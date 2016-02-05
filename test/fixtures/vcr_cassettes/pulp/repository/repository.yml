@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/2d09049b-f0f1-4618-a32b-9e6f7555b504/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/d0002187-094b-4ed9-bda6-5b44dbe293bb/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -14,9 +14,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="lteOUTty3xZ7gwzYWB6zBPCc1J1fdestkMctCYyb94",
-        oauth_signature="TN6y2rsAH1seGDvjDGfKkDKzmrk%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291985", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="efEtwl0g88rwAE38U7CuBtE2tAFcqE65kEIOPRFbg",
+        oauth_signature="Dy6J3FU%2FfJzToWRoy3O0%2F3byn9o%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628889", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -27,40 +27,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:45 GMT
+      - Thu, 04 Feb 2016 23:34:49 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '645'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8yZDA5MDQ5Yi1mMGYxLTQ2MTgtYTMyYi05ZTZmNzU1NWI1
-        MDQvIiwgInRhc2tfaWQiOiAiMmQwOTA0OWItZjBmMS00NjE4LWEzMmItOWU2
-        Zjc1NTViNTA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9kMDAwMjE4Ny0wOTRiLTRlZDktYmRhNi01YjQ0ZGJlMjkz
+        YmIvIiwgInRhc2tfaWQiOiAiZDAwMDIxODctMDk0Yi00ZWQ5LWJkYTYtNWI0
+        NGRiZTI5M2JiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJj
-        ZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3Rh
-        dGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNv
-        dXJjZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20iLCAicmVz
-        dWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1
-        NmFlYmMxMWU1NDk3NWY3MWE2YTY0ZDgifSwgImlkIjogIjU2YWViYzExZTU0
-        OTc1ZjcxYTZhNjRkOCJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDE5ODY4MGI1Y2E1Yzg0MjJmOSJ9LCAi
+        aWQiOiAiNTZiM2UwMTk4NGEwOWMwNzA2MzQzM2M2In0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:45 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:49 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/2d09049b-f0f1-4618-a32b-9e6f7555b504/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/d0002187-094b-4ed9-bda6-5b44dbe293bb/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -72,9 +67,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="ViixPQNVuSFZmib7YTiMYMZ2GscEfKl2K9hCGDmeec",
-        oauth_signature="Q4DUzp8qQsbcjS%2FwXurmBI%2B1Qvo%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291985", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="3fICbyODrD1YkA6T0gVn8IUXHrSfpRZjvu968cxHmQM",
+        oauth_signature="d1YA82xLe3Ejs9Qv8pY2hk1Tf0o%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628889", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -85,41 +80,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:45 GMT
+      - Thu, 04 Feb 2016 23:34:49 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8yZDA5MDQ5Yi1mMGYxLTQ2MTgtYTMyYi05ZTZmNzU1NWI1
-        MDQvIiwgInRhc2tfaWQiOiAiMmQwOTA0OWItZjBmMS00NjE4LWEzMmItOWU2
-        Zjc1NTViNTA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9kMDAwMjE4Ny0wOTRiLTRlZDktYmRhNi01YjQ0ZGJlMjkz
+        YmIvIiwgInRhc2tfaWQiOiAiZDAwMDIxODctMDk0Yi00ZWQ5LWJkYTYtNWI0
+        NGRiZTI5M2JiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjQ1WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjQ1WiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjQ5WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjQ5WiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMTFl
-        NTQ5NzVmNzFhNmE2NGQ4In0sICJpZCI6ICI1NmFlYmMxMWU1NDk3NWY3MWE2
-        YTY0ZDgifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDE5ODY4MGI1Y2E1Yzg0MjJmOSJ9LCAiaWQiOiAiNTZiM2UwMTk4NGEwOWMw
+        N2RiZjRkOTczIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:45 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:49 GMT
 - request:
     method: delete
-    uri: https://katello-yoda.example.com/pulp/api/v2/content/orphans/
+    uri: https://katello-devbox.example.com/pulp/api/v2/content/orphans/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -131,9 +124,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="xDl7xZy32MfxVe7fYLvmSgCR5z7EUJHF0JJqL76Zz0",
-        oauth_signature="Fij3kpV77lF7cdzqzimJiMfIgqE%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291986", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="RsoU6NtTEDkHbRzlxGgC1ecOjhu0qpbS2dtCHXw7cI",
+        oauth_signature="sZ77LO2YuWutRqi0LgvqlBHkrlA%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628890", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -141,30 +134,32 @@ http_interactions:
   response:
     status:
       code: 202
-      message: ACCEPTED
+      message: Accepted
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:46 GMT
+      - Thu, 04 Feb 2016 23:34:50 GMT
       Server:
       - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
       Content-Length:
       - '172'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzL2MzMmYxZTYzLTZmOTctNGNhZC1hNDIyLTRlMTcwYmFmOTBmNy8iLCAi
-        dGFza19pZCI6ICJjMzJmMWU2My02Zjk3LTRjYWQtYTQyMi00ZTE3MGJhZjkw
-        ZjcifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzQ3OTA1OWFkLWVlZmMtNDBkNC1iMzZkLThkY2I2YzliYzZjNi8iLCAi
+        dGFza19pZCI6ICI0NzkwNTlhZC1lZWZjLTQwZDQtYjM2ZC04ZGNiNmM5YmM2
+        YzYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:46 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:50 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/7a52c4ad-550c-46bc-807c-7ac47585aff4/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/48d08d23-9ae0-4538-be8e-ea5efdc1c25a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -176,9 +171,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="w05aYiE4HaTeQF7VOIo29pF9weV5CTUCUVn5ZIMMC4",
-        oauth_signature="AfmU0Nuu1zeiUgSFu0cfBuOZHfE%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291986", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="IZknq3m5CcDrEw6i9SQiZmTq38XoTIASvvYO2em9M",
+        oauth_signature="44abmI3IOJ%2FgRgoOzlozo09kzls%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628890", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -189,38 +184,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:46 GMT
+      - Thu, 04 Feb 2016 23:34:50 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '549'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy83YTUyYzRhZC01NTBjLTQ2YmMtODA3Yy03YWM0NzU4NWFm
-        ZjQvIiwgInRhc2tfaWQiOiAiN2E1MmM0YWQtNTUwYy00NmJjLTgwN2MtN2Fj
-        NDc1ODVhZmY0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy80OGQwOGQyMy05YWUwLTQ1MzgtYmU4ZS1lYTVlZmRjMWMy
+        NWEvIiwgInRhc2tfaWQiOiAiNDhkMDhkMjMtOWFlMC00NTM4LWJlOGUtZWE1
+        ZWZkYzFjMjVhIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJOb25lLmRxIiwgInN0YXRl
-        IjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0Ijog
-        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmFlYmMx
-        MmU1NDk3NWY3MWE2YTY0ZGEifSwgImlkIjogIjU2YWViYzEyZTU0OTc1Zjcx
-        YTZhNjRkYSJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDFhODY4MGI1Y2E1Yzg0MjJmZSJ9LCAi
+        aWQiOiAiNTZiM2UwMWE4NGEwOWMwNzA2MzQzM2QzIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:46 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:50 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/7a52c4ad-550c-46bc-807c-7ac47585aff4/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/48d08d23-9ae0-4538-be8e-ea5efdc1c25a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -232,9 +224,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="20wPCqMDsxzIjrL5icxOlaAWxvHaOCTVkKZ8fdtfig4",
-        oauth_signature="ztR0iEnku3gUtcBmr%2FDVXsAX8Qk%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291987", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="lqFxegnCJPpPbvy2iznx4RFS1L88PsLqLoLlj8",
+        oauth_signature="X3W%2B4EoG14RhULYnx%2Bd7zaqXq5c%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628891", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -245,41 +237,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:47 GMT
+      - Thu, 04 Feb 2016 23:34:51 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy83YTUyYzRhZC01NTBjLTQ2YmMtODA3Yy03YWM0NzU4NWFm
-        ZjQvIiwgInRhc2tfaWQiOiAiN2E1MmM0YWQtNTUwYy00NmJjLTgwN2MtN2Fj
-        NDc1ODVhZmY0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy80OGQwOGQyMy05YWUwLTQ1MzgtYmU4ZS1lYTVlZmRjMWMy
+        NWEvIiwgInRhc2tfaWQiOiAiNDhkMDhkMjMtOWFlMC00NTM4LWJlOGUtZWE1
+        ZWZkYzFjMjVhIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjQ2WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjQ2WiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjUwWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjUwWiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMTJl
-        NTQ5NzVmNzFhNmE2NGRhIn0sICJpZCI6ICI1NmFlYmMxMmU1NDk3NWY3MWE2
-        YTY0ZGEifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDFhODY4MGI1Y2E1Yzg0MjJmZSJ9LCAiaWQiOiAiNTZiM2UwMWE4NGEwOWMw
+        N2RiZjRkOTdhIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:47 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:51 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/3b15e9e5-1f11-4b9a-b3fe-0cdca844e898/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/2fe6d4f5-1552-4821-98e3-f7a893f9a4d8/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -291,9 +281,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="VvRFn0XYVZB3qFy3Sdcem5zTWYadcgCwYbH6PCpM",
-        oauth_signature="VGzRciVBJiTWgNc0CuhZvqEsnPc%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291988", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="REdZ2c5aNjvIxZYudL8K0sCqi5TRO5K6TgmaL4bomU",
+        oauth_signature="EMm%2Bgp5rr7VsBXJ3YB4Z5o%2BabH0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628892", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -304,38 +294,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:48 GMT
+      - Thu, 04 Feb 2016 23:34:52 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '549'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zYjE1ZTllNS0xZjExLTRiOWEtYjNmZS0wY2RjYTg0NGU4
-        OTgvIiwgInRhc2tfaWQiOiAiM2IxNWU5ZTUtMWYxMS00YjlhLWIzZmUtMGNk
-        Y2E4NDRlODk4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8yZmU2ZDRmNS0xNTUyLTQ4MjEtOThlMy1mN2E4OTNmOWE0
+        ZDgvIiwgInRhc2tfaWQiOiAiMmZlNmQ0ZjUtMTU1Mi00ODIxLTk4ZTMtZjdh
+        ODkzZjlhNGQ4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJOb25lLmRxIiwgInN0YXRl
-        IjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0Ijog
-        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmFlYmMx
-        NGU1NDk3NWY3MWE2YTY0ZGIifSwgImlkIjogIjU2YWViYzE0ZTU0OTc1Zjcx
-        YTZhNjRkYiJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDFjODY4MGI1Y2E1Yzg0MjMwMiJ9LCAi
+        aWQiOiAiNTZiM2UwMWM4NGEwOWMwNzA2MzQzM2RmIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:48 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:52 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/3b15e9e5-1f11-4b9a-b3fe-0cdca844e898/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/2fe6d4f5-1552-4821-98e3-f7a893f9a4d8/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -347,9 +334,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="LTNx2SosAEhCpw6luzJwR1zfKwI3SFSJ3L0CwrnFM",
-        oauth_signature="dVpdtY6MoWZglCFab4LTW8AWrj4%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291988", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BMRRn0DpzfnDJqmuxYopnn3KMGpnc06A8CAFxf9o",
+        oauth_signature="OKZKGLs2lBln%2FOgNRtFwa%2BQ7syc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628892", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -360,41 +347,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:48 GMT
+      - Thu, 04 Feb 2016 23:34:52 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zYjE1ZTllNS0xZjExLTRiOWEtYjNmZS0wY2RjYTg0NGU4
-        OTgvIiwgInRhc2tfaWQiOiAiM2IxNWU5ZTUtMWYxMS00YjlhLWIzZmUtMGNk
-        Y2E4NDRlODk4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8yZmU2ZDRmNS0xNTUyLTQ4MjEtOThlMy1mN2E4OTNmOWE0
+        ZDgvIiwgInRhc2tfaWQiOiAiMmZlNmQ0ZjUtMTU1Mi00ODIxLTk4ZTMtZjdh
+        ODkzZjlhNGQ4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjQ4WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjQ4WiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjUyWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjUyWiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMTRl
-        NTQ5NzVmNzFhNmE2NGRiIn0sICJpZCI6ICI1NmFlYmMxNGU1NDk3NWY3MWE2
-        YTY0ZGIifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDFjODY4MGI1Y2E1Yzg0MjMwMiJ9LCAiaWQiOiAiNTZiM2UwMWM4NGEwOWMw
+        N2RiZjRkOTgxIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:48 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:52 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/f8e97102-86e9-4881-892a-b18bb7df8dc7/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/21ad2d98-9943-4ccb-9e48-ee946c9a8b3b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -406,9 +391,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="wRRNVMmDdIbCUm5Gwx5VQTt1LgyOgZ4dk0bJMh9gg",
-        oauth_signature="syrh4bHSLPMpflPwvT6mIrHzbIU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291989", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="2jBQT72NMKtDvjHVhwgFtzDDukBsNdFqd00aEmZEIrc",
+        oauth_signature="yOo7AG2H4S6KMDt6Qa%2FJqX80I4U%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628893", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -419,40 +404,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:49 GMT
+      - Thu, 04 Feb 2016 23:34:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '645'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy9mOGU5NzEwMi04NmU5LTQ4ODEtODkyYS1iMThiYjdkZjhk
-        YzcvIiwgInRhc2tfaWQiOiAiZjhlOTcxMDItODZlOS00ODgxLTg5MmEtYjE4
-        YmI3ZGY4ZGM3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8yMWFkMmQ5OC05OTQzLTRjY2ItOWU0OC1lZTk0NmM5YThi
+        M2IvIiwgInRhc2tfaWQiOiAiMjFhZDJkOTgtOTk0My00Y2NiLTllNDgtZWU5
+        NDZjOWE4YjNiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJj
-        ZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3Rh
-        dGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNv
-        dXJjZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20iLCAicmVz
-        dWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1
-        NmFlYmMxNWU1NDk3NWY3MWE2YTY0ZGMifSwgImlkIjogIjU2YWViYzE1ZTU0
-        OTc1ZjcxYTZhNjRkYyJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDFkODY4MGI1Y2E1Yzg0MjMwNiJ9LCAi
+        aWQiOiAiNTZiM2UwMWQ4NGEwOWMwNzA2MzQzM2ViIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:49 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:53 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/f8e97102-86e9-4881-892a-b18bb7df8dc7/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/21ad2d98-9943-4ccb-9e48-ee946c9a8b3b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -464,9 +444,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="QC5NRISvHuVuGv59jsqx1JZuTWCHGp8TQa7duSuuzY",
-        oauth_signature="MXv%2FyPhRKHeopYEPQ%2BLlMx21ZMM%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291990", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="4z07UNo8ylUOOxXRjC2UQQq2AQpgbeBTWbabVAOsqs",
+        oauth_signature="WWiFbZGGjYMbR7J6tWyCVESOOAo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628893", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -477,41 +457,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:50 GMT
+      - Thu, 04 Feb 2016 23:34:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy9mOGU5NzEwMi04NmU5LTQ4ODEtODkyYS1iMThiYjdkZjhk
-        YzcvIiwgInRhc2tfaWQiOiAiZjhlOTcxMDItODZlOS00ODgxLTg5MmEtYjE4
-        YmI3ZGY4ZGM3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8yMWFkMmQ5OC05OTQzLTRjY2ItOWU0OC1lZTk0NmM5YThi
+        M2IvIiwgInRhc2tfaWQiOiAiMjFhZDJkOTgtOTk0My00Y2NiLTllNDgtZWU5
+        NDZjOWE4YjNiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjQ5WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjQ5WiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjUzWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjUzWiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMTVl
-        NTQ5NzVmNzFhNmE2NGRjIn0sICJpZCI6ICI1NmFlYmMxNWU1NDk3NWY3MWE2
-        YTY0ZGMifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDFkODY4MGI1Y2E1Yzg0MjMwNiJ9LCAiaWQiOiAiNTZiM2UwMWQ4NGEwOWMw
+        N2RiZjRkOTg4In0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:50 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:53 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/7af370fe-9d7f-4718-bce6-29981f616b04/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/26cfff03-1995-4b24-9702-0f04a0dbf394/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -523,9 +501,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="tUPqBJEbU5PmyALZvPuDEYTHqmANFp78A3ROrB3puKw",
-        oauth_signature="0ini9eZOU6MH063y5NiLNF1rFek%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291991", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KoaUXGJt77dtAa8fkFW0jBhYQjRIi2i3MxcmJCTcLNw",
+        oauth_signature="Z%2BKNlxIbWZufAmn4OPyUJpdF%2BeY%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628894", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -536,40 +514,37 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:51 GMT
+      - Thu, 04 Feb 2016 23:34:54 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '645'
+      - '627'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy83YWYzNzBmZS05ZDdmLTQ3MTgtYmNlNi0yOTk4MWY2MTZi
-        MDQvIiwgInRhc2tfaWQiOiAiN2FmMzcwZmUtOWQ3Zi00NzE4LWJjZTYtMjk5
-        ODFmNjE2YjA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8yNmNmZmYwMy0xOTk1LTRiMjQtOTcwMi0wZjA0YTBkYmYz
+        OTQvIiwgInRhc2tfaWQiOiAiMjZjZmZmMDMtMTk5NS00YjI0LTk3MDItMGYw
+        NGEwZGJmMzk0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJj
-        ZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3Rh
-        dGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNv
-        dXJjZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20iLCAicmVz
-        dWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1
-        NmFlYmMxN2U1NDk3NWY3MWE2YTY0ZGQifSwgImlkIjogIjU2YWViYzE3ZTU0
-        OTc1ZjcxYTZhNjRkZCJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQGthdGVsbG8tZGV2
+        Ym94LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29y
+        a2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAa2F0ZWxs
+        by1kZXZib3guZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9y
+        IjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmIzZTAxZTg2ODBiNWNhNWM4
+        NDIzMGEifSwgImlkIjogIjU2YjNlMDFlODRhMDljMDdkYmY0ZDk4ZiJ9
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:51 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:54 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/7af370fe-9d7f-4718-bce6-29981f616b04/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/26cfff03-1995-4b24-9702-0f04a0dbf394/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -581,9 +556,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="kS1Sr7uqGhyM2sRE7KCXNJCPKBVf3640qMJvs1uAwc",
-        oauth_signature="gGQP5d1rO8rbKuXPspIU9Lwpa%2FY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291991", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="vsYqNlC4cTyIjsCqwYl5TpvcCqHUMUiGMljAy98",
+        oauth_signature="Pt4yyTL6C3GPpADBogg%2Fhm15r5s%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628895", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -594,41 +569,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:51 GMT
+      - Thu, 04 Feb 2016 23:34:55 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy83YWYzNzBmZS05ZDdmLTQ3MTgtYmNlNi0yOTk4MWY2MTZi
-        MDQvIiwgInRhc2tfaWQiOiAiN2FmMzcwZmUtOWQ3Zi00NzE4LWJjZTYtMjk5
-        ODFmNjE2YjA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8yNmNmZmYwMy0xOTk1LTRiMjQtOTcwMi0wZjA0YTBkYmYz
+        OTQvIiwgInRhc2tfaWQiOiAiMjZjZmZmMDMtMTk5NS00YjI0LTk3MDItMGYw
+        NGEwZGJmMzk0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjUxWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjUxWiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjU0WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjU0WiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMTdl
-        NTQ5NzVmNzFhNmE2NGRkIn0sICJpZCI6ICI1NmFlYmMxN2U1NDk3NWY3MWE2
-        YTY0ZGQifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDFlODY4MGI1Y2E1Yzg0MjMwYSJ9LCAiaWQiOiAiNTZiM2UwMWU4NGEwOWMw
+        N2RiZjRkOThmIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:51 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:55 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/74088b6e-efc0-4553-ab74-99b1803b43ff/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/1d1d97d1-26d5-4b02-af42-e483df3d4c86/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -640,9 +613,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="SM4Sf18GI41ymEmiiQ8xQFTkEEUcJ8gawbu2owcy6j4",
-        oauth_signature="SmUYJKVZwiCAifLdSAcCTS2100U%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291992", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="RTYBxwoB06PXrAs09ThQCyPCTVoqs2IqSrVAjuSLkY",
+        oauth_signature="wnqiHUEYroWh%2BjFIHw6iUj2dU40%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628896", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -653,38 +626,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:52 GMT
+      - Thu, 04 Feb 2016 23:34:56 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '549'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy83NDA4OGI2ZS1lZmMwLTQ1NTMtYWI3NC05OWIxODAzYjQz
-        ZmYvIiwgInRhc2tfaWQiOiAiNzQwODhiNmUtZWZjMC00NTUzLWFiNzQtOTli
-        MTgwM2I0M2ZmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8xZDFkOTdkMS0yNmQ1LTRiMDItYWY0Mi1lNDgzZGYzZDRj
+        ODYvIiwgInRhc2tfaWQiOiAiMWQxZDk3ZDEtMjZkNS00YjAyLWFmNDItZTQ4
+        M2RmM2Q0Yzg2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJOb25lLmRxIiwgInN0YXRl
-        IjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0Ijog
-        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmFlYmMx
-        OGU1NDk3NWY3MWE2YTY0ZGUifSwgImlkIjogIjU2YWViYzE4ZTU0OTc1Zjcx
-        YTZhNjRkZSJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDIwODY4MGI1Y2E1Yzg0MjMwZSJ9LCAi
+        aWQiOiAiNTZiM2UwMjA4NGEwOWMwNzA2MzQzNDAzIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:52 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:56 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/74088b6e-efc0-4553-ab74-99b1803b43ff/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/1d1d97d1-26d5-4b02-af42-e483df3d4c86/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -696,9 +666,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="fEbsbAgNlO83VGY2vRIZ6U5fHkS2BoSZUuSbPky5l8g",
-        oauth_signature="bGp5JtiSoRyzaxUij6I3%2BTTV5mM%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291992", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="eTXhloFtSykzBqWpoRe0C33qRHqSJDmFsdQks17nP6Q",
+        oauth_signature="6bXxnlrnCmwbD1xltDJ3RhR4Qyo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628896", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -709,41 +679,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:52 GMT
+      - Thu, 04 Feb 2016 23:34:56 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy83NDA4OGI2ZS1lZmMwLTQ1NTMtYWI3NC05OWIxODAzYjQz
-        ZmYvIiwgInRhc2tfaWQiOiAiNzQwODhiNmUtZWZjMC00NTUzLWFiNzQtOTli
-        MTgwM2I0M2ZmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8xZDFkOTdkMS0yNmQ1LTRiMDItYWY0Mi1lNDgzZGYzZDRj
+        ODYvIiwgInRhc2tfaWQiOiAiMWQxZDk3ZDEtMjZkNS00YjAyLWFmNDItZTQ4
+        M2RmM2Q0Yzg2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjUyWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjUyWiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjU2WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjU2WiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMThl
-        NTQ5NzVmNzFhNmE2NGRlIn0sICJpZCI6ICI1NmFlYmMxOGU1NDk3NWY3MWE2
-        YTY0ZGUifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDIwODY4MGI1Y2E1Yzg0MjMwZSJ9LCAiaWQiOiAiNTZiM2UwMjA4NGEwOWMw
+        N2RiZjRkOTk2In0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:53 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:56 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/3bf9bd65-3b09-4048-bb5c-a142c039def6/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/b71c6e49-b03c-4746-8060-295781fbb564/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -755,9 +723,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="5pR8DWxZlcl0TndelVZsDDQUcGfulfsEAqaZ2SpkUk",
-        oauth_signature="Jm1Wppvans2JjRYiyKXqV0X%2FKUA%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291993", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KMCLqCzxF8CZVKO0IXESweOTDmnKzq1xrLyqBoBtk",
+        oauth_signature="%2Bmblpng6O8%2BBjQGWb4s1%2FhehQ9M%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628897", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -768,38 +736,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:53 GMT
+      - Thu, 04 Feb 2016 23:34:57 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '549'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zYmY5YmQ2NS0zYjA5LTQwNDgtYmI1Yy1hMTQyYzAzOWRl
-        ZjYvIiwgInRhc2tfaWQiOiAiM2JmOWJkNjUtM2IwOS00MDQ4LWJiNWMtYTE0
-        MmMwMzlkZWY2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9iNzFjNmU0OS1iMDNjLTQ3NDYtODA2MC0yOTU3ODFmYmI1
+        NjQvIiwgInRhc2tfaWQiOiAiYjcxYzZlNDktYjAzYy00NzQ2LTgwNjAtMjk1
+        NzgxZmJiNTY0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJOb25lLmRxIiwgInN0YXRl
-        IjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0Ijog
-        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmFlYmMx
-        OWU1NDk3NWY3MWE2YTY0ZGYifSwgImlkIjogIjU2YWViYzE5ZTU0OTc1Zjcx
-        YTZhNjRkZiJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDIxODY4MGI1Y2E1Yzg0MjMxMiJ9LCAi
+        aWQiOiAiNTZiM2UwMjE4NGEwOWMwNzA2MzQzNDBmIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:53 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:57 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/3bf9bd65-3b09-4048-bb5c-a142c039def6/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/b71c6e49-b03c-4746-8060-295781fbb564/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -811,9 +776,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="0EpD9RWMZxQqBnCBxkxTmgxIu3PgaPkSTrY1KwUwLpk",
-        oauth_signature="LwVq3bDRRUnVIhruiGfEf7Be7Gg%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291994", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="6KADJqfWRRMM0RjuZSeysUuTD3zQAjIfWqwJyC6OqE",
+        oauth_signature="gMnuSZF9LqMEqCDd62DVrEIgBro%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628898", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -824,41 +789,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:54 GMT
+      - Thu, 04 Feb 2016 23:34:58 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zYmY5YmQ2NS0zYjA5LTQwNDgtYmI1Yy1hMTQyYzAzOWRl
-        ZjYvIiwgInRhc2tfaWQiOiAiM2JmOWJkNjUtM2IwOS00MDQ4LWJiNWMtYTE0
-        MmMwMzlkZWY2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9iNzFjNmU0OS1iMDNjLTQ3NDYtODA2MC0yOTU3ODFmYmI1
+        NjQvIiwgInRhc2tfaWQiOiAiYjcxYzZlNDktYjAzYy00NzQ2LTgwNjAtMjk1
+        NzgxZmJiNTY0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjUzWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjUzWiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM0OjU3WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM0OjU3WiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMTll
-        NTQ5NzVmNzFhNmE2NGRmIn0sICJpZCI6ICI1NmFlYmMxOWU1NDk3NWY3MWE2
-        YTY0ZGYifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDIxODY4MGI1Y2E1Yzg0MjMxMiJ9LCAiaWQiOiAiNTZiM2UwMjE4NGEwOWMw
+        N2RiZjRkOTlkIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:54 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:58 GMT
 - request:
     method: post
-    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/actions/sync/
+    uri: https://katello-devbox.example.com/pulp/api/v2/repositories/Fedora_17/actions/sync/
     body:
       encoding: UTF-8
       base64_string: |
@@ -871,9 +834,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4",
-        oauth_nonce="QobefFaVNFQpNgoZsc4Ue2Z8ViuzJDW0Nls5z5UA", oauth_signature="LcggZfzhsYRmdRWKOjyS5QcmvQI%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454291995", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
+        oauth_nonce="WpLZlUSIxkPezOoKgJ0HSUxX2L8tmwqTA698ZLGvqx4", oauth_signature="9QRzJn%2FXYGs1eVJZ%2FJuh%2BahSxtE%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454628898", oauth_version="1.0"
       Pulp-User:
       - admin
       Content-Length:
@@ -883,30 +846,32 @@ http_interactions:
   response:
     status:
       code: 202
-      message: ACCEPTED
+      message: Accepted
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:55 GMT
+      - Thu, 04 Feb 2016 23:34:58 GMT
       Server:
       - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
       Content-Length:
       - '172'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzQyOGIzOWM2LTk2NTAtNDI4YS05ZWM2LWNiNzkxNjEzZTRiNC8iLCAi
-        dGFza19pZCI6ICI0MjhiMzljNi05NjUwLTQyOGEtOWVjNi1jYjc5MTYxM2U0
-        YjQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzL2RlYjdiYjkwLTg5MDItNDExYS04YTNlLTNjM2Q5ZDk2NmNhZS8iLCAi
+        dGFza19pZCI6ICJkZWI3YmI5MC04OTAyLTQxMWEtOGEzZS0zYzNkOWQ5NjZj
+        YWUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:55 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:58 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/428b39c6-9650-428a-9ec6-cb791613e4b4/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/deb7bb90-8902-411a-8a3e-3c3d9d966cae/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -918,9 +883,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="ZYHw8DZoxU7ZkUU4bhTk8K4Hcnx7sBaN8q20OWZW5g",
-        oauth_signature="cyHDvMNISkBea%2BN86YHvPT5n6W0%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291995", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="gUzyWuwJEDJpfFhBdwAxYLEV8pBoo15ixw0pa1OEg",
+        oauth_signature="1weKnpDkYtf1eARHC2MBF9qZ2Fo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628898", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -931,38 +896,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:55 GMT
+      - Thu, 04 Feb 2016 23:34:58 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '547'
+      - '525'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80MjhiMzljNi05NjUwLTQyOGEtOWVjNi1jYjc5MTYxM2U0
-        YjQvIiwgInRhc2tfaWQiOiAiNDI4YjM5YzYtOTY1MC00MjhhLTllYzYtY2I3
-        OTE2MTNlNGI0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9kZWI3YmI5MC04OTAyLTQxMWEtOGEzZS0zYzNkOWQ5NjZj
+        YWUvIiwgInRhc2tfaWQiOiAiZGViN2JiOTAtODkwMi00MTFhLThhM2UtM2Mz
+        ZDlkOTY2Y2FlIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
-        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAi
-        dHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dy
-        ZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAiTm9uZS5kcSIsICJzdGF0ZSI6
-        ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogbnVsbCwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMWJl
-        NTQ5NzVmNzFhNmE2NGUwIn0sICJpZCI6ICI1NmFlYmMxYmU1NDk3NWY3MWE2
-        YTY0ZTAifQ==
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJOb25lLmRxIiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25h
+        bWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1NmIzZTAyMjg2ODBiNWNhNWM4NDIzMTYifSwgImlk
+        IjogIjU2YjNlMDIyODRhMDljMDcwNjM0MzQxYiJ9
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:55 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:58 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/428b39c6-9650-428a-9ec6-cb791613e4b4/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/deb7bb90-8902-411a-8a3e-3c3d9d966cae/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -974,9 +936,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="uGpeMMR4ZcMHFyjzBUbSWFAqjWgxj2S612qJGos0",
-        oauth_signature="pzgSvbEwmiep7eXEcpKb1qQbyxQ%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291995", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="kvCEdE2tMDqnKPxxeh9QTUWz5yyYCcbQSSkvXQZ1I4",
+        oauth_signature="LvWm%2F9zcGhddN3fcH2Xgkk%2FZsr8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628898", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -987,50 +949,37 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:55 GMT
+      - Thu, 04 Feb 2016 23:34:58 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '1087'
+      - '625'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80MjhiMzljNi05NjUwLTQyOGEtOWVjNi1jYjc5MTYxM2U0
-        YjQvIiwgInRhc2tfaWQiOiAiNDI4YjM5YzYtOTY1MC00MjhhLTllYzYtY2I3
-        OTE2MTNlNGI0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9kZWI3YmI5MC04OTAyLTQxMWEtOGEzZS0zYzNkOWQ5NjZj
+        YWUvIiwgInRhc2tfaWQiOiAiZGViN2JiOTAtODkwMi00MTFhLThhM2UtM2Mz
+        ZDlkOTY2Y2FlIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiBudWxs
-        LCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxNi0w
-        Mi0wMVQwMTo1OTo1NVoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRf
-        dGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHsieXVtX2ltcG9ydGVy
-        IjogeyJjb250ZW50IjogeyJpdGVtc190b3RhbCI6IDAsICJzdGF0ZSI6ICJO
-        T1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJkZXRhaWxzIjog
-        eyJycG1fdG90YWwiOiAwLCAicnBtX2RvbmUiOiAwLCAiZHJwbV90b3RhbCI6
-        IDAsICJkcnBtX2RvbmUiOiAwfSwgInNpemVfdG90YWwiOiAwLCAic2l6ZV9s
-        ZWZ0IjogMCwgIml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6
-        ICJOT1RfU1RBUlRFRCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJpdGVtc190b3Rh
-        bCI6IDAsICJzdGF0ZSI6ICJOT1RfU1RBUlRFRCIsICJlcnJvcl9kZXRhaWxz
-        IjogW10sICJpdGVtc19sZWZ0IjogMH0sICJlcnJhdGEiOiB7InN0YXRlIjog
-        Ik5PVF9TVEFSVEVEIn0sICJtZXRhZGF0YSI6IHsic3RhdGUiOiAiSU5fUFJP
-        R1JFU1MifX19LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2Vy
-        LTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogInJ1
-        bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMWJl
-        NTQ5NzVmNzFhNmE2NGUwIn0sICJpZCI6ICI1NmFlYmMxYmU1NDk3NWY3MWE2
-        YTY0ZTAifQ==
+        LCAic3RhcnRfdGltZSI6IG51bGwsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bh
+        d25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWRldmJv
+        eC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtl
+        cl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQGthdGVsbG8t
+        ZGV2Ym94LmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6
+        IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZiM2UwMjI4NjgwYjVjYTVjODQy
+        MzE2In0sICJpZCI6ICI1NmIzZTAyMjg0YTA5YzA3ZGJmNGQ5YTQifQ==
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:55 GMT
+  recorded_at: Thu, 04 Feb 2016 23:34:58 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/428b39c6-9650-428a-9ec6-cb791613e4b4/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/deb7bb90-8902-411a-8a3e-3c3d9d966cae/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1042,9 +991,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="584yXXZiPx1JmFbdO3FLEHNfoRK4XeQknNNxeCX5BM",
-        oauth_signature="fHWLggfIT0f3tZUHcNrM7baVVCE%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291996", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="XG4sLxmJwwbnEzcdCvKeEfXGOxvuaG937gW1HlEWcI",
+        oauth_signature="CasJuhGfE%2BhvRZgXEveTPPxHAHo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628900", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1055,77 +1004,75 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:56 GMT
+      - Thu, 04 Feb 2016 23:35:00 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '2318'
+      - '2301'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80MjhiMzljNi05NjUwLTQyOGEtOWVjNi1jYjc5MTYxM2U0
-        YjQvIiwgInRhc2tfaWQiOiAiNDI4YjM5YzYtOTY1MC00MjhhLTllYzYtY2I3
-        OTE2MTNlNGI0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9kZWI3YmI5MC04OTAyLTQxMWEtOGEzZS0zYzNkOWQ5NjZj
+        YWUvIiwgInRhc2tfaWQiOiAiZGViN2JiOTAtODkwMi00MTFhLThhM2UtM2Mz
+        ZDlkOTY2Y2FlIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246c3luYyJdLCAiZmluaXNoX3RpbWUiOiAiMjAx
-        Ni0wMi0wMVQwMTo1OTo1NVoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
-        YXJ0X3RpbWUiOiAiMjAxNi0wMi0wMVQwMTo1OTo1NVoiLCAidHJhY2ViYWNr
+        Ni0wMi0wNFQyMzozNDo1OVoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0
+        YXJ0X3RpbWUiOiAiMjAxNi0wMi0wNFQyMzozNDo1OFoiLCAidHJhY2ViYWNr
         IjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbeyJfaHJlZiI6ICIvcHVscC9h
-        cGkvdjIvdGFza3MvYTA0MDdkMjYtNjZlNi00YWQ5LWFiNWUtODA1NmExMjFi
-        MjllLyIsICJ0YXNrX2lkIjogImEwNDA3ZDI2LTY2ZTYtNGFkOS1hYjVlLTgw
-        NTZhMTIxYjI5ZSJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy9m
-        YmUxZGYyYi00Mzc4LTQwZTktYTkyYy1iMjQzNjMwMTczMDUvIiwgInRhc2tf
-        aWQiOiAiZmJlMWRmMmItNDM3OC00MGU5LWE5MmMtYjI0MzYzMDE3MzA1In1d
+        cGkvdjIvdGFza3MvOTM3ZmMwMmEtODQ4OS00ZTViLTkwOTktNTljZDA4Mjg1
+        MTA5LyIsICJ0YXNrX2lkIjogIjkzN2ZjMDJhLTg0ODktNGU1Yi05MDk5LTU5
+        Y2QwODI4NTEwOSJ9LCB7Il9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy85
+        MWJjNWQ1YS0yNzY0LTQ5OTQtODc5OS1hMjFlZDZiZjUzMjYvIiwgInRhc2tf
+        aWQiOiAiOTFiYzVkNWEtMjc2NC00OTk0LTg3OTktYTIxZWQ2YmY1MzI2In1d
         LCAicHJvZ3Jlc3NfcmVwb3J0IjogeyJ5dW1faW1wb3J0ZXIiOiB7ImNvbnRl
-        bnQiOiB7Iml0ZW1zX3RvdGFsIjogOCwgInN0YXRlIjogIkZJTklTSEVEIiwg
-        ImVycm9yX2RldGFpbHMiOiBbXSwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6
-        IDgsICJycG1fZG9uZSI6IDgsICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9u
-        ZSI6IDB9LCAic2l6ZV90b3RhbCI6IDE3ODcyLCAic2l6ZV9sZWZ0IjogMCwg
-        Iml0ZW1zX2xlZnQiOiAwfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hF
+        bnQiOiB7InNpemVfdG90YWwiOiAxNzg3MiwgIml0ZW1zX2xlZnQiOiAwLCAi
+        aXRlbXNfdG90YWwiOiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9s
+        ZWZ0IjogMCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDgsICJycG1fZG9u
+        ZSI6IDgsICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJy
+        b3JfZGV0YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hF
         RCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJpdGVtc190b3RhbCI6IDMsICJzdGF0
         ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJpdGVtc19s
         ZWZ0IjogMH0sICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJt
         ZXRhZGF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifX19LCAicXVldWUiOiAi
-        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAa2F0ZWxsby15b2RhLmV4YW1w
-        bGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1l
-        IjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGthdGVsbG8teW9kYS5l
-        eGFtcGxlLmNvbSIsICJyZXN1bHQiOiB7InJlc3VsdCI6ICJzdWNjZXNzIiwg
-        ImltcG9ydGVyX2lkIjogeyIkb2lkIjogIjU2YWViYzFhZGUwNDAzMzQ2Y2Y2
-        NDliNiJ9LCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiRmVkb3Jh
-        XzE3IiwgInRyYWNlYmFjayI6IG51bGwsICJzdGFydGVkIjogIjIwMTYtMDIt
-        MDFUMDE6NTk6NTVaIiwgIl9ucyI6ICJyZXBvX3N5bmNfcmVzdWx0cyIsICJj
-        b21wbGV0ZWQiOiAiMjAxNi0wMi0wMVQwMTo1OTo1NVoiLCAiaW1wb3J0ZXJf
-        dHlwZV9pZCI6ICJ5dW1faW1wb3J0ZXIiLCAiZXJyb3JfbWVzc2FnZSI6IG51
-        bGwsICJzdW1tYXJ5IjogeyJjb250ZW50IjogeyJzdGF0ZSI6ICJGSU5JU0hF
-        RCJ9LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJkaXN0cmli
-        dXRpb24iOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJlcnJhdGEiOiB7InN0
-        YXRlIjogIkZJTklTSEVEIn0sICJtZXRhZGF0YSI6IHsic3RhdGUiOiAiRklO
-        SVNIRUQifX0sICJhZGRlZF9jb3VudCI6IDAsICJyZW1vdmVkX2NvdW50Ijog
-        MCwgInVwZGF0ZWRfY291bnQiOiAwLCAiaWQiOiAiNTZhZWJjMWJkZTA0MDM0
-        Y2Q5MmRjNTNmIiwgImRldGFpbHMiOiB7ImNvbnRlbnQiOiB7InNpemVfdG90
-        YWwiOiAxNzg3MiwgIml0ZW1zX2xlZnQiOiAwLCAiaXRlbXNfdG90YWwiOiA4
-        LCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6ZV9sZWZ0IjogMCwgImRldGFp
-        bHMiOiB7InJwbV90b3RhbCI6IDgsICJycG1fZG9uZSI6IDgsICJkcnBtX3Rv
-        dGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAiZXJyb3JfZGV0YWlscyI6IFtd
-        fSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5JU0hFRCJ9LCAiZGlzdHJpYnV0
-        aW9uIjogeyJpdGVtc190b3RhbCI6IDMsICJzdGF0ZSI6ICJGSU5JU0hFRCIs
-        ICJlcnJvcl9kZXRhaWxzIjogW10sICJpdGVtc19sZWZ0IjogMH0sICJlcnJh
-        dGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJtZXRhZGF0YSI6IHsic3Rh
-        dGUiOiAiRklOSVNIRUQifX19LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIk
-        b2lkIjogIjU2YWViYzFiZTU0OTc1ZjcxYTZhNjRlMCJ9LCAiaWQiOiAiNTZh
-        ZWJjMWJlNTQ5NzVmNzFhNmE2NGUwIn0=
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAa2F0ZWxsby1kZXZib3guZXhh
+        bXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2VyX25h
+        bWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAa2F0ZWxsby1kZXZi
+        b3guZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJpbXBvcnRlcl90eXBlX2lk
+        IjogInl1bV9pbXBvcnRlciIsICJpbXBvcnRlcl9pZCI6ICJ5dW1faW1wb3J0
+        ZXIiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiRmVkb3JhXzE3
+        IiwgInJlbW92ZWRfY291bnQiOiAwLCAic3RhcnRlZCI6ICIyMDE2LTAyLTA0
+        VDIzOjM0OjU5WiIsICJfbnMiOiAicmVwb19zeW5jX3Jlc3VsdHMiLCAiY29t
+        cGxldGVkIjogIjIwMTYtMDItMDRUMjM6MzQ6NTlaIiwgInRyYWNlYmFjayI6
+        IG51bGwsICJzdW1tYXJ5IjogeyJjb250ZW50IjogeyJzdGF0ZSI6ICJGSU5J
+        U0hFRCJ9LCAiY29tcHMiOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJkaXN0
+        cmlidXRpb24iOiB7InN0YXRlIjogIkZJTklTSEVEIn0sICJlcnJhdGEiOiB7
+        InN0YXRlIjogIkZJTklTSEVEIn0sICJtZXRhZGF0YSI6IHsic3RhdGUiOiAi
+        RklOSVNIRUQifX0sICJhZGRlZF9jb3VudCI6IDE1LCAiZXJyb3JfbWVzc2Fn
+        ZSI6IG51bGwsICJ1cGRhdGVkX2NvdW50IjogMCwgImRldGFpbHMiOiB7ImNv
+        bnRlbnQiOiB7InNpemVfdG90YWwiOiAxNzg3MiwgIml0ZW1zX2xlZnQiOiAw
+        LCAiaXRlbXNfdG90YWwiOiA4LCAic3RhdGUiOiAiRklOSVNIRUQiLCAic2l6
+        ZV9sZWZ0IjogMCwgImRldGFpbHMiOiB7InJwbV90b3RhbCI6IDgsICJycG1f
+        ZG9uZSI6IDgsICJkcnBtX3RvdGFsIjogMCwgImRycG1fZG9uZSI6IDB9LCAi
+        ZXJyb3JfZGV0YWlscyI6IFtdfSwgImNvbXBzIjogeyJzdGF0ZSI6ICJGSU5J
+        U0hFRCJ9LCAiZGlzdHJpYnV0aW9uIjogeyJpdGVtc190b3RhbCI6IDMsICJz
+        dGF0ZSI6ICJGSU5JU0hFRCIsICJlcnJvcl9kZXRhaWxzIjogW10sICJpdGVt
+        c19sZWZ0IjogMH0sICJlcnJhdGEiOiB7InN0YXRlIjogIkZJTklTSEVEIn0s
+        ICJtZXRhZGF0YSI6IHsic3RhdGUiOiAiRklOSVNIRUQifX0sICJpZCI6ICI1
+        NmIzZTAyMzg0YTA5YzA3ZGE5NzliNmQiLCAicmVzdWx0IjogInN1Y2Nlc3Mi
+        fSwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmIzZTAyMjg2
+        ODBiNWNhNWM4NDIzMTYifSwgImlkIjogIjU2YjNlMDIyODRhMDljMDdkYmY0
+        ZDlhNCJ9
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:56 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:00 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/379ac160-4dec-4ac0-8d8d-9d8a93fab322/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/30be85a2-a590-477b-9f7d-63531387c83a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1137,9 +1084,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="5P002nlNrUKuSQHubGqIPkbJVP4GfzFGRJF7XbBnaaQ",
-        oauth_signature="441FKWViY5t71w1iYKhbTU85Oag%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291997", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Q73xwoBtGvxiKI9AN4y0R0WdROUbKj2CvaHxwsI9iQ",
+        oauth_signature="ZmJ5neYcHi%2FjajmXiyAUukEgC9E%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628900", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1150,38 +1097,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:57 GMT
+      - Thu, 04 Feb 2016 23:35:00 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '549'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zNzlhYzE2MC00ZGVjLTRhYzAtOGQ4ZC05ZDhhOTNmYWIz
-        MjIvIiwgInRhc2tfaWQiOiAiMzc5YWMxNjAtNGRlYy00YWMwLThkOGQtOWQ4
-        YTkzZmFiMzIyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8zMGJlODVhMi1hNTkwLTQ3N2ItOWY3ZC02MzUzMTM4N2M4
+        M2EvIiwgInRhc2tfaWQiOiAiMzBiZTg1YTItYTU5MC00NzdiLTlmN2QtNjM1
+        MzEzODdjODNhIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJOb25lLmRxIiwgInN0YXRl
-        IjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0Ijog
-        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmFlYmMx
-        Y2U1NDk3NWY3MWE2YTY0ZjIifSwgImlkIjogIjU2YWViYzFjZTU0OTc1Zjcx
-        YTZhNjRmMiJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDI0ODY4MGI1Y2E1Yzg0MjMyMiJ9LCAi
+        aWQiOiAiNTZiM2UwMjQ4NGEwOWMwNzA2MzQzNDIyIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:57 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:00 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/379ac160-4dec-4ac0-8d8d-9d8a93fab322/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/30be85a2-a590-477b-9f7d-63531387c83a/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1193,9 +1137,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="mY1W2BeUnqesanox9ZwldRCCmVmMHjgOnpA9iaR7A",
-        oauth_signature="v93T5SDA2yBs300kkg3gcIZlLrs%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291997", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="cT7CwDxph7chmbjHK2qUgw5lmQi7F4oFHKtKX5U3NM",
+        oauth_signature="hgZNPZwUub5CUZJq0LFjSTHq5rs%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628901", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1206,41 +1150,39 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:57 GMT
+      - Thu, 04 Feb 2016 23:35:01 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zNzlhYzE2MC00ZGVjLTRhYzAtOGQ4ZC05ZDhhOTNmYWIz
-        MjIvIiwgInRhc2tfaWQiOiAiMzc5YWMxNjAtNGRlYy00YWMwLThkOGQtOWQ4
-        YTkzZmFiMzIyIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy8zMGJlODVhMi1hNTkwLTQ3N2ItOWY3ZC02MzUzMTM4N2M4
+        M2EvIiwgInRhc2tfaWQiOiAiMzBiZTg1YTItYTU5MC00NzdiLTlmN2QtNjM1
+        MzEzODdjODNhIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjU3WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjU3WiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM1OjAxWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM1OjAxWiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMWNl
-        NTQ5NzVmNzFhNmE2NGYyIn0sICJpZCI6ICI1NmFlYmMxY2U1NDk3NWY3MWE2
-        YTY0ZjIifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDI0ODY4MGI1Y2E1Yzg0MjMyMiJ9LCAiaWQiOiAiNTZiM2UwMjQ4NGEwOWMw
+        N2RiZjRkOWI2In0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:57 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:01 GMT
 - request:
     method: post
-    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/
+    uri: https://katello-devbox.example.com/pulp/api/v2/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1262,8 +1204,9 @@ http_interactions:
         b25maWciOnt9LCJhdXRvX3B1Ymxpc2giOnRydWUsImRpc3RyaWJ1dG9yX2lk
         IjoiRmVkb3JhXzE3X25vZGVzIn0seyJkaXN0cmlidXRvcl90eXBlX2lkIjoi
         ZXhwb3J0X2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3JfY29uZmlnIjp7Imh0
-        dHAiOmZhbHNlLCJodHRwcyI6ZmFsc2V9LCJhdXRvX3B1Ymxpc2giOmZhbHNl
-        LCJkaXN0cmlidXRvcl9pZCI6ImV4cG9ydF9kaXN0cmlidXRvciJ9XX0=
+        dHAiOmZhbHNlLCJodHRwcyI6ZmFsc2UsInJlbGF0aXZlX3VybCI6bnVsbH0s
+        ImF1dG9fcHVibGlzaCI6ZmFsc2UsImRpc3RyaWJ1dG9yX2lkIjoiZXhwb3J0
+        X2Rpc3RyaWJ1dG9yIn1dfQ==
     headers:
       Accept:
       - application/json
@@ -1272,32 +1215,32 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4",
-        oauth_nonce="AlIalL4VYXvb7E0fO5kqbTNFDGvH87SSrg5waoPZI", oauth_signature="Gu5UqNUB1ceFiLvEw2YjLI4F0LQ%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454291998", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
+        oauth_nonce="LiVGfWbcJLLH4hzZEJaU8jeCbrToJKQf0EiEhUe1ss", oauth_signature="uUtwWZSqTtTkjQoReQbm3Y26884%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454628901", oauth_version="1.0"
       Pulp-User:
       - admin
       Content-Length:
-      - '896'
+      - '916'
       User-Agent:
       - Ruby
   response:
     status:
       code: 201
-      message: CREATED
+      message: Created
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:58 GMT
+      - Thu, 04 Feb 2016 23:35:01 GMT
       Server:
       - Apache/2.4.6 (CentOS)
+      Location:
+      - Fedora_17
       Content-Length:
       - '320'
-      Location:
-      - https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
       encoding: UTF-8
       base64_string: |
@@ -1306,14 +1249,14 @@ http_interactions:
         ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
         fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
         b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
-        NTZhZWJjMWVkZTA0MDMzNDZiZmRhZDM5In0sICJpZCI6ICJGZWRvcmFfMTci
+        NTZiM2UwMjU4NGEwOWMwNzA2MzQzNDI3In0sICJpZCI6ICJGZWRvcmFfMTci
         LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
         MTcvIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:58 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:01 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    uri: https://katello-devbox.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1325,9 +1268,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="O1YglymaKRNWH6ALrpSMb2ab0sR5vSCqPH44pmDwQ",
-        oauth_signature="Y1Z2JgCtj2wp3j6rEm0jTJN%2Fji8%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291998", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="lttPyD2axKHTdwImlWveamK15vsLC8zuPheEx0FcY",
+        oauth_signature="ZtB7Nfb073VJmNfXmXEmIjDP3w0%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628902", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1338,7 +1281,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:58 GMT
+      - Thu, 04 Feb 2016 23:35:02 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -1346,16 +1289,16 @@ http_interactions:
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
       encoding: UTF-8
       base64_string: |
         W10=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:58 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:02 GMT
 - request:
     method: post
-    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    uri: https://katello-devbox.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1368,9 +1311,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4",
-        oauth_nonce="QS0SqsKhfeYlEeb7u7FYdFwlQpWuATIkZk7uenWehUE", oauth_signature="EnDkUVOH6HGvdWmk4oMLEV2gktQ%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454291998", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello",
+        oauth_nonce="NjGz3RTqvCDASKE24CAVdQWR6qvl6unPaE51UtwU8", oauth_signature="pAJa3XuCkoUP%2F2WNisWNli6Z4ts%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454628902", oauth_version="1.0"
       Pulp-User:
       - admin
       Content-Length:
@@ -1380,43 +1323,42 @@ http_interactions:
   response:
     status:
       code: 201
-      message: CREATED
+      message: Created
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:58 GMT
+      - Thu, 04 Feb 2016 23:35:02 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '671'
       Location:
-      - https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/56aebc1ede0403346bfdad40/
+      - "/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/56b3e02684a09c0706343430/"
+      Content-Length:
+      - '610'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
       encoding: UTF-8
       base64_string: |
-        eyJuZXh0X3J1biI6ICIyMDE2LTAyLTAxVDAxOjU5OjU4WiIsICJyZW1haW5p
-        bmdfcnVucyI6IG51bGwsICJsYXN0X3VwZGF0ZWQiOiAxNDU0MjkxOTk4LjI5
-        NjQ5MywgImZpcnN0X3J1biI6ICIyMDEzLTA4LTAxVDAwOjAwOjAwLTA0OjAw
+        eyJuZXh0X3J1biI6ICIyMDE2LTAyLTA0VDIzOjM1OjAyWiIsICJyZW1haW5p
+        bmdfcnVucyI6IG51bGwsICJsYXN0X3VwZGF0ZWQiOiAxNDU0NjI4OTAyLjA0
+        NDk4NSwgImZpcnN0X3J1biI6ICIyMDEzLTA4LTAxVDAwOjAwOjAwLTA0OjAw
         IiwgInRvdGFsX3J1bl9jb3VudCI6IDAsICJzY2hlZHVsZSI6ICIyMDEzLTA4
         LTAxVDAwOjAwOjAwLTA0OjAwL1AxRCIsICJrd2FyZ3MiOiB7Im92ZXJyaWRl
-        cyI6IHt9LCAic2NoZWR1bGVkX2NhbGxfaWQiOiAiNTZhZWJjMWVkZTA0MDMz
-        NDZiZmRhZDQwIn0sICJhcmdzIjogWyJGZWRvcmFfMTciXSwgImVuYWJsZWQi
-        OiB0cnVlLCAibGFzdF9ydW5fYXQiOiBudWxsLCAidGFzayI6ICJwdWxwLnNl
-        cnZlci5jb250cm9sbGVycy5yZXBvc2l0b3J5LnF1ZXVlX3N5bmNfd2l0aF9h
-        dXRvX3B1Ymxpc2giLCAiZmFpbHVyZV90aHJlc2hvbGQiOiBudWxsLCAicmVz
-        b3VyY2UiOiAicHVscDppbXBvcnRlcjpGZWRvcmFfMTc6eXVtX2ltcG9ydGVy
-        IiwgIl9pZCI6ICI1NmFlYmMxZWRlMDQwMzM0NmJmZGFkNDAiLCAiY29uc2Vj
-        dXRpdmVfZmFpbHVyZXMiOiAwLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Jl
-        cG9zaXRvcmllcy9GZWRvcmFfMTcvaW1wb3J0ZXJzL3l1bV9pbXBvcnRlci9z
-        Y2hlZHVsZXMvc3luYy81NmFlYmMxZWRlMDQwMzM0NmJmZGFkNDAvIn0=
+        cyI6IHt9fSwgImFyZ3MiOiBbIkZlZG9yYV8xNyJdLCAiZW5hYmxlZCI6IHRy
+        dWUsICJsYXN0X3J1bl9hdCI6IG51bGwsICJ0YXNrIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuc3luY193aXRoX2F1dG9fcHVibGlzaCIsICJm
+        YWlsdXJlX3RocmVzaG9sZCI6IG51bGwsICJyZXNvdXJjZSI6ICJwdWxwOmlt
+        cG9ydGVyOkZlZG9yYV8xNzp5dW1faW1wb3J0ZXIiLCAiX2lkIjogIjU2YjNl
+        MDI2ODRhMDljMDcwNjM0MzQzMCIsICJjb25zZWN1dGl2ZV9mYWlsdXJlcyI6
+        IDAsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzL0ZlZG9y
+        YV8xNy9pbXBvcnRlcnMveXVtX2ltcG9ydGVyL3NjaGVkdWxlcy9zeW5jLzU2
+        YjNlMDI2ODRhMDljMDcwNjM0MzQzMC8ifQ==
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:58 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:02 GMT
 - request:
     method: delete
-    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/
+    uri: https://katello-devbox.example.com/pulp/api/v2/repositories/Fedora_17/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1428,9 +1370,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="vW8uMCCINDaEqJsRYlkLuUpUTXGpIkEmm5vr06Kcv4",
-        oauth_signature="lf8BsZG%2B1kD2jmvc7TRltO6I5SU%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291998", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="3oWuqGmBOz6mRK4Mw82C16APb9tvxFmg4B3D3U2eJc",
+        oauth_signature="Q8a95b4UbdO3ost%2Bl7bmcvtgv7Y%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628902", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1438,30 +1380,32 @@ http_interactions:
   response:
     status:
       code: 202
-      message: ACCEPTED
+      message: Accepted
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:58 GMT
+      - Thu, 04 Feb 2016 23:35:02 GMT
       Server:
       - Apache/2.4.6 (CentOS)
+      Content-Encoding:
+      - utf-8
       Content-Length:
       - '172'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzk1MWQzZTg5LTg4MTctNDk5Zi04OGU4LWMzY2QxNjJiOWI4Ni8iLCAi
-        dGFza19pZCI6ICI5NTFkM2U4OS04ODE3LTQ5OWYtODhlOC1jM2NkMTYyYjli
-        ODYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzc5MDAyY2IzLTA3N2ItNDE2NC1hNWQ4LTE4MGM4ZDUwMDE0ZC8iLCAi
+        dGFza19pZCI6ICI3OTAwMmNiMy0wNzdiLTQxNjQtYTVkOC0xODBjOGQ1MDAx
+        NGQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:58 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:02 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/951d3e89-8817-499f-88e8-c3cd162b9b86/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/79002cb3-077b-4164-a5d8-180c8d50014d/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1473,9 +1417,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="gVD29YLJ88wCGfeeMBCRmXfGVs0ADykIOSZPGBe7Unc",
-        oauth_signature="C11TCnD1SBXleslrGrjc%2BVx0wmY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291998", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="VylNNhBHUr72sB4xQtn8scJVBSmPW0Nh4LQvPhxCEc",
+        oauth_signature="V0VNxd5EkHnqm11WYtfGKTjDdkc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628902", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1486,40 +1430,35 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:58 GMT
+      - Thu, 04 Feb 2016 23:35:02 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '645'
+      - '527'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy85NTFkM2U4OS04ODE3LTQ5OWYtODhlOC1jM2NkMTYyYjli
-        ODYvIiwgInRhc2tfaWQiOiAiOTUxZDNlODktODgxNy00OTlmLTg4ZTgtYzNj
-        ZDE2MmI5Yjg2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy83OTAwMmNiMy0wNzdiLTQxNjQtYTVkOC0xODBjOGQ1MDAx
+        NGQvIiwgInRhc2tfaWQiOiAiNzkwMDJjYjMtMDc3Yi00MTY0LWE1ZDgtMTgw
+        YzhkNTAwMTRkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
-        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
-        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJj
-        ZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3Rh
-        dGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNv
-        dXJjZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20iLCAicmVz
-        dWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1
-        NmFlYmMxZWU1NDk3NWY3MWE2YTY0ZjMifSwgImlkIjogIjU2YWViYzFlZTU0
-        OTc1ZjcxYTZhNjRmMyJ9
+        bGwsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJz
+        cGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1
+        ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
+        bmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjNlMDI2ODY4MGI1Y2E1Yzg0MjMyNiJ9LCAi
+        aWQiOiAiNTZiM2UwMjY4NGEwOWMwNzA2MzQzNDMzIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:58 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:02 GMT
 - request:
     method: get
-    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/951d3e89-8817-499f-88e8-c3cd162b9b86/
+    uri: https://katello-devbox.example.com/pulp/api/v2/tasks/79002cb3-077b-4164-a5d8-180c8d50014d/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1531,9 +1470,9 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - OAuth oauth_consumer_key="5N52BJQuADMGfHKMhzRV8NUfKUZvePw4", oauth_nonce="AUI1xSIY3jJmfG20fZf6EU6bUAB4bCPR3ahpYboeq5I",
-        oauth_signature="60qKTeT345gHDcRuqKOwgKyYmBk%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454291999", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="PuEn2xoSfel49hd7I8tcrjb1iEx7Hx9eERTc8Uqd2cM",
+        oauth_signature="Q09jGxl3qa%2B0ZiZcfMsurQKkS7Y%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1454628902", oauth_version="1.0"
       Pulp-User:
       - admin
       User-Agent:
@@ -1544,36 +1483,34 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 01 Feb 2016 01:59:59 GMT
+      - Thu, 04 Feb 2016 23:35:02 GMT
       Server:
       - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
       Content-Length:
-      - '682'
+      - '686'
       Connection:
       - close
       Content-Type:
-      - application/json; charset=utf-8
+      - application/json
     body:
-      encoding: ASCII-8BIT
+      encoding: UTF-8
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy85NTFkM2U4OS04ODE3LTQ5OWYtODhlOC1jM2NkMTYyYjli
-        ODYvIiwgInRhc2tfaWQiOiAiOTUxZDNlODktODgxNy00OTlmLTg4ZTgtYzNj
-        ZDE2MmI5Yjg2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy83OTAwMmNiMy0wNzdiLTQxNjQtYTVkOC0xODBjOGQ1MDAx
+        NGQvIiwgInRhc2tfaWQiOiAiNzkwMDJjYjMtMDc3Yi00MTY0LWE1ZDgtMTgw
+        YzhkNTAwMTRkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTAxVDAxOjU5OjU4WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTAxVDAxOjU5OjU4WiIsICJ0cmFjZWJh
+        MDE2LTAyLTA0VDIzOjM1OjAyWiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTA0VDIzOjM1OjAyWiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
-        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZhZWJjMWVl
-        NTQ5NzVmNzFhNmE2NGYzIn0sICJpZCI6ICI1NmFlYmMxZWU1NDk3NWY3MWE2
-        YTY0ZjMifQ==
+        MEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWRldmJveC5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjNl
+        MDI2ODY4MGI1Y2E1Yzg0MjMyNiJ9LCAiaWQiOiAiNTZiM2UwMjY4NGEwOWMw
+        N2RiZjRkOWJkIn0=
     http_version: 
-  recorded_at: Mon, 01 Feb 2016 01:59:59 GMT
+  recorded_at: Thu, 04 Feb 2016 23:35:02 GMT
 recorded_with: VCR 2.9.3
