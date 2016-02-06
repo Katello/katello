@@ -67,13 +67,12 @@ module Katello
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
         product.must_equal @product
         content.id.must_equal @content.id
-        substitutions.must_equal('registry_name' => 'boo')
+        substitutions.must_be_empty
       end
 
       put :enable,
           product_id: @product.id,
-          id: @content.id,
-          registry_name: 'boo'
+          id: @content.id
       assert_response :success
     end
 
@@ -107,13 +106,12 @@ module Katello
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
         product.must_equal @product
         content.id.must_equal @content.id
-        substitutions.must_equal('registry_name' => 'boo')
+        substitutions.must_be_empty
       end
 
       put :disable,
           product_id: @product.id,
-          id: @content.id,
-          registry_name: 'boo'
+          id: @content.id
       assert_response :success
     end
 
