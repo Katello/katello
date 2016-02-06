@@ -296,15 +296,6 @@ Katello::Engine.routes.draw do
           end
           collection do
             match '/post_index' => 'systems#index', :via => :post
-            match '/bulk/add_host_collections' => 'systems_bulk_actions#bulk_add_host_collections', :via => :put
-            match '/bulk/remove_host_collections' => 'systems_bulk_actions#bulk_remove_host_collections', :via => :put
-            match '/bulk/install_content' => 'systems_bulk_actions#install_content', :via => :put
-            match '/bulk/applicable_errata' => 'systems_bulk_actions#applicable_errata', :via => :post
-            match '/bulk/update_content' => 'systems_bulk_actions#update_content', :via => :put
-            match '/bulk/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
-            match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
-            match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
-            match '/bulk/available_incremental_updates' => 'systems_bulk_actions#available_incremental_updates', :via => :post
             get :auto_complete_search
           end
         end

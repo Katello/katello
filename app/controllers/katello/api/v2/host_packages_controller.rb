@@ -4,7 +4,8 @@ module Katello
 
     before_filter :require_packages_or_groups, :only => [:install, :remove]
     before_filter :require_packages_only, :only => [:upgrade]
-    before_filter :find_host
+    before_filter :find_editable_host_with_facet, :except => :index
+    before_filter :find_host, :only => :index
 
     resource_description do
       api_version 'v2'
@@ -87,12 +88,16 @@ module Katello
 
     private
 
-    def find_host
+    def find_editable_host_with_facet
       @host = resource_finder(::Host::Managed.authorized("edit_hosts"), params[:host_id])
       fail HttpErrors::NotFound, _("Couldn't find host with host id '%s'") % params[:host_id] if @host.nil?
       fail HttpErrors::NotFound, _("Host id '%s' does not have a content facet") % params[:host_id] if @host.content_facet.nil?
       fail HttpErrors::NotFound, _("Host id '%s' content facet is missing a uuid") % params[:host_id] if @host.content_facet.uuid.nil?
       @host
+    end
+
+    def find_host
+      @host = resource_finder(::Host::Managed.authorized(:view_hosts), params[:host_id])
     end
 
     def valid_package_name?(package_name)

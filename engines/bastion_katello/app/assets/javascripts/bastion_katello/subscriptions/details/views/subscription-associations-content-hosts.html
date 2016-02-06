@@ -40,12 +40,12 @@
       <tr bst-table-row ng-repeat="contentHost in contentHosts"
           ng-controller="ContentHostStatusController">
         <td bst-table-cell>
-          <a ui-sref="content-hosts.details.info({contentHostId: contentHost.uuid})">
+          <a ui-sref="content-hosts.details.info({hostId: contentHost.host_id})">
             {{ contentHost.name }}
           </a>
         </td>
         <td bst-table-cell>
-          <span class="fa fa-circle" ng-class="getStatusColor(contentHost['entitlement_status'])">
+          <span class="fa fa-circle" ng-class="getSubscriptionStatusColor(contentHost['entitlement_status'])">
           </span>
         </td>
         <td bst-table-cell>{{ virtual(contentHost.facts) | booleanToYesNo }}</td>

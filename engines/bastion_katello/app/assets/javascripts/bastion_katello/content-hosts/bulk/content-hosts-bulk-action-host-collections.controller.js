@@ -7,7 +7,7 @@
  * @requires $location
  * @requires translate
  * @requires Nutupane
- * @requires ContentHostsBulkAction
+ * @requires HostBulkAction
  * @requires HostCollection
  * @requires CurrentOrganization
  *
@@ -15,8 +15,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'Nutupane', 'ContentHostBulkAction', 'HostCollection', 'CurrentOrganization',
-    function ($scope, $q, $location, translate, Nutupane, ContentHostBulkAction, HostCollection, CurrentOrganization) {
+    ['$scope', '$q', '$location', 'translate', 'Nutupane', 'HostBulkAction', 'HostCollection', 'CurrentOrganization',
+    function ($scope, $q, $location, translate, Nutupane, HostBulkAction, HostCollection, CurrentOrganization) {
         var hostCollectionNutupane, nutupaneParams;
 
         $scope.hostCollections = {
@@ -67,9 +67,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionHostCo
             };
 
             if (action === 'add') {
-                ContentHostBulkAction.addHostCollections(params, success, error);
+                HostBulkAction.addHostCollections(params, success, error);
             } else if (action === 'remove') {
-                ContentHostBulkAction.removeHostCollections(params, success, error);
+                HostBulkAction.removeHostCollections(params, success, error);
             }
 
             return deferred.promise;

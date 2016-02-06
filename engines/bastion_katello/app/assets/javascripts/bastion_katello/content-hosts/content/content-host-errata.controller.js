@@ -21,12 +21,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         function loadErratum(errataId) {
-            $scope.erratum = HostErratum.get({'id': $scope.contentHost.host.id,
+            $scope.erratum = HostErratum.get({'id': $scope.host.id,
                 'errata_id': errataId});
         }
 
         errataNutupane = new Nutupane(HostErratum, params, 'get');
-
         errataNutupane.masterOnly = true;
         $scope.detailsTable = errataNutupane.table;
         $scope.detailsTable.errataFilterTerm = "";
@@ -40,39 +39,42 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.selectedErrataOption = 'current';
         $scope.errataOptions = [{name: "Current Environment", label: 'current'}, {name: 'foo', label: 'bar'}];
 
+        $scope.detailsTable.initialLoad = false;
+        $scope.host.$promise.then(function() {
+            if ($scope.host.content && $scope.host.id) {
+                errataNutupane.setParams({id: $scope.host.id});
+                errataNutupane.load();
+            }
+        });
+
         $scope.setupErrataOptions = function (host) {
             var libraryString = translate("Library Synced Content"),
-                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.environment.name).replace("%cv", host.content_view.name),
+                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content.lifecycle_environment_name).replace("%cv", host.content.content_view_name),
                 previousEnv;
 
             $scope.errataOptions = [{name: currentEnv, label: 'current', order: 3}];
 
-            if (!host.environment.library) {
-                Environment.get({id: host.environment.id}).$promise.then(function (env) {
-                    previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_view.name);
+            if (!host.content['lifecycle_environment_library?']) {
+                Environment.get({id: host.content.lifecycle_environment_id}).$promise.then(function (env) {
+                    previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_view_name);
                     $scope.errataOptions.push({name: previousEnv,
-                        label: 'prior', order: 2, 'content_view_id': host.content_view_id, 'environment_id': env.prior.id});
+                        label: 'prior', order: 2, 'content_view_id': host.content.content_view_id, 'environment_id': env.prior.id});
 
                 });
             }
-            if (!host.content_view.default) {
-                Organization.get({id: host.environment.organization.id}).$promise.then(function (org) {
+            if (!host.content['content_view_default?']) {
+                Organization.get({id: host.organization_id}).$promise.then(function (org) {
                     $scope.errataOptions.push({name: libraryString, label: 'library', order: 1,
                         'content_view_id': org.default_content_view_id, 'environment_id': org.library_id});
                 });
             }
         };
-        $scope.contentHost.$promise.then(function (contentHost) {
-            $scope.setupErrataOptions(contentHost);
-            params.id = $scope.contentHost.host.id;
-            errataNutupane.setParams(params);
-            errataNutupane.load();
-        });
+
+        $scope.host.$promise.then($scope.setupErrataOptions);
 
         $scope.refreshErrata = function (selected) {
             var option, errataParams;
-            errataParams = {'id': $scope.contentHost.host.id};
-
+            errataParams = {'id': $scope.host.id};
             $scope.selectedErrataOption = selected;
 
             if (selected === 'library' || selected === 'prior') {
@@ -99,7 +101,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 angular.forEach(selected, function (value) {
                     errataIds.push(value.errata_id);
                 });
-                HostErratum.apply({id: $scope.contentHost.host.id, 'errata_ids': errataIds},
+                HostErratum.apply({id: $scope.host.id, 'errata_ids': errataIds},
                                    function (task) {
                                         $scope.detailsTable.selectAll(false);
                                         $scope.transitionTo('content-hosts.details.tasks.details', {taskId: task.id});

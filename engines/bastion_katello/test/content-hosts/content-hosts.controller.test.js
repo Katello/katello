@@ -17,7 +17,6 @@ describe('Controller: ContentHostsController', function() {
         translate = function(message) {
             return message;
         };
-        ContentHost = {};
     });
 
     // Initialize controller
@@ -29,7 +28,6 @@ describe('Controller: ContentHostsController', function() {
             $state: $state,
             translate: translate,
             Nutupane: Nutupane,
-            ContentHost: ContentHost,
             CurrentOrganization: 'CurrentOrganization'
         });
     }));

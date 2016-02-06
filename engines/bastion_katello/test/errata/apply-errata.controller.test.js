@@ -1,5 +1,5 @@
 describe('Controller: ApplyErrataController', function() {
-    var $controller, dependencies, $scope, translate, ContentHostBulkAction, ContentViewVersion,
+    var $controller, dependencies, $scope, translate, HostBulkAction, ContentViewVersion,
         CurrentOrganization;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
@@ -11,7 +11,7 @@ describe('Controller: ApplyErrataController', function() {
             return string;
         };
 
-        ContentHostBulkAction = {
+        HostBulkAction = {
             failed: false,
             installContent: function (params, success, error) {
                 if (this.failed) {
@@ -41,7 +41,7 @@ describe('Controller: ApplyErrataController', function() {
         dependencies = {
             $scope: $scope,
             translate: translate,
-            ContentHostBulkAction: ContentHostBulkAction,
+            HostBulkAction: HostBulkAction,
             ContentViewVersion: ContentViewVersion,
             CurrentOrganization: CurrentOrganization
         };
@@ -63,7 +63,7 @@ describe('Controller: ApplyErrataController', function() {
 
     it("sets the updates on the $scope if there are selected content hosts", function () {
         var updates = ['update'];
-        spyOn(ContentHostBulkAction, 'availableIncrementalUpdates').andCallFake(function (params, success) {
+        spyOn(HostBulkAction, 'availableIncrementalUpdates').andCallFake(function (params, success) {
             success(updates);
         });
 
@@ -72,7 +72,7 @@ describe('Controller: ApplyErrataController', function() {
 
         $controller('ApplyErrataController', dependencies);
 
-        expect(ContentHostBulkAction.availableIncrementalUpdates).toHaveBeenCalledWith($scope.selectedContentHosts,
+        expect(HostBulkAction.availableIncrementalUpdates).toHaveBeenCalledWith($scope.selectedContentHosts,
             jasmine.any(Function));
         expect($scope.updates).toEqual(updates);
     });
@@ -96,11 +96,11 @@ describe('Controller: ApplyErrataController', function() {
                 };
 
                 $scope.updates = [];
-                spyOn(ContentHostBulkAction, 'installContent').andCallThrough();
+                spyOn(HostBulkAction, 'installContent').andCallThrough();
             });
 
             afterEach(function () {
-                expect(ContentHostBulkAction.installContent).toHaveBeenCalledWith(expectedParams, jasmine.any(Function),
+                expect(HostBulkAction.installContent).toHaveBeenCalledWith(expectedParams, jasmine.any(Function),
                     jasmine.any(Function));
             });
 
@@ -113,7 +113,7 @@ describe('Controller: ApplyErrataController', function() {
             });
 
             it("and fail", function () {
-                ContentHostBulkAction.failed = true;
+                HostBulkAction.failed = true;
                 $scope.confirmApply();
 
                 expect($scope.successMessages.length).toBe(0);

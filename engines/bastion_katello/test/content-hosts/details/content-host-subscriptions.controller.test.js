@@ -2,7 +2,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
     var $scope,
         $controller,
         translate,
-        ContentHost,
+        Host,
         HostSubscription,
         Subscription,
         Nutupane,
@@ -23,7 +23,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q');
 
-        ContentHost = $injector.get('MockResource').$new();
+        Host = $injector.get('MockResource').$new();
         HostSubscription = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
         $location = $injector.get('$location');
@@ -59,16 +59,15 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             this.load = function() {};
         };
 
-        $scope.contentHost = new ContentHost({
-            uuid: 12345,
-            host: {id: 9389},
-            subscriptions: [{id: 1, cp_id: "cpid1", quantity_consumed: 11}, {id: 2, cp_id: "cpid2", quantity_consumed: 22}]
+        $scope.host = new Host({
+           id: 9389
         });
 
         $scope.subscriptionsPane = {
             refresh: function() {},
             table: {}
         };
+        $scope.$stateParams = {hostId: $scope.host.id};
 
         $controller('ContentHostSubscriptionsController', {
             $scope: $scope,
@@ -76,7 +75,6 @@ describe('Controller: ContentHostSubscriptionsController', function() {
             translate: translate,
             Subscription: Subscription,
             Nutupane: Nutupane,
-            ContentHost: ContentHost,
             HostSubscription: HostSubscription,
             SubscriptionsHelper: SubscriptionsHelper
         });
@@ -88,7 +86,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
 
     it("allows removing subscriptions from the content host", function() {
 
-        var expected = {id: $scope.contentHost.host.id, subscriptions: [{id: 2, quantity: 5}]};
+        var expected = {id: $scope.host.id, subscriptions: [{id: 2, quantity: 5}]};
         spyOn(HostSubscription, 'removeSubscriptions');
 
         $scope.detailsTable.getSelected = function() {

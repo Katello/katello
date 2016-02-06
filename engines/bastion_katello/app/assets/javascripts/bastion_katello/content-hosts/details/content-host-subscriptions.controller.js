@@ -13,11 +13,12 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ContentHost', 'HostSubscription', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, ContentHost, HostSubscription, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'Host', 'ContentHost', 'HostSubscription', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, Host, ContentHost, HostSubscription, SubscriptionsHelper) {
 
         var params = {
             'organization_id': CurrentOrganization,
+            'id': $scope.$stateParams.hostId,
             'search': $location.search().search || "",
             'sort_order': 'ASC'
         };
@@ -33,11 +34,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
-        $scope.contentHost.$promise.then(function() {
-            params.id = $scope.contentHost.host.id;
-            $scope.contentNutupane.setParams(params);
-            $scope.contentNutupane.load(true);
-        });
+        $scope.contentNutupane.setParams(params);
+        $scope.contentNutupane.load(true);
 
         $scope.disableRemoveButton = function () {
             return $scope.detailsTable.numSelected === 0 || $scope.isRemoving;
@@ -48,9 +46,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
             selected = SubscriptionsHelper.getSelectedSubscriptions($scope.detailsTable);
 
             $scope.isRemoving = true;
-            HostSubscription.removeSubscriptions({id: $scope.contentHost.host.id, 'subscriptions': selected}, function () {
-                ContentHost.get({id: $scope.$stateParams.contentHostId}, function (host) {
-                    $scope.$parent.contentHost = host;
+            HostSubscription.removeSubscriptions({id: $scope.$stateParams.hostId, 'subscriptions': selected}, function () {
+                Host.get({id: $scope.$stateParams.hostId}, function (host) {
+                    $scope.$parent.host = host;
                     $scope.contentNutupane.table.selectAll(false);
                     $scope.contentNutupane.refresh();
                     $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));

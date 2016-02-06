@@ -1,13 +1,13 @@
 module Katello
-  class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
-    include Concerns::Api::V2::BulkSystemsExtensions
+  class Api::V2::HostsBulkActionsController < Api::V2::ApiController
+    include Concerns::Api::V2::BulkHostsExtensions
 
     before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_filter :find_environment, :only => [:environment_content_view]
     before_filter :find_content_view, :only => [:environment_content_view]
-    before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
-    before_filter :find_deletable_systems, :only => [:destroy_systems]
-    before_filter :find_readable_systems, :only => [:applicable_errata, :available_incremental_updates]
+    before_filter :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata]
+    before_filter :find_deletable_hosts, :only => [:destroy_hosts]
+    before_filter :find_readable_hosts, :only => [:applicable_errata, :available_incremental_updates]
     before_filter :find_errata, :only => [:available_incremental_updates]
 
     before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
@@ -39,8 +39,8 @@ module Katello
       end
     end
 
-    api :PUT, "/systems/bulk/add_host_collections",
-        N_("Add one or more host collections to one or more content hosts"), :deprecated => true
+    api :PUT, "/hosts/bulk/add_host_collections",
+        N_("Add one or more host collections to one or more hosts")
     param_group :bulk_params
     param :host_collection_ids, Array, :desc => N_("List of host collection ids"), :required => true
     def bulk_add_host_collections
@@ -49,7 +49,7 @@ module Katello
 
         @host_collections.each do |host_collection|
           pre_host_collection_count = host_collection.host_ids.count
-          host_collection.host_ids =  (host_collection.host_ids + @systems.collect { |s| s.foreman_host.id }).uniq
+          host_collection.host_ids =  (host_collection.host_ids + @hosts.map(&:id)).uniq
           host_collection.save!
 
           final_count = host_collection.host_ids.count - pre_host_collection_count
@@ -62,8 +62,8 @@ module Katello
                        :resource => { 'displayMessages' => display_messages }
     end
 
-    api :PUT, "/systems/bulk/remove_host_collections",
-        N_("Remove one or more host collections from one or more content hosts"), :deprecated => true
+    api :PUT, "/hosts/bulk/remove_host_collections",
+        N_("Remove one or more host collections from one or more hosts")
     param_group :bulk_params
     param :host_collection_ids, Array, :desc => N_("List of host collection ids"), :required => true
     def bulk_remove_host_collections
@@ -72,7 +72,7 @@ module Katello
       unless params[:host_collection_ids].blank?
         @host_collections.each do |host_collection|
           pre_host_collection_count = host_collection.host_ids.count
-          host_collection.host_ids =  (host_collection.host_ids - @systems.collect { |s| s.host_id }).uniq
+          host_collection.host_ids =  (host_collection.host_ids - @hosts.map(&:id)).uniq
           host_collection.save!
 
           final_count = pre_host_collection_count - host_collection.host_ids.count
@@ -85,16 +85,15 @@ module Katello
                        :resource => { 'displayMessages' => display_messages }
     end
 
-    api :POST, "/systems/bulk/applicable_errata",
-        N_("Fetch applicable errata for a system."), :deprecated => true
+    api :POST, "/hosts/bulk/applicable_errata",
+        N_("Fetch applicable errata for a system.")
     param_group :bulk_params
-    def applicable_errata
-      @hosts = @systems.find_all { |system| system.foreman_host }
+    def installable_errata
       respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_hosts(@hosts), 'updated', 'desc',
                                                      :resource_class => Erratum))
     end
 
-    api :PUT, "/systems/bulk/install_content", N_("Install content on one or more systems"), :deprecated => true
+    api :PUT, "/hosts/bulk/install_content", N_("Install content on one or more hosts")
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package', 'package_group' and 'errata'."),
@@ -104,7 +103,7 @@ module Katello
       content_action
     end
 
-    api :PUT, "/systems/bulk/update_content", N_("Update content on one or more systems"), :deprecated => true
+    api :PUT, "/hosts/bulk/update_content", N_("Update content on one or more hosts")
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
@@ -114,7 +113,7 @@ module Katello
       content_action
     end
 
-    api :PUT, "/systems/bulk/remove_content", N_("Remove content on one or more systems"), :deprecated => true
+    api :PUT, "/hosts/bulk/remove_content", N_("Remove content on one or more hosts")
     param_group :bulk_params
     param :content_type, String,
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
@@ -124,40 +123,30 @@ module Katello
       content_action
     end
 
-    api :PUT, "/systems/bulk/destroy", N_("Destroy one or more systems"), :deprecated => true
+    api :PUT, "/hosts/bulk/destroy", N_("Destroy one or more hosts")
     param_group :bulk_params
-    def destroy_systems
-      @systems.each { |system| sync_task(::Actions::Katello::System::Destroy, system) }
-      display_message = _("Successfully removed %s content host(s)") % @systems.length
-      respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => [display_message] }
+    def destroy_hosts
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Destroy, @hosts)
+      respond_for_async :resource => task
     end
 
-    api :PUT, "/systems/bulk/environment_content_view", N_("Assign the environment and content view to one or more systems"), :deprecated => true
+    api :PUT, "/hosts/bulk/environment_content_view", N_("Assign the environment and content view to one or more systems")
     param_group :bulk_params
     param :environment_id, Integer
     param :content_view_id, Integer
     def environment_content_view
-      @systems.each do |system|
-        system.content_view = @view
-        system.environment = @environment
-        system.save!
-      end
-      display_message = _("Successfully reassigned %{count} content host(s) to %{cv} in %{env}.") %
-          {:count => @systems.length, :cv => @view.name, :env => @environment.name}
-      respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => [display_message] }
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateContentView, @hosts, @view.id, @environment.id)
+      respond_for_async :resource => task
     end
 
-    api :POST, "/systems/bulk/available_incremental_updates", N_("Given a set of systems and errata, lists the content view versions" \
-                                                                 " and environments that need updating."), :deprecated => true
+    api :POST, "/hosts/bulk/available_incremental_updates", N_("Given a set of hosts and errata, lists the content view versions" \
+                                                                 " and environments that need updating.")
     param_group :bulk_params
     param :errata_ids, Array, :desc => N_("List of Errata ids")
     def available_incremental_updates
       version_environments = {}
-      host_ids = @systems.pluck(:host_id)
       content_facets = Katello::Host::ContentFacet.with_non_installable_errata(@errata).
-          where("#{Katello::Host::ContentFacet.table_name}.host_id" => host_ids)
+          where("#{Katello::Host::ContentFacet.table_name}.host_id" => @hosts)
 
       ContentViewEnvironment.for_content_facets(content_facets).each do |cve|
         version = cve.content_view_version
@@ -192,21 +181,21 @@ module Katello
       @host_collections = HostCollection.where(:id => params[:host_collection_ids])
     end
 
-    def find_readable_systems
-      find_bulk_systems(:readable, params)
+    def find_readable_hosts
+      find_bulk_hosts(:view_hosts, params)
     end
 
-    def find_editable_systems
-      find_bulk_systems(:editable, params)
+    def find_editable_hosts
+      find_bulk_hosts(:edit_hosts, params)
     end
 
-    def find_deletable_systems
-      find_bulk_systems(:deletable, params)
+    def find_deletable_hosts
+      find_bulk_hosts(:destroy_hosts, params)
     end
 
     def validate_host_collection_membership_limit
       max_hosts_exceeded = []
-      host_ids = @systems.collect { |i| i.foreman_host.id }
+      host_ids = @hosts.map(&:id)
 
       @host_collections.each do |host_collection|
         computed_count = (host_collection.host_ids + host_ids).uniq.length
@@ -222,13 +211,12 @@ module Katello
 
     def content_action
       if params[:content_type] == 'errata'
-        @hosts = @systems.collect { |i| i.foreman_host }
         errata_uuids = Katello::Erratum.where(:errata_id => params[:content]).pluck(:uuid)
         errata_uuids += Katello::Erratum.where(:uuid => params[:content]).pluck(:uuid)
         task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, errata_uuids.uniq)
         respond_for_async :resource => task
       else
-        action = Katello::BulkActions.new(@systems)
+        action = Katello::BulkActions.new(@hosts)
         job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content])
         respond_for_show :template => 'job', :resource => job
       end

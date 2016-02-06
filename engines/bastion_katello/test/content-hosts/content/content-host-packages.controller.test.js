@@ -1,5 +1,5 @@
 describe('Controller: ContentHostPackagesController', function() {
-    var $scope, Nutupane, HostPackage, mockContentHost, mockTask, translate, ContentHost;
+    var $scope, Nutupane, HostPackage, mockHost, mockTask, translate, ContentHost;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.hosts', 'Bastion.test-mocks'));
 
@@ -16,6 +16,9 @@ describe('Controller: ContentHostPackagesController', function() {
         };
         ContentHost = {
             tasks: function() {return []}
+        };
+        mockHost = {
+          id: 23434
         };
         HostPackage = {
             get: function() {return []},
@@ -38,11 +41,8 @@ describe('Controller: ContentHostPackagesController', function() {
 
     beforeEach(inject(function($controller, $rootScope, MockResource) {
         $scope = $rootScope.$new();
-        mockContentHost = MockResource.$new().get({id: 1});
-        mockContentHost.uuid = 5;
-        mockContentHost.host = {id: 10};
-
-        $scope.contentHost = mockContentHost;
+        $scope.host = mockHost;
+        $scope.$stateParams = {hostId: mockHost.id};
 
         $controller('ContentHostPackagesController', {$scope: $scope,
                                                HostPackage: HostPackage,
@@ -76,7 +76,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.packageAction.actionType = "packageUpdate";
         $scope.packageAction.term = "foo";
         $scope.performPackageAction();
-        expect(HostPackage.update).toHaveBeenCalledWith({id: mockContentHost.host.id, packages: ["foo"]},
+        expect(HostPackage.update).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
@@ -86,7 +86,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.packageAction.actionType = "packageUpdate";
         $scope.packageAction.term = "foo, bar";
         $scope.performPackageAction();
-        expect(HostPackage.update).toHaveBeenCalledWith({id: mockContentHost.host.id, packages: ["foo", "bar"]},
+        expect(HostPackage.update).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo", "bar"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
@@ -96,7 +96,7 @@ describe('Controller: ContentHostPackagesController', function() {
         $scope.packageAction.actionType = "groupInstall";
         $scope.packageAction.term = "bigGroup";
         $scope.performPackageAction();
-        expect(HostPackage.install).toHaveBeenCalledWith({id: mockContentHost.host.id, groups: ["bigGroup"]},
+        expect(HostPackage.install).toHaveBeenCalledWith({id: mockHost.id, groups: ["bigGroup"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
@@ -109,7 +109,7 @@ describe('Controller: ContentHostPackagesController', function() {
 
         spyOn(HostPackage, 'remove');
         $scope.removeSelectedPackages();
-        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockContentHost.host.id, packages: [mockPackageClone]},
+        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockHost.id, packages: [mockPackageClone]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
@@ -117,7 +117,7 @@ describe('Controller: ContentHostPackagesController', function() {
     it("provides a way to upgrade all packages", function() {
         spyOn(HostPackage, "updateAll");
         $scope.updateAll();
-        expect(HostPackage.updateAll).toHaveBeenCalledWith({id: mockContentHost.host.id}, jasmine.any(Function),
+        expect(HostPackage.updateAll).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function),
             jasmine.any(Function));
         expect($scope.working).toBe(true);
     });

@@ -12,8 +12,8 @@
  *   Display confirmation screen and apply Errata.
  */
 angular.module('Bastion.errata').controller('ApplyErrataController',
-    ['$scope', 'translate', 'ContentHostBulkAction', 'ContentViewVersion', 'CurrentOrganization',
-        function ($scope, translate, ContentHostBulkAction, ContentViewVersion, CurrentOrganization) {
+    ['$scope', 'translate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization',
+        function ($scope, translate, HostBulkAction, ContentViewVersion, CurrentOrganization) {
             var applyErrata, incrementalUpdate;
 
             function transitionToTask(task) {
@@ -108,7 +108,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     $scope.applyingErrata = false;
                 };
 
-                ContentHostBulkAction.installContent(params, transitionToTask, error);
+                HostBulkAction.installContent(params, transitionToTask, error);
             };
 
             if ($scope.$stateParams.hasOwnProperty('errataId')) {
@@ -122,7 +122,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             if ($scope.selectedContentHosts && $scope.errataIds) {
                 $scope.selectedContentHosts['errata_ids'] = $scope.errataIds;
                 $scope.selectedContentHosts['organization_id'] = CurrentOrganization;
-                ContentHostBulkAction.availableIncrementalUpdates($scope.selectedContentHosts, function (updates) {
+                HostBulkAction.availableIncrementalUpdates($scope.selectedContentHosts, function (updates) {
                     $scope.updates = updates;
                 });
             }

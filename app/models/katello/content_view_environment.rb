@@ -22,7 +22,7 @@ module Katello
 
     def self.for_content_facets(content_facets)
       joins("INNER JOIN #{Host::ContentFacet.table_name} on #{Host::ContentFacet.table_name}.lifecycle_environment_id = #{ContentViewEnvironment.table_name}.environment_id").
-          where("#{Host::ContentFacet.table_name}.content_view_id = #{Katello::ContentViewEnvironment.table_name}.content_view_id").where("#{Host::ContentFacet.table_name}.id" => content_facets).uniq
+          where("#{Host::ContentFacet.table_name}.content_view_id = #{ContentViewEnvironment.table_name}.content_view_id").where("#{Host::ContentFacet.table_name}.id" => content_facets).uniq
     end
 
     # retrieve the owning environment for this content view environment.

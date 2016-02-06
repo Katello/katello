@@ -1,80 +1,87 @@
-<span page-title ng-model="contentHost">{{ 'Subscriptions for: ' | translate }} {{ contentHost.name }}</span>
+<span page-title ng-model="host">{{ 'Subscriptions for: ' | translate }} {{ host.name }}</span>
 
-<button class="btn btn-primary fr"
-        ng-hide="denied('edit_content_hosts', contentHost)"
-        ng-click="autoAttachSubscriptions()"
-        ng-disabled="subscription.workingMode">
-{{ "Run Auto-Attach" | translate }}
-</button>
+<div ng-hide="host.hasSubscription()">
+  <div data-extend-template="common/registration.html"></div>
+</div>
 
-<span ng-show="subscription.workingMode">
-  <i class="fa fa-spinner inline-icon fa-spin fr"></i>
-  <span translate>Working</span>
-</span>
+<div ng-if="host.hasSubscription()">
+  <button class="btn btn-primary fr"
+          ng-hide="denied('edit_content_hosts', contentHost)"
+          ng-click="autoAttachSubscriptions()"
+          ng-disabled="subscription.workingMode">
+  {{ "Run Auto-Attach" | translate }}
+  </button>
 
-<section class="details">
-  <h4 translate>Subscription Details</h4>
-  <div class="detail">
-    <span class="info-label" translate>Status</span>
-      <span class="info-value">
-        <i class="fa fa-circle" ng-class="contentHostTable.getStatusColor(contentHost.compliance.status)"></i>
-        {{ contentHost.compliance.status }}
-      </span>
-  </div>
+  <span ng-show="subscription.workingMode">
+    <i class="fa fa-spinner inline-icon fa-spin fr"></i>
+    <span translate>Working</span>
+  </span>
 
-  <div ng-show="contentHost.compliance.reasons.length > 0" class="detail">
-    <span class="info-label" translate>Details</span>
-    <div class="info-value">
-      <ul class="compliance-reasons">
-        <li ng-repeat="reason in contentHost.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
-      </ul>
+  <section class="details">
+    <h4 translate>Subscription Details</h4>
+    <div class="detail">
+      <span class="info-label" translate>Status</span>
+        <span class="info-value">
+          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription.subscription_status.color_code)"></i>
+          {{ host.subscription.subscription_status.label }}
+        </span>
     </div>
-  </div>
 
-  <div class="detail">
-    <span class="info-label" translate>Auto-Attach</span>
-    <span class="info-value"
-          bst-edit-checkbox="contentHost.autoheal"
-          formatter="booleanToYesNo"
-          readonly="denied('edit_content_hosts', contentHost)"
-          on-save="save(contentHost)">
-    </span>
-  </div>
-  <div class="detail">
-    <span class="info-label" translate>Service Level</span>
-        <span class="info-value"
-              bst-edit-select="contentHost.service_level"
-              readonly="denied('edit_content_hosts', contentHost)"
-              selector="contentHost.service_level"
-              options="serviceLevels()"
-              options-format="option for option in options"
-              on-save="save(contentHost)">
-        </span>
-  </div>
-</section>
+    <div ng-show="contentHost.compliance.reasons.length > 0" class="detail">
+      <span class="info-label" translate>Details</span>
+      <div class="info-value">
+        <ul class="compliance-reasons">
+          <li ng-repeat="reason in host.subscription.compliance_reasons">{{ reason }}</li>
+        </ul>
+      </div>
+    </div>
 
-<nav>
-  <ul class="nav nav-tabs" ng-show="permitted('attach_subscriptions')">
-    <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
-      <a ui-sref="content-hosts.details.subscriptions.list">
-        <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->
-        <span translate>
-          List/Remove
-        </span>
-      </a>
-    </li>
+    <div class="detail">
+      <span class="info-label" translate>Auto-Attach</span>
+      <span class="info-value"
+            bst-edit-checkbox="contentHost.autoheal"
+            formatter="booleanToYesNo"
+            readonly="denied('edit_content_hosts', contentHost)"
+            on-save="save(contentHost)">
+      </span>
+    </div>
+    <div class="detail">
+      <span class="info-label" translate>Service Level</span>
+          <span class="info-value"
+                bst-edit-select="contentHost.service_level"
+                readonly="denied('edit_content_hosts', contentHost)"
+                selector="contentHost.service_level"
+                options="serviceLevels()"
+                options-format="option for option in options"
+                on-save="save(contentHost)">
+          </span>
+    </div>
+  </section>
 
-    <li ng-class="{active: stateIncludes('content-hosts.details.subscriptions.add')}">
-      <a ui-sref="content-hosts.details.subscriptions.add">
-        <span translate>
-          Add
-        </span>
-      </a>
-    </li>
-  </ul>
-</nav>
+  <nav>
+    <ul class="nav nav-tabs" ng-show="permitted('attach_subscriptions')">
+      <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
+        <a ui-sref="content-hosts.details.subscriptions.list">
+          <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->
+          <span translate>
+            List/Remove
+          </span>
+        </a>
+      </li>
 
-<div ui-view></div>
+      <li ng-class="{active: stateIncludes('content-hosts.details.subscriptions.add')}">
+        <a ui-sref="content-hosts.details.subscriptions.add">
+          <span translate>
+            Add
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div ui-view></div>
+
+</div>
 
 <!--
 http://projects.theforeman.org/issues/4253

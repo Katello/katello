@@ -37,7 +37,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.updateAll = function () {
             $scope.working = true;
-            HostPackage.updateAll({id: $scope.contentHost.host.id}, openEventInfo, errorHandler);
+            HostPackage.updateAll({id: $scope.host.id}, openEventInfo, errorHandler);
         };
 
         $scope.removeSelectedPackages = function () {
@@ -46,7 +46,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             if (!$scope.working) {
                 $scope.working = true;
                 HostPackage.remove({
-                    id: $scope.contentHost.host.id,
+                    id: $scope.host.id,
                     packages: selected
                 }, openEventInfo, errorHandler);
             }
@@ -62,31 +62,24 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         packageActions = {
             packageInstall: function (termList) {
-                HostPackage.install({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             packageUpdate: function (termList) {
-                HostPackage.update({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.update({id: $scope.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             packageRemove: function (termList) {
-                HostPackage.remove({id: $scope.contentHost.host.id, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.host.id, packages: termList}, openEventInfo, errorHandler);
             },
             groupInstall: function (termList) {
-                HostPackage.install({id: $scope.contentHost.host.id, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.host.id, groups: termList}, openEventInfo, errorHandler);
             },
             groupRemove: function (termList) {
-                HostPackage.remove({id: $scope.contentHost.host.id, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.host.id, groups: termList}, openEventInfo, errorHandler);
             }
         };
 
-        // Need to delay loading until we have host id in $stateParams in the future
-        packagesNutupane = new Nutupane(HostPackage, {initialLoad: false});
+        packagesNutupane = new Nutupane(HostPackage, {id: $scope.$stateParams.hostId});
         packagesNutupane.masterOnly = true;
-
-        $scope.contentHost.$promise.then(function () {
-            packagesNutupane.setParams({id: $scope.contentHost.host.id});
-            packagesNutupane.load();
-        });
-
         $scope.detailsTable = packagesNutupane.table;
         $scope.detailsTable.openEventInfo = openEventInfo;
         $scope.detailsTable.contentHost = $scope.contentHost;

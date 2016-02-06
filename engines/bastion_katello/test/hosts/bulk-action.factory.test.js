@@ -1,10 +1,10 @@
-describe('Factory: ContentHostBulkAction', function() {
+describe('Factory: HostBulkAction', function() {
     var $httpBackend,
         ContentHostBulkAction,
         contentHostParams,
         hostCollectionParams;
 
-    beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
+    beforeEach(module('Bastion.hosts', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         var contentHostIds = [1, 2, 3],
@@ -16,7 +16,7 @@ describe('Factory: ContentHostBulkAction', function() {
 
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
-        ContentHostBulkAction = $injector.get('ContentHostBulkAction');
+        ContentHostBulkAction = $injector.get('HostBulkAction');
     }));
 
     afterEach(function() {
@@ -24,32 +24,32 @@ describe('Factory: ContentHostBulkAction', function() {
     });
 
     it('provides a way to add host collections to content hosts', function() {
-        $httpBackend.expect('PUT', '/katello/api/v2/systems/bulk/add_host_collections', hostCollectionParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/add_host_collections', hostCollectionParams).respond();
         ContentHostBulkAction.addHostCollections(hostCollectionParams);
     });
 
     it('provides a way to remove host collections from content hosts', function() {
-        $httpBackend.expect('PUT', '/katello/api/v2/systems/bulk/remove_host_collections', hostCollectionParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/remove_host_collections', hostCollectionParams).respond();
         ContentHostBulkAction.removeHostCollections(hostCollectionParams);
     });
 
     it('provides a way to install content on content hosts', function() {
-        $httpBackend.expect('PUT', '/katello/api/v2/systems/bulk/install_content', contentHostParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/install_content', contentHostParams).respond();
         ContentHostBulkAction.installContent(contentHostParams);
     });
 
     it('provides a way to update content on content hosts', function() {
-        $httpBackend.expect('PUT', '/katello/api/v2/systems/bulk/update_content', contentHostParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/update_content', contentHostParams).respond();
         ContentHostBulkAction.updateContent(contentHostParams);
     });
 
     it('provides a way to remove content from content hosts', function() {
-        $httpBackend.expect('PUT', '/katello/api/v2/systems/bulk/remove_content', contentHostParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/remove_content', contentHostParams).respond();
         ContentHostBulkAction.removeContent(contentHostParams);
     });
 
     it('provides a way to unregister content hosts', function() {
-        $httpBackend.expect('PUT', '/katello/api/v2/systems/bulk/destroy', contentHostParams).respond();
-        ContentHostBulkAction.unregisterContentHosts(contentHostParams);
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/destroy', contentHostParams).respond();
+        ContentHostBulkAction.destroyHosts(contentHostParams);
     });
 });

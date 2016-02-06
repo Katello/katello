@@ -32,21 +32,10 @@ describe('Controller: ContentHostAddHostCollectionsController', function() {
             return message;
         };
 
-
-        $scope.contentHost = new Host({
-            uuid: 2,
-            hostCollections: [{id: 1, name: "lalala"}],
-            host_collection_ids: [1],
-            host: {
-                id: 1
-            }
+        $scope.host = new Host({
+            id: 1,
+            host_collections: [{id: 1, name: "lalala"}]
         });
-
-        $scope.contentHost.$promise = {
-            then: function (callback) {
-                callback($scope.contentHost);
-            }
-        };
 
         $controller('ContentHostAddHostCollectionsController', {
             $scope: $scope,
@@ -69,7 +58,7 @@ describe('Controller: ContentHostAddHostCollectionsController', function() {
             return [{id: 2, name: "hello!"}];
         };
 
-        $scope.addHostCollections($scope.contentHost);
+        $scope.addHostCollections($scope.host);
         expect(Host.updateHostCollections).toHaveBeenCalledWith({id: 1}, {host_collection_ids: [1, 2]},
             jasmine.any(Function), jasmine.any(Function));
     });

@@ -38,7 +38,7 @@ module Katello
       @user.user_mail_notifications.first.deliver
       email = ActionMailer::Base.deliveries.first
       assert email.body.encoded.include? @errata_host.name
-      assert email.body.encoded.include? 'http://foreman.some.host.fqdn/content_hosts/abcdefghi/errata'
+      assert email.body.encoded.include? "http://foreman.some.host.fqdn/content_hosts/#{@errata_host.id}/errata"
     end
 
     def test_sync_errata

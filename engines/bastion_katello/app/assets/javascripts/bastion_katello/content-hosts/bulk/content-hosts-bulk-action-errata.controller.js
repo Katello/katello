@@ -5,7 +5,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires ContentHostBulkAction
+ * @requires HostBulkAction
  * @requires HostCollection
  * @requires Nutupane
  * @requires CurrentOrganization
@@ -16,8 +16,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrataController',
-    ['$scope', '$q', '$location', 'ContentHostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum',
-    function ($scope, $q, $location, ContentHostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum) {
+    ['$scope', '$q', '$location', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum',
+    function ($scope, $q, $location, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum) {
 
         var nutupane;
 
@@ -33,7 +33,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
             $scope.erratum = Erratum.get({id: errataId, 'organization_id': CurrentOrganization});
         }
 
-        nutupane = new Nutupane(ContentHostBulkAction, {}, 'applicableErrata');
+        nutupane = new Nutupane(HostBulkAction, {}, 'installableErrata');
         nutupane.table.closeItem = function () {};
         $scope.detailsTable = nutupane.table;
         $scope.detailsTable.errataFilterTerm = "";
@@ -85,7 +85,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
         $scope.installErrata = function () {
             var params = installParams();
             $scope.setState(true, [], []);
-            ContentHostBulkAction.installContent(params,
+            HostBulkAction.installContent(params,
                 function (data) {
                     $scope.setState(false, [], []);
                     $scope.transitionTo('content-hosts.bulk-actions.task-details', {taskId: data.id});

@@ -16,8 +16,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'ContentHost', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $state, $location, translate, Nutupane, ContentHost, CurrentOrganization, ContentHostsHelper) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'Host', 'CurrentOrganization', 'ContentHostsHelper',
+    function ($scope, $state, $location, translate, Nutupane, Host, CurrentOrganization, ContentHostsHelper) {
         var nutupane, params;
 
         $scope.successMessages = [];
@@ -30,7 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             'sort_order': 'ASC'
         };
 
-        nutupane = new Nutupane(ContentHost, params);
+        nutupane = new Nutupane(Host, params);
         $scope.contentHostTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
         $scope.nutupane = nutupane;
@@ -42,8 +42,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             nutupane.table.initialSelectAll = true;
         }
 
-        $scope.contentHostTable.getStatusColor = ContentHostsHelper.getStatusColor;
-        $scope.contentHostTable.getProvisioningStatusColor = ContentHostsHelper.getProvisioningStatusColor;
+        $scope.contentHostTable.getSubscriptionStatusColor = ContentHostsHelper.getSubscriptionStatusColor;
+        $scope.contentHostTable.getGlobalStatusColor = ContentHostsHelper.getGlobalStatusColor;
 
         $scope.contentHostTable.closeItem = function () {
             $scope.transitionTo('content-hosts.index');

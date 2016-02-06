@@ -20,7 +20,7 @@
     </a>
   </div>
 
-  <div data-extend-template="layouts/details-nutupane.html">
+  <div data-extend-template="layouts/details-nutupane.html" ng-if="table.numSelected > 0">
 
     <div data-block="header" translate>Content Host Errata Management</div>
 
@@ -54,7 +54,7 @@
            <th class="small" bst-table-column="errata_id" translate>Id</th>
            <th bst-table-column="title" translate>Title</th>
            <th class="small" bst-table-column="issued" translate>Issued</th>
-           <th class="small" bst-table-column="content_host_affected" translate>Affected Content Hosts</th>
+           <th class="small" bst-table-column="content_host_affected" translate>Affected Hosts</th>
          </tr>
        </thead>
 
@@ -73,7 +73,7 @@
            <td class="small" bst-table-cell>{{ erratum.issued }}</td>
            <td class="small" bst-table-cell class="number-cell">
              <a ng-click="transitionToErrataContentHosts(erratum)">
-              {{ erratum.applicable_consumers.length }}
+              {{ erratum.applicable_hosts.length }}
              </a>
            </td>
          </tr>

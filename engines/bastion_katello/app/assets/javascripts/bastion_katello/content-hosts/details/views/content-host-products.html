@@ -1,50 +1,56 @@
-<div alert type="'info'">
-  {{ "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the" | translate}}
-  <a ng-href="/katello/providers/redhat_provider" translate>Red Hat Repositories page</a>.
-  {{ "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host." | translate }}
+<div class="details fl" ng-hide="host.hasSubscription()">
+  <div data-extend-template="common/registration.html"></div>
 </div>
 
-<div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+<div ng-if="host.hasSubscription()">
+  <div alert type="'info'">
+    {{ "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the" | translate}}
+    <a ng-href="/katello/providers/redhat_provider" translate>Red Hat Repositories page</a>.
+    {{ "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host." | translate }}
+  </div>
 
-<div class="loading-mask loading-mask-panel" ng-show="displayArea.working">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-<div class="details details-full pull-left">
-  <section>
-    <div ng-hide="displayArea.isAvailableContent" translate>
-      This Content Host is not attached to any subscriptions that provide content
-    </div>
+  <div class="loading-mask loading-mask-panel" ng-show="displayArea.working">
+    <i class="fa fa-spinner fa-spin"></i>
+    {{ "Loading..." | translate }}
+  </div>
 
-    <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
-         ng-controller="ContentHostProductDetailsController" ng-init="productDetails(product)">
-      <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
-         ng-click="expanded = !expanded">
-        <b>{{ product.name }}</b>
-      </i>
+  <div class="details details-full pull-left">
+    <section>
+      <div ng-hide="displayArea.isAvailableContent" translate>
+        This Content Host is not attached to any subscriptions that provide content
+      </div>
 
-      <div class="row" ng-show="expanded">
-        <div class="col-md-11 col-md-offset-1" ng-show="details.available_content.length < 1"
-             translate>
-          No repository content.
-        </div>
+      <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"
+           ng-controller="ContentHostProductDetailsController" ng-init="productDetails(product)">
+        <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
+           ng-click="expanded = !expanded">
+          <b>{{ product.name }}</b>
+        </i>
 
-        <div class="col-md-11 col-md-offset-1" ng-repeat="content in product.available_content">
-          <h4><u>{{ content.content.name }}</u></h4>
+        <div class="row" ng-show="expanded">
+          <div class="col-md-11 col-md-offset-1" ng-show="details.available_content.length < 1"
+               translate>
+            No repository content.
+          </div>
 
-          <div class="detail row">
-            <span class="col-sm-4" translate>Enabled?</span>
-            <span class="col-sm-3"
-                  bst-edit-select="content.enabledText"
-                  readonly="denied('edit_content_hosts', contentHost)"
-                  selector="content.overrideEnabled"
-                  options="overrideEnableChoices(content)"
-                  on-save="saveContentOverride(content)">
-            </span>
+          <div class="col-md-11 col-md-offset-1" ng-repeat="content in product.available_content">
+            <h4><u>{{ content.content.name }}</u></h4>
+
+            <div class="detail row">
+              <span class="col-sm-4" translate>Enabled?</span>
+              <span class="col-sm-3"
+                    bst-edit-select="content.enabledText"
+                    readonly="denied('edit_content_hosts', contentHost)"
+                    selector="content.overrideEnabled"
+                    options="overrideEnableChoices(content)"
+                    on-save="saveContentOverride(content)">
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </div>

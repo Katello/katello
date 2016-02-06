@@ -6,15 +6,15 @@
  * @requires $q
  * @requires $location
  * @requires translate
- * @requires ContentHostBulkAction
+ * @requires HostBulkAction
  * @requires CurrentOrganization
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionController',
-    ['$scope', '$q', '$location', 'translate', 'ContentHostBulkAction', 'CurrentOrganization',
-    function ($scope, $q, $location, translate, ContentHostBulkAction, CurrentOrganization) {
+    ['$scope', '$q', '$window', '$location', 'translate', 'HostBulkAction', 'CurrentOrganization',
+    function ($scope, $q, $window, $location, translate, HostBulkAction, CurrentOrganization) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.showConfirm = false;
@@ -53,7 +53,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
                 !$scope.isState('content-hosts.bulk-actions.task-details');
         };
 
-        $scope.performUnregisterContentHosts = function () {
+        $scope.performDestroyHosts = function () {
             var params, success, error, deferred = $q.defer();
 
             $scope.unregisterContentHosts.confirm = false;
@@ -64,11 +64,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
 
             success = function (data) {
                 deferred.resolve(data);
-                angular.forEach($scope.contentHostTable.getSelected(), function (row) {
-                    $scope.removeRow(row.id);
-
-                });
-                $scope.setState(false, data.displayMessages.success, data.displayMessages.error);
+                $scope.setState(false, [], []);
+                $window.location = "/foreman_tasks/tasks/" + data.id;
             };
 
             error = function (response) {
@@ -76,7 +73,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
                 $scope.setState(false, [], response.data.errors);
             };
 
-            ContentHostBulkAction.unregisterContentHosts(params, success, error);
+            HostBulkAction.destroyHosts(params, success, error);
 
             return deferred.promise;
         };

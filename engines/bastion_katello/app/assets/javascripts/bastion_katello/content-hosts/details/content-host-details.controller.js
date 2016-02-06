@@ -15,8 +15,9 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ContentHost', 'Organization', 'CurrentOrganization', 'MenuExpander',
-    function ($scope, $state, $q, translate, ContentHost, Organization, CurrentOrganization, MenuExpander) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHost', 'Organization', 'CurrentOrganization', 'MenuExpander',
+    function ($scope, $state, $q, translate, Host, ContentHost, Organization, CurrentOrganization, MenuExpander) {
+        var contentHostDeferred = $q.defer();
 
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
@@ -28,14 +29,22 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             $scope.panel = {loading: true};
         }
 
-        $scope.contentHost = ContentHost.get({id: $scope.$stateParams.contentHostId}, function (contentHost) {
-            $scope.$watch("contentHostTable.rows.length > 0", function () {
-                $scope.contentHostTable.replaceRow(contentHost);
-            });
+        $scope.contentHost = {$promise: contentHostDeferred.promise};
+        $scope.host = Host.get({id: $scope.$stateParams.hostId}, function(host) {
+            if (host.subscription && host.subscription.uuid) {
+                $scope.contentHost = ContentHost.get({id: host.subscription.uuid}, function (contentHost) {
+                    contentHostDeferred.resolve(contentHost);
+                    $scope.$watch("contentHostTable.rows.length > 0", function () {
+                        $scope.contentHostTable.replaceRow(contentHost);
+                    });
+                    $scope.panel.loading = false;
+                });
 
-            $scope.$broadcast('contentHost.loaded', contentHost);
-            $scope.panel.loading = false;
+            } else {
+                $scope.panel.loading = false;
+            }
         });
+
 
         $scope.save = function (contentHost) {
             var deferred = $q.defer();
@@ -54,15 +63,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         };
 
         $scope.transitionTo = function (state, params) {
-            var contentHostId = $scope.$stateParams.contentHostId;
+            var hostId = $scope.$stateParams.hostId;
 
-            if ($scope.contentHost && $scope.contentHost.uuid) {
-                contentHostId = $scope.contentHost.uuid;
+            if ($scope.host && $scope.host.id) {
+                hostId = $scope.host.id;
             }
 
-            if (contentHostId) {
+            if (hostId) {
                 params = params ? params : {};
-                params.contentHostId = contentHostId;
+                params.hostId = hostId;
                 $state.transitionTo(state, params);
                 return true;
             }

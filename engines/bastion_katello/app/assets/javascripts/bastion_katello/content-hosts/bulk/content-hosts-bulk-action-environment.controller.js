@@ -3,7 +3,7 @@
  * @name  Bastion.content-hosts.controller:ContentHostsBulkActionEnvironmentController
  *
  * @requires $scope
- * @requires ContentHostBulkAction
+ * @requires HostBulkAction
  * @requires Organization
  * @requires CurrentOrganization
  * @requires ContentView
@@ -12,8 +12,8 @@
  *   A controller for providing bulk action functionality for setting content view and environment
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnvironmentController',
-    ['$scope', 'ContentHostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView',
-    function ($scope, ContentHostBulkAction, Organization, CurrentOrganization, ContentView) {
+    ['$scope', '$state', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView',
+    function ($scope, $state, HostBulkAction, Organization, CurrentOrganization, ContentView) {
 
         function actionParams() {
             var params = $scope.nutupane.getAllSelectedResults();
@@ -54,8 +54,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
         $scope.performAction = function () {
             $scope.setState(true, [], []);
 
-            ContentHostBulkAction.environmentContentView(actionParams(), function (response) {
-                $scope.setState(false, response.displayMessages.success, response.displayMessages.error);
+            HostBulkAction.environmentContentView(actionParams(), function (task) {
+                $scope.setState(false, [], []);
+                $state.go('content-hosts.bulk-actions.task-details', {taskId: task.id});
             }, function (data) {
                 $scope.setState(false, [], data.errors);
             });

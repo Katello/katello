@@ -2,9 +2,9 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
     var $scope,
         $controller,
         translate,
-        ContentHost,
         HostSubscription,
         Subscription,
+        Host,
         Nutupane,
         expectedTable,
         expectedRows,
@@ -23,7 +23,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q');
 
-        ContentHost = $injector.get('MockResource').$new();
+        Host = $injector.get('MockResource').$new();
         HostSubscription = $injector.get('MockResource').$new();
         HostSubscription.addSubscriptions = function() {};
         $scope = $injector.get('$rootScope').$new();
@@ -69,18 +69,18 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             'multi_entitlement': false,
             available: 0,
             selected: false
-        }
+        };
 
-        $scope.contentHost = new ContentHost({
-            uuid: 12345,
-            subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}],
-            host: {id: 1}
+        $scope.host = new Host({
+            id: 12345
         });
 
         $scope.addSubscriptionsPane = {
             refresh: function() {},
             table: {}
-        }
+        };
+
+        $scope.$stateParams = {hostId: $scope.host.id};
 
         $controller('ContentHostAddSubscriptionsController', {
             $scope: $scope,
@@ -88,7 +88,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             translate: translate,
             CurrentOrganization: 'organization',
             Subscription: Subscription,
-            ContentHost: ContentHost,
+            Host: Host,
             Nutupane: Nutupane,
             SubscriptionsHelper: SubscriptionsHelper,
             HostSubscription: HostSubscription
@@ -100,8 +100,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
     });
 
     it("allows adding subscriptions to the content host", function() {
-
-        var expected = {id: 1, subscriptions: [
+        var expected = {id: $scope.host.id, subscriptions: [
                                                       {id: 2, quantity: 0},
                                                       {id: 3, quantity: 1},
                                                       {id: 4, quantity: 1}

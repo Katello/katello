@@ -23,23 +23,17 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
             'sort_by': 'name',
             'sort_order': 'ASC',
             'paged': true,
-            'available_for': 'host'
+            'available_for': 'host',
+            'host_id': $scope.$stateParams.hostId
         };
 
         hostCollectionsPane = new Nutupane(HostCollection, params);
-        hostCollectionsPane.table.initialLoad = false;
         $scope.hostCollectionsTable = hostCollectionsPane.table;
-
-        $scope.contentHost.$promise.then(function(contentHost) {
-            params['host_id'] = contentHost.host.id;
-            hostCollectionsPane.setParams(params);
-            hostCollectionsPane.load(true);
-        });
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
-        $scope.addHostCollections = function (contentHost) {
+        $scope.addHostCollections = function (host) {
             var deferred = $q.defer(),
                 success,
                 error,
@@ -49,11 +43,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
             success = function (response) {
                 $scope.successMessages = [translate('Added %x host collections to content host "%y".')
-                    .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', $scope.contentHost.name)];
+                    .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', host.name)];
                 $scope.hostCollectionsTable.working = false;
                 $scope.hostCollectionsTable.selectAll(false);
                 hostCollectionsPane.refresh();
-                $scope.contentHost.$get();
+                $scope.host.$get();
                 deferred.resolve(response);
             };
 
@@ -65,11 +59,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
             $scope.hostCollectionsTable.working = true;
 
-            hostCollections = _.pluck($scope.contentHost.hostCollections, 'id');
+            hostCollections = _.pluck(host['host_collections'], 'id');
             hostCollectionsToAdd = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
             data = {"host_collection_ids": _.union(hostCollections, hostCollectionsToAdd)};
 
-            Host.updateHostCollections({id: contentHost.host.id}, data, success, error);
+            Host.updateHostCollections({id: host.id}, data, success, error);
 
             return deferred.promise;
         };

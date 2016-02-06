@@ -1,8 +1,11 @@
-<span page-title ng-model="contentHost">{{ 'Content Host' | translate }} {{ contentHost.name }}</span>
+<span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
 
 <section>
+  <div class="details fl" ng-show="contentHost.id === undefined">
+    <div data-extend-template="common/registration.html"></div>
+  </div>
 
-  <div class="details fl">
+  <div class="details fl" ng-if="contentHost.id">
     <section>
       <h4 translate>Basic Information</h4>
 
@@ -61,7 +64,7 @@
       <div ng-show="contentHost.virtual_host" class="detail">
         <span class="info-label" translate>Virtual Host</span>
         <div class="info-value">
-          <a ui-sref="content-hosts.details.info({contentHostId: contentHost.virtual_host.uuid })">{{ contentHost.virtual_host.name }}</a>
+          <a ui-sref="content-hosts.details.info({hostId: contentHost.virtual_host.uuid })">{{ contentHost.virtual_host.name }}</a>
         </div>
       </div>
 
@@ -74,7 +77,7 @@
       <div class="detail">
         <span class="info-label" translate>Subscription Status</span>
         <span class="info-value">
-          <i class="fa fa-circle" ng-class="contentHostTable.getStatusColor(contentHost.compliance.status)"></i>
+          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(contentHost.compliance.status)"></i>
           {{ contentHost.compliance.status }}
         </span>
       </div>
@@ -174,7 +177,7 @@
 
 
 
-  <div class="fr details">
+  <div class="fr details" ng-show="contentHost.id !== undefined">
     <section>
       <h4 translate>Installable Errata</h4>
 

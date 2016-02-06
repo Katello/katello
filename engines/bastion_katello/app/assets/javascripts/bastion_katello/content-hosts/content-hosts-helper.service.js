@@ -7,19 +7,6 @@
  */
 angular.module('Bastion.content-hosts').service('ContentHostsHelper',
     function () {
-
-        // The color mapping used here is based upon the mapping utilized by when it displays Host status
-        var hostStatusColorMap = {
-            'Pending Installation': 'light-blue',
-            'Alerts disabled': 'gray',
-            'No reports': 'gray',
-            'Out of sync': 'orange',
-            'Error': 'red',
-            'Active': 'light-blue',
-            'Pending': 'orange',
-            'No Change': 'green'
-        };
-
         function memoryInGigabytes(memStr) {
             var mems,
                 memory,
@@ -65,24 +52,28 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
             return memory;
         }
 
-        this.getStatusColor = function (status) {
+        this.getSubscriptionStatusColor = function (status) {
             var colors = {
                     'valid': 'green',
                     'partial': 'yellow',
-                    'invalid': 'red'
+                    'invalid': 'red',
+                    0: 'green',
+                    1: 'yellow',
+                    2: 'red',
+                    3: 'red'
                 };
 
             return colors[status] ? colors[status] : 'red';
         };
 
-        this.getProvisioningStatusColor = function (status) {
-            var color;
-            if (angular.isDefined(status)) {
-                if (angular.isUndefined(color = hostStatusColorMap[status])) {
-                    throw "Unknown status = " + status;
-                }
-            }
-            return color;
+        this.getGlobalStatusColor = function (status) {
+            var colors = {
+                    0: 'green',
+                    1: 'yellow',
+                    2: 'red'
+                };
+
+            return colors[status] ? colors[status] : 'red';
         };
 
         this.memory = function (facts) {

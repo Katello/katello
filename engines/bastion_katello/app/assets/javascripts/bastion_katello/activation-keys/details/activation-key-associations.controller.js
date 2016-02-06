@@ -29,7 +29,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
                 });
         });
 
-        $scope.getStatusColor = ContentHostsHelper.getStatusColor;
+        $scope.getSubscriptionStatusColor = ContentHostsHelper.getSubscriptionStatusColor;
 
         $scope.memory = ContentHostsHelper.memory;
     }]
