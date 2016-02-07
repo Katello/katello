@@ -19,7 +19,11 @@ module Actions
         end
 
         def humanized_name
-          _('Attach subscriptions to %s') % (input[:host_name] || _('Unknown'))
+          if input.try([], :host_name)
+            _('Remove subscriptions from %s') % (input[:host_name] || _('Unknown'))
+          else
+            _('Remove subscriptions')
+          end
         end
 
         def resource_locks
