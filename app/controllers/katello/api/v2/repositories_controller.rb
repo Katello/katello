@@ -28,7 +28,7 @@ module Katello
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :content_type, String, :required => true, :desc => N_("type of repo (either 'yum', 'puppet', 'docker', or 'ostree')")
+      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'puppet', 'docker', or 'ostree')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
@@ -45,7 +45,7 @@ module Katello
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
     param :rpm_id, String, :desc => N_("Id of a package to find repositories that contain the rpm")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
-    param :content_type, String, :desc => N_("limit to only repositories of this time")
+    param :content_type, RepositoryTypeManager.repository_types.keys, :desc => (N_("limit to only repositories of this type"))
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
           :required => false
