@@ -40,7 +40,11 @@ module Actions
         end
 
         def humanized_name
-          _("Update for host %s") % input[:hostname]
+          if input.try([], :hostname)
+            _('Update for host %s') % (input[:hostname])
+          else
+            _('Update for host')
+          end
         end
       end
     end

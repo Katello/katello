@@ -16,7 +16,11 @@ module Actions
         end
 
         def humanized_name
-          _("Package Profile Update for %s") % input[:hostname]
+          if input.try([], :hostname)
+            _("Package Profile Update for %s") % input[:hostname]
+          else
+            _('Package Profile Update')
+          end
         end
 
         def resource_locks
