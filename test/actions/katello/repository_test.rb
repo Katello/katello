@@ -140,6 +140,33 @@ module ::Actions::Katello::Repository
     end
   end
 
+  class UploadErrataTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::UploadErrata }
+
+    it 'plans' do
+      action.expects(:action_subject).with(custom_repository)
+      action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
+        content_create.stubs(output: { upload_id: 123 })
+      end
+
+      errata = [{:unit_metadata => "our-metadata", :unit_key => "our-key"}]
+
+      plan_action action, custom_repository, errata
+
+      assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
+
+      assert_action_planed(action, ::Actions::Pulp::Repository::ImportUpload) do |(inputs)|
+        inputs[:unit_type_id].must_equal 'erratum'
+        inputs[:unit_metadata].must_equal 'our-metadata'
+        inputs[:unit_key].must_equal "our-key"
+        inputs[:upload_id].must_equal 123
+      end
+
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
+                                upload_id: 123)
+    end
+  end
+
   class FinishUploadTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::FinishUpload }
 
@@ -151,6 +178,30 @@ module ::Actions::Katello::Repository
     it "does plan metadata generate for puppet repository" do
       plan_action action, puppet_repository
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
+    end
+  end
+
+  class IncrementalImportTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::IncrementalImport }
+
+    it 'plans' do
+      action.expects(:action_subject).with(custom_repository)
+      # import_dir contains a tgz (ignored), a phony json (ignored), an rpm and
+      # a real erratum json.
+      import_dir = File.join(::Katello::Engine.root, "test", "fixtures", "files")
+      plan_action action, custom_repository, import_dir
+
+      assert_action_planed_with action, ::Actions::Katello::Repository::UploadFiles do |repo, rpm_files|
+        repo.must_equal custom_repository
+        rpm_files.length.must_equal 1
+        rpm_files.first.must_include "squirrel"
+      end
+
+      assert_action_planed_with action, ::Actions::Katello::Repository::UploadErrata do |repo, errata|
+        repo.must_equal custom_repository
+        errata.length.must_equal 1
+        errata.first['unit_key']['id'].must_equal 'test'
+      end
     end
   end
 
@@ -169,6 +220,25 @@ module ::Actions::Katello::Repository
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         repo.id.must_equal repository.id
+      end
+    end
+
+    it 'plans for incremental' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository, nil, 'file:///tmp/foo/', true
+
+      # note the source URL is changed to a path
+      assert_action_planed_with(action, ::Actions::Katello::Repository::IncrementalImport,
+                                repository, '/tmp/foo/')
+    end
+
+    it 'plans for incremental, bad URL' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      assert_raises(RuntimeError) do
+        plan_action action, repository, nil, 'http://wikipedia.org', true
       end
     end
 
@@ -294,32 +364,23 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Export }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
 
-    it 'export without date' do
-      action = create_action action_class
-      plan_action(action, repository)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
-                                pulp_id: repository.pulp_id,
-                                distributor_type_id: 'export_distributor',
-                                override_config: { "export_dir" => "/tmp/katello-repo-exports/repo_export"})
-    end
+    it 'plans' do
+      plan_action(action, [repository.pulp_id], false, nil, 0, repository.pulp_id)
 
-    it 'export with date' do
-      action = create_action action_class
-      # we expect the TZ designation to get converted to an offset
-      plan_action(action, repository, '20100101T00:00:00Z'.to_datetime)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
-                                pulp_id: repository.pulp_id,
-                                distributor_type_id: 'export_distributor',
-                                override_config: {"export_dir" => "/tmp/katello-repo-exports/repo_export", :start_date => "2010-01-01T00:00:00+00:00"})
-    end
-
-    it 'export with export suffix' do
-      action = create_action action_class
-      plan_action(action, repository, nil, 'some-export-suffix')
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::DistributorPublish,
-                                pulp_id: repository.pulp_id,
-                                distributor_type_id: 'export_distributor',
-                                override_config: {"export_dir" => "/tmp/katello-repo-exports/some-export-suffix"})
+      # ensure arguments get transformed and bubble through to pulp actions.
+      # Org label defaults to blank for this test, hence the group ID starts
+      # with '-'.
+      assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Create,
+                                :id=>"8",
+                                :pulp_ids=>["8"])
+      assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Export) do |(inputs)|
+        inputs[:id].must_equal "8"
+        inputs[:export_to_iso].must_equal false
+        # NB: the pulp export task writes to /v/l/p, not to a katello-owned dir
+        inputs[:export_directory].must_include '/var/lib/pulp/published'
+      end
+      assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Delete,
+                                :id=>"8")
     end
   end
 end

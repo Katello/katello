@@ -100,6 +100,7 @@ Katello::Engine.routes.draw do
         api_resources :content_view_versions, :except => [:create] do
           member do
             post :promote
+            post :export
           end
           collection do
             get :auto_complete_search

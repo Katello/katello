@@ -72,4 +72,9 @@ Foreman::Plugin.find(:katello).security_block :content_views do
                'katello/api/v2/content_views' => [:remove_from_environment, :remove]
              },
              :resource_type => 'Katello::ContentView'
+  permission :export_content_views,
+             {
+               'katello/api/v2/content_view_versions' => [:export]
+             },
+             :resource_type => 'Katello::ContentView'
 end

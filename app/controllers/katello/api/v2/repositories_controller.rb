@@ -151,6 +151,7 @@ module Katello
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
     param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
+    param :incremental, :bool, :desc => N_("perform an incremental import"), :required => false
     def sync
       if params[:source_url].present? && params[:source_url] !~ /\A#{URI.regexp}\z/
         fail HttpErrors::BadRequest, _("source URL is malformed")
@@ -160,14 +161,21 @@ module Katello
         fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
       end
 
-      task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, params[:source_url])
+      task = async_task(::Actions::Katello::Repository::Sync, @repository,
+                          nil, params[:source_url], ::Foreman::Cast.to_bool(params[:incremental]))
       respond_for_async :resource => task
     end
 
     api :POST, "/repositories/:id/export", N_("Export a repository")
-    param :id, :identifier, :required => true, :desc => N_("repository ID")
-    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z), useful for exporting deltas. If not specified, a full export will occur."), :required => false
+    param :id, :identifier, :desc => N_("Repository identifier"), :required => true
+    param :export_to_iso, :bool, :desc => N_("Export to ISO format"), :required => false
+    param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
+    param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
     def export
+      if !params[:export_to_iso].present? && params[:iso_mb_size].present?
+        fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
+      end
+
       if params[:since].present?
         begin
           params[:since].to_datetime
@@ -176,8 +184,11 @@ module Katello
         end
       end
 
-      task = async_task(::Actions::Katello::Repository::Export,
-                        @repository, params[:since].try(:to_datetime))
+      task = async_task(::Actions::Katello::Repository::Export, [@repository.pulp_id],
+                        ::Foreman::Cast.to_bool(params[:export_to_iso]),
+                        params[:since].try(:to_datetime),
+                        params[:iso_mb_size],
+                        @repository.pulp_id)
       respond_for_async :resource => task
     end
 

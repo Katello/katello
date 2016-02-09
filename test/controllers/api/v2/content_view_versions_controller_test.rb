@@ -21,6 +21,7 @@ module Katello
       @publish_permission = :publish_content_views
       @env_promote_permission = :promote_or_remove_content_views_to_environments
       @cv_promote_permission = :promote_or_remove_content_views
+      @export_permission = :export_content_views
 
       @dev_env_promote_permission = {:name => @env_promote_permission, :search => "name=\"#{@dev.name}\"" }
       @library_dev_staging_view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{@library_dev_staging_view.name}\"" }
@@ -99,6 +100,37 @@ module Katello
       get :show, :id => @library_dev_staging_view.versions.first.id
       assert_response :success
       assert_template 'api/v2/content_view_versions/show'
+    end
+
+    def test_export
+      version = @library_dev_staging_view.versions.first
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Export,
+                                            version, false, nil, nil).returns({})
+      post :export, :id => version.id
+      assert_response :success
+    end
+
+    def test_export_bad_date
+      version = @library_dev_staging_view.versions.first
+      post :export, :id => version.id, :since => "a really bad date"
+      assert_response 400
+    end
+
+    def test_export_size_sans_iso_param
+      version = @library_dev_staging_view.versions.first
+      post :export, :id => version.id, :iso_mb_size => 5
+      assert_response 400
+    end
+
+    def test_export_protected
+      allowed_perms = [@export_permission]
+      denied_perms = [@create_permission, @update_permission,
+                      @destroy_permission, @view_permission]
+      version = @library_dev_staging_view.versions.first
+
+      assert_protected_action(:export, allowed_perms, denied_perms) do
+        post :export, :id => version.id
+      end
     end
 
     def test_show_protected
