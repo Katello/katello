@@ -69,6 +69,7 @@ module Katello
                                  :content_type => katello_content_type,
                                  :preserve_metadata => true, #preserve repo metadata when importing from cp
                                  :unprotected => unprotected?,
+                                 :download_policy => download_policy,
                                  :content_view_version => product.organization.library.default_content_view_version)
       end
 
@@ -147,6 +148,14 @@ module Katello
 
       def kickstart?
         content.type.downcase == 'kickstart'
+      end
+
+      def download_policy
+        if katello_content_type == Repository::YUM_TYPE
+          Setting[:default_download_policy]
+        else
+          ""
+        end
       end
 
       def ca
