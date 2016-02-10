@@ -7,7 +7,7 @@ module Actions
         end
 
         def humanized_name
-          if input.try([], :environment_name)
+          if input.try(:[], :environment_name)
             _("Generate and Synchronize Capsule Metadata for %s") % input[:environment_name]
           else
             _("Generate and Synchronize Capsule Metadata")

@@ -37,7 +37,7 @@ module Actions
         end
 
         def humanized_name
-          if input.try([], :hostname)
+          if input.try(:[], :hostname)
             _('Register Host %s') % (input[:hostname] || _('Unknown'))
           else
             _('Register Host')

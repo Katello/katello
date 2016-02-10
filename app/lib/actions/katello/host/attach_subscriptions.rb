@@ -30,7 +30,7 @@ module Actions
         end
 
         def humanized_name
-          if input.try([], :host_name)
+          if input.try(:[], :host_name)
             _('Attach subscriptions to %s') % (input[:host_name] || _('Unknown'))
           else
             _('Attach subscriptions')
