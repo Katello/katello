@@ -40,14 +40,14 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
     .state('errata.apply.select-content-hosts', {
         url: '/select-content-hosts',
         collapsed: true,
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         controller: 'ErrataContentHostsController',
         templateUrl: 'errata/views/apply-errata-select-content-hosts.html'
     })
     .state('errata.apply.confirm', {
         url: '/confirm',
         collapsed: true,
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         controller: 'ApplyErrataController',
         templateUrl: 'errata/views/apply-errata-confirm.html'
     })
@@ -70,7 +70,7 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
     .state('errata.details.apply', {
         url: '/apply',
         collapsed: true,
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         controller: 'ApplyErrataController',
         templateUrl: 'errata/views/apply-errata-confirm.html'
     })

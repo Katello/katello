@@ -13,7 +13,8 @@
       <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
     </form>
 
-    <form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_content_hosts', contentHost)">
+    <form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')">
+
       <div>
         <input id="package" type="radio"
                ng-model="content.contentType"
@@ -44,7 +45,7 @@
         <span class="input-group-btn">
           <button class="btn btn-default"
                   translate
-                  ng-hide="denied('edit_content_hosts', contentHost)"
+                  ng-hide="denied('edit_hosts')"
                   ng-click="confirmContentAction('install', content)"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm">
             Install
@@ -65,14 +66,14 @@
         <span class="input-group-btn">
           <button class="btn btn-default"
                   translate
-                  ng-hide="denied('edit_content_hosts', contentHost)"
+                  ng-hide="denied('edit_hosts')"
                   ng-click="confirmContentAction('update', content)"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   ng-hide="content.contentType == 'errata'">
             Update
           </button>
           <button class="btn btn-default dropdown-toggle"
-                  ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
+                  ng-hide="!remoteExecutionPresent || denied('edit_hosts')"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   type="button" id="update-use-remote-execution" data-toggle="dropdown">
             <span class="caret"></span>
@@ -87,13 +88,13 @@
         <span class="input-group-btn">
           <button class="btn btn-default"
                   translate
-                  ng-hide="content.contentType == 'errata' || denied('edit_content_hosts', contentHost)"
+                  ng-hide="content.contentType == 'errata' || denied('edit_hosts')"
                   ng-click="confirmContentAction('remove', content)"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm">
             Remove
           </button>
           <button class="btn btn-default dropdown-toggle"
-                  ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
+                  ng-hide="!remoteExecutionPresent || denied('edit_hosts')"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
                   type="button" id="remove-use-remote-execution" data-toggle="dropdown">
             <span class="caret"></span>

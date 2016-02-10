@@ -37,7 +37,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
 
     $stateProvider.state('content-hosts.index', {
         url: '/content_hosts',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         views: {
             'table': {
                 templateUrl: 'content-hosts/views/content-hosts-table-full.html'
@@ -47,7 +47,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
 
     $stateProvider.state('content-hosts.register', {
         url: '/content_hosts/register',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         views: {
             'table': {
@@ -63,7 +63,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     $stateProvider.state("content-hosts.details", {
         abstract: true,
         url: '/content_hosts/:hostId',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         views: {
             'table': {
@@ -77,14 +77,14 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.details.info', {
         url: '/info',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         controller: 'ContentHostDetailsInfoController',
         templateUrl: 'content-hosts/details/views/content-host-info.html'
     })
     .state('content-hosts.details.provisioning', {
         url: '/provisioning',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         templateUrl: 'content-hosts/details/views/content-host-provisioning-info.html'
     })
@@ -99,7 +99,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     $stateProvider.state('content-hosts.details.events', {
         collapsed: true,
         url: '/events',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         controller: 'ContentHostEventsController',
         templateUrl: 'content-hosts/details/views/content-host-events.html'
     });
@@ -111,13 +111,13 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.details.tasks.index', {
         url: '/tasks',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         templateUrl: 'content-hosts/details/views/content-host-tasks.html'
     })
     .state('content-hosts.details.tasks.details', {
         url: '/tasks/:taskId',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details.html'
@@ -131,7 +131,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.details.subscriptions.list', {
         url: '/subscriptions',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         controller: 'ContentHostSubscriptionsController',
         templateUrl: 'content-hosts/details/views/content-host-subscriptions-list.html'
@@ -151,14 +151,14 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.details.host-collections.list', {
         url: '/host-collections',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         controller: 'ContentHostHostCollectionsController',
         templateUrl: 'content-hosts/details/views/host-collections-table.html'
     })
     .state('content-hosts.details.host-collections.add', {
         url: '/host-collections/add',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         collapsed: true,
         controller: 'ContentHostAddHostCollectionsController',
         templateUrl: 'content-hosts/details/views/host-collections-table.html'
@@ -180,13 +180,13 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     .state('content-hosts.bulk-actions.task-details', {
         url: '/content_hosts/bulk-actions/bulk-tasks/:taskId',
         collapsed: true,
-        permission: ['view_content_hosts'],
+        permission: ['view_hosts'],
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details.html'
     })
     .state('content-hosts.bulk-actions.packages', {
         url: '/content_hosts/bulk-actions/packages',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         collapsed: true,
         controller: 'ContentHostsBulkActionPackagesController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-packages.html'
@@ -200,24 +200,24 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     .state('content-hosts.bulk-actions.errata.list', {
         collapsed: true,
         url: '/content_hosts/bulk-actions/errata',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-errata.html'
     })
     .state('content-hosts.bulk-actions.errata.details', {
         collapsed: true,
         url: '/content_hosts/bulk-actions/errata/:errataId',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         templateUrl: 'content-hosts/bulk/views/errata-details.html'
     })
     .state('content-hosts.bulk-actions.errata.content-hosts', {
         collapsed: true,
         url: '/content_hosts/bulk-actions/errata/:errataId/content-hosts',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         templateUrl: 'content-hosts/bulk/views/errata-content-hosts.html'
     })
     .state('content-hosts.bulk-actions.host-collections', {
         url: '/content_hosts/bulk-actions/bulk-host-collections',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         collapsed: true,
         controller: 'ContentHostsBulkActionHostCollectionsController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-host-collections.html'
@@ -231,7 +231,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.bulk-actions.environment', {
         url: '/content_hosts/bulk-actions/bulk-environment',
-        permission: 'edit_content_hosts',
+        permission: 'edit_hosts',
         collapsed: true,
         controller: 'ContentHostsBulkActionEnvironmentController',
         templateUrl: 'content-hosts/bulk/views/bulk-actions-environment.html'
@@ -239,7 +239,7 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
 
     $stateProvider.state('content-hosts.details.packages', {
         url: '/packages',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         controller: 'ContentHostPackagesController',
         templateUrl: 'content-hosts/content/views/content-host-packages.html'
@@ -254,13 +254,13 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     })
     .state('content-hosts.details.errata.index', {
         url: '/errata?getSearch',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         templateUrl: 'content-hosts/content/views/content-host-errata.html'
     })
     .state('content-hosts.details.errata.details', {
         url: '/errata/:errataId',
-        permission: 'view_content_hosts',
+        permission: 'view_hosts',
         collapsed: true,
         templateUrl: 'content-hosts/content/views/errata-details.html'
     });

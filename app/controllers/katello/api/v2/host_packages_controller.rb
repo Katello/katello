@@ -97,7 +97,7 @@ module Katello
     end
 
     def find_host
-      @host = resource_finder(::Host::Managed.authorized(:view_hosts), params[:host_id])
+      @host = resource_finder(::Host::Managed.authorized(:view_hosts, ::Host::Managed), params[:host_id])
     end
 
     def valid_package_name?(package_name)

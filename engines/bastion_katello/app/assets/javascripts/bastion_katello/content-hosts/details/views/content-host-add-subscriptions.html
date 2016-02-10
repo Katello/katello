@@ -1,11 +1,11 @@
-<span page-title ng-model="contentHost">{{ 'Add Subscriptions for Content Host:' | translate }} {{ contentHost.name }}</span>
+<span page-title ng-model="host">{{ 'Add Subscriptions for Content Host:' | translate }} {{ host.name }}</span>
 <div data-extend-template="layouts/details-nutupane.html">
   <div data-block="messages"></div>
 
   <div data-block="actions">
      <button class="btn btn-primary"
              translate
-             ng-hide="denied('edit_content_hosts', contentHost)"
+             ng-hide="denied('edit_hosts', host)"
              ng-disabled="disableAddButton()"
              ng-click="addSelected()">
        Add Selected

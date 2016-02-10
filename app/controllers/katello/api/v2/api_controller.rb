@@ -141,7 +141,7 @@ module Katello
     end
 
     def find_host_with_subscriptions(id, permission)
-      @host = resource_finder(::Host.authorized(permission), id)
+      @host = resource_finder(::Host::Managed.authorized(permission, ::Host::Managed), id)
       fail HttpErrors::BadRequest, _("Host has not been registered with subscription-manager") if @host.subscription_facet.nil?
     end
   end

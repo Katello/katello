@@ -19,14 +19,14 @@
 
       <button ng-if="isState('content-hosts.details.host-collections.list')"
               class="btn btn-default"
-              ng-hide="denied('edit_content_hosts', contentHost)"
+              ng-hide="denied('edit_hosts', host)"
               ng-disabled="hostCollectionsTable.numSelected == 0 || hostCollectionsTable.working"
               ng-click="removeHostCollections(host)">
         {{ 'Remove Selected' | translate }}
       </button>
       <button ng-if="isState('content-hosts.details.host-collections.add')"
               class="btn btn-default"
-              ng-hide="denied('edit_content_hosts', contentHost)"
+              ng-hide="denied('edit_hosts', host)"
               ng-disabled="hostCollectionsTable.numSelected == 0 || hostCollectionsTable.working"
               ng-click="addHostCollections(host)">
         {{ 'Add Selected' | translate }}

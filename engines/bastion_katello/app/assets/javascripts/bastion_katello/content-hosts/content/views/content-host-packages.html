@@ -1,13 +1,13 @@
-<span page-title ng-model="contentHost">{{ 'Packages for: ' | translate }} {{ contentHost.name }}</span>
+<span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
 
-<section ng-hide="denied('edit_content_hosts', contentHost)" bst-feature-flag="remote_actions">
+<section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
   <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
   <p bst-alert="info" ng-hide="contentHost.katello_agent_installed">
     <span translate>
       The katello-agent package is required to manage packages on this Host.
       Please install the katello-agent package to manage packages on
-      {{ contentHost.name }}. To install the package, connect directly to the
+      {{ host.name }}. To install the package, connect directly to the
       host from a terminal and use yum.
     </span>
   </p>
@@ -41,7 +41,7 @@
 
         <span class="input-group-btn">
           <button class="btn btn-default"
-                  ng-hide="denied('edit_content_hosts', contentHost)"
+                  ng-hide="denied('edit_hosts', host)"
                   ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
                   translate>
             Perform</button>
@@ -70,7 +70,7 @@
   </span>
 
   <div data-block="actions" bst-feature-flag="remote_actions">
-    <div ng-hide="denied('edit_content_hosts', contentHost)" class="nutupane-actions fr">
+    <div ng-hide="denied('edit_hosts', host)" class="nutupane-actions fr">
       <button class="btn btn-primary"
               translate
               ng-disabled="working || detailsTable.numSelected === 0"
