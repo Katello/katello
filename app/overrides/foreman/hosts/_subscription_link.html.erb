@@ -1,6 +1,6 @@
 <%= link_to(
         _('Content'),
-        "/content_hosts/#{@host.content_host.uuid}/info",
+        "/content_hosts/#{@host.id}/info",
         :title => _("Host content and subscription details"),
-        :class => 'btn btn-default') if @host.content_host
+        :class => 'btn btn-default') if (@host.content_facet || @host.subscription_facet)
 %>
