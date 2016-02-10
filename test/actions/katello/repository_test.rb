@@ -129,7 +129,7 @@ module ::Actions::Katello::Repository
         content_create.stubs(output: { upload_id: 123 })
       end
 
-      plan_action action, custom_repository, [file]
+      plan_action action, custom_repository, [{:path => file, :filename => 'puppet_module.tar.gz'}]
       assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
                                 upload_id: 123, file: File.join(Rails.root, 'tmp', 'uploads', 'puppet_module.tar.gz'))

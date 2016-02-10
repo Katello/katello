@@ -15,10 +15,11 @@ module Actions
                   upload_request = plan_action(Pulp::Repository::CreateUploadRequest)
                   plan_action(Pulp::Repository::UploadFile,
                               upload_id: upload_request.output[:upload_id],
-                              file: file)
+                              file: file[:path])
                   plan_action(Pulp::Repository::ImportUpload,
                               pulp_id: repository.pulp_id,
                               unit_type_id: repository.unit_type_id,
+                              unit_key: unit_key(file, repository),
                               upload_id: upload_request.output[:upload_id])
                   plan_action(Pulp::Repository::DeleteUploadRequest,
                               upload_id: upload_request.output[:upload_id])
@@ -51,15 +52,24 @@ module Actions
         end
 
         def prepare_tmp_files(files)
-          files.map do |file|
-            tmp_file = File.join(tmp_dir, File.basename(file))
-            FileUtils.copy(file, tmp_file)
-            tmp_file
+          files.each do |file|
+            tmp_file = File.join(tmp_dir, File.basename(file[:path]))
+            FileUtils.copy(file[:path], tmp_file)
+            file[:path] = tmp_file
           end
         end
 
         def delete_tmp_files(files)
-          files.each { |file| File.delete(file) }
+          files.each { |file| File.delete(file[:path]) }
+        end
+
+        def unit_key(file, repository)
+          return {} unless repository.file?
+          {
+            :checksum => Digest::SHA256.hexdigest(File.read(file[:path])),
+            :name => file[:filename],
+            :size => File.size(file[:path])
+          }
         end
       end
     end
