@@ -16,7 +16,7 @@ module Actions
         end
 
         def humanized_name
-          if input.try([], :hostname)
+          if input.try(:[], :hostname)
             _("Package Profile Update for %s") % input[:hostname]
           else
             _('Package Profile Update')
