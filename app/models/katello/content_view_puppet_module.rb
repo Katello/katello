@@ -31,7 +31,7 @@ module Katello
         )
       end
 
-      puppet_module.version
+      puppet_module.try(:version)
     end
 
     before_save :set_attributes

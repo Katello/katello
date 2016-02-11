@@ -42,5 +42,21 @@ module Katello
     def test_search_author
       assert_includes ContentViewPuppetModule.search_for("author = \"#{@puppet_module.author}\""), @puppet_module
     end
+
+    def test_computed_version
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => katello_puppet_modules(:foreman_proxy).uuid,
+        :content_view => @library_view
+      )
+      assert_equal "1.0", content_view_puppet_module.computed_version
+    end
+
+    def test_computed_version_nil
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => nil,
+        :content_view => @library_view
+      )
+      assert_equal nil, content_view_puppet_module.computed_version
+    end
   end
 end
