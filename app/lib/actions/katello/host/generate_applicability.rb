@@ -15,7 +15,6 @@ module Actions
         def finalize
           ::Host.where(:id => input[:host_ids]).each do |host|
             host.content_facet.try(:import_applicability)
-            host.content_host.try(:import_applicability)
             host.get_status(::Katello::ErrataStatus).refresh!
           end
         end
