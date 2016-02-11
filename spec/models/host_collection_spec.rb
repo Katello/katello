@@ -86,6 +86,23 @@ module Katello
       end
     end
 
+    describe "errata" do
+      before(:each) do
+        @host_collection.hosts << @host
+      end
+
+      it "should retrieve errata for the hosts in the host collection" do
+        errata = @host_collection.errata
+        errata.count.must_equal(2)
+      end
+
+      it "should retrieve a specific type of errata for the hosts in the host collection" do
+        errata = @host_collection.errata("security")
+        errata.count.must_equal(1)
+        errata.must_include(katello_errata("security"))
+      end
+    end
+
     describe "actions (katello)" do
       it "should raise exception on package install, if no hosts in host collection" do
         lambda { @host_collection.install_packages("pkg1") }.must_raise(Errors::HostCollectionEmptyException)
