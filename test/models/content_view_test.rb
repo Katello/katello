@@ -261,15 +261,6 @@ module Katello
       end
     end
 
-    def test_iso_repos
-      @file_repo = create(:katello_repository, :iso, :product => @organization.products.first, :content_view_version =>
-          @organization.default_content_view.versions.first)
-
-      assert_raises(ActiveRecord::RecordInvalid) do
-        @library_view.repositories << @file_repo
-      end
-    end
-
     def test_unique_environments
       3.times do |i|
         ContentViewVersion.create!(:major => i + 2,

@@ -20,6 +20,8 @@ module Actions
               plan_action(Repository::CloneDockerContent, repository, clone)
             elsif repository.ostree?
               plan_action(Repository::CloneOstreeContent, repository, clone)
+            elsif repository.file?
+              plan_action(Repository::CloneFileContent, repository, clone)
             end
           end
         end

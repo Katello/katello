@@ -129,6 +129,13 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewVersionContentController',
         templateUrl: 'content-views/versions/views/content-view-version-ostree-branches.html'
     })
+    .state('content-views.details.version.file', {
+        collapsed: true,
+        url: '/file',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-file.html'
+    })
 
     .state('content-views.details.promotion', {
         collapsed: true,
@@ -201,6 +208,25 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         permission: 'view_content_views',
         controller: 'ContentViewAvailableRepositoriesController',
         templateUrl: 'content-views/details/views/content-view-repositories.html'
+    })
+    .state('content-views.details.repositories.file', {
+        abstract: true,
+        collapsed: true,
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.repositories.file.list', {
+        collapsed: true,
+        url: '/repositories/file',
+        permission: 'view_content_views',
+        controller: 'ContentViewFileRepositoriesListController',
+        templateUrl: 'content-views/details/views/content-view-file-repositories.html'
+    })
+    .state('content-views.details.repositories.file.available', {
+        collapsed: true,
+        url: '/repositories/file/available',
+        permission: 'view_content_views',
+        controller: 'ContentViewAvailableFileRepositoriesController',
+        templateUrl: 'content-views/details/views/content-view-file-repositories.html'
     })
     .state('content-views.details.repositories.docker', {
         abstract: true,

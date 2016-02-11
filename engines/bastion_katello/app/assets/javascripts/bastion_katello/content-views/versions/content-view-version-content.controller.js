@@ -64,6 +64,14 @@
                 params: {
                     'composite_version_id': $scope.$stateParams.versionId
                 }
+            },
+            'file': {
+                type: Repository,
+                params: {
+                    'content_type': 'file',
+                    'content_view_version_id': $scope.$stateParams.versionId,
+                    library: true
+                }
             }
         };
 
