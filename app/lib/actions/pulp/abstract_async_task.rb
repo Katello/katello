@@ -110,8 +110,10 @@ module Actions
           end
         end
 
-        #Combine new tasks and remove call reports
-        output[:pulp_tasks] = external_task_data.reject { |task| task['task_id'].nil? } + new_tasks
+        # Combine new tasks and remove call reports and ignored tasks
+        output[:pulp_tasks] = (external_task_data + new_tasks).reject do |task|
+          task["task_id"].nil? || (task["tags"] && (task["tags"] & ignored_tags).present?)
+        end
       end
 
       def get_new_tasks(current_list, spawned_task_ids)
@@ -128,6 +130,10 @@ module Actions
 
       def task_resource
         ::Katello.pulp_server.resources.task
+      end
+
+      def ignored_tags
+        []
       end
     end
   end
