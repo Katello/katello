@@ -24,7 +24,12 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
         $scope.errorMessages = [];
 
         $scope.versionText = function (module) {
-            var version = translate("Latest (Currently %s)").replace('%s', module['computed_version']);
+            var version;
+            if (module['computed_version']) {
+                version = translate("Latest (Currently %s)").replace('%s', module['computed_version']);
+            } else {
+                version = translate("Unable to determine version");
+            }
             if (module['puppet_module']) {
                 version = module['puppet_module'].version;
             }
