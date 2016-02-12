@@ -34,8 +34,8 @@ module Katello
       Repository::PUPPET_TYPE
     end
 
-    def puppet?
-      true
+    def unprotected
+      false
     end
 
     def node_syncable?

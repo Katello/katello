@@ -2,10 +2,10 @@ module Actions
   module Katello
     module CapsuleContent
       class ConfigureCapsule < ::Actions::EntryAction
-        def plan(capsule)
+        def plan(capsule, environment, content_view)
           sequence do
-            plan_action(Pulp::Consumer::ActivateNode, capsule.consumer)
-            plan_action(ManageBoundRepositories, capsule)
+            plan_action(RemoveUnneededRepos, capsule)
+            plan_action(CreateOrUpdate, capsule, environment, content_view)
           end
         end
       end

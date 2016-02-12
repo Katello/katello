@@ -143,24 +143,8 @@ module Katello
         .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
     end
 
-    def puppet?
-      content_type == PUPPET_TYPE
-    end
-
-    def docker?
-      content_type == DOCKER_TYPE
-    end
-
     def archive?
       self.environment.nil?
-    end
-
-    def yum?
-      content_type == YUM_TYPE
-    end
-
-    def file?
-      content_type == FILE_TYPE
     end
 
     def in_default_view?
@@ -445,7 +429,7 @@ module Katello
     end
 
     def node_syncable?
-      environment && !(environment.library? && content_view.default? && puppet?) && !file?
+      environment
     end
 
     def exist_for_environment?(environment, content_view, attribute = nil)

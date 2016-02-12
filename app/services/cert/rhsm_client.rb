@@ -1,8 +1,8 @@
 require 'openssl'
 require 'base64'
 
-module Client
-  class Cert
+module Cert
+  class RhsmClient
     attr_accessor :cert
 
     def initialize(cert)

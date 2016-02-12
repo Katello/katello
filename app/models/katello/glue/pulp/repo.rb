@@ -2,6 +2,7 @@ module Katello
   module Glue::Pulp::Repo
     # TODO: move into submodules
     # rubocop:disable MethodLength
+    # rubocop:disable ModuleLength
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
@@ -122,31 +123,55 @@ module Katello
         raise PulpErrors::ServiceUnavailable.new(message, e)
       end
 
-      def generate_importer
+      def generate_importer(capsule = false)
         case self.content_type
         when Repository::YUM_TYPE
-          Runcible::Models::YumImporter.new(:ssl_ca_cert => self.feed_ca,
-                                            :ssl_client_cert => self.feed_cert,
-                                            :ssl_client_key => self.feed_key,
-                                            :feed => self.url,
-                                            :download_policy => self.download_policy)
+          Runcible::Models::YumImporter.new(yum_importer_values(capsule))
         when Repository::FILE_TYPE
           Runcible::Models::IsoImporter.new(:ssl_ca_cert => self.feed_ca,
                                             :ssl_client_cert => self.feed_cert,
                                             :ssl_client_key => self.feed_key,
-                                            :feed => self.url)
+                                            :feed => importer_feed_url(capsule))
         when Repository::PUPPET_TYPE
           options = {}
-          options[:feed] = self.url if self.respond_to?(:url)
+          options[:feed] = importer_feed_url(capsule) if self.respond_to?(:url)
           Runcible::Models::PuppetImporter.new(options)
         when Repository::DOCKER_TYPE
           options = {}
-          options[:upstream_name] = self.docker_upstream_name
-          options[:feed] = self.url if self.respond_to?(:url)
+          options[:upstream_name] = capsule ? self.pulp_id : self.docker_upstream_name
+          options[:feed] = docker_feed_url(capsule)
           options[:enable_v1] = false if self.respond_to?(:enable_v1)
           Runcible::Models::DockerImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
+        end
+      end
+
+      def docker_feed_url(capsule = false)
+        pulp_uri = URI.parse(SETTINGS[:katello][:pulp][:url])
+        if capsule
+          "https://#{pulp_uri.host.downcase}:5000"
+        else
+          self.url if self.respond_to?(:url)
+        end
+      end
+
+      def importer_feed_url(capsule = false)
+        if capsule
+          self.full_path
+        else
+          self.url
+        end
+      end
+
+      def yum_importer_values(capsule)
+        {}.tap do |yum_importer_values|
+          yum_importer_values[:feed] = self.importer_feed_url(capsule)
+          unless capsule
+            yum_importer_values[:ssl_ca_cert] = self.feed_ca
+            yum_importer_values[:ssl_client_cert] = self.feed_cert
+            yum_importer_values[:ssl_ca_cert] = self.feed_key
+          end
         end
       end
 
@@ -157,16 +182,16 @@ module Katello
           yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
           #check the instance variable, as we do not want to go to pulp
           yum_dist_options['checksum_type'] = self.checksum_type
-          yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
+          yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected), true,
                                                           yum_dist_options)
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                  :destination_distributor_id => yum_dist_id)
           export_dist = Runcible::Models::ExportDistributor.new(false, false)
-          [yum_dist, clone_dist, export_dist]
+          distributors = [yum_dist, clone_dist, export_dist]
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
-          [dist]
+          distributors = [dist]
         when Repository::PUPPET_TYPE
           dist_options = { :id => self.pulp_id, :auto_publish => true }
           repo_path =  File.join(SETTINGS[:katello][:puppet_repo_root],
@@ -177,21 +202,19 @@ module Katello
           puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(repo_path, dist_options)
 
           dist_options[:id] = "#{self.pulp_id}_puppet"
-          puppet_dist = Runcible::Models::PuppetDistributor.new(self.relative_path, (self.unprotected || false),
+          puppet_dist = Runcible::Models::PuppetDistributor.new(nil, (self.unprotected || false),
                                                                 true, dist_options)
 
-          [puppet_dist, puppet_install_dist, nodes_distributor]
+          distributors = [puppet_dist, puppet_install_dist]
         when Repository::DOCKER_TYPE
           options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true }
           docker_dist = Runcible::Models::DockerDistributor.new(options)
-          [docker_dist, nodes_distributor]
+          distributors = [docker_dist]
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
-      end
 
-      def nodes_distributor
-        Runcible::Models::NodesHttpDistributor.new(:id => "#{self.pulp_id}_nodes", :auto_publish => true)
+        distributors
       end
 
       def importer_type
@@ -379,7 +402,7 @@ module Katello
         tmp_packages = []
         self.pulp_rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, Pulp::Rpm::PULP_INDEXED_FIELDS))
+                                  sub_list, ::Katello::Pulp::Rpm::PULP_INDEXED_FIELDS))
         end
         tmp_packages
       end
@@ -669,6 +692,22 @@ module Katello
         end
         {:names => names.to_set,
          :filenames => filenames.to_set}
+      end
+
+      def docker?
+        self.content_type == Repository::DOCKER_TYPE
+      end
+
+      def puppet?
+        self.content_type == Repository::PUPPET_TYPE
+      end
+
+      def file?
+        self.content_type == Repository::FILE_TYPE
+      end
+
+      def yum?
+        self.content_type == Repository::YUM_TYPE
       end
 
       protected

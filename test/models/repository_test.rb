@@ -513,10 +513,12 @@ module Katello
       lib_yum_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
       lib_puppet_repo = Repository.find(katello_repositories(:p_forge))
       lib_iso_repo = Repository.find(katello_repositories(:iso))
+      lib_docker_repo = Repository.find(katello_repositories(:busybox))
 
       assert lib_yum_repo.node_syncable?
-      refute lib_puppet_repo.node_syncable?
-      refute lib_iso_repo.node_syncable?
+      assert lib_puppet_repo.node_syncable?
+      assert lib_iso_repo.node_syncable?
+      assert lib_docker_repo.node_syncable?
     end
 
     def test_bad_checksum

@@ -129,7 +129,7 @@ module Actions
       end
 
       def task_resource
-        ::Katello.pulp_server.resources.task
+        pulp_resources.task
       end
 
       def ignored_tags

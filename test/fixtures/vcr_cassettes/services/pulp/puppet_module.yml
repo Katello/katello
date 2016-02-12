@@ -1667,136 +1667,6 @@ http_interactions:
   recorded_at: Fri, 05 Feb 2016 17:38:32 GMT
 - request:
     method: get
-    uri: https://katello-2-8-dev.example.com/pulp/api/v2/repositories/4/?details=true
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Content-Type:
-      - application/json
-      Authorization:
-      - OAuth oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f", oauth_nonce="8LpMspJEU0mRJJeoGp2h6JwjD2eRvjSsnY0GRvAP7HU",
-        oauth_signature="7qvEqmDLc6%2FbibCGlp3frIR6zHc%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454693913", oauth_version="1.0"
-      Pulp-User:
-      - admin
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 05 Feb 2016 17:38:33 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
-      Content-Length:
-      - '1718'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
-        ICJkZXNjcmlwdGlvbiI6IG51bGwsICJkaXN0cmlidXRvcnMiOiBbeyJyZXBv
-        X2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmll
-        cy80L2Rpc3RyaWJ1dG9ycy80X3B1cHBldC8iLCAiX25zIjogInJlcG9fZGlz
-        dHJpYnV0b3JzIiwgImxhc3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRv
-        cl90eXBlX2lkIjogInB1cHBldF9kaXN0cmlidXRvciIsICJhdXRvX3B1Ymxp
-        c2giOiB0cnVlLCAic2NyYXRjaHBhZCI6IHt9LCAiX2lkIjogeyIkb2lkIjog
-        IjU2YjRkZTE4Yzc4MjFiMzMwNWNlNTI4MCJ9LCAiY29uZmlnIjogeyJzZXJ2
-        ZV9odHRwcyI6IHRydWUsICJzZXJ2ZV9odHRwIjogZmFsc2V9LCAiaWQiOiAi
-        NF9wdXBwZXQifSwgeyJyZXBvX2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAv
-        YXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3RyaWJ1dG9ycy80X25vZGVzLyIs
-        ICJfbnMiOiAicmVwb19kaXN0cmlidXRvcnMiLCAibGFzdF9wdWJsaXNoIjog
-        bnVsbCwgImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAibm9kZXNfaHR0cF9kaXN0
-        cmlidXRvciIsICJhdXRvX3B1Ymxpc2giOiB0cnVlLCAic2NyYXRjaHBhZCI6
-        IHt9LCAiX2lkIjogeyIkb2lkIjogIjU2YjRkZTE4Yzc4MjFiMzMwNWNlNTI3
-        ZiJ9LCAiY29uZmlnIjoge30sICJpZCI6ICI0X25vZGVzIn0sIHsicmVwb19p
-        ZCI6ICI0IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMv
-        NC9kaXN0cmlidXRvcnMvNC8iLCAiX25zIjogInJlcG9fZGlzdHJpYnV0b3Jz
-        IiwgImxhc3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRvcl90eXBlX2lk
-        IjogInB1cHBldF9pbnN0YWxsX2Rpc3RyaWJ1dG9yIiwgImF1dG9fcHVibGlz
-        aCI6IHRydWUsICJzY3JhdGNocGFkIjoge30sICJfaWQiOiB7IiRvaWQiOiAi
-        NTZiNGRlMThjNzgyMWIzMzA1Y2U1MjdlIn0sICJjb25maWciOiB7Imluc3Rh
-        bGxfcGF0aCI6ICIvdmFyL2xpYi9wdWxwL3B1Ymxpc2hlZC9wdXBwZXRfa2F0
-        ZWxsb190ZXN0IiwgImF1dG9fcHVibGlzaCI6IHRydWV9LCAiaWQiOiAiNCJ9
-        XSwgImxhc3RfdW5pdF9hZGRlZCI6IG51bGwsICJub3RlcyI6IHsiX3JlcG8t
-        dHlwZSI6ICJwdXBwZXQtcmVwbyJ9LCAibGFzdF91bml0X3JlbW92ZWQiOiBu
-        dWxsLCAiY29udGVudF91bml0X2NvdW50cyI6IHt9LCAiX25zIjogInJlcG9z
-        IiwgImltcG9ydGVycyI6IFt7InNjcmF0Y2hwYWQiOiBudWxsLCAiX2hyZWYi
-        OiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy80L2ltcG9ydGVycy9wdXBw
-        ZXRfaW1wb3J0ZXIvIiwgIl9ucyI6ICJyZXBvX2ltcG9ydGVycyIsICJpbXBv
-        cnRlcl90eXBlX2lkIjogInB1cHBldF9pbXBvcnRlciIsICJsYXN0X3N5bmMi
-        OiBudWxsLCAicmVwb19pZCI6ICI0IiwgIl9pZCI6IHsiJG9pZCI6ICI1NmI0
-        ZGUxOGM3ODIxYjMzMDVjZTUyN2QifSwgImNvbmZpZyI6IHsiZmVlZCI6ICJo
-        dHRwOi8vZGF2aWRkLmZlZG9yYXBlb3BsZS5vcmcvcmVwb3MvcmFuZG9tX3B1
-        cHBldC8ifSwgImlkIjogInB1cHBldF9pbXBvcnRlciJ9XSwgImxvY2FsbHlf
-        c3RvcmVkX3VuaXRzIjogMCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI0ZGUxOGM3
-        ODIxYjMzMDVjZTUyN2MifSwgInRvdGFsX3JlcG9zaXRvcnlfdW5pdHMiOiAw
-        LCAiaWQiOiAiNCIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9y
-        aWVzLzQvIn0=
-    http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:38:33 GMT
-- request:
-    method: post
-    uri: https://katello-2-8-dev.example.com/pulp/api/v2/repositories/4/actions/publish/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJpZCI6IjQiLCJvdmVycmlkZV9jb25maWciOm51bGx9
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Content-Type:
-      - application/json
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
-        oauth_nonce="BApp5t6ju3Ph2BZPjN4MGwvNGXufn4vz4qsvRjPmts", oauth_signature="BVpTWqA67DMwfxR8JIbTGKwMtXg%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454693913", oauth_version="1.0"
-      Pulp-User:
-      - admin
-      Content-Length:
-      - '33'
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 202
-      message: ACCEPTED
-    headers:
-      Date:
-      - Fri, 05 Feb 2016 17:38:33 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzAzMzA1MWRlLTU3NmUtNGI5Yy1hNmM2LTE1MjUzN2M4NGVlYi8iLCAi
-        dGFza19pZCI6ICIwMzMwNTFkZS01NzZlLTRiOWMtYTZjNi0xNTI1MzdjODRl
-        ZWIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:38:33 GMT
-- request:
-    method: get
     uri: https://katello-2-8-dev.example.com/pulp/api/v2/tasks/033051de-576e-4b9c-a6c6-152537c84eeb/
     body:
       encoding: US-ASCII
@@ -1918,55 +1788,6 @@ http_interactions:
         ImlkIjogIjU2YjRkZTE5OGFkYTQwZGIwNGVlMTFiZiJ9
     http_version: 
   recorded_at: Fri, 05 Feb 2016 17:38:33 GMT
-- request:
-    method: post
-    uri: https://katello-2-8-dev.example.com/pulp/api/v2/repositories/4/actions/sync/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJvdmVycmlkZV9jb25maWciOnsibnVtX3RocmVhZHMiOjQsInZhbGlkYXRl
-        Ijp0cnVlfX0=
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Content-Type:
-      - application/json
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
-        oauth_nonce="sOiOEbCK6msfuLCwahTSXvBOaRLynKofnfeBYUoZ0", oauth_signature="8oLXUDsNHOoCR6Iovve8pfIUlTQ%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454693914", oauth_version="1.0"
-      Pulp-User:
-      - admin
-      Content-Length:
-      - '53'
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 202
-      message: ACCEPTED
-    headers:
-      Date:
-      - Fri, 05 Feb 2016 17:38:34 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzNkZDdlNzIxLTBkMzctNDRiMy04YmUwLWQxNGNjOTVlM2I0Zi8iLCAi
-        dGFza19pZCI6ICIzZGQ3ZTcyMS0wZDM3LTQ0YjMtOGJlMC1kMTRjYzk1ZTNi
-        NGYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:38:34 GMT
 - request:
     method: get
     uri: https://katello-2-8-dev.example.com/pulp/api/v2/tasks/3dd7e721-0d37-44b3-8be0-d14cc95e3b4f/
@@ -3140,74 +2961,6 @@ http_interactions:
   recorded_at: Fri, 05 Feb 2016 17:38:42 GMT
 - request:
     method: post
-    uri: https://katello-2-8-dev.example.com/pulp/api/v2/repositories/4/search/units/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJwdXBwZXRfbW9kdWxlIl0sImZp
-        ZWxkcyI6eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Content-Type:
-      - application/json
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
-        oauth_nonce="FamSRotvSPLBR7zKvnzh4NFRdNYcWhvsvasPWhq2A", oauth_signature="eR%2FtexjvvF72Rg%2BITCvQHfQKoW0%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454693922", oauth_version="1.0"
-      Pulp-User:
-      - admin
-      Content-Length:
-      - '90'
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 05 Feb 2016 17:38:42 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
-      Content-Length:
-      - '916'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICIzMGVhZTNlMi1mOTI1LTRmYzItOTU5
-        MS0wYzUwMTg0MmI2N2YiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
-        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiNGRlMWU4YWRhNDBkYjA0
-        ZWUxMWMyIn0sICJ1bml0X2lkIjogIjMwZWFlM2UyLWY5MjUtNGZjMi05NTkx
-        LTBjNTAxODQyYjY3ZiIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
-        ZSJ9LCB7Im1ldGFkYXRhIjogeyJfaWQiOiAiNDVjNmQ4YzctZDI2Yy00OWZm
-        LWIwNWYtNTgxODY3MDRiZDM4IiwgIl9jb250ZW50X3R5cGVfaWQiOiAicHVw
-        cGV0X21vZHVsZSJ9LCAiX2lkIjogeyIkb2lkIjogIjU2YjRkZTFkOGFkYTQw
-        ZGIwNGVlMTFjMSJ9LCAidW5pdF9pZCI6ICI0NWM2ZDhjNy1kMjZjLTQ5ZmYt
-        YjA1Zi01ODE4NjcwNGJkMzgiLCAidW5pdF90eXBlX2lkIjogInB1cHBldF9t
-        b2R1bGUifSwgeyJtZXRhZGF0YSI6IHsiX2lkIjogIjg1M2IzNjkxLTBmODIt
-        NDM1MC1hOTU1LTQ4NDc5YTRjYjg1MyIsICJfY29udGVudF90eXBlX2lkIjog
-        InB1cHBldF9tb2R1bGUifSwgIl9pZCI6IHsiJG9pZCI6ICI1NmI0ZGUyMDhh
-        ZGE0MGRiMDRlZTExYzQifSwgInVuaXRfaWQiOiAiODUzYjM2OTEtMGY4Mi00
-        MzUwLWE5NTUtNDg0NzlhNGNiODUzIiwgInVuaXRfdHlwZV9pZCI6ICJwdXBw
-        ZXRfbW9kdWxlIn0sIHsibWV0YWRhdGEiOiB7Il9pZCI6ICJmNTdjMTU1Ny0x
-        ODhjLTRiYjgtOWI0Zi0wNjM5MmZiNDgyZWIiLCAiX2NvbnRlbnRfdHlwZV9p
-        ZCI6ICJwdXBwZXRfbW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiNGRl
-        MWY4YWRhNDBkYjA0ZWUxMWMzIn0sICJ1bml0X2lkIjogImY1N2MxNTU3LTE4
-        OGMtNGJiOC05YjRmLTA2MzkyZmI0ODJlYiIsICJ1bml0X3R5cGVfaWQiOiAi
-        cHVwcGV0X21vZHVsZSJ9XQ==
-    http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:38:42 GMT
-- request:
-    method: post
     uri: https://katello-2-8-dev.example.com/pulp/api/v2/content/units/puppet_module/search/
     body:
       encoding: UTF-8
@@ -3475,74 +3228,6 @@ http_interactions:
   recorded_at: Fri, 05 Feb 2016 17:38:43 GMT
 - request:
     method: post
-    uri: https://katello-2-8-dev.example.com/pulp/api/v2/repositories/4/search/units/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJwdXBwZXRfbW9kdWxlIl0sImZp
-        ZWxkcyI6eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Content-Type:
-      - application/json
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
-        oauth_nonce="2k1VL94vkKFfXs3CBhtMITOjqscGii5V7GYnG35M", oauth_signature="C8bU%2FGjWE61%2B2UBb6KUGA4PkVG4%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454693923", oauth_version="1.0"
-      Pulp-User:
-      - admin
-      Content-Length:
-      - '90'
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 05 Feb 2016 17:38:43 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
-      Content-Length:
-      - '916'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICIzMGVhZTNlMi1mOTI1LTRmYzItOTU5
-        MS0wYzUwMTg0MmI2N2YiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
-        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiNGRlMWU4YWRhNDBkYjA0
-        ZWUxMWMyIn0sICJ1bml0X2lkIjogIjMwZWFlM2UyLWY5MjUtNGZjMi05NTkx
-        LTBjNTAxODQyYjY3ZiIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
-        ZSJ9LCB7Im1ldGFkYXRhIjogeyJfaWQiOiAiNDVjNmQ4YzctZDI2Yy00OWZm
-        LWIwNWYtNTgxODY3MDRiZDM4IiwgIl9jb250ZW50X3R5cGVfaWQiOiAicHVw
-        cGV0X21vZHVsZSJ9LCAiX2lkIjogeyIkb2lkIjogIjU2YjRkZTFkOGFkYTQw
-        ZGIwNGVlMTFjMSJ9LCAidW5pdF9pZCI6ICI0NWM2ZDhjNy1kMjZjLTQ5ZmYt
-        YjA1Zi01ODE4NjcwNGJkMzgiLCAidW5pdF90eXBlX2lkIjogInB1cHBldF9t
-        b2R1bGUifSwgeyJtZXRhZGF0YSI6IHsiX2lkIjogIjg1M2IzNjkxLTBmODIt
-        NDM1MC1hOTU1LTQ4NDc5YTRjYjg1MyIsICJfY29udGVudF90eXBlX2lkIjog
-        InB1cHBldF9tb2R1bGUifSwgIl9pZCI6IHsiJG9pZCI6ICI1NmI0ZGUyMDhh
-        ZGE0MGRiMDRlZTExYzQifSwgInVuaXRfaWQiOiAiODUzYjM2OTEtMGY4Mi00
-        MzUwLWE5NTUtNDg0NzlhNGNiODUzIiwgInVuaXRfdHlwZV9pZCI6ICJwdXBw
-        ZXRfbW9kdWxlIn0sIHsibWV0YWRhdGEiOiB7Il9pZCI6ICJmNTdjMTU1Ny0x
-        ODhjLTRiYjgtOWI0Zi0wNjM5MmZiNDgyZWIiLCAiX2NvbnRlbnRfdHlwZV9p
-        ZCI6ICJwdXBwZXRfbW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiNGRl
-        MWY4YWRhNDBkYjA0ZWUxMWMzIn0sICJ1bml0X2lkIjogImY1N2MxNTU3LTE4
-        OGMtNGJiOC05YjRmLTA2MzkyZmI0ODJlYiIsICJ1bml0X3R5cGVfaWQiOiAi
-        cHVwcGV0X21vZHVsZSJ9XQ==
-    http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:38:43 GMT
-- request:
-    method: post
     uri: https://katello-2-8-dev.example.com/pulp/api/v2/content/units/puppet_module/search/
     body:
       encoding: UTF-8
@@ -3641,51 +3326,6 @@ http_interactions:
         c3VtIjogImVlZjE4ZThiZDUxNjJhMDFkODA1Yzc2MzM1YjhhOTRjNDgwNjdl
         YTg0YTBlNmY5NGVkMWJlZWY1NWZhZWU4MDkiLCAic3VtbWFyeSI6ICIiLCAi
         Y2hlY2tzdW1fdHlwZSI6ICJzaGEyNTYiLCAidGFnX2xpc3QiOiBbXX1d
-    http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:38:43 GMT
-- request:
-    method: delete
-    uri: https://katello-2-8-dev.example.com/pulp/api/v2/repositories/4/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Content-Type:
-      - application/json
-      Authorization:
-      - OAuth oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f", oauth_nonce="YFB4zN598Pc6gAzIC3cZyv70x7b8jIHWkn6LN8i0",
-        oauth_signature="M4LNewEUgji2xPzHIq%2BkaYiQ6SM%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454693923", oauth_version="1.0"
-      Pulp-User:
-      - admin
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 202
-      message: ACCEPTED
-    headers:
-      Date:
-      - Fri, 05 Feb 2016 17:38:43 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzI5OWIyM2JmLWJlZGEtNDZhMy1iZmFhLWI4OGYwMDgyNzBkOC8iLCAi
-        dGFza19pZCI6ICIyOTliMjNiZi1iZWRhLTQ2YTMtYmZhYS1iODhmMDA4Mjcw
-        ZDgifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
   recorded_at: Fri, 05 Feb 2016 17:38:43 GMT
 - request:
@@ -3801,6 +3441,1701 @@ http_interactions:
         LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjRkZTIzOGFk
         YTQwZGIwNGVlMTFjOCJ9LCAiaWQiOiAiNTZiNGRlMjM4YWRhNDBkYjA0ZWUx
         MWM4In0=
-    http_version: 
+    http_version:
   recorded_at: Fri, 05 Feb 2016 17:38:43 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IjQiLCJkaXNwbGF5X25hbWUiOiJQIEZvcmdlIiwiaW1wb3J0ZXJf
+        dHlwZV9pZCI6InB1cHBldF9pbXBvcnRlciIsImltcG9ydGVyX2NvbmZpZyI6
+        eyJmZWVkIjoiaHR0cDovL2RhdmlkZC5mZWRvcmFwZW9wbGUub3JnL3JlcG9z
+        L3JhbmRvbV9wdXBwZXQvIiwic3NsX2NhX2NlcnQiOm51bGwsInNzbF9jbGll
+        bnRfY2VydCI6bnVsbCwic3NsX2NsaWVudF9rZXkiOm51bGx9LCJub3RlcyI6
+        eyJfcmVwby10eXBlIjoicHVwcGV0LXJlcG8ifSwiZGlzdHJpYnV0b3JzIjpb
+        eyJkaXN0cmlidXRvcl90eXBlX2lkIjoicHVwcGV0X2luc3RhbGxfZGlzdHJp
+        YnV0b3IiLCJkaXN0cmlidXRvcl9jb25maWciOnsiaW5zdGFsbF9wYXRoIjoi
+        L3Zhci9saWIvcHVscC9wdWJsaXNoZWQvcHVwcGV0X2thdGVsbG9fdGVzdCIs
+        ImF1dG9fcHVibGlzaCI6dHJ1ZX0sImF1dG9fcHVibGlzaCI6dHJ1ZSwiZGlz
+        dHJpYnV0b3JfaWQiOiI0In0seyJkaXN0cmlidXRvcl90eXBlX2lkIjoicHVw
+        cGV0X2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3JfY29uZmlnIjp7ImFic29s
+        dXRlX3BhdGgiOm51bGwsInNlcnZlX2h0dHAiOmZhbHNlLCJzZXJ2ZV9odHRw
+        cyI6dHJ1ZX0sImF1dG9fcHVibGlzaCI6dHJ1ZSwiZGlzdHJpYnV0b3JfaWQi
+        OiI0X3B1cHBldCJ9XX0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '644'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:19 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '298'
+      Location:
+      - https://katello-burrito.example.com/pulp/api/v2/repositories/4/
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
+        ICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRkZWQiOiBudWxs
+        LCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicHVwcGV0LXJlcG8ifSwgImxh
+        c3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9jb3VudHMi
+        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNTZiOTIy
+        ZWY2NzdjNzQzZGNhYjUwOTRlIn0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:19 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/4/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:20 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1423'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
+        ICJkZXNjcmlwdGlvbiI6IG51bGwsICJkaXN0cmlidXRvcnMiOiBbeyJyZXBv
+        X2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmll
+        cy80L2Rpc3RyaWJ1dG9ycy80X3B1cHBldC8iLCAiX25zIjogInJlcG9fZGlz
+        dHJpYnV0b3JzIiwgImxhc3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRv
+        cl90eXBlX2lkIjogInB1cHBldF9kaXN0cmlidXRvciIsICJhdXRvX3B1Ymxp
+        c2giOiB0cnVlLCAic2NyYXRjaHBhZCI6IHt9LCAiX2lkIjogeyIkb2lkIjog
+        IjU2YjkyMmVmNjc3Yzc0M2RjYWI1MDk1MSJ9LCAiY29uZmlnIjogeyJzZXJ2
+        ZV9odHRwcyI6IHRydWUsICJzZXJ2ZV9odHRwIjogZmFsc2V9LCAiaWQiOiAi
+        NF9wdXBwZXQifSwgeyJyZXBvX2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAv
+        YXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3RyaWJ1dG9ycy80LyIsICJfbnMi
+        OiAicmVwb19kaXN0cmlidXRvcnMiLCAibGFzdF9wdWJsaXNoIjogbnVsbCwg
+        ImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVwcGV0X2luc3RhbGxfZGlzdHJp
+        YnV0b3IiLCAiYXV0b19wdWJsaXNoIjogdHJ1ZSwgInNjcmF0Y2hwYWQiOiB7
+        fSwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJlZjY3N2M3NDNkY2FiNTA5NTAi
+        fSwgImNvbmZpZyI6IHsiaW5zdGFsbF9wYXRoIjogIi92YXIvbGliL3B1bHAv
+        cHVibGlzaGVkL3B1cHBldF9rYXRlbGxvX3Rlc3QiLCAiYXV0b19wdWJsaXNo
+        IjogdHJ1ZX0sICJpZCI6ICI0In1dLCAibGFzdF91bml0X2FkZGVkIjogbnVs
+        bCwgIm5vdGVzIjogeyJfcmVwby10eXBlIjogInB1cHBldC1yZXBvIn0sICJs
+        YXN0X3VuaXRfcmVtb3ZlZCI6IG51bGwsICJjb250ZW50X3VuaXRfY291bnRz
+        Ijoge30sICJfbnMiOiAicmVwb3MiLCAiaW1wb3J0ZXJzIjogW3sic2NyYXRj
+        aHBhZCI6IG51bGwsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9y
+        aWVzLzQvaW1wb3J0ZXJzL3B1cHBldF9pbXBvcnRlci8iLCAiX25zIjogInJl
+        cG9faW1wb3J0ZXJzIiwgImltcG9ydGVyX3R5cGVfaWQiOiAicHVwcGV0X2lt
+        cG9ydGVyIiwgImxhc3Rfc3luYyI6IG51bGwsICJyZXBvX2lkIjogIjQiLCAi
+        X2lkIjogeyIkb2lkIjogIjU2YjkyMmVmNjc3Yzc0M2RjYWI1MDk0ZiJ9LCAi
+        Y29uZmlnIjogeyJmZWVkIjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
+        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0LyJ9LCAiaWQiOiAicHVwcGV0X2lt
+        cG9ydGVyIn1dLCAibG9jYWxseV9zdG9yZWRfdW5pdHMiOiAwLCAiX2lkIjog
+        eyIkb2lkIjogIjU2YjkyMmVmNjc3Yzc0M2RjYWI1MDk0ZSJ9LCAidG90YWxf
+        cmVwb3NpdG9yeV91bml0cyI6IDAsICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:20 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/4/actions/publish/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IjQiLCJvdmVycmlkZV9jb25maWciOm51bGx9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '33'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: ACCEPTED
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:20 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzA3OTI5MTJkLWI2OWMtNGJhMC1iZWNkLWZjMDA2OWY1NmI2NS8iLCAi
+        dGFza19pZCI6ICIwNzkyOTEyZC1iNjljLTRiYTAtYmVjZC1mYzAwNjlmNTZi
+        NjUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:20 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/0792912d-b69c-4ba0-becd-fc0069f56b65/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:20 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '548'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy8wNzkyOTEyZC1iNjljLTRiYTAtYmVjZC1mYzAw
+        NjlmNTZiNjUvIiwgInRhc2tfaWQiOiAiMDc5MjkxMmQtYjY5Yy00YmEwLWJl
+        Y2QtZmMwMDY5ZjU2YjY1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogbnVs
+        bCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogbnVsbCwg
+        InRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9n
+        cmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUi
+        OiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6IG51bGwsICJyZXN1bHQiOiBu
+        dWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjkyMmYw
+        MzQ0NzFlNDAwNzBhZWQ4ZiJ9LCAiaWQiOiAiNTZiOTIyZjAzNDQ3MWU0MDA3
+        MGFlZDhmIn0=
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:20 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/0792912d-b69c-4ba0-becd-fc0069f56b65/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:21 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1068'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy8wNzkyOTEyZC1iNjljLTRiYTAtYmVjZC1mYzAw
+        NjlmNTZiNjUvIiwgInRhc2tfaWQiOiAiMDc5MjkxMmQtYjY5Yy00YmEwLWJl
+        Y2QtZmMwMDY5ZjU2YjY1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogIjIw
+        MTYtMDItMDhUMjM6MjE6MjBaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
+        dGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6MjE6MjBaIiwgInRyYWNlYmFj
+        ayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBv
+        cnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QGthdGVsbG8tYnVycml0by5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0
+        IjogeyJyZXN1bHQiOiAic3VjY2VzcyIsICJleGNlcHRpb24iOiBudWxsLCAi
+        cmVwb19pZCI6ICI0IiwgInN0YXJ0ZWQiOiAiMjAxNi0wMi0wOFQyMzoyMToy
+        MFoiLCAiX25zIjogInJlcG9fcHVibGlzaF9yZXN1bHRzIiwgImNvbXBsZXRl
+        ZCI6ICIyMDE2LTAyLTA4VDIzOjIxOjIwWiIsICJ0cmFjZWJhY2siOiBudWxs
+        LCAiZGlzdHJpYnV0b3JfdHlwZV9pZCI6ICJwdXBwZXRfaW5zdGFsbF9kaXN0
+        cmlidXRvciIsICJzdW1tYXJ5IjogInN1Y2Nlc3MiLCAiZXJyb3JfbWVzc2Fn
+        ZSI6IG51bGwsICJkaXN0cmlidXRvcl9pZCI6ICI0IiwgImlkIjogIjU2Yjky
+        MmYwNjc3Yzc0M2Q4ZDRjZWRiOCIsICJkZXRhaWxzIjogeyJlcnJvcnMiOiBb
+        XSwgInN1Y2Nlc3NfdW5pdF9rZXlzIjogW119fSwgImVycm9yIjogbnVsbCwg
+        Il9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMDM0NDcxZTQwMDcwYWVkOGYifSwg
+        ImlkIjogIjU2YjkyMmYwMzQ0NzFlNDAwNzBhZWQ4ZiJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:21 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/4/actions/sync/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJvdmVycmlkZV9jb25maWciOnsibnVtX3RocmVhZHMiOjQsInZhbGlkYXRl
+        Ijp0cnVlfX0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '53'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: ACCEPTED
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:21 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzA4ZjEyOTJmLTQ1ZDItNDJjNS05NmIzLWJjNmU1MjE3ODI5OS8iLCAi
+        dGFza19pZCI6ICIwOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:21 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:21 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '641'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFj
+        ayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBv
+        cnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QGthdGVsbG8tYnVycml0by5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJ3
+        YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dv
+        cmtlci0wQGthdGVsbG8tYnVycml0by5leGFtcGxlLmNvbSIsICJyZXN1bHQi
+        OiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2Yjky
+        MmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9LCAiaWQiOiAiNTZiOTIyZjEzNDQ3MWU0
+        MDA3MGFlZDkwIn0=
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:21 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:21 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1080'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IG51bGwsICJ0cmFjZWJhY2si
+        OiBudWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogIm5v
+        dC1zdGFydGVkIiwgImVycm9yX2NvdW50IjogbnVsbCwgImVycm9yIjogIk5v
+        bmUiLCAiZmluaXNoZWRfY291bnQiOiBudWxsfSwgIm1ldGFkYXRhIjogeyJx
+        dWVyeV9maW5pc2hlZF9jb3VudCI6IDAsICJ0cmFjZWJhY2siOiBudWxsLCAi
+        ZXhlY3V0aW9uX3RpbWUiOiBudWxsLCAicXVlcnlfdG90YWxfY291bnQiOiAx
+        LCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdGF0ZSI6ICJydW5uaW5nIiwg
+        ImVycm9yIjogIk5vbmUiLCAiY3VycmVudF9xdWVyeSI6IG51bGx9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1
+        cnJpdG8uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRl
+        bGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMTM0NDcxZTQw
+        MDcwYWVkOTAifSwgImlkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:21 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:22 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1141'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IG51bGwsICJ0cmFjZWJhY2si
+        OiBudWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogIm5v
+        dC1zdGFydGVkIiwgImVycm9yX2NvdW50IjogbnVsbCwgImVycm9yIjogIk5v
+        bmUiLCAiZmluaXNoZWRfY291bnQiOiBudWxsfSwgIm1ldGFkYXRhIjogeyJx
+        dWVyeV9maW5pc2hlZF9jb3VudCI6IDAsICJ0cmFjZWJhY2siOiBudWxsLCAi
+        ZXhlY3V0aW9uX3RpbWUiOiBudWxsLCAicXVlcnlfdG90YWxfY291bnQiOiAx
+        LCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdGF0ZSI6ICJydW5uaW5nIiwg
+        ImVycm9yIjogIk5vbmUiLCAiY3VycmVudF9xdWVyeSI6ICJodHRwOi8vZGF2
+        aWRkLmZlZG9yYXBlb3BsZS5vcmcvcmVwb3MvcmFuZG9tX3B1cHBldC9tb2R1
+        bGVzLmpzb24ifX19LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTBAa2F0ZWxsby1idXJyaXRvLmV4YW1wbGUuY29tLmRxIiwgInN0YXRl
+        IjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3Vy
+        Y2Vfd29ya2VyLTBAa2F0ZWxsby1idXJyaXRvLmV4YW1wbGUuY29tIiwgInJl
+        c3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAi
+        NTZiOTIyZjEzNDQ3MWU0MDA3MGFlZDkwIn0sICJpZCI6ICI1NmI5MjJmMTM0
+        NDcxZTQwMDcwYWVkOTAifQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:22 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:23 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1141'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IG51bGwsICJ0cmFjZWJhY2si
+        OiBudWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogIm5v
+        dC1zdGFydGVkIiwgImVycm9yX2NvdW50IjogbnVsbCwgImVycm9yIjogIk5v
+        bmUiLCAiZmluaXNoZWRfY291bnQiOiBudWxsfSwgIm1ldGFkYXRhIjogeyJx
+        dWVyeV9maW5pc2hlZF9jb3VudCI6IDEsICJ0cmFjZWJhY2siOiBudWxsLCAi
+        ZXhlY3V0aW9uX3RpbWUiOiBudWxsLCAicXVlcnlfdG90YWxfY291bnQiOiAx
+        LCAiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJzdGF0ZSI6ICJydW5uaW5nIiwg
+        ImVycm9yIjogIk5vbmUiLCAiY3VycmVudF9xdWVyeSI6ICJodHRwOi8vZGF2
+        aWRkLmZlZG9yYXBlb3BsZS5vcmcvcmVwb3MvcmFuZG9tX3B1cHBldC9tb2R1
+        bGVzLmpzb24ifX19LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTBAa2F0ZWxsby1idXJyaXRvLmV4YW1wbGUuY29tLmRxIiwgInN0YXRl
+        IjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3Vy
+        Y2Vfd29ya2VyLTBAa2F0ZWxsby1idXJyaXRvLmV4YW1wbGUuY29tIiwgInJl
+        c3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAi
+        NTZiOTIyZjEzNDQ3MWU0MDA3MGFlZDkwIn0sICJpZCI6ICI1NmI5MjJmMTM0
+        NDcxZTQwMDcwYWVkOTAifQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:23 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:23 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1125'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IDQsICJ0cmFjZWJhY2siOiBu
+        dWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogInJ1bm5p
+        bmciLCAiZXJyb3JfY291bnQiOiAwLCAiZXJyb3IiOiAiTm9uZSIsICJmaW5p
+        c2hlZF9jb3VudCI6IDB9LCAibWV0YWRhdGEiOiB7InF1ZXJ5X2ZpbmlzaGVk
+        X2NvdW50IjogMSwgInRyYWNlYmFjayI6IG51bGwsICJleGVjdXRpb25fdGlt
+        ZSI6IDEsICJxdWVyeV90b3RhbF9jb3VudCI6IDEsICJlcnJvcl9tZXNzYWdl
+        IjogbnVsbCwgInN0YXRlIjogInN1Y2Nlc3MiLCAiZXJyb3IiOiAiTm9uZSIs
+        ICJjdXJyZW50X3F1ZXJ5IjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
+        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0L21vZHVsZXMuanNvbiJ9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1
+        cnJpdG8uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRl
+        bGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMTM0NDcxZTQw
+        MDcwYWVkOTAifSwgImlkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:23 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:24 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1125'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IDQsICJ0cmFjZWJhY2siOiBu
+        dWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogInJ1bm5p
+        bmciLCAiZXJyb3JfY291bnQiOiAwLCAiZXJyb3IiOiAiTm9uZSIsICJmaW5p
+        c2hlZF9jb3VudCI6IDB9LCAibWV0YWRhdGEiOiB7InF1ZXJ5X2ZpbmlzaGVk
+        X2NvdW50IjogMSwgInRyYWNlYmFjayI6IG51bGwsICJleGVjdXRpb25fdGlt
+        ZSI6IDEsICJxdWVyeV90b3RhbF9jb3VudCI6IDEsICJlcnJvcl9tZXNzYWdl
+        IjogbnVsbCwgInN0YXRlIjogInN1Y2Nlc3MiLCAiZXJyb3IiOiAiTm9uZSIs
+        ICJjdXJyZW50X3F1ZXJ5IjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
+        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0L21vZHVsZXMuanNvbiJ9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1
+        cnJpdG8uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRl
+        bGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMTM0NDcxZTQw
+        MDcwYWVkOTAifSwgImlkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:24 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:25 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1125'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IDQsICJ0cmFjZWJhY2siOiBu
+        dWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogInJ1bm5p
+        bmciLCAiZXJyb3JfY291bnQiOiAwLCAiZXJyb3IiOiAiTm9uZSIsICJmaW5p
+        c2hlZF9jb3VudCI6IDF9LCAibWV0YWRhdGEiOiB7InF1ZXJ5X2ZpbmlzaGVk
+        X2NvdW50IjogMSwgInRyYWNlYmFjayI6IG51bGwsICJleGVjdXRpb25fdGlt
+        ZSI6IDEsICJxdWVyeV90b3RhbF9jb3VudCI6IDEsICJlcnJvcl9tZXNzYWdl
+        IjogbnVsbCwgInN0YXRlIjogInN1Y2Nlc3MiLCAiZXJyb3IiOiAiTm9uZSIs
+        ICJjdXJyZW50X3F1ZXJ5IjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
+        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0L21vZHVsZXMuanNvbiJ9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1
+        cnJpdG8uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRl
+        bGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMTM0NDcxZTQw
+        MDcwYWVkOTAifSwgImlkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:25 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:26 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1125'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IDQsICJ0cmFjZWJhY2siOiBu
+        dWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogInJ1bm5p
+        bmciLCAiZXJyb3JfY291bnQiOiAwLCAiZXJyb3IiOiAiTm9uZSIsICJmaW5p
+        c2hlZF9jb3VudCI6IDJ9LCAibWV0YWRhdGEiOiB7InF1ZXJ5X2ZpbmlzaGVk
+        X2NvdW50IjogMSwgInRyYWNlYmFjayI6IG51bGwsICJleGVjdXRpb25fdGlt
+        ZSI6IDEsICJxdWVyeV90b3RhbF9jb3VudCI6IDEsICJlcnJvcl9tZXNzYWdl
+        IjogbnVsbCwgInN0YXRlIjogInN1Y2Nlc3MiLCAiZXJyb3IiOiAiTm9uZSIs
+        ICJjdXJyZW50X3F1ZXJ5IjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
+        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0L21vZHVsZXMuanNvbiJ9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1
+        cnJpdG8uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRl
+        bGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMTM0NDcxZTQw
+        MDcwYWVkOTAifSwgImlkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:26 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:27 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1125'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6
+        ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6
+        MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjog
+        W10sICJwcm9ncmVzc19yZXBvcnQiOiB7InB1cHBldF9pbXBvcnRlciI6IHsi
+        bW9kdWxlcyI6IHsiZXJyb3JfbWVzc2FnZSI6IG51bGwsICJleGVjdXRpb25f
+        dGltZSI6IG51bGwsICJ0b3RhbF9jb3VudCI6IDQsICJ0cmFjZWJhY2siOiBu
+        dWxsLCAiaW5kaXZpZHVhbF9lcnJvcnMiOiBbXSwgInN0YXRlIjogInJ1bm5p
+        bmciLCAiZXJyb3JfY291bnQiOiAwLCAiZXJyb3IiOiAiTm9uZSIsICJmaW5p
+        c2hlZF9jb3VudCI6IDN9LCAibWV0YWRhdGEiOiB7InF1ZXJ5X2ZpbmlzaGVk
+        X2NvdW50IjogMSwgInRyYWNlYmFjayI6IG51bGwsICJleGVjdXRpb25fdGlt
+        ZSI6IDEsICJxdWVyeV90b3RhbF9jb3VudCI6IDEsICJlcnJvcl9tZXNzYWdl
+        IjogbnVsbCwgInN0YXRlIjogInN1Y2Nlc3MiLCAiZXJyb3IiOiAiTm9uZSIs
+        ICJjdXJyZW50X3F1ZXJ5IjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
+        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0L21vZHVsZXMuanNvbiJ9fX0sICJx
+        dWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1
+        cnJpdG8uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3
+        b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRl
+        bGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmMTM0NDcxZTQw
+        MDcwYWVkOTAifSwgImlkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:27 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/08f1292f-45d2-42c5-96b3-bc6e52178299/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1871'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8uc3luYy5zeW5jIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy8wOGYxMjkyZi00NWQyLTQyYzUtOTZiMy1iYzZlNTIxNzgy
+        OTkvIiwgInRhc2tfaWQiOiAiMDhmMTI5MmYtNDVkMi00MmM1LTk2YjMtYmM2
+        ZTUyMTc4Mjk5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOnN5bmMiXSwgImZpbmlzaF90aW1lIjogIjIwMTYtMDItMDhU
+        MjM6MjE6MjdaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1l
+        IjogIjIwMTYtMDItMDhUMjM6MjE6MjFaIiwgInRyYWNlYmFjayI6IG51bGws
+        ICJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2YzMzRiNjc4LTcyMmQtNGViNS1hOWNlLTQ2ZWNjYTVkNmE0NS8iLCAi
+        dGFza19pZCI6ICJmMzM0YjY3OC03MjJkLTRlYjUtYTljZS00NmVjY2E1ZDZh
+        NDUifSwgeyJfaHJlZiI6ICIvcHVscC9hcGkvdjIvdGFza3MvZjQwNjFkZTAt
+        ZmJlNy00Y2Y0LWE5Y2QtYjllY2Y2NGJkNzBkLyIsICJ0YXNrX2lkIjogImY0
+        MDYxZGUwLWZiZTctNGNmNC1hOWNkLWI5ZWNmNjRiZDcwZCJ9XSwgInByb2dy
+        ZXNzX3JlcG9ydCI6IHsicHVwcGV0X2ltcG9ydGVyIjogeyJtb2R1bGVzIjog
+        eyJlcnJvcl9tZXNzYWdlIjogbnVsbCwgImV4ZWN1dGlvbl90aW1lIjogNCwg
+        InRvdGFsX2NvdW50IjogNCwgInRyYWNlYmFjayI6IG51bGwsICJpbmRpdmlk
+        dWFsX2Vycm9ycyI6IFtdLCAic3RhdGUiOiAic3VjY2VzcyIsICJlcnJvcl9j
+        b3VudCI6IDAsICJlcnJvciI6ICJOb25lIiwgImZpbmlzaGVkX2NvdW50Ijog
+        NH0sICJtZXRhZGF0YSI6IHsicXVlcnlfZmluaXNoZWRfY291bnQiOiAxLCAi
+        dHJhY2ViYWNrIjogbnVsbCwgImV4ZWN1dGlvbl90aW1lIjogMSwgInF1ZXJ5
+        X3RvdGFsX2NvdW50IjogMSwgImVycm9yX21lc3NhZ2UiOiBudWxsLCAic3Rh
+        dGUiOiAic3VjY2VzcyIsICJlcnJvciI6ICJOb25lIiwgImN1cnJlbnRfcXVl
+        cnkiOiAiaHR0cDovL2RhdmlkZC5mZWRvcmFwZW9wbGUub3JnL3JlcG9zL3Jh
+        bmRvbV9wdXBwZXQvbW9kdWxlcy5qc29uIn19fSwgInF1ZXVlIjogInJlc2Vy
+        dmVkX3Jlc291cmNlX3dvcmtlci0wQGthdGVsbG8tYnVycml0by5leGFtcGxl
+        LmNvbS5kcSIsICJzdGF0ZSI6ICJmaW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6
+        ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1cnJpdG8u
+        ZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJyZXN1bHQiOiAic3VjY2VzcyIs
+        ICJpbXBvcnRlcl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJlZjY3N2M3NDNkY2Fi
+        NTA5NGYifSwgImV4Y2VwdGlvbiI6IG51bGwsICJyZXBvX2lkIjogIjQiLCAi
+        dHJhY2ViYWNrIjogbnVsbCwgInN0YXJ0ZWQiOiAiMjAxNi0wMi0wOFQyMzoy
+        MToyMVoiLCAiX25zIjogInJlcG9fc3luY19yZXN1bHRzIiwgImNvbXBsZXRl
+        ZCI6ICIyMDE2LTAyLTA4VDIzOjIxOjI3WiIsICJpbXBvcnRlcl90eXBlX2lk
+        IjogInB1cHBldF9pbXBvcnRlciIsICJlcnJvcl9tZXNzYWdlIjogbnVsbCwg
+        InN1bW1hcnkiOiB7InRvdGFsX2V4ZWN1dGlvbl90aW1lIjogNX0sICJhZGRl
+        ZF9jb3VudCI6IDAsICJyZW1vdmVkX2NvdW50IjogMCwgInVwZGF0ZWRfY291
+        bnQiOiAwLCAiaWQiOiAiNTZiOTIyZjc2NzdjNzQzZDhkNGNlZGI5IiwgImRl
+        dGFpbHMiOiB7ImZpbmlzaGVkX2NvdW50IjogNCwgInRvdGFsX2NvdW50Ijog
+        NCwgImVycm9yX2NvdW50IjogMH19LCAiZXJyb3IiOiBudWxsLCAiX2lkIjog
+        eyIkb2lkIjogIjU2YjkyMmYxMzQ0NzFlNDAwNzBhZWQ5MCJ9LCAiaWQiOiAi
+        NTZiOTIyZjEzNDQ3MWU0MDA3MGFlZDkwIn0=
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:28 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/f334b678-722d-4eb5-a9ce-46ecca5d6a45/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1426'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy9mMzM0YjY3OC03MjJkLTRlYjUtYTljZS00NmVj
+        Y2E1ZDZhNDUvIiwgInRhc2tfaWQiOiAiZjMzNGI2NzgtNzIyZC00ZWI1LWE5
+        Y2UtNDZlY2NhNWQ2YTQ1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogIjIw
+        MTYtMDItMDhUMjM6MjE6MjhaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
+        dGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6MjE6MjdaIiwgInRyYWNlYmFj
+        ayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBv
+        cnQiOiB7IjRfcHVwcGV0IjogeyJtb2R1bGVzIjogeyJlcnJvcl9tZXNzYWdl
+        IjogbnVsbCwgImV4ZWN1dGlvbl90aW1lIjogMCwgInRvdGFsX2NvdW50Ijog
+        NCwgInRyYWNlYmFjayI6IG51bGwsICJpbmRpdmlkdWFsX2Vycm9ycyI6IG51
+        bGwsICJzdGF0ZSI6ICJzdWNjZXNzIiwgImVycm9yX2NvdW50IjogMCwgImVy
+        cm9yIjogIk5vbmUiLCAiZmluaXNoZWRfY291bnQiOiA0fSwgInB1Ymxpc2hp
+        bmciOiB7Imh0dHAiOiAic2tpcHBlZCIsICJodHRwcyI6ICJzdWNjZXNzIn0s
+        ICJtZXRhZGF0YSI6IHsiZXhlY3V0aW9uX3RpbWUiOiAwLCAic3RhdGUiOiAi
+        c3VjY2VzcyIsICJlcnJvcl9tZXNzYWdlIjogbnVsbCwgImVycm9yIjogIk5v
+        bmUiLCAidHJhY2ViYWNrIjogbnVsbH19fSwgInF1ZXVlIjogInJlc2VydmVk
+        X3Jlc291cmNlX3dvcmtlci0wQGthdGVsbG8tYnVycml0by5leGFtcGxlLmNv
+        bS5kcSIsICJzdGF0ZSI6ICJmaW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJy
+        ZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBrYXRlbGxvLWJ1cnJpdG8uZXhh
+        bXBsZS5jb20iLCAicmVzdWx0IjogeyJyZXN1bHQiOiAic3VjY2VzcyIsICJl
+        eGNlcHRpb24iOiBudWxsLCAicmVwb19pZCI6ICI0IiwgInN0YXJ0ZWQiOiAi
+        MjAxNi0wMi0wOFQyMzoyMToyN1oiLCAiX25zIjogInJlcG9fcHVibGlzaF9y
+        ZXN1bHRzIiwgImNvbXBsZXRlZCI6ICIyMDE2LTAyLTA4VDIzOjIxOjI4WiIs
+        ICJ0cmFjZWJhY2siOiBudWxsLCAiZGlzdHJpYnV0b3JfdHlwZV9pZCI6ICJw
+        dXBwZXRfZGlzdHJpYnV0b3IiLCAic3VtbWFyeSI6IHsidG90YWxfZXhlY3V0
+        aW9uX3RpbWUiOiAwfSwgImVycm9yX21lc3NhZ2UiOiBudWxsLCAiZGlzdHJp
+        YnV0b3JfaWQiOiAiNF9wdXBwZXQiLCAiaWQiOiAiNTZiOTIyZjg2NzdjNzQz
+        ZDhkNGNlZGJhIiwgImRldGFpbHMiOiB7fX0sICJlcnJvciI6IG51bGwsICJf
+        aWQiOiB7IiRvaWQiOiAiNTZiOTIyZjczNDQ3MWU0MDA3MGFlZDk1In0sICJp
+        ZCI6ICI1NmI5MjJmNzM0NDcxZTQwMDcwYWVkOTUifQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:28 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/f4061de0-fbe7-4cf4-a9cd-b9ecf64bd70d/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1302'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi90YXNrcy9mNDA2MWRlMC1mYmU3LTRjZjQtYTljZC1iOWVj
+        ZjY0YmQ3MGQvIiwgInRhc2tfaWQiOiAiZjQwNjFkZTAtZmJlNy00Y2Y0LWE5
+        Y2QtYjllY2Y2NGJkNzBkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogIjIw
+        MTYtMDItMDhUMjM6MjE6MjhaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
+        dGFydF90aW1lIjogIjIwMTYtMDItMDhUMjM6MjE6MjhaIiwgInRyYWNlYmFj
+        ayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBv
+        cnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QGthdGVsbG8tYnVycml0by5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJm
+        aW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93
+        b3JrZXItMEBrYXRlbGxvLWJ1cnJpdG8uZXhhbXBsZS5jb20iLCAicmVzdWx0
+        IjogeyJyZXN1bHQiOiAic3VjY2VzcyIsICJleGNlcHRpb24iOiBudWxsLCAi
+        cmVwb19pZCI6ICI0IiwgInN0YXJ0ZWQiOiAiMjAxNi0wMi0wOFQyMzoyMToy
+        OFoiLCAiX25zIjogInJlcG9fcHVibGlzaF9yZXN1bHRzIiwgImNvbXBsZXRl
+        ZCI6ICIyMDE2LTAyLTA4VDIzOjIxOjI4WiIsICJ0cmFjZWJhY2siOiBudWxs
+        LCAiZGlzdHJpYnV0b3JfdHlwZV9pZCI6ICJwdXBwZXRfaW5zdGFsbF9kaXN0
+        cmlidXRvciIsICJzdW1tYXJ5IjogInN1Y2Nlc3MiLCAiZXJyb3JfbWVzc2Fn
+        ZSI6IG51bGwsICJkaXN0cmlidXRvcl9pZCI6ICI0IiwgImlkIjogIjU2Yjky
+        MmY4Njc3Yzc0M2Q4ZDRjZWRiYiIsICJkZXRhaWxzIjogeyJlcnJvcnMiOiBb
+        XSwgInN1Y2Nlc3NfdW5pdF9rZXlzIjogW3sidmVyc2lvbiI6ICIwLjIuMCIs
+        ICJuYW1lIjogInNhbWJhIiwgImF1dGhvciI6ICJwdXBwZXQifSwgeyJ2ZXJz
+        aW9uIjogIjEuMC4yIiwgIm5hbWUiOiAicHVyZWZ0cGQiLCAiYXV0aG9yIjog
+        InNheiJ9LCB7InZlcnNpb24iOiAiMC4wLjEiLCAibmFtZSI6ICJjcm9uIiwg
+        ImF1dGhvciI6ICJwdXBwZXQifSwgeyJ2ZXJzaW9uIjogIjAuMi4wIiwgIm5h
+        bWUiOiAiaHR0cGQiLCAiYXV0aG9yIjogIjV1YlozcjAifV19fSwgImVycm9y
+        IjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmNzM0NDcxZTQwMDcw
+        YWVkOTYifSwgImlkIjogIjU2YjkyMmY3MzQ0NzFlNDAwNzBhZWQ5NiJ9
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:28 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/4/search/units/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJwdXBwZXRfbW9kdWxlIl0sImZp
+        ZWxkcyI6eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '90'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '916'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICIyMjJlNzBmMi04NTUxLTQ0YmItODE0
+        YS04ZTk1ZjJiYWRmNDUiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
+        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiOTIyZjYzNDQ3MWU0MDA3
+        MGFlZDkzIn0sICJ1bml0X2lkIjogIjIyMmU3MGYyLTg1NTEtNDRiYi04MTRh
+        LThlOTVmMmJhZGY0NSIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
+        ZSJ9LCB7Im1ldGFkYXRhIjogeyJfaWQiOiAiZDI0Y2E1MjctYzM0NS00OWNi
+        LTlmZTgtZTNmYTRlZDY1MzI3IiwgIl9jb250ZW50X3R5cGVfaWQiOiAicHVw
+        cGV0X21vZHVsZSJ9LCAiX2lkIjogeyIkb2lkIjogIjU2YjkyMmY1MzQ0NzFl
+        NDAwNzBhZWQ5MiJ9LCAidW5pdF9pZCI6ICJkMjRjYTUyNy1jMzQ1LTQ5Y2It
+        OWZlOC1lM2ZhNGVkNjUzMjciLCAidW5pdF90eXBlX2lkIjogInB1cHBldF9t
+        b2R1bGUifSwgeyJtZXRhZGF0YSI6IHsiX2lkIjogImU2ODI5ZWMzLTM0ODkt
+        NDI0Zi04Mzc2LTc4NmEzZTcyOWY2ZSIsICJfY29udGVudF90eXBlX2lkIjog
+        InB1cHBldF9tb2R1bGUifSwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmNzM0
+        NDcxZTQwMDcwYWVkOTQifSwgInVuaXRfaWQiOiAiZTY4MjllYzMtMzQ4OS00
+        MjRmLTgzNzYtNzg2YTNlNzI5ZjZlIiwgInVuaXRfdHlwZV9pZCI6ICJwdXBw
+        ZXRfbW9kdWxlIn0sIHsibWV0YWRhdGEiOiB7Il9pZCI6ICJmMTkzMzFiMS03
+        MDMzLTRkMjMtODllNS00ZGU2MmUyMjIyNmMiLCAiX2NvbnRlbnRfdHlwZV9p
+        ZCI6ICJwdXBwZXRfbW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiOTIy
+        ZjQzNDQ3MWU0MDA3MGFlZDkxIn0sICJ1bml0X2lkIjogImYxOTMzMWIxLTcw
+        MzMtNGQyMy04OWU1LTRkZTYyZTIyMjI2YyIsICJ1bml0X3R5cGVfaWQiOiAi
+        cHVwcGV0X21vZHVsZSJ9XQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:28 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/content/units/puppet_module/search/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJmaWx0ZXJzIjp7Il9pZCI6eyIkaW4iOlsiMjIyZTcw
+        ZjItODU1MS00NGJiLTgxNGEtOGU5NWYyYmFkZjQ1IiwiZDI0Y2E1MjctYzM0
+        NS00OWNiLTlmZTgtZTNmYTRlZDY1MzI3IiwiZTY4MjllYzMtMzQ4OS00MjRm
+        LTgzNzYtNzg2YTNlNzI5ZjZlIiwiZjE5MzMxYjEtNzAzMy00ZDIzLTg5ZTUt
+        NGRlNjJlMjIyMjZjIl19fX0sImluY2x1ZGVfcmVwb3MiOnRydWV9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '219'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '9732'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL2NvbnRlbnQvdW5pdHMvcHVwcGV0
+        X21vZHVsZS8yMjJlNzBmMi04NTUxLTQ0YmItODE0YS04ZTk1ZjJiYWRmNDUv
+        IiwgInB1bHBfdXNlcl9tZXRhZGF0YSI6IHt9LCAiX2NvbnRlbnRfdHlwZV9p
+        ZCI6ICJwdXBwZXRfbW9kdWxlIiwgImNoZWNrc3VtcyI6IFtbIm1hbmlmZXN0
+        cy9zZXJ2aWNlLnBwIiwgIjE5MmM4MTk3OTFlMjA0MjcwMzg5MWU1MWE2MWQz
+        MTRhIl0sIFsiTW9kdWxlZmlsZSIsICJkMzA5ZWUzMTUxNzZlYTNmOTIzNDgw
+        YzI4NmUzYTU1YiJdLCBbInNwZWMvc3BlYy5vcHRzIiwgImE2MDBkZWQ5OTVk
+        OTQ4ZTM5M2ZiZTIzMjBiYThlNTFjIl0sIFsidGVzdHMvaW5pdC5wcCIsICI0
+        ZGNjMjg2OGNiOTc0MGMzMmViNjhmMzQ1YTdiNzE5NCJdLCBbInNwZWMvc3Bl
+        Y19oZWxwZXIucmIiLCAiY2ExOWVjNGY0NTFlYmM3ZmRiMDM1YjUyZWFlNmU5
+        MDkiXSwgWyJtYW5pZmVzdHMvY29uZi5wcCIsICJhZDRiMjg1YTY3MzZhZWJl
+        YmI2ZmE1OWUzOGRkZGVkMSJdLCBbIm1hbmlmZXN0cy9wYXJhbXMucHAiLCAi
+        ZjQxZDExZTdkYmJkZTY3YTJjZjRkMjljZjY3ODNhNTUiXSwgWyJtYW5pZmVz
+        dHMvaW5zdGFsbC5wcCIsICJjOTI5ZTEzZjU0NmJjZGIzZjAyZWZlZGU5ZGIx
+        YWY5YiJdLCBbIm1hbmlmZXN0cy9pbml0LnBwIiwgImY2NThiNTk0YWM4OGRh
+        OTAyNmM2NzViZmUwMzEwZDU3Il0sIFsiUkVBRE1FIiwgIjYyN2ZiYjU3ZWI4
+        ZDk0MzA4ZjAxYTExNDMwNDE4ZmI2Il1dLCAiY2hpbGRyZW4iOiB7fSwgImF1
+        dGhvciI6ICJwdXBwZXQiLCAicHJvamVjdF9wYWdlIjogImh0dHBzOi8vZ2l0
+        aHViLmNvbS81VWItWjNyMC9wdXBwZXQtc2FtYmEiLCAic291cmNlIjogImh0
+        dHBzOi8vZ2l0aHViLmNvbS81VWItWjNyMC9wdXBwZXQtc2FtYmEiLCAidmVy
+        c2lvbiI6ICIwLjIuMCIsICJyZXBvc2l0b3J5X21lbWJlcnNoaXBzIjogWyI0
+        Il0sICJkZXNjcmlwdGlvbiI6ICJUaGlzIHB1cHBldCBtb2R1bGUgbWFuYWdl
+        cyBzYW1iYSBjb25maWd1cmF0aW9uLlxuXG5JdCBoYXMgYmVlbiB0ZXN0ZWQg
+        b25seSBmb3Igc2FtYmEgbWFuYWdpbmcgc2hhcmVzLCB0b3VnaCBpdCBkb2Vz
+        IG5vdCBjYXJlIGFib3V0IHRoZSBjb250ZW50IG9mIHlvdXIgY29uZmlnIGZp
+        bGUuXG5cblRlc3RlZCBvbiBDZW50T1MgNi4yLCBSSEVMIDYuMiwgQ2VudE9T
+        IDUuOC4iLCAiX2xhc3RfdXBkYXRlZCI6ICIyMDE2LTAyLTA4VDIzOjIxOjI2
+        WiIsICJkb3dubG9hZGVkIjogdHJ1ZSwgImRlcGVuZGVuY2llcyI6IFtdLCAi
+        dHlwZXMiOiBbXSwgIl9zdG9yYWdlX3BhdGgiOiAiL3Zhci9saWIvcHVscC9j
+        b250ZW50L3VuaXRzL3B1cHBldF9tb2R1bGUvMjIyZS8yMjJlNzBmMi04NTUx
+        LTQ0YmItODE0YS04ZTk1ZjJiYWRmNDUvNVViWjNyMC1zYW1iYS0wLjIuMC50
+        YXIuZ3oiLCAiX2lkIjogIjIyMmU3MGYyLTg1NTEtNDRiYi04MTRhLThlOTVm
+        MmJhZGY0NSIsICJuYW1lIjogInNhbWJhIiwgImxpY2Vuc2UiOiAiR1BMIHYz
+        IiwgImNoZWNrc3VtIjogImM3NzJkZWNmNzgzNmU0MmE3MjE1YzJhZWUzZjhi
+        ZDc0MmUxYzQ4MDM5NGE2NTBiNjU5NDdiM2MwODMyODRjYWMiLCAic3VtbWFy
+        eSI6ICJBIHB1cHBldCBtb2R1bGUgdGhhdCBtYW5hZ2VzIHNhbWJhIiwgImNo
+        ZWNrc3VtX3R5cGUiOiAic2hhMjU2IiwgInRhZ19saXN0IjogW119LCB7Il9o
+        cmVmIjogIi9wdWxwL2FwaS92Mi9jb250ZW50L3VuaXRzL3B1cHBldF9tb2R1
+        bGUvZDI0Y2E1MjctYzM0NS00OWNiLTlmZTgtZTNmYTRlZDY1MzI3LyIsICJw
+        dWxwX3VzZXJfbWV0YWRhdGEiOiB7fSwgIl9jb250ZW50X3R5cGVfaWQiOiAi
+        cHVwcGV0X21vZHVsZSIsICJjaGVja3N1bXMiOiBbWyJmaWxlc1xcZGViaWFu
+        XFxNYXhDbGllbnRzTnVtYmVyIiwgIjJhNTJhNWU2NWZjM2M0M2Y0MDk1NTBk
+        ZmFkMWY5MDRmIl0sIFsic3BlY1xcdW5pdFxccHVwcGV0XFx0eXBlXFxSRUFE
+        TUUubWFya2Rvd24iLCAiZGUyNmE3NjQzODEzYWJkNmMyZTdlMjgwNzFiMWVm
+        OTQiXSwgWyJzcGVjXFx1bml0XFxwdXBwZXRcXHByb3ZpZGVyXFxSRUFETUUu
+        bWFya2Rvd24iLCAiZTUyNjY4OTQ0ZWU2YWYyZmI1ZDViOWU3OTgzNDI2NDUi
+        XSwgWyJmaWxlc1xcZGViaWFuXFxEb250UmVzb2x2ZSIsICJlYjQ1ODVhZDlm
+        ZTA0MjY3ODFlZDdjNDkyNTJmODIyNSJdLCBbInRlc3RzXFxpbml0LnBwIiwg
+        IjVkNmU4NGJkMDZlMjNjNGQ1NjU3ODJkYjY3ZTMzM2VjIl0sIFsidGVtcGxh
+        dGVzXFxkZWZhdWx0X2NvbmZpZy5lcmIiLCAiMjIyOTQ1MTg5YzViOGQ0ZWZh
+        OWZlMmMzY2MwMWY0MzUiXSwgWyJzcGVjXFxSRUFETUUubWFya2Rvd24iLCAi
+        MzJhMWZjMDEyMWMyOGFmZjU1NGVmNWQ0MjJiOGI1MWUiXSwgWyJmaWxlc1xc
+        ZGViaWFuXFxBbHRMb2ciLCAiYTNkN2Y4OWRjOTE2MDYyMjM0MjM3YWNmNzVi
+        ZGU5N2QiXSwgWyJSRUFETUUubWQiLCAiOWNiYjk0NWM2Y2U3MzAzMWIwMGIx
+        YzUyNjljYmI2MzgiXSwgWyJmaWxlc1xcZGViaWFuXFxDaHJvb3RFdmVyeW9u
+        ZSIsICJlYjQ1ODVhZDlmZTA0MjY3ODFlZDdjNDkyNTJmODIyNSJdLCBbImZp
+        bGVzXFxkZWJpYW5cXE5vQW5vbnltb3VzIiwgImViNDU4NWFkOWZlMDQyNjc4
+        MWVkN2M0OTI1MmY4MjI1Il0sIFsiZmlsZXNcXGRlYmlhblxcVmVyYm9zZUxv
+        ZyIsICI3ZmEzYjc2N2M0NjBiNTRhMmJlNGQ0OTAzMGIzNDljNyJdLCBbImZp
+        bGVzXFxkZWJpYW5cXFBBTUF1dGhlbnRpY2F0aW9uIiwgImViNDU4NWFkOWZl
+        MDQyNjc4MWVkN2M0OTI1MmY4MjI1Il0sIFsibWFuaWZlc3RzXFxwYXJhbXMu
+        cHAiLCAiZTdiM2NmM2E2MTE1ZTk2YTZmNzZkM2ZmMmM1NDU2MjUiXSwgWyJm
+        aWxlc1xcZGViaWFuXFxQdXJlREIiLCAiNmRiNTk2NTY5ODUyN2UxZjE0MGRm
+        YzczZWQ0MGQ0N2MiXSwgWyJtYW5pZmVzdHNcXGNvbmZpZy5wcCIsICJiMTJk
+        NjMzMTM0OWQyMTdiYmJhNjg0YTBjNTY1MjYyMCJdLCBbImZpbGVzXFxkZWJp
+        YW5cXFVuaXhBdXRoZW50aWNhdGlvbiIsICJlYjQ1ODVhZDlmZTA0MjY3ODFl
+        ZDdjNDkyNTJmODIyNSJdLCBbIm1hbmlmZXN0c1xcaW5pdC5wcCIsICI2MTY3
+        NWE5MDVjNDA2NDFlNzBkNmY3NDk4NWZkYThjOCJdLCBbIk1vZHVsZWZpbGUi
+        LCAiZGVjYWFhYjMyYTk5MzFjMzU2NWE2ZmM0N2YyNmE3NDAiXSwgWyJmaWxl
+        c1xcZGViaWFuXFxNaW5VSUQiLCAiNGZiYWZkNjk0OGI2NTI5Y2FhMmI3OGU0
+        NzYzNTk4NzUiXSwgWyJtYW5pZmVzdHNcXHNlcnZpY2UucHAiLCAiNzIyZDYy
+        NjUxZTZjNjFkYTQzMzAzMzJiNjM4MmY1YTkiXSwgWyJzcGVjXFxzcGVjLm9w
+        dHMiLCAiYTYwMGRlZDk5NWQ5NDhlMzkzZmJlMjMyMGJhOGU1MWMiXSwgWyJz
+        cGVjXFxzcGVjX2hlbHBlci5yYiIsICJjYTE5ZWM0ZjQ1MWViYzdmZGIwMzVi
+        NTJlYWU2ZTkwOSJdLCBbIm1hbmlmZXN0c1xcaW5zdGFsbC5wcCIsICI1MWNh
+        YTI1ZjkwYTQ3OWNkNTAxODI0MzYyYjliZGJhMSJdXSwgImNoaWxkcmVuIjog
+        e30sICJhdXRob3IiOiAic2F6IiwgInByb2plY3RfcGFnZSI6ICJodHRwczov
+        L2dpdGh1Yi5jb20vc2F6L3B1cHBldC1wdXJlZnRwZCIsICJzb3VyY2UiOiAi
+        IiwgInZlcnNpb24iOiAiMS4wLjIiLCAicmVwb3NpdG9yeV9tZW1iZXJzaGlw
+        cyI6IFsiNCJdLCAiZGVzY3JpcHRpb24iOiAiTWFuYWdlIFB1cmUtRlRQZCB2
+        aWEgUHVwcGV0IiwgIl9sYXN0X3VwZGF0ZWQiOiAiMjAxNi0wMi0wOFQyMzoy
+        MToyNVoiLCAiZG93bmxvYWRlZCI6IHRydWUsICJkZXBlbmRlbmNpZXMiOiBb
+        XSwgInR5cGVzIjogW10sICJfc3RvcmFnZV9wYXRoIjogIi92YXIvbGliL3B1
+        bHAvY29udGVudC91bml0cy9wdXBwZXRfbW9kdWxlL2QyNGMvZDI0Y2E1Mjct
+        YzM0NS00OWNiLTlmZTgtZTNmYTRlZDY1MzI3LzVVYlozcjAtcHVyZWZ0cGQt
+        MS4wLjIudGFyLmd6IiwgIl9pZCI6ICJkMjRjYTUyNy1jMzQ1LTQ5Y2ItOWZl
+        OC1lM2ZhNGVkNjUzMjciLCAibmFtZSI6ICJwdXJlZnRwZCIsICJsaWNlbnNl
+        IjogIkFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCIsICJjaGVja3N1bSI6
+        ICJlZWYxOGU4YmQ1MTYyYTAxZDgwNWM3NjMzNWI4YTk0YzQ4MDY3ZWE4NGEw
+        ZTZmOTRlZDFiZWVmNTVmYWVlODA5IiwgInN1bW1hcnkiOiAiIiwgImNoZWNr
+        c3VtX3R5cGUiOiAic2hhMjU2IiwgInRhZ19saXN0IjogW119LCB7Il9ocmVm
+        IjogIi9wdWxwL2FwaS92Mi9jb250ZW50L3VuaXRzL3B1cHBldF9tb2R1bGUv
+        ZTY4MjllYzMtMzQ4OS00MjRmLTgzNzYtNzg2YTNlNzI5ZjZlLyIsICJwdWxw
+        X3VzZXJfbWV0YWRhdGEiOiB7fSwgIl9jb250ZW50X3R5cGVfaWQiOiAicHVw
+        cGV0X21vZHVsZSIsICJjaGVja3N1bXMiOiBbWyJtYW5pZmVzdHMvdGFzay5w
+        cCIsICI0Y2I0YWE0OWRmOGM5MDYxOWQ5MDM5OTkyYTUxNmMwNyJdLCBbInNw
+        ZWMvc3BlYy5vcHRzIiwgImE2MDBkZWQ5OTVkOTQ4ZTM5M2ZiZTIzMjBiYThl
+        NTFjIl0sIFsibWFuaWZlc3RzL21vbnRobHkucHAiLCAiYjk5MDBmNmUyZGIw
+        ODU0ZjM0YzY2OTMwMjg3ZGI3MDAiXSwgWyJ0ZXN0cy9pbml0LnBwIiwgIjRi
+        Y2I3ZTAzYWNlZDhiYjQ2ODM1MWE0NWU4ZTliYzc2Il0sIFsic3BlYy9zcGVj
+        X2hlbHBlci5yYiIsICJjYTE5ZWM0ZjQ1MWViYzdmZGIwMzViNTJlYWU2ZTkw
+        OSJdLCBbIm1hbmlmZXN0cy93ZWVrbHkucHAiLCAiN2QzNGEwMGQ2Mjk1NzVl
+        ZTJlNGY0YmQ1OGVhYjFkNDAiXSwgWyJtYW5pZmVzdHMvZGFpbHkucHAiLCAi
+        OTZmZmQwZTU5MmRlM2Y1ZGQwNTRkZTM3NTVhOGJjZmYiXSwgWyJNb2R1bGVm
+        aWxlIiwgIjE4YzkyMDhlNzdhM2M0M2I0ZGY2NWFlOGJiM2JmODA0Il0sIFsi
+        bWFuaWZlc3RzL2luaXQucHAiLCAiOGMzZTEwYmMzZTI0NjU5MDg0MzZmMWFh
+        NzcxZjAzOWIiXSwgWyJtYW5pZmVzdHMvaG91cmx5LnBwIiwgIjdhMTc2MjFh
+        NzMxNzUwYzQwYzg3MmU3YTViNmY0NDQyIl0sIFsiUkVBRE1FIiwgIjQ5MWU2
+        M2E5Y2Y3NWY4MjUzNjk1Mjg5ODNjYWFlODdhIl0sIFsibWFuaWZlc3RzL3Bh
+        cmFtcy5wcCIsICJkNTkyNDkxOGZjMDU5ZGFhNDdhYTM1NTUzNGE0YjQzNCJd
+        XSwgImNoaWxkcmVuIjoge30sICJhdXRob3IiOiAicHVwcGV0IiwgInByb2pl
+        Y3RfcGFnZSI6ICJodHRwczovL2dpdGh1Yi5jb20vNVViLVozcjAvcHVwcGV0
+        LWNyb24iLCAic291cmNlIjogImh0dHBzOi8vZ2l0aHViLmNvbS81VWItWjNy
+        MC9wdXBwZXQtY3Jvbi5naXQiLCAidmVyc2lvbiI6ICIwLjAuMSIsICJyZXBv
+        c2l0b3J5X21lbWJlcnNoaXBzIjogWyI0Il0sICJkZXNjcmlwdGlvbiI6ICJU
+        aGlzIHB1cHBldCBtb2R1bGUgbWFuYWdlcyB0aGUgc2NoZWR1bGluZyBvZiB0
+        YXNrIHRyb3VnaCBjcm9uLlxuSXQgaGFzIHNob3J0Y3V0cyAgY2xhc3NlcyBm
+        b3IgaG91cmx5ICgvZXRjL2Nyb24uaG91cmx5KSwgZGFpbHkgKC9ldGMvY3Jv
+        bi5kYWlseSksIHdlZWtseSAoL2V0Yy9jcm9uLmRhaWx5KSBhbmQgbW9udGhs
+        eSAoL2V0Yy9jcm9uLm1vbnRobHkpIHNjaGVkdWxhdGlvbi5cblxuSXQgaGFz
+        IGJlZW4gdGVzdGVkIG9ubHkgLi4uXG5cblRlc3RlZCBvbiBDZW50T1MgNi4y
+        LCBSSEVMIDYuMiwgQ2VudE9TIDUuOC5cblxuUmVxdWlyZW1lbnRzOlxuXG4g
+        KiBbRmFjdGVyXShodHRwOi8vd3d3LnB1cHBldGxhYnMuY29tL3B1cHBldC9y
+        ZWxhdGVkLXByb2plY3RzL2ZhY3Rlci8pIDEuNi4xIG9yIGdyZWF0ZXIgKHZl
+        cnNpb25zIHRoYXQgc3VwcG9ydCB0aGUgb3NmYW1pbHkgZmFjdClcbiAqIFtw
+        dXBwZXRsYWJzL3N0ZGxpYl0gZm9yIHRoZSB2YWxpZGF0ZV9hYnNvbHV0ZV9w
+        YXRoIHN0YXRlbWVudFxuXG5Ub2RvOlxuLSBTZXQgdXAgYW5kIGluc3RhbGwg
+        Y3JvbiBpbiB0aGUgLSB2ZXJ5IHVubGlrZWx5IC0gY2FzZSB0aGF0IGl0J3Mg
+        bm90IGluc3RhbGxlZDtcbi0gTWFrZSBjcm9uOjp0YXNrIHdvcmsgd2l0aCB3
+        aW5kb3dzLiIsICJfbGFzdF91cGRhdGVkIjogIjIwMTYtMDItMDhUMjM6MjE6
+        MjdaIiwgImRvd25sb2FkZWQiOiB0cnVlLCAiZGVwZW5kZW5jaWVzIjogW3si
+        bmFtZSI6ICJwdXBwZXRsYWJzL3N0ZGxpYiIsICJ2ZXJzaW9uX3JlcXVpcmVt
+        ZW50IjogIj49My4wLjAifV0sICJ0eXBlcyI6IFtdLCAiX3N0b3JhZ2VfcGF0
+        aCI6ICIvdmFyL2xpYi9wdWxwL2NvbnRlbnQvdW5pdHMvcHVwcGV0X21vZHVs
+        ZS9lNjgyL2U2ODI5ZWMzLTM0ODktNDI0Zi04Mzc2LTc4NmEzZTcyOWY2ZS81
+        VWJaM3IwLWNyb24tMC4wLjEudGFyLmd6IiwgIl9pZCI6ICJlNjgyOWVjMy0z
+        NDg5LTQyNGYtODM3Ni03ODZhM2U3MjlmNmUiLCAibmFtZSI6ICJjcm9uIiwg
+        ImxpY2Vuc2UiOiAiR1BMIHYzIiwgImNoZWNrc3VtIjogIjBlOTQ4NWUwMDQy
+        NjM2YzA5NTIyMDVjZDY3YWQ2NjkwNGQwYzRmNmIzN2VhMTkyZDE1Yjc2NDI2
+        ZTk2MTA0YTYiLCAic3VtbWFyeSI6ICJQdXBwZXQgbW9kdWxlIHRoYXQgbWFu
+        YWdlcyBzY2hlZHVsaW5nIG9mIHRhc2sgdHJvdWdoIGNyb24iLCAiY2hlY2tz
+        dW1fdHlwZSI6ICJzaGEyNTYiLCAidGFnX2xpc3QiOiBbXX0sIHsiX2hyZWYi
+        OiAiL3B1bHAvYXBpL3YyL2NvbnRlbnQvdW5pdHMvcHVwcGV0X21vZHVsZS9m
+        MTkzMzFiMS03MDMzLTRkMjMtODllNS00ZGU2MmUyMjIyNmMvIiwgInB1bHBf
+        dXNlcl9tZXRhZGF0YSI6IHt9LCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBw
+        ZXRfbW9kdWxlIiwgImNoZWNrc3VtcyI6IFtbImZpbGVzL2RlZmxhdGUuY29u
+        ZiIsICIxZmM2NzhhYTk2N2Y0ZmQzYzgyMzhjOTExMTAxOWExZCJdLCBbInNw
+        ZWMvc3BlYy5vcHRzIiwgImE2MDBkZWQ5OTVkOTQ4ZTM5M2ZiZTIzMjBiYThl
+        NTFjIl0sIFsidGVtcGxhdGVzL2h0dHBkLmNvbmYuUkhFTC5lcmIiLCAiNGNi
+        Y2MyOTc2NTM1NmFlYjlhMDFiZWVjZTY3MzhmZTgiXSwgWyJmaWxlcy9zcGR5
+        L21vZC1zcGR5LWJldGFfY3VycmVudF9pMzg2LnJwbSIsICI0YWJkZWUzNTM5
+        MmMxYzZkMzI5ZGVmMjAxNzM5MzQwMyJdLCBbInRlbXBsYXRlcy9waHAuaW5p
+        LlJIRUwuZXJiIiwgIjI1Y2JiNzYwZTVmY2Y4MTE2NWZiYzMzY2U5OGZlNmQ5
+        Il0sIFsibWFuaWZlc3RzL3BhcmFtcy5wcCIsICJkMDJlYjg3YTNlZDY5ZmY2
+        MzhjYTAyOGI2NzAwMTYyMSJdLCBbImZpbGVzL2Vycm9yL2Vycm9yLmh0bWwi
+        LCAiM2FmODQxMWM4MmEwNzI1YzBiYTZiYTBmYTY4MWJkMDgiXSwgWyJmaWxl
+        cy9zcGR5L21vZC1zcGR5LWJldGFfY3VycmVudF94ODZfNjQucnBtIiwgIjZk
+        MjVkMDNiZmI4MjQ5ZjdjNmRjZDk5MDY5MDljOTk1Il0sIFsibWFuaWZlc3Rz
+        L3NzbC5wcCIsICI2ZDhhOWNhZjFhMTMxMzJiNmNkMjQ2NGRhNjA2MjgxYiJd
+        LCBbIm1hbmlmZXN0cy9pbml0LnBwIiwgImZjZDhjOGY5NzY3MTBlYWM2NTMy
+        YWRjMmYyOGJmYTQ0Il0sIFsibWFuaWZlc3RzL2Rldi5wcCIsICIxM2UwNTY0
+        ZDM2NmYyNzY5NGIxMTVmODExMjQwNjQyOSJdLCBbIm1hbmlmZXN0cy92aG9z
+        dC5wcCIsICI2ZWFjODQyMDFkMjM5NDM2YzM4NmZlMmFkZjRjNDI1MiJdLCBb
+        ImZpbGVzL3NwZHkvbW9kLXNwZHktYmV0YV9jdXJyZW50X2kzODYuZGViIiwg
+        IjdkNzI0NzRlMzk4M2YzOTBkYWY4OWYxMjg5ZTA4NTIxIl0sIFsidGVtcGxh
+        dGVzL3NzbC5jb25mLlJIRUwuZXJiIiwgImYxMTY2MThmYjg1ZmZkZGEzY2Vm
+        MWZjZjVhODIxMGM4Il0sIFsibGliL3B1cHBldC9wcm92aWRlci9hMm1vZC9h
+        Mm1vZC5yYiIsICIwYWNmNDJkM2Q2NzBhOTkxNWM1YTNmNDZhZTczMzVmMSJd
+        LCBbImxpYi9wdXBwZXQvcHJvdmlkZXIvYTJtb2QvbW9kZml4LnJiIiwgImY0
+        NTM2Y2RjYTY4ZDE1YTIzNWNiYjFlMGI2N2U0NDA2Il0sIFsidGVtcGxhdGVz
+        L2xvY2FsaXplZC1lcnJvci1wYWdlcy5EZWJpYW4uZXJiIiwgIjU3OGRmZDUz
+        NzkxMWE3YjhkZGNkNDg1NjQwNDUyYWMzIl0sIFsic3BlYy9zcGVjX2hlbHBl
+        ci5yYiIsICJjYTE5ZWM0ZjQ1MWViYzdmZGIwMzViNTJlYWU2ZTkwOSJdLCBb
+        Im1hbmlmZXN0cy9zcGR5LnBwIiwgImVmNzkyYjQxNDA4MjM2YWVkYTdmNTdh
+        NDI3ZjU3NGViIl0sIFsiZmlsZXMvc3BkeS9tb2Qtc3BkeS1iZXRhX2N1cnJl
+        bnRfYW1kNjQuZGViIiwgIjgzNGM4NTAzOGFlNTAyNjBkYTNhMDcwY2ZhMGNk
+        YmRmIl0sIFsiTW9kdWxlZmlsZSIsICJlYTMzZTJkN2ZlNGQ5N2VhZmEwNzE3
+        MmM5MmMxMzBkYiJdLCBbIm1hbmlmZXN0cy9waHAucHAiLCAiNTZlYTdmMjk3
+        YWFhY2RkZTAwMWQzNTI5MDUxYjNjMGUiXSwgWyJ0ZW1wbGF0ZXMvdmhvc3Qt
+        ZGVmYXVsdC5jb25mLmVyYiIsICJlZDY0YTUzYWYwZDdiYWQ3NjIxNzZhOThj
+        OWVhM2U2MiJdLCBbIlJFQURNRSIsICI0YzliNDM2ZTQ4YTQ0N2Q2MzRlYjgy
+        MWMwNmZmZjZmYyJdLCBbInRlbXBsYXRlcy9waHAuaW5pLkRlYmlhbi5lcmIi
+        LCAiMTgwYTM5Y2EyNjJlMTMyYzZkNDMxOTczOTg2ZDdlMzkiXSwgWyJsaWIv
+        cHVwcGV0L3R5cGUvYTJtb2QucmIiLCAiYWRjZjc1NGEwNzYxNTM0NDJlYWMy
+        YmViNDI3MzY1NDciXV0sICJjaGlsZHJlbiI6IHt9LCAiYXV0aG9yIjogIjV1
+        YlozcjAiLCAicHJvamVjdF9wYWdlIjogIiIsICJzb3VyY2UiOiAiIiwgInZl
+        cnNpb24iOiAiMC4yLjAiLCAicmVwb3NpdG9yeV9tZW1iZXJzaGlwcyI6IFsi
+        NCJdLCAiZGVzY3JpcHRpb24iOiAiVGhpcyBtb2R1bGUgaGFuZGxlcyBhIHN0
+        YW5kYXJkIGh0dHBkIGluc3RhbGxhdGlvbi5cblxuSXQgaGFzIG9wdGlvbmFs
+        IGNsYXNzZXMgaWYgeW91IHdhbnQgdG8gaW5zdGFsbCBhbmQgY29uZmlndXJl
+        IG1vZF9zc2wsIHBocCwgbW9kX3NwZHkgb3IgaHR0cGQtZGV2LlxuXG5JdCBo
+        YXMgYmVlbiB0ZXN0ZWQgb24gQ2VudE9TIDYuMiBhbmQgQ2VudE9TIDUuOC5c
+        bkl0IGNvdWxkIHdvcmsgYWxzbyBvbiBkZWJpYW4sIGJ1dCB0aGF0IG5lZWRz
+        IHRvIGJlIHRlc3RlZC4iLCAiX2xhc3RfdXBkYXRlZCI6ICIyMDE2LTAyLTA4
+        VDIzOjIxOjI0WiIsICJkb3dubG9hZGVkIjogdHJ1ZSwgImRlcGVuZGVuY2ll
+        cyI6IFtdLCAidHlwZXMiOiBbeyJkb2MiOiAiTWFuYWdlIEFwYWNoZSAyIG1v
+        ZHVsZXMgb24gRGViaWFuIGFuZCBVYnVudHUiLCAibmFtZSI6ICJhMm1vZCIs
+        ICJwYXJhbWV0ZXJzIjogW3siZG9jIjogIlRoZSBuYW1lIG9mIHRoZSBtb2R1
+        bGUgdG8gYmUgbWFuYWdlZCIsICJuYW1lIjogIm5hbWUifV0sICJwcm92aWRl
+        cnMiOiBbeyJkb2MiOiAiTWFuYWdlIEFwYWNoZSAyIG1vZHVsZXMgb24gRGVi
+        aWFuIGFuZCBVYnVudHUiLCAibmFtZSI6ICJhMm1vZCJ9LCB7ImRvYyI6ICJE
+        dW1teSBwcm92aWRlciBmb3IgQTJtb2QuXG5cbiAgICBGYWtlIG5pbCByZXNv
+        dXJjZXMgd2hlbiB0aGVyZSBpcyBubyBjcm9udGFiIGJpbmFyeSBhdmFpbGFi
+        bGUuIEFsbG93c1xuICAgIHB1cHBldGQgdG8gcnVuIG9uIGEgYm9vdHN0cmFw
+        cGVkIG1hY2hpbmUgYmVmb3JlIGEgQ3JvbiBwYWNrYWdlIGhhcyBiZWVuXG4g
+        ICAgaW5zdGFsbGVkLiBXb3JrYXJvdW5kIGZvcjogaHR0cDovL3Byb2plY3Rz
+        LnB1cHBldGxhYnMuY29tL2lzc3Vlcy8yMzg0XG4gICAgIiwgIm5hbWUiOiAi
+        bW9kZml4In1dfV0sICJfc3RvcmFnZV9wYXRoIjogIi92YXIvbGliL3B1bHAv
+        Y29udGVudC91bml0cy9wdXBwZXRfbW9kdWxlL2YxOTMvZjE5MzMxYjEtNzAz
+        My00ZDIzLTg5ZTUtNGRlNjJlMjIyMjZjLzVVYlozcjAtaHR0cGQtMC4yLjAu
+        dGFyLmd6IiwgIl9pZCI6ICJmMTkzMzFiMS03MDMzLTRkMjMtODllNS00ZGU2
+        MmUyMjIyNmMiLCAibmFtZSI6ICJodHRwZCIsICJsaWNlbnNlIjogIkdQTCB2
+        MyIsICJjaGVja3N1bSI6ICIwMDQzMGRlYmI5OWU5NDE2YTBmNzNlMTgxMjlj
+        NjNlZWU2NzkwMjNiY2RmMGQyNjc3NDJlYmU4ZmYxMGU5Yzk5IiwgInN1bW1h
+        cnkiOiAiVGhpcyBtb2R1bGUgaGFuZGxlcyBhIHN0YW5kYXJkIGh0dHBkIGlu
+        c3RhbGxhdGlvbi4iLCAiY2hlY2tzdW1fdHlwZSI6ICJzaGEyNTYiLCAidGFn
+        X2xpc3QiOiBbXX1d
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:28 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/4/search/units/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJwdXBwZXRfbW9kdWxlIl0sImZp
+        ZWxkcyI6eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '90'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '916'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICIyMjJlNzBmMi04NTUxLTQ0YmItODE0
+        YS04ZTk1ZjJiYWRmNDUiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
+        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiOTIyZjYzNDQ3MWU0MDA3
+        MGFlZDkzIn0sICJ1bml0X2lkIjogIjIyMmU3MGYyLTg1NTEtNDRiYi04MTRh
+        LThlOTVmMmJhZGY0NSIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
+        ZSJ9LCB7Im1ldGFkYXRhIjogeyJfaWQiOiAiZDI0Y2E1MjctYzM0NS00OWNi
+        LTlmZTgtZTNmYTRlZDY1MzI3IiwgIl9jb250ZW50X3R5cGVfaWQiOiAicHVw
+        cGV0X21vZHVsZSJ9LCAiX2lkIjogeyIkb2lkIjogIjU2YjkyMmY1MzQ0NzFl
+        NDAwNzBhZWQ5MiJ9LCAidW5pdF9pZCI6ICJkMjRjYTUyNy1jMzQ1LTQ5Y2It
+        OWZlOC1lM2ZhNGVkNjUzMjciLCAidW5pdF90eXBlX2lkIjogInB1cHBldF9t
+        b2R1bGUifSwgeyJtZXRhZGF0YSI6IHsiX2lkIjogImU2ODI5ZWMzLTM0ODkt
+        NDI0Zi04Mzc2LTc4NmEzZTcyOWY2ZSIsICJfY29udGVudF90eXBlX2lkIjog
+        InB1cHBldF9tb2R1bGUifSwgIl9pZCI6IHsiJG9pZCI6ICI1NmI5MjJmNzM0
+        NDcxZTQwMDcwYWVkOTQifSwgInVuaXRfaWQiOiAiZTY4MjllYzMtMzQ4OS00
+        MjRmLTgzNzYtNzg2YTNlNzI5ZjZlIiwgInVuaXRfdHlwZV9pZCI6ICJwdXBw
+        ZXRfbW9kdWxlIn0sIHsibWV0YWRhdGEiOiB7Il9pZCI6ICJmMTkzMzFiMS03
+        MDMzLTRkMjMtODllNS00ZGU2MmUyMjIyNmMiLCAiX2NvbnRlbnRfdHlwZV9p
+        ZCI6ICJwdXBwZXRfbW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZiOTIy
+        ZjQzNDQ3MWU0MDA3MGFlZDkxIn0sICJ1bml0X2lkIjogImYxOTMzMWIxLTcw
+        MzMtNGQyMy04OWU1LTRkZTYyZTIyMjI2YyIsICJ1bml0X3R5cGVfaWQiOiAi
+        cHVwcGV0X21vZHVsZSJ9XQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:28 GMT
+- request:
+    method: post
+    uri: https://katello-burrito.example.com/pulp/api/v2/content/units/puppet_module/search/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJmaWx0ZXJzIjp7Il9pZCI6eyIkaW4iOlsiMjIyZTcw
+        ZjItODU1MS00NGJiLTgxNGEtOGU5NWYyYmFkZjQ1Il19fX0sImluY2x1ZGVf
+        cmVwb3MiOnRydWV9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '102'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:28 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1660'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL2NvbnRlbnQvdW5pdHMvcHVwcGV0
+        X21vZHVsZS8yMjJlNzBmMi04NTUxLTQ0YmItODE0YS04ZTk1ZjJiYWRmNDUv
+        IiwgInB1bHBfdXNlcl9tZXRhZGF0YSI6IHt9LCAiX2NvbnRlbnRfdHlwZV9p
+        ZCI6ICJwdXBwZXRfbW9kdWxlIiwgImNoZWNrc3VtcyI6IFtbIm1hbmlmZXN0
+        cy9zZXJ2aWNlLnBwIiwgIjE5MmM4MTk3OTFlMjA0MjcwMzg5MWU1MWE2MWQz
+        MTRhIl0sIFsiTW9kdWxlZmlsZSIsICJkMzA5ZWUzMTUxNzZlYTNmOTIzNDgw
+        YzI4NmUzYTU1YiJdLCBbInNwZWMvc3BlYy5vcHRzIiwgImE2MDBkZWQ5OTVk
+        OTQ4ZTM5M2ZiZTIzMjBiYThlNTFjIl0sIFsidGVzdHMvaW5pdC5wcCIsICI0
+        ZGNjMjg2OGNiOTc0MGMzMmViNjhmMzQ1YTdiNzE5NCJdLCBbInNwZWMvc3Bl
+        Y19oZWxwZXIucmIiLCAiY2ExOWVjNGY0NTFlYmM3ZmRiMDM1YjUyZWFlNmU5
+        MDkiXSwgWyJtYW5pZmVzdHMvY29uZi5wcCIsICJhZDRiMjg1YTY3MzZhZWJl
+        YmI2ZmE1OWUzOGRkZGVkMSJdLCBbIm1hbmlmZXN0cy9wYXJhbXMucHAiLCAi
+        ZjQxZDExZTdkYmJkZTY3YTJjZjRkMjljZjY3ODNhNTUiXSwgWyJtYW5pZmVz
+        dHMvaW5zdGFsbC5wcCIsICJjOTI5ZTEzZjU0NmJjZGIzZjAyZWZlZGU5ZGIx
+        YWY5YiJdLCBbIm1hbmlmZXN0cy9pbml0LnBwIiwgImY2NThiNTk0YWM4OGRh
+        OTAyNmM2NzViZmUwMzEwZDU3Il0sIFsiUkVBRE1FIiwgIjYyN2ZiYjU3ZWI4
+        ZDk0MzA4ZjAxYTExNDMwNDE4ZmI2Il1dLCAiY2hpbGRyZW4iOiB7fSwgImF1
+        dGhvciI6ICJwdXBwZXQiLCAicHJvamVjdF9wYWdlIjogImh0dHBzOi8vZ2l0
+        aHViLmNvbS81VWItWjNyMC9wdXBwZXQtc2FtYmEiLCAic291cmNlIjogImh0
+        dHBzOi8vZ2l0aHViLmNvbS81VWItWjNyMC9wdXBwZXQtc2FtYmEiLCAidmVy
+        c2lvbiI6ICIwLjIuMCIsICJyZXBvc2l0b3J5X21lbWJlcnNoaXBzIjogWyI0
+        Il0sICJkZXNjcmlwdGlvbiI6ICJUaGlzIHB1cHBldCBtb2R1bGUgbWFuYWdl
+        cyBzYW1iYSBjb25maWd1cmF0aW9uLlxuXG5JdCBoYXMgYmVlbiB0ZXN0ZWQg
+        b25seSBmb3Igc2FtYmEgbWFuYWdpbmcgc2hhcmVzLCB0b3VnaCBpdCBkb2Vz
+        IG5vdCBjYXJlIGFib3V0IHRoZSBjb250ZW50IG9mIHlvdXIgY29uZmlnIGZp
+        bGUuXG5cblRlc3RlZCBvbiBDZW50T1MgNi4yLCBSSEVMIDYuMiwgQ2VudE9T
+        IDUuOC4iLCAiX2xhc3RfdXBkYXRlZCI6ICIyMDE2LTAyLTA4VDIzOjIxOjI2
+        WiIsICJkb3dubG9hZGVkIjogdHJ1ZSwgImRlcGVuZGVuY2llcyI6IFtdLCAi
+        dHlwZXMiOiBbXSwgIl9zdG9yYWdlX3BhdGgiOiAiL3Zhci9saWIvcHVscC9j
+        b250ZW50L3VuaXRzL3B1cHBldF9tb2R1bGUvMjIyZS8yMjJlNzBmMi04NTUx
+        LTQ0YmItODE0YS04ZTk1ZjJiYWRmNDUvNVViWjNyMC1zYW1iYS0wLjIuMC50
+        YXIuZ3oiLCAiX2lkIjogIjIyMmU3MGYyLTg1NTEtNDRiYi04MTRhLThlOTVm
+        MmJhZGY0NSIsICJuYW1lIjogInNhbWJhIiwgImxpY2Vuc2UiOiAiR1BMIHYz
+        IiwgImNoZWNrc3VtIjogImM3NzJkZWNmNzgzNmU0MmE3MjE1YzJhZWUzZjhi
+        ZDc0MmUxYzQ4MDM5NGE2NTBiNjU5NDdiM2MwODMyODRjYWMiLCAic3VtbWFy
+        eSI6ICJBIHB1cHBldCBtb2R1bGUgdGhhdCBtYW5hZ2VzIHNhbWJhIiwgImNo
+        ZWNrc3VtX3R5cGUiOiAic2hhMjU2IiwgInRhZ19saXN0IjogW119XQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:29 GMT
+- request:
+    method: delete
+    uri: https://katello-burrito.example.com/pulp/api/v2/repositories/4/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 202
+      message: ACCEPTED
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:29 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2U1NWQ2YjEyLWI4MDctNDE3OS05MGUzLWFlNDMyYzNlOGExNy8iLCAi
+        dGFza19pZCI6ICJlNTVkNmIxMi1iODA3LTQxNzktOTBlMy1hZTQzMmMzZThh
+        MTcifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version:
+  recorded_at: Mon, 08 Feb 2016 23:21:29 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/e55d6b12-b807-4179-90e3-ae432c3e8a17/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:29 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '541'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9lNTVkNmIxMi1iODA3LTQxNzktOTBlMy1hZTQzMmMzZThh
+        MTcvIiwgInRhc2tfaWQiOiAiZTU1ZDZiMTItYjgwNy00MTc5LTkwZTMtYWU0
+        MzJjM2U4YTE3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAidHJhY2Vi
+        YWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3Jl
+        cG9ydCI6IHt9LCAicXVldWUiOiAiTm9uZS5kcSIsICJzdGF0ZSI6ICJ3YWl0
+        aW5nIiwgIndvcmtlcl9uYW1lIjogbnVsbCwgInJlc3VsdCI6IG51bGwsICJl
+        cnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZiOTIyZjkzNDQ3MWU0
+        MDA3MGFlZDk3In0sICJpZCI6ICI1NmI5MjJmOTM0NDcxZTQwMDcwYWVkOTci
+        fQ==
+    http_version: 
+  recorded_at: Mon, 08 Feb 2016 23:21:29 GMT
+- request:
+    method: get
+    uri: https://katello-burrito.example.com/pulp/api/v2/tasks/e55d6b12-b807-4179-90e3-ae432c3e8a17/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 08 Feb 2016 23:21:29 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '680'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9lNTVkNmIxMi1iODA3LTQxNzktOTBlMy1hZTQzMmMzZThh
+        MTcvIiwgInRhc2tfaWQiOiAiZTU1ZDZiMTItYjgwNy00MTc5LTkwZTMtYWU0
+        MzJjM2U4YTE3IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxNi0wMi0w
+        OFQyMzoyMToyOVoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
+        bWUiOiAiMjAxNi0wMi0wOFQyMzoyMToyOVoiLCAidHJhY2ViYWNrIjogbnVs
+        bCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9
+        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAa2F0ZWxs
+        by1idXJyaXRvLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVk
+        IiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QGthdGVsbG8tYnVycml0by5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxs
+        LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YjkyMmY5MzQ0
+        NzFlNDAwNzBhZWQ5NyJ9LCAiaWQiOiAiNTZiOTIyZjkzNDQ3MWU0MDA3MGFl
+        ZDk3In0=
+    http_version: 
+  recorded_at: Mon, 08 Feb 2016 23:21:29 GMT
 recorded_with: VCR 2.9.3

@@ -1,8 +1,9 @@
 require 'minitest/autorun'
-require File.expand_path('../../../../app/services/client/cert.rb', __FILE__)
+require "katello_test_helper"
+require File.expand_path("#{Katello::Engine.root}/app/services/cert/rhsm_client.rb", __FILE__)
 
-module Client
-  class CertTest < Minitest::Test
+module Katello
+  class RhsmClientTest < Minitest::Test
     CERT = '
       -----BEGIN CERTIFICATE-----
       MIIEaTCCA1GgAwIBAgIIMAikOB+/HpowDQYJKoZIhvcNAQEFBQAwezELMAkGA1UE
@@ -32,19 +33,19 @@ module Client
       -----END CERTIFICATE-----'
 
     def test_uuid
-      rhsm_cert = Client::Cert.new(CERT)
+      rhsm_cert = ::Cert::RhsmClient.new(CERT)
       assert_equal rhsm_cert.uuid, '14e98155-731a-4cae-b151-5c504cc30e1a'
     end
 
     def test_empty_cert
       assert_raises RuntimeError do
-        Cert.new('')
+        ::Cert::RhsmClient.new('')
       end
     end
 
     def test_bad_cert
       assert_raises OpenSSL::X509::CertificateError do
-        Cert.new('This is not a real cert string.')
+        ::Cert::RhsmClient.new('This is not a real cert string.')
       end
     end
   end
