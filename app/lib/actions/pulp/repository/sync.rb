@@ -98,6 +98,11 @@ module Actions
           # in the warning state, but not locking further syncs
           Dynflow::Action::Rescue::Skip
         end
+
+        def ignored_tags
+          # ignore background download tasks
+          ["pulp:action:download"]
+        end
       end
     end
   end
