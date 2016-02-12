@@ -9,13 +9,14 @@
  * @requires Repository
  * @requires GPGKey
  * @requires CurrentOrganization
+ * @requires DownloadPolicy
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization',
-    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization) {
+    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy',
+    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization, DownloadPolicy) {
         var updateRepositoriesTable;
 
         $scope.successMessages = [];
@@ -152,6 +153,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 checksum = translate('Default');
             }
             return checksum;
+        };
+
+        $scope.downloadPolicyDisplay = function (downloadPolicy) {
+            return DownloadPolicy.downloadPolicyName(downloadPolicy);
         };
 
         updateRepositoriesTable = function () {

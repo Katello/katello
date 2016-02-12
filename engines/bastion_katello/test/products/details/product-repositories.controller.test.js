@@ -1,7 +1,7 @@
 describe('Controller: ProductRepositoriesController', function() {
-    var $scope, $q, expectedTable, expectedIds, Repository, RepositoryBulkAction, Nutupane;
+    var $scope, $q, expectedTable, expectedIds, Repository, RepositoryBulkAction, Nutupane, DownloadPolicy;
 
-    beforeEach(module('Bastion.products', 'Bastion.test-mocks'))
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks', 'Bastion.repositories'))
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
@@ -46,12 +46,15 @@ describe('Controller: ProductRepositoriesController', function() {
             return {'$promise': $q.defer().promise};
         };
 
+        DownloadPolicy = $injector.get('DownloadPolicy');
+
         $controller('ProductRepositoriesController', {
             $scope: $scope,
             Repository: Repository,
             RepositoryBulkAction: RepositoryBulkAction,
             CurrentOrganization: 'ACME',
-            Nutupane: Nutupane
+            Nutupane: Nutupane,
+            DownloadPolicy: DownloadPolicy
         });
     }));
 

@@ -103,6 +103,15 @@
           <option value=""></option>
         </select>
       </div>
+
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
+        <select tabindex="4"
+                id="download_policy"
+                name="download_policy"
+                ng-model="repository.download_policy"
+                ng-options="id as name for (id, name) in downloadPolicies">
+        </select>
+      </div>
     </div>
 
     <div bst-form-buttons ng-show="repository.content_type !== undefined"
