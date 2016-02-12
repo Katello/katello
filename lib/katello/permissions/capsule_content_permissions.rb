@@ -7,4 +7,10 @@ Foreman::Plugin.find(:katello).security_block :capsule_content do
                                                     :sync, :sync_status, :cancel_sync]
              },
              :resource_type => 'SmartProxy'
+
+  permission :view_capsule_content,
+            {
+              'smart_proxies' => [:pulp_storage, :pulp_status, :show_with_content]
+            },
+            :resource_type => "SmartProxy"
 end
