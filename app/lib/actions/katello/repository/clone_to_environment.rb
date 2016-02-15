@@ -9,7 +9,7 @@ module Actions
 
           sequence do
             if clone.new_record?
-              plan_action(Repository::Create, clone, true)
+              plan_action(Repository::Create, clone, true, false, repository.ostree_branch_names)
             else
               plan_action(Repository::Clear, clone)
             end
@@ -18,6 +18,8 @@ module Actions
               plan_action(Repository::CloneYumContent, repository, clone, [], false)
             elsif repository.docker?
               plan_action(Repository::CloneDockerContent, repository, clone)
+            elsif repository.ostree?
+              plan_action(Repository::CloneOstreeContent, repository, clone)
             end
           end
         end

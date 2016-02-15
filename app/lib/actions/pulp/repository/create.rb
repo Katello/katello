@@ -19,6 +19,7 @@ module Actions
           param :docker_upstream_name
           param :download_policy
           param :capsule_id
+          param :ostree_branches
         end
 
         def run
@@ -29,43 +30,61 @@ module Actions
                                                     display_name: input[:name])
         end
 
-        # rubocop:disable MethodLength
         def importer
+          case input[:content_type]
+          when ::Katello::Repository::YUM_TYPE, ::Katello::Repository::FILE_TYPE
+            yum_or_iso_importer
+          when ::Katello::Repository::PUPPET_TYPE
+            puppet_importer
+          when ::Katello::Repository::DOCKER_TYPE
+            docker_importer
+          when ::Katello::Repository::OSTREE_TYPE
+            ostree_importer
+          else
+            fail _("Unexpected repo type %s") % input[:content_type]
+          end
+        end
+
+        def yum_or_iso_importer
           importer = case input[:content_type]
                      when ::Katello::Repository::YUM_TYPE
                        Runcible::Models::YumImporter.new
                      when ::Katello::Repository::FILE_TYPE
                        Runcible::Models::IsoImporter.new
-                     when ::Katello::Repository::PUPPET_TYPE
-                       Runcible::Models::PuppetImporter.new
-                     when ::Katello::Repository::DOCKER_TYPE
-                       Runcible::Models::DockerImporter.new
                      end
+          importer.feed            = input[:feed]
+          importer.ssl_ca_cert     = input[:ssl_ca_cert]
+          importer.ssl_client_cert = input[:ssl_client_cert]
+          importer.ssl_client_key  = input[:ssl_client_key]
+          importer.download_policy = input[:download_policy] if input[:content_type] == ::Katello::Repository::YUM_TYPE
+          importer
+        end
 
-          if input[:with_importer]
-            case input[:content_type]
-            when ::Katello::Repository::YUM_TYPE
-              importer.feed            = input[:feed]
-              importer.ssl_ca_cert     = input[:ssl_ca_cert]
-              importer.ssl_client_cert = input[:ssl_client_cert]
-              importer.ssl_client_key  = input[:ssl_client_key]
-              importer.download_policy = input[:download_policy]
-            when ::Katello::Repository::FILE_TYPE
-              importer.feed            = input[:feed]
-              importer.ssl_ca_cert     = input[:ssl_ca_cert]
-              importer.ssl_client_cert = input[:ssl_client_cert]
-              importer.ssl_client_key  = input[:ssl_client_key]
-            when ::Katello::Repository::PUPPET_TYPE
-              importer.feed            = input[:feed]
-              importer.ssl_ca_cert     = input[:ssl_ca_cert]
-              importer.ssl_client_cert = input[:ssl_client_cert]
-              importer.ssl_client_key  = input[:ssl_client_key]
-            when ::Katello::Repository::DOCKER_TYPE
-              importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
-              importer.feed            = input[:feed]
-              importer.enable_v1       = false
-            end
-          end
+        def ostree_importer
+          importer = Runcible::Models::OstreeImporter.new
+          importer.feed            = input[:feed]
+          importer.branches        = input[:ostree_branches] unless input[:ostree_branches].blank?
+          importer.ssl_ca_cert     = input[:ssl_ca_cert]
+          importer.ssl_client_cert = input[:ssl_client_cert]
+          importer.ssl_client_key  = input[:ssl_client_key]
+          importer
+        end
+
+        def puppet_importer
+          importer = Runcible::Models::PuppetImporter.new
+          importer.feed            = input[:feed]
+          importer.ssl_ca_cert     = input[:ssl_ca_cert]
+          importer.ssl_client_cert = input[:ssl_client_cert]
+          importer.ssl_client_key  = input[:ssl_client_key]
+
+          importer
+        end
+
+        def docker_importer
+          importer = Runcible::Models::DockerImporter.new
+          importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
+          importer.feed            = input[:feed]
+          importer.enable_v1       = false
           importer
         end
 
@@ -79,7 +98,9 @@ module Actions
             distributors = input[:path].blank? ? [] : [puppet_install_distributor]
             distributors << puppet_distributor
           when ::Katello::Repository::DOCKER_TYPE
-            distributors =  [docker_distributor]
+            distributors = [docker_distributor]
+          when ::Katello::Repository::OSTREE_TYPE
+            distributors = [ostree_distributor]
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end
@@ -128,6 +149,13 @@ module Actions
                       id: input[:pulp_id],
                       auto_publish: true }
           Runcible::Models::DockerDistributor.new(options)
+        end
+
+        def ostree_distributor
+          options = { id: input[:pulp_id],
+                      relative_path: input[:path],
+                      auto_publish: true }
+          Runcible::Models::OstreeDistributor.new(options)
         end
       end
     end

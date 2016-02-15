@@ -3,8 +3,11 @@ module Actions
     module Repository
       class Create < Actions::EntryAction
         # rubocop:disable MethodLength
-        def plan(repository, clone = false, plan_create = false)
+        def plan(repository, clone = false, plan_create = false, ostree_branches = [])
           repository.save!
+          ostree_branches.each do |branch_name|
+            repository.ostree_branches.create!(:name => branch_name)
+          end if ostree_branches
           action_subject(repository)
 
           org = repository.organization
@@ -25,7 +28,8 @@ module Actions
                                         checksum_type: repository.checksum_type,
                                         path: path,
                                         download_policy: repository.download_policy,
-                                        with_importer: true)
+                                        with_importer: true,
+                                        ostree_branches: repository.ostree_branch_names)
 
             return if create_action.error
 
