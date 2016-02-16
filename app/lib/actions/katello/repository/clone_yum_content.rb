@@ -2,7 +2,6 @@ module Actions
   module Katello
     module Repository
       class CloneYumContent < Actions::Base
-        # rubocop:disable MethodLength
         def plan(source_repo, target_repo, filters, purge_empty_units, options = {})
           generate_metadata = options.fetch(:generate_metadata, true)
           index_content = options.fetch(:index_content, true)

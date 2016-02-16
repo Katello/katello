@@ -12,7 +12,6 @@ module Actions
         # key_content_view_id - content view to reassociate actvation keys with
         # key_environment_id - environment to reassociate activation keys with'
         # organization_destroy
-        # rubocop:disable MethodLength
         def plan(content_view, options)
           cv_envs = options.fetch(:content_view_environments, [])
           versions = options.fetch(:content_view_versions, [])

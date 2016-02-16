@@ -1,5 +1,4 @@
 class RefactorContentViews < ActiveRecord::Migration
-  # rubocop:disable MethodLength
   def up
     remove_foreign_key "katello_component_content_views", :name => "component_content_views_content_view_definition_id_fk"
     remove_foreign_key "katello_content_view_definition_bases", :name => "content_view_definition_bases_source_id_fk"
