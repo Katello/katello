@@ -396,14 +396,15 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
 
     it 'plans' do
-      plan_action(action, [repository.pulp_id], false, nil, 0, repository.pulp_id)
+      action.stubs(:action_subject)
+      plan_action(action, [repository], false, nil, 0, repository.pulp_id)
 
       # ensure arguments get transformed and bubble through to pulp actions.
       # Org label defaults to blank for this test, hence the group ID starts
       # with '-'.
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Create,
                                 :id => "8",
-                                :pulp_ids => ["8"])
+                                :pulp_ids => [repository.pulp_id])
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Export) do |(inputs)|
         inputs[:id].must_equal "8"
         inputs[:export_to_iso].must_equal false
