@@ -72,11 +72,6 @@ module Katello
     param :name, String, :desc => N_("name of the environment"), :required => true
     param :label, String, :desc => N_("label of the environment"), :required => false
     param :description, String, :desc => N_("description of the environment")
-    param :prior, Integer, :deprecated => true, :desc => <<-DESC
-      ID of an environment that is prior to the new environment in the chain. It has to be
-      either the ID of Library or the ID of an environment at the end of a chain.
-      This param exists for backwards compatibility purposes. Please use prior_id.
-    DESC
     param :prior_id, Integer, :required => true, :desc => <<-DESC
       ID of an environment that is prior to the new environment in the chain. It has to be
       either the ID of Library or the ID of an environment at the end of a chain.

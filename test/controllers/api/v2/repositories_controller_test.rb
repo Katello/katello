@@ -543,7 +543,7 @@ module Katello
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
                                            @repository, [@rpm]).once.returns(::ForemanTasks::Task.new)
 
-      put :remove_content, :id => @repository.id, :uuids => [@rpm.uuid]
+      put :remove_content, :id => @repository.id, :ids => [@rpm.uuid]
 
       assert_response :success
     end

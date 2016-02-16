@@ -252,7 +252,6 @@ module Katello
     api :PUT, "/repositories/:id/remove_content"
     desc "Remove content from a repository"
     param :id, :identifier, :required => true, :desc => "repository ID"
-    param 'uuids', Array, :required => true, :deprecated => true, :desc => "Array of content uuids to remove"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
     def remove_content
       fail _("No content ids provided") if @content.blank?
@@ -356,7 +355,7 @@ module Katello
     end
 
     def find_content
-      @content = @repository.units_for_removal(params[:ids] || params[:uuids])
+      @content = @repository.units_for_removal(params[:ids])
     end
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)

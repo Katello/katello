@@ -8,7 +8,6 @@ module Katello
     before_filter :find_product, :only => [:update, :destroy, :sync]
     before_filter :find_organization_from_product, :only => [:update]
     before_filter :authorize_gpg_key, :only => [:update, :create]
-    before_filter :deprecated, :only => [:index]
 
     resource_description do
       api_version "v2"
@@ -24,8 +23,6 @@ module Katello
     api :GET, "/subscriptions/:subscription_id/products", N_("List of subscription products in a subscription")
     api :GET, "/activation_keys/:activation_key_id/products", N_("List of subscription products in an activation key")
     api :GET, "/organizations/:organization_id/products", N_("List of products in an organization")
-    api :GET, "/organizations/:organization_id/sync_plans/:sync_plan_id/available_products",
-      N_("List of available Products for sync plan"), :deprecated => true
     api :GET, "/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
     api :GET, "/organizations/:organization_id/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
     param :organization_id, :number, :desc => N_("Filter products by organization"), :required => true
@@ -157,12 +154,6 @@ module Katello
         params.require(:product).permit(:sync_plan_id)
       else
         params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
-      end
-    end
-
-    def deprecated
-      if request.path =~ /sync_plans.*available_products/
-        ::Foreman::Deprecation.api_deprecation_warning("it will be changed in Katello 2.5, where it will be /sync_plans/:id/products?available_for=sync_plan")
       end
     end
   end
