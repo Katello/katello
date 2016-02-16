@@ -11,16 +11,16 @@ module Actions
           org_label = ::Organization.find_by(:id => content_view.organization_id).label
           group_id = "#{org_label}-#{content_view.label}-"\
                      "v#{content_view_version.major}.#{content_view_version.minor}"
+          action_subject(content_view_version)
 
-          repo_pulp_ids = content_view_version.archived_repos.
-                            select { |r| r.content_type == 'yum' }.collect { |r| r.pulp_id }
+          repos = content_view_version.archived_repos.select { |r| r.content_type == 'yum' }
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => content_view_version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :task => self.task)
 
-          plan_action(Katello::Repository::Export, repo_pulp_ids, export_to_iso, start_date, iso_size,
+          plan_action(Katello::Repository::Export, repos, export_to_iso, start_date, iso_size,
                                                    group_id)
           plan_self(:history_id => history.id)
         end
