@@ -29,6 +29,10 @@ Katello::Engine.routes.draw do
 
     match '/providers/:id' => 'providers#update', :via => [:put, :post]
 
+    if Katello.with_remote_execution?
+      match '/remote_execution' => 'remote_execution#create', :via => [:post]
+    end
+
     resources :organizations do
       collection do
         get :auto_complete_search

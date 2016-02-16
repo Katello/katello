@@ -32,7 +32,9 @@ module BastionKatello
           select_organization
         ),
         :config => {
-          'consumerCertRPM' => consumer_cert_rpm
+          'consumerCertRPM' => consumer_cert_rpm,
+          'remoteExecutionPresent' => ::Katello.with_remote_execution?,
+          'remoteExecutionByDefault' => ::Katello.with_remote_execution? && Setting['remote_execution_by_default']
         }
       )
     end

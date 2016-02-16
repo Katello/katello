@@ -23,7 +23,8 @@ class Setting::Katello < Setting
         self.set('default_download_policy', N_("Default download policy for repositories (either 'immediate', 'on_demand', or 'background')"), "immediate"),
         self.set('pulp_export_destination', N_("On-disk location for exported repositories"), File.join(Rails.root, 'repo-exports')),
         self.set('pulp_client_key', N_("Path for ssl key used for pulp server auth"), "/etc/pki/katello/private/pulp-client.key"),
-        self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt")
+        self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt"),
+        self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false)
       ].each { |s| self.create! s.update(:category => "Setting::Katello") }
     end
     true
