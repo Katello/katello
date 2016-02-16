@@ -67,7 +67,7 @@ module Katello
       refute env.save
       assert_equal 1, env.errors.size
       # this an ActiveModel::Errors object; not a Hash
-      assert env.errors.has_key?(:label) # rubocop:disable Style/DeprecatedHashMethods
+      assert env.errors.include?(:label)
     end
 
     def test_content_view_label_excludes_content_dir
@@ -76,7 +76,7 @@ module Katello
       refute env.save
       assert_equal 1, env.errors.size
       # this an ActiveModel::Errors object; not a Hash
-      assert env.errors.has_key?(:label) # rubocop:disable Style/DeprecatedHashMethods
+      assert env.errors.include?(:label)
     end
   end
 end
