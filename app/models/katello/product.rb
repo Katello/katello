@@ -190,7 +190,7 @@ module Katello
 
     def environments_for_view(view)
       versions = view.versions.select { |version| version.products.include?(self) }
-      versions.collect { |v|v.environments }.flatten
+      versions.collect { |v| v.environments }.flatten
     end
 
     def environments

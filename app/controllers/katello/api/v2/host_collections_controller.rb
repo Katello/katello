@@ -1,5 +1,5 @@
 module Katello
-  class Api::V2::HostCollectionsController <  Api::V2::ApiController
+  class Api::V2::HostCollectionsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_hosts,
                                                    :add_hosts, :remove_hosts, :hosts]

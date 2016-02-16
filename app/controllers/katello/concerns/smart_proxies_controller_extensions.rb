@@ -43,7 +43,7 @@ module Katello
       end
 
       def show_with_content
-        @task_search_url = main_app.foreman_tasks_tasks_path(:search=>"resource_id = #{@smart_proxy.id} AND resource_type = #{@smart_proxy.class}")
+        @task_search_url = main_app.foreman_tasks_tasks_path(:search => "resource_id = #{@smart_proxy.id} AND resource_type = #{@smart_proxy.class}")
         render 'foreman/smart_proxies/show', :layout => 'katello/layouts/foreman_with_bastion'
       end
 

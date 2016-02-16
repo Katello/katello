@@ -4,44 +4,44 @@ module Katello
   class ContentCountsCalculator < ActiveSupport::TestCase
     let(:repositories_data) do
       [{
-        "display_name"=>"rpm repo 1",
-        "notes"=>{"_repo-type"=>"rpm-repo"},
-        "content_unit_counts"=>{
-          "package_group"=>2,
-          "rpm"=>32,
-          "erratum"=>4
+        "display_name" => "rpm repo 1",
+        "notes" => {"_repo-type" => "rpm-repo"},
+        "content_unit_counts" => {
+          "package_group" => 2,
+          "rpm" => 32,
+          "erratum" => 4
         },
-        "id"=>"rpm-repo-1"
+        "id" => "rpm-repo-1"
       }, {
-        "display_name"=>"rpm repo 2",
-        "notes"=>{"_repo-type"=>"rpm-repo"},
-        "content_unit_counts"=>{
-          "package_group"=>3,
-          "rpm"=>6,
-          "erratum"=>1
+        "display_name" => "rpm repo 2",
+        "notes" => {"_repo-type" => "rpm-repo"},
+        "content_unit_counts" => {
+          "package_group" => 3,
+          "rpm" => 6,
+          "erratum" => 1
         },
-        "id"=>"rpm-repo-2"
+        "id" => "rpm-repo-2"
       }, {
-        "display_name"=>"docker repo",
-        "notes"=>{"_repo-type"=>"docker-repo"},
-        "content_unit_counts"=>{
+        "display_name" => "docker repo",
+        "notes" => {"_repo-type" => "docker-repo"},
+        "content_unit_counts" => {
           "docker_image" => 5
         },
-        "id"=>"docker-repo"
+        "id" => "docker-repo"
       }, {
-        "display_name"=>"puppet repo 1",
-        "notes"=>{"_repo-type"=>"puppet-repo"},
-        "content_unit_counts"=>{
+        "display_name" => "puppet repo 1",
+        "notes" => {"_repo-type" => "puppet-repo"},
+        "content_unit_counts" => {
           "puppet_module" => 1
         },
-        "id"=>"puppet-repo-1"
+        "id" => "puppet-repo-1"
       }, {
-        "display_name"=>"puppet repo 2",
-        "notes"=>{"_repo-type"=>"puppet-repo"},
-        "content_unit_counts"=>{
+        "display_name" => "puppet repo 2",
+        "notes" => {"_repo-type" => "puppet-repo"},
+        "content_unit_counts" => {
           "puppet_module" => 2
         },
-        "id"=>"puppet-repo-2"
+        "id" => "puppet-repo-2"
       }]
     end
 

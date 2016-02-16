@@ -191,7 +191,7 @@ module Katello
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
           assert_equal environment.id, @host.content_facet.lifecycle_environment.id
           assert_equal content_view.id, @host.content_facet.content_view.id
-          assert_equal params, "owner"=>"Empty_Organization", "env"=>"library_default_view_library"
+          assert_equal params, "owner" => "Empty_Organization", "env" => "library_default_view_library"
         end
         post :hypervisors_update
         assert_response 200
@@ -201,7 +201,7 @@ module Katello
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
           assert_equal environment.id, @host.content_facet.lifecycle_environment.id
           assert_equal content_view.id, @host.content_facet.content_view.id
-          assert_equal params, "owner"=>"Empty_Organization", "env"=>"library_default_view_library"
+          assert_equal params, "owner" => "Empty_Organization", "env" => "library_default_view_library"
         end
         post(:hypervisors_update, :owner => 'owner', :env => 'dev/dev')
         assert_response 200

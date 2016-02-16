@@ -5,7 +5,7 @@ FactoryGirl.define do
     type 'ForemanTasks::Task'
     state 'stopped'
     result 'success'
-    sequence(:started_at) { |n| "2016-#{(n/30)+1}-#{(n%30)+1} 11:15:00" }
+    sequence(:started_at) { |n| "2016-#{(n / 30) + 1}-#{(n % 30) + 1} 11:15:00" }
     after(:build) do |task|
       task.ended_at = task.started_at.change(:sec => 32)
     end

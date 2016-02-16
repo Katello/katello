@@ -1,7 +1,7 @@
 module Actions
   module Pulp
     module Consumer
-      class GenerateApplicability <  Pulp::AbstractAsyncTask
+      class GenerateApplicability < Pulp::AbstractAsyncTask
         input_format do
           param :uuids, Array
         end

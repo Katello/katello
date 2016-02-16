@@ -13,7 +13,7 @@ module Actions
 
             to_check.each do |service|
               if result[service][:status] != ::Katello::Ping::OK_RETURN_CODE
-                fail _("There was an issue with the backend service %s: ")  % service + result[service][:message]
+                fail _("There was an issue with the backend service %s: ") % service + result[service][:message]
               end
             end
             parent.input[:services_checked].concat(to_check)

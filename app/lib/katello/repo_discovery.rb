@@ -23,7 +23,7 @@ module Katello
       elsif %w(http https).include?(@uri.scheme)
         http_crawl(uri(resume_point))
       else
-        fail _("Unsupported URL protocol %s.")  % @uri.scheme
+        fail _("Unsupported URL protocol %s.") % @uri.scheme
       end
     end
 

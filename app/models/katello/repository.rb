@@ -410,7 +410,7 @@ module Katello
     # equivalent of repo
     def environmental_instances(view)
       repo = self.library_instance || self
-      search = Repository.non_archived.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
+      search = Repository.non_archived.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s" % [repo.id, repo.id])
       search.in_content_views([view])
     end
 

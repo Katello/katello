@@ -39,7 +39,7 @@ module Katello
       end
 
       def test_compliance_reasons
-        reasons = [{"key"=>"NOTCOVERED", "message"=>"Not supported by a valid subscription.", "attributes"=>{"product_id"=>"69", "name"=>"Red Hat Server"}}]
+        reasons = [{"key" => "NOTCOVERED", "message" => "Not supported by a valid subscription.", "attributes" => {"product_id" => "69", "name" => "Red Hat Server"}}]
         Resources::Candlepin::Consumer.stubs(:compliance).returns('reasons' => reasons)
 
         assert_equal ["Red Hat Server: Not supported by a valid subscription."], @consumer.compliance_reasons

@@ -24,11 +24,11 @@ module Support
       end
 
       def assert_foreman_task(async, expected_action_class, *args_expected, &block)
-        block      ||= if args_expected.empty?
-                         lambda { |*_args| true }
-                       else
-                         lambda { |*args|  args == args_expected }
-                       end
+        block ||= if args_expected.empty?
+                    lambda { |*_args| true }
+                  else
+                    lambda { |*args|  args == args_expected }
+                  end
 
         method = async ? :async_task : :sync_task
         task_stub = build_task_stub

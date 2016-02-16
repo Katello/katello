@@ -21,7 +21,7 @@ module Actions
                         :repo_id => repository.pulp_id,
                         :id => found['id'],
                         :config => importer.config.merge!(importer_certs(repository)),
-                        :capsule_id =>capsule_id
+                        :capsule_id => capsule_id
                         )
           else
             plan_action(::Actions::Pulp::Repository::AssociateImporter,

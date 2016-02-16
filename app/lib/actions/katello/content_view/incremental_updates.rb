@@ -44,8 +44,8 @@ module Actions
               new_components = composite_version.components.map { |component| old_new_version_map[component] }.compact
 
               if new_components.empty?
-                fail _("Incremental update specified for composite %{name} version %{version}, but no components updated.")  %
-                      {:name => composite_version.content_view.name, :version => composite_version.version}
+                fail _("Incremental update specified for composite %{name} version %{version}, but no components updated.") %
+                  {:name => composite_version.content_view.name, :version => composite_version.version}
               end
 
               action = plan_action(ContentViewVersion::IncrementalUpdate, composite_version, environments,

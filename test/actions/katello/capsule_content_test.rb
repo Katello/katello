@@ -90,20 +90,20 @@ module ::Actions::Katello::CapsuleContent
 
     let(:cert) do
       {
-        :key=>"this is a key",
-        :cert=>"this is a cert",
-        :id=>"123",
-        :serial=>{
-          :id=>132,
-          :revoked=>false,
-          :collected=>false,
-          :expiration=>"2116-01-28t19:43:26.317+0000",
-          :serial=>53,
-          :created=>"2016-01-28t19:43:26.770+0000",
-          :updated=>"2016-01-28T19:43:26.770+0000"
+        :key => "this is a key",
+        :cert => "this is a cert",
+        :id => "123",
+        :serial => {
+          :id => 132,
+          :revoked => false,
+          :collected => false,
+          :expiration => "2116-01-28t19:43:26.317+0000",
+          :serial => 53,
+          :created => "2016-01-28t19:43:26.770+0000",
+          :updated => "2016-01-28T19:43:26.770+0000"
         },
-        :created=>"2016-01-28T19:43:26.780+0000",
-        :updated=>"2016-01-28T19:43:26.780+0000"
+        :created => "2016-01-28T19:43:26.780+0000",
+        :updated => "2016-01-28T19:43:26.780+0000"
       }
     end
 

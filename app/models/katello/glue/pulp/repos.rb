@@ -119,7 +119,7 @@ module Katello
         to_ret = []
         self.repos(env).each do |repo|
           distros = repo.distributions
-          to_ret +=  distros unless distros.empty?
+          to_ret += distros unless distros.empty?
         end
         to_ret
       end
