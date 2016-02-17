@@ -34,7 +34,7 @@ module Katello
     end
   end
 
-  class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
+  class ActivationKeyAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
       User.current = User.find(users(:restricted))

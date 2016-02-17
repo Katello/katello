@@ -79,7 +79,7 @@ module Katello
         return nil if hosts.empty? #no host exists
         if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
           #TODO: http://projects.theforeman.org/issues/11532
-          fail _("Host is currently registered to a different org, please migrate host to %s.") %  organization.name
+          fail _("Host is currently registered to a different org, please migrate host to %s.") % organization.name
         end
         hosts.first
       end

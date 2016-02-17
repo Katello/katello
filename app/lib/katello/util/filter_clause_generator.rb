@@ -21,7 +21,7 @@ module Katello
       def copy_clause
         clauses = []
         whitelist = join_clauses(@whitelist, "$or")
-        blacklist = !@blacklist.blank?  ? {"$nor" => @blacklist} : nil
+        blacklist = !@blacklist.blank? ? {"$nor" => @blacklist} : nil
 
         clauses << whitelist  if whitelist
         clauses << blacklist  if blacklist

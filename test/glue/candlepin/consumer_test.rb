@@ -86,7 +86,7 @@ module Katello
       pool1 = katello_pools(:pool_one)
       pool2 = katello_pools(:pool_two)
 
-      @sys.stubs(:entitlements).returns([{'pool' => {'id'=> pool1.cp_id}}, {'pool' => {'id'=> pool2.cp_id}}])
+      @sys.stubs(:entitlements).returns([{'pool' => {'id' => pool1.cp_id}}, {'pool' => {'id' => pool2.cp_id}}])
 
       expected = (pool1.subscription.products + pool2.subscription.products).sort_by(&:name).uniq
       assert_equal expected, @sys.products.sort_by(&:name)

@@ -82,7 +82,7 @@ module Katello
         :subtotal => sub_total,
         :total    => total,
         :page     => params[:page] || 1,
-        :per_page => params[:per_page]  || ::Setting::General.entries_per_page
+        :per_page => params[:per_page] || ::Setting::General.entries_per_page
       }
     end
 

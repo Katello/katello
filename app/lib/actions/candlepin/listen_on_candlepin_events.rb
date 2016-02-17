@@ -179,10 +179,10 @@ module Actions
           action_logger.error("katello has not been configured for qpid.url and qpid.subscriptions_queue_address")
           suspended_action.notify_finished
         end
-        rescue => e
-          Rails.logger.error(e.message)
-          Rails.logger.error(e.backtrace)
-          error!(e)
+      rescue => e
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace)
+        error!(e)
       end
 
       def on_event(event)

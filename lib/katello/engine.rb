@@ -180,8 +180,8 @@ module Katello
       #Handle Smart Proxy items separately
       begin
         ::SmartProxy.send :include, Katello::Concerns::SmartProxyExtensions
-        rescue ActiveRecord::StatementInvalid
-          Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
+      rescue ActiveRecord::StatementInvalid
+        Rails.logger.info('Database was not initialized yet: skipping smart proxy katello extension')
       end
 
       # Organization controller extensions

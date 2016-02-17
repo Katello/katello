@@ -90,7 +90,7 @@ module Katello
         end
 
         def validate_destroy(current_org)
-          def_error = _("Could not delete organization '%s'.")  % [self.name]
+          def_error = _("Could not delete organization '%s'.") % [self.name]
           if (current_org == self)
             [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
           elsif (Organization.count == 1)

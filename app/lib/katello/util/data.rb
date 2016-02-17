@@ -7,7 +7,7 @@ module Katello
 
       def self.ostructize(obj, options = {})
         options[:prefix_keys] ||= []
-        options[:prefix]      ||= '_'
+        options[:prefix] ||= '_'
 
         if obj.is_a? Hash
 

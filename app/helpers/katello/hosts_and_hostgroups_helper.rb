@@ -53,7 +53,7 @@ module Katello
         if Organization.current
           all_options << env_options
         else
-          all_options <<  %(<optgroup label="#{org.name}">#{env_options}</optgroup>)
+          all_options << %(<optgroup label="#{org.name}">#{env_options}</optgroup>)
         end
       end
 

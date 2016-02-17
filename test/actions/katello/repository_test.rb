@@ -308,7 +308,7 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class CloneDockerContentTest  < TestBase
+  class CloneDockerContentTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::CloneDockerContent }
     let(:source_repo) { katello_repositories(:redis) }
     let(:target_repo) { katello_repositories(:busybox) }
@@ -328,7 +328,7 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class CloneDockerContentEnvironmentTest  < TestBase
+  class CloneDockerContentEnvironmentTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
     let(:source_repo) { katello_repositories(:redis) }
 
@@ -344,7 +344,7 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class CloneOstreeContentTest  < TestBase
+  class CloneOstreeContentTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::CloneOstreeContent }
     let(:source_repo) { katello_repositories(:ostree) }
     let(:target_repo) { katello_repositories(:ostree_view1) }
@@ -360,7 +360,7 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class CloneOstreeContentEnvironmentTest  < TestBase
+  class CloneOstreeContentEnvironmentTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
     let(:source_repo) { katello_repositories(:ostree) }
 
@@ -391,7 +391,7 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class ExportRepositoryTest  < TestBase
+  class ExportRepositoryTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Export }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
 
@@ -402,8 +402,8 @@ module ::Actions::Katello::Repository
       # Org label defaults to blank for this test, hence the group ID starts
       # with '-'.
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Create,
-                                :id=>"8",
-                                :pulp_ids=>["8"])
+                                :id => "8",
+                                :pulp_ids => ["8"])
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Export) do |(inputs)|
         inputs[:id].must_equal "8"
         inputs[:export_to_iso].must_equal false
@@ -411,7 +411,7 @@ module ::Actions::Katello::Repository
         inputs[:export_directory].must_include '/var/lib/pulp/published'
       end
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Delete,
-                                :id=>"8")
+                                :id => "8")
     end
   end
 end
