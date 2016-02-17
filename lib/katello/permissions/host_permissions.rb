@@ -1,6 +1,6 @@
 require 'katello/plugin.rb'
 
-Foreman::AccessControl.permission(:edit_hosts).actions << [
+Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'api/v2/hosts/host_collections',
   'katello/api/v2/host_errata/apply',
   'katello/api/v2/host_packages/install',
@@ -18,15 +18,20 @@ Foreman::AccessControl.permission(:edit_hosts).actions << [
   'katello/api/v2/hosts_bulk_actions/environment_content_view'
 ]
 
-Foreman::AccessControl.permission(:view_hosts).actions << [
+Foreman::AccessControl.permission(:view_hosts).actions.concat [
+  'hosts/puppet_environment_for_content_view',
   'katello/api/v2/host_errata/index',
   'katello/api/v2/host_errata/show',
+  'katello/api/v2/host_errata/auto_complete_search',
   'katello/api/v2/host_subscriptions/index',
   'katello/api/v2/host_subscriptions/events',
-  'katello/api/v2/hosts_bulk_actions/installable_errata'
-
+  'katello/api/v2/host_subscriptions/product_content',
+  'katello/api/v2/hosts_bulk_actions/installable_errata',
+  'katello/api/v2/hosts_bulk_actions/available_incremental_updates',
+  'katello/api/v2/host_packages/index',
+  'katello/api/v2/host_packages/auto_complete_search'
 ]
 
-Foreman::AccessControl.permission(:destroy_hosts).actions << [
+Foreman::AccessControl.permission(:destroy_hosts).actions.concat [
   'katello/api/v2/hosts_bulk_actions/destroy_hosts'
 ]
