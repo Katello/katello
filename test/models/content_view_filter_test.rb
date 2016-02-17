@@ -26,7 +26,7 @@ module Katello
     def test_bad_name
       filter = FactoryGirl.build(:katello_content_view_filter, :name => "")
       assert filter.invalid?
-      assert filter.errors.has_key?(:name) # rubocop:disable Style/DeprecatedHashMethods
+      assert filter.errors.include?(:name)
     end
 
     def test_duplicate_name
