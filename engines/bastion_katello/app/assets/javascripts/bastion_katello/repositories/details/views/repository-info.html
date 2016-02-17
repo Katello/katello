@@ -119,7 +119,7 @@
     </div>
 
 
-    <div class="detail" ng-show="repository.content_type == 'yum'">
+    <div class="detail" ng-show="repository.content_type === 'yum'">
       <span class="info-label" translate>Yum Metadata Checksum</span>
       <span class="info-value"
             bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
@@ -127,6 +127,16 @@
             selector="repository.checksum_type"
             options="checksums"
             on-save="save(repository)">
+      </span>
+    </div>
+
+    <div class="detail" ng-show="repository.content_type === 'yum'">
+      <span class="info-label" translate>Mirror on Sync</span>
+      <span class="info-value"
+            bst-edit-checkbox="repository.mirror_on_sync"
+            formatter="booleanToYesNo"
+            on-save="save(repository)"
+            readonly="product.readonly || denied('edit_products', product)">
       </span>
     </div>
 
@@ -159,7 +169,7 @@
       </span>
     </div>
 
-    <div class="detail" ng-if="repository.content_type == 'yum' && !product.redhat">
+    <div class="detail" ng-if="repository.content_type === 'yum' && !product.redhat">
       <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             bst-edit-select="repository.gpg_key.name"
@@ -230,7 +240,7 @@
       </thead>
 
       <tbody>
-        <tr ng-show="repository.content_type == 'yum'">
+        <tr ng-show="repository.content_type === 'yum'">
           <td translate>Packages</td>
           <td class="align-center">
             <a ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
@@ -238,7 +248,7 @@
             </a>
           </td>
         </tr>
-        <tr ng-show="repository.content_type == 'yum'">
+        <tr ng-show="repository.content_type === 'yum'">
           <td translate>Errata</td>
           <td class="align-center">
             <a ui-sref="errata.index({repositoryId: repository.id})">
@@ -262,7 +272,6 @@
             </a>
           </td>
         </tr>
-
         <tr ng-show="repository.content_type === 'docker'">
             <td translate>Docker Manifests</td>
             <td class="align-center">{{ repository.content_counts.docker_manifest || 0 }}</td>

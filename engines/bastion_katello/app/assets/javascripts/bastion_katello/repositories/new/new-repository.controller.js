@@ -46,7 +46,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         }
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
-            'checksum_type': null, 'download_policy': null});
+            'checksum_type': null, 'download_policy': null, 'mirror_on_sync': true});
 
         Repository.repositoryTypes({'creatable': true}, function (data) {
             $scope.repositoryTypes = data;

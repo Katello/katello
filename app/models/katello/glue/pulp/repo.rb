@@ -64,7 +64,7 @@ module Katello
 
     # rubocop:disable Metrics/ModuleLength
     module InstanceMethods
-      # This module is too long. See https://projects.theforeman.org/issues/12584.
+      # TODO: This module is too long. See https://projects.theforeman.org/issues/12584.
       def last_sync
         last = self.latest_dynflow_sync
         last.nil? ? nil : last.to_s
@@ -185,6 +185,7 @@ module Katello
         {}.tap do |yum_importer_values|
           yum_importer_values[:feed] = self.importer_feed_url(capsule)
           yum_importer_values[:download_policy] = new_download_policy
+          yum_importer_values[:remove_missing] = capsule ? true : self.mirror_on_sync?
           unless capsule
             yum_importer_values[:ssl_ca_cert] = self.feed_ca
             yum_importer_values[:ssl_client_cert] = self.feed_cert
@@ -495,7 +496,7 @@ module Katello
 
       def pulp_update_needed?
         return true if ostree?
-        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy)
+        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
       end

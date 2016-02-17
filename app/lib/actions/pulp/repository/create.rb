@@ -20,6 +20,7 @@ module Actions
           param :download_policy
           param :capsule_id
           param :ostree_branches
+          param :mirror_on_sync
         end
 
         def run
@@ -57,6 +58,7 @@ module Actions
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
           importer.download_policy = input[:download_policy] if input[:content_type] == ::Katello::Repository::YUM_TYPE
+          importer.remove_missing  = input[:mirror_on_sync] if input[:content_type] == ::Katello::Repository::YUM_TYPE
           importer
         end
 

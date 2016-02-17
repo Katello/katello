@@ -401,6 +401,40 @@ module Katello
       end
     end
 
+    def test_create_with_mirror_on_sync_true
+      mirror_on_sync = true
+      product = MiniTest::Mock.new
+      product.expect(:add_repo, @repository, [
+        'Fedora_Repository',
+        'Fedora Repository',
+        'http://www.google.com',
+        'yum',
+        false,
+        nil,
+        nil,
+        nil
+      ])
+
+      product.expect(:editable?, @product.editable?)
+      product.expect(:gpg_key, nil)
+      product.expect(:organization, @organization)
+      product.expect(:redhat?, false)
+      product.expect(:unprotected?, false)
+      @repository.expects(:mirror_on_sync=).with(mirror_on_sync)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+
+      Product.stub(:find, product) do
+        post :create, :name => 'Fedora Repository',
+                      :product_id => @product.id,
+                      :url => 'http://www.google.com',
+                      :content_type => 'yum',
+                      :unprotected => false,
+                      :mirror_on_sync => mirror_on_sync
+        assert_response :success
+        assert_template 'api/v2/repositories/show'
+      end
+    end
+
     def test_create_with_protected_docker
       docker_upstream_name = "busybox"
       product = MiniTest::Mock.new

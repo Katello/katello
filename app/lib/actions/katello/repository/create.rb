@@ -29,7 +29,8 @@ module Actions
                                         path: path,
                                         download_policy: repository.download_policy,
                                         with_importer: true,
-                                        ostree_branches: repository.ostree_branch_names)
+                                        ostree_branches: repository.ostree_branch_names,
+                                        mirror_on_sync: repository.mirror_on_sync?)
 
             return if create_action.error
 

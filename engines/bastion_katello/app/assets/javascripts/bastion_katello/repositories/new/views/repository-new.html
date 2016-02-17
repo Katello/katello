@@ -112,6 +112,17 @@
                 ng-options="id as name for (id, name) in downloadPolicies">
         </select>
       </div>
+
+      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}">
+        <input id="mirror_on_sync"
+               name="mirror_on_sync"
+               ng-model="repository.mirror_on_sync"
+               type="checkbox"
+               tabindex="8"/>
+        <h6 translate>
+          Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
+        </h6>
+      </div>
     </div>
 
     <div bst-form-buttons ng-show="repository.content_type !== undefined"
