@@ -1,17 +1,109 @@
 class MigrateContentHosts < ActiveRecord::Migration
-  class Katello::HostCollectionAssociation < ActiveRecord::Base
-    self.table_name = "katello_system_host_collections"
+  class Location < ActiveRecord::Base
+    self.table_name = "taxonomies"
+
+    def self.default_location
+      location = MigrateContentHosts::Location.where(:katello_default => true).first
+      location.becomes(MigrateContentHosts::Location)
+    end
   end
 
-  class Katello::ErrataAssociation < ActiveRecord::Base
-    self.table_name = "katello_system_errata"
+  class Organization < ActiveRecord::Base
+    self.table_name = "taxonomies"
+
+    has_many :kt_environments, :class_name => "MigrateContentHosts::KTEnvironment",
+             :dependent => :restrict_with_exception, :inverse_of => :organization
   end
 
-  class Katello::RepositoryAssociation < ActiveRecord::Base
+  class KTEnvironment < ActiveRecord::Base
+    self.table_name = "katello_environments"
+
+    belongs_to :organization, :class_name => "MigrateContentHosts::Organization", :inverse_of => :kt_environments
+
+    has_many :content_facets, :class_name => "MigrateContentHosts::ContentFacet", :foreign_key => :lifecycle_environment_id,
+             :inverse_of => :lifecycle_environment, :dependent => :restrict_with_exception
+    has_many :systems, :class_name => "MigrateContentHosts::System", :inverse_of => :environment,
+             :dependent => :restrict_with_exception, :foreign_key => :environment_id
+  end
+
+  class ContentView < ActiveRecord::Base
+    self.table_name = "katello_content_views"
+
+    has_many :systems, :class_name => "MigrateContentHosts::System", :dependent => :restrict_with_exception
+    has_many :content_facets, :class_name => "MigrateContentHosts::ContentFacet", :foreign_key => :content_view_id,
+             :inverse_of => :content_view, :dependent => :restrict_with_exception
+  end
+
+  class Repository < ActiveRecord::Base
+    self.table_name = "katello_repositories"
+
+    has_many :system_repositories, :class_name => "MigrateContentHosts::SystemRepository", :dependent => :destroy
+    has_many :systems, :through => :system_repositories
+  end
+
+  class SystemRepository < ActiveRecord::Base
     self.table_name = "katello_system_repositories"
+    belongs_to :system, :inverse_of => :system_repositories, :class_name => 'MigrateContentHosts::System'
+    belongs_to :repository, :inverse_of => :system_repositories, :class_name => 'MigrateContentHosts::Repository'
   end
 
-  class Katello::System < ActiveRecord::Base
+  class HostCollection < ActiveRecord::Base
+    self.table_name = "katello_host_collection"
+
+    has_many :system_host_collections, :class_name => "MigrateContentHosts::SystemHostCollection", :dependent => :destroy
+    has_many :systems, :through => :system_host_collections, :class_name => "MigrateContentHosts::System"
+  end
+
+  class SystemHostCollections < ActiveRecord::Base
+    self.table_name = "katello_system_host_collections"
+
+    belongs_to :system, :inverse_of => :system_host_collections, :class_name => 'MigrateContentHosts::System'
+    belongs_to :host_collection, :inverse_of => :system_host_collections
+  end
+
+  class Erratum < ActiveRecord::Base
+    self.table_name = "katello_errata"
+
+    has_many :systems_applicable, :through => :system_errata, :class_name => "MigrateContentHosts::System", :source => :system
+  end
+
+  class SystemErratum < ActiveRecord::Base
+    self.table_name = "katello_system_errata"
+
+    belongs_to :system, :inverse_of => :system_errata, :class_name => 'MigrateContentHosts::System'
+    belongs_to :erratum, :inverse_of => :system_errata, :class_name => 'MigrateContentHosts::Erratum'
+  end
+
+  class ActivationKey < ActiveRecord::Base
+    self.table_name = "katello_activation_keys"
+
+    has_many :system_activation_keys, :class_name => "MigrateContentHosts::SystemActivationKey", :dependent => :destroy
+    has_many :subscription_facet_activation_keys, :class_name => "MigrateContentHosts::SubscriptionFacetActivationKey", :dependent => :destroy
+    has_many :subscription_facets, :through => :subscription_facet_activation_keys
+  end
+
+  class SystemActivationKey < ActiveRecord::Base
+    self.table_name = "katello_system_activation_keys"
+
+    belongs_to :system, :inverse_of => :system_activation_keys
+    belongs_to :activation_key, :inverse_of => :system_activation_keys
+  end
+
+  class Host < ActiveRecord::Base
+    self.table_name = "hosts"
+    self.inheritance_column = nil
+
+    has_one :content_facet, :class_name => "MigrateContentHosts::ContentFacet", :dependent => :destroy
+    has_one :subscription_facet, :class_name => "MigrateContentHosts::SubscriptionFacet", :dependent => :destroy
+
+    belongs_to :organization, :class_name => "MigrateContentHosts::Organization"
+    belongs_to :location, :class_name => "MigrateContentHosts::Location"
+  end
+
+  class System < ActiveRecord::Base
+    self.table_name = "katello_systems"
+    self.inheritance_column = nil
+
     def backend_data
       @data ||= ::Katello::Resources::Candlepin::Consumer.get(uuid)
     end
@@ -20,22 +112,58 @@ class MigrateContentHosts < ActiveRecord::Migration
       backend_data[:facts]
     end
 
-    self.table_name = "katello_systems"
+    belongs_to :content_view, :inverse_of => :systems, :class_name => "MigrateContentHosts::ContentView"
+    belongs_to :environment, :class_name => "MigrateContentHosts::KTEnvironment", :inverse_of => :systems
 
-    has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
-    has_many :activation_keys,
-             :through => :system_activation_keys,
-             :after_add    => :add_activation_key,
-             :after_remove => :remove_activation_key
-    belongs_to :content_view, :inverse_of => :systems
-    belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
-    has_many :errata_associations, :class_name => "Katello::ErrataAssociation", :dependent => :destroy
-    has_many :repository_associations, :class_name => "Katello::RepositoryAssociation", :dependent => :destroy
-    has_many :host_collections, :class_name => "Katello::HostCollectionAssociation", :dependent => :destroy
-    has_many :applicable_errata, :through => :system_errata, :class_name => "Katello::Erratum", :source => :erratum
-    has_many :system_errata, :class_name => "Katello::SystemErratum", :dependent => :destroy, :inverse_of => :system
-    has_many :bound_repositories, :through => :system_repositories, :class_name => "Katello::Repository", :source => :repository
-    has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy, :inverse_of => :system
+    has_many :system_activation_keys, :class_name => "MigrateContentHosts::SystemActivationKey", :dependent => :destroy
+    has_many :activation_keys, :through => :system_activation_keys
+    has_many :host_collections, :class_name => "MigrateContentHosts::SystemHostCollections", :dependent => :destroy
+    has_many :applicable_errata, :through => :system_errata, :class_name => "MigrateContentHosts::Erratum", :source => :erratum
+    has_many :system_errata, :class_name => "MigrateContentHosts::SystemErratum", :dependent => :destroy, :inverse_of => :system
+    has_many :bound_repositories, :through => :system_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
+    has_many :system_repositories, :class_name => "MigrateContentHosts::SystemRepository", :dependent => :destroy, :inverse_of => :system
+  end
+
+  class ContentFacet < ActiveRecord::Base
+    self.table_name = "katello_content_facets"
+
+    belongs_to :host, :inverse_of => :content_facet, :class_name => "MigrateContentHosts::Host"
+    belongs_to :content_view, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::ContentView"
+    belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::KTEnvironment"
+
+    has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
+    has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facet
+    has_many :applicable_errata, :through => :content_facet_errata, :class_name => "MigrateContentHosts::Erratum", :source => :erratum
+    has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
+  end
+
+  class ContentFacetRepository < ActiveRecord::Base
+    self.table_name = "katello_content_facet_repositories"
+
+    belongs_to :content_facet, :inverse_of => :content_facet_repositories, :class_name => 'MigrateContentHosts::ContentFacet'
+    belongs_to :repository, :inverse_of => :content_facet_repositories, :class_name => 'MigrateContentHosts::Repository'
+  end
+
+  class ContentFacetErratum < ActiveRecord::Base
+    self.table_name = "katello_content_facet_errata"
+
+    belongs_to :content_facet, :inverse_of => :content_facet_errata, :class_name => 'MigrateContentHosts::ContentFacet'
+    belongs_to :erratum, :inverse_of => :content_facet_errata, :class_name => 'MigrateContentHosts::Erratum'
+  end
+
+  class SubscriptionFacet < ActiveRecord::Base
+    self.table_name = "katello_subscription_facets"
+
+    belongs_to :host, :inverse_of => :subscription_facet, :class_name => "MigrateContentHosts::Host"
+    has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "MigrateContentHosts::ActivationKey"
+    has_many :subscription_facet_activation_keys, :class_name => "MigrateContentHosts::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
+  end
+
+  class SubscriptionFacetActivationKey < ActiveRecord::Base
+    self.table_name = "katello_subscription_facet_activation_keys"
+
+    belongs_to :subscription_facet, :inverse_of => :subscription_facet_activation_keys, :class_name => 'MigrateContentHosts::SubscriptionFacet'
+    belongs_to :activation_key, :inverse_of => :subscription_facet_activation_keys, :class_name => 'MigrateContentHosts::ActivationKey'
   end
 
   def logger
@@ -44,8 +172,8 @@ class MigrateContentHosts < ActiveRecord::Migration
 
   def create_content_facet(host, system)
     logger.info("Creating content facet for host #{host.name}.")
-    content_facet = host.content_facet = ::Katello::Host::ContentFacet.new(:content_view => system.content_view,
-                                                                              :lifecycle_environment => system.environment)
+    content_facet = host.content_facet = MigrateContentHosts::ContentFacet.new(:content_view => system.content_view,
+                                                         :lifecycle_environment => system.environment)
     content_facet.uuid = system.uuid
     content_facet.bound_repositories = system.bound_repositories
     content_facet.applicable_errata = system.applicable_errata
@@ -54,7 +182,7 @@ class MigrateContentHosts < ActiveRecord::Migration
 
   def create_subscription_facet(host, system)
     logger.info("Creating subscription facet for host #{host.name}.")
-    subscription_facet = host.subscription_facet = Katello::Host::SubscriptionFacet.new
+    subscription_facet = host.subscription_facet = MigrateContentHosts::SubscriptionFacet.new
     subscription_facet.activation_keys = system.activation_keys
     subscription_facet.uuid = system.uuid
 
@@ -164,11 +292,12 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     User.current = User.anonymous_api_admin
 
-    ensure_one_system_per_hostname(Katello::System.all)
+    ensure_one_system_per_hostname(MigrateContentHosts::System.all)
 
-    systems = get_systems_with_facts(Katello::System.all)
+    systems = get_systems_with_facts(MigrateContentHosts::System.all)
 
     systems.each do |system|
+      system.environment.organization = system.environment.organization.becomes(MigrateContentHosts::Organization)
       hostname = system.facts['network.hostname']
 
       logger.info("Processing content host #{system.uuid} #{hostname}")
@@ -179,12 +308,12 @@ class MigrateContentHosts < ActiveRecord::Migration
         break
       end
 
-      hosts = ::Host.where(:name => hostname)
+      MigrateContentHosts::Host.reset_column_information
+      hosts = MigrateContentHosts::Host.where(:name => hostname)
       if hosts.empty? # no host exists
         logger.info("No host exists with hostname #{hostname}, creating new host.")
-        params = system.attributes.to_options
-        params[:facts] = system.facts
-        host = Katello::Host::SubscriptionFacet.new_host_from_rhsm_params(params, system.environment.organization, Location.default_location)
+        host = MigrateContentHosts::Host.new(:name => system.facts['network.hostname'], :organization => system.environment.organization,
+                                             :location => MigrateContentHosts::Location.default_location, :managed => false)
         host.save!
 
         create_content_facet(host, system)
@@ -194,15 +323,15 @@ class MigrateContentHosts < ActiveRecord::Migration
         logger.warn("Found host with hostname #{hostname} but it's in org #{hosts[0].org.name} instead of #{system.environment.organization.name}.")
         host = hosts.first
 
-        create_content_facet(host, system)
+        create_content_facet(host, system) unless host.content_facet
         unregister_system(system)
 
       else #host exists in the correct org
         logger.info("Found host with hostname #{hostname}.")
         host = hosts.first
 
-        create_content_facet(host, system)
-        create_subscription_facet(host, system)
+        create_content_facet(host, system) unless host.content_facet
+        create_subscription_facet(host, system) unless host.subscription_facet
       end
 
       system.host_id = host.id
