@@ -77,6 +77,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             }
 
             CapsuleContent.syncStatus(params).$promise.then(function (syncStatus) {
+                var errorCount, errorMessage;
                 $scope.syncStatus = syncStatus;
                 if (syncStatus['last_sync_time'] === null) {
                     $scope.syncStatus['last_sync_time'] = translate('Never');
@@ -86,8 +87,17 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                     $scope.syncTask = aggregateTasks(syncStatus['active_sync_tasks']);
 
                 } else if (syncStatus['last_failed_sync_tasks'].length > 0) {
+                    errorCount = $scope.syncTask.humanized.errors.length;
                     $scope.syncTask = pickLastTask(syncStatus['last_failed_sync_tasks']);
-                    $scope.syncErrorMessages = $scope.syncTask.humanized.errors;
+                    if (errorCount > 0) {
+                        errorMessage = $scope.syncTask.humanized.errors[0];
+                        if (errorCount > 2) {
+                            errorMessage += " " + translate("Plus %y more errors").replace("%y", errorCount - 1);
+                        } else if (errorCount > 1) {
+                            errorMessage += " " + translate("Plus 1 more error");
+                        }
+                        $scope.syncErrorMessages = [errorMessage];
+                    }
                 }
                 $scope.syncState.set(stateFromTask($scope.syncTask));
             }, function (response) {
