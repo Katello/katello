@@ -21,7 +21,7 @@ class Setting::Katello < Setting
         self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."), true),
         self.set('force_post_sync_actions', N_("Force post sync actions such as indexing and email even if no content was available."), false),
         self.set('default_download_policy', N_("Default download policy for repositories (either 'immediate', 'on_demand', or 'background')"), "immediate"),
-        self.set('pulp_export_destination', N_("On-disk location for exported repositories"), File.join(Rails.root, 'repo-exports')),
+        self.set('pulp_export_destination', N_("On-disk location for exported repositories"), File.join(Rails.root, 'tmp', 'repo-exports')),
         self.set('pulp_client_key', N_("Path for ssl key used for pulp server auth"), "/etc/pki/katello/private/pulp-client.key"),
         self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt"),
         self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false)
