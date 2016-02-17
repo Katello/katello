@@ -5,7 +5,7 @@ module Actions
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(host, options = {})
-          plan_action(Katello::Host::Destroy, host, options.merge(:destroy_object => false, :destroy_facets => false))
+          plan_action(Katello::Host::Destroy, host, options.merge(:unregistering => true))
         end
 
         def humanized_name
