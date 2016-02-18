@@ -13,7 +13,7 @@
         <span class="info-label" translate>Name</span>
         <span class="info-value"
               bst-edit-text="contentHost.name"
-              readonly="denied('edit_content_hosts', contentHost)"
+              readonly="denied('edit_hosts', host)"
               on-save="save(contentHost)">
         </span>
       </div>
@@ -27,7 +27,7 @@
         <span class="info-label" translate>Description</span>
         <span class="info-value"
               bst-edit-textarea="contentHost.description"
-              readonly="denied('edit_content_hosts', contentHost)"
+              readonly="denied('edit_hosts', host)"
               on-save="save(contentHost)">
         </span>
       </div>
@@ -95,7 +95,7 @@
         <span class="info-label" translate>Auto-Attach</span>
         <span class="info-value"
               bst-edit-checkbox="contentHost.autoheal"
-              readonly="denied('edit_content_hosts', contentHost)"
+              readonly="denied('edit_hosts', host)"
               formatter="booleanToYesNo"
               on-save="save(contentHost)">
         </span>
@@ -104,7 +104,7 @@
         <span class="info-label" translate>Service Level</span>
         <span class="info-value"
               bst-edit-select="contentHost.service_level"
-              readonly="denied('edit_content_hosts', contentHost)"
+              readonly="denied('edit_hosts', host)"
               selector="contentHost.service_level"
               options="serviceLevels()"
               options-format="option for option in options"
@@ -226,7 +226,7 @@
         <span class="info-label" translate>Release Version</span>
         <span class="info-value"
               bst-edit-select="contentHost.release_ver"
-              readonly="denied('edit_content_hosts', contentHost)"
+              readonly="denied('edit_hosts', host)"
               selector="contentHost.release_ver"
               options="releaseVersions()"
               options-format="option for option in options"
@@ -246,7 +246,7 @@
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
               bst-edit-select="contentHost.content_view.name"
-              readonly="denied('edit_content_hosts', contentHost)"
+              readonly="denied('edit_hosts', host)"
               selector="contentHost.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
@@ -272,7 +272,7 @@
         <span path-selector="environments"
               ng-model="contentHost.environment"
               mode="singleSelect"
-              disabled="denied('edit_content_hosts', contentHost)"
+              disabled="denied('edit_hosts', host)"
               disable-trigger="disableEnvironmentSelection">
         </span>
       </div>

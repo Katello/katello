@@ -25,7 +25,7 @@
 
     <div data-block="actions">
       <button class="btn btn-default"
-              ng-hide="denied('edit_content_hosts', contentHost)"
+              ng-hide="denied('edit_hosts')"
               ng-disabled="table.numSelected == 0 || detailsTable.numSelected == 0"
               ng-click="hostCollections.action = 'add'; hostCollections.working = true">
         <i class="fa fa-plus"></i>
@@ -33,7 +33,7 @@
       </button>
 
       <button class="btn btn-default"
-              ng-hide="denied('edit_content_hosts', contentHost)"
+              ng-hide="denied('edit_hosts')"
               ng-disabled="table.numSelected == 0 || detailsTable.numSelected == 0"
               ng-click="hostCollections.action = 'remove'; hostCollections.working = true">
         <i class="fa fa-minus"></i>

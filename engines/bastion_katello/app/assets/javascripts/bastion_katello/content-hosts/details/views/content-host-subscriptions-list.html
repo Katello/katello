@@ -1,4 +1,4 @@
-<span page-title ng-model="contentHost">{{ 'Subscriptions for Content Host:' | translate }} {{ contentHost.name }}</span>
+<span page-title ng-model="host">{{ 'Subscriptions for Content Host:' | translate }} {{ host.name }}</span>
 <div data-extend-template="layouts/details-nutupane.html">
   <div data-block="messages"></div>
 
@@ -15,7 +15,7 @@
     <div ng-hide="system.readonly" class="nutupane-actions fr">
        <button class="btn btn-primary"
                translate
-               ng-hide="denied('edit_content_hosts', contentHost)"
+               ng-hide="denied('edit_hosts', host)"
                ng-disabled="disableRemoveButton()"
                ng-click="removeSelected()">
          Remove Selected

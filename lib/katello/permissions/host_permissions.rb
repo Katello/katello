@@ -28,8 +28,7 @@ Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'katello/api/v2/host_subscriptions/product_content',
   'katello/api/v2/hosts_bulk_actions/installable_errata',
   'katello/api/v2/hosts_bulk_actions/available_incremental_updates',
-  'katello/api/v2/host_packages/index',
-  'katello/api/v2/host_packages/auto_complete_search'
+  'katello/api/v2/host_packages/index'
 ]
 
 Foreman::AccessControl.permission(:destroy_hosts).actions.concat [

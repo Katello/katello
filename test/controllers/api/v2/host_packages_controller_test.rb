@@ -99,8 +99,16 @@ module Katello
       assert_response :success
     end
 
+    def test_view_permissions
+      good_perms = [@view_permission]
+      bad_perms = [@update_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:index, good_perms, bad_perms) do
+        get :index, :host_id => @host.id
+      end
+    end
+
     def test_permissions
-      #all actions have the same perms
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
 
