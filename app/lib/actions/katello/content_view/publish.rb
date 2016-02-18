@@ -4,7 +4,6 @@ module Actions
       class Publish < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
-        # rubocop:disable MethodLength
         def plan(content_view, description = "")
           action_subject(content_view)
           content_view.check_ready_to_publish!

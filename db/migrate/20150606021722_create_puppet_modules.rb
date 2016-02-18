@@ -1,5 +1,4 @@
 class CreatePuppetModules < ActiveRecord::Migration
-  # rubocop:disable MethodLength
   def up
     create_table 'katello_puppet_modules' do |t|
       t.timestamps

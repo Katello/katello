@@ -1,5 +1,4 @@
 class AddErrata < ActiveRecord::Migration
-  # rubocop:disable MethodLength
   def up
     create_table "katello_errata" do |t|
       t.string "uuid", :null => false

@@ -1,5 +1,4 @@
 class CreateSubscriptions < ActiveRecord::Migration
-  # rubocop:disable MethodLength
   def change
     create_table "katello_subscriptions" do |t|
       t.string  :name

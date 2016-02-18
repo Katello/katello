@@ -2,7 +2,6 @@ module Actions
   module Katello
     module Repository
       class Create < Actions::EntryAction
-        # rubocop:disable MethodLength
         def plan(repository, clone = false, plan_create = false, ostree_branches = [])
           repository.save!
           ostree_branches.each do |branch_name|
