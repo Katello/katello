@@ -46,8 +46,10 @@ module Actions
 
         def finalize
           host = ::Host.find(input[:host_id])
-          host.content_facet.update_attributes(:uuid => input[:uuid])
-          host.subscription_facet.update_attributes(:uuid => input[:uuid])
+          host.content_facet.uuid = input[:uuid]
+          host.subscription_facet.uuid = input[:uuid]
+          host.content_facet.save!
+          host.subscription_facet.save!
 
           system = ::Katello::System.find(input[:system_id])
           system.uuid = input[:uuid]

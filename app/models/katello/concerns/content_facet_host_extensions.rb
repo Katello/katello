@@ -25,6 +25,7 @@ module Katello
         scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
 
         accepts_nested_attributes_for :content_facet, :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? }
+        attr_accessible :content_facet_attributes
       end
     end
   end

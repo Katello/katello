@@ -4,6 +4,7 @@ module Katello
   class ContentFacetBase < ActiveSupport::TestCase
     let(:library) { katello_environments(:library) }
     let(:view)  { katello_content_views(:library_dev_view) }
+    let(:environment) { katello_environments(:library) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
       FactoryGirl.create(:host, :with_content, :content_view => view,
@@ -14,11 +15,21 @@ module Katello
 
   class ContentFacetTest < ContentFacetBase
     def test_create
-      empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view => view, :lifecycle_environment => library, :host => empty_host)
+      empty_host.content_facet = Katello::Host::ContentFacet.create!(:content_view_id => view.id, :lifecycle_environment_id => library.id, :host => empty_host)
     end
 
     def test_content_view_version
       assert_equal view.version(library), host.content_facet.content_view_version
+    end
+
+    def test_permitted_content_facet_attributes
+      assert ::Host.new(:name => "foo", :content_facet_attributes => { :content_view_id => view.id, :lifecycle_environment_id => environment.id })
+    end
+
+    def test_protected_content_facet_attributes
+      assert_raises ActiveModel::MassAssignmentSecurity::Error do
+        assert ::Host.new(:name => "foo", :content_facet_attributes => {:uuid => "thisshouldntbeabletobesetbyuser"})
+      end
     end
   end
 

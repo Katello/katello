@@ -22,8 +22,7 @@ module Actions
             host.subscription_facet.try(:destroy!)
             host.content_facet.try(:destroy!)
           else
-            host.subscription_facet.update_attributes!(:uuid => nil) if host.subscription_facet
-            host.content_facet.update_attributes!(:uuid => nil) if host.content_facet
+            unregister_host(host)
           end
 
           if host.content_host
@@ -39,6 +38,17 @@ module Actions
           else
             host.get_status(::Katello::ErrataStatus).destroy
             host.get_status(::Katello::SubscriptionStatus).destroy
+          end
+        end
+
+        def unregister_host(host)
+          if host.subscription_facet
+            host.subscription_facet.uuid = nil
+            host.subscription_facet.save!
+          end
+          if host.content_facet
+            host.content_facet.uuid = nil
+            host.content_facet.save!
           end
         end
 
