@@ -10,14 +10,15 @@ module Actions
 
           sequence do
             host.content_facet.save! if host.content_facet
-            host.subscription_facet.save! if host.subscription_facet
 
-            if consumer_params && host.subscription_facet
-              host.subscription_facet.update_from_consumer_attributes(consumer_params)
+            if host.subscription_facet
+              if consumer_params
+                host.subscription_facet.update_from_consumer_attributes(consumer_params)
+              else
+                consumer_params = host.subscription_facet.consumer_attributes
+              end
               host.subscription_facet.save!
               plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
-            elsif host.subscription_facet
-              consumer_params = host.subscription_facet.consumer_attributes
             end
 
             if host.content_facet && host.content_host
@@ -25,6 +26,7 @@ module Actions
               host.content_host.environment = host.content_facet.try(:lifecycle_environment)
               host.content_host.save!
             end
+
             if host.subscription_facet.try(:autoheal)
               plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid)
             end
