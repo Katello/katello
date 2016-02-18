@@ -181,7 +181,24 @@ module Katello
         sys.must_equal @system
         inp.must_equal input
       end
-      post :update, input
+      put :update, input
+      assert_response :success
+    end
+
+    def test_update_service_level
+      input = {
+        :id => @system.id,
+        :service_level => 'standard'
+      }
+      where_stub = System.where(:id => @system.id)
+      System.stubs(:where).returns(where_stub)
+      System.any_instance.stubs(:first).returns(@system)
+      @controller.expects(:system_params).returns(input)
+      assert_sync_task(::Actions::Katello::System::Update) do |sys, inp|
+        sys.must_equal @system
+        inp.must_equal input
+      end
+      put :update, input
       assert_response :success
     end
 
