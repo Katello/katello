@@ -4,12 +4,13 @@ module Actions
       def plan(*args)
         if Setting[:check_services_before_actions]
           #To prevent the ping from happening multiple times, keep track on the initial entry action
+          #If capsule_id is passed as in args from an action, Katello::Ping checks the pulp server on the capsule
           parent = source_action
           parent.input[:services_checked] ||= []
           to_check = services - parent.input[:services_checked]
 
           if to_check.any?
-            result = User.as_anonymous_admin { ::Katello::Ping.ping(to_check)[:services] }
+            result = User.as_anonymous_admin { ::Katello::Ping.ping(services: to_check, capsule_id: capsule_id(args))[:services] }
 
             to_check.each do |service|
               if result[service][:status] != ::Katello::Ping::OK_RETURN_CODE
@@ -23,6 +24,11 @@ module Actions
       end
 
       protected
+
+      def capsule_id(args)
+        capsule_hash = args.select { |x| x[:capsule_id] if x.is_a? Hash }
+        capsule_hash[0] ? capsule_hash[0][:capsule_id] : nil
+      end
 
       def source_action
         parent = self.action

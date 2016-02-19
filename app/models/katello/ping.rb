@@ -16,14 +16,14 @@ module Katello
       #
       # TODO: break up this method
       # rubocop:disable MethodLength
-      def ping(services = SERVICES)
+      def ping(services: SERVICES, capsule_id: nil)
         result = { :status => OK_RETURN_CODE, :services => {}}
         services.each { |service| result[:services][service] = {} }
 
         # pulp - ping without oauth
         if services.include?(:pulp)
           exception_watch(result[:services][:pulp]) do
-            Ping.pulp_without_oauth
+            Ping.pulp_without_auth(pulp_url(capsule_id))
           end
         end
 
@@ -98,12 +98,22 @@ module Katello
         packages.split("\n").sort
       end
 
+      def pulp_url(capsule_id)
+        if capsule_id
+          capsule_content = ::Katello::CapsuleContent.new(SmartProxy.find(capsule_id))
+          uri = URI.parse(capsule_content.pulp_url)
+          "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
+        else
+          SETTINGS[:katello][:pulp][:url]
+        end
+      end
+
       # this checks Pulp is running and responding without need
       # for authentication. We don't use RestClient.options here
       # because it returns empty string, which is not enough to say
       # pulp is the one that responded
-      def pulp_without_oauth
-        body = RestClient.get("#{SETTINGS[:katello][:pulp][:url]}/status/")
+      def pulp_without_auth(url)
+        body = RestClient.get("#{url}/status/")
         fail _("Pulp does not appear to be running.") if body.empty?
         json = JSON.parse(body)
 
