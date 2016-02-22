@@ -51,6 +51,16 @@ module Katello
       assert_template 'api/v2/content_views/index'
     end
 
+    def test_index_with_composite_filter
+      get :index, :organization_id => @organization.id, :composite => true
+
+      assert_response :success
+      assert_template 'api/v2/content_views/index'
+      views = JSON.parse(response.body)['results']
+      assert views.length > 0
+      assert views.all? { |view| view["composite"] }
+    end
+
     def test_index_fail_without_organization_id
       get :index
 
