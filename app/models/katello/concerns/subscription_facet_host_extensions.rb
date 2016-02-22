@@ -20,8 +20,7 @@ module Katello
       end
 
       def update_action
-        if self.content_facet && self.content_host && (self.content_host.content_view != self.content_facet.content_view ||
-            self.content_host.environment != self.content_facet.lifecycle_environment)
+        if subscription_facet.try(:backend_update_needed?)
           ::Actions::Katello::Host::Update
         end
       end

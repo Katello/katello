@@ -4,6 +4,7 @@ module Katello
   class SubscriptionFacetBase < ActiveSupport::TestCase
     let(:org) { taxonomies(:empty_organization) }
     let(:library) { katello_environments(:library) }
+    let(:dev) { katello_environments(:dev) }
     let(:view)  { katello_content_views(:library_dev_view) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
@@ -85,6 +86,19 @@ module Katello
       ForemanTasks.expects(:sync_task).with(Actions::Katello::Host::RemoveSubscriptions, host, entitlements)
 
       host.subscription_facet.remove_subscriptions([PoolWithQuantities.new(pool, [1])])
+    end
+
+    def test_backend_update_needed?
+      refute subscription_facet.backend_update_needed?
+
+      subscription_facet.service_level = 'terrible'
+      assert subscription_facet.backend_update_needed?
+
+      subscription_facet.reload
+      refute subscription_facet.backend_update_needed?
+
+      subscription_facet.host.content_facet.lifecycle_environment_id = dev.id
+      assert subscription_facet.backend_update_needed?
     end
   end
 end

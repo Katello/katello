@@ -4,7 +4,7 @@ require 'katello_test_helper'
 require 'support/host_support'
 
 module Katello
-  class HostManagedExtensionsTest < ActiveSupport::TestCase
+  class HostManagedExtensionsTestBase < ActiveSupport::TestCase
     def setup
       disable_orchestration # disable foreman orchestration
       @dev = KTEnvironment.find(katello_environments(:dev).id)
@@ -22,7 +22,9 @@ module Katello
 
       @foreman_host.environment = new_puppet_environment
     end
+  end
 
+  class HostManagedExtensionsTest < HostManagedExtensionsTestBase
     def test_destroy_host
       system_id = @foreman_host.content_host.id
 
@@ -90,6 +92,47 @@ module Katello
       assert_raises(ActiveRecord::RecordInvalid) do
         host.content_facet.save!
       end
+    end
+  end
+
+  class HostManagedPuppetTest < HostManagedExtensionsTestBase
+    def setup
+      super
+      @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
+      @library_cvpe = katello_content_view_puppet_environments(:library_dev_staging_view_library_puppet_env)
+      @dev_cvpe = katello_content_view_puppet_environments(:dev_dev_staging_view_library_puppet_env)
+
+      @library_puppet_env = ::Environment.create!(:name => 'library_env')
+      @dev_puppet_env = ::Environment.create!(:name => 'dev_env')
+
+      @library_cvpe.puppet_environment = @library_puppet_env
+      @library_cvpe.save!
+
+      @dev_cvpe.puppet_environment = @dev_puppet_env
+      @dev_cvpe.save!
+
+      @foreman_host = FactoryGirl.create(:host, :with_content, :content_view => @library_dev_staging_view,
+                                     :lifecycle_environment =>  @library, :organization => @library.organization, :environment => @library_puppet_env)
+    end
+
+    def test_correct_puppet_environment
+      assert_equal @library_puppet_env, @foreman_host.environment
+
+      @foreman_host.content_facet.lifecycle_environment = @dev
+      @foreman_host.save!
+
+      assert_equal @dev_puppet_env, @foreman_host.environment
+    end
+
+    def test_non_matching_puppet_environment
+      third_party_env = ::Environment.create!(:name => 'someotherenv')
+      @foreman_host.environment = third_party_env
+      @foreman_host.save!
+
+      @foreman_host.content_facet.lifecycle_environment = @dev
+      @foreman_host.save!
+
+      assert_equal third_party_env, @foreman_host.environment
     end
   end
 end

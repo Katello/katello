@@ -39,45 +39,22 @@ module Katello
     api :POST, "/systems/post_index", N_("List content hosts when you have a query string parameter that will cause a 414."), :deprecated => true
     api :GET, "/organizations/:organization_id/systems", N_("List content hosts in an organization"), :deprecated => true
     api :GET, "/environments/:environment_id/systems", N_("List content hosts in environment"), :deprecated => true
-    api :GET, "/host_collections/:host_collection_id/systems", N_("List content hosts in a host collection"), :deprecated => true
     param :name, String, :desc => N_("Filter content host by name")
     param :pool_id, String, :desc => N_("Filter content host by subscribed pool")
     param :uuid, String, :desc => N_("Filter content host by uuid")
     param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
     param :environment_id, String, :desc => N_("Filter by environment")
-    param :host_collection_id, String, :desc => N_("Filter by host collection")
     param :content_view_id, String, :desc => N_("Filter by content view")
-    param :erratum_id, String, :desc => N_("Filter by systems that need an Erratum by uuid")
-    param :errata_ids, Array, :desc => N_("Filter by systems that need any one of multiple Errata by uuid")
-    param :erratum_restrict_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is available to systems (default False)")
-    param :erratum_restrict_non_installable, String, :desc => N_("Return only systems where the Erratum specified by erratum_id or errata_ids is unavailable to systems (default False)")
-    param :available_for, String, :desc => N_("Return content hosts that are able to be attached to a specified object such as 'host_collection'")
     param_group :search, Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end
 
     def index_relation
-      if params[:erratum_id] || params[:errata_ids]
-        errata_ids = [params[:erratum_id]] if params[:erratum_id]
-        errata_ids = params.fetch(:errata_ids, []) if params[:errata_ids]
-        collection = systems_by_errata(errata_ids, params[:erratum_restrict_installable],
-            params[:erratum_restrict_non_installable])
-      else
-        collection = System.readable
-      end
-
-      if params[:available_for] && params[:available_for] == 'host_collection'
-        host_ids = HostCollection.find(params[:host_collection_id]).hosts.pluck(:id)
-        collection = collection.where("id NOT IN (?)", host_ids) unless host_ids.empty?
-        return collection
-      end
-
+      collection = System.readable
       collection = collection.where(:content_view_id => params[:content_view_id]) if params[:content_view_id]
       collection = collection.where(:id => Organization.find(params[:organization_id]).systems.map(&:id)) if params[:organization_id]
       collection = collection.where(:environment_id => params[:environment_id]) if params[:environment_id]
-      collection = collection.where(:id => HostCollection.find(params[:host_collection_id]).systems) if params[:host_collection_id]
-      collection = collection.where(:id => Katello::ActivationKey.find(params[:activation_key_id]).systems) if params[:activation_key_id]
       collection = collection.where(:id => Pool.find(params['pool_id']).systems.map(&:id)) if params['pool_id']
       collection = collection.where(:uuid => params['uuid']) if params['uuid']
       collection = collection.where(:name => params['name']) if params['name']
@@ -117,24 +94,14 @@ module Katello
 
     api :PUT, "/systems/:id", N_("Update content host information"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
-    param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
-    param :description, String, :desc => N_("Description of the content host")
-    param :location, String, :desc => N_("Physical location of the content host")
-    param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true do
-      param :fact, String, :desc => N_("Any number of facts about this content host")
-    end
-    param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :action_aware => true
-    param :guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
-    param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
     param :release_ver, String, :desc => N_("Release version of the content host")
     param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
-    param :last_checkin, String, :desc => N_("Last check-in time of this content host")
     param :environment_id, String, :desc => N_("Specify the environment")
     param :content_view_id, String, :desc => N_("Specify the content view")
     param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
     def update
-      system_params = system_params(params)
-      sync_task(::Actions::Katello::System::Update, @system, system_params)
+      host_params = system_params_to_host_params(system_params(params))
+      @system.foreman_host.update_attributes!(host_params)
       respond_for_update
     end
 
@@ -149,36 +116,6 @@ module Katello
     def destroy
       sync_task(::Actions::Katello::System::Destroy, @system, :destroy_object => false)
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
-    end
-
-    api :GET, "/environments/:environment_id/systems/report", N_("Get content host reports for the environment"), :deprecated => true
-    api :GET, "/organizations/:organization_id/systems/report", N_("Get content host reports for the organization"), :deprecated => true
-    def report
-      data = @environment.nil? ? @organization.systems.readable : @environment.systems.readable
-
-      data = data.flatten.map do |r|
-        r.reportable_data(
-            :only    => [:uuid, :name, :location, :created_at, :updated_at],
-            :methods => [:environment, :organization, :compliance_color, :compliant_until]
-        )
-      end
-
-      system_report = Util::ReportTable.new(
-          :data         => data,
-          :column_names => %w(name uuid location organization environment created_at updated_at
-                              compliance_color compliant_until),
-          :transforms   => lambda do |r|
-                             r.organization    = r.organization.name
-                             r.environment     = r.environment.name
-                             r.created_at      = r.created_at.to_s
-                             r.updated_at      = r.updated_at.to_s
-                             r.compliant_until = r.compliant_until.to_s
-                           end
-      )
-      respond_to do |format|
-        format.text { render :text => system_report.as(:text) }
-        format.csv { render :text => system_report.as(:csv) }
-      end
     end
 
     api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true
@@ -225,6 +162,22 @@ module Katello
     end
 
     private
+
+    def system_params_to_host_params(sys_params)
+      content_facet = {}
+      subscription_facet = {}
+      host_params = {}
+      host_params[:host_collection_ids] = sys_params[:host_collection_ids] unless sys_params[:host_collection_ids].blank?
+
+      content_facet[:lifecycle_environment_id] = sys_params[:environment_id]
+      content_facet[:content_view_id] = sys_params[:content_view_id]
+      host_params[:content_facet_attributes] = content_facet.compact! unless content_facet.compact.empty?
+
+      subscription_facet[:service_level] = params[:service_level]
+      subscription_facet[:release_version] = params[:release_ver]
+      host_params[:subscription_facet_attributes] = subscription_facet.compact! unless subscription_facet.compact.empty?
+      host_params
+    end
 
     def validate_content_overrides(content_params)
       case content_params[:value].to_s
@@ -346,25 +299,6 @@ module Katello
       else
         @content_view = nil
       end
-    end
-
-    def systems_by_errata(errata_uuids, installable, non_installable)
-      installable = ::Foreman::Cast.to_bool(installable)
-      non_installable = ::Foreman::Cast.to_bool(non_installable)
-
-      errata = Katello::Erratum.where(:uuid => errata_uuids)
-      if errata.count != errata_uuids.count
-        fail _("Unable to find errata with ids: %s.") % (errata_uuids - errata.pluck(:uuid)).join(", ")
-      end
-
-      if installable
-        content_facets = Katello::Host::ContentFacet.with_installable_errata(errata)
-      elsif non_installable
-        content_facets = Katello::Host::ContentFacet.with_non_installable_errata(errata)
-      else
-        content_facets = Katello::Host::ContentFacet.with_applicable_errata(errata)
-      end
-      Katello::System.readable.where(:host_id => content_facets.pluck(:host_id))
     end
 
     def authorize_environment
