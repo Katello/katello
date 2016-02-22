@@ -136,18 +136,23 @@ module Katello
     end
 
     def test_update
+      host = @system.foreman_host
       input = {
         :id => @system.id,
-        :name => 'newname'
+        :release_ver => '7Server',
+        :content_view_id => @system.content_view_id
       }
       where_stub = System.where(:id => @system.id)
       System.stubs(:where).returns(where_stub)
       System.any_instance.stubs(:first).returns(@system)
+      @system.stubs(:foreman_host).returns(host)
       @controller.expects(:system_params).returns(input)
-      assert_sync_task(::Actions::Katello::System::Update) do |sys, inp|
-        sys.must_equal @system
-        inp.must_equal input
-      end
+
+      subscription_facet = {:release_version => '7Server'}
+      content_facet = {:content_view_id => @system.content_view_id}
+      ::Host::Managed.any_instance.stubs(:update_attributes!).once.with(:subscription_facet_attributes => subscription_facet,
+                                                                         :content_facet_attributes => content_facet)
+
       post :update, input
       assert_response :success
     end

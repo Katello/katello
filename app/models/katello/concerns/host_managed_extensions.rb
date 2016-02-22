@@ -21,11 +21,13 @@ module Katello
         has_many :host_collection_hosts, :class_name => "::Katello::HostCollectionHosts", :foreign_key => :host_id, :dependent => :destroy
         has_many :host_collections, :class_name => "::Katello::HostCollection", :through => :host_collection_hosts
 
+        before_save :correct_puppet_environment
+
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :in => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id
         scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
 
-        attr_accessible :content_source_id
+        attr_accessible :content_source_id, :host_collection_ids
       end
 
       def validate_media_with_capsule?
@@ -55,9 +57,21 @@ module Katello
         info
       end
 
+      def correct_puppet_environment
+        if content_and_puppet_matched?
+          new_environment = content_facet.content_view.puppet_env(content_facet.lifecycle_environment).try(:puppet_environment)
+          self.environment = new_environment if new_environment
+        end
+      end
+
+      def content_and_puppet_matched?
+        content_facet && content_facet.content_view_id_was == environment.try(:content_view).try(:id) &&
+            content_facet.lifecycle_environment_id_was == self.environment.try(:lifecycle_environment).try(:id)
+      end
+
       def content_and_puppet_match?
-        content_facet && content_facet.content_view == environment.try(:content_view) &&
-            content_facet.lifecycle_environment == self.environment.try(:lifecycle_environment)
+        content_facet && content_facet.content_view_id == environment.try(:content_view).try(:id) &&
+            content_facet.lifecycle_environment_id == self.environment.try(:lifecycle_environment).try(:id)
       end
 
       def set_hostgroup_defaults_with_katello_attributes

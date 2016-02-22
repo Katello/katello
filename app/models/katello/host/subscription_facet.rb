@@ -87,6 +87,16 @@ module Katello
       def candlepin_consumer
         @candlepin_consumer ||= Katello::Candlepin::Consumer.new(self.uuid)
       end
+
+      def backend_update_needed?
+        %w(release_version service_level autoheal).each do |method|
+          return true if self.send("#{method}_changed?")
+        end
+        if self.host.content_facet
+          return true if (self.host.content_facet.content_view_id_changed? || self.host.content_facet.lifecycle_environment_id_changed?)
+        end
+        false
+      end
     end
   end
 end
