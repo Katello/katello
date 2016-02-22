@@ -3,7 +3,7 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
     respond_to :json
 
-    wrap_parameters :include => (System.attribute_names + %w(type autoheal facts guest_ids host_collection_ids installed_products content_view environment))
+    wrap_parameters :include => (System.attribute_names + %w(type autoheal facts guest_ids host_collection_ids installed_products content_view environment service_level release_ver last_checkin))
 
     skip_before_filter :set_default_response_format, :only => :report
 
