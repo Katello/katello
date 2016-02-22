@@ -24,7 +24,8 @@ class Setting::Katello < Setting
         self.set('pulp_export_destination', N_("On-disk location for exported repositories"), File.join(Rails.root, 'tmp', 'repo-exports')),
         self.set('pulp_client_key', N_("Path for ssl key used for pulp server auth"), "/etc/pki/katello/private/pulp-client.key"),
         self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt"),
-        self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false)
+        self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false),
+        self.set('use_pulp_oauth', N_("use oauth authentication for pulp instead of the default cert based authentication"), false)
       ].each { |s| self.create! s.update(:category => "Setting::Katello") }
     end
     true
