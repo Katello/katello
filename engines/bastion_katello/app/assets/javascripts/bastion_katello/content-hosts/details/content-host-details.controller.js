@@ -6,7 +6,6 @@
  * @requires $state
  * @requires $q
  * @requires translate
- * @requires ContentHost
  * @requires Organization
  * @requires CurrentOrganization
  * @requires MenuExpander
@@ -15,42 +14,63 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHost', 'Organization', 'CurrentOrganization', 'MenuExpander',
-    function ($scope, $state, $q, translate, Host, ContentHost, Organization, CurrentOrganization, MenuExpander) {
-        var contentHostDeferred = $q.defer();
-
+    ['$scope', '$state', '$q', 'translate', 'Host', 'Organization', 'CurrentOrganization', 'MenuExpander',
+    function ($scope, $state, $q, translate, Host, Organization, CurrentOrganization, MenuExpander) {
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
         $scope.errorMessages = [];
+        $scope.panel = {loading: true};
 
-        if ($scope.contentHost) {
-            $scope.panel = {loading: false};
-        } else {
-            $scope.panel = {loading: true};
-        }
-
-        $scope.contentHost = {$promise: contentHostDeferred.promise};
-        $scope.host = Host.get({id: $scope.$stateParams.hostId}, function(host) {
-            if (host.subscription && host.subscription.uuid) {
-                $scope.contentHost = ContentHost.get({id: host.subscription.uuid}, function (contentHost) {
-                    contentHostDeferred.resolve(contentHost);
-                    $scope.$watch("contentHostTable.rows.length > 0", function () {
-                        $scope.contentHostTable.replaceRow(contentHost);
-                    });
-                    $scope.panel.loading = false;
-                });
-
-            } else {
-                $scope.panel.loading = false;
-            }
+        $scope.host = Host.get({id: $scope.$stateParams.hostId}, function () {
+            $scope.panel.loading = false;
         });
 
+        // @TODO begin hack for content and subscript facets
+        // see http://projects.theforeman.org/issues/13763
+        $scope.saveContentFacet = function (host) {
+            host['content_facet_attributes'] = {
+                id: host.content.id,
+                'content_view_id': host.content.content_view.id,
+                'lifecycle_environment_id': host.content.lifecycle_environment.id
+            };
+            return $scope.save(host);
+        };
 
-        $scope.save = function (contentHost) {
+        $scope.saveSubscriptionFacet = function (host) {
+            host['subscription_facet_attributes'] = {
+                id: host.subscription.id,
+                autoheal: host.subscription.autoheal,
+                'service_level': host.subscription.service_level
+            };
+            return $scope.save(host);
+        };
+        // @TODO end hack
+
+        $scope.save = function (host) {
             var deferred = $q.defer();
 
-            contentHost.$update(function (response) {
+            // TODO begin hack needed to use the foreman host API, see the following bugs:
+            // http://projects.theforeman.org/issues/13622
+            // http://projects.theforeman.org/issues/13669
+            // http://projects.theforeman.org/issues/13670
+            // http://projects.theforeman.org/issues/13672
+            // http://projects.theforeman.org/issues/13759
+
+            var whitelistedHostObject = {},
+                whitelist = [
+                    "name",
+                    "description",
+                    "content_facet_attributes",
+                    "subscription_facet_attributes"
+                ];
+
+            angular.forEach(whitelist, function (key) {
+                whitelistedHostObject[key] = host[key];
+            });
+
+            Host.update({id: host.id, host: whitelistedHostObject}, function (response) {
                 deferred.resolve(response);
+                $scope.host = response;
                 $scope.successMessages.push(translate('Save Successful.'));
             }, function (response) {
                 deferred.reject(response);
@@ -58,6 +78,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                     $scope.errorMessages.push(translate("An error occurred saving the Content Host: ") + errorMessage);
                 });
             });
+            // TODO end hack
 
             return deferred.promise;
         };

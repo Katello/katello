@@ -58,13 +58,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         $scope.setupErrataOptions = function (host) {
             var libraryString = translate("Library Synced Content"),
-                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content.lifecycle_environment_name).replace("%cv", host.content.content_view_name),
+                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content.lifecycle_environment.name).replace("%cv", host.content.content_view_name),
                 previousEnv;
 
             $scope.errataOptions = [{name: currentEnv, label: 'current', order: 3}];
 
             if (!host.content['lifecycle_environment_library?']) {
-                Environment.get({id: host.content.lifecycle_environment_id}).$promise.then(function (env) {
+                Environment.get({id: host.content.lifecycle_environment.id}).$promise.then(function (env) {
                     previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_view_name);
                     $scope.errataOptions.push({name: previousEnv,
                         label: 'prior', order: 2, 'content_view_id': host.content.content_view_id, 'environment_id': env.prior.id});

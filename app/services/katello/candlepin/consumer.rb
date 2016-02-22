@@ -84,6 +84,17 @@ module Katello
         filtered
       end
 
+      def virtual_guests
+        guest_uuids = Resources::Candlepin::Consumer.virtual_guests(self.uuid).map { |guest| guest['uuid'] }
+        ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => guest_uuids)
+      end
+
+      def virtual_host
+        if virtual_host_info = Resources::Candlepin::Consumer.virtual_host(self.uuid)
+          Katello::Host::SubscriptionFacet.find_by_uuid(virtual_host_info[:uuid])
+        end
+      end
+
       def compliance_reasons
         Resources::Candlepin::Consumer.compliance(uuid)['reasons'].map do |reason|
           "#{reason['attributes']['name']}: #{reason['message']}"

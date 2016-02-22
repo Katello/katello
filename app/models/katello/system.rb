@@ -53,7 +53,6 @@ module Katello
     scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
     scoped_search :in => :fact_values, :on => :value, :in_key => :fact_names, :on_key => :name, :rename => :facts, :complete_value => true,
                   :only_explicit => true, :ext_method => :search_cast_facts
-    scoped_search :on => :description, :complete_value => true
     scoped_search :in => :foreman_host, :on => :name, :complete_value => true, :rename => :host
     scoped_search :in => :environment, :on => :name, :complete_value => true, :rename => :environment
     # scoped_search :in => :host_collections, :on => :name, :rename => :host_collection, :complete_value => true,
@@ -282,7 +281,6 @@ module Katello
     end
 
     def fill_defaults
-      self.description = _("Initial Registration Params") unless self.description
       self.location = _("None") unless self.location
     end
 

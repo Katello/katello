@@ -16,7 +16,7 @@ module Katello
 
   class SubscriptionFacetTest < SubscriptionFacetBase
     def test_create
-      empty_host.subscription_facet = Katello::Host::SubscriptionFacet.create!(:uuid => 'asdfasdf', :host => empty_host)
+      empty_host.subscription_facet = Katello::Host::SubscriptionFacet.create!(:host => empty_host)
     end
 
     def test_update_from_consumer_attributes

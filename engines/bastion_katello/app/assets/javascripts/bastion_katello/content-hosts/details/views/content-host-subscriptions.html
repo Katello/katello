@@ -39,21 +39,21 @@
     <div class="detail">
       <span class="info-label" translate>Auto-Attach</span>
       <span class="info-value"
-            bst-edit-checkbox="contentHost.autoheal"
+            bst-edit-checkbox="host.subscription.autoheal"
             formatter="booleanToYesNo"
             readonly="denied('edit_hosts', host)"
-            on-save="save(contentHost)">
+            on-save="saveSubscriptionFacet(host)">
       </span>
     </div>
     <div class="detail">
       <span class="info-label" translate>Service Level</span>
           <span class="info-value"
-                bst-edit-select="contentHost.service_level"
+                bst-edit-select="host.subscription.service_level"
                 readonly="denied('edit_hosts', host)"
-                selector="contentHost.service_level"
+                selector="host.subscription.service_level"
                 options="serviceLevels()"
                 options-format="option for option in options"
-                on-save="save(contentHost)">
+                on-save="saveSubscriptionFacet(host)">
           </span>
     </div>
   </section>

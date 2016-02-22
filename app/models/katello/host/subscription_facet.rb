@@ -11,6 +11,8 @@ module Katello
 
       DEFAULT_TYPE = Glue::Candlepin::Consumer::SYSTEM
 
+      attr_accessible :release_version, :autoheal, :service_level, :host
+
       def update_from_consumer_attributes(consumer_params)
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].blank?

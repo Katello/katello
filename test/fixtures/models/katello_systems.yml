@@ -1,6 +1,5 @@
 simple_server:
   name:         Simple Server
-  description:  Super administrator with all access.
   uuid:         010E99C0-3276-11E2-81C1-0800200C9A66
   environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
@@ -8,7 +7,6 @@ simple_server:
 
 simple_server2:
   name:         Simple Server 2
-  description:  Super administrator with all access.
   uuid:         010E99C0-3276-11E2-81C1-0800200C9A77
   environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
@@ -16,19 +14,16 @@ simple_server2:
 
 candlepin_system:
   name:         Candlepin System
-  description:  System before creating in candlepin
   environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
 
 simple_server_3:
   name:         Simple Server 3
-  description:  Super administrator with all access.
   uuid:         010E99C0-3276-11E2-81C1-0800200C9A88
   environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_staging_view) %>
 
 errata_server:
   name:         Errata Server
-  description:  Super administrator with all access.
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzzz
   environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
@@ -36,7 +31,6 @@ errata_server:
 
 errata_server_dev:
   name:         Errata Dev Server
-  description:  Errata server in the dev environment
   uuid:         010E99C0-3276-11E2-81C1-0800200Czzzz1
   environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>

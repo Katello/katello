@@ -27,7 +27,7 @@ module Katello
         scoped_search :in => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id
         scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
 
-        attr_accessible :content_source_id, :host_collection_ids
+        attr_accessible :content_source_id, :host_collection_ids, :description
       end
 
       def validate_media_with_capsule?

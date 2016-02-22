@@ -2,11 +2,9 @@ describe('Controller: ContentHostDetailsController', function() {
     var $scope,
         $controller,
         translate,
-        ContentHost,
         Host,
         Organization,
         MenuExpander,
-        mockContentHost,
         mockHost;
 
     beforeEach(module('Bastion.content-hosts',
@@ -20,58 +18,50 @@ describe('Controller: ContentHostDetailsController', function() {
         $controller = _$controller_;
         $scope = $rootScope.$new();
 
-        state = {
-            transitionTo: function() {}
-        };
-
         translate = function(message) {
             return message;
         };
 
-        mockContentHost = {
+        mockHost = {
             failed: false,
-            uuid: "abcd-1234",
+            id: 1,
             facts: {
                 cpu: "Itanium",
                 "lscpu.architecture": "Intel Itanium architecture",
                 "lscpu.instructionsPerCycle": "6",
                 anotherFact: "yes"
             },
+            subscription: {uuid: 'abcd-1234'},
+
             $update: function(success, error) {
-                if (mockContentHost.failed) {
+                if (mockHost.failed) {
                     error({ data: {errors: ['error!']}});
                 } else {
-                    success(mockContentHost);
+                    success(mockHost);
                 }
             }
         };
 
-        mockHost = {
-            id: 4,
-            subscription: {uuid: mockContentHost.uuid},
-            content_host_id: mockContentHost.uuid
-        };
-
         Host = {
+            failed: false,
             get: function(params, callback) {
                 callback(mockHost);
                 return mockHost;
             },
+            update: function (data, success, error) {
+                if (this.failed) {
+                    error({data: {errors: ['error']}});
+                } else {
+                    success(mockHost);
+                }
+            },
             $promise: {then: function(callback) {callback(mockHost)}}
-        };
-        ContentHost = {
-            get: function(params, callback) {
-                callback(mockContentHost);
-                return mockContentHost;
-            }
         };
 
         Organization = {};
         MenuExpander = {};
 
-        spyOn(ContentHost, 'get').andCallThrough();
         spyOn(Host, 'get').andCallThrough();
-
 
         $scope.$stateParams = {hostId: mockHost.id};
 
@@ -80,7 +70,6 @@ describe('Controller: ContentHostDetailsController', function() {
             $state: $state,
             translate: translate,
             Host: Host,
-            ContentHost: ContentHost,
             Organization: Organization,
             MenuExpander: MenuExpander
         });
@@ -90,9 +79,9 @@ describe('Controller: ContentHostDetailsController', function() {
         expect($scope.menuExpander).toBe(MenuExpander);
     });
 
-    it("gets the content host using the ContentHost service and puts it on the $scope.", function() {
-        expect(ContentHost.get).toHaveBeenCalledWith({id: mockContentHost.uuid}, jasmine.any(Function));
-        expect($scope.contentHost).toBe(mockContentHost);
+    it("gets the  host using the Host service and puts it on the $scope.", function() {
+        expect(Host.get).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function));
+        expect($scope.host).toBe(mockHost);
     });
 
     it("gets the host using the Host service and puts it on the $scope.", function() {
@@ -100,26 +89,26 @@ describe('Controller: ContentHostDetailsController', function() {
         expect($scope.host).toBe(mockHost);
     });
 
-    it('provides a method to transition states when a content host is present', function() {
+    it('provides a method to transition states when a host is present', function() {
         expect($scope.transitionTo('content-hosts.fake')).toBeTruthy();
     });
 
-    it('should save the content host and return a promise', function() {
-        var promise = $scope.save(mockContentHost);
+    it('should save the host and return a promise', function() {
+        var promise = $scope.save(mockHost);
 
         expect(promise.then).toBeDefined();
     });
 
-    it('should save the content host successfully', function() {
-        $scope.save(mockContentHost);
+    it('should save the host successfully', function() {
+        $scope.save(mockHost);
 
         expect($scope.successMessages.length).toBe(1);
         expect($scope.errorMessages.length).toBe(0);
     });
 
-    it('should fail to save the content host', function() {
-        mockContentHost.failed = true;
-        $scope.save(mockContentHost);
+    it('should fail to save the host', function() {
+        Host.failed = true;
+        $scope.save(mockHost);
 
         expect($scope.successMessages.length).toBe(0);
         expect($scope.errorMessages.length).toBe(1);

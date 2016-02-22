@@ -1,70 +1,70 @@
 <span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
 
 <section>
-  <div class="details fl" ng-show="contentHost.id === undefined">
+  <div class="details fl" ng-hide="host.hasContent()">
     <div data-extend-template="common/registration.html"></div>
   </div>
 
-  <div class="details fl" ng-if="contentHost.id">
+  <div class="details fl" ng-show="host.hasContent()">
     <section>
       <h4 translate>Basic Information</h4>
 
       <div class="detail">
         <span class="info-label" translate>Name</span>
         <span class="info-value"
-              bst-edit-text="contentHost.name"
+              bst-edit-text="host.name"
               readonly="denied('edit_hosts', host)"
-              on-save="save(contentHost)">
+              on-save="save(host)">
         </span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>UUID</span>
-        <span class="info-value">{{ contentHost.uuid }}</span>
+        <span class="info-value">{{ host.subscription.uuid }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>Description</span>
         <span class="info-value"
-              bst-edit-textarea="contentHost.description"
+              bst-edit-textarea="host.description"
               readonly="denied('edit_hosts', host)"
-              on-save="save(contentHost)">
+              on-save="save(host)">
         </span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>Type</span>
-        <span class="info-value">{{ contentHost.type }}</span>
+        <span class="info-value">{{ host.facts["virt::host_type"] }}</span>
       </div>
 
       <div class="detail"
            bst-feature-flag="remote_actions">
         <span class="info-label" translate>Katello Agent</span>
-        <span class="info-value" ng-show="contentHost.katello_agent_installed">
+        <span class="info-value" ng-show="host.content.katello_agent_installed">
           <span class="fa fa-circle green"></span>
           <span translate>Installed</span>
         </span>
-        <span class="info-value" ng-hide="contentHost.katello_agent_installed">
+        <span class="info-value" ng-hide="host.content.katello_agent_installed">
           <span class="fa fa-circle yellow"></span>
           <span translate>Not installed</span>
         </span>
       </div>
 
-      <div ng-show="contentHost.virtual_guests" class="detail">
+      <div ng-show="host.virtual_guests" class="detail">
         <span class="info-label" translate>Virtual Guests</span>
         <div class="info-value">
-          <a ng-click="reloadSearch(virtualGuestIds(contentHost))"
-               translate translate-n="contentHost.virtual_guests.length"
-               translate-plural="{{ contentHost.virtual_guests.length }} Content Hosts">
+          <a ng-click="reloadSearch(virtualGuestIds(host))"
+               translate translate-n="host.virtual_guests.length"
+               translate-plural="{{ host.virtual_guests.length }} Content Hosts">
              1 Content Host
           </a>
         </div>
       </div>
 
-      <div ng-show="contentHost.virtual_host" class="detail">
+      <div ng-show="host.virtual_host" class="detail">
         <span class="info-label" translate>Virtual Host</span>
         <div class="info-value">
-          <a ui-sref="content-hosts.details.info({hostId: contentHost.virtual_host.uuid })">{{ contentHost.virtual_host.name }}</a>
+          <a ui-sref="content-hosts.details.info({contentHostId: host.subscription.virtual_host.uuid })">{{ host.virtual_host.name }}</a>
         </div>
       </div>
 
@@ -77,16 +77,16 @@
       <div class="detail">
         <span class="info-label" translate>Subscription Status</span>
         <span class="info-value">
-          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(contentHost.compliance.status)"></i>
-          {{ contentHost.compliance.status }}
+          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription_status)"></i>
+          {{ host.subscription_status_label }}
         </span>
       </div>
 
-      <div ng-show="contentHost.compliance.reasons.length > 0" class="detail">
+      <div ng-show=" host.subscription.compliance_reasons.length > 0" class="detail">
         <span class="info-label" translate>Details</span>
         <div class="info-value">
           <ul class="compliance-reasons">
-            <li ng-repeat="reason in contentHost.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
+            <li ng-repeat="reason in host.subscription.compliance_reasons">{{ reason }}</li>
           </ul>
         </div>
       </div>
@@ -94,23 +94,23 @@
       <div class="detail">
         <span class="info-label" translate>Auto-Attach</span>
         <span class="info-value"
-              bst-edit-checkbox="contentHost.autoheal"
+              bst-edit-checkbox="host.subscription.autoheal"
               readonly="denied('edit_hosts', host)"
               formatter="booleanToYesNo"
-              on-save="save(contentHost)">
+              on-save="saveSubscriptionFacet(host)">
         </span>
       </div>
       <div class="detail">
         <span class="info-label" translate>Service Level</span>
         <span class="info-value"
-              bst-edit-select="contentHost.service_level"
+              bst-edit-select="host.subscription.service_level"
               readonly="denied('edit_hosts', host)"
-              selector="contentHost.service_level"
+              selector="host.subscription.service_level"
               options="serviceLevels()"
               options-format="option for option in options"
               deletable="true"
               on-delete="clearServiceLevel()"
-              on-save="save(contentHost)">
+              on-save="saveSubscriptionFacet(host)">
           </span>
       </div>
 
@@ -122,37 +122,22 @@
 
       <div class="detail">
         <span class="info-label" translate>OS</span>
-        <span class="info-value">{{ contentHostFacts.distribution["name"] }}</span>
+        <span class="info-value">{{ host.operatingsystem_name }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label" translate>Release</span>
-        <span class="info-value">{{ contentHostFacts.uname["release"] }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Arch</span>
-        <span class="info-value">{{ contentHostFacts.uname["machine"] }}</span>
+        <span class="info-label" translate>Architecture</span>
+        <span class="info-value">{{ host.architecture_name }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>Number of CPUs</span>
-        <span class="info-value">{{ contentHostFacts.cpu["cpu(s)"] }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Sockets</span>
-        <span class="info-value">{{ contentHostFacts.cpu["cpu_socket(s)"] }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Cores per Socket</span>
-        <span class="info-value">{{ contentHostFacts.cpu["core(s)_per_socket"] }}</span>
+        <span class="info-value">{{ host.facts["cpu::cpu(s)"] }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>RAM (GB)</span>
-        <span class="info-value">{{ memory(contentHostFacts) }}</span>
+        <span class="info-value">{{ host.facts["dmi::memory::size"] }}</span>
       </div>
 
       <div class="divider"></div>
@@ -161,12 +146,12 @@
     <section>
       <h4 translate>Installed Products</h4>
 
-      <p translate ng-show="!contentHost.installedProducts || contentHost.installedProducts.length == 0">
+      <p translate ng-show="!host.subscription.installed_products || host.subscription.installed_products.length == 0">
         You do not have any Installed Products
       </p>
 
-      <div ng-show="contentHost.installedProducts.length > 0">
-        <div ng-repeat="product in contentHost.installedProducts" class="detail">
+      <div ng-show="host.subscription.installed_products.length > 0">
+        <div ng-repeat="product in host.subscription.installed_products" class="detail">
           <span class="info-label" translate>Product</span>
           <span class="info-value">{{ product.productName }} {{ product.version }}</span>
         </div>
@@ -174,10 +159,8 @@
 
     </section>
   </div>
-
-
-
-  <div class="fr details" ng-show="contentHost.id !== undefined">
+  
+  <div class="fr details" ng-show="host.hasContent()">
     <section>
       <h4 translate>Installable Errata</h4>
 
@@ -186,9 +169,9 @@
         <span class="info-value">
           <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=security'})">
             <i class="fa fa-warning inline-icon"
-               ng-class="{black: contentHost.errata_counts.security === 0, red: contentHost.errata_counts.security > 0}"
+               ng-class="{black: host.content.errata_counts.security === 0, red: host.content.errata_counts.security > 0}"
                title="{{ 'Security' | translate }}"></i>
-            {{ contentHost.errata_counts.security || 0 }}
+            {{ host.content.errata_counts.security || 0 }}
           </a>
         </span>
       </div>
@@ -198,9 +181,9 @@
         <span class="info-value">
           <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=bugfix'})">
             <i class="fa fa-bug inline-icon"
-               ng-class="{black: contentHost.errata_counts.bugfix === 0, yellow: contentHost.errata_counts.bugfix > 0}"
+               ng-class="{black: host.content.errata_counts.bugfix === 0, yellow: host.content.errata_counts.bugfix > 0}"
                title="{{ 'Bug Fix' | translate }}"></i>
-            {{ contentHost.errata_counts.bugfix || 0 }}
+            {{ host.content.errata_counts.bugfix || 0 }}
           </a>
         </span>
       </div>
@@ -210,9 +193,9 @@
         <span class="info-value">
           <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=enhancement'})">
             <i class="fa fa-plus-square inline-icon"
-               ng-class="{black: contentHost.errata_counts.enhancement === 0, yellow: contentHost.errata_counts.enhancement > 0}"
+               ng-class="{black: host.content.errata_counts.enhancement === 0, yellow: host.content.errata_counts.enhancement > 0}"
                title="{{ 'Enhancement' | translate }}"></i>
-            {{ contentHost.errata_counts.enhancement || 0 }}
+            {{ host.content.errata_counts.enhancement || 0 }}
           </a>
         </span>
       </div>
@@ -225,19 +208,19 @@
       <div class="detail">
         <span class="info-label" translate>Release Version</span>
         <span class="info-value"
-              bst-edit-select="contentHost.release_ver"
+              bst-edit-select="host.subscription.release_version"
               readonly="denied('edit_hosts', host)"
-              selector="contentHost.release_ver"
+              selector="host.subscription.release_verion"
               options="releaseVersions()"
               options-format="option for option in options"
               deletable="true"
               on-delete="clearReleaseVersion()"
-              on-save="save(contentHost)"
+              on-save="save(host)"
               on-cancel="cancelReleaseVersionUpdate()">
         </span>
         <div alert type="'info'" ng-show="showVersionAlert">
           <p translate>
-            No alternate release version choices are available. The available releases are based upon what is available in "{{ contentHost.content_view.name }}", the selected <a href="/content_views">content view</a> this content host is attached to for the given <a href="/lifecycle_environments">lifecycle environment</a>, "{{ contentHost.environment.name }}".
+            No alternate release version choices are available. The available releases are based upon what is available in "{{ host.content.content_view.name }}", the selected <a href="/content_views">content view</a> this content host is attached to for the given <a href="/lifecycle_environments">lifecycle environment</a>, "{{ host.content.lifecycle_environment.name }}".
           </p>
         </div>
       </div>
@@ -245,12 +228,12 @@
       <div class="detail" bst-feature-flag="lifecycle_environments">
         <span class="info-label" translate>Content View</span>
         <span class="info-value"
-              bst-edit-select="contentHost.content_view.name"
+              bst-edit-select="host.content.content_view.name"
               readonly="denied('edit_hosts', host)"
-              selector="contentHost.content_view.id"
+              selector="host.content.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
-              on-save="saveContentView(contentHost)"
+              on-save="saveContentView(host)"
               edit-trigger="editContentView">
         </span>
       </div>
@@ -270,7 +253,7 @@
         </div>
         <span class="info-label" translate>Environment</span>
         <span path-selector="environments"
-              ng-model="contentHost.environment"
+              ng-model="host.content.lifecycle_environment"
               mode="singleSelect"
               disabled="denied('edit_hosts', host)"
               disable-trigger="disableEnvironmentSelection">
@@ -292,19 +275,19 @@
         <span class="info-label" translate> Registered By</span>
         <span class="info-value"
               translate
-              ng-show="contentHost.activation_keys.length == 0">
+              ng-show="host.subscription.activation_keys.length == 0">
           {{ contentHost.registered_by }}
         </span>
         <span class="info-value"
-              ng-show="contentHost.activation_keys.length > 0"
+              ng-show="host.subscription.activation_keys.length > 0"
               translate
-              translate-n="contentHost.activation_keys.length"
+              translate-n="host.subscription.activation_keys.length"
               translate-plural="Activation Keys">
           Activation Key
         </span>
         <span class="info-value">
-          <ul ng-show="contentHost.activation_keys.length > 0">
-            <li ng-repeat="activation_key in contentHost.activation_keys">
+          <ul ng-show="host.subscription.activation_keys.length > 0">
+            <li ng-repeat="activation_key in host.subscription.activation_keys">
               <span>
                 <a ui-sref="activation-keys.details.info({activationKeyId: activation_key.id})">
                   {{ activation_key.name }}
@@ -317,8 +300,8 @@
       </div>
 
       <div class="detail">
-        <span class="info-label" translate>Checkin</span>
-        <span class="info-value">{{ (contentHost.checkin_time | date:'short') || ("Never checked in" | translate) }}</span>
+        <span class="info-label" translate>Last Checkin</span>
+        <span class="info-value">{{ (host.subscription.last_checkin | date:'short') || ("Never checked in" | translate) }}</span>
       </div>
 
       <div class="divider"></div>
@@ -329,23 +312,23 @@
 
       <div class="detail">
         <span class="info-label" translate>Hostname</span>
-        <span class="info-value">{{ contentHostFacts.network.hostname }}</span>
+        <span class="info-value">{{ host.name }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>IPv4 Address</span>
-        <span class="info-value">{{ contentHostFacts.network.ipv4_address }}</span>
+        <span class="info-value">{{ host.facts["network::ipv4_address"] }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>IPv6 Address</span>
-        <span class="info-value">{{ contentHostFacts.network.ipv6_address }}</span>
+        <span class="info-value">{{ host.facts["network::ipv6_address"] }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>Interfaces</span>
         <div class="info-value">
-          <div ng-repeat="(interfaceName, interface) in contentHostFacts.net.interface" >
+          <div ng-repeat="(interfaceName, interface) in hostFactsAsObject.net.interface" >
             <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
                ng-hide="editMode" ng-click="expanded = !expanded"></i>
             {{ interfaceName }}
@@ -361,33 +344,5 @@
 
       <div class="divider"></div>
     </section>
-  </div>
-
-  <div class="advanced-info" ng-show="hasAdvancedInfo">
-    <header class="details-sub-header">
-       <h3>
-        <i class="expand-icon" ng-class="{'fa fa-plus': !showAdvanced, 'fa fa-minus': showAdvanced}"
-           ng-click="showAdvanced = !showAdvanced"></i>
-         <span translate>Advanced Information</span>
-       </h3>
-    </header>
-    <div ng-show="showAdvanced" class="details fl">
-      <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoLeft">
-        <h4>{{ sectionName }}</h4>
-        <div ng-repeat="(key, value) in subSection track by $index" >
-          <div ng-include="getTemplateForType(value)"></div>
-        </div>
-        <div class="divider" ng-show="!$last"></div>
-      </section>
-    </div>
-    <div ng-show="showAdvanced" class="details fr">
-      <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoRight">
-        <h4>{{ sectionName }}</h4>
-        <div ng-repeat="(key, value) in subSection track by $index" >
-          <div ng-include="getTemplateForType(value)"></div>
-        </div>
-        <div class="divider" ng-show="!$last"></div>
-      </section>
-    </div>
   </div>
 </section>

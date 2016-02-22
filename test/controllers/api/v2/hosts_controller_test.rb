@@ -18,6 +18,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     assert_response :success
 
     Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
     get :show, :id => host.id
     assert_response :success
