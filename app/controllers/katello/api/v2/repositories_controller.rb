@@ -263,9 +263,11 @@ module Katello
     param :id, :identifier, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
     def upload_content
-      filepaths = Array.wrap(params[:content]).compact.map(&:path)
-
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Docker content.") if @repository.docker?
+
+      filepaths = params[:content].collect do |content|
+        {path: content.path, filename: content.original_filename}
+      end
 
       if !filepaths.blank?
         sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths)

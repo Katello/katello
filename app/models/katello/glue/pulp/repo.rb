@@ -688,6 +688,8 @@ module Katello
           "docker_manifest"
         when Repository::OSTREE_TYPE
           "ostree"
+        when Repository::FILE_TYPE
+          "iso"
         end
       end
 

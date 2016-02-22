@@ -219,7 +219,7 @@
 
 <div class="details fl">
 
-  <section>
+  <section ng-if="repository.content_type !== 'file'">
     <h4 translate>Content Counts</h4>
 
     <table class="table table-striped">
@@ -304,6 +304,7 @@
   <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree'">
     <h5 translate ng-show="repository.content_type === 'puppet'">Upload Puppet Module</h5>
     <h5 translate ng-show="repository.content_type === 'yum'">Upload Package</h5>
+    <h5 translate ng-show="repository.content_type === 'file'">Upload File</h5>
 
     <div bst-alerts success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
