@@ -12,7 +12,7 @@ module Katello
 
         validates_with Katello::Validators::ContentViewEnvironmentValidator
 
-        attr_accessible :content_view_id, :lifecycle_environment_id
+        attr_accessible :content_view_id, :lifecycle_environment_id, :content_source_id
 
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
