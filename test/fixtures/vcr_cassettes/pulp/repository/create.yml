@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -11,20 +11,20 @@ http_interactions:
         b3J0ZXJfY29uZmlnIjp7ImZlZWQiOiJmaWxlOi8vL3Zhci93d3cvdGVzdF9y
         ZXBvcy96b28iLCJzc2xfY2FfY2VydCI6ImZvbyIsInNzbF9jbGllbnRfY2Vy
         dCI6ImZvbyIsInNzbF9jbGllbnRfa2V5IjoiZm9vIiwiZG93bmxvYWRfcG9s
-        aWN5IjpudWxsfSwibm90ZXMiOnsiX3JlcG8tdHlwZSI6InJwbS1yZXBvIn0s
-        ImRpc3RyaWJ1dG9ycyI6W3siZGlzdHJpYnV0b3JfdHlwZV9pZCI6Inl1bV9k
-        aXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJyZWxhdGl2ZV91
-        cmwiOiJ0ZXN0X3BhdGgvIiwiaHR0cCI6ZmFsc2UsImh0dHBzIjp0cnVlLCJw
-        cm90ZWN0ZWQiOnRydWV9LCJhdXRvX3B1Ymxpc2giOnRydWUsImRpc3RyaWJ1
-        dG9yX2lkIjoiRmVkb3JhXzE3In0seyJkaXN0cmlidXRvcl90eXBlX2lkIjoi
-        eXVtX2Nsb25lX2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3JfY29uZmlnIjp7
-        ImRlc3RpbmF0aW9uX2Rpc3RyaWJ1dG9yX2lkIjoiRmVkb3JhXzE3In0sImF1
-        dG9fcHVibGlzaCI6ZmFsc2UsImRpc3RyaWJ1dG9yX2lkIjoiRmVkb3JhXzE3
-        X2Nsb25lIn0seyJkaXN0cmlidXRvcl90eXBlX2lkIjoiZXhwb3J0X2Rpc3Ry
-        aWJ1dG9yIiwiZGlzdHJpYnV0b3JfY29uZmlnIjp7Imh0dHAiOmZhbHNlLCJo
-        dHRwcyI6ZmFsc2UsInJlbGF0aXZlX3VybCI6InRlc3RfcGF0aC8ifSwiYXV0
-        b19wdWJsaXNoIjpmYWxzZSwiZGlzdHJpYnV0b3JfaWQiOiJleHBvcnRfZGlz
-        dHJpYnV0b3IifV19
+        aWN5IjpudWxsLCJyZW1vdmVfbWlzc2luZyI6bnVsbH0sIm5vdGVzIjp7Il9y
+        ZXBvLXR5cGUiOiJycG0tcmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3Ry
+        aWJ1dG9yX3R5cGVfaWQiOiJ5dW1fZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRv
+        cl9jb25maWciOnsicmVsYXRpdmVfdXJsIjoidGVzdF9wYXRoLyIsImh0dHAi
+        OmZhbHNlLCJodHRwcyI6dHJ1ZSwicHJvdGVjdGVkIjp0cnVlfSwiYXV0b19w
+        dWJsaXNoIjp0cnVlLCJkaXN0cmlidXRvcl9pZCI6IkZlZG9yYV8xNyJ9LHsi
+        ZGlzdHJpYnV0b3JfdHlwZV9pZCI6Inl1bV9jbG9uZV9kaXN0cmlidXRvciIs
+        ImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJkZXN0aW5hdGlvbl9kaXN0cmlidXRv
+        cl9pZCI6IkZlZG9yYV8xNyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNlLCJkaXN0
+        cmlidXRvcl9pZCI6IkZlZG9yYV8xN19jbG9uZSJ9LHsiZGlzdHJpYnV0b3Jf
+        dHlwZV9pZCI6ImV4cG9ydF9kaXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2Nv
+        bmZpZyI6eyJodHRwIjpmYWxzZSwiaHR0cHMiOmZhbHNlLCJyZWxhdGl2ZV91
+        cmwiOiJ0ZXN0X3BhdGgvIn0sImF1dG9fcHVibGlzaCI6ZmFsc2UsImRpc3Ry
+        aWJ1dG9yX2lkIjoiZXhwb3J0X2Rpc3RyaWJ1dG9yIn1dfQ==
     headers:
       Accept:
       - application/json
@@ -33,7 +33,7 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '822'
+      - '844'
       User-Agent:
       - Ruby
   response:
@@ -42,13 +42,13 @@ http_interactions:
       message: CREATED
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:08 GMT
+      - Tue, 23 Feb 2016 16:47:37 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
       - '320'
       Location:
-      - https://abed.usersys.redhat.com/pulp/api/v2/repositories/Fedora_17/
+      - https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/
       Connection:
       - close
       Content-Type:
@@ -61,14 +61,14 @@ http_interactions:
         ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
         fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
         b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
-        NTZjNGRhMzA1Y2EwMTMxODRlMjhmYmM1In0sICJpZCI6ICJGZWRvcmFfMTci
+        NTZjYzhkMjlkZTA0MDMzZjQzNTE0ZjY5In0sICJpZCI6ICJGZWRvcmFfMTci
         LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
         MTcvIn0=
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:08 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:37 GMT
 - request:
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/Fedora_17/
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/Fedora_17/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -87,7 +87,7 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:08 GMT
+      - Tue, 23 Feb 2016 16:47:37 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -100,14 +100,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzY1ZmQ0MmZhLWRkOWQtNDYxMC04MzVlLTExOTRjZjZmZjJiNC8iLCAi
-        dGFza19pZCI6ICI2NWZkNDJmYS1kZDlkLTQ2MTAtODM1ZS0xMTk0Y2Y2ZmYy
-        YjQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzL2UwZWFiZjU1LWU2OGYtNDg2ZC1iNTI5LWE4OTJhZGQ1ZjUzNi8iLCAi
+        dGFza19pZCI6ICJlMGVhYmY1NS1lNjhmLTQ4NmQtYjUyOS1hODkyYWRkNWY1
+        MzYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:08 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:37 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/tasks/65fd42fa-dd9d-4610-835e-1194cf6ff2b4/
+    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/e0eabf55-e68f-486d-b529-a892add5f536/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -126,13 +126,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:08 GMT
+      - Tue, 23 Feb 2016 16:47:37 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '549'
+      - '645'
       Connection:
       - close
       Content-Type:
@@ -142,22 +142,24 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy82NWZkNDJmYS1kZDlkLTQ2MTAtODM1ZS0xMTk0Y2Y2ZmYy
-        YjQvIiwgInRhc2tfaWQiOiAiNjVmZDQyZmEtZGQ5ZC00NjEwLTgzNWUtMTE5
-        NGNmNmZmMmI0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9lMGVhYmY1NS1lNjhmLTQ4NmQtYjUyOS1hODkyYWRkNWY1
+        MzYvIiwgInRhc2tfaWQiOiAiZTBlYWJmNTUtZTY4Zi00ODZkLWI1MjktYTg5
+        MmFkZDVmNTM2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
         bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
         ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
-        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJOb25lLmRxIiwgInN0YXRl
-        IjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0Ijog
-        bnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmM0ZGEz
-        MGRiMDNjMmJhN2M5MWIyODEifSwgImlkIjogIjU2YzRkYTMwZGIwM2MyYmE3
-        YzkxYjI4MSJ9
+        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJj
+        ZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3Rh
+        dGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNv
+        dXJjZV93b3JrZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20iLCAicmVz
+        dWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1
+        NmNjOGQyOTk4OTA1NGZjNDhiYTJlZDQifSwgImlkIjogIjU2Y2M4ZDI5OTg5
+        MDU0ZmM0OGJhMmVkNCJ9
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:08 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:37 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/tasks/65fd42fa-dd9d-4610-835e-1194cf6ff2b4/
+    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/e0eabf55-e68f-486d-b529-a892add5f536/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -176,13 +178,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:08 GMT
+      - Tue, 23 Feb 2016 16:47:37 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '680'
+      - '682'
       Connection:
       - close
       Content-Type:
@@ -192,20 +194,20 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy82NWZkNDJmYS1kZDlkLTQ2MTAtODM1ZS0xMTk0Y2Y2ZmYy
-        YjQvIiwgInRhc2tfaWQiOiAiNjVmZDQyZmEtZGQ5ZC00NjEwLTgzNWUtMTE5
-        NGNmNmZmMmI0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        aS92Mi90YXNrcy9lMGVhYmY1NS1lNjhmLTQ4NmQtYjUyOS1hODkyYWRkNWY1
+        MzYvIiwgInRhc2tfaWQiOiAiZTBlYWJmNTUtZTY4Zi00ODZkLWI1MjktYTg5
+        MmFkZDVmNTM2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
         MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
-        MDE2LTAyLTE3VDIwOjM4OjA4WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
-        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTE3VDIwOjM4OjA4WiIsICJ0cmFjZWJh
+        MDE2LTAyLTIzVDE2OjQ3OjM3WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE2LTAyLTIzVDE2OjQ3OjM3WiIsICJ0cmFjZWJh
         Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
         b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
-        MEBhYmVkLnVzZXJzeXMucmVkaGF0LmNvbS5kcSIsICJzdGF0ZSI6ICJmaW5p
-        c2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3Jr
-        ZXItMEBhYmVkLnVzZXJzeXMucmVkaGF0LmNvbSIsICJyZXN1bHQiOiBudWxs
-        LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YzRkYTMwZGIw
-        M2MyYmE3YzkxYjI4MSJ9LCAiaWQiOiAiNTZjNGRhMzBkYjAzYzJiYTdjOTFi
-        MjgxIn0=
+        MUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
+        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51
+        bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZjYzhkMjk5
+        ODkwNTRmYzQ4YmEyZWQ0In0sICJpZCI6ICI1NmNjOGQyOTk4OTA1NGZjNDhi
+        YTJlZDQifQ==
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:08 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:37 GMT
 recorded_with: VCR 2.9.3

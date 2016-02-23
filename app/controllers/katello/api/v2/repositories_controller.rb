@@ -33,6 +33,7 @@ module Katello
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
       param :ostree_branches, Array, :desc => N_("list of ostree branch refs associated to an rpm ostree repository")
+      param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -131,6 +132,7 @@ module Katello
                                      repo_params[:content_type], unprotected,
                                      gpg_key, repository_params[:checksum_type], repo_params[:download_policy])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
+      repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params[:mirror_on_sync]
       sync_task(::Actions::Katello::Repository::Create, repository, false, true, repo_params[:ostree_branches])
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
@@ -204,6 +206,7 @@ module Katello
     param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
     param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
     param :ostree_branches, Array,  :desc => N_("list of ostree branch refs associated to an rpm ostree repository")
+    param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
     def update
       repo_params = repository_params
       repo_params[:url] = nil if repository_params[:url].blank? && !@repository.ostree?
@@ -336,7 +339,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name, :download_policy, :ostree_branches => []]
+      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name, :download_policy, :mirror_on_sync, :ostree_branches => []]
       keys += [:label, :content_type] if params[:action] == "create"
       params.require(:repository).permit(*keys)
     end

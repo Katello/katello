@@ -71,6 +71,7 @@ module Katello
           :preserve_metadata => true, #preserve repo metadata when importing from cp
           :unprotected => unprotected?,
           :download_policy => download_policy,
+          :mirror_on_sync => true,
           :content_view_version => product.organization.
                                   library.default_content_view_version
         )

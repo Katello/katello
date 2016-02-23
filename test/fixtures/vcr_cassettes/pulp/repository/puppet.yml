@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -38,13 +38,13 @@ http_interactions:
       message: CREATED
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:37 GMT
+      - Tue, 23 Feb 2016 16:47:52 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
       - '298'
       Location:
-      - https://abed.usersys.redhat.com/pulp/api/v2/repositories/4/
+      - https://katello-yoda.example.com/pulp/api/v2/repositories/4/
       Connection:
       - close
       Content-Type:
@@ -56,14 +56,14 @@ http_interactions:
         ICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRkZWQiOiBudWxs
         LCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicHVwcGV0LXJlcG8ifSwgImxh
         c3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9jb3VudHMi
-        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNTZjNGRh
-        NGQ1Y2EwMTMxODRkYzgxNWQxIn0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
+        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNTZjYzhk
+        MzhkZTA0MDMzZjQxZDJhM2Y3In0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
         dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:37 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:52 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/4/?details=true
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/4/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -82,7 +82,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:38 GMT
+      - Tue, 23 Feb 2016 16:47:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
@@ -103,14 +103,14 @@ http_interactions:
         dHJpYnV0b3JzIiwgImxhc3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRv
         cl90eXBlX2lkIjogInB1cHBldF9kaXN0cmlidXRvciIsICJhdXRvX3B1Ymxp
         c2giOiB0cnVlLCAic2NyYXRjaHBhZCI6IHt9LCAiX2lkIjogeyIkb2lkIjog
-        IjU2YzRkYTRkNWNhMDEzMTg0ZGM4MTVkNCJ9LCAiY29uZmlnIjogeyJzZXJ2
+        IjU2Y2M4ZDM4ZGUwNDAzM2Y0MWQyYTNmYSJ9LCAiY29uZmlnIjogeyJzZXJ2
         ZV9odHRwcyI6IHRydWUsICJzZXJ2ZV9odHRwIjogZmFsc2V9LCAiaWQiOiAi
         NF9wdXBwZXQifSwgeyJyZXBvX2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAv
         YXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3RyaWJ1dG9ycy80LyIsICJfbnMi
         OiAicmVwb19kaXN0cmlidXRvcnMiLCAibGFzdF9wdWJsaXNoIjogbnVsbCwg
         ImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVwcGV0X2luc3RhbGxfZGlzdHJp
         YnV0b3IiLCAiYXV0b19wdWJsaXNoIjogdHJ1ZSwgInNjcmF0Y2hwYWQiOiB7
-        fSwgIl9pZCI6IHsiJG9pZCI6ICI1NmM0ZGE0ZDVjYTAxMzE4NGRjODE1ZDMi
+        fSwgIl9pZCI6IHsiJG9pZCI6ICI1NmNjOGQzOGRlMDQwMzNmNDFkMmEzZjki
         fSwgImNvbmZpZyI6IHsiaW5zdGFsbF9wYXRoIjogIi92YXIvbGliL3B1bHAv
         cHVibGlzaGVkL3B1cHBldF9rYXRlbGxvX3Rlc3QiLCAiYXV0b19wdWJsaXNo
         IjogdHJ1ZX0sICJpZCI6ICI0In1dLCAibGFzdF91bml0X2FkZGVkIjogbnVs
@@ -121,20 +121,20 @@ http_interactions:
         aWVzLzQvaW1wb3J0ZXJzL3B1cHBldF9pbXBvcnRlci8iLCAiX25zIjogInJl
         cG9faW1wb3J0ZXJzIiwgImltcG9ydGVyX3R5cGVfaWQiOiAicHVwcGV0X2lt
         cG9ydGVyIiwgImxhc3Rfc3luYyI6IG51bGwsICJyZXBvX2lkIjogIjQiLCAi
-        X2lkIjogeyIkb2lkIjogIjU2YzRkYTRkNWNhMDEzMTg0ZGM4MTVkMiJ9LCAi
+        X2lkIjogeyIkb2lkIjogIjU2Y2M4ZDM4ZGUwNDAzM2Y0MWQyYTNmOCJ9LCAi
         Y29uZmlnIjogeyJmZWVkIjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
         Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0LyIsICJzc2xfY2FfY2VydCI6ICJm
         b28iLCAic3NsX2NsaWVudF9jZXJ0IjogImZvbyIsICJzc2xfY2xpZW50X2tl
         eSI6ICJmb28ifSwgImlkIjogInB1cHBldF9pbXBvcnRlciJ9XSwgImxvY2Fs
-        bHlfc3RvcmVkX3VuaXRzIjogMCwgIl9pZCI6IHsiJG9pZCI6ICI1NmM0ZGE0
-        ZDVjYTAxMzE4NGRjODE1ZDEifSwgInRvdGFsX3JlcG9zaXRvcnlfdW5pdHMi
+        bHlfc3RvcmVkX3VuaXRzIjogMCwgIl9pZCI6IHsiJG9pZCI6ICI1NmNjOGQz
+        OGRlMDQwMzNmNDFkMmEzZjcifSwgInRvdGFsX3JlcG9zaXRvcnlfdW5pdHMi
         OiAwLCAiaWQiOiAiNCIsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3Np
         dG9yaWVzLzQvIn0=
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:38 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:53 GMT
 - request:
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/4/actions/publish/
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/4/actions/publish/
     body:
       encoding: UTF-8
       base64_string: |
@@ -156,7 +156,7 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:38 GMT
+      - Tue, 23 Feb 2016 16:47:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -169,14 +169,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzL2I1ZDJhNGUzLWQ1NTEtNDQ0OS1hMDFiLTQ4MmI3NjcwMWY2MS8iLCAi
-        dGFza19pZCI6ICJiNWQyYTRlMy1kNTUxLTQ0NDktYTAxYi00ODJiNzY3MDFm
-        NjEifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzL2NlZGUzZDkzLWJiZmQtNDYwYS1iZGMyLTNlNWY2ZTMyN2ZkMy8iLCAi
+        dGFza19pZCI6ICJjZWRlM2Q5My1iYmZkLTQ2MGEtYmRjMi0zZTVmNmUzMjdm
+        ZDMifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:38 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:53 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/tasks/b5d2a4e3-d551-4449-a01b-482b76701f61/
+    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/cede3d93-bbfd-460a-bdc2-3e5f6e327fd3/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -195,13 +195,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:38 GMT
+      - Tue, 23 Feb 2016 16:47:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '548'
+      - '644'
       Connection:
       - close
       Content-Type:
@@ -211,22 +211,24 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
-        dWxwL2FwaS92Mi90YXNrcy9iNWQyYTRlMy1kNTUxLTQ0NDktYTAxYi00ODJi
-        NzY3MDFmNjEvIiwgInRhc2tfaWQiOiAiYjVkMmE0ZTMtZDU1MS00NDQ5LWEw
-        MWItNDgyYjc2NzAxZjYxIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        dWxwL2FwaS92Mi90YXNrcy9jZWRlM2Q5My1iYmZkLTQ2MGEtYmRjMi0zZTVm
+        NmUzMjdmZDMvIiwgInRhc2tfaWQiOiAiY2VkZTNkOTMtYmJmZC00NjBhLWJk
+        YzItM2U1ZjZlMzI3ZmQzIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
         IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogbnVs
         bCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogbnVsbCwg
         InRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9n
-        cmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogIk5vbmUuZHEiLCAic3RhdGUi
-        OiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6IG51bGwsICJyZXN1bHQiOiBu
-        dWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YzRkYTRl
-        ZGIwM2MyYmE3YzkxYjI5ZCJ9LCAiaWQiOiAiNTZjNGRhNGVkYjAzYzJiYTdj
-        OTFiMjlkIn0=
+        cmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0xQGthdGVsbG8teW9kYS5leGFtcGxlLmNvbS5kcSIsICJzdGF0
+        ZSI6ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291
+        cmNlX3dvcmtlci0xQGthdGVsbG8teW9kYS5leGFtcGxlLmNvbSIsICJyZXN1
+        bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2
+        Y2M4ZDM5OTg5MDU0ZmM0OGJhMmVmMCJ9LCAiaWQiOiAiNTZjYzhkMzk5ODkw
+        NTRmYzQ4YmEyZWYwIn0=
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:38 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:53 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/tasks/b5d2a4e3-d551-4449-a01b-482b76701f61/
+    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/cede3d93-bbfd-460a-bdc2-3e5f6e327fd3/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -245,13 +247,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:38 GMT
+      - Tue, 23 Feb 2016 16:47:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '1060'
+      - '1062'
       Connection:
       - close
       Content-Type:
@@ -261,33 +263,33 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
-        dWxwL2FwaS92Mi90YXNrcy9iNWQyYTRlMy1kNTUxLTQ0NDktYTAxYi00ODJi
-        NzY3MDFmNjEvIiwgInRhc2tfaWQiOiAiYjVkMmE0ZTMtZDU1MS00NDQ5LWEw
-        MWItNDgyYjc2NzAxZjYxIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        dWxwL2FwaS92Mi90YXNrcy9jZWRlM2Q5My1iYmZkLTQ2MGEtYmRjMi0zZTVm
+        NmUzMjdmZDMvIiwgInRhc2tfaWQiOiAiY2VkZTNkOTMtYmJmZC00NjBhLWJk
+        YzItM2U1ZjZlMzI3ZmQzIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
         IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogIjIw
-        MTYtMDItMTdUMjA6Mzg6MzhaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
-        dGFydF90aW1lIjogIjIwMTYtMDItMTdUMjA6Mzg6MzhaIiwgInRyYWNlYmFj
+        MTYtMDItMjNUMTY6NDc6NTNaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
+        dGFydF90aW1lIjogIjIwMTYtMDItMjNUMTY6NDc6NTNaIiwgInRyYWNlYmFj
         ayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBv
-        cnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
-        QGFiZWQudXNlcnN5cy5yZWRoYXQuY29tLmRxIiwgInN0YXRlIjogImZpbmlz
-        aGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
-        ci0wQGFiZWQudXNlcnN5cy5yZWRoYXQuY29tIiwgInJlc3VsdCI6IHsicmVz
-        dWx0IjogInN1Y2Nlc3MiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQi
-        OiAiNCIsICJzdGFydGVkIjogIjIwMTYtMDItMTdUMjA6Mzg6MzhaIiwgIl9u
-        cyI6ICJyZXBvX3B1Ymxpc2hfcmVzdWx0cyIsICJjb21wbGV0ZWQiOiAiMjAx
-        Ni0wMi0xN1QyMDozODozOFoiLCAidHJhY2ViYWNrIjogbnVsbCwgImRpc3Ry
-        aWJ1dG9yX3R5cGVfaWQiOiAicHVwcGV0X2luc3RhbGxfZGlzdHJpYnV0b3Ii
-        LCAic3VtbWFyeSI6ICJzdWNjZXNzIiwgImVycm9yX21lc3NhZ2UiOiBudWxs
-        LCAiZGlzdHJpYnV0b3JfaWQiOiAiNCIsICJpZCI6ICI1NmM0ZGE0ZTVjYTAx
-        MzE4ZjMwY2IwM2EiLCAiZGV0YWlscyI6IHsiZXJyb3JzIjogW10sICJzdWNj
-        ZXNzX3VuaXRfa2V5cyI6IFtdfX0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7
-        IiRvaWQiOiAiNTZjNGRhNGVkYjAzYzJiYTdjOTFiMjlkIn0sICJpZCI6ICI1
-        NmM0ZGE0ZWRiMDNjMmJhN2M5MWIyOWQifQ==
+        cnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0x
+        QGthdGVsbG8teW9kYS5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJmaW5p
+        c2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3Jr
+        ZXItMUBrYXRlbGxvLXlvZGEuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogeyJy
+        ZXN1bHQiOiAic3VjY2VzcyIsICJleGNlcHRpb24iOiBudWxsLCAicmVwb19p
+        ZCI6ICI0IiwgInN0YXJ0ZWQiOiAiMjAxNi0wMi0yM1QxNjo0Nzo1M1oiLCAi
+        X25zIjogInJlcG9fcHVibGlzaF9yZXN1bHRzIiwgImNvbXBsZXRlZCI6ICIy
+        MDE2LTAyLTIzVDE2OjQ3OjUzWiIsICJ0cmFjZWJhY2siOiBudWxsLCAiZGlz
+        dHJpYnV0b3JfdHlwZV9pZCI6ICJwdXBwZXRfaW5zdGFsbF9kaXN0cmlidXRv
+        ciIsICJzdW1tYXJ5IjogInN1Y2Nlc3MiLCAiZXJyb3JfbWVzc2FnZSI6IG51
+        bGwsICJkaXN0cmlidXRvcl9pZCI6ICI0IiwgImlkIjogIjU2Y2M4ZDM5ZGUw
+        NDAzMDg5NzU4YTg3NiIsICJkZXRhaWxzIjogeyJlcnJvcnMiOiBbXSwgInN1
+        Y2Nlc3NfdW5pdF9rZXlzIjogW119fSwgImVycm9yIjogbnVsbCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1NmNjOGQzOTk4OTA1NGZjNDhiYTJlZjAifSwgImlkIjog
+        IjU2Y2M4ZDM5OTg5MDU0ZmM0OGJhMmVmMCJ9
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:38 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:53 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/4/?details=true
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/4/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -306,7 +308,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:38 GMT
+      - Tue, 23 Feb 2016 16:47:53 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
@@ -327,15 +329,15 @@ http_interactions:
         dHJpYnV0b3JzIiwgImxhc3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRv
         cl90eXBlX2lkIjogInB1cHBldF9kaXN0cmlidXRvciIsICJhdXRvX3B1Ymxp
         c2giOiB0cnVlLCAic2NyYXRjaHBhZCI6IHt9LCAiX2lkIjogeyIkb2lkIjog
-        IjU2YzRkYTRkNWNhMDEzMTg0ZGM4MTVkNCJ9LCAiY29uZmlnIjogeyJzZXJ2
+        IjU2Y2M4ZDM4ZGUwNDAzM2Y0MWQyYTNmYSJ9LCAiY29uZmlnIjogeyJzZXJ2
         ZV9odHRwcyI6IHRydWUsICJzZXJ2ZV9odHRwIjogZmFsc2V9LCAiaWQiOiAi
         NF9wdXBwZXQifSwgeyJyZXBvX2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAv
         YXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3RyaWJ1dG9ycy80LyIsICJfbnMi
         OiAicmVwb19kaXN0cmlidXRvcnMiLCAibGFzdF9wdWJsaXNoIjogIjIwMTYt
-        MDItMTdUMjA6Mzg6MzhaIiwgImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVw
+        MDItMjNUMTY6NDc6NTNaIiwgImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVw
         cGV0X2luc3RhbGxfZGlzdHJpYnV0b3IiLCAiYXV0b19wdWJsaXNoIjogdHJ1
-        ZSwgInNjcmF0Y2hwYWQiOiB7fSwgIl9pZCI6IHsiJG9pZCI6ICI1NmM0ZGE0
-        ZDVjYTAxMzE4NGRjODE1ZDMifSwgImNvbmZpZyI6IHsiaW5zdGFsbF9wYXRo
+        ZSwgInNjcmF0Y2hwYWQiOiB7fSwgIl9pZCI6IHsiJG9pZCI6ICI1NmNjOGQz
+        OGRlMDQwMzNmNDFkMmEzZjkifSwgImNvbmZpZyI6IHsiaW5zdGFsbF9wYXRo
         IjogIi92YXIvbGliL3B1bHAvcHVibGlzaGVkL3B1cHBldF9rYXRlbGxvX3Rl
         c3QiLCAiYXV0b19wdWJsaXNoIjogdHJ1ZX0sICJpZCI6ICI0In1dLCAibGFz
         dF91bml0X2FkZGVkIjogbnVsbCwgIm5vdGVzIjogeyJfcmVwby10eXBlIjog
@@ -345,20 +347,20 @@ http_interactions:
         cC9hcGkvdjIvcmVwb3NpdG9yaWVzLzQvaW1wb3J0ZXJzL3B1cHBldF9pbXBv
         cnRlci8iLCAiX25zIjogInJlcG9faW1wb3J0ZXJzIiwgImltcG9ydGVyX3R5
         cGVfaWQiOiAicHVwcGV0X2ltcG9ydGVyIiwgImxhc3Rfc3luYyI6IG51bGws
-        ICJyZXBvX2lkIjogIjQiLCAiX2lkIjogeyIkb2lkIjogIjU2YzRkYTRkNWNh
-        MDEzMTg0ZGM4MTVkMiJ9LCAiY29uZmlnIjogeyJmZWVkIjogImh0dHA6Ly9k
+        ICJyZXBvX2lkIjogIjQiLCAiX2lkIjogeyIkb2lkIjogIjU2Y2M4ZDM4ZGUw
+        NDAzM2Y0MWQyYTNmOCJ9LCAiY29uZmlnIjogeyJmZWVkIjogImh0dHA6Ly9k
         YXZpZGQuZmVkb3JhcGVvcGxlLm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0LyIs
         ICJzc2xfY2FfY2VydCI6ICJmb28iLCAic3NsX2NsaWVudF9jZXJ0IjogImZv
         byIsICJzc2xfY2xpZW50X2tleSI6ICJmb28ifSwgImlkIjogInB1cHBldF9p
         bXBvcnRlciJ9XSwgImxvY2FsbHlfc3RvcmVkX3VuaXRzIjogMCwgIl9pZCI6
-        IHsiJG9pZCI6ICI1NmM0ZGE0ZDVjYTAxMzE4NGRjODE1ZDEifSwgInRvdGFs
+        IHsiJG9pZCI6ICI1NmNjOGQzOGRlMDQwMzNmNDFkMmEzZjcifSwgInRvdGFs
         X3JlcG9zaXRvcnlfdW5pdHMiOiAwLCAiaWQiOiAiNCIsICJfaHJlZiI6ICIv
         cHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzLzQvIn0=
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:38 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:53 GMT
 - request:
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/4/
+    uri: https://katello-yoda.example.com/pulp/api/v2/repositories/4/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -377,7 +379,7 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:39 GMT
+      - Tue, 23 Feb 2016 16:47:54 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -390,14 +392,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzNmNTBhYzEzLTEyOTAtNDdmNC1iYTE0LWE5M2YzY2M4NmZkZi8iLCAi
-        dGFza19pZCI6ICIzZjUwYWMxMy0xMjkwLTQ3ZjQtYmExNC1hOTNmM2NjODZm
-        ZGYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzL2U1MmVmODI4LWQ0NTQtNGJhMS04MWI2LTNkMWRiMWIzZjIyOS8iLCAi
+        dGFza19pZCI6ICJlNTJlZjgyOC1kNDU0LTRiYTEtODFiNi0zZDFkYjFiM2Yy
+        MjkifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:39 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:54 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/tasks/3f50ac13-1290-47f4-ba14-a93f3cc86fdf/
+    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/e52ef828-d454-4ba1-81b6-3d1db1b3f229/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -416,13 +418,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:39 GMT
+      - Tue, 23 Feb 2016 16:47:54 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '635'
+      - '655'
       Connection:
       - close
       Content-Type:
@@ -432,24 +434,24 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zZjUwYWMxMy0xMjkwLTQ3ZjQtYmExNC1hOTNmM2NjODZm
-        ZGYvIiwgInRhc2tfaWQiOiAiM2Y1MGFjMTMtMTI5MC00N2Y0LWJhMTQtYTkz
-        ZjNjYzg2ZmRmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        aS92Mi90YXNrcy9lNTJlZjgyOC1kNDU0LTRiYTEtODFiNi0zZDFkYjFiM2Yy
+        MjkvIiwgInRhc2tfaWQiOiAiZTUyZWY4MjgtZDQ1NC00YmExLTgxYjYtM2Qx
+        ZGIxYjNmMjI5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
         bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
-        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAidHJhY2Vi
-        YWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3Jl
-        cG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2Vy
-        LTBAYWJlZC51c2Vyc3lzLnJlZGhhdC5jb20uZHEiLCAic3RhdGUiOiAid2Fp
-        dGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3Jr
-        ZXItMEBhYmVkLnVzZXJzeXMucmVkaGF0LmNvbSIsICJyZXN1bHQiOiBudWxs
-        LCAiZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2YzRkYTRmZGIw
-        M2MyYmE3YzkxYjI5ZSJ9LCAiaWQiOiAiNTZjNGRhNGZkYjAzYzJiYTdjOTFi
-        MjllIn0=
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxNi0wMi0yM1Qx
+        Njo0Nzo1NFoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3Mi
+        OiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUuY29t
+        LmRxIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVz
+        ZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAa2F0ZWxsby15b2RhLmV4YW1wbGUu
+        Y29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7
+        IiRvaWQiOiAiNTZjYzhkM2E5ODkwNTRmYzQ4YmEyZWYxIn0sICJpZCI6ICI1
+        NmNjOGQzYTk4OTA1NGZjNDhiYTJlZjEifQ==
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:39 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:54 GMT
 - request:
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/tasks/3f50ac13-1290-47f4-ba14-a93f3cc86fdf/
+    uri: https://katello-yoda.example.com/pulp/api/v2/tasks/e52ef828-d454-4ba1-81b6-3d1db1b3f229/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -468,13 +470,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 17 Feb 2016 20:38:39 GMT
+      - Tue, 23 Feb 2016 16:47:54 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '672'
+      - '674'
       Connection:
       - close
       Content-Type:
@@ -484,19 +486,19 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy8zZjUwYWMxMy0xMjkwLTQ3ZjQtYmExNC1hOTNmM2NjODZm
-        ZGYvIiwgInRhc2tfaWQiOiAiM2Y1MGFjMTMtMTI5MC00N2Y0LWJhMTQtYTkz
-        ZjNjYzg2ZmRmIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
-        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxNi0wMi0x
-        N1QyMDozODozOVoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
-        bWUiOiAiMjAxNi0wMi0xN1QyMDozODozOVoiLCAidHJhY2ViYWNrIjogbnVs
+        aS92Mi90YXNrcy9lNTJlZjgyOC1kNDU0LTRiYTEtODFiNi0zZDFkYjFiM2Yy
+        MjkvIiwgInRhc2tfaWQiOiAiZTUyZWY4MjgtZDQ1NC00YmExLTgxYjYtM2Qx
+        ZGIxYjNmMjI5IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxNi0wMi0y
+        M1QxNjo0Nzo1NFoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
+        bWUiOiAiMjAxNi0wMi0yM1QxNjo0Nzo1NFoiLCAidHJhY2ViYWNrIjogbnVs
         bCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9
-        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAYWJlZC51
-        c2Vyc3lzLnJlZGhhdC5jb20uZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAi
-        d29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAYWJl
-        ZC51c2Vyc3lzLnJlZGhhdC5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9y
-        IjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1NmM0ZGE0ZmRiMDNjMmJhN2M5
-        MWIyOWUifSwgImlkIjogIjU2YzRkYTRmZGIwM2MyYmE3YzkxYjI5ZSJ9
+        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAa2F0ZWxs
+        by15b2RhLmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVkIiwg
+        Indvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGth
+        dGVsbG8teW9kYS5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJy
+        b3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjU2Y2M4ZDNhOTg5MDU0ZmM0
+        OGJhMmVmMSJ9LCAiaWQiOiAiNTZjYzhkM2E5ODkwNTRmYzQ4YmEyZWYxIn0=
     http_version: 
-  recorded_at: Wed, 17 Feb 2016 20:38:39 GMT
+  recorded_at: Tue, 23 Feb 2016 16:47:54 GMT
 recorded_with: VCR 2.9.3
