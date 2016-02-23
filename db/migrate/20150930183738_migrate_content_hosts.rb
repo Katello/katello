@@ -212,6 +212,10 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     systems_to_remove.each do |system|
       logger.info("Content Host #{system.uuid} doesn't have candlepin information, unregistering.")
+      if (system_proxy = SmartProxy.find_by_content_host_id(system.id))
+        system_proxy.content_host = nil
+        system_proxy.save
+      end
       systems.delete(system)
       unregister_system(system)
     end
