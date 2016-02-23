@@ -59,7 +59,7 @@ describe('Controller: RepositoryManageContentController', function() {
 
         $scope.removeContent();
 
-        expect(Repository.removeContent).toHaveBeenCalledWith({id: $scope.repository.id, uuids: ['foo']},
+        expect(Repository.removeContent).toHaveBeenCalledWith({id: $scope.repository.id, ids: ['foo']},
             jasmine.any(Function), jasmine.any(Function));
     });
 

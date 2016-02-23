@@ -262,8 +262,6 @@ Katello::Engine.routes.draw do
             end
             collection do
               get :auto_complete_search
-              match ':sync_plan_id/available_products', :to => 'products#index',
-                :available_for => 'sync_plan', :via => :get
               match ':sync_plan_id/products', :to => 'products#index', :via => :get
             end
           end

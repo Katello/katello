@@ -70,10 +70,6 @@ module Katello
 
     private
 
-    def deprecated
-      ::Foreman::Deprecation.api_deprecation_warning("it will be changed in Katello 2.4, where it will be /content_view_filters/:id/package_groups?available_for=content_view_filter")
-    end
-
     def find_content_view
       @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
     end

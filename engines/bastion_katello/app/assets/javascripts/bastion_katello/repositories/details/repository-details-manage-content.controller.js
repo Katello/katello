@@ -60,7 +60,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
         $scope.removeContent = function () {
             var selected = $scope.detailsTable.getSelected();
             $scope.detailsTable.working = true;
-            Repository.removeContent({id: $scope.repository.id, uuids: _.pluck(selected, 'id')},
+            Repository.removeContent({id: $scope.repository.id, ids: _.pluck(selected, 'id')},
                 function (response) {
                     success(response, selected);
                 }, error);
