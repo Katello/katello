@@ -14,20 +14,21 @@ module Actions
         def update_or_associate_importer(capsule_id, repository)
           existing_importers = pulp_extensions(capsule_id).repository.retrieve_with_details(repository.pulp_id)["importers"]
           importer = capsule_id ? repository.generate_importer(true) : repository.generate_importer
+          importer_config = capsule_id ? importer.config.merge!(importer_certs(repository)) : importer.config
           found = existing_importers.find { |i| i['importer_type_id'] == importer.id }
 
           if found
             plan_action(::Actions::Pulp::Repository::UpdateImporter,
                         :repo_id => repository.pulp_id,
                         :id => found['id'],
-                        :config => importer.config.merge!(importer_certs(repository)),
+                        :config => importer_config,
                         :capsule_id => capsule_id
                         )
           else
             plan_action(::Actions::Pulp::Repository::AssociateImporter,
                         :repo_id => repository.pulp_id,
                         :type_id => repository.importers.first['importer_type_id'],
-                        :config => importer.config,
+                        :config => importer_config,
                         :capsule_id => input[:capsule_id],
                         :hash => { :importer_id => importer.id }
                         )
