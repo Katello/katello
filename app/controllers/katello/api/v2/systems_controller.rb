@@ -114,7 +114,7 @@ module Katello
     api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def destroy
-      sync_task(::Actions::Katello::System::Destroy, @system, :destroy_object => false)
+      sync_task(::Actions::Katello::System::Destroy, @system, :unregistering => true)
       respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
     end
 
