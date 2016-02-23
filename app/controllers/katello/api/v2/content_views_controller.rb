@@ -26,6 +26,7 @@ module Katello
     param :environment_id, :identifier, :desc => N_("environment identifier")
     param :nondefault, :bool, :desc => N_("Filter out default content views")
     param :noncomposite, :bool, :desc => N_("Filter out composite content views")
+    param :composite, :bool, :desc => N_("Filter only composite content views")
     param :without, Array, :desc => N_("Do not include this array of content views")
     param :name, String, :desc => N_("Name of the content view"), :required => false
     param_group :search, Api::V2::ApiController
@@ -42,6 +43,7 @@ module Katello
       content_views = content_views.in_environment(@environment) if @environment
       content_views = content_views.non_default if params[:nondefault]
       content_views = content_views.non_composite if params[:noncomposite]
+      content_views = content_views.composite if params[:composite]
       content_views = content_views.where(:name => params[:name]) if params[:name]
       content_views = content_views.where("#{ContentView.table_name}.id NOT IN (?)", params[:without]) if params[:without]
       content_views
