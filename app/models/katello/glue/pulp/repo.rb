@@ -176,8 +176,15 @@ module Katello
       end
 
       def yum_importer_values(capsule)
+        if capsule && self.library_instance
+          new_download_policy = self.library_instance.download_policy
+        else
+          new_download_policy = self.download_policy
+        end
+
         {}.tap do |yum_importer_values|
           yum_importer_values[:feed] = self.importer_feed_url(capsule)
+          yum_importer_values[:download_policy] = new_download_policy
           unless capsule
             yum_importer_values[:ssl_ca_cert] = self.feed_ca
             yum_importer_values[:ssl_client_cert] = self.feed_cert
