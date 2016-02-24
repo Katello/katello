@@ -40,7 +40,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             host['subscription_facet_attributes'] = {
                 id: host.subscription.id,
                 autoheal: host.subscription.autoheal,
-                'service_level': host.subscription.service_level
+                'service_level': host.subscription.service_level,
+                'release_version': host.subscription.release_version
             };
             return $scope.save(host);
         };
