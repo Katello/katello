@@ -135,4 +135,23 @@ module Katello
       assert_equal third_party_env, @foreman_host.environment
     end
   end
+  class HostInstalledPackagesTest < HostManagedExtensionsTestBase
+    def setup
+      super
+      package_json = {:name => "foo", :version => "1", :release => "1.el7", :arch => "x86_64"}
+      @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+      @nvra = 'foo-1-1.el7.x86_64'
+    end
+
+    def test_installed_packages
+      assert_equal 1, @foreman_host.installed_packages.count
+      assert_equal 'foo', @foreman_host.installed_packages.first.name
+      assert_equal @nvra, @foreman_host.installed_packages.first.nvra
+    end
+
+    def test_search_installed_package
+      assert_includes ::Host::Managed.search_for("installed_package = #{@nvra}"), @foreman_host
+      assert_includes ::Host::Managed.search_for("installed_package_name = foo"), @foreman_host
+    end
+  end
 end

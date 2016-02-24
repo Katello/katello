@@ -19,6 +19,12 @@ module Katello
                       :complete_value => SUBSCRIPTION_STATUS_MAP
 
         attr_accessible :subscription_facet_attributes
+
+        scoped_search :on => :release_version, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :autoheal, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :service_level, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :last_checkin, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :uuid, :in => :subscription_facet, :rename => :subscription_uuid
       end
 
       def update_action

@@ -20,12 +20,22 @@ module Katello
         #associations for simpler scoped searches
         has_one :content_view, :through => :content_facet
         has_one :lifecycle_environment, :through => :content_facet
+        has_many :applicable_errata, :through => :content_facet
 
         scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
         scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
+        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata
 
         accepts_nested_attributes_for :content_facet, :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? }
         attr_accessible :content_facet_attributes
+      end
+
+      module ClassMethods
+        def find_by_applicable_errata(_key, operator, value)
+          conditions = sanitize_sql_for_conditions("#{Katello::Erratum.table_name}.errata_id #{operator}", value_to_sql(operator, value))
+          hosts = Host::Managed.joins("#{Katello}").where(conditions)
+          { :conditions => "#{Host::Managed.table_name}.id IN(#{hosts.pluck(:id)})" }
+        end
       end
     end
   end
