@@ -16,8 +16,13 @@ module Katello
       def update_from_consumer_attributes(consumer_params)
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].blank?
-        self.release_version = consumer_params['releaseVer'] unless consumer_params['releaseVer'].blank?
+        self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
+        self.release_version = consumer_params['releaseVer'] unless consumer_params['releaseVer'].blank?
+
+        if self.release_version.is_a?(Hash)
+          self.release_version = self.release_version['releaseVer']
+        end
       end
 
       def consumer_attributes

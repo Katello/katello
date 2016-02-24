@@ -24,6 +24,7 @@ module Katello
         scoped_search :on => :autoheal, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :service_level, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :last_checkin, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :registered_at, :in => :subscription_facet, :rename => :registered_at
         scoped_search :on => :uuid, :in => :subscription_facet, :rename => :subscription_uuid
       end
 

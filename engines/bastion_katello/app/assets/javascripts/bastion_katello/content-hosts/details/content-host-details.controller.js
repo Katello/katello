@@ -50,7 +50,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.save = function (host) {
             var deferred = $q.defer();
 
-            // TODO begin hack needed to use the foreman host API, see the following bugs:
+            // @TODO begin hack needed to use the foreman host API, see the following bugs:
             // http://projects.theforeman.org/issues/13622
             // http://projects.theforeman.org/issues/13669
             // http://projects.theforeman.org/issues/13670
@@ -79,7 +79,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                     $scope.errorMessages.push(translate("An error occurred saving the Content Host: ") + errorMessage);
                 });
             });
-            // TODO end hack
+            // @TODO end hack
 
             return deferred.promise;
         };

@@ -4,17 +4,17 @@
   <thead>
     <tr bst-table-head row-select>
       <th bst-table-column="name" sortable><span translate>Name</span></th>
-      <th bst-table-column="status">
+      <th bst-table-column="subscription_status" sortable>
         {{ "Subscription Status" | translate }}
       </th>
       <th bst-table-column="status">
         <span translate>Installable Errata</span>
       </th>
-      <th bst-table-column="os"><span translate>OS</span></th>
-      <th bst-table-column="environment"><span sortable translate>Environment</span></th>
-      <th bst-table-column="contentView"><span translate>Content View</span></th>
-      <th bst-table-column="registered"><span translate>Registered</span></th>
-      <th bst-table-column="lastCheckin" sortable><span translate>Last Checkin</span></th>
+      <th bst-table-column="os" sortable><span translate>OS</span></th>
+      <th bst-table-column="lifecycle_environment" sortable><span sortable translate>Environment</span></th>
+      <th bst-table-column="content_view" sortable><span translate>Content View</span></th>
+      <th bst-table-column="registered_at" sortable><span translate>Registered</span></th>
+      <th bst-table-column="last_checkin" sortable><span translate>Last Checkin</span></th>
     </tr>
   </thead>
 
@@ -40,7 +40,7 @@
       <td bst-table-cell>{{ host.operatingsystem_name }}</td>
       <td bst-table-cell>{{ host.content.lifecycle_environment.name }}</td>
       <td bst-table-cell>{{ host.content.content_view.name || "" }}</td>
-      <td bst-table-cell>{{ host.created_at | date:'short' }}</td>
+      <td bst-table-cell>{{ (host.subscription.registered_at | date:'short') || ("Never registered" | translate) }}</td>
       <td bst-table-cell>{{ (host.subscription.last_checkin | date:'short') || ("Never checked in" | translate) }}</td>
     </tr>
   </tbody>
