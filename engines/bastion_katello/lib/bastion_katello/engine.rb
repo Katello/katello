@@ -34,7 +34,8 @@ module BastionKatello
         :config => {
           'consumerCertRPM' => consumer_cert_rpm,
           'remoteExecutionPresent' => ::Katello.with_remote_execution?,
-          'remoteExecutionByDefault' => ::Katello.with_remote_execution? && Setting['remote_execution_by_default']
+          'remoteExecutionByDefault' => ::Katello.with_remote_execution? && !Foreman.in_rake?('db:migrate') &&
+                                          Setting['remote_execution_by_default']
         }
       )
     end
