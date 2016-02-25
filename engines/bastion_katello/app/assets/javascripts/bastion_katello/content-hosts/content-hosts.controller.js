@@ -36,6 +36,30 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         $scope.nutupane = nutupane;
         $scope.controllerName = 'katello_systems';
 
+        // @TODO begin hack necessary because of foreman API bug http://projects.theforeman.org/issues/13877
+        $scope.contentHostTable.sortBy = function (column) {
+            var sort = $scope.contentHostTable.resource.sort,
+                sortOrder;
+            if (!column) {
+                return;
+            }
+
+            params.sort = column.id;
+            if (column.id === sort.by) {
+                sortOrder = (sort.order === 'ASC') ? 'DESC' : 'ASC';
+            } else {
+                sortOrder = 'ASC';
+            }
+
+            params.order = [column.id, sortOrder].join(' ');
+
+            column.sortOrder = sortOrder;
+            column.active = true;
+            $scope.contentHostTable.rows = [];
+            $scope.nutupane.query();
+        };
+        // @TODO end hack
+
         nutupane.enableSelectAllResults();
 
         if ($location.search()['select_all']) {
