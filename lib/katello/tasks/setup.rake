@@ -41,11 +41,8 @@ namespace :katello do
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
 
-    # Otherwise migration fails since it currently requires a reloaded environment
+    # Otherwise migration and seeds fail because they require a reloaded environment
     system('rake db:migrate')
-
-    # Load configuration needed by db:seed first
-    require './config/initializers/foreman.rb'
-    Rake::Task['db:seed'].invoke
+    system('rake db:seed')
   end
 end
