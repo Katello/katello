@@ -16,9 +16,9 @@
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscriptionsController',
     ['$scope', '$q', '$location', 'HostCollection', 'CurrentOrganization', 'translate',
-     'Organization', 'Task',
+     'Organization', 'Task', 'GlobalNotification',
     function ($scope, $q, $location, HostCollection, CurrentOrganization, translate,
-        Organization, Task) {
+        Organization, Task, GlobalNotification) {
 
         function watchRunningTasks() {
             var searchParams = { 'type': 'resource',
@@ -48,10 +48,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionSubscr
                 $scope.subscription.runningTask = Task.monitorTask(task);
                 promise = $scope.subscription.runningTask.promise;
                 promise.then(function () {
-                    $scope.state.successMessages.push(translate('Successfully Scheduled Auto-attach.'));
+                    GlobalNotification.setSuccessMessage(translate('Successfully Scheduled Auto-attach.'));
                 });
                 promise.catch(function (errors) {
-                    $scope.state.errorMessages.push(translate("An error occurred applying Subscriptions: ") + errors.join('; '));
+                    GlobalNotification.setErrorMessage(translate("An error occurred applying Subscriptions: ") + errors.join('; '));
                 });
                 promise.finally(function () {
                     if ($scope.subscription.runningTask.state === 'stopped') {

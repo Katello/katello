@@ -14,8 +14,8 @@
  *   Provides the functionality for the activation key details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization',
-    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization) {
+    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization, GlobalNotification) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
@@ -65,9 +65,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             activationKey.$delete(function () {
                 $scope.removeRow(id);
                 $scope.transitionTo('activation-keys.index');
-                $scope.successMessages.push(translate('Activation Key removed.'));
+                GlobalNotification.setSuccessMessage(translate('Activation Key removed.'));
             }, function (response) {
-                $scope.errorMessages.push(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);
+                GlobalNotification.setErrorMessage(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);
             });
         };
 

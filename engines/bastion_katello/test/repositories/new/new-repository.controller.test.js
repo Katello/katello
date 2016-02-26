@@ -1,6 +1,7 @@
 describe('Controller: NewRepositoryController', function() {
     var $scope,
         FormUtils,
+        GlobalNotification,
         $httpBackend;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
@@ -14,9 +15,9 @@ describe('Controller: NewRepositoryController', function() {
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
+        GlobalNotification = $injector.get('GlobalNotification');
 
         $scope.detailsTable = {rows: []};
-        $scope.successMessages = [];
         $scope.$stateParams = {productId: 1};
         $scope.repositoryForm = $injector.get('MockForm');
 
@@ -29,7 +30,8 @@ describe('Controller: NewRepositoryController', function() {
             $scope: $scope,
             $http: $http,
             Repository: Repository,
-            GPGKey: GPGKey
+            GPGKey: GPGKey,
+            GlobalNotification: GlobalNotification
         });
     }));
 
@@ -51,9 +53,11 @@ describe('Controller: NewRepositoryController', function() {
 
         spyOn($scope, 'transitionTo');
         spyOn(repository, '$save').andCallThrough();
+        spyOn(GlobalNotification, "setSuccessMessage");
         $scope.save(repository);
 
         expect(repository.$save).toHaveBeenCalled();
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index', {productId: 1});
     });
 

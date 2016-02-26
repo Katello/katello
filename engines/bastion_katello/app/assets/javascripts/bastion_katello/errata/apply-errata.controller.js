@@ -26,8 +26,6 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 $scope.applyingErrata = false;
             }
 
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
             $scope.applyingErrata = false;
 
             $scope.hasComposites = function (updates) {

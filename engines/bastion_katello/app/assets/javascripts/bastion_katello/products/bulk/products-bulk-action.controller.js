@@ -11,11 +11,8 @@
  *   A controller for providing bulk action functionality to the products page.
  */
 angular.module('Bastion.products').controller('ProductsBulkActionController',
-    ['$scope', 'translate', 'ProductBulkAction', 'CurrentOrganization',
-    function ($scope, translate, ProductBulkAction, CurrentOrganization) {
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
+    ['$scope', 'translate', 'ProductBulkAction', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, translate, ProductBulkAction, CurrentOrganization, GlobalNotification) {
 
         $scope.removeProducts = {
             confirm: false,
@@ -42,15 +39,21 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
                 $scope.productsNutupane.refresh();
                 $scope.table.selectAll(false);
 
-                $scope.$parent.successMessages = data.displayMessages.success;
-                $scope.$parent.errorMessages = data.displayMessages.error;
+                angular.forEach(data.displayMessages.success, function(message) {
+                    GlobalNotification.setSuccessMessage(message);
+                });
+
+                angular.forEach(data.displayMessages.error, function(message) {
+                    GlobalNotification.setErrorMessage(message);
+                });
+
                 $scope.removingProducts = false;
                 $scope.transitionTo('products.index');
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred removing the Products: ") + errorMessage);
+                    GlobalNotification.setErrorMessage(translate("An error occurred removing the Products: ") + errorMessage);
                 });
                 $scope.removingProducts = false;
             };

@@ -1,5 +1,6 @@
 describe('Controller: ProductsController', function() {
     var $scope,
+        GlobalNotification,
         Nutupane;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
@@ -14,15 +15,17 @@ describe('Controller: ProductsController', function() {
         Product = {};
     });
 
-    beforeEach(inject(function($controller, $rootScope, $location) {
+    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, $location) {
         $scope = $rootScope.$new();
+        GlobalNotification = _GlobalNotification_;
 
         $controller('ProductsController', {
             $scope: $scope,
             $location: $location,
             Nutupane: Nutupane,
             Product: Product,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            GlobalNotification: GlobalNotification
         });
     }));
 
