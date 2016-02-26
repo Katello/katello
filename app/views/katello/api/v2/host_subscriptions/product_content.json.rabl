@@ -11,7 +11,5 @@ child @collection[:results] => :results do
     attributes :id, :name, :label
   end
 
-  node :override do |pc|
-    pc.content_override(@system)
-  end
+  attributes :enabled_override, :enabled
 end
