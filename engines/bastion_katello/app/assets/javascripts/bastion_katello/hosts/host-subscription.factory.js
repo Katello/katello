@@ -14,7 +14,9 @@ angular.module('Bastion.hosts').factory('HostSubscription',
             events: {method: 'GET', params: {action: 'events'}},
             autoAttach: {method: 'PUT', params: {action: 'auto_attach'}},
             removeSubscriptions: {method: 'put', isArray: false, params: {action: 'remove_subscriptions'}},
-            addSubscriptions: {method: 'put', isArray: false, params: {action: 'add_subscriptions'}}
+            addSubscriptions: {method: 'put', isArray: false, params: {action: 'add_subscriptions'}},
+            productContent: {method: 'get', isArray: false, params: {action: 'product_content'}},
+            contentOverride: {method: 'put', isArray: false, params: {action: 'content_override'}}
         });
 
     }]

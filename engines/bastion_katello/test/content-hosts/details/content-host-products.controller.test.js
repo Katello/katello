@@ -1,11 +1,11 @@
-describe('Controller: ContentHostProductDetailsController', function () {
+describe('Controller: ContentHostProductsController', function () {
     var $scope,
         $controller,
         translate,
-        ContentHost,
-        Product,
-        CurrentOrganization,
-        mockContentHost;
+        HostSubscription,
+        mockHost,
+        mockContent,
+        mockProductContent;
 
     beforeEach(module('Bastion.content-hosts',
                        'content-hosts/views/content-hosts.html'));
@@ -18,123 +18,78 @@ describe('Controller: ContentHostProductDetailsController', function () {
         $controller = _$controller_;
         $scope = $rootScope.$new();
 
-        state = {
-            transitionTo: function () {}
-        };
-
         translate = function (message) {
             return message;
         };
 
-        mockContentHost = {
-            "id": 1,
-            "content_overrides": [{
-                "contentLabel": "content-override-true",
-                "name": "enabled",
-                "value": "1"
-            }, {
-                "contentLabel": "content-override-false",
-                "name": "enabled",
-                "value": "0"
-            }],
-
-            mockFailed: false,
-            mockContent: null/*,
-            $contentOverride: function (success, error) {
-                if (mockContentHost.mockFailed) {
-                    error({ data: { errors: ['error!'] } });
-                } else {
-                    success(mockContentHost.mockContent);
-                }
-            }*/
+        mockHost = {
+            "id": 1
         };
 
-        mockContentHostProducts = {
-            "total": 1,
-            "subtotal": 1,
-            "page": 1,
-            "per_page": 20,
-            "search": null,
-            "sort": {
-                "by": null,
-                "order": null
-            },
+        mockContent = {
+            "label": "content_label"
+        };
+
+        mockProductContent = {
             "results": [{
-                "id": 1,
-                "name": "Some Product",
-                "label": "some_product",
-                "available_content": [{
-                    "enabled": false,
-                    "content": {
-                        "id": "1",
-                        "label": "false-content-not-overridden",
-                        "name": "False Content Not Overridden",
-                    }
-                }, {
-                    "enabled": false,
-                    "content": {
-                        "id": "2",
-                        "label": "content-override-true",
-                        "name": "Content Override True",
-                    }
-                }, {
-                    "enabled": true,
-                    "content": {
-                        "id": "3",
-                        "label": "content-override-false",
-                        "name": "Content Override False",
-                    }
-                }, {
-                    "enabled": true,
-                    "content": {
-                        "id": "4",
-                        "label": "true-content-not-overridden",
-                        "name": "True Content Not Overridden",
-                    }
-                }],
+                "enabled": 0,
+                "enabled_override": "default",
+                "product": {
+                    "name": 'product_name'
+                },
+                "content": mockContent
             }]
         };
 
 
-        ContentHost = {
-            get: function (params, callback) {
-                callback(mockContentHost);
-                return mockContentHost;
+        HostSubscription = {
+            productContent: function (params, callback) {
+                callback(mockProductContent);
+                return mockProductContent;
             },
-            products: function (params, callback) {
-                callback(mockContentHostProducts);
-                return mockContentHostProducts;
+            contentOverride: function(params, callback) {
+                callback(mockProductContent);
             }
         };
 
-        spyOn(ContentHost, 'get').andCallThrough();
-        spyOn(ContentHost, 'products').andCallThrough();
+        spyOn(HostSubscription, 'productContent').andCallThrough();
+        spyOn(HostSubscription, 'contentOverride');
 
-        $scope.contentHost = mockContentHost;
-        $scope.contentHost.$promise = { then: function (callback) { callback(mockContentHost) } };
+        $scope.host = mockHost;
 
         $controller('ContentHostProductsController', {
             $scope: $scope,
             translate: translate,
-            ContentHost: ContentHost,
-            Product: Product,
-            CurrentOrganization: CurrentOrganization
+            HostSubscription: HostSubscription
         });
     }));
 
     it('gets the content host products', function () {
-        expect(ContentHost.products).toHaveBeenCalled();
+        expect(HostSubscription.productContent).toHaveBeenCalled();
         expect($scope.displayArea.isAvailableContent).toBe(true);
         expect($scope.displayArea.working).toBe(false);
     });
 
-    it('is available content', function () {
-        var products = [{ 'available_content': [1, 2, 3] }];
-        expect($scope.isAnyAvailableContent(products)).toBe(true);
+    it('should initialize product content successfully', function () {
+        var newObject = $scope.products.product_name;
+        expect(newObject[0].content).toBe(mockProductContent.results[0].content);
     });
 
-    it('is no available content', function () {
-        var products = [{ 'available_content': [] }];
-        expect($scope.isAnyAvailableContent(products)).toBe(false);
+    it('should calculate get enabled properly', function () {
+        expect($scope.getEnabledText(0, 'default')).toBe("No (Default)");
+        expect($scope.getEnabledText(1, 'default')).toBe("Yes (Default)");
+        expect($scope.getEnabledText(0, 1)).toBe("Override to Yes");
+        expect($scope.getEnabledText(0, "1")).toBe("Override to Yes");
+        expect($scope.getEnabledText(1, "0")).toBe("Override to No");
+    });
+
+    it('should save overrides', function () {
+        $scope.saveContentOverride(mockProductContent['results'][0])
+
+        expect(HostSubscription.contentOverride).toHaveBeenCalledWith({id: mockHost.id}, {
+            content_label: mockContent.label,
+            name: 'enabled',
+            value: 'default'
+        }, jasmine.any(Function), jasmine.any(Function));
     });
 });

@@ -130,37 +130,6 @@ module Katello
       respond_for_index :collection => response
     end
 
-    api :PUT, "/systems/:id/content_override", N_("Set content overrides for the content host")
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    param :content_override, Hash, :desc => N_("Content override parameters") do
-      param :content_label, String, :desc => N_("Label of the content"), :required => true
-      param :value, [0, 1, "default"], :desc => N_("Override to 0/1, or 'default'"), :required => true
-    end
-    def content_override
-      content_override = validate_content_overrides(params[:content_override])
-      @system.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
-
-      content = @system.available_content
-      response = {
-        :results => content,
-        :total => content.size,
-        :subtotal => content.size
-      }
-      respond_for_index :collection => response
-    end
-
-    api :GET, "/systems/:id/product_content", N_("Get content overrides for the content host")
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def product_content
-      content = @system.available_content
-      response = {
-        :results => content,
-        :total => content.size,
-        :subtotal => content.size
-      }
-      respond_for_index :collection => response
-    end
-
     private
 
     def system_params_to_host_params(sys_params)
@@ -177,24 +146,6 @@ module Katello
       subscription_facet[:release_version] = params[:release_ver]
       host_params[:subscription_facet_attributes] = subscription_facet.compact! unless subscription_facet.compact.empty?
       host_params
-    end
-
-    def validate_content_overrides(content_params)
-      case content_params[:value].to_s
-      when 'default'
-        content_params[:value] = nil
-      when '1'
-        content_params[:value] = 1
-      when '0'
-        content_params[:value] = 0
-      else
-        fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
-      end
-
-      unless @system.available_content.map(&:content).any? { |content| content.label == content_params[:content_label] }
-        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
-      end
-      content_params
     end
 
     def find_system

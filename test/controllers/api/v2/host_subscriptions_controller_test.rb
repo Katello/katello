@@ -3,7 +3,7 @@
 require "katello_test_helper"
 
 module Katello
-  class Api::V2::HostSubscriptionsControllerTest < ActionController::TestCase
+  class Api::V2::HostSubscriptionsControllerBase < ActionController::TestCase
     include Support::ForemanTasks::Task
     tests Katello::Api::V2::HostSubscriptionsController
 
@@ -34,7 +34,9 @@ module Katello
       backend_stubs
       permissions
     end
+  end
 
+  class Api::V2::HostSubscriptionsControllerTest < Api::V2::HostSubscriptionsControllerBase
     def test_index
       get :index, :host_id => @host.id
 
@@ -115,6 +117,56 @@ module Katello
       assert_protected_action(:remove_subscriptions, allowed_perms, denied_perms) do
         post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
       end
+    end
+  end
+
+  class Api::V2::HostSubscriptionsProductContentTest < Api::V2::HostSubscriptionsControllerBase
+    def setup
+      super
+      ::Katello::Candlepin::Consumer.any_instance.stubs(:available_product_content).returns(
+          [Candlepin::ProductContent.new(:content => {:label => 'some-content'})])
+      Katello::Candlepin::Consumer.any_instance.stubs(:content_overrides).returns([])
+    end
+
+    def test_product_content_protected
+      allowed_perms = [@view_permission]
+      denied_perms = [@update_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:product_content, allowed_perms, denied_perms) do
+        get(:product_content, :host_id => @host.id)
+      end
+    end
+
+    def test_product_content
+      get :product_content, :host_id => @host.id
+
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/product_content'
+    end
+
+    def test_content_override_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:content_override, allowed_perms, denied_perms) do
+        put(:content_override, :host_id => @host.id, :content_label => 'some-content',
+            :value => 1)
+      end
+    end
+
+    def test_content_override
+      Resources::Candlepin::Consumer.expects(:update_content_override).with(@host.subscription_facet.uuid, 'some-content', 'enabled', 1)
+
+      put :content_override, :host_id => @host.id, :content_label => 'some-content', :value => 1
+
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/content_override'
+    end
+
+    def test_invalid_content_fails
+      put :content_override, :host_id => @host.id, :content_label => 'wrong-content', :value => 1
+
+      assert_response 400
     end
   end
 end
