@@ -9,6 +9,7 @@ angular.module('Bastion.gpg-keys', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.common',
     'Bastion.components',
     'ngUpload'
 ]);

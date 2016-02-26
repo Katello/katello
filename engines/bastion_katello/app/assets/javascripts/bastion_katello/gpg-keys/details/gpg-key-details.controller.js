@@ -6,19 +6,24 @@
  * @requires GPGKey
  * @requires $q
  * @requires translate
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the gpgKey details action pane.
  */
 angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsController',
-    ['$scope', 'GPGKey', '$q', 'translate', function ($scope, GPGKey, $q, translate) {
+    ['$scope', 'GPGKey', '$q', 'translate', 'ApiErrorHandler', function ($scope, GPGKey, $q, translate, ApiErrorHandler) {
         $scope.errorMessages = [];
         $scope.successMessages = [];
 
-        $scope.panel = $scope.panel || {loading: false};
+        $scope.panel = $scope.panel || {error: false, loading: false};
 
         $scope.gpgKey = GPGKey.get({id: $scope.$stateParams.gpgKeyId}, function () {
+            $scope.panel.error = false;
             $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         $scope.save = function (gpgKey) {

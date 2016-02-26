@@ -1,19 +1,21 @@
 <span page-title>{{ 'Lifecycle Environment Paths' | translate }}</span>
 
-<section ng-cloak bst-container-scroll class="row">
+<section ng-cloak bst-container-scroll>
 
-  <h2 class="col-sm-12">
-    <span data-block="header" translate>
-      Lifecycle Environment Paths
-    </span>
+  <div class="row">
+    <h2 class="col-sm-12">
+      <span data-block="header" translate>
+        Lifecycle Environment Paths
+      </span>
 
-    <a class="fr btn btn-default"
-        ui-sref="environments.new({priorId: library.id})"
-        ng-hide="denied('create_lifecycle_environments')">
-      <i class="fa fa-plus"></i>
-      {{ "New Environment Path" | translate }}
-    </a>
-  </h2>
+      <a class="fr btn btn-default"
+          ui-sref="environments.new({priorId: library.id})"
+          ng-hide="denied('create_lifecycle_environments')">
+        <i class="fa fa-plus"></i>
+        {{ "New Environment Path" | translate }}
+      </a>
+    </h2>
+  </div>
 
   <section class="row nutupane-sub-section">
 

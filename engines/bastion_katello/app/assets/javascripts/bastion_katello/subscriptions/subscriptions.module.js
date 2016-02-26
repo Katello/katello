@@ -10,6 +10,7 @@ angular.module('Bastion.subscriptions', [
     'ui.router',
     'Bastion',
     'Bastion.organizations',
+    'Bastion.common',
     'Bastion.components',
     'Bastion.components.formatters'
 ]);

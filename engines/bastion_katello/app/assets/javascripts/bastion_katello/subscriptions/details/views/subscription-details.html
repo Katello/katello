@@ -4,52 +4,55 @@
 </div>
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="pull-left">{{ subscription.name }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="pull-left">{{ subscription.name }}</h2>
 
-    <div class="fr">
-      <button class="btn btn-default" ui-sref="subscriptions.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
+      <div class="fr">
+        <button class="btn btn-default" ui-sref="subscriptions.index">
+          <i class="fa fa-remove"></i>
+          {{ "Close" | translate }}
+        </button>
+      </div>
 
-  </header>
+    </header>
 
-  <nav>
-    <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('subscriptions.details.info')}">
-        <a translate ui-sref="subscriptions.details.info({subscriptionId: subscription.id})">
-          Details
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('subscriptions.details.products')}">
-        <a translate ui-sref="subscriptions.details.products({subscriptionId: subscription.id})">
-          Product Content
-        </a>
-      </li>
-      <li class="dropdown"
-          ng-class="{active: stateIncludes('subscriptions.details.associations-activation-keys') || stateIncludes('subscriptions.details.associations-content-hosts')}">
-        <a class="dropdown-toggle">
-          <span translate>Associations</span>
-          <i class="fa fa-chevron-down"></i>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a ui-sref="subscriptions.details.associations-activation-keys({subscriptionId: subscription.id})" translate>
-              Activation Keys
-            </a>
-          </li>
-          <li>
-            <a ui-sref="subscriptions.details.associations-content-hosts({subscriptionId: subscription.id})" translate>
-              Content Hosts
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
+    <nav>
+      <ul class="nav nav-tabs">
+        <li ng-class="{active: isState('subscriptions.details.info')}">
+          <a translate ui-sref="subscriptions.details.info({subscriptionId: subscription.id})">
+            Details
+          </a>
+        </li>
+        <li ng-class="{active: stateIncludes('subscriptions.details.products')}">
+          <a translate ui-sref="subscriptions.details.products({subscriptionId: subscription.id})">
+            Product Content
+          </a>
+        </li>
+        <li class="dropdown"
+            ng-class="{active: stateIncludes('subscriptions.details.associations-activation-keys') || stateIncludes('subscriptions.details.associations-content-hosts')}">
+          <a class="dropdown-toggle">
+            <span translate>Associations</span>
+            <i class="fa fa-chevron-down"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a ui-sref="subscriptions.details.associations-activation-keys({subscriptionId: subscription.id})" translate>
+                Activation Keys
+              </a>
+            </li>
+            <li>
+              <a ui-sref="subscriptions.details.associations-content-hosts({subscriptionId: subscription.id})" translate>
+                Content Hosts
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
 
-  <section class="nutupane-sub-section" ui-view></section>
+    <section class="nutupane-sub-section" ui-view></section>
+  </div>
 </section>

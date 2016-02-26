@@ -6,45 +6,48 @@
 </div>
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="fl">{{ errata.title }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="fl">{{ errata.title }}</h2>
 
-    <div class="details-actions fr">
-      <button class="btn btn-default" ui-sref="errata.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
+      <div class="details-actions fr">
+        <button class="btn btn-default" ui-sref="errata.index">
+          <i class="fa fa-remove"></i>
+          {{ "Close" | translate }}
+        </button>
+      </div>
+    </header>
 
-  <nav class="details-navigation">
-    <ul>
-      <li ng-class="{active: isState('errata.details.info')}">
-        <a ui-sref="errata.details.info">
-          <span translate>
-            Details
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: isState('errata.details.content-hosts') || isState('errata.details.apply')}">
-        <a ui-sref="errata.details.content-hosts">
-          <span translate>
-            Content Hosts
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: isState('errata.details.repositories')}">
-        <a ui-sref="errata.details.repositories">
-          <span translate>
-            Repositories
-          </span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <nav class="details-navigation">
+      <ul>
+        <li ng-class="{active: isState('errata.details.info')}">
+          <a ui-sref="errata.details.info">
+            <span translate>
+              Details
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: isState('errata.details.content-hosts') || isState('errata.details.apply')}">
+          <a ui-sref="errata.details.content-hosts">
+            <span translate>
+              Content Hosts
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: isState('errata.details.repositories')}">
+          <a ui-sref="errata.details.repositories">
+            <span translate>
+              Repositories
+            </span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <section ui-view></section>
+    <section ui-view></section>
+  </div>
 </section>

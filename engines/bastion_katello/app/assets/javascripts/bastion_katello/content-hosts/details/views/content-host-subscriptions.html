@@ -1,7 +1,7 @@
 <span page-title ng-model="host">{{ 'Subscriptions for: ' | translate }} {{ host.name }}</span>
 
 <div ng-hide="host.hasSubscription()">
-  <div data-extend-template="common/registration.html"></div>
+  <div data-extend-template="common/views/registration.html"></div>
 </div>
 
 <div ng-if="host.hasSubscription()">

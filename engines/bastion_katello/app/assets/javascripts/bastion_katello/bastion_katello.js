@@ -1,6 +1,9 @@
 //= require "bastion_katello/host-collections/host-collections.module.js"
 //= require_tree "./host-collections"
 
+//= require "bastion_katello/common/common.module.js"
+//= require_tree "./common"
+
 //= require "bastion_katello/content-hosts/content-hosts.module.js"
 //= require_tree "./content-hosts"
 
