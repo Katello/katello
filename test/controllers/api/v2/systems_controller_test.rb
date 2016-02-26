@@ -157,6 +157,22 @@ module Katello
       assert_response :success
     end
 
+    def test_update_service_level
+      input = {
+        :id => @system.id,
+        :service_level => 'standard'
+      }
+      where_stub = System.where(:id => @system.id)
+      System.stubs(:where).returns(where_stub)
+      System.any_instance.stubs(:first).returns(@system)
+      @controller.expects(:system_params).returns(input)
+      subscription_facet = { :service_level => 'standard' }
+      ::Host::Managed.any_instance.stubs(:update_attributes!).once.with(:subscription_facet_attributes => subscription_facet)
+      put :update, input
+
+      assert_response :success
+    end
+
     def test_search_by_name
       systems = System.search_for("name = \"#{@system.name}\"")
       assert_includes systems, @system
