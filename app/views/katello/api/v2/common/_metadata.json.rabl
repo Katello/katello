@@ -4,6 +4,7 @@ node(:total)    { @collection[:total] }
 node(:subtotal) { @collection[:subtotal] }
 node(:page)     { @collection[:page] }
 node(:per_page) { @collection[:per_page] }
+node(:error)    { @collection[:error] }
 node(:search)   { params[:search] }
 node(:sort) do
   {
