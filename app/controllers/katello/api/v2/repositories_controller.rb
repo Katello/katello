@@ -188,7 +188,7 @@ module Katello
         end
       end
 
-      task = async_task(::Actions::Katello::Repository::Export, [@repository.pulp_id],
+      task = async_task(::Actions::Katello::Repository::Export, [@repository],
                         ::Foreman::Cast.to_bool(params[:export_to_iso]),
                         params[:since].try(:to_datetime),
                         params[:iso_mb_size],

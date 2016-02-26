@@ -3,6 +3,7 @@ module Katello
     self.include_root_in_json = false
 
     include Authorization::ContentViewVersion
+    include ForemanTasks::Concerns::ActionSubject
 
     before_destroy :validate_destroyable!
 
@@ -271,6 +272,10 @@ module Katello
 
     def remove_environment(env)
       content_view.remove_environment(env) unless content_view.content_view_versions.in_environment(env).count > 1
+    end
+
+    def related_resources
+      [self.content_view]
     end
   end
 end

@@ -107,7 +107,8 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             publish: "Actions::Katello::ContentView::Publish",
             promotion: "Actions::Katello::ContentView::Promote",
             deletion: "Actions::Katello::ContentView::Remove",
-            incrementalUpdate: "Actions::Katello::ContentView::IncrementalUpdates"
+            incrementalUpdate: "Actions::Katello::ContentView::IncrementalUpdates",
+            export: "Actions::Katello::ContentViewVersion::Export"
         };
 
         $scope.copy = function (newName) {

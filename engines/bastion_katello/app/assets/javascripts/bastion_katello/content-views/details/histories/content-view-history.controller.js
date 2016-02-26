@@ -34,6 +34,8 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
                 message = translate("Promoted to %s").replace('%s', history.environment.name);
             } else if (taskType === taskTypes.publish) {
                 message = translate("Published new version");
+            } else if (taskType === taskTypes.export) {
+                message = translate("Exported content view");
             }
 
             return message;
