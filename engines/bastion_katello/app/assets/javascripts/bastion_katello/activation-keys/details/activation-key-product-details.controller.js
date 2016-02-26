@@ -61,38 +61,28 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductDetail
             return enabledText;
         };
 
-        $scope.success = function (content) {
-            content.enabledText = $scope.getEnabledText(content.enabled, content.overrideEnabled);
-            $scope.successMessages.push(translate('Updated override to "%x".')
-                    .replace('%x', content.enabledText));
-        };
-
-        $scope.error = function (error) {
-            $scope.errorMessages.push(error.data.errors);
-        };
-
         $scope.saveContentOverride = function (content) {
-            if (content.overrideEnabled === null) {
-                ActivationKey.contentOverride({id: $scope.activationKey.id},
-                        {'content_override': {'content_label': content.content.label,
-                                              value: 'default'}
-                        },
-                        function (response) {
-                            $scope.success(content);
-                            $scope.setActivationKey(response);
-                        },
-                        $scope.error);
-            } else {
-                ActivationKey.contentOverride({id: $scope.activationKey.id},
-                        {'content_override': { 'content_label': content.content.label,
-                                               value: content.overrideEnabled}
-                        },
-                        function (response) {
-                            $scope.success(content);
-                            $scope.setActivationKey(response);
-                        },
-                        $scope.error);
+            var deferred, overrideValue = 'default';
+
+            if (content.overrideEnabled !== null) {
+                overrideValue = content.overrideEnabled;
             }
+
+            deferred = ActivationKey.contentOverride({id: $scope.activationKey.id},
+                    {'content_override': {'content_label': content.content.label,
+                                          value: overrideValue}
+                    },
+                    function (response) {
+                        content.enabledText = $scope.getEnabledText(content.enabled, content.overrideEnabled);
+                        $scope.successMessages.push(translate('Updated override to "%x".')
+                                                    .replace('%x', content.enabledText));
+                        $scope.setActivationKey(response);
+                    },
+                    function (response) {
+                        $scope.errorMessages.push(response.data.errors);
+                    });
+
+            return deferred.$promise;
         };
     }]
 );
