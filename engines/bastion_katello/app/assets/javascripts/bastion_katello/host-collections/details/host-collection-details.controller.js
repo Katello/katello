@@ -7,26 +7,32 @@
  * @requires $q
  * @requires translate
  * @requires HostCollection
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'HostCollection',
-    function ($scope, $state, $q, translate, HostCollection) {
+    ['$scope', '$state', '$q', 'translate', 'HostCollection', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, HostCollection, ApiErrorHandler) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
         if ($scope.hostCollection) {
-            $scope.panel = {loading: false};
-        } else {
-            $scope.panel = {loading: true};
+            $scope.panel.loading = false;
         }
 
         $scope.hostCollection = HostCollection.get({id: $scope.$stateParams.hostCollectionId}, function (hostCollection) {
             $scope.$broadcast('hostCollection.loaded', hostCollection);
             $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         $scope.refreshHostCollection = function () {

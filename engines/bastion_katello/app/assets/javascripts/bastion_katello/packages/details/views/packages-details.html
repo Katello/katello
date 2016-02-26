@@ -6,52 +6,55 @@
 </div>
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="fl">{{ package.nvra }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="fl">{{ package.nvra }}</h2>
 
-    <div class="details-actions fr">
-      <button class="btn btn-default" ui-sref="packages.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
+      <div class="details-actions fr">
+        <button class="btn btn-default" ui-sref="packages.index">
+          <i class="fa fa-remove"></i>
+          {{ "Close" | translate }}
+        </button>
+      </div>
+    </header>
 
-  <nav class="details-navigation">
-    <ul>
-      <li ng-class="{active: isState('packages.details.info')}">
-        <a ui-sref="packages.details.info">
-          <span translate>
-            Details
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: isState('packages.details.files')}">
-        <a ui-sref="packages.details.files">
-          <span translate>
-            Files
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: isState('packages.details.dependencies')}">
-        <a ui-sref="packages.details.dependencies">
-          <span translate>
-            Dependencies
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: isState('packages.details.repositories')}">
-        <a ui-sref="packages.details.repositories">
-          <span translate>
-            Repositories
-          </span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <nav class="details-navigation">
+      <ul>
+        <li ng-class="{active: isState('packages.details.info')}">
+          <a ui-sref="packages.details.info">
+            <span translate>
+              Details
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: isState('packages.details.files')}">
+          <a ui-sref="packages.details.files">
+            <span translate>
+              Files
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: isState('packages.details.dependencies')}">
+          <a ui-sref="packages.details.dependencies">
+            <span translate>
+              Dependencies
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: isState('packages.details.repositories')}">
+          <a ui-sref="packages.details.repositories">
+            <span translate>
+              Repositories
+            </span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <section ui-view></section>
+    <section ui-view></section>
+  </div>
 </section>

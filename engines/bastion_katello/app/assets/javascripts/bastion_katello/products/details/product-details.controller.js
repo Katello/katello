@@ -5,23 +5,29 @@
  * @requires $scope
  * @requires $state
  * @requires Product
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsController',
-    ['$scope', '$state', 'Product', function ($scope, $state, Product) {
+    ['$scope', '$state', 'Product', 'ApiErrorHandler', function ($scope, $state, Product, ApiErrorHandler) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
         if ($scope.product) {
-            $scope.panel = {loading: false};
-        } else {
-            $scope.panel = {loading: true};
+            $scope.panel.loading = false;
         }
 
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
             $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         $scope.removeProduct = function (product) {

@@ -8,7 +8,8 @@ describe('Controller: SubscriptionDetailsController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            Subscription = $injector.get('MockResource').$new();
+            Subscription = $injector.get('MockResource').$new(),
+            ApiErrorHandler = $injector.get('ApiErrorHandler');
 
         $scope = $injector.get('$rootScope').$new();
 
@@ -19,7 +20,8 @@ describe('Controller: SubscriptionDetailsController', function() {
         $controller('SubscriptionDetailsController', {
             $scope: $scope,
             translate: translate,
-            Subscription: Subscription
+            Subscription: Subscription,
+            ApiErrorHandler: ApiErrorHandler
         });
     }));
 

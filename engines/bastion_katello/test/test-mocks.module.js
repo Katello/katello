@@ -12,10 +12,16 @@ angular.module('Bastion.test-mocks').config(['$provide', function ($provide) {
 
     $provide.service('GlobalNotification', function () {
         return {
-            this.setSuccessMessage: function() {},
-            this.setErrorMessage: function() {},
+            setSuccessMessage: function() {},
+            setErrorMessage: function() {}
         }
     });
+
+    $provide.service('ApiErrorHandler', function () {
+        return {
+            handleGETRequestErrors: function () {}
+        };
+    })
 }]);
 
 angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope', '$window',

@@ -10,13 +10,14 @@
  * @requires GPGKey
  * @requires CurrentOrganization
  * @requires DownloadPolicy
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy',
-    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization, DownloadPolicy) {
+    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization, DownloadPolicy, ApiErrorHandler) {
         var updateRepositoriesTable;
 
         $scope.successMessages = [];
@@ -24,12 +25,25 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         $scope.uploadSuccessMessages = [];
         $scope.uploadErrorMessages = [];
         $scope.organization = CurrentOrganization;
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
+
+        if ($scope.repository) {
+            $scope.panel.loading = false;
+        }
 
         $scope.progress = {uploading: false};
 
         $scope.repository = Repository.get({
             'product_id': $scope.$stateParams.productId,
             'id': $scope.$stateParams.repositoryId
+        }, function () {
+            $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         $scope.repository.$promise.then(function () {

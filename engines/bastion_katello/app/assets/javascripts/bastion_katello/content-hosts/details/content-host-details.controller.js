@@ -9,20 +9,27 @@
  * @requires Organization
  * @requires CurrentOrganization
  * @requires MenuExpander
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'Organization', 'CurrentOrganization', 'MenuExpander',
-    function ($scope, $state, $q, translate, Host, Organization, CurrentOrganization, MenuExpander) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'Organization', 'CurrentOrganization', 'MenuExpander', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, Organization, CurrentOrganization, MenuExpander, ApiErrorHandler) {
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
         $scope.errorMessages = [];
-        $scope.panel = {loading: true};
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
         $scope.host = Host.get({id: $scope.$stateParams.hostId}, function () {
             $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         // @TODO begin hack for content and subscript facets

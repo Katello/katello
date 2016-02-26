@@ -9,6 +9,7 @@ angular.module('Bastion.host-collections', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.common',
     'Bastion.utils'
 ]);
 

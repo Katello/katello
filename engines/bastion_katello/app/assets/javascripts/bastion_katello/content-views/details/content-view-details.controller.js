@@ -6,6 +6,7 @@
  * @requires ContentView
  * @requires Nutupane
  * @requires translate
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -13,8 +14,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', 'ContentView', 'ContentViewVersion', 'Nutupane', 'AggregateTask', 'translate',
-    function ($scope, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate) {
+    ['$scope', 'ContentView', 'ContentViewVersion', 'Nutupane', 'AggregateTask', 'translate', 'ApiErrorHandler',
+    function ($scope, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate, ApiErrorHandler) {
 
 
         function saveSuccess() {
@@ -100,8 +101,17 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
-        $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId});
+        $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function () {
+            $scope.loading = false;
+        }, function (response) {
+            $scope.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
+        });
 
         $scope.taskTypes = {
             publish: "Actions::Katello::ContentView::Publish",

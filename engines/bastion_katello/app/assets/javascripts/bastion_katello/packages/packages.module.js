@@ -6,5 +6,6 @@
  *   Module for package related functionality.
  */
 angular.module('Bastion.packages', [
-    'Bastion'
+    'Bastion',
+    'Bastion.common'
 ]);
