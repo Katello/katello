@@ -396,6 +396,9 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
 
     it 'plans' do
+      # required for export pre-run validation to succeed
+      Setting['pulp_export_destination'] = '/tmp'
+
       action.stubs(:action_subject)
       plan_action(action, [repository], false, nil, 0, repository.pulp_id)
 
@@ -413,6 +416,23 @@ module ::Actions::Katello::Repository
       end
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Delete,
                                 :id => "8")
+    end
+
+    it 'plans without export destination' do
+      action.stubs(:action_subject)
+
+      assert_raises(Foreman::Exception) do
+        plan_action(action, [repository], false, nil, 0, repository.pulp_id)
+      end
+    end
+
+    it 'plans without writable destination' do
+      Setting['pulp_export_destination'] = '/'
+      action.stubs(:action_subject)
+
+      assert_raises(Foreman::Exception) do
+        plan_action(action, [repository], false, nil, 0, repository.pulp_id)
+      end
     end
   end
 end

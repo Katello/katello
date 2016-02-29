@@ -12,6 +12,14 @@ module Actions
         EXPORT_OUTPUT_BASEDIR = "/var/lib/pulp/published/yum/master/group_export_distributor/"
 
         def plan(repos, export_to_iso, since, iso_size, group_id)
+          unless File.directory?(Setting['pulp_export_destination'])
+            fail ::Foreman::Exception, N_("Unable to export, 'pulp_export_destination' setting is not set to a valid directory.")
+          end
+
+          unless File.writable?(Setting['pulp_export_destination'])
+            fail ::Foreman::Exception, N_("Unable to export, 'pulp_export_destination' setting is not a writable directory.")
+          end
+
           repo_pulp_ids = repos.collect do |repo|
             action_subject(repo)
             repo.pulp_id
