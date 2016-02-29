@@ -56,17 +56,15 @@ module Katello
         {:name => distro.name, :path => distro.full_path(host.content_source)} if distro && host.content_source
       end
 
-      private
-
       def distribution_repositories(host)
         content_view = host.content_facet.try(:content_view)
         lifecycle_environment = host.content_facet.try(:lifecycle_environment)
 
         if content_view && lifecycle_environment
-          Katello::Repository.where(:distribution_version => host.os.release,
-                                    :distribution_arch => host.architecture.name,
-                                    :distribution_bootable => true
-                                    )
+          Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
+              where(:distribution_version => host.os.release,
+                    :distribution_arch => host.architecture.name,
+                    :distribution_bootable => true)
         else
           []
         end
