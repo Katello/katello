@@ -66,6 +66,10 @@ module Katello
     end
 
     def test_create
+      Organization.any_instance.stubs(:redhat_repository_url)
+      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+
       name = "Michaelangelo"
       assert_sync_task ::Actions::Katello::Organization::Create do |org|
         org.name.must_equal name
