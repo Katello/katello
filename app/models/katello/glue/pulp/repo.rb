@@ -151,7 +151,6 @@ module Katello
           }
 
           options[:feed] = self.url if self.respond_to?(:url)
-          options[:branches] = self.ostree_branch_names
           Runcible::Models::OstreeImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
@@ -495,7 +494,6 @@ module Katello
       end
 
       def pulp_update_needed?
-        return true if ostree?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
