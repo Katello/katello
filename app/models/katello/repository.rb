@@ -476,20 +476,6 @@ module Katello
       self.ostree_branches.map(&:name)
     end
 
-    def update_ostree_branches!(branch_names)
-      check_duplicate_branch_names(branch_names)
-
-      # remove the ostree_branches not in this list
-      self.ostree_branches.each do |branch|
-        branch.destroy unless branch_names.include?(branch.name)
-      end
-
-      # add the new ostree_branches
-      (branch_names - self.ostree_branch_names).each do |ref|
-        self.ostree_branches.create!(:name => ref)
-      end
-    end
-
     def units_for_removal(ids)
       table_name = removable_unit_association.table_name
       is_integer = Integer(ids.first) rescue false #assume all ids are either integers or not

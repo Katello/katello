@@ -19,7 +19,6 @@ module Actions
           param :docker_upstream_name
           param :download_policy
           param :capsule_id
-          param :ostree_branches
           param :mirror_on_sync
         end
 
@@ -65,7 +64,6 @@ module Actions
         def ostree_importer
           importer = Runcible::Models::OstreeImporter.new
           importer.feed            = input[:feed]
-          importer.branches        = input[:ostree_branches] unless input[:ostree_branches].blank?
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]

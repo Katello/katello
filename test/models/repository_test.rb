@@ -291,31 +291,6 @@ module Katello
         OstreeBranch.create!(:repository => rhel6, :name => "/foo/bar1")
       end
     end
-
-    def test_ostree_branch_update_methods
-      branches = ["branch1", "branch2"]
-      @repo.update_ostree_branches!(branches)
-      branches.each do |branch_name|
-        assert_includes @repo.ostree_branch_names, branch_name
-      end
-
-      branches2 = ["branch3", "branch4"]
-      @repo.update_ostree_branches!(branches2)
-      @repo = @repo.reload
-      branches.each do |branch_name|
-        refute_includes @repo.ostree_branch_names, branch_name
-      end
-
-      branches2.each do |branch_name|
-        assert_includes @repo.ostree_branch_names, branch_name
-      end
-    end
-
-    def test_ostree_branch_update_duplicate_violation
-      assert_raises ::Katello::Errors::ConflictException do
-        @repo.update_ostree_branches!(["branch", "branch"])
-      end
-    end
   end
 
   class RepositoryInstanceTest < RepositoryTestBase

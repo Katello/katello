@@ -6,8 +6,6 @@ module Actions
 
         def plan(repository, repo_params)
           action_subject repository
-          ostree_branches = repo_params.delete(:ostree_branches)
-          repository.update_ostree_branches!(ostree_branches) if ostree_branches
           repository = repository.reload
           repository.update_attributes!(repo_params)
 

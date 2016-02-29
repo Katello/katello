@@ -76,12 +76,6 @@ module Katello
                                   library.default_content_view_version
         )
 
-        if katello_content_type == Repository::OSTREE_TYPE
-          # TODO
-          # add a hard coded config entry branch for now
-          # we will add pull all once the summary files functionality is available
-          repository.ostree_branches.new(:name => Setting[:default_cdn_ostree_branch_name], :repository => repository)
-        end
         repository
       end
 
