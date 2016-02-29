@@ -727,6 +727,7 @@ module Katello
     end
 
     def test_export
+      Setting['pulp_export_destination'] = '/tmp'
       post :export, :id => @repository.id
       assert_response :success
     end
@@ -737,11 +738,13 @@ module Katello
     end
 
     def test_export_with_date
+      Setting['pulp_export_destination'] = '/tmp'
       post :export, :id => @repository.id, :since => 'November 30, 1970'
       assert_response :success
     end
 
     def test_export_with_8601_date
+      Setting['pulp_export_destination'] = '/tmp'
       post :export, :id => @repository.id, :since => '2010-01-01T00:00:00'
       assert_response :success
     end
