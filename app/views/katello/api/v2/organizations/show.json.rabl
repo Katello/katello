@@ -1,4 +1,4 @@
-object @taxonomy
+object @organization
 
 extends "api/v2/taxonomies/show"
 
