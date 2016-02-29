@@ -7,6 +7,11 @@ module Katello
       ENTITLEMENTS_PARTIAL = 'partial'
       ENTITLEMENTS_INVALID = 'invalid'
 
+      SYSTEM = "system"
+      HYPERVISOR = "hypervisor"
+      CANDLEPIN = "candlepin"
+      CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN]
+
       lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Consumer.events(uuid) }
       lazy_accessor :consumer_attributes, :initializer => lambda { |_s| Resources::Candlepin::Consumer.get(uuid) }

@@ -78,26 +78,6 @@ module Katello
       end
     end
 
-    def test_create
-      @controller.stubs(:sync_task).returns(true)
-      System.stubs(:new).returns(@system)
-      ::Host::Managed.stubs(:new).returns(@host)
-      cp_id = @content_view_environment.cp_id
-      ContentViewEnvironment.expects(:find_by!).with(:cp_id => cp_id).returns(@content_view_environment)
-      @controller.expects(:sync_task).returns(true)
-
-      post :create, :name => "needsmoretests", :environment_id => cp_id.to_s, :organization_id => @organization.id
-      assert_response :success
-    end
-
-    def test_create_without_environment
-      @controller.stubs(:sync_task).returns(true)
-      System.stubs(:new).returns(@system)
-      ::Host::Managed.stubs(:new).returns(@host)
-      post :create, :name => "needs more tests", :organization_id => @organization.id
-      assert_response :success
-    end
-
     def test_index_with_system_id_only
       get :index, :environment_id => @system.environment.id
 

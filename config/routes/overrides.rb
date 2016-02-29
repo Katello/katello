@@ -64,6 +64,7 @@ Foreman::Application.routes.draw do
             match '/bulk/destroy' => 'hosts_bulk_actions#destroy_hosts', :via => :put
             match '/bulk/environment_content_view' => 'hosts_bulk_actions#environment_content_view', :via => :put
             match '/bulk/available_incremental_updates' => 'hosts_bulk_actions#available_incremental_updates', :via => :post
+            match '/subscriptions/' => 'host_subscriptions#create', :via => :post
           end
 
           resources :packages, :only => [:index], :controller => :host_packages do
