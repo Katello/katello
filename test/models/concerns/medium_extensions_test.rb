@@ -18,7 +18,6 @@ module Katello
 
     def test_update_media_with_distro
       assert_nil Operatingsystem.where(:name => @distro.name).first
-      assert_nil Architecture.where(:name => @distro.arch).first
       assert_nil Medium.where(:name => @medium_name).first
 
       Medium.update_media(@repo)
