@@ -10,6 +10,7 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'katello/api/v2/host_subscriptions/auto_attach',
   'katello/api/v2/host_subscriptions/add_subscriptions',
   'katello/api/v2/host_subscriptions/remove_subscriptions',
+  'katello/api/v2/host_subscriptions/content_override',
   'katello/api/v2/hosts_bulk_actions/bulk_add_host_collections',
   'katello/api/v2/hosts_bulk_actions/bulk_remove_host_collections',
   'katello/api/v2/hosts_bulk_actions/install_content',

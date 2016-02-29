@@ -68,7 +68,47 @@ module Katello
       respond_for_index(:collection => index_response, :template => "index")
     end
 
+    api :PUT, "/hosts/:host_id/subscriptions/content_override", N_("Set content overrides for the host")
+    param :host_id, String, :desc => N_("Id of the content host"), :required => true
+    param :content_label, String, :desc => N_("Label of the content"), :required => true
+    param :value, [0, 1, "default"], :desc => N_("Override to 0/1, or 'default'"), :required => true
+    def content_override
+      content_override = validate_content_overrides(params)
+      @host.subscription_facet.candlepin_consumer.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
+
+      product_content
+    end
+
+    api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
+    param :host_id, String, :desc => N_("Id of the host"), :required => true
+    def product_content
+      content = @host.subscription_facet.candlepin_consumer.available_product_content
+      overrides = @host.subscription_facet.candlepin_consumer.content_overrides
+      results = content.map { |product_content| Katello::ProductContentPresenter.new(product_content, overrides) }
+
+      respond_for_index(:collection => full_result_response(results))
+    end
+
     private
+
+    def validate_content_overrides(content_params)
+      case content_params[:value].to_s
+      when 'default'
+        content_params[:value] = nil
+      when '1'
+        content_params[:value] = 1
+      when '0'
+        content_params[:value] = 0
+      else
+        fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
+      end
+
+      available_content = @host.subscription_facet.candlepin_consumer.available_product_content
+      unless available_content.map(&:content).any? { |content| content.label == content_params[:content_label] }
+        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
+      end
+      content_params
+    end
 
     def check_subscriptions
       fail HttpErrors::BadRequest, _("subscriptions not specified") if params[:subscriptions].nil? || params[:subscriptions].empty?
@@ -79,9 +119,9 @@ module Katello
     end
 
     def action_permission
-      if ['add_subscriptions', 'remove_subscriptions', 'auto_attach'].include?(params[:action])
+      if ['add_subscriptions', 'remove_subscriptions', 'auto_attach', 'content_override'].include?(params[:action])
         :edit
-      elsif ['index', 'events'].include?(params[:action])
+      elsif ['index', 'events', 'product_content'].include?(params[:action])
         :view
       end
     end

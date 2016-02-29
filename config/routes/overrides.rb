@@ -81,6 +81,7 @@ Foreman::Application.routes.draw do
               put :auto_attach
               get :product_content
               get :events
+              put :content_override
               put :remove_subscriptions
               put :add_subscriptions
             end
