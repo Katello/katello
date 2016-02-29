@@ -118,6 +118,34 @@ module Katello
         post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
       end
     end
+
+    def test_create
+      facts = { 'network.hostname' => @host.name}
+      installed_products = [{
+        'product_id' => 1,
+        'product_name' => 'name'
+      }]
+      expected_consumer_params = {
+        'type' => 'system',
+        'facts' => facts,
+        'installedProducts' => [{
+          'productId' => '1',
+          'productName' => 'name'
+        }]
+      }
+      content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
+      system = katello_systems(:simple_server)
+      Resources::Candlepin::Consumer.stubs(:get)
+
+      System.expects(:new).returns(system)
+      ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host).returns(@host)
+      assert_sync_task(::Actions::Katello::Host::Register, @host, system, expected_consumer_params, content_view_environment)
+
+      post(:create, :lifecycle_environment_id => content_view_environment.environment_id,
+           :content_view_id => content_view_environment.content_view_id, :facts => facts, :installed_products => installed_products)
+
+      assert_response :success
+    end
   end
 
   class Api::V2::HostSubscriptionsProductContentTest < Api::V2::HostSubscriptionsControllerBase

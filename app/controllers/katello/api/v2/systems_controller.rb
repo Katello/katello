@@ -61,37 +61,6 @@ module Katello
       collection
     end
 
-    api :POST, "/systems", N_("Register a content host"), :deprecated => true
-    api :POST, "/environments/:environment_id/systems", N_("Register a content host in environment"), :deprecated => true
-    api :POST, "/host_collections/:host_collection_id/systems", N_("Register a content host in environment"), :deprecated => true
-    param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
-    param :description, String, :desc => N_("Description of the content host")
-    param :location, String, :desc => N_("Physical location of the content host")
-    param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true, :required => true do
-      param :fact, String, :desc => N_("Any number of facts about this content host")
-    end
-    param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :required => true, :action_aware => true
-    param :guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
-    param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
-    param :release_ver, String, :desc => N_("Release version of the content host")
-    param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
-    param :last_checkin, String, :desc => N_("Last check-in time of this content host")
-    param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
-    param :environment_id, String, :desc => N_("Specify the environment")
-    param :content_view_id, String, :desc => N_("Specify the content view")
-    param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
-    def create
-      rhsm_params = system_params(params)
-      rhsm_params[:facts] ||= {}
-      rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
-      content_view_environment = ContentViewEnvironment.where(:content_view_id => @content_view, :environment_id => @environment).first
-      host = Katello::Host::SubscriptionFacet.new_host_from_facts(rhsm_params[:facts], @organization, Location.default_location)
-
-      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
-      @system = host.reload.content_host
-      respond_for_create
-    end
-
     api :PUT, "/systems/:id", N_("Update content host information"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     param :release_ver, String, :desc => N_("Release version of the content host")
