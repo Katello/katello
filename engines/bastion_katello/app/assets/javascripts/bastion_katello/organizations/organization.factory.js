@@ -14,7 +14,7 @@ angular.module('Bastion.organizations').factory('Organization',
         return BastionResource('/katello/api/v2/organizations/:id/:action',
             {id: '@id'},
             {
-                update: { method: 'PUT'},
+                update: { method: 'PUT' },
                 select: {
                     method: 'GET',
                     url: '/organizations/:label/select'
