@@ -104,6 +104,10 @@ module Katello
           "#{Katello::Engine.root}/ca/redhat-uep.pem"
         end
 
+        def self.ca_file_contents
+          File.read(ca_file)
+        end
+
         def net_http_class
           if proxy_host
             Net::HTTP::Proxy(proxy_host, proxy_port, proxy_user, proxy_password)

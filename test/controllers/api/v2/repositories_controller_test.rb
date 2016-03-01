@@ -27,6 +27,12 @@ module Katello
       @export_permission = :export_products
     end
 
+    def backend_stubs
+      Product.any_instance.stubs(:certificate).returns(nil)
+      Product.any_instance.stubs(:key).returns(nil)
+      Resources::CDN::CdnResource.stubs(:ca_file_contents).returns(:nil)
+    end
+
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
@@ -34,6 +40,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       models
       permissions
+      backend_stubs
     end
 
     def test_index
@@ -532,20 +539,9 @@ module Katello
       key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
       assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
         repo.must_equal @repository
-        attributes.must_equal('gpg_key_id' => "#{key.id}", 'url' => nil)
+        attributes.must_equal('gpg_key_id' => "#{key.id}")
       end
       put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
-      assert_response :success
-      assert_template 'api/v2/repositories/show'
-    end
-
-    def test_update_empty_string_url
-      assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
-        repo.must_equal @repository
-        attributes.must_equal('url' => nil)
-      end
-      put :update, :id => @repository.id, :repository => {:url => ''}
-
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
