@@ -118,14 +118,14 @@
             </td>
             <td bst-table-cell>
               <span ng-show="repository.content_type == 'puppet'">
-                <a translate ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"> 
+                <a translate ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
                   {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
                 </a>
               </span>
 
               <span ng-show="repository.content_type == 'yum'">
                 <div>
-                  <a translate ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">   
+                  <a translate ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
                     {{ repository.content_counts.rpm || 0 }} Packages
                   </a>
                 </div>
@@ -149,6 +149,15 @@
                   </span>
                 </div>
               </span>
+
+              <span ng-show="repository.content_type == 'ostree'">
+                <div>
+                  <span translate>
+                    {{ repository.content_counts.ostree || 0 }} OSTree Units
+                  </span>
+                </div>
+              </span>
+
             </td>
           </tr>
         </tbody>
