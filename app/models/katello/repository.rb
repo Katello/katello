@@ -50,7 +50,8 @@ module Katello
 
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
 
-    has_many :ostree_branches, :class_name => "Katello::OstreeBranch", :dependent => :destroy
+    has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :destroy
+    has_many :ostree_branches, :through => :repository_ostree_branches
 
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
@@ -527,6 +528,8 @@ module Katello
         self.rpms -= units
       elsif puppet?
         self.puppet_modules -= units
+      elsif ostree?
+        self.ostree_branches -= units
       elsif docker?
         remove_docker_content(units)
       end
@@ -558,6 +561,8 @@ module Katello
         self.docker_manifests
       elsif puppet?
         self.puppet_modules
+      elsif ostree?
+        self.ostree_branches
       else
         fail "Content type not supported for removal"
       end
