@@ -140,6 +140,12 @@ module Katello
       self.capsule.url + "/pulp/api/v2/"
     end
 
+    def pulp_repo_facts(pulp_id)
+      self.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+    rescue RestClient::ResourceNotFound
+      nil
+    end
+
     def self.with_environment(environment, include_default = false)
       features = [SmartProxy::PULP_NODE_FEATURE]
       features << SmartProxy::PULP_FEATURE if include_default

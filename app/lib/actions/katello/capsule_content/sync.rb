@@ -19,6 +19,11 @@ module Actions
 
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
+          need_updates = repos_needing_updates(capsule_content, environment, content_view)
+          need_updates.each do |repo|
+            plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
+          end
+
           repository_ids = get_repository_ids(capsule_content, environment, content_view, repository)
           unless repository_ids.blank?
             sequence do
@@ -52,6 +57,32 @@ module Actions
           end
 
           repository_ids
+        end
+
+        def repos_needing_updates(capsule_content, environment, content_view)
+          need_importer_update = repos_needing_importer_updates(capsule_content, environment, content_view)
+          need_distributor_update = repos_needing_distributor_updates(capsule_content, environment, content_view)
+          (need_distributor_update && need_importer_update).uniq
+        end
+
+        def repos_needing_distributor_updates(capsule, environment, content_view)
+          repos = capsule.repos_available_to_capsule(environment, content_view)
+          repos.select do |repo|
+            repo_details = capsule.pulp_repo_facts(repo.pulp_id)
+            next unless repo_details
+            capsule_distributors = repo_details["distributors"]
+            !(repo.distributors_match?(capsule_distributors))
+          end
+        end
+
+        def repos_needing_importer_updates(capsule, environment, content_view)
+          repos = capsule.repos_available_to_capsule(environment, content_view)
+          repos.select do |repo|
+            repo_details = capsule.pulp_repo_facts(repo.pulp_id)
+            next unless repo_details
+            capsule_importer = repo_details["importers"][0]["config"]
+            !(repo.importer_matches?(capsule_importer))
+          end
         end
 
         def rescue_strategy
