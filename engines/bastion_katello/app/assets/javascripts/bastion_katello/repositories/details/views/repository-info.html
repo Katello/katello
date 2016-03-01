@@ -27,12 +27,6 @@
     </button>
 
     <button class="btn btn-default"
-            ui-sref="products.details.repositories.manage-ostree-branches({productId: product.id, repositoryId: repository.id})"
-            ng-hide="repository.content_type !== 'ostree' || product.readonly">
-      <span translate>Manage Branches</span>
-    </button>
-
-    <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
             ng-hide="!repository.url || denied('sync_products', product)"
             ng-disabled="syncInProgress(repository.last_sync)">
@@ -288,26 +282,6 @@
     </table>
 
     <div class="divider" ng-if="repository.content_type === 'ostree'"/>
-  </section>
-
-  <section  ng-if="repository.content_type === 'ostree'">
-      <table class="table table-striped">
-      <thead>
-        <tr>
-          <th translate>Branches</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr ng-if ="repository.ostree_branches === undefined || repository.ostree_branches.length === 0">
-          <td translate> No Branches </td>
-        </tr>
-
-        <tr ng-repeat="branch in repository.ostree_branches" row-select="branch">
-          <td>{{ branch }}</td>
-        </tr>
-      </tbody>
-    </table>
   </section>
 
   <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree'">
