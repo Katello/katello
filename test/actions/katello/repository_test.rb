@@ -18,6 +18,8 @@ module ::Actions::Katello::Repository
 
     before(:all) do
       set_user
+      ::Katello::Product.any_instance.stubs(:certificate).returns(nil)
+      ::Katello::Product.any_instance.stubs(:key).returns(nil)
     end
   end
 

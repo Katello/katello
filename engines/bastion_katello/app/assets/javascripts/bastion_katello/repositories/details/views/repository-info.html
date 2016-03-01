@@ -1,5 +1,4 @@
 <span page-title ng-model="repository">{{ 'Repository:' | translate }} {{ repository.name }}</span>
-
 <div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
   <i class="fa fa-spinner fa-spin"></i>
   {{ "Loading..." | translate }}
@@ -17,19 +16,19 @@
     <div class="fr">
       <button class="btn btn-default"
               ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})"
-              ng-hide="repository.content_type !== 'yum' || product.readonly">
+              ng-hide="repository.content_type !== 'yum' || denied('edit_products', product)">
         <span translate>Manage Packages</span>
       </button>
 
       <button class="btn btn-default"
               ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"
-              ng-hide="repository.content_type !== 'puppet' || product.readonly">
+              ng-hide="repository.content_type !== 'puppet' || denied('edit_products', product)">
         <span translate>Manage Puppet Modules</span>
       </button>
 
       <button class="btn btn-default"
             ui-sref="products.details.repositories.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})"
-            ng-hide="repository.content_type !== 'docker' || product.readonly">
+            ng-hide="repository.content_type !== 'docker' || denied('edit_products', product)">
       <span translate>Manage Docker Manifests</span>
       </button>
 
@@ -86,7 +85,7 @@
         <span class="info-value"
               bst-edit-text="repository.name"
               on-save="save(repository)"
-              readonly="product.readonly || denied('edit_products', product)">
+              readonly="product.redhat || denied('edit_products', product)">
         </span>
       </div>
 
@@ -106,7 +105,7 @@
         <span class="info-value"
               bst-edit-text="repository.url"
               on-save="save(repository)"
-              readonly="product.readonly || denied('edit_products', product)">
+              readonly="product.redhat || denied('edit_products', product)">
         </span>
       </div>
 
@@ -115,16 +114,15 @@
         <span class="info-value"
               bst-edit-text="repository.docker_upstream_name"
               on-save="save(repository)"
-              readonly="product.readonly || denied('edit_products', product)">
+              readonly="product.redhat || denied('edit_products', product)">
         </span>
       </div>
-
 
       <div class="detail" ng-show="repository.content_type === 'yum'">
         <span class="info-label" translate>Yum Metadata Checksum</span>
         <span class="info-value"
               bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
-              readonly="product.readonly || denied('edit_products', product)"
+              readonly="product.redhat || denied('edit_products', product)"
               selector="repository.checksum_type"
               options="checksums"
               on-save="save(repository)">
@@ -137,7 +135,7 @@
               bst-edit-checkbox="repository.mirror_on_sync"
               formatter="booleanToYesNo"
               on-save="save(repository)"
-              readonly="product.readonly || denied('edit_products', product)">
+              readonly="denied('edit_products', product)">
         </span>
       </div>
 
@@ -152,7 +150,7 @@
               bst-edit-checkbox="repository.unprotected"
               formatter="booleanToYesNo"
               on-save="save(repository)"
-              readonly="product.readonly || denied('edit_products', product)">
+              readonly="product.redhat || denied('edit_products', product)">
         </span>
       </div>
 
@@ -174,7 +172,7 @@
         <span class="info-label" translate>GPG Key</span>
         <span class="info-value"
               bst-edit-select="repository.gpg_key.name"
-              readonly="product.readonly || denied('edit_products', product)"
+              readonly="product.redhat ||denied('edit_products', product)"
               selector="repository.gpg_key_id"
               options="gpgKeys()"
               on-save="save(repository)">
@@ -185,7 +183,7 @@
         <span class="info-label" translate>Download Policy</span>
         <span class="info-value"
               bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
-              readonly="product.readonly || denied('edit_products', product)"
+              readonly="denied('edit_products', product)"
               selector="repository.download_policy"
               options="downloadPolicies"
               options-format="id as name for (id, name) in options"

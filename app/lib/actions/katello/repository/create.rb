@@ -12,15 +12,16 @@ module Actions
 
           create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
+            certs = repository.importer_ssl_options
             create_action = plan_action(create_action,
                                         content_type: repository.content_type,
                                         pulp_id: repository.pulp_id,
                                         name: repository.name,
                                         docker_upstream_name: repository.docker_upstream_name,
                                         feed: repository.url,
-                                        ssl_ca_cert: repository.feed_ca,
-                                        ssl_client_cert: repository.feed_cert,
-                                        ssl_client_key: repository.feed_key,
+                                        ssl_ca_cert: certs[:ssl_ca_cert],
+                                        ssl_client_cert: certs[:ssl_client_cert],
+                                        ssl_client_key: certs[:ssl_client_key],
                                         unprotected: repository.unprotected,
                                         checksum_type: repository.checksum_type,
                                         path: path,

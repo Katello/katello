@@ -25,8 +25,6 @@ module Katello
         lazy_accessor :distributors,
                       :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
 
-        attr_accessor :feed_cert, :feed_key, :feed_ca
-
         def self.ensure_sync_notification
           resource =  Katello.pulp_server.resources.event_notifier
           url = SETTINGS[:katello][:post_sync_url]
@@ -101,7 +99,7 @@ module Katello
 
       def create_pulp_repo
         #if we are in library, no need for an distributor, but need to sync
-        if self.environment && self.environment.library?
+        if self.environment.try(:library?)
           importer = generate_importer
         else
           #if not in library, no need for sync info, but we need a distributor
@@ -129,10 +127,7 @@ module Katello
         when Repository::YUM_TYPE
           Runcible::Models::YumImporter.new(yum_importer_values(capsule))
         when Repository::FILE_TYPE
-          Runcible::Models::IsoImporter.new(:ssl_ca_cert => self.feed_ca,
-                                            :ssl_client_cert => self.feed_cert,
-                                            :ssl_client_key => self.feed_key,
-                                            :feed => importer_feed_url(capsule))
+          Runcible::Models::IsoImporter.new(importer_ssl_options(capsule).merge(:feed => importer_feed_url(capsule)))
         when Repository::PUPPET_TYPE
           options = {}
           options[:feed] = importer_feed_url(capsule) if self.respond_to?(:url)
@@ -144,11 +139,7 @@ module Katello
           options[:enable_v1] = false if self.respond_to?(:enable_v1)
           Runcible::Models::DockerImporter.new(options)
         when Repository::OSTREE_TYPE
-          options = {
-            :ssl_ca_cert => self.feed_ca,
-            :ssl_client_cert => self.feed_cert,
-            :ssl_client_key => self.feed_key
-          }
+          options = importer_ssl_options(capsule)
 
           options[:feed] = self.url if self.respond_to?(:url)
           Runcible::Models::OstreeImporter.new(options)
@@ -181,15 +172,34 @@ module Katello
           new_download_policy = self.download_policy
         end
 
-        {}.tap do |yum_importer_values|
-          yum_importer_values[:feed] = self.importer_feed_url(capsule)
-          yum_importer_values[:download_policy] = new_download_policy
-          yum_importer_values[:remove_missing] = capsule ? true : self.mirror_on_sync?
-          unless capsule
-            yum_importer_values[:ssl_ca_cert] = self.feed_ca
-            yum_importer_values[:ssl_client_cert] = self.feed_cert
-            yum_importer_values[:ssl_ca_cert] = self.feed_key
-          end
+        config = {
+          :feed => self.importer_feed_url(capsule),
+          :download_policy => new_download_policy,
+          :remove_missing => capsule ? true : self.mirror_on_sync?
+        }
+        config.merge(importer_ssl_options(capsule))
+      end
+
+      def importer_ssl_options(capsule = nil)
+        if capsule
+          ueber_cert = ::Cert::Certs.ueber_cert(organization)
+          {
+            :ssl_client_cert => ueber_cert[:cert],
+            :ssl_client_key => ueber_cert[:key],
+            :ssl_ca_cert => ::Cert::Certs.ca_cert
+          }
+        elsif redhat? && self.content_view.default?
+          {
+            :ssl_client_cert => self.product.certificate,
+            :ssl_client_key => self.product.key,
+            :ssl_ca_cert => Resources::CDN::CdnResource.ca_file_contents
+          }
+        else
+          {
+            :ssl_client_cert => nil,
+            :ssl_client_key => nil,
+            :ssl_ca_cert => nil
+          }
         end
       end
 
@@ -258,11 +268,7 @@ module Katello
         end
       end
 
-      def refresh_pulp_repo(feed_ca, feed_cert, feed_key)
-        self.feed_ca = feed_ca
-        self.feed_cert = feed_cert
-        self.feed_key = feed_key
-
+      def refresh_pulp_repo
         Katello.pulp_server.extensions.repository.update_importer(self.pulp_id, self.importers.first['id'], generate_importer.config)
 
         existing_distributors = self.distributors

@@ -7,6 +7,7 @@ module Actions
         def plan(repository, repo_params)
           action_subject repository
           repository = repository.reload
+          repo_params[:url] = nil if repo_params[:url] == ''
           repository.update_attributes!(repo_params)
 
           if update_content?(repository)

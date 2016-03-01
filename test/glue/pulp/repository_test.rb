@@ -8,6 +8,7 @@ module Katello
 
     def setup
       set_user
+      backend_stubs
 
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
@@ -15,6 +16,11 @@ module Katello
       @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
       @fedora_17_x86_64.relative_path = 'test_path/'
       @fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
+    end
+
+    def backend_stubs
+      Product.any_instance.stubs(:certificate).returns(nil)
+      Product.any_instance.stubs(:key).returns(nil)
     end
 
     def teardown
