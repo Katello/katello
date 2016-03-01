@@ -778,7 +778,7 @@ module Katello
       end
 
       def distributors_match?(capsule_distributors)
-        generated_distributors = self.generate_distributors.map { |dist| object_to_hash(dist) }
+        generated_distributors = self.generate_distributors.map(&:as_json)
         capsule_distributors.each do |dist|
           dist.merge!(dist["config"])
           dist.delete("config")
@@ -792,7 +792,7 @@ module Katello
       end
 
       def importer_matches?(capsule_importer)
-        generated_importer = object_to_hash(self.generate_importer(true))
+        generated_importer = self.generate_importer(true).as_json
         (generated_importer.to_a - capsule_importer.to_a).empty?
       end
 
