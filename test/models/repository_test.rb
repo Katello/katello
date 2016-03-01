@@ -441,6 +441,18 @@ module Katello
       assert_equal manifests, @redis.units_for_removal(manifests.map(&:id)).sort_by { |obj| obj.id }
     end
 
+    def test_units_for_removal_ostree
+      ['one', 'two', 'three'].each do |str|
+        @ostree_rhel7.ostree_branches.create!(:name => str) do |branch|
+          branch.uuid = str
+        end
+      end
+
+      branches = @ostree_rhel7.ostree_branches.sample(2).sort_by { |obj| obj.id }
+      refute_empty branches
+      assert_equal branches, @ostree_rhel7.units_for_removal(branches.map(&:id)).sort_by { |obj| obj.id }
+    end
+
     def test_environmental_instances
       content_view = @fedora_17_dev_library_view.content_view
       assert_includes @fedora_17_dev_library_view.environmental_instances(content_view), @fedora_17_dev_library_view

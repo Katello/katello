@@ -33,7 +33,7 @@ describe('Controller: ContentViewsVersionContentController', function() {
             PuppetModule = $injector.get('MockResource').$new();
             ContentViewVersion = $injector.get('MockResource').$new();
             Repository = $injector.get('MockResource').$new();
-
+            OstreeBranch = $injector.get('MockResource').$new();
             $scope = $injector.get('$rootScope').$new();
             $scope.$stateParams = {versionId: '1'};
             $scope.$state = {current: {name: state}};
@@ -47,6 +47,7 @@ describe('Controller: ContentViewsVersionContentController', function() {
                 Erratum: Erratum,
                 PackageGroup: PackageGroup,
                 PuppetModule: PuppetModule,
+                OstreeBranch: OstreeBranch,
                 ContentViewVersion: ContentViewVersion,
                 Repository: Repository
             });
@@ -76,6 +77,11 @@ describe('Controller: ContentViewsVersionContentController', function() {
     it("setups up PuppetModule resource when is state is 'puppet modules'", function() {
         SetupController('content-views.details.version.puppet-modules');
         expect($scope.nutupane.resource).toBe(PuppetModule);
+    });
+
+    it("setups up PuppetModule resource when is state is 'ostree-branches'", function() {
+        SetupController('content-views.details.version.ostree-branches');
+        expect($scope.nutupane.resource).toBe(OstreeBranch);
     });
 
     it("setups up docker Repo resource when is state is 'docker content'", function() {

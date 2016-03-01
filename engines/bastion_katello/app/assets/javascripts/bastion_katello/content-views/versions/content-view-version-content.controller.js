@@ -10,7 +10,8 @@
      *   ui-router state.
      */
     function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum,
-                                                 PackageGroup, PuppetModule, Repository, ContentViewVersion) {
+                                                 PackageGroup, PuppetModule, OstreeBranch, Repository,
+                                                ContentViewVersion) {
         var nutupane, contentTypes, currentState, params;
 
         currentState = $scope.$state.current.name.split('.').pop();
@@ -48,6 +49,15 @@
             },
             'puppet-modules': {
                 type: PuppetModule
+            },
+            'ostree-branches': {
+                type: OstreeBranch,
+                params: {
+                    'content_type': "ostree",
+                    'content_view_version_id': $scope.$stateParams.versionId,
+                    'sort_by': 'version_date',
+                    'sort_order': 'DESC'
+                }
             },
             'components': {
                 type: ContentViewVersion,
@@ -92,6 +102,6 @@
         .controller('ContentViewVersionContentController', ContentViewVersionContentController);
 
     ContentViewVersionContentController.$inject = ['$scope', 'translate', 'Nutupane', 'Package', 'Erratum',
-                                                   'PackageGroup', 'PuppetModule', 'Repository', 'ContentViewVersion'];
+                                                   'PackageGroup', 'PuppetModule', 'OstreeBranch', 'Repository', 'ContentViewVersion'];
 
 })();

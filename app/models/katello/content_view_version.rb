@@ -216,6 +216,10 @@ module Katello
       Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
+    def ostree_branch_count
+      ostree_branches.count
+    end
+
     def docker_manifest_count
       manifest_counts = repositories.archived.docker_type.map do |repo|
         repo.docker_manifests.count
@@ -238,6 +242,10 @@ module Katello
       errata = Erratum.in_repositories(archived_repos).uniq
       errata = errata.of_type(errata_type) if errata_type
       errata
+    end
+
+    def ostree_branches
+      OstreeBranch.in_repositories(archived_repos).uniq
     end
 
     def docker_manifests

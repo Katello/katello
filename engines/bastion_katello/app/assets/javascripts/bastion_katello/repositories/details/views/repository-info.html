@@ -29,8 +29,15 @@
       <button class="btn btn-default"
             ui-sref="products.details.repositories.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})"
             ng-hide="repository.content_type !== 'docker' || denied('edit_products', product)">
-      <span translate>Manage Docker Manifests</span>
+        <span translate>Manage Docker Manifests</span>
       </button>
+
+      <button class="btn btn-default"
+              ui-sref="products.details.repositories.manage-content.ostree-branches({productId: product.id, repositoryId: repository.id})"
+              ng-hide="repository.content_type !== 'ostree' || denied('edit_products', product)">
+        <span translate>Manage Branches</span>
+      </button>
+
 
       <button class="btn btn-default"
               ng-click="syncRepository(repository); working = true"
@@ -281,7 +288,7 @@
         </tr>
         <tr ng-show="repository.content_type === 'ostree'">
           <td translate>OSTree Units</td>
-          <td class="align-center">{{ repository.content_counts.ostree || 0 }}</td>
+          <td class="align-center">{{ repository.content_counts.ostree_branch || 0 }}</td>
         </tr>
         </tbody>
       </table>

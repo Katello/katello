@@ -13,6 +13,7 @@ angular.module('Bastion.environments', [
     'Bastion.components',
     'Bastion.errata',
     'Bastion.packages',
+    'Bastion.ostree-branches',
     'Bastion.puppet-modules',
     'Bastion.repositories',
     'Bastion.content-views'

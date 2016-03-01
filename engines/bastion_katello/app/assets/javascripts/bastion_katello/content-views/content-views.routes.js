@@ -122,7 +122,13 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewVersionContentController',
         templateUrl: 'content-views/versions/views/content-view-version-puppet-modules.html'
     })
-
+    .state('content-views.details.version.ostree-branches', {
+        collapsed: true,
+        url: '/ostree_branches',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-ostree-branches.html'
+    })
     .state('content-views.details.promotion', {
         collapsed: true,
         url: '/versions/:versionId/promotion',

@@ -62,6 +62,10 @@
           <div translate ng-if="version.docker_tag_count && version.docker_tag_count > 0">
             {{ version.docker_tag_count }} Docker Tags
           </div>
+          <div translate ng-if="version.ostree_branch_count && version.ostree_branch_count > 0">
+            {{ version.ostree_branch_count }} OSTree Units
+          </div>
+
         </td>
         <td bst-table-cell>
           <div class="ellipsis-column">

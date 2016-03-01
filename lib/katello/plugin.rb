@@ -117,6 +117,15 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
+
+    menu :top_menu,
+         :ostree_branches,
+         :caption => N_('Ostree Branches'),
+         :url => '/ostree_branches',
+         :url_hash => {:controller => 'katello/api/v2/ostree_branches',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
   end
 
   menu :top_menu,
