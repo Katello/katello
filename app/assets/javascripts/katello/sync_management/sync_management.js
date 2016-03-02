@@ -11,9 +11,6 @@ $(document).ready(function() {
     KT.content.reset_products(KT.repo_status);
     KT.content_actions.addSyncing(ids);
 
-
-
-
     $('#select_all').click(KT.content.select_all);
     $('#select_none').click(KT.content.select_none);
     $('#collapse_all').click(KT.content.collapse_all);
@@ -35,7 +32,6 @@ $(document).ready(function() {
           KT.content.updateProduct(item.product_id, false, 0);
        });
        KT.content_actions.addSyncing(ids);
-
     })
     .bind("ajax:beforeSend",
       function(evt, data, status, xhr) {
@@ -43,7 +39,6 @@ $(document).ready(function() {
           return false;
         }
     });
-
 
     $("#sync_toggle").change(function(){
         var img = "<img  src='" + KT.common.spinner_path() + "'>";
@@ -56,7 +51,6 @@ $(document).ready(function() {
         }
         $("#sync_toggle_cont").find("img").remove();
     });
-
 });
 
 KT.content_actions = (function(){
@@ -151,10 +145,8 @@ KT.content_actions = (function(){
         addSyncing: addSyncing,
         startUpdater: startUpdater,
         getSyncing: function(){return syncing}
-
     };
 })();
-
 
 KT.content = (function(){
 
@@ -270,17 +262,13 @@ KT.content = (function(){
                 var total = 0;
                 $.each(percentages, function(i, val){total += val;});
                 updateProduct(prod_id, percentages.length === 0, total/percentages.length);
-
             });
-
         },
         showOnlySyncing = function(){
             $("#products_table").find("tbody").find("tr").hide();
             $.each(KT.content_actions.getSyncing(), function(index, repoid){
                 var repo = $("#repo-" + repoid);
                 showChain(repo);
-
-
             });
         },
         showChain = function(element){
@@ -301,6 +289,11 @@ KT.content = (function(){
             });
         },
         expand_all = function() {
+          var sync_toggle = $("#sync_toggle");
+          if($(sync_toggle).is(":checked")) {
+            $(sync_toggle).removeAttr("checked");
+            KT.content.showAll();
+          }
           $("#products_table").find("tr").removeClass("collapsed").addClass("expanded").each(function(){
             $(this).expand();
           });
