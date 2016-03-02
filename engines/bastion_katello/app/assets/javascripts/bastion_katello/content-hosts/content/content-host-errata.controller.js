@@ -125,8 +125,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.performViaRemoteExecution = function(customize) {
             var errataIds = $scope.selectedErrataIds();
             $scope.errataActionFormValues.errata = errataIds.join(',');
-            $scope.errataActionFormValues.customize = customize;
-            $scope.errataActionFormValues.hostIds = $scope.contentHost.host.id;
+            $scope.errataActionFormValues.hostIds = $scope.host.id;
             $scope.errataActionFormValues.customize = customize;
 
             $timeout(function () {

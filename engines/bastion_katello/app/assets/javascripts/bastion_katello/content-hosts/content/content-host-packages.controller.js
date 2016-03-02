@@ -78,7 +78,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         $scope.performViaRemoteExecution = function(customize) {
             $scope.packageActionFormValues.package = $scope.packageAction.term;
             $scope.packageActionFormValues.remoteAction = $scope.packageAction.actionType;
-            $scope.packageActionFormValues.hostIds = $scope.contentHost.host.id;
+            $scope.packageActionFormValues.hostIds = $scope.host.id;
             $scope.packageActionFormValues.customize = customize;
 
             $timeout(function () {
