@@ -8,10 +8,10 @@ class RemoveNotices < ActiveRecord::Migration
       t.string   "text",            :limit => 1024,                    :null => false
       t.text     "details"
       t.boolean  "global",                          :default => false, :null => false
-      t.string   "level",                                              :null => false
+      t.string   "level",                                              :null => false, :limit => 255
       t.datetime "created_at",                                         :null => false
       t.datetime "updated_at",                                         :null => false
-      t.string   "request_type"
+      t.string   "request_type", :limit => 255
       t.integer  "organization_id"
     end
 

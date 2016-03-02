@@ -2,10 +2,10 @@ class AddSubscriptionFacet < ActiveRecord::Migration
   def change
     create_table "katello_subscription_facets" do |t|
       t.references 'host', :null => false
-      t.string 'uuid'
+      t.string 'uuid', :limit => 255
       t.datetime 'last_checkin'
-      t.string 'service_level'
-      t.string 'release_version'
+      t.string 'service_level', :limit => 255
+      t.string 'release_version', :limit => 255
       t.boolean 'autoheal', :default => false
     end
 

@@ -1,13 +1,13 @@
 class CreateDockerTables < ActiveRecord::Migration
   def up
     create_table :katello_docker_images do |t|
-      t.string :image_id
+      t.string :image_id, :limit => 255
       t.integer :size
-      t.string :uuid
+      t.string :uuid, :limit => 255
       t.timestamps
     end
     create_table :katello_docker_tags do |t|
-      t.string :name
+      t.string :name, :limit => 255
       t.integer :docker_image_id
       t.integer :repository_id
       t.timestamps

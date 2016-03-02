@@ -1,10 +1,10 @@
 class AddDockerV2Schema < ActiveRecord::Migration
   def up
     create_table :katello_docker_manifests do |t|
-      t.string :name
+      t.string :name, :limit => 255
       t.integer :schema_version
-      t.string :uuid
-      t.string :digest
+      t.string :uuid, :limit => 255
+      t.string :digest, :limit => 255
       t.boolean :downloaded
       t.timestamps
     end
@@ -15,7 +15,7 @@ class AddDockerV2Schema < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_column :katello_docker_tags, :uuid, :string
+    add_column :katello_docker_tags, :uuid, :string, :limit => 255
     add_column :katello_docker_tags, :docker_manifest_id, :integer
 
     add_index :katello_docker_tags, :uuid, :unique => true

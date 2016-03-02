@@ -1,9 +1,9 @@
 class CreatePackageGroups < ActiveRecord::Migration
   def change
     create_table "katello_package_groups" do |t|
-      t.string "name"
-      t.string "uuid", :null => false
-      t.string "description"
+      t.string "name", :limit => 255
+      t.string "uuid", :null => false, :limit => 255
+      t.string "description", :limit => 255
       t.timestamps
     end
     add_index :katello_package_groups, :uuid, :unique => true
