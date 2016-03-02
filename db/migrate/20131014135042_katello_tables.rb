@@ -3,7 +3,7 @@ class KatelloTables < ActiveRecord::Migration
   def self.up
 
     create_table "katello_activation_keys", :force => true do |t|
-      t.string   "name"
+      t.string   "name", :limit => 255
       t.text     "description"
       t.integer  "organization_id",                 :null => false
       t.integer  "environment_id",                  :null => false
@@ -39,14 +39,14 @@ class KatelloTables < ActiveRecord::Migration
 
     create_table "katello_changesets", :force => true do |t|
       t.integer  "environment_id"
-      t.string   "name"
+      t.string   "name", :limit => 255
       t.datetime "created_at",                                       :null => false
       t.datetime "updated_at",                                       :null => false
       t.datetime "promotion_date"
-      t.string   "state",          :default => "new",                :null => false
+      t.string   "state",          :default => "new",                :null => false, :limit => 255
       t.integer  "task_status_id"
       t.text     "description"
-      t.string   "type",           :default => "Katello::PromotionChangeset"
+      t.string   "type",           :default => "Katello::PromotionChangeset", :limit => 255
     end
 
     add_index "katello_changesets", ["environment_id"], :name => "index_changesets_on_environment_id"
@@ -63,14 +63,14 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_component_content_views", ["content_view_definition_id", "content_view_id"], :name => "component_content_views_index"
 
     create_table "katello_content_view_definition_bases", :force => true do |t|
-      t.string   "name"
-      t.string   "label",                              :null => false
+      t.string   "name", :limit => 255
+      t.string   "label",                              :null => false, :limit => 255
       t.text     "description"
       t.integer  "organization_id"
       t.datetime "created_at",                         :null => false
       t.datetime "updated_at",                         :null => false
       t.boolean  "composite",       :default => false, :null => false
-      t.string   "type"
+      t.string   "type", :limit => 255
       t.integer  "source_id"
     end
 
@@ -95,9 +95,9 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_content_view_definition_repositories", ["content_view_definition_id", "repository_id"], :name => "cvd_repo_index"
 
     create_table "katello_content_view_environments", :force => true do |t|
-      t.string   "name"
-      t.string   "label",           :null => false
-      t.string   "cp_id"
+      t.string   "name", :limit => 255
+      t.string   "label",           :null => false, :limit => 255
+      t.string   "cp_id", :limit => 255
       t.integer  "content_view_id"
       t.datetime "created_at",      :null => false
       t.datetime "updated_at",      :null => false
@@ -129,8 +129,8 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_content_view_versions", ["id", "content_view_id"], :name => "cvv_cv_index"
 
     create_table "katello_content_views", :force => true do |t|
-      t.string   "name"
-      t.string   "label",                                         :null => false
+      t.string   "name", :limit => 255
+      t.string   "label",                                         :null => false, :limit => 255
       t.text     "description"
       t.integer  "content_view_definition_id"
       t.integer  "organization_id"
@@ -145,10 +145,10 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_content_views", ["organization_id"], :name => "index_content_views_on_organization_id"
 
     create_table "katello_custom_info", :force => true do |t|
-      t.string   "keyname"
-      t.string   "value",           :default => ""
+      t.string   "keyname", :limit => 255
+      t.string   "value",           :default => "", :limit => 255
       t.integer  "informable_id"
-      t.string   "informable_type"
+      t.string   "informable_type", :limit => 255
       t.datetime "created_at",                         :null => false
       t.datetime "updated_at",                         :null => false
       t.boolean  "org_default",     :default => false
@@ -164,19 +164,19 @@ class KatelloTables < ActiveRecord::Migration
       t.datetime "run_at"
       t.datetime "locked_at"
       t.datetime "failed_at"
-      t.string   "locked_by"
+      t.string   "locked_by", :limit => 255
       t.datetime "created_at",                :null => false
       t.datetime "updated_at",                :null => false
-      t.string   "queue"
+      t.string   "queue", :limit => 255
     end
 
     add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
     create_table "katello_distributors", :force => true do |t|
-      t.string   "uuid"
-      t.string   "name"
+      t.string   "uuid", :limit => 255
+      t.string   "name", :limit => 255
       t.text     "description"
-      t.string   "location"
+      t.string   "location", :limit => 255
       t.integer  "environment_id"
       t.datetime "created_at",      :null => false
       t.datetime "updated_at",      :null => false
@@ -195,13 +195,13 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_environment_priors", ["prior_id"], :name => "index_environment_priors_on_prior_id"
 
     create_table "katello_environments", :force => true do |t|
-      t.string   "name",                               :null => false
+      t.string   "name",                               :null => false, :limit => 255
       t.text     "description"
       t.boolean  "library",         :default => false, :null => false
       t.integer  "organization_id",                    :null => false
       t.datetime "created_at",                         :null => false
       t.datetime "updated_at",                         :null => false
-      t.string   "label",                              :null => false
+      t.string   "label",                              :null => false, :limit => 255
     end
 
     add_index "katello_environments", ["label", "organization_id"], :name => "index_environments_on_label_and_organization_id", :unique => true
@@ -209,7 +209,7 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_environments", ["organization_id"], :name => "index_environments_on_organization_id"
 
     create_table "katello_filter_rules", :force => true do |t|
-      t.string   "type"
+      t.string   "type", :limit => 255
       t.text     "parameters"
       t.integer  "filter_id",                    :null => false
       t.boolean  "inclusion",  :default => true
@@ -221,7 +221,7 @@ class KatelloTables < ActiveRecord::Migration
 
     create_table "katello_filters", :force => true do |t|
       t.integer  "content_view_definition_id"
-      t.string   "name",                       :null => false
+      t.string   "name",                       :null => false, :limit => 255
       t.datetime "created_at",                 :null => false
       t.datetime "updated_at",                 :null => false
     end
@@ -248,7 +248,7 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_filters_repositories", ["repository_id"], :name => "index_filters_repositories_on_repository_id"
 
     create_table "katello_gpg_keys", :force => true do |t|
-      t.string   "name",            :null => false
+      t.string   "name",            :null => false, :limit => 255
       t.integer  "organization_id", :null => false
       t.text     "content",         :null => false
       t.datetime "created_at",      :null => false
@@ -258,7 +258,7 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_gpg_keys", ["organization_id", "name"], :name => "index_gpg_keys_on_organization_id_and_name", :unique => true
 
     create_table "katello_help_tips", :force => true do |t|
-      t.string   "key"
+      t.string   "key", :limit => 255
       t.integer  "user_id"
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
@@ -276,8 +276,8 @@ class KatelloTables < ActiveRecord::Migration
 
     create_table "katello_jobs", :force => true do |t|
       t.integer "job_owner_id"
-      t.string  "job_owner_type"
-      t.string  "pulp_id",        :null => false
+      t.string  "job_owner_type", :limit => 255
+      t.string  "pulp_id",        :null => false, :limit => 255
     end
 
     add_index "katello_jobs", ["job_owner_id"], :name => "index_jobs_on_job_owner_id"
@@ -311,17 +311,17 @@ class KatelloTables < ActiveRecord::Migration
       t.string   "text",            :limit => 1024,                    :null => false
       t.text     "details"
       t.boolean  "global",                          :default => false, :null => false
-      t.string   "level",                                              :null => false
+      t.string   "level",                                              :null => false, :limit => 255
       t.datetime "created_at",                                         :null => false
       t.datetime "updated_at",                                         :null => false
-      t.string   "request_type"
+      t.string   "request_type", :limit => 255
       t.integer  "organization_id"
     end
 
     add_index "katello_notices", ["organization_id"], :name => "index_notices_on_organization_id"
 
     create_table "katello_pools", :force => true do |t|
-      t.string   "cp_id",      :null => false
+      t.string   "cp_id",      :null => false, :limit => 255
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
     end
@@ -329,17 +329,17 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_pools", ["cp_id"], :name => "index_pools_on_cp_id"
 
     create_table "katello_products", :force => true do |t|
-      t.string   "name"
+      t.string   "name", :limit => 255
       t.text     "description"
-      t.string   "cp_id"
+      t.string   "cp_id", :limit => 255
       t.integer  "multiplier"
       t.integer  "provider_id",                               :null => false
       t.datetime "created_at",                                :null => false
       t.datetime "updated_at",                                :null => false
       t.integer  "gpg_key_id"
-      t.string   "type",               :default => "Katello::Product", :null => false
+      t.string   "type",               :default => "Katello::Product", :null => false, :limit => 255
       t.integer  "sync_plan_id"
-      t.string   "label",                                     :null => false
+      t.string   "label",                                     :null => false, :limit => 255
       t.boolean  "cdn_import_success", :default => true,      :null => false
     end
 
@@ -349,15 +349,15 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_products", ["sync_plan_id"], :name => "index_products_on_sync_plan_id"
 
     create_table "katello_providers", :force => true do |t|
-      t.string   "name"
+      t.string   "name", :limit => 255
       t.text     "description"
-      t.string   "repository_url"
-      t.string   "provider_type"
+      t.string   "repository_url", :limit => 255
+      t.string   "provider_type", :limit => 255
       t.integer  "organization_id"
       t.datetime "created_at",        :null => false
       t.datetime "updated_at",        :null => false
       t.integer  "task_status_id"
-      t.string   "discovery_url"
+      t.string   "discovery_url", :limit => 255
       t.text     "discovered_repos"
       t.integer  "discovery_task_id"
     end
@@ -367,24 +367,24 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_providers", ["task_status_id"], :name => "index_providers_on_task_status_id"
 
     create_table "katello_repositories", :force => true do |t|
-      t.string   "name"
-      t.string   "pulp_id",                                       :null => false
+      t.string   "name", :limit => 255
+      t.string   "pulp_id",                                       :null => false, :limit => 255
       t.boolean  "enabled",                 :default => true
       t.datetime "created_at",                                    :null => false
       t.datetime "updated_at",                                    :null => false
       t.integer  "major"
-      t.string   "minor"
+      t.string   "minor", :limit => 255
       t.integer  "gpg_key_id"
-      t.string   "cp_label"
+      t.string   "cp_label", :limit => 255
       t.integer  "library_instance_id"
-      t.string   "content_id",                                    :null => false
-      t.string   "arch",                    :default => "noarch", :null => false
-      t.string   "label",                                         :null => false
+      t.string   "content_id",                                    :null => false, :limit => 255
+      t.string   "arch",                    :default => "noarch", :null => false, :limit => 255
+      t.string   "label",                                         :null => false, :limit => 255
       t.integer  "content_view_version_id",                       :null => false
-      t.string   "relative_path",                                 :null => false
-      t.string   "feed"
+      t.string   "relative_path",                                 :null => false, :limit => 255
+      t.string   "feed", :limit => 255
       t.boolean  "unprotected",             :default => false,    :null => false
-      t.string   "content_type",            :default => "yum",    :null => false
+      t.string   "content_type",            :default => "yum",    :null => false, :limit => 255
       t.integer  "product_id"
       t.integer  "environment_id"
     end
@@ -398,8 +398,8 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_repositories", ["pulp_id"], :name => "index_repositories_on_pulp_id"
 
     create_table "katello_search_favorites", :force => true do |t|
-      t.string   "params"
-      t.string   "path"
+      t.string   "params", :limit => 255
+      t.string   "path", :limit => 255
       t.integer  "user_id"
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
@@ -408,8 +408,8 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_search_favorites", ["user_id"], :name => "index_search_favorites_on_user_id"
 
     create_table "katello_search_histories", :force => true do |t|
-      t.string   "params"
-      t.string   "path"
+      t.string   "params", :limit => 255
+      t.string   "path", :limit => 255
       t.integer  "user_id"
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
@@ -418,10 +418,10 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_search_histories", ["user_id"], :name => "index_search_histories_on_user_id"
 
     create_table "katello_sync_plans", :force => true do |t|
-      t.string   "name"
+      t.string   "name", :limit => 255
       t.text     "description"
       t.datetime "sync_date"
-      t.string   "interval"
+      t.string   "interval", :limit => 255
       t.integer  "organization_id", :null => false
       t.datetime "created_at",      :null => false
       t.datetime "updated_at",      :null => false
@@ -439,7 +439,7 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_system_activation_keys", ["system_id"], :name => "index_system_activation_keys_on_system_id"
 
     create_table "katello_system_groups", :force => true do |t|
-      t.string   "name",                            :null => false
+      t.string   "name",                            :null => false, :limit => 255
       t.text     "description"
       t.integer  "max_systems",     :default => -1, :null => false
       t.integer  "organization_id",                 :null => false
@@ -461,14 +461,14 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_system_system_groups", ["system_id"], :name => "index_system_system_groups_on_system_id"
 
     create_table "katello_systems", :force => true do |t|
-      t.string   "uuid"
-      t.string   "name"
+      t.string   "uuid", :limit => 255
+      t.string   "name", :limit => 255
       t.text     "description"
-      t.string   "location"
+      t.string   "location", :limit => 255
       t.integer  "environment_id"
       t.datetime "created_at",                            :null => false
       t.datetime "updated_at",                            :null => false
-      t.string   "type",            :default => "Katello::System"
+      t.string   "type",            :default => "Katello::System", :limit => 255
       t.integer  "content_view_id"
     end
 
@@ -476,10 +476,10 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_systems", ["environment_id"], :name => "index_systems_on_environment_id"
 
     create_table "katello_task_statuses", :force => true do |t|
-      t.string   "type"
+      t.string   "type", :limit => 255
       t.integer  "organization_id"
       t.string   "uuid",                           :null => false
-      t.string   "state"
+      t.string   "state", :limit => 255
       t.text     "result"
       t.text     "progress"
       t.datetime "start_time"
@@ -487,10 +487,10 @@ class KatelloTables < ActiveRecord::Migration
       t.datetime "created_at",                     :null => false
       t.datetime "updated_at",                     :null => false
       t.text     "parameters"
-      t.string   "task_type"
+      t.string   "task_type", :limit => 255
       t.integer  "user_id",         :default => 0, :null => false
       t.integer  "task_owner_id"
-      t.string   "task_owner_type"
+      t.string   "task_owner_type", :limit => 255
     end
 
     add_index "katello_task_statuses", ["organization_id"], :name => "index_task_statuses_on_organization_id"

@@ -9,10 +9,10 @@ class RemoveDistributors < ActiveRecord::Migration
 
   def down
     create_table "katello_distributors", :force => true do |t|
-      t.string   "uuid"
-      t.string   "name"
+      t.string   "uuid", :limit => 255
+      t.string   "name", :limit => 255
       t.text     "description"
-      t.string   "location"
+      t.string   "location", :limit => 255
       t.integer  "environment_id"
       t.datetime "created_at",      :null => false
       t.datetime "updated_at",      :null => false

@@ -3,9 +3,9 @@ class CreateContentViewHistory < ActiveRecord::Migration
     create_table 'katello_content_view_histories' do |t|
       t.references :katello_content_view_version, :null => false
       t.references :katello_environment, :null => true
-      t.string :task_id, :null => true
-      t.string :user, :null => false
-      t.string :status, :null => false
+      t.string :task_id, :null => true, :limit => 255
+      t.string :user, :null => false, :limit => 255
+      t.string :status, :null => false, :limit => 255
       t.text :notes
       t.timestamps
     end

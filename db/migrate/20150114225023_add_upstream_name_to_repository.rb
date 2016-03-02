@@ -1,6 +1,6 @@
 class AddUpstreamNameToRepository < ActiveRecord::Migration
   def up
-    add_column :katello_repositories, :docker_upstream_name, :string
+    add_column :katello_repositories, :docker_upstream_name, :string, :limit => 255
     Katello::Repository.docker_type.each do |repo|
       next if repo.url.blank?
       update %(

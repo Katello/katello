@@ -2,9 +2,9 @@ class CreateContentViewPuppetModules < ActiveRecord::Migration
   def change
     create_table :katello_content_view_puppet_modules do |t|
       t.references :content_view
-      t.string :name
-      t.string :author
-      t.string :uuid
+      t.string :name, :limit => 255
+      t.string :author, :limit => 255
+      t.string :uuid, :limit => 255
 
       t.timestamps
     end
