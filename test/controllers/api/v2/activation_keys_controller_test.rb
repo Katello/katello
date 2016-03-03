@@ -174,6 +174,16 @@ module Katello
       assert_template 'api/v2/activation_keys/product_content'
     end
 
+    def test_product_content_organization_filter
+      @activation_key.organization = @organization
+      organization2 = Organization.find(taxonomies(:organization2))
+      response = get :product_content, :id => @activation_key.id, :organization_id => organization2.id
+      assert_equal JSON.parse(response.body)['results'], []
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/product_content'
+    end
+
     def test_content_override_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]

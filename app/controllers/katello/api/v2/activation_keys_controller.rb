@@ -4,7 +4,7 @@ module Katello
 
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
-    before_filter :find_optional_organization, :only => [:index, :create, :show]
+    before_filter :find_optional_organization, :only => [:index, :create, :show, :product_content]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions,
@@ -130,8 +130,13 @@ module Katello
 
     api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
     param :id, String, :desc => N_("ID of the activation key"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier to associate with activation key")
     def product_content
-      content = @activation_key.available_content
+      if params.key?(:organization_id)
+        content = @activation_key.organization == @organization ? @activation_key.available_content : []
+      else
+        content = @activation_key.available_content
+      end
       response = {
         :results => content,
         :total => content.size,
