@@ -477,6 +477,26 @@ module Katello
         Katello.pulp_server.extensions.repository.docker_manifest_ids(self.pulp_id)
       end
 
+      def pulp_ostree_branch_ids
+        Katello.pulp_server.extensions.repository.pulp_ostree_branch_ids(self.pulp_id)
+      end
+
+      def index_db_ostree_branches
+        ostree_branches_json.each do |ostree_branch_json|
+          branch = OstreeBranch.where(:uuid => ostree_branch_json[:_id]).first_or_create
+          branch.update_from_json(ostree_branch_json)
+        end
+        OstreeBranch.sync_repository_associations(self, pulp_ostree_branch_ids)
+      end
+
+      def ostree_branches_json
+        ostree_branches = []
+        pulp_ostree_branch_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+          ostree_branches.concat(Katello.pulp_server.extensions.ostree_branches.find_all_by_unit_ids(sub_list))
+        end
+        ostree_branches
+      end
+
       def sync_schedule(date_and_time)
         if date_and_time
           Katello.pulp_server.extensions.repository.create_or_update_schedule(self.pulp_id, importer_type, date_and_time)
@@ -786,6 +806,7 @@ module Katello
       self.index_db_docker_manifests
       self.index_db_puppet_modules
       self.index_db_package_groups
+      self.index_db_ostree_branches if Katello::RepositoryTypeManager.find(Repository::OSTREE_TYPE).present?
       self.import_distribution_data
       true
     end
