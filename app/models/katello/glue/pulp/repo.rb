@@ -478,7 +478,7 @@ module Katello
       end
 
       def pulp_ostree_branch_ids
-        Katello.pulp_server.extensions.repository.pulp_ostree_branch_ids(self.pulp_id)
+        Katello.pulp_server.extensions.repository.ostree_branch_ids(self.pulp_id)
       end
 
       def index_db_ostree_branches
@@ -492,7 +492,7 @@ module Katello
       def ostree_branches_json
         ostree_branches = []
         pulp_ostree_branch_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          ostree_branches.concat(Katello.pulp_server.extensions.ostree_branches.find_all_by_unit_ids(sub_list))
+          ostree_branches.concat(Katello.pulp_server.extensions.ostree_branch.find_all_by_unit_ids(sub_list))
         end
         ostree_branches
       end
