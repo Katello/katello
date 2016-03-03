@@ -38,7 +38,7 @@ module Actions
                       path: relative_path,
                       with_importer: true,
                       docker_upstream_name: repository.try(:docker_upstream_name),
-                      download_policy: (repository.library_instance || repository).download_policy,
+                      download_policy: repository.capsule_download_policy,
                       capsule_id: capsule_content.capsule.id)
         end
 

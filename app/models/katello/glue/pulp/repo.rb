@@ -750,6 +750,13 @@ module Katello
         self.content_type == Repository::OSTREE_TYPE
       end
 
+      def capsule_download_policy
+        if self.yum?
+          repo = self.library_instance || self
+          repo.download_policy
+        end
+      end
+
       protected
 
       def _get_most_recent_sync_status
