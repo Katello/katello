@@ -146,5 +146,10 @@ namespace :katello do
     reindex_helper.index_objects(Katello::Rpm) do
       Katello::Rpm.import_all
     end
+
+    # For docker repositories, index all associated manifests and tags
+    Katello::Repository.docker_type.each do |docker_repo|
+      docker_repo.index_db_docker_manifests
+    end
   end
 end
