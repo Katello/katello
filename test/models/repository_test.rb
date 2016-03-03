@@ -594,6 +594,12 @@ module Katello
       errata = @rhel6.errata.first
       assert_includes Repository.with_errata([errata]), @rhel6
     end
+
+    def test_capsule_download_policy
+      assert_equal @content_view_puppet_environment.capsule_download_policy, nil
+      assert_equal @puppet_forge.capsule_download_policy, nil
+      assert_not_nil @fedora_17_x86_64.download_policy
+    end
   end
 
   class RepositoryApplicabilityTest < RepositoryTestBase
