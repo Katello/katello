@@ -1,6 +1,6 @@
 class AddDockerImageFields < ActiveRecord::Migration
   def up
-    add_column :docker_images, :katello_uuid, :string
+    add_column :docker_images, :katello_uuid, :string, :limit => 255
     add_column :docker_images, :katello_repository_id, :integer
     add_column :docker_tags, :katello_repository_id, :integer
 

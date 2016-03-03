@@ -12,10 +12,10 @@ class RemoveDelayedJobs < ActiveRecord::Migration
       t.datetime "run_at"
       t.datetime "locked_at"
       t.datetime "failed_at"
-      t.string "locked_by"
+      t.string "locked_by", :limit => 255
       t.datetime "created_at",                :null => false
       t.datetime "updated_at",                :null => false
-      t.string "queue"
+      t.string "queue", :limit => 255
     end
 
     add_index "delayed_jobs", %w(priority run_at), :name => "delayed_jobs_priority"

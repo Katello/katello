@@ -9,9 +9,9 @@ class RemoveDockerImageSchema < ActiveRecord::Migration
     add_column :katello_docker_tags, :docker_image_id, :integer
 
     create_table :katello_docker_images do |t|
-      t.string :image_id
+      t.string :image_id, :limit => 255
       t.integer :size
-      t.string :uuid
+      t.string :uuid, :limit => 255
       t.timestamps
     end
 

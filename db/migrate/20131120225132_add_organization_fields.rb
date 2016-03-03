@@ -1,7 +1,7 @@
 class AddOrganizationFields < ActiveRecord::Migration
   def change
     add_column :taxonomies, :description, :text unless column_exists?(:taxonomies, :description)
-    add_column :taxonomies, :label, :string
+    add_column :taxonomies, :label, :string, :limit => 255
     add_column :taxonomies, :deletion_task_id, :integer
     add_column :taxonomies, :default_info, :text
     add_column :taxonomies, :apply_info_task_id, :integer

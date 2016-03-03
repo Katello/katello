@@ -5,7 +5,7 @@ class RemoveHelpTips < ActiveRecord::Migration
 
   def down
     create_table "katello_help_tips", :force => true do |t|
-      t.string   "key"
+      t.string   "key", :limit => 255
       t.integer  "user_id"
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false

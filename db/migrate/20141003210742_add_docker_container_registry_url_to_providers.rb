@@ -1,6 +1,6 @@
 class AddDockerContainerRegistryUrlToProviders < ActiveRecord::Migration
   def up
-    add_column :katello_providers, :docker_registry_url, :string
+    add_column :katello_providers, :docker_registry_url, :string, :limit => 255
   end
 
   def down

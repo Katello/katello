@@ -5,8 +5,8 @@ class RemoveSearchFavorites < ActiveRecord::Migration
 
   def down
     create_table "katello_search_favorites", :force => true do |t|
-      t.string   "params"
-      t.string   "path"
+      t.string   "params", :limit => 255
+      t.string   "path", :limit => 255
       t.integer  "user_id"
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
