@@ -16,7 +16,13 @@ module Actions
           users = ::User.select { |user| user.receives?(:katello_sync_errata) && user.can?(:view_products, repo.product) }.compact
           errata = ::Katello::Erratum.where(:id => repo.repository_errata.where('katello_repository_errata.updated_at > ?', input[:last_updated].to_datetime).pluck(:erratum_id))
 
-          MailNotification[:katello_sync_errata].deliver(:users => users, :repo => repo, :errata => errata) unless users.blank?
+          begin
+            MailNotification[:katello_sync_errata].deliver(:users => users, :repo => repo, :errata => errata) unless users.blank?
+          rescue => e
+            message = _('Unable to send errata e-mail notification: %{error}' % {:error => e})
+            Rails.logger.error(message)
+            output[:result] = message
+          end
         end
 
         def finalize
