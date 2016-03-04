@@ -42,7 +42,7 @@ module Katello
     end
 
     def humanized_action
-      case self.task.label
+      case self.task.try(:label)
       when "Actions::Katello::ContentViewVersion::Export"
         _("Exported version")
       when "Actions::Katello::ContentView::Publish"
@@ -51,6 +51,8 @@ module Katello
         _("Promoted to %{environment}") % { :environment => self.environment.name }
       when "Actions::Katello::ContentView::Remove"
         _("Deleted from %{environment}") % { :environment => self.environment.name }
+      else
+        _("Unknown Action")
       end
     end
 
