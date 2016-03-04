@@ -27,6 +27,20 @@ module Katello
       assert_template "katello/api/v2/docker_tags/index"
     end
 
+    def test_grouped_index
+      organization = @repo.organization
+      repos_stub = stub(:in_organization => [@repo])
+      Repository.expects(:readable).returns(repos_stub)
+      get :index, :organization_id => organization.id,
+        :grouped => true
+
+      assert_response :success
+      assert_template 'api/v2/docker_tags/index'
+
+      results = JSON.parse(response.body)["results"].map { |tag| tag["name"] }
+      assert_equal ['wat'], results
+    end
+
     def test_show
       get :show, :repository_id => @repo.id, :id => @tag.id
 
