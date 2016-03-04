@@ -14,6 +14,7 @@ module ::Actions::Pulp::Repository
       run_action(::Actions::Pulp::Repository::ImportUpload,
                   pulp_id: repo.pulp_id,
                   unit_type_id: repo.unit_type_id,
+                  unit_key: {},
                   upload_id: upload_request.output[:upload_id])
       run_action(::Actions::Pulp::Repository::DeleteUploadRequest,
                   upload_id: upload_request.output[:upload_id])
