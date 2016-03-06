@@ -94,6 +94,13 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewVersionContentController',
         templateUrl: 'content-views/versions/views/content-view-version-docker.html'
     })
+    .state('content-views.details.version.ostree', {
+        collapsed: true,
+        url: '/ostree',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-ostree.html'
+    })
     .state('content-views.details.version.packages', {
         collapsed: true,
         url: '/packages',
