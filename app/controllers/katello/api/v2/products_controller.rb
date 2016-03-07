@@ -106,9 +106,16 @@ module Katello
     api :POST, "/products/:id/sync", N_("Sync all repositories for a product")
     param :id, :identifier, :required => true, :desc => "product ID"
     def sync
+      syncable_repos = @product.library_repositories.has_url.syncable
+      if syncable_repos.empty?
+        msg = _("Unable to synchronize any repository. You either do not have the permission to"\
+                " synchronize or the selected repositories do not have a feed url.")
+        fail HttpErrors::UnprocessableEntity, msg
+      end
+
       task = async_task(::Actions::BulkAction,
                         ::Actions::Katello::Repository::Sync,
-                        @product.library_repositories.has_url.syncable)
+                        syncable_repos)
 
       respond_for_async(:resource => task)
     end

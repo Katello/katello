@@ -9,7 +9,7 @@ module Katello
     def models
       @organization = get_organization
       @provider = Provider.find(katello_providers(:anonymous))
-      @product = Product.find(katello_products(:empty_product))
+      @product = Product.find(katello_products(:fedora))
       @product.stubs(:redhat?).returns(false)
       Product.any_instance.stubs('productContent').returns([])
       Product.any_instance.stubs('sync_status').returns(PulpSyncStatus.new)
@@ -192,6 +192,12 @@ module Katello
       end
       post :sync, :id => @product.id
       assert_response :success
+    end
+
+    def test_sync_bad_product
+      product = Product.find(katello_products(:empty_product))
+      post :sync, :id => product.id
+      assert_response 422
     end
 
     def test_sync_protected
