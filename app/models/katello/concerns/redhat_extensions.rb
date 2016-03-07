@@ -64,10 +64,11 @@ module Katello
         lifecycle_environment = host.lifecycle_environment
 
         if content_view && lifecycle_environment
-          Katello::Repository.where(:distribution_version => host.os.release,
-                                    :distribution_arch => host.architecture.name,
-                                    :distribution_bootable => true
-                                    )
+          Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
+              where(:distribution_version => host.os.release,
+                    :distribution_arch => host.architecture.name,
+                    :distribution_bootable => true
+                   )
         else
           []
         end
