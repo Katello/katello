@@ -163,6 +163,14 @@ module Katello
       assert_template 'api/v2/host_subscriptions/content_override'
     end
 
+    def test_content_override_accepts_string_values
+      Resources::Candlepin::Consumer.expects(:update_content_override).with(@host.subscription_facet.uuid, 'some-content', 'enabled', 1)
+
+      put :content_override, :host_id => @host.id, :content_label => 'some-content', :value => 'yes'
+
+      assert_response :success
+    end
+
     def test_invalid_content_fails
       put :content_override, :host_id => @host.id, :content_label => 'wrong-content', :value => 1
 

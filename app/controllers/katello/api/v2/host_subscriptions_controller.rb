@@ -71,7 +71,7 @@ module Katello
     api :PUT, "/hosts/:host_id/subscriptions/content_override", N_("Set content overrides for the host")
     param :host_id, String, :desc => N_("Id of the content host"), :required => true
     param :content_label, String, :desc => N_("Label of the content"), :required => true
-    param :value, [0, 1, "default"], :desc => N_("Override to 0/1, or 'default'"), :required => true
+    param :value, [0, 1, String], :desc => N_("Override to 'yes', 'no', or 'default'"), :required => true
     def content_override
       content_override = validate_content_overrides(params)
       @host.subscription_facet.candlepin_consumer.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
@@ -92,15 +92,15 @@ module Katello
     private
 
     def validate_content_overrides(content_params)
-      case content_params[:value].to_s
+      case content_params[:value].to_s.downcase
       when 'default'
         content_params[:value] = nil
-      when '1'
+      when '1', 'yes'
         content_params[:value] = 1
-      when '0'
+      when '0', 'no'
         content_params[:value] = 0
       else
-        fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
+        fail HttpErrors::BadRequest, _("Value must be 'yes', 'no', or 'default'")
       end
 
       available_content = @host.subscription_facet.candlepin_consumer.available_product_content
