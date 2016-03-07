@@ -1,45 +1,48 @@
 <span page-title ng-model="puppetModule">{{ 'Puppet Module: ' | translate }} {{ puppetModule.name }}</span>
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="fl">{{ puppetModule.name }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="fl">{{ puppetModule.name }}</h2>
 
-    <div class="details-actions fr">
-      <button class="btn btn-default" ui-sref="puppet-modules.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
+      <div class="details-actions fr">
+        <button class="btn btn-default" ui-sref="puppet-modules.index">
+          <i class="fa fa-remove"></i>
+          {{ "Close" | translate }}
+        </button>
+      </div>
+    </header>
 
-  <nav class="details-navigation">
-    <ul>
-      <li ng-class="{active: isState('puppet-modules.details.info')}">
-        <a ui-sref="puppet-modules.details.info">
-          <span translate>
-            Details
-          </span>
-        </a>
-      </li>
-      <li ng-show="permitted('view_products')" ng-class="{active: isState('puppet-modules.details.repositories')}">
-        <a ui-sref="puppet-modules.details.repositories">
-          <span translate>
-            Library Repositories
-          </span>
-        </a>
-      </li>
-      <li ng-show="permitted('view_content_views')" ng-class="{active: isState('puppet-modules.details.content-views')}">
-        <a ui-sref="puppet-modules.details.content-views">
-          <span translate>
-            Content Views
-          </span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <nav class="details-navigation">
+      <ul>
+        <li ng-class="{active: isState('puppet-modules.details.info')}">
+          <a ui-sref="puppet-modules.details.info">
+            <span translate>
+              Details
+            </span>
+          </a>
+        </li>
+        <li ng-show="permitted('view_products')" ng-class="{active: isState('puppet-modules.details.repositories')}">
+          <a ui-sref="puppet-modules.details.repositories">
+            <span translate>
+              Library Repositories
+            </span>
+          </a>
+        </li>
+        <li ng-show="permitted('view_content_views')" ng-class="{active: isState('puppet-modules.details.content-views')}">
+          <a ui-sref="puppet-modules.details.content-views">
+            <span translate>
+              Content Views
+            </span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <section ui-view></section>
+    <section ui-view></section>
+  </div>
 </section>

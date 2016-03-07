@@ -6,110 +6,113 @@
 </div>
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="pull-left" translate>Activation Key: {{ activationKey.name }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="pull-left" translate>Activation Key: {{ activationKey.name }}</h2>
 
-    <div class="details-actions pull-right">
-      <button class="btn btn-default"
-              ng-click="openModal()" ng-hide="denied('destroy_activation_keys', activationKey)" translate>
-        Remove
-      </button>
+      <div class="details-actions pull-right">
+        <button class="btn btn-default"
+                ng-click="openModal()" ng-hide="denied('destroy_activation_keys', activationKey)" translate>
+          Remove
+        </button>
 
-      <!-- RFE copy activation key - http://projects.theforeman.org/issues/4407 -->
-      <button class="btn btn-default"
-              ng-click="showCopy = true"
-              ng-hide="denied('create_activation_key')">
-        <i class="fa fa-copy"></i>
-        {{ "Copy Activation Key" | translate }}
-      </button>
+        <!-- RFE copy activation key - http://projects.theforeman.org/issues/4407 -->
+        <button class="btn btn-default"
+                ng-click="showCopy = true"
+                ng-hide="denied('create_activation_key')">
+          <i class="fa fa-copy"></i>
+          {{ "Copy Activation Key" | translate }}
+        </button>
 
-      <button class="btn btn-default" ui-sref="activation-keys.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
+        <button class="btn btn-default" ui-sref="activation-keys.index">
+          <i class="fa fa-remove"></i>
+          {{ "Close" | translate }}
+        </button>
 
-      <div bst-modal="removeActivationKey(activationKey)">
-        <div data-block="modal-header" translate>Remove Activation Key "{{ activationKey.name }}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove Activation Key "{{ activationKey.name }}"?</div>
+        <div bst-modal="removeActivationKey(activationKey)">
+          <div data-block="modal-header" translate>Remove Activation Key "{{ activationKey.name }}"?</div>
+          <div data-block="modal-body" translate>Are you sure you want to remove Activation Key "{{ activationKey.name }}"?</div>
+        </div>
       </div>
+    </header>
+
+    <div ng-show="showCopy" class="pull-right action-pane" >
+      <form>
+        <h5 translate>Copy</h5>
+        <div class="input">
+          <div bst-alerts error-messages="copyErrorMessages"></div>
+          <div class="info-label">
+            <label for="copy_name" translate>New Name:</label>
+          </div>
+          <input ng-model="copyName"
+                 id="copy_name"
+                 name="copy_name"
+                 tabindex="1"
+                 autofocus
+                 required/>
+          <div>
+            <button class="btn btn-default" ng-click="copy(copyName)">
+              {{ "Create" | translate }}
+            </button>
+            <button class="btn btn-default" ng-click="showCopy = false">
+              {{ "Cancel" | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-  </header>
 
-  <div ng-show="showCopy" class="pull-right action-pane" >
-    <form>
-      <h5 translate>Copy</h5>
-      <div class="input">
-        <div bst-alerts error-messages="copyErrorMessages"></div>
-        <div class="info-label">
-          <label for="copy_name" translate>New Name:</label>
-        </div>
-        <input ng-model="copyName"
-               id="copy_name"
-               name="copy_name"
-               tabindex="1"
-               autofocus
-               required/>
-        <div>
-          <button class="btn btn-default" ng-click="copy(copyName)">
-            {{ "Create" | translate }}
-          </button>
-          <button class="btn btn-default" ng-click="showCopy = false">
-            {{ "Cancel" | translate }}
-          </button>
-        </div>
-      </div>
-    </form>
+    <nav>
+      <ul class="nav nav-tabs">
+        <li ng-class="{active: isState('activation-keys.details.info')}">
+          <a ui-sref="activation-keys.details.info">
+            <span translate>
+              Details
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: stateIncludes('activation-keys.details.subscriptions')}">
+          <a ui-sref="activation-keys.details.subscriptions.list">
+            <span translate>
+              Subscriptions
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: stateIncludes('activation-keys.details.products')}">
+          <a ui-sref="activation-keys.details.products">
+            <span translate>
+              Product Content
+            </span>
+          </a>
+        </li>
+        <li ng-class="{active: stateIncludes('activation-keys.details.host-collections')}">
+          <a ui-sref="activation-keys.details.host-collections.list">
+            <span translate>
+              Host Collections
+            </span>
+          </a>
+        </li>
+        <li class="dropdown"
+            ng-class="{active: stateIncludes('activation-keys.details.associations-content-hosts')}">
+          <a class="dropdown-toggle">
+            <span translate>Associations</span>
+            <i class="fa fa-chevron-down"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a ui-sref="activation-keys.details.associations-content-hosts({activationKeyId: activationKey.id})" translate>
+                Content Hosts
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
+    <section class="nutupane-sub-section" ui-view></section>
   </div>
-
-  <nav>
-    <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('activation-keys.details.info')}">
-        <a ui-sref="activation-keys.details.info">
-          <span translate>
-            Details
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('activation-keys.details.subscriptions')}">
-        <a ui-sref="activation-keys.details.subscriptions.list">
-          <span translate>
-            Subscriptions
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('activation-keys.details.products')}">
-        <a ui-sref="activation-keys.details.products">
-          <span translate>
-            Product Content
-          </span>
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('activation-keys.details.host-collections')}">
-        <a ui-sref="activation-keys.details.host-collections.list">
-          <span translate>
-            Host Collections
-          </span>
-        </a>
-      </li>
-      <li class="dropdown"
-          ng-class="{active: stateIncludes('activation-keys.details.associations-content-hosts')}">
-        <a class="dropdown-toggle">
-          <span translate>Associations</span>
-          <i class="fa fa-chevron-down"></i>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a ui-sref="activation-keys.details.associations-content-hosts({activationKeyId: activationKey.id})" translate>
-              Content Hosts
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
-
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-
-  <section class="nutupane-sub-section" ui-view></section>
 </section>

@@ -6,20 +6,32 @@
  * @requires $location
  * @requires DockerTag
  * @requires CurrentOrganization
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the docker tags details action pane.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagsDetailsController',
-    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization) {
+    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'ApiErrorHandler',
+    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization, ApiErrorHandler) {
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
+
         if ($scope.tag) {
-            $scope.panel = {loading: false};
-        } else {
-            $scope.panel = {loading: true};
+            $scope.panel.loading = false;
         }
 
-        $scope.tag = DockerTag.get({id: $scope.$stateParams.tagId});
+        $scope.tag = DockerTag.get({id: $scope.$stateParams.tagId}, function () {
+            $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
+        });
 
         $scope.tag.$promise.then(function () {
             var params = {

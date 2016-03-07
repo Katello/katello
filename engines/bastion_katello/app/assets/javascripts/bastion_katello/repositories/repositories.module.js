@@ -11,6 +11,7 @@ angular.module('Bastion.repositories', [
     'ngUpload',
     'Bastion',
     'Bastion.utils',
+    'Bastion.common',
     'Bastion.components',
     'Bastion.components.formatters',
     'Bastion.packages',

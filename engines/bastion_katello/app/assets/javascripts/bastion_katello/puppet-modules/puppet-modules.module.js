@@ -9,6 +9,6 @@
      *   Module for Puppet Module related functionality.
      */
     angular
-        .module('Bastion.puppet-modules', ['Bastion']);
+        .module('Bastion.puppet-modules', ['Bastion', 'Bastion.common']);
 
 })();

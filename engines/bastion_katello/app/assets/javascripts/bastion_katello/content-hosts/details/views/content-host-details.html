@@ -6,104 +6,107 @@
 </div>
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="fl" translate>Content Host {{ contentHost.name }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="fl" translate>Content Host {{ contentHost.name }}</h2>
 
-    <div class="fr">
+      <div class="fr">
 
-      <div bst-modal="unregisterContentHost(contentHost)">
-        <div data-block="modal-header" translate>
-          Unregister Content Host "{{contentHost.name}}"?
-        </div>
-        <div data-block="modal-body" translate>
-          Are you sure you want to unregister content host "{{ contentHost.name }}"?
-        </div>
-    </div>
+        <div bst-modal="unregisterContentHost(contentHost)">
+          <div data-block="modal-header" translate>
+            Unregister Content Host "{{contentHost.name}}"?
+          </div>
+          <div data-block="modal-body" translate>
+            Are you sure you want to unregister content host "{{ contentHost.name }}"?
+          </div>
+      </div>
 
-      <button class="btn btn-default"
-              ng-hide="denied('destroy_hosts', contentHost)"
-              ng-click="openModal()" translate>Unregister Content Host</button>
-      <button class="btn btn-default" ui-sref="content-hosts.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
+        <button class="btn btn-default"
+                ng-hide="denied('destroy_hosts', contentHost)"
+                ng-click="openModal()" translate>Unregister Content Host</button>
+        <button class="btn btn-default" ui-sref="content-hosts.index">
+          <i class="fa fa-remove"></i>
+          {{ "Close" | translate }}
+        </button>
+      </div>
+    </header>
 
-  <nav>
-    <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('content-hosts.details.info')}">
-        <a translate
-           ui-sref="content-hosts.details.info">
-          Details
-        </a>
-      </li>
-      <li ng-class="{active: isState('content-hosts.details.provisioning')}"
-          bst-feature-flag="remote_actions">
-        <a translate
-           ui-sref="content-hosts.details.provisioning">
-          Provisioning Details
-        </a>
-      </li>
-      <li class="dropdown"
-          ng-class="{active: stateIncludes('content-hosts.details.subscriptions.list') || stateIncludes('content-hosts.details.subscriptions.add') || stateIncludes('content-hosts.details.events')}">
-        <a class="dropdown-toggle">
-          <span translate>Subscriptions</span>
-          <i class="fa fa-chevron-down"></i>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a ui-sref="content-hosts.details.subscriptions.list" translate>
-              Subscriptions
-            </a>
-          </li>
-          <li>
-            <a ui-sref="content-hosts.details.events" translate>
-              Events
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li ng-class="{active: $state.includes('content-hosts.details.host-collections')}">
-        <a translate
-           ui-sref="content-hosts.details.host-collections.list">
-          Host Collections
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('content-hosts.details.tasks')}">
-        <a translate
-           ui-sref="content-hosts.details.tasks.index">
-          Tasks
-        </a>
-      </li>
-      <li ng-class="{active: isState('content-hosts.details.packages')}">
-        <a translate
-           ui-sref="content-hosts.details.packages">
-          Packages
-        </a>
-      </li>
-      <li ng-class="{active: isState('content-hosts.details.errata.index')}">
-        <a translate
-           ui-sref="content-hosts.details.errata.index">
-          Errata
-        </a>
-      </li>
-      <li ng-hide="denied('view_products')" ng-class="{active: isState('content-hosts.details.products')}">
-        <a translate
-           ui-sref="content-hosts.details.products">
-          Product Content
-        </a>
-      </li>
-      <li ng-repeat="menuItem in menuExpander.getMenu('contentHost')">
-        <a href="{{ menuItem.url }}">
-          {{ menuItem.label }}
-        </a>
-      </li>
-    </ul>
-  </nav>
+    <nav>
+      <ul class="nav nav-tabs">
+        <li ng-class="{active: isState('content-hosts.details.info')}">
+          <a translate
+             ui-sref="content-hosts.details.info">
+            Details
+          </a>
+        </li>
+        <li ng-class="{active: isState('content-hosts.details.provisioning')}"
+            bst-feature-flag="remote_actions">
+          <a translate
+             ui-sref="content-hosts.details.provisioning">
+            Provisioning Details
+          </a>
+        </li>
+        <li class="dropdown"
+            ng-class="{active: stateIncludes('content-hosts.details.subscriptions.list') || stateIncludes('content-hosts.details.subscriptions.add') || stateIncludes('content-hosts.details.events')}">
+          <a class="dropdown-toggle">
+            <span translate>Subscriptions</span>
+            <i class="fa fa-chevron-down"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a ui-sref="content-hosts.details.subscriptions.list" translate>
+                Subscriptions
+              </a>
+            </li>
+            <li>
+              <a ui-sref="content-hosts.details.events" translate>
+                Events
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li ng-class="{active: $state.includes('content-hosts.details.host-collections')}">
+          <a translate
+             ui-sref="content-hosts.details.host-collections.list">
+            Host Collections
+          </a>
+        </li>
+        <li ng-class="{active: stateIncludes('content-hosts.details.tasks')}">
+          <a translate
+             ui-sref="content-hosts.details.tasks.index">
+            Tasks
+          </a>
+        </li>
+        <li ng-class="{active: isState('content-hosts.details.packages')}">
+          <a translate
+             ui-sref="content-hosts.details.packages">
+            Packages
+          </a>
+        </li>
+        <li ng-class="{active: isState('content-hosts.details.errata.index')}">
+          <a translate
+             ui-sref="content-hosts.details.errata.index">
+            Errata
+          </a>
+        </li>
+        <li ng-hide="denied('view_products')" ng-class="{active: isState('content-hosts.details.products')}">
+          <a translate
+             ui-sref="content-hosts.details.products">
+            Product Content
+          </a>
+        </li>
+        <li ng-repeat="menuItem in menuExpander.getMenu('contentHost')">
+          <a href="{{ menuItem.url }}">
+            {{ menuItem.label }}
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <section class="nutupane-sub-section" ui-view></section>
+    <section class="nutupane-sub-section" ui-view></section>
+  </div>
 </section>
