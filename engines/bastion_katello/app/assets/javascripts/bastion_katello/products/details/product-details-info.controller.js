@@ -69,6 +69,9 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         $scope.syncProduct = function () {
             Product.sync({id: $scope.product.id}, function (task) {
                 $state.go('products.details.tasks.details', {taskId: task.id});
+            },
+            function (response) {
+                $scope.errorMessages = response.data.errors;
             });
         };
     }]
