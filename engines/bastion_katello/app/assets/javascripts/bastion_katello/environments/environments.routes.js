@@ -73,6 +73,13 @@ angular.module('Bastion.environments').config(['$stateProvider', function ($stat
         controller: 'EnvironmentContentController',
         templateUrl: 'environments/details/views/environment-docker.html'
     })
+    .state('environments.environment.ostree', {
+        url: '/ostree?repositoryId&contentViewId',
+        reloadOnSearch: false,
+        permission: 'view_lifecycle_environments',
+        controller: 'EnvironmentContentController',
+        templateUrl: 'environments/details/views/environment-ostree.html'
+    })
     .state('environments.environment.content-views', {
         url: '/content-views',
         reloadOnSearch: false,

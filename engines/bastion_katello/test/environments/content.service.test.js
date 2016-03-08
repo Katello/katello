@@ -12,7 +12,7 @@ describe('Service: ContentService', function() {
     }));
 
     it("should expose the list of content types", function() {
-        expect(ContentService.contentTypes.length).toBe(6);
+        expect(ContentService.contentTypes.length).toBe(7);
     });
 
     it("should expose a method to get the repository type for an object", function() {
