@@ -83,6 +83,11 @@ describe('Controller: ContentViewsVersionContentController', function() {
         expect($scope.nutupane.resource).toBe(Repository);
     });
 
+    it("setups up ostree Repo resource when is state is 'ostree content'", function() {
+        SetupController('content-views.details.version.ostree');
+        expect($scope.nutupane.resource).toBe(Repository);
+    });
+
     it("setups up yum Repo resource when is state is 'yum content'", function() {
         SetupController('content-views.details.version.yum');
         expect($scope.nutupane.resource).toBe(Repository);

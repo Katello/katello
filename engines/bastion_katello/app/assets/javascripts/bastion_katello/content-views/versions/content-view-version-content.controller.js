@@ -16,6 +16,14 @@
         currentState = $scope.$state.current.name.split('.').pop();
 
         contentTypes = {
+            'ostree': {
+                type: Repository,
+                params: {
+                    'content_type': "ostree",
+                    'content_view_version_id': $scope.$stateParams.versionId,
+                    library: true
+                }
+            },
             'docker': {
                 type: Repository,
                 params: {
