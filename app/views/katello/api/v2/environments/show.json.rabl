@@ -29,6 +29,7 @@ node :counts do |env|
     counts[:errata] = partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(Katello::Erratum.in_repositories(repos)))
     counts[:yum_repositories] = repos.yum_type.count
     counts[:docker_repositories] = repos.docker_type.count
+    counts[:ostree_repositories] = repos.ostree_type.count
     counts[:products] = env.organization.products.enabled.count
   end
   counts
