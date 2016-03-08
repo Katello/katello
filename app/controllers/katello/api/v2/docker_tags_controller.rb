@@ -6,7 +6,10 @@ module Katello
     def index
       if params[:grouped]
         # group docker tags by name, repo, and product
-        collection = Katello::DockerTag.grouped
+        repos = Repository.readable
+        repos = repos.in_organization(@organization) if @organization
+        collection = Katello::DockerTag.in_repositories(repos).grouped
+
         respond(:collection => scoped_search(collection, "name", "DESC"))
       else
         super
