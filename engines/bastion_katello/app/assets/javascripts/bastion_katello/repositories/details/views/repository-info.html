@@ -150,7 +150,7 @@
         <span class="info-value" translate>Yes</span>
       </div>
 
-      <div class="detail">
+      <div class="detail" ng-hide="repository.content_type === 'ostree'">
         <span class="info-label" translate>Publish via HTTP</span>
         <span class="info-value"
               bst-edit-checkbox="repository.unprotected"
