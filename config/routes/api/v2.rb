@@ -108,6 +108,12 @@ Katello::Engine.routes.draw do
           end
         end
 
+        api_resources :ostree_branches, :only => [:index, :show] do
+          collection do
+            get :auto_complete_search
+          end
+        end
+
         api_resources :docker_manifests, :only => [:index, :show]
         api_resources :docker_tags, :only => [:index, :show] do
           collection do
@@ -322,6 +328,8 @@ Katello::Engine.routes.draw do
           end
           api_resources :docker_manifests, :only => [:index, :show]
           api_resources :docker_tags, :only => [:index, :show]
+
+          api_resources :ostree_branches, :only => [:index, :show]
 
           api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]
 

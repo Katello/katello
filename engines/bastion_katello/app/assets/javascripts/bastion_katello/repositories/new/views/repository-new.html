@@ -80,7 +80,7 @@
         </select>
       </div>
 
-      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}">
+      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}" ng-show="repository.content_type === 'yum'">
         <input id="mirror_on_sync"
                name="mirror_on_sync"
                ng-model="repository.mirror_on_sync"
