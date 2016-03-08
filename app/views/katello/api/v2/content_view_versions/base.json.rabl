@@ -12,6 +12,7 @@ attributes :package_count
 attributes :puppet_module_count
 attributes :docker_manifest_count
 attributes :docker_tag_count
+attributes :ostree_branch_count
 
 node :errata_counts do |version|
   partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(version.errata))
