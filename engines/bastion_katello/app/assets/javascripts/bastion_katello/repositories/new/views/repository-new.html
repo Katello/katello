@@ -44,31 +44,50 @@
       </div>
     </div>
     <div ng-show="repository.content_type !== undefined">
-        <h4 translate> Sync Information </h4>
-        <div bst-form-group label="{{ 'URL' | translate }}">
-          <input id="url"
-                 name="url"
-                 ng-model="repository.url"
-                 type="text"
-                 tabindex="5"/>
-          <h6 ng-show="repository.content_type === 'docker'" translate>
-            URL of the registry you want to sync. Example: https://registry-1.docker.io/
-          </h6>
+      <h4 translate> Sync Information </h4>
+      <div bst-form-group label="{{ 'URL' | translate }}">
+        <input id="url"
+               name="url"
+               ng-model="repository.url"
+               type="text"
+               tabindex="5"/>
+        <h6 ng-show="repository.content_type === 'docker'" translate>
+          URL of the registry you want to sync. Example: https://registry-1.docker.io/
+        </h6>
 
-        </div>
+      </div>
 
-        <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
-          <input id="docker_upstream_name"
-                 name="docker_upstream_name"
-                 ng-model="repository.docker_upstream_name"
-                 type="text"
-                 tabindex="1"/>
-          <h6 translate>
-            Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh'.
-          </h6>
+      <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
+        <input id="docker_upstream_name"
+               name="docker_upstream_name"
+               ng-model="repository.docker_upstream_name"
+               type="text"
+               tabindex="1"/>
+        <h6 translate>
+          Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh'.
+        </h6>
 
-        </div>
+      </div>
 
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
+        <select tabindex="4"
+                id="download_policy"
+                name="download_policy"
+                ng-model="repository.download_policy"
+                ng-options="id as name for (id, name) in downloadPolicies">
+        </select>
+      </div>
+
+      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}">
+        <input id="mirror_on_sync"
+               name="mirror_on_sync"
+               ng-model="repository.mirror_on_sync"
+               type="checkbox"
+               tabindex="8"/>
+        <h6 translate>
+          Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
+        </h6>
+      </div>
     </div>
 
     <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
@@ -104,33 +123,11 @@
         </select>
       </div>
 
-      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
-        <select tabindex="4"
-                id="download_policy"
-                name="download_policy"
-                ng-model="repository.download_policy"
-                ng-options="id as name for (id, name) in downloadPolicies">
-        </select>
-      </div>
-
-      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}">
-        <input id="mirror_on_sync"
-               name="mirror_on_sync"
-               ng-model="repository.mirror_on_sync"
-               type="checkbox"
-               tabindex="8"/>
-        <h6 translate>
-          Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
-        </h6>
-      </div>
-    </div>
-
     <div bst-form-buttons ng-show="repository.content_type !== undefined"
          on-cancel="transitionTo('products.details.repositories.index', {productId: repository.product_id})"
          on-save="save(repository)"
          working="working">
     </div>
-
-
+  </div>
   </form>
 </section>

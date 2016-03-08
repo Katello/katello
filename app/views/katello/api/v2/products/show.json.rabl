@@ -34,8 +34,16 @@ node(:published_content_view_ids) do |product|
   product.published_content_views.map(&:id).uniq
 end
 
-node :readonly do |product|
+node :redhat do |product|
   product.redhat?
+end
+
+node :permissions do |product|
+  {
+    :destroy_products => product.editable?,
+    :edit_products => product.deletable?,
+    :sync_products => product.syncable?
+  }
 end
 
 extends 'katello/api/v2/common/timestamps'

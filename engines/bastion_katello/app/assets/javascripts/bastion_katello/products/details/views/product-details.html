@@ -38,7 +38,7 @@
         </span>
 
         <button class="btn btn-default" bst-feature-flag="custom_products"
-                ng-hide="denied('destroy_products', product) || product.readonly || product.published_content_view_ids.length > 0"
+                ng-hide="productDeletable(product)"
                 ng-click="openModal()">
           <i class="fa fa-trash-o"></i>
           {{ "Remove Product" | translate }}

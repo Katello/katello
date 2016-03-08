@@ -70,7 +70,7 @@
       <button class="btn btn-primary"
               bst-feature-flag="custom_products"
               ng-hide="denied('edit_products', product)"
-              ng-disabled="product.readonly"
+              ng-disabled="product.redhat"
               ui-sref="products.details.repositories.new({productId: product.id})">
         <span translate>Create Repository</span>
       </button>
@@ -118,14 +118,14 @@
             </td>
             <td bst-table-cell>
               <span ng-show="repository.content_type == 'puppet'">
-                <a translate ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"> 
+                <a translate ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
                   {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
                 </a>
               </span>
 
               <span ng-show="repository.content_type == 'yum'">
                 <div>
-                  <a translate ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">   
+                  <a translate ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
                     {{ repository.content_counts.rpm || 0 }} Packages
                   </a>
                 </div>

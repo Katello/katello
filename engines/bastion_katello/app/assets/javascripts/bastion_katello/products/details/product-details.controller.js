@@ -40,6 +40,10 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             });
         };
 
+        $scope.productDeletable = function(product) {
+            return $scope.getReadOnlyReason(product) === null;
+        };
+
         $scope.getReadOnlyReason = function (product) {
             var readOnlyReason = null;
 
