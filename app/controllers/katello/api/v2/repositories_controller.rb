@@ -48,6 +48,7 @@ module Katello
     param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
     param :rpm_id, String, :desc => N_("Id of a package to find repositories that contain the rpm")
+    param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
@@ -71,6 +72,10 @@ module Katello
 
       if params[:rpm_id]
         query = query.joins(:rpms).where("#{Rpm.table_name}.id" => Rpm.with_identifiers(params[:rpm_id]))
+      end
+
+      if params[:ostree_branch_id]
+        query = query.joins(:ostree_branches).where("#{OstreeBranch.table_name}.id" => OstreeBranch.with_identifiers(params[:ostree_branch_id]))
       end
 
       if params[:puppet_module_id]
