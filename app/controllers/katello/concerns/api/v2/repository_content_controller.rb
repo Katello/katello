@@ -198,6 +198,8 @@ module Katello
           _("Docker Manifest")
         when "Katello::DockerTag"
           _("Docker Tag")
+        when "Katello::OstreeBranch"
+          _("OSTree Branch")
         else
           fail "Can't find resource class: #{resource_class}"
         end
