@@ -17,6 +17,7 @@ $(document).ready(function() {
     $('#expand_all').click(KT.content.expand_all);
 
     KT.content.showAll();
+    KT.content.select_repo();
 
     $("#products_table").delegate(".cancel_sync", "click", function(){
         var repo_id = $(this).parents("tr").attr("data-id");
@@ -51,6 +52,11 @@ $(document).ready(function() {
         }
         $("#sync_toggle_cont").find("img").remove();
     });
+
+    $.each($("input[name='repoids[]']"), function(index, checkbox) {
+      $(checkbox).click(KT.content.select_repo);
+    });
+
 });
 
 KT.content_actions = (function(){
@@ -235,10 +241,12 @@ KT.content = (function(){
             element.text(text);
         },
         select_all = function(){
-            $("#products_table").find("input[type=checkbox]").attr('checked',true);
+            $("#products_table").find("input[type=checkbox]").prop('checked',true);
+            KT.content.select_repo();
         },
         select_none = function(){
             $("#products_table").find("input[type=checkbox]").removeAttr('checked');
+            KT.content.select_repo();
         },
         select_repo = function(){
             if($("input[name='repoids[]']:checked").length > 0) {
