@@ -15,6 +15,7 @@ $(document).ready(function() {
     $('#select_none').click(KT.content.select_none);
     $('#collapse_all').click(KT.content.collapse_all);
     $('#expand_all').click(KT.content.expand_all);
+    $("input[name='repoids[]']").click(KT.content.selection_changed);
 
     KT.content.showAll();
     KT.content.select_repo();
@@ -53,10 +54,7 @@ $(document).ready(function() {
         $("#sync_toggle_cont").find("img").remove();
     });
 
-    $.each($("input[name='repoids[]']"), function(index, checkbox) {
-      $(checkbox).click(KT.content.select_repo);
-    });
-
+    KT.content.count_selected();
 });
 
 KT.content_actions = (function(){
@@ -240,13 +238,33 @@ KT.content = (function(){
             //element.fadeIn('fast');
             element.text(text);
         },
-        select_all = function(){
-            $("#products_table").find("input[type=checkbox]").prop('checked',true);
+        select_all = function() {
+            $("#products_table").find("input[type=checkbox]").prop('checked', true);
+            $.each($('#products_table').find('td.details'), function(index, details) {
+                $(details).attr('data-selected', $(details).attr('data-total'));
+                KT.content.display_product_counts(details);
+            });
             KT.content.select_repo();
         },
-        select_none = function(){
+        select_none = function() {
             $("#products_table").find("input[type=checkbox]").removeAttr('checked');
+            $.each($('#products_table').find('td.details'), function(index, details) {
+                $(details).attr('data-selected', 0);
+                KT.content.display_product_counts(details);
+            });
             KT.content.select_repo();
+        },
+        selection_changed = function(event) {
+            var row = event.target.closest('tr');
+            var product_id = $(row).data('product_id');
+            var details = $(row).siblings('#product-' + product_id).find('td.details');
+            var delta = ($(event.target).is(':checked')) ? 1 : -1;
+            $(details).attr('data-selected', delta + Number($(details).attr('data-selected')));
+            KT.content.display_product_counts(details);
+            KT.content.select_repo();
+        },
+        display_product_counts = function(details) {
+            $(details).text($(details).text().replace(/\d+\//, $(details).attr('data-selected') + '/'));
         },
         select_repo = function(){
             if($("input[name='repoids[]']:checked").length > 0) {
@@ -254,6 +272,17 @@ KT.content = (function(){
             } else {
                 $("#sync_button").addClass("disabled");
             }
+        },
+        count_selected = function() {
+            $.each($('#products_table').find('tr.product'), function(index, product) {
+                var selected = 0;
+                $.each($(product).siblings('tr.child-of-' + $(product).attr('id')), function(repo_index, repo) {
+                    selected += $(repo).find("input[name='repoids[]']:checked").length;
+                });
+                var details = $(product).find('td.details');
+                $(details).attr('data-selected', selected);
+                KT.content.display_product_counts(details);
+            });
         },
         reset_products = function(status_set){
             var products = {};
@@ -319,7 +348,10 @@ KT.content = (function(){
         select_all : select_all,
         select_none: select_none,
         select_repo: select_repo,
+        selection_changed: selection_changed,
+        count_selected: count_selected,
         draw_syncing: draw_syncing,
+        display_product_counts: display_product_counts,
         reset_products: reset_products,
         showOnlySyncing: showOnlySyncing,
         showAll: showAll,
