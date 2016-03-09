@@ -31,7 +31,7 @@
                     <% if !orphaned || product.repositories.detect {|repo| repo.cp_label == product_content.content.label} %>
                       <tr class="collapsed repo_set" id="repo_set_<%= product_content.content.id %>">
                         <td>
-                          <span class="expander_area"
+                          <span class="expander_area clickable"
                                 data-url="<%= available_repositories_product_path(product.id)%>"
                                 data-content-id="<%= product_content.content.id %>"
                                 data-orphaned="<%= orphaned.to_s %>">
