@@ -24,7 +24,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
             'search': $location.search().search || "",
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true,
+            'full_result': true,
             'id': $scope.$stateParams.activationKeyId
         };
 

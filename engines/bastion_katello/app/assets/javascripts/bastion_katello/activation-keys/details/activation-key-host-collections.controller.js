@@ -25,7 +25,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
             'search': $location.search().search || "",
             'sort_by': 'name',
             'sort_order': 'ASC',
-            'paged': true
+            'full_result': true
         };
 
         hostCollectionsPane = new Nutupane(ActivationKey, params, 'hostCollections');
