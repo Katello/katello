@@ -34,7 +34,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         $scope.contentHostTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
         $scope.nutupane = nutupane;
-        $scope.controllerName = 'katello_systems';
+        $scope.controllerName = 'hosts';
 
         // @TODO begin hack necessary because of foreman API bug http://projects.theforeman.org/issues/13877
         $scope.contentHostTable.sortBy = function (column) {
