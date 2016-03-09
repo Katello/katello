@@ -106,6 +106,9 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     def backend_data
       @data ||= ::Katello::Resources::Candlepin::Consumer.get(uuid)
+    rescue RestClient::ResourceNotFound
+      logger.info("Tried to fetch Candlepin data for #{name} but its uuid (#{uuid}) was not found.")
+      { :facts => { 'network.hostname' => name } }
     end
 
     def facts
@@ -186,7 +189,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     subscription_facet.activation_keys = system.activation_keys
     subscription_facet.uuid = system.uuid
 
-    if system.backend_data
+    if system.backend_data && system.backend_data['serviceLevel']
       subscription_facet.service_level = system.backend_data['serviceLevel']
       subscription_facet.release_version = system.backend_data['releaseVer']['releaseVer']
       subscription_facet.last_checkin = system.backend_data['lastCheckin']
