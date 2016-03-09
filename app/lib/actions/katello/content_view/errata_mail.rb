@@ -13,7 +13,13 @@ module Actions
           environment = ::Katello::KTEnvironment.find(input[:environment])
           users = ::User.select { |user| user.receives?(:katello_promote_errata) && user.can?(:view_content_views, content_view) }
 
-          MailNotification[:katello_promote_errata].deliver(:users => users, :content_view => content_view, :environment  => environment) unless users.blank?
+          begin
+            MailNotification[:katello_promote_errata].deliver(:users => users, :content_view => content_view, :environment  => environment) unless users.blank?
+          rescue => e
+            message = _('Unable to send errata e-mail notification: %{error}' % {:error => e})
+            Rails.logger.error(message)
+            output[:result] = message
+          end
         end
 
         def finalize
