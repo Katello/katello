@@ -15,6 +15,10 @@ module Actions
 
           rpm_files = Dir.glob(File.join(import_location, "*rpm"))
 
+          rpm_filepaths = rpm_files.collect do |filepath|
+            {path: filepath, filename: File.basename(filepath)}
+          end
+
           json_files = Dir.glob(File.join(import_location, "*json"))
           pulp_units = json_files.map { |json_file| JSON.parse(File.read(json_file)) }
           errata = pulp_units.select { |pulp_unit| erratum? pulp_unit }
@@ -24,7 +28,7 @@ module Actions
             # everything to /tmp. It is better to just have Pulp generate
             # incrementals in the same way it publishes normally, vs optimizing
             # this call. https://pulp.plan.io/issues/1543
-            plan_action(Katello::Repository::UploadFiles, repo, rpm_files)
+            plan_action(Katello::Repository::UploadFiles, repo, rpm_filepaths)
             plan_action(Katello::Repository::UploadErrata, repo, errata)
           end
 
