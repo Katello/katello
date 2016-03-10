@@ -32,6 +32,14 @@ module Katello
       assert_nil Katello::System.find_by_id(system_id)
     end
 
+    def test_full_text_search
+      other_host = FactoryGirl.create(:host)
+      found = ::Host.search_for(@foreman_host.name)
+
+      assert_includes found, @foreman_host
+      refute_includes found, other_host
+    end
+
     def test_smart_proxy_ids_with_katello
       content_source = FactoryGirl.create(:smart_proxy,
                                           :features => [Feature.where(:name => "Pulp Node").first_or_create])
