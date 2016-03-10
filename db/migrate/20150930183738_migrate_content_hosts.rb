@@ -185,14 +185,6 @@ class MigrateContentHosts < ActiveRecord::Migration
     subscription_facet = host.subscription_facet = MigrateContentHosts::SubscriptionFacet.new
     subscription_facet.activation_keys = system.activation_keys
     subscription_facet.uuid = system.uuid
-
-    if system.backend_data
-      subscription_facet.service_level = system.backend_data['serviceLevel']
-      subscription_facet.release_version = system.backend_data['releaseVer']['releaseVer']
-      subscription_facet.last_checkin = system.backend_data['lastCheckin']
-      subscription_facet.autoheal = system.backend_data['autoheal']
-    end
-
     subscription_facet.save!
   end
 
@@ -317,7 +309,7 @@ class MigrateContentHosts < ActiveRecord::Migration
       if hosts.empty? # no host exists
         logger.info("No host exists with hostname #{hostname}, creating new host.")
         host = MigrateContentHosts::Host.new(:name => system.facts['network.hostname'], :organization => system.environment.organization,
-                                             :location => MigrateContentHosts::Location.default_location, :managed => false)
+                                             :type => "Host::Managed", :location => MigrateContentHosts::Location.default_location, :managed => false)
         host.save!
 
         create_content_facet(host, system)

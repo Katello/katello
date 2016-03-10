@@ -242,7 +242,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_subscriptions.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/add_export_distributor.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/delete_docker_v1_content.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/update_subscription_facet_registered_at.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/update_subscription_facet_backend_data.rake"
     end
   end
 
