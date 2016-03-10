@@ -105,6 +105,11 @@ module Katello
       @capsule.default_capsule?
     end
 
+    def orphaned_repos
+      @capsule.pulp_repositories.map { |x| x["id"] } - current_repositories.map { |x| x.pulp_id }
+    end
+
+    # shows repos available both in katello and on the capsule.
     def current_repositories(environment_id = nil, content_view_id = nil)
       @current_repositories ||= @capsule.pulp_repositories
       katello_repo_ids = []

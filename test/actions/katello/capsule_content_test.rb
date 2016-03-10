@@ -157,6 +157,18 @@ module ::Actions::Katello::CapsuleContent
     it "removes unneeded repos" do
       capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
       capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
+      capsule_content.stubs(:orphaned_repos).returns([])
+
+      action = create_and_plan_action(action_class, capsule_content)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|
+        input.must_equal(:pulp_id => repository.pulp_id, :capsule_id => capsule_content.capsule.id)
+      end
+    end
+
+    it "removes deleted repos" do
+      capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
+      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
+      capsule_content.stubs(:orphaned_repos).returns([repository.pulp_id])
 
       action = create_and_plan_action(action_class, capsule_content)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|
