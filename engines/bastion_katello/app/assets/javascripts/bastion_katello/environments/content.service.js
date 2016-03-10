@@ -54,6 +54,11 @@
                 resource: 'DockerTag',
                 display: translate('Docker Tags'),
                 repositoryType: 'docker'
+            }, {
+                state: 'ostree',
+                resource: 'OstreeBranch',
+                display: translate('OSTree Branches'),
+                repositoryType: 'ostree'
             }
         ];
 
