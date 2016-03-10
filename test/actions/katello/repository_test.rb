@@ -193,10 +193,10 @@ module ::Actions::Katello::Repository
       import_dir = File.join(::Katello::Engine.root, "test", "fixtures", "files")
       plan_action action, custom_repository, import_dir
 
-      assert_action_planed_with action, ::Actions::Katello::Repository::UploadFiles do |repo, rpm_files|
+      assert_action_planed_with action, ::Actions::Katello::Repository::UploadFiles do |repo, rpm_filepaths|
         repo.must_equal custom_repository
-        rpm_files.length.must_equal 1
-        rpm_files.first.must_include "squirrel"
+        rpm_filepaths.length.must_equal 1
+        rpm_filepaths.first[:filename].must_include "squirrel"
       end
 
       assert_action_planed_with action, ::Actions::Katello::Repository::UploadErrata do |repo, errata|
