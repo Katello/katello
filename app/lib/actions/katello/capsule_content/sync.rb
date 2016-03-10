@@ -38,6 +38,7 @@ module Actions
                               repo_pulp_id: repo_id)
                 end
               end
+              plan_action(RemoveOrphans, :capsule_id => capsule_content.capsule.id)
             end
           end
         end
