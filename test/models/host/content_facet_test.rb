@@ -41,8 +41,12 @@ module Katello
     end
 
     def test_errata_searchable
+      other_host = FactoryGirl.create(:host)
       errata = katello_errata(:security)
-      assert_includes ::Host.search_for("applicable_errata = #{errata.errata_id}"), content_facet.host
+      found = ::Host.search_for("applicable_errata = #{errata.errata_id}")
+
+      assert_includes found, content_facet.host
+      refute_includes found, other_host
     end
 
     def test_available_and_applicable_errta

@@ -32,9 +32,13 @@ module Katello
 
       module ClassMethods
         def find_by_applicable_errata(_key, operator, value)
-          conditions = sanitize_sql_for_conditions("#{Katello::Erratum.table_name}.errata_id #{operator}", value_to_sql(operator, value))
-          hosts = Host::Managed.joins("#{Katello}").where(conditions)
-          { :conditions => "#{Host::Managed.table_name}.id IN(#{hosts.pluck(:id)})" }
+          conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
+          hosts = ::Host::Managed.joins(:applicable_errata).where(conditions)
+          if hosts.empty?
+            { :conditions => "1=0" }
+          else
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+          end
         end
       end
     end
