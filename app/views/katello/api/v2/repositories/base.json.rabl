@@ -13,6 +13,7 @@ end
 
 node :content_counts do |repo|
   {
+    :ostree_branch => repo.ostree_branches.count,
     :docker_manifest => repo.docker_manifests.count,
     :docker_tag => repo.docker_tags.count,
     :rpm => repo.rpms.count,

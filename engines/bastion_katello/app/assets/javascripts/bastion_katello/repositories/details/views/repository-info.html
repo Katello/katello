@@ -12,7 +12,7 @@
       <i class="fa fa-double-angle-left"></i>
       {{ "Back to Repository List" | translate }}
     </a>
-  
+
     <div class="fr">
       <button class="btn btn-default"
               ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})"
@@ -29,7 +29,13 @@
       <button class="btn btn-default"
             ui-sref="products.details.repositories.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})"
             ng-hide="repository.content_type !== 'docker' || denied('edit_products', product)">
-      <span translate>Manage Docker Manifests</span>
+        <span translate>Manage Docker Manifests</span>
+      </button>
+
+      <button class="btn btn-default"
+              ui-sref="products.details.repositories.manage-content.ostree-branches({productId: product.id, repositoryId: repository.id})"
+              ng-hide="repository.content_type !== 'ostree' || denied('edit_products', product)">
+        <span translate>View Branches</span>
       </button>
 
       <button class="btn btn-default"
@@ -280,8 +286,8 @@
           <td class="align-center">{{ repository.content_counts.docker_tag || 0 }}</td>
         </tr>
         <tr ng-show="repository.content_type === 'ostree'">
-          <td translate>OSTree Units</td>
-          <td class="align-center">{{ repository.content_counts.ostree || 0 }}</td>
+          <td translate>OSTree Branches</td>
+          <td class="align-center">{{ repository.content_counts.ostree_branch || 0 }}</td>
         </tr>
         </tbody>
       </table>

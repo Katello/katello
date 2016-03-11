@@ -10,6 +10,7 @@ module Katello
       @fedora_17_dev_library_view       = katello_repositories(:fedora_17_dev_library_view)
       @puppet_forge                     = katello_repositories(:p_forge)
       @redis                            = katello_repositories(:redis)
+      @ostree_rhel7                     = katello_repositories(:ostree_rhel7)
       @fedora                           = katello_products(:fedora)
       @library                          = katello_environments(:library)
       @dev                              = katello_environments(:dev)

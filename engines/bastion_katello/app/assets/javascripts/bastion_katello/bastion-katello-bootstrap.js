@@ -7,6 +7,7 @@ BASTION_MODULES.push(
     'Bastion.docker-tags',
     'Bastion.hosts',
     'Bastion.puppet-modules',
+    'Bastion.ostree-branches',
     'Bastion.environments',
     'Bastion.gpg-keys',
     'Bastion.hosts',
