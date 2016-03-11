@@ -4,16 +4,18 @@ module Katello
       extend ActiveSupport::Concern
 
       def available_kickstart_repo
-        host = Host.new
-        operatingsystem = Operatingsystem.find(params[:id])
-        host.operatingsystem = operatingsystem
+        host = ::Host.new
+        host.operatingsystem = Operatingsystem.find(params[:id])
         host.architecture = Architecture.find(params[:architecture_id])
-        host.content_facet.new(:lifecycle_environment => Katello::KTEnvironment.find(params[:lifecycle_environment_id]),
-                                :content_view => Katello::ContentView.find(params[:content_view_id]))
+
+        lifecycle_env = Katello::KTEnvironment.find(params[:lifecycle_environment_id])
+        content_view = Katello::ContentView.find(params[:content_view_id])
+        host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_env.id,
+                                                    :content_view_id => content_view.id)
         host.content_source = SmartProxy.find(params[:content_source_id])
 
-        if operatingsystem.is_a?(Redhat)
-          render :json => operatingsystem.kickstart_repo(host)
+        if  host.operatingsystem.is_a?(Redhat)
+          render :json =>  host.operatingsystem.kickstart_repo(host)
         else
           render :json => nil
         end
