@@ -121,7 +121,7 @@ module Katello
     end
 
     def self.in_organization(org)
-      where(:environment_id => org.kt_environments)
+      where("#{Repository.table_name}.environment_id" => org.kt_environments.pluck("#{KTEnvironment.table_name}.id"))
     end
 
     def self.in_environment(env_id)

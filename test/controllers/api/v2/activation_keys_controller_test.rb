@@ -136,6 +136,10 @@ module Katello
       assert_template 'api/v2/common/async'
     end
 
+    def test_destroy_object
+      assert @activation_key.destroy
+    end
+
     def test_destroy_protected
       allowed_perms = [@destroy_permission]
       denied_perms = [@view_permission, @create_permission, @update_permission]
