@@ -11,7 +11,7 @@
 <% if products.empty? %>
   <p class="ca"><%= _("No recently synced products") %></p>
 <% else %>
-  <table class="table table-striped ellipsis table-bordered">
+  <table class="table table-fixed table-striped table-bordered">
     <thead>
       <tr>
         <th>Product</th>
@@ -22,7 +22,7 @@
     <tbody>
       <% products.each do |product| %>
         <tr>
-          <td><%= product.name %></td>
+          <td class='ellipsis'><%= product.name %></td>
           <td><%= product.sync_status[:state] %></td>
           <td><%= product.sync_status[:finish_time] %></td>
         </tr>

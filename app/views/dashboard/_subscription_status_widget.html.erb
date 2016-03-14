@@ -8,7 +8,7 @@
 <% total_expiring_subscriptions = Katello::Pool.expiring_soon(subscriptions).count %>
 <% total_recently_expired_subscriptions = Katello::Pool.recently_expired(subscriptions).count %>
 
-<table class="table table-striped ellipsis table-bordered">
+<table class="table table-fixed table-striped table-bordered">
   <thead>
     <tr>
       <th>Subscription Status</th>
