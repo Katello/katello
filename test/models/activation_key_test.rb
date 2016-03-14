@@ -111,5 +111,19 @@ module Katello
       @dev_key.stubs(:available_content).returns([OpenStruct.new(:content => OpenStruct.new(:label => 'some-label'))])
       assert @dev_key.valid_content_label?('some-label')
     end
+
+    def test_max_hosts_not_exceeded
+      @dev_key.unlimited_content_hosts = false
+      @dev_key.max_content_hosts = 1
+      @dev_key.stubs(:subscription_facets).returns(['host one', 'host two'])
+      refute @dev_key.valid?
+    end
+
+    def test_max_hosts_exceeded
+      @dev_key.unlimited_content_hosts = false
+      @dev_key.max_content_hosts = 10
+      @dev_key.stubs(:subscription_facets).returns(['host one', 'host two'])
+      assert @dev_key.valid?
+    end
   end
 end
