@@ -36,6 +36,7 @@ module Katello
       :katello_rpms => Katello::Rpm,
       :katello_repository_rpms => Katello::RepositoryRpm,
       :katello_content_facets => Katello::Host::ContentFacet,
+      :katello_subscription_facets => Katello::Host::SubscriptionFacet,
       :katello_system_activation_keys => Katello::SystemActivationKey
     }
 
