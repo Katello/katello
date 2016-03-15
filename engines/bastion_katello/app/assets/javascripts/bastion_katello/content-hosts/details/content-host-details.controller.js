@@ -15,8 +15,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'Organization', 'CurrentOrganization', 'MenuExpander', 'ApiErrorHandler',
-    function ($scope, $state, $q, translate, Host, Organization, CurrentOrganization, MenuExpander, ApiErrorHandler) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'GlobalNotification', 'MenuExpander', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, GlobalNotification, MenuExpander, ApiErrorHandler) {
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -25,7 +25,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             loading: true
         };
 
-        $scope.host = Host.get({id: $scope.$stateParams.hostId}, function () {
+        $scope.host = Host.get({id: $scope.$stateParams.hostId}, function (host) {
+            host.unregisterDelete = !host.hasSubscription(); //default to delete if no subscription
             $scope.panel.loading = false;
         }, function (response) {
             $scope.panel.loading = false;
@@ -115,6 +116,29 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             });
 
             return deferred.promise;
+        };
+
+        $scope.unregisterContentHost = function (host) {
+            var errorHandler = function (response) {
+                host.deleting = false;
+                GlobalNotification.setErrorMessage(translate('An error occured: %s').replace('%s', response.data.displayMessage));
+            };
+            host.deleting = true;
+
+            if (host.unregisterDelete) {
+                host.$delete(function () {
+                    host.deleting = false;
+                    GlobalNotification.setSuccessMessage(translate('Host %s has been deleted.').replace('%s', host.name));
+                    $scope.removeRow(host.id);
+                    $scope.transitionTo('content-hosts.index');
+                }, errorHandler);
+            } else {
+                HostSubscription.delete({id: host.id}, function () {
+                    host.deleting = false;
+                    GlobalNotification.setSuccessMessage(translate('Host %s has been unregistered.').replace('%s', host.name));
+                    $scope.transitionTo('content-hosts.index');
+                }, errorHandler);
+            }
         };
     }]
 );

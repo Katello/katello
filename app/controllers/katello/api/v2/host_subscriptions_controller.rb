@@ -35,6 +35,14 @@ module Katello
       respond_for_index :collection => collection
     end
 
+    api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
+    param :host_id, Integer, :desc => N_("Id of the host"), :required => true
+    def destroy
+      sync_task(::Actions::Katello::Host::Unregister, @host)
+      @host.reload
+      respond_for_destroy(:resource => @host)
+    end
+
     api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions"
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
