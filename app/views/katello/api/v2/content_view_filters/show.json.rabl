@@ -1,41 +1,28 @@
 object @resource
 
-extends 'katello/api/v2/common/identifier'
-
-node(:type) { |filter| filter.class::CONTENT_TYPE }
-attributes :inclusion
+extends 'katello/api/v2/content_view_filters/base'
 
 child :content_view => :content_view do
-  extends 'katello/api/v2/content_views/show'
-end
+  extends "katello/api/v2/content_views/base"
 
-child :repositories => :repositories do
-  extends 'katello/api/v2/repositories/show'
-end
+  child :repositories => :repositories do
+    attributes :id, :name, :label, :content_type
 
-if @resource.respond_to?(:package_rules)
-  attributes :original_packages
-end
-
-node :rules do |filter|
-  if filter.respond_to?(:package_rules)
-    filter.package_rules.map do |rule|
-      partial('katello/api/v2/content_view_filter_rules/show', :object => rule)
+    child :product => :product do
+      attributes :id, :name
     end
 
-  elsif filter.respond_to?(:package_group_rules)
-    filter.package_group_rules.map do |rule|
-      partial('katello/api/v2/content_view_filter_rules/show', :object => rule)
+    node :content_counts do |repo|
+      {
+        :ostree_branch => repo.ostree_branches.count,
+        :docker_manifest => repo.docker_manifests.count,
+        :docker_tag => repo.docker_tags.count,
+        :rpm => repo.rpms.count,
+        :package => repo.rpms.count,
+        :package_group => repo.package_groups.count,
+        :erratum => repo.errata.count,
+        :puppet_module => repo.puppet_modules.count
+      }
     end
-
-  elsif filter.respond_to?(:erratum_rules)
-    filter.erratum_rules.map do |rule|
-      partial('katello/api/v2/content_view_filter_rules/show', :object => rule)
-    end
-
-  else
-    []
   end
 end
-
-extends 'katello/api/v2/common/timestamps'
