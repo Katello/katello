@@ -34,5 +34,20 @@ module Katello
       override = activation_key.content_overrides.find { |pc| pc[:contentLabel] == content.label }
       override.nil? ? 'default' : override[:value]
     end
+
+    def content_type
+      self.content.type
+    end
+
+    def displayable?
+      case content_type
+      when ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
+        false
+      when ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
+        ::Katello::RepositoryTypeManager.enabled?(Repository::OSTREE_TYPE)
+      else
+        true
+      end
+    end
   end
 end
