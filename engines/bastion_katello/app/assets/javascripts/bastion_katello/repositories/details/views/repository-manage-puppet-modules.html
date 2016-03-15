@@ -26,16 +26,18 @@
   </div>
 
   <div data-block="actions">
-    <div bst-modal="removeContent()">
+    <div bst-modal="removeContent()" model="detailsTable">
       <div data-block="modal-header"
+           translate
            translate-n="detailsTable.numSelected"
            translate-plural="Remove {{ detailsTable.numSelected  }} Puppet Modules?">
-        Remove {{ detailsTable.numSelected  }} Puppet Module?
+        Remove Puppet Module?
       </div>
       <div data-block="modal-body"
+           translate
            translate-n="detailsTable.numSelected"
            translate-plural="Are you sure you want to remove the {{ detailsTable.numSelected }} Puppet modules selected?">
-        Are you sure you want to remove the {{ detailsTable.numSelected }} Puppet module selected?
+        Are you sure you want to remove the {{ detailsTable.getSelected()[0].name }}?
       </div>
     </div>
 
