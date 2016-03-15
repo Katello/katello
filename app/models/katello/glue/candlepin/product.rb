@@ -134,6 +134,16 @@ module Katello
         self.productContent.find { |pc| pc.content.name == content_name }
       end
 
+      def import_subscription(subscription_id)
+        sub = ::Katello::Subscription.where(:cp_id => subscription_id).first_or_create
+        sub.import_data
+        pools = ::Katello::Resources::Candlepin::Product.pools(self.organization.label, self.cp_id)
+        pools.each do |pool_json|
+          pool = ::Katello::Pool.where(:cp_id => pool_json['id']).first_or_create
+          pool.import_data
+        end
+      end
+
       protected
 
       def added_content
