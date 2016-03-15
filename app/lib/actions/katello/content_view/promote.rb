@@ -48,6 +48,10 @@ module Actions
                                   ::Katello::KTEnvironment.find(input[:environment_id]))
         end
 
+        def rescue_strategy_for_self
+          Dynflow::Action::Rescue::Skip
+        end
+
         def finalize
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
