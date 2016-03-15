@@ -96,7 +96,7 @@ module Katello
       @activation_key.content_overrides.each do |content|
         @new_activation_key.set_content_override(content['contentLabel'], content[:name], content[:value])
       end
-      @activation_key.get_key_pools.each do |pool|
+      @activation_key.pools.each do |pool|
         @new_activation_key.subscribe(pool[:id], pool[:amount])
       end
       respond_for_show(:resource => @new_activation_key)
