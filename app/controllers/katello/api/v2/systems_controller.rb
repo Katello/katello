@@ -7,7 +7,7 @@ module Katello
 
     skip_before_filter :set_default_response_format, :only => :report
 
-    before_filter :find_system, :only => [:destroy, :show, :update, :enabled_repos, :releases, :tasks,
+    before_filter :find_system, :only => [:show, :update, :enabled_repos, :releases, :tasks,
                                           :content_override, :product_content]
     before_filter :find_environment, :only => [:index, :report]
     before_filter :find_optional_organization, :only => [:create, :index, :report]
@@ -109,13 +109,6 @@ module Katello
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     def show
       respond
-    end
-
-    api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def destroy
-      sync_task(::Actions::Katello::System::Destroy, @system, :unregistering => true)
-      respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
     end
 
     api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true

@@ -3,6 +3,7 @@ describe('Controller: ContentHostDetailsController', function() {
         $controller,
         translate,
         Host,
+        HostSubscription,
         Organization,
         MenuExpander,
         mockHost;
@@ -14,7 +15,8 @@ describe('Controller: ContentHostDetailsController', function() {
         $stateProvider.state('content-hosts.fake', {});
     }));
 
-    beforeEach(inject(function(_$controller_, $rootScope, $state) {
+
+    beforeEach(inject(function(_$controller_, $rootScope, $state, $injector) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
 
@@ -25,6 +27,7 @@ describe('Controller: ContentHostDetailsController', function() {
         mockHost = {
             failed: false,
             id: 1,
+            hasSubscription: function(){ return true; },
             facts: {
                 cpu: "Itanium",
                 "lscpu.architecture": "Intel Itanium architecture",
@@ -55,7 +58,12 @@ describe('Controller: ContentHostDetailsController', function() {
                     success(mockHost);
                 }
             },
+            delete: function (success, error) {success()},
             $promise: {then: function(callback) {callback(mockHost)}}
+        };
+
+        HostSubscription = {
+            'delete': function (parmas, success, error) {success()}
         };
 
         Organization = {};
@@ -64,6 +72,7 @@ describe('Controller: ContentHostDetailsController', function() {
         spyOn(Host, 'get').andCallThrough();
 
         $scope.$stateParams = {hostId: mockHost.id};
+        $scope.removeRow = function(){};
 
         $controller('ContentHostDetailsController', {
             $scope: $scope,
@@ -71,6 +80,8 @@ describe('Controller: ContentHostDetailsController', function() {
             translate: translate,
             Host: Host,
             Organization: Organization,
+            HostSubscription: HostSubscription,
+            GlobalNotification: $injector.get('GlobalNotification'),
             MenuExpander: MenuExpander
         });
     }));
@@ -109,4 +120,39 @@ describe('Controller: ContentHostDetailsController', function() {
         expect($scope.errorMessages.length).toBe(1);
     });
 
+
+    it("provides a way to unregister content hosts.", function() {
+        var testHost = {
+            id: 123,
+            unregisterDelete: false
+        };
+
+        spyOn($scope, "transitionTo");
+        spyOn(HostSubscription, 'delete').andCallThrough();
+
+        $scope.unregisterContentHost(testHost);
+
+        expect(HostSubscription.delete).toHaveBeenCalledWith({'id': 123}, jasmine.any(Function), jasmine.any(Function));
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
+
+    });
+
+    it("provides a way to delete a host.", function() {
+        var testHost = {
+            id: 123,
+            '$delete': function(callback) {
+                callback();
+            },
+            unregisterDelete: true
+        };
+
+        spyOn($scope, "transitionTo");
+        spyOn($scope, "removeRow");
+        spyOn(testHost, '$delete').andCallThrough();
+
+        $scope.unregisterContentHost(testHost);
+        expect(testHost.$delete).toHaveBeenCalled();
+        expect($scope.removeRow).toHaveBeenCalled();
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
+    });
 });
