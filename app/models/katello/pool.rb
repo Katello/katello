@@ -38,11 +38,6 @@ module Katello
     DAYS_EXPIRING_SOON = 120
     DAYS_RECENTLY_EXPIRED = 30
 
-    # ActivationKey includes the Pool's json in its own'
-    def as_json(*_args)
-      self.remote_data.merge(:cp_id => self.cp_id)
-    end
-
     def self.active(subscriptions)
       subscriptions.select { |s| s.active }
     end

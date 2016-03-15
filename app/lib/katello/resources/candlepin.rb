@@ -675,7 +675,7 @@ module Katello
               'providedProducts' => [],
               'contractNumber' => ''
             }
-            Candlepin::Subscription.create_for_owner owner_key, subscription
+            JSON.parse(Candlepin::Subscription.create_for_owner(owner_key, subscription))
           end
 
           def pools(owner_key, product_id)
