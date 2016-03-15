@@ -190,6 +190,14 @@ module Katello
       @repo.url = ""
       refute @repo.save
     end
+
+    def test_ostree_unprotected
+      @repo.content_type = Repository::OSTREE_TYPE
+      @repo.url = "http://foo.com"
+      @repo.download_policy = nil
+      @repo.unprotected = true
+      refute @repo.save
+    end
   end
 
   class RepositorySearchTest < RepositoryTestBase

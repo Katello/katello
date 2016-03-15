@@ -64,6 +64,9 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         });
 
         $scope.save = function (repository) {
+            if (repository.content_type === 'ostree') {
+                repository.unprotected = false;
+            }
             repository.$save(success, error);
         };
 

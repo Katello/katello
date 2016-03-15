@@ -95,6 +95,7 @@ module Katello
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_has_url_for_ostree, :if => :ostree?
+    validate :ensure_ostree_repo_protected, :if => :ostree?
 
     scope :has_url, -> { where('url IS NOT NULL') }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
@@ -599,6 +600,12 @@ module Katello
     def ensure_has_url_for_ostree
       return true if url.present? || library_instance_id
       errors.add(:url, N_("cannot be blank. RPM OSTree Repository URL required for syncing from the upstream."))
+    end
+
+    def ensure_ostree_repo_protected
+      if unprotected
+        errors.add(:base, N_("OSTree Repositories cannot be unprotected."))
+      end
     end
 
     def remove_docker_content(manifests)
