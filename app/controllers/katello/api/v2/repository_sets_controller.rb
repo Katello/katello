@@ -15,7 +15,7 @@ module Katello
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
     def index
       collection = {}
-      collection[:results] = @product.productContent
+      collection[:results] = @product.displayable_product_contents
       # filter on name if it is provided
       collection[:results] = collection[:results].select { |pc| pc.content.name == params[:name] } if params[:name]
       collection[:subtotal] = collection[:results].size

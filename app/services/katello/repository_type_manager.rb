@@ -28,6 +28,10 @@ module Katello
       def find(repository_type)
         repository_types[repository_type.to_s]
       end
+
+      def enabled?(repository_type)
+        find(repository_type).present?
+      end
     end
   end
 end

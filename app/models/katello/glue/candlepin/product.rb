@@ -65,6 +65,10 @@ module Katello
         super
       end
 
+      def displayable_product_contents
+        self.productContent.select(&:displayable?)
+      end
+
       def orphaned?
         self.provider.redhat_provider? && self.certificate.nil?
       end
