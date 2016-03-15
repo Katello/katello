@@ -231,8 +231,9 @@ module Katello
         fail Errors::SecurityViolation, _("Token invalid during sync_complete.")
       end
 
-      repo_id = params['payload']['repo_id']
-      task_id = params['call_report']['task_id']
+      json = JSON.parse(params['_json'])
+      repo_id = json['payload']['repo_id']
+      task_id = json['call_report']['task_id']
       User.current = User.anonymous_admin
 
       repo    = Repository.where(:pulp_id => repo_id).first
