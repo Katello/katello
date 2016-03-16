@@ -106,44 +106,5 @@ module Katello
         ActivationKey.find(@akey.id).host_collections.must_include @host_collection
       end
     end
-
-    describe "#apply_to_system" do
-      before(:each) do
-        Katello.pulp_server.extensions.consumer.stubs(:create).returns(:id => "1234")
-        Resources::Candlepin::Consumer.stubs(:create).returns(:uuid => "1234", :owner => {:key => "1234"})
-        @content_view = katello_content_views(:library_dev_view)
-        @system = System.new(:name => "test", :cp_type => "system", :content_view_id => @content_view.id, :facts => {"distribution.name" => "Fedora"})
-        @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name" => "Fedora"})
-        @akey_limit1 = ActivationKey.create(:name => "max_content_hosts_key1", :max_content_hosts => 1, :unlimited_content_hosts => false,
-                                            :organization => @organization, :environment => @environment_1)
-      end
-
-      it "assignes environment to the system" do
-        @akey.apply_to_system(@system)
-        @system.environment.must_equal @akey.environment
-      end
-
-      it "creates an association between the activation key and the system" do
-        @akey.apply_to_system(@system)
-        @system.save!
-        @system.activation_keys.must_include(@akey)
-      end
-
-      it "apply once for limit 1" do
-        @akey_limit1.apply_to_system(@system)
-        @system.save!
-        @system.activation_keys.must_include(@akey_limit1)
-      end
-
-      it "not apply twice for limit 1" do
-        @akey_limit1.apply_to_system(@system)
-        @system.save!
-        @system.activation_keys.must_include(@akey_limit1)
-        apply_limit = lambda do
-          @akey_limit1.apply_to_system(@system2)
-        end
-        apply_limit.must_raise Katello::Errors::MaxContentHostsReachedException
-      end
-    end
   end
 end

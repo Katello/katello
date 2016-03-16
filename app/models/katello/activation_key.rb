@@ -41,9 +41,9 @@ module Katello
           record.errors[attr] << _("cannot be nil")
         elsif value <= 0
           record.errors[attr] << _("cannot be less than one")
-        elsif value < record.systems.length
+        elsif value < record.subscription_facets.length
           # we don't let users to set usage limit lower than current in-use
-          record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.systems.length)
+          record.errors[attr] << _("cannot be lower than current usage count (%s)" % record.subscription_facets.length)
         end
       end
     end
@@ -67,7 +67,7 @@ module Katello
     end
 
     def usage_count
-      system_activation_keys.count
+      subscription_facet_activation_keys.count
     end
 
     def related_resources
@@ -112,16 +112,6 @@ module Katello
 
     def valid_content_label?(content_label)
       self.available_content.map(&:content).any? { |content| content.label == content_label }
-    end
-
-    # sets up system when registering with this activation key - must be executed in a transaction
-    def apply_to_system(system)
-      if !max_content_hosts.nil? && !self.unlimited_content_hosts && usage_count >= max_content_hosts
-        fail Errors::MaxContentHostsReachedException, _("Max Content Hosts (%{limit}) reached for activation key '%{name}'") % {:limit => max_content_hosts, :name => name}
-      end
-      system.environment_id = self.environment_id if self.environment_id
-      system.content_view_id = self.content_view_id if self.content_view_id
-      system.system_activation_keys.build(:activation_key => self)
     end
 
     def calculate_consumption(product, pools, _allocate)

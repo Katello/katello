@@ -117,9 +117,9 @@ module Katello
     end
 
     def test_update_limit_below_consumed
-      content_host1 = System.find(katello_systems(:simple_server))
-      content_host2 = System.find(katello_systems(:simple_server2))
-      @activation_key.system_ids = [content_host1.id, content_host2.id]
+      subscription_facet1 = Host::SubscriptionFacet.find(katello_subscription_facets(:one))
+      subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two))
+      @activation_key.subscription_facet_ids = [subscription_facet1.id, subscription_facet2.id]
 
       results = JSON.parse(put(:update, :id => @activation_key.id, :organization_id => @organization.id,
                                :activation_key => {:max_content_hosts => 1}).body)
