@@ -53,6 +53,11 @@ module Katello
       date_obj.strftime('%I:%M %p')
     end
 
+    def plan_date_time(localtime = true)
+      date_obj = localtime ? self.zone_converted : self.sync_date
+      date_obj.strftime('%m/%d/%Y %I:%M:%p')
+    end
+
     def schedule_format
       if (self.interval != DURATION[self.interval])
         format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
