@@ -36,10 +36,10 @@ describe('Controller: NewGPGKeyController', function() {
     it('should save a new gpg key resource', function() {
         spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, "setErrorMessage");
+        spyOn(GlobalNotification, "setSuccessMessage");
         $scope.uploadContent({"status": "success"});
 
-        expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.uploadStatus).toBe('success');
 
         expect($scope.table.addRow).toHaveBeenCalled();
@@ -49,10 +49,11 @@ describe('Controller: NewGPGKeyController', function() {
     it('should error on a new gpg key resource', function() {
         spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, "setErrorMessage");
+        spyOn(GlobalNotification, "setSuccessMessage");
         $scope.uploadContent({"errors": "....", "displayMessage":"......"});
 
-        expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+        expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
+        expect($scope.errorMessages.length).toBe(1);
 
         expect($scope.uploadStatus).toBe('error');
         expect($scope.table.addRow).not.toHaveBeenCalled();
