@@ -13,14 +13,16 @@ module Actions
 
           cp_id = cp_create.output[:response][:id]
 
-          plan_action(::Actions::Candlepin::Product::CreateUnlimitedSubscription,
+          sub_create = plan_action(::Actions::Candlepin::Product::CreateUnlimitedSubscription,
                       :owner_key => organization.label,
                       :product_id => cp_id)
+          subscription_id = sub_create.output[:response][:id]
+
           product.save!
           action_subject product, :cp_id => cp_id
 
           plan_self
-          plan_action Katello::Provider::ReindexSubscriptions, product.provider
+          plan_action Katello::Product::ReindexSubscriptions, product, subscription_id
         end
 
         def finalize
@@ -30,7 +32,7 @@ module Actions
         end
 
         def humanized_name
-          _("Create")
+          _("Product Create")
         end
       end
     end
