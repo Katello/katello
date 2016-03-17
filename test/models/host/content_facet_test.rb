@@ -31,6 +31,14 @@ module Katello
         assert ::Host.new(:name => "foo", :content_facet_attributes => {:uuid => "thisshouldntbeabletobesetbyuser"})
       end
     end
+
+    def test_katello_agent_installed?
+      refute host.content_facet.katello_agent_installed?
+
+      host.installed_packages << Katello::InstalledPackage.create!(:name => 'katello-agent', 'nvra' => 'katello-agent-1.0.x86_64')
+
+      assert host.reload.content_facet.katello_agent_installed?
+    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase
