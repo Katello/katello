@@ -37,7 +37,7 @@ describe('Controller: ActivationKeyAddHostCollectionsController', function() {
                     "updated_at": "2014-02-17T16:02:24Z",
                     "name": "Employee",
                     "organization_id": 3,
-                    "max_content_hosts": -1,
+                    "max_hosts": -1,
                     "description": null,
                     "total_content_hosts": 0,
                     "id": 14,
