@@ -36,9 +36,9 @@
         <span class="info-label" translate>Host Limit</span>
 
         <span class="info-value"
-              bst-edit-custom="activationKey.max_content_hosts"
+              bst-edit-custom="activationKey.max_hosts"
               formatter="unlimitedFilter"
-              formatter-options="activationKey.unlimited_content_hosts"
+              formatter-options="activationKey.unlimited_hosts"
               readonly="denied('edit_activation_keys', activationKey)"
               on-save="save(activationKey)">
 
@@ -47,17 +47,17 @@
               <span translate>
                 Unlimited Content Hosts:
               </span>
-              <input type='checkbox' ng-model="activationKey.unlimited_content_hosts"/>
+              <input type='checkbox' ng-model="activationKey.unlimited_hosts"/>
             </div>
-            <div ng-hide="activationKey.unlimited_content_hosts" >
+            <div ng-hide="activationKey.unlimited_hosts" >
               <span translate>
                 Limit:
               </span>
-              <input ng-model="activationKey.max_content_hosts"
-                     name="max_content_hosts"
+              <input ng-model="activationKey.max_hosts"
+                     name="max_hosts"
                      type="number"
                      min="1"
-                     ng-required="!activationKey.unlimited_content_hosts"
+                     ng-required="!activationKey.unlimited_hosts"
                      tabindex="2"/>
             </div>
           </div>

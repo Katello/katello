@@ -81,11 +81,11 @@ module Katello
     def test_create_unlimited
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
-        activation_key.max_content_hosts.must_be_nil
+        activation_key.max_hosts.must_be_nil
       end
 
       post :create, :organization_id => @organization.id,
-                    :activation_key => {:name => 'Unlimited Key', :unlimited_content_hosts => true}
+                    :activation_key => {:name => 'Unlimited Key', :unlimited_hosts => true}
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
@@ -95,12 +95,12 @@ module Katello
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, activation_key_params|
         assert_equal activation_key.id, @activation_key.id
         assert_equal activation_key_params[:name], 'New Name'
-        assert_equal activation_key_params[:max_content_hosts], "2"
-        assert_equal activation_key_params[:unlimited_content_hosts], false
+        assert_equal activation_key_params[:max_hosts], "2"
+        assert_equal activation_key_params[:unlimited_hosts], false
       end
 
       put :update, :id => @activation_key.id, :organization_id => @organization.id,
-         :activation_key => {:name => 'New Name', :max_content_hosts => 2}
+         :activation_key => {:name => 'New Name', :max_hosts => 2}
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
@@ -122,10 +122,10 @@ module Katello
       @activation_key.subscription_facet_ids = [subscription_facet1.id, subscription_facet2.id]
 
       results = JSON.parse(put(:update, :id => @activation_key.id, :organization_id => @organization.id,
-                               :activation_key => {:max_content_hosts => 1}).body)
+                               :activation_key => {:max_hosts => 1}).body)
 
       assert_response 422
-      assert_includes results['errors']['max_content_hosts'][0], 'cannot be lower than current usage count'
+      assert_includes results['errors']['max_hosts'][0], 'cannot be lower than current usage count'
     end
 
     def test_destroy

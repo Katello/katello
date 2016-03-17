@@ -54,22 +54,22 @@ module Katello
       assert_equal new_key.host_collections, @dev_key.host_collections
       assert_equal new_key.content_view, @dev_key.content_view
       assert_equal new_key.organization, @dev_key.organization
-      assert_equal new_key.max_content_hosts, @dev_key.max_content_hosts
+      assert_equal new_key.max_hosts, @dev_key.max_hosts
     end
 
     test "unlimited hosts requires no max hosts" do
       key1 = ActivationKey.find(katello_activation_keys(:simple_key))
       org = key1.organization
       new_key = ActivationKey.new(:name => "JarJar", :organization => org)
-      new_key.unlimited_content_hosts = false
-      new_key.max_content_hosts = 100
+      new_key.unlimited_hosts = false
+      new_key.max_hosts = 100
       assert new_key.valid?
 
-      new_key.unlimited_content_hosts = true
-      new_key.max_content_hosts = nil
+      new_key.unlimited_hosts = true
+      new_key.max_hosts = nil
       assert new_key.valid?
 
-      new_key.max_content_hosts = 100
+      new_key.max_hosts = 100
       assert !new_key.valid?
     end
 
@@ -113,15 +113,15 @@ module Katello
     end
 
     def test_max_hosts_not_exceeded
-      @dev_key.unlimited_content_hosts = false
-      @dev_key.max_content_hosts = 1
+      @dev_key.unlimited_hosts = false
+      @dev_key.max_hosts = 1
       @dev_key.stubs(:subscription_facets).returns(['host one', 'host two'])
       refute @dev_key.valid?
     end
 
     def test_max_hosts_exceeded
-      @dev_key.unlimited_content_hosts = false
-      @dev_key.max_content_hosts = 10
+      @dev_key.unlimited_hosts = false
+      @dev_key.max_hosts = 10
       @dev_key.stubs(:subscription_facets).returns(['host one', 'host two'])
       assert @dev_key.valid?
     end
