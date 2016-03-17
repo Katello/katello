@@ -98,6 +98,10 @@ module Katello
         self.content_view.version(self.lifecycle_environment).available_releases
       end
 
+      def katello_agent_installed?
+        self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-agent').any?
+      end
+
       private
 
       def insert_errata_applicability(uuids)
