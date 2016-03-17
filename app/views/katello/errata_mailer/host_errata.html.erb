@@ -48,7 +48,7 @@
                           <th style="border-collapse: collapse; background-image: linear-gradient(#f5f5f5, #e8e8e8); text-align: center; padding: 4px; border: 1px solid #cccccc;" align="center"><%= _("Bugfix") %></th>
                           <th style="border-collapse: collapse; background-image: linear-gradient(#f5f5f5, #e8e8e8); text-align: center; padding: 4px; border: 1px solid #cccccc;" align="center"><%= _("Enhancement") %></th>
                         </tr>
-                        <% hosts.each do |host| %>
+                        <% hosts.sort.each do |host| %>
                           <tr>
                             <td style="text-align: left; border-collapse: collapse; background-color: #FFFFFF; padding: 4px; border: 1px solid #cccccc;" width="48%" align="left" bgcolor="#FFFFFF"><%= link_to host, content_host_errata_path(host) %></td>
                             <td width="18%" style="border-collapse: collapse; text-align: center; background-color: #FFFFFF; padding: 4px; border: 1px solid #cccccc;" align="center" bgcolor="#FFFFFF"><%= errata_count(host, :security) %></td>
