@@ -1,5 +1,5 @@
 describe('Controller: ProductsBulkActionSyncPlanController', function() {
-    var $scope, $q, ProductBulkAction, SyncPlan, Nutupane, selected;
+    var $scope, $q, ProductBulkAction, SyncPlan, Nutupane, selected, GlobalNotification;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
@@ -17,19 +17,21 @@ describe('Controller: ProductsBulkActionSyncPlanController', function() {
         };
     });
 
-    beforeEach(inject(function($controller, $rootScope, _$q_, MockResource) {
+    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, _$q_, MockResource) {
         $scope = $rootScope.$new();
         $q = _$q_;
 
         $scope.actionParams = {};
         $scope.getSelectedProductIds = function () { return selected; };
         SyncPlan = MockResource.$new();
+        GlobalNotification = _GlobalNotification_;
 
         $controller('ProductsBulkActionSyncPlanController', {
             $scope: $scope,
             Nutpane: Nutupane,
             SyncPlan: SyncPlan,
-            ProductBulkAction: ProductBulkAction
+            ProductBulkAction: ProductBulkAction,
+            GlobalNotification: GlobalNotification
         });
     }));
 

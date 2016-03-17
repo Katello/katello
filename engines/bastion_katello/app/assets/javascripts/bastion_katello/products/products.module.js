@@ -186,11 +186,10 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         collapsed: true,
         templateUrl: 'repositories/details/views/repository-manage-docker-manifests.html'
     })
-    .state('products.details.repositories.manage-ostree-branches', {
+    .state('products.details.repositories.manage-content.ostree-branches', {
         url: '/repositories/:repositoryId/content/ostree_branches',
         permission: 'view_products',
         collapsed: true,
-        controller: 'RepositoryManageOstreeBranchesController',
         templateUrl: 'repositories/details/views/repository-manage-ostree-branches.html'
     });
 

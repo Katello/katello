@@ -103,6 +103,7 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
                 } else {
                     successCallback();
                 }
+                return { then: function (callback) { callback(mockActivationKey) } };
             }
         };
 

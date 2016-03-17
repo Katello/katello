@@ -1,19 +1,19 @@
 class AddRpm < ActiveRecord::Migration
   def up
     create_table "katello_rpms" do |t|
-      t.string "uuid", :null => false
+      t.string "uuid", :null => false, :limit => 255
       t.timestamps
-      t.string 'name'
-      t.string 'version'
-      t.string 'release'
-      t.string 'arch'
-      t.string 'epoch'
-      t.string 'filename'
-      t.string 'sourcerpm'
-      t.string 'checksum'
-      t.string 'version_sortable'
-      t.string 'release_sortable'
-      t.string 'summary'
+      t.string 'name', :limit => 255
+      t.string 'version', :limit => 255
+      t.string 'release', :limit => 255
+      t.string 'arch', :limit => 255
+      t.string 'epoch', :limit => 255
+      t.string 'filename', :limit => 255
+      t.string 'sourcerpm', :limit => 255
+      t.string 'checksum', :limit => 255
+      t.string 'version_sortable', :limit => 255
+      t.string 'release_sortable', :limit => 255
+      t.string 'summary', :limit => 255
     end
 
     add_index :katello_rpms, :uuid, :unique => true

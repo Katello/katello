@@ -1,5 +1,5 @@
 describe('Controller: ContentHostsBulkActionSubscriptionsController', function() {
-    var $scope, $_q_, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization;
+    var $scope, $_q_, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization, GlobalNotification;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -28,9 +28,10 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
         CurrentOrganization = 'foo';
     });
 
-    beforeEach(inject(function($controller, $rootScope, $q) {
+    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, $q) {
         $_q_ = $q;
         $scope = $rootScope.$new();
+        GlobalNotification = _GlobalNotification_;
         $scope.getSelectedContentHostIds = function() {
             return [1,2,3]
         };
@@ -42,7 +43,8 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
             translate: translate,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
-            Task: Task});
+            Task: Task,
+            GlobalNotification: GlobalNotification});
     }));
 
     it("can auto-attach available subscriptions to all content hosts", function() {

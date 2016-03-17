@@ -72,7 +72,7 @@ namespace :katello do
           notes = []
           facts = fetch_resource { object.pulp_facts }
           notes << "Pulp Consumer #{object.uuid} was not found." if facts.nil?
-          candlepin_consumer_info = fetch_resource { object.candlepin_consumer_info }
+          candlepin_consumer_info = fetch_resource { Katello::Resources::Candlepin::Consumer.get(object.uuid) }
           notes << "Candlepin Consumer was not available for #{object.name}." if candlepin_consumer_info.nil?
           notes << "Foreman Host was not available for #{object.name}." if object.foreman_host.nil?
 
@@ -136,6 +136,7 @@ namespace :katello do
     Katello::Erratum.import_all
     Katello::PackageGroup.import_all
     Katello::PuppetModule.import_all
+    Katello::OstreeBranch.import_all if Katello::RepositoryTypeManager.find(Katello::Repository::OSTREE_TYPE).present?
     Katello::Subscription.import_all
     Katello::Pool.import_all
 
@@ -145,6 +146,11 @@ namespace :katello do
 
     reindex_helper.index_objects(Katello::Rpm) do
       Katello::Rpm.import_all
+    end
+
+    # For docker repositories, index all associated manifests and tags
+    Katello::Repository.docker_type.each do |docker_repo|
+      docker_repo.index_db_docker_manifests
     end
   end
 end

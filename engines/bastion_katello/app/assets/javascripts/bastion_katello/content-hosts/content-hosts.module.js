@@ -9,6 +9,7 @@ angular.module('Bastion.content-hosts', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.common',
     'Bastion.components',
     'Bastion.components.formatters',
     'Bastion.organizations',

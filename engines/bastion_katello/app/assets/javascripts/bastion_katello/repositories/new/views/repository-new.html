@@ -19,7 +19,6 @@
                name="name"
                ng-model="repository.name"
                type="text"
-               tabindex="1"
                autofocus
                required/>
       </div>
@@ -29,54 +28,67 @@
                name="label"
                ng-model="repository.label"
                type="text"
-               tabindex="1"
                required/>
       </div>
       <div bst-form-group label="{{ 'Type' | translate }}">
         <select required
-                tabindex="3"
                 id="content_type"
                 name="content_type"
                 ng-model="repository.content_type"
-                ng-options="type.name as type.name for type in repositoryTypes"
-                autofocus>
+                ng-options="type.name as type.name for type in repositoryTypes">
         </select>
       </div>
     </div>
     <div ng-show="repository.content_type !== undefined">
-        <h4 translate> Sync Information </h4>
-        <div bst-form-group label="{{ 'URL' | translate }}">
-          <input id="url"
-                 name="url"
-                 ng-model="repository.url"
-                 type="text"
-                 tabindex="5"/>
-          <h6 ng-show="repository.content_type === 'docker'" translate>
-            URL of the registry you want to sync. Example: https://registry.hub.docker.com
-          </h6>
+      <h4 translate> Sync Information </h4>
+      <div bst-form-group label="{{ 'URL' | translate }}">
+        <input id="url"
+               name="url"
+               ng-model="repository.url"
+               type="text"
+               ng-required="repository.content_type === 'docker'"/>
+        <h6 ng-show="repository.content_type === 'docker'" translate>
+          URL of the registry you want to sync. Example: https://registry-1.docker.io/
+        </h6>
 
-        </div>
+      </div>
 
-        <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
-          <input id="docker_upstream_name"
-                 name="docker_upstream_name"
-                 ng-model="repository.docker_upstream_name"
-                 type="text"
-                 tabindex="1"/>
-          <h6 translate>
-            Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh'.
-          </h6>
+      <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
+        <input id="docker_upstream_name"
+               name="docker_upstream_name"
+               ng-model="repository.docker_upstream_name"
+               type="text"
+               ng-required="repository.content_type === 'docker'"/>
+        <h6 translate>
+          Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh'.
+        </h6>
 
-        </div>
+      </div>
 
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
+        <select id="download_policy"
+                name="download_policy"
+                ng-model="repository.download_policy"
+                ng-options="id as name for (id, name) in downloadPolicies">
+        </select>
+      </div>
+
+      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}" ng-show="repository.content_type === 'yum'">
+        <input id="mirror_on_sync"
+               name="mirror_on_sync"
+               ng-model="repository.mirror_on_sync"
+               type="checkbox"/>
+        <h6 translate>
+          Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
+        </h6>
+      </div>
     </div>
 
     <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
       <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
 
       <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type === 'yum'">
-        <select tabindex="4"
-                id="checksum_type"
+        <select id="checksum_type"
                 name="checksum_type"
                 ng-model="repository.checksum_type"
                 ng-options="type.id as type.name for type in checksums">
@@ -90,38 +102,16 @@
         <input id="unprotected"
                name="unprotected"
                ng-model="repository.unprotected"
-               type="checkbox"
-               tabindex="6"/>
+               type="checkbox"/>
       </div>
 
       <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type === 'yum'">
         <select id="gpg_key_id"
                 name="gpg_key_id"
                 ng-model="repository.gpg_key_id"
-                ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
-                tabindex="7">
+                ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
           <option value=""></option>
         </select>
-      </div>
-
-      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
-        <select tabindex="4"
-                id="download_policy"
-                name="download_policy"
-                ng-model="repository.download_policy"
-                ng-options="id as name for (id, name) in downloadPolicies">
-        </select>
-      </div>
-
-      <div bst-form-group label="{{ 'Mirror On Sync' | translate }}">
-        <input id="mirror_on_sync"
-               name="mirror_on_sync"
-               ng-model="repository.mirror_on_sync"
-               type="checkbox"
-               tabindex="8"/>
-        <h6 translate>
-          Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
-        </h6>
       </div>
     </div>
 
@@ -131,6 +121,6 @@
          working="working">
     </div>
 
-
   </form>
 </section>
+

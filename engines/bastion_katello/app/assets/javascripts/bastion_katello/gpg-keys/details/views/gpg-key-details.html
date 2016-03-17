@@ -1,47 +1,50 @@
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header new-header">
-    <h2 class="fl" translate>
-      GPG Key {{ gpgKey.name }}
-    </h2>
+  <div ng-hide="panel.error">
+    <header class="details-header new-header">
+      <h2 class="fl" translate>
+        GPG Key {{ gpgKey.name }}
+      </h2>
 
-    <div class="details-actions fr">
-      <button class="btn btn-default"
-              ng-click="openModal()"
-              ng-hide="denied('destroy_gpg_keys', gpgKey)"
-              translate>
-        Remove GPG Key
-      </button>
+      <div class="details-actions fr">
+        <button class="btn btn-default"
+                ng-click="openModal()"
+                ng-hide="denied('destroy_gpg_keys', gpgKey)"
+                translate>
+          Remove GPG Key
+        </button>
 
-      <button class="btn btn-default" ng-click="table.closeItem()">
-        <i class="fa fa-remove"></i>
-        <span translate>Close</span>
-      </button>
+        <button class="btn btn-default" ng-click="table.closeItem()">
+          <i class="fa fa-remove"></i>
+          <span translate>Close</span>
+        </button>
 
-      <div bst-modal="removeGPGKey(gpgKey)">
-        <div data-block="modal-header" translate>Remove GPG Key {{ gpgKey.name }}</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove GPG key {{ gpgKey.name }}?</div>
+        <div bst-modal="removeGPGKey(gpgKey)">
+          <div data-block="modal-header" translate>Remove GPG Key {{ gpgKey.name }}</div>
+          <div data-block="modal-body" translate>Are you sure you want to remove GPG key {{ gpgKey.name }}?</div>
+        </div>
+
       </div>
+    </header>
 
-    </div>
-  </header>
+    <nav class="details-navigation">
+      <ul>
+        <li ng-class="{active: isState('gpgKeys.details.info')}">
+          <a ui-sref="gpgKeys.details.info" translate>Details</a>
+        </li>
 
-  <nav class="details-navigation">
-    <ul>
-      <li ng-class="{active: isState('gpgKeys.details.info')}">
-        <a ui-sref="gpgKeys.details.info" translate>Details</a>
-      </li>
+        <li ng-class="{active: stateIncludes('gpgKeys.details.products')}">
+          <a ui-sref="gpgKeys.details.products" translate>Products</a>
+        </li>
 
-      <li ng-class="{active: stateIncludes('gpgKeys.details.products')}">
-        <a ui-sref="gpgKeys.details.products" translate>Products</a>
-      </li>
+        <li ng-class="{active: stateIncludes('gpgKeys.details.repositories')}">
+          <a ui-sref="gpgKeys.details.repositories" translate>Repositories</a>
+        </li>
+      </ul>
+    </nav>
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-      <li ng-class="{active: stateIncludes('gpgKeys.details.repositories')}">
-        <a ui-sref="gpgKeys.details.repositories" translate>Repositories</a>
-      </li>
-    </ul>
-  </nav>
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-
-  <section class="nutupane-sub-section" ui-view></section>
+    <section class="nutupane-sub-section" ui-view></section>
+  </div>
 </section>

@@ -165,7 +165,7 @@ module Katello
 
           def entitlements(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
-            Util::Data.array_with_indifferent_access JSON.parse(response)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
           end
 
           def refresh_entitlements(uuid)
@@ -196,7 +196,7 @@ module Katello
 
           def virtual_guests(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
-            Util::Data.array_with_indifferent_access JSON.parse(response)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
           rescue
             return []
           end
@@ -230,7 +230,7 @@ module Katello
           def events(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
             if response.present?
-              Util::Data.array_with_indifferent_access JSON.parse(response)
+              ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
             else
               return []
             end
@@ -238,7 +238,7 @@ module Katello
 
           def content_overrides(id)
             result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
-            Util::Data.array_with_indifferent_access(JSON.parse(result))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
 
           def update_content_override(id, content_label, name, value = nil)
@@ -253,7 +253,7 @@ module Katello
               client.options[:payload] = attrs.to_json
               result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
             end
-            Util::Data.array_with_indifferent_access(JSON.parse(result))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
         end
       end
@@ -378,7 +378,7 @@ module Katello
 
           def imports(organization_name)
             imports_json = self.get(join_path(path(organization_name), 'imports'), self.default_headers)
-            Util::Data.array_with_indifferent_access JSON.parse(imports_json)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(imports_json)
           end
 
           def pools(key, filter = {})
@@ -391,12 +391,12 @@ module Katello
             else
               json_str = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
             end
-            Util::Data.array_with_indifferent_access JSON.parse(json_str)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
 
           def statistics(key)
             json_str = self.get(join_path(path(key), 'statistics'), self.default_headers).body
-            Util::Data.array_with_indifferent_access JSON.parse(json_str)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
 
           def generate_ueber_cert(key)
@@ -418,7 +418,7 @@ module Katello
 
           def events(key)
             response = self.get(join_path(path(key), 'events'), self.default_headers).body
-            Util::Data.array_with_indifferent_access JSON.parse(response)
+            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
           end
 
           def service_levels(uuid)
@@ -622,7 +622,7 @@ module Katello
             products_json = super(path(id), self.default_headers).body
             products = JSON.parse(products_json)
             products = [products] unless id.nil?
-            Util::Data.array_with_indifferent_access products
+            ::Katello::Util::Data.array_with_indifferent_access products
           end
 
           def _certificate_and_key(id, owner)
@@ -675,7 +675,7 @@ module Katello
               'providedProducts' => [],
               'contractNumber' => ''
             }
-            Candlepin::Subscription.create_for_owner owner_key, subscription
+            JSON.parse(Candlepin::Subscription.create_for_owner(owner_key, subscription))
           end
 
           def pools(owner_key, product_id)
@@ -732,7 +732,7 @@ module Katello
             akeys_json = super(path(id) + params, self.default_headers).body
             akeys = JSON.parse(akeys_json)
             akeys = [akeys] unless id.nil?
-            Util::Data.array_with_indifferent_access akeys
+            ::Katello::Util::Data.array_with_indifferent_access akeys
           end
 
           def create(name, owner_key, auto_attach)
@@ -757,7 +757,7 @@ module Katello
           def key_pools(id)
             kp_json = Candlepin::CandlepinResource.get(join_path(path(id), "pools"), self.default_headers).body
             key_pools = JSON.parse(kp_json)
-            Util::Data.array_with_indifferent_access key_pools
+            ::Katello::Util::Data.array_with_indifferent_access key_pools
           end
 
           def add_product(id, product_id)
@@ -786,7 +786,7 @@ module Katello
 
           def content_overrides(id)
             result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
-            Util::Data.array_with_indifferent_access(JSON.parse(result))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
 
           def update_content_override(id, content_label, name, value = nil)
@@ -801,7 +801,7 @@ module Katello
               client.options[:payload] = attrs.to_json
               result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
             end
-            Util::Data.array_with_indifferent_access(JSON.parse(result))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
 
           def path(id = nil)

@@ -9,6 +9,8 @@ module Katello
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
 
+    scope :in_org, -> (org_id) { joins(:subscription).where("#{Katello::Subscription.table_name}.organization_id = ?", org_id) }
+
     self.include_root_in_json = false
 
     include Glue::Candlepin::Pool
@@ -35,11 +37,6 @@ module Katello
 
     DAYS_EXPIRING_SOON = 120
     DAYS_RECENTLY_EXPIRED = 30
-
-    # ActivationKey includes the Pool's json in its own'
-    def as_json(*_args)
-      self.remote_data.merge(:cp_id => self.cp_id)
-    end
 
     def self.active(subscriptions)
       subscriptions.select { |s| s.active }

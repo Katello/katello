@@ -1,5 +1,5 @@
 describe('Controller: NewSyncPlanController', function() {
-    var $scope, translate, SyncPlan;
+    var $scope, translate, SyncPlan, GlobalNotification;
 
     beforeEach(module(
         'Bastion.sync-plans',
@@ -10,6 +10,7 @@ describe('Controller: NewSyncPlanController', function() {
         var $controller = $injector.get('$controller');
 
         SyncPlan = $injector.get('MockResource').$new()
+        GlobalNotification = $injector.get('GlobalNotification');
         $scope = $injector.get('$rootScope').$new();
         $scope.$state = {go: function () {}};
 
@@ -18,15 +19,15 @@ describe('Controller: NewSyncPlanController', function() {
         $scope.syncPlanTable = {
             rows: {
                 unshift: function () {}
-            }
-        };
+             }
+         };
 
         $controller('NewSyncPlanController', {
             $scope: $scope,
             translate: translate,
-            SyncPlan: SyncPlan
+            SyncPlan: SyncPlan,
+            GlobalNotification: GlobalNotification
         });
-
     }));
 
     it('should attach a sync plan resource on to the scope', function() {
@@ -83,11 +84,12 @@ describe('Controller: NewSyncPlanController', function() {
         spyOn($scope.$state, 'go');
         spyOn(syncPlan, '$save').andCallThrough();
         spyOn($scope.syncPlanTable.rows, 'unshift');
+        spyOn(GlobalNotification, "setSuccessMessage");
 
         $scope.createSyncPlan(syncPlan);
 
         expect($scope.working).toBe(false);
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.syncPlanTable.rows.unshift).toHaveBeenCalledWith(syncPlan);
         expect($scope.$state.go).toHaveBeenCalledWith('sync-plans.details.info', {syncPlanId: syncPlan.id});
     });
@@ -99,12 +101,13 @@ describe('Controller: NewSyncPlanController', function() {
 
         spyOn($scope.$state, 'go');
         spyOn(syncPlan, '$save').andCallThrough();
+        spyOn(GlobalNotification, "setSuccessMessage");
 
         $scope.product = {id: 1};
         $scope.createSyncPlan(syncPlan);
 
         expect($scope.working).toBe(false);
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.$state.go).toHaveBeenCalledWith('products.details.info', {productId: $scope.product.id});
     });
 });

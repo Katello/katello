@@ -79,13 +79,8 @@ describe('Controller: ContentHostDetailsController', function() {
         expect($scope.menuExpander).toBe(MenuExpander);
     });
 
-    it("gets the  host using the Host service and puts it on the $scope.", function() {
-        expect(Host.get).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function));
-        expect($scope.host).toBe(mockHost);
-    });
-
     it("gets the host using the Host service and puts it on the $scope.", function() {
-        expect(Host.get).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function));
+        expect(Host.get).toHaveBeenCalledWith({id: mockHost.id}, jasmine.any(Function), jasmine.any(Function));
         expect($scope.host).toBe(mockHost);
     });
 

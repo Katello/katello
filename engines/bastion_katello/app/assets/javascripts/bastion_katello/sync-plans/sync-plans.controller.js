@@ -15,12 +15,9 @@
  *   within the table.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlansController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'SyncPlan', 'CurrentOrganization',
-        function ($scope, $location, translate, Nutupane, SyncPlan, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'SyncPlan', 'CurrentOrganization', 'GlobalNotification',
+        function ($scope, $location, translate, Nutupane, SyncPlan, CurrentOrganization, GlobalNotification) {
             var params, nutupane;
-
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
 
             params = {
                 'organization_id': CurrentOrganization,
@@ -49,7 +46,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
 
             $scope.removeSyncPlan = function (syncPlan) {
                 syncPlan.$remove(function () {
-                    $scope.successMessages.push(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
+                    GlobalNotification.setSuccessMessage(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
                     $scope.removeRow(syncPlan.id);
                     $scope.transitionTo('sync-plans.index');
                 });

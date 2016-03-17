@@ -14,8 +14,9 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductsController',
-    ['$scope', '$location', 'Nutupane', 'Product', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, Product, CurrentOrganization) {
+    ['$scope', '$sce', '$location', 'Nutupane', 'Product', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, $sce, $location, Nutupane, Product, CurrentOrganization, GlobalNotification) {
+        var taskUrl, taskLink;
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -36,7 +37,9 @@ angular.module('Bastion.products').controller('ProductsController',
         };
 
         $scope.$on('productDelete', function (event, taskId) {
-            $scope.productDeletionTaskId = taskId;
+            taskUrl = $scope.taskUrl(taskId);
+            taskLink = $sce.trustAsHtml("<a href=" + taskUrl + ">here</a>");
+            GlobalNotification.setRenderedSuccessMessage("Product delete operation has been initiated in the background. Click " + taskLink + " click to monitor the progress.");
         });
 
         $scope.unsetProductDeletionTaskId = function () {

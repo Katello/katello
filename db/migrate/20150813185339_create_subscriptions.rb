@@ -2,9 +2,9 @@ class CreateSubscriptions < ActiveRecord::Migration
   # rubocop:disable MethodLength
   def change
     create_table "katello_subscriptions" do |t|
-      t.string  :name
-      t.string  :product_id
-      t.string  :cp_id
+      t.string  :name, :limit => 255
+      t.string  :product_id, :limit => 255
+      t.string  :cp_id, :limit => 255
       t.string  :support_level
       t.integer :organization_id
       t.integer :sockets
@@ -20,9 +20,9 @@ class CreateSubscriptions < ActiveRecord::Migration
     add_column :katello_pools, :contract_number, :integer
     add_column :katello_pools, :virtual, :boolean
     add_column :katello_pools, :quantity, :integer
-    add_column :katello_pools, :start_date, :string
-    add_column :katello_pools, :pool_type, :string
-    add_column :katello_pools, :end_date, :string
+    add_column :katello_pools, :start_date, :string, :limit => 255
+    add_column :katello_pools, :pool_type, :string, :limit => 255
+    add_column :katello_pools, :end_date, :string, :limit => 255
     add_column :katello_pools, :ram, :integer
     add_column :katello_pools, :multi_entitlement, :boolean
     add_column :katello_pools, :consumed, :integer

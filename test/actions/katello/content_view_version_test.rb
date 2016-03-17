@@ -58,7 +58,7 @@ module ::Actions::Katello::ContentViewVersion
     end
 
     let(:library_repo) do
-      katello_repositories(:rhel_7_x86_64)
+      katello_repositories(:fedora_17_x86_64_library_view_2)
     end
 
     it 'plans' do
@@ -68,8 +68,19 @@ module ::Actions::Katello::ContentViewVersion
       action.stubs(:task).returns(task)
       plan_action(action, content_view_version, false, nil, 0)
       # verify everything bubbles through to the export action as we expect
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, ["3"], false, nil,
-                                0, "-published_library_view-v2.0")
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, [library_repo],
+                                false, nil, 0, "-published_library_view-v2.0")
+    end
+
+    it 'plans with date' do
+      stub_remote_user
+
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      action.stubs(:task).returns(task)
+      # the date should not be converted to an iso8601 when fed to Repository::Export.
+      plan_action(action, content_view_version, false, '1841-01-01', 0)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, [library_repo],
+                                false, '1841-01-01', 0, "-published_library_view-v2.0")
     end
   end
 end

@@ -1,6 +1,9 @@
 //= require "bastion_katello/host-collections/host-collections.module.js"
 //= require_tree "./host-collections"
 
+//= require "bastion_katello/common/common.module.js"
+//= require_tree "./common"
+
 //= require "bastion_katello/content-hosts/content-hosts.module.js"
 //= require_tree "./content-hosts"
 
@@ -21,6 +24,9 @@
 
 //= require "bastion_katello/docker-tags/docker-tags.module.js"
 //= require_tree "./docker-tags"
+
+//= require "bastion_katello/ostree-branches/ostree-branches.module.js"
+//= require_tree "./ostree-branches"
 
 //= require "bastion_katello/errata/errata.module"
 //= require_tree "./errata"

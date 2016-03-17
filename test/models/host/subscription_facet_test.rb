@@ -15,6 +15,39 @@ module Katello
   end
 
   class SubscriptionFacetTest < SubscriptionFacetBase
+    def test_search_release_version
+      subscription_facet.update_attributes!(:release_version => '7Server')
+
+      assert_includes ::Host.search_for("release_version = 7Server"), host
+    end
+
+    def test_search_autoheal
+      subscription_facet.update_attributes!(:autoheal => 'true')
+
+      assert_includes ::Host.search_for("autoheal = true"), host
+    end
+
+    def test_search_service_level
+      subscription_facet.update_attributes!(:service_level => 'terrible')
+
+      assert_includes ::Host.search_for("service_level = terrible"), host
+    end
+
+    def test_search_uuid
+      subscription_facet.uuid = "kdjfkdjf"
+      subscription_facet.save!
+
+      assert_includes ::Host.search_for("subscription_uuid = kdjfkdjf"), host
+    end
+
+    def test_search_last_checkin
+      subscription_facet.last_checkin = DateTime.now - 1.hour
+      subscription_facet.save!
+
+      assert_includes ::Host.search_for('last_checkin > "3 hours ago"'), host
+      refute_includes ::Host.search_for('last_checkin < "3 hours ago"'), host
+    end
+
     def test_create
       empty_host.subscription_facet = Katello::Host::SubscriptionFacet.create!(:host => empty_host)
     end

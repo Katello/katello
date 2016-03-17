@@ -9,20 +9,27 @@
  * @requires Organization
  * @requires CurrentOrganization
  * @requires MenuExpander
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'Organization', 'CurrentOrganization', 'MenuExpander',
-    function ($scope, $state, $q, translate, Host, Organization, CurrentOrganization, MenuExpander) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'Organization', 'CurrentOrganization', 'MenuExpander', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, Organization, CurrentOrganization, MenuExpander, ApiErrorHandler) {
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
         $scope.errorMessages = [];
-        $scope.panel = {loading: true};
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
         $scope.host = Host.get({id: $scope.$stateParams.hostId}, function () {
             $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         // @TODO begin hack for content and subscript facets
@@ -40,7 +47,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             host['subscription_facet_attributes'] = {
                 id: host.subscription.id,
                 autoheal: host.subscription.autoheal,
-                'service_level': host.subscription.service_level
+                'service_level': host.subscription.service_level,
+                'release_version': host.subscription.release_version
             };
             return $scope.save(host);
         };
@@ -49,7 +57,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.save = function (host) {
             var deferred = $q.defer();
 
-            // TODO begin hack needed to use the foreman host API, see the following bugs:
+            // @TODO begin hack needed to use the foreman host API, see the following bugs:
             // http://projects.theforeman.org/issues/13622
             // http://projects.theforeman.org/issues/13669
             // http://projects.theforeman.org/issues/13670
@@ -78,7 +86,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                     $scope.errorMessages.push(translate("An error occurred saving the Content Host: ") + errorMessage);
                 });
             });
-            // TODO end hack
+            // @TODO end hack
 
             return deferred.promise;
         };

@@ -6,7 +6,7 @@ class RemoveProviderDiscovery < ActiveRecord::Migration
   end
 
   def down
-    add_column :katello_providers, :discovery_url, :string
+    add_column :katello_providers, :discovery_url, :string, :limit => 255
     add_column :katello_providers, :discovered_repos, :text
     add_column :katello_providers, :discovery_task_id, :integer
   end

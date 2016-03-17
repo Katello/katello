@@ -26,6 +26,8 @@ module Katello
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :in => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id
         scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
+        scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package
+        scoped_search :in => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name
 
         attr_accessible :content_source_id, :host_collection_ids, :description
       end

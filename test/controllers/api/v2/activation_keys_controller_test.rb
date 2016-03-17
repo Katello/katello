@@ -117,9 +117,9 @@ module Katello
     end
 
     def test_update_limit_below_consumed
-      content_host1 = System.find(katello_systems(:simple_server))
-      content_host2 = System.find(katello_systems(:simple_server2))
-      @activation_key.system_ids = [content_host1.id, content_host2.id]
+      subscription_facet1 = Host::SubscriptionFacet.find(katello_subscription_facets(:one))
+      subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two))
+      @activation_key.subscription_facet_ids = [subscription_facet1.id, subscription_facet2.id]
 
       results = JSON.parse(put(:update, :id => @activation_key.id, :organization_id => @organization.id,
                                :activation_key => {:max_content_hosts => 1}).body)
@@ -147,6 +147,27 @@ module Katello
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
       end
+    end
+
+    def test_copy
+      ActivationKey.any_instance.expects(:reload)
+      @activation_key.stubs(:service_level).returns("Premium")
+      @activation_key.stubs(:release_version).returns("6Server")
+      @activation_key.stubs(:auto_attach).returns(false)
+      @controller.instance_variable_set(:@activation_key, @activation_key)
+      @controller.stubs(:find_activation_key).returns(@activation_key)
+
+      assert_sync_task(::Actions::Katello::ActivationKey::Create)
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |_activation_key, activation_key_params|
+        assert_equal activation_key_params[:service_level], @activation_key.service_level
+        assert_equal activation_key_params[:release_version], @activation_key.release_version
+        assert_equal activation_key_params[:auto_attach], @activation_key.auto_attach
+      end
+
+      post :copy, :id => @activation_key.id, :organization_id => @organization.id, :new_name => 'New Name'
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
     end
 
     def test_copy_protected

@@ -11,10 +11,21 @@ module Actions
 
         EXPORT_OUTPUT_BASEDIR = "/var/lib/pulp/published/yum/master/group_export_distributor/"
 
-        def plan(repo_pulp_ids, export_to_iso, since, iso_size, group_id)
-          # assemble data to feed to Pulp
-          start_date = since ? since.iso8601 : nil
+        def plan(repos, export_to_iso, since, iso_size, group_id)
+          unless File.directory?(Setting['pulp_export_destination'])
+            fail ::Foreman::Exception, N_("Unable to export, 'pulp_export_destination' setting is not set to a valid directory.")
+          end
 
+          unless File.writable?(Setting['pulp_export_destination'])
+            fail ::Foreman::Exception, N_("Unable to export, 'pulp_export_destination' setting is not a writable directory.")
+          end
+
+          repo_pulp_ids = repos.collect do |repo|
+            action_subject(repo)
+            repo.pulp_id
+          end
+
+          start_date = since ? since.iso8601 : nil
           unless since.nil?
             group_id += "-incremental"
           end
@@ -25,8 +36,7 @@ module Actions
           # Additionally, we want Pulp to export to dirs that Pulp owns, and
           # then Katello can copy it over as needed. This is needed for SELinux
           # reasons.
-          export_directory = File.join(EXPORT_OUTPUT_BASEDIR, group_id,
-                                       Time.now.getutc.to_f.round(2).to_s)
+          export_directory = File.join(EXPORT_OUTPUT_BASEDIR, group_id)
 
           sequence do
             plan_action(Pulp::RepositoryGroup::Create, :id => group_id,
@@ -47,7 +57,7 @@ module Actions
           # Pulp do the deletion as part of repo group delete since it's under
           # /v/l/p.
           export_location = File.join(EXPORT_OUTPUT_BASEDIR, input[:group_id])
-          FileUtils.cp_r(export_location, Setting['pulp_export_destination'])
+          FileUtils.cp_r(export_location, Setting['pulp_export_destination'], :remove_destination => true)
         end
 
         def humanized_name

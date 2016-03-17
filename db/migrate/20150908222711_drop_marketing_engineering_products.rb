@@ -16,6 +16,6 @@ class DropMarketingEngineeringProducts < ActiveRecord::Migration
       t.integer "engineering_product_id"
     end
 
-    add_column :katello_products, :type, :string
+    add_column :katello_products, :type, :string, :limit => 255
   end
 end

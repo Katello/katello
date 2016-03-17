@@ -3,11 +3,11 @@ class CreatePuppetModules < ActiveRecord::Migration
   def up
     create_table 'katello_puppet_modules' do |t|
       t.timestamps
-      t.string "uuid", :null => false
-      t.string 'name'
-      t.string 'author'
-      t.string 'title'
-      t.string 'version'
+      t.string "uuid", :null => false, :limit => 255
+      t.string 'name', :limit => 255
+      t.string 'author', :limit => 255
+      t.string 'title', :limit => 255
+      t.string 'version', :limit => 255
       t.text 'summary'
     end
 

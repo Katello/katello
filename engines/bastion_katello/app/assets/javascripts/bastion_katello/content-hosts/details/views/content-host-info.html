@@ -2,7 +2,7 @@
 
 <section>
   <div class="details fl" ng-hide="host.hasContent()">
-    <div data-extend-template="common/registration.html"></div>
+    <div data-extend-template="common/views/registration.html"></div>
   </div>
 
   <div class="details fl" ng-show="host.hasContent()">
@@ -159,7 +159,7 @@
 
     </section>
   </div>
-  
+
   <div class="fr details" ng-show="host.hasContent()">
     <section>
       <h4 translate>Installable Errata</h4>
@@ -210,12 +210,12 @@
         <span class="info-value"
               bst-edit-select="host.subscription.release_version"
               readonly="denied('edit_hosts', host)"
-              selector="host.subscription.release_verion"
+              selector="host.subscription.release_version"
               options="releaseVersions()"
               options-format="option for option in options"
               deletable="true"
               on-delete="clearReleaseVersion()"
-              on-save="save(host)"
+              on-save="saveSubscriptionFacet(host)"
               on-cancel="cancelReleaseVersionUpdate()">
         </span>
         <div alert type="'info'" ng-show="showVersionAlert">

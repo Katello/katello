@@ -1,6 +1,6 @@
 class UpdateEnvironmentsAddKatelloId < ActiveRecord::Migration
   def up
-    add_column :environments, :katello_id, :string
+    add_column :environments, :katello_id, :string, :limit => 255
     add_index :environments, :katello_id
   end
 

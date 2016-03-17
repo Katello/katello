@@ -77,7 +77,7 @@ function ktSetParam(name, value) {
     var paramContainer = ktFindParamContainer(name);
     if(value) {
         if(! paramContainer) { // we create the param for kt_activation_keys
-            $("div#parameters a.btn-success").click();
+            $("div#parameters a[target~='#global_parameters_table']").click();
             paramContainer = $("div#parameters .fields").last();
             paramContainer.find("input").val(name);
         }

@@ -27,6 +27,12 @@ module Katello
       @export_permission = :export_products
     end
 
+    def backend_stubs
+      Product.any_instance.stubs(:certificate).returns(nil)
+      Product.any_instance.stubs(:key).returns(nil)
+      Resources::CDN::CdnResource.stubs(:ca_file_contents).returns(:nil)
+    end
+
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin)))
@@ -34,9 +40,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       models
       permissions
-      [:package_group_count, :package_count, :puppet_module_count].each do |content_type_count|
-        Repository.any_instance.stubs(content_type_count).returns(0)
-      end
+      backend_stubs
     end
 
     def test_index
@@ -232,7 +236,7 @@ module Katello
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
       product.expect(:unprotected?, true)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -262,7 +266,7 @@ module Katello
       product.expect(:gpg_key, nil)
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -294,7 +298,7 @@ module Katello
       ])
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -324,7 +328,7 @@ module Katello
       product.expect(:gpg_key, nil)
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -355,7 +359,7 @@ module Katello
       product.expect(:gpg_key, nil)
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -387,7 +391,7 @@ module Katello
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
       product.expect(:unprotected?, false)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -421,7 +425,7 @@ module Katello
       product.expect(:redhat?, false)
       product.expect(:unprotected?, false)
       @repository.expects(:mirror_on_sync=).with(mirror_on_sync)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -455,7 +459,7 @@ module Katello
       product.expect(:redhat?, false)
       product.expect(:unprotected?, true)
       product.expect(:docker_upstream_name, docker_upstream_name)
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, nil)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
@@ -486,16 +490,14 @@ module Katello
       product.expect(:gpg_key, nil)
       product.expect(:organization, @organization)
       product.expect(:redhat?, false)
-      branches = ["branch1", "branch2"]
 
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true, branches)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stub(:find, product) do
         post :create, :name => 'Fedora Repository',
                       :product_id => @product.id,
                       :url => 'http://hub.registry.com',
-                      :content_type => 'ostree',
-                      :ostree_branches => branches
+                      :content_type => 'ostree'
 
         assert_response :success
         assert_template 'api/v2/repositories/show'
@@ -537,20 +539,9 @@ module Katello
       key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
       assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
         repo.must_equal @repository
-        attributes.must_equal('gpg_key_id' => "#{key.id}", 'url' => nil)
+        attributes.must_equal('gpg_key_id' => "#{key.id}")
       end
       put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
-      assert_response :success
-      assert_template 'api/v2/repositories/show'
-    end
-
-    def test_update_empty_string_url
-      assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
-        repo.must_equal @repository
-        attributes.must_equal('url' => nil)
-      end
-      put :update, :id => @repository.id, :repository => {:url => ''}
-
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -730,6 +721,7 @@ module Katello
     end
 
     def test_export
+      Setting['pulp_export_destination'] = '/tmp'
       post :export, :id => @repository.id
       assert_response :success
     end
@@ -740,11 +732,13 @@ module Katello
     end
 
     def test_export_with_date
+      Setting['pulp_export_destination'] = '/tmp'
       post :export, :id => @repository.id, :since => 'November 30, 1970'
       assert_response :success
     end
 
     def test_export_with_8601_date
+      Setting['pulp_export_destination'] = '/tmp'
       post :export, :id => @repository.id, :since => '2010-01-01T00:00:00'
       assert_response :success
     end

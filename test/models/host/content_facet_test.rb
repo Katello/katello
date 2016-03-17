@@ -40,6 +40,15 @@ module Katello
       refute_empty content_facet.applicable_errata
     end
 
+    def test_errata_searchable
+      other_host = FactoryGirl.create(:host)
+      errata = katello_errata(:security)
+      found = ::Host.search_for("applicable_errata = #{errata.errata_id}")
+
+      assert_includes found, content_facet.host
+      refute_includes found, other_host
+    end
+
     def test_available_and_applicable_errta
       @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64))
       content_facet.bound_repositories = [@view_repo]

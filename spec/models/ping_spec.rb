@@ -21,7 +21,7 @@ module Katello
           # pulp - with oauth
           Katello.pulp_server.resources.user.stubs(:retrieve_all).returns([])
 
-          Ping.expects(:pulp_without_oauth).returns(nil)
+          Ping.expects(:pulp_without_auth).returns(nil)
 
           subject.must_be_instance_of(String)
         end

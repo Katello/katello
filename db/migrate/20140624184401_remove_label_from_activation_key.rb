@@ -4,6 +4,6 @@ class RemoveLabelFromActivationKey < ActiveRecord::Migration
   end
 
   def down
-    add_column :katello_activation_keys, :label, :string
+    add_column :katello_activation_keys, :label, :string, :limit => 255
   end
 end

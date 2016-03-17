@@ -39,6 +39,8 @@ module Katello
       @repo.content_type = 'docker'
       @repo.download_policy = nil
       @repo.docker_upstream_name = ""
+      @repo.url = ""
+      refute @repo.valid?
       @repo.url = "http://registry.com"
       refute @repo.valid?
       @repo.docker_upstream_name = "justin"
@@ -50,7 +52,7 @@ module Katello
       refute @repo.valid?
       @repo.url = nil
       @repo.docker_upstream_name = nil
-      assert @repo.valid?
+      refute @repo.valid?
     end
 
     def test_docker_repository_docker_upstream_name_format
@@ -189,19 +191,12 @@ module Katello
       refute @repo.save
     end
 
-    def test_ostree_branch_create
-      @repo.url = "http://foo.com"
+    def test_ostree_unprotected
       @repo.content_type = Repository::OSTREE_TYPE
-      @repo.download_policy = nil
-      assert OstreeBranch.create(:repository => @repo, :name => "/foo/bar")
-    end
-
-    def test_ostree_branch_bad_create
       @repo.url = "http://foo.com"
-      @repo.content_type = Repository::DOCKER_TYPE
-      assert_raises ActiveRecord::RecordInvalid do
-        OstreeBranch.create!(:repository => @repo, :name => "/foo/bar1")
-      end
+      @repo.download_policy = nil
+      @repo.unprotected = true
+      refute @repo.save
     end
   end
 
@@ -268,53 +263,6 @@ module Katello
       repos = Repository.search_for("distribution_bootable = \"#{@fedora_17_x86_64.distribution_bootable}\"")
       assert_includes repos, @fedora_17_x86_64
       refute_includes repos, @puppet_forge
-    end
-  end
-
-  class OstreeRepositoryInstanceTest < RepositoryTestBase
-    def setup
-      super
-      User.current = @admin
-      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
-      @repo.content_type = Repository::OSTREE_TYPE
-    end
-
-    def test_ostree_branch_update
-      assert OstreeBranch.create(:repository => @repo, :name => "/foo/bar")
-      @repo.url = ""
-      refute @repo.save
-    end
-
-    def test_bad_branch_update
-      rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
-      assert_raises ActiveRecord::RecordInvalid do
-        OstreeBranch.create!(:repository => rhel6, :name => "/foo/bar1")
-      end
-    end
-
-    def test_ostree_branch_update_methods
-      branches = ["branch1", "branch2"]
-      @repo.update_ostree_branches!(branches)
-      branches.each do |branch_name|
-        assert_includes @repo.ostree_branch_names, branch_name
-      end
-
-      branches2 = ["branch3", "branch4"]
-      @repo.update_ostree_branches!(branches2)
-      @repo = @repo.reload
-      branches.each do |branch_name|
-        refute_includes @repo.ostree_branch_names, branch_name
-      end
-
-      branches2.each do |branch_name|
-        assert_includes @repo.ostree_branch_names, branch_name
-      end
-    end
-
-    def test_ostree_branch_update_duplicate_violation
-      assert_raises ::Katello::Errors::ConflictException do
-        @repo.update_ostree_branches!(["branch", "branch"])
-      end
     end
   end
 
@@ -464,6 +412,18 @@ module Katello
       manifests = @redis.docker_manifests.sample(2).sort_by { |obj| obj.id }
       refute_empty manifests
       assert_equal manifests, @redis.units_for_removal(manifests.map(&:id)).sort_by { |obj| obj.id }
+    end
+
+    def test_units_for_removal_ostree
+      ['one', 'two', 'three'].each do |str|
+        @ostree_rhel7.ostree_branches.create!(:name => str) do |branch|
+          branch.uuid = str
+        end
+      end
+
+      branches = @ostree_rhel7.ostree_branches.sample(2).sort_by { |obj| obj.id }
+      refute_empty branches
+      assert_equal branches, @ostree_rhel7.units_for_removal(branches.map(&:id)).sort_by { |obj| obj.id }
     end
 
     def test_environmental_instances
@@ -618,6 +578,12 @@ module Katello
     def test_with_errata
       errata = @rhel6.errata.first
       assert_includes Repository.with_errata([errata]), @rhel6
+    end
+
+    def test_capsule_download_policy
+      assert_equal @content_view_puppet_environment.capsule_download_policy, nil
+      assert_equal @puppet_forge.capsule_download_policy, nil
+      assert_not_nil @fedora_17_x86_64.download_policy
     end
   end
 

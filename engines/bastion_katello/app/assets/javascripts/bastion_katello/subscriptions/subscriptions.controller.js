@@ -33,8 +33,6 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         nutupane = new Nutupane(Subscription, params);
         $scope.table = nutupane.table;
         $scope.refreshTable = nutupane.refresh;
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
         $scope.controllerName = 'katello_subscriptions';
 
         $scope.table.closeItem = function () {

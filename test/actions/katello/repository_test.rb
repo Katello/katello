@@ -18,6 +18,8 @@ module ::Actions::Katello::Repository
 
     before(:all) do
       set_user
+      ::Katello::Product.any_instance.stubs(:certificate).returns(nil)
+      ::Katello::Product.any_instance.stubs(:key).returns(nil)
     end
   end
 
@@ -191,10 +193,10 @@ module ::Actions::Katello::Repository
       import_dir = File.join(::Katello::Engine.root, "test", "fixtures", "files")
       plan_action action, custom_repository, import_dir
 
-      assert_action_planed_with action, ::Actions::Katello::Repository::UploadFiles do |repo, rpm_files|
+      assert_action_planed_with action, ::Actions::Katello::Repository::UploadFiles do |repo, rpm_filepaths|
         repo.must_equal custom_repository
-        rpm_files.length.must_equal 1
-        rpm_files.first.must_include "squirrel"
+        rpm_filepaths.length.must_equal 1
+        rpm_filepaths.first[:filename].must_include "squirrel"
       end
 
       assert_action_planed_with action, ::Actions::Katello::Repository::UploadErrata do |repo, errata|
@@ -396,14 +398,18 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
 
     it 'plans' do
-      plan_action(action, [repository.pulp_id], false, nil, 0, repository.pulp_id)
+      # required for export pre-run validation to succeed
+      Setting['pulp_export_destination'] = '/tmp'
+
+      action.stubs(:action_subject)
+      plan_action(action, [repository], false, nil, 0, repository.pulp_id)
 
       # ensure arguments get transformed and bubble through to pulp actions.
       # Org label defaults to blank for this test, hence the group ID starts
       # with '-'.
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Create,
                                 :id => "8",
-                                :pulp_ids => ["8"])
+                                :pulp_ids => [repository.pulp_id])
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Export) do |(inputs)|
         inputs[:id].must_equal "8"
         inputs[:export_to_iso].must_equal false
@@ -412,6 +418,23 @@ module ::Actions::Katello::Repository
       end
       assert_action_planed_with(action, ::Actions::Pulp::RepositoryGroup::Delete,
                                 :id => "8")
+    end
+
+    it 'plans without export destination' do
+      action.stubs(:action_subject)
+
+      assert_raises(Foreman::Exception) do
+        plan_action(action, [repository], false, nil, 0, repository.pulp_id)
+      end
+    end
+
+    it 'plans without writable destination' do
+      Setting['pulp_export_destination'] = '/'
+      action.stubs(:action_subject)
+
+      assert_raises(Foreman::Exception) do
+        plan_action(action, [repository], false, nil, 0, repository.pulp_id)
+      end
     end
   end
 end

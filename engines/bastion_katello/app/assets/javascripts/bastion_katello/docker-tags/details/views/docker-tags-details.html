@@ -7,65 +7,68 @@
 
 
 <section class="nutupane-details" ng-cloak bst-container-scroll>
+  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="details-header">
-    <h2 class="fl">{{ tag.full_name }}</h2>
+  <div ng-hide="panel.error">
+    <header class="details-header">
+      <h2 class="fl">{{ tag.full_name }}</h2>
 
-    <div class="details-actions fr">
-      <button class="btn btn-default" ui-sref="docker-tags.index">
-        <i class="icon-remove"></i>
-        {{ "Close" | translate }}
-      </button>
+      <div class="details-actions fr">
+        <button class="btn btn-default" ui-sref="docker-tags.index">
+          <i class="icon-remove"></i>
+          {{ "Close" | translate }}
+        </button>
+      </div>
+    </header>
+
+    <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+    <div class="details" style="margin: 0 0 2em">
+
+      <h4 translate>Basic Information</h4>
+
+      <div class="detail">
+        <span class="info-label" translate>Product</span>
+        <span class="info-value">{{ tag.product.name }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Repository</span>
+        <span class="info-value">{{ tag.repository.name }}</span>
+      </div>
+
     </div>
-  </header>
 
-  <div bst-alert success-messages="successMessages" error-messages="errorMessages"></div>
+    <table bst-table="table"
+           class="table table-striped"
+           ng-class="{'table-mask': table.working}"
+           ng-show="table.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="environment" translate>Environment</th>
+          <th bst-table-column="version" translate>Content View Version</th>
+          <th bst-table-column="manifest" translate>Manifest</th>
+          <th bst-table-column="path" translate>Published At</th>
+        </tr>
+      </thead>
 
-  <div class="details" style="margin: 0 0 2em">
-
-    <h4 translate>Basic Information</h4>
-
-    <div class="detail">
-      <span class="info-label" translate>Product</span>
-      <span class="info-value">{{ tag.product.name }}</span>
-    </div>
-
-    <div class="detail">
-      <span class="info-label" translate>Repository</span>
-      <span class="info-value">{{ tag.repository.name }}</span>
-    </div>
-
+      <tbody>
+        <tr bst-table-row
+            ng-repeat="tag in table.rows">
+          <td bst-table-cell>
+            {{ tag.environment.name }}
+          </td>
+          <td bst-table-cell>
+            {{ tag.content_view_version.name }}
+          </td>
+          <td bst-table-cell>
+            {{ tag.manifest.name | limitTo:20 }}...
+          </td>
+          <td bst-table-cell>
+            {{ tag.repository.full_path }}:{{ tag.name }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <table bst-table="table"
-         class="table table-striped"
-         ng-class="{'table-mask': table.working}"
-         ng-show="table.rows.length > 0">
-    <thead>
-      <tr bst-table-head>
-        <th bst-table-column="environment" translate>Environment</th>
-        <th bst-table-column="version" translate>Content View Version</th>
-        <th bst-table-column="manifest" translate>Manifest</th>
-        <th bst-table-column="path" translate>Published At</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr bst-table-row
-          ng-repeat="tag in table.rows">
-        <td bst-table-cell>
-          {{ tag.environment.name }}
-        </td>
-        <td bst-table-cell>
-          {{ tag.content_view_version.name }}
-        </td>
-        <td bst-table-cell>
-          {{ tag.manifest.name | limitTo:20 }}...
-        </td>
-        <td bst-table-cell>
-          {{ tag.repository.full_path }}:{{ tag.name }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </section>

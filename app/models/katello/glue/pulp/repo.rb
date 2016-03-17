@@ -25,8 +25,6 @@ module Katello
         lazy_accessor :distributors,
                       :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
 
-        attr_accessor :feed_cert, :feed_key, :feed_ca
-
         def self.ensure_sync_notification
           resource =  Katello.pulp_server.resources.event_notifier
           url = SETTINGS[:katello][:post_sync_url]
@@ -101,7 +99,7 @@ module Katello
 
       def create_pulp_repo
         #if we are in library, no need for an distributor, but need to sync
-        if self.environment && self.environment.library?
+        if self.environment.try(:library?)
           importer = generate_importer
         else
           #if not in library, no need for sync info, but we need a distributor
@@ -129,10 +127,7 @@ module Katello
         when Repository::YUM_TYPE
           Runcible::Models::YumImporter.new(yum_importer_values(capsule))
         when Repository::FILE_TYPE
-          Runcible::Models::IsoImporter.new(:ssl_ca_cert => self.feed_ca,
-                                            :ssl_client_cert => self.feed_cert,
-                                            :ssl_client_key => self.feed_key,
-                                            :feed => importer_feed_url(capsule))
+          Runcible::Models::IsoImporter.new(importer_ssl_options(capsule).merge(:feed => importer_feed_url(capsule)))
         when Repository::PUPPET_TYPE
           options = {}
           options[:feed] = importer_feed_url(capsule) if self.respond_to?(:url)
@@ -144,14 +139,9 @@ module Katello
           options[:enable_v1] = false if self.respond_to?(:enable_v1)
           Runcible::Models::DockerImporter.new(options)
         when Repository::OSTREE_TYPE
-          options = {
-            :ssl_ca_cert => self.feed_ca,
-            :ssl_client_cert => self.feed_cert,
-            :ssl_client_key => self.feed_key
-          }
+          options = importer_ssl_options(capsule)
 
           options[:feed] = self.url if self.respond_to?(:url)
-          options[:branches] = self.ostree_branch_names
           Runcible::Models::OstreeImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
@@ -182,15 +172,34 @@ module Katello
           new_download_policy = self.download_policy
         end
 
-        {}.tap do |yum_importer_values|
-          yum_importer_values[:feed] = self.importer_feed_url(capsule)
-          yum_importer_values[:download_policy] = new_download_policy
-          yum_importer_values[:remove_missing] = capsule ? true : self.mirror_on_sync?
-          unless capsule
-            yum_importer_values[:ssl_ca_cert] = self.feed_ca
-            yum_importer_values[:ssl_client_cert] = self.feed_cert
-            yum_importer_values[:ssl_ca_cert] = self.feed_key
-          end
+        config = {
+          :feed => self.importer_feed_url(capsule),
+          :download_policy => new_download_policy,
+          :remove_missing => capsule ? true : self.mirror_on_sync?
+        }
+        config.merge(importer_ssl_options(capsule))
+      end
+
+      def importer_ssl_options(capsule = nil)
+        if capsule
+          ueber_cert = ::Cert::Certs.ueber_cert(organization)
+          {
+            :ssl_client_cert => ueber_cert[:cert],
+            :ssl_client_key => ueber_cert[:key],
+            :ssl_ca_cert => ::Cert::Certs.ca_cert
+          }
+        elsif redhat? && self.content_view.default?
+          {
+            :ssl_client_cert => self.product.certificate,
+            :ssl_client_key => self.product.key,
+            :ssl_ca_cert => Resources::CDN::CdnResource.ca_file_contents
+          }
+        else
+          {
+            :ssl_client_cert => nil,
+            :ssl_client_key => nil,
+            :ssl_ca_cert => nil
+          }
         end
       end
 
@@ -259,11 +268,7 @@ module Katello
         end
       end
 
-      def refresh_pulp_repo(feed_ca, feed_cert, feed_key)
-        self.feed_ca = feed_ca
-        self.feed_cert = feed_cert
-        self.feed_key = feed_key
-
+      def refresh_pulp_repo
         Katello.pulp_server.extensions.repository.update_importer(self.pulp_id, self.importers.first['id'], generate_importer.config)
 
         existing_distributors = self.distributors
@@ -478,6 +483,26 @@ module Katello
         Katello.pulp_server.extensions.repository.docker_manifest_ids(self.pulp_id)
       end
 
+      def pulp_ostree_branch_ids
+        Katello.pulp_server.extensions.repository.ostree_branch_ids(self.pulp_id)
+      end
+
+      def index_db_ostree_branches
+        ostree_branches_json.each do |ostree_branch_json|
+          branch = OstreeBranch.where(:uuid => ostree_branch_json[:_id]).first_or_create
+          branch.update_from_json(ostree_branch_json)
+        end
+        OstreeBranch.sync_repository_associations(self, pulp_ostree_branch_ids)
+      end
+
+      def ostree_branches_json
+        ostree_branches = []
+        pulp_ostree_branch_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+          ostree_branches.concat(Katello.pulp_server.extensions.ostree_branch.find_all_by_unit_ids(sub_list))
+        end
+        ostree_branches
+      end
+
       def sync_schedule(date_and_time)
         if date_and_time
           Katello.pulp_server.extensions.repository.create_or_update_schedule(self.pulp_id, importer_type, date_and_time)
@@ -495,7 +520,6 @@ module Katello
       end
 
       def pulp_update_needed?
-        return true if ostree?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
@@ -746,6 +770,13 @@ module Katello
         self.content_type == Repository::OSTREE_TYPE
       end
 
+      def capsule_download_policy
+        if self.yum?
+          repo = self.library_instance || self
+          repo.download_policy
+        end
+      end
+
       protected
 
       def _get_most_recent_sync_status
@@ -777,6 +808,8 @@ module Katello
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}"
       elsif puppet?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}"
+      elsif ostree?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{pulp_id}"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
       end
@@ -788,6 +821,7 @@ module Katello
       self.index_db_docker_manifests
       self.index_db_puppet_modules
       self.index_db_package_groups
+      self.index_db_ostree_branches if Katello::RepositoryTypeManager.find(Repository::OSTREE_TYPE).present?
       self.import_distribution_data
       true
     end

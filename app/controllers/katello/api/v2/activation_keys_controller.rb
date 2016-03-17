@@ -88,16 +88,16 @@ module Katello
       @new_activation_key.user = current_user
       sync_task(::Actions::Katello::ActivationKey::Create, @new_activation_key)
       @new_activation_key.reload
-      @new_activation_key.update_attributes!(
-                                             :service_level => @activation_key.service_level,
-                                             :release_version => @activation_key.release_version,
-                                             :auto_attach => @activation_key.auto_attach
-                                            )
+      sync_task(::Actions::Katello::ActivationKey::Update, @new_activation_key,
+                  :service_level   => @activation_key.service_level,
+                  :release_version => @activation_key.release_version,
+                  :auto_attach     => @activation_key.auto_attach
+               )
       @activation_key.content_overrides.each do |content|
         @new_activation_key.set_content_override(content['contentLabel'], content[:name], content[:value])
       end
-      @activation_key.get_key_pools.each do |pool|
-        @new_activation_key.subscribe(pool[:id], pool[:amount])
+      @activation_key.subscriptions.each do |subscription|
+        @new_activation_key.subscribe(subscription[:id])
       end
       respond_for_show(:resource => @new_activation_key)
     end
@@ -227,6 +227,12 @@ module Katello
                       :subtotal => collection.count }
     end
 
+    def find_activation_key
+      @activation_key = ActivationKey.find(params[:id])
+      fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
+      @activation_key
+    end
+
     private
 
     def validate_content_overrides(content_params)
@@ -268,12 +274,6 @@ module Katello
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       @organization = @environment.organization
       @environment
-    end
-
-    def find_activation_key
-      @activation_key = ActivationKey.find(params[:id])
-      fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
-      @activation_key
     end
 
     def find_host_collections

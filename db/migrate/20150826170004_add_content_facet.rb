@@ -3,7 +3,7 @@ class AddContentFacet < ActiveRecord::Migration
   def change
     create_table "katello_content_facets" do |t|
       t.references 'host', :null => false
-      t.string 'uuid'
+      t.string 'uuid', :limit => 255
       t.references 'content_view', :null => false, :index => true
       t.references 'lifecycle_environment', :null => false, :index => true
     end
@@ -20,8 +20,8 @@ class AddContentFacet < ActiveRecord::Migration
                     :name => "katello_content_facets_life_environment_id", :column => "lifecycle_environment_id"
 
     create_table "katello_installed_packages" do |t|
-      t.string 'name', :null => false
-      t.string 'nvra', :null => false
+      t.string 'name', :null => false, :limit => 255
+      t.string 'nvra', :null => false, :limit => 255
     end
 
     create_table "katello_host_installed_packages" do |t|

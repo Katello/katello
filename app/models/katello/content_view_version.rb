@@ -3,6 +3,7 @@ module Katello
     self.include_root_in_json = false
 
     include Authorization::ContentViewVersion
+    include ForemanTasks::Concerns::ActionSubject
 
     before_destroy :validate_destroyable!
 
@@ -215,6 +216,10 @@ module Katello
       Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
+    def ostree_branch_count
+      ostree_branches.count
+    end
+
     def docker_manifest_count
       manifest_counts = repositories.archived.docker_type.map do |repo|
         repo.docker_manifests.count
@@ -237,6 +242,10 @@ module Katello
       errata = Erratum.in_repositories(archived_repos).uniq
       errata = errata.of_type(errata_type) if errata_type
       errata
+    end
+
+    def ostree_branches
+      OstreeBranch.in_repositories(archived_repos).uniq
     end
 
     def docker_manifests
@@ -271,6 +280,10 @@ module Katello
 
     def remove_environment(env)
       content_view.remove_environment(env) unless content_view.content_view_versions.in_environment(env).count > 1
+    end
+
+    def related_resources
+      [self.content_view]
     end
   end
 end

@@ -2,14 +2,14 @@ class AddErrata < ActiveRecord::Migration
   # rubocop:disable MethodLength
   def up
     create_table "katello_errata" do |t|
-      t.string "uuid", :null => false
-      t.string "errata_id"
+      t.string "uuid", :null => false, :limit => 255
+      t.string "errata_id", :limit => 255
       t.timestamps
       t.datetime 'issued'
       t.datetime 'updated'
-      t.string 'errata_type'
-      t.string 'severity'
-      t.string 'title'
+      t.string 'errata_type', :limit => 255
+      t.string 'severity', :limit => 255
+      t.string 'title', :limit => 255
       t.text 'solution'
       t.text 'description'
       t.text 'summary'
@@ -20,9 +20,9 @@ class AddErrata < ActiveRecord::Migration
 
     create_table "katello_erratum_packages" do |t|
       t.references :erratum, :null => false
-      t.string :nvrea, :null => false
-      t.string :name, :null => false
-      t.string :filename
+      t.string :nvrea, :null => false, :limit => 255
+      t.string :name, :null => false, :limit => 255
+      t.string :filename, :limit => 255
     end
 
     add_index :katello_erratum_packages, [:erratum_id, :nvrea, :name, :filename], :unique => true,
@@ -32,8 +32,8 @@ class AddErrata < ActiveRecord::Migration
 
     create_table "katello_erratum_cves" do |t|
       t.references :erratum, :null => false
-      t.string :cve_id, :null => false
-      t.string :href, :null => true
+      t.string :cve_id, :null => false, :limit => 255
+      t.string :href, :null => true, :limit => 255
     end
 
     add_index :katello_erratum_cves, [:erratum_id, :cve_id, :href], :unique => true
@@ -42,8 +42,8 @@ class AddErrata < ActiveRecord::Migration
 
     create_table "katello_erratum_bugzillas" do |t|
       t.references :erratum, :null => false
-      t.string :bug_id, :null => false
-      t.string :href, :null => true
+      t.string :bug_id, :null => false, :limit => 255
+      t.string :href, :null => true, :limit => 255
     end
 
     add_index :katello_erratum_bugzillas, [:erratum_id, :bug_id, :href], :unique => true, :name => 'katello_erratum_bz_eid_bid_href'

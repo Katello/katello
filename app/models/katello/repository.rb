@@ -50,7 +50,8 @@ module Katello
 
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
 
-    has_many :ostree_branches, :class_name => "Katello::OstreeBranch", :dependent => :destroy
+    has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :destroy
+    has_many :ostree_branches, :through => :repository_ostree_branches
 
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
     has_many :systems, :through => :system_repositories
@@ -94,6 +95,7 @@ module Katello
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_has_url_for_ostree, :if => :ostree?
+    validate :ensure_ostree_repo_protected, :if => :ostree?
 
     scope :has_url, -> { where('url IS NOT NULL') }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
@@ -102,6 +104,7 @@ module Katello
     scope :file_type, -> { where(:content_type => FILE_TYPE) }
     scope :puppet_type, -> { where(:content_type => PUPPET_TYPE) }
     scope :docker_type, -> { where(:content_type => DOCKER_TYPE) }
+    scope :ostree_type, -> { where(:content_type => OSTREE_TYPE) }
     scope :non_puppet, -> { where("content_type != ?", PUPPET_TYPE) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
@@ -476,20 +479,6 @@ module Katello
       self.ostree_branches.map(&:name)
     end
 
-    def update_ostree_branches!(branch_names)
-      check_duplicate_branch_names(branch_names)
-
-      # remove the ostree_branches not in this list
-      self.ostree_branches.each do |branch|
-        branch.destroy unless branch_names.include?(branch.name)
-      end
-
-      # add the new ostree_branches
-      (branch_names - self.ostree_branch_names).each do |ref|
-        self.ostree_branches.create!(:name => ref)
-      end
-    end
-
     def units_for_removal(ids)
       table_name = removable_unit_association.table_name
       is_integer = Integer(ids.first) rescue false #assume all ids are either integers or not
@@ -541,6 +530,8 @@ module Katello
         self.rpms -= units
       elsif puppet?
         self.puppet_modules -= units
+      elsif ostree?
+        self.ostree_branches -= units
       elsif docker?
         remove_docker_content(units)
       end
@@ -572,6 +563,8 @@ module Katello
         self.docker_manifests
       elsif puppet?
         self.puppet_modules
+      elsif ostree?
+        self.ostree_branches
       else
         fail "Content type not supported for removal"
       end
@@ -586,9 +579,7 @@ module Katello
     end
 
     def ensure_valid_docker_attributes
-      if url.blank? != docker_upstream_name.blank?
-        field = url.blank? ? :url : :docker_upstream_name
-        errors.add(field, N_("cannot be blank. Either provide all or no sync information."))
+      if url.blank? || docker_upstream_name.blank?
         errors.add(:base, N_("Repository URL or Upstream Name is empty. Both are required for syncing from the upstream."))
       end
     end
@@ -609,6 +600,12 @@ module Katello
     def ensure_has_url_for_ostree
       return true if url.present? || library_instance_id
       errors.add(:url, N_("cannot be blank. RPM OSTree Repository URL required for syncing from the upstream."))
+    end
+
+    def ensure_ostree_repo_protected
+      if unprotected
+        errors.add(:base, N_("OSTree Repositories cannot be unprotected."))
+      end
     end
 
     def remove_docker_content(manifests)

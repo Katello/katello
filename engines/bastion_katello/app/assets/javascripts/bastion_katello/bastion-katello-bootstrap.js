@@ -1,11 +1,13 @@
 BASTION_MODULES.push(
     'Bastion.capsule-content',
     'Bastion.activation-keys',
+    'Bastion.common',
     'Bastion.content-views',
     'Bastion.content-views.versions',
     'Bastion.docker-tags',
     'Bastion.hosts',
     'Bastion.puppet-modules',
+    'Bastion.ostree-branches',
     'Bastion.environments',
     'Bastion.gpg-keys',
     'Bastion.hosts',

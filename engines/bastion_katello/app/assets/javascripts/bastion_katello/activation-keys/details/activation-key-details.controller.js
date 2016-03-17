@@ -9,26 +9,33 @@
  * @requires ActivationKey
  * @requires CurrentOrganization
  * @requires Organization
+ * @requires GlobalNotification
+ * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the activation key details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization',
-    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization) {
+    ['$scope', '$state', '$q', 'translate', 'ActivationKey', 'Organization', 'CurrentOrganization', 'GlobalNotification', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, ActivationKey, Organization, CurrentOrganization, GlobalNotification, ApiErrorHandler) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
         if ($scope.activationKey) {
-            $scope.panel = {loading: false};
-        } else {
-            $scope.panel = {loading: true};
+            $scope.panel.loading = false;
         }
 
         $scope.activationKey = ActivationKey.get({id: $scope.$stateParams.activationKeyId}, function (activationKey) {
             $scope.$broadcast('activationKey.loaded', activationKey);
             $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
         $scope.save = function (activationKey) {
@@ -65,9 +72,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             activationKey.$delete(function () {
                 $scope.removeRow(id);
                 $scope.transitionTo('activation-keys.index');
-                $scope.successMessages.push(translate('Activation Key removed.'));
+                GlobalNotification.setSuccessMessage(translate('Activation Key removed.'));
             }, function (response) {
-                $scope.errorMessages.push(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);
+                GlobalNotification.setErrorMessage(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);
             });
         };
 

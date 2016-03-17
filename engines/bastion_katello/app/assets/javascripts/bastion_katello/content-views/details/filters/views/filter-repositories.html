@@ -67,6 +67,7 @@
           <th bst-table-column="product" translate>Product</th>
           <th bst-table-column="type" translate>Type</th>
           <th bst-table-column="sync-status" translate>Sync Status</th>
+          <th bst-table-column="content" translate>Content</th>
         </tr>
       </thead>
 
@@ -98,6 +99,22 @@
                 </span>
               </span>
             <span ng-hide="repository.url" translate>N/A</span>
+          </td>
+          <td bst-table-cell>
+            <div ng-if="repository.content_counts.rpm && repository.content_counts.rpm > 0">
+              <a ui-sref="products.details.repositories.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})"
+                 ng-show="repository.content_type == 'yum'"
+                 translate>
+                {{ repository.content_counts.rpm }} Packages
+              </a>
+            </div>
+            <div ng-if="repository.content_counts.erratum && repository.content_counts.erratum > 0">
+              <a ui-sref="errata.index({repositoryId: repository.id})"
+                 ng-show="repository.content_type == 'yum'"
+                 translate>
+                {{ repository.content_counts.erratum }} Errata
+              </a>
+            </div>
           </td>
         </tr>
       </tbody>

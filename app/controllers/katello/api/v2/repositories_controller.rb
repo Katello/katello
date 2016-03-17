@@ -1,6 +1,5 @@
 module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController
-    wrap_parameters :include => (Repository.attribute_names + [:ostree_branches])
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_organization, :only => [:index, :auto_complete_search]
@@ -14,7 +13,7 @@ module Katello
     before_filter :find_organization_from_repo, :only => [:update]
     before_filter :find_gpg_key, :only => [:create, :update]
     before_filter :error_on_rh_product, :only => [:create]
-    before_filter :error_on_rh_repo, :only => [:update, :destroy]
+    before_filter :error_on_rh_repo, :only => [:destroy]
 
     skip_before_filter :authorize, :only => [:sync_complete, :gpg_key_content]
     skip_before_filter :require_org, :only => [:sync_complete]
@@ -28,11 +27,10 @@ module Katello
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :content_type, String, :required => true, :desc => N_("type of repo (either 'yum', 'puppet', 'docker', or 'ostree')")
+      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'puppet', 'docker', or 'ostree')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
-      param :ostree_branches, Array, :desc => N_("list of ostree branch refs associated to an rpm ostree repository")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
     end
 
@@ -46,7 +44,7 @@ module Katello
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
     param :rpm_id, String, :desc => N_("Id of a package to find repositories that contain the rpm")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
-    param :content_type, String, :desc => N_("limit to only repositories of this time")
+    param :content_type, RepositoryTypeManager.repository_types.keys, :desc => (N_("limit to only repositories of this type"))
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
           :required => false
@@ -133,7 +131,7 @@ module Katello
                                      gpg_key, repository_params[:checksum_type], repo_params[:download_policy])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params[:mirror_on_sync]
-      sync_task(::Actions::Katello::Repository::Create, repository, false, true, repo_params[:ostree_branches])
+      sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
     end
@@ -188,7 +186,7 @@ module Katello
         end
       end
 
-      task = async_task(::Actions::Katello::Repository::Export, [@repository.pulp_id],
+      task = async_task(::Actions::Katello::Repository::Export, [@repository],
                         ::Foreman::Cast.to_bool(params[:export_to_iso]),
                         params[:since].try(:to_datetime),
                         params[:iso_mb_size],
@@ -205,11 +203,9 @@ module Katello
     param :url, String, :desc => N_("the feed url of the original repository ")
     param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
     param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
-    param :ostree_branches, Array,  :desc => N_("list of ostree branch refs associated to an rpm ostree repository")
     param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
     def update
       repo_params = repository_params
-      repo_params[:url] = nil if repository_params[:url].blank? && !@repository.ostree?
       sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
       respond_for_show(:resource => @repository)
     end
@@ -338,8 +334,11 @@ module Katello
     end
 
     def repository_params
-      keys = [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name, :download_policy, :mirror_on_sync, :ostree_branches => []]
+      keys = [:download_policy, :mirror_on_sync]
       keys += [:label, :content_type] if params[:action] == "create"
+      if params[:action] == 'create' || @repository.custom?
+        keys += [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
+      end
       params.require(:repository).permit(*keys)
     end
 
