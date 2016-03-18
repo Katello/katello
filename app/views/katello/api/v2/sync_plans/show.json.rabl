@@ -2,7 +2,7 @@ object @resource
 
 attributes :id, :organization_id
 attributes :name, :description
-attributes :sync_date, :interval, :next_sync
+attributes :interval, :next_sync
 attributes :created_at, :updated_at
 attributes :enabled
 
@@ -25,4 +25,8 @@ node :permissions do |sync_plan|
     :edit_sync_plans => sync_plan.editable?,
     :destroy_sync_plans => sync_plan.deletable?
   }
+end
+
+node :sync_date do |sync_plan|
+  sync_plan.plan_date_time
 end
