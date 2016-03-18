@@ -1,7 +1,7 @@
 module Actions
   module Katello
     module CapsuleContent
-      class CreateOrUpdate < ::Actions::EntryAction
+      class CreateRepos < ::Actions::EntryAction
         # @param capsule_content [::Katello::CapsuleContent]
         def plan(capsule_content, environment = nil, content_view = nil)
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
@@ -9,14 +9,9 @@ module Actions
           current_repos_on_capsule = capsule_content.current_repositories(environment, content_view)
           list_of_repos_to_sync = capsule_content.repos_available_to_capsule(environment, content_view)
           need_creation =  list_of_repos_to_sync - current_repos_on_capsule
-          need_update = current_repos_on_capsule & list_of_repos_to_sync
 
           need_creation.each do |repo|
             create_repo_in_pulp(capsule_content, repo)
-          end
-
-          need_update.each do |repo|
-            plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
           end
         end
 
@@ -37,7 +32,7 @@ module Actions
                       checksum_type: checksum_type,
                       path: relative_path,
                       with_importer: true,
-                      docker_upstream_name: repository.try(:docker_upstream_name),
+                      docker_upstream_name: repository.pulp_id,
                       download_policy: repository.capsule_download_policy,
                       capsule_id: capsule_content.capsule.id)
         end

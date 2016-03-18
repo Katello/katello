@@ -130,7 +130,7 @@ module Katello
           Runcible::Models::IsoImporter.new(importer_ssl_options(capsule).merge(:feed => importer_feed_url(capsule)))
         when Repository::PUPPET_TYPE
           options = {}
-          options[:feed] = importer_feed_url(capsule) if self.respond_to?(:url)
+          options[:feed] = importer_feed_url(capsule)
           Runcible::Models::PuppetImporter.new(options)
         when Repository::DOCKER_TYPE
           options = {}
@@ -777,7 +777,32 @@ module Katello
         end
       end
 
+      def distributors_match?(capsule_distributors)
+        generated_distributors = self.generate_distributors.map(&:as_json)
+        capsule_distributors.each do |dist|
+          dist.merge!(dist["config"])
+          dist.delete("config")
+        end
+
+        generated_distributors.any? do |gen_dist|
+          capsule_distributors.any? do |cap_dist|
+            (gen_dist.to_a - cap_dist.to_a).empty?
+          end
+        end
+      end
+
+      def importer_matches?(capsule_importer)
+        generated_importer = self.generate_importer(true).as_json
+        (generated_importer.to_a - capsule_importer.to_a).empty?
+      end
+
       protected
+
+      def object_to_hash(object)
+        hash = {}
+        object.instance_variables.each { |var| hash[var.to_s.delete("@")] = object.instance_variable_get(var) }
+        hash
+      end
 
       def _get_most_recent_sync_status
         begin

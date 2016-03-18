@@ -5,7 +5,7 @@ module Actions
         def plan(capsule, environment, content_view)
           sequence do
             plan_action(RemoveUnneededRepos, capsule)
-            plan_action(CreateOrUpdate, capsule, environment, content_view)
+            plan_action(CreateRepos, capsule, environment, content_view)
           end
         end
       end
