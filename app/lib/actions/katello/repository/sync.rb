@@ -45,6 +45,7 @@ module Actions
               plan_self(:id => repo.id, :sync_result => output, :user_id => ::User.current.id, :contents_changed => contents_changed)
               plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id, :contents_changed => contents_changed)
             end
+            plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed)
           end
         end
 
@@ -69,14 +70,6 @@ module Actions
 
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
-        end
-
-        def finalize
-          ::User.current = ::User.anonymous_admin
-          repo = ::Katello::Repository.find(input[:id])
-          repo.import_system_applicability
-        ensure
-          ::User.current = nil
         end
       end
     end
