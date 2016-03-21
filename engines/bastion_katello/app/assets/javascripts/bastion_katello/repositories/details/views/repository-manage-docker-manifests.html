@@ -26,13 +26,15 @@
   </div>
 
   <div data-block="actions">
-    <div bst-modal="removeContent()">
+    <div bst-modal="removeContent()" model="detailsTable">
       <div data-block="modal-header"
+           translate
            translate-n="detailsTable.numSelected"
            translate-plural="Remove {{ detailsTable.numSelected  }} Docker Manifests?">
         Remove {{ detailsTable.numSelected  }} Docker Manifest?
       </div>
       <div data-block="modal-body"
+           translate
            translate-n="detailsTable.numSelected"
            translate-plural="Are you sure you want to remove the {{ detailsTable.numSelected }} Docker manifests selected?">
         Are you sure you want to remove the {{ detailsTable.numSelected }} Docker manifest selected?

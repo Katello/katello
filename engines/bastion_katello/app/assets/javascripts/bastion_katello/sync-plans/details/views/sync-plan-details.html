@@ -14,7 +14,7 @@
       <h2 class="fl" translate>Sync Plan {{ syncPlan.name }}</h2>
 
       <div class="fr">
-        <div bst-modal="removeSyncPlan(syncPlan)">
+        <div bst-modal="removeSyncPlan(syncPlan)" model="syncPlan">
           <div data-block="modal-header" translate>Remove Sync Plan "{{ syncPlan.name }}"?</div>
           <div data-block="modal-body" translate>Are you sure you want to remove Sync Plan "{{ syncPlan.name }}"?</div>
         </div>

@@ -11,7 +11,7 @@
 
   <div data-block="messages">
     <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-
+ 
     <div bst-alert="success" ng-hide="generationTaskId === undefined">
       <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
       <p translate>
@@ -25,16 +25,18 @@
   </div>
 
   <div data-block="actions">
-    <div bst-modal="removeContent()">
+    <div bst-modal="removeContent()" model="detailsTable">
       <div data-block="modal-header"
+           translate
            translate-n="detailsTable.numSelected"
-           translate-plural="Remove {{ detailsTable.numSelected  }} Packages?">
-        Remove {{ detailsTable.numSelected  }} Package?
+           translate-plural="Remove {{ detailsTable.numSelected }} packages?">
+        Remove Package?
       </div>
       <div data-block="modal-body"
+           translate
            translate-n="detailsTable.numSelected"
            translate-plural="Are you sure you want to remove the {{ detailsTable.numSelected }} packages selected?">
-        Are you sure you want to remove the {{ detailsTable.numSelected }} package selected?
+        Are you sure you want to remove the {{ detailsTable.getSelected()[0].name }}?
       </div>
     </div>
 

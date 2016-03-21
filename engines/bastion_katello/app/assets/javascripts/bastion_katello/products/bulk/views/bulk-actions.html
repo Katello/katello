@@ -24,9 +24,19 @@
         {{ "Close" | translate }}
       </button>
 
-      <div bst-modal="removeProducts()">
-        <div data-block="modal-header" translate>Remove {{ productTable.getSelected().length }} Products?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove the {{ productTable.getSelected().length }} products(s) selected?</div>
+      <div bst-modal="removeProducts()" model="productTable">
+        <div data-block="modal-header" 
+             translate
+             translate-n="productTable.getSelected().length"
+             translate-plural="Remove {{ productTable.getSelected().length }} products?">
+             Remove product?
+        </div>
+        <div data-block="modal-body" 
+             translate
+             translate-n="productTable.getSelected().length" 
+             translate-plural="Are you sure you want to remove {{ productTable.getSelected().length }} products selected?"> 
+             Are you sure you want to remove {{ productTable.getSelected()[0].name }}?
+        </div>
       </div>
     </div>
   </header>
@@ -57,6 +67,7 @@
     <div class="alert warning alert-warning" ng-show="table.numSelected == 0">
       <i class="fa fa-exclamation-sign"></i>
       {{ 'At least one product needs to be selected in order to perform a bulk action.' | translate }}
+      {{ products.length }}
     </div>
 
     <span ng-hide="table.numSelected == 0">
