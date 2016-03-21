@@ -3,10 +3,10 @@
 </h4>
 
 <% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
-<% subscriptions = organizations.collect { |org| Katello::Pool.in_org(org.id) }.flatten %>
-<% total_active_subscriptions = Katello::Pool.active(subscriptions).count %>
-<% total_expiring_subscriptions = Katello::Pool.expiring_soon(subscriptions).count %>
-<% total_recently_expired_subscriptions = Katello::Pool.recently_expired(subscriptions).count %>
+<% subscriptions = Katello::Subscription.in_organization(organizations).includes(:pools) %>
+<% total_active_subscriptions = subscriptions.select(&:active?).count %>
+<% total_expiring_subscriptions = subscriptions.select(&:expiring_soon?).count %>
+<% total_recently_expired_subscriptions = subscriptions.select(&:recently_expired?).count %>
 
 <table class="table table-fixed table-striped table-bordered">
   <thead>

@@ -10,8 +10,22 @@ module Katello
 
     belongs_to :organization, :class_name => "Organization", :inverse_of => :subscriptions
 
+    scope :in_organization, ->(org) { where(:organization => org) }
+
     def redhat?
       self.products.any? { |product| product.redhat? }
+    end
+
+    def active?
+      pools.any?(&:active?)
+    end
+
+    def expiring_soon?
+      pools.any?(&:expiring_soon?)
+    end
+
+    def recently_expired?
+      pools.any?(&:recently_expired?)
     end
   end
 end
