@@ -219,6 +219,7 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, pulp_action_class,
                                 pulp_id: repository.pulp_id, task_id: nil, source_url: nil)
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
+      assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         repo.id.must_equal repository.id
@@ -390,6 +391,16 @@ module ::Actions::Katello::Repository
     it 'plans' do
       plan_action(action, repository)
       assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :repository => repository)
+    end
+  end
+
+  class ImportApplicabilityTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::ImportApplicability }
+
+    it 'runs' do
+      Katello::Repository.any_instance.expects(:import_host_applicability)
+
+      ForemanTasks.sync_task(action_class, :repo_id => repository.id, :contents_changed => true)
     end
   end
 

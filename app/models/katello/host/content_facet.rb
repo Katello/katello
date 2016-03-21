@@ -52,22 +52,24 @@ module Katello
 
       def import_applicability(partial = false)
         facet = self
+        errata_uuids = ::Katello::Pulp::Consumer.new(self.uuid).applicable_errata_ids
         ::Katello::Util::Support.active_record_retry do
+          if partial
+            consumer_uuids = applicable_errata.pluck("#{Erratum.table_name}.uuid")
+            to_remove = consumer_uuids - errata_uuids
+            to_add = errata_uuids - consumer_uuids
+          else
+            to_add = errata_uuids
+            to_remove = nil
+            Katello::ContentFacetErratum.where(:content_facet_id => facet.id).delete_all
+          end
+
           ActiveRecord::Base.transaction do
-            errata_uuids = ::Katello::Pulp::Consumer.new(self.uuid).applicable_errata_ids
-            if partial
-              consumer_uuids = applicable_errata.pluck("#{Erratum.table_name}.uuid")
-              to_remove = consumer_uuids - errata_uuids
-              to_add = errata_uuids - consumer_uuids
-            else
-              to_add = errata_uuids
-              to_remove = nil
-              Katello::ContentFacetErratum.where(:content_facet_id => facet.id).delete_all
-            end
             insert_errata_applicability(to_add) unless to_add.blank?
             remove_errata_applicability(to_remove) unless to_remove.blank?
           end
         end
+        host.get_status(::Katello::ErrataStatus).refresh!
       end
 
       def self.with_non_installable_errata(errata)
