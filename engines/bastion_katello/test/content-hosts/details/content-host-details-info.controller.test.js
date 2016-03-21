@@ -71,7 +71,8 @@ describe('Controller: ContentHostDetailsInfoController', function() {
                     id: 2
                 }
             },
-            subscription: {'virtual_guests': []}
+            subscription: {'virtual_guests': []},
+            hasContent: function() { return true; }
         });
 
         $scope.host.$promise = {then: function (callback) { callback($scope.host); }};

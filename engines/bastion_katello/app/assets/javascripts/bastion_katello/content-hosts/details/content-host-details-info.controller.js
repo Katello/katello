@@ -36,7 +36,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.host.$promise.then(function (host) {
             $scope.hostFactsAsObject = doubleColonNotationToObject(host.facts);
-            $scope.originalEnvironment = host.content.lifecycle_environment;
+            if (host.hasContent()) {
+                $scope.originalEnvironment = host.content.lifecycle_environment;
+            }
         });
 
         $scope.successMessages = [];
