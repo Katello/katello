@@ -33,8 +33,8 @@ module Katello
     param :environment, Hash, :desc => N_("environment")
     param :environment_id, :identifier, :desc => N_("environment id")
     param :content_view_id, :identifier, :desc => N_("content view id")
-    param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
-    param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
+    param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
+    param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
     def create
       @activation_key = ActivationKey.new(activation_key_params) do |activation_key|
         activation_key.environment = @environment if @environment
@@ -53,8 +53,8 @@ module Katello
     param :description, String, :desc => N_("description")
     param :environment_id, :identifier, :desc => N_("environment id")
     param :content_view_id, :identifier, :desc => N_("content view id")
-    param :max_content_hosts, :number, :desc => N_("maximum number of registered content hosts")
-    param :unlimited_content_hosts, :bool, :desc => N_("can the activation key have unlimited content hosts")
+    param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
+    param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
     param :release_version, String, :desc => N_("content release version")
     param :service_level, String, :desc => N_("service level")
     param :auto_attach, :bool, :desc => N_("auto attach subscriptions upon registration")
@@ -302,22 +302,22 @@ module Katello
                                                           :release_version,
                                                           :service_level,
                                                           :auto_attach,
-                                                          :max_content_hosts,
-                                                          :unlimited_content_hosts,
+                                                          :max_hosts,
+                                                          :unlimited_hosts,
                                                           :content_overrides => [],
                                                           :host_collection_ids => [])
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)
-      unlimited = params[:activation_key].try(:[], :unlimited_content_hosts)
-      max_hosts = params[:activation_key].try(:[], :max_content_hosts)
+      unlimited = params[:activation_key].try(:[], :unlimited_hosts)
+      max_hosts = params[:activation_key].try(:[], :max_hosts)
 
       if unlimited && max_hosts
-        key_params[:unlimited_content_hosts] = true
-        key_params[:max_content_hosts] = nil
+        key_params[:unlimited_hosts] = true
+        key_params[:max_hosts] = nil
       else
-        key_params[:unlimited_content_hosts] = false if max_hosts
-        key_params[:max_content_hosts] = nil if unlimited
+        key_params[:unlimited_hosts] = false if max_hosts
+        key_params[:max_hosts] = nil if unlimited
       end
 
       key_params

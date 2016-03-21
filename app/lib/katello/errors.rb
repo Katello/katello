@@ -37,7 +37,7 @@ module Katello
 
     class ConnectionRefusedException < StandardError; end
 
-    class MaxContentHostsReachedException < StandardError; end
+    class MaxHostsReachedException < StandardError; end
 
     class OrganizationDestroyException < StandardError; end
 

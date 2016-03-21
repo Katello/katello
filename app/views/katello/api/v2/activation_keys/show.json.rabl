@@ -1,6 +1,6 @@
 object @resource
 
-attributes :id, :name, :description, :unlimited_content_hosts, :auto_attach
+attributes :id, :name, :description, :unlimited_hosts, :auto_attach
 
 extends 'katello/api/v2/common/org_reference'
 
@@ -15,7 +15,7 @@ child :environment => :environment do
 end
 attributes :environment_id
 
-attributes :usage_count, :user_id, :max_content_hosts, :system_template_id, :release_version,
+attributes :usage_count, :user_id, :max_hosts, :system_template_id, :release_version,
            :service_level, :auto_attach
 
 child :products => :products do |_product|

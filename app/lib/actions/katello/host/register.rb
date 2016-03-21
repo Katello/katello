@@ -77,7 +77,7 @@ module Actions
             if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0 &&
                host_collection.systems.length >= host_collection.max_hosts
               fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
-                       {:limit => host_collection.max_content_hosts, :name => host_collection.name}
+                       {:limit => host_collection.max_hosts, :name => host_collection.name}
             end
           end
           host.host_collection_ids = host_collection_ids
