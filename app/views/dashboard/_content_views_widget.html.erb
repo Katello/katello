@@ -9,7 +9,7 @@
 <% if histories.empty? %>
   <p class="ca"><%= _("No content view history events found.") %></p>
 <% else %>
-  <table class="table table-striped ellipsis table-bordered">
+  <table class="table table-fixed table-striped table-bordered">
     <thead>
       <tr>
         <th>Content View</th>
@@ -20,7 +20,7 @@
     <tbody>
       <% histories.each do |history| %>
         <tr>
-          <td>
+          <td class='ellipsis'>
             <a href="/content_views/<%= history.content_view_version.content_view.id %>/versions/<%= history.content_view_version.id %>/details">
               <%= history.content_view_version.content_view.name %> <%= history.content_view_version.version %>
             </a>

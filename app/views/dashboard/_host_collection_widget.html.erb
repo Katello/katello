@@ -9,7 +9,7 @@
 <% if host_collections.empty? %>
   <p class="ca"><%= _("No host collections found.") %></p>
 <% else %>
-  <table class="table table-striped ellipsis table-bordered">
+  <table class="table table-fixed table-striped table-bordered">
     <thead>
       <tr>
         <th>Updates</th>
@@ -29,7 +29,7 @@
               <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-success">&nbsp;</i></a>
             <% end %>
           </td>
-          <td><%= host_collection.name %></td>
+          <td class='ellipsis'><%= host_collection.name %></td>
           <td style="text-align: right"><%= host_collection.hosts.length %></td>
         </tr>
       <% end %>
