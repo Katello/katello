@@ -579,7 +579,7 @@ module Katello
     end
 
     def ensure_valid_docker_attributes
-      if url.blank? || docker_upstream_name.blank?
+      if library_instance? && (url.blank? || docker_upstream_name.blank?)
         errors.add(:base, N_("Repository URL or Upstream Name is empty. Both are required for syncing from the upstream."))
       end
     end
