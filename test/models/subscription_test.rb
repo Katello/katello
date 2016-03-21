@@ -10,5 +10,13 @@ module Katello
     def test_subscription_returns_pools
       assert @other.pools.count > 0
     end
+
+    def test_pool_states
+      pools = [FactoryGirl.build(:katello_pool, :active), FactoryGirl.build(:katello_pool, :expiring_soon)]
+      @basic.stubs(:pools).returns(pools)
+      assert @basic.active?
+      assert @basic.expiring_soon?
+      refute @basic.recently_expired?
+    end
   end
 end
