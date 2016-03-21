@@ -1,11 +1,11 @@
 <span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
 
 <section>
-  <div class="details fl" ng-hide="host.hasContent()">
+  <div class="details fl" ng-hide="host.hasContent() || host.hasSubscription()">
     <div data-extend-template="common/views/registration.html"></div>
   </div>
 
-  <div class="details fl" ng-show="host.hasContent()">
+  <div class="details fl" ng-show="host.hasContent() || host.hasSubscription()">
     <section>
       <h4 translate>Basic Information</h4>
 
@@ -143,7 +143,7 @@
       <div class="divider"></div>
     </section>
 
-    <section>
+    <section ng-show="host.hasContent()">
       <h4 translate>Installed Products</h4>
 
       <p translate ng-show="!host.subscription.installed_products || host.subscription.installed_products.length == 0">
