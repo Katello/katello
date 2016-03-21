@@ -178,14 +178,14 @@ module Katello
           @composite_version_environments << version_environment
         else
           @version_environments << version_environment
-          @composite_version_environments += lookup_all_composites(version) if params[:propagate_all_composites]
+          @composite_version_environments += lookup_all_composites(version_environment[:content_view_version]) if params[:propagate_all_composites]
         end
       end
       @composite_version_environments.uniq! { |cve| cve[:content_view_version] }
     end
 
     def lookup_all_composites(component)
-      component.composites.select { |c| c.environment.any? }.map do |composite|
+      component.composites.select { |c| c.environments.any? }.map do |composite|
         {
           :content_view_version => composite,
           :environments =>  composite.environments
