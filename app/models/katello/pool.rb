@@ -38,21 +38,16 @@ module Katello
     DAYS_EXPIRING_SOON = 120
     DAYS_RECENTLY_EXPIRED = 30
 
-    def self.active(subscriptions)
-      subscriptions.select { |s| s.active }
+    def active?
+      active
     end
 
-    def self.expiring_soon(subscriptions)
-      subscriptions.select { |s| (s.end_date.to_date - Date.today) <= DAYS_EXPIRING_SOON }
+    def expiring_soon?
+      (end_date.to_date - Date.today) <= DAYS_EXPIRING_SOON
     end
 
-    def self.recently_expired(subscriptions)
-      today_date = Date.today
-
-      subscriptions.select do |s|
-        end_date = s.end_date.to_date
-        today_date >= end_date && today_date - end_date <= DAYS_RECENTLY_EXPIRED
-      end
+    def recently_expired?
+      Date.today >= end_date.to_date && (Date.today - end_date.to_date) <= DAYS_RECENTLY_EXPIRED
     end
 
     def quantity_available
