@@ -233,9 +233,6 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
 
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
