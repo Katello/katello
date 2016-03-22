@@ -55,6 +55,25 @@ module Katello
       refute @repo.valid?
     end
 
+    def test_docker_repository_in_content_view
+      # verify: url and docker_upstream_name are not required for repositories
+      # created as part of a content view
+      library_repo = Repository.find(katello_repositories(:busybox))
+      view_repo = build(:katello_repository,
+                        :content_type => 'docker',
+                        :name => 'view repo',
+                        :label => 'view_repo',
+                        :library_instance => library_repo,
+                        :environment => library_repo.environment,
+                        :product => library_repo.product,
+                        :content_view_version => library_repo.content_view_version,
+                        :unprotected => true,
+                        :download_policy => nil,
+                        :url => nil,
+                        :docker_upstream_name => nil)
+      assert view_repo.valid?
+    end
+
     def test_docker_repository_docker_upstream_name_format
       @repo.unprotected = true
       @repo.content_type = 'docker'
