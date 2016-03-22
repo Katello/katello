@@ -50,21 +50,21 @@
         </span>
       </div>
 
-      <div ng-show="host.virtual_guests" class="detail">
+      <div ng-show="host.subscription.virtual_guests" class="detail">
         <span class="info-label" translate>Virtual Guests</span>
         <div class="info-value">
           <a ng-click="reloadSearch(virtualGuestIds(host))"
-               translate translate-n="host.virtual_guests.length"
-               translate-plural="{{ host.virtual_guests.length }} Content Hosts">
+               translate translate-n="host.subscription.virtual_guests.length"
+               translate-plural="{{ host.subscription.virtual_guests.length }} Content Hosts">
              1 Content Host
           </a>
         </div>
       </div>
 
-      <div ng-show="host.virtual_host" class="detail">
+      <div ng-show="host.subscription.virtual_host" class="detail">
         <span class="info-label" translate>Virtual Host</span>
         <div class="info-value">
-          <a ui-sref="content-hosts.details.info({contentHostId: host.subscription.virtual_host.uuid })">{{ host.virtual_host.name }}</a>
+          <a ui-sref="content-hosts.details.info({hostId: host.subscription.virtual_host.id })">{{ host.subscription.virtual_host.name }}</a>
         </div>
       </div>
 

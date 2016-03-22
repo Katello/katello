@@ -106,8 +106,8 @@ describe('Controller: ContentHostDetailsInfoController', function() {
     });
 
     it("builds list of guest ids", function () {
-        $scope.host.subscription['virtual_guests'] = [{ id: 2 }, { id: 3}];
-        expect($scope.virtualGuestIds($scope.host)).toEqual("id:2 id:3");
+        $scope.host.subscription['virtual_guests'] = [{ id: 2, name: "guest2" }, { id: 3, name: "guest3"}];
+        expect($scope.virtualGuestIds($scope.host)).toEqual("name = guest2 or name = guest3");
     });
 
     it('provides a method to retrieve available content views for a content host', function() {
