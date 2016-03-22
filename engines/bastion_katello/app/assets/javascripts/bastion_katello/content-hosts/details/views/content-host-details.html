@@ -13,19 +13,41 @@
       <h2 class="fl" translate>Content Host {{ host.name }}</h2>
 
       <div class="fr">
-
-        <div bst-modal="unregisterContentHost(host)" model="host" >
+        <div bst-modal="unregisterContentHost(host)" model="host">
           <div data-block="modal-header" translate>
-            Unregister Content Host "{{ host.name }}"?
+            Unregister Host "{{host.name}}"?
           </div>
-          <div data-block="modal-body" translate>
-            Are you sure you want to unregister content host "{{ host.name }}"?
+          <div data-block="modal-body">
+            <p translate>
+              Unregister Options:
+            </p>
+
+            <p ng-show="host.hasSubscription()">
+              <label>
+                <input name="delete"
+                       ng-model="host.unregisterDelete"
+                       ng-value="false"
+                       type="radio" />
+                Unregister the host as a subscription consumer.  Provisioning and configuration information is preserved.
+              </label>
+            </p>
+            <p>
+              <label>
+                <input name="delete"
+                       ng-model="host.unregisterDelete"
+                       ng-value="true"
+                       type="radio" />
+                Completely deletes the host record and removes all reporting, provisioning, and configuration information.
+              </label>
+            </p>
           </div>
-      </div>
+        </div>
 
         <button class="btn btn-default"
+                ng-disabled="host.deleting"
                 ng-hide="denied('destroy_hosts', host)"
-                ng-click="openModal()" translate>Unregister Content Host</button>
+                ng-click="openModal()" translate>Unregister Host</button>
+
         <button class="btn btn-default" ui-sref="content-hosts.index">
           <i class="fa fa-remove"></i>
           {{ "Close" | translate }}

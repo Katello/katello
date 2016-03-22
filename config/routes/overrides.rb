@@ -85,6 +85,7 @@ Foreman::Application.routes.draw do
               put :content_override
               put :remove_subscriptions
               put :add_subscriptions
+              delete :destroy
             end
           end
         end

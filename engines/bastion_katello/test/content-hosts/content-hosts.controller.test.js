@@ -37,22 +37,4 @@ describe('Controller: ContentHostsController', function() {
         $scope.contentHostTable.closeItem();
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
     });
-
-    it("provides a way to unregister content hosts.", function() {
-        var testContentHost = {
-            uuid: 'abcde',
-            name: 'test',
-            $remove: function(callback) {
-                callback();
-            }
-        };
-
-        spyOn($scope, "transitionTo");
-
-        $scope.unregisterContentHost(testContentHost);
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
-        expect($scope.successMessages[0]).toBe('Content Host test has been deleted.');
-
-    });
 });
