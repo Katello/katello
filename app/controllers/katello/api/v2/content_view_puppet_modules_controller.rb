@@ -24,9 +24,9 @@ module Katello
     param :id, String, :desc => N_("the id of the puppet module to associate")
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
     def create
-      params[:content_view_puppet_module][:uuid] = @puppet_module.uuid if @puppet_module
-
-      @puppet_module = ContentViewPuppetModule.create!(puppet_module_params) do |puppet_module|
+      module_params = puppet_module_params
+      module_params.reverse_merge!(:uuid => @puppet_module.uuid) if @puppet_module
+      @puppet_module = ContentViewPuppetModule.create!(module_params) do |puppet_module|
         puppet_module.content_view = @view
       end
 
