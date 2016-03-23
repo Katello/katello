@@ -66,12 +66,6 @@ module Actions
       end
 
       def done?
-        output[:pulp_tasks].each do |pulp_task|
-          if pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task)
-            fail pulp_exception
-          end
-        end
-
         external_task.all? { |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
       end
 
@@ -97,6 +91,14 @@ module Actions
         end
       end
 
+      def rescue_external_task(error)
+        if error.is_a?(PulpError)
+          fail error
+        else
+          super
+        end
+      end
+
       private
 
       def external_task=(external_task_data)
@@ -113,6 +115,11 @@ module Actions
         # Combine new tasks and remove call reports and ignored tasks
         output[:pulp_tasks] = (external_task_data + new_tasks).reject do |task|
           task["task_id"].nil? || (task["tags"] && (task["tags"] & ignored_tags).present?)
+        end
+        output[:pulp_tasks].each do |pulp_task|
+          if pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task)
+            fail pulp_exception
+          end
         end
       end
 
