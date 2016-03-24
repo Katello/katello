@@ -149,16 +149,18 @@ module Actions
           end
         end
 
-        def copy_yum_content(new_repo, dep_solve, package_uuids, errata_uuids)
+        def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
           copy_outputs = []
           if new_repo.content_type == ::Katello::Repository::YUM_TYPE
-            unless errata_uuids.blank?
+            unless errata_ids.blank?
+              errata_uuids = ::Katello::Erratum.with_identifiers(errata_ids).pluck(:uuid)
               copy_outputs << plan_copy(Pulp::Repository::CopyErrata, new_repo.library_instance, new_repo,
                                         { :filters => {:association => {'unit_id' => {'$in' => errata_uuids}}}},
                                         :recursive => true, :resolve_dependencies => dep_solve).output
             end
 
-            unless package_uuids.blank?
+            unless package_ids.blank?
+              package_uuids = ::Katello::Rpm.with_identifiers(package_ids).pluck(:uuid)
               copy_outputs << plan_copy(Pulp::Repository::CopyRpm, new_repo.library_instance, new_repo,
                                         { :filters => {:association => {'unit_id' => {'$in' => package_uuids}}}},
                                         :resolve_dependencies => dep_solve).output

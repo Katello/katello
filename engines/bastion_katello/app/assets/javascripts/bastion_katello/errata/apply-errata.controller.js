@@ -81,7 +81,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 });
 
                 if ($scope.applyErrata) {
-                    params['update_systems'] = $scope.selectedContentHosts;
+                    params['update_hosts'] = $scope.selectedContentHosts;
                 }
 
                 error = function (response) {
