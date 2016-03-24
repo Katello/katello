@@ -463,18 +463,6 @@ module Katello
       end
     end
 
-    def systems_with_applicability
-      ::Katello::System.joins(:bound_repositories).
-              where("#{::Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
-    end
-
-    def import_system_applicability
-      fail "Can only calculate applicability for Library repositories" unless self.content_view.default?
-      systems_with_applicability.find_each do |system|
-        system.import_applicability
-      end
-    end
-
     def ostree_branch_names
       self.ostree_branches.map(&:name)
     end
@@ -552,6 +540,20 @@ module Katello
           return false
         end
       end
+    end
+
+    def import_host_applicability
+      self.hosts_with_applicability.find_each do |host|
+        begin
+          host.content_facet.import_applicability if host.content_facet.try(:uuid)
+        rescue => e
+          Rails.logger.error("Could not import applicability for #{host.name}: #{e}")
+        end
+      end
+    end
+
+    def hosts_with_applicability
+      ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
     end
 
     protected
