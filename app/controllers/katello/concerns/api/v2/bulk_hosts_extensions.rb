@@ -13,15 +13,21 @@ module Katello
         unless bulk_params[:included][:ids].blank?
           @hosts = ::Host::Managed.authorized(permission).where(:id => bulk_params[:included][:ids])
           @hosts = @hosts.where(:organization_id => organization.id) if organization
-          @hosts = @hosts.where('id not in (?)', bulk_params[:excluded]) unless bulk_params[:excluded][:ids].blank?
-          @hosts = restrict_to.call(@hosts) if restrict_to
         end
 
         if bulk_params[:included][:search]
-          search_hosts = ::Host::Managed.where(:organization_id => organization_id) if params[:organization_id]
+          search_hosts = ::Host::Managed.authorized(permission)
+          search_hosts = search_hosts.where(:organization_id => organization_id) if params[:organization_id]
           search_hosts = search_hosts.search_for(bulk_params[:included][:search])
-          @hosts += search_hosts
+          if @hosts.any?
+            ::Host.where("id in (?) OR id in (?)", @hosts, search_hosts)
+          else
+            @hosts = search_hosts
+          end
         end
+
+        @hosts = restrict_to.call(@hosts) if restrict_to
+        @hosts = @hosts.where('id not in (?)', bulk_params[:excluded][:ids]) unless bulk_params[:excluded][:ids].blank?
 
         if bulk_params[:included][:ids].blank? && bulk_params[:included][:search].nil?
           fail HttpErrors::BadRequest, _("No hosts have been specified.")

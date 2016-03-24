@@ -21,7 +21,7 @@
       <div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="errata.showInstallable" ng-change="toggleInstallable()"/>
+            <input type="checkbox" ng-model="restrictInstallable" ng-change="toggleInstallable()"/>
             <span translate>Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.</span>
           </label>
         </div>
@@ -71,13 +71,13 @@
         <tr bst-table-row ng-repeat="contentHost in detailsTable.rows" row-select="contentHost"
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
-            <a ui-sref="content-hosts.details.info({hostId: contentHost.host_id})">
+            <a ui-sref="content-hosts.details.info({hostId: contentHost.id})">
               {{ contentHost.name }}
             </a>
           </td>
-          <td bst-table-cell>{{ contentHost.distribution }}</td>
-          <td bst-table-cell>{{ contentHost.environment.name }}</td>
-          <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
+          <td bst-table-cell>{{ contentHost.operatingsystem_name }}</td>
+          <td bst-table-cell>{{ contentHost.content.lifecycle_environment_name }}</td>
+          <td bst-table-cell>{{ contentHost.content.content_view_name || "" }}</td>
         </tr>
       </tbody>
     </table>

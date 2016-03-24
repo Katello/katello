@@ -54,6 +54,13 @@ module Katello
       return self.errata_id <=> other.errata_id
     end
 
+    def self.with_identifiers(ids)
+      ids = [ids] unless ids.is_a?(Array)
+      ids.map!(&:to_s)
+      id_integers = ids.map { |string| Integer(string) rescue -1 }
+      where("#{self.table_name}.id = (?) or #{self.table_name}.uuid = (?) or #{self.table_name}.errata_id = (?)", id_integers, ids, ids)
+    end
+
     def hosts_applicable
       self.content_facets_applicable.joins(:host)
     end

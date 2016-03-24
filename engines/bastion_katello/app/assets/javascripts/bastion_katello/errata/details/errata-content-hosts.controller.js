@@ -12,41 +12,64 @@
  *   Provides the functionality for the available host collection details action pane.
  */
 angular.module('Bastion.errata').controller('ErrataContentHostsController',
-    ['$scope', 'Nutupane', 'ContentHost', 'Environment', 'CurrentOrganization',
-    function ($scope, Nutupane, ContentHost, Environment, CurrentOrganization) {
+    ['$scope', 'Nutupane', 'Host', 'Environment', 'CurrentOrganization',
+    function ($scope, Nutupane, Host, Environment, CurrentOrganization) {
         var nutupane, params;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
+
+        $scope.restrictInstallable = false;
 
         params = {
             'erratum_id': $scope.$stateParams.errataId,
             'organization_id': CurrentOrganization
         };
 
-        if (!params['erratum_id']) {
-            params['errata_ids'] = _.pluck($scope.table.getSelected(), 'id');
-        }
-
-        nutupane = new Nutupane(ContentHost, params, 'getPost');
+        nutupane = new Nutupane(Host, params);
         nutupane.table.closeItem = function () {};
         nutupane.enableSelectAllResults();
 
         $scope.nutupane = nutupane;
         $scope.detailsTable = nutupane.table;
+        $scope.nutupane.searchTransform = function(term) {
+            var addition = '( ' + $scope.errataSearchString($scope.restrictInstallable) + ' )';
+            if (angular.isDefined($scope.environment_id)) {
+                addition = addition + ' and lifecycle_environment_id = ' + $scope.environmentId;
+            }
+
+            if (term === "" || angular.isUndefined(term)) {
+                return addition;
+            }
+            return term + ' and ' + addition;
+        };
 
         Environment.queryUnpaged(function (response) {
             $scope.environments = response.results;
         });
 
         $scope.toggleInstallable = function () {
-            nutupane.table.params['erratum_restrict_installable'] = $scope.errata.showInstallable;
             nutupane.refresh();
         };
 
+        $scope.errataSearchString = function(installable) {
+            var searchTerm = installable ? 'installable_errata' : 'applicable_errata',
+                searchStatements, errataIds;
+
+            if ($scope.errata) {
+                errataIds = [$scope.errata['errata_id']];
+            } else {
+                errataIds = _.pluck($scope.table.getSelected(), 'errata_id');
+            }
+
+            searchStatements = _.map(errataIds, function(errataId) {
+                return searchTerm + ' = "' + errataId + '"';
+            });
+            return searchStatements.join(" or ");
+        };
+
         $scope.selectEnvironment = function (environmentId) {
-            params['environment_id'] = environmentId;
-            nutupane.setParams(params);
+            $scope.environmentId = environmentId;
             nutupane.refresh();
         };
 
