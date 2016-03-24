@@ -12,9 +12,14 @@ hostname: <%= @host.shortname %>
 fqdn: <%= @host %>
 manage_etc_hosts: true
 <%# Allow user to specify additional SSH key as host paramter -%>
-<% if @host.params['sshkey'] -%>
+<% if @host.params['sshkey'].present? || @host.params['remote_execution_ssh_keys'].present? -%>
 ssh_authorized_keys:
+<% if @host.params['sshkey'].present? -%>
   - <%= @host.params['sshkey'] %>
+<% end -%>
+<% @host.params['remote_execution_ssh_keys'].each do |key| -%>
+  - <%= key %>
+<% end -%>
 <% end -%>
 write_files:
 - path: /tmp/foreman-userdata.sh
