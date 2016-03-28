@@ -25,7 +25,7 @@ module Katello
         if params[:scoped_search].present?
           params[:scoped_search]
         else
-          ::Host.where(:id => params[:host_ids])
+          ::Host.where(:id => params[:host_ids].try(:split, ','))
         end
       end
 
