@@ -155,6 +155,7 @@ module Katello
       ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
+      ::Setting.send :include, Katello::Concerns::SettingExtensions
 
       ::Container.send :include, Katello::Concerns::ContainerExtensions
       ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
