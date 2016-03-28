@@ -63,7 +63,7 @@ module Actions
         def repos_needing_updates(capsule_content, environment, content_view)
           need_importer_update = repos_needing_importer_updates(capsule_content, environment, content_view)
           need_distributor_update = repos_needing_distributor_updates(capsule_content, environment, content_view)
-          (need_distributor_update && need_importer_update).uniq
+          (need_distributor_update + need_importer_update).uniq
         end
 
         def repos_needing_distributor_updates(capsule, environment, content_view)
