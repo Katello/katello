@@ -47,7 +47,7 @@ module Katello
         cp_product_ids = products.map { |product| product["id"] }
         cp_product_ids << self.product_id if self.product_id
         cp_product_ids.each do |cp_id|
-          product = ::Katello::Product.where(:cp_id => cp_id)
+          product = ::Katello::Product.where(:cp_id => cp_id, :organization_id => self.organization_id)
           if product.any?
             ::Katello::SubscriptionProduct.where(:subscription_id => self.id, :product_id => product.first.id).first_or_create
           end
