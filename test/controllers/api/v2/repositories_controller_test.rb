@@ -563,6 +563,15 @@ module Katello
       put :update, :id => repo.id, :docker_upstream_name => "helloworld"
     end
 
+    def test_update_false_download_policy
+      expected_message = "must be one of the following: %s" % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
+      response = put :update, :id => @repository.id, :download_policy => 'false'
+      body = JSON.parse(response.body)
+
+      assert_response 422
+      assert_equal(expected_message, body['errors']['download_policy'][0])
+    end
+
     def test_remove_content
       @repository.rpms << @rpm
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
