@@ -51,6 +51,7 @@ module Actions
           host.content_facet.save!
           host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.consumer_attributes)
           host.subscription_facet.save!
+          host.refresh_global_status!
 
           system = ::Katello::System.find(input[:system_id])
           system.uuid = input[:uuid]

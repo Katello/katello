@@ -44,6 +44,7 @@ module Katello
 
       def update_subscription_status
         host.get_status(::Katello::SubscriptionStatus).refresh!
+        host.refresh_global_status!
       end
 
       def self.new_host_from_facts(facts, org, location)
