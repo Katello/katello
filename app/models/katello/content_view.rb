@@ -25,7 +25,7 @@ module Katello
       end
     end
 
-    has_many :content_view_repositories, :dependent => :destroy
+    has_many :content_view_repositories, :dependent => :destroy, :inverse_of => :content_view
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
 
