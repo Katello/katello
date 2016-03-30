@@ -51,7 +51,9 @@ module Katello
         table_name = self.repository_association_class.table_name
         attribute_name = "#{self.name.demodulize.underscore}_id"
 
-        existing_ids = self.repository_association_class.where(:repository_id => repository).pluck(attribute_name)
+        existing_ids = self.repository_association_class.uncached do
+          self.repository_association_class.where(:repository_id => repository).pluck(attribute_name)
+        end
         new_ids = associated_ids - existing_ids
         delete_ids = existing_ids - associated_ids
 
