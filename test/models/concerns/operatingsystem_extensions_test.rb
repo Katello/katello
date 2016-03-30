@@ -28,5 +28,29 @@ module Katello
 
       assert os.ptables.include? ptable
     end
+
+    def test_assign_template_for_atomic
+      template = templates(:mystring2)
+      ptable = FactoryGirl.create(:ptable)
+      Setting.create(:name => 'katello_default_atomic_provision', :description => 'atomic default template',
+                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :default => template.name)
+
+      Setting.create(:name => 'katello_default_ptable', :description => 'default template',
+                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :default => ptable.name)
+
+      os_attributes = {:major => "7", :minor => "3", :name => ::Operatingsystem::REDHAT_ATOMIC_HOST_OS}
+      os = Operatingsystem.create!(os_attributes)
+
+      assert ::OsDefaultTemplate.where(:template_kind_id    => ::TemplateKind.find_by_name('provision').id,
+                                       :provisioning_template_id  => template.id,
+                                       :operatingsystem_id  => os.id).any?
+
+      assert os.ptables.include? ptable
+      assert_equal "Redhat", os.family
+      assert_equal "x86_64", os.architectures.first.name
+      assert_equal "#{::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME} 7.3", os.description
+    end
   end
 end

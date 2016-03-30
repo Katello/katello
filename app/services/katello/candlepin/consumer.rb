@@ -121,6 +121,8 @@ module Katello
       end
 
       def self.distribution_to_puppet_os(name)
+        return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
+
         name = name.downcase
         if name =~ /red\s*hat/
           'RedHat'
