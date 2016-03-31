@@ -108,7 +108,7 @@ module Actions
         # given a composite version, and a list of new components, calculate the list of all components for the new version
         def calculate_components(old_version, new_components)
           old_components = old_version.components.select do |component|
-            !old_version.components.map(&:content_view_id).include?(component.content_view_id)
+            !new_components.map(&:content_view_id).include?(component.content_view_id)
           end
           old_components + new_components
         end
