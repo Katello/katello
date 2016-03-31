@@ -6,7 +6,10 @@ module Actions
 
         def plan(host, system, consumer_params, content_view_environment, activation_keys = [])
           sequence do
-            plan_action(Katello::Host::Unregister, host) unless host.new_record?
+            unless host.new_record?
+              plan_action(Katello::Host::Unregister, host)
+              host.reload
+            end
             ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
 
             unless activation_keys.empty?
@@ -20,6 +23,7 @@ module Actions
             system.save!
 
             host.content_host = system
+            host.save!
             host.content_facet = plan_content_facet(host, content_view_environment)
             host.subscription_facet = plan_subscription_facet(host, activation_keys, consumer_params)
             host.save!
