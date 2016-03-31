@@ -221,6 +221,20 @@ module Katello
       assert_response :success
     end
 
+    def test_incremental_update_without_env
+      version = @library_dev_staging_view.versions.first
+      errata_id = Katello::Erratum.first.uuid
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
+                                            [{:content_view_version => version, :environments => []}], [],
+                                            {'errata_ids' => [errata_id]}, true, [], nil).returns({})
+
+      put :incremental_update, :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => []}],
+                               :update_hosts => {:included => {:search => ''}},
+                               :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true
+
+      assert_response :success
+    end
+
     def test_incremental_update_protected
       version = @library_dev_staging_view.versions.first
       errata_id = Katello::Erratum.first.uuid

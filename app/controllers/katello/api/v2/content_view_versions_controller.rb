@@ -108,7 +108,8 @@ module Katello
       end
     end
     def incremental_update
-      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_hosts]
+      any_environments = params[:content_view_version_environments].any? { |cvve| cvve[:environment_ids].try(:any?) }
+      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_hosts] && any_environments
         hosts = calculate_hosts_for_incremental(params[:update_hosts], params[:propagate_to_composites])
       else
         hosts = []
@@ -126,9 +127,13 @@ module Katello
       if bulk_params[:included].try(:[], :search)
         version_environments  = find_version_environments_for_hosts(use_composites)
         restrict_hosts = lambda do |relation|
-          errata = Erratum.with_identifiers(params[:add_content][:errata_ids])
-          content_facets = Host::ContentFacet.in_content_view_version_environments(version_environments).with_applicable_errata(errata)
-          relation.where(:id => content_facets.pluck(:host_id))
+          if version_environments.any?
+            errata = Erratum.with_identifiers(params[:add_content][:errata_ids])
+            content_facets = Host::ContentFacet.in_content_view_version_environments(version_environments).with_applicable_errata(errata)
+            relation.where(:id => content_facets.pluck(:host_id))
+          else
+            relation.where("1=0")
+          end
         end
       else
         restrict_hosts = nil
@@ -171,8 +176,10 @@ module Katello
           return deny_access(_("You are not allowed to promote to Environments %s") % un_promotable.map(&:name).join(', '))
         end
 
-        not_found = combination[:environment_ids].map(&:to_s) - version_environment[:environments].map { |env| env.id.to_s }
-        fail _("Could not find Environment with ids: %s") % not_found.join(', ') unless not_found.empty?
+        unless combination[:environment_ids].blank?
+          not_found = combination[:environment_ids].map(&:to_s) - version_environment[:environments].map { |env| env.id.to_s }
+          fail _("Could not find Environment with ids: %s") % not_found.join(', ') unless not_found.empty?
+        end
 
         if view.composite?
           @composite_version_environments << version_environment
@@ -202,9 +209,10 @@ module Katello
                                                                             :environments => composite_version.environments}
           end
         end
+
         version_environments_for_systems_map.values
       else
-        @version_environments
+        @version_environments.select { |ve| !ve[:environment_ids].blank? }
       end
     end
 
