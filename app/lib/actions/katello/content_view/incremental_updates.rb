@@ -4,7 +4,7 @@ module Actions
       class IncrementalUpdates < Actions::EntryAction
         include Helpers::Presenter
 
-        def plan(version_environments, composite_version_environments, content, dep_solve, systems, description)
+        def plan(version_environments, composite_version_environments, content, dep_solve, hosts, description)
           old_new_version_map = {}
           output_for_version_ids = []
 
@@ -28,8 +28,9 @@ module Actions
               handle_composites(old_new_version_map, composite_version_environments, output_for_version_ids, description, content[:puppet_module_ids])
             end
 
-            if systems.any? && !content[:errata_ids].blank? #content[:errata_ids] are uuids
-              hosts = systems.collect { |i| i.foreman_host }
+            if hosts.any? && !content[:errata_ids].blank?
+              errata = ::Katello::Erratum.with_identifiers(content[:errata_ids])
+              hosts = hosts.where(:id => ::Katello::Host::ContentFacet.with_applicable_errata(errata).pluck(:host_id))
               plan_action(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, hosts, content[:errata_ids])
             end
             plan_self(:version_outputs => output_for_version_ids)

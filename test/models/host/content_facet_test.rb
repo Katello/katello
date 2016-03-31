@@ -3,6 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentFacetBase < ActiveSupport::TestCase
     let(:library) { katello_environments(:library) }
+    let(:dev) { katello_environments(:dev) }
     let(:view)  { katello_content_views(:library_dev_view) }
     let(:environment) { katello_environments(:library) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
@@ -39,6 +40,18 @@ module Katello
 
       assert host.reload.content_facet.katello_agent_installed?
     end
+
+    def test_in_content_view_version_environments
+      first_cvve = {:content_view_version => content_facet.content_view.version(content_facet.lifecycle_environment),
+                    :environments => [content_facet.lifecycle_environment]}
+      second_cvve = {:content_view_version => view.version(library), :environments => [dev]} #dummy set
+
+      facets = Host::ContentFacet.in_content_view_version_environments([first_cvve, second_cvve])
+      assert_includes facets, content_facet
+
+      facets = Host::ContentFacet.in_content_view_version_environments([first_cvve])
+      assert_includes facets, content_facet
+    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase
@@ -52,6 +65,21 @@ module Katello
       other_host = FactoryGirl.create(:host)
       errata = katello_errata(:security)
       found = ::Host.search_for("applicable_errata = #{errata.errata_id}")
+
+      assert_includes found, content_facet.host
+      refute_includes found, other_host
+    end
+
+    def test_installable_errata_searchable
+      other_host = FactoryGirl.create(:host)
+      errata = katello_errata(:security)
+      found = ::Host.search_for("installable_errata = #{errata.errata_id}")
+
+      refute_includes found, host
+
+      host.content_facet.bound_repositories << errata.repositories.first
+
+      found = ::Host.search_for("installable_errata = #{errata.errata_id}")
 
       assert_includes found, content_facet.host
       refute_includes found, other_host
@@ -96,7 +124,7 @@ module Katello
       refute content_facets.include?(content_facet_dev)
 
       content_facets = Katello::Host::ContentFacet.with_installable_errata([installable.first, non_installable.first])
-      refute content_facets.include?(content_facet_dev)
+      assert_includes content_facets, content_facet_dev
     end
 
     def test_with_non_installable_errata
@@ -201,8 +229,16 @@ module Katello
       assert_includes ::Host::Managed.search_for("content_view = \"#{view.name}\""), host
     end
 
+    def test_content_view_id_search
+      assert_includes ::Host::Managed.search_for("content_view_id = #{view.id}"), host
+    end
+
     def test_lifecycle_environment_search
       assert_includes ::Host::Managed.search_for("lifecycle_environment = #{library.name}"), host
+    end
+
+    def test_lifecycle_environment_id_search
+      assert_includes ::Host::Managed.search_for("lifecycle_environment_id = #{library.id}"), host
     end
 
     def test_errata_status_search

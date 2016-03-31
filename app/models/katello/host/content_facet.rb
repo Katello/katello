@@ -72,6 +72,16 @@ module Katello
         host.get_status(::Katello::ErrataStatus).refresh!
       end
 
+      def self.in_content_view_version_environments(version_environments)
+        #takes a structure of [{:content_view_version => ContentViewVersion, :environments => [KTEnvironment]}]
+        queries = version_environments.map do |version_environment|
+          version = version_environment[:content_view_version]
+          env_ids = version_environment[:environments].map(&:id)
+          "(#{table_name}.content_view_id = #{version.content_view_id} AND #{table_name}.lifecycle_environment_id IN (#{env_ids.join(',')}))"
+        end
+        where(queries.join(" OR "))
+      end
+
       def self.with_non_installable_errata(errata)
         subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_hosts
         .where("#{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::Host::ContentFacet.table_name}.id").to_sql
@@ -83,13 +93,19 @@ module Katello
       end
 
       def self.with_installable_errata(errata)
-        non_installable = Katello::Host::ContentFacet.with_non_installable_errata(errata)
-        subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").installable_for_hosts.
-            where("#{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::Host::ContentFacet.table_name}.id")
+        joins_installable_errata.where("#{Katello::Erratum.table_name}.id" => errata)
+      end
 
-        query = self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id" => subquery)
-        query = query.where.not("#{Katello::Host::ContentFacet.table_name}.id" => non_installable) unless non_installable.empty?
-        query.uniq
+      def self.joins_installable_errata
+        facet_repository = Katello::ContentFacetRepository.table_name
+        facet_errata = Katello::ContentFacetErratum.table_name
+        repository_erratum = Katello::RepositoryErratum.table_name
+        erratum = Katello::Erratum.table_name
+
+        self.joins("INNER JOIN #{facet_repository} on #{facet_repository}.content_facet_id = #{table_name}.id",
+                   "INNER JOIN #{repository_erratum} on #{repository_erratum}.repository_id = #{facet_repository}.repository_id",
+                   "INNER JOIN #{erratum} on #{erratum}.id = #{repository_erratum}.erratum_id",
+                   "INNER JOIN #{facet_errata} on #{facet_errata}.erratum_id = #{erratum}.id")
       end
 
       def content_view_version
