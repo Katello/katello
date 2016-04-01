@@ -33,7 +33,7 @@ module Katello
              :dependent   => :restrict_with_exception,
              :foreign_key => :library_instance_id
     has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
-                                         :dependent => :destroy
+                                         :dependent => :destroy, :inverse_of => :repository
     has_many :content_views, :through => :content_view_repositories
 
     has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy
