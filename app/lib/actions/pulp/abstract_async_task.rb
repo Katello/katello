@@ -98,7 +98,7 @@ module Actions
       end
 
       def rescue_external_task(error)
-        if error.is_a?(Katello::Errors::PulpError)
+        if error.is_a?(::Katello::Errors::PulpError)
           fail error
         else
           super
