@@ -15,7 +15,9 @@ module Katello
           'katello_default_provision',
           'katello_default_ptable',
           'katello_default_PXELinux',
-          'katello_default_user_data'].include?(setting.name)
+          'katello_default_user_data',
+          'katello_default_kexec'
+        ].include?(setting.name)
 
         case setting.name
         when "default_download_policy"
@@ -32,6 +34,8 @@ module Katello
           edit_select(setting, :value, :select_values => katello_template_setting_values("PXELinux"))
         when "katello_default_user_data"
           edit_select(setting, :value, :select_values => katello_template_setting_values("user_data"))
+        when "katello_default_kexec"
+          edit_select(setting, :value, :select_values => katello_template_setting_values("kexec"))
         end
       end
 
