@@ -203,7 +203,7 @@ module Katello
         end
       end
 
-      def generate_distributors
+      def generate_distributors(capsule = false)
         case self.content_type
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
@@ -215,7 +215,8 @@ module Katello
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                  :destination_distributor_id => yum_dist_id)
           export_dist = Runcible::Models::ExportDistributor.new(false, false, self.relative_path)
-          distributors = [yum_dist, clone_dist, export_dist]
+          distributors = [yum_dist, export_dist]
+          distributors << clone_dist unless capsule
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
@@ -778,17 +779,19 @@ module Katello
       end
 
       def distributors_match?(capsule_distributors)
-        generated_distributors = self.generate_distributors.map(&:as_json)
+        generated_distributors = self.generate_distributors(true).map(&:as_json)
         capsule_distributors.each do |dist|
           dist.merge!(dist["config"])
           dist.delete("config")
         end
 
-        generated_distributors.any? do |gen_dist|
+        config_check = generated_distributors.any? do |gen_dist|
           capsule_distributors.any? do |cap_dist|
             (gen_dist.to_a - cap_dist.to_a).empty?
           end
         end
+        equal_amount_check = generated_distributors.count == capsule_distributors.count
+        config_check && equal_amount_check
       end
 
       def importer_matches?(capsule_importer)
