@@ -81,7 +81,6 @@ module Katello
     end
 
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
-    api :POST, "/subscriptions/upload", N_("Upload a subscription manifest")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     param :content, File, :desc => N_("Subscription manifest file"), :required => true
     param :repository_url, String, :desc => N_("repository url"), :required => false
