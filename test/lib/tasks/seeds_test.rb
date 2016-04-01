@@ -5,6 +5,7 @@ module Katello
     setup do
       Setting.stubs(:[]).with(:administrator).returns("root@localhost")
       Setting.stubs(:[]).with(:send_welcome_email).returns(false)
+      Setting.stubs(:[]).with(regexp_matches(/katello_default_/)).returns("Crazy Template")
       Katello::Repository.stubs(:ensure_sync_notification)
     end
 
@@ -87,6 +88,13 @@ module Katello
     test "Make sure sync notifications  notiffication got setup" do
       Katello::Repository.expects(:ensure_sync_notification). returns(true)
       seed
+    end
+  end
+
+  class AtomicOsTest < SeedsTest
+    test "Make sure atomic OS got setup" do
+      seed
+      assert Operatingsystem.find_by(:name => Operatingsystem::REDHAT_ATOMIC_HOST_OS).present?
     end
   end
 end
