@@ -18,7 +18,7 @@
           <tr>
             <td align="center" valign="top">
               <div align="left">
-                <h2 style="font-weight: normal;"><b>KATELLO</b> PROMOTION SUMMARY</h2>
+                <h2 style="font-weight: normal;"><%= _("<b>PROMOTION</b> SUMMARY") %></h2>
 
                 <%= (_("The promotion of %{content_view} to <b>%{environment}</b> has completed.  %{count} needed errata are installable on your hosts.") %
                      {:content_view         => link_to(@content_view.name, content_view_path(@content_view)),

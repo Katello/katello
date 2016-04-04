@@ -77,9 +77,11 @@ module Katello
   end
 
   class MailNotificationsTest < SeedsTest
-    test "Make sure mail notiffication got setup" do
+    test "Make sure mail notification got setup" do
       seed
-      assert ::MailNotification.pluck(:name).grep(/katello/).present?
+      assert MailNotification[:host_errata_advisory]
+      assert MailNotification[:promote_errata]
+      assert MailNotification[:sync_errata]
     end
   end
 

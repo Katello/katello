@@ -9,7 +9,7 @@ module Katello
       end
 
       set_locale_for(user) do
-        mail(:to => user.mail, :subject => _("Katello Host Advisory"))
+        mail(:to => user.mail, :subject => _("Host Errata Advisory"))
       end
     end
 
@@ -22,7 +22,7 @@ module Katello
       @errata = all_errata.take(100).group_by(&:errata_type)
 
       set_locale_for(user) do
-        mail(:to => user.mail, :subject => (_("Katello Sync Summary for %s") % @repo.name))
+        mail(:to => user.mail, :subject => (_("Sync Summary for %s") % @repo.name))
       end
     end
 
@@ -37,7 +37,7 @@ module Katello
       @errata = @content_facets.map(&:installable_errata).flatten.uniq
 
       set_locale_for(user) do
-        mail(:to => user.mail, :subject => (_("Katello Promotion Summary for %{content_view}") % {:content_view => @content_view.name}))
+        mail(:to => user.mail, :subject => (_("Promotion Summary for %{content_view}") % {:content_view => @content_view.name}))
       end
     end
 
