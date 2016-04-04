@@ -10,7 +10,8 @@ module Actions
         def plan(repository, options = {})
           planned_destroy = options.fetch(:planned_destroy, false)
 
-          skip_environment_update = options.fetch(:organization_destroy, false)
+          skip_environment_update = options.fetch(:skip_environment_update, false) ||
+              options.fetch(:organization_destroy, false)
           action_subject(repository)
 
           if !planned_destroy && !repository.assert_deletable
