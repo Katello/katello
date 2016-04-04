@@ -90,7 +90,10 @@ module Katello
       :allow_blank => false,
       :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
     }
-    validates :download_policy, inclusion: { in: ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES }, if: :yum?
+    validates :download_policy, inclusion: {
+      :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,
+      :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
+    }, if: :yum?
     validate :ensure_no_download_policy, if: ->(repo) { !repo.yum? }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
