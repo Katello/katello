@@ -10,10 +10,10 @@
 angular.module('Bastion.capsule-content').config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 
     // Catch the url to prevent the router to perform redirect.
-    $urlRouterProvider.when('/smart_proxies/:proxyId', function ($match, $stateParams) {
+    $urlRouterProvider.when('/smart_proxies/:proxyId', ['$match', '$stateParams', function ($match, $stateParams) {
         $stateParams.pageName = 'smart_proxies/detail';
         return true;
-    });
+    }]);
 
     // Add rule to redirect links on the smart proxy detail page.
     // Changing state doesn't work there since there's no <ui-view> element there
