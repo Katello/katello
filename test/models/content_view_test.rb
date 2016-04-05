@@ -355,59 +355,6 @@ module Katello
       assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:major)
     end
 
-    def test_check_distribution_conflicts_conflict
-      view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64).id)
-      view.save!
-
-      assert_raises(RuntimeError) do
-        view.check_distribution_conflicts!
-      end
-    end
-
-    def test_check_distribution_conflicts_no_conflict
-      view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_7_x86_64).id)
-      view.repositories << Repository.find(katello_repositories(:feedless_fedora_17_x86_64).id)
-      view.save!
-
-      assert_empty view.check_distribution_conflicts!
-    end
-
-    def test_conflicting_distributions_nil_value_no_conflict
-      view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_7_no_arch).id)
-      view.repositories << Repository.find(katello_repositories(:fedora_17_no_arch).id)
-      view.save!
-
-      assert_empty view.check_distribution_conflicts!
-    end
-
-    def test_duplicate_distributions
-      view = @library_view
-      duplicate_repo = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate).id)
-
-      view.repositories << duplicate_repo
-      view.save!
-
-      assert_includes view.duplicate_distributions, duplicate_repo
-    end
-
-    def test_distribution_conflicts
-      view = @library_view
-      conflicting_distribution = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate).id)
-      view.repositories << conflicting_distribution
-      view.save!
-
-      conflicts = view.distribution_conflicts
-      assert_equal 2, conflicts.count
-      conflicts.each do |c|
-        assert_equal conflicting_distribution.distribution_version, c.distribution_version
-        assert_equal conflicting_distribution.distribution_arch, c.distribution_arch
-      end
-      assert_includes conflicts, conflicting_distribution
-    end
-
     def test_add_repository_from_other_org
       view = @library_view
       other_org = create(:katello_organization)

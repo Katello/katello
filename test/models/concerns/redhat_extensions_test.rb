@@ -56,4 +56,51 @@ module Katello
       refute_includes repo_list, other_repo
     end
   end
+
+  class RedhatExtensionsMediaTest < ActiveSupport::TestCase
+    def setup
+      User.current = User.find(users(:admin))
+      @repo_with_distro = katello_repositories(:fedora_17_x86_64)
+      version = @repo_with_distro.distribution_version.split('.')
+      @os = ::Redhat.create_operating_system("RedHat", version[0], version[1])
+      @content_source = SmartProxy.create!(:name => "foobar", :url => "http://capsule.com/")
+
+      @host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => @os,
+                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
+                                                      :content_view_id => @repo_with_distro.content_view.id})
+
+      @host.content_source = @content_source
+    end
+
+    def test_medium_uri_for_no_content_source_or_ks_repo
+      # create os
+      @os.media.create!(:name => "my-media", :path => "http://www.foo.com/abcd")
+      @host.medium = @os.media.first
+      @host.content_source = nil
+      @host.kickstart_repository = @repo_with_distro
+      assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
+
+      @host.content_source = @content_source
+      @host.kickstart_repository = nil
+      assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
+    end
+
+    def test_medium_uri_with_a_kickstart_repo
+      @host.kickstart_repository = @repo_with_distro
+      assert_equal @repo_with_distro.full_path(@content_source), @os.medium_uri(@host).to_s
+    end
+
+    def test_kickstart_repos_with_no_content_source
+      @os.expects(:distribution_repositories).with(@host).returns([@repo_with_distro])
+      @host.content_source = nil
+      assert_empty @os.kickstart_repos(@host)
+    end
+
+    def test_kickstart_repos_with_one_distro
+      @os.expects(:distribution_repositories).with(@host).returns([@repo_with_distro])
+      repos =  @os.kickstart_repos(@host)
+      refute_empty repos
+      assert_equal @repo_with_distro.full_path(@content_source), repos.first[:path]
+    end
+  end
 end

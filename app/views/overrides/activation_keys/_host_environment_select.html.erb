@@ -3,7 +3,7 @@
     option.kt-env { margin-left: 0em; }
     option.kt-cv  { margin-left: 1em; }
 </style>
-
+<% spinner_path = asset_path('spinner.gif') %>
 <% using_hostgroups_page = @host.nil? %>
 
 <% env_select_id = using_hostgroups_page ? :hostgroup_lifecycle_environment_id : :host_lifecycle_environment_id %>
@@ -19,16 +19,15 @@
   end
 end %>
 
-
 <% cv_select_id =  using_hostgroups_page ? :hostgroup_content_view_id : :host_content_view_id %>
 <% cv_select_name =  using_hostgroups_page ? 'hostgroup[content_view_id]' : 'host[content_facet_attributes][content_view_id]' %>
 <% cv_select_attr = using_hostgroups_page ? 'content_view' : 'content_facet.content_view' %>
 <%= field(f, cv_select_attr, {:label => _("Content View")}) do
   if using_hostgroups_page
-    select_tag cv_select_id,  content_views_for_host(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)),
+    select_tag cv_select_id,  content_views_for_host(@hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :data => {"spinner_path" => spinner_path},
                :class => 'form-control',  :name => cv_select_name
   else
-    select_tag cv_select_id,  content_views_for_host(@host, :selected_host_group => @hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :class => 'form-control',  :name => cv_select_name
+    select_tag cv_select_id,  content_views_for_host(@host, :selected_host_group => @hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_view)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cv_select_name
   end
 end %>
 

@@ -1,0 +1,15 @@
+<% using_hostgroups_page = @host.nil?
+kickstart_repo_id = using_hostgroups_page ? kickstart_repository_id(@hostgroup) : kickstart_repository_id(@host, :selected_host_group => @hostgroup)
+host = using_hostgroups_page ? @hostgroup : @host
+kickstart_options = kickstart_repository_options(host, :selected_host_group => @hostgroup)
+%>
+<%= select_f f, :kickstart_repository_id, kickstart_options, :id, :name,
+  {:include_blank => blank_or_inherit_f(f, :kickstart_repository), :selected => kickstart_repo_id },
+  {:label => _("Synced Content"), :disabled => kickstart_options.empty? ,
+   :help_inline => :indicator, :"data-kickstart-repository-id" => kickstart_repo_id,
+   :'data-type' => controller_name, :required => true }
+%>
+<script>
+  KT.hosts.set_media_selection_bindings();
+  KT.hosts.update_media_enablement();
+</script>

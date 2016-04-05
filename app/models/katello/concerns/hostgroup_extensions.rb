@@ -5,14 +5,14 @@ module Katello
 
       included do
         before_save :add_organization_for_environment
-
+        belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hostgroups
         belongs_to :content_view, :inverse_of => :hostgroups, :class_name => "::Katello::ContentView"
         belongs_to :lifecycle_environment, :inverse_of => :hostgroups, :class_name => "::Katello::KTEnvironment"
 
         validates_with Katello::Validators::ContentViewEnvironmentValidator
 
-        attr_accessible :content_view_id, :lifecycle_environment_id, :content_source_id
+        attr_accessible :content_view_id, :lifecycle_environment_id, :content_source_id, :kickstart_repository_id
 
         scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
