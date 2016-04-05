@@ -19,5 +19,6 @@ BASTION_MODULES.push(
     'Bastion.sync-plans',
     'Bastion.host-collections',
     'Bastion.content-hosts',
-    'Bastion.tasks'
+    'Bastion.tasks',
+    'Bastion.settings'
 );

@@ -11,13 +11,14 @@
  * @requires CurrentOrganization
  * @requires DownloadPolicy
  * @requires ApiErrorHandler
+ * @requires Setting
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy', 'ApiErrorHandler',
-    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization, DownloadPolicy, ApiErrorHandler) {
+    ['$scope', '$state', '$q', 'translate', 'Repository', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy', 'ApiErrorHandler', 'BastionConfig', 'Setting',
+    function ($scope, $state, $q, translate, Repository, GPGKey, CurrentOrganization, DownloadPolicy, ApiErrorHandler, BastionConfig, Setting) {
         var updateRepositoriesTable;
 
         $scope.successMessages = [];
@@ -35,6 +36,14 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         }
 
         $scope.progress = {uploading: false};
+
+        Setting.get({"search": "name = enable_deferred_download_policies"},
+        function (data) {
+            data = angular.fromJson(data);
+            $scope.enableDownloadPolicies = data.results[0].value;
+        }, function (data) {
+            ApiErrorHandler.handleGETRequestErrors(data, $scope);
+        });
 
         $scope.repository = Repository.get({
             'product_id': $scope.$stateParams.productId,

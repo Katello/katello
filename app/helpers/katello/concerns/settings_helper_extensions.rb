@@ -21,7 +21,7 @@ module Katello
 
         case setting.name
         when "default_download_policy"
-          edit_select(setting, :value, :select_values => Hash[::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.collect { |p| [p, p] }].to_json)
+          edit_select(setting, :value, :select_values => default_download_policy_setting_values)
         when "katello_default_finish"
           edit_select(setting, :value, :select_values => katello_template_setting_values("finish"))
         when "katello_default_iPXE"
@@ -44,6 +44,10 @@ module Katello
       def katello_template_setting_values(name)
         templates = ProvisioningTemplate.where(:template_kind => TemplateKind.where(:name => name))
         templates.each_with_object({}) { |tmpl, hash| hash[tmpl.name] = tmpl.name }.to_json
+      end
+
+      def default_download_policy_setting_values
+        Hash[Katello::RepositoryDownloadPolicy.policies.collect { |policy| [policy, policy] }].to_json
       end
     end
   end

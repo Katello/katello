@@ -1,10 +1,18 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, repository;
+    var $scope, $state, Setting, translate, repository;
 
     beforeEach(module(
         'Bastion.repositories',
         'Bastion.test-mocks'
     ));
+
+    beforeEach(module({
+        Setting: {
+            get: function() {
+                return { results: [{ value: 'true' }]};
+            }
+        }
+    }));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),

@@ -186,10 +186,10 @@
       </div>
 
       <div class="detail" ng-if="repository.content_type == 'yum'">
-        <span class="info-label" translate>Download Policy</span>
+        <span class="info-label" translate> Download Policy</span>
         <span class="info-value"
               bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
-              readonly="denied('edit_products', product)"
+              readonly="!(enableDownloadPolicies) || denied('edit_products', product)"
               selector="repository.download_policy"
               options="downloadPolicies"
               options-format="id as name for (id, name) in options"
