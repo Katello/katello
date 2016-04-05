@@ -10,7 +10,7 @@ module Katello
         alias_method_chain :set_hostgroup_defaults, :katello_attributes
         alias_method_chain :info, :katello
         alias_method_chain :smart_proxy_ids, :katello
-
+        belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                                :dependent => :destroy, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
@@ -29,11 +29,11 @@ module Katello
         scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package
         scoped_search :in => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name
 
-        attr_accessible :content_source_id, :host_collection_ids, :description
+        attr_accessible :content_source_id, :host_collection_ids, :description, :kickstart_repository_id
       end
 
       def validate_media_with_capsule?
-        content_source_id.blank? && validate_media_without_capsule?
+        (content_source_id.blank? || kickstart_repository.blank?) && validate_media_without_capsule?
       end
 
       def rhsm_organization_label
