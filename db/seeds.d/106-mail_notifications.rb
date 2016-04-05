@@ -7,21 +7,21 @@
 
 # Mail Notifications
 notifications = [
-  {:name              => :katello_host_advisory,
+  {:name              => :host_errata_advisory,
    :description       => N_('A summary of available and applicable errata for your hosts'),
    :mailer            => 'Katello::ErrataMailer',
    :method            => 'host_errata',
    :subscription_type => 'report'
   },
 
-  {:name              => :katello_sync_errata,
+  {:name              => :sync_errata,
    :description       => N_('A summary of new errata after a repository is synchronized'),
    :mailer            => 'Katello::ErrataMailer',
    :method            => 'sync_errata',
    :subscription_type => 'alert'
   },
 
-  {:name              => :katello_promote_errata,
+  {:name              => :promote_errata,
    :description       => N_('A post-promotion summary of hosts with installable errata'),
    :mailer            => 'Katello::ErrataMailer',
    :method            => 'promote_errata',
