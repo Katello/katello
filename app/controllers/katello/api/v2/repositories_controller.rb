@@ -144,7 +144,7 @@ module Katello
       render :json => repo_types.values
     end
 
-    api :GET, "/repositories/:id", N_("Show a custom repository")
+    api :GET, "/repositories/:id", N_("Show a repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
     def show
       respond_for_show(:resource => @repository)
@@ -194,7 +194,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/repositories/:id", N_("Update a custom repository")
+    api :PUT, "/repositories/:id", N_("Update a repository")
     param :name, String, :desc => N_("New name for the repository")
     param :id, :identifier, :required => true, :desc => N_("repository ID")
     param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
