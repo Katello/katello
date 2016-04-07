@@ -29,7 +29,7 @@ module Katello
     validates_with Validators::ProductUniqueAttributeValidator, :attributes => :label
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :description
     scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,

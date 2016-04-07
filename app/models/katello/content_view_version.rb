@@ -42,7 +42,7 @@ module Katello
     scope :default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true) }
     scope :non_default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false) }
 
-    scoped_search :on => :content_view_id
+    scoped_search :on => :content_view_id, :only_explicit => true
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
     scoped_search :in => :repositories, :on => :name, :rename => :repository, :complete_value => true
 

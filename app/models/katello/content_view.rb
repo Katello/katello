@@ -63,7 +63,7 @@ module Katello
     scope :non_composite, -> { where(:composite => [nil, false]) }
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
     scoped_search :on => :composite, :complete_value => {true: true, false: false}
 
     def self.in_environment(env)
