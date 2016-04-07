@@ -28,7 +28,7 @@ module Katello
     validate :max_hosts_not_exceeded, :on => :create
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
     scoped_search :in => :hosts, :complete_value => false
 
     def max_hosts_check

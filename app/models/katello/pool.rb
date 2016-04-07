@@ -16,7 +16,7 @@ module Katello
     include Glue::Candlepin::Pool
     include Glue::Candlepin::CandlepinObject
 
-    scoped_search :on => :cp_id, :complete_value => true, :rename => :id
+    scoped_search :on => :cp_id, :complete_value => true, :rename => :id, :only_explicit => true
     scoped_search :on => :quantity, :complete_value => true
     scoped_search :on => :start_date, :complete_value => true, :rename => :starts
     scoped_search :on => :end_date, :complete_value => true, :rename => :expires
