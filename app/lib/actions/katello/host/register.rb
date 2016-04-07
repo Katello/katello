@@ -29,7 +29,6 @@ module Actions
             host.save!
 
             action_subject host
-            connect_to_smart_proxy(host)
 
             cp_create = plan_action(Candlepin::Consumer::Create, cp_environment_id: content_view_environment.cp_id,
                                     consumer_parameters: consumer_params, activation_keys: activation_keys.map(&:cp_name))
@@ -56,6 +55,7 @@ module Actions
           host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.consumer_attributes)
           host.subscription_facet.save!
           host.refresh_global_status!
+          connect_to_smart_proxy(host)
 
           system = ::Katello::System.find(input[:system_id])
           system.uuid = input[:uuid]
