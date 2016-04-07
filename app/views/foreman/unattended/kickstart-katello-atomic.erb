@@ -31,6 +31,7 @@ reboot
 
 %post
 <%= snippet "subscription_manager_registration" %>
+<%= snippet('remote_execution_ssh_keys') %>
 (
 # Report success back to Foreman
 curl -s -o /dev/null --insecure <%= foreman_url %>
