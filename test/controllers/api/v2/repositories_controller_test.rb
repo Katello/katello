@@ -209,6 +209,16 @@ module Katello
       assert_response_ids response, ids
     end
 
+    def test_index_with_names
+      ids = Repository.where(:name => katello_repositories(:fedora_17_x86_64).name, :library_instance_id => nil).pluck(:id)
+
+      response = get :index, :names => [katello_repositories(:fedora_17_x86_64).name].to_json, :organization_id => @organization.id
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, ids
+    end
+
     def test_index_protected
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]

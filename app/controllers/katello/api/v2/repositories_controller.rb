@@ -59,6 +59,7 @@ module Katello
       query = index_relation_product(query)
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query = query.where(:name => params[:name]) if params[:name]
+      query = query.where(:name => JSON.parse(params[:names])) if params[:names]
 
       if params[:erratum_id]
         query = query.joins(:errata).where("#{Erratum.table_name}.id" => Erratum.with_identifiers(params[:erratum_id]))
