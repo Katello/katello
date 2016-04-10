@@ -67,7 +67,8 @@ module Actions
 
           if smart_proxy
             smart_proxy.content_host = system.content_host
-            smart_proxy.organizations << system.organization unless smart_proxy.organizations.include?(system.organization)
+            org = system.content_facet.lifecycle_environment.organization
+            smart_proxy.organizations << org unless smart_proxy.organizations.include?(org)
             smart_proxy.save!
           end
         end
