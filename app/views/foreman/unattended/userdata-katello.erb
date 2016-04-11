@@ -6,11 +6,28 @@ oses:
 - CentOS 7
 - Fedora 19
 - Fedora 20
+- Fedora 21
+- Fedora 22
+- Fedora 23
 -%>
 #cloud-config
 hostname: <%= @host.shortname %>
 fqdn: <%= @host %>
 manage_etc_hosts: true
+
+groups:
+ - admin
+
+users:
+ - default
+ - name: admin
+   primary-group: admin
+   groups: users
+   shell: /bin/bash
+   sudo: ['ALL=(ALL) ALL']
+   lock-passwd: false
+   passwd: <%= @host.root_pass %>
+
 <%# Allow user to specify additional SSH key as host paramter -%>
 <% if @host.params['sshkey'].present? || @host.params['remote_execution_ssh_keys'].present? -%>
 ssh_authorized_keys:
@@ -34,13 +51,16 @@ write_files:
       snippet 'freeipa_register'
     end %>
 <% end -%>
+  <% unless @host.operatingsystem.atomic? -%>
     # update all the base packages from the updates repository
     yum -t -y -e 0 update
+  <% end -%>
 <%
   # safemode renderer does not support unary negation
+  non_atomic = @host.operatingsystem.atomic? ? false : true
   pm_set = @host.puppetmaster.empty? ? false : true
-  puppet_enabled = pm_set || @host.params['force-puppet']
-  salt_enabled = @host.params['salt_master'] ? true : false
+  puppet_enabled = non_atomic && (pm_set || @host.params['force-puppet'])
+  salt_enabled = non_atomic && (@host.params['salt_master'] ? true : false)
 %>
 <% if salt_enabled %>
     yum -t -y -e 0 install salt-minion
