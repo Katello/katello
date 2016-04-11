@@ -7,11 +7,8 @@ module Actions
         end
 
         def run
-          ::User.current = ::User.find(input[:user_id])
           repo = ::Katello::Repository.find(input[:id])
           repo.index_db_errata
-        ensure
-          ::User.current = nil
         end
       end
     end
