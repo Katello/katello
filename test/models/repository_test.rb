@@ -141,6 +141,25 @@ module Katello
       refute @repo2.valid?
     end
 
+    def test_empty_errata
+      @fedora_17_x86_64.errata.destroy_all
+      filename = 'much-rpm.much-wow'
+
+      erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
+        new_erratum.uuid = "foo"
+        new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
+      end
+
+      assert_includes @fedora_17_x86_64.empty_errata, erratum
+
+      @fedora_17_x86_64.rpms.create! do |rpm|
+        rpm.uuid = 'its the uuid that never ends oh wait it does'
+        rpm.filename = filename
+      end
+
+      refute_includes @fedora_17_x86_64.empty_errata, erratum
+    end
+
     def test_create_with_no_type
       @repo.content_type = ''
       assert_raises ActiveRecord::RecordInvalid do

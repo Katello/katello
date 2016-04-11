@@ -8,13 +8,11 @@ module Actions
 
         def invoke_external_task
           repo = ::Katello::Repository.where(:pulp_id => input[:pulp_id]).first
-
-          package_lists = repo.package_lists_for_publish
-          rpm_names = package_lists[:names]
+          rpm_names = repo.rpms.pluck(:name).uniq
 
           # Remove all  package groups with no packages
-          package_groups_to_delete = repo.package_groups.collect do |group|
-            group.uuid if rpm_names.intersection(group.package_names).empty?
+          package_groups_to_delete = repo.package_groups.select do |group|
+            (rpm_names & group.package_names).empty?
           end
           criteria = {:association => {"unit_id" => {"$in" => package_groups_to_delete.compact}}}
 

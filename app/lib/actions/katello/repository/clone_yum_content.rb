@@ -38,15 +38,16 @@ module Actions
             plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
             plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
 
+            plan_action(Katello::Repository::IndexContent, id: target_repo.id) if index_content
+
             if purge_empty_units
-              plan_action(Katello::Repository::IndexErrata, target_repo)
               plan_action(Pulp::Repository::PurgeEmptyErrata, :pulp_id => target_repo.pulp_id)
-              plan_action(Katello::Repository::IndexPackageGroups, target_repo)
               plan_action(Pulp::Repository::PurgeEmptyPackageGroups, :pulp_id => target_repo.pulp_id)
+              plan_action(Katello::Repository::IndexErrata, target_repo)
+              plan_action(Katello::Repository::IndexPackageGroups, target_repo)
             end
 
             plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil) if generate_metadata
-            plan_action(Katello::Repository::IndexContent, id: target_repo.id) if index_content
           end
         end
 
