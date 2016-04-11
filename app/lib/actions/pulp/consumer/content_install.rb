@@ -28,7 +28,7 @@ module Actions
           output[:pulp_tasks].each do |pulp_task|
             error_details = pulp_task.try(:[], "result").try(:[], "details").try(:[], "rpm").try(:[], "details").try(:[], "trace")
             error_message = pulp_task.try(:[], "result").try(:[], "details").try(:[], "rpm").try(:[], "details").try(:[], "message")
-            if error_details.include?("YumDownloadError") && error_message
+            if error_details && error_details.include?("YumDownloadError") && error_message
               fail _("An error occurred during the sync \n%{error_message}") % {:error_message => error_details}
             end
           end
