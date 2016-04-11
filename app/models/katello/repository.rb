@@ -33,7 +33,7 @@ module Katello
              :dependent   => :restrict_with_exception,
              :foreign_key => :library_instance_id
     has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
-                                         :dependent => :destroy
+                                         :dependent => :destroy, :inverse_of => :repository
     has_many :content_views, :through => :content_view_repositories
 
     has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy
@@ -90,7 +90,10 @@ module Katello
       :allow_blank => false,
       :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
     }
-    validates :download_policy, inclusion: { in: ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES }, if: :yum?
+    validates :download_policy, inclusion: {
+      :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,
+      :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
+    }, if: :yum?
     validate :ensure_no_download_policy, if: ->(repo) { !repo.yum? }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
@@ -463,18 +466,6 @@ module Katello
       end
     end
 
-    def systems_with_applicability
-      ::Katello::System.joins(:bound_repositories).
-              where("#{::Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
-    end
-
-    def import_system_applicability
-      fail "Can only calculate applicability for Library repositories" unless self.content_view.default?
-      systems_with_applicability.find_each do |system|
-        system.import_applicability
-      end
-    end
-
     def ostree_branch_names
       self.ostree_branches.map(&:name)
     end
@@ -554,6 +545,20 @@ module Katello
       end
     end
 
+    def import_host_applicability
+      self.hosts_with_applicability.find_each do |host|
+        begin
+          host.content_facet.import_applicability if host.content_facet.try(:uuid)
+        rescue => e
+          Rails.logger.error("Could not import applicability for #{host.name}: #{e}")
+        end
+      end
+    end
+
+    def hosts_with_applicability
+      ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
+    end
+
     protected
 
     def removable_unit_association
@@ -579,7 +584,7 @@ module Katello
     end
 
     def ensure_valid_docker_attributes
-      if url.blank? || docker_upstream_name.blank?
+      if library_instance? && (url.blank? || docker_upstream_name.blank?)
         errors.add(:base, N_("Repository URL or Upstream Name is empty. Both are required for syncing from the upstream."))
       end
     end

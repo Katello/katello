@@ -18,9 +18,10 @@ class CreateDockerTables < ActiveRecord::Migration
 
     add_index :katello_docker_tags, [:docker_image_id, :repository_id, :name],
               :name => :docker_tag_docker_image_repo_name, :unique => true
-
-    add_foreign_key :katello_repository_docker_images, :katello_docker_images,
-                    :column => :docker_image_id
+    unless foreign_key_exists?(:katello_repository_docker_images, :column => :docker_image_id)
+      add_foreign_key :katello_repository_docker_images, :katello_docker_images,
+                      :column => :docker_image_id
+    end
   end
 
   def down

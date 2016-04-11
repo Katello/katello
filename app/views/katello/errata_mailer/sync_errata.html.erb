@@ -18,7 +18,7 @@
           <tr>
             <td align="center" valign="top">
               <div align="left">
-                <h2 style="font-weight: normal;"><b>KATELLO</b> SYNC SUMMARY</h2>
+                <h2 style="font-weight: normal;"><%= _("<b>SYNC</b> SUMMARY") %></h2>
                 <p><%= _("The synchronization of \"%s\" has completed.  Below is a summary of new errata.") % @repo.name %>
                    <% if @errata_counts[:total] > 100 %>
                      <%= _("A large number of errata were synced for this repository, so only the first 100 are shown.") %>

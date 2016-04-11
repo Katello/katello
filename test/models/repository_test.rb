@@ -55,6 +55,25 @@ module Katello
       refute @repo.valid?
     end
 
+    def test_docker_repository_in_content_view
+      # verify: url and docker_upstream_name are not required for repositories
+      # created as part of a content view
+      library_repo = Repository.find(katello_repositories(:busybox))
+      view_repo = build(:katello_repository,
+                        :content_type => 'docker',
+                        :name => 'view repo',
+                        :label => 'view_repo',
+                        :library_instance => library_repo,
+                        :environment => library_repo.environment,
+                        :product => library_repo.product,
+                        :content_view_version => library_repo.content_view_version,
+                        :unprotected => true,
+                        :download_policy => nil,
+                        :url => nil,
+                        :docker_upstream_name => nil)
+      assert view_repo.valid?
+    end
+
     def test_docker_repository_docker_upstream_name_format
       @repo.unprotected = true
       @repo.content_type = 'docker'
@@ -590,31 +609,29 @@ module Katello
   class RepositoryApplicabilityTest < RepositoryTestBase
     def setup
       super
-      @lib_system = System.find(katello_systems(:simple_server))
-      @lib_repo =  @fedora_17_x86_64
-      @lib_system.environment = @fedora_17_x86_64.environment
-      @lib_system.bound_repositories = [@lib_repo]
-      @lib_system.save!
+      @lib_host = FactoryGirl.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
+                                     :lifecycle_environment =>  @fedora_17_x86_64.environment)
 
-      @view_system = System.find(katello_systems(:simple_server2))
+      @lib_host.content_facet.bound_repositories << @fedora_17_x86_64
+      @lib_host.content_facet.save!
+
       @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
-      @view_system.bound_repositories = [@view_repo]
-      @view_system.save!
 
-      @dev_system =  System.find(katello_systems(:errata_server_dev))
+      @view_host = FactoryGirl.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
+                                     :lifecycle_environment =>  @fedora_17_x86_64.environment)
+      @view_host.content_facet.bound_repositories = [@view_repo]
+      @view_host.content_facet.save!
     end
 
-    def test_systems_with_applicability
-      assert_includes @lib_repo.systems_with_applicability, @lib_system
-      assert_includes @view_repo.systems_with_applicability, @view_system
+    def test_host_with_applicability
+      assert_includes @fedora_17_x86_64.hosts_with_applicability, @lib_host
+      assert_includes @fedora_17_x86_64.hosts_with_applicability, @view_host
     end
 
-    def test_import_system_applicability
-      mock_active_records(@lib_system, @view_system, @dev_system)
-      @lib_system.expects(:import_applicability)
-      @view_system.expects(:import_applicability)
-      @dev_system.expects(:import_applicability)
-      @lib_repo.import_system_applicability
+    def test_import_host_applicability
+      Host::ContentFacet.any_instance.expects(:import_applicability).twice
+
+      @fedora_17_x86_64.import_host_applicability
     end
   end
 end

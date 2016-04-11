@@ -32,7 +32,7 @@
           {{ "Close" | translate }}
         </button>
 
-        <div bst-modal="removeHostCollection(hostCollection)">
+        <div bst-modal="removeHostCollection(hostCollection)" model="hostCollection">
           <div data-block="modal-header" translate>Remove Host Collection "{{ hostCollection.name }}"?</div>
           <div data-block="modal-body" translate>Are you sure you want to remove Host Collection "{{ hostCollection.name }}"?</div>
         </div>

@@ -25,11 +25,15 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
             $scope.menuExpander = MenuExpander;
             $scope.panel = $scope.panel || {loading: false};
 
+            function updateSyncPlan(syncPlan) {
+                syncPlan.syncDate = syncPlan.syncTime = syncPlan['sync_date'];
+                $scope.syncPlan = syncPlan;
+            }
+
             SyncPlan.get({id: $scope.$stateParams.syncPlanId}, function (syncPlan) {
                 $scope.panel.loading = false;
 
-                syncPlan.syncDate = syncPlan.syncTime = syncPlan['sync_date'];
-                $scope.syncPlan = syncPlan;
+                updateSyncPlan(syncPlan);
             });
 
             $scope.save = function (syncPlan) {
@@ -43,6 +47,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
                 syncPlan['sync_date'] = syncDate.toString();
 
                 syncPlan.$update(function (response) {
+                    updateSyncPlan(syncPlan);
                     deferred.resolve(response);
                     $scope.successMessages.push(translate('Sync Plan Saved'));
                 }, function (response) {

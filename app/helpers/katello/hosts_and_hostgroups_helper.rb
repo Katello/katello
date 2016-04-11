@@ -34,13 +34,27 @@ module Katello
       end
     end
 
+    def fetch_lifecycle_environment(host, options = {})
+      selected_host_group = options.fetch(:selected_host_group, nil)
+      selected_env = lifecycle_environment(host)
+      return selected_env if selected_env.present?
+      lifecycle_environment(selected_host_group) if selected_host_group.present?
+    end
+
+    def fetch_content_view(host, options = {})
+      selected_host_group = options.fetch(:selected_host_group, nil)
+      selected_content_view = content_view(host)
+      return selected_content_view if selected_content_view.present?
+      content_view(selected_host_group) if selected_host_group.present?
+    end
+
     def lifecycle_environment_options(host, options = {})
       include_blank = options.fetch(:include_blank, nil)
       if include_blank == true #check for true specifically
         include_blank = '<option></option>'
       end
+      selected_id = fetch_lifecycle_environment(host, options).try(:id)
 
-      selected_id = lifecycle_environment(host).try(:id)
       orgs = Organization.current ? [Organization.current] : Organization.my_organizations
       all_options = []
       orgs.each do |org|
@@ -67,9 +81,8 @@ module Katello
       if include_blank == true #check for true specifically
         include_blank = '<option></option>'
       end
-
-      content_view = content_view(host)
-      lifecycle_environment = lifecycle_environment(host)
+      lifecycle_environment = fetch_lifecycle_environment(host, options)
+      content_view = fetch_content_view(host, options)
 
       views = []
       if lifecycle_environment

@@ -36,7 +36,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.host.$promise.then(function (host) {
             $scope.hostFactsAsObject = doubleColonNotationToObject(host.facts);
-            $scope.originalEnvironment = host.content.lifecycle_environment;
+            if (host.hasContent()) {
+                $scope.originalEnvironment = host.content.lifecycle_environment;
+            }
         });
 
         $scope.successMessages = [];
@@ -122,10 +124,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.virtualGuestIds = function (host) {
             var ids = [];
             angular.forEach(host.subscription['virtual_guests'], function (guest) {
-                ids.push('id:%s'.replace('%s', guest.id));
+                ids.push('name = %s'.replace('%s', guest.name));
             });
 
-            return ids.join(" ");
+            return ids.join(" or ");
         };
     }]
 );

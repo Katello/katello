@@ -11,7 +11,6 @@ module Katello
         {:id => :debug, :name => _('Debug RPMs'), :products => {}},
         {:id => :beta, :name => _('Beta'), :products => {}},
         {:id => :isos, :name => _('ISOs'), :products => {}},
-        {:id => :docker_manifests, :name => _('Docker Manifests'), :products => {}},
         {:id => :ostree, :name => _('OSTree'), :products => {}},
         {:id => :other, :name => _('Other'), :products => {}}
       ]
@@ -22,11 +21,9 @@ module Katello
       redhat_repo_tabs.each { |tab| tabs[tab[:id]] = tab }
 
       provider.products.each do |product|
-        product.productContent.each do |prod_content|
+        product.displayable_product_contents.each do |prod_content|
           name = prod_content.content.name
-          if prod_content.content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
-            key = :docker_manifests
-          elsif prod_content.content.type == ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
+          if prod_content.content_type == ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
             key = :ostree
           elsif name.include?(" Beta ")
             key = :beta

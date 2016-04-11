@@ -1,47 +1,48 @@
 <span page-title ng-model="activationKey">{{ 'Content Hosts for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div class="nutupane">
+<div data-extend-template="layouts/details-nutupane.html">
 
-  <h3 translate>
-    Attached to Content Hosts
-  </h3>
+  <div data-block="messages"></div>
+  <div data-block="actions"></div>
+  <div data-block="selection-summary"></div>
 
-  <div bst-alert="info" ng-show="!table.working && contentHosts.length === 0">
-    <span translate>This activation key is not associated with any content hosts.</span>
+  <span data-block="no-rows-message" translate>
+    This activation key is not associated with any content hosts.
+  </span>
+
+  <div data-block="table">
+    <table class="table table-bordered table-striped" bst-table="table" ng-class="{'table-mask': detailsTable.working}">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name" sortable><span translate>Name</span></th>
+          <th bst-table-column="status" translate>
+            Subscription Status
+          </th>
+          <th bst-table-column="environment" sortable><span translate>Environment</span></th>
+          <th bst-table-column="contentView"><span translate>Content View</span></th>
+          <th bst-table-column="serviceLevel"><span translate>Service Level</span></th>
+          <th bst-table-column="releaseVersion"><span translate>Release Version</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="contentHost in detailsTable.rows"
+            ng-controller="ContentHostStatusController">
+          <td bst-table-cell>
+            <a ui-sref="content-hosts.details.info({hostId: contentHost.host_id})">
+              {{ contentHost.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            <span class="fa fa-circle" ng-class="getSubscriptionStatusColor(contentHost.entitlementStatus)">
+            </span>
+          </td>
+          <td bst-table-cell>{{ contentHost.environment.name }}</td>
+          <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
+          <td bst-table-cell>{{ contentHost.service_level }}</td>
+          <td bst-table-cell>{{ contentHost.release_ver }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <table class="table table-bordered table-striped" bst-table="table" ng-show="contentHosts.length > 0" ng-class="{'table-mask': table.working}">
-    <thead>
-      <tr bst-table-head>
-        <th bst-table-column="name" sortable><span translate>Name</span></th>
-        <th bst-table-column="status">
-          {{ "Subscription Status" | translate }}
-        </th>
-        <th bst-table-column="environment" sortable><span translate>Environment</span></th>
-        <th bst-table-column="contentView"><span translate>Content View</span></th>
-        <th bst-table-column="serviceLevel"><span translate>Service Level</span></th>
-        <th bst-table-column="releaseVersion"><span translate>Release Version</span></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr bst-table-row ng-repeat="contentHost in contentHosts"
-          ng-controller="ContentHostStatusController">
-        <td bst-table-cell>
-          <a ui-sref="content-hosts.details.info({hostId: contentHost.host_id})">
-            {{ contentHost.name }}
-          </a>
-        </td>
-        <td bst-table-cell>
-          <span class="fa fa-circle" ng-class="getSubscriptionStatusColor(contentHost.entitlementStatus)">
-          </span>
-        </td>
-        <td bst-table-cell>{{ contentHost.environment.name }}</td>
-        <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
-        <td bst-table-cell>{{ contentHost.service_level }}</td>
-        <td bst-table-cell>{{ contentHost.release_ver }}</td>
-      </tr>
-    </tbody>
-  </table>
-
 </div>

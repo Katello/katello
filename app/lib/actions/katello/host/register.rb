@@ -6,7 +6,10 @@ module Actions
 
         def plan(host, system, consumer_params, content_view_environment, activation_keys = [])
           sequence do
-            plan_action(Katello::Host::Unregister, host) unless host.new_record?
+            unless host.new_record?
+              plan_action(Katello::Host::Unregister, host)
+              host.reload
+            end
             ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
 
             unless activation_keys.empty?
@@ -20,12 +23,12 @@ module Actions
             system.save!
 
             host.content_host = system
+            host.save!
             host.content_facet = plan_content_facet(host, content_view_environment)
             host.subscription_facet = plan_subscription_facet(host, activation_keys, consumer_params)
             host.save!
 
             action_subject host
-            connect_to_smart_proxy(host)
 
             cp_create = plan_action(Candlepin::Consumer::Create, cp_environment_id: content_view_environment.cp_id,
                                     consumer_parameters: consumer_params, activation_keys: activation_keys.map(&:cp_name))
@@ -51,6 +54,8 @@ module Actions
           host.content_facet.save!
           host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.consumer_attributes)
           host.subscription_facet.save!
+          host.refresh_global_status!
+          connect_to_smart_proxy(host)
 
           system = ::Katello::System.find(input[:system_id])
           system.uuid = input[:uuid]
@@ -62,7 +67,8 @@ module Actions
 
           if smart_proxy
             smart_proxy.content_host = system.content_host
-            smart_proxy.organizations << system.organization unless smart_proxy.organizations.include?(system.organization)
+            org = system.content_facet.lifecycle_environment.organization
+            smart_proxy.organizations << org unless smart_proxy.organizations.include?(org)
             smart_proxy.save!
           end
         end
@@ -77,7 +83,7 @@ module Actions
             if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0 &&
                host_collection.systems.length >= host_collection.max_hosts
               fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
-                       {:limit => host_collection.max_content_hosts, :name => host_collection.name}
+                       {:limit => host_collection.max_hosts, :name => host_collection.name}
             end
           end
           host.host_collection_ids = host_collection_ids

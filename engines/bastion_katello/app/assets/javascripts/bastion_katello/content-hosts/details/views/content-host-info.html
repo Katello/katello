@@ -1,11 +1,11 @@
 <span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
 
 <section>
-  <div class="details fl" ng-hide="host.hasContent()">
+  <div class="details fl" ng-hide="host.hasContent() || host.hasSubscription()">
     <div data-extend-template="common/views/registration.html"></div>
   </div>
 
-  <div class="details fl" ng-show="host.hasContent()">
+  <div class="details fl" ng-show="host.hasContent() || host.hasSubscription()">
     <section>
       <h4 translate>Basic Information</h4>
 
@@ -50,21 +50,21 @@
         </span>
       </div>
 
-      <div ng-show="host.virtual_guests" class="detail">
+      <div ng-show="host.subscription.virtual_guests" class="detail">
         <span class="info-label" translate>Virtual Guests</span>
         <div class="info-value">
           <a ng-click="reloadSearch(virtualGuestIds(host))"
-               translate translate-n="host.virtual_guests.length"
-               translate-plural="{{ host.virtual_guests.length }} Content Hosts">
+               translate translate-n="host.subscription.virtual_guests.length"
+               translate-plural="{{ host.subscription.virtual_guests.length }} Content Hosts">
              1 Content Host
           </a>
         </div>
       </div>
 
-      <div ng-show="host.virtual_host" class="detail">
+      <div ng-show="host.subscription.virtual_host" class="detail">
         <span class="info-label" translate>Virtual Host</span>
         <div class="info-value">
-          <a ui-sref="content-hosts.details.info({contentHostId: host.subscription.virtual_host.uuid })">{{ host.virtual_host.name }}</a>
+          <a ui-sref="content-hosts.details.info({hostId: host.subscription.virtual_host.id })">{{ host.subscription.virtual_host.name }}</a>
         </div>
       </div>
 
@@ -143,7 +143,7 @@
       <div class="divider"></div>
     </section>
 
-    <section>
+    <section ng-show="host.hasContent()">
       <h4 translate>Installed Products</h4>
 
       <p translate ng-show="!host.subscription.installed_products || host.subscription.installed_products.length == 0">

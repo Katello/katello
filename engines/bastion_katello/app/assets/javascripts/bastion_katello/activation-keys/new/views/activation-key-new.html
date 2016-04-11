@@ -29,18 +29,18 @@
              required/>
     </div>
 
-    <div bst-form-group label="{{ 'Content Host Limit' | translate }}" field="max_content_hosts">
-      <span translate>Unlimited Content Hosts:</span>
+    <div bst-form-group label="{{ 'Host Limit' | translate }}" field="max_hosts">
+      <span translate>Unlimited Hosts:</span>
       <input type="checkbox"
              name="limit"
-             ng-model="activationKey.unlimited_content_hosts"/>
+             ng-model="activationKey.unlimited_hosts"/>
 
-      <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_content_hosts">
-        <input id="max_content_hosts"
-               name="max_content_hosts"
+      <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_hosts">
+        <input id="max_hosts"
+               name="max_hosts"
                class="form-control"
-               ng-model="activationKey.max_content_hosts"
-               ng-required="!activationKey.unlimited_content_hosts"
+               ng-model="activationKey.max_hosts"
+               ng-required="!activationKey.unlimited_hosts"
                type="number"
                min="1"
                max="2147483648"

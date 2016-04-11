@@ -23,8 +23,11 @@ module Katello
         has_many :applicable_errata, :through => :content_facet
 
         scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
+        scoped_search :in => :content_facet, :on => :content_view_id, :rename => :content_view_id
         scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
+        scoped_search :in => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id
         scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata
+        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata
 
         accepts_nested_attributes_for :content_facet, :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? }
         attr_accessible :content_facet_attributes
@@ -38,6 +41,16 @@ module Katello
             { :conditions => "1=0" }
           else
             { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+          end
+        end
+
+        def find_by_installable_errata(_key, operator, value)
+          conditions = sanitize_sql_for_conditions(["#{Katello::Erratum.table_name}.errata_id #{operator} ?", value_to_sql(operator, value)])
+          facets = Katello::Host::ContentFacet.joins_installable_errata.where(conditions)
+          if facets.empty?
+            { :conditions => "1=0" }
+          else
+            { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
           end
         end
       end

@@ -219,8 +219,8 @@ module Katello
     end
 
     def test_create
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         'http://www.google.com',
@@ -229,29 +229,26 @@ module Katello
         nil,
         nil,
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
-      product.expect(:unprotected?, true)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => 'http://www.google.com',
-                      :content_type => 'yum'
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum'
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_empty_string_url
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         nil,
@@ -260,33 +257,28 @@ module Katello
         nil,
         nil,
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
+      Product.stubs(:find).returns(product)
+
+      post :create, :name => 'Fedora Repository',
                       :product_id => @product.id,
                       :url => '',
                       :content_type => 'yum'
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_gpg_key
       key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
-
-      product = MiniTest::Mock.new
-      product.expect(:gpg_key, key)
-      product.expect(:editable?, @product.editable?)
-
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         'http://www.google.com',
@@ -295,25 +287,27 @@ module Katello
         key,
         nil,
         nil
-      ])
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
+      ).returns(@repository)
+
+      product.expects(:gpg_key).returns(key)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => 'http://www.google.com',
-                      :content_type => 'yum'
+      Product.stubs(:find).returns(product)
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum'
+
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_checksum
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         nil,
@@ -322,29 +316,27 @@ module Katello
         nil,
         'sha256',
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => '',
-                      :content_type => 'yum',
-                      :checksum_type => 'sha256'
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => '',
+                    :content_type => 'yum',
+                    :checksum_type => 'sha256'
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_download_policy
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         nil,
@@ -353,29 +345,27 @@ module Katello
         nil,
         nil,
         'on_demand'
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => '',
-                      :content_type => 'yum',
-                      :download_policy => 'on_demand'
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => '',
+                    :content_type => 'yum',
+                    :download_policy => 'on_demand'
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_protected_true
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         'http://www.google.com',
@@ -384,31 +374,28 @@ module Katello
         nil,
         nil,
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
-      product.expect(:unprotected?, false)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => 'http://www.google.com',
-                      :content_type => 'yum',
-                      :unprotected => false
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum',
+                    :unprotected => false
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_mirror_on_sync_true
       mirror_on_sync = true
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         'http://www.google.com',
@@ -417,32 +404,28 @@ module Katello
         nil,
         nil,
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
-      product.expect(:unprotected?, false)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       @repository.expects(:mirror_on_sync=).with(mirror_on_sync)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => 'http://www.google.com',
-                      :content_type => 'yum',
-                      :unprotected => false,
-                      :mirror_on_sync => mirror_on_sync
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum',
+                    :unprotected => false,
+                    :mirror_on_sync => mirror_on_sync
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_protected_docker
-      docker_upstream_name = "busybox"
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         'http://hub.registry.com',
@@ -451,31 +434,27 @@ module Katello
         nil,
         nil,
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
-      product.expect(:unprotected?, true)
-      product.expect(:docker_upstream_name, docker_upstream_name)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => 'http://hub.registry.com',
-                      :content_type => 'docker',
-                      :docker_upstream_name => "busybox"
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://hub.registry.com',
+                    :content_type => 'docker',
+                    :docker_upstream_name => "busybox"
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_with_ostree
-      product = MiniTest::Mock.new
-      product.expect(:add_repo, @repository, [
+      product = mock
+      product.expects(:add_repo).with(
         'Fedora_Repository',
         'Fedora Repository',
         'http://hub.registry.com',
@@ -484,24 +463,22 @@ module Katello
         nil,
         nil,
         nil
-      ])
+      ).returns(@repository)
 
-      product.expect(:editable?, @product.editable?)
-      product.expect(:gpg_key, nil)
-      product.expect(:organization, @organization)
-      product.expect(:redhat?, false)
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
 
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
-      Product.stub(:find, product) do
-        post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => 'http://hub.registry.com',
-                      :content_type => 'ostree'
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://hub.registry.com',
+                    :content_type => 'ostree'
 
-        assert_response :success
-        assert_template 'api/v2/repositories/show'
-      end
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
     end
 
     def test_create_without_label_or_name
@@ -561,6 +538,15 @@ module Katello
         attributes[:docker_upstream_name] = "helloworld"
       end
       put :update, :id => repo.id, :docker_upstream_name => "helloworld"
+    end
+
+    def test_update_false_download_policy
+      expected_message = "must be one of the following: %s" % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
+      response = put :update, :id => @repository.id, :download_policy => 'false'
+      body = JSON.parse(response.body)
+
+      assert_response 422
+      assert_equal(expected_message, body['errors']['download_policy'][0])
     end
 
     def test_remove_content

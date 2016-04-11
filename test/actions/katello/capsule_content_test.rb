@@ -53,14 +53,22 @@ module ::Actions::Katello::CapsuleContent
 
     it 'plans' do
       capsule_content.add_lifecycle_environment(environment)
+      action_class.any_instance.expects(:repos_needing_updates).returns([repository])
       capsule_content_sync = plan_action(action, capsule_content)
+
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
       assert_equal synced_repos.sort.uniq, capsule_content.repos_available_to_capsule.map { |repo| repo.pulp_id }.sort.uniq
+      assert_action_planed_with(action,
+                                ::Actions::Pulp::Repository::Refresh,
+                                repository,
+                                :capsule_id => capsule_content.capsule.id
+                                )
     end
 
     it 'allows limiting scope of the syncing to one environment' do
       capsule_content.add_lifecycle_environment(dev_environment)
+      action_class.any_instance.expects(:repos_needing_updates).returns([])
       capsule_content_sync = plan_action(action, capsule_content, :environment => dev_environment)
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
@@ -73,6 +81,7 @@ module ::Actions::Katello::CapsuleContent
         plan_action(action, capsule_content, :environment => dev_environment)
       end
     end
+
     it 'fails when trying to sync a lifecyle environment that is not attached' do
       capsule_content.add_lifecycle_environment(environment)
 
@@ -83,10 +92,10 @@ module ::Actions::Katello::CapsuleContent
     end
   end
 
-  class CreateOrUpdateTest < TestBase
+  class CreateReposTest < TestBase
     include VCR::TestCase
 
-    let(:action_class) { ::Actions::Katello::CapsuleContent::CreateOrUpdate }
+    let(:action_class) { ::Actions::Katello::CapsuleContent::CreateRepos }
 
     let(:cert) do
       {
@@ -132,22 +141,10 @@ module ::Actions::Katello::CapsuleContent
                          checksum_type: repository.checksum_type,
                          path: repository.relative_path,
                          with_importer: true,
-                         docker_upstream_name: repository.try(:docker_upstream_name),
+                         docker_upstream_name: repository.pulp_id,
                          capsule_id: capsule_content.capsule.id
                         )
       end
-    end
-
-    it "updates repos on the capsule" do
-      capsule_content.stubs(:current_repositories).returns([repository])
-      capsule_content.stubs(:repos_available_to_capsule).returns([repository])
-
-      action = create_and_plan_action(action_class, capsule_content)
-      assert_action_planed_with(action,
-                                ::Actions::Pulp::Repository::Refresh,
-                                repository,
-                                :capsule_id => capsule_content.capsule.id
-                                )
     end
   end
 
@@ -157,6 +154,18 @@ module ::Actions::Katello::CapsuleContent
     it "removes unneeded repos" do
       capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
       capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
+      capsule_content.stubs(:orphaned_repos).returns([])
+
+      action = create_and_plan_action(action_class, capsule_content)
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|
+        input.must_equal(:pulp_id => repository.pulp_id, :capsule_id => capsule_content.capsule.id)
+      end
+    end
+
+    it "removes deleted repos" do
+      capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
+      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
+      capsule_content.stubs(:orphaned_repos).returns([repository.pulp_id])
 
       action = create_and_plan_action(action_class, capsule_content)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|

@@ -31,7 +31,7 @@ describe('Controller: ErrataContentHostsController', function() {
             };
         };
 
-        ContentHost = {};
+        Host = {};
 
         ContentHostBulkAction = {
             failed: false,
@@ -55,7 +55,7 @@ describe('Controller: ErrataContentHostsController', function() {
             $scope: $scope,
             translate: translate,
             Nutupane: Nutupane,
-            ContentHost: ContentHost,
+            Host: Host,
             Environment: Environment,
             ContentHostBulkAction: ContentHostBulkAction,
             CurrentOrganization: CurrentOrganization                      
@@ -66,13 +66,22 @@ describe('Controller: ErrataContentHostsController', function() {
         expect($scope.detailsTable).toBeDefined();
     });
 
-    it("allows the filtering of installable errata only", function () {
-        $scope.errata = {
-            showInstallable: true
+    it("generates errata search string properly for single errata", function () {
+        $scope.errata = {'errata_id': 'foo'};
+
+        expect($scope.errataSearchString(false)).toBe('applicable_errata = "foo"');
+        expect($scope.errataSearchString(true)).toBe('installable_errata = "foo"');
+    });
+
+    it("generates errata search string properly for multiple errata", function () {
+        $scope.errata = undefined;
+        $scope.table = {};
+        $scope.table.getSelected = function() {
+            return [{'errata_id': 'foo'},{'errata_id': 'bar'}];
         };
-        
-        $scope.toggleInstallable();
-        expect($scope.detailsTable.params['erratum_restrict_installable']).toBe(true)
+
+        expect($scope.errataSearchString(false)).toBe('applicable_errata = "foo" or applicable_errata = "bar"');
+        expect($scope.errataSearchString(true)).toBe('installable_errata = "foo" or installable_errata = "bar"');
     });
 
     it("provides a way to filter on environment", function () {
@@ -83,9 +92,8 @@ describe('Controller: ErrataContentHostsController', function() {
 
         $scope.selectEnvironment('foo');
 
-        expect(nutupane.setParams).toHaveBeenCalled();
         expect(nutupane.refresh).toHaveBeenCalled();
-        expect($scope.detailsTable.params['environment_id']).toBe('foo');
+        expect($scope.environmentId).toBe('foo');
     });
 
     describe("provides a way to go to the next apply step", function () {

@@ -16,6 +16,10 @@ child :content_facet => :content do
   node :lifecycle_environment_library? do |content_facet|
     content_facet.lifecycle_environment.library?
   end
+
+  node :katello_agent_installed do |content_facet|
+    content_facet.katello_agent_installed?
+  end
 end
 
 child :host_collections => :host_collections do

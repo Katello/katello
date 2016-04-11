@@ -30,11 +30,11 @@ module Katello
     validates :name, :presence => true
     validates :name, :uniqueness => {:scope => :organization_id}
     validate :environment_exists
-    validates :max_content_hosts, :numericality => {:less_than => 2**31, :allow_nil => true}
-    validates_each :max_content_hosts do |record, attr, value|
-      if record.unlimited_content_hosts
+    validates :max_hosts, :numericality => {:less_than => 2**31, :allow_nil => true}
+    validates_each :max_hosts do |record, attr, value|
+      if record.unlimited_hosts
         unless value.nil?
-          record.errors[attr] << _("cannot be set because unlimited content hosts is set")
+          record.errors[attr] << _("cannot be set because unlimited hosts is set")
         end
       else
         if value.nil?
@@ -107,7 +107,7 @@ module Katello
     end
 
     def available_content
-      self.products.map(&:available_content).flatten.uniq { |product| product.content.id }
+      self.products ? self.products.map(&:available_content).flatten.uniq { |product| product.content.id } : []
     end
 
     def valid_content_label?(content_label)
@@ -178,7 +178,7 @@ module Katello
     def copy(new_name)
       new_key = ActivationKey.new
       new_key.name = new_name
-      new_key.attributes = self.attributes.slice("description", "environment_id", "organization_id", "content_view_id", "max_content_hosts", "unlimited_content_hosts")
+      new_key.attributes = self.attributes.slice("description", "environment_id", "organization_id", "content_view_id", "max_hosts", "unlimited_hosts")
       new_key.host_collection_ids = self.host_collection_ids
       new_key
     end

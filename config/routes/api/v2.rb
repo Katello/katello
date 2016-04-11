@@ -240,13 +240,7 @@ Katello::Engine.routes.draw do
 
         api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
           member do
-            post :host_collections, :action => :add_host_collections
-            delete :host_collections, :action => :remove_host_collections
-            get :pools
             get :releases
-            put :content_override
-            get :product_content
-            post :subscriptions, :action => :add_subscriptions
           end
           collection do
             get :auto_complete_search

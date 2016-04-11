@@ -105,6 +105,11 @@ module Katello
       @capsule.default_capsule?
     end
 
+    def orphaned_repos
+      @capsule.pulp_repositories.map { |x| x["id"] } - current_repositories.map { |x| x.pulp_id }
+    end
+
+    # shows repos available both in katello and on the capsule.
     def current_repositories(environment_id = nil, content_view_id = nil)
       @current_repositories ||= @capsule.pulp_repositories
       katello_repo_ids = []
@@ -138,6 +143,12 @@ module Katello
 
     def pulp_url
       self.capsule.url + "/pulp/api/v2/"
+    end
+
+    def pulp_repo_facts(pulp_id)
+      self.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+    rescue RestClient::ResourceNotFound
+      nil
     end
 
     def self.with_environment(environment, include_default = false)

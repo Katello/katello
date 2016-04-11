@@ -147,19 +147,29 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.saveCdnUrl = function (organization) {
-            var deferred = $q.defer();
+            var deferred;
 
-            organization.$update(function (response) {
-                deferred.resolve(response);
-                GlobalNotification.setSuccessMessage.push(translate('Repository URL updated'));
+            // @TODO hack needed to prevent upload of fields users, parent_name, and parent_id
+            // http://projects.theforeman.org/issues/12894
+            var whitelistedOrganizationObject = {},
+                whitelist = [
+                    "id",
+                    "redhat_repository_url"
+                ];
+
+            angular.forEach(whitelist, function (key) {
+                whitelistedOrganizationObject[key] = organization[key];
+            });
+
+            deferred = Organization.update(whitelistedOrganizationObject, function () {
+                GlobalNotification.setSuccessMessage(translate('Repository URL updated'));
                 $scope.refreshTable();
                 $scope.refreshOrganizationInfo();
             }, function (response) {
-                deferred.reject(response);
                 GlobalNotification.setErrorMessage(translate("An error occurred saving the URL: ") + response.data.error.message);
             });
 
-            return deferred.promise;
+            return deferred.$promise;
         };
 
         $scope.uploadManifest = function (content) {

@@ -130,7 +130,7 @@ module Katello
           Runcible::Models::IsoImporter.new(importer_ssl_options(capsule).merge(:feed => importer_feed_url(capsule)))
         when Repository::PUPPET_TYPE
           options = {}
-          options[:feed] = importer_feed_url(capsule) if self.respond_to?(:url)
+          options[:feed] = importer_feed_url(capsule)
           Runcible::Models::PuppetImporter.new(options)
         when Repository::DOCKER_TYPE
           options = {}
@@ -203,7 +203,7 @@ module Katello
         end
       end
 
-      def generate_distributors
+      def generate_distributors(capsule = false)
         case self.content_type
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
@@ -215,7 +215,8 @@ module Katello
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                  :destination_distributor_id => yum_dist_id)
           export_dist = Runcible::Models::ExportDistributor.new(false, false, self.relative_path)
-          distributors = [yum_dist, clone_dist, export_dist]
+          distributors = [yum_dist, export_dist]
+          distributors << clone_dist unless capsule
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
@@ -777,7 +778,34 @@ module Katello
         end
       end
 
+      def distributors_match?(capsule_distributors)
+        generated_distributors = self.generate_distributors(true).map(&:as_json)
+        capsule_distributors.each do |dist|
+          dist.merge!(dist["config"])
+          dist.delete("config")
+        end
+
+        config_check = generated_distributors.any? do |gen_dist|
+          capsule_distributors.any? do |cap_dist|
+            (gen_dist.to_a - cap_dist.to_a).empty?
+          end
+        end
+        equal_amount_check = generated_distributors.count == capsule_distributors.count
+        config_check && equal_amount_check
+      end
+
+      def importer_matches?(capsule_importer)
+        generated_importer = self.generate_importer(true).as_json
+        (generated_importer.to_a - capsule_importer.to_a).empty?
+      end
+
       protected
+
+      def object_to_hash(object)
+        hash = {}
+        object.instance_variables.each { |var| hash[var.to_s.delete("@")] = object.instance_variable_get(var) }
+        hash
+      end
 
       def _get_most_recent_sync_status
         begin

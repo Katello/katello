@@ -31,7 +31,7 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
         }
 
         $scope.activationKey = $scope.activationKey || new ActivationKey();
-        $scope.activationKey['unlimited_content_hosts'] = true;
+        $scope.activationKey['unlimited_hosts'] = true;
 
         $scope.panel = {loading: false};
         $scope.organization = CurrentOrganization;

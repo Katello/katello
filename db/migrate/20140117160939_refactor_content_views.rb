@@ -14,6 +14,7 @@ class RefactorContentViews < ActiveRecord::Migration
     remove_foreign_key "katello_filters_products", :name => "filters_product_filter_id_fk"
     remove_foreign_key "katello_filters_products", :name => "filters_product_product_id_fk"
     remove_foreign_key "katello_filter_rules", :name => "filters_rules_filter_id_fk"
+    remove_foreign_key "katello_filters_repositories", :name => "filters_repositories_filter_id_fk"
 
     drop_table :katello_content_view_definition_bases
     drop_table :katello_content_view_definition_products

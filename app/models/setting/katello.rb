@@ -4,13 +4,14 @@ class Setting::Katello < Setting
 
     self.transaction do
       [
-        self.set('default_cdn_ostree_branch_name', N_("Name of the default OSTree branch when enabling a Red Hat OSTree repo"), 'rhel-atomic-host/7/x86_64/standard'),
         self.set('katello_default_provision', N_("Default provisioning template for new Operating Systems"), 'Katello Kickstart Default'),
         self.set('katello_default_finish', N_("Default finish template for new Operating Systems"), 'Katello Kickstart Default Finish'),
         self.set('katello_default_user_data', N_("Default user data for new Operating Systems"), 'Katello Kickstart Default User Data'),
         self.set('katello_default_PXELinux', N_("Default PXElinux template for new Operating Systems"), 'Kickstart default PXELinux'),
         self.set('katello_default_iPXE', N_("Default iPXE template for new Operating Systems"), 'Kickstart default iPXE'),
         self.set('katello_default_ptable', N_("Default partitioning table for new Operating Systems"), 'Kickstart default'),
+        self.set('katello_default_kexec', N_("Default kexec template for new Operating Systems"), 'Discovery Red Hat kexec'),
+        self.set('katello_default_atomic_provision', N_("Default provisioning template for new Atomic Operating Systems"), 'Katello Atomic Kickstart Default'),
         self.set('content_action_accept_timeout', N_("Time in seconds to wait for a Host to pickup a remote action"), 20),
         self.set('content_action_finish_timeout', N_("Time in seconds to wait for a Host to finish a remote action"), 3600),
         self.set('restrict_composite_view', N_("If set to true, a composite content view may not be published or "\

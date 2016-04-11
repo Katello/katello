@@ -191,7 +191,10 @@ module Katello
     def view_params
       attrs = [:name, :description, {:repository_ids => []}, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
-      params.require(:content_view).permit(*attrs)
+      permitted_params = params.require(:content_view).permit(*attrs)
+      permitted_params[:repository_ids] ||= [] if params[:content_view].key?(:repository_ids)
+      permitted_params[:component_ids] ||= [] if params[:content_view].key?(:component_ids)
+      permitted_params
     end
 
     def find_environment

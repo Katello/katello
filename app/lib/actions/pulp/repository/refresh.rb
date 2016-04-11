@@ -7,12 +7,14 @@ module Actions
         end
 
         def plan(repository, input = {})
-          update_or_associate_importer(input[:capsule_id], repository)
-          update_or_associate_distributors(input[:capsule_id], repository)
+          repository_details = pulp_extensions(input[:capsule_id]).repository.retrieve_with_details(repository.pulp_id)
+          update_or_associate_importer(input[:capsule_id], repository, repository_details)
+          update_or_associate_distributors(input[:capsule_id], repository, repository_details)
+          remove_unnecessary_distributors(input[:capsule_id], repository, repository_details)
         end
 
-        def update_or_associate_importer(capsule_id, repository)
-          existing_importers = pulp_extensions(capsule_id).repository.retrieve_with_details(repository.pulp_id)["importers"]
+        def update_or_associate_importer(capsule_id, repository, repository_details)
+          existing_importers = repository_details["importers"]
           importer = capsule_id ? repository.generate_importer(true) : repository.generate_importer
           importer_config = capsule_id ? importer.config.merge!(importer_certs(repository)) : importer.config
           found = existing_importers.find { |i| i['importer_type_id'] == importer.id }
@@ -35,10 +37,10 @@ module Actions
           end
         end
 
-        def update_or_associate_distributors(capsule_id, repository)
+        def update_or_associate_distributors(capsule_id, repository, repository_details)
           concurrence do
-            existing_distributors = pulp_extensions(capsule_id).repository.retrieve_with_details(repository.pulp_id)["distributors"]
-            repository.generate_distributors.each do |distributor|
+            existing_distributors = repository_details["distributors"]
+            repository.generate_distributors(capsule_id.present?).each do |distributor|
               found = existing_distributors.find { |i| i['distributor_type_id'] == distributor.type_id }
               if found
                 plan_action(::Actions::Pulp::Repository::RefreshDistributor,
@@ -55,6 +57,22 @@ module Actions
                             :capsule_id => capsule_id,
                             :hash => { :distributor_id => distributor.id }
                             )
+              end
+            end
+          end
+        end
+
+        def remove_unnecessary_distributors(capsule_id, repository, repository_details)
+          concurrence do
+            existing_distributors = repository_details["distributors"]
+            generated_distributors = repository.generate_distributors(capsule_id.present?)
+            existing_distributors.each do |distributor|
+              found = generated_distributors.find { |dist| dist.type_id == distributor['distributor_type_id'] }
+              unless found
+                plan_action(Pulp::Repository::DeleteDistributor, :repo_id => repository.pulp_id,
+                                                                 :distributor_id => distributor['id'],
+                                                                 :capsule_id => capsule_id
+                           )
               end
             end
           end

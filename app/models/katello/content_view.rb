@@ -25,7 +25,7 @@ module Katello
       end
     end
 
-    has_many :content_view_repositories, :dependent => :destroy
+    has_many :content_view_repositories, :dependent => :destroy, :inverse_of => :content_view
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
 
@@ -83,9 +83,9 @@ module Katello
       new_view = ContentView.new
       new_view.name = new_name
       new_view.attributes = self.attributes.slice("description", "organization_id", "default", "composite")
+      new_view.save!
       new_view.repositories = self.repositories
       new_view.components = self.components
-      new_view.save!
 
       self.content_view_puppet_modules.each do |puppet_module|
         new_view.content_view_puppet_modules << puppet_module.dup

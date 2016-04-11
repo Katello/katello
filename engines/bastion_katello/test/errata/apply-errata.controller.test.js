@@ -170,7 +170,7 @@ describe('Controller: ApplyErrataController', function() {
             });
 
             it("can pass a parameter to update the content hosts", function () {
-                expectedParams['update_systems'] = {include: [1, 2, 3]};
+                expectedParams['update_hosts'] = {include: [1, 2, 3]};
                 $scope.applyErrata = true;
 
                 $scope.confirmApply();
@@ -184,11 +184,11 @@ describe('Controller: ApplyErrataController', function() {
                         'errata_ids': [10]
                     },
                     'content_view_version_environments': [{
-                        'content_view_version_id': 5,
-                        'environment_ids': []
-                    },{
                         'content_view_version_id': 1,
                         'environment_ids': [2]
+                    },{
+                        'content_view_version_id': 5,
+                        'environment_ids': []
                     }],
                     'resolve_dependencies': true
                 };
@@ -225,11 +225,11 @@ describe('Controller: ApplyErrataController', function() {
                         'errata_ids': [10]
                     },
                     'content_view_version_environments': [{
-                        'content_view_version_id': 5,
-                        'environment_ids': [99]
-                    },{
                         'content_view_version_id': 1,
                         'environment_ids': [2]
+                    },{
+                        'content_view_version_id': 5,
+                        'environment_ids': [99]
                     }],
                     'resolve_dependencies': true
                 };

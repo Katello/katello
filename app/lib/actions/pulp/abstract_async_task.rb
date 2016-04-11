@@ -97,6 +97,14 @@ module Actions
         end
       end
 
+      def rescue_external_task(error)
+        if error.is_a?(::Katello::Errors::PulpError)
+          fail error
+        else
+          super
+        end
+      end
+
       private
 
       def external_task=(external_task_data)

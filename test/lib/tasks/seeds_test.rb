@@ -5,6 +5,7 @@ module Katello
     setup do
       Setting.stubs(:[]).with(:administrator).returns("root@localhost")
       Setting.stubs(:[]).with(:send_welcome_email).returns(false)
+      Setting.stubs(:[]).with(regexp_matches(/katello_default_/)).returns("Crazy Template")
       Katello::Repository.stubs(:ensure_sync_notification)
     end
 
@@ -52,7 +53,7 @@ module Katello
     test "Make sure provisioning templates exist" do
       seed
       assert ProvisioningTemplate.where(:default => true).exists?
-      template_names = ["Katello Kickstart Default", "Katello Kickstart Default User Data", "Katello Kickstart Default Finish", "subscription_manager_registration"]
+      template_names = ["Katello Kickstart Default", "Katello Kickstart Default User Data", "Katello Kickstart Default Finish", "subscription_manager_registration", "Katello Atomic Kickstart Default"]
 
       ProvisioningTemplate.where(:default => true, :vendor => "Katello").each do |template|
         assert template_names.include?(template.name)
@@ -77,9 +78,11 @@ module Katello
   end
 
   class MailNotificationsTest < SeedsTest
-    test "Make sure mail notiffication got setup" do
+    test "Make sure mail notification got setup" do
       seed
-      assert ::MailNotification.pluck(:name).grep(/katello/).present?
+      assert MailNotification[:host_errata_advisory]
+      assert MailNotification[:promote_errata]
+      assert MailNotification[:sync_errata]
     end
   end
 
@@ -87,6 +90,13 @@ module Katello
     test "Make sure sync notifications  notiffication got setup" do
       Katello::Repository.expects(:ensure_sync_notification). returns(true)
       seed
+    end
+  end
+
+  class AtomicOsTest < SeedsTest
+    test "Make sure atomic OS got setup" do
+      seed
+      assert Operatingsystem.find_by(:name => Operatingsystem::REDHAT_ATOMIC_HOST_OS).present?
     end
   end
 end

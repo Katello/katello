@@ -7,7 +7,7 @@ module Katello
 
     skip_before_filter :set_default_response_format, :only => :report
 
-    before_filter :find_system, :only => [:destroy, :show, :update, :enabled_repos, :releases, :tasks,
+    before_filter :find_system, :only => [:show, :update, :enabled_repos, :releases, :tasks,
                                           :content_override, :product_content]
     before_filter :find_environment, :only => [:index, :report]
     before_filter :find_optional_organization, :only => [:create, :index, :report]
@@ -61,37 +61,6 @@ module Katello
       collection
     end
 
-    api :POST, "/systems", N_("Register a content host"), :deprecated => true
-    api :POST, "/environments/:environment_id/systems", N_("Register a content host in environment"), :deprecated => true
-    api :POST, "/host_collections/:host_collection_id/systems", N_("Register a content host in environment"), :deprecated => true
-    param :name, String, :desc => N_("Name of the content host"), :required => true, :action_aware => true
-    param :description, String, :desc => N_("Description of the content host")
-    param :location, String, :desc => N_("Physical location of the content host")
-    param :facts, Hash, :desc => N_("Key-value hash of content host-specific facts"), :action_aware => true, :required => true do
-      param :fact, String, :desc => N_("Any number of facts about this content host")
-    end
-    param :type, String, :desc => N_("Type of the content host, it should always be 'system'"), :required => true, :action_aware => true
-    param :guest_ids, Array, :desc => N_("IDs of the virtual guests running on this content host")
-    param :installed_products, Array, :desc => N_("List of products installed on the content host"), :action_aware => true
-    param :release_ver, String, :desc => N_("Release version of the content host")
-    param :service_level, String, :allow_nil => true, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT"), :action_aware => true
-    param :last_checkin, String, :desc => N_("Last check-in time of this content host")
-    param :organization_id, :number, :desc => N_("Specify the organization"), :required => true
-    param :environment_id, String, :desc => N_("Specify the environment")
-    param :content_view_id, String, :desc => N_("Specify the content view")
-    param :host_collection_ids, Array, :desc => N_("Specify the host collections as an array")
-    def create
-      rhsm_params = system_params(params)
-      rhsm_params[:facts] ||= {}
-      rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
-      content_view_environment = ContentViewEnvironment.where(:content_view_id => @content_view, :environment_id => @environment).first
-      host = Katello::Host::SubscriptionFacet.new_host_from_facts(rhsm_params[:facts], @organization, Location.default_location)
-
-      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
-      @system = host.reload.content_host
-      respond_for_create
-    end
-
     api :PUT, "/systems/:id", N_("Update content host information"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     param :release_ver, String, :desc => N_("Release version of the content host")
@@ -111,13 +80,6 @@ module Katello
       respond
     end
 
-    api :DELETE, "/systems/:id", N_("Unregister a content host"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def destroy
-      sync_task(::Actions::Katello::System::Destroy, @system, :unregistering => true)
-      respond :message => _("Deleted content host '%s'") % params[:id], :status => 204
-    end
-
     api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true
     param :id, String, :desc => N_("UUID of the content host"), :required => true
     desc <<-DESC
@@ -127,37 +89,6 @@ module Katello
       response = { :results => @system.available_releases,
                    :total => @system.available_releases.size,
                    :subtotal => @system.available_releases.size }
-      respond_for_index :collection => response
-    end
-
-    api :PUT, "/systems/:id/content_override", N_("Set content overrides for the content host")
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    param :content_override, Hash, :desc => N_("Content override parameters") do
-      param :content_label, String, :desc => N_("Label of the content"), :required => true
-      param :value, [0, 1, "default"], :desc => N_("Override to 0/1, or 'default'"), :required => true
-    end
-    def content_override
-      content_override = validate_content_overrides(params[:content_override])
-      @system.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
-
-      content = @system.available_content
-      response = {
-        :results => content,
-        :total => content.size,
-        :subtotal => content.size
-      }
-      respond_for_index :collection => response
-    end
-
-    api :GET, "/systems/:id/product_content", N_("Get content overrides for the content host")
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    def product_content
-      content = @system.available_content
-      response = {
-        :results => content,
-        :total => content.size,
-        :subtotal => content.size
-      }
       respond_for_index :collection => response
     end
 
@@ -177,24 +108,6 @@ module Katello
       subscription_facet[:release_version] = params[:release_ver]
       host_params[:subscription_facet_attributes] = subscription_facet.compact! unless subscription_facet.compact.empty?
       host_params
-    end
-
-    def validate_content_overrides(content_params)
-      case content_params[:value].to_s
-      when 'default'
-        content_params[:value] = nil
-      when '1'
-        content_params[:value] = 1
-      when '0'
-        content_params[:value] = 0
-      else
-        fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
-      end
-
-      unless @system.available_content.map(&:content).any? { |content| content.label == content_params[:content_label] }
-        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
-      end
-      content_params
     end
 
     def find_system

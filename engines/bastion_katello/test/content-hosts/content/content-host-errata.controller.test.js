@@ -33,6 +33,7 @@ describe('Controller: ContentHostErrataController', function() {
                 lifecycle_environment_id: 'env_id_stage',
                 content_view_id: 'content-view-id'
             },
+            hasContent: function() { return true; },
             $promise: {then: function(callback) {callback(host)}}
         };
         Nutupane = function() {

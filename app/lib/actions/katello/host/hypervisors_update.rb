@@ -43,7 +43,7 @@ module Actions
                                     content_view.organization)
           host.subscription_facet ||= ::Katello::Host::SubscriptionFacet.new
           host.subscription_facet.update_from_consumer_attributes(hypervisor_json)
-          host.subscription_facet.update_attributes(:uuid => hypervisor_json[:uuid])
+          host.subscription_facet.uuid = hypervisor_json[:uuid]
           host.subscription_facet.save!
 
           # TODO: Remove this legacy

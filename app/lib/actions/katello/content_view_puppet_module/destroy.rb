@@ -11,12 +11,12 @@ module Actions
           repository.puppet_modules.each do |puppet_module|
             # first, process content view puppet modules that have been specified by version
             library_repos = ::Katello::Repository.in_environment(repository.organization.library).
-                                                  where(:pulp_id => puppet_module.repoids)
+              where(:pulp_id => puppet_module.repositories.map(&:pulp_id))
 
             if library_repos.length == 1
               content_view_puppet_modules = ::Katello::ContentViewPuppetModule.joins(:content_view).
                   where("#{::Katello::ContentView.table_name}.organization_id" => repository.organization.id).
-                  where(:uuid => puppet_module.id)
+                  where(:uuid => puppet_module.id.to_s)
 
               content_view_puppet_modules.destroy_all
             end
@@ -29,9 +29,8 @@ module Actions
             if content_view_puppet_modules.any?
               puppet_repoids = ::Katello::Repository.puppet_type.in_environment(repository.organization.library).
                   pluck(:pulp_id).reject { |repoid| repoid == repository.pulp_id }
-              found_puppet_module = ::Katello::PuppetModule.latest_modules_search([{:name => puppet_module.name,
-                                                                                    :author => puppet_module.author}],
-                                                                                  puppet_repoids).first
+              found_puppet_module = ::Katello::PuppetModule.
+                latest_module(puppet_module.name, puppet_module.author, puppet_repoids)
 
               content_view_puppet_modules.destroy_all unless found_puppet_module
             end

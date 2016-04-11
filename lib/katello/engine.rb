@@ -16,6 +16,7 @@ module Katello
         :redhat_repository_url => 'https://cdn.redhat.com',
         :post_sync_url => 'http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello',
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
+        :consumer_cert_sh => 'katello-rhsm-consumer',
         :pulp => {
           :default_login => 'admin',
           :url => 'https://localhost/pulp/api/v2/',
@@ -154,6 +155,7 @@ module Katello
       ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
+      ::Setting.send :include, Katello::Concerns::SettingExtensions
 
       ::Container.send :include, Katello::Concerns::ContainerExtensions
       ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
@@ -214,6 +216,8 @@ module Katello
         api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
       end
 
+      ::SettingsHelper.send :include, Katello::Concerns::SettingsHelperExtensions
+
       load 'katello/repository_types.rb'
     end
 
@@ -232,9 +236,6 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
 
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.1/import_errata.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_gpg_key_urls.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.2/update_metadata_expire.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"

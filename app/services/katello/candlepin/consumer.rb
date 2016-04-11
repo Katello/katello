@@ -7,12 +7,18 @@ module Katello
       ENTITLEMENTS_PARTIAL = 'partial'
       ENTITLEMENTS_INVALID = 'invalid'
 
+      SYSTEM = "system"
+      HYPERVISOR = "hypervisor"
+      CANDLEPIN = "candlepin"
+      CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN]
+
       lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Consumer.events(uuid) }
       lazy_accessor :consumer_attributes, :initializer => lambda { |_s| Resources::Candlepin::Consumer.get(uuid) }
       lazy_accessor :installed_products, :initializer => lambda { |_s| consumer_attributes['installedProducts'] }
       lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
+      lazy_accessor :content_overrides, :initializer => lambda { |_s| Resources::Candlepin::Consumer.content_overrides(uuid) }
 
       attr_accessor :uuid
 
@@ -91,8 +97,21 @@ module Katello
 
       def virtual_host
         if virtual_host_info = Resources::Candlepin::Consumer.virtual_host(self.uuid)
-          Katello::Host::SubscriptionFacet.find_by_uuid(virtual_host_info[:uuid])
+          ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => virtual_host_info[:uuid]).first
         end
+      end
+
+      def set_content_override(content_label, name, value = nil)
+        Resources::Candlepin::Consumer.update_content_override(self.uuid, content_label, name, value)
+      end
+
+      def products
+        pool_ids = self.entitlements.map { |entitlement| entitlement['pool']['id'] }
+        Katello::Product.joins(:subscriptions => :pools).where("#{Katello::Pool.table_name}.cp_id" => pool_ids).enabled.uniq
+      end
+
+      def available_product_content
+        products.flat_map(&:available_content)
       end
 
       def compliance_reasons
@@ -102,6 +121,8 @@ module Katello
       end
 
       def self.distribution_to_puppet_os(name)
+        return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
+
         name = name.downcase
         if name =~ /red\s*hat/
           'RedHat'

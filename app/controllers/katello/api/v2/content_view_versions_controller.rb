@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
-    include Concerns::Api::V2::BulkSystemsExtensions
+    include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_content_view_version, :only => [:show, :promote, :destroy, :export]
@@ -94,47 +94,47 @@ module Katello
     param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well.")
     param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment.")
     param :add_content, Hash  do
-      param :errata_ids, Array, :desc => "Errata uuids to copy into the new versions."
-      param :package_ids, Array, :desc => "Package uuids to copy into the new versions."
-      param :puppet_module_ids, Array, :desc => "Puppet Modules to copy into the new versions."
+      param :errata_ids, Array, :desc => "Errata ids or uuids to copy into the new versions."
+      param :package_ids, Array, :desc => "Package ids or uuids to copy into the new versions."
+      param :puppet_module_ids, Array, :desc => "Puppet Module ids or uuids to copy into the new versions."
     end
-    param :update_systems, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified systems.  Only Errata are supported currently.") do
+    param :update_hosts, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.") do
       param :included, Hash, :required => true, :action_aware => true do
-        param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
-        param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
+        param :search, String, :required => false, :desc => N_("Search string for host to perform an action on")
+        param :ids, Array, :required => false, :desc => N_("List of host ids to perform an action on")
       end
       param :excluded, Hash, :required => false, :action_aware => true do
-        param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
+        param :ids, Array, :required => false, :desc => N_("List of host ids to exclude and not run an action on")
       end
-      param :update_all_systems, :bool, :required => false, :desc => N_("Update all editable and applicable systems, not just ones using the selected Content View Versions and Environments")
     end
     def incremental_update
-      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_systems]
-        systems = calculate_systems_for_incremental(params[:update_systems], params[:propagate_to_composites])
+      if params[:add_content] && params[:add_content].key?(:errata_ids) && params[:update_hosts]
+        hosts = calculate_hosts_for_incremental(params[:update_hosts], params[:propagate_to_composites])
       else
-        systems = []
+        hosts = []
       end
 
       validate_content(params[:add_content])
       task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments, params[:add_content],
-                        params[:resolve_dependencies], systems, params[:description])
+                        params[:resolve_dependencies], hosts, params[:description])
       respond_for_async :resource => task
     end
 
     private
 
-    def calculate_systems_for_incremental(bulk_params, use_composites)
-      if bulk_params[:update_all_systems]
-        version_environments  = find_version_environments_for_systems(use_composites)
-        restrict_systems = lambda do |relation|
-          errata = Erratum.where(:uuid => params[:add_content][:errata_ids])
-          relation.in_content_view_version_environments(version_environments).with_applicable_errata(errata)
+    def calculate_hosts_for_incremental(bulk_params, use_composites)
+      if bulk_params[:included].try(:[], :search)
+        version_environments  = find_version_environments_for_hosts(use_composites)
+        restrict_hosts = lambda do |relation|
+          errata = Erratum.with_identifiers(params[:add_content][:errata_ids])
+          content_facets = Host::ContentFacet.in_content_view_version_environments(version_environments).with_applicable_errata(errata)
+          relation.where(:id => content_facets.pluck(:host_id))
         end
       else
-        restrict_systems = nil
+        restrict_hosts = nil
       end
 
-      find_bulk_systems(:editable, params[:update_systems], restrict_systems)
+      find_bulk_hosts(:editable, params[:update_hosts], restrict_hosts)
     end
 
     def find_content_view_version
@@ -178,14 +178,14 @@ module Katello
           @composite_version_environments << version_environment
         else
           @version_environments << version_environment
-          @composite_version_environments += lookup_all_composites(version) if params[:propagate_all_composites]
+          @composite_version_environments += lookup_all_composites(version_environment[:content_view_version]) if params[:propagate_all_composites]
         end
       end
       @composite_version_environments.uniq! { |cve| cve[:content_view_version] }
     end
 
     def lookup_all_composites(component)
-      component.composites.select { |c| c.environment.any? }.map do |composite|
+      component.composites.select { |c| c.environments.any? }.map do |composite|
         {
           :content_view_version => composite,
           :environments =>  composite.environments
@@ -193,7 +193,7 @@ module Katello
       end
     end
 
-    def find_version_environments_for_systems(include_composites)
+    def find_version_environments_for_hosts(include_composites)
       if include_composites
         version_environments_for_systems_map = {}
         @version_environments.each do |version_environment|
@@ -220,9 +220,12 @@ module Katello
 
     def validate_content(content)
       if content[:errata_ids]
-        errata = Erratum.where(:uuid => content[:errata_ids])
-        not_found = content[:errata_ids] - errata.pluck(:uuid)
-        fail _("Could not find errata with id: %s") % not_found.join(", ") unless not_found.empty?
+        errata = Erratum.with_identifiers(content[:errata_ids])
+        not_found_count = content[:errata_ids].length - errata.length
+        if not_found_count > 0
+          fail _("Could not find %{count} errata.  Only found: %{found}") %
+                   { :count => not_found_count, :found => errata.pluck(:errata_id).join(',') }
+        end
       end
 
       if content[:package_ids]
