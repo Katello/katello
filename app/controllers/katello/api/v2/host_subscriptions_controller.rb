@@ -53,6 +53,8 @@ module Katello
       param :product_id, String, :desc => N_("Product id as listed from a host's installed products, \
         this is not the same product id as the products api returns")
       param :product_name, String, :desc => N_("Product name as listed from a host's installed products")
+      param :arch, String, :desc => N_("Product architecture")
+      param :version, String, :desc => N_("Product version")
     end
     param :release_version, String, :desc => N_("Release version of the content host")
     param :service_level, String, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT")
@@ -80,7 +82,10 @@ module Katello
 
       if params['installed_products']
         rhsm_params[:installedProducts] = params['installed_products'].map do |product|
-          { :productId => product['product_id'], :productName => product['product_name'] }
+          product_params = { :productId => product['product_id'], :productName => product['product_name'] }
+          product_params[:arch] = product['arch'] if product['arch']
+          product_params[:version] = product['version'] if product['version']
+          product_params
         end
       end
       rhsm_params
