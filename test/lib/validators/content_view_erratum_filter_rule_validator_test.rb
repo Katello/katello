@@ -78,9 +78,9 @@ module Katello
       @validator.validate(model)
       refute_empty model.errors[:base]
 
-      model = ContentViewErratumFilterRule.new(:content_view_filter_id => @filter.id, :types => 'invalid')
-      @validator.validate(model)
-      refute_empty model.errors[:base]
+      assert_raises(ActiveRecord::SerializationTypeMismatch) do
+        model = ContentViewErratumFilterRule.new(:content_view_filter_id => @filter.id, :types => 'invalid')
+      end
     end
   end
 end
