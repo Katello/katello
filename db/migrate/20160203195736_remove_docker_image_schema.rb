@@ -1,6 +1,8 @@
 class RemoveDockerImageSchema < ActiveRecord::Migration
   def up
-    remove_foreign_key :katello_docker_tags, :name => "katello_docker_tags_docker_image_id_fk"
+    if foreign_key_exists?(:katello_docker_tags, :name => "katello_docker_tags_docker_image_id_fk")
+      remove_foreign_key :katello_docker_tags, :name => "katello_docker_tags_docker_image_id_fk"
+    end
     remove_column :katello_docker_tags, :docker_image_id
     drop_table :katello_repository_docker_images
     drop_table :katello_docker_images
