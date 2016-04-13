@@ -21,6 +21,18 @@ module Katello
       assert Rpm.find_by_uuid(uuid)
     end
 
+    def test_with_identifiers_single
+      assert_includes Rpm.with_identifiers(@rpm_one.id), @rpm_one
+    end
+
+    def test_with_multiple
+      rpms = Rpm.with_identifiers([@rpm_one.id, @rpm_two.uuid])
+
+      assert_equal 2, rpms.count
+      assert_include rpms, @rpm_one
+      assert_include rpms, @rpm_two
+    end
+
     def test_update_from_json
       uuid = 'foo'
       Rpm.create!(:uuid => uuid)
