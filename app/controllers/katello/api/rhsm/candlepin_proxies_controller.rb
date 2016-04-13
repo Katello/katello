@@ -243,7 +243,7 @@ module Katello
     def facts
       User.as_anonymous_admin do
         sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
-        Katello::Host::SubscriptionFacet.update_facts(@host, rhsm_params[:facts])
+        Katello::Host::SubscriptionFacet.update_facts(@host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end

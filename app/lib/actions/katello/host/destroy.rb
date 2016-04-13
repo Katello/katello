@@ -33,6 +33,7 @@ module Actions
 
             host.get_status(::Katello::ErrataStatus).destroy
             host.get_status(::Katello::SubscriptionStatus).destroy
+            host.reload
           else
             host.content_facet.try(:destroy!)
             unless host.destroy

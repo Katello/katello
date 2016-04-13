@@ -114,6 +114,14 @@ module Katello
         put :facts, :id => @host.subscription_facet.uuid, :facts => facts
         assert_equal 200, response.status
       end
+
+      it "should update other attributes without facts" do
+        Host::SubscriptionFacet.expects(:update_facts).never
+        assert_sync_task(::Actions::Katello::Host::Update)
+
+        put :facts, :id => @host.subscription_facet.uuid, :serviceLevel => 'synthetic'
+        assert_equal 200, response.status
+      end
     end
 
     describe "list owners" do
