@@ -46,7 +46,7 @@ module Actions
 
             concurrence do
               plan_action(::Actions::Pulp::Repos::Update, repository.product) if repository.product.sync_plan
-              plan_self(:repository_id => repository.id) unless repository.puppet?
+              plan_self(:repository_id => repository.id)
             end
           end
         end
