@@ -7,6 +7,7 @@ module Actions
         def plan(host, system, consumer_params, content_view_environment, activation_keys = [])
           sequence do
             unless host.new_record?
+              host.save!
               plan_action(Katello::Host::Unregister, host)
               host.reload
             end
@@ -67,8 +68,7 @@ module Actions
 
           if smart_proxy
             smart_proxy.content_host = system.content_host
-            org = system.content_facet.lifecycle_environment.organization
-            smart_proxy.organizations << org unless smart_proxy.organizations.include?(org)
+            smart_proxy.organizations << system.organization unless smart_proxy.organizations.include?(system.organization)
             smart_proxy.save!
           end
         end
