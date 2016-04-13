@@ -77,7 +77,7 @@ module Katello
     ERROR_CLASS_NAME = "Environment"
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
 
     def library?
       self.library

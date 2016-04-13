@@ -21,7 +21,7 @@ module Katello
     validates_with Validators::GpgKeyContentValidator, :attributes => :content, :if => proc { SETTINGS[:katello][:gpg_strict_validation] }
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :organization_id, :complete_value => true
+    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
 
     def as_json(options = {})
       options ||= {}
