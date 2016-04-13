@@ -13,7 +13,7 @@ module Actions
           end
 
           def humanized_name
-            if input[:hostname]
+            if input.try(:[], :hostname).nil?
               _("Install Applicable Errata")
             else
               _("Install Applicable Errata on %s") % input[:hostname]
