@@ -24,7 +24,7 @@ module Katello
         ids = [ids] unless ids.is_a?(Array)
         ids.map!(&:to_s)
         id_integers = ids.map { |string| Integer(string) rescue -1 }
-        where("#{self.table_name}.id = (?) or #{self.table_name}.uuid = (?)", id_integers, ids)
+        where("#{self.table_name}.id in (?) or #{self.table_name}.uuid in (?)", id_integers, ids)
       end
 
       def in_repositories(repos)
