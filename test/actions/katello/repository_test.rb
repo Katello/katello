@@ -34,6 +34,28 @@ module ::Actions::Katello::Repository
       end
       plan_action action, repository
     end
+
+    it 'no clone flag means generate metadata in run phase' do
+      repository.expects(:save!)
+      action.expects(:action_subject).with(repository)
+      action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
+        content_create.stubs(input: { content_id: 123 })
+      end
+      plan = plan_action action, repository
+      run_action plan
+      plan.run.label.must_equal "Actions::Katello::Repository::MetadataGenerate"
+    end
+
+    it 'clone flag disables metadata generation' do
+      repository.expects(:save!)
+      action.expects(:action_subject).with(repository)
+      action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
+        content_create.stubs(input: { content_id: 123 })
+      end
+      plan = plan_action action, repository, true
+      run_action plan
+      plan.run.must_equal nil
+    end
   end
 
   class CreateFailTest < TestBase
