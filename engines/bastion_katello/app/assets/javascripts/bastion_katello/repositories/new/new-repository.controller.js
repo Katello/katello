@@ -7,13 +7,15 @@
  * @requires GPGKey
  * @requires FormUtils
  * @requires translate
+ * @requires Setting
+ * @requires ApiErrorHandler
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification',
-    function ($scope, Repository, GPGKey, FormUtils, translate, GlobalNotification) {
+    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'Setting', 'ApiErrorHandler',
+    function ($scope, Repository, GPGKey, FormUtils, translate, GlobalNotification, Setting, ApiErrorHandler) {
 
         function success(response) {
             $scope.detailsTable.rows.push(response);
@@ -47,6 +49,13 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
             'checksum_type': null, 'download_policy': null, 'mirror_on_sync': true});
+
+        Setting.get({"search": "name = default_download_policy"},
+            function (data) {
+                $scope.repository['download_policy'] = data.results[0].value;
+            }, function (data) {
+                ApiErrorHandler.handleGETRequestErrors(data, $scope);
+            });
 
         Repository.repositoryTypes({'creatable': true}, function (data) {
             $scope.repositoryTypes = data;
