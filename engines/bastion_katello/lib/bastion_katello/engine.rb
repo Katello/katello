@@ -33,6 +33,7 @@ module BastionKatello
         ),
         :config => {
           'consumerCertRPM' => consumer_cert_rpm,
+          'enable_deferred_download_policies' => !Foreman.in_rake? && Setting[:enable_deferred_download_policies],
           'remoteExecutionPresent' => ::Katello.with_remote_execution?,
           'remoteExecutionByDefault' => ::Katello.with_remote_execution? && !Foreman.in_rake?('db:migrate') &&
                                           Setting['remote_execution_by_default']

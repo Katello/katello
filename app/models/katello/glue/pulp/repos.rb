@@ -245,7 +245,7 @@ module Katello
         unprotected = unprotected.nil? ? false : unprotected
 
         if download_policy.blank? && repo_type == Repository::YUM_TYPE
-          download_policy = Setting[:default_download_policy]
+          download_policy = RepositoryDownloadPolicy.default
         end
 
         rel_path = if repo_type == 'docker'

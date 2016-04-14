@@ -2,9 +2,18 @@ describe('Controller: NewRepositoryController', function() {
     var $scope,
         FormUtils,
         GlobalNotification,
+        Setting,
         $httpBackend;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
+
+    beforeEach(module({
+        Setting: {
+            get: function() {
+                return { results: [{ value: 'true' }]};
+            }
+        }
+    }));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),

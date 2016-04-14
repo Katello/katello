@@ -159,7 +159,7 @@ module Katello
 
       def download_policy
         if katello_content_type == Repository::YUM_TYPE
-          Setting[:default_download_policy]
+          RepositoryDownloadPolicy.default
         else
           ""
         end

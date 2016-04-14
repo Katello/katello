@@ -12,8 +12,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification',
-    function ($scope, Repository, GPGKey, FormUtils, translate, GlobalNotification) {
+    ['$scope', 'Repository', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'BastionConfig', 'Setting', 'ApiErrorHandler',
+    function ($scope, Repository, GPGKey, FormUtils, translate, GlobalNotification, BastionConfig, Setting, ApiErrorHandler) {
 
         function success(response) {
             $scope.detailsTable.rows.push(response);
@@ -44,6 +44,14 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
                 GlobalNotification.setErrorMessage(response.data.displayMessage);
             }
         }
+
+        Setting.get({"search": "name = enable_deferred_download_policies"},
+        function (data) {
+            data = angular.fromJson(data);
+            $scope.enableDownloadPolicies = data.results[0].value;
+        }, function (data) {
+            ApiErrorHandler.handleGETRequestErrors(data, $scope);
+        });
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
             'checksum_type': null, 'download_policy': null, 'mirror_on_sync': true});
