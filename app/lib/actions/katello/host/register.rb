@@ -10,7 +10,6 @@ module Actions
               plan_action(Katello::Host::Unregister, host)
               host.reload
             end
-            ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
 
             unless activation_keys.empty?
               content_view_environment ||= lookup_content_view_environment(activation_keys)
@@ -27,6 +26,8 @@ module Actions
             host.content_facet = plan_content_facet(host, content_view_environment)
             host.subscription_facet = plan_subscription_facet(host, activation_keys, consumer_params)
             host.save!
+
+            ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
 
             action_subject host
 
@@ -52,7 +53,8 @@ module Actions
           host.content_facet.uuid = input[:uuid]
           host.subscription_facet.uuid = input[:uuid]
           host.content_facet.save!
-          host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.consumer_attributes)
+          host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
+              consumer_attributes.except(:installedProducts, :guestIds, :facts))
           host.subscription_facet.save!
           host.refresh_global_status!
           connect_to_smart_proxy(host)
@@ -121,7 +123,7 @@ module Actions
         def plan_subscription_facet(host, activation_keys, consumer_params)
           subscription_facet = host.subscription_facet || ::Katello::Host::SubscriptionFacet.new(:host => host)
           subscription_facet.last_checkin = DateTime.now
-          subscription_facet.update_from_consumer_attributes(consumer_params)
+          subscription_facet.update_from_consumer_attributes(consumer_params.except(:installedProducts, :guestIds, :facts))
           subscription_facet.save!
           subscription_facet.activation_keys = activation_keys
           subscription_facet
