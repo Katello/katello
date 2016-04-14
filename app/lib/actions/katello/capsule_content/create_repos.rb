@@ -24,7 +24,7 @@ module Actions
                       content_type: repository.content_type,
                       pulp_id: repository.pulp_id,
                       name: repository.name,
-                      feed: repository.full_path,
+                      feed: repository.docker? ? repository.docker_feed_url(true) : repository.full_path,
                       ssl_ca_cert: ::Cert::Certs.ca_cert,
                       ssl_client_cert: ueber_cert[:cert],
                       ssl_client_key: ueber_cert[:key],
