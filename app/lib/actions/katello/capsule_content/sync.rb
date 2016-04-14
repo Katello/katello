@@ -20,13 +20,13 @@ module Actions
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
           need_updates = repos_needing_updates(capsule_content, environment, content_view)
-          need_updates.each do |repo|
-            plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
-          end
-
           repository_ids = get_repository_ids(capsule_content, environment, content_view, repository)
           unless repository_ids.blank?
             sequence do
+              need_updates.each do |repo|
+                plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
+              end
+
               plan_action(ConfigureCapsule, capsule_content, environment, content_view)
 
               smart_proxy = SmartProxy.where(:content_host_id => capsule_content.consumer.id).first
