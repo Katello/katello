@@ -23,6 +23,10 @@ module Katello
     DOCKER_TYPE = 'docker'
     OSTREE_TYPE = 'ostree'
 
+    PUBLISH_DISTRIBUTOR_TYPES = [
+      Runcible::Models::YumDistributor.type_id
+    ]
+
     CHECKSUM_TYPES = %w(sha1 sha256)
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"

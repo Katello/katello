@@ -1,7 +1,7 @@
 module Actions
   module Pulp
     module Consumer
-      class SyncCapsule < ::Actions::Pulp::AbstractAsyncTask
+      class SyncCapsule < ::Actions::Pulp::AbstractContentTask
         input_format do
           param :capsule_id, Integer
           param :repo_pulp_id, String
