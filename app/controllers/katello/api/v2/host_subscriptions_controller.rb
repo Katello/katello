@@ -65,6 +65,7 @@ module Katello
       host = Katello::Host::SubscriptionFacet.find_or_create_host(name, @content_view_environment.environment.organization, rhsm_params)
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, @content_view_environment)
       host.reload
+      ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
       respond_for_show(:resource => host, :template => '../../../api/v2/hosts/show')
     end

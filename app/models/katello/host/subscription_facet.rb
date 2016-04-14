@@ -11,7 +11,9 @@ module Katello
 
       DEFAULT_TYPE = Glue::Candlepin::Consumer::SYSTEM
 
-      attr_accessible :release_version, :autoheal, :service_level, :host
+      attr_accessible :release_version, :autoheal, :service_level, :host,
+                      :installed_products, :facts, :hypervisor_guest_uuids
+      attr_accessor :installed_products, :facts, :hypervisor_guest_uuids
 
       def update_from_consumer_attributes(consumer_params)
         import_database_attributes(consumer_params)
@@ -34,12 +36,26 @@ module Katello
       end
 
       def consumer_attributes
-        {
+        attrs = {
           :autoheal => autoheal,
           :serviceLevel => service_level,
           :releaseVer => release_version,
           :environment => {:id => self.candlepin_environment_id}
         }
+        attrs[:facts] = facts if facts
+        attrs[:guestIds] = hypervisor_guest_uuids if hypervisor_guest_uuids
+        if installed_products
+          attrs[:installedProducts] = installed_products.collect do |installed_product|
+            product = {
+              :productName => installed_product[:product_name],
+              :productId => installed_product[:product_id]
+            }
+            product[:arch] = installed_product[:arch] if installed_product[:arch]
+            product[:version] = installed_product[:version] if installed_product[:version]
+            product
+          end
+        end
+        attrs
       end
 
       def candlepin_environment_id
@@ -104,6 +120,8 @@ module Katello
       end
 
       def backend_update_needed?
+        return true if self.installed_products || self.hypervisor_guest_uuids
+
         %w(release_version service_level autoheal).each do |method|
           return true if self.send("#{method}_changed?")
         end
