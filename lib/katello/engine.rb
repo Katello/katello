@@ -44,7 +44,13 @@ module Katello
     initializer 'katello.configure_assets', :group => :all do
       def find_assets(args = {})
         type = args.fetch(:type, nil)
-        asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
+        vendor = args.fetch(:vendor, false)
+
+        if vendor
+          asset_dir = "#{Katello::Engine.root}/vendor/assets/#{type}/"
+        else
+          asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
+        end
 
         asset_paths = Dir[File.join(asset_dir, '**', '*')].reject { |file| File.directory?(file) }
         asset_paths.each { |file| file.slice!(asset_dir) }
@@ -54,6 +60,7 @@ module Katello
 
       javascripts = find_assets(:type => 'javascripts')
       images = find_assets(:type => 'images')
+      vendor_images = find_assets(:type => 'images', :vendor => true)
 
       precompile = [
         'katello/katello.css',
@@ -62,8 +69,10 @@ module Katello
         'bastion_katello/bastion_katello.js',
         /bastion_katello\S+.(?:svg|eot|woff|ttf)$/
       ]
+
       precompile.concat(javascripts)
       precompile.concat(images)
+      precompile.concat(vendor_images)
 
       SETTINGS[:katello] = {} unless SETTINGS.key?(:katello)
       SETTINGS[:katello][:assets] = {:precompile => precompile}
