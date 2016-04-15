@@ -1,4 +1,4 @@
-child :content_facet => :content do
+child :content_facet => :content_facet_attributes do
   extends 'katello/api/v2/content_facet/base'
 
   node do |content_facet|
