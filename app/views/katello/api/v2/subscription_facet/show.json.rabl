@@ -1,4 +1,4 @@
-child :subscription_facet => :subscription do |facet|
+child :subscription_facet => :subscription_facet_attributes do |facet|
   extends 'katello/api/v2/subscription_facet/base'
   consumer = Katello::Candlepin::Consumer.new(facet.uuid)
 

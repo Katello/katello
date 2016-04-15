@@ -22,16 +22,16 @@
     <div class="detail">
       <span class="info-label" translate>Status</span>
         <span class="info-value">
-          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription.subscription_status.color_code)"></i>
-          {{ host.subscription.subscription_status.label }}
+          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription_facet_attributes.subscription_status.color_code)"></i>
+          {{ host.subscription_facet_attributes.subscription_status.label }}
         </span>
     </div>
 
-    <div ng-show="host.subscription.compliance_reasons.length > 0" class="detail">
+    <div ng-show="host.subscription_facet_attributes.compliance_reasons.length > 0" class="detail">
       <span class="info-label" translate>Details</span>
       <div class="info-value">
         <ul class="compliance-reasons">
-          <li ng-repeat="reason in host.subscription.compliance_reasons">{{ reason }}</li>
+          <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
         </ul>
       </div>
     </div>
@@ -39,7 +39,7 @@
     <div class="detail">
       <span class="info-label" translate>Auto-Attach</span>
       <span class="info-value"
-            bst-edit-checkbox="host.subscription.autoheal"
+            bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
             formatter="booleanToYesNo"
             readonly="denied('edit_hosts', host)"
             on-save="saveSubscriptionFacet(host)">
@@ -48,9 +48,9 @@
     <div class="detail">
       <span class="info-label" translate>Service Level</span>
           <span class="info-value"
-                bst-edit-select="host.subscription.service_level"
+                bst-edit-select="host.subscription_facet_attributes.service_level"
                 readonly="denied('edit_hosts', host)"
-                selector="host.subscription.service_level"
+                selector="host.subscription_facet_attributes.service_level"
                 options="serviceLevels()"
                 options-format="option for option in options"
                 on-save="saveSubscriptionFacet(host)">
