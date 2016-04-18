@@ -37,7 +37,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.host.$promise.then(function (host) {
             $scope.hostFactsAsObject = doubleColonNotationToObject(host.facts);
             if (host.hasContent()) {
-                $scope.originalEnvironment = host.content.lifecycle_environment;
+                $scope.originalEnvironment = host.content_facet_attributes.lifecycle_environment;
             }
         });
 
@@ -51,7 +51,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
-        $scope.$watch('host.content.lifecycle_environment', function (environment) {
+        $scope.$watch('host.content_facet_attributes.lifecycle_environment', function (environment) {
             if (environment && $scope.originalEnvironment) {
                 if (environment.id !== $scope.originalEnvironment.id) {
                     $scope.editContentView = true;
@@ -67,7 +67,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
-                $scope.host.content['lifecycle_environment'] = $scope.originalEnvironment;
+                $scope.host.content_facet_attributes['lifecycle_environment'] = $scope.originalEnvironment;
                 $scope.disableEnvironmentSelection = false;
             }
         };
@@ -76,7 +76,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             $scope.editContentView = false;
 
             $scope.saveContentFacet(host).then(function (response) {
-                $scope.originalEnvironment = response.content.lifecycle_environment;
+                $scope.originalEnvironment = response.content_facet_attributes.lifecycle_environment;
             });
             $scope.disableEnvironmentSelection = false;
         };
@@ -84,7 +84,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.releaseVersions = function () {
             var deferred = $q.defer();
 
-            ContentHost.releaseVersions({ id: $scope.host.subscription.uuid }, function (response) {
+            ContentHost.releaseVersions({ id: $scope.host.subscription_facet_attributes.uuid }, function (response) {
                 if (response.total === 0) {
                     $scope.showVersionAlert = true;
                 }
@@ -95,19 +95,19 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         };
 
         $scope.clearReleaseVersion = function () {
-            $scope.host.subscription['release_version'] = '';
+            $scope.host.subscription_facet_attributes['release_version'] = '';
             $scope.saveSubscriptionFacet($scope.host);
         };
 
         $scope.clearServiceLevel = function () {
-            $scope.host.subscription['service_level'] = '';
+            $scope.host.subscription_facet_attributes['service_level'] = '';
             $scope.saveSubscriptionFacet($scope.host);
         };
 
         $scope.contentViews = function () {
             var deferred = $q.defer();
 
-            ContentView.queryUnpaged({ 'environment_id': $scope.host.content.lifecycle_environment.id}, function (response) {
+            ContentView.queryUnpaged({ 'environment_id': $scope.host.content_facet_attributes.lifecycle_environment.id}, function (response) {
                 deferred.resolve(response.results);
                 $scope.contentViews = response.results;
             });
@@ -123,7 +123,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.virtualGuestIds = function (host) {
             var ids = [];
-            angular.forEach(host.subscription['virtual_guests'], function (guest) {
+            angular.forEach(host.subscription_facet_attributes['virtual_guests'], function (guest) {
                 ids.push('name = %s'.replace('%s', guest.name));
             });
 

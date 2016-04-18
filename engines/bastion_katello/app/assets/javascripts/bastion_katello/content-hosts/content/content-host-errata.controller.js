@@ -49,12 +49,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.errataOptions = [{name: "Current Environment", label: 'current'}, {name: 'foo', label: 'bar'}];
 
         $scope.detailsTable.initialLoad = false;
-        $scope.host.$promise.then(function() {
-            if ($scope.host.content && $scope.host.id) {
-                errataNutupane.setParams({id: $scope.host.id});
-                errataNutupane.load();
-            }
-        });
 
         $scope.setupErrataOptions = function (host) {
             var libraryString = translate("Library Synced Content"),
@@ -62,18 +56,18 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 previousEnv;
 
             if (host.hasContent()) {
-                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content.lifecycle_environment.name).replace("%cv", host.content.content_view_name);
+                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content_facet_attributes.lifecycle_environment.name).replace("%cv", host.content_facet_attributes.content_view_name);
                 $scope.errataOptions = [{name: currentEnv, label: 'current', order: 3}];
 
-                if (!host.content['lifecycle_environment_library?']) {
-                    Environment.get({id: host.content.lifecycle_environment.id}).$promise.then(function (env) {
-                        previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_view_name);
+                if (!host.content_facet_attributes['lifecycle_environment_library?']) {
+                    Environment.get({id: host.content_facet_attributes.lifecycle_environment.id}).$promise.then(function (env) {
+                        previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_facet_attributes.content_view_name);
                         $scope.errataOptions.push({name: previousEnv,
-                                                   label: 'prior', order: 2, 'content_view_id': host.content.content_view_id, 'environment_id': env.prior.id});
+                                                   label: 'prior', order: 2, 'content_view_id': host.content_facet_attributes.content_view_id, 'environment_id': env.prior.id});
 
                     });
                 }
-                if (!host.content['content_view_default?']) {
+                if (!host.content_facet_attributes['content_view_default?']) {
                     Organization.get({id: host.organization_id}).$promise.then(function (org) {
                         $scope.errataOptions.push({name: libraryString, label: 'library', order: 1,
                                                    'content_view_id': org.default_content_view_id, 'environment_id': org.library_id});
@@ -82,7 +76,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             }
         };
 
-        $scope.host.$promise.then($scope.setupErrataOptions);
+        $scope.host.$promise.then(function() {
+            $scope.setupErrataOptions($scope.host);
+            if ($scope.host.content_facet_attributes && $scope.host.id) {
+                errataNutupane.setParams({id: $scope.host.id});
+                errataNutupane.load();
+            }
+        });
 
         $scope.refreshErrata = function (selected) {
             var option, errataParams;
