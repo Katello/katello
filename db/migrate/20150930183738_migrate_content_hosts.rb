@@ -190,6 +190,7 @@ class MigrateContentHosts < ActiveRecord::Migration
 
   def get_systems_with_facts(systems)
     systems_to_remove = []
+    systems = systems.to_a
 
     systems.each do |system|
       begin
