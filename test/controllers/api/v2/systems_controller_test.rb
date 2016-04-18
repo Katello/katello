@@ -106,6 +106,13 @@ module Katello
       assert_template 'api/v2/systems/show'
     end
 
+    def test_show_host_id
+      get :show, :id => @system.foreman_host.id
+
+      assert_response :success
+      assert_template 'api/v2/systems/show'
+    end
+
     def test_show_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
