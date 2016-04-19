@@ -30,7 +30,7 @@ module Katello
       respond :resource => @product_content
     end
 
-    api :GET, "/products/:product_id/repository_sets/:id/available_repositories", N_("Get list or available repositories for the repository set")
+    api :GET, "/products/:product_id/repository_sets/:id/available_repositories", N_("Get list of available repositories for the repository set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     def available_repositories
@@ -65,8 +65,8 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/products/:product_id/repository_sets/:id/disable", N_("Disable a repository form the set")
-    param :id, :number, :required => true, :desc => N_("ID of the repository set to enable")
+    api :PUT, "/products/:product_id/repository_sets/:id/disable", N_("Disable a repository from the set")
+    param :id, :number, :required => true, :desc => N_("ID of the repository set to disable")
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
     param :basearch, String, :required => false, :desc => N_("Basearch to disable")
     param :releasever, String, :required => false, :desc => N_("Releasever to disable")
