@@ -37,43 +37,50 @@
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.yum')}">
+      <li ng-class="{active: isState('content-views.details.version.yum')}"
+          ng-show="hasRepositories(version, 'yum')">
         <a ui-sref="content-views.details.version.yum({versionId: version.id})">
           <span translate>Yum Repositories</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.packages')}">
+      <li ng-class="{active: isState('content-views.details.version.packages')}"
+          ng-show="version.package_count !== 0">
         <a ui-sref="content-views.details.version.packages({versionId: version.id})">
           <span translate>Packages</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.package-groups')}">
+      <li ng-class="{active: isState('content-views.details.version.package-groups')}"
+          ng-show="version.package_group_count !== 0">
         <a ui-sref="content-views.details.version.package-groups({versionId: version.id})">
           <span translate>Package Groups</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.errata')}">
+      <li ng-class="{active: isState('content-views.details.version.errata')}"
+          ng-show="hasErrata(version)">
         <a ui-sref="content-views.details.version.errata({versionId: version.id})">
           <span translate>Errata</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.puppet-modules')}">
+      <li ng-class="{active: isState('content-views.details.version.puppet-modules')}"
+          ng-show="version.puppet_module_count !== 0">
         <a ui-sref="content-views.details.version.puppet-modules({versionId: version.id})">
           <span translate>Puppet Modules</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.docker')}">
+      <li ng-class="{active: isState('content-views.details.version.docker')}"
+          ng-show="version.docker_tag_count !== 0 || version.docker_manifest_count !== 0">
         <a ui-sref="content-views.details.version.docker({versionId: version.id})">
           <span translate>Docker Repositories</span>
         </a>
       </li>
 
-      <li ng-class="{active: isState('content-views.details.version.ostree-branches')}">
+      <li ng-class="{active: isState('content-views.details.version.ostree-branches')}"
+          ng-show="version.ostree_branch_count !== 0">
         <a ui-sref="content-views.details.version.ostree-branches({versionId: version.id})">
           <span translate>OSTree Branches</span>
         </a>
