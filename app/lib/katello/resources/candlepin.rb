@@ -105,9 +105,10 @@ module Katello
           end
 
           def create(env_id, parameters, activation_key_cp_ids)
+            parameters['installedProducts'] ||= [] #if installed products is nil, candlepin won't attach custom products
             url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
-
             url += "?activation_keys=" + activation_key_cp_ids.join(",") if activation_key_cp_ids.length > 0
+
             response = self.post(url, parameters.to_json, self.default_headers).body
             JSON.parse(response).with_indifferent_access
           end
