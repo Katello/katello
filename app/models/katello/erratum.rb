@@ -20,7 +20,7 @@ module Katello
     has_many :cves, :class_name => "Katello::ErratumCve", :dependent => :destroy, :inverse_of => :erratum
     has_many :packages, :class_name => "Katello::ErratumPackage", :dependent => :destroy, :inverse_of => :erratum
 
-    scoped_search :on => :errata_id, :rename => :id, :complete_value => true
+    scoped_search :on => :errata_id, :rename => :id, :complete_value => true, :only_explicit => true
     scoped_search :on => :title, :only_explicit => true
     scoped_search :on => :severity, :complete_value => true
     scoped_search :on => :errata_type, :rename => :type, :complete_value => true
@@ -58,7 +58,7 @@ module Katello
       ids = [ids] unless ids.is_a?(Array)
       ids.map!(&:to_s)
       id_integers = ids.map { |string| Integer(string) rescue -1 }
-      where("#{self.table_name}.id = (?) or #{self.table_name}.uuid = (?) or #{self.table_name}.errata_id = (?)", id_integers, ids, ids)
+      where("#{self.table_name}.id in (?) or #{self.table_name}.uuid in (?) or #{self.table_name}.errata_id in (?)", id_integers, ids, ids)
     end
 
     def hosts_applicable

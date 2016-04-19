@@ -42,7 +42,7 @@ module Katello
     scope :default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true) }
     scope :non_default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false) }
 
-    scoped_search :on => :content_view_id
+    scoped_search :on => :content_view_id, :only_explicit => true
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
     scoped_search :in => :repositories, :on => :name, :rename => :repository, :complete_value => true
 
@@ -254,6 +254,10 @@ module Katello
 
     def package_groups
       PackageGroup.in_repositories(archived_repos).uniq
+    end
+
+    def package_group_count
+      package_groups.count
     end
 
     def check_ready_to_promote!(to_env)

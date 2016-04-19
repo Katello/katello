@@ -63,7 +63,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
                 "lscpu.instructionsPerCycle": "6",
                 anotherFact: "yes"
             },
-            content: {
+            content_facet_attributes: {
                 lifecycle_environment: {
                     id: 1
                 },
@@ -71,7 +71,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
                     id: 2
                 }
             },
-            subscription: {'virtual_guests': []},
+            subscription_facet_attributes: {'virtual_guests': []},
             hasContent: function() { return true; }
         });
 
@@ -106,7 +106,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
     });
 
     it("builds list of guest ids", function () {
-        $scope.host.subscription['virtual_guests'] = [{ id: 2, name: "guest2" }, { id: 3, name: "guest3"}];
+        $scope.host.subscription_facet_attributes['virtual_guests'] = [{ id: 2, name: "guest2" }, { id: 3, name: "guest3"}];
         expect($scope.virtualGuestIds($scope.host)).toEqual("name = guest2 or name = guest3");
     });
 
@@ -119,10 +119,10 @@ describe('Controller: ContentHostDetailsInfoController', function() {
     });
 
     it('should set the environment and force a content view to be selected', function() {
-        $scope.host.content.lifecycle_environment = {name: 'Dev', id: 2};
+        $scope.host.content_facet_attributes.lifecycle_environment = {name: 'Dev', id: 2};
         $scope.$digest();
 
-        expect($scope.host.content.lifecycle_environment.id).toBe(2);
+        expect($scope.host.content_facet_attributes.lifecycle_environment.id).toBe(2);
         expect($scope.originalEnvironment.id).toBe(1);
         expect($scope.editContentView).toBe(true);
         expect($scope.disableEnvironmentSelection).toBe(true);
@@ -133,7 +133,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
         $scope.originalEnvironment.id = 2;
         $scope.cancelContentViewUpdate();
 
-        expect($scope.host.content.lifecycle_environment.id).toBe(2);
+        expect($scope.host.content_facet_attributes.lifecycle_environment.id).toBe(2);
         expect($scope.editContentView).toBe(false);
     });
 });

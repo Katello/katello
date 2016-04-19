@@ -24,7 +24,7 @@ describe('Controller: ContentHostErrataController', function() {
         host = {
             id: 5,
             organization_id: 'org-id-5',
-            content: {
+            content_facet_attributes: {
                 uuid: 4,
                 lifecycle_environment: {
                     id: 'env_id_stage',
@@ -112,7 +112,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn(nutupaneMock, 'refresh');
         $scope.refreshErrata('prior');
         expect(nutupaneMock.setParams).toHaveBeenCalledWith({id: host.id,
-            content_view_id: $scope.host.content.content_view_id, environment_id: Environment.mockResources.results[0].prior.id});
+            content_view_id: $scope.host.content_facet_attributes.content_view_id, environment_id: Environment.mockResources.results[0].prior.id});
         expect(nutupaneMock.refresh).toHaveBeenCalled();
     });
 
@@ -135,7 +135,7 @@ describe('Controller: ContentHostErrataController', function() {
         expect(defaultLib.environment_id).toBe(Organization.mockResources.results[0].library_id);
         expect(defaultLib.content_view_id).toBe(Organization.mockResources.results[0].default_content_view_id);
         expect(prior.environment_id).toBe(Environment.mockResources.results[0].prior.id);
-        expect(prior.content_view_id).toBe(host.content.content_view_id);
+        expect(prior.content_view_id).toBe(host.content_facet_attributes.content_view_id);
     });
 
     it("By default should have 3 options, with appropriate values after setupOptions", function() {
@@ -149,13 +149,13 @@ describe('Controller: ContentHostErrataController', function() {
         expect(defaultLib.environment_id).toBe(Organization.mockResources.results[0].library_id);
         expect(defaultLib.content_view_id).toBe(Organization.mockResources.results[0].default_content_view_id);
         expect(prior.environment_id).toBe(Environment.mockResources.results[0].prior.id);
-        expect(prior.content_view_id).toBe(host.content.content_view_id);
+        expect(prior.content_view_id).toBe(host.content_facet_attributes.content_view_id);
     });
 
 
     it("If no prior, do not include it as an option", function() {
         Environment.mockResources.results[0].library = true;
-        $scope.host.content['lifecycle_environment_library?'] = true;
+        $scope.host.content_facet_attributes['lifecycle_environment_library?'] = true;
         $scope.setupErrataOptions($scope.host);
 
         var defaultLib = _.find($scope.errataOptions, function(opt) { return opt.label === 'library'; }),
@@ -169,9 +169,9 @@ describe('Controller: ContentHostErrataController', function() {
 
     it("If already the default content view,, do not include it as an option", function() {
         Environment.mockResources.results[0].library = true;
-        $scope.host.content['lifecycle_environment_library?'] = true;
-        $scope.host.content.content_view_id = Organization.mockResources.results[0].default_content_view_id
-        $scope.host.content['content_view_default?'] = true;
+        $scope.host.content_facet_attributes['lifecycle_environment_library?'] = true;
+        $scope.host.content_facet_attributes.content_view_id = Organization.mockResources.results[0].default_content_view_id
+        $scope.host.content_facet_attributes['content_view_default?'] = true;
         $scope.setupErrataOptions($scope.host);
 
         var defaultLib = _.find($scope.errataOptions, function(opt) { return opt.label === 'library'; }),

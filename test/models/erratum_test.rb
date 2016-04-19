@@ -35,6 +35,19 @@ module Katello
       assert_equal Erratum.find_by_uuid(attrs[:uuid]).title.size, 255
     end
 
+    def test_with_identifiers_single
+      assert_includes Katello::Erratum.with_identifiers(@security.id), @security
+    end
+
+    def test_with_identifiers_multiple
+      errata = Katello::Erratum.with_identifiers([@security.id, @bugfix.uuid, @enhancement.errata_id])
+
+      assert_equal 3, errata.length
+      assert_includes errata, @security
+      assert_includes errata, @bugfix
+      assert_includes errata, @enhancement
+    end
+
     def test_of_type
       assert Erratum.of_type(Erratum::SECURITY).include?(@security)
       refute Erratum.of_type(Erratum::SECURITY).include?(@bugfix)

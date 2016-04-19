@@ -46,15 +46,17 @@ module Actions
 
             concurrence do
               plan_action(::Actions::Pulp::Repos::Update, repository.product) if repository.product.sync_plan
-              plan_self(:repository_id => repository.id) unless repository.puppet?
+              plan_self(:repository_id => repository.id, :clone => clone)
             end
           end
         end
 
         def run
           ::User.current = ::User.anonymous_api_admin
-          repository = ::Katello::Repository.find(input[:repository_id])
-          ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
+          unless input[:clone]
+            repository = ::Katello::Repository.find(input[:repository_id])
+            ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
+          end
         ensure
           ::User.current = nil
         end

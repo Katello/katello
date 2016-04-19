@@ -34,14 +34,14 @@
       </td>
       <td>
         <a ui-sref="content-hosts.details.errata.index({hostId: host.id})">
-          <span class="aligned-errata-count" errata-counts="host.content.errata_counts"></span>
+          <span class="aligned-errata-count" errata-counts="host.content_facet_attributes.errata_counts"></span>
         </a>
       </td>
       <td bst-table-cell>{{ host.operatingsystem_name }}</td>
-      <td bst-table-cell>{{ host.content.lifecycle_environment.name }}</td>
-      <td bst-table-cell>{{ host.content.content_view.name || "" }}</td>
-      <td bst-table-cell>{{ (host.subscription.registered_at | date:'short') || ("Never registered" | translate) }}</td>
-      <td bst-table-cell>{{ (host.subscription.last_checkin | date:'short') || ("Never checked in" | translate) }}</td>
+      <td bst-table-cell>{{ host.content_facet_attributes.lifecycle_environment.name }}</td>
+      <td bst-table-cell>{{ host.content_facet_attributes.content_view.name || "" }}</td>
+      <td bst-table-cell>{{ (host.subscription_facet_attributes.registered_at | date:'short') || ("Never registered" | translate) }}</td>
+      <td bst-table-cell>{{ (host.subscription_facet_attributes.last_checkin | date:'short') || ("Never checked in" | translate) }}</td>
     </tr>
   </tbody>
 </table>

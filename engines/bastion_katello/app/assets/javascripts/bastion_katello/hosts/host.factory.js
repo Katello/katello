@@ -15,10 +15,10 @@ angular.module('Bastion.hosts').factory('Host',
             autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
         });
         resource.prototype.hasContent = function () {
-            return angular.isDefined(this.content) && angular.isDefined(this.content.uuid);
+            return angular.isDefined(this.content_facet_attributes) && angular.isDefined(this.content_facet_attributes.uuid);
         };
         resource.prototype.hasSubscription = function () {
-            return angular.isDefined(this.subscription) && angular.isDefined(this.subscription.uuid);
+            return angular.isDefined(this.subscription_facet_attributes) && angular.isDefined(this.subscription_facet_attributes.uuid);
         };
         return resource;
     }]

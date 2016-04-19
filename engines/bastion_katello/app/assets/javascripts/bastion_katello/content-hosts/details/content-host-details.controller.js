@@ -36,26 +36,28 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         // @TODO begin hack for content and subscript facets
         // see http://projects.theforeman.org/issues/13763
         $scope.saveContentFacet = function (host) {
-            host['content_facet_attributes'] = {
-                id: host.content.id,
-                'content_view_id': host.content.content_view.id,
-                'lifecycle_environment_id': host.content.lifecycle_environment.id
+            var newHost = {id: host.id};
+            newHost['content_facet_attributes'] = {
+                id: host.content_facet_attributes.id,
+                'content_view_id': host.content_facet_attributes.content_view.id,
+                'lifecycle_environment_id': host.content_facet_attributes.lifecycle_environment.id
             };
-            return $scope.save(host);
+            return $scope.save(newHost, true);
         };
 
         $scope.saveSubscriptionFacet = function (host) {
-            host['subscription_facet_attributes'] = {
-                id: host.subscription.id,
-                autoheal: host.subscription.autoheal,
-                'service_level': host.subscription.service_level,
-                'release_version': host.subscription.release_version
+            var newHost = {id: host.id};
+            newHost['subscription_facet_attributes'] = {
+                id: host.subscription_facet_attributes.id,
+                autoheal: host.subscription_facet_attributes.autoheal,
+                'service_level': host.subscription_facet_attributes.service_level,
+                'release_version': host.subscription_facet_attributes.release_version
             };
-            return $scope.save(host);
+            return $scope.save(newHost, true);
         };
         // @TODO end hack
 
-        $scope.save = function (host) {
+        $scope.save = function (host, saveFacets) {
             var deferred = $q.defer();
 
             // @TODO begin hack needed to use the foreman host API, see the following bugs:
@@ -68,10 +70,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             var whitelistedHostObject = {},
                 whitelist = [
                     "name",
-                    "description",
-                    "content_facet_attributes",
-                    "subscription_facet_attributes"
+                    "description"
                 ];
+
+            if (saveFacets) {
+                whitelist.push("content_facet_attributes");
+                whitelist.push("subscription_facet_attributes");
+            }
 
             angular.forEach(whitelist, function (key) {
                 whitelistedHostObject[key] = host[key];
