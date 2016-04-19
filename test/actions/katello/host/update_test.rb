@@ -34,6 +34,7 @@ module Katello::Host
       it 'plans' do
         action.stubs(:action_subject).with(@host)
         consumer_params = {'autoheal' => true}
+        consumer_params[:facts] = {'memory.memtotal' => '16 GB'}
 
         plan_action action, @host, consumer_params
 

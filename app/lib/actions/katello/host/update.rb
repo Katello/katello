@@ -17,7 +17,7 @@ module Actions
               else
                 consumer_params = host.subscription_facet.consumer_attributes
               end
-              ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
+              ::Katello::Host::SubscriptionFacet.update_facts(::Host.find(host.id), consumer_params[:facts]) unless consumer_params[:facts].blank?
               host.subscription_facet.save!
               plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
