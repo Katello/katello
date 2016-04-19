@@ -9,6 +9,7 @@ attributes :content_view_id
 attributes :default
 attributes :description
 attributes :package_count
+attributes :package_group_count
 attributes :puppet_module_count
 attributes :docker_manifest_count
 attributes :docker_tag_count
@@ -61,7 +62,7 @@ child :environments => :environments do
 end
 
 child :archived_repos => :repositories do
-  attributes :id, :name, :label
+  attributes :id, :name, :label, :content_type
 end
 
 child :last_event => :last_event do
