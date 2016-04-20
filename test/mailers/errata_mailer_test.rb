@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ErrataMailerTest < ActiveSupport::TestCase
     def setup
-      @user = User.current = User.find(users('admin'))
+      @user = User.current = User.find(users('admin').id)
 
       FactoryGirl.create(:mail_notification,
                          :name => 'host_errata_advisory',
@@ -51,7 +51,7 @@ module Katello
     end
 
     def test_promote_errata
-      view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       @errata_host.content_facet.bound_repositories = [view_repo]
       @errata_host.content_facet.content_view = katello_content_views(:acme_default)
       @errata_host.content_facet.save!

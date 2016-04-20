@@ -22,7 +22,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       System.any_instance.stubs(:subscribe).returns(true)
       System.any_instance.stubs(:unsubscribe).returns(true)
       System.any_instance.stubs(:filtered_pools).returns([])

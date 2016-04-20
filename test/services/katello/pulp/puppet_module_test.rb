@@ -9,7 +9,7 @@ module Katello
 
         VCR.insert_cassette('services/pulp/puppet_module')
 
-        @repository = Repository.find(katello_repositories(:p_forge))
+        @repository = Repository.find(katello_repositories(:p_forge).id)
         RepositorySupport.create_and_sync_repo(@repository)
         @repository.index_db_puppet_modules
 

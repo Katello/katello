@@ -163,15 +163,15 @@ class ActiveSupport::TestCase
 
   def set_user(user = nil)
     user ||= users(:admin)
-    user = User.find(user) if user.id
+    user = User.find(user.id) if user.id
     User.current = user
   end
 
   def get_organization(org = nil)
     saved_user = User.current
-    User.current = User.find(users(:admin))
+    User.current = User.find(users(:admin).id)
     org = org.nil? ? :empty_organization : org
-    organization = Organization.find(taxonomies(org.to_sym))
+    organization = Organization.find(taxonomies(org.to_sym).id)
     organization.stubs(:label_not_changed).returns(true)
     organization.setup_label_from_name
     organization.save!

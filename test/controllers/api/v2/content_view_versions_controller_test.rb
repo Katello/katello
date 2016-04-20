@@ -4,13 +4,13 @@ module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
     def models
       @organization = get_organization
-      @library = KTEnvironment.find(katello_environments(:library))
-      @dev = KTEnvironment.find(katello_environments(:dev))
-      @test = KTEnvironment.find(katello_environments(:test))
-      @beta = KTEnvironment.find(katello_environments(:beta))
-      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
-      @library_view = ContentView.find(katello_content_views(:library_view))
-      @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
+      @library = KTEnvironment.find(katello_environments(:library).id)
+      @dev = KTEnvironment.find(katello_environments(:dev).id)
+      @test = KTEnvironment.find(katello_environments(:test).id)
+      @beta = KTEnvironment.find(katello_environments(:beta).id)
+      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
+      @library_view = ContentView.find(katello_content_views(:library_view).id)
+      @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1).id)
     end
 
     def permissions
@@ -50,7 +50,7 @@ module Katello
     end
 
     def test_index_with_content_view_in_environment
-      expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
+      expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
 
       results = JSON.parse(get(:index, :content_view_id => @library_view.id, :environment_id => @library.id).body)
       assert_response :success
@@ -75,7 +75,7 @@ module Katello
     end
 
     def test_index_with_content_view_by_version
-      expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
+      expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
       results = JSON.parse(get(:index, :content_view_id => @library_view.id, :version => 2).body)
 
       assert_response :success
@@ -176,8 +176,8 @@ module Katello
     end
 
     def test_promote_protected
-      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
-      diff_env = KTEnvironment.find(katello_environments(:staging))
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
+      diff_env = KTEnvironment.find(katello_environments(:staging).id)
       diff_env_promote_permission = {:name => @env_promote_permission, :search => "name=\"#{diff_env.name}\"" }
       diff_view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{diff_view.name}\"" }
 
@@ -197,13 +197,13 @@ module Katello
     end
 
     def test_promote_default
-      view = ContentView.find(katello_content_views(:acme_default))
+      view = ContentView.find(katello_content_views(:acme_default).id)
       post :promote, :id => view.versions.first.id, :environment_id => @dev.id
       assert_response 400
     end
 
     def test_promote_out_of_sequence
-      view = ContentView.find(katello_content_views(:acme_default))
+      view = ContentView.find(katello_content_views(:acme_default).id)
       post :promote, :id => view.versions.first.id, :environment_id => @dev.id
       assert_response 400
     end
@@ -254,7 +254,7 @@ module Katello
     end
 
     def test_destroy_protected
-      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       diff_view_destroy_permission = {:name => @destroy_permission, :search => "name=\"#{diff_view.name}\""}
 
       allowed_perms = [@destroy_permission]

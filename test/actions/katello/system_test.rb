@@ -18,7 +18,7 @@ module ::Actions::Katello::System
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::System::Destroy }
 
-    let(:system) { Katello::System.find(katello_systems(:simple_server)) }
+    let(:system) { Katello::System.find(katello_systems(:simple_server).id) }
 
     it 'plans' do
       stub_remote_user

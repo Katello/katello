@@ -4,8 +4,8 @@ module Katello
   class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
-      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+      User.current = User.find(users('admin').id)
+      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
     end
 
     def test_readable
@@ -28,8 +28,8 @@ module Katello
   class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
-      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+      User.current = User.find(users('restricted').id)
+      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
     end
 
     def test_readable

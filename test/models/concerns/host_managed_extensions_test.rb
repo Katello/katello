@@ -9,10 +9,10 @@ module Katello
       disable_orchestration # disable foreman orchestration
       @dev = KTEnvironment.find(katello_environments(:dev).id)
       @library = KTEnvironment.find(katello_environments(:library).id)
-      @view = ContentView.find(katello_content_views(:library_dev_staging_view))
-      @library_view = ContentView.find(katello_content_views(:library_view))
+      @view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
+      @library_view = ContentView.find(katello_content_views(:library_view).id)
 
-      content_host = Katello::System.find(katello_systems(:simple_server))
+      content_host = Katello::System.find(katello_systems(:simple_server).id)
       @foreman_host = FactoryGirl.create(:host)
       @foreman_host.puppetclasses = []
       @foreman_host.content_host = content_host
@@ -76,7 +76,7 @@ module Katello
     end
 
     def test_update_does_not_update_content_host
-      content_host = System.find(katello_systems(:simple_server2))
+      content_host = System.find(katello_systems(:simple_server2).id)
       @foreman_host2 = FactoryGirl.create(:host, :with_content, :content_view => content_host.content_view,
                                           :lifecycle_environment => content_host.environment)
       @foreman_host2.content_host = content_host

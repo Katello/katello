@@ -4,7 +4,7 @@ module Katello
   class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
     end
 
     def test_editable
@@ -20,12 +20,12 @@ module Katello
     end
 
     def test_deletable?
-      repository = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
+      repository = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
       assert repository.deletable?
     end
 
     def test_redhat_deletable?
-      repository = Repository.find(katello_repositories(:rhel_7_x86_64))
+      repository = Repository.find(katello_repositories(:rhel_7_x86_64).id)
       assert repository.redhat_deletable?
     end
 
@@ -41,7 +41,7 @@ module Katello
   class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:restricted))
+      User.current = User.find(users(:restricted).id)
     end
 
     def test_editable

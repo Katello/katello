@@ -21,7 +21,7 @@ class OperatingsystemsControllerTest < ActionController::TestCase
   def setup
     setup_controller_defaults(false)
     setup_foreman_routes
-    login_user(User.find(users(:admin)))
+    login_user(User.find(users(:admin).id))
     models
   end
 

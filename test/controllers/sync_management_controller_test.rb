@@ -14,7 +14,7 @@ module Katello
 
     def setup
       setup_controller_defaults
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       models
       permissions
     end

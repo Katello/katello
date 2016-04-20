@@ -4,8 +4,8 @@ module Katello
   class ContentViewAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
-      @view = ContentView.find(katello_content_views('acme_default'))
+      User.current = User.find(users('admin').id)
+      @view = ContentView.find(katello_content_views('acme_default').id)
     end
 
     def test_readable
@@ -44,8 +44,8 @@ module Katello
   class ContentViewAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
-      @view = ContentView.find(katello_content_views('acme_default'))
+      User.current = User.find(users('restricted').id)
+      @view = ContentView.find(katello_content_views('acme_default').id)
     end
 
     def test_readable

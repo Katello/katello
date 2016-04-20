@@ -3,7 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::ContentViewHistoriesControllerTest < ActionController::TestCase
     def models
-      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
+      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
     end
 
     def permissions

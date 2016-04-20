@@ -133,7 +133,7 @@ module Katello
           'productName' => 'name'
         }]
       }
-      content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
+      content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
       system = katello_systems(:simple_server)
       Resources::Candlepin::Consumer.stubs(:get)
 

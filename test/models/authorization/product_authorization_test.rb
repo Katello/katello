@@ -4,7 +4,7 @@ module Katello
   class ProductAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
+      User.current = User.find(users('admin').id)
       @prod = @fedora
       @org = @acme_corporation
     end
@@ -38,7 +38,7 @@ module Katello
     end
 
     def test_deletable?
-      product = Product.find(katello_products(:empty_product))
+      product = Product.find(katello_products(:empty_product).id)
       assert product.deletable?
     end
 
@@ -54,7 +54,7 @@ module Katello
   class ProductAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
       @prod = @fedora
       @org = @acme_corporation
     end

@@ -3,7 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::DockerManifestsControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:redis))
+      @repo = Repository.find(katello_repositories(:redis).id)
       @manifest = @repo.docker_manifests.create!(:name => "abc123", :uuid => "123xyz")
     end
 

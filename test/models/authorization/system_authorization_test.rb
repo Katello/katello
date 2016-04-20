@@ -4,7 +4,7 @@ module Katello
   class SystemAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
+      User.current = User.find(users('admin').id)
       @sys = @system
       @org = @acme_corporation
       @env = @dev
@@ -23,7 +23,7 @@ module Katello
     end
 
     def test_all_editable?
-      sys = System.find(katello_systems(:simple_server_3))
+      sys = System.find(katello_systems(:simple_server_3).id)
       assert System.all_editable?(sys.content_view, sys.environment)
     end
 
@@ -39,7 +39,7 @@ module Katello
   class SystemAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
       @sys = @system
       @org = @acme_corporation
       @env = @dev
@@ -66,7 +66,7 @@ module Katello
     end
 
     def test_all_editable?
-      sys = System.find(katello_systems(:simple_server_3))
+      sys = System.find(katello_systems(:simple_server_3).id)
       refute System.all_editable?(sys.content_view, sys.environment)
     end
   end
@@ -74,11 +74,11 @@ module Katello
   class SystemAuthorizationWithPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
     end
 
     def test_all_editable?
-      sys = System.find(katello_systems(:simple_server_3))
+      sys = System.find(katello_systems(:simple_server_3).id)
       systems = System.where(:content_view_id => sys.content_view_id, :environment_id => sys.environment)
 
       clause = systems.map { |system| "name=\"#{system.name}\"" }.join(" or ")

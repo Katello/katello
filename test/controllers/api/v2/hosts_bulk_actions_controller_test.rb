@@ -29,7 +29,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       @request.env['HTTP_ACCEPT'] = 'application/json'
 
       setup_foreman_routes
@@ -193,7 +193,7 @@ module Katello
       ContentViewVersion.any_instance.stubs(:errata_count).returns(0)
       ContentViewVersion.any_instance.stubs(:puppet_module_count).returns(0)
 
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
 
       @host1.content_facet.applicable_errata = @view_repo.errata
 

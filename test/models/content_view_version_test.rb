@@ -3,15 +3,15 @@ require 'katello_test_helper'
 module Katello
   class ContentViewVersionTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @cvv = create(:katello_content_view_version, :major => 1, :minor => 0)
       @cvv_minor = create(:katello_content_view_version, :major => 1, :minor => 1)
       @cvv.organization.kt_environments << Katello::KTEnvironment.find_by_name(:Library)
       @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library,     :name => 'dev')
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev,                         :name => 'beta')
-      @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1))
-      @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
-      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:library_default_version))
+      @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1).id)
+      @cvv_with_repo = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
+      @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:library_default_version).id)
     end
 
     def test_promotable_in_sequence
@@ -133,7 +133,7 @@ module Katello
     end
 
     def test_components_needing_errata
-      errata = Erratum.find(katello_errata(:security))
+      errata = Erratum.find(katello_errata(:security).id)
       component = @composite_version.components.first
       assert_includes @composite_version.components_needing_errata([errata]), component
     end

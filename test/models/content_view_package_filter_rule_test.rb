@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentViewPackageFilterRuleTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @rule = FactoryGirl.build(:katello_content_view_package_filter_rule)
     end
 

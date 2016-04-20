@@ -3,9 +3,9 @@ require 'katello_test_helper'
 module Katello
   class MediumExtensionsTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
-      @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
-      @repo_without_distro = Repository.find(katello_repositories(:feedless_fedora_17_x86_64))
+      User.current = User.find(users(:admin).id)
+      @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+      @repo_without_distro = Repository.find(katello_repositories(:feedless_fedora_17_x86_64).id)
       @distro = OpenStruct.new(:name => 'RedHat', :family => @repo.distribution_family,
                                :version => @repo.distribution_version,
                                :arch => @repo.distribution_arch)

@@ -12,7 +12,7 @@ module Katello
       ActivationKey.any_instance.stubs(:products).returns([])
 
       @organization = get_organization
-      @activation_key = ActivationKey.find(katello_activation_keys(:simple_key))
+      @activation_key = ActivationKey.find(katello_activation_keys(:simple_key).id)
       @view = katello_content_views(:library_view)
       @library = @organization.library
     end
@@ -117,8 +117,8 @@ module Katello
     end
 
     def test_update_limit_below_consumed
-      subscription_facet1 = Host::SubscriptionFacet.find(katello_subscription_facets(:one))
-      subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two))
+      subscription_facet1 = Host::SubscriptionFacet.find(katello_subscription_facets(:one).id)
+      subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two).id)
       @activation_key.subscription_facet_ids = [subscription_facet1.id, subscription_facet2.id]
 
       results = JSON.parse(put(:update, :id => @activation_key.id, :organization_id => @organization.id,

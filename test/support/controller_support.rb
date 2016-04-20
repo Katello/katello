@@ -7,7 +7,7 @@ module ControllerSupport
     permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
 
     permissions.each do |permission|
-      user = User.find(users(:restricted))
+      user = User.find(users(:restricted).id)
       setup_user_with_permissions(permission, user)
 
       action = params[:action]

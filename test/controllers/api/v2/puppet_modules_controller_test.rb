@@ -4,7 +4,7 @@ module Katello
   class Api::V2::PuppetModulesControllerTest < ActionController::TestCase
     def models
       @library = katello_environments(:library)
-      @repo = Repository.find(katello_repositories(:p_forge))
+      @repo = Repository.find(katello_repositories(:p_forge).id)
       @puppet_module = katello_puppet_modules(:dhcp)
     end
 

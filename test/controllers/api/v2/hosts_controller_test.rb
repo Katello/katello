@@ -3,7 +3,7 @@ require 'katello_test_helper'
 class Api::V2::HostsControllerTest < ActionController::TestCase
   def setup
     setup_foreman_routes
-    login_user(User.find(users(:admin)))
+    login_user(User.find(users(:admin).id))
     models
   end
 

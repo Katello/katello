@@ -21,7 +21,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       Organization.any_instance.stubs(:service_levels)
       Organization.any_instance.stubs(:service_level)
@@ -106,7 +106,6 @@ module Katello
       #stub foreman super class..
       ::Api::V2::TaxonomiesController.class_eval do
         def params_match_database
-          @organization.id
         end
       end
 

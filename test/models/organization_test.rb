@@ -6,7 +6,7 @@ module Katello
   class OrganizationTestDelete < ActiveSupport::TestCase
     def test_org_being_deleted
       Organization.any_instance.stubs(:being_deleted?).returns(true)
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       org = get_organization(:organization2)
       org.content_view_environments.first.destroy!
       org.reload.library.destroy!

@@ -5,7 +5,7 @@ module Katello
     INCLUDE_ALL_PACKAGES = {"filename" => {"$exists" => true}}
 
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       organization = get_organization
       Repository.any_instance.stubs(:package_count).returns(2)
       @repo = katello_repositories(:fedora_17_x86_64)

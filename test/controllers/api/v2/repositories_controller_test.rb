@@ -35,8 +35,8 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
-      User.current = User.find(users(:admin))
+      login_user(User.find(users(:admin).id))
+      User.current = User.find(users(:admin).id)
       @request.env['HTTP_ACCEPT'] = 'application/json'
       models
       permissions
@@ -154,7 +154,7 @@ module Katello
     end
 
     def test_index_with_content_view_version_id_and_environment
-      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+      repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
       ids = repo.content_view_version.repository_ids
 
       response =  get :index, :content_view_version_id => repo.content_view_version.id,
@@ -276,7 +276,7 @@ module Katello
     end
 
     def test_create_with_gpg_key
-      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
       product = mock
       product.expects(:add_repo).with(
         'Fedora_Repository',
@@ -513,7 +513,7 @@ module Katello
     end
 
     def test_update
-      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+      key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
         repo.must_equal @repository
         attributes.must_equal('gpg_key_id' => "#{key.id}")
