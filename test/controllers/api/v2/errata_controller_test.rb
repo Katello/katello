@@ -4,7 +4,7 @@ module Katello
   class Api::V2::ErrataControllerTest < ActionController::TestCase
     def models
       ::Katello::Product.any_instance.stubs(:as_json).returns([])
-      @test_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @test_repo = Repository.find(katello_repositories(:rhel_6_x86_64).id)
       @errata_filter = katello_content_view_filters(:populated_erratum_filter)
     end
 
@@ -64,7 +64,7 @@ module Katello
     def test_index_with_filters
       get :index, :content_view_filter_id => @errata_filter
 
-      package_group_filter = ContentViewFilter.find(katello_content_view_filters(:populated_package_group_filter))
+      package_group_filter = ContentViewFilter.find(katello_content_view_filters(:populated_package_group_filter).id)
       get :index, :content_view_filter_id => package_group_filter
     end
 

@@ -4,7 +4,7 @@ module Katello
   class ContentViewEnvironmentAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @content_view_environment = katello_content_view_environments(:library_default_view_environment)
     end
 
@@ -16,7 +16,7 @@ module Katello
   class ContentViewEnvironmentAuthorizationNonAuthUserTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:restricted))
+      User.current = User.find(users(:restricted).id)
       @content_view_environment = katello_content_view_environments(:library_default_view_environment)
     end
 
@@ -28,7 +28,7 @@ module Katello
   class ContentViewEnvironmentAuthorizationAuthorizedUserTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:restricted))
+      User.current = User.find(users(:restricted).id)
       @content_view_environment = katello_content_view_environments(:library_default_view_environment)
     end
 

@@ -8,7 +8,7 @@ module Katello
 
     def models
       @organization = get_organization
-      @sync_plan = Katello::SyncPlan.find(katello_sync_plans(:sync_plan_hourly))
+      @sync_plan = Katello::SyncPlan.find(katello_sync_plans(:sync_plan_hourly).id)
       @products = katello_products(:fedora, :redhat, :empty_product)
     end
 
@@ -26,7 +26,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
       Repository.any_instance.stubs(:last_sync).returns(DateTime.now.to_s)

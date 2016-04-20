@@ -4,7 +4,7 @@ module Katello
   class OrganizationAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
+      User.current = User.find(users('admin').id)
       @org = @acme_corporation
     end
 
@@ -28,7 +28,7 @@ module Katello
   class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
       @org = @acme_corporation
     end
 

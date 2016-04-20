@@ -6,7 +6,7 @@ module ::Actions::Pulp::Repository
 
     before do
       stub_remote_user
-      @repo = Katello::Repository.find(katello_repositories(:fedora_17_x86_64))
+      @repo = Katello::Repository.find(katello_repositories(:fedora_17_x86_64).id)
     end
 
     it 'runs' do

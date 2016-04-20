@@ -27,8 +27,8 @@ ostree_product:
   description:  A product for ostree content
   cp_id:        ostree
   label:        ostree_product
-  provider_id:  <%= ActiveRecord::Fixtures.identify(:anonymous) %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
+  provider_id:  <%= ActiveRecord::FixtureSet.identify(:anonymous) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 empty_product:
   name:         Empty Product

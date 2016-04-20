@@ -7,7 +7,7 @@ module Katello
 
     def setup
       @branches = YAML.load_file(BRANCHES).values.map(&:deep_symbolize_keys)
-      @repo = Repository.find(katello_repositories(:ostree_rhel7))
+      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
 
       ids = @branches.map { |attrs| attrs[:_id] }
       ::Katello::Repository.any_instance.stubs(:pulp_ostree_branch_ids).returns(ids)

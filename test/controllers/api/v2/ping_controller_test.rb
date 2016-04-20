@@ -9,7 +9,7 @@ module Katello
     end
 
     def test_ping
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       response = { :status => "ok",
                    :services => { :pulp => { :status => "ok",
                                              :duration_ms => "38" },

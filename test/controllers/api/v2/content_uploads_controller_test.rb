@@ -5,7 +5,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::ContentUploadsControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
+      @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       @org = get_organization
       @environment = katello_environments(:library)
     end
@@ -20,7 +20,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       models
       permissions
     end

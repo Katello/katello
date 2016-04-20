@@ -9,11 +9,11 @@ module Katello
 
     def models
       @organization = get_organization
-      @library = KTEnvironment.find(katello_environments(:library))
-      @dev = KTEnvironment.find(katello_environments(:dev))
-      @staging = KTEnvironment.find(katello_environments(:staging))
-      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view))
-      @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
+      @library = KTEnvironment.find(katello_environments(:library).id)
+      @dev = KTEnvironment.find(katello_environments(:dev).id)
+      @staging = KTEnvironment.find(katello_environments(:staging).id)
+      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
+      @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
     end
 
     def permissions
@@ -155,7 +155,7 @@ module Katello
 
     def test_update_components
       version = @library_dev_staging_view.versions.first
-      composite = ContentView.find(katello_content_views(:composite_view))
+      composite = ContentView.find(katello_content_views(:composite_view).id)
 
       params = { :component_ids => [version.id.to_s] }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
@@ -211,7 +211,7 @@ module Katello
     end
 
     def test_publish_default_view
-      view = ContentView.find(katello_content_views(:acme_default))
+      view = ContentView.find(katello_content_views(:acme_default).id)
       version_count = view.versions.count
       post :publish, :id => view.id
       assert_response 400
@@ -227,7 +227,7 @@ module Katello
     end
 
     def test_destroy_protected
-      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       diff_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{diff_view.name}\"" }
 
       allowed_perms = [:destroy_content_views]
@@ -264,7 +264,7 @@ module Katello
       dev_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{@dev.name}\"" }
       library_dev_staging_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
 
-      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       diff_env = @staging
       diff_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{diff_env.name}\"" }
       diff_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{diff_view.name}\"" }
@@ -297,8 +297,8 @@ module Katello
 
       library_dev_staging_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
 
-      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
-      diff_env = KTEnvironment.find(katello_environments(:dev_path1))
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
+      diff_env = KTEnvironment.find(katello_environments(:dev_path1).id)
 
       diff_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments, :search => "name=\"#{diff_env.name}\"" }
       diff_view_remove_permission = {:name => :promote_or_remove_content_views, :search => "name=\"#{diff_view.name}\"" }
@@ -338,7 +338,7 @@ module Katello
     def test_remove_protected_with_no_environment_ids
       library_dev_staging_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{@library_dev_staging_view.name}\"" }
 
-      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv))
+      diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       diff_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{diff_view.name}\"" }
 
       allowed_perms = [:destroy_content_views, library_dev_staging_view_destroy_permission]
@@ -358,7 +358,7 @@ module Katello
     end
 
     def test_remove_protected_envs_with_systems
-      sys = System.find(katello_systems(:simple_server_3))
+      sys = System.find(katello_systems(:simple_server_3).id)
       system_edit_permission = {:name => :edit_content_hosts, :search  => "name=\"#{sys.name}\"" }
 
       sys_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
@@ -375,11 +375,11 @@ module Katello
       alternate_cv_read_permission = {:name => :view_content_views,
                                       :search => "name=\"#{alternate_cv.name}\"" }
 
-      bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv))
+      bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       bad_cv_read_permission = {:name => :view_content_views,
                                 :search => "name=\"#{bad_cv.name}\"" }
 
-      bad_env = KTEnvironment.find(katello_environments(:dev_path1))
+      bad_env = KTEnvironment.find(katello_environments(:dev_path1).id)
       bad_env_read_permission = {:name => :view_lifecycle_environments,
                                  :search => "name=\"#{bad_env.name}\"" }
 
@@ -412,7 +412,7 @@ module Katello
     end
 
     def test_remove_protected_envs_with_activation_keys
-      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
       ak_edit_permission = {:name => :edit_activation_keys, :search  => "name=\"#{ak.name}\"" }
 
       ak_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
@@ -429,11 +429,11 @@ module Katello
       alternate_cv_read_permission = {:name => :view_content_views,
                                       :search => "name=\"#{alternate_cv.name}\"" }
 
-      bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv))
+      bad_cv = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       bad_cv_read_permission = {:name => :view_content_views,
                                 :search => "name=\"#{bad_cv.name}\"" }
 
-      bad_env = KTEnvironment.find(katello_environments(:dev_path1))
+      bad_env = KTEnvironment.find(katello_environments(:dev_path1).id)
       bad_env_read_permission = {:name => :view_lifecycle_environments,
                                  :search => "name=\"#{bad_env.name}\"" }
 

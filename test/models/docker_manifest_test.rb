@@ -9,7 +9,7 @@ module Katello
     def setup
       @manifests = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys)
       @tags = YAML.load_file(TAGS).values.map(&:deep_symbolize_keys)
-      @repo = Repository.find(katello_repositories(:redis))
+      @repo = Repository.find(katello_repositories(:redis).id)
 
       ids = @manifests.map { |attrs| attrs[:_id] }
       ::Katello::Repository.any_instance.stubs(:pulp_docker_manifest_ids).returns(ids)

@@ -6,7 +6,7 @@ module Katello
     def models
       @organization = get_organization
       @product = Product.find(katello_products(:fedora).id)
-      @gpg_key = GpgKey.find(katello_gpg_keys(:fedora_gpg_key))
+      @gpg_key = GpgKey.find(katello_gpg_keys(:fedora_gpg_key).id)
     end
 
     def permissions
@@ -19,8 +19,8 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
-      User.current = User.find(users(:admin))
+      login_user(User.find(users(:admin).id))
+      User.current = User.find(users(:admin).id)
       models
       permissions
     end

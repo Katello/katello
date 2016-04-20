@@ -4,8 +4,8 @@ module Katello
   class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
-      @key = ActivationKey.find(katello_activation_keys('simple_key'))
+      User.current = User.find(users('admin').id)
+      @key = ActivationKey.find(katello_activation_keys('simple_key').id)
     end
 
     def test_readable
@@ -29,7 +29,7 @@ module Katello
     end
 
     def test_all_editable?
-      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
       assert ActivationKey.all_editable?(ak.content_view, ak.environment)
     end
   end
@@ -37,8 +37,8 @@ module Katello
   class ActivationKeyAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:restricted))
-      @key = ActivationKey.find(katello_activation_keys('simple_key'))
+      User.current = User.find(users(:restricted).id)
+      @key = ActivationKey.find(katello_activation_keys('simple_key').id)
     end
 
     def test_readable?
@@ -58,7 +58,7 @@ module Katello
     end
 
     def test_all_editable?
-      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
       refute ActivationKey.all_editable?(ak.content_view, ak.environment)
     end
   end
@@ -66,11 +66,11 @@ module Katello
   class ActivationKeyAuthorizationWithPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
     end
 
     def test_all_editable?
-      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key))
+      ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
       keys = ActivationKey.where(:content_view_id => ak.content_view_id, :environment_id => ak.environment)
 
       clause = keys.map { |key| "name=\"#{key.name}\"" }.join(" or ")

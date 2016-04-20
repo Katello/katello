@@ -5,7 +5,7 @@ require 'katello_test_helper'
 module Katello
   class RedhatExtensionsTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @my_distro = OpenStruct.new(:name => 'RedHat', :family => 'Red Hat Enterprise Linux', :version => '9.0')
       @repo_with_distro = katello_repositories(:fedora_17_x86_64)
     end
@@ -16,7 +16,7 @@ module Katello
     end
 
     def test_find_or_create_os_without_minor
-      repo_without_minor = Repository.find(katello_repositories(:rhel_7_x86_64))
+      repo_without_minor = Repository.find(katello_repositories(:rhel_7_x86_64).id)
       os_count = Operatingsystem.count
       created = ::Redhat.find_or_create_operating_system(repo_without_minor)
       created2 = ::Redhat.find_or_create_operating_system(repo_without_minor)

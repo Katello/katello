@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentViewFilterTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       @view = create(:katello_content_view, :organization => @repo.product.organization)
       @filter =  create(:katello_content_view_filter, :content_view => @view)

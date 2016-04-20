@@ -4,8 +4,8 @@ module Katello
   class ContentViewHistoryAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
-      @history = ContentViewHistory.find(katello_content_view_histories('view_version_1_history_1'))
+      User.current = User.find(users('admin').id)
+      @history = ContentViewHistory.find(katello_content_view_histories('view_version_1_history_1').id)
     end
 
     def test_readable
@@ -16,8 +16,8 @@ module Katello
   class ContentViewHistoryAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
-      @history = ContentViewHistory.find(katello_content_view_histories('view_version_1_history_1'))
+      User.current = User.find(users('restricted').id)
+      @history = ContentViewHistory.find(katello_content_view_histories('view_version_1_history_1').id)
     end
 
     def test_readable

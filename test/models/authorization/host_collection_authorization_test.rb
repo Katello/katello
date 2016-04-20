@@ -4,8 +4,8 @@ module Katello
   class HostCollectionAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
-      @host_collection = HostCollection.find(katello_host_collections(:simple_host_collection))
+      User.current = User.find(users('admin').id)
+      @host_collection = HostCollection.find(katello_host_collections(:simple_host_collection).id)
     end
 
     def test_readable
@@ -44,8 +44,8 @@ module Katello
   class HostCollectionAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
-      @host_collection = HostCollection.find(katello_host_collections(:simple_host_collection))
+      User.current = User.find(users('restricted').id)
+      @host_collection = HostCollection.find(katello_host_collections(:simple_host_collection).id)
     end
 
     def test_readable

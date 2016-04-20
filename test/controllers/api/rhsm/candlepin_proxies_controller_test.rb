@@ -8,7 +8,7 @@ module Katello
 
     before do
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       @system = katello_systems(:simple_server)
 
       @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @system.content_view, :lifecycle_environment => @system.environment)
@@ -57,7 +57,7 @@ module Katello
     describe "register with a lifecycle environment" do
       before do
         @facts = { 'network.hostname' => 'somehostname'}
-        @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment))
+        @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
       end
 
       it "should register" do
@@ -118,7 +118,7 @@ module Katello
 
     describe "list owners" do
       it 'should return organizations admin user is assigned to' do
-        User.current = User.find(users(:admin))
+        User.current = User.find(users(:admin).id)
         get :list_owners, :login => User.current.login
 
         assert_empty((JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name)))

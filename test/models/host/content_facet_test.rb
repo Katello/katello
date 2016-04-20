@@ -86,7 +86,7 @@ module Katello
     end
 
     def test_available_and_applicable_errta
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64))
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64).id)
       content_facet.bound_repositories = [@view_repo]
       content_facet.save!
       assert_equal_arrays content_facet.applicable_errata, content_facet.installable_errata
@@ -95,21 +95,21 @@ module Katello
     def test_installable_errata
       lib_applicable = content_facet.applicable_errata
 
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       content_facet.bound_repositories = [@view_repo]
       content_facet.save!
 
       assert_equal_arrays lib_applicable, content_facet.applicable_errata
       refute_equal_arrays lib_applicable, content_facet.installable_errata
-      assert_includes content_facet.installable_errata, Erratum.find(katello_errata(:security))
+      assert_includes content_facet.installable_errata, Erratum.find(katello_errata(:security).id)
     end
 
     def test_with_installable_errata
-      content_facet.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))]
+      content_facet.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)]
       content_facet.save!
 
       content_facet_dev = katello_content_facets(:two)
-      content_facet_dev.bound_repositories = [Katello::Repository.find(katello_repositories(:fedora_17_x86_64_dev))]
+      content_facet_dev.bound_repositories = [Katello::Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)]
       content_facet_dev.save!
 
       installable = content_facet_dev.applicable_errata & content_facet_dev.installable_errata
@@ -128,7 +128,7 @@ module Katello
     end
 
     def test_with_non_installable_errata
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       content_facet.bound_repositories = [@view_repo]
       content_facet.save!
 
@@ -142,13 +142,13 @@ module Katello
     end
 
     def test_available_errata_other_view
-      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1))
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
       content_facet.bound_repositories = [@view_repo]
       content_facet.save!
 
       available_in_view = content_facet.installable_errata(@library, @library_view)
       assert_equal 1, available_in_view.length
-      assert_includes available_in_view, Erratum.find(katello_errata(:security))
+      assert_includes available_in_view, Erratum.find(katello_errata(:security).id)
     end
   end
 

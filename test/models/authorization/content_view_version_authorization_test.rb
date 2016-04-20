@@ -4,7 +4,7 @@ module Katello
   class ContentViewVersionAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
     end
 
     def test_readable
@@ -15,7 +15,7 @@ module Katello
   class ContentViewVersionAuthorizationNonAuthUserTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users(:restricted))
+      User.current = User.find(users(:restricted).id)
     end
 
     def test_readable

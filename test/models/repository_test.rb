@@ -58,7 +58,7 @@ module Katello
     def test_docker_repository_in_content_view
       # verify: url and docker_upstream_name are not required for repositories
       # created as part of a content view
-      library_repo = Repository.find(katello_repositories(:busybox))
+      library_repo = Repository.find(katello_repositories(:busybox).id)
       view_repo = build(:katello_repository,
                         :content_type => 'docker',
                         :name => 'view repo',
@@ -308,7 +308,7 @@ module Katello
     def setup
       super
       User.current = @admin
-      @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64).id)
     end
 
     def test_product
@@ -533,7 +533,7 @@ module Katello
     def test_clone_repo_path_for_component
       # validate that clone repo path for a component view does not include the component view label
       library = KTEnvironment.find(katello_environments(:library).id)
-      cv = ContentView.find(katello_content_views(:composite_view))
+      cv = ContentView.find(katello_content_views(:composite_view).id)
       cve = ContentViewEnvironment.where(:environment_id => library,
                                          :content_view_id => cv).first
       relative_path = Repository.clone_repo_path(repository: @fedora_17_x86_64,
@@ -578,7 +578,7 @@ module Katello
     end
 
     def test_nil_rhel_url
-      rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
+      rhel = Repository.find(katello_repositories(:rhel_6_x86_64).id)
       rhel.url = nil
       refute rhel.valid?
       refute rhel.save
@@ -586,11 +586,11 @@ module Katello
     end
 
     def test_node_syncable
-      lib_yum_repo = Repository.find(katello_repositories(:rhel_6_x86_64))
-      lib_puppet_repo = Repository.find(katello_repositories(:p_forge))
-      lib_iso_repo = Repository.find(katello_repositories(:iso))
-      lib_docker_repo = Repository.find(katello_repositories(:busybox))
-      lib_ostree_repo = Repository.find(katello_repositories(:ostree_rhel7))
+      lib_yum_repo = Repository.find(katello_repositories(:rhel_6_x86_64).id)
+      lib_puppet_repo = Repository.find(katello_repositories(:p_forge).id)
+      lib_iso_repo = Repository.find(katello_repositories(:iso).id)
+      lib_docker_repo = Repository.find(katello_repositories(:busybox).id)
+      lib_ostree_repo = Repository.find(katello_repositories(:ostree_rhel7).id)
 
       assert lib_yum_repo.node_syncable?
       assert lib_puppet_repo.node_syncable?
@@ -606,7 +606,7 @@ module Katello
     end
 
     def test_errata_filenames
-      @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64))
+      @rhel6 = Repository.find(katello_repositories(:rhel_6_x86_64).id)
       @rhel6.errata.first.packages << katello_erratum_packages(:security_package)
 
       refute_empty @rhel6.errata_filenames
@@ -634,7 +634,7 @@ module Katello
       @lib_host.content_facet.bound_repositories << @fedora_17_x86_64
       @lib_host.content_facet.save!
 
-      @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
+      @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
 
       @view_host = FactoryGirl.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
                                      :lifecycle_environment =>  @fedora_17_x86_64.environment)

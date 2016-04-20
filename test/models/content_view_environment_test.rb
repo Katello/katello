@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentViewEnvironmentTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @content_facet = katello_content_facets(:one)
     end
 

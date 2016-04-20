@@ -8,8 +8,8 @@ module Katello
 
     def models
       @organization = get_organization
-      @provider = Provider.find(katello_providers(:anonymous))
-      @product = Product.find(katello_products(:fedora))
+      @provider = Provider.find(katello_providers(:anonymous).id)
+      @product = Product.find(katello_products(:fedora).id)
       @product.stubs(:redhat?).returns(false)
       Product.any_instance.stubs('productContent').returns([])
       Product.any_instance.stubs('sync_status').returns(PulpSyncStatus.new)
@@ -94,7 +94,7 @@ module Katello
     end
 
     def test_create_protected
-      anonymous_provider = Katello::Provider.find(katello_providers(:anonymous))
+      anonymous_provider = Katello::Provider.find(katello_providers(:anonymous).id)
       Organization.any_instance.stubs(:anonymous_provider).returns(anonymous_provider)
 
       allowed_perms = [@create_permission]
@@ -195,7 +195,7 @@ module Katello
     end
 
     def test_sync_bad_product
-      product = Product.find(katello_products(:empty_product))
+      product = Product.find(katello_products(:empty_product).id)
       post :sync, :id => product.id
       assert_response 422
     end

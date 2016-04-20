@@ -6,7 +6,7 @@ module Containers
       setup_controller_defaults(false)
       setup_foreman_routes
 
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       @compute_resource = FactoryGirl.create(:docker_stuff)
       @state = DockerContainerWizardState.create!
 

@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentViewTest < ActiveSupport::TestCase
     def setup
-      User.current         = User.find(users(:admin))
+      User.current         = User.find(users(:admin).id)
       @organization        = get_organization
       @library             = KTEnvironment.find(katello_environments(:library).id)
       @dev                 = KTEnvironment.find(katello_environments(:dev).id)
@@ -68,7 +68,7 @@ module Katello
     end
 
     def test_environment_content_view_env_destroy_should_fail
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       ContentViewPuppetEnvironment.any_instance.stubs(:clear_content_indices)
       env = @dev
       cve = env.content_views.first.content_view_environments.where(:environment_id => env.id).first
@@ -188,8 +188,8 @@ module Katello
       view = stub(:composite? => true)
       view.stubs(:default?).returns(false)
       ContentViewVersion.any_instance.stubs(:content_view).returns(view)
-      composite = ContentView.find(katello_content_views(:composite_view))
-      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       assert_raises(ActiveRecord::RecordInvalid) do
         composite.update_attributes(:component_ids => [v1.id])
       end
@@ -203,21 +203,21 @@ module Katello
 
     def test_repositories_to_publish
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      composite = ContentView.find(katello_content_views(:composite_view))
-      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       composite.update_attributes(:component_ids => [v1.id])
       repo_ids = composite.repositories_to_publish.map(&:id)
       assert_equal v1.repositories.archived.pluck(:id).sort, repo_ids.sort
 
-      repo = Repository.find(katello_repositories(:fedora_17_x86_64))
+      repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       assert_includes @library_view.repositories_to_publish.map(&:id), repo.id
     end
 
     def test_repo_conflicts
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      composite = ContentView.find(katello_content_views(:composite_view))
-      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
-      v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2))
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
+      v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
 
       refute composite.update_attributes(component_ids: [v1.id, v2.id])
       assert_equal 2, composite.errors.count # docker and yum repos
@@ -229,7 +229,7 @@ module Katello
     end
 
     def test_puppet_module_conflicts
-      composite = ContentView.find(katello_content_views(:composite_view))
+      composite = ContentView.find(katello_content_views(:composite_view).id)
       view = create(:katello_content_view)
       versions = 2.times.map do |_i|
         create(:katello_content_view_version, :content_view => view)
@@ -246,7 +246,7 @@ module Katello
     end
 
     def test_puppet_repos
-      @p_forge = Repository.find(katello_repositories(:p_forge))
+      @p_forge = Repository.find(katello_repositories(:p_forge).id)
 
       assert_raises(ActiveRecord::RecordInvalid) do
         @library_view.repositories << @p_forge
@@ -301,12 +301,12 @@ module Katello
       Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Katello',
                      :settings_type => 'boolean', :default => true)
 
-      library = KTEnvironment.find(katello_environments(:library))
-      composite = ContentView.find(katello_content_views(:composite_view))
+      library = KTEnvironment.find(katello_environments(:library).id)
+      composite = ContentView.find(katello_content_views(:composite_view).id)
       # version with no envs
-      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       # version in library & dev
-      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version))
+      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
 
       composite.components = [library_view_version_1]
       composite.save!
@@ -324,12 +324,12 @@ module Katello
       Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Katello',
                      :settings_type => 'boolean', :default => false)
 
-      library = KTEnvironment.find(katello_environments(:library))
-      composite = ContentView.find(katello_content_views(:composite_view))
+      library = KTEnvironment.find(katello_environments(:library).id)
+      composite = ContentView.find(katello_content_views(:composite_view).id)
       # version with no envs
-      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1))
+      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       # version in library & dev
-      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version))
+      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
 
       composite.components = [library_view_version_1]
       composite.save!
@@ -357,7 +357,7 @@ module Katello
 
     def test_check_distribution_conflicts_conflict
       view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64))
+      view.repositories << Repository.find(katello_repositories(:rhel_6_x86_64).id)
       view.save!
 
       assert_raises(RuntimeError) do
@@ -367,8 +367,8 @@ module Katello
 
     def test_check_distribution_conflicts_no_conflict
       view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_7_x86_64))
-      view.repositories << Repository.find(katello_repositories(:feedless_fedora_17_x86_64))
+      view.repositories << Repository.find(katello_repositories(:rhel_7_x86_64).id)
+      view.repositories << Repository.find(katello_repositories(:feedless_fedora_17_x86_64).id)
       view.save!
 
       assert_empty view.check_distribution_conflicts!
@@ -376,8 +376,8 @@ module Katello
 
     def test_conflicting_distributions_nil_value_no_conflict
       view = @library_view
-      view.repositories << Repository.find(katello_repositories(:rhel_7_no_arch))
-      view.repositories << Repository.find(katello_repositories(:fedora_17_no_arch))
+      view.repositories << Repository.find(katello_repositories(:rhel_7_no_arch).id)
+      view.repositories << Repository.find(katello_repositories(:fedora_17_no_arch).id)
       view.save!
 
       assert_empty view.check_distribution_conflicts!
@@ -385,7 +385,7 @@ module Katello
 
     def test_duplicate_distributions
       view = @library_view
-      duplicate_repo = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate))
+      duplicate_repo = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate).id)
 
       view.repositories << duplicate_repo
       view.save!
@@ -395,7 +395,7 @@ module Katello
 
     def test_distribution_conflicts
       view = @library_view
-      conflicting_distribution = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate))
+      conflicting_distribution = Repository.find(katello_repositories(:fedora_17_x86_64_duplicate).id)
       view.repositories << conflicting_distribution
       view.save!
 
@@ -435,7 +435,7 @@ module Katello
 
     def test_add_repository_from_other_view
       view = @library_view
-      bad_repo =  Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1))
+      bad_repo =  Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
       assert_raises(ActiveRecord::RecordInvalid) do
         view.repositories << bad_repo
         view.save!

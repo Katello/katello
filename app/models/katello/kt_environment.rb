@@ -120,7 +120,8 @@ module Katello
       self.priors[0]
     end
 
-    def prior=(env_id)
+    def prior=(env)
+      env_id = env.is_a?(ActiveRecord::Base) ? env.id : env
       self.priors.clear
       return if env_id.nil? || env_id == ""
       prior_env = KTEnvironment.find env_id

@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentViewPuppetEnvironmentTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
 
       @library = FactoryGirl.build(:katello_environment, :library => true)
       @content_view_version = FactoryGirl.build(:katello_content_view_version)
@@ -28,7 +28,7 @@ module Katello
       assert @puppet_env.save
       refute_empty ContentViewPuppetEnvironment.in_content_view(@content_view_version.content_view)
 
-      library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
+      library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
       assert_empty ContentViewPuppetEnvironment.in_content_view(library_dev_view)
     end
 

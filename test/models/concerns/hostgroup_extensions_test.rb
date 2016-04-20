@@ -4,7 +4,7 @@ require 'support/host_support'
 module Katello
   class HostgroupExtensionsTest < ActiveSupport::TestCase
     def setup
-      @view = ContentView.find(katello_content_views(:library_dev_staging_view))
+      @view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library = KTEnvironment.find(katello_environments(:library).id)
       @dev = KTEnvironment.find(katello_environments(:dev).id)
 

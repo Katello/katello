@@ -10,8 +10,8 @@ module Katello
       @system = katello_systems(:simple_server)
       @errata_system = katello_systems(:errata_server)
       @organization = get_organization
-      @repo = Repository.find(katello_repositories(:rhel_6_x86_64))
-      @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library))
+      @repo = Repository.find(katello_repositories(:rhel_6_x86_64).id)
+      @content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_dev_view_library).id)
       @host = ::Host::Managed.new
       @host.name = "testhost"
       @host.managed = false
@@ -29,7 +29,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin)))
+      login_user(User.find(users(:admin).id))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
 

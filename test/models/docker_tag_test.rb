@@ -7,7 +7,7 @@ module Katello
     extend ActiveRecord::TestFixtures
 
     def setup
-      @repo = Repository.find(katello_repositories(:busybox))
+      @repo = Repository.find(katello_repositories(:busybox).id)
       @tag = create(:docker_tag, :repository => @repo)
 
       @repo.library_instances_inverse.each do |repo|

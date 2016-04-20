@@ -45,7 +45,7 @@ module Katello
 
     def test_create_with_content_view
       @system = build(:katello_system, :alabama, :name => 'alabama', :environment => @library, :uuid => '1234')
-      @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
+      @system.content_view = ContentView.find(katello_content_views(:library_dev_view).id)
       assert @system.save
       refute @system.content_view.default?
     end
@@ -54,13 +54,13 @@ module Katello
       @system = build(:katello_system, :alabama, :name => 'alabama', :environment => @library, :uuid => '1234')
       name = "ಬoo0000"
       @system.name = name
-      @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
+      @system.content_view = ContentView.find(katello_content_views(:library_dev_view).id)
       assert @system.save!
       refute_nil System.find_by_name(name)
     end
 
     def test_registered_by
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @system = build(:katello_system, :alabama, :name => 'alabama', :environment => @library, :uuid => '1234')
       assert @system.save!
       assert_equal User.current.name, @system.registered_by
@@ -74,7 +74,7 @@ module Katello
       @system.host_id = foreman_host.id
       @system.save!
 
-      new_view = ContentView.find(katello_content_views(:library_view))
+      new_view = ContentView.find(katello_content_views(:library_view).id)
       new_lifecycle_environment = new_view.environments.first
 
       @system.environment = new_lifecycle_environment
@@ -87,7 +87,7 @@ module Katello
 
     def test_update_does_not_update_foreman_host
       foreman_host = FactoryGirl.create(:host)
-      @system2 = System.find(katello_systems(:simple_server2))
+      @system2 = System.find(katello_systems(:simple_server2).id)
       @system2.host_id = foreman_host.id
       @system2.save!
 
@@ -120,7 +120,7 @@ module Katello
     end
 
     def test_save_bound_repos_by_path
-      @repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64))
+      @repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64).id)
 
       @errata_system.bound_repositories = []
       @errata_system.save!

@@ -9,8 +9,8 @@ module Katello
                        :organization => get_organization,
                        :provider => katello_providers(:anonymous)
                       )
-      @redhat_product = Product.find(katello_products(:redhat))
-      @promoted_product = Product.find(katello_products(:fedora))
+      @redhat_product = Product.find(katello_products(:redhat).id)
+      @promoted_product = Product.find(katello_products(:fedora).id)
     end
 
     def teardown

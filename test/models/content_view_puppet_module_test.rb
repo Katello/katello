@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class ContentViewPuppetModuleTest < ActiveSupport::TestCase
     def setup
-      User.current   = User.find(users(:admin))
+      User.current   = User.find(users(:admin).id)
       @library_view  = ContentView.find(katello_content_views(:library_view).id)
       @puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_abrt_module).id)
     end

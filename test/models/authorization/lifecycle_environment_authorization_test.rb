@@ -4,7 +4,7 @@ module Katello
   class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('admin'))
+      User.current = User.find(users('admin').id)
       @env = @dev
       @org = @acme_corporation
     end
@@ -29,7 +29,7 @@ module Katello
   class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
       @env = @dev
       @org = @acme_corporation
     end
@@ -54,7 +54,7 @@ module Katello
   class EnvironmentAuthorizationWithPermsTest < AuthorizationTestBase
     def setup
       super
-      User.current = User.find(users('restricted'))
+      User.current = User.find(users('restricted').id)
     end
 
     def test_readables
