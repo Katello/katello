@@ -38,7 +38,16 @@ module Katello
       kickstart_repository_id(host, options).blank?
     end
 
+    def host_hostgroup_kickstart_repository_id(host)
+      return if host.blank?
+      return host.kickstart_repository_id if host.is_a?(Hostgroup)
+      host.content_facet.kickstart_repository_id if host.try(:content_facet).present?
+    end
+
     def kickstart_repository_id(host, options = {})
+      return if host.try(:medium_id).present?
+
+      host_ks_repo_id = host_hostgroup_kickstart_repository_id(host)
       ks_repo_options = kickstart_repository_options(host, options)
       # if the kickstart repo id is set in the selected_hostgroup use that
       selected_host_group = options.fetch(:selected_host_group, nil)
@@ -47,16 +56,15 @@ module Katello
 
         if ks_repo_ids.include?(selected_host_group.kickstart_repository_id)
           return selected_host_group.kickstart_repository_id
-        elsif host.try(:kickstart_repository_id).present? &&
-              ks_repo_ids.include?(host.kickstart_repository_id)
-          return host.kickstart_repository_id
+        elsif host_ks_repo_id && ks_repo_ids.include?(host_ks_repo_id)
+          return host_ks_repo_id
         else
           return ks_repo_options.first.try(:id)
         end
       end
 
       # if the kickstart repo id is set in the host use that
-      return host.kickstart_repository_id if host.try(:kickstart_repository_id).present?
+      return host_ks_repo_id if host_ks_repo_id.present?
 
       if selected_host_group.try(:medium_id).blank? && host.try(:medium_id).blank?
         ks_repo_options.first.try(:id)
@@ -127,6 +135,19 @@ module Katello
       view_options = view_options.join
       view_options.insert(0, include_blank) if include_blank
       view_options.html_safe
+    end
+
+    def view_to_options(view_options, selected_val, include_blank = false)
+      if include_blank == true #check for true specifically
+        include_blank = '<option></option>'
+      end
+      views = view_options.map do |view|
+        selected = selected_val == view.id ? 'selected' : ''
+        %(<option #{selected} value="#{view.id}">#{h(view.name)}</option>)
+      end
+      views = views.join
+      views.insert(0, include_blank) if include_blank
+      views.html_safe
     end
 
     def kickstart_repository_options(param_host, options = {})

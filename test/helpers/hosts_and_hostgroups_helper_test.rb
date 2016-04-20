@@ -141,7 +141,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     repo_id = 1000
     @hostgroup.kickstart_repository_id = repo_id
     assert_equal repo_id, kickstart_repository_id(@hostgroup)
-    @host.kickstart_repository_id = repo_id
+    @host.content_facet.kickstart_repository_id = repo_id
     assert_equal repo_id, kickstart_repository_id(@host)
   end
 
@@ -150,7 +150,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @hostgroup.medium_id = 1000
     assert_nil kickstart_repository_id(@hostgroup)
 
-    @host.kickstart_repository_id = nil
+    @host.content_facet.kickstart_repository_id = nil
     @host.medium_id = 1000
     assert_nil kickstart_repository_id(@host)
   end
@@ -164,7 +164,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     expects(:kickstart_repository_options).with(@hostgroup, {}).returns([option])
     assert_equal id, kickstart_repository_id(@hostgroup)
 
-    @host.kickstart_repository_id = nil
+    @host.content_facet.kickstart_repository_id = nil
     @host.medium_id = nil
     expects(:kickstart_repository_options).with(@host, {}).returns([option])
     assert_equal id, kickstart_repository_id(@host)
