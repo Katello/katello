@@ -67,7 +67,7 @@ module Katello
       @host_collection = HostCollection.new(host_collection_params_with_host_ids)
       @host_collection.organization = @organization
       @host_collection.save!
-      respond
+      respond_for_show(:resource => @host_collection)
     end
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")
