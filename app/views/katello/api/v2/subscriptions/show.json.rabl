@@ -27,6 +27,11 @@ node :systems do |subscription|
       service_level: sys.serviceLevel,
       autoheal: sys.autoheal,
       facts: {
+        dmi: {
+          memory: {
+            size: facts['dmi.memory.size']
+          }
+        },
         memory: {
           memtotal: facts['memory.memtotal']
         },
