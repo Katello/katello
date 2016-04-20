@@ -2,13 +2,22 @@
 kickstart_repo_id = using_hostgroups_page ? kickstart_repository_id(@hostgroup) : kickstart_repository_id(@host, :selected_host_group => @hostgroup)
 host = using_hostgroups_page ? @hostgroup : @host
 kickstart_options = kickstart_repository_options(host, :selected_host_group => @hostgroup)
+ks_repo_select_id =  using_hostgroups_page ? :host_group_kickstart_repository_id : :host_kickstart_repository_id
+ks_repo_select_name =  using_hostgroups_page ? 'hostgroup[kickstart_repository_id]' : 'host[content_facet_attributes][kickstart_repository_id]'
+ks_repo_select_attr = using_hostgroups_page ? 'kickstart_repository' : 'content_facet.kickstart_repository'
 %>
-<%= select_f f, :kickstart_repository_id, kickstart_options, :id, :name,
-  {:include_blank => blank_or_inherit_f(f, :kickstart_repository), :selected => kickstart_repo_id },
-  {:label => _("Synced Content"), :disabled => kickstart_options.empty? ,
-   :help_inline => :indicator, :"data-kickstart-repository-id" => kickstart_repo_id,
-   :'data-type' => controller_name, :required => true }
-%>
+
+<% spinner_path = asset_path('spinner.gif') %>
+
+<%= field(f, ks_repo_select_attr, {:label => _("Synced Content")}) do
+  if using_hostgroups_page
+    select_tag ks_repo_select_id,  view_to_options(kickstart_options, kickstart_repo_id, blank_or_inherit_with_id(f, :kickstart_repository)), :data => {"spinner_path" => spinner_path, "kickstart-repository-id" => kickstart_repo_id},
+               :class => 'form-control',  :name => ks_repo_select_name, :disabled => kickstart_options.empty?
+  else
+    select_tag ks_repo_select_id,  view_to_options(kickstart_options, kickstart_repo_id, blank_or_inherit_with_id(f, :kickstart_repository)), :data => {"spinner_path" => spinner_path, "kickstart-repository-id" => kickstart_repo_id}, :class => 'form-control',  :name => ks_repo_select_name, :disabled => kickstart_options.empty?
+  end
+end %>
+
 <script>
   KT.hosts.set_media_selection_bindings();
   KT.hosts.update_media_enablement();

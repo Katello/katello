@@ -44,8 +44,8 @@ module Katello
       end
 
       def medium_uri_with_content_uri(host, url = nil)
-        if host.try(:content_source) && host.kickstart_repository.present?
-          return URI.parse(host.kickstart_repository.full_path(host.content_source))
+        if host.try(:content_source) && host.content_facet.try(:kickstart_repository).present?
+          return URI.parse(host.content_facet.kickstart_repository.full_path(host.content_source))
         else
           medium_uri_without_content_uri(host, url)
         end

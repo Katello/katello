@@ -77,16 +77,16 @@ module Katello
       @os.media.create!(:name => "my-media", :path => "http://www.foo.com/abcd")
       @host.medium = @os.media.first
       @host.content_source = nil
-      @host.kickstart_repository = @repo_with_distro
+      @host.content_facet.kickstart_repository = @repo_with_distro
       assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
 
       @host.content_source = @content_source
-      @host.kickstart_repository = nil
+      @host.content_facet.kickstart_repository = nil
       assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
     end
 
     def test_medium_uri_with_a_kickstart_repo
-      @host.kickstart_repository = @repo_with_distro
+      @host.content_facet.kickstart_repository = @repo_with_distro
       assert_equal @repo_with_distro.full_path(@content_source), @os.medium_uri(@host).to_s
     end
 

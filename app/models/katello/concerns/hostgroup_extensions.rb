@@ -47,6 +47,10 @@ module Katello
         inherited_ancestry_attribute(:lifecycle_environment_id)
       end
 
+      def inherited_kickstart_repository_id
+        inherited_ancestry_attribute(:kickstart_repository_id)
+      end
+
       def rhsm_organization_label
         #used for rhsm registration snippet, since hostgroup can belong to muliple organizations, use lifecycle environment or cv
         (self.lifecycle_environment || self.content_view).try(:organization).try(:label)
