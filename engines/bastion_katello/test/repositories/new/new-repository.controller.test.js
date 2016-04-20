@@ -10,6 +10,7 @@ describe('Controller: NewRepositoryController', function() {
         var $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
             Repository = $injector.get('MockResource').$new(),
+            Setting = $injector.get('MockResource').$new(),
             GPGKey = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
@@ -26,12 +27,17 @@ describe('Controller: NewRepositoryController', function() {
             $scope.repositoryTypesTestCalled = true;
         };
 
+        Setting.get = function (data, succ, err) {
+            return { results: [{ value: 'true' }]};
+        };
+
         $controller('NewRepositoryController', {
             $scope: $scope,
             $http: $http,
             Repository: Repository,
             GPGKey: GPGKey,
-            GlobalNotification: GlobalNotification
+            GlobalNotification: GlobalNotification,
+            Setting: Setting
         });
     }));
 
