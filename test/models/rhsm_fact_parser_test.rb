@@ -36,5 +36,21 @@ module Katello
       }
       assert_equal expected_eth1, @parser.get_facts_for_interface('eth1')
     end
+
+    def test_valid_centos_os
+      @facts['distribution.name'] = 'CentOS'
+      @facts['distribution.version'] = '7.2'
+      @parser = RhsmFactParser.new(@facts)
+
+      assert @parser.operatingsystem.is_a?(::Operatingsystem)
+    end
+
+    def test_invalid_centos_os
+      @facts['distribution.name'] = 'CentOS'
+      @facts['distribution.version'] = '7'
+      @parser = RhsmFactParser.new(@facts)
+
+      refute @parser.operatingsystem
+    end
   end
 end
