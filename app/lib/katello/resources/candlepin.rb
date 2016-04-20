@@ -569,7 +569,6 @@ module Katello
 
           def create_for_owner(owner_key, attrs)
             subscription = self.post("/candlepin/owners/#{owner_key}/subscriptions", attrs.to_json, self.default_headers).body
-            self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
             subscription
           end
 
