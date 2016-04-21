@@ -69,7 +69,7 @@ module Katello
             remove_errata_applicability(to_remove) unless to_remove.blank?
           end
         end
-        self.update_errata_status
+        host.get_status(::Katello::ErrataStatus).refresh!
       end
 
       def self.in_content_view_version_environments(version_environments)
@@ -118,11 +118,6 @@ module Katello
 
       def katello_agent_installed?
         self.host.installed_packages.where("#{Katello::InstalledPackage.table_name}.name" => 'katello-agent').any?
-      end
-
-      def update_errata_status
-        host.get_status(::Katello::ErrataStatus).refresh!
-        host.refresh_global_status!
       end
 
       private
