@@ -2,7 +2,7 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_organization, :only => [:index, :auto_complete_search]
+    before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
     before_filter :find_product, :only => [:index, :auto_complete_search]
     before_filter :find_product_for_create, :only => [:create]
     before_filter :find_organization_from_product, :only => [:create]
@@ -36,7 +36,7 @@ module Katello
 
     api :GET, "/repositories", N_("List of enabled repositories")
     api :GET, "/content_views/:id/repositories", N_("List of repositories for a content view")
-    param :organization_id, :number, :required => true, :desc => N_("ID of an organization to show repositories in")
+    param :organization_id, :number, :desc => N_("ID of an organization to show repositories in")
     param :product_id, :number, :desc => N_("ID of a product to show repositories of")
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
@@ -105,7 +105,12 @@ module Katello
         instance_ids += instances.where(:library_instance_id => nil)
         query = Repository.where(:id => instance_ids)
       elsif (params[:library] && !params[:environment_id]) || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
-        query = query.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
+
+        if @organization
+          query = query.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
+        else
+          query = query.in_default_view
+        end
       end
       query
     end
@@ -316,6 +321,7 @@ module Katello
 
     def find_product
       @product = Product.find(params[:product_id]) if params[:product_id]
+      find_organization_from_product if @organization.nil? && @product
     end
 
     def find_product_for_create
