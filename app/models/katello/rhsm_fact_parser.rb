@@ -42,11 +42,15 @@ module Katello
       return nil if name.nil? || version.nil?
 
       os_name = ::Katello::Candlepin::Consumer.distribution_to_puppet_os(name)
-      if os_name
-        major, minor = version.split('.')
+      major, minor = version.split('.')
+      if os_name && !invalid_centos_os?(os_name, minor)
         os_attributes = {:major => major, :minor => minor || '', :name => os_name}
         ::Operatingsystem.find_by(os_attributes) || ::Operatingsystem.create!(os_attributes)
       end
+    end
+
+    def invalid_centos_os?(name, minor_version)
+      name == 'CentOS' && minor_version.blank?
     end
 
     #required to be defined, even if they return nil
