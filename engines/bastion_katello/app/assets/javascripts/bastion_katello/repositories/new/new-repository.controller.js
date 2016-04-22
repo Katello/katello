@@ -76,6 +76,9 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             if (repository.content_type === 'ostree') {
                 repository.unprotected = false;
             }
+            if (repository.content_type !== 'yum') {
+                repository['download_policy'] = '';
+            }
             repository.$save(success, error);
         };
 
