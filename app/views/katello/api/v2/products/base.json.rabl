@@ -14,20 +14,21 @@ attributes :redhat? => :redhat
 attributes :available_content => :available_content, :if => params[:include_available_content]
 
 node :sync_status do |product|
+  local_sync_status = product.sync_status
   {
-    :id => product.sync_status[:id],
-    :product_id => product.sync_status[:product_id],
-    :progress => product.sync_status[:progress],
-    :sync_id => product.sync_status[:sync_id],
-    :state => product.sync_status[:state],
-    :raw_state => product.sync_status[:raw_state],
-    :start_time => product.sync_status[:start_time],
-    :finish_time => product.sync_status[:finish_time],
-    :duration => product.sync_status[:duration],
-    :display_size => product.sync_status[:display_size],
-    :size => product.sync_status[:size],
-    :is_running => product.sync_status[:is_running],
-    :error_details => product.sync_status[:error_details]
+    :id => local_sync_status[:id],
+    :product_id => local_sync_status[:product_id],
+    :progress => local_sync_status[:progress],
+    :sync_id => local_sync_status[:sync_id],
+    :state => local_sync_status[:state],
+    :raw_state => local_sync_status[:raw_state],
+    :start_time => local_sync_status[:start_time],
+    :finish_time => local_sync_status[:finish_time],
+    :duration => local_sync_status[:duration],
+    :display_size => local_sync_status[:display_size],
+    :size => local_sync_status[:size],
+    :is_running => local_sync_status[:is_running],
+    :error_details => local_sync_status[:error_details]
   }
 end
 
