@@ -10,7 +10,6 @@ module Katello
         alias_method_chain :set_hostgroup_defaults, :katello_attributes
         alias_method_chain :info, :katello
         alias_method_chain :smart_proxy_ids, :katello
-
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
                                :dependent => :destroy, :inverse_of => :foreman_host
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
@@ -33,7 +32,7 @@ module Katello
       end
 
       def validate_media_with_capsule?
-        content_source_id.blank? && validate_media_without_capsule?
+        (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && validate_media_without_capsule?
       end
 
       def rhsm_organization_label
@@ -56,6 +55,9 @@ module Katello
         info['parameters']['kt_cv'] = self.content_view.try(:label) #deprecated
         info['parameters']['lifecycle_environment'] = self.lifecycle_environment.try(:label)
         info['parameters']['content_view'] = self.content_view.try(:label)
+        if self.content_facet.present?
+          info['parameters']['kickstart_repository'] = self.content_facet.kickstart_repository.try(:label)
+        end
         info
       end
 
@@ -78,6 +80,9 @@ module Katello
 
       def set_hostgroup_defaults_with_katello_attributes
         if hostgroup.present?
+          if content_facet.present?
+            self.content_facet.kickstart_repository_id = hostgroup.inherited_kickstart_repository_id
+          end
           assign_hostgroup_attributes(%w(content_source_id content_view_id lifecycle_environment_id))
         end
         set_hostgroup_defaults_without_katello_attributes

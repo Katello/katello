@@ -3,6 +3,7 @@ module Katello
     class ContentFacet < Katello::Model
       self.table_name = 'katello_content_facets'
 
+      belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_content_facets
       belongs_to :host, :inverse_of => :content_facet, :class_name => "::Host::Managed"
       belongs_to :content_view, :inverse_of => :content_facets, :class_name => "Katello::ContentView"
       belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "Katello::KTEnvironment"
@@ -18,7 +19,7 @@ module Katello
       validates :host, :presence => true, :allow_blank => false
       validates_with Validators::ContentViewEnvironmentValidator
 
-      attr_accessible :content_view_id, :lifecycle_environment_id, :host
+      attr_accessible :content_view_id, :lifecycle_environment_id, :host, :kickstart_repository_id
 
       def update_repositories_by_paths(paths)
         paths = paths.map { |path| path.gsub('/pulp/repos/', '') }
