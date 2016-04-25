@@ -33,6 +33,7 @@ module Katello
       versions = versions.in_environment(@environment) if @environment
       versions = versions.with_puppet_module(@puppet_module) if @puppet_module
       versions = versions.component_of(params[:composite_version_id]) if params[:composite_version_id]
+      versions = versions.with_names(params[:name].split(',')) if params[:name]
       versions
     end
 

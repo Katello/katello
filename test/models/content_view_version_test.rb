@@ -160,5 +160,10 @@ module Katello
         @cvv.validate_destroyable!
       end
     end
+
+    def test_with_names
+      names = ContentViewVersion.last(3).map(&:name).sort
+      assert_equal(names, ContentViewVersion.with_names(names).map(&:name).sort)
+    end
   end
 end

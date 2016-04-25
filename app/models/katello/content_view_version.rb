@@ -5,6 +5,8 @@ module Katello
     include Authorization::ContentViewVersion
     include ForemanTasks::Concerns::ActionSubject
 
+    extend DatabaseAgnosticHelper
+
     before_destroy :validate_destroyable!
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
@@ -62,6 +64,14 @@ module Katello
         _, conditions = query.to_sql.split("WHERE")
       end
       { :conditions => conditions }
+    end
+
+    def self.with_names(names)
+      table_name = ActiveRecord::Base.connection.quote_table_name(Katello::ContentView.table_name)
+      name_column = ActiveRecord::Base.connection.quote_column_name("name")
+      cvv_name = concat("#{table_name}.#{name_column}", "' '", "major", "'.'", "minor")
+      joins(:content_view)
+        .where("#{cvv_name} in (#{names.map { |n| "'#{n}'" }.join(',')})")
     end
 
     def self.component_of(versions)

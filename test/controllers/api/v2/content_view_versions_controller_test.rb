@@ -42,6 +42,13 @@ module Katello
       assert_response :success
     end
 
+    def test_index_with_name_list
+      cvv_names = ContentViewVersion.last(2).map(&:name)
+      results = JSON.parse(get(:index, name: [cvv_names].join(',')).body)['results']
+      assert_response :success
+      assert_equal_arrays(results.map { |r| r['name'] }, cvv_names)
+    end
+
     def test_index_with_content_view
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :index, :content_view_id => @library_dev_staging_view.id
