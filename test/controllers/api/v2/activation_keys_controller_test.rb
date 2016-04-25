@@ -14,6 +14,7 @@ module Katello
       @organization = get_organization
       @activation_key = ActivationKey.find(katello_activation_keys(:simple_key).id)
       @view = katello_content_views(:library_view)
+      @acme_view = katello_content_views(:acme_default)
       @library = @organization.library
     end
 
@@ -48,6 +49,13 @@ module Katello
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.id
       end
+    end
+
+    def test_index_filter_by_content_view
+      results = JSON.parse(get(:index, :organization_id => @organization.id, :content_view_id => @acme_view.id).body)
+
+      assert_response :success
+      assert_equal results["results"].size, 4
     end
 
     def test_show
