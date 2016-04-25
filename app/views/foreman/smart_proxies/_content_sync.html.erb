@@ -5,7 +5,7 @@
 
   {{ syncStatusText(syncState, syncStatus) }}
   <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.FAILURE)">
-    {{syncTask.progressbar.value || 0}}%
+    {{ syncTask.progressbar.value || 0 | number: 0 }}%
     <a href="<%= @task_search_url %>" target="_self">
       <div ng-class="{ active: isTaskInProgress(syncTask) }" class="progress progress-striped">
         <span progressbar
