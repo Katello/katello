@@ -263,7 +263,7 @@ module Katello
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Docker content.") if @repository.docker?
 
-      filepaths = params[:content].collect do |content|
+      filepaths = Array.wrap(params[:content]).compact.collect do |content|
         {path: content.path, filename: content.original_filename}
       end
 
