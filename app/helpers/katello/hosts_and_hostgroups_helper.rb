@@ -4,6 +4,10 @@ module Katello
       "kt_activation_keys"
     end
 
+    def using_hostgroups_page?
+      controller.controller_name == "hostgroups"
+    end
+
     def blank_or_inherit_with_id(f, attr)
       return true unless f.object.respond_to?(:parent_id) && f.object.parent_id
       inherited_value  = f.object.send(attr).try(:id) || ''
@@ -35,6 +39,7 @@ module Katello
     end
 
     def use_install_media(host, options = {})
+      return true if host && host.errors && host.errors.include?(:medium_id)
       kickstart_repository_id(host, options).blank?
     end
 
