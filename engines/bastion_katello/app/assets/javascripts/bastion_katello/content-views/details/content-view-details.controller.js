@@ -78,7 +78,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
             ContentViewVersion.get({'id': version.id}).$promise.then(function (newVersion) {
                 $scope.contentView.versions[versionIndex] = newVersion;
-                $scope.versions[versionIndex] = newVersion;
+                $scope.detailsTable.rows[versionIndex] = newVersion;
             });
         }
 
