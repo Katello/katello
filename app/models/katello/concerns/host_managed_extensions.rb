@@ -28,7 +28,7 @@ module Katello
         scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package
         scoped_search :in => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name
 
-        attr_accessible :content_source_id, :host_collection_ids, :description
+        attr_accessible :content_source_id, :host_collection_ids
       end
 
       def validate_media_with_capsule?
