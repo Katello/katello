@@ -142,13 +142,19 @@ module Katello
     end
 
     def pulp_url
-      self.capsule.url + "/pulp/api/v2/"
+      "https://" + self.capsule.hostname + "/pulp/api/v2/"
     end
 
     def pulp_repo_facts(pulp_id)
       self.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
     rescue RestClient::ResourceNotFound
       nil
+    end
+
+    def ping_pulp
+      ::Katello::Ping.pulp_without_auth(self.pulp_url)
+    rescue Errno::EHOSTUNREACH, Errno::ECONNREFUSED, RestClient::Exception => error
+      raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [@capsule.name, error])
     end
 
     def self.with_environment(environment, include_default = false)
@@ -164,6 +170,10 @@ module Katello
     def self.default_capsule
       proxy = SmartProxy.with_features(SmartProxy::PULP_FEATURE).first
       self.new(proxy) if proxy
+    end
+
+    def self.sync_needed?(environment)
+      ::Katello::CapsuleContent.with_environment(environment).any?
     end
   end
 end

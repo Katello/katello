@@ -1,3 +1,4 @@
+# rubocop:disable HandleExceptions
 module Actions
   module Katello
     module ContentView
@@ -43,9 +44,13 @@ module Actions
         end
 
         def run
-          ForemanTasks.async_task(ContentView::CapsuleGenerateAndSync,
-                                  ::Katello::ContentView.find(input[:content_view_id]),
-                                  ::Katello::KTEnvironment.find(input[:environment_id]))
+          environment = ::Katello::KTEnvironment.find(input[:environment_id])
+          if ::Katello::CapsuleContent.sync_needed?(environment)
+            ForemanTasks.async_task(ContentView::CapsuleGenerateAndSync,
+                                    ::Katello::ContentView.find(input[:content_view_id]),
+                                    environment)
+          end
+        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         def rescue_strategy_for_self
