@@ -5,6 +5,7 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index, :create, :show]
+    before_filter :find_content_view, :only => [:index]
     before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions,
@@ -291,6 +292,14 @@ module Katello
     def verify_presence_of_organization_or_environment
       return if params.key?(:organization_id) || params.key?(:environment_id)
       fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
+    end
+
+    def find_content_view
+      if params.include?(:content_view_id)
+        cv_id = params[:content_view_id]
+        @content_view = ContentView.find_by(:id => cv_id)
+        fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
+      end
     end
 
     def activation_key_params
