@@ -4,7 +4,6 @@
  *
  * @requires $scope
  * @requires translate
- * @requires ContentViewVersion
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
