@@ -70,7 +70,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             var whitelistedHostObject = {},
                 whitelist = [
                     "name",
-                    "description"
+                    "comment"
                 ];
 
             if (saveFacets) {

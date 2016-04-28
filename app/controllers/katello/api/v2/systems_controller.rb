@@ -174,7 +174,7 @@ module Katello
     end
 
     def system_params(param_hash)
-      system_params = param_hash.require(:system).permit(:name, :description, :location, :owner, :type,
+      system_params = param_hash.require(:system).permit(:name, :location, :owner, :type,
                                                      :service_level, :autoheal,
                                                      :guest_ids, :host_collection_ids => [])
 
