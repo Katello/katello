@@ -33,9 +33,15 @@ module Actions
               fail _("Smart Proxy not found for capsule.") unless smart_proxy
               concurrence do
                 repository_ids.each do |repo_id|
-                  plan_action(Pulp::Consumer::SyncCapsule,
-                              capsule_id: smart_proxy.id,
-                              repo_pulp_id: repo_id)
+                  output = plan_action(Pulp::Consumer::SyncCapsule,
+                                       capsule_id: smart_proxy.id,
+                                       repo_pulp_id: repo_id).output
+
+                  plan_action(Pulp::Repository::Publish,
+                              :pulp_id => repo_id,
+                              :capsule_id => smart_proxy.id,
+                              :distributor_type_filter => ::Katello::Repository::PUBLISH_DISTRIBUTOR_TYPES,
+                              :contents_changed => output[:contents_changed])
                 end
               end
               plan_action(RemoveOrphans, :capsule_id => capsule_content.capsule.id)

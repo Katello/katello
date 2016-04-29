@@ -1,7 +1,7 @@
 module Actions
   module Pulp
     module Repository
-      class Sync < Pulp::AbstractAsyncTask
+      class Sync < Pulp::AbstractContentTask
         include Helpers::Presenter
 
         input_format do
@@ -41,32 +41,12 @@ module Actions
           check_error_details
         end
 
-        def external_task=(tasks)
-          output[:contents_changed] = contents_changed?(tasks)
-          super
-        end
-
         def check_error_details
           output[:pulp_tasks].each do |pulp_task|
             error_details = pulp_task.try(:[], "progress_report").try(:[], "yum_importer").try(:[], "content").try(:[], "error_details")
             if error_details && error_details[0]
               fail _("An error occurred during the sync \n%{error_message}") % {:error_message => error_details[0]}
             end
-          end
-        end
-
-        def contents_changed?(tasks)
-          if tasks.is_a?(Hash)
-            # note: for syncs initiated by a sync plan, tasks is a hash input
-            sync_task = tasks
-          else
-            sync_task = tasks.find { |task| (task['tags'] || []).include?('pulp:action:sync') }
-          end
-
-          if sync_task && sync_task['state'] == 'finished' && sync_task[:result]
-            sync_task['result']['added_count'] > 0 || sync_task['result']['removed_count'] > 0 || sync_task['result']['updated_count'] > 0
-          else
-            true #if we can't figure it out, assume something changed
           end
         end
 

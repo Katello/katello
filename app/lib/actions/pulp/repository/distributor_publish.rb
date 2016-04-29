@@ -4,6 +4,7 @@ module Actions
       class DistributorPublish < Pulp::AbstractAsyncTask
         input_format do
           param :pulp_id
+          param :distributor_id
           param :distributor_type_id
           param :source_pulp_id
           param :dependency
@@ -13,7 +14,7 @@ module Actions
         def invoke_external_task
           pulp_extensions.repository.
               publish(input[:pulp_id],
-                      distributor_id(input[:pulp_id], input[:distributor_type_id]),
+                      input[:distributor_id] || distributor_id(input[:pulp_id], input[:distributor_type_id]),
                       distributor_config)
         end
 

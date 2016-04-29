@@ -36,6 +36,9 @@ module Actions
             end
 
             contents_changed = output[:contents_changed]
+            plan_action(Pulp::Repository::Publish, :pulp_id => repo.pulp_id,
+                                                   :distributor_type_filter => ::Katello::Repository::PUBLISH_DISTRIBUTOR_TYPES,
+                                                   :contents_changed => contents_changed)
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::CorrectChecksum, repo)
