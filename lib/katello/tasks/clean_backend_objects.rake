@@ -58,6 +58,12 @@ namespace :katello do
       end
     end
 
+    # check services first
+    result = ::Katello::Ping.ping
+    if result[:status] != ::Katello::Ping::OK_RETURN_CODE
+      fail "Could not connect to service: #{result[:message]}"
+    end
+
     User.current = User.anonymous_admin
     cleanup_systems
     cleanup_host_delete_artifacts
