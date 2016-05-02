@@ -51,8 +51,10 @@ module Katello
         end
       elsif @activation_key
         query = @activation_key.host_collections
-      else
+      elsif @organization
         query = HostCollection.readable.where(:organization_id => @organization.id)
+      else
+        query = HostCollection.readable
       end
       query = query.where(:name => params[:name]) if params[:name]
       query
