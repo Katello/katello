@@ -83,7 +83,7 @@ module Katello
     def test_index_with_product_id
       ids = Repository.where(:product_id => @product.id, :library_instance_id => nil).pluck(:id)
 
-      response = get :index, :product_id => @product.id, :organization_id => @organization.id
+      response = get :index, :product_id => @product.id
       response_ids = JSON.parse(response.body)['results'].map { |repo| repo['id'] }
 
       assert_response :success
