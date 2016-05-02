@@ -3,11 +3,11 @@ object @resource
 
 extends "katello/api/v2/products/base"
 
-extends 'katello/api/v2/common/org_reference'
-
 attributes :productContent => :product_content
 
 attributes :available_content => :available_content
+
+attributes :redhat? => :redhat
 
 child :library_repositories => :repositories do |_repo|
   attributes :name, :id
@@ -19,6 +19,25 @@ end
 
 child :provider do
   attribute :name
+end
+
+node :sync_status do |product|
+  local_sync_status = product.sync_status
+  {
+    :id => local_sync_status[:id],
+    :product_id => local_sync_status[:product_id],
+    :progress => local_sync_status[:progress],
+    :sync_id => local_sync_status[:sync_id],
+    :state => local_sync_status[:state],
+    :raw_state => local_sync_status[:raw_state],
+    :start_time => local_sync_status[:start_time],
+    :finish_time => local_sync_status[:finish_time],
+    :duration => local_sync_status[:duration],
+    :display_size => local_sync_status[:display_size],
+    :size => local_sync_status[:size],
+    :is_running => local_sync_status[:is_running],
+    :error_details => local_sync_status[:error_details]
+  }
 end
 
 node :permissions do |product|
