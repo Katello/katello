@@ -111,6 +111,8 @@ echo "updating system time"
 # update all the base packages from the updates repository
 yum -t -y -e 0 update
 
+<%= snippet('remote_execution_ssh_keys') %>
+
 <% if salt_enabled %>
 yum -t -y -e 0 install salt-minion
 cat > /etc/salt/minion << EOF
@@ -130,8 +132,6 @@ echo "Configuring puppet"
 cat > /etc/puppet/puppet.conf << EOF
 <%= snippet 'puppet.conf' %>
 EOF
-
-<%= snippet('remote_execution_ssh_keys') %>
 
 # Setup puppet to run on system reboot
 /sbin/chkconfig --level 345 puppet on
