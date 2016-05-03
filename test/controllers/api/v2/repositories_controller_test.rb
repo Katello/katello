@@ -676,7 +676,17 @@ module Katello
             files.size == 1 && files.first[:filename].include?("puppet_module.tar.gz")
       end
 
+      # array
       post :upload_content, :id => @repository.id, :content => [puppet_module]
+      assert_response :success
+
+      assert_sync_task ::Actions::Katello::Repository::UploadFiles do |repo, files|
+        repo.id == @repository.id &&
+            files.size == 1 && files.first[:filename].include?("puppet_module.tar.gz")
+      end
+
+      # single file
+      post :upload_content, :id => @repository.id, :content => puppet_module
       assert_response :success
     end
 
