@@ -113,8 +113,11 @@ module Katello
 
     def process_errata_ids(select_all_params)
       if select_all_params[:included][:ids].blank?
+        select_all_params[:excluded][:ids] ||= [] if select_all_params[:excluded][:ids].nil?
         current_errata_ids = @filter.erratum_rules.map(&:errata_id) + select_all_params[:excluded][:ids]
-        Erratum.where('errata_id not in (?)', current_errata_ids).in_repositories(@filter.applicable_repos).pluck(:errata_id)
+        query = Erratum
+        query = query.where('errata_id not in (?)', current_errata_ids) unless current_errata_ids.empty?
+        query.in_repositories(@filter.applicable_repos).pluck(:errata_id)
       else
         []
       end
