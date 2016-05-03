@@ -17,8 +17,10 @@ ssh_authorized_keys:
 <% if @host.params['sshkey'].present? -%>
   - <%= @host.params['sshkey'] %>
 <% end -%>
+<% if @host.params['remote_execution_ssh_keys'].present? -%>
 <% @host.params['remote_execution_ssh_keys'].each do |key| -%>
   - <%= key %>
+<% end -%>
 <% end -%>
 <% end -%>
 write_files:
