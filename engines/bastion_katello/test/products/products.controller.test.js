@@ -30,16 +30,9 @@ describe('Controller: ProductsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.productTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
-
-    it('sets the closeItem function to transition to the index page', function() {
-        spyOn($scope, "transitionTo");
-        $scope.productTable.closeItem();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
-    });
-
+    
     it('properly detects most important sync state error', function () {
         var product = {
             'sync_summary': {

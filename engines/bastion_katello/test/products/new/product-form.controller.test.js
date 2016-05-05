@@ -21,11 +21,6 @@ describe('Controller: ProductFormController', function() {
         GlobalNotification = $injector.get('GlobalNotification');
 
         $scope.productForm = $injector.get('MockForm');
-        $scope.productTable = {
-            addRow: function() {},
-            closeItem: function() {}
-        };
-
         $scope.panel = {};
 
         $controller('ProductFormController', {
@@ -48,14 +43,12 @@ describe('Controller: ProductFormController', function() {
     it('should save a new product resource', function() {
         var product = $scope.product;
 
-        spyOn($scope.productTable, 'addRow');
         spyOn($scope, 'transitionTo');
         spyOn(product, '$save').and.callThrough();
         $scope.save(product);
 
         expect(product.$save).toHaveBeenCalled();
-        expect($scope.productTable.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index',
+        expect($scope.transitionTo).toHaveBeenCalledWith('product.repositories',
                                                          {productId: $scope.product.id})
     });
 

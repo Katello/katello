@@ -62,7 +62,7 @@
           <tbody>
           <tr bst-table-row ng-repeat="product in productsTable.rows | filter:productFilter" row-select="product">
             <td bst-table-cell>
-              <a ui-sref="products.details.info({productId: product.id})">
+              <a ui-sref="product.info({productId: product.id})">
                 {{ product.name }}
               </a>
             </td>

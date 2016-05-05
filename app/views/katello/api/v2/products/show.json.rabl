@@ -65,4 +65,8 @@ node :permissions do |product|
   }
 end
 
+node :active_task_count do |product|
+  ForemanTasks::Task::DynflowTask.for_resource(product).active.count
+end
+
 extends 'katello/api/v2/common/timestamps'

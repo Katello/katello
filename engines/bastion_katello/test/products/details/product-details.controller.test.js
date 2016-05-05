@@ -1,17 +1,18 @@
 describe('Controller: ProductDetailsController', function() {
-    var $scope;
+    var $scope, Product;
 
-    beforeEach(module('Bastion.products', 'Bastion.test-mocks'))
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            $state = $injector.get('$state'),
-            Product = $injector.get('MockResource').$new();
+            $state = $injector.get('$state');
+
+        Product = $injector.get('MockResource').$new();
+        Product.sync = function() {};
 
         $scope = $injector.get('$rootScope').$new();
 
         $scope.$stateParams = {productId: 1};
-        $scope.removeRow = function() {};
 
         $controller('ProductDetailsController', {
             $scope: $scope,
@@ -26,12 +27,10 @@ describe('Controller: ProductDetailsController', function() {
 
     it('provides a method to remove a product', function() {
         spyOn($scope, 'transitionTo');
-        spyOn($scope, 'removeRow');
 
         $scope.removeProduct($scope.product);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
-        expect($scope.removeRow).toHaveBeenCalledWith($scope.product.id);
+        expect($scope.transitionTo).toHaveBeenCalledWith('products');
     });
 
     describe("it provides a method to get the read only reason", function() {
@@ -58,5 +57,14 @@ describe('Controller: ProductDetailsController', function() {
             product.redhat = true;
             expect($scope.getReadOnlyReason(product)).toBe('redhat');
         });
+    });
+
+    it('provides a way to sync a product', function() {
+        spyOn(Product, 'sync');
+
+        $scope.syncProduct();
+
+        expect(Product.sync).toHaveBeenCalledWith({id: $scope.$stateParams.productId},
+            jasmine.any(Function), jasmine.any(Function));
     });
 });

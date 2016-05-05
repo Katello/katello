@@ -19,7 +19,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {url: ''};
-        $scope.panel = {loading: false};
+        $scope.page = {loading: false};
 
         if (!$scope.discoveryTable) {
             $scope.discoveryTable = {rows: []};
@@ -37,9 +37,11 @@ angular.module('Bastion.products').controller('DiscoveryController',
         };
 
         $scope.setupSelected = function () {
-            $scope.panel.loading = true;
+            $scope.page.loading = true;
             $scope.discovery.selected = $scope.discoveryTable.getSelected();
-            $scope.transitionTo('products.discovery.create');
+            $scope.transitionTo('product-discovery.create').then(function () {
+                $scope.page.loading = false;
+            });
         };
 
         $scope.defaultName = function (basePath) {

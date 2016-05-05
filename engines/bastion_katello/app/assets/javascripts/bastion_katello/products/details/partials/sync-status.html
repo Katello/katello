@@ -1,23 +1,21 @@
-<div class="detail">
-  <span class="info-label" translate>Sync Interval</span>
-  <span class="info-value" ng-if="product.sync_plan.interval == 'hourly'">
-    <span translate>
-      Hourly at {{ product.sync_plan.sync_date | date:'m' }} minutes and {{ product.sync_plan.sync_date | date:'s' }} seconds
-    </span>
+<dt translate>Sync Interval</dt>
+<dd ng-if="product.sync_plan.interval == 'hourly'">
+  <span translate>
+    Hourly at {{ product.sync_plan.sync_date | date:'m' }} minutes and {{ product.sync_plan.sync_date | date:'s' }} seconds
   </span>
-  <span class="info-value" ng-if="product.sync_plan.interval == 'daily'">
-    <span translate>
-      Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
-    </span>
+</dd>
+<dd ng-if="product.sync_plan.interval == 'daily'">
+  <span translate>
+    Daily at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
   </span>
-  <span class="info-value" ng-if="product.sync_plan.interval == 'weekly'">
-    <span translate>
-      Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
-    </span>
+</dd>
+<dd ng-if="product.sync_plan.interval == 'weekly'">
+  <span translate>
+    Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
   </span>
-  <span class="info-value" ng-hide="product.sync_plan.next_sync">
-    <span translate>
-      Synced manually, no interval set.
-    </span>
+</dd>
+<dd ng-hide="product.sync_plan.next_sync">
+  <span translate>
+    Synced manually, no interval set.
   </span>
-</div>
+</dd>

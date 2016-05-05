@@ -21,10 +21,10 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         $scope.errorMessages = [];
 
         $scope.menuExpander = MenuExpander;
-        $scope.panel = $scope.panel || {loading: false};
+        $scope.page = $scope.page || {loading: false};
 
         $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function () {
-            $scope.panel.loading = false;
+            $scope.page.loading = false;
         });
 
         $scope.gpgKeys = function () {
@@ -61,18 +61,9 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         };
 
         $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
-            if (fromState.name === 'products.details.info.new-sync-plan') {
+            if (fromState.name === 'product.info.new-sync-plan') {
                 $scope.product.$update();
             }
         });
-
-        $scope.syncProduct = function () {
-            Product.sync({id: $scope.product.id}, function (task) {
-                $state.go('products.details.tasks.details', {taskId: task.id});
-            },
-            function (response) {
-                $scope.errorMessages = response.data.errors;
-            });
-        };
     }]
 );

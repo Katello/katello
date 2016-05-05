@@ -69,7 +69,7 @@
       </p>
       <p bst-alert="info" ng-show="isState('content-views.details.repositories.yum.available')">
         <span translate>There are currently no repositories to add to this Content View,</span>
-        <a ui-sref="products.index" translate>add some repositories.</a>
+        <a ui-sref="products" translate>add some repositories.</a>
       </p>
     </div>
 
@@ -94,7 +94,7 @@
             row-select="repository"
             ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter as filteredItems">
           <td bst-table-cell>
-            <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
+            <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.id})">
               {{ repository.name }}
             </a>
           </td>
@@ -116,7 +116,7 @@
           </td>
           <td bst-table-cell>
             <div>
-              <a ui-sref="products.details.repositories.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})"
+              <a ui-sref="product.repository.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})"
                  ng-show="repository.content_type == 'yum'"
                  translate>
                 {{ repository.content_counts.rpm }} Packages
