@@ -55,13 +55,13 @@ describe('Controller: DiscoveryController', function() {
     it('setting up selected transitions to create state', function() {
         var fakeSelected = [1,2,3];
         spyOn($scope.discoveryTable, 'getSelected').and.returnValue(fakeSelected);
-        spyOn($scope, 'transitionTo');
+        spyOn($scope, 'transitionTo').and.returnValue({then: function () {}});
 
         $scope.setupSelected();
 
-        expect($scope.panel.loading).toBe(true);
+        expect($scope.page.loading).toBe(true);
         expect($scope.discovery.selected).toBe(fakeSelected);
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.create');
+        expect($scope.transitionTo).toHaveBeenCalledWith('product-discovery.create');
     });
 
 

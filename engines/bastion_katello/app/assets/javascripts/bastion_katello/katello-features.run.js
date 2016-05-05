@@ -20,9 +20,9 @@
 
         var customProducts = [
             'products.new.form',
-            'products.discovery',
-            'products.discovery.scan',
-            'products.discovery.create',
+            'product-discovery',
+            'product-discovery.scan',
+            'product-discovery.create',
             'gpg-keys.index',
             'gpg-keys.new',
             'gpg-keys.details.info',

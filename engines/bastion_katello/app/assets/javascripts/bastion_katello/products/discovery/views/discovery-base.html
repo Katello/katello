@@ -1,16 +1,11 @@
-<section class="nutupane-details" ng-cloak bst-container-scroll>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <div ng-show="page.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <header class="new-header details-header">
-    <h2 class="fl" translate>Yum Repo Discovery</h2>
-
-    <div class="fr">
-      <button class="btn btn-default" ui-sref="products.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
+  <header data-block="header">
+    <h2 translate>Yum Repo Discovery</h2>
   </header>
 
-  <div ui-view></div>
-
-</section>
+  <div data-block="content">
+    <div ui-view></div>
+  </div>
+</div>

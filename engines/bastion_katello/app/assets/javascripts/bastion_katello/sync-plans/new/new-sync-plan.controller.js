@@ -28,7 +28,7 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
                 $scope.nutupane.refresh();
                 if ($scope.product) {
                     $scope.product['sync_plan_id'] = syncPlan.id;
-                    $scope.$state.go('products.details.info', {productId: $scope.product.id});
+                    $scope.$state.go('product.info', {productId: $scope.product.id});
                 } else if ($scope.syncPlanTable) {
                     $scope.syncPlanTable.rows.unshift(syncPlan);
                     $scope.$state.go('sync-plans.details.info', {syncPlanId: syncPlan.id});

@@ -1,151 +1,142 @@
 <span page-title>{{ 'Create Repositories' | translate }}</span>
 
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <a ui-sref="products.discovery.scan">
-      <i class="fa fa-double-angle-left"></i>
-      {{ "Back To Repository Selection" | translate }}
-    </a>
+<form name="productForm" class="form-horizontal" ng-disabled="creating()" novalidate role="form">
 
-    <form name="productForm" class="form-horizontal" ng-disabled="creating()" novalidate role="form">
+  <section>
+    <h4 translate>Create Repositories Within:</h4>
 
-      <section>
-        <h4 translate>Create Repositories Within:</h4>
+    <div class="form-group">
+      <label class="checkbox-inline">
+        <input type="radio"
+               name="newProduct"
+               value="false"
+               ng-model="createRepoChoices.newProduct"
+               ng-disabled="creating()"/>
+        <span translate>Existing Product</span>
+      </label>
 
-        <div class="form-group">
-          <label class="checkbox-inline">
-            <input type="radio"
-                   name="newProduct"
-                   value="false"
-                   ng-model="createRepoChoices.newProduct"
-                   ng-disabled="creating()"/>
-            <span translate>Existing Product</span>
-          </label>
+      <label class="checkbox-inline">
+        <input type="radio"
+               name="newProduct"
+               value="true"
+               ng-model="createRepoChoices.newProduct"
+               ng-disabled="creating()"/>
+        <span translate>New Product</span>
+      </label>
+    </div>
 
-          <label class="checkbox-inline">
-            <input type="radio"
-                   name="newProduct"
-                   value="true"
-                   ng-model="createRepoChoices.newProduct"
-                   ng-disabled="creating()"/>
-            <span translate>New Product</span>
-          </label>
+    <div class="form-group">
+      <div class="col-md-5" ng-hide="createRepoChoices.newProduct">
+        <select class="form-control" ng-disabled="creating()"
+                ng-model="createRepoChoices.existingProductId"
+                ng-options="product.id as product.name for product in products">
+        </select>
+      </div>
+    </div>
+
+    <div ng-show="createRepoChoices.newProduct">
+
+      <div bst-alerts error-messages="productErrorMessages"></div>
+
+      <div class="form-group required">
+        <label class="control-label col-sm-1 text-left" translate>Name</label>
+        <div class="col-sm-5 input">
+          <input ng-model="createRepoChoices.product.name"
+                 id="name"
+                 name="name"
+                 type="text"
+                 class="form-control"
+                 tabindex=1
+                 ng-required="createRepoChoices.newProduct === 'true'"/>
         </div>
+      </div>
 
-        <div class="form-group">
-          <div class="col-md-5" ng-hide="createRepoChoices.newProduct">
-            <select class="form-control" ng-disabled="creating()"
-                    ng-model="createRepoChoices.existingProductId"
-                    ng-options="product.id as product.name for product in products">
-            </select>
-          </div>
+      <div class="form-group required">
+        <label class="control-label col-sm-1" translate>Label</label>
+        <div class="col-sm-5 input">
+          <input ng-model="createRepoChoices.product.label"
+                 id="label"
+                 name="label"
+                 type="text"
+                 class="form-control"
+                 tabindex=2
+                 ng-required="createRepoChoices.newProduct === 'true'"/>
         </div>
+      </div>
 
-        <div ng-show="createRepoChoices.newProduct">
-
-          <div bst-alerts error-messages="productErrorMessages"></div>
-
-          <div class="form-group required">
-            <label class="control-label col-sm-1 text-left" translate>Name</label>
-            <div class="col-sm-5 input">
-              <input ng-model="createRepoChoices.product.name"
-                     id="name"
-                     name="name"
-                     type="text"
-                     class="form-control"
-                     tabindex=1
-                     ng-required="createRepoChoices.newProduct === 'true'"/>
-            </div>
-          </div>
-
-          <div class="form-group required">
-            <label class="control-label col-sm-1" translate>Label</label>
-            <div class="col-sm-5 input">
-              <input ng-model="createRepoChoices.product.label"
-                     id="label"
-                     name="label"
-                     type="text"
-                     class="form-control"
-                     tabindex=2
-                     ng-required="createRepoChoices.newProduct === 'true'"/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-sm-1" translate>GPG Key</label>
-            <div class="col-sm-5 input">
-              <select class="form-control" ng-model="createRepoChoices.product.gpg_key_id"
-                      ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
-              </select>
-            </div>
-          </div>
-
-         </div>
-      </section>
-
-      <section>
-        <h4 translate>Options:</h4>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox"
-                   id="unprotected"
-                   ng-model="createRepoChoices.unprotected"
-                   ng-disabled="creating()"/>
-            <span translate>Serve via HTTP.</span>
-          </label>
+      <div class="form-group">
+        <label class="control-label col-sm-1" translate>GPG Key</label>
+        <div class="col-sm-5 input">
+          <select class="form-control" ng-model="createRepoChoices.product.gpg_key_id"
+                  ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+          </select>
         </div>
-      </section>
+      </div>
 
-      <section>
-        <h4 ng-show="discovery.selected.length > 0" translate>Selected URLs:</h4>
+     </div>
+  </section>
 
-        <div ng-repeat="repo in discovery.selected">
+  <section>
+    <h4 translate>Options:</h4>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox"
+               id="unprotected"
+               ng-model="createRepoChoices.unprotected"
+               ng-disabled="creating()"/>
+        <span translate>Serve via HTTP.</span>
+      </label>
+    </div>
+  </section>
 
-          <div class="col-sm-offset-0 bottom-padding">
-            <i class="fa fa-circle"></i>
-            <span>{{  repo.url }}</span>
-            <i class="fa fa-check" ng-show="repo.created"></i>
-          </div>
+  <section>
+    <h4 ng-show="discovery.selected.length > 0" translate>Selected URLs:</h4>
 
-          <div class="form-group required">
-            <label class="control-label col-sm-1" translate>Name</label>
-            <div class="col-sm-4 input">
-              <input ng-model="repo.name"
-                     ng-disabled="creating() || repo.created"
-                     name="repo_name"
-                     type="text"
-                     class="form-control"
-                     required/>
-            </div>
-          </div>
+    <div ng-repeat="repo in discovery.selected">
 
-          <div class="form-group required">
-            <label class="control-label col-sm-1" translate>Label</label>
-            <div class="col-sm-4 input">
-              <input ng-model="repo.label"
-                     ng-disabled="creating() || repo.created"
-                     name="repo_label"
-                     type="text"
-                     class="form-control"
-                     required/>
-            </div>
-          </div>
+      <div class="col-sm-offset-0 bottom-padding">
+        <i class="fa fa-circle"></i>
+        <span>{{  repo.url }}</span>
+        <i class="fa fa-check" ng-show="repo.created"></i>
+      </div>
+
+      <div class="form-group required">
+        <label class="control-label col-sm-1" translate>Name</label>
+        <div class="col-sm-4 input">
+          <input ng-model="repo.name"
+                 ng-disabled="creating() || repo.created"
+                 name="repo_name"
+                 type="text"
+                 class="form-control"
+                 required/>
         </div>
+      </div>
 
-        <div class="form">
-          <div class="control-group buttons">
-            <div class="input">
-              <button ng-click="createRepos()"
-                      ng-disabled="creating() || !requiredFieldsEnabled()"
-                      translate
-                      class="btn btn-primary btn-large">
-                <i class="fa fa-spinner fa-spin" ng-show="creating()"></i>
-                Create
-              </button>
-            </div>
-          </div>
+      <div class="form-group required">
+        <label class="control-label col-sm-1" translate>Label</label>
+        <div class="col-sm-4 input">
+          <input ng-model="repo.label"
+                 ng-disabled="creating() || repo.created"
+                 name="repo_label"
+                 type="text"
+                 class="form-control"
+                 required/>
         </div>
-      </section>
-    </form>
-  </div>
-</div>
+      </div>
+    </div>
+
+    <div class="form">
+      <div class="control-group buttons">
+        <div class="input">
+          <button ng-click="createRepos()"
+                  ng-disabled="creating() || !requiredFieldsEnabled()"
+                  translate
+                  class="btn btn-primary btn-large">
+            <i class="fa fa-spinner fa-spin" ng-show="creating()"></i>
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>

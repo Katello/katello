@@ -1,0 +1,78 @@
+<span page-title ng-model="repository">{{ 'Details for Repository:' | translate }} {{ repository.name }}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>{{ repository.name }}</h2>
+  </header>
+
+  <div data-block="item-actions">
+    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-link dropdown-toggle">
+        <span class="fa fa-ellipsis-v"></span>
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+        <li role="menuitem">
+          <a ng-click="syncRepository(repository)"
+             ng-hide="syncInProgress(repository.last_sync) || !repository.url || denied('sync_products', product)"
+             translate>
+            Sync Now
+          </a>
+
+          <span class="disabled" ng-show="syncInProgress(repository.last_sync)" translate>
+            Cannot sync Repository, a sync is already in progress.
+          </span>
+
+          <span class="disabled" ng-show="!repository.url" translate>
+            Cannot sync Repository without a URL.
+          </span>
+
+          <span class="disabled" ng-show="denied('sync_products', product)" translate>
+            Cannot sync Repository without the proper permissions.
+          </span>
+        </li>
+
+        <li class="divider" bst-feature-flag="custom_products" ng-hide="denied('delete_repositories')"></li>
+        <li role="menuitem" ng-hide="denied('delete_repositories')">
+          <a ng-click="openModal()" ng-show="canRemove(repository, product)" translate>
+            Remove Repository
+          </a>
+
+          <span class="disabled" ng-hide="canRemove(repository, product)">
+            <span translate>Cannot Remove</span>
+
+            <span ng-switch="getRepoNonDeletableReason(repository, product)" model="repository">
+              <i class="fa fa-question-circle" ng-switch-when="permissions"
+                 tooltip="{{ 'You cannot remove this repository because you do not have permission.' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-placement="left"
+                 tooltip-append-to-body="true">
+              </i>
+              <i class="fa fa-question-circle" ng-switch-when="published"
+                 tooltip="{{ 'You cannot remove this repository because it was published to a content view.' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-placement="left"
+                 tooltip-append-to-body="true">
+              </i>
+              <i class="fa fa-question-circle" ng-switch-when="redhat"
+                 tooltip="{{ 'You cannot remove this repository because it is a Red Hat repository.' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-placement="left"
+                 tooltip-append-to-body="true">
+              </i>
+            </span>
+          </span>
+        </li>
+      </ul>
+
+      <div bst-modal="removeRepository(repository)" model="repository">
+        <div data-block="modal-header" translate>Remove Repository "{{ repository.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove repository "{{ repository.name }}"?</div>
+      </div>
+    </div>
+  </div>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

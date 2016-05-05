@@ -1,31 +1,78 @@
 <span page-title>{{ 'Products' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
+<div data-extend-template="layouts/table-with-header.html">
 
   <div data-block="header">
-    {{ 'Products' | translate }}
+    <h2 translate>Products</h2>
   </div>
 
-  <div data-block="actions">
+  <div data-block="list-actions" ng-controller="ProductsBulkActionController">
     <button class="btn btn-default"
-            ng-show="permitted('edit_products') || permitted('destroy_products')"
-            ui-sref="products.bulk-actions.sync">
-      <i class="fa fa-group leading-icon"></i>
-      {{ "Bulk Actions" | translate }}
-    </button>
-
-    <button class="btn btn-default"
+            ui-sref="products.new.form"
             bst-feature-flag="custom_products"
-            ng-hide="denied('edit_products')"
-            ui-sref="products.discovery.scan">
-      <i class="fa fa-crosshairs"></i>
-      {{ "Repo Discovery" | translate }}
+            ng-show="permitted('create_products')">
+      <span translate>New Product</span>
     </button>
 
-    <button class="btn btn-primary" bst-feature-flag="custom_products" ui-sref="products.new.form" ng-hide="denied('create_products')">
-      <i class="fa fa-plus"></i>
-      {{ "New Product" | translate }}
+    <button class="btn btn-default"
+            ui-sref="product-discovery.scan"
+            bst-feature-flag="custom_products"
+            ng-show="permitted('edit_products')">
+      <span translate>Repo Discovery</span>
     </button>
+
+    <button class="btn btn-default"
+            ng-show="permitted('sync_products')"
+            ng-disabled="table.numSelected == 0"
+            ng-click="syncProducts()">
+      <span translate>Sync</span>
+    </button>
+
+    <div class="btn-group" uib-dropdown keyboard-nav>
+      <button class="btn btn-default dropdown-toggle"
+              ng-show="permitted('edit_products')"
+              ng-disabled="table.numSelected == 0">
+        <span translate>Change Sync Plan</span>
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem" ng-repeat="syncPlan in syncPlans.results" ng-show="syncPlans.results.length > 0">
+          <a ng-click="updateSyncPlan(syncPlan)">{{ syncPlan.name }}</a>
+        </li>
+
+        <li role="menuitem" ng-hide="syncPlans.results.length > 0">
+          <a ui-sref="sync-plans.new" translate>New Sync Plan</a>
+        </li>
+
+        <li class="divider"></li>
+        <li role="menuitem">
+          <a ng-click="removeSyncPlan()" translate>Remove Sync Plan</a>
+        </li>
+      </ul>
+    </div>
+
+    <button class="btn btn-default"
+            ng-show="permitted('destroy_products')"
+            ng-disabled="table.numSelected == 0"
+            ng-click="openModal()">
+      <span translate>Remove</span>
+    </button>
+
+    <div bst-modal="removeProducts()" model="table">
+      <div data-block="modal-header"
+           translate
+           translate-n="table.getSelected().length"
+           translate-plural="Remove {{ table.getSelected().length }} products?">
+        Remove product?
+      </div>
+      <div data-block="modal-body"
+           translate
+           translate-n="table.getSelected().length"
+           translate-plural="Are you sure you want to remove {{ table.getSelected().length }} products selected?">
+        Are you sure you want to remove {{ table.getSelected()[0].name }}?
+      </div>
+    </div>
   </div>
 
   <span data-block="no-rows-message" translate>
@@ -36,4 +83,39 @@
     Your search returned zero Products.
   </span>
 
+  <div data-block="table">
+    <table class="table table-striped" ng-class="{'table-mask': table.working}">
+      <thead>
+      <tr bst-table-head row-select>
+        <th bst-table-column="name" sortable><span translate>Name</span></th>
+        <th bst-table-column="description"><span translate>Description</span></th>
+        <th bst-table-column="sync_status"><span translate>Sync Status</span></th>
+        <th bst-table-column="sync_plan"><span translate>Sync Plan</span></th>
+        <th bst-table-column class="number-cell"><span translate>Repositories</span></th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr bst-table-row ng-repeat="product in table.rows" row-select="product">
+        <td bst-table-cell>
+          <a ui-sref="product.info({productId: product.id})">
+            {{ product.name }}
+          </a>
+        </td>
+        <td bst-table-cell>{{ product.description }}</td>
+        <td bst-table-cell>
+          <div ng-include="'products/views/partials/product-table-sync-status.html'"></div>
+        </td>
+        <td bst-table-cell>
+          {{ product.sync_plan.name }}
+          <span ng-hide="product.sync_plan" translate>None</span>
+        <span ng-show="product.sync_plan">
+          ({{ product.sync_plan.interval }})
+        </span>
+        </td>
+        <td bst-table-cell class="number-cell">{{ product.repository_count }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

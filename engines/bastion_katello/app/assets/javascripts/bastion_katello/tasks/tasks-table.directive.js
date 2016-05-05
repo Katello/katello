@@ -23,7 +23,7 @@
  *   can be skipped because are obvious from the context the table is in
  * @example
  *   <pre>
-        <div tasks-table  details-state="products.details.tasks.details"
+        <div tasks-table  details-state="product.tasks.details"
                           known-context="product,organization"
                           resource-type="Katello::Product"
                           resource-id="{{ product.id }}"/>

@@ -1,23 +1,9 @@
 <span page-title>{{ 'New Product' | translate }}</span>
 
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
-      <header class="new-header details-header">
-        <h2 class="fl" translate>New Product</h2>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>New Product</h2>
+  </header>
 
-        <div class="fr">
-          <button class="btn btn-default" ui-sref="products.index">
-            <i class="fa fa-remove"></i>
-            {{ "Close" | translate }}
-          </button>
-        </div>
-      </header>
-
-      <div bst-alerts error-messages="errorMessages" success-messages="successMessages"></div>
-
-      <div ui-view></div>
-
-    </section>
-  </div>
+  <div ui-view data-block="content"></div>
 </div>

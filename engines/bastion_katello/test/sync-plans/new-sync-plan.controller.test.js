@@ -109,6 +109,6 @@ describe('Controller: NewSyncPlanController', function() {
 
         expect($scope.working).toBe(false);
         expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-        expect($scope.$state.go).toHaveBeenCalledWith('products.details.info', {productId: $scope.product.id});
+        expect($scope.$state.go).toHaveBeenCalledWith('product.info', {productId: $scope.product.id});
     });
 });

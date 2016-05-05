@@ -1,20 +1,38 @@
 <span page-title ng-model="product">{{ 'Details for Product:' | translate }} {{ product.name }}</span>
 
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
-      <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>{{ product.name }}</h2>
+  </header>
 
-      <div ng-hide="panel.error">
-        <header class="details-header">
-          <h2 class="fl" translate>Product {{ product.name }}</h2>
+  <nav data-block="item-actions">
+    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-link dropdown-toggle">
+        <span class="fa fa-ellipsis-v"></span>
+      </button>
 
-          <div class="fr">
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+        <li role="menuitem" ng-hide="denied('create_sync_plans')">
+          <a ui-sref="product.new-sync-plan">
+            <span translate>New Sync Plan</span>
+          </a>
+        </li>
 
-            <div bst-modal="removeProduct(product)" model="product">
-              <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
-              <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
-            </div>
+        <li role="menuitem" ng-hide="denied('sync_products', product)">
+          <a ng-click="syncProduct()">
+            <span translate>Sync Now</span>
+          </a>
+        </li>
+
+        <li class="divider" bst-feature-flag="custom_products" ng-hide="denied('delete_products')"></li>
+
+        <li role="menuitem" bst-feature-flag="custom_products" ng-hide="denied('delete_products')">
+          <a ng-click="openModal()" ng-show="productDeletable(product)">
+            <span translate>Remove Product</span>
+          </a>
+
+          <span class="disabled" ng-hide="productDeletable(product)">
+            <span translate>Cannot Remove</span>
 
             <span ng-switch="getReadOnlyReason(product)" bst-feature-flag="custom_products">
               <i class="fa fa-question-circle" ng-switch-when="permissions"
@@ -33,50 +51,46 @@
                  tooltip-append-to-body="true">
               </i>
             </span>
+          </span>
+        </li>
+      </ul>
 
-            <button class="btn btn-default" bst-feature-flag="custom_products"
-                    ng-disabled="!productDeletable(product)"
-                    ng-click="openModal()">
-              <i class="fa fa-trash-o"></i>
-              {{ "Remove Product" | translate }}
-            </button>
-            <button class="btn btn-default" ui-sref="products.index">
-              <i class="fa fa-remove"></i>
-              {{ "Close" | translate }}
-            </button>
-          </div>
-        </header>
-
-        <nav>
-          <ul class="nav nav-tabs">
-            <li ng-class="{active: stateIncludes('products.details.info')}">
-              <a translate
-                 ui-sref="products.details.info({productId: product.id})">
-                Details
-              </a>
-            </li>
-            <li ng-class="{active: stateIncludes('products.details.repositories')}">
-              <a translate
-                 ui-sref="products.details.repositories.index({productId: product.id})">
-                Repositories
-              </a>
-            </li>
-            <li ng-class="{active: stateIncludes('products.details.tasks')}">
-              <a translate
-                 ui-sref="products.details.tasks.index({productId: product.id})">
-                Tasks
-              </a>
-            </li>
-            <li ng-repeat="menuItem in menuExpander.getMenu('product')">
-              <a href="{{ menuItem.url }}">
-                {{ menuItem.label }}
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-        <section class="nutupane-sub-section" ui-view></section>
+      <div bst-modal="removeProduct(product)" model="product">
+        <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
       </div>
-    </section>
+    </div>
+  </nav>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs details-nav">
+      <li ng-class="{active: stateIncludes('product.info')}">
+        <a translate
+           ui-sref="product.info({productId: product.id})">
+          Details
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('product.repositories')}">
+        <a translate
+           ui-sref="product.repositories({productId: product.id})">
+          Repositories
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('product.tasks')}">
+        <a translate
+           ui-sref="product.tasks.index({productId: product.id})">
+          Tasks
+        </a>
+      </li>
+      <li ng-repeat="menuItem in menuExpander.getMenu('product')">
+        <a href="{{ menuItem.url }}">
+          {{ menuItem.label }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
   </div>
 </div>

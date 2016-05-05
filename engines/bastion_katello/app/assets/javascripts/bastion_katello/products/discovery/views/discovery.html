@@ -1,6 +1,6 @@
 <span page-title>{{ 'Repository Discovery' | translate }}</span>
 
-<div class="row">
+<div>
   <form ng-submit="discover()" name="discoveryForm" class="col-sm-6">
     <div class="input-group">
 
@@ -36,9 +36,8 @@
   </form>
 </div>
 
-<section class="nutupane-sub-section row">
+<section>
   <div class="row">
-    
     <h3 class="col-sm-12" translate>Results</h3>
 
     <div class="col-sm-4">
@@ -63,25 +62,25 @@
         </button>
       </div>      
     </div>
-
   </div>
 
-  <div class="col-sm-12">
-    <table bst-table="discoveryTable" class="table table-striped">
-      <thead>
-        <tr bst-table-head row-select>
-          <th bst-table-column translate>Discovered URLs</th>
-        </tr>
-      </thead>
+  <div class="row">
+    <div class="col-sm-12">
+      <table bst-table="discoveryTable" class="table table-striped">
+        <thead>
+          <tr bst-table-head row-select>
+            <th bst-table-column translate>Discovered URLs</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr bst-table-row
-            row-select="urlRow"
-            ng-repeat="urlRow in discoveryTable.rows | filter:discoveryTable.filterTerm">
-          <td bst-table-cell>{{ urlRow.path }}</td>
-        </tr>
-      </tbody>
-    </table>
+        <tbody>
+          <tr bst-table-row
+              row-select="urlRow"
+              ng-repeat="urlRow in discoveryTable.rows | filter:discoveryTable.filterTerm">
+            <td bst-table-cell>{{ urlRow.path }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-
 </section>

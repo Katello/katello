@@ -22,7 +22,6 @@ describe('Controller: ProductRepositoriesController', function() {
 
         Nutupane = function() {
             this.table = expectedTable;
-            this.removeRow = function() {};
             this.get = function() {};
             this.query = function() {};
             this.refresh = function() {};
@@ -59,7 +58,7 @@ describe('Controller: ProductRepositoriesController', function() {
     }));
 
     it("sets up the repositories nutupane table", function() {
-        expect($scope.detailsTable).toBe(expectedTable);
+        expect($scope.table).toBe(expectedTable);
     });
 
     it("provides a way to remove all of the selected repositories in the table", function() {

@@ -3,6 +3,8 @@
  * @name  Bastion.products.controller:ProductsController
  *
  * @requires $scope
+ * @requires $state
+ * @requires $sce
  * @requires $location
  * @requires Nutupane
  * @requires Product
@@ -14,8 +16,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductsController',
-    ['$scope', '$sce', '$location', 'Nutupane', 'Product', 'CurrentOrganization', 'GlobalNotification',
-    function ($scope, $sce, $location, Nutupane, Product, CurrentOrganization, GlobalNotification) {
+    ['$scope', '$state', '$sce', '$location', 'Nutupane', 'Product', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, $state, $sce, $location, Nutupane, Product, CurrentOrganization, GlobalNotification) {
         var taskUrl, taskLink;
 
         var params = {
@@ -28,13 +30,10 @@ angular.module('Bastion.products').controller('ProductsController',
         };
 
         $scope.productsNutupane = new Nutupane(Product, params);
-        $scope.productTable = $scope.productsNutupane.table;
-        $scope.removeRow = $scope.productsNutupane.removeRow;
-        $scope.controllerName = 'katello_products';
+        $scope.productsNutupane.masterOnly = true;
 
-        $scope.productTable.closeItem = function () {
-            $scope.transitionTo('products.index');
-        };
+        $scope.table = $scope.productsNutupane.table;
+        $scope.controllerName = 'katello_products';
 
         $scope.$on('productDelete', function (event, taskId) {
             taskUrl = $scope.taskUrl(taskId);
@@ -46,9 +45,7 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.productDeletionTaskId = undefined;
         };
 
-        $scope.productTable.refresh = $scope.productsNutupane.refresh;
-
-        $scope.table = $scope.productTable;
+        $scope.table.refresh = $scope.productsNutupane.refresh;
 
         $scope.mostImportantSyncState = function (product) {
             var state = 'none';
@@ -63,6 +60,5 @@ angular.module('Bastion.products').controller('ProductsController',
             }
             return state;
         };
-
     }]
 );

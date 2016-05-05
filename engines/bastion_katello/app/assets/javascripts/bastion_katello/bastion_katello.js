@@ -52,11 +52,11 @@
 //= require "bastion_katello/puppet-modules/puppet-modules.module.js"
 //= require_tree "./puppet-modules"
 
+//= require "bastion_katello/products/details/repositories/repositories.module.js"
+//= require_tree "./products/details/repositories"
+
 //= require "bastion_katello/products/products.module.js"
 //= require_tree "./products"
-
-//= require "bastion_katello/repositories/repositories.module.js"
-//= require_tree "./repositories"
 
 //= require "bastion_katello/sync-plans/sync-plans.module.js"
 //= require_tree "./sync-plans"

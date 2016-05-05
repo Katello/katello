@@ -1,5 +1,5 @@
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope, translate, MenuExpander;
+    var $scope, translate, Product, GPGKey, MenuExpander;
 
     beforeEach(module(
         'Bastion.products',
@@ -13,7 +13,6 @@ describe('Controller: ProductDetailsInfoController', function() {
             GPGKey = $injector.get('MockResource').$new();
 
         Product = $injector.get('MockResource').$new();
-        Product.sync = function() {};
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};
@@ -74,14 +73,5 @@ describe('Controller: ProductDetailsInfoController', function() {
 
         expect($scope.successMessages.length).toBe(0);
         expect($scope.errorMessages.length).toBe(1);
-    });
-
-    it('provides a way to sync a product', function() {
-        spyOn(Product, 'sync');
-
-        $scope.syncProduct();
-
-        expect(Product.sync).toHaveBeenCalledWith({id: $scope.$stateParams.productId}, 
-            jasmine.any(Function), jasmine.any(Function));
     });
 });

@@ -1,0 +1,68 @@
+<span page-title ng-model="repository">{{ 'Manage Puppet Modules for Repository:' | translate }} {{ repository.name }}</span>
+
+<div data-block="messages">
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div bst-alert="success" ng-hide="generationTaskId === undefined">
+    <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
+    <p translate>
+      Puppet module metadata generation has been initiated in the background.
+      Click <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
+    </p>
+  </div>
+</div>
+
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="list-actions">
+    <div bst-modal="removeContent()" model="table">
+      <div data-block="modal-header"
+           translate
+           translate-n="table.numSelected"
+           translate-plural="Remove {{ table.numSelected  }} Puppet Modules?">
+        Remove Puppet Module?
+      </div>
+      <div data-block="modal-body"
+           translate
+           translate-n="table.numSelected"
+           translate-plural="Are you sure you want to remove the {{ table.numSelected }} Puppet modules selected?">
+        Are you sure you want to remove the {{ table.getSelected()[0].name }}?
+      </div>
+    </div>
+
+    <button class="btn btn-default"
+            ng-hide="denied('edit_products')"
+            ng-click="openModal()"
+            ng-disabled="table.working || table.numSelected === 0">
+      <i class="fa fa-trash-o" ng-hide="table.working"></i>
+      <i class="fa fa-spinner fa-spin" ng-show="table.working"></i>
+      <span translate>Remove Puppet Modules</span>
+    </button>
+  </div>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" >
+
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column><span translate>Name</span></th>
+          <th bst-table-column><span translate>Author</span></th>
+          <th bst-table-column><span translate>Version</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="item in table.rows" row-select="item">
+          <td bst-table-cell>
+            {{ item.name }}
+          </td>
+          <td bst-table-cell>
+            {{item.author}}
+          </td>
+          <td bst-table-cell>
+            {{ item.version }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
