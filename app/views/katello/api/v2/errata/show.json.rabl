@@ -12,8 +12,8 @@ end
 
 attributes :errata_type => :type
 
-node(:hosts_available_count) { |m| m.hosts_available.count }
-node(:hosts_applicable_count) { |m| m.hosts_applicable.count }
+node(:hosts_available_count) { |m| m.hosts_available(params[:organization_id]).count }
+node(:hosts_applicable_count) { |m| m.hosts_applicable(params[:organization_id]).count }
 
 node :packages do |e|
   e.packages.pluck(:nvrea)
