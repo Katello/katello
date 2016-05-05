@@ -42,11 +42,11 @@ module Katello
         raise e
       end
 
-      def update_package(packages)
+      def update_package(packages, options = {})
         Rails.logger.debug "Scheduling package update for consumer group #{self.pulp_id}"
 
-        options = {"importkeys" => true}
-        options[:all] = true if packages.blank?
+        options.merge!(:importkeys => true)
+        options[:all] = true if options[:update_all]
         Katello.pulp_server.extensions.consumer_group.update_content(self.pulp_id,
                                                                        'rpm',
                                                                        packages,

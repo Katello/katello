@@ -109,6 +109,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
         $scope.detailsTable = packagesNutupane.table;
         $scope.detailsTable.openEventInfo = openEventInfo;
         $scope.detailsTable.contentHost = $scope.contentHost;
+        $scope.detailsTable.selectAllResultsEnabled = true;
 
         $scope.detailsTable.taskFailed = function (task) {
             return angular.isUndefined(task) || task.failed || task['affected_units'] === 0;

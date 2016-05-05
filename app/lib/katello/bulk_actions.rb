@@ -6,43 +6,42 @@ module Katello
       @consumer_ids = hosts.map { |host| host.content_facet.try(:uuid) }.compact
     end
 
-    def install_packages(packages)
+    def install_packages(packages, _options = {})
       fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
       perform_bulk_action do |consumer_group|
         consumer_group.install_package(packages)
       end
     end
 
-    def uninstall_packages(packages)
+    def uninstall_packages(packages, _options = {})
       fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
       perform_bulk_action do |consumer_group|
         consumer_group.uninstall_package(packages)
       end
     end
 
-    def update_packages(packages = nil)
-      # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
+    def update_packages(packages = nil, options = {})
       fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
       perform_bulk_action do |consumer_group|
-        consumer_group.update_package(packages)
+        consumer_group.update_package(packages, options)
       end
     end
 
-    def install_package_groups(groups)
-      fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
-      perform_bulk_action do |consumer_group|
-        consumer_group.install_package_group(groups)
-      end
-    end
-
-    def update_package_groups(groups)
+    def install_package_groups(groups, _options = {})
       fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
       perform_bulk_action do |consumer_group|
         consumer_group.install_package_group(groups)
       end
     end
 
-    def uninstall_package_groups(groups)
+    def update_package_groups(groups, _options = {})
+      fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
+      perform_bulk_action do |consumer_group|
+        consumer_group.install_package_group(groups)
+      end
+    end
+
+    def uninstall_package_groups(groups, _options = {})
       fail Errors::EmptyBulkActionException if self.consumer_ids.empty?
       perform_bulk_action do |consumer_group|
         consumer_group.uninstall_package_group(groups)

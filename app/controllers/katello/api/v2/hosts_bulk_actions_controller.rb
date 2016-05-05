@@ -109,6 +109,7 @@ module Katello
           :desc => N_("The type of content.  The following types are supported: 'package' and 'package_group."),
           :required => true
     param :content, Array, :desc => N_("List of content (e.g. package or package group names)"), :required => true
+    param :update_all, :bool, :desc => N_("Updates all packages on the host(s)")
     def update_content
       content_action
     end
@@ -217,14 +218,14 @@ module Katello
         respond_for_async :resource => task
       else
         action = Katello::BulkActions.new(@hosts)
-        job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content])
+        job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content], :update_all => params[:update_all])
         respond_for_show :template => 'job', :resource => job
       end
     end
 
     def validate_content_action
       fail HttpErrors::BadRequest, _("A content_type must be provided.") if params[:content_type].blank?
-      fail HttpErrors::BadRequest, _("No content has been provided.") if params[:content].blank?
+      fail HttpErrors::BadRequest, _("No content has been provided.") if params[:content].blank? && !params[:update_all]
 
       if PARAM_ACTIONS[params[:action]][params[:content_type]].nil?
         fail HttpErrors::BadRequest, _("Invalid content type %s") % params[:content_type]
