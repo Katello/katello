@@ -16,10 +16,6 @@ module Actions
                                                    input[:unit_key],
                                                     unit_metadata: {})
         end
-
-        def rescue_strategy
-          Dynflow::Action::Rescue::Skip
-        end
       end
     end
   end
