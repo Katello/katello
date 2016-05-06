@@ -309,9 +309,6 @@ module Katello
       User.current = nil
     end
 
-    # TODO: break up method
-    # rubocop:disable MethodLength
-
     # render bad params to user
     # @overload render_bad_parameters()
     #   render bad_parameters with `default_message` and status `400`

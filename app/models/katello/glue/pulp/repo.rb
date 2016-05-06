@@ -60,7 +60,6 @@ module Katello
       end
     end
 
-    # rubocop:disable Metrics/ModuleLength
     module InstanceMethods
       # TODO: This module is too long. See https://projects.theforeman.org/issues/12584.
       def last_sync
