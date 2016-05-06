@@ -246,6 +246,19 @@ module Katello
       render :template => "katello/common/403"
     end
 
+    # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".
+    # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
+    # This assumes that the input follows a syntax similar to:
+    #   "{\"displayMessage\":\"Import is older than existing data\"}"
+    def self.parse_display_message(input)
+      unless input.nil?
+        if input.include? 'displayMessage'
+          return JSON.parse(input)['displayMessage']
+        end
+      end
+      input
+    end
+
     private # why bother? methods below are not testable/tested
 
     def require_org
@@ -308,9 +321,6 @@ module Katello
       end
       User.current = nil
     end
-
-    # TODO: break up method
-    # rubocop:disable MethodLength
 
     # render bad params to user
     # @overload render_bad_parameters()
@@ -652,19 +662,6 @@ module Katello
 
     def log_exception(exception, level = :error)
       logger.send level, "#{exception} (#{exception.class})\n#{exception.backtrace.join("\n")}" if exception
-    end
-
-    # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".
-    # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
-    # This assumes that the input follows a syntax similar to:
-    #   "{\"displayMessage\":\"Import is older than existing data\"}"
-    def self.parse_display_message(input)
-      unless input.nil?
-        if input.include? 'displayMessage'
-          return JSON.parse(input)['displayMessage']
-        end
-      end
-      input
     end
 
     def default_notify_options

@@ -174,6 +174,10 @@ module Katello
       errata.any? { |erratum| erratum.errata_type == Erratum::ENHANCEMENT }
     end
 
+    def self.humanize_class_name(_name = nil)
+      _("Host Collections")
+    end
+
     private
 
     def perform_group_action
@@ -190,10 +194,6 @@ module Katello
       job = Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self)
       job.create_tasks(self.org, pulp_job, job_type, parameters_type => parameters)
       job
-    end
-
-    def self.humanize_class_name(_name = nil)
-      _("Host Collections")
     end
   end
 end
