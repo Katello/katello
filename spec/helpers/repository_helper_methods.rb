@@ -19,7 +19,7 @@ module Katello
 
       random_id = rand(10**6)
       repo = Repository.new(:environment => env, :product => product,
-                            :name => name, :label =>  "#{name}-#{random_id}",
+                            :name => name, :label => "#{name}-#{random_id}",
                             :relative_path => path, :pulp_id => "pulp-id-#{random_id}",
                             :content_id => "content-id-#{random_id}",
                             :content_view_version => env.content_view_versions.first,

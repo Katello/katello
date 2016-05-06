@@ -6,7 +6,7 @@ module Katello
     PULP_TMP_DIR = "/var/lib/pulp/published/puppet_katello_test"
     @repo_url = "file:///var/www/test_repos/zoo"
     @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
-    @repo     = nil
+    @repo = nil
 
     def self.repo_id
       @repo.id

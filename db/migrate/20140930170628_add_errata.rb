@@ -26,7 +26,7 @@ class AddErrata < ActiveRecord::Migration
     end
 
     add_index :katello_erratum_packages, [:erratum_id, :nvrea, :name, :filename], :unique => true,
-                                                                                  :name =>  'katello_erratum_packages_eid_nvrea_n_f'
+                                                                                  :name => 'katello_erratum_packages_eid_nvrea_n_f'
     add_foreign_key "katello_erratum_packages", "katello_errata",
                     :name => "katello_erratum_packages_errata_id_fk", :column => "erratum_id"
 

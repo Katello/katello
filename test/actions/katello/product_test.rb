@@ -22,7 +22,7 @@ module Katello
         @repository.stubs(:other_repos_with_same_product_and_content).returns([])
         @repository.stubs(:other_repos_with_same_content).returns([])
 
-        action       = create_action action_class
+        action = create_action action_class
         action.stubs(:action_subject).with(@repository)
         plan_action action, @repository
         assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
@@ -35,7 +35,7 @@ module Katello
         @repository.stubs(:other_repos_with_same_product_and_content).returns([])
         @repository.stubs(:other_repos_with_same_content).returns([repo2])
 
-        action       = create_action action_class
+        action = create_action action_class
         action.stubs(:action_subject).with(@repository)
         plan_action action, @repository
         assert_action_planed action, candlepin_remove_class
@@ -47,7 +47,7 @@ module Katello
         @repository.stubs(:other_repos_with_same_product_and_content).returns([repo2])
         @repository.stubs(:other_repos_with_same_content).returns([repo2])
 
-        action       = create_action action_class
+        action = create_action action_class
         action.stubs(:action_subject).with(@repository)
         plan_action action, @repository
         refute_action_planed action, candlepin_remove_class

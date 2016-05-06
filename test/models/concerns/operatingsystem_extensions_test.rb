@@ -22,9 +22,9 @@ module Katello
                      :default => ptable.name)
 
       os = ::Redhat.create_operating_system(@my_distro.name, '9', '0')
-      assert ::OsDefaultTemplate.where(:template_kind_id    => ::TemplateKind.find_by_name('provision').id,
-                                       :provisioning_template_id  => template.id,
-                                       :operatingsystem_id  => os.id).any?
+      assert ::OsDefaultTemplate.where(:template_kind_id => ::TemplateKind.find_by_name('provision').id,
+                                       :provisioning_template_id => template.id,
+                                       :operatingsystem_id => os.id).any?
 
       assert os.ptables.include? ptable
     end
@@ -43,9 +43,9 @@ module Katello
       os_attributes = {:major => "7", :minor => "3", :name => ::Operatingsystem::REDHAT_ATOMIC_HOST_OS}
       os = Operatingsystem.create!(os_attributes)
 
-      assert ::OsDefaultTemplate.where(:template_kind_id    => ::TemplateKind.find_by_name('provision').id,
-                                       :provisioning_template_id  => template.id,
-                                       :operatingsystem_id  => os.id).any?
+      assert ::OsDefaultTemplate.where(:template_kind_id => ::TemplateKind.find_by_name('provision').id,
+                                       :provisioning_template_id => template.id,
+                                       :operatingsystem_id => os.id).any?
 
       assert os.ptables.include? ptable
       assert_equal "Redhat", os.family

@@ -19,7 +19,7 @@ module Katello
 
       def self.custom_filters
         {
-          "ngram_filter"  => {
+          "ngram_filter" => {
             "type"      => "edgeNGram",
             "side"      => "front",
             "min_gram"  => 1,
@@ -38,7 +38,7 @@ module Katello
       end
 
       def self.active_record_search_classes
-        ignore_list =  %w(Katello::CpConsumerUser Katello::Pool)
+        ignore_list = %w(Katello::CpConsumerUser Katello::Pool)
         classes = get_subclasses(ActiveRecord::Base)
         classes = classes.select { |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
 

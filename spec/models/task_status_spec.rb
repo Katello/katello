@@ -48,20 +48,20 @@ module Katello
             { :rpm =>
               { :succeeded => true,
                 :details =>
-                  { "deps" =>                        [{"qname" => "elephant-8.8-1.noarch",
-                                                       "repoid" => "zoo-repo-updates",
-                                                       "name" => "elephant",
-                                                       "version" => "8.8",
-                                                       "arch" => "noarch",
-                                                       "epoch" => "0",
-                                                       "release" => "1"}],
-                    "resolved" =>                        [{"qname" => "cheetah-1.26.3-5.noarch",
-                                                           "repoid" => "zoo-repo-updates",
-                                                           "name" => "cheetah",
-                                                           "version" => "1.26.3",
-                                                           "arch" => "noarch",
-                                                           "epoch" => "0",
-                                                           "release" => "5"}]
+                  { "deps" => [{"qname" => "elephant-8.8-1.noarch",
+                                "repoid" => "zoo-repo-updates",
+                                "name" => "elephant",
+                                "version" => "8.8",
+                                "arch" => "noarch",
+                                "epoch" => "0",
+                                "release" => "1"}],
+                    "resolved" => [{"qname" => "cheetah-1.26.3-5.noarch",
+                                    "repoid" => "zoo-repo-updates",
+                                    "name" => "cheetah",
+                                    "version" => "1.26.3",
+                                    "arch" => "noarch",
+                                    "epoch" => "0",
+                                    "release" => "5"}]
                   }
               }
             }
@@ -97,13 +97,13 @@ module Katello
             { :package_group =>
               { :succeeded => true,
                 :details =>
-                { "deps" =>                       [{"qname" => "elephant-8.8-1.noarch",
-                                                    "repoid" => "zoo-repo-updates",
-                                                    "name" => "elephant",
-                                                    "version" => "8.8",
-                                                    "arch" => "noarch",
-                                                    "epoch" => "0",
-                                                    "release" => "1"}],
+                { "deps" => [{"qname" => "elephant-8.8-1.noarch",
+                              "repoid" => "zoo-repo-updates",
+                              "name" => "elephant",
+                              "version" => "8.8",
+                              "arch" => "noarch",
+                              "epoch" => "0",
+                              "release" => "1"}],
                   "resolved" =>                       [{"qname" => "cheetah-1.26.3-5.noarch",
                                                         "repoid" => "zoo-repo-updates",
                                                         "name" => "cheetah",
@@ -146,13 +146,13 @@ module Katello
             { :rpm =>
               { :succeeded => true,
                 :details =>
-                { "deps" =>                       [{"qname" => "cheetah-1.26.3-5.noarch",
-                                                    "repoid" => "installed",
-                                                    "name" => "cheetah",
-                                                    "version" => "1.26.3",
-                                                    "arch" => "noarch",
-                                                    "epoch" => "0",
-                                                    "release" => "5"}],
+                { "deps" => [{"qname" => "cheetah-1.26.3-5.noarch",
+                              "repoid" => "installed",
+                              "name" => "cheetah",
+                              "version" => "1.26.3",
+                              "arch" => "noarch",
+                              "epoch" => "0",
+                              "release" => "5"}],
                   "resolved" =>                       [{"qname" => "elephant-8.8-1.noarch",
                                                         "repoid" => "installed",
                                                         "name" => "elephant",
@@ -195,20 +195,20 @@ module Katello
             { :package_group =>
               { :succeeded => true,
                 :details =>
-                { "deps" =>                      [{"qname" => "elephant-8.8-1.noarch",
-                                                   "repoid" => "zoo-repo-updates",
-                                                   "name" => "elephant",
-                                                   "version" => "8.8",
-                                                   "arch" => "noarch",
-                                                   "epoch" => "0",
-                                                   "release" => "1"}],
-                  "resolved" =>                      [{"qname" => "cheetah-1.26.3-5.noarch",
-                                                       "repoid" => "zoo-repo-updates",
-                                                       "name" => "cheetah",
-                                                       "version" => "1.26.3",
-                                                       "arch" => "noarch",
-                                                       "epoch" => "0",
-                                                       "release" => "5"}]
+                { "deps" => [{"qname" => "elephant-8.8-1.noarch",
+                              "repoid" => "zoo-repo-updates",
+                              "name" => "elephant",
+                              "version" => "8.8",
+                              "arch" => "noarch",
+                              "epoch" => "0",
+                              "release" => "1"}],
+                  "resolved" => [{"qname" => "cheetah-1.26.3-5.noarch",
+                                  "repoid" => "zoo-repo-updates",
+                                  "name" => "cheetah",
+                                  "version" => "1.26.3",
+                                  "arch" => "noarch",
+                                  "epoch" => "0",
+                                  "release" => "5"}]
                 }
               }
             }
@@ -244,20 +244,20 @@ module Katello
             { :rpm =>
               { :succeeded => true,
                 :details =>
-                { "deps" =>                       [{"qname" => "elephant-8.8-1.noarch",
-                                                    "repoid" => "zoo-repo-updates",
-                                                    "name" => "elephant",
-                                                    "version" => "8.8",
-                                                    "arch" => "noarch",
-                                                    "epoch" => "0",
-                                                    "release" => "1"}],
-                  "resolved" =>                       [{"qname" => "cheetah-1.26.3-5.noarch",
-                                                        "repoid" => "zoo-repo-updates",
-                                                        "name" => "cheetah",
-                                                        "version" => "1.26.3",
-                                                        "arch" => "noarch",
-                                                        "epoch" => "0",
-                                                        "release" => "5"}]
+                { "deps" => [{"qname" => "elephant-8.8-1.noarch",
+                              "repoid" => "zoo-repo-updates",
+                              "name" => "elephant",
+                              "version" => "8.8",
+                              "arch" => "noarch",
+                              "epoch" => "0",
+                              "release" => "1"}],
+                  "resolved" => [{"qname" => "cheetah-1.26.3-5.noarch",
+                                  "repoid" => "zoo-repo-updates",
+                                  "name" => "cheetah",
+                                  "version" => "1.26.3",
+                                  "arch" => "noarch",
+                                  "epoch" => "0",
+                                  "release" => "5"}]
                 }
               }
             }
@@ -272,19 +272,19 @@ module Katello
 
     describe "Yum error" do
       let(:result) do
-        {:errors =>          ["['Errors were encountered while downloading packages.', 'katello-all-0.1.149-1.fc16.noarch: failure: " \
+        {:errors => ["['Errors were encountered while downloading packages.', 'katello-all-0.1.149-1.fc16.noarch: failure: " \
                                "katello-all-0.1.149-1.fc16.noarch.rpm from katello: [Errno 256] No more mirrors to try.']",
-                              ["Traceback (most recent call last):\n",
-                               "  File \"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\", line 404, in run\n    result = self.callable(*self.args, **self.kwargs)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\", line 520, in __updatepackages\n    return packages.update(names)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 72, in __call__\n    return self.stub._send(request, opts)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 133, in _send\n    return self.__send(request, options)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 164, in __send\n    any=opts.any)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 144, in send\n    return self.__getreply(sn, reader)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 181, in __getreply\n    return self.__onreply(envelope)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 197, in __onreply\n    raise RemoteException.instance(reply)\n",
-                               "YumDownloadError: ['Errors were encountered while downloading packages.', 'katello-all-0.1.149-1.fc16.noarch: failure: " \
-                               "katello-all-0.1.149-1.fc16.noarch.rpm from katello: [Errno 256] No more mirrors to try.']\n"]]}
+                     ["Traceback (most recent call last):\n",
+                      "  File \"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\", line 404, in run\n    result = self.callable(*self.args, **self.kwargs)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\", line 520, in __updatepackages\n    return packages.update(names)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 72, in __call__\n    return self.stub._send(request, opts)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 133, in _send\n    return self.__send(request, options)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 164, in __send\n    any=opts.any)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 144, in send\n    return self.__getreply(sn, reader)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 181, in __getreply\n    return self.__onreply(envelope)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 197, in __onreply\n    raise RemoteException.instance(reply)\n",
+                      "YumDownloadError: ['Errors were encountered while downloading packages.', 'katello-all-0.1.149-1.fc16.noarch: failure: " \
+                      "katello-all-0.1.149-1.fc16.noarch.rpm from katello: [Errno 256] No more mirrors to try.']\n"]]}
       end
       let(:state) { "error" }
 
@@ -299,16 +299,16 @@ module Katello
 
     describe "Pulp error" do
       let(:result) do
-        {:errors =>          ["('8341bcac-b627-49ce-9383-f75c75f24202', 0)",
-                              ["Traceback (most recent call last):\n",
-                               "  File \"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\", line 404, in run\n    result = self.callable(*self.args, **self.kwargs)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\", line 456, in __installpackages\n    return packages.install(names, reboot)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 72, in __call__\n    return self.stub._send(request, opts)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 133, in _send\n    return self.__send(request, options)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 164, in __send\n    any=opts.any)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 143, in send\n    self.__getstarted(sn, reader)\n",
-                               "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 166, in __getstarted\n    raise RequestTimeout(sn, 0)\n",
-                               "RequestTimeout: ('8341bcac-b627-49ce-9383-f75c75f24202', 0)\n"]]}
+        {:errors => ["('8341bcac-b627-49ce-9383-f75c75f24202', 0)",
+                     ["Traceback (most recent call last):\n",
+                      "  File \"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\", line 404, in run\n    result = self.callable(*self.args, **self.kwargs)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\", line 456, in __installpackages\n    return packages.install(names, reboot)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 72, in __call__\n    return self.stub._send(request, opts)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 133, in _send\n    return self.__send(request, options)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\", line 164, in __send\n    any=opts.any)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 143, in send\n    self.__getstarted(sn, reader)\n",
+                      "  File \"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\", line 166, in __getstarted\n    raise RequestTimeout(sn, 0)\n",
+                      "RequestTimeout: ('8341bcac-b627-49ce-9383-f75c75f24202', 0)\n"]]}
       end
       let(:state) { "error" }
 

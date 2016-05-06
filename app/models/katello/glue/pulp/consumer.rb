@@ -52,7 +52,7 @@ module Katello
       end
 
       def unbind_repo_ids(repo_ids, distributor_type)
-        error_ids     = []
+        error_ids = []
 
         repo_ids.each do |repo_id|
           begin
@@ -66,7 +66,7 @@ module Katello
       end
 
       def bind_repo_ids(repo_ids, distributor_type, bind_options)
-        error_ids     = []
+        error_ids = []
 
         repo_ids.each do |repo_id|
           begin

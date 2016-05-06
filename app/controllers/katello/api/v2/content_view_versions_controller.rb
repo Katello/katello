@@ -125,7 +125,7 @@ module Katello
 
     def calculate_hosts_for_incremental(bulk_params, use_composites)
       if bulk_params[:included].try(:[], :search)
-        version_environments  = find_version_environments_for_hosts(use_composites)
+        version_environments = find_version_environments_for_hosts(use_composites)
         restrict_hosts = lambda do |relation|
           if version_environments.any?
             errata = Erratum.with_identifiers(params[:add_content][:errata_ids])
@@ -165,7 +165,7 @@ module Katello
       list.each do |combination|
         version_environment = {
           :content_view_version => ContentViewVersion.find(combination[:content_view_version_id]),
-          :environments =>  KTEnvironment.where(:id => combination[:environment_ids])
+          :environments => KTEnvironment.where(:id => combination[:environment_ids])
         }
 
         view = version_environment[:content_view_version].content_view
@@ -195,7 +195,7 @@ module Katello
       component.composites.select { |c| c.environments.any? }.map do |composite|
         {
           :content_view_version => composite,
-          :environments =>  composite.environments
+          :environments => composite.environments
         }
       end
     end

@@ -215,7 +215,7 @@ module Katello
                                                     :content_view_id => content_view.id)
         host.content_source = SmartProxy.find(params[:content_source_id])
         if host.operatingsystem.is_a?(Redhat)
-          view_options =  host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
+          view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end
       end
       view_options

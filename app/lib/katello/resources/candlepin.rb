@@ -412,7 +412,7 @@ module Katello
 
           def get_ueber_cert_pkcs12(key, name = nil, password = nil)
             certs = get_ueber_cert(key)
-            c =  OpenSSL::X509::Certificate.new certs["cert"]
+            c = OpenSSL::X509::Certificate.new certs["cert"]
             p = OpenSSL::PKey::RSA.new certs["key"]
             OpenSSL::PKCS12.create(password, name, p, c, nil, "PBE-SHA1-3DES", "PBE-SHA1-3DES")
           end

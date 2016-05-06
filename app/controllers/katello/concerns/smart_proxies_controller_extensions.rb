@@ -19,7 +19,7 @@ module Katello
         rescue ::Foreman::WrappedException => e
           Rails.logger.warn _('Error connecting. Got: %s') % e
           respond_to do |format|
-            format.html { render :text =>  _('Error retrieving Pulp storage') }
+            format.html { render :text => _('Error retrieving Pulp storage') }
             format.json { render :json => {:success => false, :message => e} }
           end
         end
@@ -30,7 +30,7 @@ module Katello
           if @pulp_status['fatal']
             Rails.logger.warn @pulp_status['fatal']
             respond_to do |format|
-              format.html { render :text =>  _('Error connecting to Pulp service') }
+              format.html { render :text => _('Error connecting to Pulp service') }
               format.json { render :json => {:success => false, :message => @pulp_status['fatal']} }
             end
           else

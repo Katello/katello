@@ -8,7 +8,7 @@ class AddHostContentViewEnvironment < ActiveRecord::Migration
 
     [Hostgroup, Host::Managed].each do |model|
       model.find_each do |host|
-        lifecycle_environment =  host.environment.try(:lifecycle_environment)
+        lifecycle_environment = host.environment.try(:lifecycle_environment)
         content_view = host.environment.try(:content_view)
         if lifecycle_environment && content_view
           host.update_column(:content_view_id, content_view.id)

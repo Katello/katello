@@ -103,7 +103,7 @@ module Katello
     end
 
     def notification_polling_time
-      time  = 120
+      time = 120
       return time.to_i * 1_000 if time
       return 120_000
     end

@@ -58,7 +58,7 @@ module Katello
     end
 
     def test_delete_request
-      mock_pulp_server(:delete_upload_request  => true)
+      mock_pulp_server(:delete_upload_request => true)
       delete :destroy, :id => "1", :repository_id => @repo.id
 
       assert_response :success

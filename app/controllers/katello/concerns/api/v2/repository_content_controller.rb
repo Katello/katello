@@ -33,7 +33,7 @@ module Katello
         if default_sort.is_a?(Array)
           sort_options = default_sort
         elsif default_sort.is_a?(Proc)
-          options[:custom_sort] =  default_sort
+          options[:custom_sort] = default_sort
         else
           fail "Unsupported default_sort type"
         end

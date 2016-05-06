@@ -120,7 +120,7 @@ module Katello
       @dev_cvpe.save!
 
       @foreman_host = FactoryGirl.create(:host, :with_content, :content_view => @library_dev_staging_view,
-                                     :lifecycle_environment =>  @library, :organization => @library.organization, :environment => @library_puppet_env)
+                                     :lifecycle_environment => @library, :organization => @library.organization, :environment => @library_puppet_env)
     end
 
     def test_correct_puppet_environment

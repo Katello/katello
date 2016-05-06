@@ -37,7 +37,7 @@ module Containers
       ::Katello::DockerTag.expects(:where).with(:id => tag.id.to_s).returns([tag])
 
       capsule_id = 300
-      image  = OpenStruct.new(:id => 1000)
+      image = OpenStruct.new(:id => 1000)
 
       @state.expects(:build_image).with(:repository_name => repo.pulp_id,
                                         :tag => tag.name,

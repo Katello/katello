@@ -10,7 +10,7 @@ module Katello::Host
       User.current = users(:admin)
       @content_view = katello_content_views(:library_dev_view)
       @content_view_environment = katello_content_view_environments(:library_dev_view_library)
-      @hypervisor_params = { 'hypervisor' =>  ['guest-1', 'guest-2'] }
+      @hypervisor_params = { 'hypervisor' => ['guest-1', 'guest-2'] }
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
     end
 

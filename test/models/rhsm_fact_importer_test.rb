@@ -9,7 +9,7 @@ module Katello
         'net.interface.eth1.mac_address' => '00:00:00:00:00:13',
         'distribution.name' => 'Red Hat', 'distribution.version' => '3.2'
       }
-      @host =  ::Host::Managed.new(:name => "here.be.dragons", :managed => false)
+      @host = ::Host::Managed.new(:name => "here.be.dragons", :managed => false)
     end
 
     def test_import_facts

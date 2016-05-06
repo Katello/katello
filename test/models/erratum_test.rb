@@ -55,7 +55,7 @@ module Katello
     end
 
     def test_applicable_to_hosts
-      errata =  Erratum.applicable_to_hosts([@host, @host_without_errata])
+      errata = Erratum.applicable_to_hosts([@host, @host_without_errata])
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement

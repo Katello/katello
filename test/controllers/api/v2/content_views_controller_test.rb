@@ -359,7 +359,7 @@ module Katello
 
     def test_remove_protected_envs_with_systems
       sys = System.find(katello_systems(:simple_server_3).id)
-      system_edit_permission = {:name => :edit_content_hosts, :search  => "name=\"#{sys.name}\"" }
+      system_edit_permission = {:name => :edit_content_hosts, :search => "name=\"#{sys.name}\"" }
 
       sys_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
                                    :search => "name=\"#{sys.environment.name}\"" }
@@ -413,7 +413,7 @@ module Katello
 
     def test_remove_protected_envs_with_activation_keys
       ak = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
-      ak_edit_permission = {:name => :edit_activation_keys, :search  => "name=\"#{ak.name}\"" }
+      ak_edit_permission = {:name => :edit_activation_keys, :search => "name=\"#{ak.name}\"" }
 
       ak_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
                                   :search => "name=\"#{ak.environment.name}\"" }

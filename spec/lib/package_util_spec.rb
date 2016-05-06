@@ -133,7 +133,7 @@ module Katello
       describe "nvre with dash and dots in name and rpm" do
         subject { "name-with-dashes-and.dots-1.0-1" }
         let(:expected) do
-          { :name  => "name-with-dashes-and.dots",
+          { :name => "name-with-dashes-and.dots",
             :version => "1.0",
             :release => "1" }
         end

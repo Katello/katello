@@ -48,7 +48,7 @@ module Katello
 
     describe 'handles pool.deleted' do
       let(:mymessage) do
-        message "pool.deleted", :entityId  => pool_id
+        message "pool.deleted", :entityId => pool_id
       end
 
       it 'pool removed from index' do

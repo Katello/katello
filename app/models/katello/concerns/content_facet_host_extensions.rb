@@ -11,7 +11,7 @@ module Katello
           :unknown => Katello::ErrataStatus::UNKNOWN
         }
 
-        has_one :content_facet, :class_name => '::Katello::Host::ContentFacet', :foreign_key => :host_id, :inverse_of => :host, :dependent =>  :destroy
+        has_one :content_facet, :class_name => '::Katello::Host::ContentFacet', :foreign_key => :host_id, :inverse_of => :host, :dependent => :destroy
 
         has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id'
         scoped_search :on => :status, :in => :errata_status_object, :rename => :errata_status,

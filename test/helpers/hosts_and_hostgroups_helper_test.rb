@@ -17,7 +17,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     @content_source = SmartProxy.create!(:name => "foobar", :url => "http://capsule.com/")
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
-    @env  = @repo_with_distro.environment
+    @env = @repo_with_distro.environment
   end
 
   test "kickstart repository options should handle os - selected call with no params" do
@@ -124,7 +124,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @content_source = SmartProxy.create!(:name => "foobar", :url => "http://capsule.com/")
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
-    @env  = @repo_with_distro.environment
+    @env = @repo_with_distro.environment
     @hostgroup = ::Hostgroup.new(:lifecycle_environment_id => @env.id,
                                 :content_view_id => @cv.id)
     @hostgroup.architecture = @arch

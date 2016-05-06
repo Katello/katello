@@ -26,7 +26,7 @@ module Katello
                       :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
 
         def self.ensure_sync_notification
-          resource =  Katello.pulp_server.resources.event_notifier
+          resource = Katello.pulp_server.resources.event_notifier
           url = SETTINGS[:katello][:post_sync_url]
           type = Runcible::Resources::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
           notifs = resource.list
