@@ -10,7 +10,7 @@ module Actions
         end
 
         def run
-          response =  pulp_extensions.consumer.create(input[:uuid], display_name: input[:name])
+          response = pulp_extensions.consumer.create(input[:uuid], display_name: input[:name])
           output[:response] = response.slice(:uuid, :name)
         end
       end

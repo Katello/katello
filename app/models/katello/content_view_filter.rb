@@ -2,7 +2,7 @@ module Katello
   class ContentViewFilter < Katello::Model
     self.include_root_in_json = false
 
-    RPM         = Rpm::CONTENT_TYPE
+    RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
     CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA]

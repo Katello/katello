@@ -98,7 +98,7 @@ module Katello
 
     def test_kickstart_repos_with_one_distro
       @os.expects(:distribution_repositories).with(@host).returns([@repo_with_distro])
-      repos =  @os.kickstart_repos(@host)
+      repos = @os.kickstart_repos(@host)
       refute_empty repos
       assert_equal @repo_with_distro.full_path(@content_source), repos.first[:path]
     end

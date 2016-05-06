@@ -382,7 +382,7 @@ module Katello
 
     def test_add_repository_from_other_view
       view = @library_view
-      bad_repo =  Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
+      bad_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
       assert_raises(ActiveRecord::RecordInvalid) do
         view.repositories << bad_repo
         view.save!

@@ -8,7 +8,7 @@ module Actions
 
           current_repos_on_capsule = capsule_content.current_repositories(environment, content_view)
           list_of_repos_to_sync = capsule_content.repos_available_to_capsule(environment, content_view)
-          need_creation =  list_of_repos_to_sync - current_repos_on_capsule
+          need_creation = list_of_repos_to_sync - current_repos_on_capsule
 
           need_creation.each do |repo|
             create_repo_in_pulp(capsule_content, repo)

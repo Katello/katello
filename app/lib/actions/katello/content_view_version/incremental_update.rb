@@ -195,7 +195,7 @@ module Actions
           puppet_module = find_puppet_modules([module_id]).first
           possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_view
           plan_action(Pulp::Repository::CopyPuppetModule, :source_pulp_id => possible_repos.first.pulp_id,
-                    :target_pulp_id => new_repo.pulp_id, :clauses =>  {'unit_id' => puppet_module.uuid}, :include_result => true)
+                    :target_pulp_id => new_repo.pulp_id, :clauses => {'unit_id' => puppet_module.uuid}, :include_result => true)
         end
 
         def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)

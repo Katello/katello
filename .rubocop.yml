@@ -3,8 +3,10 @@ inherit_from:
   - .rubocop_todo.yml
 # end TODO
 
+Rails:
+  Enabled: true
+
 AllCops:
-  RunRailsCops: true # automatically run rails cops
   Exclude:
     - db/migrate/20131014135042_katello_tables.rb
     - engines/bastion_katello/node_modules/**/*
@@ -105,3 +107,6 @@ Style/EachWithObject:
 
 Style/SymbolProc:
   Enabled: false # don't force usage of symbol procs
+
+Style/SignalException:
+  EnforcedStyle: semantic

@@ -240,7 +240,7 @@ module Katello
       task_id = params['call_report']['task_id']
       User.current = User.anonymous_admin
 
-      repo    = Repository.where(:pulp_id => repo_id).first
+      repo = Repository.where(:pulp_id => repo_id).first
       fail _("Couldn't find repository '%s'") % repo_id if repo.nil?
       Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
 
@@ -370,7 +370,7 @@ module Katello
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)
       if is_available_for
-        params[:library] =  true
+        params[:library] = true
         sub_query = ContentViewRepository.where(:content_view_id => content_view_id).pluck(:repository_id)
         query = query.where("#{Repository.table_name}.id not in (#{sub_query.join(',')})") unless sub_query.empty?
       elsif environment_id

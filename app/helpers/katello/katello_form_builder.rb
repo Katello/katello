@@ -132,7 +132,7 @@ module Katello
     end
 
     def field_label(name, options)
-      required = object.class.validators_on(name).any? do|v|
+      required = object.class.validators_on(name).any? do |v|
         v.is_a? ActiveModel::Validations::PresenceValidator
       end
 

@@ -8,7 +8,7 @@ module Katello
 
     let(:host) do
       FactoryGirl.create(:host, :with_content, :content_view => katello_content_views(:library_dev_view),
-                         :lifecycle_environment =>  katello_environments(:library))
+                         :lifecycle_environment => katello_environments(:library))
     end
 
     let(:status) { host.get_status(Katello::ErrataStatus) }

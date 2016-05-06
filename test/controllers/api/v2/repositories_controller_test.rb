@@ -564,7 +564,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:remove_content, allowed_perms, denied_perms) do
-        put :remove_content, :id => @repository.id, :uuids =>  ['foo', 'bar']
+        put :remove_content, :id => @repository.id, :uuids => ['foo', 'bar']
       end
     end
 

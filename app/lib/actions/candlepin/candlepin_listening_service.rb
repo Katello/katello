@@ -6,7 +6,7 @@ module Actions
 
     class CandlepinListeningService
       RECONNECT_ATTEMPTS = 30
-      TIMEOUT =  Qpid::Messaging::Duration::SECOND
+      TIMEOUT = Qpid::Messaging::Duration::SECOND
       NO_MESSAGE_AVAILABLE_ERROR_TYPE = 'NoMessageAvailable'
 
       class << self

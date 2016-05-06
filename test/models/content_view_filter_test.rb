@@ -6,7 +6,7 @@ module Katello
       User.current = User.find(users(:admin).id)
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       @view = create(:katello_content_view, :organization => @repo.product.organization)
-      @filter =  create(:katello_content_view_filter, :content_view => @view)
+      @filter = create(:katello_content_view_filter, :content_view => @view)
       ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
     end
 
@@ -69,7 +69,7 @@ module Katello
     end
 
     def test_add_good_repo
-      view =  @filter.content_view
+      view = @filter.content_view
       view.repositories << @repo
       view.save!
       @filter.repositories << @repo
@@ -79,7 +79,7 @@ module Katello
 
     def test_content_view_delete_repo
       @filter.save!
-      view =  @filter.content_view
+      view = @filter.content_view
       view.repositories << @repo
       view.save!
       @repo = Repository.find(@repo.id)
@@ -88,7 +88,7 @@ module Katello
       @repo = Repository.find(@repo.id)
       @filter.repositories << @repo
       @filter.save!
-      view  = ContentView.find(view)
+      view = ContentView.find(view)
       view.repositories.delete(@repo)
       view.save!
       assert_empty view.filters.first.repositories

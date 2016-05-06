@@ -40,7 +40,7 @@ module Katello
       # values are loaded from CDN
       def substitute_vars(path_with_vars)
         if path_with_vars =~ /^(.*\$\w+)(.*)$/
-          prefix_with_vars, suffix_without_vars =  Regexp.last_match[1], Regexp.last_match[2]
+          prefix_with_vars, suffix_without_vars = Regexp.last_match[1], Regexp.last_match[2]
         else
           prefix_with_vars, suffix_without_vars = "", path_with_vars
         end

@@ -6,7 +6,7 @@ module Katello
       included do
         def update_environment
           change_types = %w(new obsolete updated)
-          changed  = self.changes
+          changed = self.changes
 
           change_types.each do |kind|
             changed[kind].slice!(@environment) unless changed[kind].empty?

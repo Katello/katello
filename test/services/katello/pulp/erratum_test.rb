@@ -39,7 +39,7 @@ module Katello
 
       def test_update_from_json
         uuid = RepositorySupport.repo.errata_json.detect { |e| e['id'] == @@full_errata_id }['_id']
-        errata_data =  Pulp::Erratum.pulp_data(uuid)
+        errata_data = Pulp::Erratum.pulp_data(uuid)
         erratum = Erratum.create!(:uuid => errata_data['_id'])
         erratum.update_from_json(errata_data)
         %w(title severity issued description solution updated summary).each do |attr|

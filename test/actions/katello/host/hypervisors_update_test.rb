@@ -11,7 +11,7 @@ module Katello::Host
       @organization = FactoryGirl.build(:katello_organization)
       @content_view = katello_content_views(:library_dev_view)
       @content_view_environment = katello_content_view_environments(:library_dev_view_library)
-      @hypervisor_results = { 'created' =>  [{ :name => 'hypervisor' }], 'updated' => [], 'deleted' => [] }
+      @hypervisor_results = { 'created' => [{ :name => 'hypervisor' }], 'updated' => [], 'deleted' => [] }
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
 
       @host = FactoryGirl.build(:host, :with_subscription, :content_view => @content_view,

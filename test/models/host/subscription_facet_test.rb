@@ -9,7 +9,7 @@ module Katello
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
       FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
-                                     :lifecycle_environment =>  library, :organization => org)
+                                     :lifecycle_environment => library, :organization => org)
     end
     let(:subscription_facet) { host.subscription_facet }
   end

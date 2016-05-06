@@ -56,7 +56,7 @@ module Katello
     api :PUT, "/hosts/:host_id/packages/upgrade_all", N_("Update packages remotely")
     param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
     def upgrade_all
-      task     = async_task(::Actions::Katello::Host::Package::Update, @host, [])
+      task = async_task(::Actions::Katello::Host::Package::Update, @host, [])
       respond_for_async :resource => task
     end
 

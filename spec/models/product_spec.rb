@@ -16,7 +16,7 @@ module Katello
         @organization = get_organization
       end
 
-      @provider     = Provider.where(:name => "customprovider", :organization => @organization, :provider_type => Provider::CUSTOM).first_or_create
+      @provider = Provider.where(:name => "customprovider", :organization => @organization, :provider_type => Provider::CUSTOM).first_or_create
       @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", :ssl_client_cert => "456", :ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123")
       @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
       @substitutor_mock.stubs(:precalculate).returns do |_paths|

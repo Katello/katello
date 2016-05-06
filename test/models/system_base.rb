@@ -10,7 +10,7 @@ module Katello
       @library            = KTEnvironment.find(katello_environments(:library).id)
       @library_view       = ContentView.find(katello_content_views(:library_view).id)
       @acme_default       = ContentView.find(katello_content_views(:acme_default).id)
-      @library_dev_staging_view   = ContentView.find(katello_content_views(:library_dev_staging_view).id)
+      @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @system             = System.find(katello_systems(:simple_server).id)
       @errata_system      = System.find(katello_systems(:errata_server).id)
     end

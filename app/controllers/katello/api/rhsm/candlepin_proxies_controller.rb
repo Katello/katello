@@ -98,7 +98,7 @@ module Katello
       organization = find_organization
       @all_environments = get_content_view_environments(params[:name], organization).collect do |env|
         {
-          :id  => env.cp_id,
+          :id => env.cp_id,
           :name => env.label,
           :display_name => env.name,
           :description => env.content_view.description

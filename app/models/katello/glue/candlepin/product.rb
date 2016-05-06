@@ -26,7 +26,7 @@ module Katello
 
     def self.import_from_cp(attrs = nil, &block)
       product_content_attrs = attrs.delete(:productContent) || []
-      import_logger        = attrs[:import_logger]
+      import_logger = attrs[:import_logger]
 
       attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
 
