@@ -510,6 +510,10 @@ module Katello
       return true
     end
 
+    def self.humanize_class_name(_name = nil)
+      _("Content Views")
+    end
+
     protected
 
     def remove_repository(repository)
@@ -621,10 +625,6 @@ module Katello
 
     def related_resources
       self.organization
-    end
-
-    def self.humanize_class_name(_name = nil)
-      _("Content Views")
     end
   end
 end

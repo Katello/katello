@@ -195,16 +195,16 @@ module Katello
       raise JSON.parse(e.response)['displayMessage']
     end
 
+    def self.humanize_class_name(_name = nil)
+      _("Activation Keys")
+    end
+
     private
 
     def set_default_content_view
       if self.environment && self.content_view.nil?
         self.content_view = self.environment.try(:default_content_view)
       end
-    end
-
-    def self.humanize_class_name(_name = nil)
-      _("Activation Keys")
     end
   end
 end

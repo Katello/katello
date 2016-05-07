@@ -62,8 +62,6 @@ module Katello
         @post_queue ||= Glue::Queue.new(pre_queue)
       end
 
-      public
-
       # we override this method in order to include checking the
       # after validation callbacks status, as rails by default does
       # not care about their return status.

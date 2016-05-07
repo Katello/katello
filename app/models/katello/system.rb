@@ -228,8 +228,6 @@ module Katello
       self.products.flat_map(&:available_content)
     end
 
-    private
-
     def self.search_host_collections(_key, operator, value)
       conditions = sanitize_sql_for_conditions(["#{Katello::HostCollection.table_name}.name #{operator} '#{value}'"])
       systems_matching_query = Katello::System.joins("INNER JOIN #{Katello::HostCollectionHosts.table_name} ON \
@@ -261,6 +259,12 @@ module Katello
       casted
     end
 
+    def self.humanize_class_name(_name = nil)
+      _('Content Host')
+    end
+
+    private
+
     def refresh_running_tasks
       ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)
       TaskStatus.refresh(ids)
@@ -280,10 +284,6 @@ module Katello
 
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
-    end
-
-    def self.humanize_class_name(_name = nil)
-      _('Content Host')
     end
   end
 end
