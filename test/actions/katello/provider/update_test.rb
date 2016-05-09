@@ -16,12 +16,12 @@ module Actions
     it 'plans' do
       action = create_action(action_class)
       action.expects(:action_subject).with(@provider)
-      plan_action(action, @provider, :redhat_repository_url => 'https://localhost')
+      plan_action(action, @provider, :redhat_repository_url => 'http://localhost')
       repositories = @provider.products.enabled.collect { |product| product.repositories }
       repositories.flatten!
       repositories = repositories.collect do |repository|
         next unless repository.url
-        [repository, {:url => "https://localhost"}]
+        [repository, {:url => "http://localhost"}]
       end
 
       assert_action_planed_with(action, repository_update_class) do |repository|

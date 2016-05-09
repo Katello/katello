@@ -22,6 +22,7 @@ module Katello
                                              :allow_blank => false, :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."}
     validate :constraint_redhat_update
     validate :only_one_rhn_provider
+    validate :only_cdn_https
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
                                                           :attributes => [:repository_url]
@@ -32,6 +33,12 @@ module Katello
     scope :redhat, -> { where(:provider_type => REDHAT) }
     scope :custom, -> { where(:provider_type => CUSTOM) }
     scope :anonymous, -> { where(:provider_type => ANONYMOUS) }
+
+    def only_cdn_https
+      if repository_url.present? && repository_url.downcase.start_with?('https') && !repository_url.downcase.start_with?('https://cdn.redhat.com')
+        errors.add(:base, _("HTTPS URLs are not supported, with the exception of 'cdn.redhat.com'"))
+      end
+    end
 
     def self.create_anonymous!(organization)
       create!(:name => SecureRandom.uuid, :description => nil,

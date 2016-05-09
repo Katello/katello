@@ -9,7 +9,7 @@ module Katello
       {
         :name => "some name",
         :description => "a description",
-        :repository_url => "https://some.url",
+        :repository_url => "https://cdn.redhat.com",
         :provider_type => Provider::REDHAT,
         :organization => @organization
       }
@@ -19,7 +19,7 @@ module Katello
       {
         :name => "some name",
         :description => "a description",
-        :repository_url => "https://some.url/path",
+        :repository_url => "http://some.url/path",
         :provider_type => Provider::CUSTOM,
         :organization => @organization
       }
@@ -39,7 +39,7 @@ module Katello
         Resources::Candlepin::Product.stubs(:create).returns(:id => "product_id")
         @provider = Provider.new(
                                    :name => 'test_provider',
-                                   :repository_url => 'https://something.net',
+                                   :repository_url => 'http://something.net',
                                    :provider_type => Provider::REDHAT,
                                    :organization => @organization
                                  )
@@ -135,7 +135,7 @@ module Katello
                                   :relative_path => '/foo',
                                   :content_id => 'asdfasdf',
                                   :content_view_version => product.organization.library.default_content_view_version,
-                                  :url => 'https://localhost')
+                                  :url => 'http://localhost')
             repo.stubs(:create_pulp_repo).returns({})
             repo.save!
           end
@@ -221,13 +221,13 @@ module Katello
 
       it "should be invalid to create two providers with the same name" do
         @provider.name = "some name"
-        @provider.repository_url = "https://some.url.here"
+        @provider.repository_url = "http://some.url.here"
         @provider.provider_type = Provider::REDHAT
         @provider.save!
 
         @provider2 = Provider.new
         @provider2.name = "some name"
-        @provider2.repository_url = "https://some.url.here"
+        @provider2.repository_url = "http://some.url.here"
         @provider2.provider_type = Provider::REDHAT
 
         @provider2.wont_be :valid?
@@ -238,7 +238,7 @@ module Katello
         subject { Provider.create(to_create_rh) }
 
         it "should allow updating url" do
-          subject.repository_url = "https://another.example.com"
+          subject.repository_url = "http://another.example.com"
           subject.must_be :valid?
         end
 
@@ -288,23 +288,28 @@ module Katello
       end
 
       describe "should accept" do
-        it "'https://www.redhat.com'" do
-          @provider.repository_url = "https://redhat.com"
+        it "'https://cdn.redhat.com'" do
+          @provider.repository_url = "https://cdn.redhat.com"
           @provider.must_be :valid?
         end
 
-        it "'https://normallength.url/with/sub/directory/'" do
-          @provider.repository_url = "https://normallength.url/with/sub/directory/"
+        it "'https://cdn.redhat.com/'" do
+          @provider.repository_url = "https://cdn.redhat.com/"
           @provider.must_be :valid?
         end
 
-        it "'https://ltl.url/'" do
-          @provider.repository_url = "https://ltl.url/"
+        it "'http://normallength.url/with/sub/directory/'" do
+          @provider.repository_url = "http://normallength.url/with/sub/directory/"
           @provider.must_be :valid?
         end
 
-        it "'https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/'" do
-          @provider.repository_url = "https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/over/kill/"
+        it "'http://ltl.url/'" do
+          @provider.repository_url = "http://ltl.url/"
+          @provider.must_be :valid?
+        end
+
+        it "'http://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/'" do
+          @provider.repository_url = "http://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/over/kill/"
           @provider.must_be :valid?
         end
 
@@ -318,13 +323,13 @@ module Katello
           @provider.must_be :valid?
         end
 
-        it "'https://dr.pepper.yum:123/nutrition/facts/'" do
-          @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
+        it "'http://dr.pepper.yum:123/nutrition/facts/'" do
+          @provider.repository_url = "http://dr.pepper.yum:123/nutrition/facts/"
           @provider.must_be :valid?
         end
 
-        it "'https://something'" do
-          @provider.repository_url = "https://something"
+        it "'http://something'" do
+          @provider.repository_url = "http://something"
           @provider.must_be :valid?
         end
       end
@@ -345,6 +350,21 @@ module Katello
           @provider.wont_be :valid?
         end
 
+        it "'https://dr.pepper.yum:123/nutrition/facts/'" do
+          @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
+          @provider.wont_be :valid?
+        end
+
+        it "'https://katello.org/cdn.redhat.com'" do
+          @provider.repository_url = "https://katello.org/cdn.redhat.com"
+          @provider.wont_be :valid?
+        end
+
+        it "'https://ltl.url/'" do
+          @provider.repository_url = "https://ltl.url/"
+          @provider.wont_be :valid?
+        end
+
         it "'repo.fedorahosted.org/reposity'" do
           @provider.repository_url = "repo.fedorahosted.org/reposity"
           @provider.wont_be :valid?
@@ -356,10 +376,10 @@ module Katello
       it "should be trimmed (ruby strip)" do
         @provider = Provider.new
         @provider.name = "some name"
-        @provider.repository_url = "https://thisurlhasatrailingspacethatshould.com/be/trimmed/   "
+        @provider.repository_url = "http://thisurlhasatrailingspacethatshould.com/be/trimmed/   "
         @provider.provider_type = Provider::REDHAT
         @provider.save!
-        @provider.repository_url.must_equal("https://thisurlhasatrailingspacethatshould.com/be/trimmed/")
+        @provider.repository_url.must_equal("http://thisurlhasatrailingspacethatshould.com/be/trimmed/")
       end
     end
 
