@@ -82,8 +82,6 @@ module Katello
       create_params[:organization] = @organization
       create_params[:prior] = @prior
       @environment = KTEnvironment.create!(create_params)
-      @organization.kt_environments << @environment
-      @organization.save!
       respond
     end
 
