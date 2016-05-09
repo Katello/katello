@@ -1,8 +1,8 @@
 namespace :katello do
 
   namespace :reset_backends do
-    service_stop = "sudo /sbin/service %s status > /dev/null && sudo /sbin/service %s stop"
-    service_start = "sudo /sbin/service %s start"
+    service_stop = "sudo /bin/systemctl status %s > /dev/null && sudo /bin/systemctl stop %s"
+    service_start = "sudo /bin/systemctl start %s"
 
     task :pulp do
       SERVICES = %w(httpd pulp_workers pulp_resource_manager pulp_celerybeat)
