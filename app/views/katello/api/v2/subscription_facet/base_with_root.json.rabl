@@ -6,4 +6,5 @@ node :content_host_id do |host|
   host.content_host.try(:id)
 end
 
-attributes :subscription_status, :subscription_status_label, :if => @object.get_status(Katello::SubscriptionStatus).relevant?
+attributes :subscription_status, :subscription_status_label, :subscription_global_status,
+           :if => @object.get_status(Katello::SubscriptionStatus).relevant?

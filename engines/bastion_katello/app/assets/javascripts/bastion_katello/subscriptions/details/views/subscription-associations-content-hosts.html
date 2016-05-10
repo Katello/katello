@@ -45,7 +45,7 @@
           </a>
         </td>
         <td bst-table-cell>
-          <span class="fa fa-circle" ng-class="getSubscriptionStatusColor(contentHost['entitlement_status'])">
+          <span ng-class="getHostStatusIcon(contentHost['entitlement_status'])">
           </span>
         </td>
         <td bst-table-cell>{{ virtual(contentHost.facts) | booleanToYesNo }}</td>

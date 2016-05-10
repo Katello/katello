@@ -104,6 +104,10 @@ module Katello
         @subscription_status_label ||= get_status(::Katello::SubscriptionStatus).to_label(options)
       end
 
+      def subscription_global_status
+        @subscription_global_status ||= get_status(::Katello::SubscriptionStatus).to_global
+      end
+
       def errata_status
         @errata_status ||= get_status(::Katello::ErrataStatus).status
       end

@@ -66,8 +66,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             nutupane.table.initialSelectAll = true;
         }
 
-        $scope.contentHostTable.getSubscriptionStatusColor = ContentHostsHelper.getSubscriptionStatusColor;
-        $scope.contentHostTable.getGlobalStatusColor = ContentHostsHelper.getGlobalStatusColor;
+        $scope.contentHostTable.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
 
         $scope.contentHostTable.closeItem = function () {
             $scope.transitionTo('content-hosts.index');

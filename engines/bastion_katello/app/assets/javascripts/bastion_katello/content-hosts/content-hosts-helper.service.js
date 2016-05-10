@@ -7,28 +7,26 @@
  */
 angular.module('Bastion.content-hosts').service('ContentHostsHelper',
     function () {
-        this.getSubscriptionStatusColor = function (status) {
+        this.getHostStatusIcon = function (globalStatus) {
+            var icons;
             var colors = {
-                    'valid': 'green',
-                    'partial': 'yellow',
-                    'invalid': 'red',
-                    0: 'green',
-                    1: 'yellow',
-                    2: 'red',
-                    3: 'red'
-                };
+                // we can remove 'valid', 'partial', and 'invalid' when http://projects.theforeman.org/issues/15347 is fixed
+                'valid': 'green',
+                'partial': 'yellow',
+                'invalid': 'red',
+                0: 'green',
+                1: 'yellow',
+                2: 'red'
+            };
 
-            return colors[status] ? colors[status] : 'red';
-        };
+            globalStatus = colors[globalStatus] || "red";
+            icons = {
+                'green': globalStatus + ' host-status pficon pficon-ok status-ok',
+                'yellow': globalStatus + ' host-status pficon pficon-info status-warn',
+                'red': globalStatus + ' host-status pficon pficon-error-circle-o status-error'
+            };
 
-        this.getGlobalStatusColor = function (status) {
-            var colors = {
-                    0: 'green',
-                    1: 'yellow',
-                    2: 'red'
-                };
-
-            return colors[status] ? colors[status] : 'red';
+            return icons[globalStatus];
         };
     }
 );
