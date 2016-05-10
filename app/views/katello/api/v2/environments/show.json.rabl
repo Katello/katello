@@ -37,6 +37,7 @@ end
 
 node :permissions do |env|
   {
+    :create_lifecycle_environments => env.creatable?,
     :view_lifecycle_environments => env.readable?,
     :edit_lifecycle_environments => env.editable?,
     :destroy_lifecycle_environments => env.deletable?,

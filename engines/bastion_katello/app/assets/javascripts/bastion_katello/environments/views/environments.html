@@ -10,7 +10,7 @@
 
       <a class="fr btn btn-default"
           ui-sref="environments.new({priorId: library.id})"
-          ng-hide="denied('create_lifecycle_environments')">
+          ng-hide="denied('create_lifecycle_environments', library)">
         <i class="fa fa-plus"></i>
         {{ "New Environment Path" | translate }}
       </a>
@@ -42,20 +42,19 @@
       <div class="col-sm-12 environment" ng-repeat="path in paths">
         <div class="row">
           <div class="col-sm-12">
-            <a ui-sref="environments.new({priorId: lastEnvironment(path).id})" class="btn btn-default fr">
+            <a ng-hide="denied('create_lifecycle_environments', path['environments'][0])" ui-sref="environments.new({priorId: lastEnvironment(path).id})" class="btn btn-default fr">
               <i class="fa fa-plus inline-icon"></i>
               <span translate>Add New Environment</span>
             </a>
           </div>
         </div>
 
-        <table class="table table-bordered environment-table">
+        <table class="table table-bordered environment-table" ng-hide="denied('view_lifecycle_environments', path.environments[0])">
           <thead>
             <tr>
               <th></th>
               <th ng-repeat="environment in path.environments">
-                <a ui-sref="environments.environment.details({environmentId: environment.id})"
-                   ng-hide="denied('create_lifecycle_environments')">
+                <a ui-sref="environments.environment.details({environmentId: environment.id})">
                   {{ environment.name }}
                 </a>
               </th>
