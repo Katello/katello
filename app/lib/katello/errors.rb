@@ -35,6 +35,12 @@ module Katello
       end
     end
 
+    class EmptyBulkActionException < StandardError
+      def message
+        _("No hosts registered with subscription-manager found in selection.")
+      end
+    end
+
     class ConnectionRefusedException < StandardError; end
 
     class MaxHostsReachedException < StandardError; end

@@ -91,8 +91,9 @@ module Katello
     def find_editable_host_with_facet
       @host = resource_finder(::Host::Managed.authorized("edit_hosts"), params[:host_id])
       fail HttpErrors::NotFound, _("Couldn't find host with host id '%s'") % params[:host_id] if @host.nil?
-      fail HttpErrors::NotFound, _("Host id '%s' does not have a content facet") % params[:host_id] if @host.content_facet.nil?
-      fail HttpErrors::NotFound, _("Host id '%s' content facet is missing a uuid") % params[:host_id] if @host.content_facet.uuid.nil?
+      if @host.content_facet.try(:uuid).nil?
+        fail HttpErrors::NotFound, _("Host has not been registered with subscription-manager.") % params[:host_id]
+      end
       @host
     end
 
