@@ -5,12 +5,13 @@ class MoveHostDescriptionToHostComment < ActiveRecord::Migration
 
   def up
     Host.find_each do |host|
-      if host.comment.empty?
-        host.comment = host.description
+      new_comment = nil
+      if host.comment.blank?
+        new_comment = host.description
       else
-        host.comment = [host.comment, host.description].join("\n") unless host.description.empty?
+        new_comment = [host.comment, host.description].join("\n") unless host.description.empty?
       end
-      host.save!
+      host.update_column(:comment, new_comment) if new_comment
     end
 
     remove_column :hosts, :description
@@ -20,9 +21,7 @@ class MoveHostDescriptionToHostComment < ActiveRecord::Migration
     add_column :hosts, :description, :text
 
     Host.find_each do |host|
-      host.description = host.comment
-      host.comment = nil
-      host.save!
+      host.update_columns(:comment => nil, :description => host.comment)
     end
   end
 end
