@@ -124,14 +124,24 @@ module Katello
     end
 
     def test_destroy_hosts
-      assert_async_task(::Actions::BulkAction, ::Actions::Katello::Host::Destroy, [@host1, @host2])
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::Destroy
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :destroy_hosts, :included => {:ids => @host_ids}, :organization_id => @org.id
       assert_response :success
     end
 
     def test_content_view_environment
-      assert_async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateContentView, [@host1, @host2], @view_2.id, @library.id)
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts, view_id, library_id|
+        assert_equal action_class, ::Actions::Katello::Host::UpdateContentView
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+        assert_equal @view_2.id, view_id
+        assert_equal @library.id, library_id
+      end
 
       put :environment_content_view, :included => {:ids => @host_ids}, :organization_id => @org.id,
           :environment_id => @library.id, :content_view_id => @view_2.id
