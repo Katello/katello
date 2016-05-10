@@ -60,6 +60,10 @@ module Katello
           self.providers.redhat.first
         end
 
+        def active_pools_count
+          self.pools.count { |p| p[:activeSubscription] == true }
+        end
+
         def anonymous_provider
           self.providers.anonymous.first
         end
