@@ -229,7 +229,9 @@ module Katello
         api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
       end
 
-      ::SettingsHelper.send :include, Katello::Concerns::SettingsHelperExtensions
+      ::SettingsController.class_eval do
+        helper Katello::Concerns::SettingsHelperExtensions
+      end
 
       load 'katello/repository_types.rb'
     end
