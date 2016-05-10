@@ -41,6 +41,8 @@ module Katello
 
     class OrganizationDestroyException < StandardError; end
 
+    class CapsuleCannotBeReached < StandardError; end
+
     class UnsupportedActionException < StandardError
       attr_reader :action, :receiver
 

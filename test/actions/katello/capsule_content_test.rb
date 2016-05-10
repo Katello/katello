@@ -22,6 +22,7 @@ module ::Actions::Katello::CapsuleContent
 
     before do
       set_user
+      ::Katello::CapsuleContent.any_instance.stubs(:ping_pulp).returns({})
       @capsule_system = create(:katello_system,
                                :capsule,
                                name: proxy_with_pulp.name,
