@@ -159,7 +159,7 @@ module Katello
 
       def importer_feed_url(capsule = false)
         if capsule
-          self.full_path
+          self.full_path(nil, true)
         else
           self.url
         end
@@ -827,9 +827,9 @@ module Katello
       end
     end
 
-    def full_path(smart_proxy = nil)
+    def full_path(smart_proxy = nil, force_https = false)
       pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
-      scheme   = (self.unprotected ? 'http' : 'https')
+      scheme   = (self.unprotected && !force_https) ? 'http' : 'https'
       if docker?
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
       elsif file?
