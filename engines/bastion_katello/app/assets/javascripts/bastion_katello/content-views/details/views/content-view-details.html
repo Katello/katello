@@ -3,6 +3,10 @@
 <section class="nutupane-details" ng-cloak bst-container-scroll>
   <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
+  <div bst-alert="info" ng-show="pendingVersionTask">
+   <span translate>Many Content View actions are disabled while a version task is in progress.</span>
+  </div>
+
   <div ng-hide="panel.error">
     <header class="details-header row">
       <h2 class="col-sm-6" ng-hide="contentView.composite">{{ contentView.name }}</h2>
@@ -10,20 +14,23 @@
 
       <div class="col-sm-6">
         <div class="fr">
-          <a class="btn btn-primary" ui-sref="content-views.details.publish"
+          <button class="btn btn-primary" ng-click="$state.go('content-views.details.publish')"
+             ng-disabled="pendingVersionTask"
              ng-hide="denied('publish_content_views', contentView)">
             <i class="fa fa-paste"></i>
             <span translate>Publish New Version</span>
-          </a>
+          </button>
 
-          <a class="btn btn-default"
+          <button class="btn btn-default"
+             ng-disabled="pendingVersionTask"
              ng-hide="denied('create_content_views')"
              ng-click="showCopy = true">
             <i class="fa fa-copy"></i>
             <span translate>Copy View</span>
-          </a>
+          </button>
 
-          <button class="btn btn-default" ui-sref="content-views.details.deletion"
+          <button class="btn btn-default" ng-click="$state.go('content-views.details.deletion')"
+                  ng-disabled="pendingVersionTask"
                   ng-hide="denied('destroy_content_views', contentView)">
             <i class="fa fa-trash-o"></i>
             {{ "Remove View" | translate }}
