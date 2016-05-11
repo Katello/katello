@@ -3,7 +3,7 @@ module Katello
     before_filter :find_repository
     skip_before_filter :check_content_type, :only => [:update]
 
-    include Foreman::Controller::FilterParameters
+    include ::Foreman::Controller::FilterParameters
     filter_parameters :content
 
     api :POST, "/repositories/:repository_id/content_uploads", N_("Create an upload request")
