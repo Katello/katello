@@ -3,21 +3,22 @@ namespace :katello do
     LOG_FILE = "#{Rails.root}/log/reindex.log"
 
     attr_accessor :reindex_logger
-    def get_logger
-      unless self.reindex_logger
-        self.reindex_logger = Logger.new(LOG_FILE)
-        self.reindex_logger.formatter = Logger::Formatter.new
-        self.reindex_logger.level = Logger::DEBUG
+
+    def reindex_logger
+      unless @reindex_logger
+        @reindex_logger = Logger.new(LOG_FILE)
+        @reindex_logger.formatter = Logger::Formatter.new
+        @reindex_logger.level = Logger::DEBUG
       end
-      self.reindex_logger
+      @reindex_logger
     end
 
     def log(message, options = {})
       puts message if options[:console]
       if options[:error]
-        get_logger.error(message)
+        reindex_logger.error(message)
       else
-        get_logger.info("#{message}")
+        reindex_logger.info("#{message}")
       end
     end
 
@@ -27,15 +28,15 @@ namespace :katello do
 
     def fetch_resource
       return yield
-    rescue RestClient::ResourceNotFound, RestClient::BadRequest => e
-        #ignore
+    rescue RestClient::ResourceNotFound, RestClient::BadRequest => _ # rubocop:disable Lint/HandleExceptions
+      # ignore
     end
 
     def index_objects(object_class)
       log("Re-indexing #{object_class.name}", :console => true)
       begin
         yield
-      rescue Exception => e
+      rescue => _
         if object_class.ancestors.include?(Katello::Glue::Pulp::PulpContentUnit)
           report_bad_backend_class(object_class.name)
         else
@@ -43,7 +44,7 @@ namespace :katello do
           object_class.each do |object|
             begin
               object.update_index
-            rescue Exception => e
+            rescue => e
               bad_objects << [object, e]
             end
           end
@@ -120,12 +121,12 @@ namespace :katello do
 
       begin
         model.index.import(objects) if objects.count > 0
-      rescue Exception => e
+      rescue => e
         bad_objects = []
         objects.each do |object|
           begin
             object.update_index
-          rescue Exception => e
+          rescue => e
             bad_objects << [object, e]
           end
         end

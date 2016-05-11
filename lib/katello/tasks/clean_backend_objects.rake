@@ -3,7 +3,6 @@ namespace :katello do
   task :clean_backend_objects => ["environment"] do
     def cleanup_systems
       Katello::System.find_each do |system|
-
         if system.uuid.nil?
           cp_fail = true
           pulp_fail = true
@@ -24,11 +23,11 @@ namespace :katello do
     def test_method
       yield
       false
-    rescue RestClient::ResourceNotFound => e
+    rescue RestClient::ResourceNotFound
       true
-    rescue RestClient::Gone => e
+    rescue RestClient::Gone
       true
-    rescue RestClient::Conflict => e
+    rescue RestClient::Conflict
       true
     end
 
@@ -39,7 +38,7 @@ namespace :katello do
       # for more information
       cp_consumers = ::Katello::Resources::Candlepin::Consumer.get({})
       cp_consumers.reject! { |consumer| consumer['type']['label'] == 'uebercert' }
-      cp_consumer_ids = cp_consumers.map {|cons| cons["uuid"]}
+      cp_consumer_ids = cp_consumers.map { |cons| cons["uuid"] }
       katello_consumer_ids = ::Katello::System.pluck(:uuid)
       deletable_ids = cp_consumer_ids - katello_consumer_ids
       deletable_ids.each do |consumer_id|
@@ -50,7 +49,7 @@ namespace :katello do
         end
         begin
           Katello.pulp_server.extensions.consumer.delete(consumer_id)
-        rescue RestClient::ResourceNotFound => e
+        rescue RestClient::ResourceNotFound # rubocop:disable Lint/HandleExceptions
           #do nothing
         rescue RestClient::Exception => e
           p "exception when destroying pulp consumer #{consumer_id}:#{e.inspect}"
