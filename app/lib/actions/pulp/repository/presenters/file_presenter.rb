@@ -2,7 +2,7 @@ module Actions
   module Pulp
     module Repository
       module Presenters
-        class IsoPresenter < AbstractSyncPresenter
+        class FilePresenter < AbstractSyncPresenter
           def progress
             total_bytes == 0 ? 0.01 : finished_bytes.to_f / total_bytes
           end
@@ -12,7 +12,7 @@ module Actions
           def humanized_details
             ret = []
             ret << _("Cancelled.") if cancelled?
-            ret << _("New ISOs: %s") % num_isos
+            ret << _("New Files: %s") % num_isos
             ret.join("\n")
           end
 
