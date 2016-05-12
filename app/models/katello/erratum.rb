@@ -82,7 +82,8 @@ module Katello
         joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS host_repo_errata ON \
           host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id").
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
-      query.where("#{Katello::Host::ContentFacet.table_name}.host_id" => [hosts.map(&:id)]) if hosts
+
+      query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => [hosts.map(&:id)]) if hosts
       query.uniq
     end
 
