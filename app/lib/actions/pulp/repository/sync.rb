@@ -86,7 +86,7 @@ module Actions
           elsif repo.try(:yum?)
             Presenters::YumPresenter.new(self)
           elsif repo.try(:file?)
-            Presenters::IsoPresenter.new(self)
+            Presenters::FilePresenter.new(self)
           elsif repo.try(:docker?)
             Presenters::DockerPresenter.new(self)
           elsif repo.try(:ostree?)
