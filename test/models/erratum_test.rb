@@ -157,5 +157,13 @@ module Katello
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
     end
+
+    def test_installable_for_hosts_without_errata
+      #Tests issue #15024
+      errata = Erratum.installable_for_hosts([@host_without_errata])
+      refute_includes errata, @security
+      refute_includes errata, @bugfix
+      refute_includes errata, @enhancement
+    end
   end
 end
