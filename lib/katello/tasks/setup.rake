@@ -1,5 +1,4 @@
 namespace :katello do
-
   namespace :reset_backends do
     service_stop = "sudo /sbin/service %s status > /dev/null && sudo /sbin/service %s stop"
     service_start = "sudo /sbin/service %s start"
@@ -8,12 +7,12 @@ namespace :katello do
       SERVICES = %w(httpd pulp_workers pulp_resource_manager pulp_celerybeat)
       system(service_stop.gsub("%s", "mongod"))
 
-      SERVICES.each{|s| system(service_stop.gsub("%s", s)) }
+      SERVICES.each { |s| system(service_stop.gsub("%s", s)) }
       system("sudo rm -rf /var/lib/mongodb/pulp_database*")
       system(service_start.gsub("%s", "mongod"))
       sleep(10)
       fail "Cannot migrate pulp database" unless system("sudo -u apache /usr/bin/pulp-manage-db")
-      SERVICES.each{|s| system(service_start.gsub("%s", s)) }
+      SERVICES.each { |s| system(service_start.gsub("%s", s)) }
       puts "Pulp database reset."
     end
 

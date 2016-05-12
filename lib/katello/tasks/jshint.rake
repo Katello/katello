@@ -12,38 +12,37 @@ if Rails.env.development?
     ].join(",")
 
     Jshintrb::JshintTask.new :jshint do |t|
-      t.pattern         = 'app/assets/javascripts/**/*.js'
+      t.pattern = 'app/assets/javascripts/**/*.js'
       t.exclude_pattern = "{#{vendor_files}}.js"
-      t.globals         = {
-          "KT"      => true,
-          "Katello" => true,
-          "angular" => false,
+      t.globals = {
+        "KT"      => true,
+        "Katello" => true,
+        "angular" => false
       }
-      t.options         = {
-          :bitwise   => true,
-          :curly     => true,
-          :eqeqeq    => true,
-          :forin     => true,
-          :immed     => true,
-          :latedef   => false, # TODO: reenable this and fix
-          :newcap    => false,
-          :noarg     => true,
-          :noempty   => true,
-          :nonew     => true,
-          :plusplus  => true,
-          :regexp    => true,
-          :undef     => false,
-          :strict    => false,
-          :trailing  => true,
-          :browser   => true,
-          :jquery    => true,
-          :passfail  => false,
-          :white     => false,
-          :sub       => true,
-          :lastsemic => true,
-          :smarttabs => true
+      t.options = {
+        :bitwise   => true,
+        :curly     => true,
+        :eqeqeq    => true,
+        :forin     => true,
+        :immed     => true,
+        :latedef   => false, # TODO: reenable this and fix
+        :newcap    => false,
+        :noarg     => true,
+        :noempty   => true,
+        :nonew     => true,
+        :plusplus  => true,
+        :regexp    => true,
+        :undef     => false,
+        :strict    => false,
+        :trailing  => true,
+        :browser   => true,
+        :jquery    => true,
+        :passfail  => false,
+        :white     => false,
+        :sub       => true,
+        :lastsemic => true,
+        :smarttabs => true
       }
-
     end
   rescue LoadError
     warn "install jshintrb gem"
