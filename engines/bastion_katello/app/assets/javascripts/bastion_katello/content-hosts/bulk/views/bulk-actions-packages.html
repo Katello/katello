@@ -4,6 +4,28 @@
   <section>
     <h4 translate>Content Host Package Management</h4>
 
+    <span class="input-group-btn">
+      <button class="btn btn-default"
+              type="button"
+              translate
+              ng-hide="denied('edit_hosts')"
+              ng-click="confirmContentAction('update all', content)"
+              ng-disabled="(table.numSelected === 0)">
+        Update All Packages
+      </button>
+      <button class="btn btn-default dropdown-toggle"
+              ng-hide="!remoteExecutionPresent"
+              ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
+              type="button" id="update-all-use-remote-execution" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="install-use-remote-execution">
+        <li role="presentation"><a ng-click="performViaKatelloAgent('update all', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
+        <li role="presentation"><a ng-click="performViaRemoteExecution('update all', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+        <li role="presentation"><a ng-click="performViaRemoteExecution('update all', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+      </ul>
+    </span>
+
     <form id="packageActionForm" name="packageActionForm" class="form" method="post" action="/katello/remote_execution">
       <input type="hidden" name="name" ng-value="content.content"/>
       <input type="hidden" name="remote_action" ng-value="packageActionFormValues.remoteAction"/>
@@ -13,7 +35,7 @@
       <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
     </form>
 
-    <form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')">
+    <form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
 
       <div>
         <input id="package" type="radio"
@@ -117,9 +139,12 @@
         <div class="confirmation_text" ng-show="content.action == 'remove'" translate>
           Are you sure you want to remove {{ content.content }} from the {{ getSelectedSystemIds().length }} system(s) selected?
         </div>
+        <div class="confirmation_text" ng-show="content.action == 'update all'" translate>
+          Are you sure you want to update all packages on the {{ getSelectedSystemIds().length }} system(s) selected?
+        </div>
 
         <button class="btn btn-default" ng-click="performContentAction()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="content.confirm = false" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="content.confirm = false" translate>No</button>
       </div>
 
     </form>

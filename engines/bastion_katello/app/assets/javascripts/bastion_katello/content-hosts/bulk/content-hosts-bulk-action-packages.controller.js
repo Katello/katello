@@ -21,9 +21,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
 
         function successMessage(type) {
             var messages = {
-                install: translate("Succesfully scheduled package installation"),
-                update: translate("Succesfully scheduled package update"),
-                remove: translate("Succesfully scheduled package removal")
+                install: translate("Successfully scheduled package installation"),
+                update: translate("Successfully scheduled package update"),
+                remove: translate("Successfully scheduled package removal"),
+                "update all": translate("Successfully scheduled an update of all packages")
             };
             return messages[type];
         }
@@ -31,7 +32,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
         function installParams() {
             var params = $scope.nutupane.getAllSelectedResults();
             params['content_type'] = $scope.content.contentType;
-            params.content = $scope.content.content.split(/ *, */);
+            if ($scope.content.action === "update all") {
+                params['update_all'] = true;
+                params.content = null;
+            } else {
+                params.content = $scope.content.content.split(/ *, */);
+            }
             params['organization_id'] = CurrentOrganization;
             return params;
         }
@@ -102,6 +108,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
                 HostBulkAction.updateContent(params, success, error);
             } else if ($scope.content.action === "remove") {
                 HostBulkAction.removeContent(params, success, error);
+            } else if ($scope.content.action === "update all") {
+                HostBulkAction.updateContent(params, success, error);
             }
 
             return deferred.promise;
@@ -115,6 +123,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
 
             if (!action) {
                 action = $scope.content.action;
+            }
+
+            if (action === "update all") {
+                action = "update";
             }
 
             if ($scope.content.contentType === 'package_group') {
