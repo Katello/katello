@@ -1,6 +1,6 @@
 module Katello
   class PulpTaskStatus < TaskStatus
-    WAIT_TIMES = [0.5, 1, 2, 4, 8, 16]
+    WAIT_TIMES = [0.5, 1, 2, 4, 8, 16].freeze
     WAIT_TIME_STEP = 5
 
     validates_lengths_from_database

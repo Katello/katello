@@ -7,10 +7,10 @@ module Katello
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :foreign_key => :katello_content_view_version_id, :inverse_of => :history
     belongs_to :task, :class_name => "ForemanTasks::Task::DynflowTask", :foreign_key => :task_id
 
-    IN_PROGRESS = 'in progress'
-    FAILED = 'failed'
-    SUCCESSFUL = 'successful'
-    STATUSES = [IN_PROGRESS, FAILED, SUCCESSFUL]
+    IN_PROGRESS = 'in progress'.freeze
+    FAILED = 'failed'.freeze
+    SUCCESSFUL = 'successful'.freeze
+    STATUSES = [IN_PROGRESS, FAILED, SUCCESSFUL].freeze
 
     validates_lengths_from_database
     validates :status, :inclusion => {:in          => STATUSES,

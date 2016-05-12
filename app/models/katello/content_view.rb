@@ -6,7 +6,7 @@ module Katello
     include Katello::Authorization::ContentView
     include ForemanTasks::Concerns::ActionSubject
 
-    CONTENT_DIR = "content_views"
+    CONTENT_DIR = "content_views".freeze
 
     belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 

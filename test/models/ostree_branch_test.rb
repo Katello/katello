@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 module Katello
   class OstreeBranchTest < ActiveSupport::TestCase
-    REPO_ID = "Default_Organization-Test-ostree"
+    REPO_ID = "Default_Organization-Test-ostree".freeze
     BRANCHES = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "ostree_branch.yml")
 
     def setup

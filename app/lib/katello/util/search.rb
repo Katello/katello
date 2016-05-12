@@ -1,7 +1,7 @@
 module Katello
   module Util
     module Search
-      DISABLED_LUCENE_SPECIAL_CHARS = ['-', ':']
+      DISABLED_LUCENE_SPECIAL_CHARS = ['-', ':'].freeze
 
       def self.custom_analyzers
         {

@@ -16,11 +16,11 @@ module Katello
     end
 
     class CandlepinConsumer < CandlepinConsumerTestBase
-      ENTITLEMENT_A = {'pool' => {'id' => 1}, 'quantity' => 1}
-      ENTITLEMENT_B = {'pool' => {'id' => 1}, 'quantity' => 1}
-      ENTITLEMENT_C = {'pool' => {'id' => 1}, 'quantity' => 3}
-      ENTITLEMENT_D = {'pool' => {'id' => 2}, 'quantity' => 1}
-      ENTITLEMENTS = [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C, ENTITLEMENT_D]
+      ENTITLEMENT_A = {'pool' => {'id' => 1}, 'quantity' => 1}.freeze
+      ENTITLEMENT_B = {'pool' => {'id' => 1}, 'quantity' => 1}.freeze
+      ENTITLEMENT_C = {'pool' => {'id' => 1}, 'quantity' => 3}.freeze
+      ENTITLEMENT_D = {'pool' => {'id' => 2}, 'quantity' => 1}.freeze
+      ENTITLEMENTS = [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C, ENTITLEMENT_D].freeze
 
       def setup
         super

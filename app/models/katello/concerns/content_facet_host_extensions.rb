@@ -9,7 +9,7 @@ module Katello
           :errata_needed => Katello::ErrataStatus::NEEDED_ERRATA,
           :updated => Katello::ErrataStatus::UP_TO_DATE,
           :unknown => Katello::ErrataStatus::UNKNOWN
-        }
+        }.freeze
 
         has_one :content_facet, :class_name => '::Katello::Host::ContentFacet', :foreign_key => :host_id, :inverse_of => :host, :dependent => :destroy
 

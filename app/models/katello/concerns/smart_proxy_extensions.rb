@@ -3,8 +3,8 @@ module Katello
     module SmartProxyExtensions
       extend ActiveSupport::Concern
 
-      PULP_FEATURE = "Pulp"
-      PULP_NODE_FEATURE = "Pulp Node"
+      PULP_FEATURE = "Pulp".freeze
+      PULP_NODE_FEATURE = "Pulp Node".freeze
 
       included do
         include ForemanTasks::Concerns::ActionSubject

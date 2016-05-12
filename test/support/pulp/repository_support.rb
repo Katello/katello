@@ -3,7 +3,7 @@ require 'support/pulp/task_support'
 module Katello
   module RepositorySupport
     include TaskSupport
-    PULP_TMP_DIR = "/var/lib/pulp/published/puppet_katello_test"
+    PULP_TMP_DIR = "/var/lib/pulp/published/puppet_katello_test".freeze
     @repo_url = "file:///var/www/test_repos/zoo"
     @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
     @repo = nil

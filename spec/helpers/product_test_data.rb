@@ -1,16 +1,16 @@
 module Katello
   module ProductTestData
-    ORG_ID = "admin-org-37070"
-    PRODUCT_ID = '37070'
+    ORG_ID = "admin-org-37070".freeze
+    PRODUCT_ID = '37070'.freeze
     PRODUCTS =
       [
         { 'productId' => 'product_1' },
         { 'productId' => 'product_2', 'providedProductIds' => ['p product 1', 'p product 2'] },
         { 'productId' => 'product_3', 'providedProductIds' => ['p product 1', 'p product 3'] },
         { 'productId' => 'product_4', 'providedProductIds' => ['p product 4', 'p product 3'] }
-      ]
+      ].freeze
 
-    PRODUCT_NAME = "Load_Balancing"
+    PRODUCT_NAME = "Load_Balancing".freeze
 
     SIMPLE_PRODUCT = {
       :name => ProductTestData::PRODUCT_NAME,

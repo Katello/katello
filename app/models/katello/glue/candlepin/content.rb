@@ -1,7 +1,7 @@
 module Katello
   module Glue::Candlepin::Content
-    CANDLEPIN_DOCKER_TYPE = "containerimage"
-    CANDLEPIN_OSTREE_TYPE = "ostree"
+    CANDLEPIN_DOCKER_TYPE = "containerimage".freeze
+    CANDLEPIN_OSTREE_TYPE = "ostree".freeze
 
     def self.included(base)
       base.send :include, InstanceMethods

@@ -2,11 +2,11 @@ module Katello
   class Erratum < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    SECURITY = "security"
-    BUGZILLA = "bugfix"
-    ENHANCEMENT = "enhancement"
+    SECURITY = "security".freeze
+    BUGZILLA = "bugfix".freeze
+    ENHANCEMENT = "enhancement".freeze
 
-    TYPES = [SECURITY, BUGZILLA, ENHANCEMENT]
+    TYPES = [SECURITY, BUGZILLA, ENHANCEMENT].freeze
     CONTENT_TYPE = Pulp::Erratum::CONTENT_TYPE
 
     has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet

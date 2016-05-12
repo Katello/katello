@@ -7,7 +7,7 @@ module Actions
             ::Katello::Erratum::CONTENT_TYPE => "Errata",
             ::Katello::Rpm::CONTENT_TYPE => "Packages",
             ::Katello::PuppetModule::CONTENT_TYPE => "Puppet Modules"
-          }
+          }.freeze
 
           def humanized_output
             if action.output[:changed_content]

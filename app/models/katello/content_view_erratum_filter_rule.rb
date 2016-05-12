@@ -2,9 +2,9 @@ module Katello
   class ContentViewErratumFilterRule < Katello::Model
     self.include_root_in_json = false
 
-    ISSUED = "issued"
-    UPDATED = "updated"
-    DATE_TYPES = [ISSUED, UPDATED]
+    ISSUED = "issued".freeze
+    UPDATED = "updated".freeze
+    DATE_TYPES = [ISSUED, UPDATED].freeze
 
     belongs_to :filter,
                :class_name => "Katello::ContentViewErratumFilter",

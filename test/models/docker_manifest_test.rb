@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 module Katello
   class DockerManifestTest < ActiveSupport::TestCase
-    REPO_ID = "Default_Organization-Test-redis"
+    REPO_ID = "Default_Organization-Test-redis".freeze
     MANIFESTS = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "docker_manifests.yml")
     TAGS = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "docker_tags.yml")
 

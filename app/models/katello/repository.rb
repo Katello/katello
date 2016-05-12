@@ -17,13 +17,13 @@ module Katello
     include Ext::LabelFromName
     include Katello::Engine.routes.url_helpers
 
-    YUM_TYPE = 'yum'
-    FILE_TYPE = 'file'
-    PUPPET_TYPE = 'puppet'
-    DOCKER_TYPE = 'docker'
-    OSTREE_TYPE = 'ostree'
+    YUM_TYPE = 'yum'.freeze
+    FILE_TYPE = 'file'.freeze
+    PUPPET_TYPE = 'puppet'.freeze
+    DOCKER_TYPE = 'docker'.freeze
+    OSTREE_TYPE = 'ostree'.freeze
 
-    CHECKSUM_TYPES = %w(sha1 sha256)
+    CHECKSUM_TYPES = %w(sha1 sha256).freeze
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
     belongs_to :product, :inverse_of => :repositories

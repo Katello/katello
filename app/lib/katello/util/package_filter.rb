@@ -1,10 +1,10 @@
 module Katello
   module Util
     class PackageFilter
-      LESS_THAN = "<"
-      GREATER_THAN = ">"
-      EQUAL = "="
-      OPERATORS = [LESS_THAN, GREATER_THAN, EQUAL]
+      LESS_THAN = "<".freeze
+      GREATER_THAN = ">".freeze
+      EQUAL = "=".freeze
+      OPERATORS = [LESS_THAN, GREATER_THAN, EQUAL].freeze
 
       attr_accessor :operator, :version, :epoch, :release, :relation
 

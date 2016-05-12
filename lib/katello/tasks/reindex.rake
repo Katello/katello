@@ -1,6 +1,6 @@
 namespace :katello do
   class ReindexHelper
-    LOG_FILE = "#{Rails.root}/log/reindex.log"
+    LOG_FILE = "#{Rails.root}/log/reindex.log".freeze
 
     attr_accessor :reindex_logger
 
