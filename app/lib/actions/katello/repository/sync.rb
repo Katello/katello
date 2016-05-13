@@ -23,18 +23,14 @@ module Actions
             fail _("Unable to sync repo. This repository does not have a feed url.")
           end
 
-          if incremental && URI(source_url).scheme != 'file'
-            fail _("URL must be of scheme 'file' for incremental import")
-          end
-
           sequence do
-            if incremental
-              output = plan_action(Katello::Repository::IncrementalImport, repo,
-                                    URI(source_url).path).output
-            else
-              output = plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id,
-                                   task_id: pulp_sync_task_id, source_url: source_url).output
-            end
+            sync_args = {:pulp_id => repo.pulp_id,
+                         :task_id => pulp_sync_task_id,
+                         :source_url => source_url}
+
+            sync_args[:remove_missing] = false if incremental
+
+            output = plan_action(Pulp::Repository::Sync, sync_args).output
 
             contents_changed = output[:contents_changed]
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)

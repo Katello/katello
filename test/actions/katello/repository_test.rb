@@ -205,30 +205,6 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class IncrementalImportTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::IncrementalImport }
-
-    it 'plans' do
-      action.expects(:action_subject).with(custom_repository)
-      # import_dir contains a tgz (ignored), a phony json (ignored), an rpm and
-      # a real erratum json.
-      import_dir = File.join(::Katello::Engine.root, "test", "fixtures", "files")
-      plan_action action, custom_repository, import_dir
-
-      assert_action_planed_with action, ::Actions::Katello::Repository::UploadFiles do |repo, rpm_filepaths|
-        repo.must_equal custom_repository
-        rpm_filepaths.length.must_equal 1
-        rpm_filepaths.first[:filename].must_include "squirrel"
-      end
-
-      assert_action_planed_with action, ::Actions::Katello::Repository::UploadErrata do |repo, errata|
-        repo.must_equal custom_repository
-        errata.length.must_equal 1
-        errata.first['unit_key']['id'].must_equal 'test'
-      end
-    end
-  end
-
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Sync }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
@@ -245,25 +221,6 @@ module ::Actions::Katello::Repository
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         repo.id.must_equal repository.id
-      end
-    end
-
-    it 'plans for incremental' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-      plan_action action, repository, nil, 'file:///tmp/foo/', true
-
-      # note the source URL is changed to a path
-      assert_action_planed_with(action, ::Actions::Katello::Repository::IncrementalImport,
-                                repository, '/tmp/foo/')
-    end
-
-    it 'plans for incremental, bad URL' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-
-      assert_raises(RuntimeError) do
-        plan_action action, repository, nil, 'http://wikipedia.org', true
       end
     end
 

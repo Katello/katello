@@ -28,6 +28,8 @@ module Actions
 
             sync_options[:feed] = input[:source_url] if input[:source_url]
 
+            sync_options[:remove_missing] = input[:remove_missing] if input.key? :remove_missing
+
             sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
 
             output[:pulp_tasks] = pulp_tasks =
