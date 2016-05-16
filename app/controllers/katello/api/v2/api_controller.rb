@@ -80,10 +80,19 @@ module Katello
       total = query.count
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
       sub_total = query.count
-      sort_attr = params[:sort_by] || default_sort_by
-      sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
 
-      query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
+      sort_attr = (params[:sort_by] || default_sort_by).to_s.downcase
+      table, column = sort_attr.split(".").length == 2 ? sort_attr.split(".") : [query.table_name, sort_attr]
+      if ActiveRecord::Base.connection.columns(table).map(&:name).include?(column)
+        sort_attr = "#{table}.#{column}"
+      else
+        sort_attr = default_sort_by
+      end
+
+      sort_order = (params[:sort_order] || default_sort_order).to_s.downcase
+      sort_order = default_sort_order unless ['desc', 'asc'].include?(sort_order)
+
+      query = query.order("#{sort_attr} #{sort_order}")
       query = query.order("#{query.table_name}.id DESC") #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
