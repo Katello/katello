@@ -22,7 +22,7 @@ angular.module('Bastion.packages').controller('PackageDetailsRepositoriesControl
             'organization_id': CurrentOrganization
         };
 
-        repositoriesNutupane = new Nutupane(Repository, params, 'repositories');
+        repositoriesNutupane = new Nutupane(Repository, params);
         $scope.detailsTable = repositoriesNutupane.table;
         $scope.detailsTable.initialLoad = false;
         repositoriesNutupane.masterOnly = true;
