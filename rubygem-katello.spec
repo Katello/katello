@@ -22,7 +22,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.3.1
-Release: 2%{dist}
+Release: 3%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -271,6 +271,12 @@ chown -R foreman.foreman %{foreman_dir}/public/apipie-cache
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon May 16 2016 Justin Sherrill <jsherril@redhat.com> 2.3.1-3
+- Fixes #14381 - properly parse sort_by and sort_attr search attributes
+  (jsherril@redhat.com)
+- Refs #12625: python-cherrypy is no longer carried by epel7
+  (ericdhelms@gmail.com)
+
 * Fri Sep 11 2015 Stephen Benjamin <stbenjam@redhat.com> 2.3.1-2
 - Bump gem version to 2.3.1 (stbenjam@redhat.com)
 
