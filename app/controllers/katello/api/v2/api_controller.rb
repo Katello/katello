@@ -49,11 +49,18 @@ module Katello
       query = query.select(group).group(group) if group
       sub_total = query.count
 
-      sort_attr = params[:sort_by] || default_sort_by
+      sort_attr = (params[:sort_by] || default_sort_by).to_s.downcase
 
       if sort_attr
-        sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
-        query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
+        table, column = sort_attr.split(".").length == 2 ? sort_attr.split(".") : [query.table_name, sort_attr]
+        if ActiveRecord::Base.connection.columns(table).map(&:name).include?(column)
+          sort_attr = "#{table}.#{column}"
+        else
+          sort_attr = default_sort_by
+        end
+        sort_order = (params[:sort_order] || default_sort_order).to_s.downcase
+        sort_order = default_sort_order unless ['desc', 'asc'].include?(sort_order)
+        query = query.order("#{sort_attr} #{sort_order}")
       elsif options[:custom_sort]
         query = options[:custom_sort].call(query)
       end
