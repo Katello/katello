@@ -139,7 +139,7 @@ module Katello
         when Repository::OSTREE_TYPE
           options = importer_ssl_options(capsule)
 
-          options[:feed] = self.url if self.respond_to?(:url)
+          options[:feed] = self.importer_feed_url(capsule)
           Runcible::Models::OstreeImporter.new(options)
         else
           fail _("Unexpected repo type %s") % self.content_type
@@ -832,7 +832,7 @@ module Katello
       elsif puppet?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}/"
       elsif ostree?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{pulp_id}/"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{relative_path}"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
