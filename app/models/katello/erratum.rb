@@ -61,12 +61,16 @@ module Katello
       where("#{self.table_name}.id in (?) or #{self.table_name}.uuid in (?) or #{self.table_name}.errata_id in (?)", id_integers, ids, ids)
     end
 
-    def hosts_applicable
-      self.content_facets_applicable.joins(:host)
+    def hosts_applicable(org_id = nil)
+      if org_id.present?
+        self.content_facets_applicable.joins(:host).where("#{::Host.table_name}.organization_id" => org_id)
+      else
+        self.content_facets_applicable.joins(:host)
+      end
     end
 
-    def hosts_available
-      self.hosts_applicable.joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
+    def hosts_available(org_id = nil)
+      self.hosts_applicable(org_id).joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
         #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:content_facet_repositories).
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id").uniq
     end

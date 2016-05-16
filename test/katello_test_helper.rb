@@ -196,7 +196,7 @@ class ActiveSupport::TestCase
 
   def render_rabl(filepath, resource)
     Rabl::Renderer.new(filepath, resource, :view_path => "#{Katello::Engine.root}/app/views/",
-                       :format => 'hash', :locals => {:resource => resource}).render
+                       :format => 'hash', :locals => {:resource => resource}, :scope => OpenStruct.new(:params => {})).render
   end
 
   def assert_service_not_used(service_class)

@@ -132,8 +132,9 @@ module Katello
 
     def test_hosts_available
       assert_includes @security.hosts_available, @host.content_facet
+      assert_includes @security.hosts_available(@host.organization), @host.content_facet
       refute_includes @security.hosts_available, @host_without_errata
-      refute_includes @bugfix.hosts_available, @host_without_errata
+      refute_includes @bugfix.hosts_available(@host.organization), @host_without_errata
     end
 
     def test_installable_for_hosts
