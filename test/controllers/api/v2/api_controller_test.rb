@@ -1,13 +1,15 @@
-require 'katello_test_helper'
+# encoding: utf-8
+
+require "katello_test_helper"
 
 module Katello
   class Api::V2::ApiControllerTest < ActionController::TestCase
     def setup
-      katello_errata
       @controller = Katello::Api::V2::ApiController.new
       @query = Erratum.all
       @default_sort = %w(updated desc)
       @options = { :resource_class => Katello::Erratum }
+      @errata = katello_errata
     end
 
     def teardown
@@ -50,6 +52,17 @@ module Katello
       assert_equal 0, response[:subtotal], "subtotal"
       assert_equal 0, response[:total], "total"
       assert_nil response[:error], "error"
+    end
+
+    def test_scoped_search_order
+      params = {:sort_by => "errata_id", :sort_order => "DESC'"} # sql injection
+      @controller.stubs(:params).returns(params)
+
+      query = Erratum.all
+      options = {resource_class: Katello::Erratum}
+
+      results = @controller.scoped_search(query, "errata_id", "asc", options)[:results]
+      assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHSA-1999-1231"], results.map(&:errata_id)
     end
   end
 end
