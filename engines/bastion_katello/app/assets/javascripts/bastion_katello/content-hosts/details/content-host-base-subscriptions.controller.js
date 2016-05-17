@@ -19,7 +19,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
         function success() {
             $scope.subscription.workingMode = false;
             $scope.$parent.successMessages = [translate('Successfully updated subscriptions.')];
-            $scope.contentHost.$get();
+            $scope.host.$get();
         }
 
         function failure() {
@@ -33,7 +33,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptions
 
         $scope.autoAttachSubscriptions = function () {
             $scope.subscription.workingMode = true;
-            HostSubscription.autoAttach({id: $scope.contentHost.host.id}, success, failure);
+            HostSubscription.autoAttach({id: $scope.host.id}, success, failure);
         };
 
     }]
