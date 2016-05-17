@@ -20,7 +20,6 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         var urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId");
         var capsuleId = urlMatcher.exec($location.path()).capsuleId;
 
-
         function processError(response) {
             if (response.data && response.data.displayMessage) {
                 $scope.syncErrorMessages = [response.data.displayMessage];
