@@ -52,9 +52,8 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
             return message;
         };
 
-        $scope.contentHost = new ContentHost({
-            uuid: 12345,
-            host: {id: 10},
+        $scope.host = new ContentHost({
+            id: 10,
             subscriptions: [{id: 1, quantity: 11}, {id: 2, quantity: 22}]
         });
 
@@ -74,6 +73,6 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
     it("allows auto attaching subscriptions to the content host", function() {
         spyOn(HostSubscription, 'autoAttach');
         $scope.autoAttachSubscriptions();
-        expect(HostSubscription.autoAttach).toHaveBeenCalledWith({id: $scope.contentHost.host.id}, jasmine.any(Function), jasmine.any(Function));
+        expect(HostSubscription.autoAttach).toHaveBeenCalledWith({id: $scope.host.id}, jasmine.any(Function), jasmine.any(Function));
     });
 });
