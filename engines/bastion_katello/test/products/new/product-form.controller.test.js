@@ -50,7 +50,7 @@ describe('Controller: ProductFormController', function() {
 
         spyOn($scope.productTable, 'addRow');
         spyOn($scope, 'transitionTo');
-        spyOn(product, '$save').andCallThrough();
+        spyOn(product, '$save').and.callThrough();
         $scope.save(product);
 
         expect(product.$save).toHaveBeenCalled();
@@ -63,7 +63,7 @@ describe('Controller: ProductFormController', function() {
         var product = $scope.product;
 
         product.failed = true;
-        spyOn(product, '$save').andCallThrough();
+        spyOn(product, '$save').and.callThrough();
         $scope.save(product);
 
         expect(product.$save).toHaveBeenCalled();

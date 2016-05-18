@@ -19,7 +19,7 @@ describe('Controller: EnvironmentContentController', function() {
 
         Repository = $injector.get('MockResource').$new(),
         ContentService = $injector.get('ContentService');
-        spyOn(ContentService, 'buildNutupane').andReturn({
+        spyOn(ContentService, 'buildNutupane').and.returnValue({
             table: {},
             params: {},
             masterOnly: false,
@@ -28,7 +28,7 @@ describe('Controller: EnvironmentContentController', function() {
             refresh: function () {}
         });
 
-        spyOn(Repository, 'queryUnpaged').andReturn({
+        spyOn(Repository, 'queryUnpaged').and.returnValue({
             results: Repository.mockResources,
             $promise: {then: function (func) { func.call(this, Repository.mockResources); }}
         });

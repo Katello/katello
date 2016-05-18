@@ -43,7 +43,7 @@ describe('Controller: ProductDetailsController', function() {
         });
 
         it ("if the permission was denied", function() {
-            spyOn($scope, 'denied').andReturn(true);
+            spyOn($scope, 'denied').and.returnValue(true);
             expect($scope.getReadOnlyReason(product)).toBe('permissions');
             expect($scope.denied).toHaveBeenCalledWith('destroy_products', product);
         });

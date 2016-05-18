@@ -32,7 +32,7 @@ describe('Controller: ContentViewCompositeContentViewsListController', function(
             };
         };
 
-        spyOn($scope, 'save').andCallThrough();
+        spyOn($scope, 'save').and.callThrough();
 
         $controller('ContentViewCompositeContentViewsListController', {
             $scope: $scope,

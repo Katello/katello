@@ -107,8 +107,8 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
             }
         };
 
-        spyOn(ActivationKey, 'get').andCallThrough();
-        spyOn(ActivationKey, 'products').andCallThrough();
+        spyOn(ActivationKey, 'get').and.callThrough();
+        spyOn(ActivationKey, 'products').and.callThrough();
 
         $scope.activationKey = mockActivationKey;
         $scope.activationKey.$promise = { then: function (callback) { callback(mockActivationKey) } };

@@ -106,7 +106,7 @@ describe('Controller: ContentHostPackagesController', function() {
         var mockPackage, mockPackageClone;
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
         mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
-        spyOn($scope.detailsTable,  'getSelected').andReturn([mockPackage]);
+        spyOn($scope.detailsTable,  'getSelected').and.returnValue([mockPackage]);
 
         spyOn(HostPackage, 'remove');
         $scope.removeSelectedPackages();

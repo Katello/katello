@@ -25,9 +25,9 @@ describe('Controller: ContentViewVersionDeletionActivationKeysController', funct
         $scope.validateEnvironmentSelection = function() {};
         $scope.deleteOptions = {activationKeys: {}, environments: {}};
 
-        spyOn(Organization, 'readableEnvironments').andCallThrough();
-        spyOn($scope, 'validateEnvironmentSelection').andCallThrough();
-        spyOn($scope, 'initEnvironmentWatch').andCallThrough();
+        spyOn(Organization, 'readableEnvironments').and.callThrough();
+        spyOn($scope, 'validateEnvironmentSelection').and.callThrough();
+        spyOn($scope, 'initEnvironmentWatch').and.callThrough();
 
         $controller('ContentViewVersionDeletionActivationKeysController', {
             $scope: $scope,
@@ -73,8 +73,8 @@ describe('Controller: ContentViewVersionDeletionActivationKeysController', funct
 
     it('should construct the activation key link', function () {
         $scope.searchString = function (contentView, environments) {};
-        spyOn($scope, 'searchString').andReturn('search');
-        spyOn($scope.$state, 'href').andReturn('activationKeys');
+        spyOn($scope, 'searchString').and.returnValue('search');
+        spyOn($scope.$state, 'href').and.returnValue('activationKeys');
 
         expect($scope.activationKeyLink()).toBe('activationKeys?search=search');
         expect($scope.searchString).toHaveBeenCalledWith($scope.contentView, $scope.deleteOptions.environments);

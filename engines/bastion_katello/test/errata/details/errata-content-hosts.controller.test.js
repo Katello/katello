@@ -87,7 +87,7 @@ describe('Controller: ErrataContentHostsController', function() {
     it("provides a way to filter on environment", function () {
         var nutupane = $scope.nutupane;
 
-        spyOn(nutupane, 'setParams').andCallThrough();
+        spyOn(nutupane, 'setParams').and.callThrough();
         spyOn(nutupane, 'refresh');
 
         $scope.selectEnvironment('foo');

@@ -12,7 +12,7 @@ describe('Controller: FilterDetailsController', function() {
             contentViewId: 1,
             filterId: 1
         };
-        spyOn(Filter, 'get').andCallThrough();
+        spyOn(Filter, 'get').and.callThrough();
 
         $controller('FilterDetailsController', {
             $scope: $scope,

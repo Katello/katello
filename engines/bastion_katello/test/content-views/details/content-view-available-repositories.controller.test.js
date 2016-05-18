@@ -28,7 +28,7 @@ describe('Controller: ContentViewAvailableRepositoriesController', function() {
             };
         };
 
-        spyOn($scope, 'save').andCallThrough();
+        spyOn($scope, 'save').and.callThrough();
 
         $controller('ContentViewAvailableRepositoriesController', {
             $scope: $scope,

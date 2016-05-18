@@ -40,7 +40,7 @@ describe('Controller: NewEnvironmentController', function() {
         var environment = $scope.environment;
 
         spyOn($scope, 'transitionTo');
-        spyOn(environment, '$save').andCallThrough();
+        spyOn(environment, '$save').and.callThrough();
         $scope.save(environment);
 
         expect(environment.$save).toHaveBeenCalled();

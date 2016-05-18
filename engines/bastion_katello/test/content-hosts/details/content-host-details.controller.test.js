@@ -69,7 +69,7 @@ describe('Controller: ContentHostDetailsController', function() {
         Organization = {};
         MenuExpander = {};
 
-        spyOn(Host, 'get').andCallThrough();
+        spyOn(Host, 'get').and.callThrough();
 
         $scope.$stateParams = {hostId: mockHost.id};
         $scope.removeRow = function(){};
@@ -128,7 +128,7 @@ describe('Controller: ContentHostDetailsController', function() {
         };
 
         spyOn($scope, "transitionTo");
-        spyOn(HostSubscription, 'delete').andCallThrough();
+        spyOn(HostSubscription, 'delete').and.callThrough();
 
         $scope.unregisterContentHost(testHost);
 
@@ -148,7 +148,7 @@ describe('Controller: ContentHostDetailsController', function() {
 
         spyOn($scope, "transitionTo");
         spyOn($scope, "removeRow");
-        spyOn(testHost, '$delete').andCallThrough();
+        spyOn(testHost, '$delete').and.callThrough();
 
         $scope.unregisterContentHost(testHost);
         expect(testHost.$delete).toHaveBeenCalled();

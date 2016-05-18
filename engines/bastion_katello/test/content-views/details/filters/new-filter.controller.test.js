@@ -80,7 +80,7 @@ describe('Controller: NewFilterController', function() {
 
     it('should fail to save a new filter resource', function() {
         $scope.filter.failed = true;
-        spyOn($scope.filter, '$save').andCallThrough();
+        spyOn($scope.filter, '$save').and.callThrough();
         $scope.save($scope.filter, $scope.contentView);
 
         expect($scope.filter.$save).toHaveBeenCalled();

@@ -25,9 +25,9 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
         $scope.validateEnvironmentSelection = function() {};
         $scope.deleteOptions = {contentHosts: {}};
 
-        spyOn(Organization, 'readableEnvironments').andCallThrough();
-        spyOn($scope, 'validateEnvironmentSelection').andCallThrough();
-        spyOn($scope, 'initEnvironmentWatch').andCallThrough();
+        spyOn(Organization, 'readableEnvironments').and.callThrough();
+        spyOn($scope, 'validateEnvironmentSelection').and.callThrough();
+        spyOn($scope, 'initEnvironmentWatch').and.callThrough();
 
         $controller('ContentViewVersionDeletionContentHostsController', {
             $scope: $scope,

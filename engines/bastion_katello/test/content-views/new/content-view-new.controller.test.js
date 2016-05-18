@@ -39,7 +39,7 @@ describe('Controller: NewContentViewController', function() {
 
         spyOn($scope.$parent.table, 'addRow');
         spyOn($scope, 'transitionTo');
-        spyOn(contentView, '$save').andCallThrough();
+        spyOn(contentView, '$save').and.callThrough();
         $scope.save(contentView);
 
         expect(contentView.$save).toHaveBeenCalled();
@@ -52,7 +52,7 @@ describe('Controller: NewContentViewController', function() {
         var contentView = $scope.contentView;
         spyOn($scope.$parent.table, 'addRow');
         spyOn($scope, 'transitionTo');
-        spyOn(contentView, '$save').andCallThrough();
+        spyOn(contentView, '$save').and.callThrough();
 
         contentView.composite = true;
         $scope.save(contentView);

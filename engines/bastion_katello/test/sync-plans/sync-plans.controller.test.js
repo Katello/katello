@@ -57,7 +57,7 @@ describe('Controller: SyncPlansController', function() {
         };
         spyOn($scope, 'removeRow');
         spyOn($scope, 'transitionTo');
-        spyOn(syncPlanInstance, '$remove').andCallThrough();
+        spyOn(syncPlanInstance, '$remove').and.callThrough();
 
         $scope.removeSyncPlan(syncPlanInstance);
 

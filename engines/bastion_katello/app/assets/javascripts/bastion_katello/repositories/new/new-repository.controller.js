@@ -27,9 +27,9 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             var foundError = false;
             $scope.working = false;
 
-            angular.forEach($scope.repositoryForm, function (value, field) {
-                if ($scope.repositoryForm.hasOwnProperty(field) && value.hasOwnProperty('$setValidity')) {
-                    value.$setValidity('server', true);
+            angular.forEach($scope.repositoryForm, function (field) {
+                if ($scope.repositoryForm.hasOwnProperty(field) && field.hasOwnProperty('$modelValue')) {
+                    field.$setValidity('server', true);
                     $scope.repositoryForm[field].$error.messages = [];
                 }
             });

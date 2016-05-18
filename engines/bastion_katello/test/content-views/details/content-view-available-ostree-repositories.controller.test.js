@@ -27,7 +27,7 @@ describe('Controller: ContentViewAvailableOstreeRepositoriesController', functio
             };
         };
 
-        spyOn($scope, 'save').andCallThrough();
+        spyOn($scope, 'save').and.callThrough();
 
         $controller('ContentViewAvailableRepositoriesController', {
             $scope: $scope,

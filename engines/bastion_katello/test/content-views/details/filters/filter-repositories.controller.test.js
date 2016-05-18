@@ -88,7 +88,7 @@ describe('Controller: FilterRepositoriesController', function() {
 
     it("provides a way to update the selected repositories", function() {
         $scope.repositoriesTable.getSelected = function () {};
-        spyOn($scope.repositoriesTable, 'getSelected').andReturn([{id: 1}, {id: 2}]);
+        spyOn($scope.repositoriesTable, 'getSelected').and.returnValue([{id: 1}, {id: 2}]);
         spyOn(Filter, 'update');
 
         $scope.filter.id = 2;

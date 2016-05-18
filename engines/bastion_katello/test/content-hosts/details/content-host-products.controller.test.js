@@ -52,7 +52,7 @@ describe('Controller: ContentHostProductsController', function () {
             }
         };
 
-        spyOn(HostSubscription, 'productContent').andCallThrough();
+        spyOn(HostSubscription, 'productContent').and.callThrough();
         spyOn(HostSubscription, 'contentOverride');
 
         $scope.host = mockHost;

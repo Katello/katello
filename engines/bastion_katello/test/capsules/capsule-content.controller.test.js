@@ -61,14 +61,14 @@ describe('Controller: CapsuleContentController', function() {
     describe('syncCapsule', function() {
 
         it('has no effect when sync is in progress', function() {
-            spyOn(CapsuleContent, 'sync').andCallThrough();
+            spyOn(CapsuleContent, 'sync').and.callThrough();
             syncState.set(syncState.SYNCING);
             $scope.syncCapsule();
             expect(CapsuleContent.sync).not.toHaveBeenCalled();
         });
 
         it('starts capsule synchronization', function() {
-            spyOn(CapsuleContent, 'sync').andCallThrough();
+            spyOn(CapsuleContent, 'sync').and.callThrough();
             $scope.syncCapsule();
             expect(CapsuleContent.sync).toHaveBeenCalledWith({ id: '83' });
         });
@@ -110,20 +110,20 @@ describe('Controller: CapsuleContentController', function() {
     describe('cancelSync', function() {
 
         it('has no effect when sync is not in progress', function() {
-            spyOn(CapsuleContent, 'cancelSync').andCallThrough();
+            spyOn(CapsuleContent, 'cancelSync').and.callThrough();
             $scope.cancelSync();
             expect(CapsuleContent.cancelSync).not.toHaveBeenCalled();
         });
 
         it('tries to cancel the sync', function() {
-            spyOn(CapsuleContent, 'cancelSync').andCallThrough();
+            spyOn(CapsuleContent, 'cancelSync').and.callThrough();
             syncState.set(syncState.SYNCING);
             $scope.cancelSync();
             expect(CapsuleContent.cancelSync).toHaveBeenCalledWith({ id: '83' });
         });
 
         it('sets state to CANCEL_TRIGGERED', function() {
-            spyOn(CapsuleContent, 'cancelSync').andCallThrough();
+            spyOn(CapsuleContent, 'cancelSync').and.callThrough();
             syncState.set(syncState.SYNCING);
             $scope.cancelSync();
             expect(syncState.is(syncState.CANCEL_TRIGGERED)).toBeTruthy();

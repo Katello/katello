@@ -107,9 +107,9 @@ describe('Controller: ActivationKeyProductDetailsController', function () {
             }
         };
 
-        spyOn(ActivationKey, 'get').andCallThrough();
-        spyOn(ActivationKey, 'products').andCallThrough();
-        spyOn(ActivationKey, 'contentOverride').andCallThrough();
+        spyOn(ActivationKey, 'get').and.callThrough();
+        spyOn(ActivationKey, 'products').and.callThrough();
+        spyOn(ActivationKey, 'contentOverride').and.callThrough();
         spyOn($scope, 'setActivationKey')
 
         $scope.activationKey = mockActivationKey;

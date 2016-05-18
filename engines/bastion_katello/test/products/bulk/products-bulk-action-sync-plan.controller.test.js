@@ -40,7 +40,7 @@ describe('Controller: ProductsBulkActionSyncPlanController', function() {
     });
 
     it("allows the updating of the sync plan", function() {
-        spyOn(ProductBulkAction, 'updateProductSyncPlan').andCallThrough();
+        spyOn(ProductBulkAction, 'updateProductSyncPlan').and.callThrough();
 
         $scope.syncPlanTable = {chosenRow: {id: 10}};
         $scope.updateSyncPlan();
@@ -50,7 +50,7 @@ describe('Controller: ProductsBulkActionSyncPlanController', function() {
     });
 
     it("allows the removal of the sync plan", function() {
-        spyOn(ProductBulkAction, 'updateProductSyncPlan').andCallThrough();
+        spyOn(ProductBulkAction, 'updateProductSyncPlan').and.callThrough();
 
         $scope.removeSyncPlan();
 

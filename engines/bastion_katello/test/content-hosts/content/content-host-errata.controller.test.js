@@ -89,7 +89,7 @@ describe('Controller: ContentHostErrataController', function() {
     });
 
     it("provide a way to apply errata", function() {
-        spyOn(HostErratum, "apply").andCallThrough();
+        spyOn(HostErratum, "apply").and.callThrough();
         spyOn($scope.detailsTable, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();

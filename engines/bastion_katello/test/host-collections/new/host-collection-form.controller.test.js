@@ -39,7 +39,7 @@ describe('Controller: HostCollectionFormController', function() {
             hostCollection = $scope.hostCollection;
             spyOn($scope.table, 'addRow');
             spyOn($scope, 'transitionTo');
-            spyOn(hostCollection, '$save').andCallThrough();
+            spyOn(hostCollection, '$save').and.callThrough();
         });
 
         afterEach(function () {
@@ -68,7 +68,7 @@ describe('Controller: HostCollectionFormController', function() {
         var hostCollection = $scope.hostCollection;
 
         hostCollection.failed = true;
-        spyOn(hostCollection, '$save').andCallThrough();
+        spyOn(hostCollection, '$save').and.callThrough();
         $scope.save(hostCollection);
 
         expect(hostCollection.$save).toHaveBeenCalled();

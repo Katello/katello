@@ -34,7 +34,7 @@ describe('Controller: ProductsBulkActionController', function() {
     }));
 
     it("can remove multiple products", function() {
-        spyOn(ProductBulkAction, 'removeProducts').andCallThrough();
+        spyOn(ProductBulkAction, 'removeProducts').and.callThrough();
 
         $scope.removeProducts();
 

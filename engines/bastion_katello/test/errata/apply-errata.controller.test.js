@@ -65,7 +65,7 @@ describe('Controller: ApplyErrataController', function() {
 
     it("sets the updates on the $scope if there are selected content hosts", function () {
         var updates = ['update'];
-        spyOn(HostBulkAction, 'availableIncrementalUpdates').andCallFake(function (params, success) {
+        spyOn(HostBulkAction, 'availableIncrementalUpdates').and.callFake(function (params, success) {
             success(updates);
         });
 
@@ -98,7 +98,7 @@ describe('Controller: ApplyErrataController', function() {
                 };
 
                 $scope.updates = [];
-                spyOn(HostBulkAction, 'installContent').andCallThrough();
+                spyOn(HostBulkAction, 'installContent').and.callThrough();
             });
 
             afterEach(function () {
@@ -142,7 +142,7 @@ describe('Controller: ApplyErrataController', function() {
                     environments: [{id: 2}]
                 }];
 
-                spyOn(ContentViewVersion, 'incrementalUpdate').andCallThrough();
+                spyOn(ContentViewVersion, 'incrementalUpdate').and.callThrough();
             });
 
             afterEach(function () {
@@ -199,16 +199,16 @@ describe('Controller: ApplyErrataController', function() {
                     components: [{id: 5}]
                 }];
 
-                spyOn(ContentViewVersion, 'incrementalUpdate').andCallThrough();
+                spyOn(ContentViewVersion, 'incrementalUpdate').and.callThrough();
             });
 
             afterEach(function () {
                 expect(ContentViewVersion.incrementalUpdate).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function),
                     jasmine.any(Function));
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['add_content']).toEqual(expectedParams['add_content'])
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][0])
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][1])
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['resolve_dependencies']).toEqual(expectedParams['resolve_dependencies'])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['add_content']).toEqual(expectedParams['add_content'])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][0])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][1])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['resolve_dependencies']).toEqual(expectedParams['resolve_dependencies'])
             });
 
             it("and succeed", function () {
@@ -248,16 +248,16 @@ describe('Controller: ApplyErrataController', function() {
                     components: undefined
                 }];
 
-                spyOn(ContentViewVersion, 'incrementalUpdate').andCallThrough();
+                spyOn(ContentViewVersion, 'incrementalUpdate').and.callThrough();
             });
 
             afterEach(function () {
                 expect(ContentViewVersion.incrementalUpdate).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function),
                     jasmine.any(Function));
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['add_content']).toEqual(expectedParams['add_content'])
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][0])
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][1])
-                expect(ContentViewVersion.incrementalUpdate.mostRecentCall.args[0]['resolve_dependencies']).toEqual(expectedParams['resolve_dependencies'])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['add_content']).toEqual(expectedParams['add_content'])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][0])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['content_view_version_environments']).toContain(expectedParams['content_view_version_environments'][1])
+                expect(ContentViewVersion.incrementalUpdate.calls.mostRecent().args[0]['resolve_dependencies']).toEqual(expectedParams['resolve_dependencies'])
             });
 
             it("and succeed", function () {
