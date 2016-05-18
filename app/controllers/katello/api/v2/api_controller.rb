@@ -52,12 +52,7 @@ module Katello
       total = query.count
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
 
-      if group.present?
-        query = query.select(group).group(group)
-        sub_total = query.count.length
-      else
-        sub_total = query.count
-      end
+      sub_total = scoped_search_sub_total(query, total, group)
 
       sort_attr = params[:sort_by] || default_sort_by
 
@@ -78,12 +73,24 @@ module Katello
       page = params[:page] || 1
       per_page = params[:per_page] || ::Setting::General.entries_per_page
 
+      query = (total.zero? || sub_total.zero?) ? [] : query
+
       scoped_search_results(query, sub_total, total, page, per_page)
     rescue ScopedSearch::QueryNotSupported => error
       return scoped_search_results(query, sub_total, total, page, per_page, error.message)
     end
 
     protected
+
+    def scoped_search_sub_total(query, total, group)
+      if group.present?
+        query = query.select(group).group(group)
+        sub_total = total.zero? ? 0 : query.count.length
+      else
+        sub_total = total.zero? ? 0 : query.count
+      end
+      sub_total
+    end
 
     def scoped_search_results(query, sub_total, total, page, per_page, error = nil)
       {

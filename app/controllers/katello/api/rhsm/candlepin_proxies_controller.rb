@@ -435,8 +435,8 @@ module Katello
     def authorize_proxy_routes
       deny_access unless (authenticate || authenticate_client)
 
-      route, _, params = Engine.routes.router.recognize(request) do |rte, match, parameters|
-        break rte, match, parameters if rte.name
+      route, params = Engine.routes.router.recognize(request) do |rte, parameters|
+        break rte, parameters if rte.name
       end
 
       # route names are defined in routes.rb (:as => :name)

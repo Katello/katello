@@ -13,7 +13,8 @@ $(document).on('ContentLoad', function(){
         KT.hosts.getPuppetEnvironmentSelect().data('content_puppet_match', 'true');
         KT.hosts.setDefaultPuppetEnvironment(KT.hosts.getSelectedContentView(), KT.hosts.getSelectedEnvironment());
     });
-
+    KT.hosts.update_media_enablement();
+    KT.hosts.set_media_selection_bindings();
 });
 
 KT.hosts.fetchContentViews = function () {
@@ -37,7 +38,7 @@ KT.hosts.signalContentViewFetch = function(fetching) {
     var select = KT.hosts.getContentViewSelect();
     var select2 = KT.hosts.getContentViewSelect2();
         //parent = select.parent(),
-        spinner = $('<img>').attr('src', '/assets/spinner.gif'),
+        spinner = $('<img>').attr('src', select.data("spinner-path")),
         spinner_id = "content_view_spinner";
 
     if(fetching) {
@@ -61,12 +62,13 @@ KT.hosts.setDefaultPuppetEnvironment = function(view_id, env_id) {
     if (view_id && env_id) {
         $.get('/hosts/puppet_environment_for_content_view', {content_view_id: view_id, lifecycle_environment_id: env_id}, function (data) {
             var select = KT.hosts.getPuppetEnvironmentSelect();
-            select.val(data.id);
-            select.trigger('change');
+            if (data !== null) {
+                select.val(data.id);
+                select.trigger('change');
+            }
         })
     }
 };
-
 
 KT.hosts.getPuppetEnvironmentSelect = function() {
     var select = $("#host_environment_id").first();
@@ -114,7 +116,7 @@ KT.hosts.getSelectedEnvironment = function () {
 
 KT.hosts.onKatelloHostEditLoad = function(){
     var prefxies = ['host', 'hostgroup'],
-        attributes = ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id', 'operatingsystem_id'];
+        attributes = ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id'];
 
     $.each(prefxies, function(index, prefix) {
         $.each(attributes, function(attrIndex, attribute) {
@@ -123,13 +125,10 @@ KT.hosts.onKatelloHostEditLoad = function(){
             });
         });
     });
-    KT.hosts.toggle_installation_medium();
 };
-
 
 KT.hosts.toggle_installation_medium = function() {
     var lifecycle_environment_id, content_source_id, architecture_id, operatingsystem_id, content_view_id;
-
 
     if ($('#hostgroup_parent_id').length > 0) {
       lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
@@ -146,47 +145,130 @@ KT.hosts.toggle_installation_medium = function() {
     }
 
     if (content_view_id && lifecycle_environment_id && content_source_id && architecture_id && operatingsystem_id) {
-        $.ajax({
-            type:'get',
-            url: '/operatingsystems/' + operatingsystem_id + '/available_kickstart_repo',
-            data: {
-                lifecycle_environment_id: lifecycle_environment_id,
-                content_source_id: content_source_id,
-                architecture_id: architecture_id,
-                operatingsystem_id: operatingsystem_id,
-                content_view_id: content_view_id
-            },
-            error: function(jqXHR, status, error){
-                KT.hosts.show_medium_selectbox();
-            },
-            success: function(result){
-                if (result == null) {
-                    KT.hosts.show_medium_selectbox();
-                } else {
-                    // add kickstart_url div after checking that it doesn't exist
-                    // since this code is called 3 times
-                    if ($("#kt_kickstart_url").length == 0) {
-                      $('label[for="medium_id"]').after("<div id='kt_kickstart_url' class='col-md-8'></div>");
-                    }
-
-                    $("#host_medium_id").hide();
-                    $("#s2id_host_medium_id").hide();
-
-                    $("#hostgroup_medium_id").hide();
-                    $("#s2id_hostgroup_medium_id").hide();
-                    // populate kickstart_url inside div created above
-                    $("#kt_kickstart_url").html(result.name+"<br />"+result.path);
-                }
-            }
-        })
-    } else {
-        KT.hosts.show_medium_selectbox();
+        os_selected(KT.hosts.get_os_element());
     }
-
 };
 
-KT.hosts.show_medium_selectbox = function() {
-    $("#s2id_host_medium_id").show();
-    $("#s2id_hostgroup_medium_id").show();
-    $("#kt_kickstart_url").html('');
+KT.hosts.get_os_element = function () {
+    var select = $("#host_operatingsystem_id").first();
+    if(select.length === 0) {
+        select = $("#hostgroup_operatingsystem_id").first();
+    }
+    return select;
+};
+
+
+KT.hosts.get_media_selection_div = function () {
+    return $("#media_selection_section");
+};
+
+KT.hosts.get_install_media_div = function() {
+    return KT.hosts.get_media_selection_div().next();
+};
+
+KT.hosts.get_synced_content_div = function() {
+    return KT.hosts.get_media_selection_div().next().next();
+};
+
+KT.hosts.show_install_media = function(show) {
+    if (show) {
+        KT.hosts.get_install_media_div().show();
+    } else {
+        KT.hosts.get_install_media_div().hide();
+    }
+};
+
+KT.hosts.show_synced_content = function(show) {
+    if (show) {
+        KT.hosts.get_synced_content_div().show();
+    } else {
+        KT.hosts.get_synced_content_div().hide();
+    }
+};
+
+KT.hosts.update_media_type_selection = function (use_install_media) {
+    var elements = KT.hosts.get_media_selector_elements();
+    elements.filter('[value="install_media"]').prop('checked', use_install_media);
+    elements.filter('[value="synced_content"]').prop('checked', !use_install_media);
+    KT.hosts.update_media_enablement();
+};
+
+KT.hosts.media_selection_changed = function() {
+    KT.hosts.show_install_media(this.value === "install_media");
+    KT.hosts.show_synced_content(this.value !== "install_media");
+};
+
+KT.hosts.update_media_enablement = function () {
+    var value = KT.hosts.is_install_media_selected();
+    KT.hosts.show_install_media(value);
+    KT.hosts.show_synced_content(!value);
+};
+
+KT.hosts.is_install_media_selected = function() {
+    return KT.hosts.get_media_selector_elements().filter('[value="install_media"]').is(':checked');
+};
+
+KT.hosts.get_media_selector_elements = function() {
+    return $('input:radio[data-media-selector]');
+};
+
+KT.hosts.get_synced_content_dropdown = function() {
+    return $('select[data-kickstart-repository-id]');
+};
+
+KT.hosts.on_install_media_dropdown_change = function() {
+    // reset the kickstart-repository-id .. They are either or.
+    KT.hosts.get_synced_content_dropdown().val("");
+    activate_select2("#media_select");
+};
+
+KT.hosts.on_synced_content_dropdown_change = function() {
+    // reset the kickstart-repository-id .. They are either or.
+    $("#host_medium_id").val("");
+    $("#s2id_host_medium_id").val("");
+    $("#hostgroup_medium_id").val("");
+    $("#s2id_hostgroup_medium_id").val("");
+    activate_select2("#media_select");
+};
+
+KT.hosts.set_install_media_bindings = function() {
+    // reset the host medium id
+    $("#host_medium_id").change(KT.hosts.on_install_media_dropdown_change);
+    $("#s2id_host_medium_id").change(KT.hosts.on_install_media_dropdown_change);
+    $("#hostgroup_medium_id").change(KT.hosts.on_install_media_dropdown_change);
+    $("#s2id_hostgroup_medium_id").change(KT.hosts.on_install_media_dropdown_change);
+};
+
+KT.hosts.set_synced_content_bindings = function() {
+    KT.hosts.get_synced_content_dropdown().change(KT.hosts.on_synced_content_dropdown_change);
+};
+
+KT.hosts.set_media_selection_bindings = function() {
+  KT.hosts.set_install_media_bindings();
+  KT.hosts.set_synced_content_bindings();
+  KT.hosts.get_media_selector_elements().change(KT.hosts.media_selection_changed);
+};
+
+// Note we are overriding the os_selected method in foreman
+// Hopefully when this gets resolved http://projects.theforeman.org/issues/14699
+// This method will get backed out.
+function os_selected(element){
+  var attrs = attribute_hash(['operatingsystem_id', 'organization_id', 'location_id', 'content_view_id',
+                              'lifecycle_environment_id', 'content_source_id', 'architecture_id', 'hostgroup_id',
+                              'medium_id', 'kickstart_repository_id']);
+  var url = $(element).attr('data-url');
+  foreman.tools.showSpinner();
+  $.ajax({
+    data: attrs,
+    type:'post',
+    url: url,
+    complete: function(){
+      reloadOnAjaxComplete(element);
+    },
+    success: function(request) {
+      $('#media_select').html(request);
+      reload_host_params();
+    }
+  });
+  update_provisioning_image();
 };

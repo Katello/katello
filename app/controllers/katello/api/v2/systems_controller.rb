@@ -112,9 +112,12 @@ module Katello
 
     def find_system
       @system = System.where(:uuid => params[:id]).first
-      if @system.nil?
+      @host = ::Host.where(:id => params[:id]).first
+      if @system.nil? && @host.nil?
         Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
         fail HttpErrors::NotFound, _("Couldn't find content host '%s'") % params[:id]
+      elsif @system.nil?
+        @system = @host.content_host
       end
     end
 

@@ -51,8 +51,10 @@ module Katello
         end
       elsif @activation_key
         query = @activation_key.host_collections
-      else
+      elsif @organization
         query = HostCollection.readable.where(:organization_id => @organization.id)
+      else
+        query = HostCollection.readable
       end
       query = query.where(:name => params[:name]) if params[:name]
       query
@@ -67,7 +69,7 @@ module Katello
       @host_collection = HostCollection.new(host_collection_params_with_host_ids)
       @host_collection.organization = @organization
       @host_collection.save!
-      respond
+      respond_for_show(:resource => @host_collection)
     end
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")

@@ -48,12 +48,12 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             var readOnlyReason = null;
 
             if (product.$resolved) {
-                if ($scope.denied('destroy_products', product)) {
+                if (product.redhat) {
+                    readOnlyReason = 'redhat';
+                } else if ($scope.denied('destroy_products', product)) {
                     readOnlyReason = 'permissions';
                 } else if (product['published_content_view_ids'].length > 0) {
                     readOnlyReason = 'published';
-                } else if (product.redhat) {
-                    readOnlyReason = 'redhat';
                 }
             }
 

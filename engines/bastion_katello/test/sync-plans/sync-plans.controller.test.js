@@ -14,6 +14,7 @@ describe('Controller: SyncPlansController', function() {
             this.get = function() {};
             this.enableSelectAllResults = function () {};
             this.removeRow = function () {};
+            this.refresh = function () {};
         };
 
         translate = function (string) {

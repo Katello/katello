@@ -292,6 +292,11 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     User.current = User.anonymous_api_admin
 
+    ping = ::Katello::Ping.ping
+    if ping[:status] != ::Katello::Ping::OK_RETURN_CODE
+      fail _("Some backend services are not running: %s") % ping.inspect
+    end
+
     ensure_one_system_per_hostname(MigrateContentHosts::System.all)
 
     systems = get_systems_with_facts(MigrateContentHosts::System.all)

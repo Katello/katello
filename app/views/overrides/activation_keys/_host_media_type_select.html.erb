@@ -1,0 +1,26 @@
+<% media_selection = using_hostgroups_page? ? use_install_media(@hostgroup) : use_install_media(@host, :selected_host_group => @hostgroup)
+   install_media_radio  = media_selection ? 'checked="checked"':''
+   synced_content_radio  = media_selection ? '' : 'checked="checked"'
+   install_media_disabled = os_media.empty? ? 'disabled = true' : ''
+
+   kickstart_options = using_hostgroups_page? ? kickstart_repository_options(@hostgroup) : kickstart_repository_options(@host, :selected_host_group => @hostgroup)
+   synced_content_disabled = kickstart_options.empty? ? 'disabled = true' : ''
+%>
+
+<div class="clear-fix" id="media_selection_section">
+  <div class="form-group ">
+     <label class="col-md-2 control-label" for="use_install_media">Media Selection</label>
+     <div class="col-md-4">
+        <label class="radio-inline">
+          <input data-media-selector="true" id="host_use_synced_content" name="media_selector" value="synced_content" type="radio" <%= synced_content_radio  %> <%= synced_content_disabled %>/> <%= _('Synced Content') %>
+        </label>
+        <label class="radio-inline">
+          <input data-media-selector="true" id="host_use_install_media" name="media_selector" value="install_media" type="radio" <%= install_media_radio  %> <%= install_media_disabled  %>/> <%= _('All Media') %>
+        </label>
+        <span class="help-block">
+          <%= _("Select the installation media that will be used to provision this host. Choose 'Synced Content' for Synced Kickstart Repositories or 'All Media' for other media.") %>
+        </span>
+      </div>
+     <span class="help-block help-inline"></span>
+  </div>
+</div>

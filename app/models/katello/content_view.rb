@@ -454,7 +454,6 @@ module Katello
       fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot publish default content view") if default?
       check_composite_action_allowed!(organization.library)
-      check_distribution_conflicts!
       true
     end
 
@@ -509,40 +508,6 @@ module Katello
 
       fail errors.join(" ") if errors.any?
       return true
-    end
-
-    def check_distribution_conflicts!
-      duplicates = duplicate_distributions
-      if duplicates.any?
-        failed_distribution = duplicates.first
-      else
-        conflicts = distribution_conflicts
-        if conflicts.any?
-          failed_distribution = conflicts.first
-        end
-      end
-
-      if failed_distribution
-        failed_repos = [duplicates, conflicts].flat_map { |i| i }
-        fail _("Content Views cannot contain multiple Kickstart trees with the same version and architecture. " \
-               "Multiple Kickstart trees of %{release} %{arch} were found in Repositories: %{repos}") %
-                 {:release => failed_distribution.distribution_version, :arch => failed_distribution.distribution_arch,
-                  :repos => failed_repos.compact.map { |repo| repo.name if repo.name }}
-      end
-    end
-
-    def distribution_conflicts
-      #find distributions, where there are two in the content view with the same version and Arch
-      repos =  self.repositories_to_publish.where("distribution_arch IS NOT NULL OR distribution_version IS NOT NULL")
-      repos = repos.select { |repo| repo.distribution_bootable? }
-      repos.group_by { |repo| [repo.distribution_arch, repo.distribution_version] }
-           .select { |_, value| value.length > 1 }.values.flatten
-    end
-
-    def duplicate_distributions
-      #find distributions where two repositories in the content view share them
-      repos =  self.repositories_to_publish.where("distribution_uuid IS NOT NULL")
-      repos.group_by { |i| i.distribution_uuid }.select { |_, v| v.length > 1 }.values.flatten
     end
 
     protected

@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
     self.include_root_in_json = false
 
@@ -61,6 +62,9 @@ module Katello
 
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy
     has_many :package_groups, :through => :repository_package_groups
+
+    has_many :kickstart_content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :kickstart_repository_id,
+                          :inverse_of => :kickstart_repository, :dependent => :nullify
 
     # rubocop:disable HasAndBelongsToMany
     # TODO: change this into has_many :through association
@@ -190,6 +194,28 @@ module Katello
 
     def custom?
       !(redhat?)
+    end
+
+    def empty_errata
+      repository_rpm = Katello::RepositoryRpm.table_name
+      repository_errata = Katello::RepositoryErratum.table_name
+      rpm = Katello::Rpm.table_name
+      errata = Katello::Erratum.table_name
+      erratum_package = Katello::ErratumPackage.table_name
+
+      errata_with_packages = Erratum.joins(
+        "INNER JOIN #{erratum_package} on #{erratum_package}.erratum_id = #{errata}.id",
+        "INNER JOIN #{repository_errata} on #{repository_errata}.erratum_id = #{errata}.id",
+        "INNER JOIN #{rpm} on #{rpm}.filename = #{erratum_package}.filename",
+        "INNER JOIN #{repository_rpm} on #{repository_rpm}.rpm_id = #{rpm}.id").
+        where("#{repository_rpm}.repository_id" => self.id).
+        where("#{repository_errata}.repository_id" => self.id)
+
+      if errata_with_packages.any?
+        self.errata.where("#{Katello::Erratum.table_name}.id NOT IN (?)", errata_with_packages.pluck("#{errata}.id"))
+      else
+        self.errata
+      end
     end
 
     def library_instance?

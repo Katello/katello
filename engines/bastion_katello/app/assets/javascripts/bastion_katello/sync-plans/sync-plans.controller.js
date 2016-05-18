@@ -48,6 +48,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
                 syncPlan.$remove(function () {
                     GlobalNotification.setSuccessMessage(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
                     $scope.removeRow(syncPlan.id);
+                    $scope.nutupane.refresh();
                     $scope.transitionTo('sync-plans.index');
                 });
             };

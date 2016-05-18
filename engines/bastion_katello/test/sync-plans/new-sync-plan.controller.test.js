@@ -13,6 +13,7 @@ describe('Controller: NewSyncPlanController', function() {
         GlobalNotification = $injector.get('GlobalNotification');
         $scope = $injector.get('$rootScope').$new();
         $scope.$state = {go: function () {}};
+        $scope.nutupane = {refresh: function () {}};
 
         translate = function (string) { return string; };
 

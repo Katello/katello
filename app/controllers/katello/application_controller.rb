@@ -251,7 +251,7 @@ module Katello
     def require_org
       unless session && current_organization
         execute_after_filters
-        fail Errors::SecurityViolation, _("User does not belong to an organization.")
+        redirect_to '/select_organization?toState=' + request.path
       end
     end
 

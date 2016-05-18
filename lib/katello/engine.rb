@@ -149,6 +149,11 @@ module Katello
         fail Foreman::Exception, N_("Organizations disabled, try allowing them in foreman/config/settings.yaml")
       end
 
+      # Rendering concerns needs to be injected to controllers, Foreman::Renderer was already included
+      # otherwise subscription_manager_configuration_url is not available in template preview
+      (TemplatesController.descendants + [TemplatesController]).each do |klass|
+        klass.send(:include, Katello::KatelloUrlsHelper)
+      end
       # Lib Extensions
       ::Foreman::Renderer.send :include, Katello::Concerns::RendererExtensions
 
@@ -170,7 +175,6 @@ module Katello
       ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
 
       #Controller extensions
-      ::OperatingsystemsController.send :include, Katello::Concerns::OperatingsystemsControllerExtensions
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
       ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
       ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions

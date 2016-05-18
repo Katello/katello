@@ -21,6 +21,17 @@ module Katello
     end
 
     def test_index
+      results = JSON.parse(get(:index).body)
+
+      assert_response :success
+      assert_template 'api/v2/host_collections/index'
+
+      assert_equal results.keys.sort, ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total']
+      assert_equal results['results'].size, 3
+      assert_includes results['results'].map { |r| r['id'] }, @host_collection.id
+    end
+
+    def test_index_with_organization
       results = JSON.parse(get(:index, :organization_id => @organization.id).body)
 
       assert_response :success
@@ -52,7 +63,7 @@ module Katello
       assert_equal results['organization_id'], @organization.id
       assert_equal results['description'], 'Collection A, World Cup 2014'
 
-      assert_template 'api/v2/host_collections/create'
+      assert_template 'api/v2/host_collections/show'
     end
 
     def test_validate_hosts
@@ -116,7 +127,7 @@ module Katello
       assert_equal results['total_hosts'], 1
 
       assert_response :success
-      assert_template 'api/v2/host_collections/create'
+      assert_template 'api/v2/host_collections/show'
     end
   end
 end

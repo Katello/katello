@@ -25,6 +25,7 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
             function success(syncPlan) {
                 $scope.working = false;
                 GlobalNotification.setSuccessMessage(translate('New sync plan successfully created.'));
+                $scope.nutupane.refresh();
                 if ($scope.product) {
                     $scope.product['sync_plan_id'] = syncPlan.id;
                     $scope.$state.go('products.details.info', {productId: $scope.product.id});

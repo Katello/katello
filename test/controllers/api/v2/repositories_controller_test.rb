@@ -83,7 +83,7 @@ module Katello
     def test_index_with_product_id
       ids = Repository.where(:product_id => @product.id, :library_instance_id => nil).pluck(:id)
 
-      response = get :index, :product_id => @product.id, :organization_id => @organization.id
+      response = get :index, :product_id => @product.id
       response_ids = JSON.parse(response.body)['results'].map { |repo| repo['id'] }
 
       assert_response :success
@@ -676,7 +676,17 @@ module Katello
             files.size == 1 && files.first[:filename].include?("puppet_module.tar.gz")
       end
 
+      # array
       post :upload_content, :id => @repository.id, :content => [puppet_module]
+      assert_response :success
+
+      assert_sync_task ::Actions::Katello::Repository::UploadFiles do |repo, files|
+        repo.id == @repository.id &&
+            files.size == 1 && files.first[:filename].include?("puppet_module.tar.gz")
+      end
+
+      # single file
+      post :upload_content, :id => @repository.id, :content => puppet_module
       assert_response :success
     end
 

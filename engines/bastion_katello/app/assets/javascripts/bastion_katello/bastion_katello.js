@@ -73,5 +73,8 @@
 //= require "bastion_katello/activation-keys/activation-keys.module.js"
 //= require_tree "./activation-keys"
 
+//= require "bastion_katello/settings/settings.module.js"
+//= require_tree "./settings"
+
 //= require "bastion_katello/bastion-katello-bootstrap.js"
 //= require "bastion_katello/katello-features.run.js"
