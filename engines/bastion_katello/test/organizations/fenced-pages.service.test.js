@@ -5,13 +5,10 @@ describe('Factory: FencedPages', function() {
         FencedPages = _FencedPages_;
     }));
 
-    it("should list all the fenced pages", function () {
-        expect(FencedPages.list().length).toBe(10);
-    });
-
     it("should add page to the list", function () {
+        var expectedLength = FencedPages.list().length + 2;
         FencedPages.addPages(["testpage", "testpage2"]);
-        expect(FencedPages.list().length).toBe(12);
+        expect(FencedPages.list().length).toBe(expectedLength);
     });
 
     it("should find if page is in the list", function () {
