@@ -15,6 +15,6 @@ FactoryGirl.define do
       association :library, :factory => :katello_library
     end
 
-    factory :acme_corporation,  :traits => [:acme_corporation]
+    factory :acme_corporation, :traits => [:acme_corporation]
   end
 end

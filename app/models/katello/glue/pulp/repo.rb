@@ -580,8 +580,8 @@ module Katello
 
           # Since the rpms will be copied above, during the copy of errata and package groups,
           # include the copy_children flag to request that pulp skip copying them again.
-          events << Katello.pulp_server.extensions.errata.copy(self.pulp_id, to_repo.pulp_id,  :copy_children => false)
-          events << Katello.pulp_server.extensions.package_group.copy(self.pulp_id, to_repo.pulp_id,  :copy_children => false)
+          events << Katello.pulp_server.extensions.errata.copy(self.pulp_id, to_repo.pulp_id, :copy_children => false)
+          events << Katello.pulp_server.extensions.package_group.copy(self.pulp_id, to_repo.pulp_id, :copy_children => false)
           events << clone_file_metadata(to_repo)
         end
 

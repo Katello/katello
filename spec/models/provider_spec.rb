@@ -42,7 +42,7 @@ module Katello
                                    :repository_url => 'http://something.net',
                                    :provider_type => Provider::REDHAT,
                                    :organization => @organization
-                                 )
+        )
         @provider.save!
 
         @product = Product.create!(:cp_id => "product_id", :label => "prod", :name => "prod", :productContent => [], :provider => @provider, :organization => @organization)

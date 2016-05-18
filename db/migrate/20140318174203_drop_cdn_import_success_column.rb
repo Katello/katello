@@ -4,6 +4,6 @@ class DropCdnImportSuccessColumn < ActiveRecord::Migration
   end
 
   def down
-    add_column :katello_products,  "cdn_import_success", :boolean, :default => true, :null => false
+    add_column :katello_products, "cdn_import_success", :boolean, :default => true, :null => false
   end
 end

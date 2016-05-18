@@ -54,7 +54,7 @@ module Katello
       end
     end
 
-    rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
+    rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved do |e|
       notify.exception e
       log_exception e, :info
 
@@ -168,7 +168,7 @@ module Katello
           response.headers['X-Message'] = @enc.gsub("%2B", "&#43;")
           response.headers['X-Message-Type'] = type.to_s
           response.headers['X-Message-Request-Type'] = requested_action
-          flash.delete(type)  # clear the flash
+          flash.delete(type) # clear the flash
           return
         end
       end

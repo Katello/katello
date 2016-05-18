@@ -277,7 +277,7 @@ module Katello
       end
 
       def custom_repos_create_orchestration
-        pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
+        pre_queue.create(:name => "create pulp repositories for product: #{self.label}", :priority => 1, :action => [self, :set_repos])
       end
 
       protected

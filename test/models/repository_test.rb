@@ -517,16 +517,16 @@ module Katello
                     :environment => @library,
                     :product => katello_products(:fedora),
                     :content_view_version => @library.default_content_view_version
-                    )
+                   )
       path = Repository.clone_docker_repo_path(:repository => @repo,
                                                :version => @repo.content_view_version,
                                                :content_view => @repo.content_view
-                                               )
+                                              )
       assert_equal "empty_organization-org_default_label-1.0-fedora_label-dockeruser_repo", path
       path = Repository.clone_docker_repo_path(:repository => @repo,
                                                :environment => @repo.organization.library,
                                                :content_view => @repo.content_view
-                                               )
+                                              )
       assert_equal 'empty_organization-library_default_view_library-org_default_label-fedora_label-dockeruser_repo', path
     end
 

@@ -4,6 +4,6 @@ class DropRepositoriesEnabledColumn < ActiveRecord::Migration
   end
 
   def down
-    add_column :katello_repositories,  :enabled, :boolean, :default => true
+    add_column :katello_repositories, :enabled, :boolean, :default => true
   end
 end

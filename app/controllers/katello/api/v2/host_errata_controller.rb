@@ -23,7 +23,7 @@ module Katello
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      if  (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
+      if (params[:content_view_id] && params[:environment_id].nil?) || (params[:environment_id] && params[:content_view_id].nil?)
         fail _("Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
       end
 

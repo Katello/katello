@@ -60,7 +60,7 @@ module Katello
     def test_install_package
       BulkActions.any_instance.expects(:install_packages).once.returns(Job.new)
 
-      put :install_content,  :included => {:ids => @host_ids}, :organization_id => @org.id,
+      put :install_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
           :content_type => 'package', :content => ['foo']
 
       assert_response :success

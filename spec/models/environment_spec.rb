@@ -46,7 +46,7 @@ module Katello
                                              :label => @environment.name + '-prior',
                                              :prior => @environment.id,
                                              :organization => @organization
-                                           )
+          )
         end
 
         specify { @new_env.prior.must_equal(@environment) }

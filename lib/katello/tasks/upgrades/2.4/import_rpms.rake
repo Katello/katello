@@ -1,7 +1,7 @@
 namespace :katello do
   namespace :upgrades do
     namespace '2.4' do
-      task :import_rpms => ["environment"]  do
+      task :import_rpms => ["environment"] do
         User.current = User.anonymous_api_admin
 
         puts _("Importing Rpms")

@@ -58,7 +58,7 @@ module Katello
             # TODO: why not use http_code from the exception???
             render :json => format_subsys_exception_hash(exception), :status => :bad_request
           else
-            respond_for_exception(exception,  :status => :bad_request)
+            respond_for_exception(exception, :status => :bad_request)
           end
         end
 

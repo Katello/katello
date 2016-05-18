@@ -16,7 +16,7 @@ module Katello
       @organization = get_organization
     end
 
-    describe "register with activation key should fail"  do
+    describe "register with activation key should fail" do
       it "without specifying owner (organization)" do
         post('consumer_activate', :activation_keys => 'non_existent_key')
         assert_response 404

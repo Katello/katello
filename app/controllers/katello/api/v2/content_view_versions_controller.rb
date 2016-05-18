@@ -93,7 +93,7 @@ module Katello
     param :description, String, :desc => N_("The description for the new generated Content View Versions")
     param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well.")
     param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment.")
-    param :add_content, Hash  do
+    param :add_content, Hash do
       param :errata_ids, Array, :desc => "Errata ids or uuids to copy into the new versions."
       param :package_ids, Array, :desc => "Package ids or uuids to copy into the new versions."
       param :puppet_module_ids, Array, :desc => "Puppet Module ids or uuids to copy into the new versions."

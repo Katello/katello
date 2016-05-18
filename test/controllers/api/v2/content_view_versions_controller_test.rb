@@ -240,7 +240,7 @@ module Katello
       errata_id = Katello::Erratum.first.uuid
 
       publish_permission = {:name => @publish_permission, :search => "name=\"#{version.content_view.name}\"" }
-      view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{version.content_view.name}\""  }
+      view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{version.content_view.name}\"" }
       environment_promote_permission = {:name => @env_promote_permission, :search => "name=\"#{@beta.name}\"" }
 
       allowed_perms = [[publish_permission, view_promote_permission, environment_promote_permission]]

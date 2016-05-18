@@ -142,7 +142,7 @@ module Katello
                                     :type => :po,
                                     :ignore_fuzzy => true,
                                     :report_warning => false
-                                  )
+                                 )
       FastGettext.default_text_domain = 'katello'
 
       unless SETTINGS[:organizations_enabled]

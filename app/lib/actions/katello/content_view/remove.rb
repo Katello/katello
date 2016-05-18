@@ -111,13 +111,13 @@ module Actions
         def system_cve(options)
           ::Katello::ContentViewEnvironment.where(:environment_id => options[:system_environment_id],
                                                   :content_view_id => options[:system_content_view_id]
-                                      ).first
+                                                 ).first
         end
 
         def activation_key_cve(options)
           ::Katello::ContentViewEnvironment.where(:environment_id => options[:key_environment_id],
                                                   :content_view_id => options[:key_content_view_id]
-                                      ).first
+                                                 ).first
         end
       end
     end

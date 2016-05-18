@@ -102,7 +102,7 @@ namespace :katello do
   end
 
   desc "Regenerates the search indicies for various Katello objects"
-  task :reindex => ["environment", "katello:check_ping"]  do
+  task :reindex => ["environment", "katello:check_ping"] do
     User.current = User.anonymous_admin #set a user for orchestration
 
     Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }

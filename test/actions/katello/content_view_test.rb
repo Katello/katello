@@ -184,7 +184,7 @@ module ::Actions::Katello::ContentView
       action.expects(:action_subject).with(content_view)
       plan_action(action, content_view, options)
 
-      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env,  :skip_repo_destroy => false, :organization_destroy => false)
+      assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
     end
 
     it 'plans for removing a version and an environment' do

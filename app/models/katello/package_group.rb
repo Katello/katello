@@ -30,7 +30,7 @@ module Katello
       pulp_package_groups = Katello.pulp_server.extensions.package_group.search(Katello::PackageGroup::CONTENT_TYPE, :filters => clauses)
       groupings = [:default_package_names, :conditional_package_names, :optional_package_names, :mandatory_package_names]
       if pulp_package_groups.any?
-        pulp_package_groups.flat_map { |group|  groupings.each { |grouping| package_names << group[grouping] } }
+        pulp_package_groups.flat_map { |group| groupings.each { |grouping| package_names << group[grouping] } }
         package_names.flatten!
       else
         []

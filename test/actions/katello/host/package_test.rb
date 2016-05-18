@@ -30,7 +30,7 @@ module ::Actions::Katello::Host::Package
       let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
       describe 'successfully installed' do
-        let(:fixture_variant) {  :success }
+        let(:fixture_variant) { :success }
 
         specify do
           action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -43,7 +43,7 @@ libotf-0.9.9-3.1.el6.x86_64
       end
 
       describe 'no packages installed' do
-        let(:fixture_variant) {  :no_packages }
+        let(:fixture_variant) { :no_packages }
 
         specify do
           action.humanized_output.must_equal "No new packages installed"
@@ -51,7 +51,7 @@ libotf-0.9.9-3.1.el6.x86_64
       end
 
       describe 'with error' do
-        let(:fixture_variant) {  :error }
+        let(:fixture_variant) { :error }
 
         specify do
           action.humanized_output.must_equal <<-MSG.chomp
@@ -77,7 +77,7 @@ emacss: No package(s) available to install
         let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
         describe 'successfully uninstalled' do
-          let(:fixture_variant) {  :success }
+          let(:fixture_variant) { :success }
 
           specify do
             action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -90,7 +90,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'no packages uninstalled' do
-          let(:fixture_variant) {  :no_packages }
+          let(:fixture_variant) { :no_packages }
 
           specify do
             action.humanized_output.must_equal "No packages removed"

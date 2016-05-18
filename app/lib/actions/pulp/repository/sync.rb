@@ -31,7 +31,7 @@ module Actions
             sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
 
             output[:pulp_tasks] = pulp_tasks =
-                [pulp_resources.repository.sync(input[:pulp_id],  override_config: sync_options)]
+                [pulp_resources.repository.sync(input[:pulp_id], override_config: sync_options)]
 
             pulp_tasks
           end

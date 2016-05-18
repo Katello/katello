@@ -18,7 +18,7 @@ module Katello
     def_param_group :search do
       param :search, String, :desc => N_("Search string")
       param :page, :number, :desc => N_("Page number, starting at 1")
-      param :per_page,  :number, :desc => N_("Number of results per page to return")
+      param :per_page, :number, :desc => N_("Number of results per page to return")
       param :order, String, :desc => N_("Sort field and order, eg. 'name DESC'")
       param :full_results, :bool, :desc => N_("Whether or not to show all results")
       param :sort, Hash, :desc => N_("Hash version of 'order' param") do

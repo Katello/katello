@@ -343,7 +343,7 @@ module Katello
       # TODO: break up this method
       def display_manifest_message(type, error)
         # Clean up response from candlepin
-        types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')}  # For i18n
+        types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')} # For i18n
         begin
           if error.respond_to?(:response)
             results = JSON.parse(error.response)
