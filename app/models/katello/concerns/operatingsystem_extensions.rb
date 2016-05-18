@@ -40,6 +40,14 @@ module Katello
         self.architectures << Architecture.where(:name => "x86_64").first_or_create
         self.family = "Redhat"
       end
+
+      def atomic?
+        name.match(/.*atomic.*/i)
+      end
     end
   end
+end
+
+class ::Operatingsystem::Jail < Safemode::Jail
+  allow :atomic?
 end

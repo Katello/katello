@@ -1,6 +1,6 @@
 <% if @host.params['kt_activation_keys'] %>
   # add subscription manager
- <% if @host.operatingsystem.name.match(/.*atomic.*/i) %>
+ <% if @host.operatingsystem.atomic? %>
   curl -s <%= subscription_manager_configuration_url(@host, false) %> | IS_ATOMIC=true bash
  <% else %>
   yum -t -y -e 0 install subscription-manager
@@ -10,7 +10,7 @@
   echo "Registering the System"
   subscription-manager register --org="<%= @host.rhsm_organization_label %>" --name="<%= @host.name %>" --activationkey="<%= @host.params['kt_activation_keys'] %>"
 
-  <% unless @host.operatingsystem.name.match(/.*atomic.*/i) %>
+  <% unless @host.operatingsystem.atomic? %>
     echo "Installing Katello Agent"
     yum -t -y -e 0 install katello-agent
     chkconfig goferd on
