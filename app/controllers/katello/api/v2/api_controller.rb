@@ -57,8 +57,9 @@ module Katello
       sort_attr = params[:sort_by] || default_sort_by
 
       if sort_attr
-        sort_attr = "#{query.table_name}.#{sort_attr}" unless sort_attr.to_s.include?('.')
-        query = query.order("#{sort_attr} #{params[:sort_order] || default_sort_order}")
+        sort_order = (params[:sort_order] || default_sort_order).to_s.downcase
+        sort_order = default_sort_order unless ['desc', 'asc'].include?(sort_order)
+        query = query.order(sort_attr => sort_order.to_sym)
       elsif options[:custom_sort]
         query = options[:custom_sort].call(query)
       end

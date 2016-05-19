@@ -20,9 +20,11 @@ module Katello
     param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      includes = [:content_view, :environments, :composite_content_views, :history => :task]
-      sort = "#{ContentViewVersion.table_name}.major desc, #{ContentViewVersion.table_name}.minor desc"
-      respond(:collection => scoped_search(index_relation.uniq, sort, '', :includes => includes))
+      options = {
+        :includes => [:content_view, :environments, :composite_content_views, :history => :task],
+        :custom_sort => lambda { |query| query.order("#{ContentViewVersion.table_name}.major desc, #{ContentViewVersion.table_name}.minor desc") }
+      }
+      respond(:collection => scoped_search(index_relation.uniq, nil, nil, options))
     end
 
     def index_relation
