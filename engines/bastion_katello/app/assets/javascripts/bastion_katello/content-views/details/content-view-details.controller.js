@@ -16,7 +16,14 @@
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
     ['$scope', 'ContentView', 'ContentViewVersion', 'Nutupane', 'AggregateTask', 'translate', 'ApiErrorHandler',
     function ($scope, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate, ApiErrorHandler) {
+        var nutupane, contentViewId = $scope.$stateParams.contentViewId;
 
+        if ($scope.contentView) {
+            contentViewId = $scope.contentView.id;
+        }
+
+        nutupane = new Nutupane(ContentViewVersion, {'content_view_id': contentViewId});
+        nutupane.masterOnly = true;
 
         function saveSuccess() {
             $scope.successMessages = [translate('Content View updated.')];
@@ -60,15 +67,21 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         function taskUpdated(version, task) {
             var taskTypes = $scope.taskTypes;
 
-            if (!task.pending && task.result === 'success') {
-                if (task.label === taskTypes.promotion) {
-                    $scope.successMessages.push(promotionMessage(version, task));
-                } else if (task.label === taskTypes.publish) {
-                    $scope.successMessages.push(publishMessage(version));
-                } else if (task.label === taskTypes.deletion) {
-                    $scope.successMessages.push(deletionMessage(version, task));
-                    $scope.reloadVersions();
+            if (!task.pending) {
+                $scope.pendingVersionTask = false;
+
+                if (task.result === 'success') {
+                    if (task.label === taskTypes.promotion) {
+                        $scope.successMessages.push(promotionMessage(version, task));
+                    } else if (task.label === taskTypes.publish) {
+                        $scope.successMessages.push(publishMessage(version));
+                    } else if (task.label === taskTypes.deletion) {
+                        $scope.successMessages.push(deletionMessage(version, task));
+                        $scope.reloadVersions();
+                    }
                 }
+            } else {
+                $scope.pendingVersionTask = true;
             }
         }
 
@@ -101,6 +114,10 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
+
+        $scope.detailsTable = nutupane.table;
+        $scope.pendingVersionTask = false;
+
         $scope.panel = {
             error: false,
             loading: true
@@ -132,14 +149,8 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.reloadVersions = function () {
-            var contentViewId = $scope.contentView.id || $scope.$stateParams.contentViewId,
-                nutupane = new Nutupane(ContentViewVersion, {
-                    'content_view_id': contentViewId
-                });
-
-            nutupane.masterOnly = true;
-
-            $scope.detailsTable = nutupane.table;
+            $scope.detailsTable.rows = [];
+            nutupane.refresh();
         };
 
         $scope.$watch('detailsTable.rows', function () {
