@@ -30,13 +30,13 @@ users:
 
 <%# Allow user to specify additional SSH key as host paramter -%>
 <% if @host.params['sshkey'].present? || @host.params['remote_execution_ssh_keys'].present? -%>
-ssh_authorized_keys:
+   ssh_authorized_keys:
 <% if @host.params['sshkey'].present? -%>
-  - <%= @host.params['sshkey'] %>
+    - <%= @host.params['sshkey'] %>
 <% end -%>
 <% if @host.params['remote_execution_ssh_keys'].present? -%>
 <% @host.params['remote_execution_ssh_keys'].each do |key| -%>
-  - <%= key %>
+    - <%= key %>
 <% end -%>
 <% end -%>
 <% end -%>
