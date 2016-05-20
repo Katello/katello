@@ -16,7 +16,8 @@ module Katello
           'katello_default_ptable',
           'katello_default_PXELinux',
           'katello_default_user_data',
-          'katello_default_kexec'
+          'katello_default_kexec',
+          'katello_default_atomic_provision'
         ].include?(setting.name)
 
         case setting.name
@@ -26,7 +27,7 @@ module Katello
           edit_select(setting, :value, :select_values => katello_template_setting_values("finish"))
         when "katello_default_iPXE"
           edit_select(setting, :value, :select_values => katello_template_setting_values("iPXE"))
-        when "katello_default_provision"
+        when "katello_default_provision", "katello_default_atomic_provision"
           edit_select(setting, :value, :select_values => katello_template_setting_values("provision"))
         when "katello_default_ptable"
           edit_select(setting, :value, :select_values => Hash[Template.all.where(:type => "Ptable").map { |tmp| [tmp[:name], tmp[:name]] }].to_json)
