@@ -136,22 +136,6 @@ module Katello
       respond_for_index(:collection => collection, :template => :paths)
     end
 
-    api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
-    param :id, :identifier, :desc => "environment identifier"
-    param :organization_id, String, :desc => "organization identifier"
-    param :content_view_id, :identifier, :desc => "content view identifier", :required => false
-    def repositories
-      if !@environment.library? && @content_view.nil?
-        fail HttpErrors::BadRequest,
-              _("Cannot retrieve repos from non-library environment '%s' without a content view.") % @environment.name
-      end
-
-      @repositories = @environment.products.readable(@organization).flat_map do |p|
-        p.repos(@environment, @content_view)
-      end
-      respond_for_index :collection => @repositories
-    end
-
     protected
 
     def find_environment
