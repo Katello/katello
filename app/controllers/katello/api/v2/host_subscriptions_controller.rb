@@ -4,6 +4,13 @@ module Katello
     before_filter :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
     before_filter :find_content_view_environment, :only => :create
 
+    def_param_group :subscription_facet_attributes do
+      param :release_version, String, :desc => N_("Release version for this Host to use (7Server, 7.1, etc)")
+      param :autoheal, :bool, :desc => N_("Sets whether the Host will autoheal subscriptions upon checkin")
+      param :service_level, Integer, :desc => N_("Service level to be used for autoheal.")
+      param :hypervisor_guest_uuids, Array, :desc => N_("List of hypervisor guest uuids")
+    end
+
     resource_description do
       api_version 'v2'
       api_base_url "/api"

@@ -216,18 +216,20 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
 
-      #Api controller extensions
-      ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
-      ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
-
       #facet extensions
       Facets.register(Katello::Host::ContentFacet, :content_facet) do
         api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
+        api_docs :content_facet_attributes,  ::Katello::Api::V2::HostContentsController
       end
 
       Facets.register(Katello::Host::SubscriptionFacet, :subscription_facet) do
         api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
+        api_docs :subscription_facet_attributes,  ::Katello::Api::V2::HostSubscriptionsController
       end
+
+      #Api controller extensions
+      ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
+      ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
 
       ::SettingsController.class_eval do
         helper Katello::Concerns::SettingsHelperExtensions
