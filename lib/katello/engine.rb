@@ -87,7 +87,14 @@ module Katello
       require 'katello/apipie/validators'
     end
 
-    initializer "katello.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |_app|
+    # make sure the Katello plugin is initialized before `after_initialize`
+    # hook so that the resumed Dynflow tasks can rely on everything ready.
+    initializer 'katello.register_plugin', :before => :finisher_hook do
+      require 'katello/plugin'
+      require 'katello/permissions'
+    end
+
+    initializer "katello.register_actions", :before => :finisher_hook do |_app|
       ForemanTasks.dynflow.require!
       action_paths = %W(#{Katello::Engine.root}/app/lib/actions
                         #{Katello::Engine.root}/app/lib/headpin/actions
@@ -95,7 +102,7 @@ module Katello
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
-    initializer "katello.set_dynflow_middlewares", :before => 'foreman_tasks.initialize_dynflow' do |_app|
+    initializer "katello.set_dynflow_middlewares",  :before => :finisher_hook do |_app|
       # We don't enable this in test env, as it adds the new field into the actions input
       # that we are not interested in tests
       unless Rails.env.test?
@@ -105,7 +112,7 @@ module Katello
       end
     end
 
-    initializer "katello.initialize_cp_listener", after: "foreman_tasks.initialize_dynflow" do
+    initializer "katello.initialize_cp_listener", :before => :finisher_hook do
       unless ForemanTasks.dynflow.config.remote? || File.basename($PROGRAM_NAME) == 'rake' || Rails.env.test?
         ForemanTasks.dynflow.config.on_init do |world|
           ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
@@ -232,11 +239,6 @@ module Katello
       ::SettingsHelper.send :include, Katello::Concerns::SettingsHelperExtensions
 
       load 'katello/repository_types.rb'
-    end
-
-    config.after_initialize do
-      require 'katello/plugin'
-      require 'katello/permissions'
     end
 
     rake_tasks do
