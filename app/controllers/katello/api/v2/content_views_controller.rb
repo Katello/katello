@@ -191,10 +191,8 @@ module Katello
     def view_params
       attrs = [:name, :description, {:repository_ids => []}, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
-      permitted_params = params.require(:content_view).permit(*attrs)
-      permitted_params[:repository_ids] ||= [] if params[:content_view].key?(:repository_ids)
-      permitted_params[:component_ids] ||= [] if params[:content_view].key?(:component_ids)
-      permitted_params
+      attrs.push(:component_ids, :repository_ids) # For deep_munge; Remove for Rails 5
+      params.require(:content_view).permit(*attrs)
     end
 
     def find_environment
