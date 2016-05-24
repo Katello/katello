@@ -313,6 +313,8 @@ module Katello
                                                           :auto_attach,
                                                           :max_hosts,
                                                           :unlimited_hosts,
+                                                          # For deep_munge; Remove for Rails 5
+                                                          :host_collection_ids,
                                                           :content_overrides => [],
                                                           :host_collection_ids => [])
 

@@ -246,5 +246,11 @@ module Katello
         post(:remove_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
       end
     end
+
+    def test_remove_host_collections
+      ActivationKey.any_instance.stubs(:save!)
+      ActivationKey.any_instance.expects(:host_collection_ids=).with([])
+      put(:remove_host_collections, organization_id: @organization.id, id: @activation_key.id, host_collection_ids: [])
+    end
   end
 end
