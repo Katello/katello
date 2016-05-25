@@ -1,5 +1,7 @@
 module Katello
   class ContentViewVersionComparePresenter
+    attr_reader :item, :versions, :repository
+
     def initialize(content_item, content_view_versions, repository)
       @item = content_item
       @versions = content_view_versions
