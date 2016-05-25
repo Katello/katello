@@ -55,7 +55,7 @@ module Katello
 
     def plan_date_time(localtime = true)
       date_obj = localtime ? self.zone_converted : self.sync_date
-      date_obj.strftime('%m/%d/%Y %I:%M:%p')
+      date_obj.strftime('%Y/%m/%d %H:%M:%S %z')
     end
 
     def schedule_format
