@@ -15,6 +15,12 @@ class MigrateContentHosts < ActiveRecord::Migration
              :dependent => :restrict_with_exception, :inverse_of => :organization
   end
 
+  class SmartProxy < ActiveRecord::Base
+    self.table_name = "smart_proxies"
+
+    belongs_to :content_host, :class_name => "MigrateContentHosts::ContentHost", :inverse_of => :capsule
+  end
+
   class KTEnvironment < ActiveRecord::Base
     self.table_name = "katello_environments"
 
@@ -125,6 +131,8 @@ class MigrateContentHosts < ActiveRecord::Migration
     has_many :system_errata, :class_name => "MigrateContentHosts::SystemErratum", :dependent => :destroy, :inverse_of => :system
     has_many :bound_repositories, :through => :system_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
     has_many :system_repositories, :class_name => "MigrateContentHosts::SystemRepository", :dependent => :destroy, :inverse_of => :system
+
+    has_one :capsule, :class_name => "MigrateContentHosts::SmartProxy", :inverse_of => :content_host, :foreign_key => :content_host_id, :dependent => :nullify
   end
 
   class ContentFacet < ActiveRecord::Base
@@ -135,7 +143,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::KTEnvironment"
 
     has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facets
-    has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "MigrateContentHosts::Repository", :source => :content_facets
+    has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
     has_many :applicable_errata, :through => :content_facet_errata, :class_name => "MigrateContentHosts::Erratum", :source => :erratum
     has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
   end
@@ -209,7 +217,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     systems_to_remove.each do |system|
       logger.info("Content Host #{system.uuid} doesn't have candlepin information, unregistering.")
       if (system_proxy = SmartProxy.find_by_content_host_id(system.id))
-        system_proxy.content_host = nil
+        system_proxy.content_host_id = nil
         system_proxy.save
       end
       systems.delete(system)
@@ -284,6 +292,7 @@ class MigrateContentHosts < ActiveRecord::Migration
   end
 
   # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def up
     if User.where(:login => User::ANONYMOUS_API_ADMIN).first.nil?
       logger.warn("Foreman anonymous admin does not exist, skipping content host migration.")
@@ -325,7 +334,11 @@ class MigrateContentHosts < ActiveRecord::Migration
         create_subscription_facet(host, system)
 
       elsif hosts.where(:organization_id => system.environment.organization.id).empty? # host is not in the correct org
-        logger.warn("Found host with hostname #{hostname} but it's in org #{hosts[0].org.name} instead of #{system.environment.organization.name}.")
+        if hosts[0].organization
+          logger.warn("Found host with hostname #{hostname} but it's in org #{hosts[0].organization.name} instead of #{system.environment.organization.name}.")
+        else
+          logger.warn("Found host with hostname #{hostname} but it is not in an org, and should be in #{system.environment.organization.name}.")
+        end
         host = hosts.first
 
         create_content_facet(host, system) unless host.content_facet
