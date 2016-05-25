@@ -3,19 +3,23 @@ module Katello
     PATHS ||= [%r{\A/api/v2/organizations/\S+/parameters}]
 
     def matches?(request)
-      PATHS.map { |path| request.env["REQUEST_PATH"].match(path) }.any? ? false : true
+      PATHS.map { |path| request.env["REQUEST_PATH"].try(:match, path) }.any? ? false : true
     end
   end
 end
 
 Foreman::Application.routes.draw do
-  override_message = '{"message": "Route forbidden by Katello, check katello/config/routes/overrides"}'
+  override_message = '{"message": "Route overriden by Katello, use the /katello API endpoint instead.  See /apidoc for more details."}'
 
   match "/api/v2/organizations/*all", :to => proc { [404, {}, [override_message]] },
-                                      :via => :get,
+                                      :via => :put,
                                       :constraints => Katello::WhitelistConstraint.new
 
-  match "/api/v1/organizations/:id", via: :delete, to: proc { [404, {}, [override_message]] }
+  match "/api/v2/organizations", :to => proc { [404, {}, [override_message]] },
+                                      :via => :post,
+                                      :constraints => Katello::WhitelistConstraint.new
+
+  match "/api/v2/organizations/:id", via: :delete, to: proc { [404, {}, [override_message]] }
 
   resources :hosts, :only => [] do
     get 'puppet_environment_for_content_view', :on => :collection
