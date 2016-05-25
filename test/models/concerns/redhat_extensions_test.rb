@@ -70,6 +70,12 @@ module Katello
                                                       :content_view_id => @repo_with_distro.content_view.id})
 
       @host.content_source = @content_source
+
+      @hostgroup = Hostgroup.new(:name => "testhg", :lifecycle_environment_id => @repo_with_distro.environment.id,
+                                 :content_view_id => @repo_with_distro.content_view.id)
+      @hostgroup.architecture = architectures(:x86_64)
+      @hostgroup.operatingsystem = @os
+      @hostgroup.content_source = @content_source
     end
 
     def test_medium_uri_for_no_content_source_or_ks_repo
@@ -85,9 +91,26 @@ module Katello
       assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
     end
 
+    def test_medium_uri_for_no_content_source_or_ks_repo_hg
+      @os.media.create!(:name => "my-media", :path => "http://www.foo.com/abcd")
+      @hostgroup.medium = @os.media.first
+      @hostgroup.content_source = nil
+      @hostgroup.kickstart_repository = @repo_with_distro
+      assert_equal @os.media.first.path, @os.medium_uri(@hostgroup).to_s
+
+      @hostgroup.content_source = @content_source
+      @hostgroup.kickstart_repository = nil
+      assert_equal @os.media.first.path, @os.medium_uri(@hostgroup).to_s
+    end
+
     def test_medium_uri_with_a_kickstart_repo
       @host.content_facet.kickstart_repository = @repo_with_distro
       assert_equal @repo_with_distro.full_path(@content_source), @os.medium_uri(@host).to_s
+    end
+
+    def test_medium_uri_with_a_kickstart_repo_hg
+      @hostgroup.kickstart_repository = @repo_with_distro
+      assert_equal @repo_with_distro.full_path(@content_source), @os.medium_uri(@hostgroup).to_s
     end
 
     def test_kickstart_repos_with_no_content_source
