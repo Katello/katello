@@ -110,6 +110,7 @@ Katello::Engine.routes.draw do
 
         api_resources :ostree_branches, :only => [:index, :show] do
           collection do
+            get :compare
             get :auto_complete_search
           end
         end
@@ -117,6 +118,7 @@ Katello::Engine.routes.draw do
         api_resources :docker_manifests, :only => [:index, :show]
         api_resources :docker_tags, :only => [:index, :show] do
           collection do
+            get :compare
             get :auto_complete_search
           end
         end
@@ -184,6 +186,7 @@ Katello::Engine.routes.draw do
 
         api_resources :packages, :only => [:index, :show] do
           collection do
+            get :compare
             get :auto_complete_search
             get :auto_complete_name
           end
@@ -191,6 +194,7 @@ Katello::Engine.routes.draw do
 
         api_resources :package_groups, :only => [:index, :show] do
           collection do
+            get :compare
             get :auto_complete_search
           end
         end
@@ -214,7 +218,10 @@ Katello::Engine.routes.draw do
           end
         end
         api_resources :puppet_modules, :only => [:index, :show] do
-          get :auto_complete_search, :on => :collection
+          collection do
+            get :compare
+            get :auto_complete_search
+          end
         end
 
         api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
