@@ -9,6 +9,10 @@ module Actions
                     :hypervisor_results => hypervisor_results)
         end
 
+        def run
+          output[:results] = input[:results]
+        end
+
         def finalize
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           content_view = ::Katello::ContentView.find(input[:content_view_id])
@@ -29,19 +33,20 @@ module Actions
           # Since host names must be unique yet hypervisors may have unique subscription
           # facets in different orgs
           duplicate_name = "virt-who-#{name}-#{content_view.organization.id}"
-          host = ::Host.find_by(:name => name)
+          host = find_host_by_uuid_or_name(hypervisor_json)
           if host
-            fail _("Host '%{name}' does not belong to an organization" % name) unless host.organization
+            fail _("Host '%{name}' does not belong to an organization") % {:name => name} unless host.organization
             if host.organization.id != content_view.organization.id
               name = duplicate_name
+              host = nil
             end
-          elsif ::Host.find_by(:name => name)
+          else
             name = duplicate_name
           end
 
-          host = ::Katello::Host::SubscriptionFacet.find_or_create_host_for_hypervisor(name,
-                                    content_view.organization)
+          host ||= create_host_for_hypervisor(name, content_view.organization)
           host.subscription_facet ||= ::Katello::Host::SubscriptionFacet.new
+          host.subscription_facet.host_id = host.id
           host.subscription_facet.update_from_consumer_attributes(hypervisor_json)
           host.subscription_facet.uuid = hypervisor_json[:uuid]
           host.subscription_facet.save!
@@ -60,6 +65,19 @@ module Actions
           end
 
           host.save!
+        end
+
+        def find_host_by_uuid_or_name(hypervisor_json)
+          facet = ::Katello::Host::SubscriptionFacet.find_by(:uuid => hypervisor_json[:uuid])
+          facet.nil? ? ::Host.find_by(:name => hypervisor_json[:name]) : facet.host
+        end
+
+        def create_host_for_hypervisor(name, organization, location = nil)
+          location ||= Location.default_location
+          host = ::Host::Managed.new(:name => name, :organization => organization,
+                                     :location => location, :managed => false)
+          host.save!
+          host
         end
       end
     end

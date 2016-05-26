@@ -85,14 +85,6 @@ module Katello
         host
       end
 
-      def self.find_or_create_host_for_hypervisor(name, organization, location = nil)
-        location ||= Location.default_location
-        host = find_host(name, organization)
-        host = ::Host::Managed.new(:name => name, :organization => organization, :location => location,
-                            :managed => false) unless host
-        host
-      end
-
       def remove_subscriptions(pools_with_quantities)
         entitlements = pools_with_quantities.map do |pool_with_quantities|
           candlepin_consumer.filter_entitlements(pool_with_quantities.pool.cp_id, pool_with_quantities.quantities)
