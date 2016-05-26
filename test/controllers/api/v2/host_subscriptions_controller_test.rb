@@ -205,6 +205,12 @@ module Katello
       assert_response 400
     end
 
+    def test_available_release_versions
+      get :available_release_versions, :host_id => @host.id
+
+      assert_response :success
+    end
+
     def test_destroy
       assert_sync_task(::Actions::Katello::Host::Unregister, @host)
       delete :destroy, :host_id => @host.id
