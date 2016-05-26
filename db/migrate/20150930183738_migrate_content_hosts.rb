@@ -126,7 +126,8 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     has_many :system_activation_keys, :class_name => "MigrateContentHosts::SystemActivationKey", :dependent => :destroy
     has_many :activation_keys, :through => :system_activation_keys
-    has_many :host_collections, :class_name => "MigrateContentHosts::SystemHostCollections", :dependent => :destroy
+    has_many :system_host_collections, :class_name => "MigrateContentHosts::SystemHostCollections", :dependent => :destroy
+    has_many :host_collections, :through => :system_host_collections
     has_many :applicable_errata, :through => :system_errata, :class_name => "MigrateContentHosts::Erratum", :source => :erratum
     has_many :system_errata, :class_name => "MigrateContentHosts::SystemErratum", :dependent => :destroy, :inverse_of => :system
     has_many :bound_repositories, :through => :system_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
