@@ -345,7 +345,9 @@ Katello::Engine.routes.draw do
 
         api_resources :environments, :only => [] do
           api_resources :products, :only => [:index] do
-            get :repositories, :on => :member
+            api_resources :repositories, :only => [:index] do
+              get :index, :on => :member
+            end
           end
 
           api_resources :content_views, :only => [:index]
@@ -357,6 +359,9 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :products, :only => [] do
+          api_resources :repositories, :only => [:index] do
+            get :index, :on => :member
+          end
           get :repositories, :on => :member
           api_resources :sync, :only => [:index] do
             delete :index, :on => :collection, :action => :cancel
