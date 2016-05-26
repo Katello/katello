@@ -71,6 +71,7 @@ See the [developer documentation](http://www.katello.org/developers/index.html).
  * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
  * [IRC Freenode](http://freenode.net/using_the_network.shtml): #theforeman-dev
  * [Twitter](https://twitter.com/Katello_Project)
+ * {file:doc/resources.md Resources for developers}
 
 ## Documentation
 
