@@ -86,9 +86,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 deferred.resolve(response);
                 $scope.host = response;
                 $scope.successMessages.push(translate('Save Successful.'));
+                $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
-                _.each(response.data.errors, function (errorMessage) {
+                _.each(response.data.error.full_messages, function (errorMessage) {
                     $scope.errorMessages.push(translate("An error occurred saving the Content Host: ") + errorMessage);
                 });
             });

@@ -50,6 +50,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
                     $scope.$parent.host = host;
                     $scope.contentNutupane.table.selectAll(false);
                     $scope.contentNutupane.refresh();
+                    $scope.table.replaceRow(host);
                     $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                     $scope.isRemoving = false;
                 });
