@@ -34,28 +34,20 @@ module Katello
       errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
     end
 
-    def zone_converted
-      #convert time to local timezone
-      self.sync_date.localtime.to_datetime
-    end
-
     def plan_day
       WEEK_DAYS[self.sync_date.strftime('%A').to_i]
     end
 
-    def plan_date(localtime = true)
-      date_obj = localtime ? self.zone_converted : self.sync_date
-      date_obj.strftime('%m/%d/%Y')
+    def plan_date
+      self.sync_date.strftime('%m/%d/%Y')
     end
 
-    def plan_time(localtime = true)
-      date_obj = localtime ? self.zone_converted : self.sync_date
-      date_obj.strftime('%I:%M %p')
+    def plan_time
+      self.sync_date.strftime('%I:%M %p')
     end
 
-    def plan_date_time(localtime = true)
-      date_obj = localtime ? self.zone_converted : self.sync_date
-      date_obj.strftime('%Y/%m/%d %H:%M:%S %z')
+    def plan_date_time
+      self.sync_date.strftime('%Y/%m/%d %H:%M:%S %Z')
     end
 
     def schedule_format
@@ -77,8 +69,7 @@ module Katello
 
     def next_sync
       return nil unless self.enabled
-
-      now = Time.now.utc
+      now = Time.current
       next_sync = self.sync_date
 
       if self.sync_date < now
@@ -107,6 +98,8 @@ module Katello
                                  :sec => self.sync_date.sec).advance(:days => days)
         end
       end
+
+      next_sync = next_sync.strftime('%Y/%m/%d %H:%M:%S %Z') if next_sync
       next_sync
     end
 
