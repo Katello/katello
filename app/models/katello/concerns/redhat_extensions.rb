@@ -44,8 +44,10 @@ module Katello
       end
 
       def medium_uri_with_content_uri(host, url = nil)
-        if host.try(:content_source) && host.content_facet.try(:kickstart_repository).present?
-          return URI.parse(host.content_facet.kickstart_repository.full_path(host.content_source))
+        kickstart_repo = host.try(:content_facet).try(:kickstart_repository) || host.try(:kickstart_repository)
+
+        if host.try(:content_source) && kickstart_repo.present?
+          return URI.parse(kickstart_repo.full_path(host.content_source))
         else
           medium_uri_without_content_uri(host, url)
         end
@@ -63,8 +65,8 @@ module Katello
       end
 
       def distribution_repositories(host)
-        content_view = host.content_facet.try(:content_view)
-        lifecycle_environment = host.content_facet.try(:lifecycle_environment)
+        content_view = host.try(:content_facet).try(:content_view) || host.try(:content_view)
+        lifecycle_environment = host.try(:content_facet).try(:lifecycle_environment) || host.try(:lifecycle_environment)
 
         if content_view && lifecycle_environment
           Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
