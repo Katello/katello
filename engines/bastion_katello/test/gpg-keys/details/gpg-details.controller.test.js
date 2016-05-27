@@ -63,7 +63,7 @@ describe('Controller: GPGKeyDetailsController', function() {
         spyOn($scope, 'removeRow');
         spyOn($scope, 'transitionTo');
         $scope.removeGPGKey($scope.gpgKey);
-        expect($scope.transitionTo).toHaveBeenCalledWith('gpgKeys.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-keys.index');
         expect($scope.removeRow).toHaveBeenCalledWith(1);
     });
 
