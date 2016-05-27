@@ -37,6 +37,8 @@ module Katello
     api :GET, "/repositories", N_("List of enabled repositories")
     api :GET, "/content_views/:id/repositories", N_("List of repositories for a content view")
     api :GET, "/organizations/:organization_id/environments/:environment_id/repositories", _("List repositories in the environment")
+    api :GET, "/products/:product_id/repositories", N_("List of repositories for a product")
+    api :GET, "/environments/:environment_id/products/:product_id/repositories", N_("List of repositories belonging to a product in an environment")
     param :organization_id, :number, :desc => N_("ID of an organization to show repositories in")
     param :product_id, :number, :desc => N_("ID of a product to show repositories of")
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
