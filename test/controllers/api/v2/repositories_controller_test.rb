@@ -189,7 +189,7 @@ module Katello
       ids = Repository.where(
               :content_type => 'yum',
               :content_view_version_id => @organization.default_content_view.versions.first.id
-            )
+      )
       ids = ids.pluck(:id)
 
       get :index, :content_type => 'yum', :organization_id => @organization.id

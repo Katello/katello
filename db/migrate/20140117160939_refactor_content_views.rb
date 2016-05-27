@@ -45,12 +45,12 @@ class RefactorContentViews < ActiveRecord::Migration
   def down
     create_table "katello_content_view_definition_bases", :force => true do |t|
       t.string "name", :limit => 255
-      t.string "label",                              :null => false, :limit => 255
+      t.string "label", :null => false, :limit => 255
       t.text "description"
       t.integer "organization_id"
       t.datetime "created_at",                         :null => false
       t.datetime "updated_at",                         :null => false
-      t.boolean "composite",       :default => false, :null => false
+      t.boolean "composite", :default => false, :null => false
       t.string "type", :limit => 255
       t.integer "source_id"
     end
@@ -70,8 +70,8 @@ class RefactorContentViews < ActiveRecord::Migration
     create_table "katello_filter_rules", :force => true do |t|
       t.string "type", :limit => 255
       t.text "parameters"
-      t.integer "filter_id",                    :null => false
-      t.boolean "inclusion",  :default => true
+      t.integer "filter_id", :null => false
+      t.boolean "inclusion", :default => true
       t.datetime "created_at",                   :null => false
       t.datetime "updated_at",                   :null => false
     end

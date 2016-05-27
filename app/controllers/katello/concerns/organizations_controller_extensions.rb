@@ -30,7 +30,7 @@ module Katello
             sync_task(::Actions::Katello::Organization::Create, @taxonomy)
             @taxonomy.reload
             if @count_nil_hosts > 0
-              redirect_to send("step2_#{taxonomy_single}_path",   @taxonomy)
+              redirect_to send("step2_#{taxonomy_single}_path", @taxonomy)
             else
               process_success(:object => @taxonomy, :success_redirect => send("edit_#{taxonomy_single}_path", @taxonomy))
             end

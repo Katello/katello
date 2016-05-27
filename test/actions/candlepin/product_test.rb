@@ -69,7 +69,7 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
     before(:all) { stub_remote_user }
     let(:action_class) { ::Actions::Candlepin::Product::DeleteUnused }
     let(:org) { get_organization }
-    let(:destroy_action) { ::Actions::Candlepin::Product::Destroy  }
+    let(:destroy_action) { ::Actions::Candlepin::Product::Destroy }
 
     context('without duplicate') do
       let(:planned_action) do

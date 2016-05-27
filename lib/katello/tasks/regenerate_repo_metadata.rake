@@ -1,5 +1,5 @@
 namespace :katello do
-  task :regenerate_repo_metadata => ["environment"]  do
+  task :regenerate_repo_metadata => ["environment"] do
     User.current = User.first #set a user for orchestration
     puts "Regenerating repository information for all repositories:\n"
 

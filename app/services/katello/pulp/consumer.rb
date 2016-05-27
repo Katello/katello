@@ -54,7 +54,7 @@ module Katello
       def unbind_repo_ids(repo_ids, distributor_type)
         repo_ids.each do |repo_id|
           begin
-            Katello.pulp_server.extensions.consumer.unbind_all(uuid,  repo_id, distributor_type)
+            Katello.pulp_server.extensions.consumer.unbind_all(uuid, repo_id, distributor_type)
           rescue => e
             Rails.logger.error "Failed to unbind repo #{repo_id}: #{e}, #{e.backtrace.join("\n")}"
           end

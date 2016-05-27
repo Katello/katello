@@ -81,7 +81,7 @@ module Katello
          "enabled" => true,
          "flexEntitlement" => 0,
          "physicalEntitlement" => 0
-      )
+        )
       ],
       :attrs => []
     )

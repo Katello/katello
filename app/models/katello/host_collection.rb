@@ -39,7 +39,7 @@ module Katello
 
     def max_hosts_not_exceeded
       if !unlimited_hosts && (hosts.size.to_i > max_hosts.to_i)
-        errors.add :base,  N_("You cannot have more than #{max_hosts} host(s) associated with host collection #{name}." %
+        errors.add :base, N_("You cannot have more than #{max_hosts} host(s) associated with host collection #{name}." %
                               {:max_hosts => max_hosts, :name => name})
       end
     end

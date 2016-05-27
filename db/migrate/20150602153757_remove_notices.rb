@@ -5,9 +5,9 @@ class RemoveNotices < ActiveRecord::Migration
 
   def down
     create_table "katello_notices", :force => true do |t|
-      t.string   "text",            :limit => 1024,                    :null => false
+      t.string   "text",            :limit => 1024, :null => false
       t.text     "details"
-      t.boolean  "global",                          :default => false, :null => false
+      t.boolean  "global", :default => false, :null => false
       t.string   "level",                                              :null => false, :limit => 255
       t.datetime "created_at",                                         :null => false
       t.datetime "updated_at",                                         :null => false

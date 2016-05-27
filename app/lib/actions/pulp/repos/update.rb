@@ -9,7 +9,8 @@ module Actions
             if sync_plan.nil?
               plan_action(::Actions::Pulp::Repository::RemoveSchedule, :repo_id => repo.id)
             else
-              plan_action(::Actions::Pulp::Repository::UpdateSchedule,
+              plan_action(
+                ::Actions::Pulp::Repository::UpdateSchedule,
                 :repo_id => repo.id,
                 :schedule => sync_plan.schedule_format,
                 :enabled => sync_plan.enabled

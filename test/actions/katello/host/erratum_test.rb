@@ -29,7 +29,7 @@ module ::Actions::Katello::Host::Erratum
       let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
       describe 'successfully installed' do
-        let(:fixture_variant) {  :success }
+        let(:fixture_variant) { :success }
 
         specify do
           action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -42,7 +42,7 @@ libotf-0.9.9-3.1.el6.x86_64
       end
 
       describe 'no errata installed' do
-        let(:fixture_variant) {  :no_packages }
+        let(:fixture_variant) { :no_packages }
 
         specify do
           action.humanized_output.must_equal "No new packages installed"

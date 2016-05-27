@@ -150,7 +150,7 @@ module Katello
         end
       end
 
-      state = :finished  # assume the job is finished, by default
+      state = :finished # assume the job is finished, by default
       if (running > 0)
         state = :running
       elsif (error > 0)

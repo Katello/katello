@@ -46,7 +46,7 @@ module Katello
                                :productContent => [],
                                :provider => @provider,
                                :organization => @organization
-                             )
+        )
       end
 
       it "should retrieve Product from candlepin" do
@@ -101,7 +101,7 @@ module Katello
                     :id => @p.cp_id,
                     :productContent => @p.productContent,
                     :provider => @p.provider
-        ).wont_be :valid?
+                   ).wont_be :valid?
       end
     end
 

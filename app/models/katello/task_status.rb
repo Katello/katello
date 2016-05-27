@@ -28,7 +28,7 @@ module Katello
 
     # a task may be optionally associated with a job, but it is not required
     # an example scenario would be a job that is created by performing an action on a system group
-    has_one :job_task,  :class_name => "Katello::JobTask", :dependent => :destroy
+    has_one :job_task, :class_name => "Katello::JobTask", :dependent => :destroy
     has_one :job, :through => :job_task
 
     validates_lengths_from_database
@@ -160,21 +160,21 @@ module Katello
         if p.length == 1
           return p.first
         else
-          return  _("%{package} (%{total} other packages)") % {:package => p.first, :total => p.length - 1}
+          return _("%{package} (%{total} other packages)") % {:package => p.first, :total => p.length - 1}
         end
       when :package_group
         p = self.parameters[:groups]
         if p.length == 1
           return p.first
         else
-          return  _("%{group} (%{total} other package groups)") % {:group => p.first, :total => p.length - 1}
+          return _("%{group} (%{total} other package groups)") % {:group => p.first, :total => p.length - 1}
         end
       when :errata
         p = self.parameters[:errata_ids]
         if p.length == 1
           return p.first
         else
-          return  _("%{errata} (%{total} other errata)") % {:errata => p.first, :total => p.length - 1}
+          return _("%{errata} (%{total} other errata)") % {:errata => p.first, :total => p.length - 1}
         end
       end
     end

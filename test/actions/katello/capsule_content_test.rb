@@ -64,7 +64,7 @@ module ::Actions::Katello::CapsuleContent
                                 ::Actions::Pulp::Repository::Refresh,
                                 repository,
                                 :capsule_id => capsule_content.capsule.id
-                                )
+                               )
     end
 
     it 'allows limiting scope of the syncing to one environment' do

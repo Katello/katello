@@ -218,7 +218,7 @@ module Katello
         respond_for_async :resource => task
       else
         action = Katello::BulkActions.new(@hosts)
-        job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content], :update_all => params[:update_all])
+        job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]], params[:content], :update_all => params[:update_all])
         respond_for_show :template => 'job', :resource => job
       end
     end

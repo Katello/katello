@@ -283,7 +283,7 @@ module Katello
                                    :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
                                    :ssl_ca_file => ca_file,
                                    :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
-          )
+                                  )
         end
 
         def self.export(url, client_cert, client_key, ca_file)

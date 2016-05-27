@@ -25,7 +25,7 @@ module Actions
                         :id => found['id'],
                         :config => importer_config,
                         :capsule_id => capsule_id
-                        )
+                       )
           else
             plan_action(::Actions::Pulp::Repository::AssociateImporter,
                         :repo_id => repository.pulp_id,
@@ -33,7 +33,7 @@ module Actions
                         :config => importer_config,
                         :capsule_id => input[:capsule_id],
                         :hash => { :importer_id => importer.id }
-                        )
+                       )
           end
         end
 
@@ -48,7 +48,7 @@ module Actions
                             :id => found['id'],
                             :config => distributor.config,
                             :capsule_id => capsule_id
-                            )
+                           )
               else
                 plan_action(::Actions::Pulp::Repository::AssociateDistributor,
                             :repo_id => repository.pulp_id,
@@ -56,7 +56,7 @@ module Actions
                             :config => distributor.config,
                             :capsule_id => capsule_id,
                             :hash => { :distributor_id => distributor.id }
-                            )
+                           )
               end
             end
           end
