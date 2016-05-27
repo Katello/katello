@@ -5,6 +5,8 @@ module Katello
       include ForemanTasks::Triggers
 
       included do
+        before_filter :check_env_and_cv, :only => [:update]
+
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
           process_response(:object => @host)
@@ -25,6 +27,12 @@ module Katello
             'edit'
           else
             super
+          end
+        end
+
+        def check_env_and_cv
+          if !@host.content_facet.nil? && (params[:lifecycle_environment_id] || params[:content_view_id])
+            raise ::Foreman::Exception.new(N_("Can't update content view and lifecycle environment for existing content host."))
           end
         end
       end
