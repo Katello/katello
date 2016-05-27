@@ -77,7 +77,7 @@ module Actions
               message = fetch_message
               if message[:result]
                 result = message[:result]
-                @session.acknowledge(:message => result)
+                @session.acknowledge(:message => result, :sync => true)
                 suspended_action.notify_message_received(result.message_id, result.subject, result.content)
               elsif message[:error]
                 suspended_action.notify_not_connected(message[:error])
