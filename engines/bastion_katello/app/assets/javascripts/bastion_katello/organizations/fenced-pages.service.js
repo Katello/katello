@@ -18,7 +18,8 @@ angular.module('Bastion.organizations').service('FencedPages',
             'content-views',
             'errata',
             'content-hosts',
-            'host-collections'
+            'host-collections',
+            'puppet-modules'
         ];
 
         this.addPages = function (pages) {

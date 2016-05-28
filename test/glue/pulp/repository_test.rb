@@ -55,6 +55,33 @@ module Katello
     end
   end
 
+  class GluePulpNonVcrTests < GluePulpRepoTestBase
+    def test_importer_feed_url
+      pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
+      repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
+
+      assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'
+      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow"
+
+      repo.unprotected = true
+      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow"
+    end
+
+    def test_relative_path
+      assert_equal 'test_path/', @fedora_17_x86_64.relative_path
+    end
+
+    def test_relative_path=
+      @fedora_17_x86_64.relative_path = 'new_path/'
+
+      refute_equal 'test_path/', @fedora_17_x86_64.relative_path
+    end
+
+    def test_populate_from
+      assert @fedora_17_x86_64.populate_from(@fedora_17_x86_64.pulp_id => {})
+    end
+  end
+
   class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
     def setup
       super
@@ -87,25 +114,11 @@ module Katello
       assert Repository.delete_orphaned_content.is_a?(Hash)
     end
 
-    def test_relative_path
-      assert_equal 'test_path/', @fedora_17_x86_64.relative_path
-    end
-
-    def test_relative_path=
-      @fedora_17_x86_64.relative_path = 'new_path/'
-
-      refute_equal 'test_path/', @fedora_17_x86_64.relative_path
-    end
-
     def test_generate_distributors
       dists = @fedora_17_x86_64.generate_distributors
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
-    end
-
-    def test_populate_from
-      assert @fedora_17_x86_64.populate_from(@fedora_17_x86_64.pulp_id => {})
     end
 
     def test_sync
@@ -141,36 +154,6 @@ module Katello
       @fedora_17_x86_64.url = 'https://www.yahoo.com'
       @fedora_17_x86_64.save!
       assert @fedora_17_x86_64.pulp_update_needed?
-    end
-  end
-
-  class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
-    def setup
-      super
-      VCR.insert_cassette('pulp/repository/after_sync')
-      create_repo(@fedora_17_x86_64)
-      @fedora_17_x86_64 = @fedora_17_x86_64
-      @fedora_17_x86_64.relative_path = 'test_path/'
-    end
-
-    def teardown
-      delete_repo(@fedora_17_x86_64)
-    ensure
-      VCR.eject_cassette
-    end
-  end
-
-  class GluePulpChangeFeedTest < GluePulpRepoTestBase
-    def setup
-      super
-      VCR.insert_cassette('pulp/repository/feed_change')
-      create_repo(@fedora_17_x86_64)
-    end
-
-    def teardown
-      delete_repo(@fedora_17_x86_64)
-    ensure
-      VCR.eject_cassette
     end
   end
 

@@ -1,7 +1,6 @@
 <span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
 
 <section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Package Actions</h4>
   <p bst-alert="info" ng-hide="contentHost.katello_agent_installed">
     <span translate>

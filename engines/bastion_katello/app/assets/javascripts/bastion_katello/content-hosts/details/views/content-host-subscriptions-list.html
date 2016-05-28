@@ -53,7 +53,7 @@
           <td bst-table-cell colspan="8"></td>
         </tr>
         <tr bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
-          <td bst-table-cell>{{ subscription | subscriptionAttachAmountFilter}}</td>
+          <td bst-table-cell>{{ subscription.quantity_consumed }}</td>
           <td bst-table-cell>
             <a ui-sref="subscriptions.details.info({subscriptionId: subscription.subscription_id})">
               {{ subscription | subscriptionConsumedFilter }}
