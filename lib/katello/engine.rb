@@ -102,7 +102,7 @@ module Katello
       ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
-    initializer "katello.set_dynflow_middlewares",  :before => :finisher_hook do |_app|
+    initializer "katello.set_dynflow_middlewares", :before => :finisher_hook do |_app|
       # We don't enable this in test env, as it adds the new field into the actions input
       # that we are not interested in tests
       unless Rails.env.test?
@@ -226,12 +226,12 @@ module Katello
       #facet extensions
       Facets.register(Katello::Host::ContentFacet, :content_facet) do
         api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
-        api_docs :content_facet_attributes,  ::Katello::Api::V2::HostContentsController
+        api_docs :content_facet_attributes, ::Katello::Api::V2::HostContentsController
       end
 
       Facets.register(Katello::Host::SubscriptionFacet, :subscription_facet) do
         api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
-        api_docs :subscription_facet_attributes,  ::Katello::Api::V2::HostSubscriptionsController
+        api_docs :subscription_facet_attributes, ::Katello::Api::V2::HostSubscriptionsController
       end
 
       #Api controller extensions
