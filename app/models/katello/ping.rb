@@ -4,7 +4,7 @@ module Katello
   class Ping
     OK_RETURN_CODE = 'ok'
     FAIL_RETURN_CODE = 'FAIL'
-    PACKAGES = %w(katello candlepin pulp thumbslug qpid)
+    PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer)
 
     SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks]
 
