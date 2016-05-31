@@ -96,6 +96,7 @@ module Katello
 
     initializer "katello.register_actions", :before => :finisher_hook do |_app|
       ForemanTasks.dynflow.require!
+      ForemanTasks.dynflow.initialize!
       action_paths = %W(#{Katello::Engine.root}/app/lib/actions
                         #{Katello::Engine.root}/app/lib/headpin/actions
                         #{Katello::Engine.root}/app/lib/katello/actions)
