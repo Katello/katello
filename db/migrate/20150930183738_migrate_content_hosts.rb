@@ -74,6 +74,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     self.table_name = "katello_errata"
 
     has_many :systems_applicable, :through => :system_errata, :class_name => "MigrateContentHosts::System", :source => :system
+    has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :source => :erratum
   end
 
   class SystemErratum < ActiveRecord::Base
@@ -143,7 +144,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     belongs_to :content_view, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::ContentView"
     belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::KTEnvironment"
 
-    has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facets
+    has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facet
     has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
     has_many :applicable_errata, :through => :content_facet_errata, :class_name => "MigrateContentHosts::Erratum", :source => :erratum
     has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
