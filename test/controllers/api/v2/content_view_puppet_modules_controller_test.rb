@@ -54,6 +54,21 @@ module Katello
       assert_includes @content_view.reload.puppet_modules.map(&:name), "abrt"
     end
 
+    def test_create_with_id
+      @puppet_module = katello_puppet_modules(:dhcp)
+      @content_view = katello_content_views(:library_dev_view)
+      assert_empty @content_view.puppet_modules
+
+      post :create, content_view_id: @content_view.id, id: @puppet_module.id
+
+      assert_response :success
+
+      assert_template layout: "katello/api/v2/layouts/resource"
+      assert_template "katello/api/v2/content_view_puppet_modules/create"
+
+      assert_includes @content_view.reload.puppet_modules.map(&:uuid), @puppet_module.uuid
+    end
+
     def test_create_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
