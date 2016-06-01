@@ -18,7 +18,7 @@ class MigrateContentHosts < ActiveRecord::Migration
   class SmartProxy < ActiveRecord::Base
     self.table_name = "smart_proxies"
 
-    belongs_to :content_host, :class_name => "MigrateContentHosts::ContentHost", :inverse_of => :capsule
+    belongs_to :content_host, :class_name => "MigrateContentHosts::System", :inverse_of => :capsule
   end
 
   class KTEnvironment < ActiveRecord::Base
@@ -354,8 +354,10 @@ class MigrateContentHosts < ActiveRecord::Migration
         create_subscription_facet(host, system) unless host.subscription_facet
       end
 
-      system.host_id = host.id
-      system.save!
+      unless system.destroyed? # if the system was unregistered, it will no longer exist
+        system.host_id = host.id
+        system.save!
+      end
     end
   end
 end
