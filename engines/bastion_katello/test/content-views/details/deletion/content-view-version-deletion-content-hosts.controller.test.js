@@ -8,7 +8,7 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
             $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
             ContentViewVersion =  $injector.get('MockResource').$new(),
-            ContentHost =  $injector.get('MockResource').$new(),
+            Host =  $injector.get('MockResource').$new(),
             $location = $injector.get('$location');
 
         CurrentOrganization = "FOO";
@@ -35,7 +35,7 @@ describe('Controller: ContentViewVersionDeletionContentHostsController', functio
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
             Nutupane: Nutupane,
-            ContentHost: ContentHost
+            Host: Host
         });
     }));
 

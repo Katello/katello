@@ -47,8 +47,8 @@ module Actions
 
         def remove_consumers(organization)
           concurrence do
-            organization.systems.each do |system|
-              plan_action(Katello::System::Destroy, system, skip_candlepin: true)
+            organization.hosts.each do |host|
+              plan_action(Katello::Host::Destroy, host, skip_candlepin: true)
             end
 
             organization.activation_keys.each do |key|

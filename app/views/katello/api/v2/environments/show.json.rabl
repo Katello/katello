@@ -19,7 +19,7 @@ end
 
 node :counts do |env|
   counts = {
-    :content_hosts => env.systems.readable.count,
+    :content_hosts => env.hosts.authorized("view_hosts").count,
     :content_views => env.content_views.non_default.count
   }
   if env.library?

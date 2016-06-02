@@ -47,13 +47,13 @@ child :environments => :environments do
     {
       :readable => env.readable?,
       :promotable_or_removable => env.promotable_or_removable?,
-      :all_systems_editable => Katello::System.all_editable?(version.content_view_id, env.id),
-      :all_keys_editable => Katello::System.all_editable?(version.content_view_id, env.id)
+      :all_hosts_editable => version.all_hosts_editable?(env),
+      :all_keys_editable => Katello::ActivationKey.all_editable?(version.content_view_id, env.id)
     }
   end
 
-  node :system_count do |env|
-    Katello::System.in_environment(env).where(:content_view_id => version.content_view_id).count
+  node :host_count do |env|
+    ::Host.authorized('view_hosts').in_content_view_environment(:content_view => version.content_view, :lifecycle_environment => env).count
   end
 
   node :activation_key_count do |env|

@@ -111,7 +111,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.totalHostCount = function () {
             return _.reduce($scope.deleteOptions.environments, function (sum, env) {
-                return sum + env['system_count'];
+                return sum + env['host_count'];
             }, 0);
         };
 

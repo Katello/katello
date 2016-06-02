@@ -53,6 +53,13 @@ module Katello
             { :conditions => "#{::Host::Managed.table_name}.id IN (#{facets.pluck(:host_id).join(',')})" }
           end
         end
+
+        def in_content_view_environment(content_view: nil, lifecycle_environment: nil)
+          relation = self.joins(:content_facet)
+          relation = relation.where("#{::Katello::Host::ContentFacet.table_name}.content_view_id" => content_view) if content_view
+          relation = relation.where("#{::Katello::Host::ContentFacet.table_name}.lifecycle_environment_id" => lifecycle_environment) if lifecycle_environment
+          relation
+        end
       end
     end
   end

@@ -322,8 +322,8 @@ module Katello
                      ]
 
       env_ids = [@dev.id.to_s, @staging.id.to_s]
-      Katello::System.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == @library_dev_staging_view.id && args[:environment_id] == env_ids
+      ::Katello::Host::ContentFacet.expects(:where).at_least_once.returns([]).with do |args|
+        args[:content_view_id].id == @library_dev_staging_view.id && args[:lifecycle_environment_id] == env_ids
       end
 
       Katello::ActivationKey.expects(:where).at_least_once.returns([]).with do |args|
@@ -453,8 +453,8 @@ module Katello
 
       env_ids = [ak.environment.id.to_s]
 
-      Katello::System.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == ak.content_view.id && args[:environment_id] == env_ids
+      ::Katello::Host::ContentFacet.expects(:where).at_least_once.returns([]).with do |args|
+        args[:content_view_id].id == ak.content_view.id && args[:lifecycle_environment_id] == env_ids
       end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do

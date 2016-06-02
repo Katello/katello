@@ -43,13 +43,6 @@ module Katello
       assert_equal expired_subscriptions, all_subscriptions - [unexpired, long_expired]
     end
 
-    def test_systems
-      active_pool = FactoryGirl.build(:katello_pool, :active)
-      systems = [katello_systems(:simple_server)]
-      System.expects(:all_by_pool).with(active_pool.cp_id).returns(systems)
-      assert_equal active_pool.systems, systems
-    end
-
     def test_with_identifiers
       assert_equal Pool.with_identifiers("#{@pool_one.cp_id}").first, @pool_one
       assert_equal Pool.with_identifiers("#{@pool_one.id}").first, @pool_one
@@ -62,10 +55,8 @@ module Katello
       active_pool = FactoryGirl.build(:katello_pool, :active)
       host_one = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @view,
                                     :lifecycle_environment => @library)
-      cp_id = "foo"
-      active_pool.cp_id = cp_id
-      pool_data = [{"pool" => {"id" => cp_id}, "consumer" => {"uuid" => host_one.content_facet.uuid}}]
-      Resources::Candlepin::Entitlement.expects(:get).returns(pool_data)
+      pool_data = [{"pool" => {"id" => 'foo'}, "consumer" => {"uuid" => host_one.subscription_facet.uuid}}]
+      Resources::Candlepin::Pool.expects(:entitlements).returns(pool_data)
       assert_equal active_pool.hosts, [host_one]
     end
 

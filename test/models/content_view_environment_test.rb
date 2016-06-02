@@ -11,5 +11,15 @@ module Katello
       cve = @content_facet.content_view.content_view_environment(@content_facet.lifecycle_environment)
       assert_includes ContentViewEnvironment.for_content_facets(@content_facet), cve
     end
+
+    def test_hosts
+      library = katello_environments(:library)
+      view = katello_content_views(:library_dev_view)
+      host = FactoryGirl.create(:host, :with_content, :content_view => view,
+                                       :lifecycle_environment =>  library)
+      cve = Katello::ContentViewEnvironment.where(:environment_id => library, :content_view_id => view).first
+
+      assert_includes cve.hosts, host
+    end
   end
 end

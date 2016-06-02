@@ -1,6 +1,6 @@
 module Katello
   class AutoCompleteSearchController < Katello::ApplicationController
-    include Foreman::Controller::AutoCompleteSearch
+    include ::Foreman::Controller::AutoCompleteSearch
 
     def model_of_controller
       Organization.current ? model.where(:organization_id => Organization.current.id) : model

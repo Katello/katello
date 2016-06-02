@@ -75,10 +75,6 @@ module Katello
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id").uniq
     end
 
-    def hosts_unavailable
-      self.hosts_applicable.where("#{Katello::System.table_name}.id not in (#{self.hosts_available.select("#{Katello::System.table_name}.id").to_sql})")
-    end
-
     def self.installable_for_hosts(hosts = nil)
       query = Katello::Erratum.joins(:content_facet_errata).joins(:repository_errata).
         joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \

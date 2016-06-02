@@ -518,6 +518,11 @@ module Katello
             self.delete(path(id), self.default_headers).code.to_i
           end
 
+          def entitlements(pool_id)
+            entitlement_json = self.get("#{path(pool_id)}/entitlements", self.default_headers).body
+            JSON.parse(entitlement_json)
+          end
+
           def path(id = nil)
             "/candlepin/pools/#{id}"
           end

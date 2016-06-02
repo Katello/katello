@@ -14,8 +14,8 @@
  *   as part of content view version deletion.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionDeletionContentHostsController',
-    ['$scope', '$location', 'Organization', 'CurrentOrganization', 'Nutupane', 'ContentHost',
-    function ($scope, $location, Organization, CurrentOrganization, Nutupane, ContentHost) {
+    ['$scope', '$location', 'Organization', 'CurrentOrganization', 'Nutupane', 'Host',
+    function ($scope, $location, Organization, CurrentOrganization, Nutupane, Host) {
 
         var params, nutupane;
 
@@ -26,10 +26,17 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
             'sort_by': 'name',
             'sort_order': 'ASC'
         };
-        nutupane = new Nutupane(ContentHost, params);
+        nutupane = new Nutupane(Host, params);
 
         nutupane.searchTransform = function (term) {
-            var addition = "(environment_id:(" + $scope.selectedEnvironmentIds().join(" OR ") + "))";
+            var addition,
+                envIdClausses = [];
+
+            angular.forEach($scope.selectedEnvironmentIds(), function(envId) {
+                envIdClausses.push("lifecycle_environment_id = " + envId);
+            });
+            addition = '(' + envIdClausses.join(" OR ") + ')';
+            addition = addition + " AND content_view_id = " + $scope.contentView.id;
             if (term === "" || angular.isUndefined(term)) {
                 return addition;
             }

@@ -1,3 +1,3 @@
 object @resource
 
-extends "katello/api/v2/systems/erratum"
+extends "katello/api/v2/content_facet/erratum"

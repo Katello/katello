@@ -103,7 +103,7 @@ module Katello
       respond_for_show(:resource => @new_activation_key)
     end
 
-    api :GET, "/activation_keys/:id/host_collections/available", N_("List host collections the system does not belong to")
+    api :GET, "/activation_keys/:id/host_collections/available", N_("List host collections the activation key does not belong to")
     param_group :search, Api::V2::ApiController
     param :name, String, :desc => N_("host collection name to filter by")
     def available_host_collections

@@ -120,12 +120,12 @@ describe('ContentViewVersionDeletionController', function() {
     });
 
     it('should properly detect when i need content hosts', function () {
-        $scope.deleteOptions.environments = [{system_count: 5}, {system_count: 3}];
+        $scope.deleteOptions.environments = [{host_count: 5}, {host_count: 3}];
         expect($scope.needHosts()).toBe(true);
     });
 
     it('should calculate total content hosts count properly', function () {
-        $scope.deleteOptions.environments = [{system_count: 5}, {system_count: 3}];
+        $scope.deleteOptions.environments = [{host_count: 5}, {host_count: 3}];
         expect($scope.totalHostCount()).toBe(8);
     });
 

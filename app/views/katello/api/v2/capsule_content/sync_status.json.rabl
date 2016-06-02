@@ -19,7 +19,7 @@ child @lifecycle_environments => :lifecycle_environments do
   end
   node :counts do |env|
     counts = {
-      :content_hosts => env.systems.readable.count,
+      :content_hosts => env.hosts.authorized("view_hosts").count,
       :content_views => env.content_views.non_default.count,
       :products => env.products.enabled.count
     }
@@ -36,7 +36,7 @@ child @lifecycle_environments => :lifecycle_environments do
         :composite => content_view.composite,
         :last_published => content_view.versions.empty? ? nil : content_view.versions.last.created_at,
         :counts => {
-          :content_hosts => content_view.systems.readable.count,
+          :content_hosts => content_view.hosts.authorized("view_hosts").count,
           :products => content_view.products.enabled.count
         }
       }

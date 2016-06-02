@@ -20,7 +20,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
             } else {
                 angular.forEach($scope.environmentsTable.rows, function (row) {
                     row.unselectable = !row.permissions['promotable_or_removable'] ||
-                                         !row.permissions['all_systems_editable'] ||
+                                         !row.permissions['all_hosts_editable'] ||
                                          !row.permissions['all_keys_editable'];
                 });
 
