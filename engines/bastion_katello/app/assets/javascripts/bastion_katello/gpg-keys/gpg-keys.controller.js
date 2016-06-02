@@ -36,16 +36,16 @@ angular.module('Bastion.gpg-keys').controller('GPGKeysController',
 
         $scope.table.openGPGKey = function (gpgKey) {
             $scope.panel.loading = true;
-            $scope.transitionTo('gpgKeys.details.info', {gpgKeyId: gpgKey.id});
+            $scope.transitionTo('gpg-keys.details.info', {gpgKeyId: gpgKey.id});
         };
 
         $scope.transitionToNewGPGKey = function () {
             $scope.panel.loading = true;
-            $scope.transitionTo('gpgKeys.new');
+            $scope.transitionTo('gpg-keys.new');
         };
 
         $scope.table.closeItem = function () {
-            $scope.transitionTo('gpgKeys.index');
+            $scope.transitionTo('gpg-keys.index');
         };
 
     }]

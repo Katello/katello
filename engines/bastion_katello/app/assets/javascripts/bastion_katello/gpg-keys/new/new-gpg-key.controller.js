@@ -28,7 +28,7 @@ angular.module('Bastion.gpg-keys').controller('NewGPGKeyController',
                 if (angular.isUndefined(content.errors)) {
                     $scope.table.addRow(content);
                     $scope.uploadStatus = 'success';
-                    $scope.transitionTo('gpgKeys.index');
+                    $scope.transitionTo('gpg-keys.index');
                     GlobalNotification.setSuccessMessage(translate('GPG key %s has been created.').replace('%s', content.name));
                 } else {
                     $scope.errorMessages = [translate("An error occurred while creating the GPG key: ") + content.displayMessage];

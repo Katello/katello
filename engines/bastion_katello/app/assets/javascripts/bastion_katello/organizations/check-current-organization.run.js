@@ -10,10 +10,10 @@
      */
     function CheckCurrentOrganization($rootScope, $window, CurrentOrganization, FencedPages) {
 
-        $rootScope.$on('$stateChangeStart', function (event, toState) {
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             if (CurrentOrganization === "" && FencedPages.isFenced(toState)) {
                 event.preventDefault();
-                $rootScope.transitionTo('organizations.select', {toState: toState.url});
+                $rootScope.transitionTo('organizations.select', {toState: $rootScope.$state.href(toState.name, toParams, {absolute: 'true'})});
             }
         });
 

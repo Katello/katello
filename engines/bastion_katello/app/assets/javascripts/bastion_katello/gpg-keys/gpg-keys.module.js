@@ -24,12 +24,12 @@ angular.module('Bastion.gpg-keys', [
  *   Used for systems level configuration such as setting up the ui state machine.
  */
 angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($stateProvider) {
-    $stateProvider.state('gpgKeys', {
+    $stateProvider.state('gpg-keys', {
         abstract: true,
         controller: 'GPGKeysController',
         templateUrl: 'gpg-keys/views/gpg-keys.html'
     })
-    .state('gpgKeys.index', {
+    .state('gpg-keys.index', {
         url: '/gpg_keys',
         permission: 'view_gpg_keys',
         views: {
@@ -38,7 +38,7 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
             }
         }
     })
-    .state('gpgKeys.new', {
+    .state('gpg-keys.new', {
         url: '/gpg_keys/new',
         permission: 'create_gpg_keys',
         collapsed: true,
@@ -52,7 +52,7 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
             }
         }
     })
-    .state("gpgKeys.details", {
+    .state("gpg-keys.details", {
         abstract: true,
         url: '/gpg_keys/:gpgKeyId',
         permission: 'view_gpg_keys',
@@ -67,21 +67,21 @@ angular.module('Bastion.gpg-keys').config(['$stateProvider', function ($statePro
             }
         }
     })
-    .state('gpgKeys.details.info', {
+    .state('gpg-keys.details.info', {
         url: '/info',
         permission: 'view_gpg_keys',
         collapsed: true,
         controller: 'GPGKeyDetailsInfoController',
         templateUrl: 'gpg-keys/details/views/gpg-key-info.html'
     })
-    .state('gpgKeys.details.products', {
+    .state('gpg-keys.details.products', {
         url: '/products',
         permission: 'view_gpg_keys',
         collapsed: true,
         controller: 'GPGKeyDetailsController',
         templateUrl: 'gpg-keys/details/views/gpg-key-products.html'
     })
-    .state('gpgKeys.details.repositories', {
+    .state('gpg-keys.details.repositories', {
         url: '/repositories',
         permission: 'view_gpg_keys',
         collapsed: true,

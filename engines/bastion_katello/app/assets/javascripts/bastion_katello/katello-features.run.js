@@ -23,11 +23,11 @@
             'products.discovery',
             'products.discovery.scan',
             'products.discovery.create',
-            'gpgKeys.index',
-            'gpgKeys.new',
-            'gpgKeys.details.info',
-            'gpgKeys.details.products',
-            'gpgKeys.details.repositories'
+            'gpg-keys.index',
+            'gpg-keys.new',
+            'gpg-keys.details.info',
+            'gpg-keys.details.products',
+            'gpg-keys.details.repositories'
         ];
 
         FeatureFlag.addStates('remote_actions', remoteActions);

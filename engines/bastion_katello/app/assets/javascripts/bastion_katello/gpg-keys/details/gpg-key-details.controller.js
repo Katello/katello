@@ -47,7 +47,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsController',
 
             gpgKey.$delete(function () {
                 $scope.removeRow(id);
-                $scope.transitionTo('gpgKeys.index');
+                $scope.transitionTo('gpg-keys.index');
             });
         };
     }]

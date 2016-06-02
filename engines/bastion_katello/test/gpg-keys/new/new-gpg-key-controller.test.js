@@ -43,7 +43,7 @@ describe('Controller: NewGPGKeyController', function() {
         expect($scope.uploadStatus).toBe('success');
 
         expect($scope.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('gpgKeys.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-keys.index');
     });
 
     it('should error on a new gpg key resource', function() {
