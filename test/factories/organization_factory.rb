@@ -3,6 +3,7 @@ FactoryGirl.define do
     type "Organization"
     sequence(:name) { |n| "Organization#{n}" }
     sequence(:label) { |n| "org#{n}" }
+    sequence(:id) { |n| n }
 
     trait :acme_corporation do
       name "ACME_Corporation"
