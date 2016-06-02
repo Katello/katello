@@ -32,6 +32,26 @@ module Katello
       assert_nil response[:error], "error"
     end
 
+    def test_scoped_search_full_results_true
+      params = { full_result: 'true', per_page: 2 }
+      @controller.stubs(:params).returns(params)
+
+      response = @controller.scoped_search(@query, @default_sort[0], @default_sort[1], @options)
+      refute_empty response[:results], "results"
+      assert_nil response[:error], "error"
+      refute_equal(2, response[:results].length)
+    end
+
+    def test_scoped_search_full_results_false
+      params = { full_result: 'false', per_page: 2 }
+      @controller.stubs(:params).returns(params)
+
+      response = @controller.scoped_search(@query, @default_sort[0], @default_sort[1], @options)
+      refute_empty response[:results], "results"
+      assert_nil response[:error], "error"
+      assert_equal(2, response[:results].length)
+    end
+
     def test_scoped_search_no_results
       params = { :search => "asdfasdf" }
       @controller.stubs(:params).returns(params)

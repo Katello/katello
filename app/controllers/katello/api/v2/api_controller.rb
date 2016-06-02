@@ -20,7 +20,7 @@ module Katello
       param :page, :number, :desc => N_("Page number, starting at 1")
       param :per_page, :number, :desc => N_("Number of results per page to return")
       param :order, String, :desc => N_("Sort field and order, eg. 'name DESC'")
-      param :full_results, :bool, :desc => N_("Whether or not to show all results")
+      param :full_result, :bool, :desc => N_("Whether or not to show all results")
       param :sort, Hash, :desc => N_("Hash version of 'order' param") do
         param :by, String, :desc => N_("Field to sort the results on")
         param :order, String, :desc => N_("How to order the sorted results (e.g. ASC for ascending)")
@@ -66,7 +66,7 @@ module Katello
       query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
-      if params[:full_result]
+      if Foreman::Cast.to_bool(params[:full_result])
         params[:per_page] = total
       else
         query = query.paginate(paginate_options)
