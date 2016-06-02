@@ -6,6 +6,7 @@ module Katello
       @repo = katello_repositories(:fedora_17_x86_64_dev)
       @version = ContentViewVersion.first
       @rpm = katello_rpms(:one)
+      @host = hosts(:one)
       Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
     end
 
@@ -53,6 +54,23 @@ module Katello
       get :index
 
       assert_response :success
+    end
+
+    def test_index_with_applicability
+      response = get :index, :host_id => @host.id
+
+      assert_response :success
+
+      ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
+      assert_includes ids, @rpm.id
+    end
+
+    def test_index_with_upgradability
+      response = get :index, :host_id => @host.id, :packages_restrict_upgradable => true
+
+      assert_response :success
+      ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
+      refute_includes ids, @rpm.id
     end
 
     def test_index_protected

@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class EventQueueTest < ActiveSupport::TestCase
     def setup
-      @type = Katello::Events::ImportHostErrata::EVENT_TYPE
+      @type = Katello::Events::ImportHostApplicability::EVENT_TYPE
     end
 
     def test_clear_events_only_deletes_last
@@ -35,7 +35,7 @@ module Katello
     end
 
     def test_event_class
-      assert_equal Katello::Events::ImportHostErrata, EventQueue.event_class(@type)
+      assert_equal Katello::Events::ImportHostApplicability, EventQueue.event_class(@type)
     end
 
     def test_supported_event_types

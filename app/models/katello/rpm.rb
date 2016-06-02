@@ -7,6 +7,10 @@ module Katello
     has_many :repositories, :through => :repository_rpms, :class_name => "Katello::Repository"
     has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy, :inverse_of => :rpm
 
+    has_many :content_facets, :through => :content_facet_applicable_rpms, :class_name => "Katello::Host::ContentFacet"
+    has_many :content_facet_applicable_rpms, :class_name => "Katello::ContentFacetApplicableRpm",
+             :dependent => :destroy, :inverse_of => :rpm
+
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :release, :complete_value => true
@@ -43,7 +47,9 @@ module Katello
       if custom_json.any? { |name, value| self.send(name) != value }
         custom_json[:release_sortable] = Util::Package.sortable_version(custom_json[:release])
         custom_json[:version_sortable] = Util::Package.sortable_version(custom_json[:version])
-        self.update_attributes!(custom_json)
+        self.assign_attributes(custom_json)
+        self.nvra = self.build_nvra
+        self.save!
       end
     end
 
@@ -52,11 +58,28 @@ module Katello
     end
 
     def nvrea
-      Util::Package.build_nvrea(self.as_json.with_indifferent_access, false)
+      Util::Package.build_nvrea(self.attributes.with_indifferent_access, false)
     end
 
-    def nvra
-      Util::Package.build_nvra(self.as_json.with_indifferent_access)
+    def build_nvra
+      Util::Package.build_nvra(self.attributes.with_indifferent_access)
+    end
+
+    def self.installable_for_hosts(hosts = nil)
+      query = Katello::Rpm.joins(:content_facet_applicable_rpms).joins(:repository_rpms).
+        joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
+        #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::ContentFacetApplicableRpm.table_name}.content_facet_id").
+        joins("INNER JOIN #{Katello::RepositoryRpm.table_name} AS host_repo_rpm ON \
+          host_repo_rpm.rpm_id = #{Katello::Rpm.table_name}.id").
+        where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_rpm.repository_id")
+
+      query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
+      query.uniq
+    end
+
+    def self.applicable_to_hosts(hosts)
+      self.joins(:content_facets).
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
     end
   end
 end

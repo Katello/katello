@@ -6,6 +6,8 @@ module Katello
       @repo = katello_repositories(:fedora_17_x86_64)
       @rpm_one = katello_rpms(:one)
       @rpm_two = katello_rpms(:two)
+      @rpm_three = katello_rpms(:three)
+
       Rpm.any_instance.stubs(:backend_data).returns({})
     end
   end
@@ -43,6 +45,7 @@ module Katello
       assert_equal @rpm_one.summary, json['summary']
       refute @rpm_one.release_sortable.blank?
       refute @rpm_one.version_sortable.blank?
+      refute @rpm_one.nvra.blank?
     end
 
     def test_update_from_json_is_idempotent
@@ -56,6 +59,34 @@ module Katello
       assert_includes Rpm.with_identifiers(@rpm_one.id), @rpm_one
       assert_includes Rpm.with_identifiers([@rpm_one.id]), @rpm_one
       assert_includes Rpm.with_identifiers(@rpm_one.uuid), @rpm_one
+    end
+
+    def test_build_nvre
+      assert_equal "#{@rpm_one.name}-#{@rpm_one.version}-#{@rpm_one.release}.#{@rpm_one.arch}", @rpm_one.build_nvra
+    end
+  end
+
+  class ApplicablityTest < RpmTestBase
+    def setup
+      super
+      @host = katello_content_facets(:one).host
+    end
+
+    def test_applicable_to_hosts
+      rpms = Rpm.applicable_to_hosts([@host])
+
+      assert_includes rpms, @rpm_one
+      assert_includes rpms, @rpm_two
+      refute_includes rpms, @rpm_three
+    end
+
+    def test_installable_for_hosts
+      assert_includes @rpm_one.repositories, @repo
+      @rpm_two.repositories = []
+      @host.content_facet.bound_repositories << @repo
+      rpms = Rpm.installable_for_hosts([@host])
+
+      assert_equal [@rpm_one], rpms
     end
   end
 

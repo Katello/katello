@@ -15,7 +15,7 @@ module Actions
         def finalize
           input[:host_ids].each do |host_id|
             if input[:use_queue]
-              ::Katello::EventQueue.push_event(::Katello::Events::ImportHostErrata::EVENT_TYPE, host_id)
+              ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host_id)
             else
               host = ::Host.find(host_id)
               host.content_facet.try(:import_applicability, true) if host

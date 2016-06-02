@@ -23,11 +23,11 @@ class Actions::Katello::EventQueueMonitorTest < ActiveSupport::TestCase
     it 'should process events' do
       host = FactoryGirl.create(:host)
       action_class.any_instance.stubs(:suspend).yields(nil)
-      ::Katello::EventQueue.push_event(::Katello::Events::ImportHostErrata::EVENT_TYPE, host.id)
+      ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host.id)
       event = Katello::EventQueue.next_event
 
       suspended_class.any_instance.expects(:notify_ready).once
-      Katello::Events::ImportHostErrata.any_instance.expects(:run).once
+      Katello::Events::ImportHostApplicability.any_instance.expects(:run).once
 
       action = run_action planned_action
       action.run(action_class::Event[event.event_type, event.object_id, event.created_at.to_datetime])
