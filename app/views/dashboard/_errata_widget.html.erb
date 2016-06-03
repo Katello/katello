@@ -4,7 +4,7 @@
 
 <% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
 <% hosts = ::Host::Managed.authorized("view_hosts") %>
-<% errata = Katello::Erratum.applicable_to_hosts(hosts).order('updated desc').limit(6) %>
+<% errata = Katello::Erratum.applicable_to_hosts(hosts).limit(6) %>
 
 <% if errata.empty? %>
   <p class="ca"><%= _("There are no errata that need to be applied to registered content hosts.") %></p>
