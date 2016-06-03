@@ -5,7 +5,7 @@ $(document).ready(function() {
     $.each(KT.repo_status, function(repo_id, status){
       if (status.is_running) {
           ids.push(repo_id);
-          KT.content.draw_syncing(repo_id, status.progress.progress);
+          KT.content.draw_syncing(repo_id, status.progress.progress, status.sync_id);
       }
     });
     KT.content.reset_products(KT.repo_status);
@@ -29,7 +29,7 @@ $(document).ready(function() {
        var ids = [];
        $.each(data, function(index, item){
           ids.push(item.id);
-          KT.content.draw_syncing(item.id, 0);
+          KT.content.draw_syncing(item.id, 0, undefined);
           KT.content.updateProduct(item.product_id, false, 0);
        });
        KT.content_actions.addSyncing(ids);
@@ -134,6 +134,7 @@ KT.content_actions = (function(){
                                             repo.progress.progress,
                                             repo.display_size,
                                             repo.packages,
+                                            repo.size,
                                             repo.sync_id);
                    }
                });
@@ -156,11 +157,15 @@ KT.content_actions = (function(){
 
 KT.content = (function(){
 
-     var draw_syncing = function(repo_id, progress){
-
+     var draw_syncing = function(repo_id, progress, task_id){
             var element = $("#repo-" + repo_id).find(".result"),
                 cancelButton = $('<a/>').attr("class", "cancel_sync").text(katelloI18n.cancel),
-                progressBar = $('<div/>').attr('class', 'progress').text(" ");
+                progressBar = $('<a/>').attr('class', 'progress').text(" ");
+
+            if(task_id !== undefined) {
+                progress.attr('href', '/foreman_tasks/tasks/' + task_id)
+            }
+
             progress = progress ? progress : 0;
             progressBar.progressbar({
                 value: progress
@@ -199,6 +204,10 @@ KT.content = (function(){
                 value = pg.find(".ui-progressbar-value");
 
             starttime = starttime === null ? katelloI18n.no_start_time : starttime;
+
+            if(task_id !== undefined) {
+                pg.attr('href', '/foreman_tasks/tasks/' + task_id);
+            }
 
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
