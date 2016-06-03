@@ -27,7 +27,7 @@ module Katello
 
       describe "provide the next sync date as" do
         it "the sync date if in the future" do
-          sync_date = '5000-11-17 18:26:48 UTC'
+          sync_date = '5000/11/17 18:26:48 UTC'
           @plan.sync_date = sync_date
           @plan.next_sync.to_s.must_equal(sync_date)
         end
