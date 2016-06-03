@@ -1,7 +1,7 @@
 module Actions
   module Pulp
     module Repository
-      class AssociateImporter < Pulp::Abstract
+      class AssociateImporter < Pulp::AbstractAsyncTask
         input_format do
           param :repo_id
           param :type_id
@@ -10,9 +10,8 @@ module Actions
           param :capsule_id
         end
 
-        def run
-          output[:response] = pulp_resources.repository.
-            associate_importer(*input.values_at(:repo_id, :type_id, :config))
+        def invoke_external_task
+          pulp_resources.repository.associate_importer(*input.values_at(:repo_id, :type_id, :config))
         end
       end
     end

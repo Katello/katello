@@ -82,8 +82,8 @@ module Actions
           repos.select do |repo|
             repo_details = capsule.pulp_repo_facts(repo.pulp_id)
             next unless repo_details
-            capsule_importer = repo_details["importers"][0]["config"]
-            !(repo.importer_matches?(capsule_importer))
+            capsule_importer = repo_details["importers"][0].try(:[], "config")
+            capsule_importer.nil? || !(repo.importer_matches?(capsule_importer))
           end
         end
 
