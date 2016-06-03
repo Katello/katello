@@ -45,7 +45,8 @@ module Actions
       private
 
       def import_or_remove_pool(pool_id)
-        ::Katello::Pool.find_by(:cp_id => pool_id).import_data
+        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
+        pool.nil? ? remove_pool(pool_id) : pool.import_data
       rescue RestClient::ResourceNotFound
         remove_pool(pool_id)
       end
