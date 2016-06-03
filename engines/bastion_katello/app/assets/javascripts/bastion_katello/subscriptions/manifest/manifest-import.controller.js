@@ -68,6 +68,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 if (task.humanized.output && task.humanized.output.length > 0) {
                     errorMessageWithDetails += ' ' + task.humanized.output;
                 }
+                if (task.humanized.errors.length > 0) {
+                    errorMessageWithDetails += ' ' + task.humanized.errors.join(' ');
+                }
                 GlobalNotification.setErrorMessage(errorMessageWithDetails);
                 $scope.histories = Subscription.manifestHistory();
             }
