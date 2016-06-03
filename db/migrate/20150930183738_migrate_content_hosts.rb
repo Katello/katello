@@ -18,7 +18,7 @@ class MigrateContentHosts < ActiveRecord::Migration
   class SmartProxy < ActiveRecord::Base
     self.table_name = "smart_proxies"
 
-    belongs_to :content_host, :class_name => "MigrateContentHosts::ContentHost", :inverse_of => :capsule
+    belongs_to :content_host, :class_name => "MigrateContentHosts::System", :inverse_of => :capsule
   end
 
   class KTEnvironment < ActiveRecord::Base
@@ -74,6 +74,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     self.table_name = "katello_errata"
 
     has_many :systems_applicable, :through => :system_errata, :class_name => "MigrateContentHosts::System", :source => :system
+    has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :source => :erratum
   end
 
   class SystemErratum < ActiveRecord::Base
@@ -143,7 +144,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     belongs_to :content_view, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::ContentView"
     belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "MigrateContentHosts::KTEnvironment"
 
-    has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facets
+    has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy, :inverse_of => :content_facet
     has_many :bound_repositories, :through => :content_facet_repositories, :class_name => "MigrateContentHosts::Repository", :source => :repository
     has_many :applicable_errata, :through => :content_facet_errata, :class_name => "MigrateContentHosts::Erratum", :source => :erratum
     has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
@@ -182,13 +183,15 @@ class MigrateContentHosts < ActiveRecord::Migration
     Rails.logger
   end
 
-  def create_content_facet(host, system)
+  def create_content_facet(host, system, include_env_and_view_only = false)
     logger.info("Creating content facet for host #{host.name}.")
     content_facet = host.content_facet = MigrateContentHosts::ContentFacet.new(:content_view => system.content_view,
                                                          :lifecycle_environment => system.environment)
-    content_facet.uuid = system.uuid
-    content_facet.bound_repositories = system.bound_repositories
-    content_facet.applicable_errata = system.applicable_errata
+    unless include_env_and_view_only
+      content_facet.uuid = system.uuid
+      content_facet.bound_repositories = system.bound_repositories
+      content_facet.applicable_errata = system.applicable_errata
+    end
     content_facet.save!
   end
 
@@ -342,7 +345,7 @@ class MigrateContentHosts < ActiveRecord::Migration
         end
         host = hosts.first
 
-        create_content_facet(host, system) unless host.content_facet
+        create_content_facet(host, system, true) unless host.content_facet
         unregister_system(system)
 
       else #host exists in the correct org
@@ -353,8 +356,10 @@ class MigrateContentHosts < ActiveRecord::Migration
         create_subscription_facet(host, system) unless host.subscription_facet
       end
 
-      system.host_id = host.id
-      system.save!
+      unless system.destroyed? # if the system was unregistered, it will no longer exist
+        system.host_id = host.id
+        system.save!
+      end
     end
   end
 end

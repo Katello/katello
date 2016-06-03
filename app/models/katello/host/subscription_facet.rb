@@ -51,7 +51,7 @@ module Katello
       end
 
       def self.update_facts(host, rhsm_facts)
-        return if host.build?
+        return if host.build? || rhsm_facts.nil?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
         rhsm_facts[:_timestamp] = DateTime.now.to_s
         host.import_facts(rhsm_facts)

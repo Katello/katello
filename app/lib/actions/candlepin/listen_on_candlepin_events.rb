@@ -144,9 +144,34 @@ module Actions
           end
           unless Rails.env.test?
             world.before_termination do
-              # make sure we close the service at exit to finish the listening action
-              suspended_action.ask(Close).wait
-              self.class.triggered_action.finished.wait
+              finish_service
+            end
+          end
+        end
+      end
+
+      def finish_service
+        log_prefix = "Finishing #{self.class.name} #{task.id}"
+        action_logger.info(log_prefix)
+        # make sure we close the service at exit to finish the listening action
+        suspended_action.ask(Close).wait
+        # if the triggered_action is nil, it means the action was resumed from
+        # previous run due to some unexpected termination of previous process
+        if self.class.triggered_action
+          self.class.triggered_action.finished.wait
+        else
+          max_attempts = 10
+          (1..max_attempts).each do |attempt|
+            task.reload
+            if !task.pending? || task.paused?
+              break
+            else
+              action_logger.info("#{log_prefix}: attempt #{attempt}/#{max_attempts}")
+              if attempt == max_attempts
+                action_logger.info("#{log_prefix} failed, skipping")
+              else
+                sleep 1
+              end
             end
           end
         end

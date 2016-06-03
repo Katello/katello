@@ -42,6 +42,19 @@ module Katello::Host
       end
     end
 
+    describe 'Host Update with consumer params with nil facts' do
+      it 'plans' do
+        action.stubs(:action_subject).with(@host)
+        consumer_params = {'autoheal' => true}
+        consumer_params[:facts] = nil
+
+        plan_action action, @host, consumer_params
+
+        assert_action_planed_with action, ::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => @host.subscription_facet.uuid
+        assert_action_planed_with action, ::Actions::Candlepin::Consumer::Update, @host.subscription_facet.uuid, consumer_params
+      end
+    end
+
     describe 'Host Update without subscription facet' do
       it 'plans' do
         @host.subscription_facet.destroy!
