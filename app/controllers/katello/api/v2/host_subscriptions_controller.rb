@@ -153,6 +153,13 @@ module Katello
       respond_for_index(:collection => full_result_response(results))
     end
 
+    api :GET, "/hosts/:host_id/subscriptions/available_release_versions", N_("Show releases available for the content host")
+    param :host_id, String, :desc => N_("id of host"), :required => true
+    def available_release_versions
+      releases = @host.content_facet.try(:available_releases) || []
+      respond_for_index :collection => full_result_response(releases)
+    end
+
     private
 
     def validate_content_overrides(content_params)

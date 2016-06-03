@@ -240,14 +240,9 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
-          member do
-            get :releases
-          end
           collection do
             get :auto_complete_search
           end
-          api_resources :activation_keys, :only => [:index]
-          api_resources :host_collections, :only => [:index]
           api_resources :products, :only => [:index]
         end
 

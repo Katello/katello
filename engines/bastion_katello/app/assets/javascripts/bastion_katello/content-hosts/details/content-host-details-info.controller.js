@@ -15,8 +15,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoController',
-    ['$scope', '$q', 'translate', 'ContentHost', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $q, translate, ContentHost, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
+    ['$scope', '$q', 'translate', 'HostSubscription', 'ContentView', 'Organization', 'CurrentOrganization', 'ContentHostsHelper',
+    function ($scope, $q, translate, HostSubscription, ContentView, Organization, CurrentOrganization, ContentHostsHelper) {
         function doubleColonNotationToObject(dotString) {
             var doubleColonObject = {}, tempObject, parts, part, key, property;
             for (property in dotString) {
@@ -84,7 +84,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.releaseVersions = function () {
             var deferred = $q.defer();
 
-            ContentHost.releaseVersions({ id: $scope.host.subscription_facet_attributes.uuid }, function (response) {
+            HostSubscription.releaseVersions({ id: $scope.host.id }, function (response) {
                 if (response.total === 0) {
                     $scope.showVersionAlert = true;
                 }

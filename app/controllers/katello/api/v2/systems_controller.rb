@@ -80,18 +80,6 @@ module Katello
       respond
     end
 
-    api :GET, "/systems/:id/releases", N_("Show releases available for the content host"), :deprecated => true
-    param :id, String, :desc => N_("UUID of the content host"), :required => true
-    desc <<-DESC
-      A hint for choosing the right value for the releaseVer param
-    DESC
-    def releases
-      response = { :results => @system.available_releases,
-                   :total => @system.available_releases.size,
-                   :subtotal => @system.available_releases.size }
-      respond_for_index :collection => response
-    end
-
     private
 
     def system_params_to_host_params(sys_params)
