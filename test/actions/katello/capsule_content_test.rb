@@ -23,12 +23,6 @@ module ::Actions::Katello::CapsuleContent
     before do
       set_user
       ::Katello::CapsuleContent.any_instance.stubs(:ping_pulp).returns({})
-      @capsule_system = create(:katello_system,
-                               :capsule,
-                               name: proxy_with_pulp.name,
-                               capsule: proxy_with_pulp,
-                               environment: environment,
-                               content_view: katello_content_views(:library_dev_view))
     end
 
     def synced_repos(action, repos)

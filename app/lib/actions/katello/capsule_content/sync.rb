@@ -30,12 +30,10 @@ module Actions
 
               plan_action(ConfigureCapsule, capsule_content, environment, content_view)
 
-              smart_proxy = SmartProxy.where(:content_host_id => capsule_content.consumer.id).first
-              fail _("Smart Proxy not found for capsule.") unless smart_proxy
               concurrence do
                 repository_ids.each do |repo_id|
                   plan_action(Pulp::Consumer::SyncCapsule,
-                              capsule_id: smart_proxy.id,
+                              capsule_id: capsule_content.capsule.id,
                               repo_pulp_id: repo_id)
                 end
               end

@@ -58,21 +58,10 @@ module Actions
               consumer_attributes.except(:installedProducts, :guestIds, :facts))
           host.subscription_facet.save!
           host.refresh_global_status!
-          connect_to_smart_proxy(host)
 
           system = ::Katello::System.find(input[:system_id])
           system.uuid = input[:uuid]
           system.save!
-        end
-
-        def connect_to_smart_proxy(system)
-          smart_proxy = SmartProxy.where(:name => system.name).first
-
-          if smart_proxy
-            smart_proxy.content_host = system.content_host
-            smart_proxy.organizations << system.organization unless smart_proxy.organizations.include?(system.organization)
-            smart_proxy.save!
-          end
         end
 
         private
