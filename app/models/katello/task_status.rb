@@ -26,11 +26,6 @@ module Katello
     # needed to delete providers w/ task status
     has_one :provider, :class_name => "Katello::Provider", :dependent => :nullify
 
-    # a task may be optionally associated with a job, but it is not required
-    # an example scenario would be a job that is created by performing an action on a system group
-    has_one :job_task, :class_name => "Katello::JobTask", :dependent => :destroy
-    has_one :job, :through => :job_task
-
     validates_lengths_from_database
     before_save :setup_task_type
 
@@ -59,8 +54,6 @@ module Katello
         end
       end
     end
-
-    after_destroy :destroy_job
 
     def initialize(attrs = nil, _options = {})
       unless attrs.nil?
@@ -333,20 +326,6 @@ module Katello
     def setup_task_type
       unless self.task_type
         self.task_type = self.class.name
-      end
-    end
-
-    # If the task is associated with a job and this is the last task associated with
-    # the job, destroy the job.
-    def destroy_job
-      # is this task associated with a job?
-      job_id = self.job_task.job_id unless self.job_task.nil?
-      if job_id
-        job = Job.find(job_id)
-        # is this the last task associated with the job?
-        if job && job.task_statuses.length == 0
-          job.destroy
-        end
       end
     end
 
