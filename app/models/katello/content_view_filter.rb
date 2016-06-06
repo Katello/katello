@@ -5,8 +5,8 @@ module Katello
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
-    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA]
-    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
+    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA].freeze
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }.freeze
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",

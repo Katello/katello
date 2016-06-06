@@ -2,7 +2,7 @@ require File.expand_path("../helpers/repo_test_data", File.dirname(__FILE__))
 
 module Katello
   module OrchestrationHelper
-    CERT = <<EOCERT
+    CERT = <<EOCERT.freeze
 -----BEGIN CERTIFICATE-----
 MIIF7DCCBVWgAwIBAgIIB1AMflT0SrswDQYJKoZIhvcNAQEFBQAwRjElMCMGA1UE
 Awwca2lsbGluZy10aW1lLmFwcGxpZWRsb2dpYy5jYTELMAkGA1UEBhMCVVMxEDAO
@@ -39,7 +39,7 @@ A5qqap7hk8CDz3HWi9/YGGU89EjLlFpSF5SPbFAWpA8=
 -----END CERTIFICATE-----
 EOCERT
 
-    KEY = <<EOKEY
+    KEY = <<EOKEY.freeze
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAlkidXB/p2Vj5zGF9Uh3WxvD6175G1JmA6kARy14ZlyEKVoWO
 IvnbhHWi6bVrxtLLEvLBXeX8uJHnP+I/bthBDMfR3+yBBMrShnTKvTJz/pZk6HG0

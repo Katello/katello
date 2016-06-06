@@ -2,7 +2,7 @@ module Katello
   class PackageGroup < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    CONTENT_TYPE = "package_group"
+    CONTENT_TYPE = "package_group".freeze
 
     has_many :repositories, :through => :repository_package_groups, :class_name => "Katello::Repository"
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy, :inverse_of => :package_group

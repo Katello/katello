@@ -107,13 +107,13 @@ end
 
 module Katello
   class PulpSyncStatus < PulpTaskStatus
-    HISTORY_ERROR = 'failed'
-    HISTORY_SUCCESS = 'success'
-    FINISHED  = "finished"
-    ERROR     = "error"
-    RUNNING   = "running"
-    WAITING   = "waiting"
-    CANCELED  = "canceled"
+    HISTORY_ERROR = 'failed'.freeze
+    HISTORY_SUCCESS = 'success'.freeze
+    FINISHED  = "finished".freeze
+    ERROR     = "error".freeze
+    RUNNING   = "running".freeze
+    WAITING   = "waiting".freeze
+    CANCELED  = "canceled".freeze
 
     class Status < TaskStatus::Status
       NOT_SYNCED = :not_synced

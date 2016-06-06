@@ -74,7 +74,7 @@ module Katello
 
     after_create :add_to_default_capsule
 
-    ERROR_CLASS_NAME = "Environment"
+    ERROR_CLASS_NAME = "Environment".freeze
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true

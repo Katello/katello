@@ -38,7 +38,7 @@ module Katello
       :katello_content_facets => Katello::Host::ContentFacet,
       :katello_subscription_facets => Katello::Host::SubscriptionFacet,
       :katello_system_activation_keys => Katello::SystemActivationKey
-    }
+    }.freeze
 
     # rubocop:disable Style/AccessorMethodName
     def self.set_fixture_classes(test_class)

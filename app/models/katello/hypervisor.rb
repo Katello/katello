@@ -4,7 +4,7 @@ module Katello
 
     UNSUPPORTED_ACTIONS = [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
                            :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,
-                           :update_package, :install_package_group, :uninstall_package_group]
+                           :update_package, :install_package_group, :uninstall_package_group].freeze
 
     UNSUPPORTED_ACTIONS.each do |unsupported_action|
       define_method(unsupported_action) do

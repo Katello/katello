@@ -9,7 +9,7 @@ module Katello
     REDHAT = 'Red Hat'.encode('utf-8')
     CUSTOM = 'Custom'.encode('utf-8')
     ANONYMOUS = 'Anonymous'.encode('utf-8')
-    TYPES = [REDHAT, CUSTOM, ANONYMOUS]
+    TYPES = [REDHAT, CUSTOM, ANONYMOUS].freeze
 
     belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
     belongs_to :task_status, :inverse_of => :provider

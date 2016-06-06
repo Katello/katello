@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 module Katello
   class Util::PackageClauseGeneratorTest < ActiveSupport::TestCase
-    INCLUDE_ALL_PACKAGES = {"filename" => {"$exists" => true}}
+    INCLUDE_ALL_PACKAGES = {"filename" => {"$exists" => true}}.freeze
 
     def setup
       User.current = User.find(users(:admin).id)

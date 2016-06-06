@@ -3,9 +3,9 @@ module Katello
     class Rpm < PulpContentUnit
       include LazyAccessor
 
-      PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum)
-      PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id)
-      CONTENT_TYPE = "rpm"
+      PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum).freeze
+      PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id).freeze
+      CONTENT_TYPE = "rpm".freeze
 
       lazy_accessor :pulp_facts, :initializer => :backend_data
 

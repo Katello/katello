@@ -4,7 +4,7 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
-        ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
+        ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor).freeze
 
         include ForemanTasks::Concerns::ActionSubject
         include ForemanTasks::Concerns::ActionTriggering

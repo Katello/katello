@@ -10,7 +10,7 @@ module Katello
           :partial => Katello::SubscriptionStatus::PARTIAL,
           :invalid => Katello::SubscriptionStatus::INVALID,
           :unknown => Katello::SubscriptionStatus::UNKNOWN
-        }
+        }.freeze
 
         has_one :subscription_facet, :class_name => '::Katello::Host::SubscriptionFacet', :foreign_key => :host_id, :inverse_of => :host, :dependent => :destroy
 

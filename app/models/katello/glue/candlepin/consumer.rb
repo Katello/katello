@@ -1,9 +1,9 @@
 module Katello
   module Glue::Candlepin::Consumer
-    SYSTEM = "system"
-    HYPERVISOR = "hypervisor"
-    CANDLEPIN = "candlepin"
-    CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN]
+    SYSTEM = "system".freeze
+    HYPERVISOR = "hypervisor".freeze
+    CANDLEPIN = "candlepin".freeze
+    CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN].freeze
 
     # TODO: break up method
     def self.included(base) # rubocop:disable MethodLength

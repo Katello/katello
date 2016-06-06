@@ -9,7 +9,7 @@ module Actions
           param :export_result, Hash
         end
 
-        EXPORT_OUTPUT_BASEDIR = "/var/lib/pulp/published/yum/master/group_export_distributor/"
+        EXPORT_OUTPUT_BASEDIR = "/var/lib/pulp/published/yum/master/group_export_distributor/".freeze
 
         def plan(repos, export_to_iso, since, iso_size, group_id)
           unless File.directory?(Setting['pulp_export_destination'])

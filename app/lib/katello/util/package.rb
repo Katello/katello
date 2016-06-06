@@ -5,7 +5,7 @@ module Katello
       ARCH_RE = /\.([^.\-]*)$/
       EPOCH_RE = /([0-9]+):/
       NVRE_RE = /^(?:([0-9]+):)?(.*)-([^-]*)-([^-]*)$/
-      SUPPORTED_ARCHS = %w(noarch i386 i686 ppc64 s390x x86_64 ia64)
+      SUPPORTED_ARCHS = %w(noarch i386 i686 ppc64 s390x x86_64 ia64).freeze
 
       #parses package nvrea and stores it in a hash
       #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm

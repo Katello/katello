@@ -1,6 +1,6 @@
 module Katello
   class WhitelistConstraint
-    PATHS ||= [%r{\A/api/v2/organizations/\S+/parameters}]
+    PATHS ||= [%r{\A/api/v2/organizations/\S+/parameters}].freeze
 
     def matches?(request)
       PATHS.map { |path| request.env["REQUEST_PATH"].try(:match, path) }.any? ? false : true

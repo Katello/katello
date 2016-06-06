@@ -2,11 +2,11 @@
 
 module Katello
   class Ping
-    OK_RETURN_CODE = 'ok'
-    FAIL_RETURN_CODE = 'FAIL'
-    PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer)
+    OK_RETURN_CODE = 'ok'.freeze
+    FAIL_RETURN_CODE = 'FAIL'.freeze
+    PACKAGES = %w(katello candlepin pulp qpid foreman tfm hammer).freeze
 
-    SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks]
+    SERVICES = [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].freeze
 
     class << self
       #

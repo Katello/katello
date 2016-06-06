@@ -7,7 +7,7 @@ module Actions
     class CandlepinListeningService
       RECONNECT_ATTEMPTS = 30
       TIMEOUT = Qpid::Messaging::Duration::SECOND
-      NO_MESSAGE_AVAILABLE_ERROR_TYPE = 'NoMessageAvailable'
+      NO_MESSAGE_AVAILABLE_ERROR_TYPE = 'NoMessageAvailable'.freeze
 
       class << self
         attr_reader :instance

@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 module Katello
   class Api::V2::UebercertsControllerTest < ActionController::TestCase
-    OWNER_KEY = "some_org"
+    OWNER_KEY = "some_org".freeze
 
     def setup
       setup_controller_defaults_api

@@ -3,8 +3,8 @@ module Katello
     module OperatingsystemExtensions
       extend ActiveSupport::Concern
 
-      REDHAT_ATOMIC_HOST_DISTRO_NAME = "Red Hat Enterprise Linux Atomic Host"
-      REDHAT_ATOMIC_HOST_OS = "RedHat_Enterprise_Linux_Atomic_Host"
+      REDHAT_ATOMIC_HOST_DISTRO_NAME = "Red Hat Enterprise Linux Atomic Host".freeze
+      REDHAT_ATOMIC_HOST_OS = "RedHat_Enterprise_Linux_Atomic_Host".freeze
 
       included do
         after_create :assign_templates!

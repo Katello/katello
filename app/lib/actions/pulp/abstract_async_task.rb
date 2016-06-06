@@ -4,7 +4,7 @@ module Actions
       include Actions::Base::Polling
       include ::Dynflow::Action::Cancellable
 
-      FINISHED_STATES = %w(finished error canceled skipped)
+      FINISHED_STATES = %w(finished error canceled skipped).freeze
 
       # A call report (documented http://pulp-dev-guide.readthedocs.org/en/latest/conventions/sync-v-async.html)
       # Looks like:  {

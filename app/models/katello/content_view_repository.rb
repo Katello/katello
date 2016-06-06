@@ -5,7 +5,7 @@ module Katello
     ALLOWED_REPOSITORY_TYPES = [Repository::YUM_TYPE,
                                 Repository::DOCKER_TYPE,
                                 Repository::OSTREE_TYPE
-                               ]
+                               ].freeze
 
     belongs_to :content_view, :inverse_of => :content_view_repositories,
                               :class_name => "Katello::ContentView"

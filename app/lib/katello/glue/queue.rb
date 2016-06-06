@@ -12,7 +12,7 @@ module Katello
   module Glue
     class Queue
       attr_reader :items
-      STATUS = %w(pending running failed completed rollbacked)
+      STATUS = %w(pending running failed completed rollbacked).freeze
 
       # we can put more queues sequentially. E.g. on queue before saving a record,
       # another after saving. If something in later queue fails we roll-back also

@@ -1,15 +1,15 @@
 require 'active_support/core_ext/hash/indifferent_access'
 
 module RepoTestData
-  REPO_NAME = 'repo'
-  REPO_LABEL = 'repo_label'
+  REPO_NAME = 'repo'.freeze
+  REPO_LABEL = 'repo_label'.freeze
 
-  REPO_ID = 'repository_id'
-  CLONED_REPO_ID = 'cloned_repository_id'
-  CLONED_2_REPO_ID = 'cloned_2_repository_id'
+  REPO_ID = 'repository_id'.freeze
+  CLONED_REPO_ID = 'cloned_repository_id'.freeze
+  CLONED_2_REPO_ID = 'cloned_2_repository_id'.freeze
 
   REPO_PRODUCT_ID = 1_313_597_888_827
-  REPO_PRODUCT_CP_ID = "4312314881818"
+  REPO_PRODUCT_CP_ID = "4312314881818".freeze
   REPO_ENV_ID = 3
   REPO_ORG_ID = 2
   CLONED_REPO_ENV_ID = 4
@@ -44,9 +44,9 @@ module RepoTestData
   REPO_FILTER = {
     "name" => "filter_1",
     "pulp_id" => "filter_1"
-  }
+  }.freeze
 
-  REPO_PULP_FILTER_IDS = ["filter_1"]
+  REPO_PULP_FILTER_IDS = ["filter_1"].freeze
 
   REPO_PACKAGES = [
     {
@@ -105,7 +105,7 @@ module RepoTestData
       "id" => "7005d70b-e097-4285-a5c0-773b8b59ec9d",
       "description" => "A dummy package of cheetah"
     }.with_indifferent_access
-  ]
+  ].freeze
 
   REPO_ERRATA = [
     {
@@ -265,7 +265,7 @@ module RepoTestData
   REPO_DISTRIBUTIONS = [
     {
     }
-  ]
+  ].freeze
 
   SUCCESSFULL_SYNC_HISTORY = [
     {
@@ -312,10 +312,10 @@ module RepoTestData
       },
       "id" => "24ca1782-c8ef-11e0-b3bb-0024d78b4ebc"
     }.with_indifferent_access
-  ]
+  ].freeze
 
-  LAST_SUCC_SYNC_START = "2011-08-17 16:37:06"
-  LAST_SUCC_SYNC_FINISH = "2011-08-17 16:37:12"
+  LAST_SUCC_SYNC_START = "2011-08-17 16:37:06".freeze
+  LAST_SUCC_SYNC_FINISH = "2011-08-17 16:37:12".freeze
 
   UNSUCCESSFULL_SYNC_HISTORY = [
     {
@@ -362,5 +362,5 @@ module RepoTestData
       },
       "id" => "3b83eda3-c8f1-11e0-a41d-0024d78b4ebc"
     }.with_indifferent_access
-  ]
+  ].freeze
 end

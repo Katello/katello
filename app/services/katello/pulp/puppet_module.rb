@@ -3,7 +3,7 @@ module Katello
     class PuppetModule < PulpContentUnit
       include LazyAccessor
 
-      CONTENT_TYPE = "puppet_module"
+      CONTENT_TYPE = "puppet_module".freeze
 
       lazy_accessor :pulp_facts, :initializer => :backend_data
 

@@ -15,7 +15,7 @@ module Katello
       end
 
       class CdnResource
-        CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING"
+        CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING".freeze
 
         attr_reader :url, :product
         attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password

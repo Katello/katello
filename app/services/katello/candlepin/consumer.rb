@@ -3,14 +3,14 @@ module Katello
     class Consumer
       include LazyAccessor
 
-      ENTITLEMENTS_VALID = 'valid'
-      ENTITLEMENTS_PARTIAL = 'partial'
-      ENTITLEMENTS_INVALID = 'invalid'
+      ENTITLEMENTS_VALID = 'valid'.freeze
+      ENTITLEMENTS_PARTIAL = 'partial'.freeze
+      ENTITLEMENTS_INVALID = 'invalid'.freeze
 
-      SYSTEM = "system"
-      HYPERVISOR = "hypervisor"
-      CANDLEPIN = "candlepin"
-      CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN]
+      SYSTEM = "system".freeze
+      HYPERVISOR = "hypervisor".freeze
+      CANDLEPIN = "candlepin".freeze
+      CP_TYPES = [SYSTEM, HYPERVISOR, CANDLEPIN].freeze
 
       lazy_accessor :entitlements, :initializer => lambda { |_s| Resources::Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :events, :initializer => lambda { |_s| Resources::Candlepin::Consumer.events(uuid) }

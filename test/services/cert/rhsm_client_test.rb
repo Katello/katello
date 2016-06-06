@@ -30,7 +30,7 @@ module Katello
       /gkhjiyicxw+uxRHuNyMClM8Q5WVj4CpxrPHwZvN1OhM8D3VDnEaZj6J2k5g55Fl
       3qQXsk8lPEJ2I5D00Up2cpDBy+CXj5zm/shmqEJlGOxILjpCzNhqER/YdBlGPP9b
       okjCBjwYlp5cNyAJSQscLF7rj/iOJYhRdetWMZg=
-      -----END CERTIFICATE-----'
+      -----END CERTIFICATE-----'.freeze
 
     def test_uuid
       rhsm_cert = ::Cert::RhsmClient.new(CERT)

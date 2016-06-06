@@ -8,11 +8,11 @@ module Katello
     include Katello::Authorization::SyncPlan
     include ForemanTasks::Concerns::ActionSubject
 
-    HOURLY = 'hourly'
-    DAILY = 'daily'
-    WEEKLY = 'weekly'
-    TYPES = [HOURLY, DAILY, WEEKLY]
-    DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
+    HOURLY = 'hourly'.freeze
+    DAILY = 'daily'.freeze
+    WEEKLY = 'weekly'.freeze
+    TYPES = [HOURLY, DAILY, WEEKLY].freeze
+    DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }.freeze
     WEEK_DAYS = (%w(Sunday Monday Tuesday Wednesday Thursday Friday)).collect { |d| N_(d) }
 
     belongs_to :organization, :inverse_of => :sync_plans

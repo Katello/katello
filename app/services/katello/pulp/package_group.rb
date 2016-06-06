@@ -3,7 +3,7 @@ module Katello
     class PackageGroup < PulpContentUnit
       include LazyAccessor
 
-      CONTENT_TYPE = 'package_group'
+      CONTENT_TYPE = 'package_group'.freeze
 
       lazy_accessor :pulp_facts, :initializer => :backend_data
 
