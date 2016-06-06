@@ -31,7 +31,7 @@ module Actions
                         :repo_id => repository.pulp_id,
                         :type_id => repository.importers.first['importer_type_id'],
                         :config => importer_config,
-                        :capsule_id => input[:capsule_id],
+                        :capsule_id => capsule_id,
                         :hash => { :importer_id => importer.id }
                        )
           end
