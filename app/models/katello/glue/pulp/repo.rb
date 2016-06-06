@@ -161,7 +161,7 @@ module Katello
         if capsule
           self.full_path(nil, true)
         else
-          self.url
+          self.url if self.respond_to?(:url)
         end
       end
 
