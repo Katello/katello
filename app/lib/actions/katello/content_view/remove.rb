@@ -64,6 +64,11 @@ module Actions
                       environment_names: cv_envs.map { |cve| cve.environment.name },
                       version_ids: versions.map(&:id),
                       content_view_history_ids: cv_histories.map { |history| history.id })
+
+            if organization_destroy
+              content_view.hostgroups.clear
+              content_view.hosts.clear
+            end
           end
         end
 
