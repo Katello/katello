@@ -59,12 +59,13 @@ module Katello::Host
         assert_nil @host.content_facet.uuid
       end
 
-      it 'plans with skip_candlepin true' do
+      it 'plans with organization_destroy true' do
         uuid = @host.content_facet.uuid
+        @host.content_facet.expects(:destroy!)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        plan_action action, @host, :unregistering => true, :skip_candlepin => true
+        plan_action action, @host, :organization_destroy => true
 
         refute_action_planned action, candlepin_destroy_class
         assert_action_planed_with action, pulp_destroy_class, :uuid => uuid

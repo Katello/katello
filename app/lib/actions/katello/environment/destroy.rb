@@ -24,6 +24,11 @@ module Actions
               end
             end
 
+            if organization_destroy
+              env.hostgroups.clear
+              env.hosts.clear
+            end
+
             plan_self
           end
         end
