@@ -7,7 +7,6 @@ namespace :katello do
       fail _("Some backend services are not running: %s") % ping.inspect
     end
 
-    puts "This script makes no modifications and can be re-run multiple times for the most up to date results."
     puts "Calculating Host changes on upgrade.  This may take a few minutes."
 
     User.current = User.anonymous_api_admin
@@ -125,7 +124,5 @@ namespace :katello do
     else
       puts "Upgrading will not affect any of your Content Hosts."
     end
-
-    FileUtils.touch('/var/lib/foreman/3.0_upgrade_ready')
   end
 end
