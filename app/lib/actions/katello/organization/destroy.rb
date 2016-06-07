@@ -46,8 +46,8 @@ module Actions
 
         def remove_consumers(organization)
           concurrence do
-            organization.hosts.each do |host|
-              plan_action(Katello::Host::Destroy, host, skip_candlepin: true)
+            ::Host.unscoped.where(:organization => organization).each do |host|
+              plan_action(Katello::Host::Destroy, host, organization_destroy: true)
             end
 
             organization.activation_keys.each do |key|
