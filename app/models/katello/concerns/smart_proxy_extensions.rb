@@ -13,7 +13,6 @@ module Katello
         before_create :associate_organizations
         before_create :associate_default_location
         before_create :associate_lifecycle_environments
-        before_create :associate_content_host
         attr_accessible :lifecycle_environment_ids
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
@@ -39,11 +38,6 @@ module Katello
                               :inverse_of => :content_source
         has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_source_id,
                               :inverse_of => :content_source
-
-        belongs_to :content_host,
-                   :class_name => "Katello::System",
-                   :inverse_of => :capsule,
-                   :foreign_key => :content_host_id
 
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
 
@@ -80,11 +74,6 @@ module Katello
 
       def associate_lifecycle_environments
         self.lifecycle_environments = Katello::KTEnvironment.all if self.default_capsule?
-      end
-
-      def associate_content_host
-        content_host = Katello::System.where(:name => self.name).order("created_at DESC").first
-        self.content_host = content_host if content_host
       end
     end
   end
