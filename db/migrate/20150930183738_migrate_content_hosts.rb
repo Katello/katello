@@ -310,6 +310,8 @@ class MigrateContentHosts < ActiveRecord::Migration
       fail _("Some backend services are not running: %s") % ping.inspect
     end
 
+    ::Katello::System.where(:uuid => nil).destroy_all
+
     ensure_one_system_per_hostname(MigrateContentHosts::System.all)
 
     systems = get_systems_with_facts(MigrateContentHosts::System.all)
