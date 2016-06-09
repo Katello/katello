@@ -66,7 +66,11 @@ child :archived_repos => :repositories do
 end
 
 child :last_event => :last_event do
-  extends 'katello/api/v2/content_view_histories/show'
+  extends 'katello/api/v2/content_view_histories/base'
+  child :task => :task do
+    attributes :id, :label, :pending
+    attributes :username, :started_at, :ended_at, :state, :result
+  end
 end
 
 child :active_history => :active_history do
