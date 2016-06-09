@@ -154,7 +154,7 @@ module Katello
       end
 
       def katello_agent_installed?
-        return false if self.is_a? Hypervisor
+        return false if (self.is_a? Hypervisor) || @new_record_before_save
         simple_packages.any? { |package| package.name == "katello-agent" }
       end
 
@@ -163,7 +163,7 @@ module Katello
       def fetch_package_profile
         Katello.pulp_server.extensions.consumer.retrieve_profile(uuid, 'rpm')
       rescue RestClient::ResourceNotFound => e
-        Rails.logger.info "Failed to find profile for #{uuid}: #{e}}"
+        Rails.logger.error "Failed to find profile for #{uuid}: #{e}, #{e.backtrace.join("\n")}"
         {:profile => []}.with_indifferent_access
       end
     end
