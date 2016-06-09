@@ -16,17 +16,22 @@ module Katello
       attr_accessor :installed_products, :facts, :hypervisor_guest_uuids
 
       def update_from_consumer_attributes(consumer_params)
+        import_database_attributes(consumer_params)
+        self.installed_products = consumer_params['installedProducts'] unless consumer_params['installedProducts'].blank?
+        self.hypervisor_guest_uuids = consumer_params['guestIds'] unless consumer_params['hypervisor_guest_uuids'].blank?
+        self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
+      end
+
+      def import_database_attributes(consumer_params)
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].blank?
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
-        self.release_version = consumer_params['releaseVer'] unless consumer_params['releaseVer'].blank?
-        self.installed_products = consumer_params['installedProducts'] unless consumer_params['installedProducts'].blank?
-        self.hypervisor_guest_uuids = consumer_params['guestIds'] unless consumer_params['hypervisor_guest_uuids'].blank?
-        self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
 
-        if self.release_version.is_a?(Hash)
-          self.release_version = self.release_version['releaseVer']
+        unless consumer_params['releaseVer'].blank?
+          release = consumer_params['releaseVer']
+          release = release['releaseVer'] if release.is_a?(Hash)
+          self.release_version = release
         end
       end
 
