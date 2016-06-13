@@ -62,6 +62,13 @@ module Katello
       assert_equal subscription_facet.release_version, params[:releaseVer]
     end
 
+    def test_update_from_consumer_attributes_release_version
+      params = { :lastCheckin => DateTime.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => {'releaseVer' => "7Server" }}
+      subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
+
+      assert_equal '7Server', subscription_facet.release_version
+    end
+
     def test_candlepin_environment_id
       assert_equal subscription_facet.candlepin_environment_id, ContentViewEnvironment.where(:content_view_id => view, :environment_id => library).first.cp_id
     end
