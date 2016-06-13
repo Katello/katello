@@ -35,25 +35,6 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
             return rules.$save(params, success, failure);
         }
 
-        $scope.nutupane = nutupane = new Nutupane(Erratum, {
-                filterId: $scope.$stateParams.filterId,
-                'sort_order': 'DESC',
-                'sort_by': 'issued',
-                'available_for': 'content_view_filter'
-            },
-            'queryUnpaged'
-        );
-        nutupane.masterOnly = true;
-        nutupane.enableSelectAllResults();
-
-        filterByDate = function (date, type) {
-            date = date.toISOString().split('T')[0];
-            nutupane.addParam(type, date);
-            nutupane.refresh();
-        };
-
-        $scope.detailsTable = nutupane.table;
-
         $scope.addErrata = function (filter) {
             var errataIds,
                 rules,
@@ -100,6 +81,25 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
                 filterByDate(end, 'end_date');
             }
         });
+
+        $scope.nutupane = nutupane = new Nutupane(Erratum, {
+                filterId: $scope.$stateParams.filterId,
+                'sort_order': 'DESC',
+                'sort_by': 'issued',
+                'available_for': 'content_view_filter'
+            },
+            'queryUnpaged'
+        );
+        nutupane.masterOnly = true;
+
+        filterByDate = function (date, type) {
+            date = date.toISOString().split('T')[0];
+            nutupane.addParam(type, date);
+            nutupane.refresh();
+        };
+
+        $scope.updateTypes($scope.types);
+        $scope.detailsTable = nutupane.table;
 
     }]
 );
