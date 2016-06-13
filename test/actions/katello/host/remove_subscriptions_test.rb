@@ -18,14 +18,14 @@ module Katello::Host
         action = create_action action_class
         action.expects(:action_subject).with(@host)
 
-        entitlements = [{'id' => 3}, {'id' => 4}]
+        entitlements = [{'id' => 3, 'pool' => {'id' => 'foo'}}, {'id' => 4, 'pool' => {'id' => 'bar'}}]
 
         plan_action action, @host, entitlements
 
         assert_action_planed_with action, Actions::Candlepin::Consumer::RemoveSubscription, :uuid => @host.subscription_facet.uuid,
-                                  :entitlement_id => 3
+                                          :entitlement_id => 3, :pool_id => 'foo'
         assert_action_planed_with action, Actions::Candlepin::Consumer::RemoveSubscription, :uuid => @host.subscription_facet.uuid,
-                                          :entitlement_id => 4
+                                          :entitlement_id => 4, :pool_id => 'bar'
       end
     end
   end
