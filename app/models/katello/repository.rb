@@ -571,16 +571,6 @@ module Katello
       end
     end
 
-    def import_host_applicability
-      self.hosts_with_applicability.find_each do |host|
-        begin
-          host.content_facet.import_applicability if host.content_facet.try(:uuid)
-        rescue => e
-          Rails.logger.error("Could not import applicability for #{host.name}: #{e}")
-        end
-      end
-    end
-
     def hosts_with_applicability
       ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
     end
