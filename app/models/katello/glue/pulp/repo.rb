@@ -827,13 +827,13 @@ module Katello
       if docker?
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
       elsif file?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}/"
       elsif puppet?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}/"
       elsif ostree?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{pulp_id}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{pulp_id}/"
       else
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
     end
 
