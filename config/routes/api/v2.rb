@@ -37,7 +37,6 @@ Katello::Engine.routes.draw do
             post :copy
             put :add_subscriptions
             put :remove_subscriptions
-            get :subscriptions
           end
           match '/releases' => 'activation_keys#available_releases', :via => :get, :on => :member
           api_resources :host_collections, :only => [:index]
@@ -47,7 +46,7 @@ Katello::Engine.routes.draw do
             match '/host_collections/available' => 'activation_keys#available_host_collections', :via => :get
           end
           api_resources :products, :only => [:index]
-          api_resources :subscriptions, :only => [] do
+          api_resources :subscriptions, :only => [:index] do
             collection do
               match '/available' => 'subscriptions#available', :via => :get
             end

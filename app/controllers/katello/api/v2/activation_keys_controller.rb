@@ -216,18 +216,6 @@ module Katello
       activation_keys
     end
 
-    api :GET, "/activation_keys/:id/subscriptions", N_("List an activation key's subscriptions")
-    param :activation_key_id, String, :desc => N_("Activation key ID"), :required => true
-    def subscriptions
-      subscriptions = @activation_key.get_key_pools.map { |sub| ActivationKeySubscriptionPresenter.new(sub) }
-      collection = subscriptions.map(&:subscription)
-      @collection = { :results => collection,
-                      :total => collection.count,
-                      :page => 1,
-                      :per_page => collection.count,
-                      :subtotal => collection.count }
-    end
-
     def find_activation_key
       @activation_key = ActivationKey.find(params[:id])
       fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?

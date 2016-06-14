@@ -34,6 +34,7 @@ module Katello
       Pool.any_instance.stubs(:import_data).returns(true)
       Pool.any_instance.stubs(:backend_data).returns({})
       Pool.any_instance.stubs(:import_lazy_attributes).returns({})
+      ActivationKey.any_instance.stubs(:get_key_pools).returns([{'id' => 'abc123', amount: 4}])
 
       models
       permissions
@@ -61,6 +62,15 @@ module Katello
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :organization_id => @organization.id
       end
+    end
+
+    def test_index_with_activation_key_id
+      activation_key = katello_activation_keys(:dev_key)
+      get :index, activation_key_id: activation_key.id
+      pool = JSON.parse(@response.body)['results'].find { |p| p['cp_id'] == 'abc123' }
+      assert_equal(4, pool['quantity_attached'])
+      assert_response :success
+      assert_template 'api/v2/subscriptions/index'
     end
 
     def test_blank_upload
