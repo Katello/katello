@@ -54,7 +54,7 @@ module Katello
       end
     end
 
-    def relevant?
+    def relevant?(_options = {})
       host.content_facet
     end
   end

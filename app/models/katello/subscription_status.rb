@@ -49,7 +49,7 @@ module Katello
       end
     end
 
-    def relevant?
+    def relevant?(_options = {})
       host.subscription_facet.try(:uuid)
     end
   end
