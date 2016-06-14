@@ -61,10 +61,10 @@ module Katello
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
 
       assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'
-      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow"
+      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
 
       repo.unprotected = true
-      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow"
+      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
     end
 
     def test_relative_path
