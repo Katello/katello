@@ -41,11 +41,11 @@
            bst-feature-flag="remote_actions">
         <span class="info-label" translate>Katello Agent</span>
         <span class="info-value" ng-show="host.content_facet_attributes.katello_agent_installed">
-          <span class="fa fa-circle green"></span>
+          <span class="{{ contentHostTable.getHostStatusIcon(0) }}"></span>
           <span translate>Installed</span>
         </span>
         <span class="info-value" ng-hide="host.content_facet_attributes.katello_agent_installed">
-          <span class="fa fa-circle yellow"></span>
+          <span class="{{ contentHostTable.getHostStatusIcon(1) }}"></span>
           <span translate>Not installed</span>
         </span>
       </div>
@@ -77,7 +77,7 @@
       <div class="detail">
         <span class="info-label" translate>Subscription Status</span>
         <span class="info-value">
-          <i class="fa fa-circle" ng-class="contentHostTable.getSubscriptionStatusColor(host.subscription_status)"></i>
+          <i ng-class="contentHostTable.getHostStatusIcon(host.subscription_global_status)"></i>
           {{ host.subscription_status_label }}
         </span>
       </div>

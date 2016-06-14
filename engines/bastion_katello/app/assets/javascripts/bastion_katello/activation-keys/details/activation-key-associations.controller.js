@@ -41,7 +41,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
             contentHostsNutupane.load();
         });
 
-        $scope.getSubscriptionStatusColor = ContentHostsHelper.getSubscriptionStatusColor;
+        $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
 
         $scope.memory = ContentHostsHelper.memory;
     }]
