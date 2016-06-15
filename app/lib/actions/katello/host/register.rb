@@ -57,6 +57,7 @@ module Actions
           host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
               consumer_attributes.except(:installedProducts, :guestIds, :facts))
           host.subscription_facet.save!
+          host.subscription_facet.update_subscription_status
           host.refresh_global_status!
 
           system = ::Katello::System.find(input[:system_id])
