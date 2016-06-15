@@ -9,7 +9,7 @@ module Actions
 
           entitlements.each do |entitlement|
             plan_action(::Actions::Candlepin::Consumer::RemoveSubscription, :uuid => host.subscription_facet.uuid,
-                        :entitlement_id => entitlement['id'])
+                        :entitlement_id => entitlement['id'], :pool_id => entitlement['pool']['id'])
             plan_self(:host_name => host.name)
           end
         end
