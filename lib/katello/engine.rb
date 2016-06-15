@@ -38,7 +38,7 @@ module Katello
 
       SETTINGS[:katello] = default_settings.deep_merge(SETTINGS[:katello] || {})
 
-      require_dependency File.expand_path('../../../app/models/setting/katello.rb', __FILE__) if (Setting.table_exists? rescue(false))
+      require_dependency File.expand_path('../../../app/models/setting/content.rb', __FILE__) if (Setting.table_exists? rescue(false))
     end
 
     initializer 'katello.configure_assets', :group => :all do

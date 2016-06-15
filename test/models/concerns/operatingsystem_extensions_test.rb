@@ -14,11 +14,11 @@ module Katello
       ptable = FactoryGirl.create(:ptable)
 
       Setting.create(:name => 'katello_default_provision', :description => 'default template',
-                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :category => 'Setting::Content', :settings_type => 'string',
                      :default => template.name)
 
       Setting.create(:name => 'katello_default_ptable', :description => 'default template',
-                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :category => 'Setting::Content', :settings_type => 'string',
                      :default => ptable.name)
 
       os = ::Redhat.create_operating_system(@my_distro.name, '9', '0')
@@ -33,11 +33,11 @@ module Katello
       template = templates(:mystring2)
       ptable = FactoryGirl.create(:ptable)
       Setting.create(:name => 'katello_default_atomic_provision', :description => 'atomic default template',
-                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :category => 'Setting::Content', :settings_type => 'string',
                      :default => template.name)
 
       Setting.create(:name => 'katello_default_ptable', :description => 'default template',
-                     :category => 'Setting::Katello', :settings_type => 'string',
+                     :category => 'Setting::Content', :settings_type => 'string',
                      :default => ptable.name)
 
       os_attributes = {:major => "7", :minor => "3", :name => ::Operatingsystem::REDHAT_ATOMIC_HOST_OS}
