@@ -10,12 +10,12 @@ Deface::Override.new(:virtual_path => "hostgroups/_form",
 
 Deface::Override.new(:virtual_path => "hostgroups/_form",
                      :name => "hostgroups_update_environments_select",
-                     :replace => 'erb[loud]:contains("select_f"):contains(":environment_id")',
+                     :insert_before => 'erb[loud]:contains("hostgroup_puppet_environment_field")',
                      :partial => 'overrides/activation_keys/host_environment_select')
 
 Deface::Override.new(:virtual_path => "hosts/_form",
                      :name => "hosts_update_environments_select",
-                     :replace => 'erb[loud]:contains("select_f"):contains(":environment_id")',
+                     :insert_before => 'erb[loud]:contains("host_puppet_environment_field")',
                      :partial => 'overrides/activation_keys/host_environment_select')
 
 Deface::Override.new(:virtual_path => "common/os_selection/_operatingsystem",

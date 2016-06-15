@@ -245,6 +245,14 @@ module Katello
 
       Katello::EventQueue.register_event(Katello::Events::ImportHostErrata::EVENT_TYPE, Katello::Events::ImportHostErrata)
 
+      ::HostsController.class_eval do
+        helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
+      end
+
+      ::HostgroupsController.class_eval do
+        helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
+      end
+
       load 'katello/repository_types.rb'
     end
 
