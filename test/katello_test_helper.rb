@@ -70,7 +70,7 @@ module FixtureTestCase
     load_repository_types
     configure_vcr
 
-    Setting::Katello.load_defaults
+    Setting::Content.load_defaults
 
     @@admin = ::User.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
@@ -128,7 +128,7 @@ class ActiveSupport::TestCase
   before do
     stub_ping
     stub_certs
-    Setting::Katello.load_defaults
+    Setting::Content.load_defaults
   end
 
   def self.stubbed_ping_response
