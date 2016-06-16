@@ -66,7 +66,7 @@ module Katello
       query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
       query = query.includes(includes) if includes.length > 0
 
-      if Foreman::Cast.to_bool(params[:full_result])
+      if ::Foreman::Cast.to_bool(params[:full_result])
         params[:per_page] = total
       else
         query = query.paginate(paginate_options)
