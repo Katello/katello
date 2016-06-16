@@ -1,8 +1,8 @@
-DESIRED_VERSION = "2.4.2"
+DESIRED_VERSION = Gem::Version.new("2.4.3")
 CP_LISTEN_ACTION = "Actions::Candlepin::ListenOnCandlepinEvents"
 
 def current_version
-  Katello::VERSION
+  Gem::Version.new(Katello::VERSION)
 end
 
 namespace :katello do
@@ -21,10 +21,10 @@ namespace :katello do
     puts "[#{task_status}] - There are #{task_count} active tasks.\n\n"
 
     # check the current version
-    version_status = current_version == DESIRED_VERSION ? success : fail
+    version_status = current_version >= DESIRED_VERSION ? success : fail
     puts "Checking the current version..."
     puts "[#{version_status}] - Current version of Katello is #{current_version} " \
-      "and needs to be #{DESIRED_VERSION}\n\n"
+      "and needs to greater than or equal to #{DESIRED_VERSION}\n\n"
 
     # run the content host check
     puts "Checking content hosts..."
