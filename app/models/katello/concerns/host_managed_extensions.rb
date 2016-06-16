@@ -81,7 +81,7 @@ module Katello
       def set_hostgroup_defaults_with_katello_attributes
         if hostgroup.present?
           if content_facet.present?
-            self.content_facet.kickstart_repository_id = hostgroup.inherited_kickstart_repository_id
+            self.content_facet.kickstart_repository_id ||= hostgroup.inherited_kickstart_repository_id
           end
           assign_hostgroup_attributes(%w(content_source_id content_view_id lifecycle_environment_id environment_id))
         end
