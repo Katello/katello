@@ -70,13 +70,6 @@ module Katello
     end
   end
 
-  class PermissionsTest < SeedsTest
-    test "Make sure katello permissions got created exist" do
-      seed
-      assert Permission.pluck(:resource_type).grep(/Katello/).present?
-    end
-  end
-
   class MailNotificationsTest < SeedsTest
     test "Make sure mail notification got setup" do
       seed
