@@ -14,8 +14,8 @@
  *   Provides the functionality for activation key associations.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'ContentHostsHelper', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, ActivationKey, ContentHostsHelper, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'ContentHostsHelper', 'CurrentOrganization', 'Host',
+    function ($scope, $location, translate, Nutupane, ActivationKey, ContentHostsHelper, CurrentOrganization, Host) {
         var contentHostsNutupane, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -31,12 +31,21 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
             $scope.table.working = false;
         }
 
-        contentHostsNutupane = new Nutupane(ActivationKey, params, 'contentHosts');
+        contentHostsNutupane = new Nutupane(Host, params);
+        contentHostsNutupane.searchTransform = function (term) {
+            var searchQuery, addition = "activation_key_id=" + $scope.$stateParams.activationKeyId;
+            if (term === "" || angular.isUndefined(term)) {
+                searchQuery = addition;
+            } else {
+                searchQuery = term + " and " + addition;
+            }
+            return searchQuery;
+        };
+
         contentHostsNutupane.masterOnly = true;
         $scope.detailsTable = contentHostsNutupane.table;
 
         $scope.activationKey.$promise.then(function () {
-            params.id = $scope.activationKey.id;
             contentHostsNutupane.setParams(params);
             contentHostsNutupane.load();
         });
