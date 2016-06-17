@@ -15,22 +15,21 @@ module Actions
 
         def update_or_associate_importer(capsule_id, repository, repository_details)
           existing_importers = repository_details["importers"]
-          importer = capsule_id ? repository.generate_importer(true) : repository.generate_importer
-          importer_config = capsule_id ? importer.config.merge!(importer_certs(repository)) : importer.config
+          importer = repository.generate_importer(!capsule_id.nil?)
           found = existing_importers.find { |i| i['importer_type_id'] == importer.id }
 
           if found
             plan_action(::Actions::Pulp::Repository::UpdateImporter,
                         :repo_id => repository.pulp_id,
                         :id => found['id'],
-                        :config => importer_config,
+                        :config => importer.config,
                         :capsule_id => capsule_id
                        )
           else
             plan_action(::Actions::Pulp::Repository::AssociateImporter,
                         :repo_id => repository.pulp_id,
                         :type_id => repository.importers.first['importer_type_id'],
-                        :config => importer_config,
+                        :config => importer.config,
                         :capsule_id => capsule_id,
                         :hash => { :importer_id => importer.id }
                        )
@@ -76,16 +75,6 @@ module Actions
               end
             end
           end
-        end
-
-        def importer_certs(repository)
-          ueber_cert = ::Cert::Certs.ueber_cert(repository.organization)
-
-          {
-            :ssl_ca_cert => ::Cert::Certs.ca_cert,
-            :ssl_client_cert => ueber_cert[:cert],
-            :ssl_client_key => ueber_cert[:key]
-          }
         end
       end
     end
