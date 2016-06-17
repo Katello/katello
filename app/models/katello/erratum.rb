@@ -46,10 +46,8 @@ module Katello
     end
 
     def self.applicable_to_hosts(hosts)
-      self.joins(:content_facet_errata).joins(:content_facets).
-         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).
-         select("DISTINCT ON (#{self.table_name}.updated, #{self.table_name}.id) #{self.table_name}.*").
-         order("#{self.table_name}.updated desc, #{self.table_name}.id")
+      self.joins(:content_facets).
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
     end
 
     def <=>(other)
