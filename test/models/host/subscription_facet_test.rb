@@ -6,6 +6,7 @@ module Katello
     let(:library) { katello_environments(:library) }
     let(:dev) { katello_environments(:dev) }
     let(:view)  { katello_content_views(:library_dev_view) }
+    let(:activation_key) { katello_activation_keys(:simple_key) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
       FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
@@ -139,6 +140,16 @@ module Katello
 
       subscription_facet.host.content_facet.lifecycle_environment_id = dev.id
       assert subscription_facet.backend_update_needed?
+    end
+
+    def test_search_by_activation_key_id
+      host.subscription_facet.activation_keys << activation_key
+      assert_includes ::Host.search_for("activation_key_id = #{activation_key.id}"), host
+    end
+
+    def test_search_by_activation_key
+      host.subscription_facet.activation_keys << activation_key
+      assert_includes ::Host.search_for("activation_key = \"#{activation_key.name}\""), host
     end
   end
 end
