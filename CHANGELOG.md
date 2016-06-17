@@ -1,3 +1,63 @@
+# 3.0.1 Saison (2016-06-17)
+
+## Bug Fixes 
+
+### Web UI
+ * Browsing Repositories provides incorrect URL for ([#15414](http://projects.theforeman.org/issues/15414), [09e099e1](http://github.com/katello/katello/commit/09e099e1073e2f78ec28e4e09746b8fc11d97045))
+ * content host packages and errata tabs request katello-agent even though it's installed ([#15316](http://projects.theforeman.org/issues/15316), [44b8d308](http://github.com/katello/katello/commit/44b8d3081d997093c4d9ec78e481ee51f750b366))
+ * Routing errors due to missing .css files on navigating sync status page ([#14163](http://projects.theforeman.org/issues/14163), [e9b932c6](http://github.com/katello/katello/commit/e9b932c6e3ebe158301827f0e6e45f23303a24a9))
+ * Dashboard gives undefined method `name' for nil:NilClass ([#14205](http://projects.theforeman.org/issues/14205), [231e359e](http://github.com/katello/katello/commit/231e359ecafe8977978a3b0845b6ce56f0dc62c1))
+ * Partial ../overrides/foreman/activation_keys/_host_tab accessed outside of view paths ([#13592](http://projects.theforeman.org/issues/13592), [49354884](http://github.com/katello/katello/commit/493548846babded2976bb2e0e7fae737b8a1294f))
+
+### Documentation
+ * Confusing formatting issue on katello.org's debug certificates page ([#15412](http://projects.theforeman.org/issues/15412), [c2df6d41](http://github.com/katello/katello.org/commit/c2df6d411fe7830d1825674d3133cbbe7f6d1ae3))
+
+### Upgrades
+ * [upgrade] Host creation failed with error:  Medium can't be blank even when media was correctly associated ([#15383](http://projects.theforeman.org/issues/15383), [c6a4963e](http://github.com/katello/katello/commit/c6a4963e7ea2d448510e05c8be6c18c50de026d2))
+
+### Capsule
+ * capsule-remove --help' does not provide help, but starts remove process ([#15381](http://projects.theforeman.org/issues/15381), [74e7da0a](http://github.com/katello/katello-installer/commit/74e7da0adb9050e89458afce48e6b319e02c824c), [5b5f17ca](http://github.com/katello/katello-installer/commit/5b5f17ca4ec689ad0a88ae07e75bfca697be42cb))
+ * capsule : pulp storage info is not available on rhel6 ([#14894](http://projects.theforeman.org/issues/14894))
+ * [Katello 2.4] Capsule content sync hangs at 75% (100% of the time) ([#13532](http://projects.theforeman.org/issues/13532))
+
+### Content Views
+ * Errata filter does not seem to be applying correctly under 'Add' ([#15378](http://projects.theforeman.org/issues/15378), [ca17f208](http://github.com/katello/katello/commit/ca17f2089393ab7b222456f3773102b364b4b7f2))
+ * Actions::Candlepin::Environment::SetContent called multiple times when publishing CV after repo remove ([#15183](http://projects.theforeman.org/issues/15183), [36b229b1](http://github.com/katello/katello/commit/36b229b1f2d524ca974fd61dc2689594f5f75274))
+
+### API
+ * Error when regenerating identity cert ([#15367](http://projects.theforeman.org/issues/15367), [3c650814](http://github.com/katello/katello/commit/3c650814a36d3614e2846c36623b2f4a83eb05d0))
+ * PUT /hosts subscription_facet_attributes missing "installed_products" ([#13854](http://projects.theforeman.org/issues/13854), [15c595d2](http://github.com/katello/katello/commit/15c595d275994aafd8c51599369e91066aa2d701))
+ * incremental update with puppet fails with error 'undefined method `id_search'  ([#13253](http://projects.theforeman.org/issues/13253), [4192beda](http://github.com/katello/katello/commit/4192beda1ccadd4ba52cbc524732ba68c9be7299))
+ * System product content does not show redhat content ([#13010](http://projects.theforeman.org/issues/13010), [2d7c3558](http://github.com/katello/katello/commit/2d7c35580d5fcfad5e0b95114ab62f34494d7dca))
+
+### Installer
+ * Cannot update custom certs with capsule-certs-generate --certs-update-server ([#15158](http://projects.theforeman.org/issues/15158), [83f11669](http://github.com/katello/katello-installer/commit/83f11669c8d9f9dac2fe7434831f94f2851e8146))
+ * `foreman-installer --reset` does not finish successfully ([#15014](http://projects.theforeman.org/issues/15014))
+
+### CLI
+ * Several host-collection commands are missing the organization options ([#14853](http://projects.theforeman.org/issues/14853))
+
+### Subscriptions
+ * system subscriptions ui - table disapears after trying to sort by column ([#14523](http://projects.theforeman.org/issues/14523), [3184e2b2](http://github.com/katello/katello/commit/3184e2b2ee678f051ae13e48f5f1dfe3a1b10659))
+
+### Dashboard
+ * Dashboard gives undefined method `label' for nil:NilClass ([#13823](http://projects.theforeman.org/issues/13823), [dc50145a](http://github.com/katello/katello/commit/dc50145ae2d74847fc6a0563963a50ee7cde2e4d))
+
+### Pulp
+ * Task pending on waiting for Pulp to start the task ([#13799](http://projects.theforeman.org/issues/13799))
+ * Unable to apply updates/erratas ([#12427](http://projects.theforeman.org/issues/12427))
+
+### Activation Key
+ * Can't delete activation key ([#12984](http://projects.theforeman.org/issues/12984), [de57a7b7](http://github.com/katello/katello/commit/de57a7b79357cc5974f13d0f922e103805940661))
+
+### Orchestration
+ * Failed pulp tasks are not resumable.  ([#14209](http://projects.theforeman.org/issues/14209), [86de6397](http://github.com/katello/katello/commit/86de63973edd329123f864b8f9feee6d6ee08af9))
+
+### Other
+ * [ALL LANG] All contents are unlocalized in Hosts -> Host Collections. ([#15397](http://projects.theforeman.org/issues/15397), [0be8e201](http://github.com/katello/katello/commit/0be8e201841bdc6c42af116c9ab2953bcabe422d))
+ * remove_gutterball fails if all expected packages are not present ([#15277](http://projects.theforeman.org/issues/15277), [dd69db6d](http://github.com/katello/katello-installer/commit/dd69db6dac109fb9ce5b2c003edc38296a8dd1a4))
+ * After upgrade to foreman 1.10 my smart proxy is no anymore sync and is only sending resetting dropped connection ([#13286](http://projects.theforeman.org/issues/13286))
+
 # 3.0 Saison (2016-06-16)
 
 ## Features 
