@@ -205,7 +205,11 @@ module Katello
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_destroy
       User.as_anonymous_admin do
-        sync_task(::Actions::Katello::Host::Unregister, @host)
+        if Setting['unregister_delete_host']
+          sync_task(::Actions::Katello::Host::Destroy, @host)
+        else
+          sync_task(::Actions::Katello::Host::Unregister, @host)
+        end
       end
       render :text => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
