@@ -13,6 +13,10 @@ module Actions
         def invoke_external_task
           pulp_resources.repository.associate_importer(*input.values_at(:repo_id, :type_id, :config))
         end
+
+        def run_progress_weight
+          0.01
+        end
       end
     end
   end
