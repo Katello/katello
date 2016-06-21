@@ -239,6 +239,31 @@ module Katello
       end
     end
 
+    describe "consumer destroy" do
+      before do
+        uuid = @host.subscription_facet.uuid
+        User.stubs(:consumer?).returns(true)
+        stub_cp_consumer_with_uuid(uuid)
+      end
+      it "should unregister" do
+        Setting[:unregister_delete_host] = false
+
+        assert_sync_task(::Actions::Katello::Host::Unregister, @host)
+        delete :consumer_destroy, :id => @host.subscription_facet.uuid
+
+        assert_response 204
+      end
+
+      it "should destroy the host if setting is set" do
+        Setting[:unregister_delete_host] = true
+
+        assert_sync_task(::Actions::Katello::Host::Destroy, @host)
+        delete :consumer_destroy, :id => @host.subscription_facet.uuid
+
+        assert_response 204
+      end
+    end
+
     describe "consumer show" do
       before do
         Resources::Candlepin::Consumer.stubs(:get).returns(Resources::Candlepin::Consumer.new(:id => 1, :uuid => 2))
