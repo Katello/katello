@@ -65,7 +65,7 @@ module Actions
 
         def pulp_task_id
           pulp_action = planned_actions(Pulp::Repository::Sync).first
-          if pulp_task = Array(pulp_action.external_task).first
+          if (pulp_task = Array(pulp_action.external_task).first)
             pulp_task.fetch(:task_id)
           end
         end

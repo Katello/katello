@@ -117,7 +117,7 @@ module Actions
           task["task_id"].nil? || (task["tags"] && (task["tags"] & ignored_tags).present?)
         end
         output[:pulp_tasks].each do |pulp_task|
-          if pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task)
+          if (pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task))
             fail pulp_exception
           end
         end

@@ -15,7 +15,7 @@ module Katello
 
           medium_path = ::Medium.installation_media_path(repo.uri)
 
-          if distribution = repo.distribution_bootable?
+          if (distribution = repo.distribution_bootable?)
             return if ::Medium.find_by(:path => medium_path)
 
             os = ::Redhat.find_or_create_operating_system(repo)
@@ -30,7 +30,7 @@ module Katello
             os.save!
 
           else
-            if medium = ::Medium.find_by(:path => medium_path)
+            if (medium = ::Medium.find_by(:path => medium_path))
               medium.destroy
             end
           end

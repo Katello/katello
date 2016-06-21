@@ -7,7 +7,7 @@ child :subscription_facet => :subscription_facet_attributes do |facet|
   end
 
   node :virtual_host do |_subscription_facet|
-    if host = consumer.virtual_host
+    if (host = consumer.virtual_host)
       {:name => host.name, :id => host.id}
     end
   end

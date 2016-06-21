@@ -86,7 +86,7 @@ module Actions
 
         def content
           return @content if defined? @content
-          if product_content = product.product_content_by_id(input[:content_id])
+          if (product_content = product.product_content_by_id(input[:content_id]))
             @content = product_content.content
           else
             fail "Couldn't find content '%s'" % input[:content_id]

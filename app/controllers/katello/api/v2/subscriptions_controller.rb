@@ -96,7 +96,7 @@ module Katello
       end
 
       # repository url
-      if repo_url = params[:repository_url]
+      if (repo_url = params[:repository_url])
         @provider.repository_url = repo_url
         @provider.save!
       end

@@ -116,7 +116,7 @@ module Katello
                                                              :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
                                                              :ssl_client_key => OpenSSL::PKey::RSA.new(product.key)).substitutor
             product.productContent.each do |pc|
-              if url_to_releases = pc.content.contentUrl[/^.*\$releasever/]
+              if (url_to_releases = pc.content.contentUrl[/^.*\$releasever/])
                 begin
                   cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, _path)|
                     releases << Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]

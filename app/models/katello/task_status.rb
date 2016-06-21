@@ -220,13 +220,13 @@ module Katello
 
     def humanize_parameters
       humanized_parameters = []
-      if packages = self.parameters[:packages]
+      if (packages = self.parameters[:packages])
         humanized_parameters.concat(packages)
       end
-      if groups = self.parameters[:groups]
+      if (groups = self.parameters[:groups])
         humanized_parameters.concat(groups.map { |g| g =~ /^@/ ? g : "@#{g}" })
       end
-      if errata = self.parameters[:errata_ids]
+      if (errata = self.parameters[:errata_ids])
         humanized_parameters.concat(errata)
       end
       humanized_parameters.join(", ")

@@ -411,7 +411,7 @@ module Katello
       if @environment && !@environment.library?
         @paths.each do |path|
           path.each do |env|
-            if @path = path
+            if (@path = path)
               return if env.id == @environment.id
             end
           end
@@ -419,7 +419,7 @@ module Katello
       elsif next_env
         @paths.each do |path|
           path.each do |env|
-            if @path = path
+            if (@path = path)
               return if env.id == next_env.id
             end
           end

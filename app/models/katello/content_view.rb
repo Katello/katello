@@ -288,7 +288,7 @@ module Katello
       end
       version = ContentViewVersion.find(version.id)
 
-      if foreman_env = Environment.find_by_katello_id(self.organization, from_env, self)
+      if (foreman_env = Environment.find_by_katello_id(self.organization, from_env, self))
         foreman_env.destroy
       end
 
