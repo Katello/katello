@@ -84,5 +84,20 @@ module Katello
       results = @controller.scoped_search(query, "errata_id", "asc", options)[:results]
       assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHSA-1999-1231"], results.map(&:errata_id)
     end
+
+    def test_scoped_search_group
+      types = Katello::Erratum.pluck(:errata_type).uniq
+      4.times do
+        Katello::Erratum.create!(:errata_id => "RHRA-#{rand(9999)}", :errata_type => 'security', :uuid => rand(9999).to_s)
+      end
+      @controller.stubs(:params).returns({})
+
+      @options[:group] = 'errata_type'
+      results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
+
+      assert_equal types.count, results[:subtotal]
+      assert_equal types.count, results[:total]
+      assert_equal types.sort, results[:results].map { |i| i['errata_type'] }.sort
+    end
   end
 end

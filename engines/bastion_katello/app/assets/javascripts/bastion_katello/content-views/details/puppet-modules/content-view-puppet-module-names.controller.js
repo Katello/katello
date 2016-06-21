@@ -10,15 +10,26 @@
  *   Provides functionality to the puppet modules name list.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModuleNamesController',
-    ['$scope', 'Nutupane', 'ContentView', function ($scope, Nutupane, ContentView) {
+    ['$scope', 'Nutupane', 'ContentView', 'CurrentOrganization', 'PuppetModule',
+    function ($scope, Nutupane, ContentView, CurrentOrganization, PuppetModule) {
 
         var nutupane = new Nutupane(
             ContentView,
             {id: $scope.$stateParams.contentViewId},
             'availablePuppetModuleNames'
         );
-
+        nutupane.masterOnly = true;
         $scope.detailsTable = nutupane.table;
+
+        $scope.detailsTable.fetchAutocomplete = function (term) {
+            var promise;
+
+            promise = PuppetModule.autocomplete({'organization_id': CurrentOrganization, search: term}).$promise;
+
+            return promise.then(function (data) {
+                return data;
+            });
+        };
 
         $scope.selectVersion = function (moduleName) {
             $scope.transitionTo('content-views.details.puppet-modules.versions',
