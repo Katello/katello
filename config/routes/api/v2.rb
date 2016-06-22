@@ -171,6 +171,7 @@ Katello::Engine.routes.draw do
             get :redhat_provider
           end
           api_resources :products, :only => [:index]
+          api_resources :repositories, :only => [:index]
           api_resources :subscriptions, :only => [:index] do
             collection do
               match '/available' => 'subscriptions#available', :via => :get
