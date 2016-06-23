@@ -138,6 +138,15 @@ module Katello
       assert_includes @composite_version.components_needing_errata([errata]), component
     end
 
+    def test_with_puppet_module
+      puppet_module = katello_puppet_modules(:abrt)
+      katello_content_view_puppet_environments(:library_dev_staging_view_library_puppet_env).puppet_modules << puppet_module
+      puppet_cv_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
+      puppet_cv_env.puppet_modules << puppet_module
+
+      assert_include ContentViewVersion.with_puppet_module(puppet_module), puppet_cv_env.content_view_version
+    end
+
     def test_validate_destroyable!
       @cvv.composite_content_views = [@composite_version.content_view]
       @cvv.save!
