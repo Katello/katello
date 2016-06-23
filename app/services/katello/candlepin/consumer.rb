@@ -96,7 +96,7 @@ module Katello
       end
 
       def virtual_host
-        if virtual_host_info = Resources::Candlepin::Consumer.virtual_host(self.uuid)
+        if (virtual_host_info = Resources::Candlepin::Consumer.virtual_host(self.uuid))
           ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => virtual_host_info[:uuid]).first
         end
       end

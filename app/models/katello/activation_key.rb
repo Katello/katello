@@ -153,7 +153,7 @@ module Katello
           Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}" }.join(", ")}"
           consumption.each do |pool, amount|
             Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, consuming pool #{pool.cp_id} of amount: #{amount}"
-            if entitlements_array = system.subscribe(pool.cp_id, amount)
+            if (entitlements_array = system.subscribe(pool.cp_id, amount))
               # store for possible rollback
               entitlements_array.each do |ent|
                 already_subscribed << ent['id']

@@ -77,7 +77,7 @@ module Katello
       end
 
       def save(*)
-        if status = super
+        if (status = super)
           changed_remote_attributes.clear
         end
         status

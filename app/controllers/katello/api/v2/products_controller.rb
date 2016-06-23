@@ -54,7 +54,7 @@ module Katello
       end
 
       # filter by sync plan
-      if sync_plan_id = params[:sync_plan_id]
+      if (sync_plan_id = params[:sync_plan_id])
         query = if params[:available_for] == "sync_plan"
                   query.enabled.where("sync_plan_id != ? OR sync_plan_id IS NULL", sync_plan_id)
                 else

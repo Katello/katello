@@ -53,7 +53,7 @@ module Katello
     end
 
     def find_content
-      if product_content = @product.product_content_by_id(params[:content_id])
+      if (product_content = @product.product_content_by_id(params[:content_id]))
         @content = product_content.content
       else
         fail HttpErrors::NotFound, _("Couldn't find content '%s'") % params[:content_id]

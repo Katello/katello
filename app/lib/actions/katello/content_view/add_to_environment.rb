@@ -4,7 +4,7 @@ module Actions
       class AddToEnvironment < Actions::Base
         def plan(content_view_version, environment)
           content_view = content_view_version.content_view
-          if cve = content_view.content_view_environment(environment)
+          if (cve = content_view.content_view_environment(environment))
             content_view_version.content_view_environments << cve
           else
             cve = content_view.add_environment(environment, content_view_version)

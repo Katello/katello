@@ -7,10 +7,11 @@ module Actions
         end
 
         def plan(product, content, options)
-          if repository = repository_mapper(product,
-                                            content,
-                                            options,
-                                            options[:registry_name]).find_repository
+          repository = repository_mapper(product,
+                                         content,
+                                         options,
+                                         options[:registry_name]).find_repository
+          if repository
             action_subject(repository)
             plan_action(Repository::Destroy, repository)
           else

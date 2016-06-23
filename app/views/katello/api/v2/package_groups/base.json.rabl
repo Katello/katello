@@ -6,7 +6,7 @@ attributes :uuid
 attributes :description
 
 node :repository do |package_group|
-  if repo = package_group.repository
+  if (repo = package_group.repository)
     {
       :id => repo.id,
       :name => repo.name,

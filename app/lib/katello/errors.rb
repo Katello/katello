@@ -92,7 +92,7 @@ module Katello
       # as the message set it
       def self.from_exception(exception)
         error_data = MultiJson.load(exception.response)
-        if display_message = error_data["displayMessage"]
+        if (display_message = error_data["displayMessage"])
           self.new(display_message).tap { |e| exception.set_backtrace(e.backtrace) }
         end
       rescue StandardError

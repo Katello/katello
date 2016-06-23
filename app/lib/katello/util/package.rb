@@ -14,7 +14,7 @@ module Katello
         name, arch = extract_arch(name)
         return unless arch
 
-        if nvre = parse_nvre(name)
+        if (nvre = parse_nvre(name))
           nvre.merge(:suffix => suffix, :arch => arch).delete_if { |_k, v| v.nil? }
         end
       end
@@ -24,7 +24,7 @@ module Katello
       def self.parse_nvre(name)
         name, suffix = extract_suffix(name)
 
-        if match = NVRE_RE.match(name)
+        if (match = NVRE_RE.match(name))
           {:suffix => suffix,
            :epoch => match[1],
            :name => match[2],
