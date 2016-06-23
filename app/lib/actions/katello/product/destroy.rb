@@ -26,12 +26,10 @@ module Actions
                   plan_action(Katello::Repository::Destroy, repo, repo_options)
                 end
               end
-              concurrence do
-                plan_action(Candlepin::Product::DeletePools,
-                              cp_id: product.cp_id, organization_label: product.organization.label)
-                plan_action(Candlepin::Product::DeleteSubscriptions,
-                              cp_id: product.cp_id, organization_label: product.organization.label)
-              end
+              plan_action(Candlepin::Product::DeletePools,
+                            cp_id: product.cp_id, organization_label: product.organization.label)
+              plan_action(Candlepin::Product::DeleteSubscriptions,
+                            cp_id: product.cp_id, organization_label: product.organization.label)
             end
 
             if !product.used_by_another_org? && !organization_destroy

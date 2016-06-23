@@ -3,6 +3,7 @@ module Actions
     module Repository
       class Destroy < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
+        middleware.use ::Actions::Middleware::KeepCurrentUser
 
         # options:
         #   skip_environment_update - defaults to false. skips updating the CP environment
@@ -23,15 +24,14 @@ module Actions
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           sequence do
-            plan_action(Product::ContentDestroy, repository)
-            plan_action(Repository::DestroyMedium, repository)
-
-            view_env = repository.content_view.content_view_environment(repository.environment)
             repository.destroy! if planned_destroy
-
-            if !skip_environment_update && ::SETTINGS[:katello][:use_cp] && view_env
-              plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
+            if repository.redhat?
+              handle_redhat_content(repository)
+            else
+              handle_custom_content(repository) unless skip_environment_update
             end
+
+            plan_action(Repository::DestroyMedium, repository)
           end
 
           plan_self(:user_id => ::User.current.id, :planned_destroy => planned_destroy)
@@ -39,12 +39,22 @@ module Actions
 
         def finalize
           unless input[:planned_destroy]
-            ::User.current = ::User.find(input[:user_id])
             repository = ::Katello::Repository.find(input[:repository][:id])
             repository.destroy!
           end
-        ensure
-          ::User.current = nil
+        end
+
+        def handle_custom_content(repository)
+          #if this is the last instance of a custom repo, destroy the content
+          if repository.other_repos_with_same_product_and_content.empty?
+            plan_action(Product::ContentDestroy, repository)
+          end
+        end
+
+        def handle_redhat_content(repository)
+          if repository.content_view.content_view_environment(repository.environment)
+            plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
+          end
         end
 
         def humanized_name
