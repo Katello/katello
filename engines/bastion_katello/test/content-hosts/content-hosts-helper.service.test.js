@@ -1,5 +1,8 @@
 describe('Controller: ContentHostsController', function() {
     var ContentHostsHelper;
+    var greenStatus = 'green host-status pficon pficon-ok status-ok';
+    var yellowStatus = 'yellow host-status pficon pficon-info status-warn';
+    var redStatus = 'red host-status pficon pficon-error-circle-o status-error';
 
     beforeEach(module('Bastion.content-hosts'));
 
@@ -8,15 +11,15 @@ describe('Controller: ContentHostsController', function() {
     }));
 
     it("provides a way to get the status color for the content host.", function() {
-        expect(ContentHostsHelper.getSubscriptionStatusColor("valid")).toBe("green");
-        expect(ContentHostsHelper.getSubscriptionStatusColor("partial")).toBe("yellow");
-        expect(ContentHostsHelper.getSubscriptionStatusColor("error")).toBe("red");
+        expect(ContentHostsHelper.getHostStatusIcon("valid")).toBe(greenStatus);
+        expect(ContentHostsHelper.getHostStatusIcon("partial")).toBe(yellowStatus);
+        expect(ContentHostsHelper.getHostStatusIcon("error")).toBe(redStatus);
     });
 
     it("provides a way to get the global status color.", function() {
-        expect(ContentHostsHelper.getGlobalStatusColor(0)).toBe("green");
-        expect(ContentHostsHelper.getGlobalStatusColor(1)).toBe("yellow");
-        expect(ContentHostsHelper.getGlobalStatusColor(2)).toBe("red");
+        expect(ContentHostsHelper.getHostStatusIcon(0)).toBe(greenStatus);
+        expect(ContentHostsHelper.getHostStatusIcon(1)).toBe(yellowStatus);
+        expect(ContentHostsHelper.getHostStatusIcon(2)).toBe(redStatus);
     });
 
 });

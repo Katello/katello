@@ -151,8 +151,9 @@ module Katello
     #param :id, String, :desc => N_("UUID of the consumer")
     #desc 'Schedules the consumer identity certificate regeneration'
     def regenerate_identity_certificates
-      Candlepin::Consumer.new(params[:uuid]).regenerate_identity_certificates
-      render :json => Resources::Candlepin::Consumer.get(@host.uuid)
+      uuid = @host.subscription_facet.uuid
+      Candlepin::Consumer.new(uuid).regenerate_identity_certificates
+      render :json => Resources::Candlepin::Consumer.get(uuid)
     end
 
     api :PUT, "/systems/:id/enabled_repos", N_("Update the information about enabled repositories")

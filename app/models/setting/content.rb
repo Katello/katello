@@ -1,4 +1,4 @@
-class Setting::Katello < Setting
+class Setting::Content < Setting
   def self.load_defaults
     return unless super
 
@@ -27,8 +27,16 @@ class Setting::Katello < Setting
         self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt"),
         self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false),
         self.set('use_pulp_oauth', N_("use oauth authentication for pulp instead of the default cert based authentication"), false)
-      ].each { |s| self.create! s.update(:category => "Setting::Katello") }
+      ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true
+  end
+end
+
+# If the database is not migrated yet, the system will not be able to load
+# since setting initializers will try to load old class. Let it have the class and remove it
+# later.
+if Setting.where(category: 'Setting::Katello').count > 0
+  class Setting::Katello < Setting
   end
 end

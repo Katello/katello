@@ -26,21 +26,21 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="contentHost in detailsTable.rows"
+        <tr bst-table-row ng-repeat="host in detailsTable.rows"
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
-            <a ui-sref="content-hosts.details.info({hostId: contentHost.host_id})">
-              {{ contentHost.name }}
+            <a ui-sref="content-hosts.details.info({hostId: host.host_id})">
+              {{ host.name }}
             </a>
           </td>
           <td bst-table-cell>
-            <span class="fa fa-circle" ng-class="getSubscriptionStatusColor(contentHost.entitlementStatus)">
+            <span ng-class="getHostStatusIcon(host.subscription_global_status)">
             </span>
           </td>
-          <td bst-table-cell>{{ contentHost.environment.name }}</td>
-          <td bst-table-cell>{{ contentHost.content_view.name || "" }}</td>
-          <td bst-table-cell>{{ contentHost.service_level }}</td>
-          <td bst-table-cell>{{ contentHost.release_ver }}</td>
+          <td bst-table-cell>{{ host.environment.name }}</td>
+          <td bst-table-cell>{{ host.content_view.name || "" }}</td>
+          <td bst-table-cell>{{ host.service_level }}</td>
+          <td bst-table-cell>{{ host.release_ver }}</td>
         </tr>
       </tbody>
     </table>

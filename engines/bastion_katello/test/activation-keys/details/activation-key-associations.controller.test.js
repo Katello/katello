@@ -2,6 +2,7 @@ describe('Controller: ActivationKeyAssociationsController', function() {
     var $scope,
         ActivationKey,
         CurrentOrganization,
+        Host,
         translate;
 
     beforeEach(module(
@@ -11,7 +12,8 @@ describe('Controller: ActivationKeyAssociationsController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            ActivationKey = $injector.get('MockResource').$new();
+            ActivationKey = $injector.get('MockResource').$new(),
+            Host  = $injector.get('MockResource').$new();
 
         translate = function (message) {
             return message;
@@ -36,6 +38,7 @@ describe('Controller: ActivationKeyAssociationsController', function() {
             $scope: $scope,
             translate: translate,
             ActivationKey: ActivationKey,
+            Host: Host,
             ContentHostsHelper: {},
             CurrentOrganization: "ACME"
         });

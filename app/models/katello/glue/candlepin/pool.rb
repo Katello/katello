@@ -135,6 +135,12 @@ module Katello
       def host
         System.find_by(:uuid => host_id) if host_id
       end
+
+      def hosts
+        entitlements = Resources::Candlepin::Entitlement.get
+        uuids = entitlements.delete_if { |ent| ent["pool"]["id"] != cp_id }.map { |ent| ent["consumer"]["uuid"] }
+        ::Host.where(:id => Katello::Host::ContentFacet.where(:uuid => uuids).pluck(:host_id))
+      end
     end
   end
 end

@@ -163,7 +163,7 @@ KT.content = (function(){
                 progressBar = $('<a/>').attr('class', 'progress').text(" ");
 
             if(task_id !== undefined) {
-                progress.attr('href', '/foreman_tasks/tasks/' + task_id)
+                progressBar.attr('href', '/foreman_tasks/tasks/' + task_id)
             }
 
             progress = progress ? progress : 0;

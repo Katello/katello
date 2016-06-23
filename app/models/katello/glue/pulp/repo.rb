@@ -128,15 +128,14 @@ module Katello
         when Repository::FILE_TYPE
           Runcible::Models::IsoImporter.new(importer_ssl_options(capsule).merge(:feed => importer_feed_url(capsule)))
         when Repository::PUPPET_TYPE
-          options = {}
-          options[:feed] = importer_feed_url(capsule)
-          Runcible::Models::PuppetImporter.new(options)
+          options = {:feed => importer_feed_url(capsule)}
+          Runcible::Models::PuppetImporter.new(importer_ssl_options(capsule).merge(options))
         when Repository::DOCKER_TYPE
           options = {}
           options[:upstream_name] = capsule ? self.pulp_id : self.docker_upstream_name
           options[:feed] = docker_feed_url(capsule)
-          options[:enable_v1] = false if self.respond_to?(:enable_v1)
-          Runcible::Models::DockerImporter.new(options)
+          options[:enable_v1] = false
+          Runcible::Models::DockerImporter.new(importer_ssl_options(capsule).merge(options))
         when Repository::OSTREE_TYPE
           options = importer_ssl_options(capsule)
 
@@ -235,7 +234,7 @@ module Katello
 
           distributors = [puppet_dist, puppet_install_dist]
         when Repository::DOCKER_TYPE
-          options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true }
+          options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true}
           docker_dist = Runcible::Models::DockerDistributor.new(options)
           distributors = [docker_dist]
         when Repository::OSTREE_TYPE
@@ -672,10 +671,6 @@ module Katello
         distributors.detect { |dist| dist["distributor_type_id"] == dist_type_id }
       end
 
-      def find_node_distributor
-        self.distributors.detect { |i| i["distributor_type_id"] == Runcible::Models::NodesHttpDistributor.type_id }
-      end
-
       def sort_sync_status(statuses)
         statuses.sort! do |a, b|
           if a['finish_time'].nil? && b['finish_time'].nil?
@@ -773,24 +768,30 @@ module Katello
       end
 
       def distributors_match?(capsule_distributors)
-        generated_distributors = self.generate_distributors(true).map(&:as_json)
-        capsule_distributors.each do |dist|
-          dist.merge!(dist["config"])
-          dist.delete("config")
+        generated_distributor_configs = self.generate_distributors(true)
+        generated_distributor_configs.all? do |gen_dist|
+          type = gen_dist.class.type_id
+          found_on_capsule = capsule_distributors.find { |dist| dist['distributor_type_id'] == type }
+          found_on_capsule && filtered_distribution_config_equal?(gen_dist.config, found_on_capsule['config'])
         end
+      end
 
-        config_check = generated_distributors.any? do |gen_dist|
-          capsule_distributors.any? do |cap_dist|
-            (gen_dist.to_a - cap_dist.to_a).empty?
-          end
+      def filtered_distribution_config_equal?(generated_config, actual_config)
+        generated = generated_config.clone
+        actual = actual_config.clone
+        #We store 'default' checksum type as nil, but pulp will default to sha256, so if we haven't set it, ignore it
+        if generated.keys.include?('checksum_type') && generated['checksum_type'].nil?
+          generated.delete('checksum_type')
+          actual.delete('checksum_type')
         end
-        equal_amount_check = generated_distributors.count == capsule_distributors.count
-        config_check && equal_amount_check
+        generated.delete('repo-registry-id')
+        generated == actual
       end
 
       def importer_matches?(capsule_importer)
-        generated_importer = self.generate_importer(true).as_json
-        (generated_importer.to_a - capsule_importer.to_a).empty?
+        generated_importer = self.generate_importer(true)
+        capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
+          generated_importer.config == capsule_importer['config']
       end
 
       protected
@@ -827,13 +828,13 @@ module Katello
       if docker?
         "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
       elsif file?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}/"
       elsif puppet?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}/"
       elsif ostree?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{pulp_id}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{pulp_id}/"
       else
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
     end
 

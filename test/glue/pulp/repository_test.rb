@@ -61,10 +61,10 @@ module Katello
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
 
       assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'
-      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow"
+      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
 
       repo.unprotected = true
-      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow"
+      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
     end
 
     def test_relative_path
@@ -79,6 +79,63 @@ module Katello
 
     def test_populate_from
       assert @fedora_17_x86_64.populate_from(@fedora_17_x86_64.pulp_id => {})
+    end
+
+    def test_distributors_match_yum
+      yum_config = {
+        'relative_url' => '/foo/bar',
+        'checksum_type' => nil,
+        'http' => true,
+        'https' => true
+      }
+      @fedora_17_x86_64.expects(:generate_distributors).with(true).at_least_once.returns(
+          [Runcible::Models::YumDistributor.new('/foo/bar', true, true, (yum_config))])
+
+      assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumDistributor.type_id,
+                                                     'config' => yum_config}])
+      refute @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumCloneDistributor.type_id,
+                                                     'config' => yum_config}])
+      refute @fedora_17_x86_64.distributors_match?([])
+
+      non_nil_checksum = yum_config.clone
+      non_nil_checksum['checksum_type'] = 'sha256'
+      assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumDistributor.type_id,
+                                                     'config' => non_nil_checksum}])
+
+      yum_config['relative_url'] = '/arrow/to/the/knee'
+      refute @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumCloneDistributor.type_id,
+                                                     'config' => yum_config}])
+    end
+
+    def test_distributors_match_docker
+      docker_config = {
+        'protected' => true
+      }
+
+      @fedora_17_x86_64.expects(:generate_distributors).with(true).at_least_once.returns(
+          [Runcible::Models::DockerDistributor.new(docker_config)])
+
+      assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::DockerDistributor.type_id,
+                                                     'config' => docker_config}])
+      docker_config['protected'] = false
+      refute @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::DockerDistributor.type_id,
+                                                     'config' => docker_config}])
+    end
+
+    def test_importer_matches?
+      yum_config = {
+        'feed' => 'http://foobar.com',
+        'download_policy' => 'on_demand',
+        'remove_missing' => true
+      }
+      @fedora_17_x86_64.expects(:generate_importer).with(true).at_least_once.returns(Runcible::Models::YumImporter.new(yum_config))
+
+      assert @fedora_17_x86_64.importer_matches?('importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config)
+      refute @fedora_17_x86_64.importer_matches?('importer_type_id' => Runcible::Models::DockerImporter::ID, 'config' => yum_config)
+      refute @fedora_17_x86_64.importer_matches?(nil)
+
+      yum_config['some_other_attribute'] = 'asdf'
+      refute @fedora_17_x86_64.importer_matches?('importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config)
     end
   end
 

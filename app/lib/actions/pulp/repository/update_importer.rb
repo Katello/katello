@@ -13,6 +13,10 @@ module Actions
           output[:response] = pulp_resources.repository.
               update_importer(*input.values_at(:repo_id, :id, :config))
         end
+
+        def run_progress_weight
+          0.01
+        end
       end
     end
   end

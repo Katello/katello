@@ -13,34 +13,36 @@ node :provided_products, :if => lambda { |sub| sub && !sub.products.blank? } do 
 end
 
 node :systems do |subscription|
-  subscription.systems.readable.map do |sys|
-    facts = sys.facts
+  subscription.hosts.map do |host|
+    facts = host.facts
     {
-      uuid: sys.uuid,
-      host_id: sys.host_id,
-      name: sys.name,
-      environment: { id: sys.environment.id, name: sys.environment.name },
-      content_view: { id: sys.content_view.id, name: sys.content_view.name },
-      created: sys.created,
-      checkin_time: sys.checkin_time,
-      entitlement_status: sys.entitlementStatus,
-      service_level: sys.serviceLevel,
-      autoheal: sys.autoheal,
+      uuid: host.subscription_facet.try(:uuid),
+      host_id: host.id,
+      name: host.name,
+      environment: { id: host.content_facet.try(:lifecycle_environment).try(:id),
+                     name: host.content_facet.try(:lifecycle_environment).try(:name) },
+      content_view: { id: host.content_facet.try(:content_view).try(:id),
+                      name: host.content_facet.try(:content_view).try(:name) },
+      created: host.subscription_facet.try(:registered_at),
+      checkin_time: host.subscription_facet.try(:last_checkin),
+      entitlement_status: host.subscription_status,
+      service_level: host.subscription_facet.try(:service_level),
+      autoheal: host.subscription_facet.try(:autoheal),
       facts: {
         dmi: {
           memory: {
-            size: facts['dmi.memory.size']
+            size: facts['dmi::memory::size']
           }
         },
         memory: {
-          memtotal: facts['memory.memtotal']
+          memtotal: facts['memory::memtotal']
         },
         cpu: {
-          'cpu_socket(s)' => facts['cpu.cpu_socket(s)'],
-          'core(s)_per_socket' => facts['cpu.core(s)_per_socket']
+          'cpu_socket(s)' => facts['cpu::cpu_socket(s)'],
+          'core(s)_per_socket' => facts['cpu::core(s)_per_socket']
         },
         virt: {
-          is_guest: facts['virt.is_guest']
+          is_guest: facts['virt::is_guest']
         }
       }
     }

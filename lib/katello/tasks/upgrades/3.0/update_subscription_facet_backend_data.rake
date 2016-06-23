@@ -7,12 +7,23 @@ namespace :katello do
 
         Katello::Host::SubscriptionFacet.find_each do |subscription_facet|
           begin
-            subscription_facet.update_from_consumer_attributes(subscription_facet.candlepin_consumer.consumer_attributes)
+            candlepin_attrs = subscription_facet.candlepin_consumer.consumer_attributes
+            subscription_facet.import_database_attributes(candlepin_attrs)
+
+            subscription_facet.host = ::Host::Managed.find(subscription_facet.host_id)
+            subscription_facet.save!
+
+            Katello::Host::SubscriptionFacet.update_facts(subscription_facet.host, candlepin_attrs[:facts])
           rescue RestClient::Exception => exception
             Rails.logger.error exception
           end
-          subscription_facet.host = ::Host::Managed.find(subscription_facet.host_id)
-          subscription_facet.save!
+        end
+
+        #there may be some invalid hosts, if there are create a primary interface
+        ::Host.includes(:interfaces).find_each do |host|
+          if host.primary_interface.nil?
+            host.interfaces.create!(:primary => true)
+          end
         end
       end
     end
