@@ -81,7 +81,7 @@ module Katello
 
     def self.with_puppet_module(puppet_module)
       joins(:content_view_puppet_environments)
-        .where("#{Katello::ContentViewPuppetEnvironment.table_name}.id = ?", puppet_module.content_view_puppet_environments)
+        .where("#{Katello::ContentViewPuppetEnvironment.table_name}.id" => puppet_module.content_view_puppet_environments)
     end
 
     def to_s
