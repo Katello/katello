@@ -26,7 +26,7 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
             'organization_id': CurrentOrganization
         };
 
-        nutupane = new Nutupane(Host, params);
+        nutupane = new Nutupane(Host, params, 'postIndex');
         nutupane.table.closeItem = function () {};
         nutupane.enableSelectAllResults();
 
