@@ -94,6 +94,8 @@ module Katello
       assert_include values.map(&:value), 'rhsm_value'
       assert_includes values.map(&:name), 'rhsm_fact'
       assert_includes values.map(&:name), '_timestamp'
+
+      assert_nil host.last_compile
     end
 
     def test_find_or_create_host_with_org

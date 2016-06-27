@@ -80,6 +80,9 @@ module Katello
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
         rhsm_facts[:_timestamp] = DateTime.now.to_s
         host.import_facts(rhsm_facts)
+        # to fix http://projects.theforeman.org/issues/15524, until
+        # http://projects.theforeman.org/issues/15525 is addressed
+        host.update_column(:last_compile, nil)
       end
 
       def self.find_or_create_host(name, organization, rhsm_params)
