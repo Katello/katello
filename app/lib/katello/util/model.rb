@@ -29,8 +29,7 @@ module Katello
 
       def self.controller_path_to_model_hash
         {
-          "katello/environments"  => "Katello::KTEnvironment",
-          "katello/content_hosts" => "Katello::System"
+          "katello/environments" => "Katello::KTEnvironment"
         }
       end
 

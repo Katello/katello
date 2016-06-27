@@ -11,9 +11,9 @@ module Katello
 
     def test_auto_complete_search
       @request.env['HTTP_ACCEPT'] = 'application/json'
-      Katello::System.expects(:complete_for).returns([" name =  \"Simple Server 3\""])
+      Katello::Product.expects(:complete_for).returns([" name =  \"Fedora\""])
 
-      get :auto_complete_search, :search => " name = Simpl*3", :kt_path => 'content_hosts'
+      get :auto_complete_search, :search => " name = Simpl*3", :kt_path => 'products'
 
       assert_response :success
     end

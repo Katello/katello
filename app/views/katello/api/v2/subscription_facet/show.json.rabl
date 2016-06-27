@@ -26,7 +26,3 @@ child :subscription_facet => :subscription_facet_attributes do |facet|
     attributes :id, :name
   end
 end
-
-node :content_host_id do |host|
-  host.content_host.try(:id)
-end

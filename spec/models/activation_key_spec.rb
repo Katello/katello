@@ -3,7 +3,6 @@ require "katello_test_helper"
 module Katello
   describe ActivationKey do
     include OrchestrationHelper
-    include SystemHelperMethods
 
     let(:aname) { 'myactkey' }
     let(:adesc) { 'my activation key description' }

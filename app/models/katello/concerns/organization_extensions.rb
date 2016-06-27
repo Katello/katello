@@ -44,10 +44,6 @@ module Katello
           ContentView.default.where(:organization_id => self.id).first
         end
 
-        def systems
-          System.where(:environment_id => kt_environments)
-        end
-
         def promotion_paths
           #I'm sure there's a better way to do this
           self.kt_environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|

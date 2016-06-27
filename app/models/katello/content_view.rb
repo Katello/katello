@@ -36,7 +36,6 @@ module Katello
     has_many :filters, :dependent => :destroy, :class_name => "Katello::ContentViewFilter"
 
     has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict_with_exception
-    has_many :systems, :class_name => "Katello::System", :dependent => :restrict_with_exception
 
     has_many :content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :restrict_with_exception
@@ -77,7 +76,7 @@ module Katello
     end
 
     def content_host_count
-      systems.count
+      hosts.count
     end
 
     def copy(new_name)
@@ -483,7 +482,7 @@ module Katello
     def check_remove_from_environment!(env)
       errors = []
 
-      dependencies = {systems:                _("systems"),
+      dependencies = {hosts:                _("hosts"),
                       activation_keys:        _("activation keys")
       }
 
@@ -502,7 +501,7 @@ module Katello
       errors = []
 
       dependencies = {environments:           _("environments"),
-                      systems:                _("systems"),
+                      hosts:                  _("hosts"),
                       activation_keys:        _("activation keys")
       }
 

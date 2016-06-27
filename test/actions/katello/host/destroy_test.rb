@@ -11,8 +11,7 @@ module Katello::Host
       @content_view = katello_content_views(:library_dev_view)
       @library = katello_environments(:library)
       @host = FactoryGirl.build(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                 :lifecycle_environment => @library, :content_host => katello_systems(:simple_server))
-      @host.content_host.stubs(:pools).returns([{"id" => "fake"}])
+                                 :lifecycle_environment => @library)
     end
 
     describe 'Host Destroy' do
@@ -26,7 +25,6 @@ module Katello::Host
         @host.expects(:destroy).returns(true)
         @host.content_facet.expects(:destroy!)
         @host.subscription_facet.expects(:destroy!)
-        @host.content_host.expects(:destroy!)
 
         plan_action action, @host
 
@@ -35,13 +33,11 @@ module Katello::Host
       end
 
       it 'ignores candlepin GONE' do
-        @host.content_host.stubs(:pools).raises(RestClient::Gone)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
         @host.expects(:destroy).returns(true)
         @host.content_facet.expects(:destroy!)
         @host.subscription_facet.expects(:destroy!)
-        @host.content_host.expects(:destroy!)
 
         plan_action action, @host
       end
@@ -51,7 +47,6 @@ module Katello::Host
         action.stubs(:action_subject).with(@host)
         @host.content_facet.expects(:destroy!).never
         @host.subscription_facet.expects(:destroy!)
-        @host.content_host.expects(:destroy!)
 
         subscription_uuid = @host.subscription_facet.uuid
         content_uuid = @host.content_facet.uuid

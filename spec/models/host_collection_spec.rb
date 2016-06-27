@@ -4,7 +4,6 @@ module Katello
   describe HostCollection do
     include Support::Actions::Fixtures
     include OrganizationHelperMethods
-    include SystemHelperMethods
     include OrchestrationHelper
 
     let(:uuid) { '1234' }
@@ -14,14 +13,10 @@ module Katello
       @org = get_organization
       @host_collection = HostCollection.create!(:name => "TestHostCollection1", :organization => @org)
 
-      setup_system_creation
       Resources::Candlepin::Consumer.stubs(:create).returns(:uuid => uuid, :owner => {:key => uuid})
       Resources::Candlepin::Consumer.stubs(:update).returns(true)
       @environment = create_environment(:name => "DEV", :label => "DEV", :prior => @org.library, :organization => @org)
       @host = hosts(:one)
-      @system = create_system(:name => "bar1", :environment => @environment, :cp_type => "system", :facts => {"Test" => ""})
-      @system.foreman_host = @host
-      @system.save!
     end
 
     describe "create should" do

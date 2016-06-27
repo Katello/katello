@@ -180,7 +180,7 @@ module Katello
     end
 
     def deletable?(from_env)
-      !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
+      ::Host.in_content_view_environment(self.content_view, from_env).empty? ||
           self.content_view.versions.in_environment(from_env).count > 1
     end
 

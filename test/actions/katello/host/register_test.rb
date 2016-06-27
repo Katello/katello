@@ -20,7 +20,6 @@ module Katello::Host
     let(:candlepin_class) { ::Actions::Candlepin::Consumer::Create }
     let(:pulp_class) { ::Actions::Pulp::Consumer::Create }
     let(:rhsm_params) { {:name => 'foobar', :facts => {'a' => 'b'}, :type => 'system'} }
-    let(:new_system) { Katello::System.new(:name => 'foobar', :cp_type => 'system') }
 
     describe 'Host Register' do
       it 'plans' do
@@ -28,7 +27,7 @@ module Katello::Host
         new_host = Host::Managed.new(:name => 'foobar', :managed => false)
         action.stubs(:action_subject).with(new_host)
         ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(new_host, rhsm_params[:facts])
-        plan_action action, new_host, new_system, rhsm_params, @content_view_environment
+        plan_action action, new_host, rhsm_params, @content_view_environment
 
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => @content_view_environment.cp_id,
                                   :consumer_parameters => rhsm_params, :activation_keys => [])
@@ -42,9 +41,6 @@ module Katello::Host
 
         assert_equal @library, new_host.content_facet.lifecycle_environment
         assert_equal @content_view, new_host.content_facet.content_view
-        assert_equal @library, new_system.environment
-        assert_equal @content_view, new_system.content_view
-        assert_equal new_host.content_host, new_system
       end
 
       it 'plans with activation keys' do
@@ -53,12 +49,11 @@ module Katello::Host
         cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
         action = create_action action_class
         new_host = Host::Managed.new(:name => 'foobar', :managed => false)
-        new_system.foreman_host = new_host
         action.stubs(:action_subject).with(new_host)
 
         activation_keys = []
         activation_keys << @activation_key
-        plan_action action, new_host, new_system, rhsm_params, nil, activation_keys
+        plan_action action, new_host, rhsm_params, nil, activation_keys
 
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => cvpe.cp_id,
                                   :consumer_parameters => rhsm_params, :activation_keys => [@activation_key.cp_name])
@@ -67,24 +62,19 @@ module Katello::Host
         assert_equal @activation_key.environment, new_host.content_facet.lifecycle_environment
         assert_equal @activation_key.content_view, new_host.content_facet.content_view
 
-        assert_equal @activation_key.environment, new_system.environment
-        assert_equal @activation_key.content_view, new_system.content_view
+        assert_equal @activation_key.environment, new_host.content_facet.lifecycle_environment
+        assert_equal @activation_key.content_view, new_host.content_facet.content_view
 
-        assert_includes new_system.foreman_host.host_collections, @host_collection
+        assert_includes new_host.host_collections, @host_collection
       end
 
       it 'plans with existing host' do
-        system = katello_systems(:simple_server)
-        system.content_view = @content_view
-        system.environment = @library
-        system.save!
         @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                   :lifecycle_environment => @library, :content_host => system)
+                                   :lifecycle_environment => @library)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
-        plan_action action, @host, new_system, rhsm_params, @content_view_environment
+        plan_action action, @host, rhsm_params, @content_view_environment
 
-        assert_equal @host.content_host, new_system
         assert_action_planned_with(action, Actions::Katello::Host::Unregister, @host)
       end
     end

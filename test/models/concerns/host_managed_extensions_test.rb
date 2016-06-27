@@ -12,10 +12,8 @@ module Katello
       @view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library_view = ContentView.find(katello_content_views(:library_view).id)
 
-      content_host = Katello::System.find(katello_systems(:simple_server).id)
       @foreman_host = FactoryGirl.create(:host)
       @foreman_host.puppetclasses = []
-      @foreman_host.content_host = content_host
       @foreman_host.save!
 
       new_puppet_environment = Environment.find(environments(:testing))
@@ -26,10 +24,7 @@ module Katello
 
   class HostManagedExtensionsTest < HostManagedExtensionsTestBase
     def test_destroy_host
-      system_id = @foreman_host.content_host.id
-
       assert @foreman_host.destroy
-      assert_nil Katello::System.find_by_id(system_id)
     end
 
     def test_full_text_search
@@ -65,25 +60,6 @@ module Katello
 
       assert_equal @foreman_host.info['parameters']['kt_cv'], @foreman_host.content_view.label
       assert_equal @foreman_host.info['parameters']['kt_env'], @foreman_host.lifecycle_environment.label
-    end
-
-    def test_update_puppet_environment_does_not_update_content_host
-      # we are making an update to the foreman host that should NOT result in a change to the content host.
-      # this can happen if the user is only using puppet environments that they create within foreman
-      # vs those that automatically created as part of the katello content management
-      @foreman_host.content_host.expects(:save!).never
-      @foreman_host.save!
-    end
-
-    def test_update_does_not_update_content_host
-      content_host = System.find(katello_systems(:simple_server2).id)
-      @foreman_host2 = FactoryGirl.create(:host, :with_content, :content_view => content_host.content_view,
-                                          :lifecycle_environment => content_host.environment)
-      @foreman_host2.content_host = content_host
-      @foreman_host2.save!
-
-      @foreman_host2.expects(:update_content_host).never
-      @foreman_host2.save!
     end
 
     def test_update_with_cv_env

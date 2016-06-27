@@ -10,7 +10,6 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   def models
     @content_view = katello_content_views(:acme_default)
     @environment = katello_environments(:library)
-    @system = katello_systems(:simple_server)
     @host = FactoryGirl.create(:host)
   end
 
@@ -37,24 +36,24 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
 
   def test_content_and_subscriptions
     host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                              :lifecycle_environment => @environment, :content_host => @system)
+                              :lifecycle_environment => @environment)
     host_index_and_show(host)
   end
 
   def test_with_content
     host = FactoryGirl.create(:host, :with_content, :content_view => @content_view,
-                              :lifecycle_environment => @environment, :content_host => @system)
+                              :lifecycle_environment => @environment)
     host_index_and_show(host)
   end
 
   def test_with_subscriptions
-    host = FactoryGirl.create(:host, :with_subscription, :content_host => @system)
+    host = FactoryGirl.create(:host, :with_subscription)
     host_index_and_show(host)
   end
 
   def test_with_smartproxy
     host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                              :lifecycle_environment => @environment, :content_host => @system)
+                              :lifecycle_environment => @environment)
     smart_proxy = FactoryGirl.create(:smart_proxy, :features => [FactoryGirl.create(:feature, name: 'Pulp')])
     host.update_column(:content_source_id, smart_proxy.id)
     host_show(host, smart_proxy)

@@ -30,10 +30,6 @@ module Katello
       self.environment
     end
 
-    def systems
-      content_view.systems.in_environment(environment)
-    end
-
     def hosts
       ::Host.in_content_view_environment(:content_view => self.content_view, :lifecycle_environment => self.environment)
     end

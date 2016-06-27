@@ -129,7 +129,6 @@ module Katello
   class ErratumAvailableTest < ErratumTestBase
     def setup
       super
-      Katello::System.any_instance.stubs(:save_candlepin_orchestration).returns(:true)
       @host = hosts(:one)
       @host.content_facet.content_view = katello_content_views(:acme_default)
       @host.content_facet.bound_repositories = [@repo]

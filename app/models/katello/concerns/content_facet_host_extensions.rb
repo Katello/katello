@@ -59,6 +59,10 @@ module Katello
           relation = relation.where("#{::Katello::Host::ContentFacet.table_name}.lifecycle_environment_id" => lifecycle_environment) if lifecycle_environment
           relation
         end
+
+        def in_environment(lifecycle_environment)
+          in_content_view_environment(:lifecycle_environment => lifecycle_environment)
+        end
       end
     end
   end

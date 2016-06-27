@@ -9,7 +9,7 @@ module Katello
 
       validates :host, :presence => true, :allow_blank => false
 
-      DEFAULT_TYPE = Glue::Candlepin::Consumer::SYSTEM
+      DEFAULT_TYPE = 'system'.freeze
 
       attr_accessor :installed_products, :facts, :hypervisor_guest_uuids
 

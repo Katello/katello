@@ -369,15 +369,20 @@ module Katello
       end
     end
 
-    def test_remove_protected_envs_with_systems
-      sys = System.find(katello_systems(:simple_server_3).id)
-      system_edit_permission = {:name => :edit_content_hosts, :search => "name=\"#{sys.name}\"" }
+    def test_remove_protected_envs_with_host
+      content_view = katello_content_views(:library_dev_view)
+      environment = katello_environments(:library)
 
-      sys_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
-                                   :search => "name=\"#{sys.environment.name}\"" }
+      host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => content_view,
+                                :lifecycle_environment => environment)
 
-      sys_cv_remove_permission = {:name => :promote_or_remove_content_views,
-                                  :search => "name=\"#{sys.content_view.name}\"" }
+      host_edit_permission = {:name => :edit_hosts, :search => "name=\"#{host.name}\"" }
+
+      host_env_remove_permission = {:name => :promote_or_remove_content_views_to_environments,
+                                    :search => "name=\"#{environment.name}\"" }
+
+      host_cv_remove_permission = {:name => :promote_or_remove_content_views,
+                                   :search => "name=\"#{content_view.name}\"" }
 
       alternate_env = @staging
       alternate_env_read_permission = {:name => :view_lifecycle_environments,
@@ -395,28 +400,28 @@ module Katello
       bad_env_read_permission = {:name => :view_lifecycle_environments,
                                  :search => "name=\"#{bad_env.name}\"" }
 
-      allowed_perms = [[:edit_content_hosts, :promote_or_remove_content_views, :view_content_views,
+      allowed_perms = [[:edit_hosts, :promote_or_remove_content_views, :view_content_views,
                         :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
-                       [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
+                       [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
                         alternate_env_read_permission, alternate_cv_read_permission]
                       ]
 
-      denied_perms = [[:edit_content_hosts, :promote_or_remove_content_views,
+      denied_perms = [[:edit_hosts, :promote_or_remove_content_views,
                        :promote_or_remove_content_views_to_environments, :view_lifecycle_environments],
-                      [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
+                      [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
                        bad_env_read_permission, alternate_cv_read_permission],
-                      [system_edit_permission, sys_cv_remove_permission, sys_env_remove_permission,
+                      [host_edit_permission, host_cv_remove_permission, host_env_remove_permission,
                        alternate_env_read_permission, bad_cv_read_permission]
                      ]
 
-      env_ids = [sys.environment.id.to_s]
+      env_ids = [environment.id.to_s]
 
       Katello::ActivationKey.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == sys.content_view.id && args[:environment_id] == env_ids
+        args[:content_view_id].id == content_view.id && args[:environment_id] == env_ids
       end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
-        put :remove, :id => sys.content_view.id,
+        put :remove, :id => content_view.id,
                      :environment_ids => env_ids,
                      :system_content_view_id => alternate_cv.id,
                      :system_environment_id => alternate_env.id

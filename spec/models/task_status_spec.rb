@@ -10,19 +10,13 @@ module Katello
     let(:parameters) { {} }
 
     subject do
-      system = System.new(:name => "test.example.com")
+      key = ActivationKey.new(:name => "test.example.com")
       TaskStatus.new(:task_type => task_type,
                      :parameters => parameters,
                      :result => result,
                      :state => state,
                      :uuid => "1234",
-                     :task_owner => system)
-    end
-
-    it "has valid as_json" do
-      subject.as_json.must_include("description")
-      subject.as_json.must_include("result_description")
-      subject.as_json.must_include(:system_name)
+                     :task_owner => key)
     end
 
     describe "Package installation" do
