@@ -19,7 +19,7 @@ module Katello
     api :POST, "/content_view_filters/:content_view_filter_id/rules",
         N_("Create a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :name, String, :desc => N_("package or package group: name")
+    param :name, [String, Array], :desc => N_("package and package group names")
     param :version, String, :desc => N_("package: version")
     param :min_version, String, :desc => N_("package: minimum version")
     param :max_version, String, :desc => N_("package: maximum version")
@@ -32,19 +32,23 @@ module Katello
     def create
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
 
-      if rule_params.key?(:errata_ids)
-        rules = []
-        rule_params[:errata_ids].each do |errata_id|
-          rules << rule_clazz.create!({:errata_id => errata_id}.merge(:filter => @filter))
-        end
-      else
-        rule = rule_clazz.create!(rule_params.merge(:filter => @filter))
+      rules = (rule_params[:name] || []).map do |name|
+        rule_clazz.create!(rule_params.except(:name).merge(:filter => @filter, name: name))
       end
 
-      if rules && rule.nil?
+      rules += (rule_params[:errata_ids] || []).map do |errata_id|
+        rule_clazz.create!(rule_params.except(:errata_ids)
+          .merge(filter:  @filter, errata_id: errata_id))
+      end
+
+      if rules.empty?
+        rules = [rule_clazz.create!(rule_params.merge(:filter => @filter))]
+      end
+
+      if rules.many?
         respond_for_index(:collection => {:results => rules}, :template => 'index')
       else
-        respond :resource => rule
+        respond resource: rules.first
       end
     end
 
@@ -69,6 +73,7 @@ module Katello
     param :types, Array, :desc => N_("erratum: types (enhancement, bugfix, security)")
     def update
       update_params = rule_params
+      update_params[:name] = update_params[:name].first if update_params[:name]
 
       if @rule.filter.content_type == ContentViewPackageFilter::CONTENT_TYPE
         update_params[:version] = "" unless rule_params[:version]
@@ -100,15 +105,21 @@ module Katello
     end
 
     def rule_params
-      if params[:content_view_filter_rule][:errata_ids].is_a?(Hash)
-        ids = process_errata_ids(params[:content_view_filter_rule][:errata_ids])
-        params[:content_view_filter_rule][:errata_ids] = ids
+      unless @rule_params
+        if params[:content_view_filter_rule][:errata_ids].is_a?(Hash)
+          ids = process_errata_ids(params[:content_view_filter_rule][:errata_ids])
+          params[:content_view_filter_rule][:errata_ids] = ids
+        end
+
+        if params[:name]
+          params[:content_view_filter_rule][:name] = params[:name] = [params[:name]].flatten
+        end
       end
 
-      params.fetch(:content_view_filter_rule, {}).
-            permit(:uuid, :name, :version, :min_version, :max_version,
+      @rule_params ||= params.fetch(:content_view_filter_rule, {}).
+            permit(:uuid, :version, :min_version, :max_version,
                     :errata_id, :start_date, :end_date, :date_type,
-                    :types => [], :errata_ids => [])
+                    :types => [], :errata_ids => [], name: [])
     end
 
     def process_errata_ids(select_all_params)

@@ -49,6 +49,18 @@ module Katello
       assert_equal @filter.package_rules.first.version, "10.0"
     end
 
+    def test_create_with_name_array
+      post :create, content_view_filter_id: @filter.id, name: %w(testpkg testpkg2),
+        version: '10.0'
+
+      assert_response :success
+
+      assert_template layout: 'katello/api/v2/layouts/collection'
+      assert_template 'katello/api/v2/content_view_filter_rules/index'
+      assert_equal @filter.reload.package_rules.sort.map(&:name), %w(testpkg testpkg2)
+      assert_equal @filter.package_rules.map(&:version), %w(10.0 10.0)
+    end
+
     def test_create_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
@@ -92,6 +104,18 @@ module Katello
       assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, :content_view_filter_id => @filter.id, :id => @rule.id, :name => "new name"
       end
+    end
+
+    def test_update_with_name_array
+      refute_equal @rule.name, "testpkg"
+      refute_equal @rule.version, "10.0"
+
+      put :update, content_view_filter_id: @filter.id, id: @rule.id,
+        name: %w(testpkg), version: '10.0'
+
+      assert_response :success
+      assert_equal @rule.reload.name, "testpkg"
+      assert_equal @rule.version, "10.0"
     end
 
     def test_destroy
