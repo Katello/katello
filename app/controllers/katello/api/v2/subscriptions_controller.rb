@@ -18,6 +18,7 @@ module Katello
     end
 
     api :GET, "/organizations/:organization_id/subscriptions", N_("List organization subscriptions")
+    api :GET, "/activation_keys/:activation_key_id/subscriptions", N_("List an activation key's subscriptions")
     api :GET, "/subscriptions"
     param_group :search, Api::V2::ApiController
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
@@ -28,7 +29,15 @@ module Katello
     param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :cp_id, :asc, :resource_class => Pool, :includes => [:subscription]))
+      collection = scoped_search(
+        index_relation.uniq, :cp_id, :asc, resource_class: Pool, includes: [:subscription])
+      if params[:activation_key_id]
+        key_pools = @activation_key.get_key_pools
+        collection[:results] = collection[:results].map do |pool|
+          ActivationKeySubscriptionsPresenter.new(pool, key_pools)
+        end
+      end
+      respond(:collection => collection)
     end
 
     def index_relation
@@ -37,6 +46,7 @@ module Katello
       collection = Pool.readable
       collection = collection.where(:unmapped_guest => false)
       collection = collection.get_for_organization(Organization.find(params[:organization_id])) if params[:organization_id]
+      collection = collection.for_activation_key(@activation_key) if params[:activation_key_id]
       collection
     end
 

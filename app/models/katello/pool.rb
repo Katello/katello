@@ -2,14 +2,15 @@ module Katello
   class Pool < Katello::Model
     include Katello::Authorization::Pool
 
-    attr_accessor :quantity_attached
-
     belongs_to :subscription, :inverse_of => :pools, :class_name => "Katello::Subscription"
 
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
 
     scope :in_org, -> (org_id) { joins(:subscription).where("#{Katello::Subscription.table_name}.organization_id = ?", org_id) }
+    scope :for_activation_key, ->(ak) {
+      where(cp_id: ak.get_key_pools.map { |pool| pool['id'] })
+    }
 
     self.include_root_in_json = false
 

@@ -152,5 +152,10 @@ module Katello
       subscriptions = Pool.search_for("support_level = \"#{@pool_one.support_level}\"")
       assert_includes subscriptions, @pool_one
     end
+
+    def test_for_activation_key
+      Pool::ActiveRecord_Relation.any_instance.expects(:where).with(cp_id: [1])
+      Pool.for_activation_key(OpenStruct.new(get_key_pools: [{'id' => 1}]))
+    end
   end
 end
