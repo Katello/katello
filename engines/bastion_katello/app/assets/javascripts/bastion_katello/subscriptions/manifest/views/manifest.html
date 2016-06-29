@@ -1,47 +1,46 @@
-<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
+
+      <header class="details-header">
+        <h2 class="pull-left" translate>Subscription Manifest</h2>
+
+        <div class="fr">
+          <button class="btn btn-default" ui-sref="subscriptions.index">
+            <i class="fa fa-remove"></i>
+            {{ "Close" | translate }}
+          </button>
+        </div>
+      </header>
+
+      <nav>
+        <ul class="nav nav-tabs">
+          <li ng-class="{active: isState('subscriptions.manifest.details')}">
+            <a class="clickable"
+               translate
+               ui-sref="subscriptions.manifest.details()">
+              Details
+            </a>
+          </li>
+          <li ng-class="{active: stateIncludes('subscriptions.manifest.import')}">
+            <a class="clickable"
+               translate
+               ui-sref="subscriptions.manifest.import()">
+              Actions
+            </a>
+          </li>
+          <li ng-class="{active: stateIncludes('subscriptions.manifest.history')}">
+            <a class="clickable"
+               translate
+               ui-sref="subscriptions.manifest.history()">
+              Import History
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="nutupane-sub-section" ui-view></section>
+
+    </section>
+  </div>
 </div>
-
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-
-  <header class="details-header">
-    <h2 class="pull-left" translate>Subscription Manifest</h2>
-
-    <div class="fr">
-      <button class="btn btn-default" ui-sref="subscriptions.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
-
-  <nav>
-    <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('subscriptions.manifest.details')}">
-        <a class="clickable"
-           translate
-           ui-sref="subscriptions.manifest.details()">
-          Details
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('subscriptions.manifest.import')}">
-        <a class="clickable"
-           translate
-           ui-sref="subscriptions.manifest.import()">
-          Actions
-        </a>
-      </li>
-      <li ng-class="{active: stateIncludes('subscriptions.manifest.history')}">
-        <a class="clickable"
-           translate
-           ui-sref="subscriptions.manifest.history()">
-          Import History
-        </a>
-      </li>
-    </ul>
-  </nav>
-
-  <section class="nutupane-sub-section" ui-view></section>
-
-</section>

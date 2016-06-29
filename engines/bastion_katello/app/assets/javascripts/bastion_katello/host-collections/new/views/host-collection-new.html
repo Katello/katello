@@ -1,22 +1,21 @@
 <span page-title>{{ 'New Host Collection' | translate }}</span>
 
-<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
+      <header class="new-header details-header">
+        <h2 class="fl" translate>New Host Collection</h2>
+
+        <div class="details-actions fr">
+          <button class="btn btn-default" ui-sref="host-collections.index">
+            <i class="fa fa-remove"></i>
+            {{ "Close" | translate }}
+          </button>
+        </div>
+      </header>
+
+      <div ui-view></div>
+
+    </section>
+  </div>
 </div>
-
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-  <header class="new-header details-header">
-    <h2 class="fl" translate>New Host Collection</h2>
-
-    <div class="details-actions fr">
-      <button class="btn btn-default" ui-sref="host-collections.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
-
-  <div ui-view></div>
-
-</section>

@@ -1,134 +1,133 @@
 <span page-title ng-model="host">{{ 'Content Host:' | translate }} {{ host.name }}</span>
 
-<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
+      <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+      <div ng-hide="panel.error">
+        <header class="details-header">
+          <h2 class="fl" translate>Content Host {{ host.name }}</h2>
 
-  <div ng-hide="panel.error">
-    <header class="details-header">
-      <h2 class="fl" translate>Content Host {{ host.name }}</h2>
+          <div class="fr">
+            <div bst-modal="unregisterContentHost(host)" model="host">
+              <div data-block="modal-header" translate>
+                Unregister Host "{{host.name}}"?
+              </div>
+              <div data-block="modal-body">
+                <p translate>
+                  Unregister Options:
+                </p>
 
-      <div class="fr">
-        <div bst-modal="unregisterContentHost(host)" model="host">
-          <div data-block="modal-header" translate>
-            Unregister Host "{{host.name}}"?
+                <p ng-show="host.hasSubscription()">
+                  <label>
+                    <input name="delete"
+                           ng-model="host.unregisterDelete"
+                           ng-value="false"
+                           type="radio" />
+                    Unregister the host as a subscription consumer.  Provisioning and configuration information is preserved.
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    <input name="delete"
+                           ng-model="host.unregisterDelete"
+                           ng-value="true"
+                           type="radio" />
+                    Completely deletes the host record and removes all reporting, provisioning, and configuration information.
+                  </label>
+                </p>
+              </div>
+            </div>
+
+            <button class="btn btn-default"
+                    ng-disabled="host.deleting"
+                    ng-hide="denied('destroy_hosts', host)"
+                    ng-click="openModal()" translate>Unregister Host</button>
+
+            <button class="btn btn-default" ui-sref="content-hosts.index">
+              <i class="fa fa-remove"></i>
+              {{ "Close" | translate }}
+            </button>
           </div>
-          <div data-block="modal-body">
-            <p translate>
-              Unregister Options:
-            </p>
+        </header>
 
-            <p ng-show="host.hasSubscription()">
-              <label>
-                <input name="delete"
-                       ng-model="host.unregisterDelete"
-                       ng-value="false"
-                       type="radio" />
-                Unregister the host as a subscription consumer.  Provisioning and configuration information is preserved.
-              </label>
-            </p>
-            <p>
-              <label>
-                <input name="delete"
-                       ng-model="host.unregisterDelete"
-                       ng-value="true"
-                       type="radio" />
-                Completely deletes the host record and removes all reporting, provisioning, and configuration information.
-              </label>
-            </p>
-          </div>
-        </div>
-
-        <button class="btn btn-default"
-                ng-disabled="host.deleting"
-                ng-hide="denied('destroy_hosts', host)"
-                ng-click="openModal()" translate>Unregister Host</button>
-
-        <button class="btn btn-default" ui-sref="content-hosts.index">
-          <i class="fa fa-remove"></i>
-          {{ "Close" | translate }}
-        </button>
-      </div>
-    </header>
-
-    <nav>
-      <ul class="nav nav-tabs">
-        <li ng-class="{active: isState('content-hosts.details.info')}">
-          <a translate
-             ui-sref="content-hosts.details.info">
-            Details
-          </a>
-        </li>
-        <li ng-class="{active: isState('content-hosts.details.provisioning')}"
-            bst-feature-flag="remote_actions">
-          <a translate
-             ui-sref="content-hosts.details.provisioning">
-            Provisioning Details
-          </a>
-        </li>
-        <li class="dropdown"
-            ng-class="{active: stateIncludes('content-hosts.details.subscriptions.list') || stateIncludes('content-hosts.details.subscriptions.add') || stateIncludes('content-hosts.details.events')}">
-          <a class="dropdown-toggle">
-            <span translate>Subscriptions</span>
-            <i class="fa fa-chevron-down"></i>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a ui-sref="content-hosts.details.subscriptions.list" translate>
-                Subscriptions
+        <nav>
+          <ul class="nav nav-tabs">
+            <li ng-class="{active: isState('content-hosts.details.info')}">
+              <a translate
+                 ui-sref="content-hosts.details.info">
+                Details
               </a>
             </li>
-            <li>
-              <a ui-sref="content-hosts.details.events" translate>
-                Events
+            <li ng-class="{active: isState('content-hosts.details.provisioning')}"
+                bst-feature-flag="remote_actions">
+              <a translate
+                 ui-sref="content-hosts.details.provisioning">
+                Provisioning Details
+              </a>
+            </li>
+            <li class="dropdown"
+                ng-class="{active: stateIncludes('content-hosts.details.subscriptions.list') || stateIncludes('content-hosts.details.subscriptions.add') || stateIncludes('content-hosts.details.events')}">
+              <a class="dropdown-toggle">
+                <span translate>Subscriptions</span>
+                <i class="fa fa-chevron-down"></i>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a ui-sref="content-hosts.details.subscriptions.list" translate>
+                    Subscriptions
+                  </a>
+                </li>
+                <li>
+                  <a ui-sref="content-hosts.details.events" translate>
+                    Events
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li ng-class="{active: $state.includes('content-hosts.details.host-collections')}">
+              <a translate
+                 ui-sref="content-hosts.details.host-collections.list">
+                Host Collections
+              </a>
+            </li>
+            <li ng-class="{active: stateIncludes('content-hosts.details.tasks')}">
+              <a translate
+                 ui-sref="content-hosts.details.tasks.index">
+                Tasks
+              </a>
+            </li>
+            <li ng-class="{active: isState('content-hosts.details.packages')}">
+              <a translate
+                 ui-sref="content-hosts.details.packages">
+                Packages
+              </a>
+            </li>
+            <li ng-class="{active: isState('content-hosts.details.errata.index')}">
+              <a translate
+                 ui-sref="content-hosts.details.errata.index">
+                Errata
+              </a>
+            </li>
+            <li ng-hide="denied('view_products')" ng-class="{active: isState('content-hosts.details.products')}">
+              <a translate
+                 ui-sref="content-hosts.details.products">
+                Product Content
+              </a>
+            </li>
+            <li ng-repeat="menuItem in menuExpander.getMenu('host')">
+              <a href="{{ menuItem.url }}">
+                {{ menuItem.label }}
               </a>
             </li>
           </ul>
-        </li>
-        <li ng-class="{active: $state.includes('content-hosts.details.host-collections')}">
-          <a translate
-             ui-sref="content-hosts.details.host-collections.list">
-            Host Collections
-          </a>
-        </li>
-        <li ng-class="{active: stateIncludes('content-hosts.details.tasks')}">
-          <a translate
-             ui-sref="content-hosts.details.tasks.index">
-            Tasks
-          </a>
-        </li>
-        <li ng-class="{active: isState('content-hosts.details.packages')}">
-          <a translate
-             ui-sref="content-hosts.details.packages">
-            Packages
-          </a>
-        </li>
-        <li ng-class="{active: isState('content-hosts.details.errata.index')}">
-          <a translate
-             ui-sref="content-hosts.details.errata.index">
-            Errata
-          </a>
-        </li>
-        <li ng-hide="denied('view_products')" ng-class="{active: isState('content-hosts.details.products')}">
-          <a translate
-             ui-sref="content-hosts.details.products">
-            Product Content
-          </a>
-        </li>
-        <li ng-repeat="menuItem in menuExpander.getMenu('host')">
-          <a href="{{ menuItem.url }}">
-            {{ menuItem.label }}
-          </a>
-        </li>
-      </ul>
-    </nav>
+        </nav>
 
-    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+        <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-    <section class="nutupane-sub-section" ui-view></section>
+        <section class="nutupane-sub-section" ui-view></section>
+      </div>
+    </section>
   </div>
-</section>
+</div>

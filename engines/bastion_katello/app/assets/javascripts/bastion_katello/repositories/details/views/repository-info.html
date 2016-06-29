@@ -1,371 +1,372 @@
 <span page-title ng-model="repository">{{ 'Repository:' | translate }} {{ repository.name }}</span>
-<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
 
 <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-<div ng-hide="panel.error">
-  <div>
-    <a ui-sref="products.details.repositories.index({productId: product.id})">
-      <i class="fa fa-double-angle-left"></i>
-      {{ "Back to Repository List" | translate }}
-    </a>
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
 
-    <div class="fr">
-      <button class="btn btn-default"
-              ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})"
-              ng-hide="repository.content_type !== 'yum' || denied('edit_products', product)">
-        <span translate>Manage Packages</span>
-      </button>
+    <div ng-hide="panel.error">
+      <div>
+        <a ui-sref="products.details.repositories.index({productId: product.id})">
+          <i class="fa fa-double-angle-left"></i>
+          {{ "Back to Repository List" | translate }}
+        </a>
 
-      <button class="btn btn-default"
-              ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"
-              ng-hide="repository.content_type !== 'puppet' || denied('edit_products', product)">
-        <span translate>Manage Puppet Modules</span>
-      </button>
+        <div class="fr">
+          <button class="btn btn-default"
+                  ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})"
+                  ng-hide="repository.content_type !== 'yum' || denied('edit_products', product)">
+            <span translate>Manage Packages</span>
+          </button>
 
-      <button class="btn btn-default"
-            ui-sref="products.details.repositories.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})"
-            ng-hide="repository.content_type !== 'docker' || denied('edit_products', product)">
-        <span translate>Manage Docker Manifests</span>
-      </button>
+          <button class="btn btn-default"
+                  ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})"
+                  ng-hide="repository.content_type !== 'puppet' || denied('edit_products', product)">
+            <span translate>Manage Puppet Modules</span>
+          </button>
 
-      <button class="btn btn-default"
-              ui-sref="products.details.repositories.manage-content.ostree-branches({productId: product.id, repositoryId: repository.id})"
-              ng-hide="repository.content_type !== 'ostree' || denied('edit_products', product)">
-        <span translate>View Branches</span>
-      </button>
+          <button class="btn btn-default"
+                ui-sref="products.details.repositories.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})"
+                ng-hide="repository.content_type !== 'docker' || denied('edit_products', product)">
+            <span translate>Manage Docker Manifests</span>
+          </button>
 
-      <button class="btn btn-default"
-              ng-click="syncRepository(repository); working = true"
-              ng-hide="!repository.url || denied('sync_products', product)"
-              ng-disabled="syncInProgress(repository.last_sync)">
-        <i class="fa fa-refresh"></i>
-        <span translate>Sync Now</span>
-      </button>
+          <button class="btn btn-default"
+                  ui-sref="products.details.repositories.manage-content.ostree-branches({productId: product.id, repositoryId: repository.id})"
+                  ng-hide="repository.content_type !== 'ostree' || denied('edit_products', product)">
+            <span translate>View Branches</span>
+          </button>
 
-      <div bst-modal="removeRepository(repository)" model="repository">
-        <div data-block="modal-header" translate>Remove Repository "{{ repository.name }}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove repository "{{ repository.name }}"?</div>
-      </div>
+          <button class="btn btn-default"
+                  ng-click="syncRepository(repository); working = true"
+                  ng-hide="!repository.url || denied('sync_products', product)"
+                  ng-disabled="syncInProgress(repository.last_sync)">
+            <i class="fa fa-refresh"></i>
+            <span translate>Sync Now</span>
+          </button>
 
-      <span ng-switch="getRepoNonDeletableReason(repository, product)">
-        <i class="fa fa-question-sign" ng-switch-when="permissions"
-           tooltip="{{ 'You cannot remove this repository because you do not have permission.' | translate }}"
-           tooltip-animation="false"
-           tooltip-placement="left"
-           tooltip-append-to-body="true">
-        </i>
-        <i class="fa fa-question-sign" ng-switch-when="published"
-           tooltip="{{ 'You cannot remove this repository because it was published to a content view.' | translate }}"
-           tooltip-animation="false"
-           tooltip-placement="left"
-           tooltip-append-to-body="true">
-        </i>
-        <i class="fa fa-question-sign" ng-switch-when="redhat"
-           tooltip="{{ 'You cannot remove this repository because it is a Red Hat repository.' | translate }}"
-           tooltip-animation="false"
-           tooltip-placement="left"
-           tooltip-append-to-body="true">
-        </i>
-      </span>
+          <div bst-modal="removeRepository(repository)" model="repository">
+            <div data-block="modal-header" translate>Remove Repository "{{ repository.name }}"?</div>
+            <div data-block="modal-body" translate>Are you sure you want to remove repository "{{ repository.name }}"?</div>
+          </div>
 
-      <button class="btn btn-default"
-              ng-click="openModal()"
-              ng-show="canRemove(repository, product)">
-        {{ "Remove Repository" | translate }}
-      </button>
-    </div>
+          <span ng-switch="getRepoNonDeletableReason(repository, product)">
+            <i class="fa fa-question-sign" ng-switch-when="permissions"
+               tooltip="{{ 'You cannot remove this repository because you do not have permission.' | translate }}"
+               tooltip-animation="false"
+               tooltip-placement="left"
+               tooltip-append-to-body="true">
+            </i>
+            <i class="fa fa-question-sign" ng-switch-when="published"
+               tooltip="{{ 'You cannot remove this repository because it was published to a content view.' | translate }}"
+               tooltip-animation="false"
+               tooltip-placement="left"
+               tooltip-append-to-body="true">
+            </i>
+            <i class="fa fa-question-sign" ng-switch-when="redhat"
+               tooltip="{{ 'You cannot remove this repository because it is a Red Hat repository.' | translate }}"
+               tooltip-animation="false"
+               tooltip-placement="left"
+               tooltip-append-to-body="true">
+            </i>
+          </span>
 
-  </div>
-
-  <div class="details fl">
-    <section>
-
-      <h4 translate>Basic Information</h4>
-
-      <div class="detail">
-        <span class="info-label" translate>Name</span>
-        <span class="info-value"
-              bst-edit-text="repository.name"
-              on-save="save(repository)"
-              readonly="product.redhat || denied('edit_products', product)">
-        </span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Label</span>
-        <span class="info-value">{{ repository.label }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Type</span>
-        <span class="info-value">{{ repository.content_type }}</span>
-      </div>
-
-      <div class="detail">
-        <span ng-show="repository.content_type !== 'docker'" class="info-label" translate>URL</span>
-        <span ng-show="repository.content_type === 'docker'" class="info-label" translate>Registry URL</span>
-        <span class="info-value"
-              bst-edit-text="repository.url"
-              on-save="save(repository)"
-              readonly="product.redhat || denied('edit_products', product)">
-        </span>
-      </div>
-
-      <div class="detail" ng-show="repository.content_type === 'docker'" >
-        <span class="info-label" translate>Upstream Repository Name</span>
-        <span class="info-value"
-              bst-edit-text="repository.docker_upstream_name"
-              on-save="save(repository)"
-              readonly="product.redhat || denied('edit_products', product)">
-        </span>
-      </div>
-
-      <div class="detail" ng-show="repository.content_type === 'yum'">
-        <span class="info-label" translate>Yum Metadata Checksum</span>
-        <span class="info-value"
-              bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
-              readonly="product.redhat || denied('edit_products', product)"
-              selector="repository.checksum_type"
-              options="checksums"
-              on-save="save(repository)">
-        </span>
-      </div>
-
-      <div class="detail" ng-show="repository.content_type === 'yum'">
-        <span class="info-label" translate>Mirror on Sync</span>
-        <span class="info-value"
-              bst-edit-checkbox="repository.mirror_on_sync"
-              formatter="booleanToYesNo"
-              on-save="save(repository)"
-              readonly="denied('edit_products', product)">
-        </span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Publish via HTTPS</span>
-        <span class="info-value" translate>Yes</span>
-      </div>
-
-      <div class="detail" ng-hide="repository.content_type === 'ostree'">
-        <span class="info-label" translate>Publish via HTTP</span>
-        <span class="info-value"
-              bst-edit-checkbox="repository.unprotected"
-              formatter="booleanToYesNo"
-              on-save="save(repository)"
-              readonly="product.redhat || denied('edit_products', product)">
-        </span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Published At</span>
-        <span class="info-value">
-          <a ng-href="{{ repository.full_path }}">{{ repository.full_path }}</a>
-
-          <p bst-alert='info' ng-hide="repository.unprotected">
-            <span translate>
-              In order to browse this repository you must <a ng-href="/organizations/{{ organization }}/edit">download the certificate</a>
-              or ask your admin for a certificate.
-            </span>
-          </p>
-        </span>
-      </div>
-
-      <div class="detail" ng-if="repository.content_type === 'yum' && !product.redhat">
-        <span class="info-label" translate>GPG Key</span>
-        <span class="info-value"
-              bst-edit-select="repository.gpg_key.name"
-              readonly="product.redhat ||denied('edit_products', product)"
-              selector="repository.gpg_key_id"
-              options="gpgKeys()"
-              on-save="save(repository)">
-        </span>
-      </div>
-
-      <div class="detail" ng-if="repository.content_type == 'yum'">
-        <span class="info-label" translate>Download Policy</span>
-        <span class="info-value"
-              bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
-              readonly="denied('edit_products', product)"
-              selector="repository.download_policy"
-              options="downloadPolicies"
-              options-format="id as name for (id, name) in options"
-              on-save="save(repository)">
-        </span>
-      </div>
-
-      <div class="divider"></div>
-    </section>
-
-    <section>
-      <h4 translate>Sync Status</h4>
-
-      <div ng-include="'products/details/partials/sync-status.html'"></div>
-
-      <div class="detail">
-        <span class="info-label" translate>Last Sync</span>
-        <span class="info-value" translate>
-          {{ repository.last_sync_words }} Ago ({{ repository.last_sync.ended_at | date:'medium' }} Local Time)
-        </span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Next Sync</span>
-        <span class="info-value" ng-show="repository.product.sync_plan.next_sync" translate>
-          {{ repository.product.sync_plan.next_sync | date:'medium' }} (Server Time)
-        </span>
-        <span class="info-value" ng-hide="repository.product.sync_plan.next_sync" translate>
-          Synced manually, no interval set.
-        </span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Sync State</span>
-        <span class="info-value">
-          <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result }}</a>
-        </span>
-      </div>
-    </section>
-
-  </div>
-
-  <div class="details fl">
-
-    <section ng-if="repository.content_type !== 'file'">
-      <h4 translate>Content Counts</h4>
-
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th colspan="2" translate>Content Type</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr ng-show="repository.content_type === 'yum'">
-            <td translate>Packages</td>
-            <td class="align-center">
-              <a ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
-                {{ repository.content_counts.rpm || 0 }}
-              </a>
-            </td>
-        </tr>
-        <tr ng-show="repository.content_type === 'yum'">
-          <td translate>Errata</td>
-          <td class="align-center">
-            <a ui-sref="errata.index({repositoryId: repository.id})">
-            {{ repository.content_counts.erratum || 0 }}
-            </a>
-          </td>
-        </tr>
-        <tr ng-show="repository.content_type === 'yum'">
-          <td translate>Package Groups</td>
-          <td class="align-center">
-            <a ui-sref="products.details.repositories.manage-content.package-groups({productId: product.id, repositoryId: repository.id})">
-              {{ repository.content_counts.package_group || 0 }}
-            </a>
-          </td>
-        </tr>
-        <tr ng-show="repository.content_type === 'puppet'">
-          <td translate>Puppet Modules</td>
-          <td class="align-center">
-            <a ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
-            {{ repository.content_counts.puppet_module || 0 }}
-            </a>
-          </td>
-        </tr>
-        <tr ng-show="repository.content_type === 'docker'">
-            <td translate>Docker Manifests</td>
-            <td class="align-center">{{ repository.content_counts.docker_manifest || 0 }}</td>
-        </tr>
-        <tr ng-show="repository.content_type === 'docker'">
-          <td translate>Docker Tags</td>
-          <td class="align-center">{{ repository.content_counts.docker_tag || 0 }}</td>
-        </tr>
-        <tr ng-show="repository.content_type === 'ostree'">
-          <td translate>OSTree Branches</td>
-          <td class="align-center">{{ repository.content_counts.ostree_branch || 0 }}</td>
-        </tr>
-        </tbody>
-      </table>
-
-      <div class="divider" ng-if="repository.content_type === 'ostree'"/>
-    </section>
-
-    <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree'">
-      <h5 translate ng-show="repository.content_type === 'puppet'">Upload Puppet Module</h5>
-      <h5 translate ng-show="repository.content_type === 'yum'">Upload Package</h5>
-      <h5 translate ng-show="repository.content_type === 'file'">Upload File</h5>
-
-      <div bst-alerts success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
-
-      <form role="form"
-            action="{{ uploadURL }}"
-            ng-upload="uploadContent(content)"
-            upload-options-enable-controls
-            upload-options-enable-rails-csrf>
-
-        <div class="form-group">
-          <input type="file" name="content[]" ng-hide="denied('edit_products', product)" multiple/>
-        </div>
-
-        <div class="form-group">
-          <button class="btn btn-primary"
-            ng-hide="denied('edit_products', product)"
-            upload-submit ng-click="progress.uploading = true">
-            <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
-            <span ng-show="progress.uploading" translate>Uploading...</span>
-            <span ng-hide="progress.uploading" translate>Upload</span>
+          <button class="btn btn-default"
+                  ng-click="openModal()"
+                  ng-show="canRemove(repository, product)">
+            {{ "Remove Repository" | translate }}
           </button>
         </div>
 
-      </form>
-    </section>
+      </div>
 
-    <section ng-show="repository.content_type === 'yum'">
-      <div class="divider"></div>
-      <h4 translate>Distribution Information</h4>
+      <div class="details fl">
+        <section>
 
-      <div class="detail" >
-        <span class="info-value" ng-hide="repository.distribution_version ||
-           repository.distribution_arch ||
-           repository.distribution_family ||
-           repository.distribution_variant">No distribution available</span>
-
-        <section ng-show="repository.distribution_version ||
-           repository.distribution_arch ||
-           repository.distribution_family ||
-           repository.distribution_variant">
+          <h4 translate>Basic Information</h4>
 
           <div class="detail">
-            <span class="info-label" translate>Version</span>
-            <span class="info-value">{{ repository.distribution_version }}</span>
+            <span class="info-label" translate>Name</span>
+            <span class="info-value"
+                  bst-edit-text="repository.name"
+                  on-save="save(repository)"
+                  readonly="product.redhat || denied('edit_products', product)">
+            </span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Architecture</span>
-            <span class="info-value">{{ repository.distribution_arch}}</span>
+            <span class="info-label" translate>Label</span>
+            <span class="info-value">{{ repository.label }}</span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Family</span>
-            <span class="info-value">{{ repository.distribution_family}}</span>
+            <span class="info-label" translate>Type</span>
+            <span class="info-value">{{ repository.content_type }}</span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Variant</span>
-            <span class="info-value">{{ repository.distribution_variant}}</span>
+            <span ng-show="repository.content_type !== 'docker'" class="info-label" translate>URL</span>
+            <span ng-show="repository.content_type === 'docker'" class="info-label" translate>Registry URL</span>
+            <span class="info-value"
+                  bst-edit-text="repository.url"
+                  on-save="save(repository)"
+                  readonly="product.redhat || denied('edit_products', product)">
+            </span>
+          </div>
+
+          <div class="detail" ng-show="repository.content_type === 'docker'" >
+            <span class="info-label" translate>Upstream Repository Name</span>
+            <span class="info-value"
+                  bst-edit-text="repository.docker_upstream_name"
+                  on-save="save(repository)"
+                  readonly="product.redhat || denied('edit_products', product)">
+            </span>
+          </div>
+
+          <div class="detail" ng-show="repository.content_type === 'yum'">
+            <span class="info-label" translate>Yum Metadata Checksum</span>
+            <span class="info-value"
+                  bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
+                  readonly="product.redhat || denied('edit_products', product)"
+                  selector="repository.checksum_type"
+                  options="checksums"
+                  on-save="save(repository)">
+            </span>
+          </div>
+
+          <div class="detail" ng-show="repository.content_type === 'yum'">
+            <span class="info-label" translate>Mirror on Sync</span>
+            <span class="info-value"
+                  bst-edit-checkbox="repository.mirror_on_sync"
+                  formatter="booleanToYesNo"
+                  on-save="save(repository)"
+                  readonly="denied('edit_products', product)">
+            </span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Bootable</span>
-            <span class="info-value">{{ repository.distribution_bootable}}</span>
+            <span class="info-label" translate>Publish via HTTPS</span>
+            <span class="info-value" translate>Yes</span>
+          </div>
+
+          <div class="detail" ng-hide="repository.content_type === 'ostree'">
+            <span class="info-label" translate>Publish via HTTP</span>
+            <span class="info-value"
+                  bst-edit-checkbox="repository.unprotected"
+                  formatter="booleanToYesNo"
+                  on-save="save(repository)"
+                  readonly="product.redhat || denied('edit_products', product)">
+            </span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Published At</span>
+            <span class="info-value">
+              <a ng-href="{{ repository.full_path }}">{{ repository.full_path }}</a>
+
+              <p bst-alert='info' ng-hide="repository.unprotected">
+                <span translate>
+                  In order to browse this repository you must <a ng-href="/organizations/{{ organization }}/edit">download the certificate</a>
+                  or ask your admin for a certificate.
+                </span>
+              </p>
+            </span>
+          </div>
+
+          <div class="detail" ng-if="repository.content_type === 'yum' && !product.redhat">
+            <span class="info-label" translate>GPG Key</span>
+            <span class="info-value"
+                  bst-edit-select="repository.gpg_key.name"
+                  readonly="product.redhat ||denied('edit_products', product)"
+                  selector="repository.gpg_key_id"
+                  options="gpgKeys()"
+                  on-save="save(repository)">
+            </span>
+          </div>
+
+          <div class="detail" ng-if="repository.content_type == 'yum'">
+            <span class="info-label" translate>Download Policy</span>
+            <span class="info-value"
+                  bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
+                  readonly="denied('edit_products', product)"
+                  selector="repository.download_policy"
+                  options="downloadPolicies"
+                  options-format="id as name for (id, name) in options"
+                  on-save="save(repository)">
+            </span>
+          </div>
+
+          <div class="divider"></div>
+        </section>
+
+        <section>
+          <h4 translate>Sync Status</h4>
+
+          <div ng-include="'products/details/partials/sync-status.html'"></div>
+
+          <div class="detail">
+            <span class="info-label" translate>Last Sync</span>
+            <span class="info-value" translate>
+              {{ repository.last_sync_words }} Ago ({{ repository.last_sync.ended_at | date:'medium' }} Local Time)
+            </span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Next Sync</span>
+            <span class="info-value" ng-show="repository.product.sync_plan.next_sync" translate>
+              {{ repository.product.sync_plan.next_sync | date:'medium' }} (Server Time)
+            </span>
+            <span class="info-value" ng-hide="repository.product.sync_plan.next_sync" translate>
+              Synced manually, no interval set.
+            </span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Sync State</span>
+            <span class="info-value">
+              <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result }}</a>
+            </span>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="details fl">
+
+        <section ng-if="repository.content_type !== 'file'">
+          <h4 translate>Content Counts</h4>
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th colspan="2" translate>Content Type</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr ng-show="repository.content_type === 'yum'">
+                <td translate>Packages</td>
+                <td class="align-center">
+                  <a ui-sref="products.details.repositories.manage-content.packages({productId: product.id, repositoryId: repository.id})">
+                    {{ repository.content_counts.rpm || 0 }}
+                  </a>
+                </td>
+            </tr>
+            <tr ng-show="repository.content_type === 'yum'">
+              <td translate>Errata</td>
+              <td class="align-center">
+                <a ui-sref="errata.index({repositoryId: repository.id})">
+                {{ repository.content_counts.erratum || 0 }}
+                </a>
+              </td>
+            </tr>
+            <tr ng-show="repository.content_type === 'yum'">
+              <td translate>Package Groups</td>
+              <td class="align-center">
+                <a ui-sref="products.details.repositories.manage-content.package-groups({productId: product.id, repositoryId: repository.id})">
+                  {{ repository.content_counts.package_group || 0 }}
+                </a>
+              </td>
+            </tr>
+            <tr ng-show="repository.content_type === 'puppet'">
+              <td translate>Puppet Modules</td>
+              <td class="align-center">
+                <a ui-sref="products.details.repositories.manage-content.puppet-modules({productId: product.id, repositoryId: repository.id})">
+                {{ repository.content_counts.puppet_module || 0 }}
+                </a>
+              </td>
+            </tr>
+            <tr ng-show="repository.content_type === 'docker'">
+                <td translate>Docker Manifests</td>
+                <td class="align-center">{{ repository.content_counts.docker_manifest || 0 }}</td>
+            </tr>
+            <tr ng-show="repository.content_type === 'docker'">
+              <td translate>Docker Tags</td>
+              <td class="align-center">{{ repository.content_counts.docker_tag || 0 }}</td>
+            </tr>
+            <tr ng-show="repository.content_type === 'ostree'">
+              <td translate>OSTree Branches</td>
+              <td class="align-center">{{ repository.content_counts.ostree_branch || 0 }}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="divider" ng-if="repository.content_type === 'ostree'"/>
+        </section>
+
+        <section class="well" ng-if="permitted('edit_products', product) && !product.redhat && repository.content_type !== 'docker' && repository.content_type !== 'ostree'">
+          <h5 translate ng-show="repository.content_type === 'puppet'">Upload Puppet Module</h5>
+          <h5 translate ng-show="repository.content_type === 'yum'">Upload Package</h5>
+          <h5 translate ng-show="repository.content_type === 'file'">Upload File</h5>
+
+          <div bst-alerts success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
+
+          <form role="form"
+                action="{{ uploadURL }}"
+                ng-upload="uploadContent(content)"
+                upload-options-enable-controls
+                upload-options-enable-rails-csrf>
+
+            <div class="form-group">
+              <input type="file" name="content[]" ng-hide="denied('edit_products', product)" multiple/>
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-primary"
+                ng-hide="denied('edit_products', product)"
+                upload-submit ng-click="progress.uploading = true">
+                <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
+                <span ng-show="progress.uploading" translate>Uploading...</span>
+                <span ng-hide="progress.uploading" translate>Upload</span>
+              </button>
+            </div>
+
+          </form>
+        </section>
+
+        <section ng-show="repository.content_type === 'yum'">
+          <div class="divider"></div>
+          <h4 translate>Distribution Information</h4>
+
+          <div class="detail" >
+            <span class="info-value" ng-hide="repository.distribution_version ||
+               repository.distribution_arch ||
+               repository.distribution_family ||
+               repository.distribution_variant">No distribution available</span>
+
+            <section ng-show="repository.distribution_version ||
+               repository.distribution_arch ||
+               repository.distribution_family ||
+               repository.distribution_variant">
+
+              <div class="detail">
+                <span class="info-label" translate>Version</span>
+                <span class="info-value">{{ repository.distribution_version }}</span>
+              </div>
+
+              <div class="detail">
+                <span class="info-label" translate>Architecture</span>
+                <span class="info-value">{{ repository.distribution_arch}}</span>
+              </div>
+
+              <div class="detail">
+                <span class="info-label" translate>Family</span>
+                <span class="info-value">{{ repository.distribution_family}}</span>
+              </div>
+
+              <div class="detail">
+                <span class="info-label" translate>Variant</span>
+                <span class="info-value">{{ repository.distribution_variant}}</span>
+              </div>
+
+              <div class="detail">
+                <span class="info-label" translate>Bootable</span>
+                <span class="info-value">{{ repository.distribution_bootable}}</span>
+              </div>
+            </section>
           </div>
         </section>
       </div>
-    </section>
+    </div>
   </div>
 </div>

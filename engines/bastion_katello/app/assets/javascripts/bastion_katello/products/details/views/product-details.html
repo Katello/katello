@@ -1,83 +1,82 @@
 <span page-title ng-model="product">{{ 'Details for Product:' | translate }} {{ product.name }}</span>
 
-<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
+      <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-  <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+      <div ng-hide="panel.error">
+        <header class="details-header">
+          <h2 class="fl" translate>Product {{ product.name }}</h2>
 
-  <div ng-hide="panel.error">
-    <header class="details-header">
-      <h2 class="fl" translate>Product {{ product.name }}</h2>
+          <div class="fr">
 
-      <div class="fr">
+            <div bst-modal="removeProduct(product)" model="product">
+              <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
+              <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
+            </div>
 
-        <div bst-modal="removeProduct(product)" model="product">
-          <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
-          <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
-        </div>
+            <span ng-switch="getReadOnlyReason(product)" bst-feature-flag="custom_products">
+              <i class="fa fa-question-circle" ng-switch-when="permissions"
+                 tooltip="{{ 'You cannot remove this product because you do not have permission.' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-append-to-body="true">
+              </i>
+              <i class="fa fa-question-circle" ng-switch-when="published"
+                 tooltip="{{ 'You cannot remove this product because it was published to a content view.' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-append-to-body="true">
+              </i>
+              <i class="fa fa-question-circle" ng-switch-when="redhat"
+                 tooltip="{{ 'You cannot remove this product because it is a Red Hat product.' | translate }}"
+                 tooltip-animation="false"
+                 tooltip-append-to-body="true">
+              </i>
+            </span>
 
-        <span ng-switch="getReadOnlyReason(product)" bst-feature-flag="custom_products">
-          <i class="fa fa-question-circle" ng-switch-when="permissions"
-             tooltip="{{ 'You cannot remove this product because you do not have permission.' | translate }}"
-             tooltip-animation="false"
-             tooltip-append-to-body="true">
-          </i>
-          <i class="fa fa-question-circle" ng-switch-when="published"
-             tooltip="{{ 'You cannot remove this product because it was published to a content view.' | translate }}"
-             tooltip-animation="false"
-             tooltip-append-to-body="true">
-          </i>
-          <i class="fa fa-question-circle" ng-switch-when="redhat"
-             tooltip="{{ 'You cannot remove this product because it is a Red Hat product.' | translate }}"
-             tooltip-animation="false"
-             tooltip-append-to-body="true">
-          </i>
-        </span>
+            <button class="btn btn-default" bst-feature-flag="custom_products"
+                    ng-disabled="!productDeletable(product)"
+                    ng-click="openModal()">
+              <i class="fa fa-trash-o"></i>
+              {{ "Remove Product" | translate }}
+            </button>
+            <button class="btn btn-default" ui-sref="products.index">
+              <i class="fa fa-remove"></i>
+              {{ "Close" | translate }}
+            </button>
+          </div>
+        </header>
 
-        <button class="btn btn-default" bst-feature-flag="custom_products"
-                ng-disabled="!productDeletable(product)"
-                ng-click="openModal()">
-          <i class="fa fa-trash-o"></i>
-          {{ "Remove Product" | translate }}
-        </button>
-        <button class="btn btn-default" ui-sref="products.index">
-          <i class="fa fa-remove"></i>
-          {{ "Close" | translate }}
-        </button>
+        <nav>
+          <ul class="nav nav-tabs">
+            <li ng-class="{active: stateIncludes('products.details.info')}">
+              <a translate
+                 ui-sref="products.details.info({productId: product.id})">
+                Details
+              </a>
+            </li>
+            <li ng-class="{active: stateIncludes('products.details.repositories')}">
+              <a translate
+                 ui-sref="products.details.repositories.index({productId: product.id})">
+                Repositories
+              </a>
+            </li>
+            <li ng-class="{active: stateIncludes('products.details.tasks')}">
+              <a translate
+                 ui-sref="products.details.tasks.index({productId: product.id})">
+                Tasks
+              </a>
+            </li>
+            <li ng-repeat="menuItem in menuExpander.getMenu('product')">
+              <a href="{{ menuItem.url }}">
+                {{ menuItem.label }}
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <section class="nutupane-sub-section" ui-view></section>
       </div>
-    </header>
-
-    <nav>
-      <ul class="nav nav-tabs">
-        <li ng-class="{active: stateIncludes('products.details.info')}">
-          <a translate
-             ui-sref="products.details.info({productId: product.id})">
-            Details
-          </a>
-        </li>
-        <li ng-class="{active: stateIncludes('products.details.repositories')}">
-          <a translate
-             ui-sref="products.details.repositories.index({productId: product.id})">
-            Repositories
-          </a>
-        </li>
-        <li ng-class="{active: stateIncludes('products.details.tasks')}">
-          <a translate
-             ui-sref="products.details.tasks.index({productId: product.id})">
-            Tasks
-          </a>
-        </li>
-        <li ng-repeat="menuItem in menuExpander.getMenu('product')">
-          <a href="{{ menuItem.url }}">
-            {{ menuItem.label }}
-          </a>
-        </li>
-      </ul>
-    </nav>
-
-    <section class="nutupane-sub-section" ui-view></section>
+    </section>
   </div>
-</section>
+</div>
