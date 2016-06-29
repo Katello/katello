@@ -13,9 +13,8 @@ module Actions
         end
 
         def finalize
-          ::Host.where(:id => input[:host_ids]).each do |host|
-            host.content_facet.try(:import_applicability)
-            host.content_facet.update_errata_status
+          input[:host_ids].each do |host_id|
+            ::Katello::EventQueue.push_event(::Katello::Events::ImportHostErrata::EVENT_TYPE, host_id)
           end
         end
       end

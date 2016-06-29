@@ -11,7 +11,9 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:repo_id])
-          repo.import_host_applicability
+          repo.hosts_with_applicability.each do |host|
+            ::Katello::EventQueue.push_event(::Katello::Events::ImportHostErrata::EVENT_TYPE, host.id)
+          end
         end
 
         def rescue_strategy_for_self
