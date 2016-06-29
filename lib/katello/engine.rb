@@ -116,6 +116,7 @@ module Katello
       unless ForemanTasks.dynflow.config.remote? || File.basename($PROGRAM_NAME) == 'rake' || Rails.env.test?
         ForemanTasks.dynflow.config.on_init do |world|
           ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
+          ::Actions::Katello::EventQueue::Monitor.ensure_running(world)
         end
       end
     end
@@ -241,6 +242,8 @@ module Katello
       ::SettingsController.class_eval do
         helper Katello::Concerns::SettingsHelperExtensions
       end
+
+      Katello::EventQueue.register_event(Katello::Events::ImportHostErrata::EVENT_TYPE, Katello::Events::ImportHostErrata)
 
       load 'katello/repository_types.rb'
     end

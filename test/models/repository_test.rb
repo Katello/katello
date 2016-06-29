@@ -646,11 +646,5 @@ module Katello
       assert_includes @fedora_17_x86_64.hosts_with_applicability, @lib_host
       assert_includes @fedora_17_x86_64.hosts_with_applicability, @view_host
     end
-
-    def test_import_host_applicability
-      Host::ContentFacet.any_instance.expects(:import_applicability).twice
-
-      @fedora_17_x86_64.import_host_applicability
-    end
   end
 end
