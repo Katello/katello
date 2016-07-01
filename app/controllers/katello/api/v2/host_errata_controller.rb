@@ -28,7 +28,12 @@ module Katello
       end
 
       collection = scoped_search(index_relation, 'updated_at', 'desc', :resource_class => Erratum, :includes => [:cves])
-      @installable_errata_ids = @host.content_facet.installable_errata.pluck("#{Katello::Erratum.table_name}.id")
+
+      @installable_errata_ids = []
+      if @host.content_facet
+        @installable_errata_ids = @host.content_facet.installable_errata.pluck("#{Katello::Erratum.table_name}.id")
+      end
+
       respond_for_index :collection => collection
     end
 
@@ -52,7 +57,11 @@ module Katello
     protected
 
     def index_relation
-      @host.content_facet.installable_errata(@environment, @content_view)
+      relation = Katello::Erratum.none
+      if @host.content_facet
+        relation = @host.content_facet.installable_errata(@environment, @content_view)
+      end
+      relation
     end
 
     private

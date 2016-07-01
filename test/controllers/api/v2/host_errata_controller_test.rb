@@ -21,6 +21,7 @@ module Katello
 
       @host = hosts(:one)
       @host_dev = hosts(:two)
+      @host_without_content_facet = hosts(:without_content_facet)
 
       setup_foreman_routes
       permissions
@@ -28,6 +29,13 @@ module Katello
 
     def test_index
       get :index, :host_id => @host_dev.id
+
+      assert_response :success
+      assert_template 'api/v2/host_errata/index'
+    end
+
+    def test_index_without_content_facet
+      get :index, :host_id => @host_without_content_facet.id
 
       assert_response :success
       assert_template 'api/v2/host_errata/index'
