@@ -27,6 +27,15 @@ module Katello
       }
     end
 
+    def interfaces
+      virtual_interface_regexp = /\A([^.]*?)\.(\d+)\z/
+      super.tap do |interfaces|
+        interfaces.each do |name, attributes|
+          attributes[:virtual] = true if name =~ virtual_interface_regexp
+        end
+      end
+    end
+
     # rubocop:disable Style/AccessorMethodName:
     def get_interfaces
       mac_keys = facts.keys.select { |f| f =~ /net\.interface\..*\.mac_address/ }
