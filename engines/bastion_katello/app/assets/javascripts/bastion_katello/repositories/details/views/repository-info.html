@@ -246,7 +246,7 @@
 
       <div class="details fl">
 
-        <section ng-if="repository.content_type !== 'file'">
+        <section>
           <h4 translate>Content Counts</h4>
 
           <table class="table table-striped">
@@ -300,6 +300,10 @@
             <tr ng-show="repository.content_type === 'ostree'">
               <td translate>OSTree Branches</td>
               <td class="align-center">{{ repository.content_counts.ostree_branch || 0 }}</td>
+            </tr>
+            <tr ng-show="repository.content_type === 'file'">
+              <td translate>Files</td>
+              <td class="align-center">{{ repository.content_counts.file || 0 }}</td>
             </tr>
             </tbody>
           </table>

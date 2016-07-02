@@ -447,3 +447,29 @@ ostree_view1:
   product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
+
+generic_file:
+  name:                 My Files
+  pulp_id:              "Default_Organization-Cabinet-My_Files"
+  content_id:           10
+  content_type:         file
+  label:                My_Files
+  relative_path:        '/Default_Organization/library/My_Files'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  unprotected:           <%= true %>
+
+generic_file_dev:
+  name:                 My Files
+  pulp_id:              "Default_Organization-Cabinet-My_Files"
+  content_id:           10
+  content_type:         file
+  library_instance:     My_Files
+  label:                My_Files_dev
+  relative_path:        '/Default_Organization/dev/My_Files'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>

@@ -43,6 +43,9 @@ module Katello
     has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :delete_all
     has_many :rpms, :through => :repository_rpms
 
+    has_many :repository_files, :class_name => "Katello::RepositoryFile", :dependent => :destroy
+    has_many :files, :through => :repository_files
+
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :delete_all
     has_many :puppet_modules, :through => :repository_puppet_modules
 
@@ -549,6 +552,8 @@ module Katello
         self.puppet_modules -= units
       elsif ostree?
         self.ostree_branches -= units
+      elsif file?
+        self.files -= units
       elsif docker?
         remove_docker_content(units)
       end
@@ -586,6 +591,8 @@ module Katello
         self.puppet_modules
       elsif ostree?
         self.ostree_branches
+      elsif file?
+        self.files
       else
         fail "Content type not supported for removal"
       end

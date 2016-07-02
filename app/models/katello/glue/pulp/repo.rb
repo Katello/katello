@@ -303,6 +303,10 @@ module Katello
         Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
       end
 
+      def pulp_file_ids
+        Katello.pulp_server.extensions.repository.file_ids(self.pulp_id)
+      end
+
       def pulp_errata_ids
         Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
       end
@@ -375,6 +379,20 @@ module Katello
         Katello::Rpm.sync_repository_associations(self, pulp_rpm_ids)
       end
 
+      def index_db_files(force = false)
+        if self.content_view.default? || force
+          files_json.each do |file_json|
+            begin
+              file = ::Katello::FileUnit.where(:uuid => file_json['_id']).first_or_create
+            rescue ActiveRecord::RecordNotUnique
+              retry
+            end
+            file.update_from_json(file_json)
+          end
+        end
+        Katello::FileUnit.sync_repository_associations(self, pulp_file_ids)
+      end
+
       def index_db_puppet_modules(force = false)
         if self.content_view.default? || force
           puppet_modules_json.each do |puppet_module_json|
@@ -432,6 +450,19 @@ module Katello
         self.pulp_rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, ::Katello::Pulp::Rpm::PULP_INDEXED_FIELDS))
+        end
+        tmp_packages
+      end
+
+      def files_json
+        tmp_packages = []
+        self.pulp_file_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+          tmp_packages.concat(
+            Katello.pulp_server.extensions.file.find_all_by_unit_ids(
+              sub_list,
+              ::Katello::Pulp::FileUnit::PULP_INDEXED_FIELDS
+            )
+          )
         end
         tmp_packages
       end
@@ -850,6 +881,7 @@ module Katello
       self.index_db_package_groups
       self.index_db_ostree_branches if Katello::RepositoryTypeManager.find(Repository::OSTREE_TYPE).present?
       self.import_distribution_data
+      self.index_db_files
       true
     end
   end

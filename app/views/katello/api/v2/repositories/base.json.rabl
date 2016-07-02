@@ -20,7 +20,8 @@ node :content_counts do |repo|
     :package => repo.rpms.count,
     :package_group => repo.package_groups.count,
     :erratum => repo.errata.count,
-    :puppet_module => repo.puppet_modules.count
+    :puppet_module => repo.puppet_modules.count,
+    :file => repo.files.count
   }
 end
 

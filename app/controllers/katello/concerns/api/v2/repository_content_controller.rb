@@ -200,6 +200,8 @@ module Katello
           _("Docker Tag")
         when "Katello::OstreeBranch"
           _("OSTree Branch")
+        when "Katello::FileUnit"
+          _("File")
         else
           fail "Can't find resource class: #{resource_class}"
         end

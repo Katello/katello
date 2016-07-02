@@ -219,6 +219,10 @@ module Katello
       Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
+    def file_count
+      Katello::FileUnit.in_repositories(self.repositories.archived).count
+    end
+
     def ostree_branch_count
       ostree_branches.count
     end

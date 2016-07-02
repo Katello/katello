@@ -17,6 +17,8 @@ module Actions
             repo.index_db_puppet_modules
           elsif repo.docker?
             repo.index_db_docker_manifests
+          elsif repo.file?
+            repo.index_db_files
           else
             ::Katello::Rpm.import_all(unit_ids, true)
           end

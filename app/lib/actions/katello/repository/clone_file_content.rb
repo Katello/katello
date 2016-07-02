@@ -8,6 +8,7 @@ module Actions
                         source_pulp_id: source_repo.pulp_id,
                         target_pulp_id: target_repo.pulp_id)
             plan_action(Katello::Repository::MetadataGenerate, target_repo)
+            plan_action(Katello::Repository::IndexContent, id: target_repo.id)
           end
         end
       end

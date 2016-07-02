@@ -21,6 +21,8 @@ module Actions
                           Pulp::Repository::RemovePuppetModule
                         when ::Katello::Repository::DOCKER_TYPE
                           Pulp::Repository::RemoveDockerManifest
+                        when ::Katello::Repository::FILE_TYPE
+                          Pulp::Repository::RemoveFile
                         end
 
           uuids = content_units.map(&:uuid)
