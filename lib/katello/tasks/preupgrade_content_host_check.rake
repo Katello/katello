@@ -112,7 +112,8 @@ namespace :katello do
 
       hosts = ::Host.where(:name => hostname)
       if hosts.any? && hosts.where(:organization_id => system.environment.organization.id).empty? # host is not in the correct org
-        unregister_system(system, "Organization mismatch between Host (#{hosts[0].org.name}) and Content Host #{system.environment.organization.name}.")
+        host_org = hosts[0].organization ? hosts[0].organization.name : ''
+        unregister_system(system, "Organization mismatch between Host (#{host_org}) and Content Host #{system.environment.organization.name}.")
       end
     end
 
