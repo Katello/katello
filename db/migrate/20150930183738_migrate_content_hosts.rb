@@ -325,7 +325,7 @@ class MigrateContentHosts < ActiveRecord::Migration
       if hostname.nil?
         logger.warn("Content host #{system.uuid} does not have a hostname, removing.")
         unregister_system(system)
-        break
+        next
       end
 
       MigrateContentHosts::Host.reset_column_information

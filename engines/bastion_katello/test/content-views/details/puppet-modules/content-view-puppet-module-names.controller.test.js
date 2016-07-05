@@ -6,6 +6,9 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
     beforeEach(inject(function($injector) {
         $controller = $injector.get('$controller');
         ContentView = $injector.get('MockResource').$new();
+        PuppetModule = $injector.get('MockResource').$new();
+        PuppetModule.autocomplete = function(){return {$promise: {then: function(callback) {callback([])}}}};
+
         ContentView.availablePuppetModuleNames = function () {};
 
         $scope = $injector.get('$rootScope').$new();
@@ -14,7 +17,9 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
 
         dependencies = {
             $scope: $scope,
-            ContentView: ContentView
+            ContentView: ContentView,
+            PuppetModule: PuppetModule,
+            CurrentOrganization: 1
         };
 
         $controller('ContentViewPuppetModuleNamesController', dependencies);
@@ -32,5 +37,12 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.puppet-modules.versions',
             {contentViewId: 1, moduleName: "puppet"}
         );
+    });
+
+    it("Auto completes to puppet modules", function() {
+        spyOn(PuppetModule, 'autocomplete').andCallThrough();
+
+        $scope.detailsTable.fetchAutocomplete('foobar');
+        expect(PuppetModule.autocomplete).toHaveBeenCalledWith({'organization_id': 1, search: 'foobar'})
     });
 });

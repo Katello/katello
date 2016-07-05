@@ -78,7 +78,7 @@ module Katello
     param_group :host_collection
     def update
       @host_collection.update_attributes!(host_collection_params_with_host_ids)
-      respond
+      respond_for_show(:resource => @host_collection)
     end
 
     api :PUT, "/host_collections/:id/add_hosts", N_("Add host to the host collection")
@@ -154,7 +154,14 @@ module Katello
     end
 
     def host_collection_params
-      attrs = [:name, :description, :max_hosts, :unlimited_hosts, { :host_ids => [] }]
+      attrs = [:name,
+               :description,
+               :max_hosts,
+               :unlimited_hosts,
+               # For deep_munge; Remove for Rails 5
+               :host_ids,
+               { :host_ids => [] }
+              ]
       params.fetch(:host_collection).permit(*attrs)
     end
 
