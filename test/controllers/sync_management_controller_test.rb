@@ -65,6 +65,18 @@ module Katello
       assert_response :success
     end
 
+    def test_sync_repos
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      @request.env['CONTENT_TYPE'] = 'application/json'
+      @controller.expects(:latest_task).returns(:state => 'running')
+      @controller.expects(:format_sync_progress).returns('formatted-progress')
+
+      post :sync, :repoids => [@repository.id]
+
+      assert_response :success
+      assert_equal %([\"formatted-progress\"]), @response.body
+    end
+
     def test_sync_protected
       allowed_perms = [@sync_permission]
       denied_perms = []
