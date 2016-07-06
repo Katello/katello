@@ -11,13 +11,17 @@ module Katello
 
     def test_create
       uuid = 'foo'
-      assert PuppetModule.create!(:uuid => uuid, :author => 'katello', :name => 'pulp')
+      create(:puppet_module, :uuid => uuid)
       assert PuppetModule.find_by_uuid(uuid)
     end
 
+    def test_sortable_version
+      version = '1.20.4'
+      puppet_module = create(:puppet_module, :version => version)
+      assert_equal Util::Package.sortable_version(version), puppet_module.sortable_version
+    end
+
     def test_update_from_json
-      uuid = 'foo'
-      assert PuppetModule.create!(:uuid => uuid, :author => 'katello', :name => 'pulp')
       json = @dhcp.attributes.merge('summary' => 'an update', 'version' => '3', 'name' => 'dns', 'author' => 'katello')
       @dhcp.update_from_json(json.with_indifferent_access)
       @dhcp = PuppetModule.find(@dhcp)
@@ -25,6 +29,7 @@ module Katello
       assert_equal @dhcp.summary, json['summary']
       assert_equal @dhcp.name, json['name']
       assert_equal @dhcp.author, json['author']
+      assert_equal '01-3', @dhcp.sortable_version
     end
 
     def test_update_from_json_is_idempotent
@@ -61,6 +66,21 @@ module Katello
       assert_raises(Katello::Errors::InvalidPuppetModuleError) do
         PuppetModule.parse_metadata(filepath)
       end
+    end
+
+    def test_latest_module
+      puppet_module1 = create(:puppet_module, :version => "1.12.0")
+      puppet_module2 = create(:puppet_module, :version => "1.3.0")
+      @repo.puppet_modules = [puppet_module1, puppet_module2]
+
+      pmodule = PuppetModule.latest_module("trystero",
+                                           "tpynchon",
+                                           @repo
+                                          )
+
+      # should be 1.12.0 and not 1.3.0
+      assert_equal "1.12.0", pmodule.version
+      assert_equal puppet_module1.id, pmodule.id
     end
   end
 end
