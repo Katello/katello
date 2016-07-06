@@ -1,3 +1,49 @@
+# 3.0.2 Saison (2016-07-06)
+
+## Bug Fixes 
+
+### Subscriptions
+ * Importing rhsm facts doesn't set the virtual flag ([#15559](http://projects.theforeman.org/issues/15559), [7b2e6900](http://github.com/katello/katello/commit/7b2e6900777630ad186089c52c0f6fd42373f918))
+
+### API
+ * PUT /api/v2/host_collections/ do not return 'host_ids' attribute ([#15486](http://projects.theforeman.org/issues/15486), [15c1a2eb](http://github.com/katello/katello/commit/15c1a2eb3552c8379e15248c1e9e10fa6fc846a1))
+ * Unable to add puppet module stdlib to my content view through the UI ([#15435](http://projects.theforeman.org/issues/15435), [11a5a536](http://github.com/katello/katello/commit/11a5a536052c575ef081c0c92ae39b3223940b9c))
+ * incremental update with puppet fails with error 'undefined method `id_search'  ([#13253](http://projects.theforeman.org/issues/13253), [4192beda](http://github.com/katello/katello/commit/4192beda1ccadd4ba52cbc524732ba68c9be7299))
+ * System product content does not show redhat content ([#13010](http://projects.theforeman.org/issues/13010), [2d7c3558](http://github.com/katello/katello/commit/2d7c35580d5fcfad5e0b95114ab62f34494d7dca))
+
+### Upgrades
+ * On upgraded Satellite Viewer role user still can manage Content Views ([#15460](http://projects.theforeman.org/issues/15460), [118ea637](http://github.com/katello/katello/commit/118ea637834534dbe470dee14b868ae74567ccdf))
+
+### Installer
+ * Katello 3.0 RC5  Upgrade fail  ([#15269](http://projects.theforeman.org/issues/15269), [b5f07391](http://github.com/katello/katello/commit/b5f07391221ca330bade21d1d1614e1e4e2ee4f4))
+
+### Candlepin
+ * sub-man registration currently blocks on applicability generation ([#12749](http://projects.theforeman.org/issues/12749), [8305bfbf](http://github.com/katello/katello/commit/8305bfbf8d917b28fe9948dfd1cdcae7de77acbc))
+
+### Dashboard
+ * Dashboard gives undefined method `label' for nil:NilClass ([#13823](http://projects.theforeman.org/issues/13823), [dc50145a](http://github.com/katello/katello/commit/dc50145ae2d74847fc6a0563963a50ee7cde2e4d))
+
+### Pulp
+ * Task pending on waiting for Pulp to start the task ([#13799](http://projects.theforeman.org/issues/13799))
+ * Unable to apply updates/erratas ([#12427](http://projects.theforeman.org/issues/12427))
+
+### Capsule
+ * [Katello 2.4] Capsule content sync hangs at 75% (100% of the time) ([#13532](http://projects.theforeman.org/issues/13532))
+
+### Activation Key
+ * Can't delete activation key ([#12984](http://projects.theforeman.org/issues/12984), [de57a7b7](http://github.com/katello/katello/commit/de57a7b79357cc5974f13d0f922e103805940661))
+
+### Orchestration
+ * Failed pulp tasks are not resumable.  ([#14209](http://projects.theforeman.org/issues/14209), [86de6397](http://github.com/katello/katello/commit/86de63973edd329123f864b8f9feee6d6ee08af9))
+
+### Web UI
+ * Dashboard gives undefined method `name' for nil:NilClass ([#14205](http://projects.theforeman.org/issues/14205), [231e359e](http://github.com/katello/katello/commit/231e359ecafe8977978a3b0845b6ce56f0dc62c1))
+ * Partial ../overrides/foreman/activation_keys/_host_tab accessed outside of view paths ([#13592](http://projects.theforeman.org/issues/13592), [49354884](http://github.com/katello/katello/commit/493548846babded2976bb2e0e7fae737b8a1294f))
+
+### Other
+ * Katello's late initialization causes issues when resuming dynflow tasks ([#15114](http://projects.theforeman.org/issues/15114), [28cb3ef5](http://github.com/katello/katello/commit/28cb3ef503df6f53a14e68b0e80d4048d3a37b7a))
+ * After upgrade to foreman 1.10 my smart proxy is no anymore sync and is only sending resetting dropped connection ([#13286](http://projects.theforeman.org/issues/13286))
+
 # 3.0.1 Saison (2016-06-17)
 
 ## Bug Fixes 
