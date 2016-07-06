@@ -10,6 +10,7 @@ namespace :test do
           "#{Katello::Engine.root}/spec/**/*_spec.rb"
         ]
         t.verbose = true
+        t.warning = false
       end
 
       Rake::Task[spec_task.name].invoke
@@ -24,6 +25,7 @@ namespace :test do
             "#{Katello::Engine.root}/spec/routing/**/*_spec.rb"
           ]
           t.verbose = true
+          t.warning = false
         end
 
         Rake::Task[spec_task.name].invoke
@@ -40,6 +42,7 @@ namespace :test do
           "#{Katello::Engine.root}/test/**/*_test.rb"
         ]
         t.verbose = true
+        t.warning = false
       end
 
       Rake::Task[test_task.name].invoke
@@ -54,6 +57,7 @@ namespace :test do
             "#{Katello::Engine.root}/test/models/**/*_test.rb"
           ]
           t.verbose = true
+          t.warning = false
         end
 
         Rake::Task[test_task.name].invoke
@@ -67,6 +71,7 @@ namespace :test do
             "#{Katello::Engine.root}/test/actions/**/*_test.rb"
           ]
           t.verbose = true
+          t.warning = false
         end
 
         Rake::Task[test_task.name].invoke
@@ -80,6 +85,7 @@ namespace :test do
             "#{Katello::Engine.root}/test/controllers/**/*_test.rb"
           ]
           t.verbose = true
+          t.warning = false
         end
 
         Rake::Task[test_task.name].invoke
@@ -93,6 +99,7 @@ namespace :test do
             "#{Katello::Engine.root}/test/glue/**/*_test.rb"
           ]
           t.verbose = true
+          t.warning = false
         end
 
         Rake::Task[test_task.name].invoke
@@ -106,6 +113,7 @@ namespace :test do
             "#{Katello::Engine.root}/test/lib/**/*_test.rb"
           ]
           t.verbose = true
+          t.warning = false
         end
 
         Rake::Task[test_task.name].invoke
