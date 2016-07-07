@@ -26,6 +26,7 @@ module Katello
     scoped_search :on => :errata_type, :rename => :type, :complete_value => true
     scoped_search :on => :issued, :complete_value => true
     scoped_search :on => :updated, :complete_value => true
+    scoped_search :on => :reboot_suggested, :complete_value => true
     scoped_search :in => :cves, :on => :cve_id, :rename => :cve
     scoped_search :in => :bugzillas, :on => :bug_id, :rename => :bug
     scoped_search :in => :packages, :on => :nvrea, :rename => :package, :complete_value => true
