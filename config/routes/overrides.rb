@@ -34,6 +34,8 @@ Foreman::Application.routes.draw do
 
   namespace :api do
     scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v2/, :constraints => ApiConstraints.new(:version => 2, :default => true) do
+      match '/hosts/post_index' => 'hosts#index', :via => :post
+
       resources :hosts, :only => [] do
         member do
           put :host_collections

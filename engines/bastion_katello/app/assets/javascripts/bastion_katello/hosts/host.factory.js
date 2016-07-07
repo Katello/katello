@@ -10,6 +10,7 @@
 angular.module('Bastion.hosts').factory('Host',
     ['BastionResource', function (BastionResource) {
         var resource = BastionResource('/api/v2/hosts/:id/:action', {id: '@id'}, {
+            postIndex: {method: 'POST', params: {action: 'post_index'}},
             update: {method: 'PUT'},
             updateHostCollections: {method: 'PUT', params: {action: 'host_collections'}},
             autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}

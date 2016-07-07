@@ -27,4 +27,9 @@ describe('Factory: Host', function() {
 
         Host.updateHostCollections({id: 1}, {"host_collection_ids": [1,2]});
     });
+
+    it("provides a way to get the host index via a post", function() {
+        $httpBackend.expectPOST('/api/v2/hosts/post_index').respond({});
+        Host.postIndex();
+    });
 });
