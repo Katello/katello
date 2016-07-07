@@ -56,7 +56,7 @@ module Katello
           elsif options[:verify_ssl].is_a? Integer
             @net.verify_mode = options[:verify_ssl]
             @net.verify_callback = lambda do |preverify_ok, ssl_context|
-              if (!preverify_ok) || ssl_context.error != 0
+              if !preverify_ok || ssl_context.error != 0
                 err_msg = "SSL Verification failed -- Preverify: #{preverify_ok}, Error: #{ssl_context.error_string} (#{ssl_context.error})"
                 fail RestClient::SSLCertificateNotVerified, err_msg
               end

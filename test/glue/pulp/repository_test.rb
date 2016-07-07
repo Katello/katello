@@ -89,7 +89,7 @@ module Katello
         'https' => true
       }
       @fedora_17_x86_64.expects(:generate_distributors).with(true).at_least_once.returns(
-          [Runcible::Models::YumDistributor.new('/foo/bar', true, true, (yum_config))])
+          [Runcible::Models::YumDistributor.new('/foo/bar', true, true, yum_config)])
 
       assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumDistributor.type_id,
                                                      'config' => yum_config}])

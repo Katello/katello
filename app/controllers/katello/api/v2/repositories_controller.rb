@@ -47,7 +47,7 @@ module Katello
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
     param :rpm_id, String, :desc => N_("Id of a package to find repositories that contain the rpm")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
-    param :content_type, RepositoryTypeManager.repository_types.keys, :desc => (N_("limit to only repositories of this type"))
+    param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
           :required => false
