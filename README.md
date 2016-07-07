@@ -1,4 +1,8 @@
-# Katello [![Dependency Status](https://gemnasium.com/Katello/katello.svg)](https://gemnasium.com/Katello/katello)
+# Katello
+
+[![Build Status](http://ci.theforeman.org/buildStatus/icon?job=test_katello)](http://ci.theforeman.org/job/test_katello)
+[![Code Climate](https://codeclimate.com/github/Katello/katello/badges/gpa.svg)](https://codeclimate.com/github/Katello/katello)
+[![Dependency Status](https://gemnasium.com/Katello/katello.svg)](https://gemnasium.com/Katello/katello)
 
 Full documentation is at http://katello.github.io/katello
 
