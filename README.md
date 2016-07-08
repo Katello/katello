@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/Katello/katello/badges/gpa.svg)](https://codeclimate.com/github/Katello/katello)
 [![Dependency Status](https://gemnasium.com/Katello/katello.svg)](https://gemnasium.com/Katello/katello)
 
-Full documentation is at http://katello.github.io/katello
+Full documentation is at http://www.katello.org
 
 ## About
 
@@ -70,23 +70,14 @@ See the [developer documentation](http://www.katello.org/developers/index.html).
 ## Contact & Resources
 
  * [Katello.org](http://katello.org)
- * [Wiki](https://fedorahosted.org/katello/wiki)
  * [Foreman User Mailing List](https://groups.google.com/forum/?fromgroups#!forum/foreman-users)
  * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
  * [IRC Freenode](http://freenode.net/using_the_network.shtml): #theforeman-dev
- * [Twitter](https://twitter.com/Katello_Project)
 
 ## Documentation
 
-Documentation is generated with [YARD](http://yardoc.org/) and hosted at <http://katello.github.io/katello/>.
-This documentation is intended for developers, user documentation can be found on
-[wiki](https://fedorahosted.org/katello/). Developer documentation contains:
-
--   code documentation
--   high level guides to architectures and implementation details
--   how-tos
-
-*Note: older developer guides can be found on our wiki, they are being migrated.*
+Most of our documentation (both for users and developers) can be found at
+[Katello.org](http://www.katello.org).
 
 ### How to
 
