@@ -63,10 +63,7 @@
                     <% ['security', 'bugfix', 'enhancement'].each do |errata_type| %>
                       <% next if @errata[errata_type].nil? %>
                       <h3 style="text-align: left; margin: 10px 0px 5px;" align="left"><%= _("%s Errata") % errata_type.titleize %></h3>
-                      <% @errata[errata_type].each do |erratum| %>
-                        <%= render :partial => 'erratum', :locals => {:erratum => erratum} %>
-                        <p></p>
-                      <% end -%>
+                      <%= render :partial => 'erratum', :collection =>  @errata[errata_type], :as => :erratum %>
                     <% end -%>
                   </td>
                 </tr>
