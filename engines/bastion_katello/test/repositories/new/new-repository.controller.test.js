@@ -58,7 +58,7 @@ describe('Controller: NewRepositoryController', function() {
         var repository = $scope.repository;
 
         spyOn($scope, 'transitionTo');
-        spyOn(repository, '$save').andCallThrough();
+        spyOn(repository, '$save').and.callThrough();
         spyOn(GlobalNotification, "setSuccessMessage");
         $scope.save(repository);
 
@@ -71,7 +71,7 @@ describe('Controller: NewRepositoryController', function() {
         var repository = $scope.repository;
 
         repository.failed = true;
-        spyOn(repository, '$save').andCallThrough();
+        spyOn(repository, '$save').and.callThrough();
         $scope.save(repository);
 
         expect(repository.$save).toHaveBeenCalled();

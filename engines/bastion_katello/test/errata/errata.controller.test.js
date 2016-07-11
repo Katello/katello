@@ -120,7 +120,7 @@ describe('Controller: ErrataController', function() {
     });
 
     it('sets the incrementalUpdateInProgress to true if an incremental update is in progress', function () {
-        spyOn(Task, 'registerSearch').andCallFake(function (params, callback) {
+        spyOn(Task, 'registerSearch').and.callFake(function (params, callback) {
             callback([1]);
         });
 
@@ -131,7 +131,7 @@ describe('Controller: ErrataController', function() {
     });
 
     it('sets the incrementalUpdateInProgress to false if no incremental update is in progress', function () {
-        spyOn(Task, 'registerSearch').andCallFake(function (params, callback) {
+        spyOn(Task, 'registerSearch').and.callFake(function (params, callback) {
             callback([]);
         });
 

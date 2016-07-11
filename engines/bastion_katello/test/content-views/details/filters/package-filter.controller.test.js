@@ -188,7 +188,7 @@ describe('Controller: PackageFilterController', function() {
     it("should provide a method to retrieve autocomplete results", function () {
         var autocomplete;
 
-        spyOn(Package, 'autocompleteName').andCallThrough();
+        spyOn(Package, 'autocompleteName').and.callThrough();
         autocomplete = $scope.fetchAutocomplete('gir');
 
         expect(autocomplete.then).toBeDefined();

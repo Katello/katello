@@ -28,7 +28,7 @@ describe('Controller: ContentViewDockerRepositoriesListController', function() {
             };
         };
 
-        spyOn($scope, 'save').andCallThrough();
+        spyOn($scope, 'save').and.callThrough();
 
         $controller('ContentViewRepositoriesListController', {
             $scope: $scope,

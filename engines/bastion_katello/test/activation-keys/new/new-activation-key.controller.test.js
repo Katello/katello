@@ -66,7 +66,7 @@ describe('Controller: NewActivationKeyController', function() {
 
         spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
-        spyOn(activationKey, '$save').andCallThrough();
+        spyOn(activationKey, '$save').and.callThrough();
         $scope.save(activationKey);
 
         expect(activationKey.$save).toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('Controller: NewActivationKeyController', function() {
         var activationKey = $scope.activationKey;
 
         activationKey.failed = true;
-        spyOn(activationKey, '$save').andCallThrough();
+        spyOn(activationKey, '$save').and.callThrough();
         $scope.save(activationKey);
 
         expect(activationKey.$save).toHaveBeenCalled();

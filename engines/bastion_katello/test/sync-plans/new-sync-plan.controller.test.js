@@ -42,17 +42,17 @@ describe('Controller: NewSyncPlanController', function() {
             syncPlan.startTime = new Date('09/09/1999 13:00:00');
 
             syncPlan.$save = function() {};
-            spyOn(syncPlan, '$save').andCallThrough();
+            spyOn(syncPlan, '$save').and.callThrough();
             
             $scope.createSyncPlan(syncPlan);
 
             var syncDate = new Date(syncPlan['sync_date']);
 
-            expect(syncDate.getHours()).toMatch(13);
-            expect(syncDate.getMinutes()).toMatch(0);
-            expect(syncDate.getDate()).toMatch(5);
-            expect(syncDate.getMonth()).toMatch(7);
-            expect(syncDate.getFullYear()).toMatch(2015);
+            expect(syncDate.getHours()).toBe(13);
+            expect(syncDate.getMinutes()).toBe(0);
+            expect(syncDate.getDate()).toBe(5);
+            expect(syncDate.getMonth()).toBe(7);
+            expect(syncDate.getFullYear()).toBe(2015);
             expect(syncPlan.$save).toHaveBeenCalled();
         });
 
@@ -62,17 +62,17 @@ describe('Controller: NewSyncPlanController', function() {
             syncPlan.startTime = new Date('09/09/1999 13:00:00');
 
             syncPlan.$save = function() {};
-            spyOn(syncPlan, '$save').andCallThrough();
+            spyOn(syncPlan, '$save').and.callThrough();
 
             $scope.createSyncPlan(syncPlan);
 
             var syncDate = new Date(syncPlan['sync_date']);
 
-            expect(syncDate.getHours()).toMatch(13);
-            expect(syncDate.getMinutes()).toMatch(0);
-            expect(syncDate.getDate()).toMatch(5);
-            expect(syncDate.getMonth()).toMatch(7);
-            expect(syncDate.getFullYear()).toMatch(2015);
+            expect(syncDate.getHours()).toBe(13);
+            expect(syncDate.getMinutes()).toBe(0);
+            expect(syncDate.getDate()).toBe(5);
+            expect(syncDate.getMonth()).toBe(7);
+            expect(syncDate.getFullYear()).toBe(2015);
             expect(syncPlan.$save).toHaveBeenCalled();
         });
     });
@@ -83,7 +83,7 @@ describe('Controller: NewSyncPlanController', function() {
         syncPlan.$save = new SyncPlan().$save;
 
         spyOn($scope.$state, 'go');
-        spyOn(syncPlan, '$save').andCallThrough();
+        spyOn(syncPlan, '$save').and.callThrough();
         spyOn($scope.syncPlanTable.rows, 'unshift');
         spyOn(GlobalNotification, "setSuccessMessage");
 
@@ -101,7 +101,7 @@ describe('Controller: NewSyncPlanController', function() {
         syncPlan.$save = new SyncPlan().$save;
 
         spyOn($scope.$state, 'go');
-        spyOn(syncPlan, '$save').andCallThrough();
+        spyOn(syncPlan, '$save').and.callThrough();
         spyOn(GlobalNotification, "setSuccessMessage");
 
         $scope.product = {id: 1};

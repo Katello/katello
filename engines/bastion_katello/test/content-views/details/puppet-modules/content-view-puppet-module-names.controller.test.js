@@ -40,7 +40,7 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
     });
 
     it("Auto completes to puppet modules", function() {
-        spyOn(PuppetModule, 'autocomplete').andCallThrough();
+        spyOn(PuppetModule, 'autocomplete').and.callThrough();
 
         $scope.detailsTable.fetchAutocomplete('foobar');
         expect(PuppetModule.autocomplete).toHaveBeenCalledWith({'organization_id': 1, search: 'foobar'})

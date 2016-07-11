@@ -50,7 +50,7 @@ describe('Controller: ManifestImportController', function() {
         spyOn(GlobalNotification, "setSuccessMessage");
         spyOn(GlobalNotification, "setErrorMessage");
 
-        Task = {registerSearch: function() {}};
+        Task = {registerSearch: function() {}, unregisterSearch: function () {}};
 
         translate = function(a) { return a };
 
@@ -92,7 +92,7 @@ describe('Controller: ManifestImportController', function() {
 
     it('should provide a method to delete a manifest', function() {
         $httpBackend.expectPOST('/api/v2/organizations/ACME/subscriptions/delete_manifest');
-        spyOn(Subscription, 'deleteManifest').andCallThrough();
+        spyOn(Subscription, 'deleteManifest').and.callThrough();
         $scope.deleteManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
             expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('Controller: ManifestImportController', function() {
 
     it('should provide a method to refresh a manifest', function() {
         $httpBackend.expectPOST('/api/v2/organizations/ACME/subscriptions/refresh_manifest');
-        spyOn(Subscription, 'refreshManifest').andCallThrough();
+        spyOn(Subscription, 'refreshManifest').and.callThrough();
         $scope.refreshManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
             expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
@@ -132,7 +132,7 @@ describe('Controller: ManifestImportController', function() {
     });
 
     it('should refresh organization info when requested', function () {
-        spyOn(Organization, 'get').andCallThrough();
+        spyOn(Organization, 'get').and.callThrough();
         $scope.refreshOrganizationInfo();
         expect(Organization.get).toHaveBeenCalled();
     });

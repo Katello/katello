@@ -32,7 +32,7 @@ describe('Controller: ContentViewHistoryController', function() {
     }));
 
     it('defines details table', function() {
-        expect($scope.detailsTable).toNotBe(undefined);
+        expect($scope.detailsTable).not.toBe(undefined);
     });
 
 });

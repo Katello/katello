@@ -39,7 +39,7 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
             callback();
         };
 
-        spyOn(ContentView, 'availablePuppetModules').andCallThrough();
+        spyOn(ContentView, 'availablePuppetModules').and.callThrough();
 
         $controller('ContentViewPuppetModuleVersionsController', dependencies);
 

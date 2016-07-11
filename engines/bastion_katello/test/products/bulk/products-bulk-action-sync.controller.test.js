@@ -29,7 +29,7 @@ describe('Controller: ProductsBulkActionSyncController', function() {
     }));
 
     it("can sync products", function() {
-        spyOn(ProductBulkAction, 'syncProducts').andCallThrough();
+        spyOn(ProductBulkAction, 'syncProducts').and.callThrough();
         $scope.syncProducts();
 
         expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3]}, jasmine.any(Function));

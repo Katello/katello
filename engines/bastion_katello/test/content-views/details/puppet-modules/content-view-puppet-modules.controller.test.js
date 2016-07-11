@@ -56,7 +56,7 @@ describe('Controller: ContentViewPuppetModulesController', function() {
 
     describe("provides a way to remove a module", function () {
         beforeEach(function () {
-            spyOn(ContentViewPuppetModule, 'remove').andCallThrough();
+            spyOn(ContentViewPuppetModule, 'remove').and.callThrough();
         });
 
         afterEach(function () {

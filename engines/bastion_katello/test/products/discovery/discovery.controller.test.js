@@ -54,7 +54,7 @@ describe('Controller: DiscoveryController', function() {
 
     it('setting up selected transitions to create state', function() {
         var fakeSelected = [1,2,3];
-        spyOn($scope.discoveryTable, 'getSelected').andReturn(fakeSelected);
+        spyOn($scope.discoveryTable, 'getSelected').and.returnValue(fakeSelected);
         spyOn($scope, 'transitionTo');
 
         $scope.setupSelected();
@@ -66,12 +66,12 @@ describe('Controller: DiscoveryController', function() {
 
 
     it('default name should handle leading and trailing slashes', function() {
-        spyOn($scope, 'defaultName').andCallThrough();
+        spyOn($scope, 'defaultName').and.callThrough();
         expect($scope.defaultName("/foo/")).toBe("foo");
     });
 
     it('default name should convert / to space', function() {
-        spyOn($scope, 'defaultName').andCallThrough();
+        spyOn($scope, 'defaultName').and.callThrough();
         expect($scope.defaultName("/foo/bar")).toBe("foo bar");
     });
 
@@ -94,7 +94,7 @@ describe('Controller: DiscoveryController', function() {
 
     it('should initiate discovery', function() {
         $scope.discovery.url = 'http://fake/';
-        spyOn(Organization, 'repoDiscover').andCallThrough();
+        spyOn(Organization, 'repoDiscover').and.callThrough();
 
         $scope.discover();
 

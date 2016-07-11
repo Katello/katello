@@ -26,15 +26,15 @@ describe('ContentViewVersionDeletionController', function() {
     }));
 
     it("should fetch a content view version", function () {
-        expect($scope.version).toNotBe(undefined);
+        expect($scope.version).not.toBe(undefined);
     });
 
     it("should set deletion options", function () {
-        expect($scope.deleteOptions).toNotBe(undefined);
+        expect($scope.deleteOptions).not.toBe(undefined);
     });
 
     it("should proceed to content hosts pane if needed", function () {
-        spyOn($scope, 'needHosts').andReturn(true);
+        spyOn($scope, 'needHosts').and.returnValue(true);
         spyOn($scope, 'transitionTo');
 
         $scope.transitionToNext($scope.stepStates.environments);
@@ -44,7 +44,7 @@ describe('ContentViewVersionDeletionController', function() {
     });
 
     it("should read current state if no state passed in", function () {
-        spyOn($scope, 'needHosts').andReturn(true);
+        spyOn($scope, 'needHosts').and.returnValue(true);
         spyOn($scope, 'transitionTo');
 
         $state.current.name = $scope.stepStates.environments;
@@ -55,8 +55,8 @@ describe('ContentViewVersionDeletionController', function() {
     });
 
     it("should proceed to activation keys pane if needed", function () {
-        spyOn($scope, 'needHosts').andReturn(false);
-        spyOn($scope, 'needActivationKeys').andReturn(true);
+        spyOn($scope, 'needHosts').and.returnValue(false);
+        spyOn($scope, 'needActivationKeys').and.returnValue(true);
         spyOn($scope, 'transitionTo');
 
         $scope.transitionToNext($scope.stepStates.contentHosts);
@@ -66,7 +66,7 @@ describe('ContentViewVersionDeletionController', function() {
     });
 
     it("should go back to cotnent hosts pane if needed", function () {
-        spyOn($scope, 'needHosts').andReturn(true);
+        spyOn($scope, 'needHosts').and.returnValue(true);
         spyOn($scope, 'transitionTo');
 
         $scope.transitionBack($scope.stepStates.activationKeys);
@@ -76,8 +76,8 @@ describe('ContentViewVersionDeletionController', function() {
     });
 
     it("should go back to environments pane if needed", function () {
-        spyOn($scope, 'needHosts').andReturn(false);
-        spyOn($scope, 'needActivationKeys').andReturn(false);
+        spyOn($scope, 'needHosts').and.returnValue(false);
+        spyOn($scope, 'needActivationKeys').and.returnValue(false);
         spyOn($scope, 'transitionTo');
 
         $scope.transitionBack($scope.stepStates.activationKeys);
@@ -166,7 +166,7 @@ describe('ContentViewVersionDeletionController', function() {
           callback({results: [{id: contentViewId}, {id: otherContentViewId}]});
         };
 
-        spyOn(ContentView, 'queryUnpaged').andCallThrough();
+        spyOn(ContentView, 'queryUnpaged').and.callThrough();
 
         $scope.selectedEnvironment = undefined;
         $scope.initEnvironmentWatch($scope);
@@ -192,7 +192,7 @@ describe('ContentViewVersionDeletionController', function() {
           callback({results: [{id: contentViewId}, {id: otherContentViewId}]});
         };
 
-        spyOn(ContentView, 'queryUnpaged').andCallThrough();
+        spyOn(ContentView, 'queryUnpaged').and.callThrough();
 
         $scope.selectedEnvironment = undefined;
         $scope.initEnvironmentWatch($scope);

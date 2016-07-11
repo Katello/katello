@@ -92,7 +92,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
         Host.releaseVersions = function(params, callback) {
             callback.apply(this, [['RHEL6']]);
         };
-        spyOn(Host, 'releaseVersions').andReturn(['RHEL6']);
+        spyOn(Host, 'releaseVersions').and.returnValue(['RHEL6']);
 
         $scope.releaseVersions().then(function(releases) {
             expect(releases).toEqual(['RHEL6']);

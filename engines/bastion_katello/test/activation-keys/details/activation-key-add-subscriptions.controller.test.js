@@ -308,7 +308,7 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
     });
 
     it('groups subscriptions', function () {
-        spyOn(SubscriptionsHelper, 'groupByProductName').andCallThrough();
+        spyOn(SubscriptionsHelper, 'groupByProductName').and.callThrough();
         $scope.detailsTable.rows = subscriptions.results;
         $scope.$digest();
         expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalled();

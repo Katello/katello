@@ -36,7 +36,7 @@ describe('Controller: ContentViewCompositeAvailableContentViewsController', func
             };
         };
 
-        spyOn($scope, 'save').andCallThrough();
+        spyOn($scope, 'save').and.callThrough();
 
         $controller('ContentViewCompositeAvailableContentViewsController', {
             $scope: $scope,

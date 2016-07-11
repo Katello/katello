@@ -1,5 +1,5 @@
 describe('Controller: ContentHostsBulkActionSubscriptionsController', function() {
-    var $scope, $_q_, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization, GlobalNotification;
+    var $scope, $q, promise, translate, ContentHostBulkAction, HostCollection, Organization, Task, CurrentOrganization, GlobalNotification;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -22,21 +22,24 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
         Task = {
             queryUnpaged: function() {},
             poll: function() {},
-            monitorTask: function() { return $_q_.defer(); },
+            registerSearch: function () {},
+            monitorTask: function() { return promise; }
         };
         translate = function() {};
         CurrentOrganization = 'foo';
     });
 
-    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, $q) {
-        $_q_ = $q;
+    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, _$q_) {
+        $q = _$q_;
+        promise = $q.defer();
         $scope = $rootScope.$new();
         GlobalNotification = _GlobalNotification_;
         $scope.getSelectedContentHostIds = function() {
             return [1,2,3]
         };
 
-        $controller('ContentHostsBulkActionSubscriptionsController', {$scope: $scope,
+        $controller('ContentHostsBulkActionSubscriptionsController', {
+            $scope: $scope,
             $q: $q,
             ContentHostBulkAction: ContentHostBulkAction,
             HostCollection: HostCollection,
@@ -44,11 +47,15 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
             Task: Task,
-            GlobalNotification: GlobalNotification});
+            GlobalNotification: GlobalNotification
+        });
     }));
 
     it("can auto-attach available subscriptions to all content hosts", function() {
         spyOn(Organization, 'autoAttachSubscriptions');
+        spyOn(Task, 'monitorTask').and.returnValue(promise);
+
+        promise.stopMonitoring = function () {};
         $scope.performAutoAttachSubscriptions();
 
         expect(Organization.autoAttachSubscriptions).toHaveBeenCalled();

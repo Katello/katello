@@ -63,7 +63,7 @@ describe('Controller: ProductRepositoriesController', function() {
     });
 
     it("provides a way to remove all of the selected repositories in the table", function() {
-        spyOn(RepositoryBulkAction, 'removeRepositories').andCallThrough();
+        spyOn(RepositoryBulkAction, 'removeRepositories').and.callThrough();
 
         $scope.removeSelectedRepositories();
         expect(RepositoryBulkAction.removeRepositories).toHaveBeenCalledWith({ids: expectedIds},
@@ -73,7 +73,7 @@ describe('Controller: ProductRepositoriesController', function() {
     it("provides a way to sync all of the selected repositories in the table", function() {
         var errorFunction = jasmine.any(Function);
 
-        spyOn(RepositoryBulkAction, 'syncRepositories').andCallThrough();
+        spyOn(RepositoryBulkAction, 'syncRepositories').and.callThrough();
 
         $scope.syncSelectedRepositories();
         expect(RepositoryBulkAction.syncRepositories).toHaveBeenCalledWith({ids: expectedIds},

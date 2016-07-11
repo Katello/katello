@@ -52,7 +52,7 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
 
     it("should fetch content views", function () {
         $scope.selected.environment = paths[0][0];
-        spyOn(ContentView, 'queryUnpaged').andCallThrough();
+        spyOn(ContentView, 'queryUnpaged').and.callThrough();
 
         $scope.fetchViews();
         expect(ContentView.queryUnpaged).toHaveBeenCalled();

@@ -23,14 +23,14 @@ describe('Controller: EnvrionmentController', function () {
     });
 
     it("should provide ability to save an environment and return a promise", function() {
-        spyOn($scope.environment, '$update').andCallThrough();
+        spyOn($scope.environment, '$update').and.callThrough();
 
         expect($scope.save($scope.environment).then).toBeDefined();
         expect($scope.environment.$update).toHaveBeenCalled();
     });
 
     it("should provide ability to remove an environment and return a promise", function() {
-        spyOn($scope.environment, '$delete').andCallThrough();
+        spyOn($scope.environment, '$delete').and.callThrough();
 
         expect($scope.remove($scope.environment).then).toBeDefined();
         expect($scope.environment.$delete).toHaveBeenCalled();
