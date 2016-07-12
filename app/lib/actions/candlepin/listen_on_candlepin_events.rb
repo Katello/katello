@@ -180,10 +180,13 @@ module Actions
       def act_on_event(event)
         begin
           output[:connection] = "Connected"
-          on_event(event)
+          Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(event)
+          output[:last_message] = "#{event.message_id} - #{event.subject}"
+          output[:messages] = event.message_id
         rescue => e
-          error!(e)
-          raise e
+          output[:last_event_error] = e.message
+          action_logger.error("Failed Candlepin Event: #{e.message}")
+          action_logger.error(e.backtrace.join('\n'))
         end
         suspend
       end
@@ -207,15 +210,6 @@ module Actions
       rescue => e
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace)
-        error!(e)
-      end
-
-      def on_event(event)
-        Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(event)
-        output[:last_message] = "#{event.message_id} - #{event.subject}"
-        output[:messages] = event.message_id
-      rescue => e
-        close_service
         error!(e)
       end
 
