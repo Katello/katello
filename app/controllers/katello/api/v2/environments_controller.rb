@@ -34,8 +34,8 @@ module Katello
     end
 
     respond_to :json
-    before_filter :find_organization, :only => [:index, :create, :paths, :auto_complete_search]
-    before_filter :find_optional_organization, :only => [:show, :update, :destroy]
+    before_filter :find_organization, :only => [:create, :paths, :auto_complete_search]
+    before_filter :find_optional_organization, :only => [:index, :show, :update, :destroy]
     before_filter :find_prior, :only => [:create]
     before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
     before_filter :find_content_view, :only => [:repositories]
@@ -44,7 +44,7 @@ module Katello
 
     api :GET, "/environments", N_("List environments in an organization")
     api :GET, "/organizations/:organization_id/environments", N_("List environments in an organization")
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier")
     param :library, [true, false], :desc => N_("set true if you want to see only library environments")
     param :name, String, :desc => N_("filter only environments containing this name")
     def index
@@ -52,7 +52,8 @@ module Katello
     end
 
     def index_relation
-      query = KTEnvironment.readable.where(:organization_id => @organization.id)
+      query = KTEnvironment.readable
+      query = query.where(organization: @organization) if @organization
       query = query.where(:name => params[:name]) if params[:name]
       query = query.where(:library => params[:library]) if params[:library]
       query

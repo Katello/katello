@@ -22,7 +22,7 @@ module Katello
 
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
     api :GET, "/content_views", N_("List content views")
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
+    param :organization_id, :number, :desc => N_("organization identifier")
     param :environment_id, :identifier, :desc => N_("environment identifier")
     param :nondefault, :bool, :desc => N_("Filter out default content views")
     param :noncomposite, :bool, :desc => N_("Filter out composite content views")
