@@ -78,37 +78,3 @@ See the [developer documentation](http://www.katello.org/developers/index.html).
 
 Most of our documentation (both for users and developers) can be found at
 [Katello.org](http://www.katello.org).
-
-### How to
-
--   to see YARD documentation start Katello server and find the link on "About" page or go directly to
-    <http://path.to.katello/url_prefix/yard/docs/katello/frames>
-
-    -   if it fails run `bundle exec yard doc --no-cache` first, which will rebuild whole documentation
-
--   see {file:doc/YARDDocumentation.md}
-
-## Current documentation
-
--   {file:doc/YARDDocumentation.md}
--   {file:doc/Graphs.md}
-
-### Debugging
-
--   {file:doc/how_to/add_praise.md Enabling Praise} - raise/exception investigation
-
-### Packaging
-
--   {file:doc/how_to/package_new_gem.md How to package new gem}
-
-### Other
-
--   {file:doc/katellodb.html DB schema documentation}
--   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
-
-    -   we use `doc` directory for storing markdown guides instead of a generated documentation
-
-### Source
-
--   {Katello::Configuration}
--   {Notifications}
