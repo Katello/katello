@@ -14,9 +14,6 @@ module Katello
     private
 
     def content_view_types
-      unless content_view.composite?
-        errors.add(:base, _("Cannot add component versions to a non-composite content view"))
-      end
       if content_view_version.content_view.composite?
         errors.add(:base, _("Cannot add composite versions to a composite content view"))
       end
