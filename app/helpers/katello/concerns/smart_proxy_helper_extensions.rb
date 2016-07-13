@@ -8,9 +8,9 @@ module Katello
           mount = values['mounted']
           mount_points[mount].nil? ? mount_points[mount] = [values['path']] : mount_points[mount] << values['path']
           values['header'] = "#{mount_points[mount].to_sentence} (on #{values['filesystem']})"
-          values['available_percent'] = available_percent(values['percent'])
+          values['available_percent'] = available_percent(values['capacity'])
           values['size_status'] = storage_warning(values['available'])
-          values['total'] = kb_to_actual(values.delete('1k-blocks'))
+          values['total'] = kb_to_actual(values.delete('1024-blocks'))
           values['used'] = kb_to_actual(values['used'])
           values['available'] = kb_to_actual(values['available'])
           disks << values

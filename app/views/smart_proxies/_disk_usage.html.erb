@@ -4,7 +4,7 @@
       <%= disk['header'] %>
     </div>
     <div class="progress progress-label-top-right">
-      <div class="progress-bar progress-bar-<%= disk['size_status'] %>" role="progressbar" aria-valuenow="<%= disk['percent'].delete('%') %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= disk['percent'] %>;" data-toggle="tooltip" title="<%= _('%s Used') % disk['used'] %>">
+      <div class="progress-bar progress-bar-<%= disk['size_status'] %>" role="progressbar" aria-valuenow="<%= disk['capacity'].delete('%') %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= disk['percent'] %>;" data-toggle="tooltip" title="<%= _('%s Used') % disk['used'] %>">
         <span><strong><%= _('%{used} of %{total}') % {:used => disk['used'],:total => disk['total']} %></strong> Used</span>
       </div>
       <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="<%= disk['available_percent'].delete('%') %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= disk['available_percent'] %>;" data-toggle="tooltip" title="<%= _('%s Available') % disk['available'] %>">
