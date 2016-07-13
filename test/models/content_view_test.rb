@@ -176,11 +176,19 @@ module Katello
         @library_dev_view.update_attributes!(:component_ids => [@library_view.versions.first.id])
       end
 
-      component = ContentViewComponent.new(:content_view => @library_dev_view,
-                                           :content_view_version => @library_view.versions.first
-                                          )
-      refute component.valid?
-      refute component.save
+      # cannot add components to a non-composite view
+      assert_raises(ActiveRecord::RecordInvalid) do
+        ContentView.create!(:name => "Carcosa",
+                            :organization_id => @organization.id,
+                            :composite => false,
+                            :component_ids => [@library_view.versions.first.id])
+      end
+
+      # can add composites to a composite
+      assert ContentView.create!(:name => "Carcosa",
+                                 :organization_id => @organization.id,
+                                 :composite => true,
+                                 :component_ids => [@library_view.versions.first.id])
     end
 
     def test_composite_views_with_composite_versions

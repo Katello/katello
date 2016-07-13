@@ -50,6 +50,7 @@ module Katello
                       :presence => true
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :organization_id, :presence => true
+    validate :check_non_composite_components
     validate :check_repo_conflicts
     validate :check_puppet_conflicts
     validates :composite, :inclusion => [true, false]
@@ -314,6 +315,12 @@ module Katello
         h[puppet_module.name] += 1
       end
       counts.select { |_k, v| v > 1 }.keys
+    end
+
+    def check_non_composite_components
+      if !composite? && components.present?
+        errors.add(:base, _("Cannot add component versions to a non-composite content view"))
+      end
     end
 
     def check_repo_conflicts
