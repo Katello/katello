@@ -117,8 +117,10 @@ module Katello
         self.create_activation_key_associations
       end
 
-      def systems
-        System.all_by_pool(cp_id)
+      def hosts
+        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id)
+        uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
+        ::Host.where(:id => Katello::Host::SubscriptionFacet.where(:uuid => uuids).pluck(:host_id))
       end
 
       def create_activation_key_associations
@@ -134,12 +136,6 @@ module Katello
 
       def host
         System.find_by(:uuid => host_id) if host_id
-      end
-
-      def hosts
-        entitlements = Resources::Candlepin::Entitlement.get
-        uuids = entitlements.delete_if { |ent| ent["pool"]["id"] != cp_id }.map { |ent| ent["consumer"]["uuid"] }
-        ::Host.where(:id => Katello::Host::ContentFacet.where(:uuid => uuids).pluck(:host_id))
       end
     end
   end

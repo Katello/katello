@@ -64,6 +64,10 @@ module Katello
       self.subscription.products if self.subscription
     end
 
+    def host
+      Katello::Host::SubscriptionFacet.find_by_uuid(host_id).try(:host) if host_id
+    end
+
     private
 
     def default_sort

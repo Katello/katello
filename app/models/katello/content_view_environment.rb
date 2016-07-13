@@ -34,6 +34,10 @@ module Katello
       content_view.systems.in_environment(environment)
     end
 
+    def hosts
+      ::Host.in_content_view_environment(:content_view => self.content_view, :lifecycle_environment => self.environment)
+    end
+
     def activation_keys
       content_view.activation_keys.in_environment(environment)
     end

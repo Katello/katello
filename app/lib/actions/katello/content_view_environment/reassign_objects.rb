@@ -4,8 +4,8 @@ module Actions
       class ReassignObjects < Actions::Base
         def plan(content_view_environment, options)
           concurrence do
-            content_view_environment.systems.each do |system|
-              plan_action(System::Reassign, system, options[:system_content_view_id], options[:system_environment_id])
+            content_view_environment.hosts.each do |host|
+              plan_action(Host::Reassign, host, options[:system_content_view_id], options[:system_environment_id])
             end
 
             content_view_environment.activation_keys.each do |key|

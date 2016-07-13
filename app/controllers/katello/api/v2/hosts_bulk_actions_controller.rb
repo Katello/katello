@@ -31,11 +31,11 @@ module Katello
     def_param_group :bulk_params do
       param :organization_id, :identifier, :required => true, :desc => N_("ID of the organization")
       param :included, Hash, :required => true, :action_aware => true do
-        param :search, String, :required => false, :desc => N_("Search string for systems to perform an action on")
-        param :ids, Array, :required => false, :desc => N_("List of system ids to perform an action on")
+        param :search, String, :required => false, :desc => N_("Search string for hosts to perform an action on")
+        param :ids, Array, :required => false, :desc => N_("List of host ids to perform an action on")
       end
       param :excluded, Hash, :required => true, :action_aware => true do
-        param :ids, Array, :required => false, :desc => N_("List of system ids to exclude and not run an action on")
+        param :ids, Array, :required => false, :desc => N_("List of host ids to exclude and not run an action on")
       end
     end
 
@@ -86,7 +86,7 @@ module Katello
     end
 
     api :POST, "/hosts/bulk/applicable_errata",
-        N_("Fetch applicable errata for a system.")
+        N_("Fetch applicable errata for a host.")
     param_group :bulk_params
     def installable_errata
       respond_for_index(:collection => scoped_search(Katello::Erratum.installable_for_hosts(@hosts), 'updated', 'desc',
@@ -131,7 +131,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/hosts/bulk/environment_content_view", N_("Assign the environment and content view to one or more systems")
+    api :PUT, "/hosts/bulk/environment_content_view", N_("Assign the environment and content view to one or more hosts")
     param_group :bulk_params
     param :environment_id, Integer
     param :content_view_id, Integer

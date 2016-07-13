@@ -68,7 +68,7 @@
           <thead>
             <tr bst-table-head>
               <th bst-table-column="name"><span translate>Name</span></th>
-              <th bst-table-column="name"><span translate>Environment</span></th>
+              <th bst-table-column="name"><span translate>Lifecycle Environment</span></th>
             </tr>
           </thead>
 
@@ -78,7 +78,7 @@
                   {{ host.name }}
               </td>
               <td bst-table-cell>
-                  {{ host.environment.name }}
+                  {{ host.content_facet_attributes.lifecycle_environment_name }}
               </td>
             </tr>
           </tbody>

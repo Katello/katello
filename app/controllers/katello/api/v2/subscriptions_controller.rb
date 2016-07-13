@@ -159,7 +159,6 @@ module Katello
     end
 
     def find_provider
-      @organization = @system.organization if @system
       @organization = @activation_key.organization if @activation_key
       @organization = @subscription.organization if @subscription
       @provider = @organization.redhat_provider if @organization

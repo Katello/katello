@@ -118,14 +118,18 @@ module Katello
       # and also ensure that the environments have the remove permission
       return deny_access unless KTEnvironment.promotable.where(:id => env_ids).count == env_ids.size && view.promotable_or_removable?
 
-      if Katello::System.where(:content_view_id => view, :environment_id => env_ids).count > 0
+      total_count = Katello::Host::ContentFacet.where(:content_view_id => view, :lifecycle_environment_id => env_ids).count
+      if total_count > 0
         unless options[:system_content_view_id] && options[:system_environment_id]
           fail _("Unable to reassign content hosts. Please provide system_content_view_id and system_environment_id.")
         end
 
-        # if we are reassigning systems to a diffent environment or cv
+        # if we are reassigning systems to a different environment or cv
         # make sure all the systems in existing environments are editable.
-        return deny_access unless Katello::System.all_editable?(view, env_ids)
+        if total_count != ::Host::Managed.authorized('edit_hosts').in_content_view_environment(:content_view => view,
+                                            :lifecycle_environment => ::Katello::KTEnvironment.where(:id => env_ids)).count
+          deny_access
+        end
       end
 
       if Katello::ActivationKey.where(:content_view_id => view, :environment_id => env_ids).count > 0

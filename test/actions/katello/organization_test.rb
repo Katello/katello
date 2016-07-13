@@ -56,7 +56,7 @@ module ::Actions::Katello::Organization
       organization.expects(:label).returns("ACME_Corporation")
       organization.expects(:validate_destroy).returns([])
       organization.expects(:products).twice.returns([])
-      organization.expects(:systems).returns([])
+      organization.expects(:hosts).returns([])
       organization.expects(:activation_keys).returns([])
       organization.expects(:content_views).returns(stub(:non_default => []))
       organization.expects(:default_content_view).twice.returns(default_view)

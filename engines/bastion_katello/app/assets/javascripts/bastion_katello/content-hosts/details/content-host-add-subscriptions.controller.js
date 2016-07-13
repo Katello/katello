@@ -14,8 +14,8 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostSubscription', 'Subscription', 'ContentHost', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostSubscription, Subscription, ContentHost, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostSubscription', 'Subscription', 'SubscriptionsHelper',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostSubscription, Subscription, SubscriptionsHelper) {
 
         var params = {
             'organization_id': CurrentOrganization,

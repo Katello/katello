@@ -3,7 +3,6 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_filter :find_activation_key, :only => [:index]
-    before_filter :find_system, :only => [:index]
     before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
     before_filter :find_product, :only => [:update, :destroy, :sync]
     before_filter :find_organization_from_product, :only => [:update]
@@ -46,7 +45,6 @@ module Katello
       query = query.where(:name => params[:name]) if params[:name]
       query = query.enabled if params[:enabled]
       query = query.where(:id => @activation_key.products) if @activation_key
-      query = query.where(:id => @system.products) if @system
 
       if params[:subscription_id]
         pool = Pool.with_identifier(params[:subscription_id])
@@ -132,14 +130,6 @@ module Katello
         @activation_key = ActivationKey.find_by(:id => params[:activation_key_id])
         fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:activation_key_id] if @activation_key.nil?
         @organization = @activation_key.organization
-      end
-    end
-
-    def find_system
-      if params[:system_id]
-        @system = System.find_by(:uuid => params[:system_id])
-        fail HttpErrors::NotFound, _("Couldn't find content host '%s'") % params[:system_id] if @system.nil?
-        @organization = @system.organization
       end
     end
 
