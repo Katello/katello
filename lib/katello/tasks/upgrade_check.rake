@@ -11,7 +11,7 @@ namespace :katello do
 
     # check for any running tasks
     task_count = ::ForemanTasks::Task.active.where("label != '#{CP_LISTEN_ACTION}'").count
-    task_status = task_count > 1 ? fail : success
+    task_status = task_count > 0 ? fail : success
     puts "Checking for running tasks..."
     puts "[#{task_status}] - There are #{task_count} active tasks.\n\n"
   end
