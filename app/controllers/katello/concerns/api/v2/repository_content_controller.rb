@@ -6,12 +6,12 @@ module Katello
       included do
         include Katello::Concerns::FilteredAutoCompleteSearch
 
-        before_filter :find_repository
-        before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
-        before_filter :find_environment, :only => [:index, :auto_complete_search]
-        before_filter :find_content_view_version, :only => [:index, :auto_complete_search]
-        before_filter :find_filter, :only => [:index, :auto_complete_search]
-        before_filter :find_content_resource, :only => [:show]
+        before_action :find_repository
+        before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+        before_action :find_environment, :only => [:index, :auto_complete_search]
+        before_action :find_content_view_version, :only => [:index, :auto_complete_search]
+        before_action :find_filter, :only => [:index, :auto_complete_search]
+        before_action :find_content_resource, :only => [:show]
       end
 
       extend ::Apipie::DSL::Concern

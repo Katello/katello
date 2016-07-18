@@ -1,7 +1,7 @@
 module Katello
   class Api::V2::RootController < Api::V2::ApiController
-    skip_before_filter :authorize # ok - only shows URLs available
-    skip_before_filter :require_user
+    skip_before_action :authorize # ok - only shows URLs available
+    skip_before_action :require_user
 
     resource_description do
       api_version 'v2'

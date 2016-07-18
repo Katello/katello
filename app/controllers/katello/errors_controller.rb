@@ -1,7 +1,7 @@
 module Katello
   class ErrorsController < Katello::ApplicationController
-    skip_before_filter :require_user, :require_org
-    skip_before_filter :authorize # ok - is used by warden
+    skip_before_action :require_user, :require_org
+    skip_before_action :authorize # ok - is used by warden
 
     # handles unknown routes from both / and /api namespaces
     def routing

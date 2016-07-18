@@ -2,8 +2,8 @@ module Katello
   class Api::V2::ContentViewFiltersController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_content_view
-    before_filter :find_filter, :except => [:index, :create, :auto_complete_search]
+    before_action :find_content_view
+    before_action :find_filter, :except => [:index, :create, :auto_complete_search]
 
     wrap_parameters :include => (ContentViewFilter.attribute_names + %w(repository_ids))
 

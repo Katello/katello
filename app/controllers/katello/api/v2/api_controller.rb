@@ -8,7 +8,7 @@ module Katello
     # support for session (thread-local) variables must be the last filter in this class
     include Foreman::ThreadSession::Cleaner
 
-    skip_before_filter :setup_has_many_params # TODO: get this working #8862
+    skip_before_action :setup_has_many_params # TODO: get this working #8862
 
     resource_description do
       api_version 'v2'

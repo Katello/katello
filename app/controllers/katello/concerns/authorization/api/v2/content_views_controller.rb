@@ -3,9 +3,9 @@ module Katello
     extend ActiveSupport::Concern
 
     included do
-      before_filter :authorize_destroy, :only => [:destroy]
-      before_filter :authorize_remove_from_environment, :only => [:remove_from_environment]
-      before_filter :authorize_remove, :only => [:remove]
+      before_action :authorize_destroy, :only => [:destroy]
+      before_action :authorize_remove_from_environment, :only => [:remove_from_environment]
+      before_action :authorize_remove, :only => [:remove]
     end
 
     private

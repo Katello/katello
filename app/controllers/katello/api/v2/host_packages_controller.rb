@@ -2,10 +2,10 @@ module Katello
   class Api::V2::HostPackagesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :require_packages_or_groups, :only => [:install, :remove]
-    before_filter :require_packages_only, :only => [:upgrade]
-    before_filter :find_editable_host_with_facet, :except => :index
-    before_filter :find_host, :only => :index
+    before_action :require_packages_or_groups, :only => [:install, :remove]
+    before_action :require_packages_only, :only => [:upgrade]
+    before_action :find_editable_host_with_facet, :except => :index
+    before_action :find_host, :only => :index
 
     resource_description do
       api_version 'v2'

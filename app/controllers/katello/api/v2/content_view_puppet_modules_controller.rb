@@ -2,8 +2,8 @@ module Katello
   class Api::V2::ContentViewPuppetModulesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_content_view, :except => [:autocomplete_search]
-    before_filter :find_content_view_puppet_module, :only => [:show, :update, :destroy]
+    before_action :find_content_view, :except => [:autocomplete_search]
+    before_action :find_content_view_puppet_module, :only => [:show, :update, :destroy]
 
     api :GET, "/content_views/:content_view_id/content_view_puppet_modules", N_("List content view puppet modules")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true

@@ -2,9 +2,9 @@ module Katello
   class ProductsController < Katello::ApplicationController
     respond_to :html, :js
 
-    before_filter :find_product, :only => [:available_repositories, :toggle_repository]
-    before_filter :find_provider, :only => [:available_repositories, :toggle_repository]
-    before_filter :find_content, :only => [:toggle_repository]
+    before_action :find_product, :only => [:available_repositories, :toggle_repository]
+    before_action :find_provider, :only => [:available_repositories, :toggle_repository]
+    before_action :find_content, :only => [:toggle_repository]
 
     include ForemanTasks::Triggers
 

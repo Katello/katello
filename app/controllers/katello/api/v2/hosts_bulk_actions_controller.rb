@@ -2,15 +2,15 @@ module Katello
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
 
-    before_filter :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
-    before_filter :find_environment, :only => [:environment_content_view]
-    before_filter :find_content_view, :only => [:environment_content_view]
-    before_filter :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata]
-    before_filter :find_deletable_hosts, :only => [:destroy_hosts]
-    before_filter :find_readable_hosts, :only => [:applicable_errata, :available_incremental_updates]
-    before_filter :find_errata, :only => [:available_incremental_updates]
+    before_action :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
+    before_action :find_environment, :only => [:environment_content_view]
+    before_action :find_content_view, :only => [:environment_content_view]
+    before_action :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata]
+    before_action :find_deletable_hosts, :only => [:destroy_hosts]
+    before_action :find_readable_hosts, :only => [:applicable_errata, :available_incremental_updates]
+    before_action :find_errata, :only => [:available_incremental_updates]
 
-    before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
+    before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
 
     PARAM_ACTIONS = {
       :install_content => {

@@ -1,6 +1,6 @@
 module Katello
   class OrganizationsController < Katello::ApplicationController
-    before_filter :search_filter, :only => [:auto_complete_search]
+    before_action :search_filter, :only => [:auto_complete_search]
 
     def rules
       {

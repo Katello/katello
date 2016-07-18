@@ -1,12 +1,12 @@
 module Katello
   class Api::V2::HostCollectionsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_filter :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_hosts,
+    before_action :find_host_collection, :only => [:copy, :show, :update, :destroy, :destroy_hosts,
                                                    :add_hosts, :remove_hosts, :hosts]
-    before_filter :find_activation_key
-    before_filter :find_host
-    before_filter :find_optional_organization, :only => [:index]
-    before_filter :find_organization, :only => [:create, :auto_complete_search]
+    before_action :find_activation_key
+    before_action :find_host
+    before_action :find_optional_organization, :only => [:index]
+    before_action :find_organization, :only => [:create, :auto_complete_search]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(host_ids))
 

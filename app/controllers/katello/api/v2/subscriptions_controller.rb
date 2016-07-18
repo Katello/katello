@@ -2,15 +2,15 @@ module Katello
   class Api::V2::SubscriptionsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_activation_key
-    before_filter :find_host, :only => :index
-    before_filter :find_optional_organization, :only => [:index, :available, :show]
-    before_filter :find_organization, :only => [:upload, :delete_manifest,
+    before_action :find_activation_key
+    before_action :find_host, :only => :index
+    before_action :find_optional_organization, :only => [:index, :available, :show]
+    before_action :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
-    before_filter :find_provider
-    before_filter :deprecated, :only => [:create, :destroy]
+    before_action :find_provider
+    before_action :deprecated, :only => [:create, :destroy]
 
-    skip_before_filter :check_content_type, :only => [:upload]
+    skip_before_action :check_content_type, :only => [:upload]
 
     resource_description do
       description "Subscriptions management."

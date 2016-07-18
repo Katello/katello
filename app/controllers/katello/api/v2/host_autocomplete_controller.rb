@@ -3,7 +3,7 @@ module Katello
     include ::Api::TaxonomyScope
     include Foreman::Controller::AutoCompleteSearch
 
-    before_filter :find_optional_nested_object
+    before_action :find_optional_nested_object
 
     resource_description do
       api_version 'v2'

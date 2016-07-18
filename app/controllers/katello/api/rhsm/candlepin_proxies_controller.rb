@@ -2,26 +2,26 @@ module Katello
   class Api::Rhsm::CandlepinProxiesController < Api::V2::ApiController
     include Katello::Authentication::ClientAuthentication
 
-    before_filter :disable_strong_params
+    before_action :disable_strong_params
 
     wrap_parameters false
 
-    around_filter :repackage_message
-    before_filter :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
+    around_action :repackage_message
+    before_action :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                         :upload_package_profile, :regenerate_identity_certificates, :facts,
                                         :available_releases, :serials]
-    before_filter :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_filter :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates]
-    before_filter :authorize_client_or_admin, :only => [:hypervisors_update]
-    before_filter :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
-    before_filter :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
+    before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
+    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates]
+    before_action :authorize_client_or_admin, :only => [:hypervisors_update]
+    before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
+    before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :facts, :available_releases]
 
-    before_filter :add_candlepin_version_header
+    before_action :add_candlepin_version_header
 
-    before_filter :proxy_request_path, :proxy_request_body
-    before_filter :set_organization_id, :except => :hypervisors_update
-    before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
+    before_action :proxy_request_path, :proxy_request_body
+    before_action :set_organization_id, :except => :hypervisors_update
+    before_action :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
 
     def repackage_message
       yield
