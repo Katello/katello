@@ -11,8 +11,6 @@ module Katello
 
       DEFAULT_TYPE = Glue::Candlepin::Consumer::SYSTEM
 
-      attr_accessible :release_version, :autoheal, :service_level, :host,
-                      :installed_products, :facts, :hypervisor_guest_uuids
       attr_accessor :installed_products, :facts, :hypervisor_guest_uuids
 
       def update_from_consumer_attributes(consumer_params)
