@@ -1,4 +1,6 @@
 class MigrateContentHosts < ActiveRecord::Migration
+  HYPERVISOR_CLASS = 'Katello::Hypervisor'.freeze
+
   class Location < ActiveRecord::Base
     self.table_name = "taxonomies"
 
@@ -295,6 +297,37 @@ class MigrateContentHosts < ActiveRecord::Migration
     system
   end
 
+  def handle_hypervisors
+    MigrateContentHosts::System.where(:type => HYPERVISOR_CLASS).find_each do |hypervisor|
+      org = hypervisor.environment.organization
+      name = "virt-who-#{hypervisor.name}-#{org.id}"
+
+      host = ::Host.find_by(:name => name)
+      if host.nil?
+        host = MigrateContentHosts::Host.create!(:name => name, :organization => org.becomes(MigrateContentHosts::Organization), :managed => false,
+                                             :type => "Host::Managed", :location => MigrateContentHosts::Location.default_location)
+      elsif host.organization != org
+        logger.warn("Found host with name #{name} but it's in org #{host.organization.name} instead of #{org.name}.")
+        unregister_system(hypervisor)
+        next
+      end
+      hypervisor.host_id = host.id
+      hypervisor.save!
+      create_subscription_facet(host, hypervisor) unless host.subscription_facet
+      update_hypervisor_consumer(hypervisor)
+    end
+  end
+
+  def update_hypervisor_consumer(hypervisor)
+    org = hypervisor.environment.organization
+    hypervisor.content_view = org.default_content_view.becomes(MigrateContentHosts::ContentView)
+    hypervisor.environment = org.library.becomes(MigrateContentHosts::KTEnvironment)
+    hypervisor.save!
+
+    candlepin_environment_id = org.default_content_view.content_view_environments.first.cp_id
+    ::Katello::Resources::Candlepin::Consumer.update(hypervisor.uuid, 'environment' => {'id' => candlepin_environment_id})
+  end
+
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def up
@@ -312,9 +345,9 @@ class MigrateContentHosts < ActiveRecord::Migration
 
     ::Katello::System.where(:uuid => nil).destroy_all
 
-    ensure_one_system_per_hostname(MigrateContentHosts::System.all)
+    ensure_one_system_per_hostname(MigrateContentHosts::System.where("type != '#{HYPERVISOR_CLASS}'").all)
 
-    systems = get_systems_with_facts(MigrateContentHosts::System.all)
+    systems = get_systems_with_facts(MigrateContentHosts::System.where("type != '#{HYPERVISOR_CLASS}'").all)
 
     systems.each do |system|
       system.environment.organization = system.environment.organization.becomes(MigrateContentHosts::Organization)
@@ -363,5 +396,7 @@ class MigrateContentHosts < ActiveRecord::Migration
         system.save!
       end
     end
+
+    handle_hypervisors
   end
 end
