@@ -120,6 +120,15 @@ module Katello
         end
       end
 
+      def self.orphaned_consumer_ids
+        #returns consumer ids in candlepin with no matching katello entry
+        cp_consumers = ::Katello::Resources::Candlepin::Consumer.get({})
+        cp_consumers.reject! { |consumer| consumer['type']['label'] == 'uebercert' }
+        cp_consumer_ids = cp_consumers.map { |cons| cons["uuid"] }
+        katello_consumer_ids = ::Katello::Host::SubscriptionFacet.pluck(:uuid)
+        cp_consumer_ids - katello_consumer_ids
+      end
+
       def self.distribution_to_puppet_os(name)
         return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
 
