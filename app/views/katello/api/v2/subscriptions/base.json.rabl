@@ -16,9 +16,9 @@ attributes :name => :product_name
 attributes :unmapped_guest
 attributes :virt_only
 
-node :host, :if => lambda { |sub| sub && sub.host } do |subscription|
+node :host, :if => lambda { |sub| sub && sub.hypervisor } do |subscription|
   {
-    id: subscription.host.uuid,
-    name: subscription.host.name
+    id: subscription.hypervisor.id,
+    name: subscription.hypervisor.name
   }
 end

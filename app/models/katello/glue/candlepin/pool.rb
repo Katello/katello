@@ -134,8 +134,8 @@ module Katello
         end
       end
 
-      def host
-        System.find_by(:uuid => host_id) if host_id
+      def hypervisor
+        ::Katello::Host::SubscriptionFacet.find_by(:uuid => host_id).try(:host) if host_id
       end
     end
   end
