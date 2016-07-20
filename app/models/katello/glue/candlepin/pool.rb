@@ -32,7 +32,10 @@ module Katello
       end
 
       def import_pool(cp_pool_id)
-        pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
+        pool = nil
+        ::Katello::Util::Support.active_record_retry do
+          pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
+        end
         pool.import_data
       end
     end
