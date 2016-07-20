@@ -2,7 +2,7 @@ module Katello
   class Api::V2::ContentViewHistoriesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_content_view
+    before_action :find_content_view
 
     api :GET, "/content_views/:id/history", N_("Show a content view's history")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true

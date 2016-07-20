@@ -3,10 +3,10 @@ module Katello
     include Concerns::Authorization::Api::V2::ContentViewsController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_content_view, :except => [:index, :create, :auto_complete_search]
-    before_filter :find_organization, :only => [:create]
-    before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
-    before_filter :find_environment, :only => [:index, :remove_from_environment]
+    before_action :find_content_view, :except => [:index, :create, :auto_complete_search]
+    before_action :find_organization, :only => [:create]
+    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_environment, :only => [:index, :remove_from_environment]
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 

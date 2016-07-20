@@ -1,8 +1,8 @@
 module Katello
   class Api::V2::HostSubscriptionsController < Katello::Api::V2::ApiController
-    before_filter :find_host, :except => :create
-    before_filter :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
-    before_filter :find_content_view_environment, :only => :create
+    before_action :find_host, :except => :create
+    before_action :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
+    before_action :find_content_view_environment, :only => :create
 
     def_param_group :subscription_facet_attributes do
       param :release_version, String, :desc => N_("Release version for this Host to use (7Server, 7.1, etc)")

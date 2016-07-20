@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::UebercertsController < Api::V2::ApiController
-    before_filter :find_organization, :only => [:show]
+    before_action :find_organization, :only => [:show]
 
     resource_description do
       api_version 'v2'

@@ -4,8 +4,8 @@ module Katello
       api_version "v2"
     end
 
-    skip_before_filter :authorize
-    before_filter :require_login, :only => [:index]
+    skip_before_action :authorize
+    before_action :require_login, :only => [:index]
 
     api :GET, "/ping", N_("Shows status of system and it's subcomponents")
     description N_("This service is only available for authenticated users")

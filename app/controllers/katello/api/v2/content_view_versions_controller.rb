@@ -3,13 +3,13 @@ module Katello
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_content_view_version, :only => [:show, :promote, :destroy, :export]
-    before_filter :find_content_view, :except => [:incremental_update]
-    before_filter :find_environment, :only => [:promote, :index]
-    before_filter :authorize_promotable, :only => [:promote]
-    before_filter :authorize_destroy, :only => [:destroy]
-    before_filter :find_version_environments, :only => [:incremental_update]
-    before_filter :find_puppet_module, :only => [:index]
+    before_action :find_content_view_version, :only => [:show, :promote, :destroy, :export]
+    before_action :find_content_view, :except => [:incremental_update]
+    before_action :find_environment, :only => [:promote, :index]
+    before_action :authorize_promotable, :only => [:promote]
+    before_action :authorize_destroy, :only => [:destroy]
+    before_action :find_version_environments, :only => [:incremental_update]
+    before_action :find_puppet_module, :only => [:index]
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")

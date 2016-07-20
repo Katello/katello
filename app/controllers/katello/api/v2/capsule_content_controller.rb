@@ -4,9 +4,9 @@ module Katello
       api_base_url "/katello/api"
     end
 
-    before_filter :find_capsule
-    before_filter :find_environment, :only => [:add_lifecycle_environment, :remove_lifecycle_environment]
-    before_filter :find_optional_organization, :only => [:sync_status]
+    before_action :find_capsule
+    before_action :find_environment, :only => [:add_lifecycle_environment, :remove_lifecycle_environment]
+    before_action :find_optional_organization, :only => [:sync_status]
 
     def_param_group :lifecycle_environments do
       param :id, Integer, :desc => N_('Id of the capsule'), :required => true

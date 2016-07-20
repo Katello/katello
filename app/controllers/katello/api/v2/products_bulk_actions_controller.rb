@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::ProductsBulkActionsController < Api::V2::ApiController
-    before_filter :find_products
+    before_action :find_products
 
     api :PUT, "/products/bulk/destroy", N_("Destroy one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true

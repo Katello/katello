@@ -2,9 +2,9 @@ module Katello
   class Api::V2::RepositorySetsController < Api::V2::ApiController
     respond_to :json
 
-    before_filter :find_product
-    before_filter :custom_product?
-    before_filter :find_product_content, :except => [:index]
+    before_action :find_product
+    before_action :custom_product?
+    before_action :find_product_content, :except => [:index]
 
     resource_description do
       api_version "v2"

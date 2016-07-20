@@ -7,7 +7,7 @@ module Katello
         include ForemanTasks::Triggers
 
         respond_to :json
-        before_filter :set_gettext_locale
+        before_action :set_gettext_locale
       end
 
       # override warden current_user (returns nil because there is no user in that scope)

@@ -2,23 +2,23 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :find_optional_organization, :only => [:index, :auto_complete_search]
-    before_filter :find_product, :only => [:index, :auto_complete_search]
-    before_filter :find_product_for_create, :only => [:create]
-    before_filter :find_organization_from_product, :only => [:create]
-    before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :export,
+    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_product, :only => [:index, :auto_complete_search]
+    before_action :find_product_for_create, :only => [:create]
+    before_action :find_organization_from_product, :only => [:create]
+    before_action :find_repository, :only => [:show, :update, :destroy, :sync, :export,
                                               :remove_content, :upload_content,
                                               :import_uploads, :gpg_key_content]
-    before_filter :find_content, :only => :remove_content
-    before_filter :find_organization_from_repo, :only => [:update]
-    before_filter :find_gpg_key, :only => [:create, :update]
-    before_filter :error_on_rh_product, :only => [:create]
-    before_filter :error_on_rh_repo, :only => [:destroy]
+    before_action :find_content, :only => :remove_content
+    before_action :find_organization_from_repo, :only => [:update]
+    before_action :find_gpg_key, :only => [:create, :update]
+    before_action :error_on_rh_product, :only => [:create]
+    before_action :error_on_rh_repo, :only => [:destroy]
 
-    skip_before_filter :authorize, :only => [:sync_complete, :gpg_key_content]
-    skip_before_filter :require_org, :only => [:sync_complete]
-    skip_before_filter :require_user, :only => [:sync_complete]
-    skip_before_filter :check_content_type, :only => [:upload_content]
+    skip_before_action :authorize, :only => [:sync_complete, :gpg_key_content]
+    skip_before_action :require_org, :only => [:sync_complete]
+    skip_before_action :require_user, :only => [:sync_complete]
+    skip_before_action :check_content_type, :only => [:upload_content]
 
     def_param_group :repo do
       param :name, String, :required => true

@@ -3,8 +3,8 @@ module Katello
     respond_to :json
 
     include Katello::Concerns::FilteredAutoCompleteSearch
-    before_filter :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_filter :find_plan, :only => [:update, :show, :destroy, :sync,
+    before_action :find_organization, :only => [:create, :index, :auto_complete_search]
+    before_action :find_plan, :only => [:update, :show, :destroy, :sync,
                                         :add_products, :remove_products]
 
     def_param_group :sync_plan do

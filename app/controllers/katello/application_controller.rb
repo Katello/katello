@@ -11,20 +11,20 @@ module Katello
 
     helper ::ApplicationHelper
     helper ::TaxonomyHelper
-    before_filter :set_gettext_locale
+    before_action :set_gettext_locale
     helper_method :current_organization
-    before_filter :require_org
+    before_action :require_org
     #before_filter :check_deleted_org
 
     protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-    after_filter :flash_to_headers
+    after_action :flash_to_headers
 
     # Skipping Foreman's filter that clears the user
     # from the current thread. If this filter is enabled
     # Katello's rescue_from don't have access to User.current.
-    skip_around_filter :clear_thread
-    after_filter :clear_katello_thread
+    skip_around_action :clear_thread
+    after_action :clear_katello_thread
 
     #custom 404 (render_404) and 500 (render_error) pages
     # this is always in the top

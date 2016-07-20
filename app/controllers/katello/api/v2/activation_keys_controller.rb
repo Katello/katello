@@ -2,15 +2,15 @@ module Katello
   class Api::V2::ActivationKeysController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_filter :verify_presence_of_organization_or_environment, :only => [:index]
-    before_filter :find_environment, :only => [:index, :create, :update]
-    before_filter :find_optional_organization, :only => [:index, :create, :show]
-    before_filter :find_content_view, :only => [:index]
-    before_filter :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
+    before_action :verify_presence_of_organization_or_environment, :only => [:index]
+    before_action :find_environment, :only => [:index, :create, :update]
+    before_action :find_optional_organization, :only => [:index, :create, :show]
+    before_action :find_content_view, :only => [:index]
+    before_action :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions,
                                                   :subscriptions]
-    before_filter :authorize
+    before_action :authorize
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
 

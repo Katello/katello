@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::RepositoriesBulkActionsController < Api::V2::ApiController
-    before_filter :find_repositories
+    before_action :find_repositories
 
     api :PUT, "/repositories/bulk/destroy", N_("Destroy one or more repositories")
     param :ids, Array, :desc => N_("List of repository ids"), :required => true

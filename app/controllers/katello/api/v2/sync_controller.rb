@@ -1,8 +1,8 @@
 module Katello
   class Api::V2::SyncController < Api::V2::ApiController
-    before_filter :find_optional_organization, :only => [:index]
-    before_filter :find_object, :only => [:index]
-    before_filter :ensure_library, :only => [:index]
+    before_action :find_optional_organization, :only => [:index]
+    before_action :find_object, :only => [:index]
+    before_action :ensure_library, :only => [:index]
 
     api :GET, "/organizations/:organization_id/products/:product_id/sync", N_("Get status of repo synchronisation for given product")
     api :GET, "/repositories/:repository_id/sync", N_("Get status of synchronisation for given repository")

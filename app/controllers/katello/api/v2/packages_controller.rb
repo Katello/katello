@@ -3,7 +3,7 @@ module Katello
     apipie_concern_subst(:a_resource => N_("a package"), :resource => "packages")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
-    before_filter :find_repositories, :only => :auto_complete_name
+    before_action :find_repositories, :only => :auto_complete_name
 
     def auto_complete_name
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE

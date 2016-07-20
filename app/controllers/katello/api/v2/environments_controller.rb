@@ -34,11 +34,11 @@ module Katello
     end
 
     respond_to :json
-    before_filter :find_organization, :only => [:create, :paths, :auto_complete_search]
-    before_filter :find_optional_organization, :only => [:index, :show, :update, :destroy]
-    before_filter :find_prior, :only => [:create]
-    before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
-    before_filter :find_content_view, :only => [:repositories]
+    before_action :find_organization, :only => [:create, :paths, :auto_complete_search]
+    before_action :find_optional_organization, :only => [:index, :show, :update, :destroy]
+    before_action :find_prior, :only => [:create]
+    before_action :find_environment, :only => [:show, :update, :destroy, :repositories]
+    before_action :find_content_view, :only => [:repositories]
 
     wrap_parameters :include => (KTEnvironment.attribute_names + %w(prior prior_id new_name))
 
