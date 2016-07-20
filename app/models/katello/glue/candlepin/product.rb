@@ -139,13 +139,13 @@ module Katello
       end
 
       def import_subscription(subscription_id)
-        sub = ::Katello::Subscription.where(:cp_id => subscription_id).first_or_create
+        sub = nil
+        ::Katello::Util::Support.active_record_retry do
+          sub = ::Katello::Subscription.where(:cp_id => subscription_id).first_or_create
+        end
         sub.import_data
         pools = ::Katello::Resources::Candlepin::Product.pools(self.organization.label, self.cp_id)
-        pools.each do |pool_json|
-          pool = ::Katello::Pool.where(:cp_id => pool_json['id']).first_or_create
-          pool.import_data
-        end
+        pools.each { |pool_json| ::Katello::Pool.import_pool(pool_json['id']) }
       end
 
       protected
