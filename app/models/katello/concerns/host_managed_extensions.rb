@@ -27,6 +27,7 @@ module Katello
         scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package
         scoped_search :in => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name
+        scoped_search :in => :subscription_facet, :on => :uuid, :complete_value => false, :rename => :subscription_manager_id
 
         attr_accessible :content_source_id, :host_collection_ids
       end
