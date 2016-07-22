@@ -20,6 +20,7 @@ module Actions
           param :download_policy
           param :capsule_id
           param :mirror_on_sync
+          param :ssl_validation
         end
 
         def run
@@ -56,6 +57,7 @@ module Actions
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
+          importer.ssl_validation  = input[:ssl_validation]
           importer.download_policy = input[:download_policy] if input[:content_type] == ::Katello::Repository::YUM_TYPE
           importer.remove_missing  = input[:mirror_on_sync] if input[:content_type] == ::Katello::Repository::YUM_TYPE
           importer
@@ -67,6 +69,7 @@ module Actions
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
+          importer.ssl_validation  = input[:ssl_validation]
           importer
         end
 
@@ -76,7 +79,7 @@ module Actions
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
-
+          importer.ssl_validation  = input[:ssl_validation]
           importer
         end
 
@@ -85,6 +88,7 @@ module Actions
           importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
           importer.feed            = input[:feed]
           importer.enable_v1       = false
+          importer.ssl_validation  = input[:ssl_validation]
           importer
         end
 

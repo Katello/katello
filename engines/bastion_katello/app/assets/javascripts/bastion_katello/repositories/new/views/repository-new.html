@@ -65,6 +65,16 @@
 
       </div>
 
+      <div bst-form-group label="{{ 'Verify SSL' | translate }}">
+        <input id="verify_ssl_on_sync"
+               name="verify_ssl_on_sync"
+               ng-model="repository.verify_ssl_on_sync"
+               type="checkbox"/>
+        <h6 translate>
+          Selecting this option will result in Katello verifying that the upstream url's SSL certificates are signed by a trusted CA. Unselect if you do not want this verification.
+        </h6>
+      </div>
+
       <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
         <select id="download_policy"
                 name="download_policy"

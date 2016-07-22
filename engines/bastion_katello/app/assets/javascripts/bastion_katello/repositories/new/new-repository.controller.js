@@ -48,7 +48,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         }
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
-            'checksum_type': null, 'download_policy': null, 'mirror_on_sync': true});
+            'checksum_type': null, 'download_policy': null, 'mirror_on_sync': true, 'verify_ssl_on_sync': true});
 
         Setting.get({"search": "name = default_download_policy"},
             function (data) {

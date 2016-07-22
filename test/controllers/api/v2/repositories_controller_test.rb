@@ -423,6 +423,38 @@ module Katello
       assert_template 'api/v2/repositories/show'
     end
 
+    def test_create_with_verify_ssl_on_sync_true
+      verify_ssl_on_sync = true
+      product = mock
+      product.expects(:add_repo).with(
+        'Fedora_Repository',
+        'Fedora Repository',
+        'http://www.google.com',
+        'yum',
+        false,
+        nil,
+        nil,
+        nil
+      ).returns(@repository)
+
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
+      @repository.expects(:verify_ssl_on_sync=).with(verify_ssl_on_sync)
+
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum',
+                    :unprotected => false,
+                    :verify_ssl_on_sync => verify_ssl_on_sync
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+
     def test_create_with_protected_docker
       product = mock
       product.expects(:add_repo).with(
