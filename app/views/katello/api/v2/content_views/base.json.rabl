@@ -6,6 +6,8 @@ attributes :repository_ids
 attributes :component_ids
 attributes :default
 attributes :force_puppet_environment
+attributes :version_count
+attributes :latest_version
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s
@@ -72,6 +74,10 @@ child :components => :components do
   child :archived_repos => :repositories do
     attributes :id, :name, :label, :description
   end
+end
+
+child :content_view_components => :content_view_components do
+  extends "katello/api/v2/content_view_components/show"
 end
 
 child :activation_keys => :activation_keys do

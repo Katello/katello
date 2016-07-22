@@ -10,6 +10,7 @@ Foreman::Plugin.find(:katello).security_block :content_views do
                'katello/api/v2/content_view_histories' => [:index, :auto_complete_search],
                'katello/api/v2/content_view_puppet_modules' => [:index, :show, :auto_complete_search],
                'katello/api/v2/content_view_versions' => [:index, :show, :auto_complete_search],
+               'katello/api/v2/content_view_components' => [:index, :show],
                'katello/api/v2/package_groups' => [:index, :show],
                'katello/api/v2/errata' => [:index, :show],
                'katello/api/v2/puppet_modules' => [:index, :show],
@@ -51,7 +52,8 @@ Foreman::Plugin.find(:katello).security_block :content_views do
                'katello/api/v2/content_views' => [:update],
                'katello/api/v2/content_view_filters' => [:create, :update, :destroy],
                'katello/api/v2/content_view_filter_rules' => [:create, :update, :destroy],
-               'katello/api/v2/content_view_puppet_modules' => [:create, :update, :destroy]
+               'katello/api/v2/content_view_puppet_modules' => [:create, :update, :destroy],
+               'katello/api/v2/content_view_components' => [:add_components, :remove_components, :update]
              },
              :resource_type => 'Katello::ContentView'
   permission :destroy_content_views,

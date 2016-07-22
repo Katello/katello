@@ -23,7 +23,7 @@ module Katello
     has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
     has_many :content_view_components, :inverse_of => :content_view_version, :dependent => :destroy
-    has_many :composite_content_views, :through => :content_view_components, :source => :content_view
+    has_many :composite_content_views, :through => :content_view_components, :source => :composite_content_view
 
     has_many :content_view_version_components, :inverse_of => :composite_version, :dependent => :destroy, :foreign_key => :composite_version_id,
              :class_name => "Katello::ContentViewVersionComponent"

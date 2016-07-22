@@ -30,6 +30,5 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
         $scope.table.closeItem = function () {
             $scope.transitionTo('content-views.index');
         };
-
     }]
 );

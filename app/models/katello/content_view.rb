@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class ContentView < Katello::Model
     self.include_root_in_json = false
 
@@ -16,14 +17,17 @@ module Katello
     has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
     alias_method :versions, :content_view_versions
 
-    has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy
-    has_many :components, :through => :content_view_components, :class_name => "Katello::ContentViewVersion",
-                          :source => :content_view_version do
-      def <<(*_args)
-        # this doesn't go through validation and generate a nice error message
-        fail "Adding components without doing validation is not supported"
-      end
-    end
+    # Note the difference between content_view_components and component_composites both refer to
+    # ContentViewComponent but mean different things.
+    # content_view_components -> Topdown, given I am a composite CV get the associated components belonging to me
+    #
+    # component_composites -> Bottom Up, given I am a component CV get the associated composites that I belong to
+    #
+    has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy,
+             :inverse_of => :composite_content_view, :foreign_key => :composite_content_view_id
+
+    has_many :component_composites, :class_name => "Katello::ContentViewComponent",
+             :dependent => :destroy, :inverse_of => :content_view, :foreign_key => :content_view_id
 
     has_many :content_view_repositories, :dependent => :destroy, :inverse_of => :content_view
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
@@ -78,18 +82,45 @@ module Katello
       hosts.count
     end
 
-    def copy(new_name)
-      new_view = ContentView.new
-      new_view.name = new_name
-      new_view.attributes = self.attributes.slice("description", "organization_id", "default", "composite")
-      new_view.save!
-      new_view.repositories = self.repositories
-      new_view.components = self.components
+    def components
+      content_view_components.map(&:latest_version).compact.freeze
+    end
 
-      self.content_view_puppet_modules.each do |puppet_module|
-        new_view.content_view_puppet_modules << puppet_module.dup
+    # Adds content view components based on the input
+    # [{:content_view_version_id=>1, :latest=> false}, {:content_view_id=>1, :latest=> true} ..]
+    def add_components(components_to_add)
+      components_to_add.each do |cvc|
+        content_view_components.build(cvc)
       end
+    end
 
+    # Removes selected content view components
+    # [1,2,34] => content view component ids/
+    def remove_components(components_to_remove)
+      content_view_components.where(:id => components_to_remove).destroy_all
+    end
+
+    # Warning this call wipes out existing associations
+    # And replaces them with the component version ids passed in.
+    def component_ids=(component_version_ids_to_set)
+      content_view_components.destroy_all
+      component_version_ids_to_set.each do |content_view_version_id|
+        cvv = ContentViewVersion.find(content_view_version_id)
+        content_view_components.build(:content_view_version => cvv,
+                                      :latest => false,
+                                      :composite_content_view => self)
+      end
+    end
+
+    def copy_components(new_view)
+      self.content_view_components.each do |cvc|
+        component = cvc.dup
+        component.composite_content_view = new_view
+        new_view.content_view_components << component
+      end
+    end
+
+    def copy_filters(new_view)
       self.filters.each do |filter|
         new_filter = filter.dup
         new_filter.repositories = filter.repositories
@@ -110,6 +141,21 @@ module Katello
           end
         end
       end
+    end
+
+    def copy(new_name)
+      new_view = ContentView.new
+      new_view.name = new_name
+      new_view.attributes = self.attributes.slice("description", "organization_id", "default", "composite")
+      new_view.save!
+      new_view.repositories = self.repositories
+
+      copy_components(new_view)
+
+      self.content_view_puppet_modules.each do |puppet_module|
+        new_view.content_view_puppet_modules << puppet_module.dup
+      end
+      copy_filters(new_view)
       new_view.save!
       new_view
     end
@@ -163,7 +209,11 @@ module Katello
     end
 
     def latest_version
-      self.versions.order('major DESC').order('minor DESC').first.try(:version)
+      latest_version_object.try(:version)
+    end
+
+    def latest_version_object
+      self.versions.order('major DESC').order('minor DESC').first
     end
 
     def history
@@ -529,6 +579,10 @@ module Katello
       _("Content Views")
     end
 
+    def version_count
+      content_view_versions.count
+    end
+
     protected
 
     def remove_repository(repository)
@@ -585,8 +639,7 @@ module Katello
       # Intended Behaviour
       # Includes are cumulative -> If you say include errata and include packages, its the sum
       # Excludes are processed after includes
-      # Excludes dont handle dependency. So if you say Include errata with pkgs P1, P2
-      #         and exclude P1  and P1 has a dependency P1d1, what gets copied over is P1d1, P2
+      # Excludes dont handle dependency. So if you say Include errata with pkgs P1, P2ve#         and exclude P1  and P1 has a dependency P1d1, what gets copied over is P1d1, P2
 
       # Another important aspect. PackageGroups & Errata are merely convinient ways to say "copy packages"
       # Its all about the packages

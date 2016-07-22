@@ -6,13 +6,14 @@
  * @requires Nutupane
  * @requires CurrentOrganization
  * @requires ContentView
+ * @requires ContentViewComponent
  *
  * @description
  *  Provides a nutupane for eligible content views to be included in the composite.
  */
 angular.module('Bastion.content-views').controller('ContentViewCompositeAvailableContentViewsController',
-    ['$scope', 'Nutupane', 'CurrentOrganization', 'ContentView',
-        function ($scope, Nutupane, CurrentOrganization, ContentView) {
+    ['$scope', 'Nutupane', 'CurrentOrganization', 'ContentView', 'ContentViewComponent',
+        function ($scope, Nutupane, CurrentOrganization, ContentView, ContentViewComponent) {
             var nutupane, params;
 
             params = {
@@ -28,9 +29,10 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
 
             $scope.contentView.$promise.then(function (contentView) {
                 var filterIds = [];
-
-                if (contentView.components) {
-                    filterIds = _.map(contentView.components, 'content_view_id');
+                if (contentView["content_view_components"]) {
+                    filterIds = _.map(contentView["content_view_components"], function (component) {
+                        return component['content_view'].id;
+                    });
                 }
                 filterIds.push(contentView.id);
 
@@ -40,31 +42,28 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                 nutupane.load(true);
             });
 
-
             $scope.addContentViews = function () {
                 var selectedRows = nutupane.getAllSelectedResults().included.resources,
-                    existingComponentsIds = $scope.contentView['component_ids'],
-                    versionIds = [];
-
-                angular.forEach(selectedRows, function (contentView) {
-                    if (!contentView.versionId) {
-                        contentView.versionId = contentView.versions[contentView.versions.length - 1].id;
+                    components = [];
+                components = _.map(selectedRows, function (view) {
+                    var component = {};
+                    if ((!view.versionId) || view.versionId === "latest") {
+                        component.latest = true;
+                        component["content_view_id"] = view.id;
+                    } else {
+                        component["content_view_version_id"] = view.versionId;
                     }
-                    versionIds.push(contentView.versionId);
+                    return component;
                 });
 
-                $scope.contentView['component_ids'] = existingComponentsIds.concat(versionIds);
-
-                $scope.save($scope.contentView).then(function () {
+                ContentViewComponent.addComponents({compositeContentViewId: $scope.contentView.id,
+                                                    components: components}, function () {
                     var newContentIds = _.map(selectedRows, 'id');
+                    $scope.saveSuccess();
                     params['without[]'] = params["without[]"].concat(newContentIds);
                     nutupane.setParams(params);
                     nutupane.refresh();
-                }, function () {
-                    $scope.contentView['component_ids'] = existingComponentsIds;
-                });
-
-
+                }, $scope.saveError);
             };
         }]
 );

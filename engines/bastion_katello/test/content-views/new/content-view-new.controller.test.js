@@ -59,7 +59,7 @@ describe('Controller: NewContentViewController', function() {
 
         expect(contentView.$save).toHaveBeenCalled();
         expect($scope.$parent.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.composite-content-views.available',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.components.composite-content-views.available',
             {contentViewId: 1})
     });
 

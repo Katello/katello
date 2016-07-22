@@ -273,24 +273,29 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         controller: 'ContentViewHistoryController',
         templateUrl: 'content-views/details/histories/views/content-view-history.html'
     })
-    .state('content-views.details.composite-content-views', {
+    .state('content-views.details.components', {
+        abstract: true,
+        template: '<div ui-view></div>',
+        collapsed: true
+    })
+    .state('content-views.details.components.composite-content-views', {
         abstract: true,
         collapsed: true,
-        templateUrl: 'content-views/details/views/content-view-composite.html'
+        templateUrl: 'content-views/details/components/views/content-view-composite.html'
     })
-    .state('content-views.details.composite-content-views.list', {
+    .state('content-views.details.components.composite-content-views.list', {
         collapsed: true,
         url: '/content-views',
         permission: 'view_content_views',
         controller: 'ContentViewCompositeContentViewsListController',
-        templateUrl: 'content-views/details/views/content-view-composite-content-views-list.html'
+        templateUrl: 'content-views/details/components/views/content-view-composite-content-views-list.html'
     })
-    .state('content-views.details.composite-content-views.available', {
+    .state('content-views.details.components.composite-content-views.available', {
         collapsed: true,
         url: '/content-views/available',
         permission: 'edit_content_views',
         controller: 'ContentViewCompositeAvailableContentViewsController',
-        templateUrl: 'content-views/details/views/content-view-composite-available-content-views.html'
+        templateUrl: 'content-views/details/components/views/content-view-composite-available-content-views.html'
     })
     .state('content-views.details.puppet-modules', {
         abstract: true,

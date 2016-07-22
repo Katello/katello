@@ -21,9 +21,9 @@ angular.module('Bastion.content-views').factory('ContentView',
                 publish: {method: 'POST', params: {action: 'publish'}},
                 removeAssociations: {method: 'PUT', params: {action: 'remove'}},
                 versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}},
-                components: {method: 'GET', transformResponse: function (data) {
+                contentViewComponents: {method: 'GET', transformResponse: function (data) {
                     var contentView = angular.fromJson(data);
-                    return {results: contentView.components};
+                    return {results: contentView.content_view_components};
                 }},
                 availablePuppetModules: {method: 'GET', params: {action: 'available_puppet_modules'},
                     transformResponse: function (data) {
