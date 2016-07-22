@@ -99,11 +99,9 @@ module Katello
       query = PuppetModule.in_repositories(repositories)
       query = query.where(:name => params[:name]) if params[:name]
       query = query.where("#{PuppetModule.table_name}.uuid NOT in (?)", current_uuids) if current_uuids.present?
-      custom_sort = ->(sort_query) { sort_query.order('author, name, sortable_version DESC') }
 
       respond_for_index :template => 'puppet_modules',
-                        :collection => scoped_search(query, nil, nil, :resource_class => PuppetModule,
-                                                     :custom_sort => custom_sort)
+                        :collection => scoped_search(query, 'name', 'ASC', :resource_class => PuppetModule)
     end
 
     api :GET, "/content_views/:id/available_puppet_module_names",

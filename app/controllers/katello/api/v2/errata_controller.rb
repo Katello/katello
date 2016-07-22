@@ -55,7 +55,7 @@ module Katello
 
     def filter_by_content_view(filter, collection)
       repos = Katello::ContentView.find(filter.content_view_id).repositories
-      uuid = repos.map { |r| r.send("errata").pluck("uuid") }.flatten
+      uuid = repos.map { |r| r.send("errata").pluck("uuid") }
       filter_by_ids(uuid, collection)
     end
 

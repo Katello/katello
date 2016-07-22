@@ -53,7 +53,7 @@ module Katello
         rule = rule.with_indifferent_access
         diff_data = rule.keys.collect do |k|
           if params[k]
-            if params[k].is_a?(Array) && rule[k].first.is_a?(Array)
+            if (params[k].is_a?(Array)) && (rule[k].first.is_a?(Array))
               diffs = params[k].collect { |pk| diff_hash_params(rule[k].first, pk) }.flatten
               diffs
             elsif params[k].is_a?(Hash)

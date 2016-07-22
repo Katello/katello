@@ -8,7 +8,6 @@ module ControllerSupport
 
     permissions.each do |permission|
       user = User.find(users(:restricted).id)
-      user.organizations = params[:organizations] if params[:organizations].present?
       setup_user_with_permissions(permission, user)
 
       action = params[:action]
@@ -30,20 +29,18 @@ module ControllerSupport
     end
   end
 
-  def assert_protected_action(action_name, allowed_perms, denied_perms = [], organizations = [], &block)
+  def assert_protected_action(action_name, allowed_perms, denied_perms = [], &block)
     assert_authorized(
         :permission => allowed_perms,
         :action => action_name,
-        :request => block,
-        :organizations => organizations
+        :request => block
     )
 
     unless denied_perms.empty?
       refute_authorized(
           :permission => denied_perms,
           :action => action_name,
-          :request => block,
-          :organizations => organizations
+          :request => block
       )
     end
   end

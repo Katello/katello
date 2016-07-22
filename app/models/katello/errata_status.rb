@@ -54,8 +54,8 @@ module Katello
       end
     end
 
-    def relevant?(_options = {})
-      host.content_facet.try(:uuid)
+    def relevant?
+      host.content_facet
     end
   end
 end

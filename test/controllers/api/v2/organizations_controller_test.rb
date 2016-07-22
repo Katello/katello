@@ -60,7 +60,7 @@ module Katello
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
-      assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
+      assert_protected_action(:show, allowed_perms, denied_perms) do
         get :show, :id => @organization.id
       end
     end
@@ -97,7 +97,7 @@ module Katello
       allowed_perms = [@delete_permission]
       denied_perms = [@create_permission, @read_permission, @update_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :id => @organization.id
       end
     end
@@ -131,7 +131,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@create_permission, @read_permission, @delete_permission]
 
-      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
+      assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, :id => @organization.id, :organization => {:name => 'NewName'}
       end
     end
@@ -148,7 +148,7 @@ module Katello
 
     def test_autoattach_subscriptions_protected
       allowed_perms = [@update_permission]
-      assert_protected_action(:autoattach_subscriptions, allowed_perms, [], [@organization]) do
+      assert_protected_action(:autoattach_subscriptions, allowed_perms) do
         post :autoattach_subscriptions, :id => @organization.id
       end
     end

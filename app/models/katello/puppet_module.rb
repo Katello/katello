@@ -27,11 +27,8 @@ module Katello
     validates :name, :presence => true
     validates :author, :presence => true
 
-    before_save :set_sortable_version
-
     def self.latest_module(name, author, repositories)
-      in_repositories(repositories).where(:name => name, :author => author).
-        order(:sortable_version => :desc).first
+      in_repositories(repositories).where(:name => name, :author => author).order(:version).first
     end
 
     def self.repository_association_class
@@ -78,12 +75,8 @@ module Katello
       self.update_attributes!(custom_json)
     end
 
-    private
-
-    def set_sortable_version
-      if version_changed? && !version.nil?
-        self.sortable_version = Util::Package.sortable_version(version)
-      end
+    def sortable_version
+      Util::Package.sortable_version(self.version)
     end
   end
 end

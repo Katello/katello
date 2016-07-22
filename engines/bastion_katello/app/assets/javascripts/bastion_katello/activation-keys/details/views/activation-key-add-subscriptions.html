@@ -20,7 +20,7 @@
   </span>
 
   <div data-block="table">
-    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full">
+    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full table-striped">
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
@@ -43,11 +43,7 @@
           </td>
           <td bst-table-cell colspan="8"></td>
         </tr>
-        <tr bst-table-row 
-            ng-repeat-end
-            class="grey-table-row"
-            ng-repeat="subscription in subscriptions"
-            row-select="subscription">
+        <tr bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
           <td bst-table-cell>
             <span ng-hide="subscription.multi_entitlement">
               1

@@ -46,7 +46,7 @@ module Katello
           logger.error pp_exception(exception.original.nil? ? exception : exception.original)
 
           orig_message             = (exception.original.nil? && '') || exception.original.message
-          format_text_orig_message = orig_message.blank? ? '' : " (#{orig_message})"
+          format_text_orig_message = (orig_message.blank?) ? '' : " (#{orig_message})"
           text                     = "#{exception.message}#{format_text_orig_message}"
 
           respond_for_exception(exception, :text => text, :errors => [exception.message, orig_message], :with_logging => false)

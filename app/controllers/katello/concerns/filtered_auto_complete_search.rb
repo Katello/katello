@@ -10,7 +10,7 @@ module Katello
           options = resource_class.respond_to?(:completer_scope_options) ? resource_class.completer_scope_options : {}
           items = resource_class.where(:id => self.index_relation).complete_for(params[:search], options)
           items = items.map do |item|
-            category = ['and', 'or', 'not', 'has'].include?(item.to_s.sub(/^.*\s+/, '')) ? _('Operators') : ''
+            category = (['and', 'or', 'not', 'has'].include?(item.to_s.sub(/^.*\s+/, ''))) ? _('Operators') : ''
             part = item.to_s.sub(/^.*\b(and|or)\b/i) { |match| match.sub(/^.*\s+/, '') }
             completed = item.to_s.chomp(part)
             {:completed => completed, :part => part, :label => item, :category => category}

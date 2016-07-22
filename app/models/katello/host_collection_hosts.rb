@@ -10,7 +10,7 @@ module Katello
     def validate_max_hosts_not_exceeded
       if new_record? && self.host_collection_id
         host_collection = HostCollection.find(self.host_collection_id)
-        if host_collection && !host_collection.unlimited_hosts && (host_collection.hosts.size >= host_collection.max_hosts)
+        if (host_collection) && (!host_collection.unlimited_hosts) && (host_collection.hosts.size >= host_collection.max_hosts)
           errors.add :base,
                      _("You cannot have more than %{max_hosts} host(s) associated with host collection '%{host_collection}'.") %
                          { :max_hosts => host_collection.max_hosts, :host_collection => host_collection.name }

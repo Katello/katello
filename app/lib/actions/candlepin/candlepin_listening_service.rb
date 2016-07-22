@@ -65,7 +65,7 @@ module Actions
 
       def fetch_message
         {:result => retrieve, :error => nil}
-      rescue ::Actions::Candlepin::ConnectionError => e
+      rescue Actions::Candlepin::ConnectionError => e
         {:result => nil, :error => e.message}
       end
 

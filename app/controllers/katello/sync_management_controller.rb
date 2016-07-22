@@ -63,8 +63,11 @@ module Katello
       repos.each do |repo|
         if latest_task(repo).try(:state) != 'running'
           ForemanTasks.async_task(::Actions::Katello::Repository::Sync, repo)
+          collected << format_sync_progress(repo)
+        else
+          notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
+                          repo.name
         end
-        collected << format_sync_progress(repo)
       end
       collected
     end

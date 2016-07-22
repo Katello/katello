@@ -90,7 +90,7 @@ module Katello
           next if pack.nil?
 
           pack = pack.with_indifferent_access
-          if latest_pack.nil? ||
+          if (latest_pack.nil?) ||
              (pack[:epoch] > latest_pack[:epoch]) ||
              (pack[:epoch] == latest_pack[:epoch] && pack[:release] > latest_pack[:release]) ||
              (pack[:epoch] == latest_pack[:epoch] && pack[:release] == latest_pack[:release] && pack[:version] > latest_pack[:version])

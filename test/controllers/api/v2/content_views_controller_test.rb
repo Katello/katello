@@ -185,18 +185,6 @@ module Katello
       assert_template 'katello/api/v2/content_views/puppet_modules'
     end
 
-    def test_available_puppet_modules_filtered_order
-      # the UI relies on these being ordered by author/name/version
-      create(:puppet_module, :version => "1.12.0")
-      create(:puppet_module, :version => "1.3.0")
-      PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
-
-      get :available_puppet_modules, :id => @library_dev_staging_view.id, :name => "trystero"
-
-      results = JSON.parse(response.body)['results']
-      assert_equal '1.12.0', results.first['version']
-    end
-
     def test_available_puppet_modules_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]

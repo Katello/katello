@@ -6,17 +6,10 @@ module Katello
       @facts = {
         'net.interface.eth0.mac_address' => '00:00:00:00:00:12',
         'net.interface.eth0.ipv4_address' => '192.168.0.1',
-        'net.interface.eth0.1.mac_address' => '00:00:00:00:00:12',
-        'net.interface.eth0.1.ipv4_address' => '192.168.0.2',
         'net.interface.ethnone.mac_address' => 'none',
         'net.interface.eth2.mac_address' => '00:00:00:00:00:13'
       }
       @parser = RhsmFactParser.new(@facts)
-    end
-
-    def test_virtual_interfaces
-      assert @parser.interfaces['eth0.1'][:virtual]
-      refute @parser.interfaces['eth0'][:virtual]
     end
 
     def test_get_interfaces

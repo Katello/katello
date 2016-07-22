@@ -116,7 +116,7 @@ namespace :katello do
         objects = model.all
       else
         #Index STI subclasses separately
-        objects = model.where(:type => [nil, model.name])
+        objects = model.where(:type => ([nil, model.name]))
       end
 
       begin

@@ -71,7 +71,7 @@ module Actions
             repo_details = capsule.pulp_repo_facts(repo.pulp_id)
             next unless repo_details
             capsule_distributors = repo_details["distributors"]
-            !repo.distributors_match?(capsule_distributors)
+            !(repo.distributors_match?(capsule_distributors))
           end
         end
 
@@ -81,7 +81,7 @@ module Actions
             repo_details = capsule.pulp_repo_facts(repo.pulp_id)
             next unless repo_details
             capsule_importer = repo_details["importers"][0]
-            !repo.importer_matches?(capsule_importer)
+            !(repo.importer_matches?(capsule_importer))
           end
         end
 
