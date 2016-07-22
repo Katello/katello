@@ -17,7 +17,7 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
             var successState = 'content-views.details.repositories.yum.available';
 
             if (response.composite) {
-                successState = 'content-views.details.composite-content-views.available';
+                successState = 'content-views.details.components.composite-content-views.available';
             }
 
             $scope.$parent.table.addRow(response);

@@ -3,6 +3,7 @@
  * @name  Bastion.content-views.controller:ContentViewDetailsController
  *
  * @requires $scope
+ * @requires $q
  * @requires ContentView
  * @requires Nutupane
  * @requires translate
@@ -14,8 +15,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', 'ContentView', 'ContentViewVersion', 'Nutupane', 'AggregateTask', 'translate', 'ApiErrorHandler',
-    function ($scope, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate, ApiErrorHandler) {
+    ['$scope', '$q', 'ContentView', 'ContentViewVersion', 'Nutupane', 'AggregateTask', 'translate', 'ApiErrorHandler',
+    function ($scope, $q, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate, ApiErrorHandler) {
         var nutupane, contentViewId = $scope.$stateParams.contentViewId;
 
         $scope.panel = {
@@ -32,15 +33,15 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         nutupane.setSearchKey('contentViewVersionSearch');
         nutupane.masterOnly = true;
 
-        function saveSuccess() {
+        $scope.saveSuccess = function () {
             $scope.successMessages = [translate('Content View updated.')];
-        }
+        };
 
-        function saveError(response) {
+        $scope.saveError = function (response) {
             angular.forEach(response.data.errors, function (errorMessage) {
                 $scope.errorMessages = [translate("An error occurred updating the Content View: ") + errorMessage];
             });
-        }
+        };
 
         function promotionMessage(version, task) {
             return translate("Successfully promoted %cv version %ver to %env")
@@ -169,8 +170,29 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         });
 
         $scope.save = function (contentView) {
-            return contentView.$update(saveSuccess, saveError);
+            return contentView.$update($scope.saveSuccess, $scope.saveError);
         };
 
+        $scope.getAvailableVersions = function (paramContentView) {
+            var deferred, latestVersion, latest;
+
+            if (paramContentView.latest_version) {
+                latestVersion = translate('Always Use Latest (Currently %s)').replace('%s', paramContentView.latest_version.toString());
+                latest = [{id: "latest", version: latestVersion}];
+            } else {
+                return [];
+            }
+
+            if (angular.isUndefined(paramContentView.versions)) {
+                deferred = $q.defer();
+
+                ContentView.get({id: paramContentView.id}, function (response) {
+                    deferred.resolve(latest.concat(response.versions.reverse()));
+                });
+
+                return deferred.promise;
+            }
+            return latest.concat(paramContentView.versions.reverse());
+        };
     }]
 );

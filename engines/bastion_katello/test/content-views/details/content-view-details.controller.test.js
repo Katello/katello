@@ -17,6 +17,7 @@ describe('Controller: ContentViewDetailsController', function() {
         AggregateTask = {newAggregate: function(){}};
 
         $scope = $injector.get('$rootScope').$new();
+        $scope.translate = function (value) { return value;}
 
         $scope.$stateParams = {contentViewId: 1};
         $scope.table = {
@@ -53,5 +54,16 @@ describe('Controller: ContentViewDetailsController', function() {
 
         expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.info', {contentViewId: newContentView.id});
         expect($scope.table.addRow).toHaveBeenCalledWith(newContentView);
+    });
+
+    it("provides a method to get the available versions for a composite", function () {
+        var cv = {
+            versions: [{id: 100, version: "foo"}],
+            latest_version: "foo"
+        }, response = $scope.getAvailableVersions(cv);
+
+        expect(response[0].id).toBe("latest");
+        expect(response[1].id).toBe(100);
+        expect(response[1].version).toBe("foo");
     });
 });

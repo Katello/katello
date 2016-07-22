@@ -193,18 +193,15 @@ module Katello
     end
 
     def test_composite_views_with_composite_versions
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      view = stub(:composite? => true)
-      view.stubs(:default?).returns(false)
-      ContentViewVersion.any_instance.stubs(:content_view).returns(view)
+      composite_view1 = create(:katello_content_view, :composite)
+      composite_version1 = create(:katello_content_view_version, :content_view => composite_view1)
       composite = ContentView.find(katello_content_views(:composite_view).id)
-      v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       assert_raises(ActiveRecord::RecordInvalid) do
-        composite.update_attributes(:component_ids => [v1.id])
+        composite.update_attributes!(:component_ids => [composite_version1.id])
       end
 
-      component = ContentViewComponent.new(:content_view => composite,
-                                           :content_view_version => v1
+      component = ContentViewComponent.new(:composite_content_view => composite,
+                                           :content_view_version => composite_version1
                                           )
       refute component.valid?
       refute component.save
@@ -226,7 +223,7 @@ module Katello
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       composite = ContentView.find(katello_content_views(:composite_view).id)
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
-      v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
+      v2 = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
 
       assert composite.update_attributes(component_ids: [v1.id, v2.id])
       assert_equal 0, composite.errors.count # docker and yum repos
@@ -234,18 +231,19 @@ module Katello
 
     def test_puppet_module_conflicts
       composite = ContentView.find(katello_content_views(:composite_view).id)
-      view = create(:katello_content_view)
-      versions = 2.times.map do |_i|
-        create(:katello_content_view_version, :content_view => view)
-      end
-      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([stub(:name => "httpd")]).times(4)
+      view1 = create(:katello_content_view)
+      version1 = create(:katello_content_view_version, :content_view => view1)
 
-      refute composite.update_attributes(component_ids: versions.map(&:id))
+      view2 = create(:katello_content_view)
+      version2 = create(:katello_content_view_version, :content_view => view2)
+
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([stub(:name => "httpd")]).times(4)
+      refute composite.update_attributes(component_ids: [version1.id, version2.id])
       assert_equal 1, composite.errors.count
       assert composite.errors.full_messages.first =~ /^Puppet module conflict/
 
       assert_raises(RuntimeError) do
-        composite.components << versions.first
+        composite.components << version1
       end
     end
 
@@ -301,13 +299,13 @@ module Katello
       # version in library & dev
       library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
 
-      composite.components = [library_view_version_1]
+      composite.component_ids = [library_view_version_1.id]
       composite.save!
       assert_raises RuntimeError do
         composite.check_composite_action_allowed!(library)
       end
 
-      composite.components = [library_dev_view_version]
+      composite.component_ids = [library_dev_view_version.id]
       composite.save!
       assert composite.check_composite_action_allowed!(library)
     end
@@ -324,11 +322,11 @@ module Katello
       # version in library & dev
       library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
 
-      composite.components = [library_view_version_1]
+      composite.component_ids = [library_view_version_1.id]
       composite.save!
       assert composite.check_composite_action_allowed!(library)
 
-      composite.components = [library_dev_view_version]
+      composite.component_ids = [library_dev_view_version.id]
       composite.save!
       assert composite.check_composite_action_allowed!(library)
     end

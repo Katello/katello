@@ -32,8 +32,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       content_view_includes = [:activation_keys, :content_view_puppet_modules, :content_view_versions,
-                               :environments, :organization, :repositories, components: [:content_view, :environments]]
-
+                               :environments, :organization, :repositories]
       respond(:collection => scoped_search(index_relation.uniq, :name, :asc, :includes => content_view_includes))
     end
 

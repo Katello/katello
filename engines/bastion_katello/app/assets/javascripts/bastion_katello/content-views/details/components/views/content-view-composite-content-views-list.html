@@ -1,0 +1,86 @@
+<span page-title ng-model="contentView">{{ 'Content Views for Composite Content View:' | translate }} {{ contentView.name }}</span>
+
+<div data-extend-template="layouts/details-nutupane.html">
+  <div data-block="messages"></div>
+
+  <div data-block="actions">
+    <button class="btn btn-primary fr"
+            ng-hide="denied('edit_content_views', contentView)"
+            ng-disabled="detailsTable.numSelected === 0"
+            ng-click="removeContentViewComponents()">
+      <i class="fa fa-trash-o"></i>
+      <span translate>Remove Content Views</span>
+    </button>
+  </div>
+
+  <div data-block="search">
+    <input type="text"
+           class="form-control"
+           placeholder="{{ 'Filter...' | translate }}"
+           ng-model="componentContentViewFilter"/>
+  </div>
+
+  <span data-block="result-count"></span>
+
+  <div data-block="table">
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr bst-table-head row-select>
+        <th bst-table-column translate>Name</th>
+        <th bst-table-column translate>Version</th>
+        <th bst-table-column translate>Environment</th>
+        <th bst-table-column translate>Description</th>
+        <th bst-table-column translate>Content</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr bst-table-row ng-repeat="contentViewComponent in detailsTable.rows | filter:componentContentViewFilter | orderBy:'content_view.name'"
+          row-select="contentViewComponent">
+        <td bst-table-cell>{{ contentViewComponent.content_view.name }}</td>
+        <td bst-table-cell ng-init="contentViewComponent.versionId = getVersionId(contentViewComponent)">
+          <span bst-edit-select="contentViewComponent.versionId"
+                display-value="getVersionString(contentViewComponent)"
+                display-value-default="getVersionString(contentViewComponent)"
+                readonly="denied('edit_content_views', contentView)"
+                selector="contentViewComponent.versionId"
+                options="getAvailableVersions(contentViewComponent.content_view)"
+                options-format="option.id as option.version for option in options"
+                on-save="saveContentViewComponent(contentViewComponent)"
+                ng-if="contentViewComponent.content_view.version_count > 0">
+          </span>
+          <div  ng-if="contentViewComponent.content_view.version_count > 0" ng-show="(!contentViewComponent.latest) && contentViewComponent.content_view_version.version != contentViewComponent.content_view.latest_version" translate>
+              A newer version is available: {{ contentViewComponent.content_view.latest_version }}
+          </div>
+          <div ng-if="contentViewComponent.content_view.version_count === 0 " translate>
+              Latest (Currently no version)
+          </div>
+        </td>
+        <td bst-table-cell>
+        <span ng-show="contentViewComponent.content_view_version.environments.length !== 0"
+              ng-repeat="environment in contentViewComponent.content_view_version.environments">
+          {{ environment.name }}<span ng-if="!$last">, </span>
+        </span>
+        <span ng-show="contentViewComponent.content_view.version_count === 0 || contentViewComponent.content_view_version.environments.length === 0" translate>
+          Not yet published
+        </span>
+        </td>
+        <td bst-table-cell>{{ contentViewComponent.content_view.description }}</td>
+        <td bst-table-cell>
+          <div>
+            <a ui-sref="content-views.details.repositories.yum.list({contentViewId: contentViewComponent.content_view.id})" translate>
+              {{ contentViewComponent.content_view_version.repositories.length || 0 }} Repositories
+            </a>
+          </div>
+          <div>
+            <a ui-sref="content-views.details.puppet-modules.list({contentViewId: contentViewComponent.content_view.id})" translate>
+              {{ contentViewComponent.content_view_version.puppet_module_count || 0 }} Puppet Modules
+            </a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
