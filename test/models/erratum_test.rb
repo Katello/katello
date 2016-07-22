@@ -25,6 +25,10 @@ module Katello
       assert Erratum.find_by_uuid(uuid)
     end
 
+    def test_search_reboot_suggested
+      assert_includes Katello::Erratum.search_for("reboot_suggested = true"), @security
+    end
+
     def test_create_truncates_long_title
       attrs = {:uuid => 'foo', :title => "This life, which had been the tomb of " \
         "his virtue and of his honour is but a walking shadow; a poor player, " \
@@ -67,9 +71,11 @@ module Katello
 
     def test_update_from_json
       errata = katello_errata(:security)
-      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now)
+      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'reboot_suggested' => true)
       errata.update_from_json(json)
-      assert_equal Erratum.find(errata).description, json['description']
+      errata = Erratum.find(errata)
+      assert_equal errata.description, json['description']
+      assert errata.reboot_suggested
     end
 
     def test_update_from_json_is_idempotent

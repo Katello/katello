@@ -1,7 +1,7 @@
 module Katello
   module PackagesHelper
     def format_changelog_changes(changes)
-      (h(changes).gsub(/\n/, "<br>")).html_safe
+      h(changes).gsub(/\n/, "<br>").html_safe
     end
 
     def format_changelog_date(date)

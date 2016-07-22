@@ -78,7 +78,7 @@ module Katello
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
     validates :docker_upstream_name, :allow_blank => true, :if => :docker?, :format => {
       :with => /\A([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}\z/,
-      :message => (_("must be a valid docker name"))
+      :message => _("must be a valid docker name")
     }
 
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
@@ -193,7 +193,7 @@ module Katello
     delegate :redhat?, to: :product
 
     def custom?
-      !(redhat?)
+      !redhat?
     end
 
     def empty_errata
@@ -306,7 +306,7 @@ module Katello
                                            :content_view_id => options[:content_view]).first
         view = repo.content_view.label
         product = repo.product.label
-        env, _ = cve.label.split('/')
+        env = cve.label.split('/').first
         "#{org}-#{env.downcase}-#{view}-#{product}-#{repo.label}"
       else
         content_path = repo.relative_path.gsub("#{org}-", '')
@@ -348,7 +348,7 @@ module Katello
 
     def errata_filenames
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
-          where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck("#{ Katello::ErratumPackage.table_name}.filename")
+          where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck("#{Katello::ErratumPackage.table_name}.filename")
     end
 
     def container_repository_name
@@ -567,16 +567,6 @@ module Katello
                               "Please delete all Content View versions containing this repository before attempting to delete it."))
 
           return false
-        end
-      end
-    end
-
-    def import_host_applicability
-      self.hosts_with_applicability.find_each do |host|
-        begin
-          host.content_facet.import_applicability if host.content_facet.try(:uuid)
-        rescue => e
-          Rails.logger.error("Could not import applicability for #{host.name}: #{e}")
         end
       end
     end

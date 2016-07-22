@@ -104,7 +104,7 @@ module Katello
 
       def url_to_host_and_path(url = "")
         parsed = URI.parse(url)
-        ["#{parsed.scheme}://#{parsed.host}#{ parsed.port ? ':' + parsed.port.to_s : '' }", parsed.path]
+        ["#{parsed.scheme}://#{parsed.host}#{parsed.port ? ':' + parsed.port.to_s : ''}", parsed.path]
       end
 
       def del_products

@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "foreman-tasks", "~> 0.7.18"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
 
-  gem.add_dependency "qpid_messaging", ">= 0.30.0", '< 0.31.0'
+  gem.add_dependency "qpid_messaging", '< 1.0.0'
   gem.add_dependency "gettext_i18n_rails"
 
   # Pulp
@@ -39,7 +39,7 @@ Gem::Specification.new do |gem|
   # UI
   gem.add_dependency "deface", '>= 1.0.0', '< 2.0.0'
   gem.add_dependency "jquery-ui-rails"
-  gem.add_dependency "bastion", ">= 3.2.0", "< 4.0.0"
+  gem.add_dependency "bastion", "3.2.0"
 
   # Testing
   gem.add_development_dependency "factory_girl_rails"
