@@ -148,6 +148,12 @@ module Katello
           where("#{Katello::Repository.table_name}.product_id" => self.id)
     end
 
+    def published_content_view_versions
+      Katello::ContentViewVersion.joins(:content_view).joins(:repositories).
+          where("#{Katello::ContentView.table_name}.default" => false).
+          where("#{Katello::Repository.table_name}.product_id" => self.id).order(:content_view_id)
+    end
+
     def anonymous?
       provider.anonymous_provider?
     end
