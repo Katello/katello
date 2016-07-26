@@ -127,7 +127,7 @@ module Katello
       def create_activation_key_associations
         keys = Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id")
         activation_key_ids = keys.collect do |key|
-          key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool']['id'] == cp_id }
+          key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool'].try(:[], 'id') == cp_id }
         end
         related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
         related_keys.each do |key|
