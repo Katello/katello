@@ -1,10 +1,5 @@
 <span page-title ng-model="version">{{ 'Version:' | translate }} {{ version.version }}</span>
 
-<div class="loading-mask loading-mask-panel fa-3x" ng-show="version.id === undefined">
-    <i class="fa fa-spinner fa-spin"></i>
-    {{ "Loading..." | translate }}
-</div>
-
 <div class="details details-full" ng-show="version.id !== undefined">
 
   <ol class="breadcrumb">

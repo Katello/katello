@@ -18,7 +18,13 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
     function ($scope, ContentView, ContentViewVersion, Nutupane, AggregateTask, translate, ApiErrorHandler) {
         var nutupane, contentViewId = $scope.$stateParams.contentViewId;
 
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
+
         if ($scope.contentView) {
+            $scope.panel.loading = false;
             contentViewId = $scope.contentView.id;
         }
 
@@ -124,8 +130,10 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function () {
+            $scope.panel.loading = false;
             $scope.loading = false;
         }, function (response) {
+            $scope.panel.loading = false;
             $scope.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });

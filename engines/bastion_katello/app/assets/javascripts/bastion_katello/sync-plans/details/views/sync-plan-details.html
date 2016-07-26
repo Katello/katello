@@ -1,65 +1,64 @@
 <span page-title ng-model="syncPlan">{{ 'Sync Plan:' | translate }} {{ syncPlan.name }}</span>
 
-<div class="loading-mask loading-mask-panel" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-    
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+      <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <div ng-hide="panel.error">
-    <header class="details-header">
-      <h2 class="fl" translate>Sync Plan {{ syncPlan.name }}</h2>
+      <div ng-hide="panel.error">
+        <header class="details-header">
+          <h2 class="fl" translate>Sync Plan {{ syncPlan.name }}</h2>
 
-      <div class="fr">
-        <div bst-modal="removeSyncPlan(syncPlan)" model="syncPlan">
-          <div data-block="modal-header" translate>Remove Sync Plan "{{ syncPlan.name }}"?</div>
-          <div data-block="modal-body" translate>Are you sure you want to remove Sync Plan "{{ syncPlan.name }}"?</div>
+          <div class="fr">
+            <div bst-modal="removeSyncPlan(syncPlan)" model="syncPlan">
+              <div data-block="modal-header" translate>Remove Sync Plan "{{ syncPlan.name }}"?</div>
+              <div data-block="modal-body" translate>Are you sure you want to remove Sync Plan "{{ syncPlan.name }}"?</div>
+            </div>
+
+            <button class="btn btn-default" ng-click="runSyncPlan()" ng-hide="denied('sync_products')">
+              <i class="fa fa-refresh"></i>
+              {{ "Run Sync Plan" | translate }}
+            </button>
+            <button class="btn btn-default" ng-click="openModal()" ng-hide="denied('destroy_sync_plans', syncPlan)">
+              <i class="fa fa-trash-o"></i>
+              {{ "Remove Sync Plan" | translate }}
+            </button>
+            <button class="btn btn-default" ui-sref="sync-plans.index">
+              <i class="fa fa-remove"></i>
+              {{ "Close" | translate }}
+            </button>
+          </div>
+        </header>
+
+        <nav>
+          <ul class="nav nav-tabs">
+            <li ng-class="{active: stateIncludes('sync-plans.details.info')}">
+              <a translate
+                 ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
+                Details
+              </a>
+            </li>
+            <li ng-class="{active: stateIncludes('sync-plans.details.products')}">
+              <a translate
+                 ui-sref="sync-plans.details.products.list({syncPlanId: syncPlan.id})">
+                Products
+              </a>
+            </li>
+            <li ng-repeat="menuItem in menuExpander.getMenu('syncPlan')">
+              <a href="{{ menuItem.url }}">
+                {{ menuItem.label }}
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div bst-alert="info" ng-show="task">
+          A sync has been initiated in the background, <a href="/foreman_tasks/tasks/{{ task.id }}">click for more details</a>
         </div>
 
-        <button class="btn btn-default" ng-click="runSyncPlan()" ng-hide="denied('sync_products')">
-          <i class="fa fa-refresh"></i>
-          {{ "Run Sync Plan" | translate }}
-        </button>
-        <button class="btn btn-default" ng-click="openModal()" ng-hide="denied('destroy_sync_plans', syncPlan)">
-          <i class="fa fa-trash-o"></i>
-          {{ "Remove Sync Plan" | translate }}
-        </button>
-        <button class="btn btn-default" ui-sref="sync-plans.index">
-          <i class="fa fa-remove"></i>
-          {{ "Close" | translate }}
-        </button>
+        <section class="nutupane-sub-section" ui-view></section>
       </div>
-    </header>
-
-    <nav>
-      <ul class="nav nav-tabs">
-        <li ng-class="{active: stateIncludes('sync-plans.details.info')}">
-          <a translate
-             ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
-            Details
-          </a>
-        </li>
-        <li ng-class="{active: stateIncludes('sync-plans.details.products')}">
-          <a translate
-             ui-sref="sync-plans.details.products.list({syncPlanId: syncPlan.id})">
-            Products
-          </a>
-        </li>
-        <li ng-repeat="menuItem in menuExpander.getMenu('syncPlan')">
-          <a href="{{ menuItem.url }}">
-            {{ menuItem.label }}
-          </a>
-        </li>
-      </ul>
-    </nav>
-
-    <div bst-alert="info" ng-show="task">
-      A sync has been initiated in the background, <a href="/foreman_tasks/tasks/{{ task.id }}">click for more details</a>
-    </div>
-
-    <section class="nutupane-sub-section" ui-view></section>
+    </section>
   </div>
-</section>
+</div>

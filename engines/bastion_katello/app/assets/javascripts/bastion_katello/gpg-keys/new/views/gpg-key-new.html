@@ -1,73 +1,72 @@
-<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-
-  <header class="new-header details-header">
-    <h2 class="fl" translate>New GPG Key</h2>
-    <div class="fr">
-      <button class="btn btn-default" ui-sref="gpg-keys.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
-  <div>
-    <div bst-alerts error-messages="errorMessages"></div>
-
-    <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
-          action="{{ uploadURL }}"
-          ng-upload="uploadContent(content)"
-          upload-options-enable-rails-csrf>
-
-      <div bst-form-group label="{{ 'Name' | translate }}">
-        <input id="name"
-               name="name"
-               ng-model="gpgKey.name"
-               type="text"
-               tabindex="1"
-               autofocus
-               required/>
-      </div>
-
-      <div bst-form-group label="{{ 'Contents' | translate }}">
-        <div>
-          <div class="radio">
-             <input type="radio"
-                 name="contentFormType"
-                 ng-model="contentFormType"
-                 value="upload"/>
-              <label translate>Upload GPG Key</label>
-          </div>
-          <input type="file" name="file_path" ng-disabled="contentFormType != 'upload'"/>
+      <header class="new-header details-header">
+        <h2 class="fl" translate>New GPG Key</h2>
+        <div class="fr">
+          <button class="btn btn-default" ui-sref="gpg-keys.index">
+            <i class="fa fa-remove"></i>
+            {{ "Close" | translate }}
+          </button>
         </div>
+      </header>
+      <div>
+        <div bst-alerts error-messages="errorMessages"></div>
 
-        <div>
-          <div class="radio">
-             <input type="radio"
-                 name="contentFormType"
-                 ng-model="contentFormType"
-                 value="paste"/>
-              <label translate>Paste GPG Key Contents</label>
+        <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
+              action="{{ uploadURL }}"
+              ng-upload="uploadContent(content)"
+              upload-options-enable-rails-csrf>
+
+          <div bst-form-group label="{{ 'Name' | translate }}">
+            <input id="name"
+                   name="name"
+                   ng-model="gpgKey.name"
+                   type="text"
+                   tabindex="1"
+                   autofocus
+                   required/>
           </div>
-          <textarea id="content"
-                    name="content"
-                    ng-model="gpgKey.content"
-                    tabindex="1"
-                    class="gpg-textarea"
-                    placeholder="{{ 'Paste contents...' | translate }}"
-                    ng-disabled="contentFormType != 'paste'">
-          </textarea>
-        </div>
-      </div>
 
-      <div bst-form-buttons upload-submit
-           on-cancel="transitionTo('gpg-keys.index')"
-           ng-disabled="gpgKey.name == undefined"
-           working="progress.uploading">
+          <div bst-form-group label="{{ 'Contents' | translate }}">
+            <div>
+              <div class="radio">
+                 <input type="radio"
+                     name="contentFormType"
+                     ng-model="contentFormType"
+                     value="upload"/>
+                  <label translate>Upload GPG Key</label>
+              </div>
+              <input type="file" name="file_path" ng-disabled="contentFormType != 'upload'"/>
+            </div>
+
+            <div>
+              <div class="radio">
+                 <input type="radio"
+                     name="contentFormType"
+                     ng-model="contentFormType"
+                     value="paste"/>
+                  <label translate>Paste GPG Key Contents</label>
+              </div>
+              <textarea id="content"
+                        name="content"
+                        ng-model="gpgKey.content"
+                        tabindex="1"
+                        class="gpg-textarea"
+                        placeholder="{{ 'Paste contents...' | translate }}"
+                        ng-disabled="contentFormType != 'paste'">
+              </textarea>
+            </div>
+          </div>
+
+          <div bst-form-buttons upload-submit
+               on-cancel="transitionTo('gpg-keys.index')"
+               ng-disabled="gpgKey.name == undefined"
+               working="progress.uploading">
+          </div>
+        </form>
       </div>
-    </form>
+    </section>
   </div>
-</section>
+</div>

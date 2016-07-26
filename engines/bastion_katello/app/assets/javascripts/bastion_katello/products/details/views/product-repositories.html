@@ -1,6 +1,6 @@
 <span page-title ng-model="product">{{ 'Repositories for Product:' | translate }} {{ product.name }}</span>
 
-<section ng-hide="panel.loading">
+<section>
   <div data-extend-template="layouts/details-nutupane.html">
     <div data-block="header"> {{ 'Repositories' | translate }} </div>
     <div data-block="messages">
@@ -24,15 +24,15 @@
 
     <div data-block="actions">
       <div bst-modal="removeSelectedRepositories()" model="detailsTable">
-        <div data-block="modal-header" 
-             translate 
-             translate-n="detailsTable.numSelected" 
+        <div data-block="modal-header"
+             translate
+             translate-n="detailsTable.numSelected"
              translate-plural="Remove {{ detailsTable.numSelected }} repostories?">
           Remove repository?
         </div>
-        <div data-block="modal-body" 
-             translate 
-             translate-n="detailsTable.numSelected" 
+        <div data-block="modal-body"
+             translate
+             translate-n="detailsTable.numSelected"
              translate-plural="Remove {{ detailsTable.numSelected }} repostories?">
              Are you sure you want to remove {{ detailsTable.getSelected()[0].name }}?
         </div>

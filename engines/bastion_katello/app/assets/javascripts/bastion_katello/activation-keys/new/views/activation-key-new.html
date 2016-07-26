@@ -1,98 +1,97 @@
 <span page-title>{{ 'New Activation Key' | translate }}</span>
 
-<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
-  <i class="fa fa-spinner fa-spin"></i>
-  {{ "Loading..." | translate }}
-</div>
+<div data-extend-template="layouts/panel.html">
+  <div data-block="panel">
+    <section class="nutupane-details" ng-cloak bst-container-scroll>
+      <header class="new-header details-header">
+        <h2 class="pull-left" translate>New Activation Key</h2>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-  <header class="new-header details-header">
-    <h2 class="pull-left" translate>New Activation Key</h2>
-
-    <div class="details-actions pull-right">
-      <button class="btn btn-default" ui-sref="activation-keys.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
-  </header>
-
-  <form name="activationKeyForm" class="form-horizontal" novalidate role="form">
-
-    <div bst-form-group label="{{ 'Name' | translate }}">
-      <input id="name"
-             name="name"
-             ng-model="activationKey.name"
-             type="text"
-             tabindex="1"
-             autofocus
-             required/>
-    </div>
-
-    <div bst-form-group label="{{ 'Host Limit' | translate }}" field="max_hosts">
-      <span translate>Unlimited Hosts:</span>
-      <input type="checkbox"
-             name="limit"
-             ng-model="activationKey.unlimited_hosts"/>
-
-      <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_hosts">
-        <input id="max_hosts"
-               name="max_hosts"
-               class="form-control"
-               ng-model="activationKey.max_hosts"
-               ng-required="!activationKey.unlimited_hosts"
-               type="number"
-               min="1"
-               max="2147483648"
-               tabindex="2"/>
-      </div>
-    </div>
-
-    <div bst-form-group label="{{ 'Description' | translate }}">
-      <textarea id="description"
-                name="description"
-                ng-model="activationKey.description"
-                tabindex="3">
-      </textarea>
-    </div>
-
-    <span bst-feature-flag="lifecycle_environments">
-      <div class="form-group">
-        <label class="control-label col-sm-2" translate>Environment</label>
-        <div class="col-sm-5 input">
-          <span path-selector="environments"
-                ng-model="activationKey.environment"
-                selection-required="false"
-                mode="singleSelect">
-          </span>
+        <div class="details-actions pull-right">
+          <button class="btn btn-default" ui-sref="activation-keys.index">
+            <i class="fa fa-remove"></i>
+            {{ "Close" | translate }}
+          </button>
         </div>
-      </div>
+      </header>
 
-      <div bst-form-group label="{{ 'Content View' | translate }}">
-        <select ng-hide="contentViews.length === 0 || activationKey.environment === undefined "
-                id="content_view_id"
-                name="content_view_id"
-                ng-model="activationKey.content_view_id"
-                ng-options="contentView.id as contentView.name for contentView in contentViews"
-                tabindex="4"
-                autofocus>
-        </select>
-        <span class="help-block" ng-show="activationKey.environment !== undefined && contentViews.length === 0" translate>
-          The selected environment contains no Content Views, please select a different environment.
+      <form name="activationKeyForm" class="form-horizontal" novalidate role="form">
+
+        <div bst-form-group label="{{ 'Name' | translate }}">
+          <input id="name"
+                 name="name"
+                 ng-model="activationKey.name"
+                 type="text"
+                 tabindex="1"
+                 autofocus
+                 required/>
+        </div>
+
+        <div bst-form-group label="{{ 'Host Limit' | translate }}" field="max_hosts">
+          <span translate>Unlimited Hosts:</span>
+          <input type="checkbox"
+                 name="limit"
+                 ng-model="activationKey.unlimited_hosts"/>
+
+          <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="activationKey.unlimited_hosts">
+            <input id="max_hosts"
+                   name="max_hosts"
+                   class="form-control"
+                   ng-model="activationKey.max_hosts"
+                   ng-required="!activationKey.unlimited_hosts"
+                   type="number"
+                   min="1"
+                   max="2147483648"
+                   tabindex="2"/>
+          </div>
+        </div>
+
+        <div bst-form-group label="{{ 'Description' | translate }}">
+          <textarea id="description"
+                    name="description"
+                    ng-model="activationKey.description"
+                    tabindex="3">
+          </textarea>
+        </div>
+
+        <span bst-feature-flag="lifecycle_environments">
+          <div class="form-group">
+            <label class="control-label col-sm-2" translate>Environment</label>
+            <div class="col-sm-5 input">
+              <span path-selector="environments"
+                    ng-model="activationKey.environment"
+                    selection-required="false"
+                    mode="singleSelect">
+              </span>
+            </div>
+          </div>
+
+          <div bst-form-group label="{{ 'Content View' | translate }}">
+            <select ng-hide="contentViews.length === 0 || activationKey.environment === undefined "
+                    id="content_view_id"
+                    name="content_view_id"
+                    ng-model="activationKey.content_view_id"
+                    ng-options="contentView.id as contentView.name for contentView in contentViews"
+                    tabindex="4"
+                    autofocus>
+            </select>
+            <span class="help-block" ng-show="activationKey.environment !== undefined && contentViews.length === 0" translate>
+              The selected environment contains no Content Views, please select a different environment.
+            </span>
+            <span class="help-block" ng-show="activationKey.environment === undefined" translate>
+              Please select an environment.
+            </span>
+          </div>
         </span>
-        <span class="help-block" ng-show="activationKey.environment === undefined" translate>
-          Please select an environment.
-        </span>
-      </div>
-    </span>
 
-    <div bst-form-buttons
-         on-cancel="transitionTo('activation-keys.index')"
-         on-save="save(activationKey)"
-         working="working">
-    </div>
+        <div bst-form-buttons
+             on-cancel="transitionTo('activation-keys.index')"
+             on-save="save(activationKey)"
+             working="working">
+        </div>
 
-  </form>
+      </form>
 
 
-</section>
+    </section>
+  </div>
+</div>
