@@ -7,7 +7,7 @@ module Katello
 
       included do
         alias_method_chain :validate_media?, :capsule
-        alias_method_chain :set_hostgroup_defaults, :katello_attributes
+        alias_method_chain :inherited_attributes, :katello
         alias_method_chain :info, :katello
         alias_method_chain :smart_proxy_ids, :katello
         has_one :content_host, :class_name => "Katello::System", :foreign_key => :host_id,
@@ -76,14 +76,9 @@ module Katello
             content_facet.lifecycle_environment_id == self.environment.try(:lifecycle_environment).try(:id)
       end
 
-      def set_hostgroup_defaults_with_katello_attributes
-        if hostgroup.present?
-          if content_facet.present?
-            self.content_facet.kickstart_repository_id ||= hostgroup.inherited_kickstart_repository_id
-          end
-          assign_hostgroup_attributes(%w(content_source_id content_view_id lifecycle_environment_id))
-        end
-        set_hostgroup_defaults_without_katello_attributes
+      def inherited_attributes_with_katello
+        self.content_facet.kickstart_repository_id ||= hostgroup.inherited_kickstart_repository_id if content_facet.present?
+        inherited_attributes_without_katello.concat(%w(content_source_id content_view_id lifecycle_environment_id))
       end
 
       def import_package_profile(simple_packages)
