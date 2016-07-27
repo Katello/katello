@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://localhost:8443/candlepin/owners/
+    uri: https://runcibox.example.com:8443/candlepin/owners/
     body:
       encoding: UTF-8
       base64_string: |
@@ -16,9 +16,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
-        oauth_nonce="qvMsaYwX8N14DgUvsuiVwbYE8weZcIYq8rws2tx7J0", oauth_signature="2mTNdHo%2F4ZJ5UOh%2ByIBiUbnoqBk%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454693676", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="zjRAjxYtUMEfBKq38jWf62Pv6JBJp62y",
+        oauth_nonce="FcFEPZC09CMIslvkxAuJzXOqh06UiFx8vl0tPsTTo", oauth_signature="21QfIDm%2BlblSFrQN12XjWmbSLa4%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1469571227", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -37,32 +37,32 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 8b611de8-e69d-4557-85e0-04aa8caaaab3
+      - c29fef8d-8865-4c70-99af-8b52b53d8ca5
       X-Version:
-      - 0.9.51.3-1
+      - 0.9.54.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Fri, 05 Feb 2016 17:34:36 GMT
+      - Tue, 26 Jul 2016 22:13:47 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUyYTc4NzE5MDE1
-        MmIyN2ZmNDJiMDA2OCIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTU2MjhmMzVkMDE1
+        NjI5NDU2MGZkMDAxMiIsImtleSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RT
         eXN0ZW1fMSIsImRpc3BsYXlOYW1lIjoiR2x1ZUNhbmRsZXBpbk93bmVyVGVz
         dFN5c3RlbV8xIiwiY29udGVudFByZWZpeCI6Ii9HbHVlQ2FuZGxlcGluT3du
         ZXJUZXN0U3lzdGVtXzEvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51
         bGwsInVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJo
         cmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEi
-        LCJjcmVhdGVkIjoiMjAxNi0wMi0wNVQxNzozNDozNi4wNzUrMDAwMCIsInVw
-        ZGF0ZWQiOiIyMDE2LTAyLTA1VDE3OjM0OjM2LjA3NSswMDAwIn0=
+        LCJjcmVhdGVkIjoiMjAxNi0wNy0yNlQyMjoxMzo0Ny45MDArMDAwMCIsInVw
+        ZGF0ZWQiOiIyMDE2LTA3LTI2VDIyOjEzOjQ3LjkwMCswMDAwIn0=
     http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:34:36 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:47 GMT
 - request:
     method: delete
-    uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    uri: https://runcibox.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -72,9 +72,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - OAuth oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f", oauth_nonce="TkDowWRjXNp4fn7xCLEAUSRtOfba7CgPMaDYIevar84",
-        oauth_signature="cDgpmGzB8OqExNAP7eC0wz9GHVg%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454693676", oauth_version="1.0"
+      - OAuth oauth_consumer_key="zjRAjxYtUMEfBKq38jWf62Pv6JBJp62y", oauth_nonce="sveO8dm8TfiWT42j4VVxRPYUQUAO275y5N9xAHEE",
+        oauth_signature="pnM9e3SIIbV%2F6%2FfGE0tWO%2BSyykw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1469571228", oauth_version="1.0"
       Cp-User:
       - foreman_admin
       User-Agent:
@@ -87,19 +87,19 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 94dedec3-36da-435a-bfee-7010cee2c775
+      - b2487dc4-aeb4-4b2e-ba9f-bce5837b827d
       X-Version:
-      - 0.9.51.3-1
+      - 0.9.54.6-1
       Date:
-      - Fri, 05 Feb 2016 17:34:36 GMT
+      - Tue, 26 Jul 2016 22:13:48 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:34:36 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:48 GMT
 - request:
     method: post
-    uri: https://localhost:8443/candlepin/owners/
+    uri: https://runcibox.example.com:8443/candlepin/owners/
     body:
       encoding: UTF-8
       base64_string: |
@@ -112,9 +112,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f",
-        oauth_nonce="POiEBdBpBAojK48NwclE00qDN8z4T1dSdPrSUEJHw", oauth_signature="NrSQQZSSmf88am97ZpdmLiplax4%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1454693678", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="zjRAjxYtUMEfBKq38jWf62Pv6JBJp62y",
+        oauth_nonce="UHwJH8TIRlJNKXVu3MHtD06wEcxS9gXvXc1wGEuw", oauth_signature="eK%2FatsVTeu%2Bku6k1x%2BJVQjgIlKU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1469571229", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -133,31 +133,31 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 22a1d1f4-26da-4fd6-a3fa-436ba18cb4d9
+      - cfb4c8ad-b920-4ce1-b8fc-a7503a8bb198
       X-Version:
-      - 0.9.51.3-1
+      - 0.9.54.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Fri, 05 Feb 2016 17:34:37 GMT
+      - Tue, 26 Jul 2016 22:13:49 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTUyYTc4NzE5MDE1
-        MmIyN2ZmZDliMDA3MCIsImtleSI6Ik9yZ2FuaXphdGlvbl8yIiwiZGlzcGxh
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiJmZjgwODA4MTU2MjhmMzVkMDE1
+        NjI5NDU2N2NkMDAxYSIsImtleSI6Ik9yZ2FuaXphdGlvbl8yIiwiZGlzcGxh
         eU5hbWUiOiJPcmdhbml6YXRpb24gMiIsImNvbnRlbnRQcmVmaXgiOiIvT3Jn
         YW5pemF0aW9uXzIvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51bGws
         InVwc3RyZWFtQ29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJocmVm
-        IjoiL293bmVycy9Pcmdhbml6YXRpb25fMiIsImNyZWF0ZWQiOiIyMDE2LTAy
-        LTA1VDE3OjM0OjM4LjQ5MSswMDAwIiwidXBkYXRlZCI6IjIwMTYtMDItMDVU
-        MTc6MzQ6MzguNDkxKzAwMDAifQ==
+        IjoiL293bmVycy9Pcmdhbml6YXRpb25fMiIsImNyZWF0ZWQiOiIyMDE2LTA3
+        LTI2VDIyOjEzOjQ5LjY0NSswMDAwIiwidXBkYXRlZCI6IjIwMTYtMDctMjZU
+        MjI6MTM6NDkuNjQ1KzAwMDAifQ==
     http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:34:38 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:49 GMT
 - request:
     method: delete
-    uri: https://localhost:8443/candlepin/owners/Organization_2
+    uri: https://runcibox.example.com:8443/candlepin/owners/Organization_2
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -167,9 +167,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       Authorization:
-      - OAuth oauth_consumer_key="WhqJhRh94gkhNXvNxnueN3AEmQzWgK2f", oauth_nonce="rUUTIZ1CgSw4o3G9xEA5OiDMzxN6oaMFSKTxDstsmg",
-        oauth_signature="XSe8MCE8DcSYSclZdtCNSL0UIz0%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1454693678", oauth_version="1.0"
+      - OAuth oauth_consumer_key="zjRAjxYtUMEfBKq38jWf62Pv6JBJp62y", oauth_nonce="cWYrMXI3rTCA4ftGXN6jFKluIDX7N3MNHV0i2l7saI",
+        oauth_signature="PGt00aKcu0cdZ16p5HDi0tCCaEQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1469571229", oauth_version="1.0"
       Cp-User:
       - foreman_admin
       User-Agent:
@@ -182,14 +182,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - ff5a93d0-8d2d-4bbe-b8bc-04b4d200929c
+      - 1d518319-63b4-4575-8c4f-a75b02c9eedb
       X-Version:
-      - 0.9.51.3-1
+      - 0.9.54.6-1
       Date:
-      - Fri, 05 Feb 2016 17:34:37 GMT
+      - Tue, 26 Jul 2016 22:13:49 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Fri, 05 Feb 2016 17:34:38 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:49 GMT
 recorded_with: VCR 2.9.3
