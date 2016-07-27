@@ -61,6 +61,11 @@
         </div>
       </div>
 
+      <div class="detail">
+        <span class="info-label" translate>Registered Through</span>
+        <span class="info-value">{{ host.subscription_facet_attributes.registered_through || "Unknown"}}</span>
+      </div>
+
       <div ng-show="host.subscription_facet_attributes.virtual_host" class="detail">
         <span class="info-label" translate>Virtual Host</span>
         <div class="info-value">

@@ -23,6 +23,7 @@ module Katello
         scoped_search :on => :autoheal, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :service_level, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :last_checkin, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :registered_through, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :registered_at, :in => :subscription_facet, :rename => :registered_at
         scoped_search :on => :uuid, :in => :subscription_facet, :rename => :subscription_uuid
         scoped_search :in => :activation_keys, :on => :name, :rename => :activation_key, :complete_value => true, :ext_method => :find_by_activation_key
