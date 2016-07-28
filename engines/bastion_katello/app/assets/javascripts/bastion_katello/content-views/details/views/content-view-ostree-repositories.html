@@ -91,7 +91,7 @@
       <tbody>
         <tr bst-table-row
             row-select="repository"
-            ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter | as:'filteredItems'">
+            ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter as filteredItems">
           <td bst-table-cell>
             <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
               {{ repository.name }}
