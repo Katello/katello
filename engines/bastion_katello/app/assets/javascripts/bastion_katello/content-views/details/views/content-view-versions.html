@@ -26,13 +26,17 @@
           <a ui-sref="content-views.details.version.details({versionId: version.id})" >Version {{ version.version }}</a>
         </td>
         <td bst-table-cell >
-          <a ui-sref="content-views.details.history" ng-hide="hideProgress(version)">
+          <a ng-href="/foreman_tasks/tasks/{{ version.last_event.task.id }}"
+             ng-hide="hideProgress(version)">
+
             <div ng-class="{ active: taskInProgress(version) }"
               class="progress progress-striped">
               <span progressbar animate="false" value="version.task.progressbar.value" type="{{version.task.progressbar.type}}"></span>
             </div>
+
             {{ status(version) }}
           </a>
+
           <span ng-show="hideProgress(version)">
             {{ historyText(version) }}
             ({{ version.last_event.created_at | date:'short' }})
