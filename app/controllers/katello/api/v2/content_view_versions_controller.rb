@@ -141,7 +141,7 @@ module Katello
         restrict_hosts = nil
       end
 
-      find_bulk_hosts(:editable, params[:update_hosts], restrict_hosts)
+      find_bulk_hosts(:edit_hosts, params[:update_hosts], restrict_hosts)
     end
 
     def find_content_view_version
