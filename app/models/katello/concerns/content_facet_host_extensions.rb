@@ -30,7 +30,6 @@ module Katello
         scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata
 
         accepts_nested_attributes_for :content_facet, :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? }
-        attr_accessible :content_facet_attributes
       end
 
       module ClassMethods

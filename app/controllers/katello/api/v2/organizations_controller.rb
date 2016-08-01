@@ -74,7 +74,7 @@ module Katello
     param :description, String, :desc => N_("description")
     param_group :resource
     def create
-      @organization = Organization.new(params[:organization])
+      @organization = Organization.new(resource_params)
       sync_task(::Actions::Katello::Organization::Create, @organization)
       @organization.reload
       respond_for_show :resource => @organization

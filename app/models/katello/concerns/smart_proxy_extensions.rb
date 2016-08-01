@@ -13,7 +13,6 @@ module Katello
         before_create :associate_organizations
         before_create :associate_default_location
         before_create :associate_lifecycle_environments
-        attr_accessible :lifecycle_environment_ids
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 

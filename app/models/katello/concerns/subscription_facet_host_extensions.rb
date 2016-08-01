@@ -19,8 +19,6 @@ module Katello
         scoped_search :on => :status, :in => :subscription_status_object, :rename => :subscription_status,
                       :complete_value => SUBSCRIPTION_STATUS_MAP
 
-        attr_accessible :subscription_facet_attributes
-
         scoped_search :on => :release_version, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :autoheal, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :service_level, :in => :subscription_facet, :complete_value => true

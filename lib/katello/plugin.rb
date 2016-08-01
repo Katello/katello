@@ -148,6 +148,16 @@ Foreman::Plugin.register :katello do
   apipie_documented_controllers ["#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"]
   apipie_ignored_controllers %w(::Api::V2::OrganizationsController)
 
+  parameter_filter ::Host::Managed, :content_source_id, :host_collection_ids,
+    :content_facet_attributes => [:content_view_id, :lifecycle_environment_id,
+                                  :host, :kickstart_repository_id],
+    :subscription_facet_attributes => [:release_version, :autoheal, :service_level, :host,
+                                       :installed_products, :facts, :hypervisor_guest_uuids]
+  parameter_filter Hostgroup, :content_view_id, :lifecycle_environment_id, :content_source_id,
+    :kickstart_repository_id
+  parameter_filter Organization, :label, :service_level
+  parameter_filter SmartProxy, :lifecycle_environment_ids
+
   logger :glue, :enabled => true
   logger :pulp_rest, :enabled => true
   logger :cp_rest, :enabled => true

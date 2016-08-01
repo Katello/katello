@@ -23,16 +23,6 @@ module Katello
       assert_equal view.version(library), host.content_facet.content_view_version
     end
 
-    def test_permitted_content_facet_attributes
-      assert ::Host.new(:name => "foo", :content_facet_attributes => { :content_view_id => view.id, :lifecycle_environment_id => environment.id })
-    end
-
-    def test_protected_content_facet_attributes
-      assert_raises ActiveModel::MassAssignmentSecurity::Error do
-        assert ::Host.new(:name => "foo", :content_facet_attributes => {:uuid => "thisshouldntbeabletobesetbyuser"})
-      end
-    end
-
     def test_katello_agent_installed?
       refute host.content_facet.katello_agent_installed?
 
