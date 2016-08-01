@@ -206,7 +206,10 @@
 
           <div class="detail">
             <span class="info-label" translate>Last Sync</span>
-            <span class="info-value" translate>
+            <span class="info-value" ng-show="repository.last_sync == null" translate>
+              Not Synced
+            </span>
+            <span class="info-value" ng-hide="repository.last_sync == null || repository.last_sync.ended_at == null" translate>
               {{ repository.last_sync_words }} Ago ({{ repository.last_sync.ended_at | date:'medium' }} Local Time)
             </span>
           </div>
