@@ -18,6 +18,7 @@ module Katello
     param :puppet_module_id, :identifier, :desc => N_("Filter versions by puppet module"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
+    param :organization_id, :number, :desc => N_("Organization identifier")
     param_group :search, Api::V2::ApiController
     def index
       options = {
@@ -30,6 +31,7 @@ module Katello
     def index_relation
       version_number = params.permit(:version)[:version]
       versions = ContentViewVersion.readable
+      versions = versions.with_organization_id(params[:organization_id]) if params[:organization_id]
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number
       versions = versions.in_environment(@environment) if @environment
