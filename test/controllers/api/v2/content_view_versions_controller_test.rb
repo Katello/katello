@@ -86,6 +86,20 @@ module Katello
       assert_equal expected_version.id, results['results'][0]['id']
     end
 
+    def test_index_with_organization_id
+      cvv = katello_content_view_versions(:library_default_version)
+      cvv_org2 = katello_content_view_versions(:candlepin_library_dev_cv_version)
+
+      results = JSON.parse(get(:index, organization_id: cvv.organization.id).body)
+
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/index'
+
+      assert_equal ['error', 'page', 'per_page', 'results', 'search', 'sort', 'subtotal', 'total'], results.keys.sort
+      assert_includes results['results'].map { |r| r['id'] }, cvv.id
+      refute_includes results['results'].map { |r| r['id'] }, cvv_org2.id
+    end
+
     def test_index_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]

@@ -138,6 +138,10 @@ module Katello
       assert_includes @composite_version.components_needing_errata([errata]), component
     end
 
+    def test_with_organization_id
+      assert_includes(Katello::ContentViewVersion.with_organization_id(@cvv.organization.id), @cvv)
+    end
+
     def test_with_puppet_module
       puppet_module = katello_puppet_modules(:abrt)
       katello_content_view_puppet_environments(:library_dev_staging_view_library_puppet_env).puppet_modules << puppet_module
