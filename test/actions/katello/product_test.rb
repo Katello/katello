@@ -128,11 +128,15 @@ module ::Actions::Katello::Product
       katello_products(:fedora)
     end
 
+    let(:content_view) do
+      katello_content_views(:acme_default)
+    end
+
     it 'plans' do
       action.stubs(:action_subject).with do |subject, _params|
         subject.must_equal(product)
       end
-      product.expects(:user_deletable?).returns(true)
+      product.expects(:published_content_view_versions).returns([])
       product.expects(:productContent).returns({})
       default_view_repos = product.repositories.in_default_view.map(&:id)
 
@@ -154,9 +158,16 @@ module ::Actions::Katello::Product
                                 cp_id: product.cp_id, organization_label: product.organization.label)
     end
 
-    it 'fails' do
-      product.expects(:user_deletable?).returns(false)
+    it 'fails for redhat products' do
+      product.expects(:redhat?).returns(true)
 
+      assert_raises(RuntimeError) do
+        plan_action(action, product)
+      end
+    end
+
+    it 'fails if published in content view' do
+      # The product being used for the test has been published to a content view
       assert_raises(RuntimeError) do
         plan_action(action, product)
       end

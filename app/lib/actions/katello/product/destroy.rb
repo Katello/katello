@@ -7,7 +7,12 @@ module Actions
           organization_destroy = options.fetch(:organization_destroy, false)
 
           unless organization_destroy || product.user_deletable?
-            fail _("Cannot delete a Red Hat Products or Products with Repositories published in a Content View")
+            if product.redhat?
+              fail _("Cannot delete Red Hat product: %{product}") % { :product => product.name }
+            elsif !product.published_content_view_versions.empty?
+              fail _("Cannot delete product with repositories published in a content view.  Product: %{product}, %{view_versions}") %
+                       { :product => product.name, :view_versions => view_versions(product) }
+            end
           end
 
           action_subject(product)
@@ -51,6 +56,19 @@ module Actions
 
         def humanized_name
           _("Delete Product")
+        end
+
+        def view_versions(product)
+          cvvs = product.published_content_view_versions.uniq
+          views = cvvs.inject({}) do |result, version|
+            result[version.content_view.name] ||= []
+            result[version.content_view.name] << version.version
+            result
+          end
+          results = views.map do |view, versions|
+            _("Content View %{view}: Versions: %{versions}") % {:view => view, :versions => versions.join(', ')}
+          end
+          results.join(', ')
         end
       end
     end
