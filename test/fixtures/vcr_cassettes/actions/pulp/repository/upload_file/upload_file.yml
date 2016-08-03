@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://centos7-devel.example.com/pulp/api/v2/repositories/
+    uri: https://runcibox.example.com/pulp/api/v2/repositories/
     body:
       encoding: UTF-8
       base64_string: |
@@ -37,13 +37,13 @@ http_interactions:
       message: CREATED
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:03 GMT
+      - Tue, 26 Jul 2016 22:13:41 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
       - '298'
       Location:
-      - https://centos7-devel.example.com/pulp/api/v2/repositories/4/
+      - https://runcibox.example.com/pulp/api/v2/repositories/4/
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -53,14 +53,14 @@ http_interactions:
         ICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRkZWQiOiBudWxs
         LCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicHVwcGV0LXJlcG8ifSwgImxh
         c3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9jb3VudHMi
-        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNTZkZTEx
-        NTM5NmNmYmM0M2RhYzVmOWYwIn0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
+        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNTc5N2Uw
+        OTVmYjMzNmQzOGZhYzM4ZWE3In0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
         dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:03 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:41 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/repositories/4/?details=true
+    uri: https://runcibox.example.com/pulp/api/v2/repositories/4/?details=true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -79,13 +79,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:04 GMT
+      - Tue, 26 Jul 2016 22:13:41 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '1423'
+      - '1559'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -93,41 +93,44 @@ http_interactions:
       base64_string: |
         eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
         ICJkZXNjcmlwdGlvbiI6IG51bGwsICJkaXN0cmlidXRvcnMiOiBbeyJyZXBv
-        X2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmll
-        cy80L2Rpc3RyaWJ1dG9ycy80X3B1cHBldC8iLCAiX25zIjogInJlcG9fZGlz
-        dHJpYnV0b3JzIiwgImxhc3RfcHVibGlzaCI6IG51bGwsICJkaXN0cmlidXRv
-        cl90eXBlX2lkIjogInB1cHBldF9kaXN0cmlidXRvciIsICJhdXRvX3B1Ymxp
-        c2giOiB0cnVlLCAic2NyYXRjaHBhZCI6IHt9LCAiX2lkIjogeyIkb2lkIjog
-        IjU2ZGUxMTUzOTZjZmJjNDNkYWM1ZjlmMyJ9LCAiY29uZmlnIjogeyJzZXJ2
-        ZV9odHRwcyI6IHRydWUsICJzZXJ2ZV9odHRwIjogZmFsc2V9LCAiaWQiOiAi
-        NF9wdXBwZXQifSwgeyJyZXBvX2lkIjogIjQiLCAiX2hyZWYiOiAiL3B1bHAv
-        YXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3RyaWJ1dG9ycy80LyIsICJfbnMi
-        OiAicmVwb19kaXN0cmlidXRvcnMiLCAibGFzdF9wdWJsaXNoIjogbnVsbCwg
-        ImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVwcGV0X2luc3RhbGxfZGlzdHJp
-        YnV0b3IiLCAiYXV0b19wdWJsaXNoIjogdHJ1ZSwgInNjcmF0Y2hwYWQiOiB7
-        fSwgIl9pZCI6IHsiJG9pZCI6ICI1NmRlMTE1Mzk2Y2ZiYzQzZGFjNWY5ZjIi
-        fSwgImNvbmZpZyI6IHsiaW5zdGFsbF9wYXRoIjogIi92YXIvbGliL3B1bHAv
-        cHVibGlzaGVkL3B1cHBldF9rYXRlbGxvX3Rlc3QiLCAiYXV0b19wdWJsaXNo
-        IjogdHJ1ZX0sICJpZCI6ICI0In1dLCAibGFzdF91bml0X2FkZGVkIjogbnVs
-        bCwgIm5vdGVzIjogeyJfcmVwby10eXBlIjogInB1cHBldC1yZXBvIn0sICJs
-        YXN0X3VuaXRfcmVtb3ZlZCI6IG51bGwsICJjb250ZW50X3VuaXRfY291bnRz
-        Ijoge30sICJfbnMiOiAicmVwb3MiLCAiaW1wb3J0ZXJzIjogW3sic2NyYXRj
-        aHBhZCI6IG51bGwsICJfaHJlZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9y
-        aWVzLzQvaW1wb3J0ZXJzL3B1cHBldF9pbXBvcnRlci8iLCAiX25zIjogInJl
-        cG9faW1wb3J0ZXJzIiwgImltcG9ydGVyX3R5cGVfaWQiOiAicHVwcGV0X2lt
-        cG9ydGVyIiwgImxhc3Rfc3luYyI6IG51bGwsICJyZXBvX2lkIjogIjQiLCAi
-        X2lkIjogeyIkb2lkIjogIjU2ZGUxMTUzOTZjZmJjNDNkYWM1ZjlmMSJ9LCAi
-        Y29uZmlnIjogeyJmZWVkIjogImh0dHA6Ly9kYXZpZGQuZmVkb3JhcGVvcGxl
-        Lm9yZy9yZXBvcy9yYW5kb21fcHVwcGV0LyJ9LCAiaWQiOiAicHVwcGV0X2lt
-        cG9ydGVyIn1dLCAibG9jYWxseV9zdG9yZWRfdW5pdHMiOiAwLCAiX2lkIjog
-        eyIkb2lkIjogIjU2ZGUxMTUzOTZjZmJjNDNkYWM1ZjlmMCJ9LCAidG90YWxf
-        cmVwb3NpdG9yeV91bml0cyI6IDAsICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
-        dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
+        X2lkIjogIjQiLCAibGFzdF91cGRhdGVkIjogIjIwMTYtMDctMjZUMjI6MTM6
+        NDFaIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC9k
+        aXN0cmlidXRvcnMvNF9wdXBwZXQvIiwgImxhc3Rfb3ZlcnJpZGVfY29uZmln
+        Ijoge30sICJsYXN0X3B1Ymxpc2giOiBudWxsLCAiZGlzdHJpYnV0b3JfdHlw
+        ZV9pZCI6ICJwdXBwZXRfZGlzdHJpYnV0b3IiLCAiYXV0b19wdWJsaXNoIjog
+        dHJ1ZSwgInNjcmF0Y2hwYWQiOiB7fSwgIl9ucyI6ICJyZXBvX2Rpc3RyaWJ1
+        dG9ycyIsICJfaWQiOiB7IiRvaWQiOiAiNTc5N2UwOTVmYjMzNmQzOGZhYzM4
+        ZWFhIn0sICJjb25maWciOiB7InNlcnZlX2h0dHBzIjogdHJ1ZSwgInNlcnZl
+        X2h0dHAiOiBmYWxzZX0sICJpZCI6ICI0X3B1cHBldCJ9LCB7InJlcG9faWQi
+        OiAiNCIsICJsYXN0X3VwZGF0ZWQiOiAiMjAxNi0wNy0yNlQyMjoxMzo0MVoi
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3Ry
+        aWJ1dG9ycy80LyIsICJsYXN0X292ZXJyaWRlX2NvbmZpZyI6IHt9LCAibGFz
+        dF9wdWJsaXNoIjogbnVsbCwgImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVw
+        cGV0X2luc3RhbGxfZGlzdHJpYnV0b3IiLCAiYXV0b19wdWJsaXNoIjogdHJ1
+        ZSwgInNjcmF0Y2hwYWQiOiB7fSwgIl9ucyI6ICJyZXBvX2Rpc3RyaWJ1dG9y
+        cyIsICJfaWQiOiB7IiRvaWQiOiAiNTc5N2UwOTVmYjMzNmQzOGZhYzM4ZWE5
+        In0sICJjb25maWciOiB7Imluc3RhbGxfcGF0aCI6ICIvdmFyL2xpYi9wdWxw
+        L3B1Ymxpc2hlZC9wdXBwZXRfa2F0ZWxsb190ZXN0IiwgImF1dG9fcHVibGlz
+        aCI6IHRydWV9LCAiaWQiOiAiNCJ9XSwgImxhc3RfdW5pdF9hZGRlZCI6IG51
+        bGwsICJub3RlcyI6IHsiX3JlcG8tdHlwZSI6ICJwdXBwZXQtcmVwbyJ9LCAi
+        bGFzdF91bml0X3JlbW92ZWQiOiBudWxsLCAiY29udGVudF91bml0X2NvdW50
+        cyI6IHt9LCAiX25zIjogInJlcG9zIiwgImltcG9ydGVycyI6IFt7InNjcmF0
+        Y2hwYWQiOiBudWxsLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRv
+        cmllcy80L2ltcG9ydGVycy9wdXBwZXRfaW1wb3J0ZXIvIiwgIl9ucyI6ICJy
+        ZXBvX2ltcG9ydGVycyIsICJpbXBvcnRlcl90eXBlX2lkIjogInB1cHBldF9p
+        bXBvcnRlciIsICJsYXN0X3N5bmMiOiBudWxsLCAicmVwb19pZCI6ICI0Iiwg
+        Il9pZCI6IHsiJG9pZCI6ICI1Nzk3ZTA5NWZiMzM2ZDM4ZmFjMzhlYTgifSwg
+        ImNvbmZpZyI6IHsiZmVlZCI6ICJodHRwOi8vZGF2aWRkLmZlZG9yYXBlb3Bs
+        ZS5vcmcvcmVwb3MvcmFuZG9tX3B1cHBldC8ifSwgImlkIjogInB1cHBldF9p
+        bXBvcnRlciJ9XSwgImxvY2FsbHlfc3RvcmVkX3VuaXRzIjogMCwgIl9pZCI6
+        IHsiJG9pZCI6ICI1Nzk3ZTA5NWZiMzM2ZDM4ZmFjMzhlYTcifSwgInRvdGFs
+        X3JlcG9zaXRvcnlfdW5pdHMiOiAwLCAiaWQiOiAiNCIsICJfaHJlZiI6ICIv
+        cHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzLzQvIn0=
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:04 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:41 GMT
 - request:
     method: post
-    uri: https://centos7-devel.example.com/pulp/api/v2/repositories/4/actions/publish/
+    uri: https://runcibox.example.com/pulp/api/v2/repositories/4/actions/publish/
     body:
       encoding: UTF-8
       base64_string: |
@@ -149,7 +152,7 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:04 GMT
+      - Tue, 26 Jul 2016 22:13:41 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -160,14 +163,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzg2OThhOGNlLWViMWEtNDMwOS05MGYyLThiODdlOGM5YjgyMS8iLCAi
-        dGFza19pZCI6ICI4Njk4YThjZS1lYjFhLTQzMDktOTBmMi04Yjg3ZThjOWI4
-        MjEifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzQ3ZDMzYzBiLTQ3NTgtNDhiOC1hYWMyLWI0MDU1MGEwZDk2Yi8iLCAi
+        dGFza19pZCI6ICI0N2QzM2MwYi00NzU4LTQ4YjgtYWFjMi1iNDA1NTBhMGQ5
+        NmIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:04 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:41 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/tasks/8698a8ce-eb1a-4309-90f2-8b87e8c9b821/
+    uri: https://runcibox.example.com/pulp/api/v2/tasks/47d33c0b-4758-48b8-aac2-b40550a0d96b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -186,13 +189,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:04 GMT
+      - Tue, 26 Jul 2016 22:13:41 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '646'
+      - '654'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -200,24 +203,24 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
-        dWxwL2FwaS92Mi90YXNrcy84Njk4YThjZS1lYjFhLTQzMDktOTBmMi04Yjg3
-        ZThjOWI4MjEvIiwgInRhc2tfaWQiOiAiODY5OGE4Y2UtZWIxYS00MzA5LTkw
-        ZjItOGI4N2U4YzliODIxIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        dWxwL2FwaS92Mi90YXNrcy80N2QzM2MwYi00NzU4LTQ4YjgtYWFjMi1iNDA1
+        NTBhMGQ5NmIvIiwgInRhc2tfaWQiOiAiNDdkMzNjMGItNDc1OC00OGI4LWFh
+        YzItYjQwNTUwYTBkOTZiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
         IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogbnVs
-        bCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogbnVsbCwg
-        InRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9n
-        cmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNl
-        X3dvcmtlci0wQGNlbnRvczctZGV2ZWwuZXhhbXBsZS5jb20uZHEiLCAic3Rh
-        dGUiOiAid2FpdGluZyIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNv
-        dXJjZV93b3JrZXItMEBjZW50b3M3LWRldmVsLmV4YW1wbGUuY29tIiwgInJl
-        c3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAi
-        NTZkZTExNTRkOWFhYzY3N2YyODdiYTc2In0sICJpZCI6ICI1NmRlMTE1NGQ5
-        YWFjNjc3ZjI4N2JhNzYifQ==
+        bCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYt
+        MDctMjZUMjI6MTM6NDFaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVk
+        X3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjog
+        InJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQHJ1bmNpYm94LmV4YW1wbGUu
+        Y29tLmRxIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAcnVuY2lib3guZXhhbXBsZS5j
+        b20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsi
+        JG9pZCI6ICI1Nzk3ZTA5NWRhYjY3ZmJmYzczNmYxYTcifSwgImlkIjogIjU3
+        OTdlMDk1ZGFiNjdmYmZjNzM2ZjFhNyJ9
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:04 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:41 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/tasks/8698a8ce-eb1a-4309-90f2-8b87e8c9b821/
+    uri: https://runcibox.example.com/pulp/api/v2/tasks/47d33c0b-4758-48b8-aac2-b40550a0d96b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -236,13 +239,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:04 GMT
+      - Tue, 26 Jul 2016 22:13:42 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '1064'
+      - '1054'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -250,33 +253,33 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLnJlcG8ucHVibGlzaC5wdWJsaXNoIiwgIl9ocmVmIjogIi9w
-        dWxwL2FwaS92Mi90YXNrcy84Njk4YThjZS1lYjFhLTQzMDktOTBmMi04Yjg3
-        ZThjOWI4MjEvIiwgInRhc2tfaWQiOiAiODY5OGE4Y2UtZWIxYS00MzA5LTkw
-        ZjItOGI4N2U4YzliODIxIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
+        dWxwL2FwaS92Mi90YXNrcy80N2QzM2MwYi00NzU4LTQ4YjgtYWFjMi1iNDA1
+        NTBhMGQ5NmIvIiwgInRhc2tfaWQiOiAiNDdkMzNjMGItNDc1OC00OGI4LWFh
+        YzItYjQwNTUwYTBkOTZiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0
         IiwgInB1bHA6YWN0aW9uOnB1Ymxpc2giXSwgImZpbmlzaF90aW1lIjogIjIw
-        MTYtMDMtMDdUMjM6NDA6MDRaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
-        dGFydF90aW1lIjogIjIwMTYtMDMtMDdUMjM6NDA6MDRaIiwgInRyYWNlYmFj
+        MTYtMDctMjZUMjI6MTM6NDFaIiwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIsICJz
+        dGFydF90aW1lIjogIjIwMTYtMDctMjZUMjI6MTM6NDFaIiwgInRyYWNlYmFj
         ayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBv
         cnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
-        QGNlbnRvczctZGV2ZWwuZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
-        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTBAY2VudG9zNy1kZXZlbC5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiB7
-        InJlc3VsdCI6ICJzdWNjZXNzIiwgImV4Y2VwdGlvbiI6IG51bGwsICJyZXBv
-        X2lkIjogIjQiLCAic3RhcnRlZCI6ICIyMDE2LTAzLTA3VDIzOjQwOjA0WiIs
-        ICJfbnMiOiAicmVwb19wdWJsaXNoX3Jlc3VsdHMiLCAiY29tcGxldGVkIjog
-        IjIwMTYtMDMtMDdUMjM6NDA6MDRaIiwgInRyYWNlYmFjayI6IG51bGwsICJk
-        aXN0cmlidXRvcl90eXBlX2lkIjogInB1cHBldF9pbnN0YWxsX2Rpc3RyaWJ1
-        dG9yIiwgInN1bW1hcnkiOiAic3VjY2VzcyIsICJlcnJvcl9tZXNzYWdlIjog
-        bnVsbCwgImRpc3RyaWJ1dG9yX2lkIjogIjQiLCAiaWQiOiAiNTZkZTExNTQ5
-        NmNmYmM0NWE1N2QxZmU2IiwgImRldGFpbHMiOiB7ImVycm9ycyI6IFtdLCAi
-        c3VjY2Vzc191bml0X2tleXMiOiBbXX19LCAiZXJyb3IiOiBudWxsLCAiX2lk
-        IjogeyIkb2lkIjogIjU2ZGUxMTU0ZDlhYWM2NzdmMjg3YmE3NiJ9LCAiaWQi
-        OiAiNTZkZTExNTRkOWFhYzY3N2YyODdiYTc2In0=
+        QHJ1bmNpYm94LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVk
+        IiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QHJ1bmNpYm94LmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IHsicmVzdWx0Ijog
+        InN1Y2Nlc3MiLCAiZXhjZXB0aW9uIjogbnVsbCwgInJlcG9faWQiOiAiNCIs
+        ICJzdGFydGVkIjogIjIwMTYtMDctMjZUMjI6MTM6NDFaIiwgIl9ucyI6ICJy
+        ZXBvX3B1Ymxpc2hfcmVzdWx0cyIsICJjb21wbGV0ZWQiOiAiMjAxNi0wNy0y
+        NlQyMjoxMzo0MVoiLCAidHJhY2ViYWNrIjogbnVsbCwgImRpc3RyaWJ1dG9y
+        X3R5cGVfaWQiOiAicHVwcGV0X2luc3RhbGxfZGlzdHJpYnV0b3IiLCAic3Vt
+        bWFyeSI6ICJzdWNjZXNzIiwgImVycm9yX21lc3NhZ2UiOiBudWxsLCAiZGlz
+        dHJpYnV0b3JfaWQiOiAiNCIsICJpZCI6ICI1Nzk3ZTA5NWZiMzM2ZDNhOGMz
+        ZGE4MWIiLCAiZGV0YWlscyI6IHsiZXJyb3JzIjogW10sICJzdWNjZXNzX3Vu
+        aXRfa2V5cyI6IFtdfX0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQi
+        OiAiNTc5N2UwOTVkYWI2N2ZiZmM3MzZmMWE3In0sICJpZCI6ICI1Nzk3ZTA5
+        NWRhYjY3ZmJmYzczNmYxYTcifQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:04 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:42 GMT
 - request:
     method: post
-    uri: https://centos7-devel.example.com/pulp/api/v2/content/uploads/
+    uri: https://runcibox.example.com/pulp/api/v2/content/uploads/
     body:
       encoding: UTF-8
       base64_string: ''
@@ -295,26 +298,26 @@ http_interactions:
       message: CREATED
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:05 GMT
+      - Tue, 26 Jul 2016 22:13:42 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
       - '132'
       Location:
-      - https://centos7-devel.example.com/pulp/api/v2/content/uploads/0daa9c24-0d0a-420b-bace-3afd4e53c846/
+      - https://runcibox.example.com/pulp/api/v2/content/uploads/cb02aa3c-8b4e-4b2d-9f61-1e3153ebb9da/
       Content-Type:
       - application/json; charset=utf-8
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ1cGxvYWRfaWQiOiAiMGRhYTljMjQtMGQwYS00MjBiLWJhY2UtM2FmZDRl
-        NTNjODQ2IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9jb250ZW50L3VwbG9h
-        ZHMvMGRhYTljMjQtMGQwYS00MjBiLWJhY2UtM2FmZDRlNTNjODQ2LyJ9
+        eyJ1cGxvYWRfaWQiOiAiY2IwMmFhM2MtOGI0ZS00YjJkLTlmNjEtMWUzMTUz
+        ZWJiOWRhIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9jb250ZW50L3VwbG9h
+        ZHMvY2IwMmFhM2MtOGI0ZS00YjJkLTlmNjEtMWUzMTUzZWJiOWRhLyJ9
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:05 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:42 GMT
 - request:
     method: put
-    uri: https://centos7-devel.example.com/pulp/api/v2/content/uploads/0daa9c24-0d0a-420b-bace-3afd4e53c846/0//
+    uri: https://runcibox.example.com/pulp/api/v2/content/uploads/cb02aa3c-8b4e-4b2d-9f61-1e3153ebb9da/0//
     body:
       encoding: ASCII-8BIT
       base64_string: |
@@ -688,7 +691,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:05 GMT
+      - Tue, 26 Jul 2016 22:13:42 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -700,16 +703,16 @@ http_interactions:
       base64_string: |
         bnVsbA==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:05 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:42 GMT
 - request:
     method: post
-    uri: https://centos7-devel.example.com/pulp/api/v2/repositories/4/actions/import_upload//
+    uri: https://runcibox.example.com/pulp/api/v2/repositories/4/actions/import_upload//
     body:
       encoding: UTF-8
       base64_string: |
         eyJyZXBvX2lkIjoiNCIsInVuaXRfdHlwZV9pZCI6InB1cHBldF9tb2R1bGUi
-        LCJ1cGxvYWRfaWQiOiIwZGFhOWMyNC0wZDBhLTQyMGItYmFjZS0zYWZkNGU1
-        M2M4NDYiLCJ1bml0X2tleSI6e30sInVuaXRfbWV0YWRhdGEiOnt9fQ==
+        LCJ1cGxvYWRfaWQiOiJjYjAyYWEzYy04YjRlLTRiMmQtOWY2MS0xZTMxNTNl
+        YmI5ZGEiLCJ1bml0X2tleSI6e30sInVuaXRfbWV0YWRhdGEiOnt9fQ==
     headers:
       Accept:
       - application/json
@@ -727,7 +730,7 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:06 GMT
+      - Tue, 26 Jul 2016 22:13:42 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -738,14 +741,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzA2MTcxMGUyLWNkYzMtNDkwYi1hZGZlLTM4M2U4ZmUzMWE0Mi8iLCAi
-        dGFza19pZCI6ICIwNjE3MTBlMi1jZGMzLTQ5MGItYWRmZS0zODNlOGZlMzFh
-        NDIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzBiMTFjYTAyLTg0NTAtNDZkNi05ZDNhLTRiOGJiNzc5N2JiZi8iLCAi
+        dGFza19pZCI6ICIwYjExY2EwMi04NDUwLTQ2ZDYtOWQzYS00YjhiYjc3OTdi
+        YmYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:06 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:42 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/tasks/061710e2-cdc3-490b-adfe-383e8fe31a42/
+    uri: https://runcibox.example.com/pulp/api/v2/tasks/0b11ca02-8450-46d6-9d3a-4b8bb7797bbf/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -764,13 +767,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:06 GMT
+      - Tue, 26 Jul 2016 22:13:42 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '667'
+      - '675'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -778,24 +781,24 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
-        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8wNjE3MTBlMi1jZGMz
-        LTQ5MGItYWRmZS0zODNlOGZlMzFhNDIvIiwgInRhc2tfaWQiOiAiMDYxNzEw
-        ZTItY2RjMy00OTBiLWFkZmUtMzgzZThmZTMxYTQyIiwgInRhZ3MiOiBbInB1
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8wYjExY2EwMi04NDUw
+        LTQ2ZDYtOWQzYS00YjhiYjc3OTdiYmYvIiwgInRhc2tfaWQiOiAiMGIxMWNh
+        MDItODQ1MC00NmQ2LTlkM2EtNGI4YmI3Nzk3YmJmIiwgInRhZ3MiOiBbInB1
         bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
         XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
-        ICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3
-        bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVl
-        IjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQGNlbnRvczctZGV2ZWwu
-        ZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAid2FpdGluZyIsICJ3b3JrZXJf
-        bmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBjZW50b3M3LWRl
-        dmVsLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51
-        bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZkZTExNTZkOWFhYzY3N2YyODdiYTc3
-        In0sICJpZCI6ICI1NmRlMTE1NmQ5YWFjNjc3ZjI4N2JhNzcifQ==
+        ICJzdGFydF90aW1lIjogIjIwMTYtMDctMjZUMjI6MTM6NDJaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHJ1bmNpYm94LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogInJ1bm5p
+        bmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2Vy
+        LTBAcnVuY2lib3guZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVy
+        cm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1Nzk3ZTA5NmRhYjY3ZmJm
+        YzczNmYxYTgifSwgImlkIjogIjU3OTdlMDk2ZGFiNjdmYmZjNzM2ZjFhOCJ9
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:06 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:42 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/tasks/061710e2-cdc3-490b-adfe-383e8fe31a42/
+    uri: https://runcibox.example.com/pulp/api/v2/tasks/0b11ca02-8450-46d6-9d3a-4b8bb7797bbf/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -814,13 +817,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:06 GMT
+      - Tue, 26 Jul 2016 22:13:43 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '752'
+      - '742'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -828,26 +831,26 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
-        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8wNjE3MTBlMi1jZGMz
-        LTQ5MGItYWRmZS0zODNlOGZlMzFhNDIvIiwgInRhc2tfaWQiOiAiMDYxNzEw
-        ZTItY2RjMy00OTBiLWFkZmUtMzgzZThmZTMxYTQyIiwgInRhZ3MiOiBbInB1
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8wYjExY2EwMi04NDUw
+        LTQ2ZDYtOWQzYS00YjhiYjc3OTdiYmYvIiwgInRhc2tfaWQiOiAiMGIxMWNh
+        MDItODQ1MC00NmQ2LTlkM2EtNGI4YmI3Nzk3YmJmIiwgInRhZ3MiOiBbInB1
         bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
-        XSwgImZpbmlzaF90aW1lIjogIjIwMTYtMDMtMDdUMjM6NDA6MDZaIiwgIl9u
-        cyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDMtMDdU
-        MjM6NDA6MDZaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tz
+        XSwgImZpbmlzaF90aW1lIjogIjIwMTYtMDctMjZUMjI6MTM6NDJaIiwgIl9u
+        cyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTYtMDctMjZU
+        MjI6MTM6NDJaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tz
         IjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2Vy
-        dmVkX3Jlc291cmNlX3dvcmtlci0wQGNlbnRvczctZGV2ZWwuZXhhbXBsZS5j
-        b20uZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29ya2VyX25hbWUiOiAi
-        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9zNy1kZXZlbC5leGFt
-        cGxlLmNvbSIsICJyZXN1bHQiOiB7ImRldGFpbHMiOiB7fSwgInN1Y2Nlc3Nf
-        ZmxhZyI6IHRydWUsICJzdW1tYXJ5IjogIiJ9LCAiZXJyb3IiOiBudWxsLCAi
-        X2lkIjogeyIkb2lkIjogIjU2ZGUxMTU2ZDlhYWM2NzdmMjg3YmE3NyJ9LCAi
-        aWQiOiAiNTZkZTExNTZkOWFhYzY3N2YyODdiYTc3In0=
+        dmVkX3Jlc291cmNlX3dvcmtlci0wQHJ1bmNpYm94LmV4YW1wbGUuY29tLmRx
+        IiwgInN0YXRlIjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2Vy
+        dmVkX3Jlc291cmNlX3dvcmtlci0wQHJ1bmNpYm94LmV4YW1wbGUuY29tIiwg
+        InJlc3VsdCI6IHsiZGV0YWlscyI6IHt9LCAic3VjY2Vzc19mbGFnIjogdHJ1
+        ZSwgInN1bW1hcnkiOiAiIn0sICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
+        aWQiOiAiNTc5N2UwOTZkYWI2N2ZiZmM3MzZmMWE4In0sICJpZCI6ICI1Nzk3
+        ZTA5NmRhYjY3ZmJmYzczNmYxYTgifQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:06 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:43 GMT
 - request:
     method: delete
-    uri: https://centos7-devel.example.com/pulp/api/v2/content/uploads/0daa9c24-0d0a-420b-bace-3afd4e53c846//
+    uri: https://runcibox.example.com/pulp/api/v2/content/uploads/cb02aa3c-8b4e-4b2d-9f61-1e3153ebb9da//
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -866,7 +869,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:07 GMT
+      - Tue, 26 Jul 2016 22:13:43 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -878,10 +881,10 @@ http_interactions:
       base64_string: |
         bnVsbA==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:07 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:43 GMT
 - request:
     method: post
-    uri: https://centos7-devel.example.com/pulp/api/v2/repositories/4/search/units/
+    uri: https://runcibox.example.com/pulp/api/v2/repositories/4/search/units/
     body:
       encoding: UTF-8
       base64_string: |
@@ -904,7 +907,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:07 GMT
+      - Tue, 26 Jul 2016 22:13:43 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
@@ -916,17 +919,17 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICI5Mjg4YmQyNC1jYWVkLTRlYWUtYTRl
-        Zi1iY2NkYTE0YzA5ZTciLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
-        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTZkZTExNTZkOWFhYzY3N2Yy
-        ODdiYTc4In0sICJ1bml0X2lkIjogIjkyODhiZDI0LWNhZWQtNGVhZS1hNGVm
-        LWJjY2RhMTRjMDllNyIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
+        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICIxZDZlMWU4OC02NzYwLTQ0MDAtYjYy
+        MC0zMTFlNzRmOTI1OTAiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
+        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNTc5N2UwOTZkYWI2N2ZiZmM3
+        MzZmMWE5In0sICJ1bml0X2lkIjogIjFkNmUxZTg4LTY3NjAtNDQwMC1iNjIw
+        LTMxMWU3NGY5MjU5MCIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
         ZSJ9XQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:07 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:43 GMT
 - request:
     method: delete
-    uri: https://centos7-devel.example.com/pulp/api/v2/repositories/4/
+    uri: https://runcibox.example.com/pulp/api/v2/repositories/4/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -945,7 +948,7 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:07 GMT
+      - Tue, 26 Jul 2016 22:13:43 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
@@ -956,14 +959,14 @@ http_interactions:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzQxNzdjMTRkLTcxY2UtNDQxOS05MzZhLTcyODc2MDg2OGU1OC8iLCAi
-        dGFza19pZCI6ICI0MTc3YzE0ZC03MWNlLTQ0MTktOTM2YS03Mjg3NjA4Njhl
-        NTgifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzkyNmE5NDZjLTZhNjctNDEyMy1hMDU3LTI0OGYwNTA1MWNkYi8iLCAi
+        dGFza19pZCI6ICI5MjZhOTQ2Yy02YTY3LTQxMjMtYTA1Ny0yNDhmMDUwNTFj
+        ZGIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:07 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:43 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/tasks/4177c14d-71ce-4419-936a-728760868e58/
+    uri: https://runcibox.example.com/pulp/api/v2/tasks/926a946c-6a67-4123-a057-248f05051cdb/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -982,7 +985,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:07 GMT
+      - Tue, 26 Jul 2016 22:13:43 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
@@ -996,22 +999,22 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80MTc3YzE0ZC03MWNlLTQ0MTktOTM2YS03Mjg3NjA4Njhl
-        NTgvIiwgInRhc2tfaWQiOiAiNDE3N2MxNGQtNzFjZS00NDE5LTkzNmEtNzI4
-        NzYwODY4ZTU4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        aS92Mi90YXNrcy85MjZhOTQ2Yy02YTY3LTQxMjMtYTA1Ny0yNDhmMDUwNTFj
+        ZGIvIiwgInRhc2tfaWQiOiAiOTI2YTk0NmMtNmE2Ny00MTIzLWEwNTctMjQ4
+        ZjA1MDUxY2RiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
         bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
         IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAidHJhY2Vi
         YWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3Jl
         cG9ydCI6IHt9LCAicXVldWUiOiAiTm9uZS5kcSIsICJzdGF0ZSI6ICJ3YWl0
         aW5nIiwgIndvcmtlcl9uYW1lIjogbnVsbCwgInJlc3VsdCI6IG51bGwsICJl
-        cnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZkZTExNTdkOWFhYzY3
-        N2YyODdiYTc5In0sICJpZCI6ICI1NmRlMTE1N2Q5YWFjNjc3ZjI4N2JhNzki
+        cnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTc5N2UwOTdkYWI2N2Zi
+        ZmM3MzZmMWFhIn0sICJpZCI6ICI1Nzk3ZTA5N2RhYjY3ZmJmYzczNmYxYWEi
         fQ==
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:07 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:43 GMT
 - request:
     method: get
-    uri: https://centos7-devel.example.com/pulp/api/v2/tasks/4177c14d-71ce-4419-936a-728760868e58/
+    uri: https://runcibox.example.com/pulp/api/v2/tasks/926a946c-6a67-4123-a057-248f05051cdb/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1030,13 +1033,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 07 Mar 2016 23:40:08 GMT
+      - Tue, 26 Jul 2016 22:13:44 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '676'
+      - '666'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -1044,20 +1047,19 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80MTc3YzE0ZC03MWNlLTQ0MTktOTM2YS03Mjg3NjA4Njhl
-        NTgvIiwgInRhc2tfaWQiOiAiNDE3N2MxNGQtNzFjZS00NDE5LTkzNmEtNzI4
-        NzYwODY4ZTU4IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
-        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxNi0wMy0w
-        N1QyMzo0MDowN1oiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
-        bWUiOiAiMjAxNi0wMy0wN1QyMzo0MDowN1oiLCAidHJhY2ViYWNrIjogbnVs
+        aS92Mi90YXNrcy85MjZhOTQ2Yy02YTY3LTQxMjMtYTA1Ny0yNDhmMDUwNTFj
+        ZGIvIiwgInRhc2tfaWQiOiAiOTI2YTk0NmMtNmE2Ny00MTIzLWEwNTctMjQ4
+        ZjA1MDUxY2RiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxNi0wNy0y
+        NlQyMjoxMzo0M1oiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
+        bWUiOiAiMjAxNi0wNy0yNlQyMjoxMzo0M1oiLCAidHJhY2ViYWNrIjogbnVs
         bCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9
-        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAY2VudG9z
-        Ny1kZXZlbC5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJmaW5pc2hlZCIs
-        ICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBj
-        ZW50b3M3LWRldmVsLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJl
-        cnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTZkZTExNTdkOWFhYzY3
-        N2YyODdiYTc5In0sICJpZCI6ICI1NmRlMTE1N2Q5YWFjNjc3ZjI4N2JhNzki
-        fQ==
+        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAcnVuY2li
+        b3guZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmluaXNoZWQiLCAid29y
+        a2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAcnVuY2li
+        b3guZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVs
+        bCwgIl9pZCI6IHsiJG9pZCI6ICI1Nzk3ZTA5N2RhYjY3ZmJmYzczNmYxYWEi
+        fSwgImlkIjogIjU3OTdlMDk3ZGFiNjdmYmZjNzM2ZjFhYSJ9
     http_version: 
-  recorded_at: Mon, 07 Mar 2016 23:40:08 GMT
+  recorded_at: Tue, 26 Jul 2016 22:13:44 GMT
 recorded_with: VCR 2.9.3
