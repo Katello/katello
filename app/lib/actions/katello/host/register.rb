@@ -58,6 +58,7 @@ module Actions
               consumer_attributes.except(:installedProducts, :guestIds, :facts))
           host.subscription_facet.save!
           host.subscription_facet.update_subscription_status
+          host.content_facet.update_errata_status
           host.refresh_global_status!
 
           system = ::Katello::System.find(input[:system_id])
