@@ -29,7 +29,11 @@
       <% else %>
         <tr>
           <td colspan="<%= @show_org ? 6 : 5 %>">
-            <%= (_("There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}.") % {:custom => link_to(_("Custom Content Repositories"), '/products'), :redhat => link_to(_(" Red Hat Repositories"), redhat_provider_providers_path)}).html_safe %>
+            <%= (_("There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}.") %
+                 {:custom => link_to(_("Custom Content Repositories"), '/products', data: {no_turbolink: true}),
+                  :redhat => link_to(_("Red Hat Repositories"), redhat_provider_providers_path, data: {no_turbolink: true})
+                 }).html_safe
+             %>
           </td>
         </tr>
       <% end %>
