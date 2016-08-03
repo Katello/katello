@@ -18,8 +18,7 @@ module Actions
           end
 
           if host.content_host
-            pool_ids = host.content_host.pools.map { |p| p["id"] }
-            plan_self(:pool_ids => pool_ids)
+            plan_self(:pool_ids => pool_ids(host))
             host.content_host.destroy!
           end
 
@@ -40,6 +39,13 @@ module Actions
               fail host.errors.full_messages.join('; ')
             end
           end
+        end
+
+        def pool_ids(host)
+          host.content_host.pools.map { |p| p["id"] }
+        rescue RestClient::Gone
+          Rails.logger.warn("Host #{host.name} (#{host.subscription_facet.uuid}) removed from candlepin.")
+          []
         end
 
         def finalize
