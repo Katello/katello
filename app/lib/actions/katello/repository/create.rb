@@ -27,7 +27,8 @@ module Actions
                                         path: path,
                                         download_policy: repository.download_policy,
                                         with_importer: true,
-                                        mirror_on_sync: repository.mirror_on_sync?)
+                                        mirror_on_sync: repository.mirror_on_sync?,
+                                        ssl_validation: certs[:ssl_validation])
 
             return if create_action.error
 

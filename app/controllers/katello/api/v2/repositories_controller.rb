@@ -32,6 +32,7 @@ module Katello
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
+      param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA.")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -140,6 +141,8 @@ module Katello
                                      gpg_key, repository_params[:checksum_type], repo_params[:download_policy])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
+      repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
+
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
@@ -213,6 +216,7 @@ module Katello
     param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
     param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
     param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
+    param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA.")
     def update
       repo_params = repository_params
       sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
@@ -344,7 +348,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:download_policy, :mirror_on_sync]
+      keys = [:download_policy, :mirror_on_sync, :verify_ssl_on_sync]
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
