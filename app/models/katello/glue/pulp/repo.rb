@@ -457,9 +457,10 @@ module Katello
         tag = unit_search(:type_ids => [Runcible::Extensions::DockerTag.content_type],
                           :filters => { :unit => { :manifest_digest => manifest.digest,
                                                    :name => tag_name } }).first
-
-        DockerTag.where(:repository_id => id, :docker_manifest_id => manifest.id,
-                        :name => tag[:metadata][:name], :uuid => tag[:metadata][:_id]).first_or_create
+        if tag
+          DockerTag.where(:repository_id => id, :docker_manifest_id => manifest.id,
+                          :name => tag[:metadata][:name], :uuid => tag[:metadata][:_id]).first_or_create
+        end
       end
 
       def package_group_categories(search_args = {})

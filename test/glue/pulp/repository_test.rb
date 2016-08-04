@@ -56,6 +56,14 @@ module Katello
   end
 
   class GluePulpNonVcrTests < GluePulpRepoTestBase
+    def test_create_docker_no_tag
+      manifest = FactoryGirl.build(:docker_manifest)
+
+      @fedora_17_x86_64.expects(:unit_search).returns([])
+
+      @fedora_17_x86_64.create_docker_tag(manifest, 'asdf')
+    end
+
     def test_importer_feed_url
       pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
