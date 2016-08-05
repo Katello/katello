@@ -1,3 +1,11 @@
+require 'simplecov'
+require 'simplecov-rcov'
+SimpleCov.formatters = [
+  SimpleCov::Formatter::RcovFormatter,
+  SimpleCov::Formatter::HTMLFormatter
+]
+SimpleCov.start 'rails'
+
 require 'test_helper'
 require 'factory_girl_rails'
 require "webmock/minitest"
