@@ -198,6 +198,8 @@ module Katello
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
       host.reload
 
+      update_host_registered_through(host, request.headers)
+
       render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
     end
 
@@ -226,6 +228,8 @@ module Katello
                                     activation_keys.first.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
+
+      update_host_registered_through(host, request.headers)
       host.reload
 
       render :json => Resources::Candlepin::Consumer.get(host.subscription_facet.uuid)
@@ -249,6 +253,7 @@ module Katello
       User.as_anonymous_admin do
         sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
         Katello::Host::SubscriptionFacet.update_facts(@host, rhsm_params[:facts]) unless rhsm_params[:facts].nil?
+        update_host_registered_through(@host, request.headers)
       end
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
@@ -257,6 +262,12 @@ module Katello
       @host.subscription_facet.last_checkin = DateTime.now
       @host.subscription_facet.save!
       render :json => Katello::Resources::Candlepin::Consumer.serials(@host.subscription_facet.uuid)
+    end
+
+    def get_parent_host(headers)
+      hostnames = headers["HTTP_X_FORWARDED_SERVER"]
+      host = hostnames.split(",")[0] if hostnames
+      host || Facter.value(:fqdn) || SETTINGS[:fqdn]
     end
 
     private
@@ -434,6 +445,11 @@ module Katello
       authorized = authenticate_client && User.consumer?
       authorized = (User.current.uuid == @host.subscription_facet.uuid) if @host && User.consumer?
       authorized
+    end
+
+    def update_host_registered_through(host, headers)
+      parent_host = get_parent_host(headers)
+      host.subscription_facet.update_attribute(:registered_through, parent_host)
     end
 
     # rubocop:disable MethodLength
