@@ -601,7 +601,7 @@ module Katello
     end
 
     def test_destroy
-      assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
+      assert_async_task(::Actions::Katello::Repository::Destroy) do |repo|
         repo.id == @repository.id
       end
 

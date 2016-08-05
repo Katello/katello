@@ -226,8 +226,8 @@ module Katello
     api :DELETE, "/repositories/:id", N_("Destroy a custom repository")
     param :id, :identifier, :required => true
     def destroy
-      sync_task(::Actions::Katello::Repository::Destroy, @repository)
-      respond_for_destroy
+      task = async_task(::Actions::Katello::Repository::Destroy, @repository)
+      respond_for_async :resource => task
     end
 
     api :POST, "/repositories/sync_complete"
