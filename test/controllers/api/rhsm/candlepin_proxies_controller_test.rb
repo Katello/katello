@@ -10,10 +10,11 @@ module Katello
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
       @system = katello_systems(:simple_server)
-
-      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @system.content_view, :lifecycle_environment => @system.environment)
-      @host.content_host = @system
       @organization = get_organization
+
+      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @system.content_view, :lifecycle_environment => @system.environment,
+                                 :organization => @organization)
+      @host.content_host = @system
     end
 
     describe "register with activation key should fail" do
@@ -188,6 +189,22 @@ module Katello
     end
 
     describe "hypervisors_update" do
+      it "hypervisors_update_with_no_owner" do
+        post :hypervisors_update
+        assert_response 403
+      end
+
+      it "hypervisors_update" do
+        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |params|
+          assert_equal params, 'owner' => @organization.label, 'env' => nil
+        end
+
+        post(:hypervisors_update, :owner => @organization.label, :env => 'dev/dev')
+        assert_response 200
+      end
+    end
+
+    describe "hypervisors_update_with_consumer_auth" do
       before do
         @controller.stubs(:authorize_client_or_admin)
         @controller.stubs(:find_host).returns(@host)
@@ -197,20 +214,16 @@ module Katello
       end
 
       it "hypervisors_update_correct_env_cv" do
-        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
-          assert_equal environment.id, @host.content_facet.lifecycle_environment.id
-          assert_equal content_view.id, @host.content_facet.content_view.id
-          assert_equal params, "owner" => "Empty_Organization", "env" => "library_default_view_library"
+        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |params|
+          assert_equal params, 'owner' => @host.organization.label, 'env' => nil
         end
         post :hypervisors_update
         assert_response 200
       end
 
       it "hypervisors_update_ignore_params" do
-        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |environment, content_view, params|
-          assert_equal environment.id, @host.content_facet.lifecycle_environment.id
-          assert_equal content_view.id, @host.content_facet.content_view.id
-          assert_equal params, "owner" => "Empty_Organization", "env" => "library_default_view_library"
+        assert_sync_task(::Actions::Katello::Host::Hypervisors) do |params|
+          assert_equal params, 'owner' => @host.organization.label, 'env' => nil
         end
         post(:hypervisors_update, :owner => 'owner', :env => 'dev/dev')
         assert_response 200
