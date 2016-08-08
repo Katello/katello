@@ -185,21 +185,21 @@ module Katello
             :ssl_client_cert => ueber_cert[:cert],
             :ssl_client_key => ueber_cert[:key],
             :ssl_ca_cert => ::Cert::Certs.ca_cert,
-            :ssl_validation => verify_ssl_on_sync?
+            :ssl_validation => try(:verify_ssl_on_sync?)
           }
-        elsif redhat? && self.content_view.default?
+        elsif self.try(:redhat?) && self.content_view.default?
           {
             :ssl_client_cert => self.product.certificate,
             :ssl_client_key => self.product.key,
             :ssl_ca_cert => Resources::CDN::CdnResource.ca_file_contents,
-            :ssl_validation => verify_ssl_on_sync?
+            :ssl_validation => try(:verify_ssl_on_sync?)
           }
         else
           {
             :ssl_client_cert => nil,
             :ssl_client_key => nil,
             :ssl_ca_cert => nil,
-            :ssl_validation => verify_ssl_on_sync?
+            :ssl_validation => try(:verify_ssl_on_sync?)
           }
         end
       end
