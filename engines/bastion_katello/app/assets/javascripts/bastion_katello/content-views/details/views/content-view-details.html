@@ -108,6 +108,13 @@
               </ul>
             </li>
 
+            <li ng-class="{active: stateIncludes('content-views.details.repositories.file')}"
+                ng-hide="contentView.composite">
+              <a ui-sref="content-views.details.repositories.file.list" translate>
+                File Repositories
+              </a>
+            </li>
+
             <li ng-class="{active: stateIncludes('content-views.details.puppet-modules')}"
                 ng-hide="contentView.composite">
               <a ui-sref="content-views.details.puppet-modules.list" translate>
