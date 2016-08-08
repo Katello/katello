@@ -85,17 +85,31 @@ module Katello
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :host_ids, Array, :desc => N_("Array of host ids")
     def add_hosts
-      @hosts = ::Host::Managed.authorized(:edit_host).where(:id => params[:host_ids])
+      host_ids = params[:host_ids].map(&:to_i)
+
+      @hosts = ::Host::Managed.where(id: host_ids)
       @editable_hosts = @hosts.authorized(:edit_host)
-      @host_collection.host_ids = (@host_collection.host_ids + @editable_hosts.collect { |s| s.id }).uniq
+
+      already_added_host_ids = @host_collection.host_ids & host_ids
+      unfound_host_ids = host_ids - @hosts.pluck(:id)
+
+      @host_collection.host_ids += @editable_hosts.pluck(:id)
       @host_collection.save!
 
       messages = format_bulk_action_messages(
           :success    => _("Successfully added %s Host(s)."),
           :error      => _("You were not allowed to add %s"),
-          :models     => @hosts,
-          :authorized => @editable_hosts
+          :models     => @hosts.pluck(:id) - already_added_host_ids,
+          :authorized => @editable_hosts.pluck(:id) - already_added_host_ids
       )
+
+      already_added_host_ids.each do |host_id|
+        messages[:error] << _("Host with ID %s already exists in the host collection.") % host_id
+      end
+
+      unfound_host_ids.each do |host_id|
+        messages[:error] << _("Host with ID %s not found.") % host_id
+      end
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
                        :resource => { 'displayMessages' => messages }
@@ -105,17 +119,31 @@ module Katello
     param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
     param :host_ids, Array, :desc => N_("Array of host ids")
     def remove_hosts
-      @hosts = ::Host::Managed.authorized(:edit_host).where(:id => params[:host_ids])
+      host_ids = params[:host_ids].map(&:to_i)
+
+      @hosts = ::Host::Managed.where(id: host_ids)
       @editable_hosts = @hosts.authorized(:edit_host)
-      @host_collection.host_ids = (@host_collection.host_ids - @editable_hosts.collect { |s| s.id }).uniq
+
+      already_removed_host_ids = @hosts.pluck(:id) - @host_collection.host_ids
+      unfound_host_ids = host_ids - @hosts.pluck(:id)
+
+      @host_collection.host_ids -= @editable_hosts.pluck(:id)
       @host_collection.save!
 
       messages = format_bulk_action_messages(
           :success    => _("Successfully removed %s Host(s)."),
           :error      => _("You were not allowed to sync %s"),
-          :models     => @hosts,
-          :authorized => @editable_hosts
+          :models     => @hosts.pluck(:id) - already_removed_host_ids,
+          :authorized => @editable_hosts.pluck(:id) - already_removed_host_ids
       )
+
+      already_removed_host_ids.each do |host_id|
+        messages[:error] << _("Host with ID %s does not exist in the host collection.") % host_id
+      end
+
+      unfound_host_ids.each do |host_id|
+        messages[:error] << _("Host with ID %s not found.") % host_id
+      end
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
                        :resource => { 'displayMessages' => messages }

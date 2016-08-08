@@ -129,5 +129,89 @@ module Katello
       assert_response :success
       assert_template 'api/v2/host_collections/show'
     end
+
+    def test_add_hosts_success
+      success_message = "Successfully added 2 Host(s)."
+
+      put :add_hosts, id: @host_collection.id, host_ids: [298_486_374, 692_292_738]
+
+      results = JSON.parse(response.body)
+      assert_includes results['displayMessages']['success'], success_message
+      assert results['displayMessages']['success'].one?, 'Expected only one success message'
+      assert results['displayMessages']['error'].none?, 'Expected no error messages'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/bulk_action'
+    end
+
+    def test_add_hosts_existing
+      error_message = "Host with ID 980190962 already exists in the host collection."
+
+      put :add_hosts, id: @host_collection.id, host_ids: [980_190_962]
+
+      results = JSON.parse(response.body)
+      assert_includes results['displayMessages']['error'], error_message
+      assert results['displayMessages']['error'].one?, 'Expected only one error message'
+      assert results['displayMessages']['success'].none?, 'Expected no success messages'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/bulk_action'
+    end
+
+    def test_add_hosts_unfound
+      error_message = "Host with ID 827 not found."
+
+      put :add_hosts, id: @host_collection.id, host_ids: [827]
+
+      results = JSON.parse(response.body)
+      assert_includes results['displayMessages']['error'], error_message
+      assert results['displayMessages']['error'].one?, 'Expected only one error message'
+      assert results['displayMessages']['success'].none?, 'Expected no success messages'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/bulk_action'
+    end
+
+    def test_remove_hosts_success
+      success_message = "Successfully removed 1 Host(s)."
+
+      put :remove_hosts, id: @host_collection.id, host_ids: [980_190_962]
+
+      results = JSON.parse(response.body)
+      assert_includes results['displayMessages']['success'], success_message
+      assert results['displayMessages']['success'].one?, 'Expected only one success message'
+      assert results['displayMessages']['error'].none?, 'Expected no error messages'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/bulk_action'
+    end
+
+    def test_remove_hosts_existing
+      error_message = "Host with ID 298486374 does not exist in the host collection."
+
+      put :remove_hosts, id: @host_collection.id, host_ids: [298_486_374]
+
+      results = JSON.parse(response.body)
+      assert_includes results['displayMessages']['error'], error_message
+      assert results['displayMessages']['error'].one?, 'Expected only one error message'
+      assert results['displayMessages']['success'].none?, 'Expected no success messages'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/bulk_action'
+    end
+
+    def test_remove_hosts_unfound
+      error_message = "Host with ID 827 not found."
+
+      put :remove_hosts, id: @host_collection.id, host_ids: [827]
+
+      results = JSON.parse(response.body)
+      assert_includes results['displayMessages']['error'], error_message
+      assert results['displayMessages']['error'].one?, 'Expected only one error message'
+      assert results['displayMessages']['success'].none?, 'Expected no success messages'
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/bulk_action'
+    end
   end
 end
