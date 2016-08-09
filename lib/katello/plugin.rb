@@ -1,5 +1,5 @@
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.13'
+  requires_foreman '>= 1.14'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,
@@ -219,4 +219,10 @@ Foreman::Plugin.register :katello do
     'bastion/bastion/index should have a permission that grants access',
     'bastion/bastion/index_ie should have a permission that grants access'
   ])
+
+  add_controller_action_scope(HostsController, :index) do |base_scope|
+    base_scope
+      .includes(:content_view, :lifecycle_environment, :subscription_facet, :applicable_errata)
+      .includes(content_facet: [:bound_repositories, :applicable_errata, :content_view, :lifecycle_environment])
+  end
 end
