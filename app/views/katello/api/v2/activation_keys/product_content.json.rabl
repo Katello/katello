@@ -14,4 +14,5 @@ child @collection[:results] => :results do
   node :override do |pc|
     pc.content_override(@activation_key)
   end
+  attributes :enabled
 end
