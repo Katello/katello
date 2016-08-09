@@ -74,7 +74,7 @@ module Katello
           @plan.sync_date = '1999-11-17 09:26:00 UTC'
 
           Time.stubs(:now).returns(Time.new(2012, 1, 1, 9))
-          @plan.next_sync.must_equal(Time.new(2012, 1, 11, 9, 26, 0, "+00:00"))
+          @plan.next_sync.must_equal(Time.new(2012, 1, 4, 9, 26, 0, "+00:00"))
 
           Time.stubs(:now).returns(Time.new(2012, 1, 11, 9, 30))
           @plan.next_sync.must_equal(Time.new(2012, 1, 18, 9, 26, 0, "+00:00"))
