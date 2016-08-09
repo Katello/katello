@@ -47,7 +47,7 @@ module Katello
       end
 
       def subscribe(pool_id, quantity = 1)
-        pool = Katello::Pool.find(pool_id)
+        pool = Katello::Pool.with_identifier(pool_id)
         subscription = pool.subscription
         add_custom_product(subscription.product_id) unless subscription.redhat?
         Resources::Candlepin::ActivationKey.add_pools self.cp_id, pool.cp_id, quantity
@@ -56,7 +56,7 @@ module Katello
 
       def unsubscribe(pool_id)
         fail _("Subscription id is nil.") unless pool_id
-        pool = Katello::Pool.find(pool_id)
+        pool = Katello::Pool.with_identifier(pool_id)
         subscription = pool.subscription
         remove_custom_product(subscription.product_id) unless subscription.redhat?
         Resources::Candlepin::ActivationKey.remove_pools self.cp_id, pool.cp_id
