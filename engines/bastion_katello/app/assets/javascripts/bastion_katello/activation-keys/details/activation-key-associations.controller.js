@@ -25,12 +25,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
             'paged': true
         };
 
-        $scope.table.working = true;
-
-        if ($scope.contentHosts) {
-            $scope.table.working = false;
-        }
-
         contentHostsNutupane = new Nutupane(Host, params);
         contentHostsNutupane.searchTransform = function (term) {
             var searchQuery, addition = "activation_key_id=" + $scope.$stateParams.activationKeyId;
@@ -43,7 +37,14 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
         };
 
         contentHostsNutupane.masterOnly = true;
+        contentHostsNutupane.setSearchKey('contentHostSearch');
+
         $scope.detailsTable = contentHostsNutupane.table;
+        $scope.detailsTable.working = true;
+
+        if ($scope.contentHosts) {
+            $scope.detailsTable.working = false;
+        }
 
         $scope.activationKey.$promise.then(function () {
             contentHostsNutupane.setParams(params);
