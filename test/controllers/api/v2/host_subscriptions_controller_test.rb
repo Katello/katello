@@ -92,6 +92,20 @@ module Katello
       assert_template 'api/v2/host_subscriptions/index'
     end
 
+    def test_add_subscriptions_with_individual_subs
+      assert_sync_task(::Actions::Katello::Host::AttachSubscriptions) do |host, pools_with_quantities|
+        assert_equal @host, host
+        assert_equal 1, pools_with_quantities.count
+        assert_equal @pool, pools_with_quantities[0].pool
+        assert_equal ["1"], pools_with_quantities[0].quantities
+      end
+
+      post :add_subscriptions, :host_id => @host.id, :subscription_id => @pool.id, :quantity => 1
+
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/index'
+    end
+
     def test_add_subscriptions_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
@@ -101,10 +115,24 @@ module Katello
       end
     end
 
+    def test_add_subscriptions_failure_on_missing_quantity
+      post :add_subscriptions, :host_id => @host.id, :subscription_id => @pool.id
+      assert_response 400
+    end
+
     def test_remove_subscriptions
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::RemoveSubscriptions, @host, @entitlements)
 
       post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
+
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/index'
+    end
+
+    def test_remove_subscriptions_with_individual_subs
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::RemoveSubscriptions, @host, @entitlements)
+
+      post :remove_subscriptions, :host_id => @host.id, :subscription_id => @pool.id, :quantity => 3
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'

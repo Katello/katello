@@ -99,15 +99,17 @@ module Katello
       rhsm_params
     end
 
-    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions"
+    api :PUT, "/hosts/:host_id/subscriptions/remove_subscriptions", N_("Remove subscriptions from a host")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
+    param :subscription_id, :number, :desc => N_("Subscription Pool identifier"), :required => false
+    param :quantity, Integer, :desc => N_("If specified, remove the first instance of a subscription with matching id and quantity"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
       param :quantity, Integer, :desc => N_("If specified, remove the first instance of a subscription with matching id and quantity"), :required => false
     end
     def remove_subscriptions
       #combine the quantities for duplicate pools into PoolWithQuantities objects
-      pool_id_quantities = params[:subscriptions].inject({}) do |new_hash, subscription|
+      pool_id_quantities = subscription_params.inject({}) do |new_hash, subscription|
         new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.find(subscription['id']))
         new_hash[subscription['id']].quantities << subscription['quantity']
         new_hash
@@ -119,15 +121,19 @@ module Katello
 
     api :PUT, "/hosts/:host_id/subscriptions/add_subscriptions", N_("Add a subscription to a host")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
+    param :subscription_id, :number, :desc => N_("Subscription identifier"), :required => false
+    param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => true do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
       param :quantity, :number, :desc => N_("Quantity of this subscriptions to add"), :required => true
     end
     def add_subscriptions
-      pools_with_quantities = params[:subscriptions].map do |sub_params|
+      pools_with_quantities = subscription_params.map do |sub_params|
+        if sub_params[:quantity].blank?
+          fail HttpErrors::BadRequest, _("No quantity provided for the subscription %s" % sub_params['id'])
+        end
         PoolWithQuantities.new(Pool.find(sub_params['id']), sub_params['quantity'])
       end
-
       sync_task(::Actions::Katello::Host::AttachSubscriptions, @host, pools_with_quantities)
       respond_for_index(:collection => index_response, :template => "index")
     end
@@ -201,6 +207,14 @@ module Katello
       elsif ['index', 'events', 'product_content'].include?(params[:action])
         :view
       end
+    end
+
+    def subscription_params
+      return params[:subscriptions] if params[:subscriptions].present?
+      if params[:subscription_id]
+        return [{"id" => params[:subscription_id], "quantity" => params[:quantity]}]
+      end
+      fail HttpErrors::BadRequest, _("No subscription parameters provided")
     end
   end
 end
