@@ -102,8 +102,12 @@ module Katello
     end
 
     def test_remove_subscriptions
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::RemoveSubscriptions, @host, @entitlements)
-
+      assert_sync_task(::Actions::Katello::Host::RemoveSubscriptions) do |host, pools_with_quantities|
+        assert_equal @host, host
+        assert_equal 1, pools_with_quantities.count
+        assert_equal @pool, pools_with_quantities[0].pool
+        assert_equal ["3"], pools_with_quantities[0].quantities
+      end
       post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
 
       assert_response :success

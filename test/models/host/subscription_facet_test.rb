@@ -129,12 +129,10 @@ module Katello
 
     def test_remove_subscriptions
       pool = katello_pools(:pool_one)
-      entitlements = [{'pool' => {'id' => pool.cp_id}, 'quantity' => 1, :id => 5}]
+      pq = [PoolWithQuantities.new(pool, [1])]
+      ForemanTasks.expects(:sync_task).with(Actions::Katello::Host::RemoveSubscriptions, host, pq)
 
-      host.subscription_facet.candlepin_consumer.stubs(:entitlements).returns(entitlements)
-      ForemanTasks.expects(:sync_task).with(Actions::Katello::Host::RemoveSubscriptions, host, entitlements)
-
-      host.subscription_facet.remove_subscriptions([PoolWithQuantities.new(pool, [1])])
+      host.subscription_facet.remove_subscriptions(pq)
     end
 
     def test_backend_update_needed?
