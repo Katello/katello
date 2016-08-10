@@ -108,7 +108,7 @@ module Katello
     def remove_subscriptions
       #combine the quantities for duplicate pools into PoolWithQuantities objects
       pool_id_quantities = params[:subscriptions].inject({}) do |new_hash, subscription|
-        new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.find(subscription['id']))
+        new_hash[subscription['id']] ||= PoolWithQuantities.new(Pool.with_identifier(subscription['id']))
         new_hash[subscription['id']].quantities << subscription['quantity']
         new_hash
       end
@@ -125,7 +125,7 @@ module Katello
     end
     def add_subscriptions
       pools_with_quantities = params[:subscriptions].map do |sub_params|
-        PoolWithQuantities.new(Pool.find(sub_params['id']), sub_params['quantity'])
+        PoolWithQuantities.new(Pool.with_identifier(sub_params['id']), sub_params['quantity'])
       end
 
       sync_task(::Actions::Katello::Host::AttachSubscriptions, @host, pools_with_quantities)
