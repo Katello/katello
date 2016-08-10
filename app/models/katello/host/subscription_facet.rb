@@ -89,11 +89,7 @@ module Katello
       end
 
       def remove_subscriptions(pools_with_quantities)
-        entitlements = pools_with_quantities.map do |pool_with_quantities|
-          candlepin_consumer.filter_entitlements(pool_with_quantities.pool.cp_id, pool_with_quantities.quantities)
-        end
-
-        ForemanTasks.sync_task(Actions::Katello::Host::RemoveSubscriptions, self.host, entitlements.flatten)
+        ForemanTasks.sync_task(Actions::Katello::Host::RemoveSubscriptions, self.host, pools_with_quantities)
       end
 
       def self.find_host(name, organization)

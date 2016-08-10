@@ -90,6 +90,10 @@ module Katello
         filtered
       end
 
+      def pool_ids
+        entitlements.map { |ent| ent['pool']['id'].to_s }
+      end
+
       def virtual_guests
         guest_uuids = Resources::Candlepin::Consumer.virtual_guests(self.uuid).map { |guest| guest['uuid'] }
         ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => guest_uuids)

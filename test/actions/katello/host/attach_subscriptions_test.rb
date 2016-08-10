@@ -19,6 +19,10 @@ module Katello::Host
         action = create_action action_class
         action.expects(:action_subject).with(@host)
 
+        candlepin_consumer = mock
+        candlepin_consumer.expects(:pool_ids).returns([])
+        @host.subscription_facet.expects(:candlepin_consumer).returns(candlepin_consumer)
+
         pools_with_quantities = [::Katello::PoolWithQuantities.new(@pool, [1, 2])]
 
         plan_action action, @host, pools_with_quantities

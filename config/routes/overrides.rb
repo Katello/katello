@@ -59,6 +59,12 @@ Foreman::Application.routes.draw do
             match '/auto_complete_search' => 'host_autocomplete#auto_complete_search', :via => :get
             match '/bulk/add_host_collections' => 'hosts_bulk_actions#bulk_add_host_collections', :via => :put
             match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
+            match '/bulk/remove_host_collections' => 'hosts_bulk_actions#bulk_remove_host_collections', :via => :put
+
+            match '/bulk/add_subscriptions' => 'hosts_bulk_actions#add_subscriptions', :via => :put
+            match '/bulk/remove_subscriptions' => 'hosts_bulk_actions#remove_subscriptions', :via => :put
+            match '/bulk/auto_attach' => 'hosts_bulk_actions#auto_attach', :via => :put
+
             match '/bulk/install_content' => 'hosts_bulk_actions#install_content', :via => :put
             match '/bulk/installable_errata' => 'hosts_bulk_actions#installable_errata', :via => :post
             match '/bulk/update_content' => 'hosts_bulk_actions#update_content', :via => :put
