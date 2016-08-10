@@ -6,6 +6,7 @@ module Katello
   class ContainerExtensionsTest < ActiveSupport::TestCase
     def setup
       @container = FactoryGirl.create(:container)
+      Setting['pulp_docker_registry_port'] = 6000
     end
 
     def test_container_repo_url
@@ -16,7 +17,7 @@ module Katello
       @container.stubs(:capsule).returns(capsule)
       Repository.expects(:where).with(:pulp_id => @container.repository_name).returns(counter)
       url = @container.repository_pull_url
-      assert_equal "#{hostname}:5000/#{@container.repository_name}:#{@container.tag}", url
+      assert_equal "#{hostname}:6000/#{@container.repository_name}:#{@container.tag}", url
     end
 
     def test_container_repo_url_no_capsule
@@ -30,7 +31,7 @@ module Katello
       @container.stubs(:capsule).returns
       Repository.expects(:where).with(:pulp_id => @container.repository_name).returns(counter)
       url = @container.repository_pull_url
-      assert_equal "#{hostname}:5000/#{@container.repository_name}:#{@container.tag}", url
+      assert_equal "#{hostname}:6000/#{@container.repository_name}:#{@container.tag}", url
     end
   end
 end
