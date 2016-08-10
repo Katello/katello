@@ -1,16 +1,23 @@
 require 'simplecov'
 require 'simplecov-rcov'
-SimpleCov.formatters = [
-  SimpleCov::Formatter::RcovFormatter,
-  SimpleCov::Formatter::HTMLFormatter
-]
-SimpleCov.start 'rails'
 
 require 'test_helper'
 require 'factory_girl_rails'
 require "webmock/minitest"
 require "mocha/setup"
 require 'set'
+
+SimpleCov.formatters = [
+  SimpleCov::Formatter::RcovFormatter,
+  SimpleCov::Formatter::HTMLFormatter
+]
+
+SimpleCov.start do
+  filters.clear
+  add_filter do |src|
+    !src.filename.include?('/plugin/app/') && !src.filename.include?('/plugin/lib/')
+  end
+end
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 require "#{Katello::Engine.root}/spec/models/model_spec_helper"
