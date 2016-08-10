@@ -149,7 +149,7 @@ module Katello
       def docker_feed_url(capsule = false)
         pulp_uri = URI.parse(SETTINGS[:katello][:pulp][:url])
         if capsule
-          "https://#{pulp_uri.host.downcase}:5000"
+          "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
         else
           self.url if self.respond_to?(:url)
         end
@@ -830,7 +830,7 @@ module Katello
       pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
       scheme   = (self.unprotected && !force_https) ? 'http' : 'https'
       if docker?
-        "#{pulp_uri.host.downcase}:5000/#{pulp_id}"
+        "#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}/#{pulp_id}"
       elsif file?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}/"
       elsif puppet?

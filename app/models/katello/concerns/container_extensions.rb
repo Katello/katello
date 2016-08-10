@@ -14,7 +14,7 @@ module Katello
         repo_url = repository_pull_url_without_katello
         if Repository.where(:pulp_id => repository_name).count > 0
           manifest_capsule = self.capsule || CapsuleContent.default_capsule.capsule
-          "#{URI(manifest_capsule.url).hostname}:5000/#{repo_url}"
+          "#{URI(manifest_capsule.url).hostname}:#{Setting['pulp_docker_registry_port']}/#{repo_url}"
         else
           repo_url
         end
