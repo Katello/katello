@@ -15,7 +15,7 @@
 
   <% if @provider.products.empty? %>
     <div>
-      <%= _("No Red Hat products currently exist, please import a manifest <a href='/subscriptions' data-no-turbolink='true'>here</a> to receive Red Hat content.").html_safe %>
+      <%= _("No Red Hat products currently exist, please import a manifest <a href='/subscriptions/manifest/import' data-no-turbolink='true'>here</a> to receive Red Hat content.").html_safe %>
     </div>
   <% else %>
     <% tabs = redhat_repo_tabs %>
