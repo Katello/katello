@@ -12,17 +12,6 @@
     </li>
   </ol>
 
-  <h3 translate>
-    Version {{ version.version }}
-  </h3>
-
-  <h4>
-    <span translate>Environments: </span>
-    <span ng-repeat="environment in version.environments" ng-if="environment.permissions.readable">
-      {{ environment.name }} <span ng-if="!$last">,</span>
-    </span>
-  </h4>
-
   <nav class="details-navigation">
     <ul>
 

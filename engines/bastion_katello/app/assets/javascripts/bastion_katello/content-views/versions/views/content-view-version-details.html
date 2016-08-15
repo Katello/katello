@@ -1,13 +1,15 @@
 <div class="details">
-
-  <div class="detail">
-    <span class="info-label" translate>Version</span>
-    <span class="info-value">{{ version.version }}</span>
-  </div>
-
   <div class="detail">
     <span class="info-label" translate>Description</span>
     <span class="info-value" bst-edit-textarea="version.description" readonly="true"></span>
   </div>
 
+  <div class="detail">
+    <span class="info-label" translate>Environments</span>
+    <span ng-repeat="environment in version.environments"  readonly="true">
+      <span class="info-value">
+        {{ environment.name }}<span ng-if="!$last">,</span>
+      </span>
+    </span>
+  </div>
 </div>
