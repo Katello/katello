@@ -84,7 +84,7 @@ module Katello
           host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id").
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
 
-      query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => [hosts.map(&:id)]) if hosts
+      query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
       query.uniq
     end
 
