@@ -18,20 +18,42 @@
   </thead>
   <tbody>
     <tr>
-      <td><i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Invalid") %></td>
-      <td style="text-align:right"><%= invalid_consumer_count %></td>
+      <td>
+        <%= link_to('/content_hosts?search=subscription_status=invalid') do %>
+          <i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Invalid") %>
+        <% end %>
+      </td>
+      <td style="text-align:right">
+        <%= link_to( "#{invalid_consumer_count}", '/content_hosts?search=subscription_status=invalid')%>
+      </td>
     </tr>
     <tr>
-      <td><i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Partial") %></td>
-      <td style="text-align:right;"><%= partial_consumer_count %></td>
+      <td>
+        <%= link_to('/content_hosts?search=subscription_status=partial') do %>
+          <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Partial") %>
+        <% end %>
+      </td>
+      <td style="text-align:right">
+        <%= link_to( "#{partial_consumer_count}", '/content_hosts?search=subscription_status=partial')%>
+      </td>
     </tr>
     <tr>
-      <td><i class="label label-success" style="margin-right: 6px">&nbsp;</i><%= _("Valid") %></td>
-      <td style="text-align:right;"><%= valid_consumer_count %></td>
+      <td>
+        <%= link_to('/content_hosts?search=subscription_status=valid') do %>
+          <i class="label label-success" style="margin-right: 6px">&nbsp;</i><%= _("Valid") %>
+        <% end %>
+      </td>
+      <td style="text-align:right">
+        <%= link_to( "#{valid_consumer_count}", '/content_hosts?search=subscription_status=valid')%>
+      </td>
     </tr>
     <tr>
-      <td><h4><%= _("Total Content Hosts") %></h4></td>
-      <td style="text-align:right;"><%= total_count %></td>
+      <td><h4>
+          <%= link_to("Total Content Hosts", '/content_hosts')%>
+      </h4></td>
+      <td style="text-align:right;">
+        <%= link_to( "#{total_count}", '/content_hosts')%>
+      </td>
     </tr>
   </tbody>
 </table>
