@@ -73,7 +73,7 @@ module Katello
       errata = katello_errata(:security)
       json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'reboot_suggested' => true)
       errata.update_from_json(json)
-      errata = Erratum.find(errata)
+      errata = Erratum.find(errata.id)
       assert_equal errata.description, json['description']
       assert errata.reboot_suggested
     end
@@ -83,7 +83,7 @@ module Katello
       last_updated = errata.updated_at
       json = errata.attributes
       errata.update_from_json(json)
-      assert_equal Erratum.find(errata).updated_at, last_updated
+      assert_equal Erratum.find(errata.id).updated_at, last_updated
     end
 
     def test_update_from_json_truncates_title
@@ -94,7 +94,7 @@ module Katello
         "lose our ventures. - William Shakespeare"
       json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'title' => title)
       errata.update_from_json(json)
-      assert_equal Erratum.find(errata).title.size, 255
+      assert_equal Erratum.find(errata.id).title.size, 255
     end
 
     def test_update_from_json_duplicate_packages #Issue 9312
