@@ -97,6 +97,35 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
 
     it('attaches the nutupane table to the scope', function() {
         expect($scope.contentNutupane).toBeDefined();
+        expect($scope.detailsTable).toBeDefined();
+    });
+
+    it("groups subscriptions by product name", function () {
+        var expected = [1];
+        spyOn(SubscriptionsHelper, 'groupByProductName');
+
+        $scope.detailsTable.rows = expected;
+        $scope.$digest();
+
+        expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalledWith(expected)
+    });
+
+    it("disables the add subscription button if necessary", function () {
+        $scope.detailsTable.numSelected = 0;
+        $scope.isAdding = true;
+        expect($scope.disableAddButton()).toBe(true);
+
+        $scope.detailsTable.numSelected = 1;
+        $scope.isAdding = true;
+        expect($scope.disableAddButton()).toBe(true);
+
+        $scope.detailsTable.numSelected = 0;
+        $scope.isAdding = false
+        expect($scope.disableAddButton()).toBe(true);
+
+        $scope.detailsTable.numSelected = 1;
+        $scope.isAdding = false;
+        expect($scope.disableAddButton()).toBe(false);
     });
 
     it("allows adding subscriptions to the content host", function() {
@@ -119,96 +148,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         expect(HostSubscription.addSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
     });
 
-    /*
-    describe("provides a filter for the available display", function() {
-        var expected;
-
-        it("it should be 'Unlimited' if -1", function() {
-            subscription.available = -1;
-            expected = subscription;
-            expected.availableDisplay = 'Unlimited';
-
-            expect($scope.availableSubscriptionsTable.formatAvailableDisplay(subscription)).toBe(expected);
-        });
-
-        it("it should be the number if not -1", function() {
-            subscription.available = 2;
-            expected = subscription;
-
-            expect($scope.availableSubscriptionsTable.formatAvailableDisplay(subscription)).toBe(expected);
-        });
+    it("sets a local scope function for getting the selector amount values from the subscription helper", function () {
+        expect($scope.getAmountSelectorValues).toBe(SubscriptionsHelper.getAmountSelectorValues);
     });
-
-    describe("provides a way to determine if the selector should be shown", function() {
-        it("shows the selector if all three conditions are met", function() {
-            subscription['multi_entitlement'] = true;
-            expect($scope.availableSubscriptionsTable.showSelector(subscription)).toBe(false);
-
-            subscription.available = 2;
-            expect($scope.availableSubscriptionsTable.showSelector(subscription)).toBe(false);
-
-            subscription.selected = true;
-            expect($scope.availableSubscriptionsTable.showSelector(subscription)).toBe(true);
-        });
-
-        it("does not show the selector if conditions are not met", function() {
-            expect($scope.availableSubscriptionsTable.showSelector(subscription)).toBe(false);
-        });
-    });
-
-    describe("provides a way to attach and remove subscriptions", function() {
-        beforeEach(function() {
-            expectedRows = [
-                {entitlementId: 1, cp_id: 'a'},
-                {entitlementId: 2, cp_id: 'b'},
-                {entitlementId: 3, cp_id: 'c'}
-            ];
-
-            $scope.contentHost = {
-                uuid: 'abcde',
-                $get: function() {}
-            };
-        });
-
-        it("by removing the selected subscriptions", function() {
-            spyOn(ContentHostSubscription, 'remove');
-
-            expectedTable.getSelected = function() {
-                return [expectedRows[1]];
-            };
-
-            $scope.removeSubscriptions();
-
-            expect(ContentHostSubscription.remove).toHaveBeenCalledWith({contentHostId: 'abcde', id: 2},
-                jasmine.any(Function), jasmine.any(Function)
-            );
-        });
-
-        it("by removing all subscriptions if all are selected", function() {
-            spyOn(ContentHostSubscription, 'remove');
-
-            expectedTable.allSelected = true;
-
-            $scope.removeSubscriptions();
-
-            expect(ContentHostSubscription.remove).toHaveBeenCalledWith({contentHostId: 'abcde'},
-                jasmine.any(Function), jasmine.any(Function)
-            );
-        });
-
-        it("by attaching the selected subscriptions", function() {
-            spyOn(ContentHostSubscription, 'save');
-
-            expectedTable.getSelected = function() {
-                return [expectedRows[1]];
-            };
-
-            $scope.attachSubscriptions();
-
-            expect(ContentHostSubscription.save).toHaveBeenCalledWith({contentHostId: 'abcde',
-                    pool: 'b', quantity: 1}, jasmine.any(Function), jasmine.any(Function)
-            );
-        });
-    });
-    */
 });

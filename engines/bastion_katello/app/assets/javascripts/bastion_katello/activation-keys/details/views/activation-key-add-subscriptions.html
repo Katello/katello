@@ -58,7 +58,7 @@
             </span>
             <select ng-hide="!subscription.multi_entitlement"
                     ng-model="subscription.amount"
-                    ng-options="amount for amount in amountSelectorValues(subscription)"
+                    ng-options="amount for amount in getAmountSelectorValues(subscription)"
                     >
               <option value="">{{ "Automatic" | translate }}</option>
             </select>

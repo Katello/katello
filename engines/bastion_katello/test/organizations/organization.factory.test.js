@@ -41,13 +41,6 @@ describe('Factory: Organization', function() {
         });
     });
 
-    it('provides a way to auto attach available subscriptions to systems', function() {
-        $httpBackend.expectPOST('/katello/api/v2/organizations/ACME/autoattach_subscriptions').respond(task);
-        Organization.autoAttachSubscriptions({id: 'ACME'}, function(results) {
-            expect(results.id).toBe(task.id);
-        });
-    });
-
     it('provides a way to get repo discover', function() {
         $httpBackend.expectPOST('/katello/api/v2/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});

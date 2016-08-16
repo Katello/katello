@@ -49,8 +49,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionContro
         };
 
         $scope.showNoSelectionWarning = function () {
-            return $scope.nutupane.table.numSelected === 0 && !$scope.isState('content-hosts.bulk-actions.subscriptions') &&
-                !$scope.isState('content-hosts.bulk-actions.task-details');
+            return $scope.nutupane.table.numSelected === 0 && !$scope.isState('content-hosts.bulk-actions.task-details');
         };
 
         $scope.performDestroyHosts = function () {

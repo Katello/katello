@@ -44,6 +44,21 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
             return selected;
         };
 
+        this.getAmountSelectorValues = function (subscription) {
+            var step, value, values;
+
+            step = subscription['instance_multiplier'];
+            if (!step || step < 1) {
+                step = 1;
+            }
+            values = [];
+            for (value = step; value < subscription.quantity && values.length < 5; value += step) {
+                values.push(value);
+            }
+            values.push(subscription.quantity);
+            return values;
+        };
+
         this.getSelectedSubscriptions = function (table) {
             var selected;
 
@@ -53,6 +68,5 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
             });
             return selected;
         };
-
     }
 );

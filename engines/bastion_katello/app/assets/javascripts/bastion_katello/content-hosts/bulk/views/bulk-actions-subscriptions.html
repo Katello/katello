@@ -1,40 +1,86 @@
 <span page-title>{{ 'Content Host Bulk Subscriptions' | translate }}</span>
 
-<div class="details">
-  <section>
-    <h4 translate>Content Host Subscriptions</h4>
+<div bst-alert="info">
+  <p translate>
+    This action will affect only those Content Hosts that require a change.
+    If the Content Host does not have the selected Subscription no action will take place.
+  </p>
+</div>
+
+<div data-extend-template="layouts/details-nutupane.html" ng-if="table.numSelected > 0">
+  <div data-block="actions">
     <button class="btn btn-primary"
             translate
-            ng-hide="denied('edit_hosts')"
-            ng-click="subscription.confirm = true"
-            ng-disabled="! subscription.taskRunnable">
-      Auto-attach available subscriptions to all content hosts
+            ng-hide="denied('edit_hosts', host)"
+            ng-disabled="detailsTable.numSelected === 0 || isWorking"
+            ng-click="addSelected()">
+      Add Selected
     </button>
 
-    <span ng-show="subscription.runningTask">
-      <span ng-show="subscription.runningTask.state === 'starting'">
-        <i class="fa fa-spinner inline-icon fa-spin"></i>
-        <span translate>Starting</span>
-      </span>
-      <span ng-show="subscription.runningTask.state === 'running'">
-        <i class="fa fa-spinner inline-icon fa-spin"></i>
-        <span translate>Working</span>
-      </span>
-      <span ng-show="subscription.runningTask.state === 'paused'">
-        <i class="fa fa-warning inline-icon"></i>
-        <span translate>Paused</span>
-      </span>
-      <span translate ng-show="subscription.runningTask.state != 'starting'">
-        (<a href="/foreman_tasks/tasks/{{ subscription.runningTask.task.id }}">{{ "task details" | translate }}</a>)
-      </span>
-    </span>
-`
-    <div class="inline-confirmation" ng-show="subscription.confirm">
-      <div class="confirmation_text" translate>
-        Are you sure you want to auto-attach available subscriptions to all {{ contentHostTable.resource.total }} content hosts?
-      </div>
-      <button class="btn btn-default" ng-click="performAutoAttachSubscriptions()" translate>Yes</button>
-      <button class="btn btn-default" ng-click="subscription.confirm = false" translate>No</button>
-    </div>
-  </section>
+    <button class="btn btn-primary"
+            translate
+            ng-hide="denied('edit_hosts', host)"
+            ng-disabled="detailsTable.numSelected === 0 || isWorking"
+            ng-click="removeSelected()">
+      Remove Selected
+    </button>
+  </div>
+
+  <span data-block="no-rows-message" translate>
+      You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu
+  </span>
+
+  <span data-block="no-search-results-message">
+    Your search returned zero Subscriptions.
+  </span>
+
+  <div data-block="table">
+    <table ng-class="{'table-mask': detailsTable.working}"
+           class="table table-full">
+      <thead>
+      <tr bst-table-head row-select>
+        <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
+        <th bst-table-column="attached" sortable><span translate>Attached</span></th>
+        <th bst-table-column="type"><span translate>Type</span></th>
+        <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
+        <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
+        <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
+        <th bst-table-column="contractNumber" sortable><span translate>Contract</span></th>
+        <th bst-table-column="accountNumber" sortable><span translate>Account</span></th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+        <td class="row-select">
+          <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
+            {{ name }}
+          </a>
+        </td>
+        <td bst-table-cell colspan="8"></td>
+      </tr>
+      <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
+        <td bst-table-cell>
+             <span ng-hide="subscription.multi_entitlement">
+               1
+             </span>
+          <select ng-hide="!subscription.multi_entitlement"
+                  ng-model="subscription.amount"
+                  ng-options="amount for amount in getAmountSelectorValues(subscription)"
+              >
+            <option value="">{{ "Automatic" | translate }}</option>
+          </select>
+        </td>
+        <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+        <td bst-table-cell><div subscription-type="subscription"></div></td>
+        <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+        <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
+        <td bst-table-cell>{{ subscription.support_level }}</td>
+        <td bst-table-cell>{{ subscription.contract_number }}</td>
+        <td bst-table-cell>{{ subscription.account_number }}</td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
 </div>
