@@ -1,6 +1,6 @@
 module Katello
   class Candlepin::Content
-    attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl
+    attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl, :modifiedProductIds
 
     def initialize(params = {})
       load_attributes(params)
@@ -51,6 +51,8 @@ module Katello
       end
 
       def build_repository
+        certificate_and_key = get_certificate_and_key(product, @content.modifiedProductIds)
+
         repository = Repository.new(
           :environment => product.organization.library,
           :product => product,
@@ -65,8 +67,8 @@ module Katello
           :label => label,
           :url => feed_url,
           :feed_ca => ca,
-          :feed_cert => product.certificate,
-          :feed_key => product.key,
+          :feed_cert => certificate_and_key[:cert],
+          :feed_key => certificate_and_key[:key],
           :content_type => katello_content_type,
           :preserve_metadata => true, #preserve repo metadata when importing from cp
           :unprotected => unprotected?,
@@ -77,6 +79,16 @@ module Katello
         )
 
         repository
+      end
+
+      def get_certificate_and_key(product, modified_product_ids = [])
+        modified_product_ids.each do |modified_product_id|
+          modified_product = Product.where(:cp_id => modified_product_id).first
+          product = modified_product if modified_product &&
+                                        modified_product.certificate &&
+                                        modified_product.key
+        end
+        {:cert => product.certificate, :key => product.key}
       end
 
       def validate!
