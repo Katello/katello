@@ -50,7 +50,7 @@ module Katello
         action = create_action action_class
         action.stubs(:action_subject).with(@repository)
         plan_action action, @repository
-        refute_action_planed action, candlepin_remove_class
+        assert_action_planed action, candlepin_remove_class
         refute_action_planed action, candlepin_destroy_class
       end
     end
