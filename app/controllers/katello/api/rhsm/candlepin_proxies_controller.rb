@@ -21,7 +21,7 @@ module Katello
 
     before_action :proxy_request_path, :proxy_request_body
     before_action :set_organization_id, :except => :hypervisors_update
-    before_action :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
+    before_action :find_hypervisor_organization, :only => [:hypervisors_update]
 
     def repackage_message
       yield
@@ -113,8 +113,9 @@ module Katello
     def hypervisors_update
       login = User.consumer? ? User.anonymous_api_admin.login : User.current.login
       task = User.as(login) do
-        sync_task(::Actions::Katello::Host::Hypervisors, @environment, @content_view,
-                            params.except(:controller, :action, :format))
+        params['owner'] = @organization.label #override owner label if
+        params['env'] = nil #hypervisors don't need an environment
+        sync_task(::Actions::Katello::Host::Hypervisors, params.except(:controller, :action, :format))
       end
       render :json => task.output[:results]
     end
@@ -312,31 +313,14 @@ module Katello
       environment
     end
 
-    # Hypervisors are restricted to the content host's environment and content view
-    def find_hypervisor_environment_and_content_view
+    def find_hypervisor_organization
       if User.consumer?
-        @host = find_host(User.current.uuid)
-        @organization = @host.content_facet.content_view.organization
-        @environment = @host.content_facet.lifecycle_environment
-        @content_view = @host.content_facet.content_view
-        params[:owner] = @organization.label
-        params[:env] = @content_view.cp_environment_label(@environment)
-      else
+        host = find_host(User.current.uuid)
+        @organization = host.organization
+      elsif params[:owner]
         @organization = Organization.find_by(:label => params[:owner])
-        deny_access unless @organization
-        if params[:env] == 'Library'
-          @environment = @organization.library
-          deny_access unless @environment && @environment.readable?
-          @content_view = @environment.default_content_view
-          deny_access unless @content_view && @content_view.readable?
-        else
-          (env_name, cv_name) = params[:env].split('/')
-          @environment = @organization.kt_environments.find_by(:label => env_name)
-          deny_access unless @environment && @environment.readable?
-          @content_view = @environment.content_views.find_by(:label => cv_name)
-          deny_access unless @content_view && @content_view.readable?
-        end
       end
+      deny_access unless @organization
     end
 
     def find_organization
