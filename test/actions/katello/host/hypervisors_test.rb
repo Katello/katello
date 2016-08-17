@@ -20,11 +20,9 @@ module Katello::Host
         action.execution_plan.stub_planned_action(::Actions::Candlepin::Consumer::Hypervisors) do |candlepin_action|
           candlepin_action.stubs(output: { :results => 'candlepin results' })
         end
-        plan_action(action, @content_view_environment, @content_view, @hypervisor_params)
+        plan_action(action, @hypervisor_params)
         assert_action_planed_with(action, ::Actions::Candlepin::Consumer::Hypervisors, @hypervisor_params)
-        assert_action_planed_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |environment, content_view, results, *_|
-          environment.must_equal @content_view_environment
-          content_view.must_equal @content_view
+        assert_action_planed_with(action, ::Actions::Katello::Host::HypervisorsUpdate) do |results, *_|
           results.must_equal 'candlepin results'
         end
       end

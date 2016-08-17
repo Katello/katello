@@ -2,12 +2,12 @@ module Actions
   module Katello
     module Host
       class Hypervisors < Actions::EntryAction
-        def plan(environment, content_view, hypervisor_params)
+        def plan(hypervisor_params)
           sequence do
             hypervisor_results = plan_action(::Actions::Candlepin::Consumer::Hypervisors, hypervisor_params)
             return if hypervisor_results.error
 
-            plan_action(Katello::Host::HypervisorsUpdate, environment, content_view, hypervisor_results.output[:results])
+            plan_action(Katello::Host::HypervisorsUpdate, hypervisor_results.output[:results])
 
             plan_self(:results => hypervisor_results.output[:results])
           end
