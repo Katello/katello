@@ -200,7 +200,7 @@ class MigrateContentHosts < ActiveRecord::Migration
   def create_subscription_facet(host, system)
     logger.info("Creating subscription facet for host #{host.name}.")
     subscription_facet = host.subscription_facet = MigrateContentHosts::SubscriptionFacet.new
-    subscription_facet.activation_keys = system.activation_keys
+    subscription_facet.activation_keys = system.activation_keys.uniq
     subscription_facet.uuid = system.uuid
     subscription_facet.save!
   end
