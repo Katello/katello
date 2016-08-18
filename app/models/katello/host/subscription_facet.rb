@@ -114,7 +114,7 @@ module Katello
         return true if self.installed_products || self.hypervisor_guest_uuids
 
         %w(release_version service_level autoheal).each do |method|
-          return true if self.send("#{method}_changed?")
+          return true if self.host.subscription_facet.send("#{method}_changed?")
         end
         if self.host.content_facet
           return true if (self.host.content_facet.content_view_id_changed? || self.host.content_facet.lifecycle_environment_id_changed?)
