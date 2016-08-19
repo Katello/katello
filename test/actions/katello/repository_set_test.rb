@@ -47,6 +47,7 @@ module ::Actions::Katello::RepositorySet
         repository.pulp_id.must_equal expected_pulp_id
         repository.relative_path.must_equal expected_relative_path
       end
+      content.expects(:modifiedProductIds).returns([])
       plan_action action, product, content, substitutions
       assert_action_planed action, ::Actions::Katello::Repository::Create
     end
