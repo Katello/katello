@@ -4,12 +4,14 @@ module Katello
 
     def host_errata(options)
       user = ::User.find(options[:user])
-      @hosts = ::Host::Managed.authorized("view_hosts").reject do |host|
-        !host.content_facet || host.content_facet.applicable_errata.empty?
-      end
+      ::User.as(user.login) do
+        @hosts = ::Host::Managed.authorized("view_hosts").reject do |host|
+          !host.content_facet || host.content_facet.applicable_errata.empty?
+        end
 
-      set_locale_for(user) do
-        mail(:to => user.mail, :subject => _("Host Errata Advisory"))
+        set_locale_for(user) do
+          mail(:to => user.mail, :subject => _("Host Errata Advisory"))
+        end
       end
     end
 
@@ -28,16 +30,17 @@ module Katello
 
     def promote_errata(options)
       user = options[:user]
+      ::User.as(user.login) do
+        @content_view = options[:content_view]
+        @environment = options[:environment]
+        @content_facets = Katello::Host::ContentFacet.where(:lifecycle_environment_id => @environment.id,
+                                                            :content_view_id => @content_view.id)
+        @hosts = ::Host::Managed.authorized("view_hosts").where(:id => @content_facets.pluck(:host_id))
+        @errata = @content_facets.map(&:installable_errata).flatten.uniq
 
-      @content_view = options[:content_view]
-      @environment = options[:environment]
-      @content_facets = Katello::Host::ContentFacet.where(:lifecycle_environment_id => @environment.id,
-                                                          :content_view_id => @content_view.id)
-      @hosts = ::Host::Managed.authorized("view_hosts").where(:id => @content_facets.pluck(:host_id))
-      @errata = @content_facets.map(&:installable_errata).flatten.uniq
-
-      set_locale_for(user) do
-        mail(:to => user.mail, :subject => (_("Promotion Summary for %{content_view}") % {:content_view => @content_view.name}))
+        set_locale_for(user) do
+          mail(:to => user.mail, :subject => (_("Promotion Summary for %{content_view}") % {:content_view => @content_view.name}))
+        end
       end
     end
 
