@@ -315,5 +315,28 @@ module ::Actions::Katello::ContentView
                   {:errata_ids => ["FOO"]}, true, [], "BadDescription")
       end
     end
+
+    it 'generates correct message' do
+      data = {:version_outputs =>
+               [{:version_id => 1,
+                 :output =>
+                  {:added_units =>
+                    {:erratum => ["RHEA-FOO"],
+                     :rpm =>
+                      ["shark-0.1-1.noarch",
+                       "penguin-0.9.1-1.noarch",
+                       "walrus-5.21-1.noarch"],
+                     :puppet_module => []
+                    }
+                  }
+                }]
+              }
+      total_count = action.total_counts(data)
+      assert_equal total_count[:errata_count], 1
+      assert_equal total_count[:rpm_count], 3
+      assert_equal total_count[:content_view_count], 1
+
+      assert_equal action.content_output(total_count), "with 3 Package(s), and 1 Errata"
+    end
   end
 end

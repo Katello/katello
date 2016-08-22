@@ -67,7 +67,66 @@ module Actions
         end
 
         def humanized_name
-          _("Incremental Update")
+          total_count = total_counts(input)
+          _("Incremental Update of %{content_view_count} Content View Version(s) " %
+            {:content_view_count => total_count[:content_view_count]}) + content_output(total_count)
+        end
+
+        def total_counts(input)
+          total_count = {}
+          if input[:version_outputs]
+            content_view_count = input[:version_outputs].length
+            input[:version_outputs].map do |version_output|
+              added_units = version_output.try(:[], :output).try(:[], :added_units)
+              if added_units
+                total_count[:errata_count] = added_units[:erratum].try(:count)
+                total_count[:rpm_count] = added_units[:rpm].try(:count)
+                total_count[:puppet_module_count] = added_units[:puppet_module].try(:count)
+              end
+            end
+          end
+          total_count[:content_view_count] = content_view_count
+          total_count
+        end
+
+        def content_output(total_count)
+          content = content_output_collection(total_count)
+          if content.count >= 1
+            message_output = _("with")
+            if content.count == 1
+              message_output + content[0]
+            else
+              message_output += content.pop
+              while content.count > 0
+                if content.count == 1
+                  message_output = message_output + _(", and") + content.pop
+                else
+                  message_output = message_output + "," + content.pop
+                end
+              end
+            end
+          else
+            message_output = ""
+          end
+          message_output
+        end
+
+        def content_output_collection(total_count)
+          content = []
+          if total_count[:errata_count] && total_count[:errata_count] > 0
+            errata = _(" %{errata_count} Errata" % {:errata_count => total_count[:errata_count]})
+            content << errata
+          end
+          if total_count[:rpm_count] && total_count[:rpm_count] > 0
+            rpm = _(" %{package_count} Package(s)" % {:package_count => total_count[:rpm_count]})
+            content << rpm
+          end
+          if total_count[:puppet_module_count] && total_count[:puppet_module_count] > 0
+            puppet_module = _(" %{puppet_module_count} Puppet Module(s)" %
+                              {:puppet_module_count => total_count[:puppet_module_count]})
+            content << puppet_module
+          end
+          content
         end
 
         def presenter
