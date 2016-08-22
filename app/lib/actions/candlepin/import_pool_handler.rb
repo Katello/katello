@@ -69,12 +69,17 @@ module Actions
       def reindex_consumer(message)
         if message.content['newEntity']
           uuid = JSON.parse(message.content['newEntity'])['consumer']['uuid']
-          subscription_facet = ::Katello::Host::SubscriptionFacet.find_by_uuid(uuid)
-          if subscription_facet.nil?
-            @logger.debug "skip re-indexing of non-existent registered host #{uuid}"
-          else
-            @logger.debug "re-indexing content host #{subscription_facet.host.name}"
-            subscription_facet.update_subscription_status
+          skip_msg = "skip re-indexing of non-existent content host #{uuid}"
+          begin
+            subscription_facet = ::Katello::Host::SubscriptionFacet.find_by_uuid(uuid)
+            if subscription_facet.nil?
+              @logger.debug "skip re-indexing of non-existent registered host #{uuid}"
+            else
+              @logger.debug "re-indexing content host #{subscription_facet.host.name}"
+              subscription_facet.update_subscription_status
+            end
+          rescue RestClient::ResourceNotFound, RestClient::Gone
+            @logger.debug(skip_msg)
           end
         end
       end
