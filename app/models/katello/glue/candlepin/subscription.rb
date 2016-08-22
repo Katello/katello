@@ -21,7 +21,7 @@ module Katello
       end
 
       def query_products
-        self.backend_data["providedProducts"]
+        self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]
       end
 
       def import_data
