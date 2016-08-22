@@ -46,8 +46,8 @@ namespace :katello do
             subscription_facet.save!
 
             host = subscription_facet.host
-            if host.name.include?('_') || host.name != host.name.downcase
-              host.name = host.name.gsub('_', '-').downcase
+            if host.name.include?('_') || host.name != host.name.downcase || host.name.ends_with?('.')
+              host.name = host.name.gsub('_', '-').chomp('.').downcase
               host.save!
             end
 
