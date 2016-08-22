@@ -37,21 +37,21 @@ module Katello
                                          :dependent => :destroy, :inverse_of => :repository
     has_many :content_views, :through => :content_view_repositories
 
-    has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy
+    has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :delete_all
     has_many :errata, :through => :repository_errata
 
-    has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy
+    has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :delete_all
     has_many :rpms, :through => :repository_rpms
 
-    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy
+    has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :delete_all
     has_many :puppet_modules, :through => :repository_puppet_modules
 
-    has_many :repository_docker_manifests, :class_name => "Katello::RepositoryDockerManifest", :dependent => :destroy
+    has_many :repository_docker_manifests, :class_name => "Katello::RepositoryDockerManifest", :dependent => :delete_all
     has_many :docker_manifests, :through => :repository_docker_manifests
 
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
 
-    has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :destroy
+    has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :delete_all
     has_many :ostree_branches, :through => :repository_ostree_branches
 
     has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
@@ -60,7 +60,7 @@ module Katello
     has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy
     has_many :content_facets, :through => :content_facet_repositories
 
-    has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy
+    has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :delete_all
     has_many :package_groups, :through => :repository_package_groups
 
     has_many :kickstart_content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :kickstart_repository_id,
