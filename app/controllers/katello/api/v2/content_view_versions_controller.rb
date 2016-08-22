@@ -216,7 +216,7 @@ module Katello
 
         version_environments_for_systems_map.values
       else
-        @version_environments.select { |ve| !ve[:environment_ids].blank? }
+        @version_environments.select { |ve| !ve[:environments].blank? }
       end
     end
 
