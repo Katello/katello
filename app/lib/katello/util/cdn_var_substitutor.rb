@@ -100,14 +100,17 @@ module Katello
               { substitutions: substitutions_needed(real_path).join(', '),
                 content_url: real_path }
         else
-          is_valid = valid_path?(real_path, 'repodata/repomd.xml') || valid_path?(real_path, 'PULP_MANIFEST')
-          unless is_valid
+          unless any_valid_metadata_file?(real_path)
             @resource.log :error, "No valid metadata files found for #{real_path}"
             fail Errors::CdnSubstitutionError, _("%{substitutions} are not valid substitutions for %{content_url}."\
                    " No valid metadata files found for %{real_path}") %
               { substitutions: substitutions, content_url: content.contentUrl, real_path: real_path}
           end
         end
+      end
+
+      def any_valid_metadata_file?(repo_path)
+        ['repodata/repomd.xml', 'PULP_MANIFEST', '.treeinfo', 'treeinfo'].any? { |filename| valid_path?(repo_path, filename) }
       end
 
       protected
