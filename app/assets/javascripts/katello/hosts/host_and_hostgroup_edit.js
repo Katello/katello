@@ -257,9 +257,9 @@ function os_selected(element){
                               'lifecycle_environment_id', 'content_source_id', 'architecture_id', 'hostgroup_id',
                               'medium_id', 'kickstart_repository_id']);
   var url = $(element).attr('data-url');
-  foreman.tools.showSpinner();
+  tfm.tools.showSpinner();
   $.ajax({
-    data: attrs,
+    data: {host: attrs},
     type:'post',
     url: url,
     complete: function(){
@@ -268,6 +268,7 @@ function os_selected(element){
     success: function(request) {
       $('#media_select').html(request);
       reload_host_params();
+      reload_puppetclass_params();
     }
   });
   update_provisioning_image();
