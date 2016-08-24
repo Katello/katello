@@ -27,17 +27,31 @@ module Actions
               need_updates.each do |repo|
                 plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
               end
-
               plan_action(ConfigureCapsule, capsule_content, environment, content_view)
+              sync_repos_to_capsule(capsule_content, repository_ids)
+              plan_action(RemoveOrphans, :capsule_id => capsule_content.capsule.id)
+            end
+          end
+        end
 
-              concurrence do
-                repository_ids.each do |repo_id|
-                  plan_action(Pulp::Consumer::SyncCapsule,
+        def sync_repos_to_capsule(capsule_content, repository_ids)
+          concurrence do
+            repository_ids.each do |repo_id|
+              sequence do
+                repo = ::Katello::Repository.where(:pulp_id => repo_id).first ||
+                       ::Katello::ContentViewPuppetEnvironment.where(:pulp_id => repo_id).first
+                if repo && repo.content_type != "yum"
+                  # we unassociate units in non-yum repos in order to avoid version conflicts
+                  # during publish. (i.e. two versions of a puppet module in the same repo)
+                  plan_action(Pulp::Consumer::UnassociateUnits,
                               capsule_id: capsule_content.capsule.id,
                               repo_pulp_id: repo_id)
                 end
+
+                plan_action(Pulp::Consumer::SyncCapsule,
+                            capsule_id: capsule_content.capsule.id,
+                            repo_pulp_id: repo_id)
               end
-              plan_action(RemoveOrphans, :capsule_id => capsule_content.capsule.id)
             end
           end
         end
