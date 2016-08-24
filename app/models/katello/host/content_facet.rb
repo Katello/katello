@@ -28,10 +28,12 @@ module Katello
           Rails.logger.warn("System #{self.host.name} (#{self.host.id}) requested binding to unknown repo #{repo_path}")
         end
 
-        self.bound_repositories = repos
-        self.save!
-        self.propagate_yum_repos
-        ForemanTasks.async_task(Actions::Katello::Host::GenerateApplicability, [self.host])
+        unless self.bound_repositories.sort == repos.sort
+          self.bound_repositories = repos
+          self.save!
+          self.propagate_yum_repos
+          ForemanTasks.async_task(Actions::Katello::Host::GenerateApplicability, [self.host])
+        end
         self.bound_repositories.pluck(:relative_path)
       end
 

@@ -197,6 +197,18 @@ module Katello
       assert_equal content_facet.bound_repositories, [repo]
     end
 
+    def test_save_bound_repos_by_paths_same_path
+      content_facet.content_view = repo.content_view
+      content_facet.lifecycle_environment = repo.environment
+      content_facet.bound_repositories = [repo]
+      ForemanTasks.expects(:async_task).never
+      content_facet.expects(:propagate_yum_repos).never
+
+      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+
+      assert_equal content_facet.bound_repositories, [repo]
+    end
+
     def test_propagate_yum_repos
       content_facet.bound_repositories << repo
       ::Katello::Pulp::Consumer.any_instance.expects(:bind_yum_repositories).with([repo.pulp_id])
