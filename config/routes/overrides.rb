@@ -52,6 +52,7 @@ Foreman::Application.routes.draw do
             collection do
               put :apply
               get :auto_complete_search
+              put :applicability
             end
           end
 

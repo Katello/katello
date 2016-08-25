@@ -18,6 +18,7 @@ angular.module('Bastion.hosts').factory('HostErratum',
                 });
                 return data;
             }},
+            regenerateApplicability: {method: 'PUT', isArray: false, params: {action: 'applicability'}},
             autocomplete: {method: 'GET', isArray: true, params: {action: 'auto_complete_search'}},
             apply: {method: 'PUT', params: {action: 'apply'}}
         });

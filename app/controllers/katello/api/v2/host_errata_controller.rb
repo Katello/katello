@@ -54,6 +54,13 @@ module Katello
       respond_for_show :resource => errata
     end
 
+    api :PUT, "/hosts/:host_id/errata/applicability", N_("Force regenerate applicability.")
+    param :host_id, :identifier, :desc => N_("Host ID"), :required => true
+    def applicability
+      task = async_task(::Actions::Katello::Host::GenerateApplicability, [@host], false)
+      respond_for_async :resource => task
+    end
+
     protected
 
     def index_relation
