@@ -8,7 +8,9 @@
 angular.module('Bastion.tasks', [
     'ngResource',
     'ui.router',
-    'Bastion'
+    'Bastion',
+    'Bastion.components',
+    'Bastion.i18n'
 ]);
 
 /**

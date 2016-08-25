@@ -9,6 +9,12 @@
      *   Module for Package Group related functionality.
      */
     angular
-        .module('Bastion.package-groups', ['Bastion']);
+        .module('Bastion.package-groups', [
+            'ui.router',
+            'ngResource',
+            'Bastion',
+            'Bastion.i18n',
+            'Bastion.components'
+        ]);
 
 })();

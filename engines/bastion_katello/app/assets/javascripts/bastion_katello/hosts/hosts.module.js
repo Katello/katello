@@ -8,5 +8,7 @@
 angular.module('Bastion.hosts', [
     'ngResource',
     'ui.router',
-    'Bastion'
+    'Bastion',
+    'Bastion.i18n',
+    'Bastion.components'
 ]);

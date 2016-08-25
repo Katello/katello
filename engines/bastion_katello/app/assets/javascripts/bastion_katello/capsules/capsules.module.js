@@ -7,5 +7,8 @@
  */
 angular.module('Bastion.capsules', [
     'ngResource',
-    'Bastion'
+    'ui.router',
+    'Bastion',
+    'Bastion.i18n',
+    'Bastion.components'
 ]);

@@ -9,6 +9,7 @@ angular.module('Bastion.environments', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.i18n',
     'Bastion.utils',
     'Bastion.components',
     'Bastion.errata',

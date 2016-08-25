@@ -7,7 +7,9 @@
  */
 angular.module('Bastion.errata', [
     'ngResource',
+    'ui.router',
     'Bastion',
     'Bastion.common',
+    'Bastion.i18n',
     'Bastion.components.formatters'
 ]);

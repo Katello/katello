@@ -9,6 +9,11 @@
      *   Module for Docker Manifest related functionality.
      */
     angular
-        .module('Bastion.docker-manifests', ['Bastion']);
+        .module('Bastion.docker-manifests', [
+            'ui.router',
+            'Bastion',
+            'Bastion.i18n',
+            'Bastion.components'
+        ]);
 
 })();

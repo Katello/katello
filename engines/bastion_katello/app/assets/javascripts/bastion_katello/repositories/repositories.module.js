@@ -10,6 +10,7 @@ angular.module('Bastion.repositories', [
     'ui.router',
     'ngUpload',
     'Bastion',
+    'Bastion.i18n',
     'Bastion.utils',
     'Bastion.common',
     'Bastion.components',
