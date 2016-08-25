@@ -449,7 +449,7 @@ module Katello
             name_and_author[:author],
             self.organization.library.repositories.puppet_type
           )
-          puppet_modules << puppet_module
+          puppet_modules << puppet_module if puppet_module
         end
       end
 
