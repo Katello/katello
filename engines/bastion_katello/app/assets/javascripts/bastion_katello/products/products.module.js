@@ -9,6 +9,7 @@ angular.module('Bastion.products', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.i18n',
     'Bastion.utils',
     'Bastion.components',
     'Bastion.sync-plans',
