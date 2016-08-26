@@ -14,6 +14,7 @@ module Katello
 
     def models
       @view = katello_content_views(:library_view)
+
       @view_2 = katello_content_views(:acme_default)
       @library = katello_environments(:library)
 
@@ -216,6 +217,44 @@ module Katello
 
       assert @missing_erratum
       post :available_incremental_updates, :included => {:ids => [@host1.id]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.uuid]
+      assert_response :success
+    end
+
+    def test_add_subscriptions
+      pool = katello_pools(:pool_one)
+
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts, pools_with_quantities|
+        assert_equal action_class, ::Actions::Katello::Host::AttachSubscriptions
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+        assert_equal pool, pools_with_quantities[0].pool
+        assert_equal ["1"], pools_with_quantities[0].quantities
+      end
+      post :add_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
+      assert_response :success
+    end
+
+    def test_remove_subscriptions
+      pool = katello_pools(:pool_one)
+
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts, pools_with_quantities|
+        assert_equal action_class, ::Actions::Katello::Host::RemoveSubscriptions
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+        assert_equal pool, pools_with_quantities[0].pool
+        assert_equal ["1"], pools_with_quantities[0].quantities
+      end
+      post :remove_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
+      assert_response :success
+    end
+
+    def test_auto_attach
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::AutoAttachSubscriptions
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
+      post :auto_attach, :included => {:ids => @host_ids}
       assert_response :success
     end
   end

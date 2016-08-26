@@ -113,7 +113,7 @@ module Katello
         new_hash
       end
 
-      @host.subscription_facet.remove_subscriptions(pool_id_quantities.values)
+      sync_task(::Actions::Katello::Host::RemoveSubscriptions, @host, pool_id_quantities.values)
       respond_for_index(:collection => index_response, :template => "index")
     end
 

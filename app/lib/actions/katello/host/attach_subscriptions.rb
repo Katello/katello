@@ -4,16 +4,21 @@ module Actions
       class AttachSubscriptions < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
-        def plan(host, pools_with_quantities)
+        def plan(host, pools_with_quantities_params)
           action_subject(host)
-
           sequence do
             pool_ids = []
+            pools_with_quantities = pools_with_quantities_params.map do |pool_with_quantity|
+              ::Katello::PoolWithQuantities.fetch(pool_with_quantity)
+            end
+            existing_pool_ids = host.subscription_facet.candlepin_consumer.pool_ids
             pools_with_quantities.each do |pool_with_quantities|
-              pool_ids << pool_with_quantities.pool.id
-              pool_with_quantities.quantities.each do |quantity|
-                plan_action(::Actions::Candlepin::Consumer::AttachSubscription, :uuid => host.subscription_facet.uuid,
-                            :pool_uuid => pool_with_quantities.pool.cp_id, :quantity => quantity)
+              unless existing_pool_ids.include?(pool_with_quantities.pool.cp_id.to_s)
+                pool_ids << pool_with_quantities.pool.id
+                pool_with_quantities.quantities.each do |quantity|
+                  plan_action(::Actions::Candlepin::Consumer::AttachSubscription, :uuid => host.subscription_facet.uuid,
+                              :pool_uuid => pool_with_quantities.pool.cp_id, :quantity => quantity)
+                end
               end
             end
 
