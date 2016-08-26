@@ -122,6 +122,7 @@ module Katello
     end
 
     initializer "katello.load_app_instance_data" do |app|
+      app.config.filter_parameters += [:_json] #package profile parameter
       Katello::Engine.paths['db/migrate'].existent.each do |path|
         app.config.paths['db/migrate'] << path
       end
