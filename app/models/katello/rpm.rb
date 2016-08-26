@@ -39,7 +39,7 @@ module Katello
 
     def update_from_json(json)
       keys = Pulp::Rpm::PULP_INDEXED_FIELDS - ['_id']
-      custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
+      custom_json = json.slice(*keys)
       if custom_json.any? { |name, value| self.send(name) != value }
         custom_json[:release_sortable] = Util::Package.sortable_version(custom_json[:release])
         custom_json[:version_sortable] = Util::Package.sortable_version(custom_json[:version])
