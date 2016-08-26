@@ -9,6 +9,7 @@ angular.module('Bastion.sync-plans', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.i18n',
     'Bastion.common',
     'Bastion.components.formatters'
 ]);

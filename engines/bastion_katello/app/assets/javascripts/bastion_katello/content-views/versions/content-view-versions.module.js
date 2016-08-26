@@ -9,6 +9,7 @@ angular.module('Bastion.content-views.versions', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.i18n',
     'Bastion.components',
     'Bastion.repositories',
     'Bastion.packages',

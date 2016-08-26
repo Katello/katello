@@ -9,6 +9,7 @@ angular.module('Bastion.activation-keys', [
     'ngResource',
     'ui.router',
     'Bastion',
+    'Bastion.i18n',
     'Bastion.utils',
     'Bastion.components',
     'Bastion.host-collections'
