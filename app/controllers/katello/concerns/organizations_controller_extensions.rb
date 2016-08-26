@@ -26,7 +26,7 @@ module Katello
       def create_with_dynflow
         if taxonomy_class == Organization
           begin
-            @taxonomy = Organization.new(params[:organization])
+            @taxonomy = Organization.new(resource_params)
             sync_task(::Actions::Katello::Organization::Create, @taxonomy)
             @taxonomy.reload
             if @count_nil_hosts > 0
