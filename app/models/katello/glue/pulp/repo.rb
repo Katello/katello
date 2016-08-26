@@ -181,24 +181,26 @@ module Katello
       def importer_ssl_options(capsule = nil)
         if capsule
           ueber_cert = ::Cert::Certs.ueber_cert(organization)
-          {
+          importer_options = {
             :ssl_client_cert => ueber_cert[:cert],
             :ssl_client_key => ueber_cert[:key],
             :ssl_ca_cert => ::Cert::Certs.ca_cert
           }
-        elsif redhat? && self.content_view.default?
-          {
+        elsif self.try(:redhat?) && self.content_view.default?
+          importer_options = {
             :ssl_client_cert => self.product.certificate,
             :ssl_client_key => self.product.key,
             :ssl_ca_cert => Resources::CDN::CdnResource.ca_file_contents
           }
         else
-          {
+          importer_options = {
             :ssl_client_cert => nil,
             :ssl_client_key => nil,
             :ssl_ca_cert => nil
           }
         end
+        importer_options.merge!(:ssl_validation => verify_ssl_on_sync?) unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
+        importer_options
       end
 
       def generate_distributors(capsule = false)
