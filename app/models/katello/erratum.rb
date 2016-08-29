@@ -90,7 +90,7 @@ module Katello
 
     def update_from_json(json)
       keys = %w(title id severity issued type description reboot_suggested solution updated summary)
-      custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
+      custom_json = json.slice(*keys)
 
       if self.updated.blank? || (custom_json['updated'].to_datetime != self.updated.to_datetime)
         custom_json['errata_id'] = custom_json.delete('id')

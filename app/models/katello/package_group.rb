@@ -20,9 +20,7 @@ module Katello
     end
 
     def update_from_json(json)
-      keys = %w(name description)
-      custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
-      self.update_attributes!(custom_json)
+      self.update_attributes!(json.slice('name', 'description'))
     end
 
     def self.list_by_filter_clauses(clauses)
