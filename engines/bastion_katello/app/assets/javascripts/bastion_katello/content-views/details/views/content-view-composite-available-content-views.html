@@ -42,7 +42,8 @@
       <tbody>
       <tr bst-table-row
           ng-repeat="contentView in detailsTable.rows | filter:contentViewFilter | orderBy:'name'"
-          row-select="contentView">
+          row-select="contentView"
+          ng-hide="contentView.versions.length === 0">
         <td bst-table-cell>{{ contentView.name }}</td>
         <td bst-table-cell>
           <select class="form-control"
