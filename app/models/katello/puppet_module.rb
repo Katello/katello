@@ -73,8 +73,7 @@ module Katello
     end
 
     def update_from_json(json)
-      keys = %w(name author title version summary)
-      custom_json = json.clone.delete_if { |key, _value| !keys.include?(key) }
+      custom_json = json.slice('name', 'author', 'title', 'version', 'summary')
       self.update_attributes!(custom_json)
     end
 
