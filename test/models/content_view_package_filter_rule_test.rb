@@ -61,5 +61,19 @@ module Katello
         @rule.save!
       end
     end
+
+    def test_duplicate_version_error
+      attrs = FactoryGirl.attributes_for(:katello_content_view_package_filter_rule,
+                                         :name => @rule.name,
+                                         :version => @rule.version,
+                                         :content_view_filter_id => @rule.content_view_filter_id,
+                                         :min_version => @rule.min_version,
+                                         :max_version => @rule.max_version)
+      @rule.save!
+      rule_item = ContentViewPackageFilterRule.create(attrs)
+      assert_raises(ActiveRecord::RecordInvalid) do
+        rule_item.save!
+      end
+    end
   end
 end
