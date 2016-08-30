@@ -15,4 +15,4 @@ foreign_input_sets:
   exclude: action,package
 %>
 
-<%= render_template('Package Action - SSH Default', :action => 'update', :package => "--advisories=#{input(:errata)}") %>
+<%= render_template('Package Action - SSH Default', :action => 'update', :package => "--advisory=#{input(:errata)}") %>
