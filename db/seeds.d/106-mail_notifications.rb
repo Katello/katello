@@ -5,6 +5,12 @@
 #
 ::User.current = ::User.anonymous_api_admin
 
+# The notification names are used as humanized labels. These need to be
+# translated as well as the description
+N_('Host errata advisory')
+N_('Sync errata')
+N_('Promote errata')
+
 # Mail Notifications
 notifications = [
   {:name              => :host_errata_advisory,
