@@ -96,7 +96,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should handle 413 (file too large) responses by showing an error', function() {
-        var text = '<html><head> \
+        var error = 'Could not parse JSON',
+            text = '<html><head> \
             <title>413 Request Entity Too Large</title> \
             </head><body> \
             <h1>Request Entity Too Large</h1> \
@@ -105,11 +106,10 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             the request exceeds the capacity limit. \
             </body></html>';
 
-        $scope.uploadContent(text, true);
+        $scope.uploadError(error, text);
         expect($scope.uploadSuccessMessages.length).toBe(0);
         expect($scope.uploadErrorMessages.length).toBe(1);
         expect($scope.uploadErrorMessages[0]).toContain('File too large');
-
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {

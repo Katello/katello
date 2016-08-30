@@ -53,6 +53,7 @@
   <form role="form"
         action="{{ uploadURL }}"
         ng-upload="uploadManifest(content, completed)"
+        error-catcher="uploadError(error, content)"
         ng-hide="denied('import_manifest')"
         upload-options-enable-controls
         upload-options-enable-rails-csrf>

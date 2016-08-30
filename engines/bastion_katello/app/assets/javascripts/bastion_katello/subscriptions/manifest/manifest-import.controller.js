@@ -199,6 +199,16 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             }
         };
 
+        $scope.uploadError = function (error, content) {
+            if (angular.isString(content) && content.indexOf("Request Entity Too Large")) {
+                error = translate('File too large.');
+            } else {
+                error = content;
+            }
+            $scope.uploadErrorMessages = [translate('Error during upload: ') + error];
+            $scope.progress.uploading = false;
+        };
+
         $scope.histories = Subscription.manifestHistory();
 
         $scope.showHistoryMoreLink = false;

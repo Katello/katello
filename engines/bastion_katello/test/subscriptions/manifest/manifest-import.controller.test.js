@@ -119,6 +119,16 @@ describe('Controller: ManifestImportController', function() {
         });
     });
 
+    it('should set an error message if there was a 413 response', function() {
+        $q.all([$scope.organization.$promise]).then(function () {
+            $scope.uploadManifest('Could not parse JSON', 'Request Entity Too Large');
+
+            expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
+            expect($scope.uploadErrorMessages.length).toBe(1);
+            expect($scope.uploadErrorMessages[0]).toBe("Error during upload: File too large.");
+        });
+    });
+
     it('should set the upload status to success and refresh data if upload status is success', function() {
         $q.all([$scope.organization.$promise]).then(function () {
             spyOn($scope, 'refreshTable');
