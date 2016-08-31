@@ -13,7 +13,7 @@ module Actions
         end
 
         def invoke_external_task
-          override_config = {}
+          override_config = { :incremental_export_repomd => true }
 
           if input[:start_date]
             override_config[:start_date] = input[:start_date]
