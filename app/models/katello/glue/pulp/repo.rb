@@ -199,7 +199,6 @@ module Katello
             :ssl_ca_cert => nil
           }
         end
-        importer_options.merge!(:ssl_validation => verify_ssl_on_sync?) unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
         importer_options
       end
 

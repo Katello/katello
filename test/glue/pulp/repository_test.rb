@@ -68,12 +68,6 @@ module Katello
       assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
     end
 
-    def test_importer_ssl_options
-      ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      assert @fedora_17_x86_64.importer_ssl_options(true).key?(:ssl_validation)
-      refute @cvpe_one.importer_ssl_options(true).key?(:ssl_validation)
-    end
-
     def test_relative_path
       assert_equal 'test_path/', @fedora_17_x86_64.relative_path
     end
