@@ -36,7 +36,8 @@
 
       <tbody>
       <tr bst-table-row ng-repeat="contentViewVersion in detailsTable.rows | filter:contentViewVersionFilter | orderBy:'name'"
-          row-select="contentViewVersion">
+          row-select="contentViewVersion"
+          ng-hide="contentViewVersions.length === 0">
         <td bst-table-cell>{{ contentViewVersion.content_view.name }}</td>
         <td bst-table-cell>
           <span bst-edit-select="contentViewVersion.id"
