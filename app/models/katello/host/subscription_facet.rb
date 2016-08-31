@@ -99,7 +99,7 @@ module Katello
       end
 
       def self.find_host(name, organization)
-        hosts = ::Host.where(:name => name)
+        hosts = ::Host.where(:name => name.downcase)
         return nil if hosts.empty? #no host exists
         if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
           #TODO: http://projects.theforeman.org/issues/11532

@@ -27,7 +27,7 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
-    scoped_search :in => :hosts, :complete_value => false
+    scoped_search :in => :hosts, :on => :name, :rename => :host, :complete_value => true
 
     def max_hosts_check
       if !unlimited_hosts && (hosts.length > 0 && (hosts.length.to_i > max_hosts.to_i)) && max_hosts_changed?

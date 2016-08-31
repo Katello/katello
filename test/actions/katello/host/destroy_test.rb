@@ -34,6 +34,18 @@ module Katello::Host
         assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_facet.uuid
       end
 
+      it 'ignores candlepin GONE' do
+        @host.content_host.stubs(:pools).raises(RestClient::Gone)
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+        @host.expects(:destroy).returns(true)
+        @host.content_facet.expects(:destroy!)
+        @host.subscription_facet.expects(:destroy!)
+        @host.content_host.expects(:destroy!)
+
+        plan_action action, @host
+      end
+
       it 'plans with unregistering true' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)

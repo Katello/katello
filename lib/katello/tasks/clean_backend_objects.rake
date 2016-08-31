@@ -1,22 +1,30 @@
 namespace :katello do
-  desc "Cleans backend objects (systems) that are missing in one or more backend systems"
-  task :clean_backend_objects => ["environment"] do
-    def cleanup_systems
-      Katello::System.find_each do |system|
-        if system.uuid.nil?
-          cp_fail = true
-          pulp_fail = true
-        else
-          cp_fail = test_method { system.facts }
-          pulp_fail = test_method { system.pulp_facts } unless system.is_a?(Katello::Hypervisor)
+  desc "Cleans backend objects (hosts) that are missing in one or more backend systems.  Run with COMMIT=true to commit changes."
+  task :clean_backend_objects => ["environment", "check_ping"] do
+    def cleanup_hosts
+      Host.includes(:content_facet, :subscription_facet).find_each do |host|
+        if test_candlepin(host) || test_pulp(host)
+          print "Host #{host.id} #{host.name} #{host.subscription_facet.try(:uuid)} is partially missing.  Un-registering\n"
+          execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
         end
+      end
+    end
 
-        if cp_fail || pulp_fail
-          print "System #{system.id} #{system.name} #{system.uuid} is partially missing.  Cleaning.\n"
-          ::Katello::Resources::Candlepin::Consumer.destroy(system.uuid) unless cp_fail
-          system.del_pulp_consumer unless (pulp_fail || system.is_a?(Katello::Hypervisor))
-          system.destroy!
-        end
+    def test_pulp(host)
+      if host.content_facet.try(:uuid)
+        test_method { Katello.pulp_server.extensions.consumer.retrieve(host.content_facet.uuid) }
+      else
+        test_method { false }
+      end
+    end
+
+    def test_candlepin(host)
+      if host.subscription_facet && host.subscription_facet.uuid
+        test_method { ::Katello::Resources::Candlepin::Consumer.get(host.subscription_facet.uuid) }
+      elsif host.subscription_facet
+        test_method { true }
+      else
+        test_method { false }
       end
     end
 
@@ -31,40 +39,32 @@ namespace :katello do
       true
     end
 
-    def cleanup_host_delete_artifacts
-      # clean up dirty consumer data in candleplin,
-      # that did not get cleared by host delete.
-      # look at https://bugzilla.redhat.com/show_bug.cgi?id=1140653
-      # for more information
-      cp_consumers = ::Katello::Resources::Candlepin::Consumer.get({})
-      cp_consumers.reject! { |consumer| consumer['type']['label'] == 'uebercert' }
-      cp_consumer_ids = cp_consumers.map { |cons| cons["uuid"] }
-      katello_consumer_ids = ::Katello::System.pluck(:uuid)
-      deletable_ids = cp_consumer_ids - katello_consumer_ids
-      deletable_ids.each do |consumer_id|
-        begin
-          Katello::Resources::Candlepin::Consumer.destroy(consumer_id)
-        rescue RestClient::Exception => e
-          p "exception when destroying candlepin consumer #{consumer_id}:#{e.inspect}"
-        end
-        begin
-          Katello.pulp_server.extensions.consumer.delete(consumer_id)
-        rescue RestClient::ResourceNotFound # rubocop:disable Lint/HandleExceptions
-          #do nothing
-        rescue RestClient::Exception => e
-          p "exception when destroying pulp consumer #{consumer_id}:#{e.inspect}"
-        end
+    # rubocop:disable HandleExceptions
+    def execute(error_msg)
+      if ENV['COMMIT'] == 'true'
+        yield
+      end
+    rescue RestClient::ResourceNotFound
+    rescue => e
+      print error_msg
+      print e.inspect
+    end
+
+    def clean_backend_orphans
+      consumer_ids = Katello::Candlepin::Consumer.orphaned_consumer_ids
+      print "#{consumer_ids.count} orphaned consumer id(s) found.\n"
+      consumer_ids.each do |consumer_id|
+        execute("exception when destroying candlepin consumer #{consumer_id}") { Katello::Resources::Candlepin::Consumer.destroy(consumer_id) }
+        execute("exception when destroying pulp consumer #{consumer_id}") { Katello.pulp_server.extensions.consumer.delete(consumer_id) }
       end
     end
 
-    # check services first
-    result = ::Katello::Ping.ping
-    if result[:status] != ::Katello::Ping::OK_RETURN_CODE
-      fail "Could not connect to service: #{result[:message]}"
+    unless ENV['COMMIT'] == 'true'
+      print "The following changes will not actually be performed.  Rerun with COMMIT=true to apply the changes\n"
     end
 
     User.current = User.anonymous_admin
-    cleanup_systems
-    cleanup_host_delete_artifacts
+    cleanup_hosts
+    clean_backend_orphans
   end
 end

@@ -32,7 +32,10 @@ module Katello
       end
 
       def import_pool(cp_pool_id)
-        pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
+        pool = nil
+        ::Katello::Util::Support.active_record_retry do
+          pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
+        end
         pool.import_data
       end
     end
@@ -124,7 +127,7 @@ module Katello
       def create_activation_key_associations
         keys = Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id")
         activation_key_ids = keys.collect do |key|
-          key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool']['id'] == cp_id }
+          key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool'].try(:[], 'id') == cp_id }
         end
         related_keys = ::Katello::ActivationKey.where(:cp_id => activation_key_ids.compact)
         related_keys.each do |key|

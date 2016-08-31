@@ -254,7 +254,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/setup.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/delete_orphaned_content.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/reimport.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrade_check.rake"

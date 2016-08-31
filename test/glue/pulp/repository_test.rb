@@ -14,6 +14,7 @@ module Katello
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       @fedora_17_library_library_view = Repository.find(FIXTURES['katello_repositories']['fedora_17_library_library_view']['id'])
       @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
+      @cvpe_one = katello_content_view_puppet_environments(:archive_view_puppet_environment)
       @fedora_17_x86_64.relative_path = 'test_path/'
       @fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
     end

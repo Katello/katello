@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var spinner = '<i class="icon-spinner inline-icon icon-spin"></i>';
+    var spinner = '<i class="fa fa-spinner fa-spin"></i>';
 
     $("#content_tabs").tabs({
         cache: true,

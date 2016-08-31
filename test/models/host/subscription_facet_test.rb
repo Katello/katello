@@ -96,6 +96,14 @@ module Katello
       assert_includes values.map(&:name), '_timestamp'
     end
 
+    def test_find_host
+      org2 = taxonomies(:organization2)
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host(host.name, host.organization)
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host(host.name.upcase, host.organization)
+      assert_nil Host::SubscriptionFacet.find_host("the hostest with the mostest", host.organization)
+      assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host(host.name.upcase, org2) }
+    end
+
     def test_find_or_create_host_with_org
       created_host = FactoryGirl.create(:host, :organization_id => org.id)
       host = Katello::Host::SubscriptionFacet.find_or_create_host(created_host.name, org, 'facts' => {'network.hostname' => created_host.name})
