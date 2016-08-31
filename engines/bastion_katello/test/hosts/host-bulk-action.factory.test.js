@@ -2,16 +2,19 @@ describe('Factory: HostBulkAction', function() {
     var $httpBackend,
         ContentHostBulkAction,
         contentHostParams,
-        hostCollectionParams;
+        hostCollectionParams,
+        subscriptionParams;
 
     beforeEach(module('Bastion.hosts', 'Bastion.test-mocks'));
 
     beforeEach(module(function($provide) {
         var contentHostIds = [1, 2, 3],
             hostCollectionIds = [8, 9];
+            subscriptionParams = [4, 5]
 
         contentHostParams = {ids: contentHostIds};
         hostCollectionParams = {ids: contentHostIds, host_collection_ids: hostCollectionIds};
+        subscriptionParams = {ids: contentHostIds, subscription_ids: hostCollectionIds};
     }));
 
     beforeEach(inject(function($injector) {
@@ -33,6 +36,16 @@ describe('Factory: HostBulkAction', function() {
         ContentHostBulkAction.removeHostCollections(hostCollectionParams);
     });
 
+    it('provides a way to add subscriptions to content hosts', function() {
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/add_subscriptions', subscriptionParams).respond();
+        ContentHostBulkAction.addSubscriptions(subscriptionParams);
+    });
+
+    it('provides a way to remove subscriptions from content hosts', function() {
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/remove_subscriptions', subscriptionParams).respond();
+        ContentHostBulkAction.removeSubscriptions(subscriptionParams);
+    });
+    
     it('provides a way to install content on content hosts', function() {
         $httpBackend.expect('PUT', '/api/v2/hosts/bulk/install_content', contentHostParams).respond();
         ContentHostBulkAction.installContent(contentHostParams);

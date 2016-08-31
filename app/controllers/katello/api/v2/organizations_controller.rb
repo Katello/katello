@@ -116,7 +116,7 @@ module Katello
                 :type => "application/text"
     end
 
-    api :POST, "/organizations/:id/autoattach_subscriptions", N_("Auto-attach available subscriptions to all hosts within an organization. Asynchronous operation.")
+    api :POST, "/organizations/:id/autoattach_subscriptions", N_("Auto-attach available subscriptions to all hosts within an organization. Asynchronous operation."), :deprecated => true
     def autoattach_subscriptions
       task = async_task(::Actions::Katello::Organization::AutoAttachSubscriptions, @organization)
       respond_for_async :resource => task

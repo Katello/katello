@@ -21,7 +21,6 @@ angular.module('Bastion.organizations').factory('Organization',
                 },
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
-                autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},
                 paths: {
                     method: 'GET',
                     url: '/katello/api/v2/organizations/:id/environments/paths',

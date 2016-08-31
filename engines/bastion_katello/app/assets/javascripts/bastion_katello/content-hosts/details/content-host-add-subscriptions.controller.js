@@ -36,6 +36,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
+        $scope.getAmountSelectorValues = SubscriptionsHelper.getAmountSelectorValues;
+
         $scope.disableAddButton = function () {
             return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
         };
@@ -58,21 +60,5 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
                 $scope.contentNutupane.refresh();
             });
         };
-
-        $scope.amountSelectorValues = function (subscription) {
-            var step, value, values;
-
-            step = subscription['instance_multiplier'];
-            if (!step || step < 1) {
-                step = 1;
-            }
-            values = [];
-            for (value = step; value < subscription.quantity && values.length < 5; value += step) {
-                values.push(value);
-            }
-            values.push(subscription.quantity);
-            return values;
-        };
-
     }]
 );
