@@ -65,13 +65,13 @@ module Actions
           (need_distributor_update + need_importer_update).uniq
         end
 
-        def repos_needing_distributor_updates(capsule, environment, content_view)
-          repos = capsule.repos_available_to_capsule(environment, content_view)
+        def repos_needing_distributor_updates(capsule_content, environment, content_view)
+          repos = capsule_content.repos_available_to_capsule(environment, content_view)
           repos.select do |repo|
-            repo_details = capsule.pulp_repo_facts(repo.pulp_id)
+            repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
             next unless repo_details
             capsule_distributors = repo_details["distributors"]
-            !repo.distributors_match?(capsule_distributors)
+            !repo.distributors_match?(capsule_distributors, capsule_content.capsule)
           end
         end
 

@@ -39,7 +39,8 @@ module Actions
         def update_or_associate_distributors(capsule_id, repository, repository_details)
           concurrence do
             existing_distributors = repository_details["distributors"]
-            repository.generate_distributors(capsule_id.present?).each do |distributor|
+            capsule = capsule_id ? SmartProxy.find(capsule_id) : nil
+            repository.generate_distributors(capsule).each do |distributor|
               found = existing_distributors.find { |i| i['distributor_type_id'] == distributor.type_id }
               if found
                 plan_action(::Actions::Pulp::Repository::RefreshDistributor,
@@ -64,7 +65,8 @@ module Actions
         def remove_unnecessary_distributors(capsule_id, repository, repository_details)
           concurrence do
             existing_distributors = repository_details["distributors"]
-            generated_distributors = repository.generate_distributors(capsule_id.present?)
+            capsule = capsule_id ? SmartProxy.find(capsule_id) : nil
+            generated_distributors = repository.generate_distributors(capsule)
             existing_distributors.each do |distributor|
               found = generated_distributors.find { |dist| dist.type_id == distributor['distributor_type_id'] }
               unless found

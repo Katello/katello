@@ -3,11 +3,13 @@ module Actions
     module ContentViewPuppetEnvironment
       class Create < Actions::EntryAction
         def plan(puppet_environment, clone = false)
+          internal_capsule = SmartProxy.default_capsule
+          fail _("Content View %s  cannot be published without an internal capsule." % puppet_environment.name) unless internal_capsule
           puppet_environment.save!
           action_subject(puppet_environment)
           plan_self
 
-          puppet_path = puppet_environment.generate_puppet_path
+          puppet_path = puppet_environment.generate_puppet_path(internal_capsule)
 
           sequence do
             plan_action(Pulp::Repository::Create,

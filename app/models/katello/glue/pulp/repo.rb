@@ -203,7 +203,7 @@ module Katello
         importer_options
       end
 
-      def generate_distributors(capsule = false)
+      def generate_distributors(capsule = nil)
         case self.content_type
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
@@ -223,7 +223,7 @@ module Katello
           distributors = [dist]
         when Repository::PUPPET_TYPE
           dist_options = { :id => self.pulp_id, :auto_publish => true }
-          repo_path =  File.join(SETTINGS[:katello][:puppet_repo_root],
+          repo_path =  File.join(capsule.puppet_path,
                                  Environment.construct_name(self.organization,
                                                             self.environment,
                                                             self.content_view),
@@ -801,8 +801,8 @@ module Katello
         end
       end
 
-      def distributors_match?(capsule_distributors)
-        generated_distributor_configs = self.generate_distributors(true)
+      def distributors_match?(capsule_distributors, capsule)
+        generated_distributor_configs = self.generate_distributors(capsule)
         generated_distributor_configs.all? do |gen_dist|
           type = gen_dist.class.type_id
           found_on_capsule = capsule_distributors.find { |dist| dist['distributor_type_id'] == type }
