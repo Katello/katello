@@ -3,21 +3,21 @@
 <div data-extend-template="layouts/nutupane.html">
 
   <div data-block="header">
-    {{ 'Gpg Keys' | translate }}
+    {{ 'GPG Keys' | translate }}
   </div>
 
   <div data-block="actions">
     <button class="btn btn-primary" ui-sref="gpg-keys.new" ng-hide="denied('create_gpg_keys')">
       <i class="fa fa-plus"></i>
-      {{ "New Gpg Key" | translate }}
+      {{ "New GPG Key" | translate }}
     </button>
   </div>
 
   <span data-block="no-rows-message" translate>
-    You currently don't have any Gpg keys, you can add Gpg keys using the button on the right.
+    You currently don't have any GPG keys, you can add GPG keys using the button on the right.
   </span>
 
    <span data-block="no-search-results-message">
-     Your search returned zero Gpg keys.
+     Your search returned zero GPG keys.
    </span>
 </div>

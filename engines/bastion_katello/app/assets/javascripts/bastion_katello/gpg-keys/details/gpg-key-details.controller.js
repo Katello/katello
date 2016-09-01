@@ -31,7 +31,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsController',
 
             gpgKey.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(translate('Gpg Key updated'));
+                $scope.successMessages.push(translate('GPG Key updated'));
                 $scope.table.replaceRow(response);
 
             }, function (response) {
