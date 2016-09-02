@@ -299,13 +299,42 @@ module Katello
 
     api :PUT, "/repositories/:id/import_uploads", N_("Import uploads into a repository")
     param :id, :identifier, :required => true, :desc => N_("Repository id")
-    param :upload_ids, Array, :required => true, :desc => N_("Array of upload ids to import")
+    param :upload_ids, Array, :desc => N_("Array of upload ids to import"), :deprecated => true
+    param :uploads, Array, :desc => N_("Array of uploads to import") do
+      param 'id', String, :required => true
+      param 'size', String
+      param 'checksum', String
+      param 'name', String
+    end
     def import_uploads
-      params[:upload_ids].each do |upload_id|
-        begin
-          sync_task(::Actions::Katello::Repository::ImportUpload, @repository, upload_id)
-        rescue => e
-          raise HttpErrors::BadRequest, e.message
+      if params['upload_ids'].empty? && params['uploads'].empty?
+        fail HttpErrors::BadRequest, _('No upload param specified. Either uploads or upload_ids (deprecated) is required.')
+      end
+
+      if params.key?(:upload_ids)
+        Foreman::Deprecation.api_deprecation_warning("The parameter upload_ids will be removed in Katello 3.3. Please update to use the uploads parameter.")
+
+        params[:upload_ids].each do |upload_id|
+          begin
+            sync_task(::Actions::Katello::Repository::ImportUpload, @repository, upload_id)
+          rescue => e
+            raise HttpErrors::BadRequest, e.message
+          end
+        end
+      end
+
+      if params.key?(:uploads)
+        params[:uploads].each do |upload|
+          begin
+            sync_task(
+              ::Actions::Katello::Repository::ImportUpload,
+              @repository,
+              upload['id'],
+              upload.except('id')
+            )
+          rescue => e
+            raise HttpErrors::BadRequest, e.message
+          end
         end
       end
 
