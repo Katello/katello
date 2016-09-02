@@ -12,7 +12,7 @@
   </p>
   <section>
 
-    <form role="form" class="row" id="packageActionForm" method="post" action="/katello/remote_execution">
+    <form role="form" id="packageActionForm" method="post" action="/katello/remote_execution">
       <input type="hidden" name="name" ng-value="packageActionFormValues.package"/>
       <input type="hidden" name="remote_action" ng-value="packageActionFormValues.remoteAction"/>
       <input type="hidden" name="host_ids" ng-value="packageActionFormValues.hostIds"/>
@@ -20,44 +20,57 @@
       <input type="hidden" name="authenticity_token" ng-value="packageActionFormValues.authenticityToken"/>
     </form>
 
-    <form ng-submit="performPackageAction()" role="form" class="row">
+    <div class="nutupane-details-bar row">
+      <form ng-submit="performPackageAction()" role="form">
 
-      <div class="col-sm-2">
-        <select class="form-control" ng-model="packageAction.actionType" name="remote_action" required>
-          <option value="packageInstall" translate>Package Install</option>
-          <option value="packageUpdate" translate>Package Update</option>
-          <option value="packageRemove" translate>Package Remove</option>
-          <option value="groupInstall" translate>Group Install</option>
-          <option value="groupRemove" translate>Group Remove</option>
-        </select>
-      </div>
+        <div class="form-group col-sm-2">
+          <select class="form-control" ng-model="packageAction.actionType" name="remote_action" required>
+            <option value="packageInstall" translate>Package Install</option>
+            <option value="packageUpdate" translate>Package Update</option>
+            <option value="packageRemove" translate>Package Remove</option>
+            <option value="groupInstall" translate>Group Install</option>
+            <option value="groupRemove" translate>Group Remove</option>
+          </select>
+        </div>
 
-      <div class="input-group col-sm-5">
-        <input class="form-control"
-               type="text"
-               placeholder="{{ 'Package/Group Name' | translate}}"
-               ng-model="packageAction.term"/>
+        <div class="form-group col-sm-5">
+          <div class="input-group">
+            <input class="form-control"
+                   type="text"
+                   placeholder="{{ 'Package/Group Name' | translate}}"
+                   ng-model="packageAction.term"/>
 
-        <span class="input-group-btn">
-          <button class="btn btn-default"
-                  ng-hide="denied('edit_hosts', host)"
-                  ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
-                  translate>
-            Perform</button>
-            <button class="btn btn-default dropdown-toggle"
-                    ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
-                    ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
-                    type="button" id="use-remote-execution" data-toggle="dropdown">
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
-              <li role="presentation"><a ng-click="performViaKatelloAgent()" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
-              <li role="presentation"><a ng-click="performViaRemoteExecution(false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
-              <li role="presentation"><a ng-click="performViaRemoteExecution(true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
-            </ul>
-        </span>
-      </div>
-    </form>
+            <span class="input-group-btn">
+              <button class="btn btn-default"
+                      ng-hide="denied('edit_hosts', host)"
+                      ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
+                      translate>
+                Perform</button>
+                <button class="btn btn-default dropdown-toggle"
+                        ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
+                        ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
+                        type="button" id="use-remote-execution" data-toggle="dropdown">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
+                  <li role="presentation"><a ng-click="performViaKatelloAgent()" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
+                  <li role="presentation"><a ng-click="performViaRemoteExecution(false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+                  <li role="presentation"><a ng-click="performViaRemoteExecution(true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+                </ul>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group fr">
+          <button class="btn btn-primary"
+                  translate
+                  ng-disabled="working"
+                  ng-click="updateAll()">
+            Update All Packages
+          </button>
+        </div>
+      </form>
+    </div>
   </section>
 </section>
 
@@ -80,12 +93,6 @@
               ng-disabled="working || detailsTable.numSelected === 0"
               ng-click="removeSelectedPackages()">
         {{ 'Remove Selected' | translate }}
-      </button>
-      <button class="btn btn-primary"
-              translate
-              ng-disabled="working || detailsTable.numSelected === 0"
-              ng-click="updateAll()">
-        Update All
       </button>
     </div>
   </div>
