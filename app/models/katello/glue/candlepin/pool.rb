@@ -81,6 +81,15 @@ module Katello
         self.class.candlepin_data(self.cp_id)
       end
 
+      def stacking_subscription(org_label, stacking_id)
+        subscription = ::Katello::Subscription.find_by(:product_id => stacking_id)
+        if subscription.nil?
+          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
+          subscription = ::Katello::Subscription.find_by(:product_id => found_product['id']) if found_product
+        end
+        subscription
+      end
+
       def import_data
         pool_attributes = {}
         pool_json = self.backend_data
@@ -88,13 +97,13 @@ module Katello
 
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
 
-        if !pool_json["sourceStackId"].nil?
-          subscription = ::Katello::Subscription.where(:product_id => pool_json["sourceStackId"])
+        if pool_json["sourceStackId"]
+          subscription = stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
         else
-          subscription = ::Katello::Subscription.where(:cp_id => pool_json["subscriptionId"])
+          subscription = ::Katello::Subscription.find_by(:cp_id => pool_json["subscriptionId"])
         end
 
-        pool_attributes[:subscription_id] = subscription.first.id if subscription.any?
+        pool_attributes[:subscription_id] = subscription.id if subscription
 
         %w(accountNumber contractNumber quantity startDate endDate accountNumber consumed).each do |json_attribute|
           pool_attributes[json_attribute.underscore] = pool_json[json_attribute]
