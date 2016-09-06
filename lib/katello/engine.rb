@@ -266,6 +266,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/reimport.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/unify_hosts.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrade_check.rake"
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
