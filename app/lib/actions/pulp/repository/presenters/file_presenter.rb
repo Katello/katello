@@ -2,7 +2,7 @@ module Actions
   module Pulp
     module Repository
       module Presenters
-        class FilePresenter < AbstractSyncPresenter
+        class FileUnitPresenter < AbstractSyncPresenter
           def progress
             total_bytes == 0 ? 0.01 : finished_bytes.to_f / total_bytes
           end

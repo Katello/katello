@@ -9,6 +9,7 @@ attributes :content_view_id
 attributes :default
 attributes :description
 attributes :package_count
+attributes :file_count
 attributes :package_group_count
 attributes :puppet_module_count
 attributes :docker_manifest_count

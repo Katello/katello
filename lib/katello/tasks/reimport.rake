@@ -19,6 +19,7 @@ namespace :katello do
               Katello::PackageGroup,
               Katello::PuppetModule,
               Katello::Rpm,
+              Katello::FileUnit,
               Katello::Subscription,
               Katello::Pool]
 

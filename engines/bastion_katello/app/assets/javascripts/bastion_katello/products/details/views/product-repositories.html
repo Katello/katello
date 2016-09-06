@@ -172,6 +172,14 @@
                 </div>
               </span>
 
+              <span ng-show="repository.content_type == 'file'">
+                <div>
+                  <span translate>
+                    {{ repository.content_counts.file || 0 }} Files
+                  </span>
+                </div>
+              </span>
+
             </td>
           </tr>
         </tbody>

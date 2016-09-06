@@ -46,10 +46,14 @@ module Katello
         all_items.count
       end
 
+      def unit_id_field
+        "#{self.name.demodulize.underscore}_id"
+      end
+
       def sync_repository_associations(repository, unit_uuids, additive = false)
         associated_ids = with_uuid(unit_uuids).pluck(:id)
         table_name = self.repository_association_class.table_name
-        attribute_name = "#{self.name.demodulize.underscore}_id"
+        attribute_name = unit_id_field
 
         existing_ids = self.repository_association_class.uncached do
           self.repository_association_class.where(:repository_id => repository).pluck(attribute_name)

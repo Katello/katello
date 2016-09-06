@@ -196,6 +196,12 @@ Katello::Engine.routes.draw do
           end
         end
 
+        api_resources :files, :only => [:index, :show], :controller => 'file_units' do
+          collection do
+            get :auto_complete_search
+          end
+        end
+
         api_resources :ping, :only => [:index]
         match "/status" => "ping#server_status", :via => :get
 
@@ -311,6 +317,7 @@ Katello::Engine.routes.draw do
             get :search, :on => :collection
           end
           api_resources :package_groups, :only => [:index, :show]
+          api_resources :files, :only => [:index, :show], :controller => 'file_units'
           api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
           api_resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
           api_resources :puppet_modules, :only => [:index, :show] do
