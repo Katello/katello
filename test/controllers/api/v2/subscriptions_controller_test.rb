@@ -7,7 +7,6 @@ module Katello
     include Support::ForemanTasks::Task
 
     def models
-      @system = katello_systems(:simple_server)
       @products = katello_products
       @organization = get_organization
     end
@@ -23,12 +22,6 @@ module Katello
     def setup
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
-      System.any_instance.stubs(:subscribe).returns(true)
-      System.any_instance.stubs(:unsubscribe).returns(true)
-      System.any_instance.stubs(:filtered_pools).returns([])
-      System.any_instance.stubs(:releaseVer).returns(1)
-      System.any_instance.stubs(:entitlements).returns([])
-      System.any_instance.stubs(:find_entitlement).returns({})
       Pool.stubs(:candlepin_data).returns({})
       Pool.stubs(:get_for_owner).returns([])
       Pool.any_instance.stubs(:import_data).returns(true)
@@ -38,13 +31,6 @@ module Katello
 
       models
       permissions
-    end
-
-    def test_system_index
-      get :index, :system_id => @system.uuid, :available_for => "content_host"
-
-      assert_response :success
-      assert_template 'api/v2/subscriptions/index'
     end
 
     def test_index

@@ -15,9 +15,6 @@ module Katello
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :host_collections, :through => :key_host_collections
 
-    has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
-    has_many :systems, :through => :system_activation_keys
-
     has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
@@ -127,52 +124,6 @@ module Katello
         consumption[pools.first] = 1
       end
       return consumption
-    end
-
-    # subscribe to each product according the entitlements remaining
-    # TODO: break up method
-    # rubocop:disable MethodLength
-    def subscribe_system(system)
-      already_subscribed = []
-      begin
-        # sanity check before we start subscribing
-        self.pools.each do |pool|
-          fail _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
-          fail _("Unable to determine quantity for pool %s") % pool.cp_id unless pool.quantity
-        end
-
-        allocate = system.sockets.to_i
-        Rails.logger.debug "Number of sockets for registration: #{allocate}"
-        fail _("Number of sockets must be higher than 0 for system %s") % system.name if allocate <= 0
-
-        # we sort just to make the order deterministig.
-        self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
-          product = Product.find_by_cp_id(product_id, self.organization)
-          consumption = calculate_consumption(product, pools, allocate)
-
-          Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}" }.join(", ")}"
-          consumption.each do |pool, amount|
-            Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, consuming pool #{pool.cp_id} of amount: #{amount}"
-            if (entitlements_array = system.subscribe(pool.cp_id, amount))
-              # store for possible rollback
-              entitlements_array.each do |ent|
-                already_subscribed << ent['id']
-              end
-            end
-          end
-        end
-      rescue => e
-        Rails.logger.error "Autosubscription failed, rolling back: #{already_subscribed.inspect}"
-        already_subscribed.each do |entitlement_id|
-          begin
-            Rails.logger.debug "Rolling back: #{entitlement_id}"
-            system.unsubscribe(entitlement_id)
-          rescue => re
-            Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
-          end
-        end
-        raise e
-      end
     end
 
     def copy(new_name)

@@ -138,12 +138,10 @@ module Katello
         }]
       }
       content_view_environment = ContentViewEnvironment.find(katello_content_view_environments(:library_default_view_environment).id)
-      system = katello_systems(:simple_server)
       Resources::Candlepin::Consumer.stubs(:get)
 
-      System.expects(:new).returns(system)
       ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host).returns(@host)
-      assert_sync_task(::Actions::Katello::Host::Register, @host, system, expected_consumer_params, content_view_environment)
+      assert_sync_task(::Actions::Katello::Host::Register, @host, expected_consumer_params, content_view_environment)
 
       post(:create, :lifecycle_environment_id => content_view_environment.environment_id,
            :content_view_id => content_view_environment.content_view_id, :facts => facts, :installed_products => installed_products)

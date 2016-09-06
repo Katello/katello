@@ -16,7 +16,6 @@ module Katello
       @library              = KTEnvironment.find(katello_environments(:library).id)
       @dev                  = KTEnvironment.find(katello_environments(:dev).id)
       @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
-      @system               = System.find(katello_systems(:simple_server).id)
     end
   end
 end

@@ -57,9 +57,6 @@ module Katello
     has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :delete_all
     has_many :ostree_branches, :through => :repository_ostree_branches
 
-    has_many :system_repositories, :class_name => "Katello::SystemRepository", :dependent => :destroy
-    has_many :systems, :through => :system_repositories
-
     has_many :content_facet_repositories, :class_name => "Katello::ContentFacetRepository", :dependent => :destroy
     has_many :content_facets, :through => :content_facet_repositories
 

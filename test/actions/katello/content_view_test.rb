@@ -93,6 +93,7 @@ module ::Actions::Katello::ContentView
 
     it 'plans' do
       cve = Katello::ContentViewEnvironment.where(:content_view_id => content_view, :environment_id => environment).first
+      cve.hosts.each { |host| host.content_facet.destroy }
       Katello::ContentViewEnvironment.stubs(:where).returns([cve])
 
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
@@ -171,7 +172,7 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans for removing environments' do
-      Katello::System.update_all(content_view_id: content_view.id)
+      Katello::Host::ContentFacet.update_all(content_view_id: content_view.id)
 
       assert_raises(RuntimeError) do
         action.validate_options(content_view, [cv_env], [], {})
@@ -188,10 +189,11 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans for removing a version and an environment' do
-      version = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
+      cve = Katello::ContentViewEnvironment.where(content_view_id: content_view.id,
                                                       environment_id: environment.id
-                                                     ).first.content_view_version
-
+                                                 ).first
+      version = cve.content_view_version
+      cve.hosts.each { |h| h.content_facet.destroy }
       options = {content_view_environments: [cv_env, library_cv_env],
                  content_view_versions: [version]
                 }

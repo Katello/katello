@@ -16,7 +16,10 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'katello/api/v2/hosts_bulk_actions/install_content',
   'katello/api/v2/hosts_bulk_actions/update_content',
   'katello/api/v2/hosts_bulk_actions/remove_content',
-  'katello/api/v2/hosts_bulk_actions/environment_content_view'
+  'katello/api/v2/hosts_bulk_actions/environment_content_view',
+  'katello/api/rhsm/candlepin_proxies/upload_package_profile',
+  'katello/api/rhsm/candlepin_proxies/regenerate_identity_certificates',
+  'katello/api/rhsm/candlepin_proxies/hypervisors_update'
 ]
 
 Foreman::AccessControl.permission(:view_hosts).actions.concat [
@@ -34,5 +37,13 @@ Foreman::AccessControl.permission(:view_hosts).actions.concat [
 ]
 
 Foreman::AccessControl.permission(:destroy_hosts).actions.concat [
+  'katello/api/v2/host_subscriptions/destroy',
   'katello/api/v2/hosts_bulk_actions/destroy_hosts'
+]
+
+Foreman::AccessControl.permission(:create_hosts).actions.concat [
+  'katello/api/v2/host_subscriptions/create',
+  'katello/api/rhsm/candlepin_proxies/consumer_create',
+  'katello/api/rhsm/candlepin_proxies/consumer_show',
+  'katello/api/rhsm/candlepin_proxies/hypervisors_update'
 ]

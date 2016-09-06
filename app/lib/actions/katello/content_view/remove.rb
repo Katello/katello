@@ -28,7 +28,7 @@ module Actions
             unless organization_destroy
               concurrence do
                 all_cv_envs.each do |cv_env|
-                  if cv_env.systems.any? || cv_env.activation_keys.any?
+                  if cv_env.hosts.any? || cv_env.activation_keys.any?
                     plan_action(ContentViewEnvironment::ReassignObjects, cv_env, options)
                   end
                 end
@@ -95,7 +95,7 @@ module Actions
           end
           all_cv_envs = combined_cv_envs(cv_envs, versions)
 
-          if all_cv_envs.flat_map(&:systems).any? && system_cve(options).nil?
+          if all_cv_envs.flat_map(&:hosts).any? && system_cve(options).nil?
             fail _("Unable to reassign systems. Please check system_content_view_id and system_environment_id.")
           end
 

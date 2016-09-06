@@ -21,8 +21,6 @@ module Katello
                                           :association_foreign_key => :environment_id, :readonly => true
 
     has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
-    has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
-                       :dependent => :restrict_with_exception, :foreign_key => :environment_id
     has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
                                          :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :restrict_with_exception
     has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
@@ -153,10 +151,10 @@ module Katello
         errors.add :base, _("Lifecycle Environment %s has a successor.  Only the last lifecycle environment on a path can be deleted") % self.name
       end
 
-      if systems.any?
+      if content_facets.any?
         errors.add(:base,
-           _("Lifecycle Environment %s has associated Content Hosts." \
-              " Please unregister or move the associated Content Hosts before trying to delete this lifecycle environment.") % self.name)
+           _("Lifecycle Environment %s has associated Hosts." \
+              " Please unregister or move the associated Hosts before trying to delete this lifecycle environment.") % self.name)
       end
 
       if activation_keys.any?

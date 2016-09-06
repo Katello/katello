@@ -4,7 +4,7 @@ module Actions
       class Register < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
 
-        def plan(host, system, consumer_params, content_view_environment, activation_keys = [])
+        def plan(host, consumer_params, content_view_environment, activation_keys = [])
           sequence do
             unless host.new_record?
               host.save!
@@ -19,10 +19,6 @@ module Actions
 
             fail _('Content View and Environment not set for registration.') if content_view_environment.nil?
 
-            system = plan_system(system, content_view_environment, consumer_params)
-            system.save!
-
-            host.content_host = system
             host.save!
             host.content_facet = plan_content_facet(host, content_view_environment)
             host.subscription_facet = plan_subscription_facet(host, activation_keys, consumer_params)
@@ -36,7 +32,7 @@ module Actions
                                     consumer_parameters: consumer_params, activation_keys: activation_keys.map(&:cp_name))
             return if cp_create.error
 
-            plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name, :system_id => system.id)
+            plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name)
             plan_action(Pulp::Consumer::Create, uuid: cp_create.output[:response][:uuid], name: host.name)
           end
         end
@@ -60,10 +56,6 @@ module Actions
           host.subscription_facet.update_subscription_status
           host.content_facet.update_errata_status
           host.refresh_global_status!
-
-          system = ::Katello::System.find(input[:system_id])
-          system.uuid = input[:uuid]
-          system.save!
         end
 
         private
@@ -73,8 +65,7 @@ module Actions
 
           host_collection_ids.each do |host_collection_id|
             host_collection = ::Katello::HostCollection.find(host_collection_id)
-            if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0 &&
-               host_collection.systems.length >= host_collection.max_hosts
+            if !host_collection.unlimited_hosts && host_collection.max_hosts >= 0
               fail _("Host collection '%{name}' exceeds maximum usage limit of '%{limit}'") %
                        {:limit => host_collection.max_hosts, :name => host_collection.name}
             end
@@ -91,16 +82,6 @@ module Actions
           else
             fail _('At least one activation key must have a lifecycle environment and content view assigned to it')
           end
-        end
-
-        def plan_system(system, content_view_environment, consumer_params)
-          system.facts = consumer_params[:facts]
-          system.cp_type = consumer_params[:type]
-          system.name = consumer_params[:name]
-          system.serviceLevel = consumer_params[:serviceLevel]
-          system.content_view = content_view_environment.content_view
-          system.environment = content_view_environment.environment
-          system
         end
 
         def plan_content_facet(host, content_view_environment)

@@ -14,14 +14,12 @@ module Katello::Host
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
 
       @host = FactoryGirl.create(:host, :with_subscription, :content_view => @content_view,
-                                :lifecycle_environment => @content_view_environment,
-                                :content_host => katello_systems(:simple_server), :organization => @organization)
+                                :lifecycle_environment => @content_view_environment, :organization => @organization)
       @hypervisor_results = { 'created' => [{ :name => @host.name, :uuid => @host.subscription_facet.uuid,
                                               :owner => {'key' => @organization.label} }],
                               'updated' => [], 'deleted' => [] }
       @hypervisor_name = "virt-who-#{@host.name}-#{@organization.id}"
       @host.update_attributes!(:name => @hypervisor_name)
-      ::Katello::Hypervisor.stubs(:find_by).returns(true)
     end
 
     let(:action_class) { ::Actions::Katello::Host::Hypervisors }

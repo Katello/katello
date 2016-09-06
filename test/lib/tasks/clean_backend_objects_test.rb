@@ -15,7 +15,6 @@ module Katello
     end
 
     def clear_hosts(except_id = -1)
-      ::Katello::System.where('host_id != ?', except_id).destroy_all
       ::Katello::Host::ContentFacet.where("host_id != ?", except_id).destroy_all
       ::Katello::Host::SubscriptionFacet.where("host_id != ?", except_id).destroy_all
       ::Host.where("id != ?", except_id).destroy_all

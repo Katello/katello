@@ -27,7 +27,6 @@ module Katello
       :katello_sync_plans => Katello::SyncPlan,
       :katello_host_collections => Katello::HostCollection,
       :katello_subscriptions => Katello::Subscription,
-      :katello_systems => Katello::System,
       :katello_host_collection_hosts => Katello::HostCollectionHosts,
       :katello_task_statuses => Katello::TaskStatus,
       :katello_errata => Katello::Erratum,
@@ -37,8 +36,7 @@ module Katello
       :katello_rpms => Katello::Rpm,
       :katello_repository_rpms => Katello::RepositoryRpm,
       :katello_content_facets => Katello::Host::ContentFacet,
-      :katello_subscription_facets => Katello::Host::SubscriptionFacet,
-      :katello_system_activation_keys => Katello::SystemActivationKey
+      :katello_subscription_facets => Katello::Host::SubscriptionFacet
     }.freeze
 
     # rubocop:disable Style/AccessorMethodName

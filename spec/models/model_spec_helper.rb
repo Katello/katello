@@ -117,10 +117,6 @@ EOKEY
       Resources::Candlepin::Environment.stubs(:delete_content).returns({})
     end
 
-    def disable_system_orchestration
-      Resources::Candlepin::Consumer.stubs(:get).returns({})
-    end
-
     def disable_user_orchestration(_options = {})
       Katello.pulp_server.resources.user.stubs(:create).returns({})
       Katello.pulp_server.resources.user.stubs(:delete).returns(200)

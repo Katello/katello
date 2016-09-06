@@ -57,7 +57,7 @@ namespace :katello do
 
         content_facet = short_host.content_facet
         sub_facet = short_host.subscription_facet
-        system = short_host.content_host
+
         if content_facet
           content_facet.host = fqdn_host
           content_facet.save!
@@ -68,11 +68,6 @@ namespace :katello do
           sub_facet.host = fqdn_host
           sub_facet.save!
           sub_facet.update_subscription_status
-        end
-
-        if system
-          system.host_id = fqdn_host.id
-          system.save!
         end
 
         unify_arf_reports(fqdn_host, short_host)

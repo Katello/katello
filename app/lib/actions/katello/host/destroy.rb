@@ -17,11 +17,6 @@ module Actions
             plan_action(Pulp::Consumer::Destroy, uuid: host.content_facet.uuid) if host.content_facet.try(:uuid)
           end
 
-          if host.content_host
-            plan_self(:pool_ids => pool_ids(host))
-            host.content_host.destroy!
-          end
-
           host.subscription_facet.try(:destroy!)
 
           if unregistering
@@ -38,20 +33,6 @@ module Actions
             unless host.destroy
               fail host.errors.full_messages.join('; ')
             end
-          end
-        end
-
-        def pool_ids(host)
-          host.content_host.pools.map { |p| p["id"] }
-        rescue RestClient::Gone
-          Rails.logger.warn("Host #{host.name} (#{host.subscription_facet.uuid}) removed from candlepin.")
-          []
-        end
-
-        def finalize
-          input[:pool_ids].each do |pool_id|
-            pool = ::Katello::Pool.where(:cp_id => pool_id).first
-            pool.import_data if pool
           end
         end
 

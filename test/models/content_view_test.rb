@@ -271,14 +271,12 @@ module Katello
     end
 
     def test_check_remove_from_environment!
+      @dev.hosts.destroy_all
       assert @library_dev_view.check_remove_from_environment!(@dev)
 
-      System.create!(:name => "Gregor Somosa",
-                     :cp_type => "system",
-                     :facts => {:foo => :bar},
-                     :environment => @dev,
-                     :content_view => @library_dev_view
-                    )
+      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @library_dev_view,
+                                 :lifecycle_environment => @dev)
+
       assert_raises RuntimeError do
         @library_dev_view.check_remove_from_environment!(@dev)
       end

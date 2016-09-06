@@ -24,7 +24,7 @@ module Katello
 
     def test_destroy_env_with_systems_should_fail
       env = KTEnvironment.create!(:name => "batman", :organization => @acme_corporation, :prior => @library)
-      env.expects(:systems).returns([stub])
+      env.expects(:content_facets).returns([stub])
       assert_raises(RuntimeError) do
         env.destroy!
       end

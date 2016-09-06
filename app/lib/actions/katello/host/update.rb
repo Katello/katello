@@ -22,12 +22,6 @@ module Actions
               plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
 
-            if host.content_facet && host.content_host
-              host.content_host.content_view = host.content_facet.try(:content_view)
-              host.content_host.environment = host.content_facet.try(:lifecycle_environment)
-              host.content_host.save!
-            end
-
             if host.subscription_facet.try(:autoheal)
               plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid)
             end

@@ -183,7 +183,6 @@ module Katello
 
       result = nil
       User.as_anonymous_admin do
-        @host.content_host.save_bound_repos_by_path!(paths.compact)
         result = @host.content_facet.update_repositories_by_paths(paths.compact)
       end
 
@@ -196,7 +195,7 @@ module Katello
       host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
                  content_view_environment.environment.organization, rhsm_params)
 
-      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, content_view_environment)
+      sync_task(::Actions::Katello::Host::Register, host, rhsm_params, content_view_environment)
       host.reload
 
       update_host_registered_through(host, request.headers)
@@ -228,7 +227,7 @@ module Katello
       host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
                                     activation_keys.first.organization, rhsm_params)
 
-      sync_task(::Actions::Katello::Host::Register, host, System.new, rhsm_params, nil, activation_keys)
+      sync_task(::Actions::Katello::Host::Register, host, rhsm_params, nil, activation_keys)
 
       update_host_registered_through(host, request.headers)
       host.reload

@@ -20,8 +20,6 @@ module Katello
     belongs_to :user, :inverse_of => :task_statuses, :class_name => "::User"
 
     belongs_to :task_owner, :polymorphic => true
-    # adding belongs_to :system allows us to perform joins with the owning system, if there is one
-    belongs_to :system, :foreign_key => :task_owner_id, :class_name => "Katello::System", :inverse_of => :task_statuses
 
     # needed to delete providers w/ task status
     has_one :provider, :class_name => "Katello::Provider", :dependent => :nullify
@@ -109,18 +107,6 @@ module Katello
       PulpTaskStatus.refresh(self)
     end
 
-    def as_json(_options = {})
-      json = super :methods => :pending?
-
-      if ('Katello::System' == task_owner_type)
-        methods = [:description, :result_description, :overall_status]
-        json.merge!(super(:only => methods, :methods => methods))
-        json[:system_name] = task_owner.name
-      end
-
-      json
-    end
-
     def human_readable_message
       task_template = TaskStatus::TYPES[self.task_type]
       return '' if task_template.nil?
@@ -129,12 +115,6 @@ module Katello
       else
         task_template[:english_name]
       end
-    end
-
-    # used by search  to filter tasks by systems :)
-    def system_filter_clause
-      system_id = task_owner_id if (task_owner_type == 'Katello::System')
-      {:system_id => system_id}
     end
 
     def pending_message
@@ -306,19 +286,6 @@ module Katello
           PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by(:uuid => pulp_task[:task_id]))
         end
       end
-    end
-
-    def self.make(system, pulp_task, task_type, parameters)
-      task_status = PulpTaskStatus.new(
-         :organization => system.organization,
-         :task_owner => system,
-         :task_type => task_type,
-         :parameters => parameters,
-         :systems => [system]
-      )
-      task_status.merge_pulp_task!(pulp_task)
-      task_status.save!
-      task_status
     end
 
     protected

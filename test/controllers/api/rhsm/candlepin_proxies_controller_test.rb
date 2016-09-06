@@ -9,12 +9,13 @@ module Katello
     before do
       setup_controller_defaults_api
       login_user(User.find(users(:admin).id))
-      @system = katello_systems(:simple_server)
-      @organization = get_organization
 
-      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @system.content_view, :lifecycle_environment => @system.environment,
-                                 :organization => @organization)
-      @host.content_host = @system
+      @content_view = katello_content_views(:acme_default)
+      @environment = katello_environments(:library)
+
+      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                 :lifecycle_environment => @environment, :organization => @content_view.organization)
+      @organization = get_organization
     end
 
     describe "register with activation key should fail" do
@@ -41,12 +42,10 @@ module Katello
       end
 
       it "should register" do
-        system = katello_systems(:simple_server)
         Resources::Candlepin::Consumer.stubs(:get)
 
-        System.expects(:new).returns(system)
         ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
-        assert_sync_task(::Actions::Katello::Host::Register, @host, system, {'facts' => @facts}, nil, [@activation_key])
+        assert_sync_task(::Actions::Katello::Host::Register, @host, {'facts' => @facts}, nil, [@activation_key])
 
         post(:consumer_activate, :organization_id => @activation_key.organization.label,
              :activation_keys => @activation_key.name, :facts => @facts)
@@ -62,12 +61,10 @@ module Katello
       end
 
       it "should register" do
-        system = katello_systems(:simple_server)
         Resources::Candlepin::Consumer.stubs(:get)
 
-        System.expects(:new).returns(system)
         ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
-        assert_sync_task(::Actions::Katello::Host::Register, @host, system, {'facts' => @facts }, @content_view_environment)
+        assert_sync_task(::Actions::Katello::Host::Register, @host, {'facts' => @facts }, @content_view_environment)
 
         post(:consumer_create, :organization_id => @content_view_environment.content_view.organization.label,
              :environment_id => @content_view_environment.cp_id, :facts => @facts)
@@ -79,10 +76,7 @@ module Katello
     describe "update enabled_repos" do
       before do
         User.stubs(:consumer?).returns(true)
-        System.stubs(:where).returns(@system)
-        System.any_instance.stubs(:first).returns(@system)
         uuid = @host.subscription_facet.uuid
-        ::Host.any_instance.stubs(:content_host).returns(@system)
         stub_cp_consumer_with_uuid(uuid)
         Repository.stubs(:where).with(:relative_path => 'foo').returns([OpenStruct.new(:pulp_id => 'a')])
         Repository.stubs(:where).with(:relative_path => 'bar').returns([OpenStruct.new(:pulp_id => 'b')])
@@ -102,7 +96,6 @@ module Katello
 
       it "should bind all" do
         Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
-        System.any_instance.expects(:save_bound_repos_by_path!).with(["/pulp/repos/foo", "/pulp/repos/bar"])
         put :enabled_repos, :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos
         assert_equal 200, response.status
       end
@@ -159,7 +152,7 @@ module Katello
     end
 
     it "test_consumer_create_protected" do
-      assert_protected_action(:consumer_create, [[:create_content_hosts,
+      assert_protected_action(:consumer_create, [[:create_hosts,
                                                   :view_lifecycle_environments, :view_content_views]]) do
         post :consumer_create, :environment_id => @organization.library.content_view_environments.first.cp_id
       end
@@ -167,7 +160,7 @@ module Katello
 
     it "test_upload_package_profile_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
-      assert_protected_action(:upload_package_profile, :edit_content_hosts) do
+      assert_protected_action(:upload_package_profile, :edit_hosts) do
         put :upload_package_profile, :id => @host.subscription_facet.uuid
       end
     end
@@ -183,7 +176,7 @@ module Katello
 
     it "test_regenerate_identity_certificates_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
-      assert_protected_action(:regenerate_identity_certificates, :edit_content_hosts) do
+      assert_protected_action(:regenerate_identity_certificates, :edit_hosts) do
         post :regenerate_identity_certificates, :id => @host.subscription_facet.uuid
       end
     end
@@ -206,7 +199,7 @@ module Katello
 
     describe "hypervisors_update_with_consumer_auth" do
       before do
-        @controller.stubs(:authorize_client_or_admin)
+        @controller.stubs(:client_authorized?).returns(true)
         @controller.stubs(:find_host).returns(@host)
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
@@ -283,7 +276,7 @@ module Katello
       end
 
       it "can be accessed by user" do
-        User.current = setup_user_with_permissions(:create_content_hosts, User.find(users(:restricted).id))
+        User.current = setup_user_with_permissions(:create_hosts, User.find(users(:restricted).id))
         get :consumer_show, :id => @host.subscription_facet.uuid
         assert_response 200
       end
