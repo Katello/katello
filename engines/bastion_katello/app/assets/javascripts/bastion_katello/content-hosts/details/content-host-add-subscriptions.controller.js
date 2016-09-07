@@ -50,6 +50,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             HostSubscription.addSubscriptions({id: $scope.$stateParams.hostId, 'subscriptions': selected}, function () {
                 Host.get({id: $scope.$stateParams.hostId}, function (host) {
                     $scope.$parent.host = host;
+                    $scope.table.replaceRow(host);
                     $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                     $scope.isAdding = false;
                     $scope.contentNutupane.refresh();

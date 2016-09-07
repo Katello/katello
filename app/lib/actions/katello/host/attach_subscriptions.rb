@@ -28,6 +28,8 @@ module Actions
 
         def finalize
           ::Katello::Pool.where(:id => input[:pool_ids]).each(&:import_data)
+          host = ::Host.find_by(:id => input[:managed][:id])
+          host.subscription_facet.update_subscription_status
         end
 
         def rescue_strategy

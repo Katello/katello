@@ -19,6 +19,9 @@ describe('Controller: ContentHostDetailsController', function() {
     beforeEach(inject(function(_$controller_, $rootScope, $state, $injector) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
+        $scope.table = {
+            replaceRow: function() {}
+        };
 
         translate = function(message) {
             return message;
@@ -38,7 +41,7 @@ describe('Controller: ContentHostDetailsController', function() {
 
             $update: function(success, error) {
                 if (mockHost.failed) {
-                    error({ data: {errors: ['error!']}});
+                    error({data: {error: {full_messages: ['error!']}}});
                 } else {
                     success(mockHost);
                 }
@@ -53,7 +56,7 @@ describe('Controller: ContentHostDetailsController', function() {
             },
             update: function (data, success, error) {
                 if (this.failed) {
-                    error({data: {errors: ['error']}});
+                    error({data: {error: {full_messages: ['error!']}}});
                 } else {
                     success(mockHost);
                 }
