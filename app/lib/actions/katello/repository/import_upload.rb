@@ -13,6 +13,10 @@ module Actions
           plan_action(FinishUpload, repository, import_upload.output)
         end
 
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
+
         def humanized_name
           _("Upload into")
         end
