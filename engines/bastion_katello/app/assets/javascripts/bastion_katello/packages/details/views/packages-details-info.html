@@ -6,6 +6,16 @@
     <h4 translate>Package Info</h4>
 
     <div class="detail">
+      <span class="info-label" translate>Installed On</span>
+      <span class="info-value" ng-show="installedPackageCount === undefined"><i class="fa fa-spinner fa-spin" ></i></span>
+      <span class="info-value" ng-show="installedPackageCount !== undefined">
+        <a href="{{ '/content_hosts?search=' + createSearchString() }}">
+          {{ installedPackageCount }} Host(s)
+        </a>
+      </span>
+    </div>
+
+    <div class="detail">
       <span class="info-label" translate>Description</span>
       <span class="info-value">{{ package.description }}</span>
     </div>
