@@ -99,16 +99,22 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     $scope.repository.$get();
                     updateRepositoriesTable();
                 } else {
-                    if (angular.isString(returnData) && returnData.indexOf("Request Entity Too Large")) {
-                        error = translate('File too large. Please use the CLI instead.');
-                    } else {
-                        error = returnData.displayMessage;
-                    }
+                    error = returnData.displayMessage;
                     $scope.uploadErrorMessages = [translate('Error during upload: ') + error];
                 }
 
                 $scope.progress.uploading = false;
             }
+        };
+
+        $scope.uploadError = function (error, content) {
+            if (angular.isString(content) && content.indexOf("Request Entity Too Large")) {
+                error = translate('File too large. Please use the CLI instead.');
+            } else {
+                error = content;
+            }
+            $scope.uploadErrorMessages = [translate('Error during upload: ') + error];
+            $scope.progress.uploading = false;
         };
 
         $scope.syncInProgress = function (task) {

@@ -38,5 +38,16 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
             }
         };
 
+        $scope.uploadError = function (error, content) {
+            if (angular.isString(content) && content.indexOf("Request Entity Too Large")) {
+                error = translate('File too large.');
+            } else {
+                error = content;
+            }
+            $scope.$parent.errorMessages = [translate('Error during upload: ') + error];
+            $scope.uploadStatus = 'error';
+            $scope.progress.uploading = false;
+        };
+
     }]
 );
