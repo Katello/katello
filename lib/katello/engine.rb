@@ -12,7 +12,6 @@ module Katello
         :use_cp => true,
         :rest_client_timeout => 30,
         :gpg_strict_validation => false,
-        :puppet_repo_root => '/etc/puppet/environments/',
         :redhat_repository_url => 'https://cdn.redhat.com',
         :post_sync_url => 'http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello',
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',

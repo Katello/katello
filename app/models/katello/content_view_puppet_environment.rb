@@ -67,10 +67,10 @@ module Katello
       self.environment.nil?
     end
 
-    def generate_puppet_path
+    def generate_puppet_path(capsule)
       # rubocop:disable Style/EmptyElse
       if self.environment
-        File.join(SETTINGS[:katello][:puppet_repo_root], generate_puppet_env_name, 'modules')
+        File.join(capsule.puppet_path, generate_puppet_env_name, 'modules')
       else
         nil #don't generate archived content view puppet environments
       end

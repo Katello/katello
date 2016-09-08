@@ -17,7 +17,7 @@ module Actions
 
         def create_repo_in_pulp(capsule_content, repository)
           ueber_cert = ::Cert::Certs.ueber_cert(repository.organization)
-          relative_path = repository_relative_path(repository)
+          relative_path = repository_relative_path(repository, capsule_content)
           checksum_type = repository.yum? ? repository.checksum_type : nil
 
           plan_action(Pulp::Repository::Create,
@@ -37,9 +37,9 @@ module Actions
                       capsule_id: capsule_content.capsule.id)
         end
 
-        def repository_relative_path(repository)
+        def repository_relative_path(repository, capsule_content)
           if repository.is_a? ::Katello::ContentViewPuppetEnvironment
-            repository.generate_puppet_path
+            repository.generate_puppet_path(capsule_content.capsule)
           elsif repository.puppet? && (repository.is_a? ::Katello::Repository)
             nil
           else

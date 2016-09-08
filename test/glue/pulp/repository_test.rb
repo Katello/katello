@@ -5,6 +5,7 @@ module Katello
   class GluePulpRepoTestBase < ActiveSupport::TestCase
     include TaskSupport
     include Dynflow::Testing
+    include Support::CapsuleSupport
 
     def setup
       set_user
@@ -103,23 +104,23 @@ module Katello
         'http' => true,
         'https' => true
       }
-      @fedora_17_x86_64.expects(:generate_distributors).with(true).at_least_once.returns(
+      @fedora_17_x86_64.expects(:generate_distributors).with(capsule_content.capsule).at_least_once.returns(
           [Runcible::Models::YumDistributor.new('/foo/bar', true, true, yum_config)])
 
       assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumDistributor.type_id,
-                                                     'config' => yum_config}])
+                                                     'config' => yum_config}], capsule_content.capsule)
       refute @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumCloneDistributor.type_id,
-                                                     'config' => yum_config}])
-      refute @fedora_17_x86_64.distributors_match?([])
+                                                     'config' => yum_config}], capsule_content.capsule)
+      refute @fedora_17_x86_64.distributors_match?([], capsule_content.capsule)
 
       non_nil_checksum = yum_config.clone
       non_nil_checksum['checksum_type'] = 'sha256'
       assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumDistributor.type_id,
-                                                     'config' => non_nil_checksum}])
+                                                     'config' => non_nil_checksum}], capsule_content.capsule)
 
       yum_config['relative_url'] = '/arrow/to/the/knee'
       refute @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::YumCloneDistributor.type_id,
-                                                     'config' => yum_config}])
+                                                     'config' => yum_config}], capsule_content.capsule)
     end
 
     def test_distributors_match_docker
@@ -127,14 +128,14 @@ module Katello
         'protected' => true
       }
 
-      @fedora_17_x86_64.expects(:generate_distributors).with(true).at_least_once.returns(
+      @fedora_17_x86_64.expects(:generate_distributors).with(capsule_content.capsule).at_least_once.returns(
           [Runcible::Models::DockerDistributor.new(docker_config)])
 
       assert @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::DockerDistributor.type_id,
-                                                     'config' => docker_config}])
+                                                     'config' => docker_config}], capsule_content.capsule)
       docker_config['protected'] = false
       refute @fedora_17_x86_64.distributors_match?([{'distributor_type_id' => Runcible::Models::DockerDistributor.type_id,
-                                                     'config' => docker_config}])
+                                                     'config' => docker_config}], capsule_content.capsule)
     end
 
     def test_importer_matches?
