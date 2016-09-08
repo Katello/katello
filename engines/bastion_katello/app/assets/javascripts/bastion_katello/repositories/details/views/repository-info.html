@@ -133,6 +133,24 @@
             </span>
           </div>
 
+          <div class="detail">
+            <span class="info-label" translate>Upstream Username</span>
+            <span class="info-value"
+                  bst-edit-text="repository.upstream_username"
+                  on-save="save(repository)"
+                  readonly="product.redhat || denied('edit_products', product)">
+            </span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Upstream Password</span>
+            <span class="info-value"
+                  bst-edit-text="repository.upstream_password"
+                  on-save="save(repository)"
+                  readonly="product.redhat || denied('edit_products', product)">
+            </span>
+          </div>
+
           <div class="detail" ng-show="repository.content_type === 'yum'">
             <span class="info-label" translate>Yum Metadata Checksum</span>
             <span class="info-value"
