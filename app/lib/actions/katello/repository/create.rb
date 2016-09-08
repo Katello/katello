@@ -28,7 +28,9 @@ module Actions
                                         download_policy: repository.download_policy,
                                         with_importer: true,
                                         mirror_on_sync: repository.mirror_on_sync?,
-                                        ssl_validation: certs[:ssl_validation])
+                                        ssl_validation: certs[:ssl_validation],
+                                        upstream_username: repository.upstream_username,
+                                        upstream_password: repository.upstream_password)
 
             return if create_action.error
 

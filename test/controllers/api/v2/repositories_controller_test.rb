@@ -462,6 +462,41 @@ module Katello
       assert_template 'api/v2/repositories/show'
     end
 
+    def test_create_with_username_password
+      upstream_username = "genius"
+      upstream_password = "genius_password"
+      product = mock
+      product.expects(:add_repo).with(
+        'Fedora_Repository',
+        'Fedora Repository',
+        'http://www.google.com',
+        'yum',
+        false,
+        nil,
+        nil,
+        nil
+      ).returns(@repository)
+
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
+      @repository.expects(:upstream_username=).with(upstream_username)
+      @repository.expects(:upstream_password=).with(upstream_password)
+
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum',
+                    :unprotected => false,
+                    :upstream_username => upstream_username,
+                    :upstream_password => upstream_password
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+
     def test_create_with_protected_docker
       product = mock
       product.expects(:add_repo).with(

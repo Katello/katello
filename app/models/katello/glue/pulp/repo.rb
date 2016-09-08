@@ -217,7 +217,11 @@ module Katello
             :ssl_ca_cert => nil
           }
         end
-        importer_options.merge!(:ssl_validation => verify_ssl_on_sync?) unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
+        unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
+          importer_options.merge!(:ssl_validation => verify_ssl_on_sync?)
+          importer_options[:basic_auth_username] = upstream_username if upstream_username.present?
+          importer_options[:basic_auth_password] = upstream_password if upstream_password.present?
+        end
         importer_options
       end
 
