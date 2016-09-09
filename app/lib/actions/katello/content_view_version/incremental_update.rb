@@ -4,6 +4,12 @@ module Actions
       class IncrementalUpdate < Actions::EntryAction
         attr_accessor :new_content_view_version
 
+        HUMANIZED_TYPES = {
+          ::Katello::Erratum::CONTENT_TYPE => "Errata",
+          ::Katello::Rpm::CONTENT_TYPE => "Packages",
+          ::Katello::PuppetModule::CONTENT_TYPE => "Puppet Modules"
+        }.freeze
+
         def humanized_name
           _("Incremental Update")
         end
@@ -40,8 +46,10 @@ module Actions
               end
             end
 
-            plan_self(:content_view_id => old_version.content_view.id, :environment_ids => environments.map(&:id),
-                      :user_id => ::User.current.id, :history_id => history.id, :copy_action_outputs => copy_action_outputs)
+            plan_self(:content_view_id => old_version.content_view.id,
+                      :new_content_view_version_id => self.new_content_view_version.id,
+                      :environment_ids => environments.map(&:id), :user_id => ::User.current.id,
+                      :history_id => history.id, :copy_action_outputs => copy_action_outputs)
             promote(new_content_view_version, environments)
           end
         end
@@ -100,6 +108,9 @@ module Actions
         end
 
         def finalize
+          version = ::Katello::ContentViewVersion.find(input[:new_content_view_version_id])
+          generate_description(version, output[:added_units]) if version.description.blank?
+
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
@@ -114,6 +125,19 @@ module Actions
         end
 
         private
+
+        def generate_description(version, content)
+          humanized_lines = []
+          [::Katello::Erratum, ::Katello::Rpm, ::Katello::PuppetModule].each do |content_type|
+            unless content[content_type::CONTENT_TYPE].blank?
+              humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
+              humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }
+            end
+            humanized_lines << ''
+          end
+          version.description = humanized_lines.join("\n")
+          version.save!
+        end
 
         def validate_environments(to_environments, old_version)
           unless (to_environments - old_version.environments).empty?
