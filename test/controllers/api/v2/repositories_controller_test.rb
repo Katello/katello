@@ -61,6 +61,12 @@ module Katello
       end
     end
 
+    def test_repository_types_with_view_products_permission
+      User.current = setup_user_with_permissions(:view_products, User.find(users(:restricted).id))
+      get :repository_types
+      assert_response :success
+    end
+
     def test_creatable_repository_types
       get :repository_types, :creatable => "true"
 

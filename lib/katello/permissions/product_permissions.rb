@@ -5,7 +5,7 @@ Foreman::Plugin.find(:katello).security_block :products do
              {
                'katello/products' => [:auto_complete, :auto_complete_search],
                'katello/api/v2/products' => [:index, :show],
-               'katello/api/v2/repositories' => [:index, :show],
+               'katello/api/v2/repositories' => [:index, :show, :repository_types],
                'katello/api/v2/packages' => [:index, :show],
                'katello/api/v2/distributions' => [:index, :show],
                'katello/api/v2/package_groups' => [:index, :show],
