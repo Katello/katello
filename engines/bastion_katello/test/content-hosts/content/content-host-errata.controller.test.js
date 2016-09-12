@@ -52,6 +52,9 @@ describe('Controller: ContentHostErrataController', function() {
             apply: function(errata, success) {
                 success(mockTask);
                 return mockTask
+            },
+            regenerateApplicability: function(options, success, error) {
+                success(mockTask)
             }
         };
     });
@@ -97,6 +100,14 @@ describe('Controller: ContentHostErrataController', function() {
                                                          jasmine.any(Function));
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.tasks.details', {taskId: mockTask.id});
         expect($scope.detailsTable.selectAll).toHaveBeenCalledWith(false);
+    });
+
+    it("provide a way to regenerate applicability", function() {
+        spyOn(HostErratum, "regenerateApplicability").and.callThrough();
+        spyOn($scope, "transitionTo");
+        $scope.calculateApplicability();
+        expect(HostErratum.regenerateApplicability).toHaveBeenCalledWith({id: host.id},  jasmine.any(Function), jasmine.any(Function));
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.tasks.details', {taskId: mockTask.id});
     });
 
     it("should refresh errata with no options for current", function () {
