@@ -352,6 +352,17 @@ module Katello
       assert_equal @library_dev_view.next_version - 1, @library_dev_view.versions.reload.maximum(:major)
     end
 
+    def test_latest_version
+      # if a version hasn't been published, latest version is not available
+      assert_nil @no_environment_view.latest_version
+
+      assert_equal "2.0", @library_view.latest_version
+
+      @library_view.create_new_version
+      @library_view.reload
+      assert_equal "3.0", @library_view.latest_version
+    end
+
     def test_add_repository_from_other_org
       view = @library_view
       other_org = create(:katello_organization)

@@ -49,6 +49,9 @@
                 options-format="option.id as option.version for option in options"
                 on-save="saveContentViewVersion(contentViewVersion)">
           </span>
+          <div ng-show="contentViewVersion.version != contentViewVersion.content_view.latest_version" translate>
+              A newer version is available: {{ contentViewVersion.content_view.latest_version }}
+          </div>
         </td>
         <td bst-table-cell>
         <span ng-show="contentViewVersions.environments.length !== 0"
