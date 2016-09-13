@@ -46,6 +46,23 @@ angular.module('Bastion.packages').controller('PackagesController',
             }
         });
 
+        Package.queryPaged({'organization_id': CurrentOrganization}, function (result) {
+            $scope.packageCount = result.total;
+        });
+
+        $scope.showApplicable = false;
+        $scope.showUpgradable = false;
+
+        $scope.toggleFilters = function () {
+            if ($scope.showUpgradable === true) {
+                $scope.showApplicable = true;
+            }
+
+            nutupane.table.params['packages_restrict_applicable'] = $scope.showApplicable;
+            nutupane.table.params['packages_restrict_upgradable'] = $scope.showUpgradable;
+            nutupane.refresh();
+        };
+
         $scope.$watch('repository', function (repository) {
             var nutupaneParams = nutupane.getParams();
 

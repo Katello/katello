@@ -69,11 +69,12 @@ module Katello
   class ApplicablityTest < RpmTestBase
     def setup
       super
-      @host = katello_content_facets(:one).host
+      @host_one = katello_content_facets(:one).host
+      @host_two = katello_content_facets(:two).host
     end
 
     def test_applicable_to_hosts
-      rpms = Rpm.applicable_to_hosts([@host])
+      rpms = Rpm.applicable_to_hosts([@host_one])
 
       assert_includes rpms, @rpm_one
       assert_includes rpms, @rpm_two
@@ -83,10 +84,25 @@ module Katello
     def test_installable_for_hosts
       assert_includes @rpm_one.repositories, @repo
       @rpm_two.repositories = []
-      @host.content_facet.bound_repositories << @repo
-      rpms = Rpm.installable_for_hosts([@host])
+      @host_one.content_facet.bound_repositories << @repo
+      rpms = Rpm.installable_for_hosts([@host_one])
 
       assert_equal [@rpm_one], rpms
+    end
+
+    def test_hosts_applicable
+      hosts = @rpm_one.hosts_applicable(@host_one.organization_id).map(&:host)
+      assert_includes hosts, @host_one
+      refute_includes hosts, @host_two
+
+      hosts = @rpm_one.hosts_applicable.map(&:host)
+      assert_includes hosts, @host_one
+    end
+
+    def test_hosts_available
+      @host_one.content_facet.bound_repositories += @rpm_one.repositories
+      facet = @rpm_one.hosts_available(@host_one.organization_id).first
+      assert_equal @host_one, facet.host
     end
   end
 

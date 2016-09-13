@@ -24,13 +24,13 @@ angular.module('Bastion.packages').controller('PackageDetailsController',
         $scope.installedPackageCount = undefined;
 
         $scope.fetchHostCount = function() {
-            Host.get({'per_page': 0, 'search': $scope.createSearchString(), 'organization_id': CurrentOrganization}, function (data) {
+            Host.get({'per_page': 0, 'search': $scope.createSearchString('installed_package'), 'organization_id': CurrentOrganization}, function (data) {
                 $scope.installedPackageCount = data.subtotal;
             });
         };
 
-        $scope.createSearchString = function() {
-            return 'installed_package=' + $scope.package.name + '-' + $scope.package.version + '-' + $scope.package.release + '.' +
+        $scope.createSearchString = function(field) {
+            return field + '=' + $scope.package.name + '-' + $scope.package.version + '-' + $scope.package.release + '.' +
                             $scope.package.arch;
         };
 

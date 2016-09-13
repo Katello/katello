@@ -31,6 +31,7 @@ describe('Controller: PackagesController', function() {
     });
 
     beforeEach(inject(function(_$controller_, $rootScope, _$location_, MockResource, translateMock) {
+        Package = MockResource.$new();
         Repository = MockResource.$new();
         $scope = $rootScope.$new();
         $location = _$location_;
@@ -64,6 +65,22 @@ describe('Controller: PackagesController', function() {
         expect($scope.repositories[0]['id']).toBe('all');
     });
 
+    it("allows the filtering of packages", function () {
+        $scope.showApplicable = false;
+        $scope.showUpgradable = false;
+        $scope.toggleFilters();
+        expect($scope.table.params['packages_restrict_applicable']).toBe(false)
+        expect($scope.table.params['packages_restrict_upgradable']).toBe(false)
+    });
+
+    it("ensures showApplicable is true if showUpgradable is true", function () {
+        $scope.showApplicable = false;
+        $scope.showUpgradable = true;
+        $scope.toggleFilters();
+        expect($scope.table.params['packages_restrict_applicable']).toBe(true)
+        expect($scope.table.params['packages_restrict_upgradable']).toBe(true)
+    });
+
     it('should set the repository_id param on Nutupane when a repository is chosen', function () {
         spyOn($scope.nutupane, 'setParams');
         spyOn($scope.nutupane, 'refresh');
@@ -75,7 +92,6 @@ describe('Controller: PackagesController', function() {
         expect($scope.nutupane.refresh).toHaveBeenCalled();
     });
 
-    
     it('allows the setting of the repositoryId via a query string parameter', function () {
         $location.search('repositoryId', '1');
 
