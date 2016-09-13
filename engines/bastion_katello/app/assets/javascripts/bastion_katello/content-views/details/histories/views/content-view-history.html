@@ -24,7 +24,7 @@
        <tr bst-table-row ng-repeat="history in detailsTable.rows">
          <td bst-table-cell>{{ history.created_at | date:'short' }}</td>
          <td bst-table-cell>{{ history.version }} </td>
-         <td bst-table-cell>{{ history.description }} </td>
+         <td bst-table-cell class="preserve-newlines">{{ history.description }}</td>
          <td bst-table-cell>{{ actionText(history) }}</td>
          <td bst-table-cell>{{ history.user }}</td>
          <td bst-table-cell>{{ history.task.result }}</td>

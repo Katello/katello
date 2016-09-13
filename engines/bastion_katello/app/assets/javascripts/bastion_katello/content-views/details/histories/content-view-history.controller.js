@@ -36,6 +36,8 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
                 message = translate("Published new version");
             } else if (taskType === taskTypes.export) {
                 message = translate("Exported content view");
+            } else if (taskType === taskTypes.incrementalUpdate) {
+                message = translate("Incremental update");
             }
 
             return message;
