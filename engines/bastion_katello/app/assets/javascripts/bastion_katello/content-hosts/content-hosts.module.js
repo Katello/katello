@@ -240,15 +240,33 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     });
 
     $stateProvider.state('content-hosts.details.packages', {
-        url: '/packages',
+        controller: 'ContentHostPackagesController',
+        collapsed: true,
+        abstract: true,
+        templateUrl: 'content-hosts/content/views/content-host-packages.html'
+    })
+    .state('content-hosts.details.packages.actions', {
+        url: '/packages/actions',
+        permission: 'edit_hosts',
+        collapsed: true,
+        controller: 'ContentHostPackagesActionsController',
+        templateUrl: 'content-hosts/content/views/content-host-packages-actions.html'
+    })
+    .state('content-hosts.details.packages.installed', {
+        url: '/packages/installed',
         permission: 'view_hosts',
         collapsed: true,
-        controller: 'ContentHostPackagesController',
-        templateUrl: 'content-hosts/content/views/content-host-packages.html'
-    });
-
-
-    $stateProvider.state('content-hosts.details.errata', {
+        controller: 'ContentHostPackagesInstalledController',
+        templateUrl: 'content-hosts/content/views/content-host-packages-installed.html'
+    })
+    .state('content-hosts.details.packages.applicable', {
+        url: '/packages/applicable',
+        permission: 'view_hosts',
+        collapsed: true,
+        controller: 'ContentHostPackagesApplicableController',
+        templateUrl: 'content-hosts/content/views/content-host-packages-applicable.html'
+    })
+    .state('content-hosts.details.errata', {
         abstract: true,
         collapsed: true,
         controller: 'ContentHostErrataController',

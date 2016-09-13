@@ -25,6 +25,10 @@ module Actions
             Helpers::Presenter::Delegated.new(
                 self, planned_actions(Pulp::Consumer::ContentUninstall))
           end
+
+          def rescue_strategy
+            Dynflow::Action::Rescue::Skip
+          end
         end
       end
     end

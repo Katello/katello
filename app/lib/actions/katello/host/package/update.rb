@@ -26,6 +26,10 @@ module Actions
           def presenter
             Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentUpdate))
           end
+
+          def rescue_strategy
+            Dynflow::Action::Rescue::Skip
+          end
         end
       end
     end

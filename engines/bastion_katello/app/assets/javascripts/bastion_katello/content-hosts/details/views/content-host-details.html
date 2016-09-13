@@ -98,11 +98,29 @@
                 Tasks
               </a>
             </li>
-            <li ng-class="{active: isState('content-hosts.details.packages')}">
-              <a translate
-                 ui-sref="content-hosts.details.packages">
-                Packages
+            <li class="dropdown"
+                ng-class="{active: stateIncludes('content-hosts.details.packages-actions') || stateIncludes('content-hosts.details.packages-installed') || stateIncludes('content-hosts.details.packages-upgradeable')}" >
+              <a class="dropdown-toggle">
+                <span translate>Packages</span>
+                <i class="fa fa-chevron-down"></i>
               </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a ui-sref="content-hosts.details.packages.actions" translate>
+                    Yum Actions
+                  </a>
+                </li>
+                <li>
+                  <a ui-sref="content-hosts.details.packages.installed" translate>
+                    Installed
+                  </a>
+                </li>
+                <li>
+                  <a ui-sref="content-hosts.details.packages.applicable" translate>
+                    Applicable
+                  </a>
+                </li>
+              </ul>
             </li>
             <li ng-class="{active: isState('content-hosts.details.errata.index')}">
               <a translate

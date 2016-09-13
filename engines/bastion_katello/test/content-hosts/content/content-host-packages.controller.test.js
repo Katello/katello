@@ -51,32 +51,15 @@ describe('Controller: ContentHostPackagesController', function() {
                                                Nutupane: Nutupane});
     }));
 
-    it("Sets a table.", function() {
-        expect($scope.detailsTable).toBeTruthy();
-    });
-
     it("provides a way to open the event details panel.", function() {
         spyOn($scope, "transitionTo");
-        $scope.detailsTable.openEventInfo({ id: 2 });
+        $scope.openEventInfo({ id: 2 });
         expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.events.details', {eventId: 2});
-    });
-
-    it("defaults to package install", function() {
-        expect($scope.packageAction.actionType).toBe('packageInstall');
-    });
-
-    it("properly recognizes a failed package remove task", function() {
-        expect($scope.detailsTable.taskFailed({failed: true})).toBe(true);
-        expect($scope.detailsTable.taskFailed({failed: false})).toBe(false);
-        expect($scope.detailsTable.taskFailed({failed: false, affected_units: 0})).toBe(true);
-        expect($scope.detailsTable.taskFailed({failed: false, affected_units: 1})).toBe(false);
     });
 
     it("performs a package update", function() {
         spyOn(HostPackage, 'update');
-        $scope.packageAction.actionType = "packageUpdate";
-        $scope.packageAction.term = "foo";
-        $scope.performPackageAction();
+        $scope.performPackageAction('packageUpdate', 'foo');
         expect(HostPackage.update).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
@@ -84,9 +67,7 @@ describe('Controller: ContentHostPackagesController', function() {
 
     it("performs a package update with multiple packages", function() {
         spyOn(HostPackage, 'update');
-        $scope.packageAction.actionType = "packageUpdate";
-        $scope.packageAction.term = "foo, bar";
-        $scope.performPackageAction();
+        $scope.performPackageAction('packageUpdate', 'foo, bar');
         expect(HostPackage.update).toHaveBeenCalledWith({id: mockHost.id, packages: ["foo", "bar"]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
@@ -94,23 +75,8 @@ describe('Controller: ContentHostPackagesController', function() {
 
     it("performs a package group install", function() {
         spyOn(HostPackage, 'install');
-        $scope.packageAction.actionType = "groupInstall";
-        $scope.packageAction.term = "bigGroup";
-        $scope.performPackageAction();
+        $scope.performPackageAction('groupInstall', 'bigGroup');
         expect(HostPackage.install).toHaveBeenCalledWith({id: mockHost.id, groups: ["bigGroup"]},
-                                                          jasmine.any(Function), jasmine.any(Function));
-        expect($scope.working).toBe(true);
-    });
-
-    it("performs a selected package removal", function() {
-        var mockPackage, mockPackageClone;
-        mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
-        mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
-        spyOn($scope.detailsTable,  'getSelected').and.returnValue([mockPackage]);
-
-        spyOn(HostPackage, 'remove');
-        $scope.removeSelectedPackages();
-        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockHost.id, packages: [mockPackageClone]},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });

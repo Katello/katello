@@ -1,0 +1,65 @@
+<span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
+
+<h4 translate>Applicable Packages</h4>
+
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <span data-block="no-rows-message" translate>
+    The host has not reported any applicable packages for upgrade.
+  </span>
+
+  <span data-block="no-search-results-message">
+    Your search returned zero Packages.
+  </span>
+
+  <div data-block="actions" bst-feature-flag="remote_actions">
+    <div ng-hide="denied('edit_hosts', host)" class="nutupane-actions fr">
+      <form ng-submit="performDefaultUpdateAction()" role="form">
+
+        <span class="btn-group">
+          <button class="btn btn-default"
+                  ng-hide="denied('edit_hosts', host)"
+                  ng-disabled="working || detailsTable.numSelected === 0"
+                  translate>
+            Upgrade Selected
+          </button>
+          <button class="btn btn-default dropdown-toggle"
+                  ng-hide="!remoteExecutionPresent || denied('edit_hosts', contentHost)"
+                  ng-disabled="working ||  detailsTable.numSelected === 0"
+                  type="button" id="use-remote-execution" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
+            <li role="presentation"><a ng-click="performViaKatelloAgent('packageUpdate', getKatelloAgentCommand())" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
+            <li role="presentation"><a ng-click="performViaRemoteExecution('packageUpdate', getRemoteExecutionCommand(), false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+            <li role="presentation"><a ng-click="performViaRemoteExecution('packageUpdate', getRemoteExecutionCommand(), true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+          </ul>
+        </span>
+
+        <button class="btn btn-primary"
+                translate
+                ng-disabled="working"
+                ng-click="updateAll()">
+          Update All Packages
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div data-block="table">
+    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full table-striped">
+      <thead>
+      <tr bst-table-head row-select>
+        <th bst-table-column="name" translate>Upgradable Package</th>
+      </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="package in detailsTable.rows" row-select="package">
+          <td bst-table-cell>{{ package.nvra }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
