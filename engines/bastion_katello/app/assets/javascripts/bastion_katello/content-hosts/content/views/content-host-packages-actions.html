@@ -1,0 +1,67 @@
+<span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
+
+<section ng-hide="denied('edit_hosts', host)" bst-feature-flag="remote_actions">
+  <h4 translate>Package Actions</h4>
+  <p bst-alert="info" ng-hide="host.content_facet_attributes.katello_agent_installed">
+    <span translate>
+      The katello-agent package is required to manage packages on this Host.
+      Please install the katello-agent package to manage packages on
+      {{ host.name }}. To install the package, connect directly to the
+      host from a terminal and use yum.
+    </span>
+  </p>
+  <section>
+    <div class="nutupane-details-bar row">
+      <form ng-submit="performPackageAction(packageAction.actionType, packageAction.term)" role="form">
+
+        <div class="form-group col-sm-2">
+          <select class="form-control" ng-model="packageAction.actionType" name="remote_action" required>
+            <option value="packageInstall" translate>Package Install</option>
+            <option value="packageUpdate" translate>Package Update</option>
+            <option value="packageRemove" translate>Package Remove</option>
+            <option value="groupInstall" translate>Group Install</option>
+            <option value="groupRemove" translate>Group Remove</option>
+          </select>
+        </div>
+
+        <div class="form-group col-sm-5">
+          <div class="input-group">
+            <input class="form-control"
+                   type="text"
+                   placeholder="{{ 'Package/Group Name' | translate}}"
+                   ng-model="packageAction.term"/>
+
+            <span class="input-group-btn">
+              <button class="btn btn-default"
+                      ng-hide="denied('edit_hosts', host)"
+                      ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
+                      translate>
+                Perform
+              </button>
+              <button class="btn btn-default dropdown-toggle"
+                      ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
+                      ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
+                      type="button" id="use-remote-execution" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
+                <li role="presentation"><a ng-click="performViaKatelloAgent(packageAction.actionType, packageAction.term)" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
+                <li role="presentation"><a ng-click="performViaRemoteExecution(packageAction.actionType, packageAction.term, false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
+                <li role="presentation"><a ng-click="performViaRemoteExecution(packageAction.actionType, packageAction.term, true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
+              </ul>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <button class="btn btn-primary"
+                  translate
+                  ng-disabled="working"
+                  ng-click="updateAll()">
+            Update All Packages
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</section>

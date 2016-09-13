@@ -15,9 +15,9 @@
 angular.module('Bastion.content-hosts').controller('ContentHostPackagesController',
     ['$scope', '$timeout', '$window', 'HostPackage', 'translate', 'Nutupane', 'BastionConfig',
     function ($scope, $timeout, $window, HostPackage, translate, Nutupane, BastionConfig) {
-        var packagesNutupane, packageActions, openEventInfo, errorHandler;
+        var packageActions;
 
-        openEventInfo = function (event) {
+        $scope.openEventInfo = function (event) {
             // when the event has label defined, it means it comes
             // from foreman-tasks
             if (event.label) {
@@ -28,12 +28,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             $scope.working = false;
         };
 
-        errorHandler = function (response) {
+        $scope.errorHandler = function (response) {
             $scope.errorMessages = response.data.errors;
             $scope.working = false;
         };
 
-        $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall
         $scope.errorMessages = [];
         $scope.working = false;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
@@ -44,40 +43,26 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         $scope.updateAll = function () {
             $scope.working = true;
-            HostPackage.updateAll({id: $scope.host.id}, openEventInfo, errorHandler);
+            HostPackage.updateAll({id: $scope.host.id}, $scope.openEventInfo, $scope.errorHandler);
         };
 
-        $scope.removeSelectedPackages = function () {
-            var selected = $scope.detailsTable.getSelected();
-
-            if (!$scope.working) {
-                $scope.working = true;
-                HostPackage.remove({
-                    id: $scope.host.id,
-                    packages: selected
-                }, openEventInfo, errorHandler);
-            }
-        };
-
-        $scope.performPackageAction = function () {
+        $scope.performPackageAction = function (actionType, term) {
             if ($scope.remoteExecutionByDefault) {
-                $scope.performViaRemoteExecution();
+                $scope.performViaRemoteExecution(actionType, term, false);
             } else {
-                $scope.performViaKatelloAgent();
+                $scope.performViaKatelloAgent(actionType, term);
             }
         };
 
-        $scope.performViaKatelloAgent = function () {
-            var action, terms;
-            action = $scope.packageAction.actionType;
-            terms = $scope.packageAction.term.split(/ *, */);
+        $scope.performViaKatelloAgent = function (actionType, term) {
+            var terms = term.split(/ *, */);
             $scope.working = true;
-            packageActions[action](terms);
+            packageActions[actionType](terms);
         };
 
-        $scope.performViaRemoteExecution = function(customize) {
-            $scope.packageActionFormValues.package = $scope.packageAction.term;
-            $scope.packageActionFormValues.remoteAction = $scope.packageAction.actionType;
+        $scope.performViaRemoteExecution = function(actionType, term, customize) {
+            $scope.packageActionFormValues.package = term;
+            $scope.packageActionFormValues.remoteAction = actionType;
             $scope.packageActionFormValues.hostIds = $scope.host.id;
             $scope.packageActionFormValues.customize = customize;
 
@@ -88,31 +73,20 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
 
         packageActions = {
             packageInstall: function (termList) {
-                HostPackage.install({id: $scope.host.id, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.host.id, packages: termList}, $scope.openEventInfo, $scope.errorHandler);
             },
             packageUpdate: function (termList) {
-                HostPackage.update({id: $scope.host.id, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.update({id: $scope.host.id, packages: termList}, $scope.openEventInfo, $scope.errorHandler);
             },
             packageRemove: function (termList) {
-                HostPackage.remove({id: $scope.host.id, packages: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.host.id, packages: termList}, $scope.openEventInfo, $scope.errorHandler);
             },
             groupInstall: function (termList) {
-                HostPackage.install({id: $scope.host.id, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.install({id: $scope.host.id, groups: termList}, $scope.openEventInfo, $scope.errorHandler);
             },
             groupRemove: function (termList) {
-                HostPackage.remove({id: $scope.host.id, groups: termList}, openEventInfo, errorHandler);
+                HostPackage.remove({id: $scope.host.id, groups: termList}, $scope.openEventInfo, $scope.errorHandler);
             }
-        };
-
-        packagesNutupane = new Nutupane(HostPackage, {id: $scope.$stateParams.hostId});
-        packagesNutupane.masterOnly = true;
-        $scope.detailsTable = packagesNutupane.table;
-        $scope.detailsTable.openEventInfo = openEventInfo;
-        $scope.detailsTable.contentHost = $scope.contentHost;
-        $scope.detailsTable.selectAllResultsEnabled = true;
-
-        $scope.detailsTable.taskFailed = function (task) {
-            return angular.isUndefined(task) || task.failed || task['affected_units'] === 0;
         };
     }
 ]);

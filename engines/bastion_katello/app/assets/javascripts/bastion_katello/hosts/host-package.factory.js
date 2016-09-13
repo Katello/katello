@@ -16,7 +16,8 @@ angular.module('Bastion.hosts').factory('HostPackage',
             install: {method: 'PUT', params: {action: 'install'}},
             update: {method: 'PUT', params: {action: 'upgrade'}},
             updateAll: {method: 'PUT', params: {action: 'upgrade_all'}},
-            autocomplete: {method: 'GET', isArray: true, params: {action: 'auto_complete_search'}}
+            autocomplete: {method: 'GET', isArray: true, params: {action: 'auto_complete_search'}},
+            applicable: {method: 'GET', params: {action: 'applicable'}}
         });
 
     }]
