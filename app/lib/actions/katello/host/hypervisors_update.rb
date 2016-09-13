@@ -29,7 +29,8 @@ module Actions
 
           # Since host names must be unique yet hypervisors may have unique subscription
           # facets in different orgs
-          duplicate_name = "virt-who-#{hypervisor_json[:name]}-#{organization.id}"
+          sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(hypervisor_json[:name])
+          duplicate_name = "virt-who-#{sanitized_name}-#{organization.id}"
           host = ::Katello::Host::SubscriptionFacet.find_by(:uuid => hypervisor_json[:uuid]).try(:host)
           host ||= ::Host.find_by(:name => duplicate_name)
           if host && host.organization.try(:id) != organization.id

@@ -102,6 +102,10 @@ module Katello
         hosts.first
       end
 
+      def self.sanitize_name(name)
+        name.gsub('_', '-').chomp('.').downcase
+      end
+
       def candlepin_consumer
         @candlepin_consumer ||= Katello::Candlepin::Consumer.new(self.uuid)
       end

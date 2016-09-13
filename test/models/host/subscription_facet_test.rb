@@ -16,6 +16,12 @@ module Katello
   end
 
   class SubscriptionFacetTest < SubscriptionFacetBase
+    def test_sanitize_name
+      assert_equal 'foo-bar', Host::SubscriptionFacet.sanitize_name('foo_bar')
+      assert_equal 'foobar', Host::SubscriptionFacet.sanitize_name('foobar.')
+      assert_equal 'foobar', Host::SubscriptionFacet.sanitize_name('FoOBar')
+    end
+
     def test_search_release_version
       subscription_facet.update_attributes!(:release_version => '7Server')
 
