@@ -62,7 +62,7 @@ child :components => :components do
   end
 
   child :content_view => :content_view do
-    attributes :id, :name, :label, :description, :next_version
+    attributes :id, :name, :label, :description, :next_version, :latest_version
   end
 
   child :archived_repos => :repositories do

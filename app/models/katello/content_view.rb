@@ -159,6 +159,10 @@ module Katello
       self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").readonly(false).last
     end
 
+    def latest_version
+      self.versions.order('major DESC').order('minor DESC').first.try(:version)
+    end
+
     def history
       Katello::ContentViewHistory.joins(:content_view_version).where(
           "#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
