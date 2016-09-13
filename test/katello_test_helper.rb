@@ -74,7 +74,9 @@ module FixtureTestCase
 
     Katello::FixturesSupport.set_fixture_classes(self)
 
-    self.fixture_path = Dir.mktmpdir("katello_fixtures")
+    self.fixture_path = "#{Katello::Engine.root}/test/fixtures/all_fixtures/"
+    FileUtils.rm_rf(self.fixture_path) if File.directory?(self.fixture_path)
+    Dir.mkdir(self.fixture_path)
     FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
     FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), self.fixture_path)
     fixtures(:all)
