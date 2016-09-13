@@ -392,7 +392,7 @@ module ::Actions::Katello::Repository
     it 'runs' do
       host =  FactoryGirl.build(:host, :id => 343)
       ::Katello::Repository.any_instance.stubs(:hosts_with_applicability).returns([host])
-      Katello::EventQueue.expects(:push_event).with(::Katello::Events::ImportHostErrata::EVENT_TYPE, host.id)
+      Katello::EventQueue.expects(:push_event).with(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host.id)
 
       ForemanTasks.sync_task(action_class, :repo_id => repository.id, :contents_changed => true)
     end

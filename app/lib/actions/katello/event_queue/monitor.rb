@@ -107,7 +107,7 @@ module Actions
         end
 
         def act_on_event(event)
-          User.as_anonymous_admin do
+          ::User.as_anonymous_admin do
             output[:last_event] = "#{event.event_type} - #{event.object_id}"
             ::Katello::EventQueue.event_class(event.event_type).new(event.object_id).run
           end

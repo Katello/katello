@@ -142,14 +142,38 @@ module Katello
     end
   end
 
-  class ImportApplicabilityTest < ContentFacetBase
+  class ContentFacetRpmTest < ContentFacetBase
+    let(:host_one) { hosts(:one) }
+    let(:host_two) { hosts(:two) }
+    let(:repo) { katello_repositories(:fedora_17_x86_64) }
+    let(:rpm_one) { katello_rpms(:one) }
+    let(:rpm_two) { katello_rpms(:two) }
+    let(:rpm_three) { katello_rpms(:three) }
+
+    def test_applicable_rpms_searchable
+      assert_includes ::Host.search_for("applicable_rpms = #{rpm_one.nvra}"), host_one
+      refute_includes ::Host.search_for("applicable_rpms = #{rpm_one.nvra}"), host_two
+      refute_includes ::Host.search_for("applicable_rpms = #{rpm_three.nvra}"), host_one
+    end
+
+    def test_installable_rpms_searchable
+      assert_includes rpm_one.repositories, repo
+      rpm_two.repositories = []
+      host_one.content_facet.bound_repositories << repo
+
+      assert_includes ::Host.search_for("installable_rpms = #{rpm_one.nvra}"), host_one
+      refute_includes ::Host.search_for("installable_rpms = #{rpm_two.nvra}"), host_one
+    end
+  end
+
+  class ImportErrataApplicabilityTest < ContentFacetBase
     let(:enhancement_errata) { katello_errata(:enhancement) }
 
     def test_partial_import
       refute_includes host.content_facet.applicable_errata, enhancement_errata
 
       ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_errata_ids).returns([enhancement_errata.uuid])
-      content_facet.import_applicability(true)
+      content_facet.import_errata_applicability(true)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
     end
@@ -158,16 +182,45 @@ module Katello
       content_facet.applicable_errata << enhancement_errata
 
       ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_errata_ids).returns([])
-      content_facet.import_applicability(true)
+      content_facet.import_errata_applicability(true)
 
       assert_empty content_facet.reload.applicable_errata
     end
 
     def test_full_import
       ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_errata_ids).returns([enhancement_errata.uuid])
-      content_facet.import_applicability(false)
+      content_facet.import_errata_applicability(false)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
+    end
+  end
+
+  class ImportRpmApplicabilityTest < ContentFacetBase
+    let(:rpm) { katello_rpms(:three) }
+
+    def test_partial_import
+      refute_includes host.content_facet.applicable_rpms, rpm
+
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_rpm_ids).returns([rpm.uuid])
+      content_facet.import_rpm_applicability(true)
+
+      assert_equal [rpm], content_facet.reload.applicable_rpms
+    end
+
+    def test_partial_import_empty
+      content_facet.applicable_rpms << rpm
+
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_rpm_ids).returns([])
+      content_facet.import_rpm_applicability(true)
+
+      assert_empty content_facet.reload.applicable_rpms
+    end
+
+    def test_full_import
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_rpm_ids).returns([rpm.uuid])
+      content_facet.import_rpm_applicability(false)
+
+      assert_equal [rpm], content_facet.reload.applicable_rpms
     end
   end
 

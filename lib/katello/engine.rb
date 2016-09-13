@@ -244,7 +244,7 @@ module Katello
         helper Katello::Concerns::SettingsHelperExtensions
       end
 
-      Katello::EventQueue.register_event(Katello::Events::ImportHostErrata::EVENT_TYPE, Katello::Events::ImportHostErrata)
+      Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
 
       ::HostsController.class_eval do
         helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
@@ -268,6 +268,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/unify_hosts.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrade_check.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/import_applicability.rake"
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"

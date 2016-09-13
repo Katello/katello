@@ -26,6 +26,12 @@ module Katello
         response[0]['applicability']['erratum'] || []
       end
 
+      def applicable_rpm_ids
+        response = Katello.pulp_server.extensions.consumer.applicable_rpms([self.uuid])
+        return [] if response.empty?
+        response[0]['applicability']['rpm'] || []
+      end
+
       def bind_yum_repositories(ids)
         bind_repos(Runcible::Models::YumDistributor.type_id, bound_yum_repositories, ids, :notify_agent => false)
       end

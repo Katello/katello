@@ -1,7 +1,7 @@
 module Katello
   module Events
-    class ImportHostErrata
-      EVENT_TYPE = 'import_host_errata'.freeze
+    class ImportHostApplicability
+      EVENT_TYPE = 'import_host_applicability'.freeze
 
       def initialize(object_id)
         @host = ::Host.find_by_id(object_id)
