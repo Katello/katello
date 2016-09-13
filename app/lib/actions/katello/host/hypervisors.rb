@@ -4,17 +4,25 @@ module Actions
       class Hypervisors < Actions::EntryAction
         def plan(hypervisor_params)
           sequence do
-            hypervisor_results = plan_action(::Actions::Candlepin::Consumer::Hypervisors, hypervisor_params)
-            return if hypervisor_results.error
-
-            plan_action(Katello::Host::HypervisorsUpdate, hypervisor_results.output[:results])
-
-            plan_self(:results => hypervisor_results.output[:results])
+            hypervisor_results = ::Katello::Resources::Candlepin::Consumer.register_hypervisors(hypervisor_params)
+            plan_action(Katello::Host::HypervisorsUpdate, parse_hypervisors(hypervisor_results))
           end
         end
 
-        def run
-          output[:results] = input[:results]
+        def parse_hypervisors(hypervisor_results)
+          hypervisors = []
+          %w(created updated unchanged).each do |group|
+            if hypervisor_results[group]
+              hypervisors += hypervisor_results[group].map do |hypervisor|
+                {
+                  :name => hypervisor['name'],
+                  :uuid => hypervisor['uuid'],
+                  :organization_label => hypervisor['owner']['key']
+                }
+              end
+            end
+          end
+          hypervisors
         end
       end
     end

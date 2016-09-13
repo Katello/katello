@@ -15,11 +15,11 @@ module Katello::Host
 
       @host = FactoryGirl.create(:host, :with_subscription, :content_view => @content_view,
                                 :lifecycle_environment => @content_view_environment, :organization => @organization)
-      @hypervisor_results = { 'created' => [{ :name => @host.name, :uuid => @host.subscription_facet.uuid,
-                                              :owner => {'key' => @organization.label} }],
-                              'updated' => [], 'deleted' => [] }
+
+      old_name = @host.name
       @hypervisor_name = "virt-who-#{@host.name}-#{@organization.id}"
       @host.update_attributes!(:name => @hypervisor_name)
+      @hypervisor_results = [{ :name => old_name, :uuid => @host.subscription_facet.uuid, :organization_label => @organization.label }]
     end
 
     let(:action_class) { ::Actions::Katello::Host::Hypervisors }
@@ -48,7 +48,7 @@ module Katello::Host
       end
 
       it 'existing hypervisor, renamed' do
-        @hypervisor_results['created'][0][:name] = 'hypervisor.renamed'
+        @hypervisor_results[0][:name] = 'hypervisor.renamed'
         ::Host.expects(:find_by).never
         ::Katello::Host::SubscriptionFacet.expects(:new).never
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
