@@ -117,10 +117,6 @@ module Katello
         fail _("Pulp does not appear to be running.") if body.empty?
         json = JSON.parse(body)
 
-        if json['known_workers'].empty?
-          fail _("No pulp workers running.")
-        end
-
         if json['database_connection'] && json['database_connection']['connected'] != true
           fail _("Pulp database connection issue.")
         end
@@ -129,7 +125,20 @@ module Katello
           fail _("Pulp message bus connection issue.")
         end
 
+        unless all_pulp_workers_present?(json)
+          fail _("Not all necessary pulp workers running.")
+        end
+
         json
+      end
+
+      def all_pulp_workers_present?(json)
+        worker_ids = json["known_workers"].collect { |worker| worker["_id"] }
+        return false unless worker_ids.any?
+        scheduler = worker_ids.any? { |worker| worker.include?("scheduler@") }
+        resource_manager = worker_ids.any? { |worker| worker.include?("resource_manager@") }
+        reservered_resource_worker = worker_ids.any? { |worker| worker =~ /reserved_resource_worker-./ }
+        scheduler && resource_manager && reservered_resource_worker
       end
     end
   end
