@@ -85,11 +85,4 @@ module Katello
       seed
     end
   end
-
-  class AtomicOsTest < SeedsTest
-    test "Make sure atomic OS got setup" do
-      seed
-      assert Operatingsystem.find_by(:name => Operatingsystem::REDHAT_ATOMIC_HOST_OS).present?
-    end
-  end
 end
