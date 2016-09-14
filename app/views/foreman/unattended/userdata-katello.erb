@@ -63,31 +63,24 @@ write_files:
   pm_set = @host.puppetmaster.empty? ? false : true
   puppet_enabled = non_atomic && (pm_set || @host.params['force-puppet'])
   salt_enabled = non_atomic && (@host.params['salt_master'] ? true : false)
+  chef_enabled = @host.respond_to?(:chef_proxy) && @host.chef_proxy
 %>
-<% if salt_enabled %>
-    yum -t -y -e 0 install salt-minion
-    cat > /etc/salt/minion << EOF
-    <%= indent 4 do
-          snippet 'saltstack_minion'
-        end %>
-    EOF
-    # Setup salt-minion to run on system reboot
-    /sbin/chkconfig --level 345 salt-minion on
-    # Running salt-call to trigger key signing
-    salt-call --no-color --grains >/dev/null
+<% if chef_enabled %>
+<%= indent 4 do
+      snippet 'chef_client'
+    end  %>
 <% end -%>
-<% if puppet_enabled %>
-    yum install -y puppet
-    cat > /etc/puppet/puppet.conf << EOF
-    <%= indent 4 do
-          snippet 'puppet.conf'
-        end %>
-    EOF
-    # Setup puppet to run on system reboot
-    /sbin/chkconfig --level 345 puppet on
 
-    /usr/bin/puppet agent --config /etc/puppet/puppet.conf --onetime --tags no_such_tag <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
-    /sbin/service puppet start
+<% if puppet_enabled %>
+<%= indent 4 do
+      snippet 'puppet_setup'
+    end %>
+<% end -%>
+
+<% if salt_enabled %>
+<%= indent 4 do
+      snippet 'saltstack_setup'
+    end %>
 <% end -%>
 phone_home:
  url: <%= foreman_url('built') %>

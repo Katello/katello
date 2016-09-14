@@ -18,6 +18,7 @@ oses:
   pm_set = @host.puppetmaster.empty? ? false : true
   puppet_enabled = pm_set || @host.params['force-puppet']
   salt_enabled = @host.params['salt_master'] ? true : false
+  chef_enabled = @host.respond_to?(:chef_proxy) && @host.chef_proxy
   section_end = (rhel_compatible && os_major <= 5) ? '' : '%end'
 %>
 install
@@ -113,30 +114,16 @@ yum -t -y -e 0 update
 
 <%= snippet('remote_execution_ssh_keys') %>
 
-<% if salt_enabled %>
-yum -t -y -e 0 install salt-minion
-cat > /etc/salt/minion << EOF
-<%= snippet 'saltstack_minion' %>
-EOF
-# Setup salt-minion to run on system reboot
-/sbin/chkconfig --level 345 salt-minion on
-# Running salt-call to trigger key signing
-salt-call --no-color --grains >/dev/null
+<% if chef_enabled %>
+<%= snippet 'chef_client' %>
 <% end -%>
 
 <% if puppet_enabled %>
-# and add the puppet package
-yum -t -y -e 0 install puppet
+<%= snippet 'puppet_setup' %>
+<% end -%>
 
-echo "Configuring puppet"
-cat > /etc/puppet/puppet.conf << EOF
-<%= snippet 'puppet.conf' %>
-EOF
-
-# Setup puppet to run on system reboot
-/sbin/chkconfig --level 345 puppet on
-
-/usr/bin/puppet agent --config /etc/puppet/puppet.conf -o --tags no_such_tag <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
+<% if salt_enabled %>
+<%= snippet 'saltstack_setup' %>
 <% end -%>
 
 sync
