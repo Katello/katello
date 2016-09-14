@@ -35,7 +35,9 @@ module Katello
         end
 
         def construct_name(family)
-          if family.include? 'Red Hat'
+          if family == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
+            return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS
+          elsif family.include? 'Red Hat'
             return 'RedHat'
           else
             return family.tr(' ', '_')
