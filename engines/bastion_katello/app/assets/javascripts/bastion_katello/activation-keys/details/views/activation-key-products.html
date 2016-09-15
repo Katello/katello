@@ -12,9 +12,26 @@
 </div>
 
 <div class="details details-full pull-left">
+  <div data-block="search-filter">
+    <div class="col-sm-3">
+      <select class="form-control" ng-model="productType">
+        <option value="redhat">{{ "Red Hat Products" | translate }}</option>
+        <option value="custom">{{ "Custom Products" | translate }}</option>
+      </select>
+    </div>
+    <div class="col-sm-3">
+      <label  class="checbox-inline" title="{{ 'Show all products in organization, not just those provided through attached subscriptions' | translate }}">
+        <input type="checkbox" ng-model="allProducts" ng-change="refreshProducts()"/>
+        <span translate>All Products</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="details details-full pull-left">
   <section>
-    <div ng-hide="displayArea.isAvailableContent" translate>
-      No repository content provided through subscriptions.
+    <div ng-hide="displayArea.isAvailableContent" ng-hide="displayArea.working" translate>
+      No repository content.
     </div>
 
     <div ng-repeat="product in products" ng-hide="product.available_content.length < 1"

@@ -236,9 +236,6 @@ module Katello
         fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
       end
 
-      unless @activation_key.valid_content_label?(content_params[:content_label])
-        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
-      end
       content_params
     end
 
