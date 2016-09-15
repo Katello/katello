@@ -74,29 +74,10 @@ module Actions
         end
 
         def repos_needing_updates(capsule_content, environment, content_view)
-          need_importer_update = repos_needing_importer_updates(capsule_content, environment, content_view)
-          need_distributor_update = repos_needing_distributor_updates(capsule_content, environment, content_view)
-          (need_distributor_update + need_importer_update).uniq
-        end
-
-        def repos_needing_distributor_updates(capsule_content, environment, content_view)
           repos = capsule_content.repos_available_to_capsule(environment, content_view)
-          repos.select do |repo|
-            repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
-            next unless repo_details
-            capsule_distributors = repo_details["distributors"]
-            !repo.distributors_match?(capsule_distributors, capsule_content.capsule)
-          end
-        end
-
-        def repos_needing_importer_updates(capsule, environment, content_view)
-          repos = capsule.repos_available_to_capsule(environment, content_view)
-          repos.select do |repo|
-            repo_details = capsule.pulp_repo_facts(repo.pulp_id)
-            next unless repo_details
-            capsule_importer = repo_details["importers"][0]
-            !repo.importer_matches?(capsule_importer)
-          end
+          need_importer_update = ::Katello::Repository.needs_importer_updates(repos, capsule_content)
+          need_distributor_update = ::Katello::Repository.needs_distributor_updates(repos, capsule_content)
+          (need_distributor_update + need_importer_update).uniq
         end
 
         def rescue_strategy

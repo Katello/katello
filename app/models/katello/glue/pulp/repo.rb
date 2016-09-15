@@ -3,6 +3,7 @@ module Katello
     # TODO: move into submodules
     # rubocop:disable MethodLength
     # rubocop:disable ModuleLength
+    # rubocop:disable Metrics/AbcSize
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
@@ -55,6 +56,23 @@ module Katello
               filename = file
             end
             filename.include?("vmlinuz") || filename.include?("pxeboot")
+          end
+        end
+
+        def self.needs_importer_updates(repos, capsule = nil)
+          repos.select do |repo|
+            repo_details = capsule ? capsule.pulp_repo_facts(repo.pulp_id) : repo.pulp_repo_facts
+            next unless repo_details
+            capsule_importer = repo_details["importers"][0]
+            !repo.importer_matches?(capsule_importer)
+          end
+        end
+
+        def self.needs_distributor_updates(repos, capsule = nil)
+          repos.select do |repo|
+            repo_details = capsule ? capsule.pulp_repo_facts(repo.pulp_id) : repo.pulp_repo_facts
+            next unless repo_details
+            !repo.distributors_match?(repo_details["distributors"], capsule)
           end
         end
       end
