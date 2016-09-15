@@ -18,7 +18,9 @@ angular.module('Bastion.subscriptions').controller('SubscriptionProductsControll
 
         Product.queryUnpaged({'organization_id': CurrentOrganization,
                               'subscription_id': $scope.$stateParams.subscriptionId,
-                              enabled: true
+                              enabled: true,
+                              'full_result': true,
+                              'include_available_content': true
                              }, function (response) {
             $scope.products = response.results;
             $scope.displayArea.working = false;
