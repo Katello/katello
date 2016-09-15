@@ -202,18 +202,19 @@ module Katello
       os_selection_params = ["operatingsystem_id", 'content_view_id', 'lifecycle_environment_id',
                              'content_source_id', 'architecture_id']
       view_options = []
-      if os_selection_params.all? { |key| params[key].present? }
+      host_params = params[:host]
+      if os_selection_params.all? { |key| host_params[key].present? }
         if host.nil?
           host = ::Host.new
         end
-        host.operatingsystem = Operatingsystem.find(params[:operatingsystem_id])
-        host.architecture = Architecture.find(params[:architecture_id])
+        host.operatingsystem = Operatingsystem.find(host_params[:operatingsystem_id])
+        host.architecture = Architecture.find(host_params[:architecture_id])
 
-        lifecycle_env = Katello::KTEnvironment.find(params[:lifecycle_environment_id])
-        content_view = Katello::ContentView.find(params[:content_view_id])
+        lifecycle_env = Katello::KTEnvironment.find(host_params[:lifecycle_environment_id])
+        content_view = Katello::ContentView.find(host_params[:content_view_id])
         host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_env.id,
                                                     :content_view_id => content_view.id)
-        host.content_source = SmartProxy.find(params[:content_source_id])
+        host.content_source = SmartProxy.find(host_params[:content_source_id])
         if host.operatingsystem.is_a?(Redhat)
           view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end
