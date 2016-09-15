@@ -22,7 +22,7 @@ angular.module('Bastion.tasks').factory('Task',
     ['BastionResource', '$timeout', '$log', '$q', 'CurrentOrganization',
     function (BastionResource, $timeout, $log, $q, CurrentOrganization) {
         var bulkSearchRunning = false, searchIdGenerator = 0,
-            searchParamsById = {}, callbackById = {};
+            searchParamsById = {}, callbackById = {}, pollCount = 0, maxPollInterval = 10000;
 
         var resource = BastionResource('/katello/api/v2/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization}, {});
@@ -101,9 +101,16 @@ angular.module('Bastion.tasks').factory('Task',
 
         /*eslint no-use-before-define:0*/
         function schedulePoll() {
+            var pollTime;
+            pollCount = pollCount + 1;
+            pollTime = 1000 * pollCount;
+            if (pollTime > maxPollInterval) {
+                pollTime = maxPollInterval;
+            }
+
             $timeout(function () {
                 updateProgress(true);
-            }, 1500);
+            }, pollTime);
         }
 
         function ensureBulkSearchRunning() {
