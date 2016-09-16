@@ -4,8 +4,8 @@ module Actions
       class HypervisorsUpdate < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
 
-        def plan(hypervisor_results)
-          plan_self(:hypervisor_results => hypervisor_results)
+        def plan(hypervisors)
+          plan_self(:hypervisors => hypervisors)
         end
 
         def run
@@ -13,23 +13,20 @@ module Actions
         end
 
         def finalize
-          hypervisor_results = input[:hypervisor_results]
+          hypervisors = input[:hypervisors]
 
-          %w(created updated unchanged).each do |group|
-            if hypervisor_results[group]
-              hypervisor_results[group].each do |hypervisor|
-                update_or_create_hypervisor(hypervisor)
-              end
-            end
+          if hypervisors
+            hypervisors.each { |hypervisor| update_or_create_hypervisor(hypervisor) }
           end
         end
 
         def update_or_create_hypervisor(hypervisor_json)
-          organization = ::Organization.find_by(:label => hypervisor_json[:owner][:key])
+          organization = ::Organization.find_by(:label => hypervisor_json[:organization_label])
 
           # Since host names must be unique yet hypervisors may have unique subscription
           # facets in different orgs
-          duplicate_name = "virt-who-#{hypervisor_json[:name]}-#{organization.id}"
+          sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(hypervisor_json[:name])
+          duplicate_name = "virt-who-#{sanitized_name}-#{organization.id}"
           host = ::Katello::Host::SubscriptionFacet.find_by(:uuid => hypervisor_json[:uuid]).try(:host)
           host ||= ::Host.find_by(:name => duplicate_name)
           if host && host.organization.try(:id) != organization.id
@@ -52,6 +49,10 @@ module Actions
                                      :location => location, :managed => false)
           host.save!
           host
+        end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
         end
       end
     end

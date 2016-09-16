@@ -19,6 +19,7 @@ module BastionKatello
           content_hosts
           content_views
           docker_tags
+          ostree_branches
           errata
           packages
           gpg_keys

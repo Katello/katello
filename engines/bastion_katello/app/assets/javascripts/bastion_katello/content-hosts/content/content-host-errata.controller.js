@@ -84,6 +84,16 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             }
         });
 
+        $scope.calculateApplicability = function () {
+            $scope.calculatingApplicability = true;
+            HostErratum.regenerateApplicability({id: $scope.host.id},
+                function (task) {
+                    $scope.transitionTo('content-hosts.details.tasks.details', {taskId: task.id});
+                }, function() {
+                    $scope.calculatingApplicability = false;
+                });
+        };
+
         $scope.refreshErrata = function (selected) {
             var option, errataParams;
             errataParams = {'id': $scope.host.id};

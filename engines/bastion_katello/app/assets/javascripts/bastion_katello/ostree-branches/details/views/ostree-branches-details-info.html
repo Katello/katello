@@ -1,0 +1,23 @@
+<span page-title ng-model="branch">{{ 'OSTree Branch: ' | translate }} {{ branch.name }}</span>
+
+<section>
+
+  <div class="details">
+    <h4 translate>Branch Info</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Version</span>
+      <span class="info-value">{{ branch.version }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Commit</span>
+      <span class="info-value">{{ branch.commit }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Date</span>
+      <span class="info-value">{{ branch.version_date }}</span>
+    </div>
+  </div>
+</section>

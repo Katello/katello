@@ -48,15 +48,22 @@
       </form>
     </span>
 
-    <span data-block="actions" bst-feature-flag="remote_actions">
+    <form id="errataActionForm" method="post" action="/katello/remote_execution">
+      <input type="hidden" name="remote_action" value="errata_install"/>
+      <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
+      <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
+      <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
+      <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
+    </form>
 
-        <div bst-modal="applySelected()" model="host">
-          <div data-block="modal-header" translate>Apply Errata to Content Host "{{host.name}}"?</div>
-          <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ host.name }}"?</div>
-          <div data-block="modal-confirm-button" translate>Apply</div>
-        </div>
+    <span data-block="actions" ng-hide="contentHost.readonly">
+      <div bst-modal="applySelected()" model="host">
+        <div data-block="modal-header" translate>Apply Errata to Content Host "{{host.name}}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ host.name }}"?</div>
+        <div data-block="modal-confirm-button" translate>Apply</div>
+      </div>
 
-        <div ng-hide="contentHost.readonly" class="fr">
+        <span bst-feature-flag="remote_actions">
           <span class="input-group-btn">
             <button class="btn btn-primary"
                     translate
@@ -76,15 +83,16 @@
               <li role="presentation"><a ng-click="performViaRemoteExecution(false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
               <li role="presentation"><a ng-click="performViaRemoteExecution(true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
             </ul>
-            <form id="errataActionForm" method="post" action="/katello/remote_execution">
-              <input type="hidden" name="remote_action" value="errata_install"/>
-              <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
-              <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
-              <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
-              <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
-            </form>
           </span>
-        </div>
+        </span>
+        <button class="btn btn-primary"
+                translate
+                ng-hide="denied('edit_hosts', host)"
+                ng-disabled="calculatingApplicability"
+                ng-click="calculateApplicability()">
+          Recalculate
+          <i class="fa fa-spinner fa-spin" ng-show="calculatingApplicability"></i>
+        </button>
     </span>
 
     <span data-block="no-rows-message" translate>

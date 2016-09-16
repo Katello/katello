@@ -61,6 +61,16 @@ module Katello
       assert_response :success
     end
 
+    def test_applicability
+      assert_async_task ::Actions::Katello::Host::GenerateApplicability do |hosts, use_queue|
+        hosts == [@host] && use_queue == false
+      end
+
+      put :applicability, :host_id => @host.id
+
+      assert_response :success
+    end
+
     def test_apply_unknown_errata
       put :apply, :host_id => @host.id, :errata_ids => %w(non-existant-errata)
       assert_response 404

@@ -1,0 +1,21 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr bst-table-head>
+      <th bst-table-column="name">{{ "Name" | translate }}</th>
+      <th bst-table-column="version">{{ "Version" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr bst-table-row ng-repeat="branch in table.rows">
+      <td bst-table-cell>
+        <a ui-sref="ostree-branches.details.info({branchId: branch.id})">
+          {{ branch.name }}
+        </a>
+      </td>
+      <td bst-table-cell>
+        {{ branch.version }}
+      </td>
+    </tr>
+  </tbody>
+</table>
