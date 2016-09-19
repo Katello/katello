@@ -104,22 +104,22 @@ module Katello
 
     def test_find_host
       org2 = taxonomies(:organization2)
-      assert_equal host, Katello::Host::SubscriptionFacet.find_host(host.name, host.organization)
-      assert_equal host, Katello::Host::SubscriptionFacet.find_host(host.name.upcase, host.organization)
-      assert_nil Host::SubscriptionFacet.find_host("the hostest with the mostest", host.organization)
-      assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host(host.name.upcase, org2) }
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name}, host.organization)
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, host.organization)
+      assert_nil Host::SubscriptionFacet.find_host({'network.hostname' => "the hostest with the mostest"}, host.organization)
+      assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, org2) }
     end
 
     def test_find_or_create_host_with_org
       created_host = FactoryGirl.create(:host, :organization_id => org.id)
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(created_host.name, org, 'facts' => {'network.hostname' => created_host.name})
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => created_host.name})
 
       assert_equal created_host, host
     end
 
     def test_find_or_create_host_no_org
       no_org_host = FactoryGirl.create(:host, :organization_id => nil)
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(no_org_host.name, org, 'facts' => {'network.hostname' => no_org_host.name})
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => no_org_host.name})
 
       assert_equal org, host.organization
     end
@@ -162,6 +162,34 @@ module Katello
     def test_search_by_activation_key
       host.subscription_facet.activation_keys << activation_key
       assert_includes ::Host.search_for("activation_key = \"#{activation_key.name}\""), host
+    end
+
+    def test_propose_name_from_facts
+      facts = {'network.hostname' => 'foo'}
+      assert_equal 'foo', Host::SubscriptionFacet.propose_name_from_facts(facts)
+
+      facts['network.hostname-override'] = 'foo.override'
+      assert_equal 'foo.override', Host::SubscriptionFacet.propose_name_from_facts(facts)
+
+      facts['network.fqdn'] = 'foo.domain.com'
+      assert_equal 'foo.domain.com', Host::SubscriptionFacet.propose_name_from_facts(facts)
+    end
+
+    def test_propose_existing_hostname_fqdn_exists
+      host = FactoryGirl.create(:host)
+      host.update_attributes!(:name => 'foo.bar.com')
+
+      facts = {'network.hostname' => 'foo'}
+      assert_equal 'foo', Host::SubscriptionFacet.propose_existing_hostname(facts)
+
+      facts = {'network.hostname' => 'foo', 'network.hostname-override' => 'foo.bar.com'}
+      assert_equal 'foo.bar.com', Host::SubscriptionFacet.propose_existing_hostname(facts)
+
+      facts = {'network.hostname' => 'foo', 'network.fqdn' => 'foo.bar.com'}
+      assert_equal 'foo.bar.com', Host::SubscriptionFacet.propose_existing_hostname(facts)
+
+      facts = {'network.hostname' => 'foo', 'network.hostname-override' => 'baz.com'}
+      assert_equal 'foo', Host::SubscriptionFacet.propose_existing_hostname(facts)
     end
   end
 end
