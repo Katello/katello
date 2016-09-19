@@ -192,8 +192,7 @@ module Katello
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")
     def consumer_create
       content_view_environment = find_content_view_environment
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
-                 content_view_environment.environment.organization, rhsm_params)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(content_view_environment.environment.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, rhsm_params, content_view_environment)
       host.reload
@@ -224,8 +223,7 @@ module Katello
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current = User.anonymous_admin
       activation_keys = find_activation_keys
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(params[:facts]['network.hostname'],
-                                    activation_keys.first.organization, rhsm_params)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(activation_keys.first.organization, rhsm_params)
 
       sync_task(::Actions::Katello::Host::Register, host, rhsm_params, nil, activation_keys)
 
