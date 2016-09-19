@@ -70,7 +70,8 @@ module Katello
       end
 
       def self.new_host_from_facts(facts, org, location)
-        ::Host::Managed.new(:name => facts['network.hostname'], :organization => org, :location => location, :managed => false)
+        name = propose_name_from_facts(facts)
+        ::Host::Managed.new(:name => name, :organization => org, :location => location, :managed => false)
       end
 
       def self.update_facts(host, rhsm_facts)
@@ -80,24 +81,45 @@ module Katello
         host.import_facts(rhsm_facts)
       end
 
-      def self.find_or_create_host(name, organization, rhsm_params)
-        host = find_host(name, organization)
+      def self.find_or_create_host(organization, rhsm_params)
+        host = find_host(rhsm_params[:facts], organization)
         host = Katello::Host::SubscriptionFacet.new_host_from_facts(rhsm_params[:facts], organization,
                                           Location.default_location) unless host
         host.organization = organization unless host.organization
         host
       end
 
+      def self.propose_name_from_facts(facts)
+        facts['network.fqdn'] || facts['network.hostname-override'] || facts['network.hostname']
+      end
+
+      def self.propose_existing_hostname(facts)
+        if ::Host.where(:name => facts['network.hostname'].downcase).any?
+          name = facts['network.hostname']
+        elsif facts['network.fqdn'] && ::Host.where(:name => facts['network.fqdn'].downcase).any?
+          name = facts['network.fqdn']
+        elsif facts['network.hostname-override'] && ::Host.where(:name => facts['network.hostname-override'].downcase).any?
+          name = facts['network.hostname-override']
+        else
+          name = facts['network.hostname'] #fallback to default, even if it doesn't exist
+        end
+
+        name.downcase
+      end
+
       def remove_subscriptions(pools_with_quantities)
         ForemanTasks.sync_task(Actions::Katello::Host::RemoveSubscriptions, self.host, pools_with_quantities)
       end
 
-      def self.find_host(name, organization)
-        hosts = ::Host.where(:name => name.downcase)
+      def self.find_host(facts, organization)
+        host_name = propose_existing_hostname(facts)
+        hosts = ::Host.where(:name => host_name)
+
         return nil if hosts.empty? #no host exists
         if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
           #TODO: http://projects.theforeman.org/issues/11532
-          fail _("Host is currently registered to a different org, please migrate host to %s.") % organization.name
+          fail _("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.") %
+                   {:org_name => organization.name, :host_name => host_name }
         end
         hosts.first
       end
