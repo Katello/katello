@@ -20,6 +20,7 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
     menu :top_menu,
          :activation_keys,
+         :caption => N_('Activation Keys'),
          :url => '/activation_keys',
          :url_hash => {:controller => 'katello/api/v2/activation_keys',
                        :action => 'index'},
@@ -46,7 +47,7 @@ Foreman::Plugin.register :katello do
 
     menu :top_menu,
          :gpg_keys,
-         :caption => N_('GPG keys'),
+         :caption => N_('GPG Keys'),
          :url => '/gpg_keys',
          :url_hash => {:controller => 'katello/api/v2/gpg_keys',
                        :action => 'index'},
