@@ -26,35 +26,44 @@ module ::Actions::Katello::Repository
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Create }
 
-    it 'plans' do
+    before do
       repository.expects(:save!)
       action.expects(:action_subject).with(repository)
       action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
         content_create.stubs(input: { content_id: 123 })
       end
+    end
+
+    it 'plans' do
       plan_action action, repository
     end
 
     it 'no clone flag means generate metadata in run phase' do
-      repository.expects(:save!)
-      action.expects(:action_subject).with(repository)
-      action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
-        content_create.stubs(input: { content_id: 123 })
-      end
       plan = plan_action action, repository
       run_action plan
       plan.run.label.must_equal "Actions::Katello::Repository::MetadataGenerate"
     end
 
     it 'clone flag disables metadata generation' do
-      repository.expects(:save!)
-      action.expects(:action_subject).with(repository)
-      action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
-        content_create.stubs(input: { content_id: 123 })
-      end
       plan = plan_action action, repository, true
       run_action plan
       plan.run.must_equal nil
+    end
+
+    it 'plans product repos update when sync plan present' do
+      repository.product.sync_plan = FactoryGirl.build('katello_sync_plan',
+                                                       :products => [repository.product])
+
+      plan_action action, repository
+      assert_action_planed action, ::Actions::Pulp::Repos::Update
+    end
+
+    it 'does not plan product repos update when clone flag is present' do
+      repository.product.sync_plan = FactoryGirl.build('katello_sync_plan',
+                                                       :products => [repository.product])
+
+      plan_action action, repository, true
+      refute_action_planed action, ::Actions::Pulp::Repos::Update
     end
   end
 
