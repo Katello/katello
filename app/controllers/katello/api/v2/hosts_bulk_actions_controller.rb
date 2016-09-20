@@ -12,6 +12,11 @@ module Katello
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
 
+    resource_description do
+      api_version 'v2'
+      api_base_url "/api"
+    end
+
     PARAM_ACTIONS = {
       :install_content => {
         :package => :install_packages,
