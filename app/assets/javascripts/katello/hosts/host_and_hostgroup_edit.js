@@ -257,7 +257,7 @@ function os_selected(element){
                               'lifecycle_environment_id', 'content_source_id', 'architecture_id', 'hostgroup_id',
                               'medium_id', 'kickstart_repository_id']);
   var url = $(element).attr('data-url');
-  foreman.tools.showSpinner();
+  tfm.tools.showSpinner();
   $.ajax({
     data: attrs,
     type:'post',
