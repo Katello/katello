@@ -65,6 +65,20 @@ module Katello
       Util::Package.build_nvra(self.attributes.with_indifferent_access)
     end
 
+    def hosts_applicable(org_id = nil)
+      if org_id.present?
+        self.content_facets.joins(:host).where("#{::Host.table_name}.organization_id" => org_id)
+      else
+        self.content_facets.joins(:host)
+      end
+    end
+
+    def hosts_available(org_id = nil)
+      self.hosts_applicable(org_id).joins("INNER JOIN #{Katello::RepositoryRpm.table_name} on \
+        #{Katello::RepositoryRpm.table_name}.rpm_id = #{self.id}").joins(:content_facet_repositories).
+        where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryRpm.table_name}.repository_id").uniq
+    end
+
     def self.installable_for_hosts(hosts = nil)
       query = Katello::Rpm.joins(:content_facet_applicable_rpms).joins(:repository_rpms).
         joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \

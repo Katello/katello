@@ -156,13 +156,25 @@ module Katello
       refute_includes ::Host.search_for("applicable_rpms = #{rpm_three.nvra}"), host_one
     end
 
-    def test_installable_rpms_searchable
+    def test_upgradable_rpms_searchable
       assert_includes rpm_one.repositories, repo
       rpm_two.repositories = []
       host_one.content_facet.bound_repositories << repo
 
-      assert_includes ::Host.search_for("installable_rpms = #{rpm_one.nvra}"), host_one
-      refute_includes ::Host.search_for("installable_rpms = #{rpm_two.nvra}"), host_one
+      assert_includes ::Host.search_for("upgradable_rpms = #{rpm_one.nvra}"), host_one
+      refute_includes ::Host.search_for("upgradable_rpms = #{rpm_two.nvra}"), host_one
+    end
+
+    def test_installable_rpms
+      lib_applicable = host_one.applicable_rpms
+      cf_one = host_one.content_facet
+
+      cf_one.bound_repositories = []
+      cf_one.save!
+
+      assert_equal_arrays lib_applicable, cf_one.applicable_rpms
+      refute_equal_arrays lib_applicable, cf_one.installable_rpms
+      refute_includes cf_one.installable_rpms, rpm_one
     end
   end
 

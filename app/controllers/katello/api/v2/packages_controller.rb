@@ -14,8 +14,7 @@ module Katello
       render :json => rpms.pluck(col)
     end
 
-    api :GET, "/hosts/:host_id/packages/applicable", N_("List :resource_id")
-    api :GET, "/:resource_id", N_("List :resource_id")
+    api :GET, "/packages", N_("List packages")
     api :GET, "/content_views/:content_view_id/filters/:filter_id/:resource_id", N_("List :resource_id")
     api :GET, "/content_view_filters/:content_view_filter_id/:resource_id", N_("List :resource_id")
     api :GET, "/repositories/:repository_id/:resource_id", N_("List :resource_id")

@@ -80,7 +80,6 @@ Foreman::Application.routes.draw do
             get :auto_complete_search, :on => :collection
 
             collection do
-              get :applicable, :controller => :packages, :action => :index
               put :remove
               put :install
               put :upgrade

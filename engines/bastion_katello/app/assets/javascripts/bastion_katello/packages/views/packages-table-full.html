@@ -3,6 +3,7 @@
     <tr bst-table-head>
       <th bst-table-column="name" sortable>{{ "RPM" | translate }}</th>
       <th bst-table-column="version">{{ "Summary" | translate }}</th>
+      <th bst-table-column="numberOfContentHosts">{{ "Content Host Counts" | translate }}</th>
     </tr>
   </thead>
 
@@ -16,6 +17,10 @@
       </td>
       <td bst-table-cell>
         {{ package.summary }}
+      </td>
+      <td bst-table-cell>
+        <span translate>{{ package.hosts_applicable_count || 0 }} Applicable, </span>
+        <span translate>{{ package.hosts_available_count || 0 }} Upgradable</span>
       </td>
     </tr>
   </tbody>

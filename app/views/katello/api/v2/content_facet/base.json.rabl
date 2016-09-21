@@ -14,3 +14,11 @@ node :errata_counts do |content_facet|
   errata = content_facet.installable_errata
   partial('katello/api/v2/errata/counts', :object => Katello::RelationPresenter.new(errata))
 end
+
+node :applicable_package_count do |facet|
+  facet.applicable_rpms.count
+end
+
+node :upgradable_package_count do |facet|
+  facet.installable_rpms.count
+end

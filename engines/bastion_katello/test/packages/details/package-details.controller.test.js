@@ -33,7 +33,8 @@ describe('Controller: PackageDetailsController', function() {
 
     it("can generate an installed package search string", function() {
         $scope.package = fakePackage;
-        expect($scope.createSearchString()).toBe("installed_package=foo-1.0-2.greatestArch")
+        expect($scope.createSearchString('installed_package')).toBe("installed_package=foo-1.0-2.greatestArch")
+        expect($scope.createSearchString('applicable_package')).toBe("applicable_package=foo-1.0-2.greatestArch")
     })
 
     it("fetches hosts counts", function() {
@@ -42,7 +43,7 @@ describe('Controller: PackageDetailsController', function() {
         spyOn(Host, 'get').and.callThrough();
 
         $scope.fetchHostCount();
-        expect(Host.get).toHaveBeenCalledWith({per_page: 0, search: $scope.createSearchString(), 'organization_id': currentOrganization},
+        expect(Host.get).toHaveBeenCalledWith({per_page: 0, search: $scope.createSearchString('installed_package'), 'organization_id': currentOrganization},
             jasmine.any(Function));
         expect($scope.installedPackageCount).toBe(5)
     })

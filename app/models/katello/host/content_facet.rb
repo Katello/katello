@@ -54,6 +54,15 @@ module Katello
         self.applicable_errata.in_repositories(repos).uniq
       end
 
+      def installable_rpms(env = nil, content_view = nil)
+        repos = if env && content_view
+                  Katello::Repository.in_environment(env).in_content_views([content_view])
+                else
+                  self.bound_repositories.pluck(:id)
+                end
+        self.applicable_rpms.in_repositories(repos).uniq
+      end
+
       def import_applicability(partial = false)
         import_errata_applicability(partial)
         import_rpm_applicability(partial)
