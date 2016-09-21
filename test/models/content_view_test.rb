@@ -393,11 +393,6 @@ module Katello
       end
     end
 
-    def test_content_view_version_publish_description
-      version = @library_view.create_new_version("Awesome")
-      assert_equal "Awesome", @library_view.versions.find(version.id).description
-    end
-
     def test_search_name
       assert_equal @library_view, ContentView.search_for("name = \"#{@library_view.name}\"").first
     end

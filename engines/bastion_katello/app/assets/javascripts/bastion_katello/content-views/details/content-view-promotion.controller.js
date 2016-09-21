@@ -95,7 +95,10 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
 
         $scope.promote = function () {
             $scope.promoting = true;
-            ContentViewVersion.promote({id: $scope.version.id, 'environment_id': $scope.selectedEnvironment.id, force: true},
+            ContentViewVersion.promote({id: $scope.version.id,
+                                        'environment_id': $scope.selectedEnvironment.id,
+                                        'description': $scope.description,
+                                        force: true},
                 success, failure);
         };
 

@@ -1,6 +1,6 @@
 object @resource
 
-attributes :user, :status
+attributes :user, :status, :description
 
 child :environment => :environment do |_h|
   attributes :id, :name
@@ -8,10 +8,6 @@ end
 
 node :version do |h|
   h.content_view_version.version
-end
-
-node :description do |h|
-  h.content_view_version.description
 end
 
 node :publish do |h|

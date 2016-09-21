@@ -28,7 +28,7 @@ module ::Actions::Katello::ContentView
       assert_empty content_view_version.history
       task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
       ::Actions::Katello::ContentView::PromoteToEnvironment.any_instance.stubs(:task).returns(task)
-      create_and_plan_action(action_class, content_view_version, environment)
+      create_and_plan_action(action_class, content_view_version, environment, 'description')
       refute_empty content_view_version.history
     end
   end

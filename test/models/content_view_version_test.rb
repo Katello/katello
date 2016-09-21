@@ -14,6 +14,24 @@ module Katello
       @cvv_with_package_groups = ContentViewVersion.find(katello_content_view_versions(:library_default_version).id)
     end
 
+    def test_description
+      ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => @cvv.id,
+                                            :status => 'successful',
+                                            :user => User.first,
+                                            :action => Katello::ContentViewHistory.actions[:publish],
+                                            :notes => "Success description"
+                                           )
+
+      ::Katello::ContentViewHistory.create!(:katello_content_view_version_id => @cvv.id,
+                                            :status => 'failed',
+                                            :user => User.first,
+                                            :action => Katello::ContentViewHistory.actions[:publish],
+                                            :notes => "Failed description"
+                                           )
+
+      assert 'Success description', @cvv.description
+    end
+
     def test_promotable_in_sequence
       @cvv.expects(:environments).returns([@cvv.organization.library]).at_least_once
       assert @cvv.promotable?(@dev)
