@@ -31,6 +31,17 @@
        ng-show="working">
   </div>
 
+  <label translate>Description</label>
+  <div>
+    <textarea id="description"
+      name="description"
+      ng-model="description"
+      rows="10"
+      cols="80"
+      tabindex="1">
+    </textarea>
+  </div>
+
   <div>
     <button class="btn btn-primary btn-lg" ng-disabled="promoting || !selectedEnvironment" ng-click="verifySelection()" translate>
       Promote Version

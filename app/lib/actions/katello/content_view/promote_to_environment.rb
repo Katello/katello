@@ -5,11 +5,12 @@ module Actions
       class PromoteToEnvironment < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
-        def plan(version, environment)
+        def plan(version, environment, description)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
-                                                          :action => 'promotion')
+                                                          :action => 'promotion',
+                                                          :notes => description)
 
           sequence do
             plan_action(ContentView::AddToEnvironment, version, environment)

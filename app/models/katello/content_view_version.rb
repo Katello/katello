@@ -105,6 +105,10 @@ module Katello
       "#{content_view} #{version}"
     end
 
+    def description
+      history.publish.successful.first.try(:notes)
+    end
+
     def default_content_view?
       default?
     end

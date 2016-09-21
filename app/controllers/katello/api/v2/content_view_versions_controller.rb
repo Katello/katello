@@ -52,10 +52,11 @@ module Katello
     param :force, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction")
     param :environment_id, :identifier, :deprecated => true, :desc => N_("LifeCycle Environment identifier")
     param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment")
+    param :description, String, :desc => N_("The description for the content view version promotion")
     def promote
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
-                        @version, @environments, is_force)
+                        @version, @environments, is_force, params[:description])
       respond_for_async :resource => task
     end
 

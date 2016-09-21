@@ -28,10 +28,11 @@ module Actions
           validate_environments(environments, old_version)
 
           new_minor = old_version.content_view.versions.where(:major => old_version.major).maximum(:minor) + 1
-          self.new_content_view_version = old_version.content_view.create_new_version(description, old_version.major, new_minor, all_components)
+          self.new_content_view_version = old_version.content_view.create_new_version(old_version.major, new_minor, all_components)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => new_content_view_version, :user => ::User.current.login,
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
-                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task,
+                                                          :notes => description)
 
           copy_action_outputs = []
 

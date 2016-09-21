@@ -9,14 +9,16 @@ module Actions
         def plan(content_view, description = "")
           action_subject(content_view)
           content_view.check_ready_to_publish!
-          version = content_view.create_new_version(description)
+          version = content_view.create_new_version
           library = content_view.organization.library
 
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
-                                                          :task => self.task)
+                                                          :task => self.task,
+                                                          :notes => description
+                                                         )
 
           sequence do
             plan_action(ContentView::AddToEnvironment, version, library)

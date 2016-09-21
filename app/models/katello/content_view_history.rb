@@ -18,7 +18,9 @@ module Katello
     validates :action, presence: true
 
     scope :active, -> { where(:status => IN_PROGRESS) }
+    scope :successful, -> { where(:status => SUCCESSFUL) }
     alias_method :version, :content_view_version
+    alias_attribute :description, :notes
 
     scoped_search :on => :name, :in => :environment, :rename => :environment, :complete_value => true
 
