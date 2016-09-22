@@ -24,13 +24,13 @@ module Katello
         has_many :applicable_rpms, :through => :content_facet
 
         scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
-        scoped_search :in => :content_facet, :on => :content_view_id, :rename => :content_view_id
+        scoped_search :in => :content_facet, :on => :content_view_id, :rename => :content_view_id, :only_explicit => true
         scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
-        scoped_search :in => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id
-        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata
-        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata
-        scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms
-        scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms
+        scoped_search :in => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id, :only_explicit => true
+        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
+        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
+        scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
+        scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
 
         accepts_nested_attributes_for :content_facet, :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? }
       end
