@@ -57,6 +57,12 @@ module Katello
     scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
 
+    def self.with_subscribable_content
+      joins(:repositories).uniq.
+        where("#{Katello::Repository.table_name}.content_type IN (?)",
+              Repository::SUBSCRIBABLE_TYPES)
+    end
+
     def self.enabled
       self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)",
                  Product.redhat.joins(:repositories).uniq.pluck(:id), Product.custom.pluck(:id))
@@ -209,7 +215,9 @@ module Katello
     end
 
     def available_content
-      self.productContent.find_all { |content| self.repositories.where(:content_id => content.content.id).any? }
+      self.productContent.select do |content|
+        self.repositories.subscribable.where(content_id: content.content.id).exists?
+      end
     end
 
     def related_resources

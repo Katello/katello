@@ -12,6 +12,11 @@ module Katello
 
     scope :in_organization, ->(org) { where(:organization => org) }
 
+    def self.with_subscribable_content
+      joins(:products).
+        where("#{Katello::Product.table_name}.id" => Product.with_subscribable_content)
+    end
+
     def redhat?
       self.products.any? { |product| product.redhat? }
     end

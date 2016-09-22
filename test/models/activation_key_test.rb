@@ -125,5 +125,17 @@ module Katello
       @dev_key.stubs(:subscription_facets).returns(['host one', 'host two'])
       assert @dev_key.valid?
     end
+
+    def test_available_subscriptions
+      pool_one = katello_pools(:pool_one)
+      pool_two = katello_pools(:pool_two)
+      fedora = katello_products(:fedora)
+      pool_two.subscription.products.delete(fedora) # pool two no longer contains sub content
+      cp_pools = [{'id' => 'abc123'}, {'id' => 'xyz123'}]
+
+      @dev_key.stubs(:get_pools).returns(cp_pools)
+      @dev_key.stubs(:get_key_pools).returns([])
+      assert_equal [pool_one], @dev_key.available_subscriptions
+    end
   end
 end

@@ -18,5 +18,13 @@ module Katello
       assert @basic.expiring_soon?
       refute @basic.recently_expired?
     end
+
+    def test_with_subscribable_content
+      fedora = katello_products(:fedora)
+      assert_includes Subscription.with_subscribable_content, @other
+
+      @other.products.delete(fedora)
+      refute_includes Subscription.with_subscribable_content, @other
+    end
   end
 end
