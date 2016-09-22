@@ -22,12 +22,12 @@ module Katello
         scoped_search :on => :release_version, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :autoheal, :in => :subscription_facet, :complete_value => true
         scoped_search :on => :service_level, :in => :subscription_facet, :complete_value => true
-        scoped_search :on => :last_checkin, :in => :subscription_facet, :complete_value => true
+        scoped_search :on => :last_checkin, :in => :subscription_facet, :complete_value => true, :only_explicit => true
         scoped_search :on => :registered_through, :in => :subscription_facet, :complete_value => true
-        scoped_search :on => :registered_at, :in => :subscription_facet, :rename => :registered_at
+        scoped_search :on => :registered_at, :in => :subscription_facet, :rename => :registered_at, :only_explicit => true
         scoped_search :on => :uuid, :in => :subscription_facet, :rename => :subscription_uuid
         scoped_search :in => :activation_keys, :on => :name, :rename => :activation_key, :complete_value => true, :ext_method => :find_by_activation_key
-        scoped_search :in => :activation_keys, :on => :id, :rename => :activation_key_id, :complete_value => true, :ext_method => :find_by_activation_key_id
+        scoped_search :in => :activation_keys, :on => :id, :rename => :activation_key_id, :complete_value => true, :ext_method => :find_by_activation_key_id, :only_explicit => true
       end
 
       def update_action
