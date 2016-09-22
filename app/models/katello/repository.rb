@@ -24,6 +24,7 @@ module Katello
     OSTREE_TYPE = 'ostree'.freeze
 
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
+    SUBSCRIBABLE_TYPES = [YUM_TYPE, OSTREE_TYPE].freeze
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
     belongs_to :product, :inverse_of => :repositories
@@ -115,6 +116,7 @@ module Katello
     scope :non_puppet, -> { where("content_type != ?", PUPPET_TYPE) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
+    scope :subscribable, -> { where(content_type: SUBSCRIBABLE_TYPES) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true
