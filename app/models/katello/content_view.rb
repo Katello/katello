@@ -50,7 +50,6 @@ module Katello
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :organization_id, :presence => true
     validate :check_non_composite_components
-    validate :check_repo_conflicts
     validate :check_puppet_conflicts
     validates :composite, :inclusion => [true, false]
 
@@ -227,6 +226,17 @@ module Katello
       composite? ? repositories_to_publish.pluck(&:id) : repository_ids
     end
 
+    def repositories_to_publish_by_library_instance
+      # retrieve the list of repositories in a hash, where the key
+      # is the library instance id, and the value is an array
+      # of the repositories for that instance.
+      repositories_to_publish.inject({}) do |result, repo|
+        result[repo.library_instance_id] ||= []
+        result[repo.library_instance_id] << repo
+        result
+      end
+    end
+
     # Returns actual puppet modules associated with all components
     def component_modules_to_publish
       composite? ? components.flat_map { |version| version.puppet_modules } : nil
@@ -323,14 +333,6 @@ module Katello
     def check_non_composite_components
       if !composite? && components.present?
         errors.add(:base, _("Cannot add component versions to a non-composite content view"))
-      end
-    end
-
-    def check_repo_conflicts
-      duplicate_repositories.each do |repo|
-        versions = components.with_library_repo(repo).uniq.map(&:name).join(", ")
-        msg = _("Repository conflict: '%{repo}' is in %{versions}.") % {repo: repo.name, versions: versions}
-        errors.add(:base, msg)
       end
     end
 

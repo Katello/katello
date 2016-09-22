@@ -18,9 +18,9 @@ module Actions
           sequence do
             plan_action(ContentView::AddToEnvironment, version, library)
             concurrence do
-              content_view.repositories_to_publish.each do |repository|
+              content_view.repositories_to_publish_by_library_instance.each do |_library_instance, repositories|
                 sequence do
-                  clone_to_version = plan_action(Repository::CloneToVersion, repository, version)
+                  clone_to_version = plan_action(Repository::CloneToVersion, repositories, version)
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
               end

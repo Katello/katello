@@ -227,13 +227,8 @@ module Katello
       v1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
       v2 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
 
-      refute composite.update_attributes(component_ids: [v1.id, v2.id])
-      assert_equal 2, composite.errors.count # docker and yum repos
-      assert composite.errors.full_messages.first =~ /^Repository conflict/
-
-      assert_raises(RuntimeError) do
-        composite.components << v1
-      end
+      assert composite.update_attributes(component_ids: [v1.id, v2.id])
+      assert_equal 0, composite.errors.count # docker and yum repos
     end
 
     def test_puppet_module_conflicts

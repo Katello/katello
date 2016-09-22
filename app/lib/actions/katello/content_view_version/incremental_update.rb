@@ -35,8 +35,8 @@ module Actions
 
           sequence do
             concurrence do
-              repos_to_copy(old_version, new_components).each do |source_repo|
-                copy_action_outputs += copy_repo(source_repo, new_content_view_version, content, dep_solve)
+              repos_to_copy(old_version, new_components).each do |source_repos|
+                copy_action_outputs += copy_repos(source_repos, new_content_view_version, content, dep_solve)
               end
 
               sequence do
@@ -54,16 +54,16 @@ module Actions
           end
         end
 
-        def repos_to_copy(old_version, components)
+        def repos_to_copy(old_version, new_components)
           old_version.archived_repos.map do |source_repo|
-            components_repo_instance(source_repo, components) || source_repo
+            components_repo_instances(source_repo, new_components)
           end
         end
 
-        def copy_repo(source_repo, new_version, content, dep_solve)
+        def copy_repos(source_repos, new_version, content, dep_solve)
           copy_output = []
           sequence do
-            new_repo = plan_action(Repository::CloneToVersion, source_repo, new_version, true).new_repository
+            new_repo = plan_action(Repository::CloneToVersion, source_repos, new_version, true).new_repository
             copy_output = copy_yum_content(new_repo, dep_solve, content[:package_ids], content[:errata_ids])
 
             plan_action(Katello::Repository::MetadataGenerate, new_repo, nil)
@@ -72,15 +72,43 @@ module Actions
           copy_output
         end
 
-        # for a given repo, find its instance out of a list of content view versions.  Since these versions
-        #  are all part of a composite, there should only be one
-        def components_repo_instance(repo, component_versions)
-          possible_repos = component_versions.map do |cvv|
-            cvv.repositories.select do |component_repo|
-              component_repo.library_instance_id == repo.library_instance_id
+        # For a given repo, find it's instances in both the new and old component versions.
+        # This is necessary, since a composite content view may have components containing
+        # the same repository within multiple component views and all of the source repos
+        # will be needed to publish the new repo.
+        def components_repo_instances(old_version_repo, new_component_versions)
+          # Attempt to locate the repo instance in the new component versions
+          new_repos = nil
+          new_component_versions.map do |cvv|
+            cvv.repositories.each do |component_repo|
+              if component_repo.library_instance_id == old_version_repo.library_instance_id
+                new_repos ||= []
+                new_repos << component_repo
+                break # each CVV can only have 1 repo with this instance id, so go to next CVV
+              end
             end
           end
-          possible_repos.flatten.first
+
+          # If we found it, we need to also locate the repo instance in the old component
+          # versions, but omit the one changed by the new component version.
+          if new_repos
+            old_repos = nil
+            old_version_repo.content_view_version.components.each do |component|
+              component.archived_repos.each do |component_repo|
+                # if the archived repo is not the same source as one of the new repos, include it
+                new_repos.each do |new_repo|
+                  if (new_repo.library_instance_id == component_repo.library_instance_id) &&
+                      (new_repo.content_view.id != component_repo.content_view.id)
+                    old_repos ||= []
+                    old_repos << component_repo
+                  end
+                end
+              end
+            end
+            new_repos.concat(old_repos)
+          else
+            [old_version_repo]
+          end
         end
 
         def run
