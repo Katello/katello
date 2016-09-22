@@ -118,5 +118,20 @@ module Katello
 
       assert @redhat_product.used_by_another_org?
     end
+
+    def test_available_content
+      product = katello_products(:fedora)
+      fedora = katello_repositories(:fedora_17_x86_64)
+      puppet = katello_repositories(:p_forge)
+      puppet.update_attributes(content_id: 2)
+      Repository.any_instance.stubs(:exist_for_environment?).returns(true)
+      product.repositories = [fedora, puppet]
+
+      fedora_content = OpenStruct.new(content: OpenStruct.new(id: fedora.content_id))
+      puppet_content = OpenStruct.new(content: OpenStruct.new(id: puppet.content_id))
+
+      product.stubs(:productContent).returns([fedora_content, puppet_content])
+      assert_equal [fedora_content], product.available_content
+    end
   end
 end
