@@ -175,12 +175,12 @@ Foreman::Plugin.register :katello do
   logger :action, :enabled => true
   logger :manifest_import_logger, :enabled => true
 
-  widget 'errata_widget', :name => 'Errata Widget', :sizey => 1, :sizex => 6
-  widget 'content_views_widget', :name => 'Content Views Widget', :sizey => 1, :sizex => 6
-  widget 'sync_widget', :name => 'Sync Widget', :sizey => 1, :sizex => 6
-  widget 'subscription_widget', :name => 'Content Host Subscription Status Widget', :sizey => 1, :sizex => 6
-  widget 'subscription_status_widget', :name => 'Subscription Status Widget', :sizey => 1, :sizex => 6
-  widget 'host_collection_widget', :name => 'Host Collection Widget', :sizey => 1, :sizex => 6
+  widget 'errata_widget', :name => 'Latest Errata', :sizey => 1, :sizex => 6
+  widget 'content_views_widget', :name => 'Content Views', :sizey => 1, :sizex => 6
+  widget 'sync_widget', :name => 'Sync Overview', :sizey => 1, :sizex => 6
+  widget 'subscription_widget', :name => 'Host Subscription Status', :sizey => 1, :sizex => 6
+  widget 'subscription_status_widget', :name => 'Subscription Status', :sizey => 1, :sizex => 6
+  widget 'host_collection_widget', :name => 'Host Collections', :sizey => 1, :sizex => 6
 
   extend_page("smart_proxies/show") do |context|
     context.add_pagelet :main_tabs,
