@@ -26,13 +26,13 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   end
 
   test "kickstart_repository_options should handle os - selected call with all params" do
-    self.params = {
+    self.params = {"host" => {
       "operatingsystem_id" => @os.id,
       "content_view_id" => @cv.id,
       "lifecycle_environment_id" => @env.id,
       "content_source_id" => @content_source.id,
       "architecture_id" => @arch.id
-    }.with_indifferent_access
+    }}.with_indifferent_access
     ret = [{:name => "boo" }]
     ::Operatingsystem.expects(:find).with(@os.id).returns(@os).at_least_once
     @os.expects(:kickstart_repos).returns(ret).with do |host|
