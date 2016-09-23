@@ -287,7 +287,7 @@ module Katello
 
       if !filepaths.blank?
         sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths)
-        render :json => {:status => "success"}
+        render :json => {:status => "success", :filenames => filepaths.map { |item| item[:filename] }}
       else
         fail HttpErrors::BadRequest, _("No file uploaded")
       end

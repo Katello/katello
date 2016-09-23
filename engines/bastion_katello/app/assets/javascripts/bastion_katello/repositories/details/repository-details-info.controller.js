@@ -81,7 +81,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         };
 
         $scope.uploadContent = function (content) {
-            var returnData, error;
+            var returnData, error, uploaded;
 
             if (content) {
                 try {
@@ -95,7 +95,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 }
 
                 if (returnData !== null && returnData.status === 'success') {
-                    $scope.uploadSuccessMessages = [translate('Content successfully uploaded')];
+                    uploaded = returnData.filenames.join(', ');
+                    $scope.uploadSuccessMessages = [translate('Successfully uploaded content: ') + uploaded];
                     $scope.repository.$get();
                     updateRepositoriesTable();
                 } else {
