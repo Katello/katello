@@ -17,6 +17,7 @@ module Actions
           history = ::Katello::ContentViewHistory.create!(:content_view_version => content_view_version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                          :action => ::Katello::ContentViewHistory.actions[:export],
                                                           :task => self.task)
 
           plan_action(Katello::Repository::Export, repos, export_to_iso, since, iso_size,

@@ -18,6 +18,7 @@ module Actions
                                                           :environment => environment,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                          :action => ::Katello::ContentViewHistory.actions[:removal],
                                                           :task => self.task)
 
           plan_action(ContentViewEnvironment::Destroy, cv_env)

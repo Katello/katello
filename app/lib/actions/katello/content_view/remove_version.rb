@@ -9,6 +9,7 @@ module Actions
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                          :action => ::Katello::ContentViewHistory.actions[:removal],
                                                           :task => self.task)
 
           plan_action(ContentViewVersion::Destroy, version)
