@@ -115,7 +115,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
         spyOn($scope.detailsTable, 'replaceRow');
         spyOn($scope.repository, '$get');
-        $scope.uploadContent('<pre>{"status": "success"}</pre>', true);
+        $scope.uploadContent('<pre>{"status": "success", "filenames": ["uploaded_file"]}</pre>', true);
 
         expect($scope.uploadErrorMessages.length).toBe(0);
         expect($scope.uploadSuccessMessages.length).toBe(1);
