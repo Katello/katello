@@ -74,7 +74,7 @@ module Katello
     end
 
     def test_active_history_nil_task
-      @cvv.history = [ContentViewHistory.new(:status => ContentViewHistory::IN_PROGRESS, :user => 'admin')]
+      @cvv.history = [ContentViewHistory.new(:status => ContentViewHistory::IN_PROGRESS, :user => 'admin', :action => 'publish')]
       assert_empty @cvv.active_history
     end
 

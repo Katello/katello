@@ -12,8 +12,11 @@ module Actions
           version = content_view.create_new_version(description)
           library = content_view.organization.library
 
-          history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
-                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
+          history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
+                                                          :user => ::User.current.login,
+                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                          :action => ::Katello::ContentViewHistory.actions[:publish],
+                                                          :task => self.task)
 
           sequence do
             plan_action(ContentView::AddToEnvironment, version, library)

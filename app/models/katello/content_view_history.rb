@@ -15,11 +15,19 @@ module Katello
     validates_lengths_from_database
     validates :status, :inclusion => {:in          => STATUSES,
                                       :allow_blank => false}
+    validates :action, presence: true
 
     scope :active, -> { where(:status => IN_PROGRESS) }
     alias_method :version, :content_view_version
 
     scoped_search :on => :name, :in => :environment, :rename => :environment, :complete_value => true
+
+    enum action: {
+      publish: 1,
+      promotion: 2,
+      removal: 3,
+      export: 4
+    }
 
     def content_view
       self.content_view_version.try(:content_view)
@@ -42,14 +50,13 @@ module Katello
     end
 
     def humanized_action
-      case self.task.try(:label)
-      when "Actions::Katello::ContentViewVersion::Export"
+      if export?
         _("Exported version")
-      when "Actions::Katello::ContentView::Publish"
+      elsif publish?
         _("Published new version")
-      when "Actions::Katello::ContentView::Promote"
+      elsif promotion?
         _("Promoted to %{environment}") % { :environment => self.environment.try(:name) || _('Unknown') }
-      when "Actions::Katello::ContentView::Remove"
+      elsif removal?
         _("Deleted from %{environment}") % { :environment => self.environment.try(:name) || _('Unknown')}
       else
         _("Unknown Action")

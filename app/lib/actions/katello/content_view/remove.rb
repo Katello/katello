@@ -41,6 +41,7 @@ module Actions
                                                                     :user => ::User.current.login,
                                                                     :environment => cve.environment,
                                                                     :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                                    :action => ::Katello::ContentViewHistory.actions[:removal],
                                                                     :task => self.task)
               plan_action(ContentViewEnvironment::Destroy,
                           cve,
@@ -51,6 +52,7 @@ module Actions
             versions.each do |version|
               ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                     :user => ::User.current.login,
+                                                    :action => ::Katello::ContentViewHistory.actions[:removal],
                                                     :status => ::Katello::ContentViewHistory::IN_PROGRESS, :task => self.task)
               plan_action(ContentViewVersion::Destroy, version,
                           :skip_environment_check => true,
