@@ -267,6 +267,11 @@ module Katello
       end
     end
 
+    def copy_library_instance_attributes
+      self.unprotected = library_instance.unprotected
+      self.checksum_type = library_instance.checksum_type
+    end
+
     # Returns true if the pulp_task_id was triggered by the last synchronization
     # action for the repository. Dynflow action handles the synchronization
     # by it's own so no need to synchronize it again in this callback. Since the

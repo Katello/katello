@@ -342,6 +342,10 @@ module ::Actions::Katello::Repository
       clone = mock
       action.expects(:find_or_build_environment_clone).returns(clone)
       clone.expects(:new_record?).returns(false)
+      clone.expects(:copy_library_instance_attributes)
+      clone.expects(:save!)
+      ::Katello::Repository.expects(:needs_distributor_updates).with([clone]).returns([])
+
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
       assert_action_planed_with(action, ::Actions::Katello::Repository::CloneDockerContent, source_repo, clone)
@@ -374,6 +378,10 @@ module ::Actions::Katello::Repository
       clone = mock
       action.expects(:find_or_build_environment_clone).returns(clone)
       clone.expects(:new_record?).returns(false)
+      clone.expects(:copy_library_instance_attributes)
+      clone.expects(:save!)
+      ::Katello::Repository.expects(:needs_distributor_updates).with([clone]).returns([])
+
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
       assert_action_planed_with(action, ::Actions::Katello::Repository::CloneOstreeContent, source_repo, clone)
