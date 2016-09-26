@@ -12,6 +12,12 @@ module Actions
               plan_action(Repository::Create, clone, true, false)
             else
               plan_action(Repository::Clear, clone)
+              clone.copy_library_instance_attributes
+              clone.save!
+
+              if ::Katello::Repository.needs_distributor_updates([clone]).first
+                plan_action(Pulp::Repository::Refresh, clone)
+              end
             end
 
             if repository.yum?
