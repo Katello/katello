@@ -100,6 +100,9 @@
           </td>
           <td bst-table-cell>{{ repository.product.name }}</td>
           <td bst-table-cell>
+            <span ng-show="repository.url && repository.last_sync == null" translate>
+              Not Synced
+            </span>
             <span ng-show="repository.url">
               {{ repository.last_sync.ended_at | date:"short" }}
             </span>
@@ -112,12 +115,12 @@
             <span ng-hide="repository.url" translate>N/A</span>
           </td>
           <td bst-table-cell>
-            <div ng-if="repository.content_counts.docker_manifest && repository.content_counts.docker_manifest > 0">
+            <div>
               <span translate>
                 {{ repository.content_counts.docker_manifest }} Docker Manifests
               </span>
             </div>
-            <div ng-if="repository.content_counts.docker_tag && repository.content_counts.docker_tag > 0">
+            <div>
               <span translate>
                 {{ repository.content_counts.docker_tag }} Docker Tags
               </span>
