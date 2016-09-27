@@ -51,23 +51,17 @@ module Katello
     end
 
     def schedule_format
-      if (self.interval != DURATION[self.interval])
-        format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
-      else
-        if self.sync_date < Time.now
-          format = nil # do not schedule tasks in past
-        else
-          format = "R1/" << self.sync_date.iso8601 << "/P1D"
-        end
-      end
-      return format
+      return nil if DURATION[self.interval].nil?
+      date = self.sync_date
+      date = next_sync_date if self.sync_date < DateTime.now
+      "#{date.iso8601}/P#{DURATION[self.interval]}"
     end
 
     def plan_zone
       self.sync_date.strftime('%Z')
     end
 
-    def next_sync
+    def next_sync_date
       return nil unless self.enabled
       now = Time.current
       next_sync = self.sync_date
@@ -100,8 +94,11 @@ module Katello
         end
       end
 
-      next_sync = next_sync.strftime('%Y/%m/%d %H:%M:%S %Z') if next_sync
       next_sync
+    end
+
+    def next_sync
+      next_sync_date.try(:strftime, '%Y/%m/%d %H:%M:%S %Z')
     end
 
     def self.humanize_class_name(_name = nil)
