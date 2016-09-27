@@ -46,10 +46,8 @@ namespace :katello do
             subscription_facet.save!
 
             host = subscription_facet.host
-            if host.name.include?('_') || host.name != host.name.downcase
-              host.name = host.name.gsub('_', '-').downcase
-              host.save!
-            end
+            host.name = ::Katello::Host::SubscriptionFacet.sanitize_name(host.name)
+            host.save! if host.name_changed?
 
             Katello::Host::SubscriptionFacet.update_facts(subscription_facet.host, candlepin_attrs[:facts])
           rescue StandardError => exception
