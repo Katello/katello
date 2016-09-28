@@ -8,14 +8,22 @@
      * @description
      *   Enter a description!
      */
-    function EnvironmentController($scope, Environment, translate, ContentService) {
+    function EnvironmentController($scope, Environment, translate, ContentService, ApiErrorHandler) {
 
         $scope.contentTypes = ContentService.contentTypes;
         $scope.errorMessages = [];
         $scope.successMessages = [];
-        $scope.environment = new Environment({id: $scope.$stateParams.environmentId});
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
 
-        $scope.environment.$get();
+        $scope.environment = Environment.get({id: $scope.$stateParams.environmentId}, function () {
+            $scope.panel.loading = false;
+        }, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
+        });
 
         $scope.save = function (environment) {
             var promise;
@@ -61,6 +69,6 @@
         .module('Bastion.environments')
         .controller('EnvironmentController', EnvironmentController);
 
-    EnvironmentController.$inject = ['$scope', 'Environment', 'translate', 'ContentService'];
+    EnvironmentController.$inject = ['$scope', 'Environment', 'translate', 'ContentService', 'ApiErrorHandler'];
 
 })();
