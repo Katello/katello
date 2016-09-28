@@ -30,8 +30,6 @@ module Actions
             else
               handle_custom_content(repository) unless skip_environment_update
             end
-
-            plan_action(Repository::DestroyMedium, repository)
           end
 
           plan_self(:user_id => ::User.current.id, :planned_destroy => planned_destroy)
