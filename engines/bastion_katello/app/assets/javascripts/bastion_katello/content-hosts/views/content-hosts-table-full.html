@@ -8,7 +8,7 @@
         {{ "Subscription Status" | translate }}
       </th>
       <th bst-table-column="status">
-        <span translate>Installable Errata</span>
+        <span translate>Installable Updates</span>
       </th>
       <th bst-table-column="os" sortable><span translate>OS</span></th>
       <th bst-table-column="lifecycle_environment" sortable><span sortable translate>Environment</span></th>
@@ -35,6 +35,20 @@
       <td>
         <a ui-sref="content-hosts.details.errata.index({hostId: host.id})">
           <span class="aligned-errata-count" errata-counts="host.content_facet_attributes.errata_counts"></span>
+        </a>
+
+        <a ui-sref="content-hosts.details.packages.applicable({hostId: host.id})">
+          <span class="aligned-errata-count">
+            <span class="errata-count">
+              <span>
+                {{ host.content_facet_attributes.upgradable_package_count || 0 }}
+              </span>
+              <i class="fa fa-cube inline-icon"
+                 ng-class="{black: host.content_facet_attributes.upgradable_package_count === 0,
+                            green: host.content_facet_attributes.upgradable_package_count > 0}"
+                 title="{{ 'Package Updates' | translate }}"></i>
+            </span>
+          </span>
         </a>
       </td>
       <td bst-table-cell>{{ host.operatingsystem_name }}</td>
