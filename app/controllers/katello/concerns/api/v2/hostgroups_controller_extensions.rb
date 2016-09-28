@@ -39,7 +39,7 @@ module Katello
         param :id, :identifier, :required => true
         param_group :hostgroup
         def update
-          process_response @hostgroup.update_attributes(params[:hostgroup])
+          process_response @hostgroup.update_attributes(hostgroup_params)
         end
 
         api :GET, "/hostgroups/:id", N_("Show a host group")
