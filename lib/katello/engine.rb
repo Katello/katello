@@ -172,7 +172,6 @@ module Katello
       ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
       ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
-      ::Medium.send :include, Katello::Concerns::MediumExtensions
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
       ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
