@@ -2,58 +2,61 @@
   <%= _("Content Host Subscription Status") %>
 </h4>
 
-<% organizations = Organization.current.present? ? [Organization.current] : User.current.allowed_organizations %>
-<% owner_infos = organizations.map(&:owner_info) %>
-<% invalid_consumer_count = owner_infos.map(&:total_invalid_compliance_consumers).reduce(:+) %>
-<% partial_consumer_count = owner_infos.map(&:total_partial_compliance_consumers).reduce(:+) %>
-<% valid_consumer_count = owner_infos.map(&:total_valid_compliance_consumers).reduce(:+) %>
-<% total_count = owner_infos.map(&:total_consumers).reduce(:+) %>
+<% unless Organization.current.present? %>
+  <p class="ca"><%= _("Please select an organization to view subscription status.") %></p>
+<% else %>
+  <% owner_info = Organization.current.owner_info %>
+  <% invalid_consumer_count = owner_info.total_invalid_compliance_consumers %>
+  <% partial_consumer_count = owner_info.total_partial_compliance_consumers %>
+  <% valid_consumer_count = owner_info.total_valid_compliance_consumers %>
+  <% total_count = owner_info.total_consumers %>
 
-<table class="table table-fixed table-striped table-bordered">
-  <thead>
-    <tr>
-      <th></th>
-      <th><%= _("Count") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <%= link_to('/content_hosts?search=subscription_status=invalid') do %>
-          <i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Invalid") %>
-        <% end %>
-      </td>
-      <td style="text-align:right">
-        <%= link_to( "#{invalid_consumer_count}", '/content_hosts?search=subscription_status=invalid')%>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= link_to('/content_hosts?search=subscription_status=partial') do %>
-          <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Partial") %>
-        <% end %>
-      </td>
-      <td style="text-align:right">
-        <%= link_to( "#{partial_consumer_count}", '/content_hosts?search=subscription_status=partial')%>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= link_to('/content_hosts?search=subscription_status=valid') do %>
-          <i class="label label-success" style="margin-right: 6px">&nbsp;</i><%= _("Valid") %>
-        <% end %>
-      </td>
-      <td style="text-align:right">
-        <%= link_to( "#{valid_consumer_count}", '/content_hosts?search=subscription_status=valid')%>
-      </td>
-    </tr>
-    <tr>
-      <td><h4>
-          <%= link_to("Total Content Hosts", '/content_hosts')%>
-      </h4></td>
-      <td style="text-align:right;">
-        <%= link_to( "#{total_count}", '/content_hosts')%>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <table class="table table-fixed table-striped table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%= _("Count") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= link_to('/content_hosts?search=subscription_status=invalid') do %>
+            <i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Invalid") %>
+          <% end %>
+        </td>
+        <td style="text-align:right">
+          <%= link_to( "#{invalid_consumer_count}", '/content_hosts?search=subscription_status=invalid')%>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= link_to('/content_hosts?search=subscription_status=partial') do %>
+            <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Partial") %>
+          <% end %>
+        </td>
+        <td style="text-align:right">
+          <%= link_to( "#{partial_consumer_count}", '/content_hosts?search=subscription_status=partial')%>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= link_to('/content_hosts?search=subscription_status=valid') do %>
+            <i class="label label-success" style="margin-right: 6px">&nbsp;</i><%= _("Valid") %>
+          <% end %>
+        </td>
+        <td style="text-align:right">
+          <%= link_to( "#{valid_consumer_count}", '/content_hosts?search=subscription_status=valid')%>
+        </td>
+      </tr>
+      <tr>
+        <td><h4>
+            <%= link_to("Total Content Hosts", '/content_hosts')%>
+        </h4></td>
+        <td style="text-align:right;">
+          <%= link_to( "#{total_count}", '/content_hosts')%>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
