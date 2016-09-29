@@ -7,7 +7,7 @@
   </h3>
 
   <nav>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" ng-show="permitted('edit_content_views', contentView)">
       <li ng-class="{active: isState('content-views.details.repositories.docker.list')}">
         <a ui-sref="content-views.details.repositories.docker.list">
           <span translate>
