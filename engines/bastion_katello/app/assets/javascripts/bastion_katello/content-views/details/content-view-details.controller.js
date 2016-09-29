@@ -29,6 +29,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         }
 
         nutupane = new Nutupane(ContentViewVersion, {'content_view_id': contentViewId});
+        nutupane.setSearchKey('contentViewVersionSearch');
         nutupane.masterOnly = true;
 
         function saveSuccess() {
