@@ -16,6 +16,7 @@ module Katello
       @environment = katello_environments(:dev)
       @content_view_version = katello_content_view_versions(:library_view_version_1)
       @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
+      @puppet_repo = katello_repositories(:p_forge)
     end
 
     def permissions
@@ -765,6 +766,11 @@ module Katello
 
     def test_export_with_bad_date
       post :export, :id => @repository.id, :since => 'November 32, 1970'
+      assert_response 400
+    end
+
+    def test_export_wrong_type
+      post :export, :id => @puppet_repo.id
       assert_response 400
     end
 

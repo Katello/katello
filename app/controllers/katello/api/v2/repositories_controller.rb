@@ -203,6 +203,8 @@ module Katello
         end
       end
 
+      fail HttpErrors::BadRequest, _("Repository content type must be 'yum' to export.") unless @repository.content_type == 'yum'
+
       task = async_task(::Actions::Katello::Repository::Export, [@repository],
                         ::Foreman::Cast.to_bool(params[:export_to_iso]),
                         params[:since].try(:to_datetime),
