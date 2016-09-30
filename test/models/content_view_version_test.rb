@@ -151,6 +151,17 @@ module Katello
       assert_include ContentViewVersion.with_puppet_module(puppet_module), puppet_cv_env.content_view_version
     end
 
+    def test_promote_puppet_environment?
+      refute @cvv.promote_puppet_environment?
+
+      @cvv.content_view.force_puppet_environment = true
+      assert @cvv.promote_puppet_environment?
+
+      @cvv.content_view.force_puppet_environment = false
+      @cvv.stubs(:puppet_module_count).returns 2
+      assert @cvv.promote_puppet_environment?
+    end
+
     def test_validate_destroyable!
       @cvv.composite_content_views = [@composite_version.content_view]
       @cvv.save!

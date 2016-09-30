@@ -191,7 +191,7 @@ module Katello
     end
 
     def view_params
-      attrs = [:name, :description, {:repository_ids => []}, {:component_ids => []}]
+      attrs = [:name, :description, :force_puppet_environment, {:repository_ids => []}, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
       attrs.push(:component_ids, :repository_ids) # For deep_munge; Remove for Rails 5
       params.require(:content_view).permit(*attrs)

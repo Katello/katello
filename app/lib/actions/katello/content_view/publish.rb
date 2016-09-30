@@ -26,7 +26,7 @@ module Actions
               end
 
               sequence do
-                has_modules = content_view.puppet_modules.any? || content_view.components.any? { |component| component.puppet_modules.any? }
+                has_modules = content_view.publish_puppet_environment?
                 plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
                 plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
                             :puppet_modules_present => has_modules)
