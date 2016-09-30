@@ -222,6 +222,12 @@ module Katello
       assert_response 400
     end
 
+    def test_promote_without_environment
+      content_view_version = FactoryGirl.create(:katello_content_view_version)
+      post :promote, :id => content_view_version.id
+      assert_response 400
+    end
+
     def test_incremental_update
       version = @library_dev_staging_view.versions.first
       errata_id = Katello::Erratum.first.uuid
