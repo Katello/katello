@@ -51,6 +51,13 @@ module Katello
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
     end
 
+    def self.applicable_to_hosts_dashboard(hosts)
+      self.joins(:content_facets).
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).
+        select("DISTINCT ON (#{self.table_name}.updated, #{self.table_name}.id) #{self.table_name}.*").
+        order("#{self.table_name}.updated desc").limit(6)
+    end
+
     def <=>(other)
       return self.errata_id <=> other.errata_id
     end

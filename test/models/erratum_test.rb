@@ -65,6 +65,13 @@ module Katello
       refute_includes errata, @enhancement
     end
 
+    def test_applicable_to_hosts_dashboard
+      errata = Erratum.applicable_to_hosts_dashboard([@host, @host_without_errata])
+      assert_includes errata, @security
+      assert_includes errata, @bugfix
+      refute_includes errata, @enhancement
+    end
+
     def test_not_applicable_to_hosts
       assert_empty Erratum.applicable_to_hosts([@host_without_errata])
     end
