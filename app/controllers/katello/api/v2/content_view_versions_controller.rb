@@ -6,7 +6,7 @@ module Katello
     before_action :find_content_view_version, :only => [:show, :promote, :destroy, :export]
     before_action :find_content_view, :except => [:incremental_update]
     before_action :find_environment, :only => [:promote, :index]
-    before_action :authorize_promotable, :only => [:promote]
+    before_action :validate_promotable, :only => [:promote]
     before_action :authorize_destroy, :only => [:destroy]
     before_action :find_version_environments, :only => [:incremental_update]
     before_action :find_puppet_module, :only => [:index]
@@ -49,7 +49,7 @@ module Katello
     api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
     param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
     param :force, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction")
-    param :environment_id, :identifier
+    param :environment_id, :identifier, :required => true, :desc => N_("LifeCycle Environment identifier")
     def promote
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
@@ -249,7 +249,9 @@ module Katello
       end
     end
 
-    def authorize_promotable
+    def validate_promotable
+      fail HttpErrors::BadRequest, _("No environment_id has been specified") if params[:environment_id].blank?
+
       return deny_access unless @environment.promotable_or_removable? && @version.content_view.promotable_or_removable?
       true
     end
