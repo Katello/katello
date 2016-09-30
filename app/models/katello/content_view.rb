@@ -114,6 +114,10 @@ module Katello
       new_view
     end
 
+    def publish_puppet_environment?
+      force_puppet_environment? || puppet_modules.any? || component_modules_to_publish.present?
+    end
+
     def promoted?
       # if the view exists in more than 1 environment, it has been promoted
       self.environments.length > 1 ? true : false

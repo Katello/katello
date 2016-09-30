@@ -3,14 +3,15 @@ require 'katello_test_helper'
 module Katello
   class ContentViewTest < ActiveSupport::TestCase
     def setup
-      User.current         = User.find(users(:admin).id)
+      User.current         = users(:admin)
       @organization        = get_organization
-      @library             = KTEnvironment.find(katello_environments(:library).id)
-      @dev                 = KTEnvironment.find(katello_environments(:dev).id)
-      @default_view        = ContentView.find(katello_content_views(:acme_default).id)
-      @library_view        = ContentView.find(katello_content_views(:library_view).id)
-      @library_dev_view    = ContentView.find(katello_content_views(:library_dev_view).id)
-      @no_environment_view = ContentView.find(katello_content_views(:no_environment_view).id)
+      @library             = katello_environments(:library)
+      @dev                 = katello_environments(:dev)
+      @default_view        = katello_content_views(:acme_default)
+      @library_view        = katello_content_views(:library_view)
+      @library_dev_view    = katello_content_views(:library_dev_view)
+      @no_environment_view = katello_content_views(:no_environment_view)
+      @puppet_module       = katello_puppet_modules(:abrt)
     end
 
     def test_create
@@ -411,6 +412,19 @@ module Katello
 
     def test_search_composite_true
       refute_includes ContentView.search_for("composite = true"), @library_view
+    end
+
+    def test_publish_puppet_environment?
+      @library_view.content_view_puppet_modules.destroy_all
+      refute @library_view.publish_puppet_environment?
+
+      @library_view.content_view_puppet_modules.create(:name => 'foo', :uuid => 'bar')
+      assert @library_view.publish_puppet_environment?
+
+      @library_view.content_view_puppet_modules.destroy_all
+      @library_view.force_puppet_environment = true
+
+      assert @library_view.publish_puppet_environment?
     end
   end
 end

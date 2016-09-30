@@ -137,6 +137,10 @@ module Katello
       self.content_view_puppet_environments.in_environment(env).first
     end
 
+    def promote_puppet_environment?
+      puppet_module_count > 0 || self.content_view.force_puppet_environment?
+    end
+
     def archived_repos
       self.default? ? self.repositories : self.repos(nil)
     end
