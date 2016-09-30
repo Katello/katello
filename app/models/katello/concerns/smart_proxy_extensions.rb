@@ -57,7 +57,8 @@ module Katello
         elsif has_feature?(PULP_NODE_FEATURE)
           path = ProxyAPI::PulpNode.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
         end
-        self.update_attribute(:puppet_path, path) if path
+        self.update_attribute(:puppet_path, path)
+        path
       end
 
       def refresh_with_puppet_path
