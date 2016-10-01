@@ -22,6 +22,10 @@ node :content_label do |repo|
   repo.content.try(:label)
 end
 
+child :environment => :environment do |_repo|
+  attribute :id, :name
+end
+
 node :content_counts do |repo|
   {
     :ostree_branch => repo.ostree_branches.count,

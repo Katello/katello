@@ -130,6 +130,7 @@ module Katello
     def index_relation_content_view(query)
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
+        query = query.archived unless params[:library] || params[:environment_id]
         query = Katello::Repository.where(:id => query.select(:library_instance_id)) if params[:library]
       elsif params[:content_view_id]
         query = filter_by_content_view(query, params[:content_view_id], params[:environment_id], params[:available_for] == 'content_view')

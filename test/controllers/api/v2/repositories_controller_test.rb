@@ -117,11 +117,12 @@ module Katello
       assert_response :success
       assert_template 'api/v2/repositories/index'
       assert_response_ids response, ids
+      assert_empty JSON.parse(response.body)['results'].collect { |repo| repo.environment.nil? }
     end
 
     def test_index_with_content_view_version_id
       version = @view.content_view_versions.first
-      ids = version.repository_ids
+      ids = version.archived_repos(&:id)
 
       response = get :index, params: { :content_view_version_id => version.id, :organization_id => @organization.id }
 
