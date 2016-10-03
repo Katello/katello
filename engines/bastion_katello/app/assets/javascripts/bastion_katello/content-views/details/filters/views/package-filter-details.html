@@ -41,10 +41,10 @@
                ng-change="selectAll(allSelected)"
                ng-hide="denied('edit_content_views', contentView)"/>
       </th>
-      <th translate>RPM Name</th>
-      <th translate>Architecture</th>
-      <th class="col-sm-5" translate>Detail</th>
-      <th class="col-sm-2"></th>
+      <th class="col-sm-3" translate>RPM Name</th>
+      <th class="col-sm-1" translate>Architecture</th>
+      <th class="col-sm-6" translate>Detail</th>
+      <th></th>
     </tr>
   </thead>
 
@@ -68,7 +68,7 @@
       </td>
 
       <td class="container">
-              <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
+              <span ng-class="{ 'col-sm-12': rule.type === 'all', 'col-sm-5': rule.type != 'all'}">
                 <select class="form-control"
                         ng-model="rule.type"
                         ng-change="clearValues(rule)"
@@ -82,7 +82,7 @@
               </span>
 
               <span ng-show="rule.type === 'greater' || rule.type === 'less' || rule.type === 'range'">
-                <span class="col-sm-5">
+                <span class="col-sm-3">
                   <input type="text"
                          class="form-control"
                          ng-model="rule.min_version"
@@ -90,7 +90,7 @@
                          ng-disabled="rule.type === 'less'"/>
                 </span>
                 <span class="fl">-</span>
-                <span class="col-sm-5">
+                <span class="col-sm-3">
                   <input type="text"
                          class="form-control"
                          ng-model="rule.max_version"
@@ -142,7 +142,7 @@
       </td>
 
       <td>
-              <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
+              <span ng-class="{ 'col-sm-12': rule.type === 'all', 'col-sm-3': rule.type != 'all'}">
                 <select class="form-control"
                         ng-model="rule.type"
                         ng-hide="denied('edit_content_views', contentView)"
@@ -158,15 +158,15 @@
               </span>
 
               <span ng-show="rule.type === 'greater' || rule.type === 'less' || rule.type === 'range'">
-                <span class="col-sm-5">
+                <span class="col-sm-4">
                   <input type="text"
                          class="form-control"
                          ng-model="rule.min_version"
                          ng-readonly="!rule.editMode"
                          ng-disabled="rule.type === 'less'"/>
                 </span>
-                <span class="fl" ng-show="rule.type === 'range' && rule.editMode">-</span>
-                <span class="col-sm-5">
+                <span class="fl">-</span>
+                <span class="col-sm-4">
                   <input type="text"
                          class="form-control"
                          ng-model="rule.max_version"
@@ -176,7 +176,7 @@
               </span>
 
               <span ng-show="rule.type === 'equal'">
-                <span class="col-sm-5">
+                <span class="col-sm-9">
                   <input type="text"
                          class="form-control"
                          ng-model="rule.version"
