@@ -19,6 +19,11 @@ module Katello
       assert @cvv.promotable?(@dev)
     end
 
+    def test_multiple_promotable_in_sequence
+      @cvv.expects(:environments).returns([@cvv.organization.library]).at_least_once
+      assert @cvv.promotable?([@beta, @dev])
+    end
+
     def test_promotable_out_of_sequence
       @cvv.expects(:environments).returns([@cvv.organization.library]).at_least_once
       refute @cvv.promotable?(@beta)
