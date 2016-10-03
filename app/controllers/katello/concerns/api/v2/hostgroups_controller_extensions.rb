@@ -24,6 +24,7 @@ module Katello
             param :content_source_id, :number, :desc => N_('Content source ID')
             param :content_view_id, :number, :desc => N_('Content view ID')
             param :lifecycle_environment_id, :number, :desc => N_('Lifecycle environment ID')
+            param :kickstart_repository_id, :number, :desc => N_('Kickstart repository ID')
             param_group :taxonomies, ::Api::V2::BaseController
           end
         end
