@@ -10,11 +10,12 @@ module Katello
     end
 
     def to_label(_options = {})
+      installable = Setting[:errata_status_installable]
       case to_status
       when NEEDED_SECURITY_ERRATA
-        N_("Security errata applicable")
+        installable ? N_("Security errata installable") : N_("Security errata applicable")
       when NEEDED_ERRATA
-        N_("Non-security errata applicable")
+        installable ? N_("Non-security errata installable") : N_("Non-security errata applicable")
       when UP_TO_DATE
         N_("All errata applied")
       when UNKNOWN
@@ -42,7 +43,12 @@ module Katello
     def to_status(_options = {})
       return UNKNOWN if host.content_facet.nil?
 
-      errata = host.content_facet.try(:applicable_errata)
+      if Setting[:errata_status_installable]
+        errata = host.content_facet.try(:installable_errata)
+      else
+        errata = host.content_facet.try(:applicable_errata)
+      end
+
       if errata.security.any?
         NEEDED_SECURITY_ERRATA
       elsif errata.any?

@@ -13,6 +13,11 @@ module Katello
 
     let(:status) { host.get_status(Katello::ErrataStatus) }
 
+    def setup
+      ForemanTasks.stubs(:async_task) #skip updates errata_status_installable is modified
+      Setting['errata_status_installable'] = false
+    end
+
     def test_get_status
       assert host.get_status(Katello::ErrataStatus)
     end
@@ -43,6 +48,15 @@ module Katello
     def test_to_global
       status.status = Katello::ErrataStatus::UNKNOWN
       assert_equal HostStatus::Global::WARN, status.to_global
+    end
+
+    def test_installable
+      Setting['errata_status_installable'] = true
+      host.content_facet.bound_repositories << repo
+      host.content_facet.applicable_errata << bugfix_errata
+      ::Katello::Host::ContentFacet.any_instance.expects(:installable_errata).returns(Erratum.where("0=1"))
+
+      assert_equal Katello::ErrataStatus::UP_TO_DATE, status.to_status
     end
   end
 end

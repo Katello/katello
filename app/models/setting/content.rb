@@ -15,6 +15,7 @@ class Setting::Content < Setting
         self.set('katello_default_atomic_provision', N_("Default provisioning template for new Atomic Operating Systems"), 'Katello Atomic Kickstart Default'),
         self.set('content_action_accept_timeout', N_("Time in seconds to wait for a Host to pickup a remote action"), 20),
         self.set('content_action_finish_timeout', N_("Time in seconds to wait for a Host to finish a remote action"), 3600),
+        self.set('errata_status_installable', N_("Calculate errata host status based only on errata in a Host's Content View and Lifecycle Environment"), false),
         self.set('restrict_composite_view', N_("If set to true, a composite content view may not be published or "\
                  "promoted, unless the component content view versions that it includes exist in the target environment."),
                  false),
