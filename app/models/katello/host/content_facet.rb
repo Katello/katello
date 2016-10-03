@@ -106,7 +106,8 @@ module Katello
         self.joins("INNER JOIN #{facet_repository} on #{facet_repository}.content_facet_id = #{table_name}.id",
                    "INNER JOIN #{repository_erratum} on #{repository_erratum}.repository_id = #{facet_repository}.repository_id",
                    "INNER JOIN #{erratum} on #{erratum}.id = #{repository_erratum}.erratum_id",
-                   "INNER JOIN #{facet_errata} on #{facet_errata}.erratum_id = #{erratum}.id")
+                   "INNER JOIN #{facet_errata} on #{facet_errata}.erratum_id = #{erratum}.id").
+              where("#{facet_errata}.content_facet_id = #{self.table_name}.id")
       end
 
       def content_view_version
