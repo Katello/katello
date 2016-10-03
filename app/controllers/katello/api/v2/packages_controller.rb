@@ -3,7 +3,7 @@ module Katello
     apipie_concern_subst(:a_resource => N_("a package"), :resource => "packages")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
-    before_action :find_repositories, :only => :auto_complete_name
+    before_action :find_repositories, :only => [:auto_complete_name, :auto_complete_arch]
     before_action :find_host, :only => :index
 
     def auto_complete_name
@@ -11,6 +11,14 @@ module Katello
       rpms = Rpm.in_repositories(@repositories)
       col = "#{Rpm.table_name}.name"
       rpms = rpms.where("#{Rpm.table_name}.name ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
+      render :json => rpms.pluck(col)
+    end
+
+    def auto_complete_arch
+      page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
+      rpms = Rpm.in_repositories(@repositories)
+      col = "#{Rpm.table_name}.arch"
+      rpms = rpms.where("#{col} ILIKE ?", "%#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
       render :json => rpms.pluck(col)
     end
 

@@ -11,6 +11,7 @@ attributes :max_version, :if => lambda { |rule| rule.respond_to?(:max_version) &
 attributes :errata_id, :if => lambda { |rule| rule.respond_to?(:errata_id) && !rule.errata_id.blank? }
 attributes :start_date, :if => lambda { |rule| rule.respond_to?(:start_date) && !rule.start_date.blank? }
 attributes :end_date, :if => lambda { |rule| rule.respond_to?(:end_date) && !rule.end_date.blank? }
+attributes :architecture, :if => lambda { |rule| rule.respond_to?(:architecture) && !rule.architecture.blank? }
 attributes :types, :if => lambda { |rule| rule.respond_to?(:types) && !rule.types.blank? }
 attributes :date_type, :if => lambda { |rule| rule.respond_to?(:date_type) }
 

@@ -40,6 +40,7 @@
                                   ng-change="selectAll(allSelected)"
                                   ng-hide="denied('edit_content_views', contentView)"/></th>
     <th translate>RPM Name</th>
+    <th translate>Architecture</th>
     <th class="col-sm-5" translate>Detail</th>
     <th class="col-sm-2"></th>
   </tr>
@@ -51,11 +52,18 @@
     <td>
       <input type="text"
              class="form-control"
-             typeahead="package for package in fetchAutocomplete($viewValue)"
+             typeahead="package for package in fetchAutocompleteName($viewValue)"
              ng-hide="denied('edit_content_views', contentView)"
              ng-model="rule.name"/>
     </td>
     <td>
+      <input type="text"
+             class="form-control"
+             typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
+             ng-hide="denied('edit_content_views', contentView)"
+             ng-model="rule.architecture"/>
+    </td>
+    <td class="container">
         <span class="col-sm-12" ng-class="{ 'col-sm-7': rule.type != 'all'}">
           <select class="form-control"
                   ng-model="rule.type"
@@ -116,6 +124,13 @@
       <input class="form-control"
              ng-hide="denied('edit_content_views', contentView)"
              ng-model="rule.name"
+             ng-readonly="!rule.editMode"/>
+    </td>
+    <td>
+      <input class="form-control"
+             ng-hide="denied('edit_content_views', contentView)"
+             ng-model="rule.architecture"
+             typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
              ng-readonly="!rule.editMode"/>
     </td>
     <td>
