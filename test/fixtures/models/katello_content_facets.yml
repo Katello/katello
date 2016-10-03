@@ -9,3 +9,9 @@ two:
   content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view) %>
   lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
   uuid: "abcdefghi"
+
+without_errata:
+  host_id:  <%= ActiveRecord::FixtureSet.identify(:without_errata) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:library_view) %>
+  lifecycle_environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  uuid: "abcdefghi"
