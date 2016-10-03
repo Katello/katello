@@ -26,6 +26,12 @@ describe('Controller: PackageFilterController', function() {
             };
         };
 
+        Package.autocompleteArch = function () {
+            return {
+                $promise: $q.defer().promise
+            };
+        };
+
         translate = function (string) {
             return string;
         };
@@ -185,14 +191,24 @@ describe('Controller: PackageFilterController', function() {
         expect(result).toBe(false);
     });
 
-    it("should provide a method to retrieve autocomplete results", function () {
+    it("should provide a method to retrieve autocomplete name results", function () {
         var autocomplete;
 
         spyOn(Package, 'autocompleteName').and.callThrough();
-        autocomplete = $scope.fetchAutocomplete('gir');
+        autocomplete = $scope.fetchAutocompleteName('gir');
 
         expect(autocomplete.then).toBeDefined();
         expect(Package.autocompleteName).toHaveBeenCalled();
+    });
+
+    it("should provide a method to retrieve autocomplete arch results", function () {
+        var autocomplete;
+
+        spyOn(Package, 'autocompleteArch').and.callThrough();
+        autocomplete = $scope.fetchAutocompleteArch('x86');
+
+        expect(autocomplete.then).toBeDefined();
+        expect(Package.autocompleteArch).toHaveBeenCalled();
     });
 
 });

@@ -19,6 +19,12 @@ angular.module('Bastion.packages').factory('Package',
                         data = angular.fromJson(data);
                         return {results: data};
                     }
+                },
+                'autocompleteArch': {method: 'GET', isArray: false, params: {id: 'auto_complete_arch'},
+                    transformResponse: function (data) {
+                        data = angular.fromJson(data);
+                        return {results: data};
+                    }
                 }
             });
     }]

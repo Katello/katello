@@ -154,11 +154,22 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             });
         };
 
-        $scope.fetchAutocomplete = function (term) {
+        $scope.fetchAutocompleteName = function (term) {
             var repositoryIds = $scope.contentView['repository_ids'],
                 promise;
 
             promise = Package.autocompleteName({'repoids[]': repositoryIds, term: term}).$promise;
+
+            return promise.then(function (data) {
+                return data.results;
+            });
+        };
+
+        $scope.fetchAutocompleteArch = function (term) {
+            var repositoryIds = $scope.contentView['repository_ids'],
+                promise;
+
+            promise = Package.autocompleteArch({'repoids[]': repositoryIds, term: term}).$promise;
 
             return promise.then(function (data) {
                 return data.results;

@@ -21,6 +21,7 @@ module Katello
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
     param :name, [String, Array], :desc => N_("package and package group names")
     param :version, String, :desc => N_("package: version")
+    param :arch, String, :desc => N_("package: architecture")
     param :min_version, String, :desc => N_("package: minimum version")
     param :max_version, String, :desc => N_("package: maximum version")
     param :errata_id, String, :desc => N_("erratum: id")
@@ -117,7 +118,7 @@ module Katello
       end
 
       @rule_params ||= params.fetch(:content_view_filter_rule, {}).
-            permit(:uuid, :version, :min_version, :max_version,
+            permit(:uuid, :version, :min_version, :max_version, :architecture,
                     :errata_id, :start_date, :end_date, :date_type,
                     :types => [], :errata_ids => [], name: [])
     end
