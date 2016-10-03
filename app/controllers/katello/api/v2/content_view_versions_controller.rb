@@ -5,7 +5,8 @@ module Katello
 
     before_action :find_content_view_version, :only => [:show, :promote, :destroy, :export]
     before_action :find_content_view, :except => [:incremental_update]
-    before_action :find_environment, :only => [:promote, :index]
+    before_action :find_environment, :only => [:index]
+    before_action :find_environments, :only => [:promote]
     before_action :validate_promotable, :only => [:promote]
     before_action :authorize_destroy, :only => [:destroy]
     before_action :find_version_environments, :only => [:incremental_update]
@@ -49,11 +50,12 @@ module Katello
     api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
     param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
     param :force, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction")
-    param :environment_id, :identifier, :required => true, :desc => N_("LifeCycle Environment identifier")
+    param :environment_id, :identifier, :deprecated => true, :desc => N_("LifeCycle Environment identifier")
+    param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment")
     def promote
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
-                        @version, @environment, is_force)
+                        @version, @environments, is_force)
       respond_for_async :resource => task
     end
 
@@ -249,10 +251,18 @@ module Katello
       end
     end
 
-    def validate_promotable
-      fail HttpErrors::BadRequest, _("No environment_id has been specified") if params[:environment_id].blank?
+    def find_environments
+      @environments = if params[:environment_id]
+                        Foreman::Deprecation.api_deprecation_warning("The parameter environment_id will be removed in Katello 3.4. Please update to use the environment_ids parameter.")
+                        KTEnvironment.where(:id => params[:environment_id])
+                      else
+                        KTEnvironment.where(:id => params[:environment_ids])
+                      end
+    end
 
-      return deny_access unless @environment.promotable_or_removable? && @version.content_view.promotable_or_removable?
+    def validate_promotable
+      fail HttpErrors::BadRequest, _("Could not find environments for promotion") if @environments.blank?
+      return deny_access unless @environments.all?(&:promotable_or_removable?) && @version.content_view.promotable_or_removable?
       true
     end
 

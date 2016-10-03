@@ -2,6 +2,8 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ContentViewVersionsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
+
     def models
       @organization = get_organization
       @library = KTEnvironment.find(katello_environments(:library).id)
@@ -158,8 +160,20 @@ module Katello
 
     def test_promote
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @dev, false).returns({})
-      post :promote, :id => version.id, :environment_id => @dev.id
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@dev], false).returns({})
+      post :promote, :id => version.id, :environment_ids => [@dev.id]
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/async'
+    end
+
+    def test_promote_multiple
+      version = @library_dev_staging_view.versions.first
+      assert_async_task(::Actions::Katello::ContentView::Promote) do |cv_version, environments|
+        assert_equal version, cv_version
+        assert_equal [@beta, @dev].map(&:id).sort, environments.map(&:id).sort
+      end
+      post :promote, :id => version.id, :environment_ids => [@beta.id, @dev.id]
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'
@@ -167,24 +181,24 @@ module Katello
 
     def test_bad_promote_out_of_sequence
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, false).raises(::Katello::HttpErrors::BadRequest)
-      post :promote, :id => version.id, :environment_id => @beta.id
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false).raises(::Katello::HttpErrors::BadRequest)
+      post :promote, :id => version.id, :environment_ids => [@beta.id]
 
       assert_response 500
     end
 
     def test_promote_out_of_sequence_force
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, true).returns({})
-      post :promote, :id => version.id, :environment_id => @beta.id, :force => 1
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], true).returns({})
+      post :promote, :id => version.id, :environment_ids => [@beta.id], :force => 1
 
       assert_response :success
     end
 
     def test_promote_out_of_sequence_force_false
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, @beta, false).returns({})
-      post :promote, :id => version.id, :environment_id => @beta.id, :force => 0
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false).returns({})
+      post :promote, :id => version.id, :environment_ids => [@beta.id], :force => 0
 
       assert_response :success
     end
