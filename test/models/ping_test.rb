@@ -4,19 +4,22 @@ require 'rest-client'
 module Katello
   class PingTest < ActiveSupport::TestCase
     def setup
-      @ok_pulp_status = {"known_workers" =>
-                          [
-                            {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:07:54Z", "_id" => "scheduler@chicken.example.com"},
-                            {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:21Z", "_id" => "resource_manager@chicken.example.com"},
-                            {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-1@chicken.example.com"},
-                            {"_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-0@chicken.example.com"}
-                          ],
-                         "messaging_connection" => {"connected" => true},
-                         "database_connection" => {"connected" => true},
-                         "api_version" => "2",
-                         "versions" => {"platform_version" => "2.9.1"
-                          }
-                        }
+      @ok_pulp_status = {
+        "known_workers" => [
+          { "_ns" => "workers", "last_heartbeat" => "2016-09-13T20:07:54Z", "_id" => "scheduler@chicken.example.com" },
+          { "_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:21Z", "_id" => "resource_manager@chicken.example.com" },
+          { "_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-1@chicken.example.com" },
+          { "_ns" => "workers", "last_heartbeat" => "2016-09-13T20:08:20Z", "_id" => "reserved_resource_worker-0@chicken.example." }
+        ],
+        "messaging_connection" => {
+          "connected" => true
+        },
+        "database_connection" => {
+          "connected" => true
+        },
+        "api_version" => "2",
+        "versions" => { "platform_version" => "2.9.1" }
+      }
     end
 
     def test_all_workers_present_ok_status
