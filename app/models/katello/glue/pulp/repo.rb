@@ -3,7 +3,6 @@ module Katello
     # TODO: move into submodules
     # rubocop:disable MethodLength
     # rubocop:disable ModuleLength
-    # rubocop:disable Metrics/AbcSize
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
