@@ -18,7 +18,7 @@ describe('Controller: ProductRepositoriesController', function() {
             allSelected: false
         };
 
-        expectedIds = _.pluck(rows, 'id');
+        expectedIds = _.map(rows, 'id');
 
         Nutupane = function() {
             this.table = expectedTable;

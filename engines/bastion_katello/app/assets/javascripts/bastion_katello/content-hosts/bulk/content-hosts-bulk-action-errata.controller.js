@@ -26,7 +26,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
         function installParams() {
             var params = $scope.nutupane.getAllSelectedResults();
             params['content_type'] = 'errata';
-            params.content = _.pluck($scope.detailsTable.getSelected(), 'errata_id');
+            params.content = _.map($scope.detailsTable.getSelected(), 'errata_id');
             params['organization_id'] = CurrentOrganization;
             return params;
         }
@@ -110,7 +110,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionErrata
         };
 
         $scope.installErrataViaRemoteExecution = function(customize) {
-            var errataIds = _.pluck($scope.detailsTable.getSelected(), 'errata_id'),
+            var errataIds = _.map($scope.detailsTable.getSelected(), 'errata_id'),
                 selectedHosts = $scope.nutupane.getAllSelectedResults();
             $scope.errataActionFormValues.remoteAction = 'errata_install';
             $scope.errataActionFormValues.errata = errataIds.join(',');

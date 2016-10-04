@@ -38,7 +38,7 @@ angular.module('Bastion.content-views').controller('ContentViewDeletionControlle
         };
 
         $scope.environmentNames = function (version) {
-            return _.pluck($scope.readableEnvironments(version), 'name');
+            return _.map($scope.readableEnvironments(version), 'name');
         };
 
         $scope.readableEnvironments = function (version) {

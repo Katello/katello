@@ -4,7 +4,7 @@ var KT = {};
 //i18n global variable
 var katelloI18n = {};
 
-//Setup underscorejs
+//Setup lodash
 KT.utils = _.noConflict();
 
 _ = KT.utils;

@@ -36,7 +36,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
                     success,
                     error,
                     deferred = $q.defer(),
-                    productsToAdd = _.pluck($scope.productsTable.getSelected(), 'id');
+                    productsToAdd = _.map($scope.productsTable.getSelected(), 'id');
 
                 data = {
                     "product_ids": productsToAdd

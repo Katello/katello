@@ -30,7 +30,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                 var filterIds = [];
 
                 if (contentView.components) {
-                    filterIds = _.pluck(contentView.components, 'content_view_id');
+                    filterIds = _.map(contentView.components, 'content_view_id');
                 }
                 filterIds.push(contentView.id);
 
@@ -56,7 +56,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                 $scope.contentView['component_ids'] = existingComponentsIds.concat(versionIds);
 
                 $scope.save($scope.contentView).then(function () {
-                    var newContentIds = _.pluck(selectedRows, 'id');
+                    var newContentIds = _.map(selectedRows, 'id');
                     params['without[]'] = params["without[]"].concat(newContentIds);
                     nutupane.setParams(params);
                     nutupane.refresh();

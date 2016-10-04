@@ -23,8 +23,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostRegisterControlle
 
         $scope.capsules = Capsule.queryUnpaged(function (data) {
             var defaultCapsule = _.filter(data.results, function (result) {
-                var featureNames = _.pluck(result.features, 'name');
-                return _.contains(featureNames, 'Pulp');
+                var featureNames = _.map(result.features, 'name');
+                return _.includes(featureNames, 'Pulp');
             });
 
             $scope.noCapsulesFound = _.isEmpty(data.results);

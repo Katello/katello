@@ -36,7 +36,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
                     success,
                     error,
                     deferred = $q.defer(),
-                    productsToRemove = _.pluck($scope.productsTable.getSelected(), 'id');
+                    productsToRemove = _.map($scope.productsTable.getSelected(), 'id');
 
                 data = {
                     "product_ids": productsToRemove

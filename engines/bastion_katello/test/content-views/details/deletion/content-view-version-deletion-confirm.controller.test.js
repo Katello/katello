@@ -17,7 +17,7 @@ describe('Controller: ContentViewVersionDeletionConfirmController', function() {
         $scope.validateEnvironmentSelection = function() {};
 
         $scope.selectedEnvironmentIds = function () {
-            return _.pluck($scope.deleteOptions.environments, 'id');
+            return _.map($scope.deleteOptions.environments, 'id');
         };
 
         $scope.contentView = {id: 8};

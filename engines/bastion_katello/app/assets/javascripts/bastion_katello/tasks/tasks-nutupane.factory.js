@@ -81,7 +81,7 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                 });
 
                 _.each(self.table.rows, function (row, i) {
-                    if (_.contains(taskIdsToDelete, row.id)) {
+                    if (_.includes(taskIdsToDelete, row.id)) {
                         rowsToDelete.push(i);
                     }
                 });

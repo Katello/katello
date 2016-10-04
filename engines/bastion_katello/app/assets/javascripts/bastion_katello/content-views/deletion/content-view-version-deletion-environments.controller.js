@@ -32,7 +32,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
                 } else {
                     //set existing selections
                     angular.forEach($scope.environmentsTable.rows, function (row) {
-                        row.selected = angular.isDefined(_.findWhere($scope.deleteOptions.environments, {unselectable: false, id: row.id}));
+                        row.selected = angular.isDefined(_.find($scope.deleteOptions.environments, {unselectable: false, id: row.id}));
 
                     });
                 }
@@ -58,13 +58,13 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionEn
             if ($scope.environmentsTable.rows.length === 0) {
                 anySelectable = true;
             } else {
-                anySelectable = angular.isDefined(_.findWhere($scope.environmentsTable.rows, {unselectable: false}));
+                anySelectable = angular.isDefined(_.find($scope.environmentsTable.rows, {unselectable: false}));
             }
             return anySelectable;
         };
 
         $scope.allSelectable = function () {
-            return angular.isUndefined(_.findWhere($scope.environmentsTable.rows, {unselectable: true}));
+            return angular.isUndefined(_.find($scope.environmentsTable.rows, {unselectable: true}));
         };
 
         $scope.processSelection = function () {

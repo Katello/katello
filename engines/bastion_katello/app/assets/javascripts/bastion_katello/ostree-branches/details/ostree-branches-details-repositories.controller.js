@@ -31,12 +31,12 @@ angular.module('Bastion.ostree-branches').controller('OstreeBranchesDetailsRepos
 
         environment = Environment.queryUnpaged(function (response) {
             $scope.environments = response.results;
-            $scope.environmentFilter = _.findWhere($scope.environments, {library: true}).id;
+            $scope.environmentFilter = _.find($scope.environments, {library: true}).id;
         });
 
         contentView = ContentView.queryUnpaged(function (response) {
             $scope.contentViews = response.results;
-            $scope.contentViewFilter = _.findWhere($scope.contentViews, {'default': true});
+            $scope.contentViewFilter = _.find($scope.contentViews, {'default': true});
         });
 
         $scope.detailsTable.working = true;
@@ -50,7 +50,7 @@ angular.module('Bastion.ostree-branches').controller('OstreeBranchesDetailsRepos
             params['content_view_version_id'] = $scope.contentViewFilter;
 
             if ($scope.contentViewFilter) {
-                params['content_view_version_id'] = _.pluck($scope.contentViewFilter.versions, 'id');
+                params['content_view_version_id'] = _.map($scope.contentViewFilter.versions, 'id');
             }
 
             repositoriesNutupane.setParams(params);

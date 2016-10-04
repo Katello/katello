@@ -36,7 +36,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
                 success,
                 error,
                 deferred = $q.defer(),
-                hostCollectionsToAdd = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
+                hostCollectionsToAdd = _.map($scope.hostCollectionsTable.getSelected(), 'id');
 
             data = {
                 "activation_key": {

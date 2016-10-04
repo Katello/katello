@@ -26,7 +26,7 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
 
         $scope.getSelectedProductIds = function () {
             var rows = $scope.productTable.getSelected();
-            return _.pluck(rows, 'id');
+            return _.map(rows, 'id');
         };
 
         $scope.removeProducts = function () {

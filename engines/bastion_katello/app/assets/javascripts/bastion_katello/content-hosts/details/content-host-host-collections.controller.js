@@ -57,8 +57,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
             };
 
             $scope.hostCollectionsTable.working = true;
-            hostCollections = _.pluck(host['host_collections'], 'id');
-            hostCollectionsToRemove = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
+            hostCollections = _.map(host['host_collections'], 'id');
+            hostCollectionsToRemove = _.map($scope.hostCollectionsTable.getSelected(), 'id');
 
             data = {"host_collection_ids": _.difference(hostCollections, hostCollectionsToRemove)};
             Host.updateHostCollections({id: host.id}, data, success, error);
