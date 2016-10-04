@@ -40,7 +40,7 @@ angular.module('Bastion.docker-tags').controller('DockerTagsDetailsController',
                 'sort_by': 'name',
                 'sort_order': 'ASC',
                 'paged': false,
-                'ids[]': _.pluck($scope.tag['related_tags'], 'id')
+                'ids[]': _.map($scope.tag['related_tags'], 'id')
             };
             var nutupane = new Nutupane(DockerTag, params);
             $scope.table = nutupane.table;

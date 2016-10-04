@@ -59,7 +59,7 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
             if ($scope.errata) {
                 errataIds = [$scope.errata['errata_id']];
             } else {
-                errataIds = _.pluck($scope.table.getSelected(), 'errata_id');
+                errataIds = _.map($scope.table.getSelected(), 'errata_id');
             }
 
             searchStatements = _.map(errataIds, function(errataId) {

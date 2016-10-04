@@ -59,8 +59,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
             $scope.hostCollectionsTable.working = true;
 
-            hostCollections = _.pluck(host['host_collections'], 'id');
-            hostCollectionsToAdd = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
+            hostCollections = _.map(host['host_collections'], 'id');
+            hostCollectionsToAdd = _.map($scope.hostCollectionsTable.getSelected(), 'id');
             data = {"host_collection_ids": _.union(hostCollections, hostCollectionsToAdd)};
 
             Host.updateHostCollections({id: host.id}, data, success, error);

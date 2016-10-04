@@ -19,7 +19,7 @@ angular.module('Bastion.capsule-content').service('syncState', function () {
     };
 
     this.is = function () {
-        return _.contains(arguments, this.state || this.DEFAULT);
+        return _.includes(arguments, this.state || this.DEFAULT);
     };
 
 });

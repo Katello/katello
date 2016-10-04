@@ -43,7 +43,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionHostsContro
         $scope.contentNutupane.setSearchKey('contentHostSearch');
 
         $scope.removeSelected = function () {
-            var selected = _.pluck($scope.detailsTable.getSelected(), 'id');
+            var selected = _.map($scope.detailsTable.getSelected(), 'id');
 
             $scope.isRemoving = true;
             HostCollection.removeHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {

@@ -92,7 +92,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         }
 
         function updateVersion(version) {
-            var versionIds = _.pluck($scope.detailsTable.rows, 'id'),
+            var versionIds = _.map($scope.detailsTable.rows, 'id'),
                 versionIndex = versionIds.indexOf(version.id);
 
             ContentViewVersion.get({'id': version.id}).$promise.then(function (newVersion) {

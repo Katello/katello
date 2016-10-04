@@ -1,4 +1,3 @@
-//= require "bastion/underscore/underscore"
 //= require "jquery.ui.dialog"
 //= require "jquery.ui.sortable"
 //= require "jquery.ui.tabs"

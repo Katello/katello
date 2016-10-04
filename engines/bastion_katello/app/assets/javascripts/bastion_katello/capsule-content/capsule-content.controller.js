@@ -161,10 +161,10 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             } else if (currentSyncState.is(currentSyncState.CANCEL_TRIGGERED)) {
                 message = translate("Synchronization is being cancelled...");
             } else {
-                syncableEnvs = _.where(syncStatus['lifecycle_environments'], {syncable: true});
+                syncableEnvs = _.filter(syncStatus['lifecycle_environments'], {syncable: true});
 
                 if (syncableEnvs.length > 0) {
-                    envNames = _.pluck(syncableEnvs, 'name').join(', ');
+                    envNames = _.map(syncableEnvs, 'name').join(', ');
                     message = translate("%count environment(s) can be synchronized: %envs")
                                 .replace('%count', syncableEnvs.length)
                                 .replace('%envs', envNames);

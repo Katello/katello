@@ -19,7 +19,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductDetail
             if ($scope.details === null) {
                 $scope.details = product;
                 angular.forEach($scope.details['available_content'], function (content) {
-                    override = _.findWhere($scope.activationKey["content_overrides"],
+                    override = _.find($scope.activationKey["content_overrides"],
                                            {"contentLabel": content.content.label, name: "enabled"});
                     if (angular.isUndefined(override)) {
                         content.overrideEnabled = null;

@@ -58,7 +58,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
 
         $scope.checkDisabled = function (env, environments) {
             var enabled = false,
-                envIds = _.pluck(environments, 'id');
+                envIds = _.map(environments, 'id');
 
             if (!env.prior) {
                 env.prior = {};
@@ -76,7 +76,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
 
         $scope.checkSuggested = function (env, environments) {
             var suggest = false,
-                envIds = _.pluck(environments, 'id');
+                envIds = _.map(environments, 'id');
 
             if (envIds.indexOf(env.id) === -1) {
                 // if version is not promoted to the environment
@@ -108,7 +108,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
         };
 
         $scope.suggestedEnvironmentMessage = function () {
-            var envs = _.uniq(_.pluck($scope.suggestedEnvironments, 'name')),
+            var envs = _.uniq(_.map($scope.suggestedEnvironments, 'name')),
                 message = "";
 
             if (envs.length === 0) {

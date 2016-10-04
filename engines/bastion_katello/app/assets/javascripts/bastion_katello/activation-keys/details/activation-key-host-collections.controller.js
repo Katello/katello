@@ -36,7 +36,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
                 success,
                 error,
                 deferred = $q.defer(),
-                hostCollectionsToRemove = _.pluck($scope.hostCollectionsTable.getSelected(), 'id');
+                hostCollectionsToRemove = _.map($scope.hostCollectionsTable.getSelected(), 'id');
 
             data = {
                 "activation_key": {

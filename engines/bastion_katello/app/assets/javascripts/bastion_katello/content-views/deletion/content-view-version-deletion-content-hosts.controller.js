@@ -56,7 +56,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.processSelection = function () {
             $scope.deleteOptions.contentHosts.environment = $scope.selectedEnvironment;
-            $scope.deleteOptions.contentHosts.contentView = _.findWhere($scope.contentViewsForEnvironment,
+            $scope.deleteOptions.contentHosts.contentView = _.find($scope.contentViewsForEnvironment,
                 {id: $scope.selectedContentViewId});
             $scope.selectedEnvironment = undefined;
             $scope.selectedContentViewId = undefined;

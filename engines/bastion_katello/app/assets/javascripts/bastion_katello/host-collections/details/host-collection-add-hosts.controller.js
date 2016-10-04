@@ -47,7 +47,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
 
         $scope.addSelected = function () {
             var selected;
-            selected = _.pluck($scope.detailsTable.getSelected(), 'id');
+            selected = _.map($scope.detailsTable.getSelected(), 'id');
 
             $scope.isAdding = true;
             HostCollection.addHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {

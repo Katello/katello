@@ -30,7 +30,7 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
                 });
             } else {
                 displayedRepositories = _.map(displayedRepositories, function (repository) {
-                    repository.selected = _.pluck(filterRepositories, 'id').indexOf(repository.id) >= 0;
+                    repository.selected = _.map(filterRepositories, 'id').indexOf(repository.id) >= 0;
                     return repository;
                 });
             }
@@ -56,7 +56,7 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
         $scope.filter.$promise.then(refreshTable);
 
         $scope.updateRepositories = function () {
-            var repositoryIds = _.pluck($scope.repositoriesTable.getSelected(), 'id');
+            var repositoryIds = _.map($scope.repositoriesTable.getSelected(), 'id');
 
             if (repositoryIds.length === 0) {
                 $scope.errorMessages = [translate('You must select at least one repository.')];

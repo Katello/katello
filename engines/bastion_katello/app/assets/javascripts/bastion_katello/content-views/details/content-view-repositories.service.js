@@ -50,10 +50,10 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
 
             scope.getSelected = function (nutupane) {
                 var selected = nutupane.getAllSelectedResults().included.ids,
-                    filtered = _.pluck(scope.filteredItems, 'id');
+                    filtered = _.map(scope.filteredItems, 'id');
 
                 selected = _.reject(selected, function (id) {
-                    return !_.contains(filtered, id);
+                    return !_.includes(filtered, id);
                 });
 
                 return selected;

@@ -106,7 +106,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
         };
 
         $scope.selectedEnvironmentIds = function () {
-            return _.pluck($scope.deleteOptions.environments, 'id');
+            return _.map($scope.deleteOptions.environments, 'id');
         };
 
         $scope.totalHostCount = function () {
@@ -138,7 +138,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
                 if (angular.isUndefined(childScope.selectedEnvironment)) {
                     childScope.contentViewsForEnvironment = [];
                 } else {
-                    removingEnvironment = angular.isDefined(_.findWhere(childScope.deleteOptions.environments, {id: childScope.selectedEnvironment.id}));
+                    removingEnvironment = angular.isDefined(_.find(childScope.deleteOptions.environments, {id: childScope.selectedEnvironment.id}));
                     $scope.fetchingViews = true;
                     ContentView.queryUnpaged({ 'environment_id': childScope.selectedEnvironment.id },
                         function (response) {

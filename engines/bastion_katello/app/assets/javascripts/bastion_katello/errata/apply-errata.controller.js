@@ -61,7 +61,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     var versionId = update['content_view_version'].id;
 
                     if (update.components) {
-                        angular.forEach(_.pluck(update.components, 'id'), function (componentId) {
+                        angular.forEach(_.map(update.components, 'id'), function (componentId) {
                             if (angular.isUndefined(cvIdEnvIds[componentId])) {
                                 cvIdEnvIds[componentId] = [];
                             }
@@ -70,7 +70,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     if (angular.isUndefined(cvIdEnvIds[versionId])) {
                         cvIdEnvIds[versionId] = [];
                     }
-                    cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.pluck(update.environments, 'id')));
+                    cvIdEnvIds[versionId] = _.uniq(cvIdEnvIds[versionId].concat(_.map(update.environments, 'id')));
                 });
 
                 angular.forEach(cvIdEnvIds, function (envIds, cvId) {
