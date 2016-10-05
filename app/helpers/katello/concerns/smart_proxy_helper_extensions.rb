@@ -30,6 +30,29 @@ module Katello
         "#{available_percent}%"
       end
 
+      def download_policies
+        policies = [
+          {
+            :name => _("On Demand"),
+            :label => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+          },
+          {
+            :name => _("Background"),
+            :label => ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND
+          },
+          {
+            :name => _("Immediate"),
+            :label => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE
+          },
+          {
+            :name => _("Inherit from Repository"),
+            :label => SmartProxy::DOWNLOAD_INHERIT
+          }
+        ]
+
+        policies.map { |p| OpenStruct.new(p) }
+      end
+
       def storage_warning(available)
         gb_size = available.to_i / 1_048_576
         case gb_size

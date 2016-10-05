@@ -1,8 +1,11 @@
 class Setting::Content < Setting
   #rubocop:disable Metrics/MethodLength
+  #rubocop:disable Metrics/AbcSize
   def self.load_defaults
     return unless super
 
+    download_policies = proc { Hash[::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
+    proxy_download_policies = proc { Hash[::SmartProxy::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
     self.transaction do
       [
         self.set('katello_default_provision', N_("Default provisioning template for new Operating Systems"), 'Katello Kickstart Default'),
@@ -17,13 +20,15 @@ class Setting::Content < Setting
         self.set('content_action_finish_timeout', N_("Time in seconds to wait for a Host to finish a remote action"), 3600),
         self.set('errata_status_installable', N_("Calculate errata host status based only on errata in a Host's Content View and Lifecycle Environment"), false),
         self.set('restrict_composite_view', N_("If set to true, a composite content view may not be published or "\
-                 "promoted, unless the component content view versions that it includes exist in the target environment."),
-                 false),
+                 "promoted, unless the component content view versions that it includes exist in the target environment."), false),
         self.set('pulp_sync_node_action_accept_timeout', N_("Time in seconds to wait for a pulp node to remote action"), 20),
         self.set('pulp_sync_node_action_finish_timeout', N_("Time in seconds to wait for a pulp node to finish sync"), 12.hours.to_i),
         self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."), true),
         self.set('force_post_sync_actions', N_("Force post sync actions such as indexing and email even if no content was available."), false),
-        self.set('default_download_policy', N_("Default download policy for repositories (either 'immediate', 'on_demand', or 'background')"), "on_demand"),
+        self.set('default_download_policy', N_("Default download policy for repositories (either 'immediate', 'on_demand', or 'background')"), "on_demand",
+                 N_('Default Repository download policy'), nil, :collection => download_policies),
+        self.set('default_proxy_download_policy', N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', 'on_demand', or 'background')"), "on_demand",
+                 N_('Default Smart Proxy download policy'), nil, :collection => proxy_download_policies),
         self.set('pulp_docker_registry_port', N_("The port used by Pulp Crane to provide Docker Registries"), 5000),
         self.set('pulp_export_destination', N_("On-disk location for exported repositories"), N_("/var/lib/pulp/katello-export")),
         self.set('pulp_client_key', N_("Path for ssl key used for pulp server auth"), "/etc/pki/katello/private/pulp-client.key"),

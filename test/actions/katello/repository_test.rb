@@ -15,6 +15,8 @@ module ::Actions::Katello::Repository
     let(:custom_repository) { katello_repositories(:fedora_17_x86_64) }
     let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
+    let(:proxy) { smart_proxies(:one) }
+    let(:capsule_content) { ::Katello::CapsuleContent.new(proxy) }
 
     before(:all) do
       set_user
@@ -337,6 +339,7 @@ module ::Actions::Katello::Repository
     let(:source_repo) { katello_repositories(:redis) }
 
     it 'plans' do
+      ::Katello::CapsuleContent.stubs(:new).returns(capsule_content)
       action = create_action action_class
       env = mock
       clone = mock
@@ -344,7 +347,7 @@ module ::Actions::Katello::Repository
       clone.expects(:new_record?).returns(false)
       clone.expects(:copy_library_instance_attributes)
       clone.expects(:save!)
-      ::Katello::Repository.expects(:needs_distributor_updates).with([clone]).returns([])
+      ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
 
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
@@ -373,6 +376,7 @@ module ::Actions::Katello::Repository
     let(:source_repo) { katello_repositories(:ostree) }
 
     it 'plans' do
+      ::Katello::CapsuleContent.stubs(:new).returns(capsule_content)
       action = create_action action_class
       env = mock
       clone = mock
@@ -380,7 +384,7 @@ module ::Actions::Katello::Repository
       clone.expects(:new_record?).returns(false)
       clone.expects(:copy_library_instance_attributes)
       clone.expects(:save!)
-      ::Katello::Repository.expects(:needs_distributor_updates).with([clone]).returns([])
+      ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
 
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)

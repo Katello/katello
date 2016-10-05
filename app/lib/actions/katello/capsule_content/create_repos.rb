@@ -33,7 +33,7 @@ module Actions
                       path: relative_path,
                       with_importer: true,
                       docker_upstream_name: repository.pulp_id,
-                      download_policy: repository.capsule_download_policy,
+                      download_policy: repository.capsule_download_policy(capsule_content.capsule),
                       capsule_id: capsule_content.capsule.id)
         end
 

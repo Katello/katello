@@ -238,6 +238,7 @@ module Katello
       #Api controller extensions
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
+      ::Api::V2::SmartProxiesController.send :include, Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
 
       ::SettingsController.class_eval do
         helper Katello::Concerns::SettingsHelperExtensions

@@ -132,7 +132,7 @@ module ::Actions::Katello::CapsuleContent
                          ssl_client_cert: cert[:cert],
                          ssl_client_key: cert[:key],
                          unprotected: repository.unprotected,
-                         download_policy: repository.capsule_download_policy,
+                         download_policy: repository.capsule_download_policy(capsule_content.capsule),
                          checksum_type: repository.checksum_type,
                          path: repository.relative_path,
                          with_importer: true,

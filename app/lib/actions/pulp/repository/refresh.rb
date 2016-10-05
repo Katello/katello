@@ -15,7 +15,7 @@ module Actions
 
         def update_or_associate_importer(capsule_id, repository, repository_details)
           existing_importers = repository_details["importers"]
-          importer = repository.generate_importer(!capsule_id.nil?)
+          importer = repository.generate_importer(::SmartProxy.find_by(:id => capsule_id))
           found = existing_importers.find { |i| i['importer_type_id'] == importer.id }
 
           if found
