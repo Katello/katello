@@ -6,6 +6,9 @@ module Katello
       PULP_FEATURE = "Pulp".freeze
       PULP_NODE_FEATURE = "Pulp Node".freeze
 
+      DOWNLOAD_INHERIT = 'inherit'.freeze
+      DOWNLOAD_POLICIES = ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES + [DOWNLOAD_INHERIT]
+
       included do
         include ForemanTasks::Concerns::ActionSubject
         include LazyAccessor
@@ -15,6 +18,7 @@ module Katello
         before_create :associate_organizations
         before_create :associate_default_location
         before_create :associate_lifecycle_environments
+        before_validation :set_default_download_policy
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
@@ -40,6 +44,10 @@ module Katello
         has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_source_id,
                               :inverse_of => :content_source
 
+        validates :download_policy, inclusion: {
+          :in => DOWNLOAD_POLICIES,
+          :message => _("must be one of the following: %s") % DOWNLOAD_POLICIES.join(', ')
+        }
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
 
         def self.default_capsule
@@ -91,6 +99,10 @@ module Katello
             self.locations << default_location
           end
         end
+      end
+
+      def set_default_download_policy
+        self.download_policy ||= Setting[:default_proxy_download_policy]
       end
 
       def associate_lifecycle_environments

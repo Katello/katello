@@ -1,0 +1,3 @@
+<% if @smart_proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) %>
+  <%= select_f(f, :download_policy, download_policies, :label, :name, :size => "col-md-8" ) %>
+<% end %>

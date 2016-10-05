@@ -59,20 +59,20 @@ module Katello
           end
         end
 
-        def self.needs_importer_updates(repos, capsule = nil)
+        def self.needs_importer_updates(repos, capsule_content)
           repos.select do |repo|
-            repo_details = capsule ? capsule.pulp_repo_facts(repo.pulp_id) : repo.pulp_repo_facts
+            repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
             next unless repo_details
             capsule_importer = repo_details["importers"][0]
-            !repo.importer_matches?(capsule_importer)
+            !repo.importer_matches?(capsule_importer, capsule_content.capsule)
           end
         end
 
-        def self.needs_distributor_updates(repos, capsule = nil)
+        def self.needs_distributor_updates(repos, capsule_content)
           repos.select do |repo|
-            repo_details = capsule ? capsule.pulp_repo_facts(repo.pulp_id) : repo.pulp_repo_facts
+            repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
             next unless repo_details
-            !repo.distributors_match?(repo_details["distributors"], capsule)
+            !repo.distributors_match?(repo_details["distributors"], capsule_content.capsule)
           end
         end
       end
@@ -150,7 +150,7 @@ module Katello
         raise PulpErrors::ServiceUnavailable.new(message, e)
       end
 
-      def generate_importer(capsule = false)
+      def generate_importer(capsule = nil)
         case self.content_type
         when Repository::YUM_TYPE
           Runcible::Models::YumImporter.new(yum_importer_values(capsule))
@@ -193,8 +193,8 @@ module Katello
       end
 
       def yum_importer_values(capsule)
-        if capsule && self.library_instance
-          new_download_policy = self.library_instance.download_policy
+        if capsule
+          new_download_policy = capsule_download_policy(capsule)
         else
           new_download_policy = self.download_policy
         end
@@ -827,10 +827,14 @@ module Katello
         self.content_type == Repository::OSTREE_TYPE
       end
 
-      def capsule_download_policy
+      def capsule_download_policy(capsule)
+        policy = capsule.download_policy || Setting[:default_proxy_download_policy]
         if self.yum?
-          repo = self.library_instance || self
-          repo.download_policy
+          if policy == ::SmartProxy::DOWNLOAD_INHERIT
+            (self.library_instance || self).download_policy
+          else
+            policy
+          end
         end
       end
 
@@ -855,8 +859,8 @@ module Katello
         generated == actual
       end
 
-      def importer_matches?(capsule_importer)
-        generated_importer = self.generate_importer(true)
+      def importer_matches?(capsule_importer, capsule)
+        generated_importer = self.generate_importer(capsule)
         capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
           generated_importer.config == capsule_importer['config']
       end

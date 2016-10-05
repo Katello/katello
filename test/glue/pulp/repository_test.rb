@@ -139,19 +139,20 @@ module Katello
     end
 
     def test_importer_matches?
+      capsule = SmartProxy.new(:download_policy => 'on_demand')
       yum_config = {
         'feed' => 'http://foobar.com',
         'download_policy' => 'on_demand',
         'remove_missing' => true
       }
-      @fedora_17_x86_64.expects(:generate_importer).with(true).at_least_once.returns(Runcible::Models::YumImporter.new(yum_config))
+      @fedora_17_x86_64.expects(:generate_importer).with(capsule).at_least_once.returns(Runcible::Models::YumImporter.new(yum_config))
 
-      assert @fedora_17_x86_64.importer_matches?('importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config)
-      refute @fedora_17_x86_64.importer_matches?('importer_type_id' => Runcible::Models::DockerImporter::ID, 'config' => yum_config)
-      refute @fedora_17_x86_64.importer_matches?(nil)
+      assert @fedora_17_x86_64.importer_matches?({'importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config}, capsule)
+      refute @fedora_17_x86_64.importer_matches?({'importer_type_id' => Runcible::Models::DockerImporter::ID, 'config' => yum_config}, capsule)
+      refute @fedora_17_x86_64.importer_matches?(nil, capsule)
 
       yum_config['some_other_attribute'] = 'asdf'
-      refute @fedora_17_x86_64.importer_matches?('importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config)
+      refute @fedora_17_x86_64.importer_matches?({'importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config}, capsule)
     end
   end
 
