@@ -14,7 +14,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   def setup
     @repo_with_distro = katello_repositories(:fedora_17_x86_64)
     @os = ::Redhat.create_operating_system('RedHat', '9', '0')
-    @content_source = SmartProxy.create!(:name => "foobar", :url => "http://capsule.com/")
+    @content_source = FactoryGirl.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment
@@ -121,7 +121,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
   def setup
     @repo_with_distro = katello_repositories(:fedora_17_x86_64)
     @os = ::Redhat.create_operating_system('RedHat', '9', '0')
-    @content_source = SmartProxy.create!(:name => "foobar", :url => "http://capsule.com/")
+    @content_source = FactoryGirl.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment
