@@ -113,6 +113,17 @@ module Katello
         find_distributor['config']['checksum_type'] if self.try(:yum?) && find_distributor
       end
 
+      def pulp_counts_differ?
+        pulp_counts = pulp_repo_facts[:content_unit_counts]
+        rpms.count != pulp_counts['rpm'].to_i ||
+          errata.count != pulp_counts['erratum'].to_i ||
+          package_groups.count != pulp_counts['package_group'].to_i ||
+          puppet_modules.count != pulp_counts['puppet_module'].to_i ||
+          docker_manifests.count != pulp_counts['docker_manifest'].to_i ||
+          docker_tags.count != pulp_counts['docker_tag'].to_i ||
+          ostree_branches.count != pulp_counts['ostree'].to_i
+      end
+
       def create_pulp_repo
         #if we are in library, no need for an distributor, but need to sync
         if self.environment.try(:library?)
