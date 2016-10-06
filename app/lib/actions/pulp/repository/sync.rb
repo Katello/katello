@@ -66,7 +66,12 @@ module Actions
           end
 
           if sync_task && sync_task['state'] == 'finished' && sync_task[:result]
-            sync_task['result']['added_count'] > 0 || sync_task['result']['removed_count'] > 0 || sync_task['result']['updated_count'] > 0
+            if sync_task['result']['added_count'] > 0 || sync_task['result']['removed_count'] > 0 || sync_task['result']['updated_count'] > 0
+              true
+            else
+              repo = ::Katello::Repository.find_by(:pulp_id => sync_task['result']['repo_id'])
+              repo ? repo.pulp_counts_differ? : true
+            end
           else
             true #if we can't figure it out, assume something changed
           end
