@@ -63,7 +63,7 @@ module Katello
       @repo_with_distro = katello_repositories(:fedora_17_x86_64)
       version = @repo_with_distro.distribution_version.split('.')
       @os = ::Redhat.create_operating_system("RedHat", version[0], version[1])
-      @content_source = SmartProxy.create!(:name => "foobar", :url => "http://capsule.com/")
+      @content_source = FactoryGirl.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
 
       @host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => @os,
                         :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
