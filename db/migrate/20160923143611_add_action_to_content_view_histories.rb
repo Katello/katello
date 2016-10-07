@@ -14,7 +14,7 @@ class AddActionToContentViewHistories < ActiveRecord::Migration
       case task_label
       when "Actions::Katello::ContentViewVersion::Export"
         history.action = Katello::ContentViewHistory.actions[:export]
-      when "Actions::Katello::ContentView::Publish"
+      when "Actions::Katello::ContentView::Publish", "Actions::Katello::ContentView::IncrementalUpdates"
         history.action = Katello::ContentViewHistory.actions[:publish]
       when "Actions::Katello::ContentView::Promote"
         history.action = Katello::ContentViewHistory.actions[:promotion]
