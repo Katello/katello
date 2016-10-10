@@ -8,7 +8,8 @@ module Actions
         def plan(version, environment)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,
-                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS)
+                                                          :status => ::Katello::ContentViewHistory::IN_PROGRESS,
+                                                          :action => 'promotion')
 
           sequence do
             plan_action(ContentView::AddToEnvironment, version, environment)

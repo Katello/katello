@@ -253,7 +253,7 @@ module Katello
 
     def find_environments
       @environments = if params[:environment_id]
-                        Foreman::Deprecation.api_deprecation_warning("The parameter environment_id will be removed in Katello 3.4. Please update to use the environment_ids parameter.")
+                        ::Foreman::Deprecation.api_deprecation_warning("The parameter environment_id will be removed in Katello 3.4. Please update to use the environment_ids parameter.")
                         KTEnvironment.where(:id => params[:environment_id])
                       else
                         KTEnvironment.where(:id => params[:environment_ids])

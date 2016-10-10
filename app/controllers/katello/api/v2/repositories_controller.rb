@@ -324,7 +324,7 @@ module Katello
       end
 
       if params.key?(:upload_ids)
-        Foreman::Deprecation.api_deprecation_warning("The parameter upload_ids will be removed in Katello 3.3. Please update to use the uploads parameter.")
+        ::Foreman::Deprecation.api_deprecation_warning("The parameter upload_ids will be removed in Katello 3.3. Please update to use the uploads parameter.")
 
         params[:upload_ids].each do |upload_id|
           begin
