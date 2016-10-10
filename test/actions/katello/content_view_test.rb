@@ -13,6 +13,26 @@ module ::Actions::Katello::ContentView
     end
   end
 
+  class PromoteToEnviroment < TestBase
+    let(:action_class) { ::Actions::Katello::ContentView::PromoteToEnvironment }
+
+    let(:environment) do
+      katello_environments(:library)
+    end
+
+    let(:content_view_version) do
+      katello_content_views(:no_environment_view).create_new_version
+    end
+
+    it 'plans' do
+      assert_empty content_view_version.history
+      task = ForemanTasks::Task::DynflowTask.create!(state: :success, result: "good")
+      ::Actions::Katello::ContentView::PromoteToEnvironment.any_instance.stubs(:task).returns(task)
+      create_and_plan_action(action_class, content_view_version, environment)
+      refute_empty content_view_version.history
+    end
+  end
+
   class AddToEnvironmentTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentView::AddToEnvironment }
 
