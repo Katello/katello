@@ -14,16 +14,18 @@ module Actions
             cp_consumer.filter_entitlements(pool_with_quantities.pool.cp_id, pool_with_quantities.quantities)
           end
 
+          pool_ids = []
           entitlements.flatten.each do |entitlement|
+            pool_ids << entitlement['pool']['id']
             plan_action(::Actions::Candlepin::Consumer::RemoveSubscription, :uuid => host.subscription_facet.uuid,
                         :entitlement_id => entitlement['id'], :pool_id => entitlement['pool']['id'])
-            plan_self(:host_name => host.name)
           end
+          plan_self(:host_id => host.id, :host_name => host.name, :pool_ids => pool_ids)
         end
 
         def finalize
-          ::Katello::Pool.where(:id => input[:pool_ids]).each(&:import_data)
-          host = ::Host.find_by(:id => input[:managed][:id])
+          ::Katello::Pool.where(:cp_id => input[:pool_ids]).each(&:import_data)
+          host = ::Host.find_by(:id => input[:host_id])
           host.subscription_facet.update_subscription_status
         end
 

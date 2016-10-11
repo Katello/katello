@@ -22,13 +22,13 @@ module Actions
               end
             end
 
-            plan_self(:pool_ids => pool_ids, :host_name => host.name)
+            plan_self(:host_id => host.id, :pool_ids => pool_ids, :host_name => host.name)
           end
         end
 
         def finalize
           ::Katello::Pool.where(:id => input[:pool_ids]).each(&:import_data)
-          host = ::Host.find_by(:id => input[:managed][:id])
+          host = ::Host.find_by(:id => input[:host_id])
           host.subscription_facet.update_subscription_status
         end
 
