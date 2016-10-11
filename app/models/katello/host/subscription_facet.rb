@@ -3,6 +3,7 @@ module Katello
     class SubscriptionFacet < Katello::Model
       self.table_name = 'katello_subscription_facets'
       belongs_to :host, :inverse_of => :subscription_facet, :class_name => "::Host::Managed"
+      belongs_to :user, :inverse_of => :subscription_facets, :class_name => "::User"
 
       has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "Katello::ActivationKey"
       has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
