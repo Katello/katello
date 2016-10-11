@@ -236,11 +236,12 @@ module Katello
     #api :GET, "/status", N_("Shows version information")
     #description N_("This service is available for unauthenticated users")
     def server_status
-      status = { :managerCapabilities => Resources::Candlepin::CandlepinPing.ping['managerCapabilities'],
-                 :result => Resources::Candlepin::CandlepinPing.ping['result'],
-                 :rulesSource => Resources::Candlepin::CandlepinPing.ping['rulesSource'],
-                 :rulesVersion => Resources::Candlepin::CandlepinPing.ping['rulesVersion'],
-                 :standalone => Resources::Candlepin::CandlepinPing.ping['standalone'],
+      candlepin_response = Resources::Candlepin::CandlepinPing.ping
+      status = { :managerCapabilities => candlepin_response['managerCapabilities'],
+                 :result => candlepin_response['result'],
+                 :rulesSource => candlepin_response['rulesSource'],
+                 :rulesVersion => candlepin_response['rulesVersion'],
+                 :standalone => candlepin_response['standalone'],
                  :timeUTC => Time.now.getutc,
                  :version => Katello::VERSION }
 
