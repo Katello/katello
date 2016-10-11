@@ -32,7 +32,8 @@ module Actions
                                     consumer_parameters: consumer_params, activation_keys: activation_keys.map(&:cp_name))
             return if cp_create.error
 
-            plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name)
+            plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name,
+                      user_id: User.current.id)
             plan_action(Pulp::Consumer::Create, uuid: cp_create.output[:response][:uuid], name: host.name)
           end
         end
@@ -49,6 +50,10 @@ module Actions
           host = ::Host.find(input[:host_id])
           host.content_facet.uuid = input[:uuid]
           host.subscription_facet.uuid = input[:uuid]
+
+          user = ::User.find(input[:user_id])
+          host.subscription_facet.user = user unless user.nil? || user.hidden?
+
           host.content_facet.save!
           host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
               consumer_attributes.except(:installedProducts, :guestIds, :facts))
