@@ -46,6 +46,7 @@ describe('Controller: ContentHostErrataController', function() {
             this.setParams = function(args) {nutupaneMock.setParams(args)};
             this.refresh = function() {nutupaneMock.refresh()};
             this.load = function () {nutupaneMock.load()};
+            this.enableSelectAllResults = function () {};
         };
         HostErratum = {
             get: function() {return []},

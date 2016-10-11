@@ -154,6 +154,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             }
         };
 
+        errataNutupane.enableSelectAllResults();
+
         if ($scope.$stateParams.errataId) {
             loadErratum($scope.$stateParams.errataId);
         }
