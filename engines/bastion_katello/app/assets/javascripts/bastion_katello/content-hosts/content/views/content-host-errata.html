@@ -113,6 +113,9 @@
             <th bst-table-column="issued" translate>Issued</th>
           </tr>
         </thead>
+
+	<div data-extend-template="layouts/select-all-results.html"></div>
+
         <tbody>
           <tr bst-table-row ng-repeat="erratum in detailsTable.rows | filter:detailsTable.errataCompare" row-select="erratum">
             <td bst-table-cell>
