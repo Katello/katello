@@ -69,9 +69,8 @@ module Katello
     param :content_view_id, Integer, :desc => N_("Content View ID"), :required => true
     def create
       rhsm_params = params_to_rhsm_params
-      name = rhsm_params[:facts]['network.hostname']
 
-      host = Katello::Host::SubscriptionFacet.find_or_create_host(name, @content_view_environment.environment.organization, rhsm_params)
+      host = Katello::Host::SubscriptionFacet.find_or_create_host(@content_view_environment.environment.organization, rhsm_params)
       sync_task(::Actions::Katello::Host::Register, host, rhsm_params, @content_view_environment)
       host.reload
       ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
