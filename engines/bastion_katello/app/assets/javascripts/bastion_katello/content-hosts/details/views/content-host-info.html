@@ -281,7 +281,7 @@
         <span class="info-value"
               translate
               ng-show="host.subscription_facet_attributes.activation_keys.length == 0">
-          {{ contentHost.registered_by }}
+          {{ host.subscription_facet_attributes.user.login }}
         </span>
         <span class="info-value"
               ng-show="host.subscription_facet_attributes.activation_keys.length > 0"
