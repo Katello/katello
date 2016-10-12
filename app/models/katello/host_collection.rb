@@ -78,19 +78,7 @@ module Katello
       host_collections.each do |host_collection|
         host_collection_state = :ok
         unless host_collection.hosts.empty?
-          host_collection.errata.each do |erratum|
-            case erratum.errata_type
-            when Erratum::SECURITY
-              # there is a critical errata, so stop searching...
-              host_collection_state = :critical
-              break
-
-            when Erratum::BUGZILLA
-            when Erratum::ENHANCEMENT
-              # set state to warning, but continue searching...
-              host_collection_state = :warning
-            end
-          end
+          host_collection_state = host_collection.security_updates? ? :critical : :warning
         end
 
         host_collections_hash[host_collection_state] ||= []
@@ -100,15 +88,15 @@ module Katello
     end
 
     def security_updates?
-      errata.any? { |erratum| erratum.errata_type == Erratum::SECURITY }
+      errata(Erratum::SECURITY).any?
     end
 
     def bugzilla_updates?
-      errata.any? { |erratum| erratum.errata_type == Erratum::BUGZILLA }
+      errata(Erratum::BUGZILLA).any?
     end
 
     def enhancement_updates?
-      errata.any? { |erratum| erratum.errata_type == Erratum::ENHANCEMENT }
+      errata(Erratum::ENHANCEMENT).any?
     end
 
     def self.humanize_class_name(_name = nil)
