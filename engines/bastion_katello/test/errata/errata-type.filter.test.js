@@ -23,6 +23,10 @@ describe('Filter:errataType', function() {
         expect(filter('security')).toBe('Security Advisory');
     });
 
+    it("returns 'New Package Advisory' if newpackage.", function() {
+        expect(filter('newpackage')).toBe('New Package Advisory');
+    });
+
     it("returns provided type if not found.", function() {
         expect(filter('blah')).toBe('blah');
     });

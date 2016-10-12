@@ -33,6 +33,10 @@
             <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
           </span>
 
+          <span ng-show="errata.type == 'newpackage'">
+            <i class="fa fa-th-large inline-icon" title="{{ 'New Package' | translate }}"></i>
+          </span>
+
         {{ errata.type | errataType}}
         <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
       </td>
