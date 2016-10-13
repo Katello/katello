@@ -639,7 +639,7 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access products
           end
 
-          def _certificate_and_key(id, owner)
+          def product_certificate(id, owner)
             subscriptions_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{owner}/subscriptions", self.default_headers).body
             subscriptions = JSON.parse(subscriptions_json)
 
@@ -655,11 +655,11 @@ module Katello
           end
 
           def certificate(id, owner)
-            self._certificate_and_key(id, owner).try :[], 'cert'
+            self.product_certificate(id, owner).try :[], 'cert'
           end
 
           def key(id, owner)
-            self._certificate_and_key(id, owner).try :[], 'key'
+            self.product_certificate(id, owner).try :[], 'key'
           end
 
           def destroy(product_id)

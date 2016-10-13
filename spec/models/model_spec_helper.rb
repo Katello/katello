@@ -88,6 +88,7 @@ EOKEY
       # pulp orchestration
       Resources::Candlepin::Product.stubs(:certificate).returns("")
       Resources::Candlepin::Product.stubs(:key).returns("")
+      Resources::Candlepin::Product.stubs(:product_certificate).returns({})
       Resources::Candlepin::Product.stubs(:destroy).returns(true)
 
       Katello.pulp_server.extensions.repository.stubs(:create_or_update_schedule).returns(true)
