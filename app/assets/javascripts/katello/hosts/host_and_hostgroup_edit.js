@@ -253,7 +253,9 @@ KT.hosts.set_media_selection_bindings = function() {
 // Hopefully when this gets resolved http://projects.theforeman.org/issues/14699
 // This method will get backed out.
 function os_selected(element){
-  var attrs = attribute_hash(['operatingsystem_id', 'organization_id', 'location_id', 'content_view_id',
+  var type = $(element).attr('data-type'),
+      attrs = {};
+  attrs[type] = attribute_hash(['operatingsystem_id', 'organization_id', 'location_id', 'content_view_id',
                               'lifecycle_environment_id', 'content_source_id', 'architecture_id', 'hostgroup_id',
                               'medium_id', 'kickstart_repository_id']);
   var url = $(element).attr('data-url');
