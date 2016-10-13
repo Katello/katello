@@ -42,7 +42,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
             }
         };
 
-        packagesNutupane = new Nutupane(Package, {'host_id': $scope.$stateParams.hostId});
+        packagesNutupane = new Nutupane(Package, {'host_id': $scope.$stateParams.hostId, 'packages_restrict_upgradable': true});
         packagesNutupane.masterOnly = true;
         $scope.detailsTable = packagesNutupane.table;
         $scope.detailsTable.openEventInfo = openEventInfo;
