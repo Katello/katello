@@ -7,12 +7,14 @@ module Katello
       base.class_eval do
         lazy_accessor :productContent, :multiplier, :href, :attrs,
           :initializer => lambda { |_s| convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
-        # Entitlement Certificate for this product
-        lazy_accessor :certificate,
-          :initializer => lambda { |_s| Resources::Candlepin::Product.certificate(cp_id, self.organization.label) },
+        # Certificate for this product - used for SSL certificate and key
+        lazy_accessor :product_certificate,
+          :initializer => lambda { |_s| Resources::Candlepin::Product.product_certificate(cp_id, self.organization.label) },
           :unless => lambda { |_s| cp_id.nil? }
+        # Entitlement Certificate for this product
+        lazy_accessor :certificate, :initializer => lambda { |_s| product_certificate['cert'] if product_certificate }
         # Entitlement Key for this product
-        lazy_accessor :key, :initializer => lambda { |_s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda { |_s| cp_id.nil? }
+        lazy_accessor :key, :initializer => lambda { |_s| product_certificate['key'] if product_certificate }
 
         # we must store custom logger object during product importing so we can log status
         # from various places like callbacks
