@@ -75,12 +75,12 @@ module Katello
       end
 
       it "should receive valid certificate" do
-        Resources::Candlepin::Product.stubs(:certificate).returns("---SOME CERT---")
+        Resources::Candlepin::Product.stubs(:product_certificate).returns('cert' => "---SOME CERT---")
         @p.certificate.must_equal("---SOME CERT---")
       end
 
       it "should receive valid key from candlepin" do
-        Resources::Candlepin::Product.stubs(:key).returns("---SOME KEY---")
+        Resources::Candlepin::Product.stubs(:product_certificate).returns('key' => "---SOME KEY---")
         @p.key.must_equal("---SOME KEY---")
       end
     end
