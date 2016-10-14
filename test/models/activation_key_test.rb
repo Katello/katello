@@ -126,6 +126,16 @@ module Katello
       assert @dev_key.valid?
     end
 
+    def test_products
+      pool_one = katello_pools(:pool_one)
+      pool_one.subscription_id = nil
+      pool_one.save!
+      cp_pools = [{'id' => pool_one.cp_id}]
+
+      @dev_key.stubs(:get_key_pools).returns(cp_pools)
+      assert_empty @dev_key.products
+    end
+
     def test_available_subscriptions
       pool_one = katello_pools(:pool_one)
       pool_two = katello_pools(:pool_two)
