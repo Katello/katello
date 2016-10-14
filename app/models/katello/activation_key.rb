@@ -98,7 +98,11 @@ module Katello
       if cp_pools
         pools = cp_pools.collect { |cp_pool| Pool.find_by(:cp_id => cp_pool['id']) }
         pools.each do |pool|
-          all_products << pool.subscription.products
+          if pool.subscription
+            all_products << pool.subscription.products
+          else
+            Rails.logger.error("Pool #{pool.id} is missing its subscription id.")
+          end
         end
       end
       all_products.flatten!
