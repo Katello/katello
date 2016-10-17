@@ -51,6 +51,24 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     host_index_and_show(host)
   end
 
+  def test_update_subscription_facet
+    Katello::Host::SubscriptionFacet.any_instance.stubs(:backend_update_needed?).returns(false)
+
+    Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:virtual_host).returns(nil)
+    Katello::Candlepin::Consumer.any_instance.stubs(:virtual_guests).returns([])
+    Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
+
+    host = FactoryGirl.create(:host, :with_subscription)
+    host.subscription_facet.update_attributes!(:autoheal => true)
+
+    put :update, :id => host.id, :subscription_facet_attributes => {:autoheal => false}
+
+    assert_response :success
+
+    refute host.reload.subscription_facet.reload.autoheal
+  end
+
   def test_with_smartproxy
     host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                               :lifecycle_environment => @environment)
