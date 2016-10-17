@@ -12,6 +12,8 @@ module Katello
           :unknown => Katello::SubscriptionStatus::UNKNOWN
         }.freeze
 
+        accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
+
         has_one :subscription_facet, :class_name => '::Katello::Host::SubscriptionFacet', :foreign_key => :host_id, :inverse_of => :host, :dependent => :destroy
 
         has_many :activation_keys, :through => :subscription_facet

@@ -168,8 +168,6 @@ module Katello
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
       ::Host::Managed.send :include, Katello::Concerns::HostManagedExtensions
-      ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
-      ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
       ::Hostgroup.send :include, Katello::Concerns::HostgroupExtensions
       ::Location.send :include, Katello::Concerns::LocationExtensions
       ::Redhat.send :include, Katello::Concerns::RedhatExtensions
@@ -177,7 +175,6 @@ module Katello
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
       ::Setting.send :include, Katello::Concerns::SettingExtensions
-
       ::Container.send :include, Katello::Concerns::ContainerExtensions
       ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
 
@@ -237,6 +234,7 @@ module Katello
       end
 
       ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
+      ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
 
       #Api controller extensions
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
