@@ -24,7 +24,11 @@ module Actions
           else
             action_subject organization
           end
-          plan_self
+          plan_self(:organization_id => organization.id)
+        end
+
+        def run
+          ::Organization.find_by(:id => input[:organization_id]).try(:load_debug_cert)
         end
 
         def humanized_name
