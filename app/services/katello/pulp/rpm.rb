@@ -30,11 +30,16 @@ module Katello
       end
 
       def files
+        result = []
         if pulp_facts['files']
-          pulp_facts['files']['file'] + pulp_facts['files']['dir']
-        else
-          []
+          if pulp_facts['files']['file']
+            result << pulp_facts['files']['file']
+          end
+          if pulp_facts['files']['dir']
+            result << pulp_facts['files']['dir']
+          end
         end
+        result.flatten
       end
     end
   end
