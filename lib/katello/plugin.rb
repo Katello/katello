@@ -213,4 +213,10 @@ Foreman::Plugin.register :katello do
     RemoteExecutionFeature.register(:katello_errata_install, N_("Katello: Install Errata"), :description => N_("Install errata via Katello interface"), :provided_inputs => ['errata'])
     allowed_template_helpers :errata
   end
+
+  tests_to_skip("AccessPermissionsTest" => [
+    'foreman_tasks/api/tasks/callback should have a permission that grants access',
+    'bastion/bastion/index should have a permission that grants access',
+    'bastion/bastion/index_ie should have a permission that grants access'
+  ])
 end

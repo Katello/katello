@@ -3,9 +3,8 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :lifecycle_environments do
   permission :view_lifecycle_environments,
              {
-               'katello/api/v2/environments' => [:index, :show, :paths, :repositories],
-               'katello/api/rhsm/candlepin_proxies' => [:rhsm_index],
-               'katello/environments' => [:auto_complete_search]
+               'katello/api/v2/environments' => [:index, :show, :paths, :repositories, :auto_complete_search],
+               'katello/api/rhsm/candlepin_proxies' => [:rhsm_index]
              },
              :resource_type => 'Katello::KTEnvironment'
   permission :create_lifecycle_environments,
