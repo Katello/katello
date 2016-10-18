@@ -242,10 +242,6 @@ module Katello
       end
     end
 
-    def permission_denied
-      render :template => "katello/common/403"
-    end
-
     # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".
     # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
     # This assumes that the input follows a syntax similar to:

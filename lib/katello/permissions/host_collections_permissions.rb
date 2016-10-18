@@ -3,8 +3,7 @@ require 'katello/plugin.rb'
 Foreman::Plugin.find(:katello).security_block :host_collections do
   permission :view_host_collections,
              {
-               'katello/api/v2/host_collections' => [:index, :show],
-               'katello/host_collections' => [:auto_complete_search]
+               'katello/api/v2/host_collections' => [:index, :show, :auto_complete_search]
              },
              :resource_type => 'Katello::HostCollection'
   permission :create_host_collections,
@@ -14,7 +13,7 @@ Foreman::Plugin.find(:katello).security_block :host_collections do
              :resource_type => 'Katello::HostCollection'
   permission :edit_host_collections,
              {
-               'katello/api/v2/host_collections' => [:update, :add_systems, :remove_systems]
+               'katello/api/v2/host_collections' => [:update, :add_hosts, :remove_hosts]
              },
              :resource_type => 'Katello::HostCollection'
   permission :destroy_host_collections,

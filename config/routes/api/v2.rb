@@ -51,7 +51,6 @@ Katello::Engine.routes.draw do
               match '/available' => 'subscriptions#available', :via => :get
             end
           end
-          api_resources :systems, :only => [:index]
         end
 
         api_resources :content_views do
@@ -59,7 +58,6 @@ Katello::Engine.routes.draw do
           member do
             post :copy
             post :publish
-            post :refresh
             put :remove
             get :available_puppet_modules
             get :available_puppet_module_names
@@ -96,7 +94,7 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :content_view_versions, :except => [:create] do
+        api_resources :content_view_versions, :except => [:create, :update] do
           member do
             post :promote
             post :export
@@ -119,14 +117,10 @@ Katello::Engine.routes.draw do
             get :auto_complete_search
           end
         end
-        api_resources :grouped_docker_tags, :only => [:index, :show]
 
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           api_resources :activation_keys, :only => [:index, :create]
           api_resources :puppet_modules, :only => [:index]
-          api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
-            get :report, :on => :collection
-          end
         end
 
         api_resources :errata, :only => [:index, :show] do
@@ -162,7 +156,6 @@ Katello::Engine.routes.draw do
           end
           api_resources :host_collections, :only => [:index, :create]
           member do
-            get :manifest_history
             post :repo_discover
             post :cancel_repo_discover
             post :autoattach_subscriptions
@@ -177,9 +170,6 @@ Katello::Engine.routes.draw do
               get :auto_complete_search
               get :manifest_history
             end
-          end
-          api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
-            get :report, :on => :collection
           end
         end
 
@@ -246,13 +236,6 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :systems, :only => [:index, :show, :create, :update, :destroy] do
-          collection do
-            get :auto_complete_search
-          end
-          api_resources :products, :only => [:index]
-        end
-
         ##############################
         ##############################
 
@@ -268,11 +251,6 @@ Katello::Engine.routes.draw do
               match ':sync_plan_id/products', :to => 'products#index', :via => :get
             end
           end
-          api_resources :systems, :only => [:create] do
-            get :report, :on => :collection
-          end
-
-          resource :uebercert, :only => [:show]
 
           api_resources :gpg_keys, :only => [:index]
 
@@ -286,21 +264,7 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :host_collections do
-          member do
-            delete :destroy_hosts
-          end
-        end
-
-        api_resources :systems, :only => [] do
-          member do
-            get :events
-          end
-          collection do
-            match '/post_index' => 'systems#index', :via => :post
-            get :auto_complete_search
-          end
-        end
+        api_resources :host_collections
 
         api_resources :repositories, :only => [], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
           collection do
@@ -308,22 +272,13 @@ Katello::Engine.routes.draw do
             match '/bulk/sync' => 'repositories_bulk_actions#sync_repositories', :via => :post
             get :auto_complete_search
           end
-          api_resources :sync, :only => [:index] do
-            delete :index, :on => :collection, :action => :cancel
-          end
+          api_resources :sync, :only => [:index]
 
-          api_resources :export, :only => [:index]
-
-          api_resources :packages, :only => [:index, :show] do
-            get :search, :on => :collection
-          end
+          api_resources :packages, :only => [:index, :show]
           api_resources :package_groups, :only => [:index, :show]
           api_resources :files, :only => [:index, :show], :controller => 'file_units'
           api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
-          api_resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
-          api_resources :puppet_modules, :only => [:index, :show] do
-            get :search, :on => :collection
-          end
+          api_resources :puppet_modules, :only => [:index, :show]
           api_resources :docker_manifests, :only => [:index, :show]
           api_resources :docker_tags, :only => [:index, :show]
 
@@ -332,8 +287,6 @@ Katello::Engine.routes.draw do
           api_resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :update]
 
           member do
-            get :package_groups
-            get :package_group_categories
             get :gpg_key_content
             put :remove_packages, :action => :remove_content
             put :remove_puppet_modules, :action => :remove_content
@@ -356,7 +309,6 @@ Katello::Engine.routes.draw do
           api_resources :content_views, :only => [:index]
 
           member do
-            get :releases
             get :repositories
           end
         end
@@ -365,10 +317,7 @@ Katello::Engine.routes.draw do
           api_resources :repositories, :only => [:index] do
             get :index, :on => :member
           end
-          get :repositories, :on => :member
-          api_resources :sync, :only => [:index] do
-            delete :index, :on => :collection, :action => :cancel
-          end
+          api_resources :sync, :only => [:index]
 
           collection do
             match '/bulk/destroy' => 'products_bulk_actions#destroy_products', :via => :put
@@ -379,10 +328,6 @@ Katello::Engine.routes.draw do
 
         api_resources :subscriptions, :only => [] do
           api_resources :products, :only => [:index]
-        end
-
-        api_resources :users do
-          get :report, :on => :collection
         end
 
         api_resources :sync_plans, :only => [:index, :show, :update, :destroy] do
