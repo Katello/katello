@@ -125,8 +125,8 @@ module Katello
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :start_date => from, :end_date => to)
 
-      expected = [{"updated" => {"$gte" => from.to_time.as_json,
-                                 "$lte" => to.to_time.as_json}}]
+      expected = [{"updated" => {"$gte" => from.to_time.utc.as_json,
+                                 "$lte" => to.to_time.utc.as_json}}]
       assert_errata_rules([foo_rule], expected)
     end
 
@@ -139,8 +139,8 @@ module Katello
                                     :date_type => ContentViewErratumFilterRule::ISSUED,
                                     :filter => @filter, :start_date => from, :end_date => to)
 
-      expected = [{"issued" => {"$gte" => from.to_time.as_json,
-                                "$lte" => to.to_time.as_json}}]
+      expected = [{"issued" => {"$gte" => from.to_time.utc.as_json,
+                                "$lte" => to.to_time.utc.as_json}}]
       assert_errata_rules([foo_rule], expected)
     end
 
@@ -153,8 +153,8 @@ module Katello
                                     :date_type => ContentViewErratumFilterRule::UPDATED,
                                     :filter => @filter, :start_date => from, :end_date => to)
 
-      expected = [{"updated" => {"$gte" => from.to_time.as_json,
-                                 "$lte" => to.to_time.as_json}}]
+      expected = [{"updated" => {"$gte" => from.to_time.utc.as_json,
+                                 "$lte" => to.to_time.utc.as_json}}]
       assert_errata_rules([foo_rule], expected)
     end
 
@@ -176,8 +176,8 @@ module Katello
                                     :filter => @filter, :start_date => from.to_s, :date_type => "issued",
                                     :end_date => to.to_s, :types => [:enhancement, :security])
 
-      expected = [{"$and" => [{"issued" => {"$gte" => from.to_s.to_time.as_json,
-                                            "$lte" => to.to_s.to_time.as_json}},
+      expected = [{"$and" => [{"issued" => {"$gte" => from.to_s.to_time.utc.as_json,
+                                            "$lte" => to.to_s.to_time.utc.as_json}},
                               {"type" => {"$in" => [:enhancement, :security]}}]}]
       assert_errata_rules([foo_rule], expected)
     end
