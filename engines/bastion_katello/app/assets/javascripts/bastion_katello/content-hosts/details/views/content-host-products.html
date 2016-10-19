@@ -3,7 +3,7 @@
 </div>
 
 <div ng-if="host.hasSubscription()">
-  <div alert type="'info'">
+  <div bst-alert="info">
     {{ "Below are the repository content sets currently available for this content host through its subscriptions. For Red Hat subscriptions, additional content can be made available through the" | translate}}
     <a ng-href="/katello/providers/redhat_provider" translate>Red Hat Repositories page</a>.
     {{ "Changing default settings requires subscription-manager version 1.10 or newer to be installed on this host." | translate }}

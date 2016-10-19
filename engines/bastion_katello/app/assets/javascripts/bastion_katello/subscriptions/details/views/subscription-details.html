@@ -17,13 +17,13 @@
           Product Content
         </a>
       </li>
-      <li class="dropdown"
+      <li class="dropdown" uib-dropdown
           ng-class="{active: stateIncludes('subscription.activation-keys') || stateIncludes('subscriptions.details.associations-content-hosts')}">
-        <a class="dropdown-toggle">
+        <a uib-dropdown-toggle>
           <span translate>Associations</span>
           <i class="fa fa-chevron-down"></i>
         </a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" uib-dropdown-menu>
           <li>
             <a ui-sref="subscription.activation-keys({subscriptionId: subscription.id})" translate>
               Activation Keys

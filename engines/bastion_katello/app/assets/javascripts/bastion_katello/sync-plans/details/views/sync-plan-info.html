@@ -26,12 +26,21 @@
           on-save="save(syncPlan)"
           readonly="denied('edit_sync_plans', syncPlan)">
 
-         <input type="text" datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
-                show-weeks="false" tabindex="4" required/>
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="input-group">
+               <input type="text" uib-datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
+                      class="form-control" is-open="isOpen" show-weeks="false" tabindex="4" required/>
+               <span class="input-group-btn">
+                 <button type="button" class="btn btn-default" ng-click="isOpen = !isOpen">
+                   <i class="fa fa-calendar"></i>
+                 </button>
+               </span>
+            </div>
+          </div>
+        </div>
 
-         <timepicker type="time" show-meridian="false" id="syncTime" name="syncTime" ng-model="syncPlan.syncTime"
-                     tabindex="5">
-         </timepicker>
+        <div uib-timepicker show-meridian="false" id="syncTime" name="syncTime" ng-model="syncPlan.syncTime" tabindex="5"></div>
       </dd>
 
       <dt translate>Next Sync</dt>

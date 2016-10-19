@@ -7,7 +7,7 @@
 
   <div data-block="item-actions">
     <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button class="btn btn-link dropdown-toggle">
+      <button class="btn btn-link" uib-dropdown-toggle>
         <span class="fa fa-ellipsis-v"></span>
       </button>
 
@@ -64,13 +64,13 @@
           </span>
         </a>
       </li>
-      <li class="dropdown"
+      <li class="dropdown" uib-dropdown
           ng-class="{active: stateIncludes('activation-key.associations-content-hosts')}">
-        <a class="dropdown-toggle">
+        <a uib-dropdown-toggle>
           <span translate>Associations</span>
           <i class="fa fa-chevron-down"></i>
         </a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" uib-dropdown-menu>
           <li>
             <a ui-sref="activation-key.associations-content-hosts({activationKeyId: activationKey.id})" translate>
               Content Hosts

@@ -4,7 +4,7 @@
   <section>
     <h4 translate>Content Host Package Management</h4>
 
-    <span class="input-group-btn">
+    <span uib-dropdown class="input-group-btn">
       <button class="btn btn-default"
               type="button"
               translate
@@ -13,13 +13,13 @@
               ng-disabled="(table.numSelected === 0)">
         Update All Packages
       </button>
-      <button class="btn btn-default dropdown-toggle"
+      <button uib-dropdown-toggle class="btn btn-default"
               ng-hide="!remoteExecutionPresent"
               ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
-              type="button" id="update-all-use-remote-execution" data-toggle="dropdown">
+              type="button" id="update-all-use-remote-execution">
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="install-use-remote-execution">
+      <ul uib-dropdown-menu role="menu" aria-labelledby="install-use-remote-execution">
         <li role="presentation"><a ng-click="performViaKatelloAgent('update all', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
         <li role="presentation"><a ng-click="performViaRemoteExecution('update all', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
         <li role="presentation"><a ng-click="performViaRemoteExecution('update all', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
@@ -64,7 +64,7 @@
       </div>
 
       <div>
-        <span class="input-group-btn">
+        <span uib-dropdown class="input-group-btn">
           <button class="btn btn-default"
                   translate
                   ng-hide="denied('edit_hosts')"
@@ -72,20 +72,20 @@
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm">
             Install
           </button>
-          <button class="btn btn-default dropdown-toggle"
+          <button uib-dropdown-toggle class="btn btn-default"
                   ng-hide="!remoteExecutionPresent"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
-                  type="button" id="install-use-remote-execution" data-toggle="dropdown">
+                  type="button" id="install-use-remote-execution">
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="install-use-remote-execution">
+          <ul uib-dropdown-menu role="menu" aria-labelledby="install-use-remote-execution">
             <li role="presentation"><a ng-click="performViaKatelloAgent('install', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
             <li role="presentation"><a ng-click="performViaRemoteExecution('install', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
             <li role="presentation"><a ng-click="performViaRemoteExecution('install', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
           </ul>
         </span>
 
-        <span class="input-group-btn">
+        <span uib-dropdown class="input-group-btn">
           <button class="btn btn-default"
                   translate
                   ng-hide="denied('edit_hosts')"
@@ -94,20 +94,20 @@
                   ng-hide="content.contentType == 'errata'">
             Update
           </button>
-          <button class="btn btn-default dropdown-toggle"
+          <button uib-dropdown-toggle class="btn btn-default"
                   ng-hide="!remoteExecutionPresent || denied('edit_hosts')"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
-                  type="button" id="update-use-remote-execution" data-toggle="dropdown">
+                  type="button" id="update-use-remote-execution">
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="update-use-remote-execution">
+          <ul uib-dropdown-menu role="menu" aria-labelledby="update-use-remote-execution">
             <li role="presentation"><a ng-click="performViaKatelloAgent('update', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
             <li role="presentation"><a ng-click="performViaRemoteExecution('update', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
             <li role="presentation"><a ng-click="performViaRemoteExecution('update', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>
           </ul>
         </span>
 
-        <span class="input-group-btn">
+        <span uib-dropdown class="input-group-btn">
           <button class="btn btn-default"
                   translate
                   ng-hide="content.contentType == 'errata' || denied('edit_hosts')"
@@ -115,13 +115,13 @@
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm">
             Remove
           </button>
-          <button class="btn btn-default dropdown-toggle"
+          <button uib-dropdown-toggle class="btn btn-default"
                   ng-hide="!remoteExecutionPresent || denied('edit_hosts')"
                   ng-disabled="(table.numSelected === 0) || !packageActionForm.$valid || content.confirm"
-                  type="button" id="remove-use-remote-execution" data-toggle="dropdown">
+                  type="button" id="remove-use-remote-execution">
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="remove-use-remote-execution">
+          <ul uib-dropdown-menu role="menu" aria-labelledby="remove-use-remote-execution">
             <li role="presentation"><a ng-click="performViaKatelloAgent('remove', content)" role="menuitem" tabindex="-1" href="#" translate>via Katello Agent</a></li>
             <li role="presentation"><a ng-click="performViaRemoteExecution('remove', false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
             <li role="presentation"><a ng-click="performViaRemoteExecution('remove', true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>

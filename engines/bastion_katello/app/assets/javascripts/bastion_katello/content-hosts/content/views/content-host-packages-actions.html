@@ -31,20 +31,20 @@
                    placeholder="{{ 'Package/Group Name' | translate}}"
                    ng-model="packageAction.term"/>
 
-            <span class="input-group-btn">
+            <span uib-dropdown class="input-group-btn">
               <button class="btn btn-default"
                       ng-hide="denied('edit_hosts', host)"
                       ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
                       translate>
                 Perform
               </button>
-              <button class="btn btn-default dropdown-toggle"
+              <button uib-dropdown-toggle class="btn btn-default"
                       ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
                       ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
-                      type="button" id="use-remote-execution" data-toggle="dropdown">
+                      type="button" id="use-remote-execution">
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="use-remote-execution">
+              <ul uib-dropdown-menu role="menu" aria-labelledby="use-remote-execution">
                 <li role="presentation"><a ng-click="performViaKatelloAgent(packageAction.actionType, packageAction.term)" role="menuitem" tabindex="-1" href="#" translate>via Katello agent</a></li>
                 <li role="presentation"><a ng-click="performViaRemoteExecution(packageAction.actionType, packageAction.term, false)" role="menuitem" tabindex="-1" href="#" translate>via remote execution</a></li>
                 <li role="presentation"><a ng-click="performViaRemoteExecution(packageAction.actionType, packageAction.term, true)" role="menuitem" tabindex="-1" href="#" translate>via remote execution - customize first</a></li>

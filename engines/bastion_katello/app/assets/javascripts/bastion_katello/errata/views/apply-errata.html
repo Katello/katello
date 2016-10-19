@@ -14,14 +14,14 @@
   </header>
 
   <div>
-    <div class="alert warning alert-warning" ng-show="errataIds.length === 0">
+    <div bst-alert="warning" ng-show="errataIds.length === 0">
       <i class="icon-exclamation-sign"></i>
-      {{ 'At least one Errata needs to be selected to Apply.' | translate }}
+      <span translate>At least one Errata needs to be selected to Apply.</span>
     </div>
 
-    <div class="alert alert-info" ng-show="state.working">
+    <div bst-alert="info" ng-show="state.working">
       <i class="fa fa-spinner fa-spin"></i>
-      {{ 'Processing' | translate }}
+      <span translate>Processing</span>
     </div>
 
     <span ng-disabled="table.numSelected == 0">

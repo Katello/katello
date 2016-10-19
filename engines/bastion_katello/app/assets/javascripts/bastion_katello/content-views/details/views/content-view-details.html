@@ -87,14 +87,14 @@
               </a>
             </li>
 
-            <li class="dropdown"
+            <li uib-dropdown
                 ng-class="{active: stateIncludes('content-views.details.repositories.yum') || stateIncludes('content-views.details.filters')}"
                 ng-hide="contentView.composite">
-              <a class="dropdown-toggle">
+              <a uib-dropdown-toggle>
                 <span translate>Yum Content</span>
                 <i class="fa fa-chevron-down"></i>
               </a>
-              <ul class="dropdown-menu">
+              <ul uib-dropdown-menu>
                 <li>
                   <a ui-sref="content-views.details.repositories.yum.list" translate>
                     Repositories

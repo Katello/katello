@@ -52,14 +52,14 @@
     <td>
       <input type="text"
              class="form-control"
-             typeahead="package for package in fetchAutocompleteName($viewValue)"
+             uib-typeahead="package for package in fetchAutocompleteName($viewValue)"
              ng-hide="denied('edit_content_views', contentView)"
              ng-model="rule.name"/>
     </td>
     <td>
       <input type="text"
              class="form-control"
-             typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
+             uib-typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
              ng-hide="denied('edit_content_views', contentView)"
              ng-model="rule.architecture"/>
     </td>
@@ -130,7 +130,7 @@
       <input class="form-control"
              ng-hide="denied('edit_content_views', contentView)"
              ng-model="rule.architecture"
-             typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
+             uib-typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
              ng-readonly="!rule.editMode"/>
     </td>
     <td>

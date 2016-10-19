@@ -1,14 +1,12 @@
 <span page-title ng-model="activationKey">{{ 'Details for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div data-block="messages">
-  <div alert type="'info'">
-    <p translate>
-      This activation key may be used during system registration. For example:
-    </p>
-    <p translate>
-      subscription-manager register --org="{{ activationKey.organization.label }}" --activationkey="{{ activationKey.name }}"
-    </p>
-  </div>
+<div bst-alert="info">
+  <p translate>
+    This activation key may be used during system registration. For example:
+  </p>
+  <p translate>
+    subscription-manager register --org="{{ activationKey.organization.label }}" --activationkey="{{ activationKey.name }}"
+  </p>
 </div>
 
 <div data-extend-template="layouts/two-column-details.html">
@@ -110,10 +108,10 @@
              edit-trigger="editContentView">
         </div>
 
-        <div alert type="info" ng-show="editEnvironment">
+        <div bst-alert="info" ng-show="editEnvironment">
           <p translate>You must select a content view in order to save your environment.</p>
         </div>
-        <div alert type="info" ng-show="editContentView && !editEnvironment">
+        <div bst-alert="info" ng-show="editContentView && !editEnvironment">
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
       </dd>

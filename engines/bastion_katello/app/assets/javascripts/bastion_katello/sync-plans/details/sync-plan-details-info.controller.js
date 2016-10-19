@@ -26,13 +26,13 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
             $scope.panel = $scope.panel || {loading: false};
 
             function updateSyncPlan(syncPlan) {
-                syncPlan.syncDate = syncPlan.syncTime = syncPlan['sync_date'];
+                syncPlan.syncDate = new Date(syncPlan['sync_date']);
+                syncPlan.syncTime = new Date(syncPlan['sync_date']);
                 $scope.syncPlan = syncPlan;
             }
 
             SyncPlan.get({id: $scope.$stateParams.syncPlanId}, function (syncPlan) {
                 $scope.panel.loading = false;
-
                 updateSyncPlan(syncPlan);
             });
 
