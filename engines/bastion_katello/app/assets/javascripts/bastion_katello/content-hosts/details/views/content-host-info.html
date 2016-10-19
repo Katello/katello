@@ -223,7 +223,7 @@
               on-save="saveSubscriptionFacet(host)"
               on-cancel="cancelReleaseVersionUpdate()">
         </span>
-        <div alert type="'info'" ng-show="showVersionAlert">
+        <div bst-alert="info" ng-show="showVersionAlert">
           <p translate>
             No alternate release version choices are available. The available releases are based upon what is available in "{{ host.content_facet_attributes.content_view.name }}", the selected <a href="/content_views">content view</a> this content host is attached to for the given <a href="/lifecycle_environments">lifecycle environment</a>, "{{ host.content_facet_attributes.lifecycle_environment.name }}".
           </p>
@@ -244,7 +244,7 @@
       </div>
 
       <div class="detail" bst-feature-flag="lifecycle_environments">
-        <div alert type="'info'" ng-show="editContentView">
+        <div bst-alert="info" ng-show="editContentView">
           <p translate ng-show="contentViews.length === 0">
             The host requires being attached to a content view and the environment you have chosen has no content views promoted to it.
             See the <a href="/content_views">content views page</a> to manage and promote a content view.

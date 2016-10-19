@@ -65,13 +65,13 @@
 
     <span ng-switch="getRepositoriesNonDeletableReason(product)" bst-feature-flag="custom_products">
       <i class="fa fa-question-sign" ng-switch-when="permissions"
-         tooltip="{{ 'You cannot remove these repositories because you do not have permission.' | translate }}"
+         uib-tooltip="{{ 'You cannot remove these repositories because you do not have permission.' | translate }}"
          tooltip-animation="false"
          tooltip-placement="left"
          tooltip-append-to-body="true">
       </i>
       <i class="fa fa-question-sign" ng-switch-when="redhat"
-         tooltip="{{ 'You cannot remove these repositories because they belong to a Red Hat product.' | translate }}"
+         uib-tooltip="{{ 'You cannot remove these repositories because they belong to a Red Hat product.' | translate }}"
          tooltip-animation="false"
          tooltip-placement="left"
          tooltip-append-to-body="true">

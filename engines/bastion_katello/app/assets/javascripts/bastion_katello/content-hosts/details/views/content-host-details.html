@@ -67,13 +67,13 @@
                 Provisioning Details
               </a>
             </li>
-            <li class="dropdown"
+            <li uib-dropdown
                 ng-class="{active: stateIncludes('content-hosts.details.subscriptions.list') || stateIncludes('content-hosts.details.subscriptions.add') || stateIncludes('content-hosts.details.events')}">
-              <a class="dropdown-toggle">
+              <a uib-dropdown-toggle>
                 <span translate>Subscriptions</span>
                 <i class="fa fa-chevron-down"></i>
               </a>
-              <ul class="dropdown-menu">
+              <ul uib-dropdown-menu>
                 <li>
                   <a ui-sref="content-hosts.details.subscriptions.list" translate>
                     Subscriptions
@@ -98,13 +98,13 @@
                 Tasks
               </a>
             </li>
-            <li class="dropdown"
+            <li uib-dropdown
                 ng-class="{active: stateIncludes('content-hosts.details.packages-actions') || stateIncludes('content-hosts.details.packages-installed') || stateIncludes('content-hosts.details.packages-upgradeable')}" >
-              <a class="dropdown-toggle">
+              <a uib-dropdown-toggle>
                 <span translate>Packages</span>
                 <i class="fa fa-chevron-down"></i>
               </a>
-              <ul class="dropdown-menu">
+              <ul uib-dropdown-menu>
                 <li>
                   <a ui-sref="content-hosts.details.packages.actions" translate>
                     Yum Actions

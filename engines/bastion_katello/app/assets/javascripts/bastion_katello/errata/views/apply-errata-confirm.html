@@ -14,11 +14,15 @@
 <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
 <section class="col-md-4" ng-hide="selectedContentHosts">
-  <p class="alert alert-warning" translate>You must select at least one Content Host in order to apply Errata.</p>
+  <p bst-alert="warning">
+    <span translate>You must select at least one Content Host in order to apply Errata.</span>
+  </p>
 </section>
 
 <section class="col-md-4" ng-hide="errataIds">
-  <p class="alert alert-warning" translate>You must select at least one Errata to apply.</p>
+  <p bst-alert="warning">
+    <span translate>You must select at least one Errata to apply.</span>
+  </p>
 </section>
 
 <section class="details details-full" ng-show="selectedContentHosts && errataIds">

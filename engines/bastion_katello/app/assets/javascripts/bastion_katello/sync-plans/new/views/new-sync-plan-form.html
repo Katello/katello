@@ -29,22 +29,31 @@
  </div>
 
  <div bst-form-group label="{{ 'Start Date' | translate }}">
-   <input type="text" datepicker-popup
-          id="startDate"
-          name="startDate"
-          ng-model="syncPlan.startDate"
-          show-weeks="false"
-          tabindex="4"
-          required/>
+   <div class="input-group">
+     <input type="text" uib-datepicker-popup
+            id="startDate"
+            name="startDate"
+            is-open="isOpen"
+            ng-model="syncPlan.startDate"
+            show-weeks="false"
+            tabindex="4"
+            required/>
+
+     <span class="input-group-btn">
+       <button type="button" class="btn btn-default" ng-click="isOpen = !isOpen">
+         <i class="fa fa-calendar"></i>
+       </button>
+     </span>
+   </div>
  </div>
 
  <div bst-form-group label="{{ 'Start Time' | translate }}">
-   <timepicker type="time" show-meridian="false"
+   <div uib-timepicker show-meridian="false"
           id="startTime"
           name="startTime"
           ng-model="syncPlan.startTime"
           tabindex="5">
-   </timepicker>
+   </div>
    <p class="help-block" translate>The time the sync should happen in your current time zone.</p>
  </div>
 

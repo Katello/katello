@@ -29,14 +29,14 @@
     </button>
 
     <div class="btn-group" uib-dropdown keyboard-nav>
-      <button class="btn btn-default dropdown-toggle"
+      <button uib-dropdown-toggle class="btn btn-default"
               ng-show="permitted('edit_products')"
               ng-disabled="table.numSelected == 0">
         <span translate>Change Sync Plan</span>
         <span class="caret"></span>
       </button>
 
-      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+      <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem" ng-repeat="syncPlan in syncPlans.results" ng-show="syncPlans.results.length > 0">
           <a ng-click="updateSyncPlan(syncPlan)">{{ syncPlan.name }}</a>
         </li>
