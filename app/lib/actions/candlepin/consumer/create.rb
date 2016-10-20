@@ -18,9 +18,13 @@ module Actions
 
         def run
           # we still keep the output interface the same for case there is other
-          # way how to check the ability to subscribe the system with the actiovation key
+          # way how to check the ability to subscribe the system with the activation key
           # or we have better support for rolling back in Dynflow
           output[:response] = input[:response]
+        end
+
+        def finalize
+          input[:consumer_parameters][:facts] = 'TRIMMED'
         end
       end
     end
