@@ -10,6 +10,10 @@ module Actions
         def run
           ::Katello::Resources::Candlepin::Consumer.update(input[:uuid], input[:consumer_params])
         end
+
+        def finalize
+          input[:consumer_params][:facts] = 'TRIMMED'
+        end
       end
     end
   end

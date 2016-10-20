@@ -38,6 +38,10 @@ module Katello
         consumer_attributes[:entitlementStatus]
       end
 
+      def update(params)
+        ::Katello::Resources::Candlepin::Consumer.update(uuid, params)
+      end
+
       def filtered_pools(match_attached, match_host, match_installed, no_overlap)
         if match_host
           pools = self.available_pools
