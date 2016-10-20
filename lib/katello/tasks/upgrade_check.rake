@@ -14,6 +14,10 @@ namespace :katello do
     task_status = task_count > 0 ? fail : success
     puts "Checking for running tasks..."
     puts "[#{task_status}] - There are #{task_count} active tasks. "
-    puts "         Please wait for these to complete or cancel them from the Monitor tab.\n\n"
+    if task_count > 0
+      puts "         Please wait for these to complete or cancel them from the Monitor tab.\n\n"
+    else
+      puts "         You may proceed with the upgrade.\n\n"
+    end
   end
 end
