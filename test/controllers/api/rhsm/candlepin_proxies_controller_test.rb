@@ -101,8 +101,7 @@ module Katello
       end
 
       it "should update facts" do
-        facts = {:rhsm_fact => 'rhsm_value'}
-        Host::SubscriptionFacet.expects(:update_facts)
+        facts = {'rhsm_fact' => 'rhsm_value'}
         assert_sync_task(::Actions::Katello::Host::Update)
 
         put :facts, :id => @host.subscription_facet.uuid, :facts => facts
