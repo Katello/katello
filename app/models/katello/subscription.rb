@@ -32,5 +32,9 @@ module Katello
     def recently_expired?
       pools.any?(&:recently_expired?)
     end
+
+    def self.humanize_class_name(_name = nil)
+      _("Subscription")
+    end
   end
 end
