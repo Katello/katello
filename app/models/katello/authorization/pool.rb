@@ -6,7 +6,7 @@ module Katello
 
     module ClassMethods
       def readable
-        where(:subscription_id => Katello::Subscription.authorized(:view_subscription))
+        where(:subscription_id => Katello::Subscription.authorized(:view_subscriptions))
       end
     end
   end
