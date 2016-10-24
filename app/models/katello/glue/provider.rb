@@ -141,7 +141,7 @@ module Katello
           products_in_candlepin_ids << marketing_product_id
           products_in_candlepin_ids.concat(engineering_product_ids)
           added_eng_products = (engineering_product_ids - product_in_katello_ids).map do |id|
-            Resources::Candlepin::Product.get(id)[0]
+            Resources::Candlepin::Product.get(self.organization.label, id)[0]
           end
           adjusted_eng_products = []
           added_eng_products.each do |product_attrs|

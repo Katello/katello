@@ -9,11 +9,13 @@ module Actions
           param :label
           param :content_url
           param :gpg_key_url
+          param :owner
         end
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Content.
-              update(id: input[:content_id],
+              update(input[:owner],
+                     id: input[:content_id],
                      name: input[:name],
                      contentUrl: input[:content_url],
                      gpgUrl: input[:gpg_key_url],

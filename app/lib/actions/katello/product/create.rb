@@ -8,6 +8,7 @@ module Actions
             product.organization = organization
 
             cp_create = plan_action(::Actions::Candlepin::Product::Create,
+                                    :owner => product.organization.label,
                                     :name => product.name,
                                     :multiplier => 1,
                                     :attributes => [{:name => "arch", :value => "ALL"}])
@@ -20,8 +21,6 @@ module Actions
 
             subscription_id = sub_create.output[:response][:id]
 
-            plan_action(::Actions::Candlepin::Owner::RefreshSubscriptions,
-                                  :label => organization.label)
             product.save!
             action_subject product, :cp_id => cp_id
 

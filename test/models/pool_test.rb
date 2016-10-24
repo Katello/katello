@@ -150,8 +150,9 @@ module Katello
     end
 
     def test_for_activation_key
-      Pool::ActiveRecord_Relation.any_instance.expects(:where).with(cp_id: [1])
-      Pool.for_activation_key(OpenStruct.new(get_key_pools: [{'id' => 1}]))
+      key = katello_activation_keys(:simple_key)
+      key.pools << @pool_one
+      assert_includes Pool.for_activation_key(key), @pool_one
     end
   end
 end

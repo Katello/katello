@@ -16,11 +16,10 @@ module Katello
         lazy_accessor :productContent, :multiplier, :href, :attrs,
           :initializer => (lambda do |_s|
             convert_from_cp_fields(
-              Resources::Candlepin::Product.get(cp_id, PRODUCT_ATTRS)[0]
+              Resources::Candlepin::Product.get(self.organization.label, cp_id, PRODUCT_ATTRS)[0]
             )
           end)
 
-        # Certificate for this product - used for SSL certificate and key
         lazy_accessor :product_certificate,
           :initializer => lambda { |_s| Resources::Candlepin::Product.product_certificate(cp_id, self.organization.label) },
           :unless => lambda { |_s| cp_id.nil? }
@@ -135,12 +134,8 @@ module Katello
       end
 
       def add_content(content)
-        Resources::Candlepin::Product.add_content self.cp_id, content.content.id, true
+        Resources::Candlepin::Product.add_content(self.organization.label, self.cp_id, content.content.id, true)
         self.productContent << content
-      end
-
-      def remove_content_by_id(content_id)
-        Resources::Candlepin::Product.remove_content cp_id, content_id
       end
 
       def product_content_by_id(content_id)

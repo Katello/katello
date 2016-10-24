@@ -32,15 +32,16 @@ module Actions
                             cp_id: product.cp_id, organization_label: product.organization.label)
             end
 
-            if !product.used_by_another_org? && !organization_destroy
+            unless organization_destroy
               concurrence do
                 product.productContent.each do |pc|
                   plan_action(Candlepin::Product::ContentRemove,
+                              owner: product.organization.label,
                               product_id: product.cp_id,
                               content_id: pc.content.id)
                 end
+                plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id, :owner => product.organization.label)
               end
-              plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id)
             end
 
             plan_self(:product_id => product.id)

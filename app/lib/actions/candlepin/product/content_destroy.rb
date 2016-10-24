@@ -4,11 +4,12 @@ module Actions
       class ContentDestroy < Candlepin::Abstract
         input_format do
           param :content_id
+          param :owner
         end
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Content.
-              destroy(input[:content_id])
+              destroy(input[:owner], input[:content_id])
         end
       end
     end

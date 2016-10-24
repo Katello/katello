@@ -111,11 +111,12 @@ class Actions::Candlepin::Product::DestroyTest < ActiveSupport::TestCase
     let(:cp_id) { "foo_boo" }
     let(:planned_action) do
       create_and_plan_action(action_class,
-                             cp_id: cp_id)
+                             cp_id: cp_id,
+                             owner: 'whoops')
     end
 
     it 'runs' do
-      ::Katello::Resources::Candlepin::Product.expects(:destroy).with(cp_id)
+      ::Katello::Resources::Candlepin::Product.expects(:destroy).with('whoops', cp_id)
       run_action planned_action
     end
   end

@@ -28,12 +28,12 @@ module Katello
 
       def get_key_pools
         key_pools = Resources::Candlepin::ActivationKey.get(self.cp_id)[0][:pools]
-        pools = []
-        key_pools.each do |key_pool|
-          key_pool[:pool][:amount] = (key_pool[:quantity] ? key_pool[:quantity] : 0)
-          pools << key_pool[:pool]
+        key_pools.map do |key_pool|
+          {
+            :amount => (key_pool[:quantity] ? key_pool[:quantity] : 0),
+            :id => key_pool[:poolId]
+          }.with_indifferent_access
         end
-        pools
       end
 
       def import_pools

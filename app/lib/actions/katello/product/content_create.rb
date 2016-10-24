@@ -8,12 +8,14 @@ module Actions
           sequence do
             if repository.content.nil?
               content_create = plan_action(Candlepin::Product::ContentCreate,
+                                           owner:       repository.product.organization.label,
                                            name:        repository.name,
                                            type:        repository.content_type,
                                            label:       repository.custom_content_label,
                                            content_url: content_url(repository))
               content_id = content_create.output[:response][:id]
               plan_action(Candlepin::Product::ContentAdd,
+                                    owner: repository.product.organization.label,
                                     product_id: repository.product.cp_id,
                                     content_id: content_id)
 
@@ -23,6 +25,7 @@ module Actions
 
             if repository.gpg_key
               plan_action(Candlepin::Product::ContentUpdate,
+                          owner:       repository.organization.label,
                           content_id:  content_id,
                           name:        repository.name,
                           type:        repository.content_type,
