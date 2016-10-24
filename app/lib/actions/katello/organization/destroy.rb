@@ -98,6 +98,7 @@ module Actions
           content_ids = repositories.map(&:content_id).uniq
           content_ids.each do |content_id|
             plan_action(Candlepin::Product::ContentDestroy,
+                        owner: organization.label,
                         content_id: content_id)
           end
         end

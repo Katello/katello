@@ -8,9 +8,7 @@ module Katello
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
 
     scope :in_org, ->(org_id) { joins(:subscription).where("#{Katello::Subscription.table_name}.organization_id = ?", org_id) }
-    scope :for_activation_key, ->(ak) {
-      where(cp_id: ak.get_key_pools.map { |pool| pool['id'] })
-    }
+    scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }
 
     self.include_root_in_json = false
 

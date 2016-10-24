@@ -10,7 +10,7 @@ module Actions
         def existing_ids
           ::Katello::Resources::Candlepin::Environment.
               find(input[:cp_environment_id])[:environmentContent].map do |content|
-            content[:contentId]
+            content[:content][:id]
           end
         end
 

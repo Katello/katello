@@ -7,11 +7,13 @@ module Actions
           param :type
           param :label
           param :content_url
+          param :owner
         end
 
         def run
           output[:response] = ::Katello::Resources::Candlepin::Content.
-              create(name: input[:name],
+              create(input[:owner],
+                     name: input[:name],
                      contentUrl: input[:content_url],
                      type: input[:type],
                      label: input[:label],

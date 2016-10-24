@@ -26,8 +26,10 @@ module Katello
         action.stubs(:action_subject).with(@repository)
         plan_action action, @repository
         assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
+                                                                  owner: @product.organization.label,
                                                                   content_id: @repository.content_id
-        assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id
+        assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id,
+                                                                   owner: @product.organization.label
       end
 
       it 'does not remove content if other content exists in different product' do
@@ -86,6 +88,7 @@ module ::Actions::Katello::Product
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Product::Create,
                                 :name => product.name,
+                                :owner => product.organization.label,
                                 :multiplier => 1,
                                 :attributes => [{:name => "arch", :value => "ALL"}])
 
@@ -143,7 +146,7 @@ module ::Actions::Katello::Product
 
       plan_action(action, product)
 
-      assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id)
+      assert_action_planed_with(action, candlepin_destroy_class, cp_id: product.cp_id, owner: product.organization.label)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Destroy) do |repo|
         default_view_repos.include?(repo.first.id)
       end

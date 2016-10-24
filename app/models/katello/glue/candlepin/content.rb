@@ -13,31 +13,11 @@ module Katello
       def content
         return @content unless @content.nil?
         unless self.content_id.nil?
-          @content = Katello::Candlepin::Content.find(self.content_id)
+          @content = Katello::Candlepin::Content.find(self.organization.label, self.content_id)
         end
         @content
       rescue RestClient::ResourceNotFound, RestClient::BadRequest
         nil
-      end
-
-      def create_content
-        #only used for custom content
-        fail 'Can only create content for custom providers' if self.product.provider.redhat_provider?
-        new_content = Candlepin::ProductContent.new(
-          :content => {
-            :name => self.name,
-            :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, self.label),
-            :type => self.content_type,
-            :label => self.custom_content_label,
-            :vendor => Provider::CUSTOM
-          },
-          :enabled => true
-        )
-        new_content.create
-        self.product.add_content new_content
-        self.content_id = new_content.content.id
-        self.cp_label = new_content.content.label
-        new_content.content
       end
 
       def should_update_content?

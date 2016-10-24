@@ -12,6 +12,7 @@ module Actions
 
           if update_content?(repository)
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
+                        :owner => repository.organization.label,
                         :content_id => repository.content_id,
                         :name => repository.content.name,
                         :content_url => ::Katello::Glue::Pulp::Repos.custom_content_path(repository.product, repository.label),

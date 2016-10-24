@@ -4,6 +4,7 @@ module Katello
   describe Repository do
     let(:repository) do
       repository = Repository.new(attributes_for(:katello_repository))
+      repository.environment = build(:katello_environment)
       repository.product = build(:katello_product)
       repository.gpg_key = build(:katello_gpg_key)
       repository.stubs(:content_id).returns("content_id-rand#{rand(100)}")
@@ -15,7 +16,7 @@ module Katello
     end
 
     it "should retrieve remote content first time it's accessed (katello)" do #TODO: headpin
-      Candlepin::Content.expects(:find).with(repository.content_id)
+      Candlepin::Content.expects(:find).with(repository.environment.organization.label, repository.content_id)
       repository.content
     end
 

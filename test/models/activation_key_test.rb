@@ -144,7 +144,8 @@ module Katello
       cp_pools = [{'id' => 'abc123'}, {'id' => 'xyz123'}]
 
       @dev_key.stubs(:get_pools).returns(cp_pools)
-      @dev_key.stubs(:get_key_pools).returns([])
+      @dev_key.pools = []
+
       assert_equal [pool_one], @dev_key.available_subscriptions
     end
   end

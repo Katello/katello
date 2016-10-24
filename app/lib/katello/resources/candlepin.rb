@@ -535,31 +535,31 @@ module Katello
 
       class Content < CandlepinResource
         class << self
-          def create(attrs)
-            JSON.parse(self.post(path, JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+          def create(owner_label, attrs)
+            JSON.parse(self.post(path(owner_label), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
           end
 
-          def get(id)
-            content_json = super(path(id), self.default_headers).body
+          def get(owner_label, id)
+            content_json = super(path(owner_label, id), self.default_headers).body
             JSON.parse(content_json).with_indifferent_access
           end
 
-          def all
-            content_json = Candlepin::CandlepinResource.get(path, self.default_headers).body
+          def all(owner_label)
+            content_json = Candlepin::CandlepinResource.get(path(owner_label), self.default_headers).body
             JSON.parse(content_json)
           end
 
-          def destroy(id)
+          def destroy(owner_label, id)
             fail ArgumentError, "content id has to be specified" unless id
-            self.delete(path(id), self.default_headers).code.to_i
+            self.delete(path(owner_label, id), self.default_headers).code.to_i
           end
 
-          def update(attrs)
-            JSON.parse(self.put(path(attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+          def update(owner_label, attrs)
+            JSON.parse(self.put(path(owner_label, attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
           end
 
-          def path(id = nil)
-            "/candlepin/content/#{id}"
+          def path(owner_label, id = nil)
+            "/candlepin/owners/#{owner_label}/content/#{id}"
           end
         end
       end
@@ -587,11 +587,6 @@ module Katello
               self.default_headers
             ).body
             JSON.parse(content_json)
-          end
-
-          def refresh_for_owner(owner_key)
-            ret = self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
-            JSON.parse(ret).with_indifferent_access
           end
 
           def path(id = nil)
@@ -622,8 +617,8 @@ module Katello
 
       class Product < CandlepinResource
         class << self
-          def all
-            JSON.parse(Candlepin::CandlepinResource.get(path, self.default_headers).body)
+          def all(owner_label)
+            JSON.parse(Candlepin::CandlepinResource.get(path(owner_label), self.default_headers).body)
           end
 
           def find_for_stacking_id(owner_key, stacking_id)
@@ -635,12 +630,12 @@ module Katello
             nil
           end
 
-          def create(attr)
-            JSON.parse(self.post(path, attr.to_json, self.default_headers).body).with_indifferent_access
+          def create(owner_label, attr)
+            JSON.parse(self.post(path(owner_label), attr.to_json, self.default_headers).body).with_indifferent_access
           end
 
-          def get(id = nil, included = [])
-            products_json = super(path(id + "/?#{included_list(included)}"), self.default_headers).body
+          def get(owner_label, id = nil, included = [])
+            products_json = super(path(owner_label, id + "/?#{included_list(included)}"), self.default_headers).body
             products = JSON.parse(products_json)
             products = [products] unless id.nil?
             ::Katello::Util::Data.array_with_indifferent_access products
@@ -674,17 +669,17 @@ module Katello
             self.product_certificate(id, owner).try :[], 'key'
           end
 
-          def destroy(product_id)
+          def destroy(owner_label, product_id)
             fail ArgumentError, "product id has to be specified" unless product_id
-            self.delete(path(product_id), self.default_headers).code.to_i
+            self.delete(path(owner_label, product_id), self.default_headers).code.to_i
           end
 
-          def add_content(product_id, content_id, enabled)
-            self.post(join_path(path(product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
+          def add_content(owner_label, product_id, content_id, enabled)
+            self.post(join_path(path(owner_label, product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
           end
 
-          def remove_content(product_id, content_id)
-            self.delete(join_path(path(product_id), "content/#{content_id}"), self.default_headers).code.to_i
+          def remove_content(owner_label, product_id, content_id)
+            self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), self.default_headers).code.to_i
           end
 
           def create_unlimited_subscription(owner_key, product_id)
@@ -721,16 +716,11 @@ module Katello
                 end
               end
             end
-
-            if update_subscriptions
-              return Candlepin::Subscription.refresh_for_owner owner_key
-            else
-              return nil
-            end
+            nil
           end
 
-          def path(id = nil)
-            "/candlepin/products/#{id}"
+          def path(owner_label, id = nil)
+            "/candlepin/owners/#{owner_label}/products/#{id}"
           end
         end
       end

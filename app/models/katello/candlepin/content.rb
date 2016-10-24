@@ -6,8 +6,8 @@ module Katello
       load_attributes(params)
     end
 
-    def self.find(id)
-      found = Resources::Candlepin::Content.get(id)
+    def self.find(owner_key, id)
+      found = Resources::Candlepin::Content.get(owner_key, id)
       Candlepin::Content.new(found)
     end
 

@@ -85,7 +85,7 @@ module Katello
 
     def available_subscriptions
       all_pools = self.get_pools.map { |pool| pool["id"] }
-      added_pools = self.get_key_pools.map { |pool| pool["id"] }
+      added_pools = self.pools.pluck(:cp_id)
       available_pools = all_pools - added_pools
       Pool.where(:cp_id => available_pools,
                  :subscription_id => Subscription.with_subscribable_content)
@@ -94,15 +94,11 @@ module Katello
     def products
       all_products = []
 
-      cp_pools = self.get_key_pools
-      if cp_pools
-        pools = cp_pools.collect { |cp_pool| Pool.find_by(:cp_id => cp_pool['id']) }
-        pools.each do |pool|
-          if pool.subscription
-            all_products << pool.subscription.products
-          else
-            Rails.logger.error("Pool #{pool.id} is missing its subscription id.")
-          end
+      self.pools.each do |pool|
+        if pool.subscription
+          all_products << pool.subscription.products
+        else
+          Rails.logger.error("Pool #{pool.id} is missing its subscription id.")
         end
       end
       all_products.flatten!
