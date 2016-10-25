@@ -2,30 +2,9 @@ module Katello
   module Glue::Provider
     def self.included(base)
       base.send :include, InstanceMethods
-      base.class_eval do
-        before_destroy :destroy_products_orchestration
-      end
     end
 
     module InstanceMethods
-      def import_manifest(zip_file_path, options = {})
-        options = {:zip_file_path => zip_file_path}.merge(options)
-        options.assert_valid_keys(:force, :zip_file_path)
-
-        queue_import_manifest options
-      end
-
-      def delete_manifest
-        queue_delete_manifest
-      end
-
-      def refresh_manifest(upstream, options = {})
-        options = { :upstream => upstream }.merge(options)
-        options.assert_valid_keys(:upstream)
-
-        queue_import_manifest(options)
-      end
-
       def sync
         Rails.logger.debug "Syncing provider #{name}"
         syncs = self.products.collect do |p|
@@ -38,14 +17,6 @@ module Katello
         self.products.any? { |p| p.synced? }
       end
 
-      #get last sync status of all repositories in this provider
-      def latest_sync_statuses
-        statuses = self.products.collect do |p|
-          p.latest_sync_statuses
-        end
-        statuses.flatten
-      end
-
       # Get the most relavant status for all the repos in this Provider
       def sync_status
         statuses = self.products.reject { |r| r.empty? }.map { |r| r.sync_status }
@@ -55,7 +26,7 @@ module Katello
          PulpSyncStatus::Status::NOT_SYNCED,
          PulpSyncStatus::Status::CANCELED,
          PulpSyncStatus::Status::ERROR].each do |interesting_status|
-          relevant_status =  statuses.find { |s| s[:state].to_s == interesting_status.to_s }
+          relevant_status = statuses.find { |s| s[:state].to_s == interesting_status.to_s }
           return relevant_status if relevant_status
         end
 
@@ -65,16 +36,6 @@ module Katello
 
       def sync_state
         self.sync_status[:state]
-      end
-
-      def sync_start
-        start_times = []
-        self.products.each do |prod|
-          start = prod.sync_start
-          start_times << start unless start.nil?
-        end
-        start_times.sort!
-        start_times.last
       end
 
       def sync_finish
@@ -100,24 +61,6 @@ module Katello
         end
         sync_times.sort!
         sync_times.last
-      end
-
-      def url_to_host_and_path(url = "")
-        parsed = URI.parse(url)
-        ["#{parsed.scheme}://#{parsed.host}#{parsed.port ? ':' + parsed.port.to_s : ''}", parsed.path]
-      end
-
-      def del_products
-        Rails.logger.debug "Deleting all products for provider: #{name}"
-        self.products.uniq.each(&:destroy)
-        true
-      rescue => e
-        Rails.logger.error "Failed to delete all products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
-
-      def owner_import(zip_file_path, options)
-        Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
       end
 
       def owner_upstream_update(upstream, _options)
@@ -189,51 +132,6 @@ module Katello
       end
 
       # TODO: break up method
-      def queue_import_manifest(options)
-        options = options.with_indifferent_access
-        fail "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
-
-        #if a manifest has already been imported, we need to update the products
-        manifest_update = self.products.any?
-        #are we refreshing from upstream?
-        manifest_refresh = options['zip_file_path'].nil?
-
-        import_logger.debug "Importing manifest for provider #{self.name}"
-
-        begin
-          if manifest_refresh
-            zip_file_path = "/tmp/#{rand}.zip"
-            upstream = options[:upstream]
-            pre_queue.create(:name => "export upstream manifest for owner: #{self.organization.name}",
-                             :priority => 2, :action => [self, :owner_upstream_update, upstream, options],
-                             :action_rollback => nil)
-            pre_queue.create(:name => "export upstream manifest for owner: #{self.organization.name}",
-                             :priority => 3, :action => [self, :owner_upstream_export, upstream, zip_file_path, options],
-                             :action_rollback => nil)
-          else
-            zip_file_path = options[:zip_file_path]
-          end
-
-          pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
-                           :priority => 4, :action => [self, :owner_import, zip_file_path, options],
-                           :action_rollback => [self, :del_owner_import])
-          pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
-                           :priority => 5, :action => [self, :import_products_from_cp])
-          pre_queue.create(:name     => "refresh product repos",
-                           :priority => 6, :action => [self, :refresh_existing_products]) if manifest_update && SETTINGS[:katello][:use_pulp]
-
-          self.save!
-        rescue => error
-          display_manifest_message(manifest_refresh ? 'refresh' : 'import', error)
-          raise error
-        end
-      end
-
-      def refresh_existing_products
-        self.products.each { |p| p.update_repositories }
-      end
-
-      # TODO: break up method
       def import_products_from_cp # rubocop:disable MethodLength
         product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
         products_in_candlepin_ids = []
@@ -277,56 +175,9 @@ module Katello
         true
       end
 
-      def destroy_products_orchestration
-        pre_queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
-      end
-
-      def import_error_message(display_message)
-        error_texts = [
-          _("Subscription manifest upload for provider '%s' failed.") % self.name,
-          (_("Reason: %s") % display_message unless display_message.blank?)
-        ].compact
-        error_texts.join('<br />')
-      end
-
-      def refresh_error_message(display_message)
-        error_texts = [
-          _("Subscription manifest refresh for provider '%s' failed.") % self.name,
-          (_("Reason: %s") % display_message unless display_message.blank?)
-        ].compact
-        error_texts.join('<br />')
-      end
-
-      def exec_delete_manifest
-        Resources::Candlepin::Owner.destroy_imports self.organization.label, true
-        index_subscriptions
-      end
-
       def index_subscriptions
         Katello::Subscription.import_all
         Katello::Pool.import_all
-      end
-
-      def rollback_delete_manifest
-        # Nothing to be done until implemented in katello where possible pulp recovery actions should be done(?)
-      end
-
-      def queue_delete_manifest
-        import_logger.debug "Deleting manifest for provider #{self.name}"
-
-        begin
-          pre_queue.create(:name     => "delete manifest for owner: #{self.organization.name}",
-                           :priority => 3, :action => [self, :exec_delete_manifest],
-                           :action_rollback => [self, :rollback_delete_manifest])
-          if SETTINGS[:katello][:use_pulp]
-            pre_queue.create(:name => "refresh product repos for deletion",
-                             :priority => 6, :action => [self, :refresh_existing_products])
-          end
-          self.save!
-        rescue => error
-          display_manifest_message('delete', error)
-          raise error
-        end
       end
 
       def rules_source
@@ -338,26 +189,6 @@ module Katello
       end
 
       protected
-
-      # Display appropriate messages when manifest import or delete fails
-      # TODO: break up this method
-      def display_manifest_message(type, error)
-        # Clean up response from candlepin
-        types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')} # For i18n
-        begin
-          if error.respond_to?(:response)
-            results = JSON.parse(error.response)
-          elsif error.message
-            results = {'displayMessage' => error.message, 'conflicts' => ['UNKNOWN']}
-          else
-            results = {'displayMessage' => _('Manifest %s failed') % types[type], 'conflicts' => ['UNKNOWN']}
-          end
-        rescue
-          results = {'displayMessage' => _('Manifest %s failed') % types[type], 'conflicts' => []}
-        end
-
-        Rails.logger.error "Error during manifest #{type}: #{results}"
-      end
 
       # When a subscription is defined as a virtual data center subscription,
       # its pools will have a seperate 'derived' marketing product and a seperate set

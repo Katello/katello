@@ -111,24 +111,21 @@ module Katello
         @provider.save!
       end
 
-      task = async_task(::Actions::Katello::Provider::ManifestImport, @provider, File.expand_path(temp_file.path), params[:force])
+      task = async_task(::Actions::Katello::Organization::ManifestImport, @organization, File.expand_path(temp_file.path), params[:force])
       respond_for_async :resource => task
     end
 
     api :PUT, "/organizations/:organization_id/subscriptions/refresh_manifest", N_("Refresh previously imported manifest for Red Hat provider")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     def refresh_manifest
-      details  = @provider.organization.owner_details
-      upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
-
-      task = async_task(::Actions::Katello::Provider::ManifestRefresh, @provider, upstream)
+      task = async_task(::Actions::Katello::Organization::ManifestRefresh, @organization)
       respond_for_async :resource => task
     end
 
     api :POST, "/organizations/:organization_id/subscriptions/delete_manifest", N_("Delete manifest from Red Hat provider")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     def delete_manifest
-      task = async_task(::Actions::Katello::Provider::ManifestDelete, @provider)
+      task = async_task(::Actions::Katello::Organization::ManifestDelete, @organization)
       respond_for_async :resource => task
     end
 

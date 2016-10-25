@@ -65,8 +65,8 @@ module Katello
     end
 
     def test_upload
-      assert_async_task ::Actions::Katello::Provider::ManifestImport do |provider, path, _force|
-        assert_equal(@organization.redhat_provider.id, provider.id)
+      assert_async_task ::Actions::Katello::Organization::ManifestImport do |org, path, _force|
+        assert_equal(@organization, org)
         assert_match(/\.zip$/, path)
       end
       test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
@@ -85,12 +85,8 @@ module Katello
     end
 
     def test_refresh_manfiest
-      Provider.any_instance.stubs(:refresh_manifest)
-      Provider.any_instance.stubs(:organization).returns(@organization)
-      Organization.any_instance.stubs(:owner_details).returns("upstreamConsumer" => "JarJarBinks")
-      assert_async_task(::Actions::Katello::Provider::ManifestRefresh) do |provider, upstream|
-        assert_equal(@organization.redhat_provider.id, provider.id)
-        assert_equal("JarJarBinks", upstream)
+      assert_async_task(::Actions::Katello::Organization::ManifestRefresh) do |organization|
+        assert_equal(@organization, organization)
       end
       put :refresh_manifest, :organization_id => @organization.id
       assert_response :success
@@ -106,9 +102,8 @@ module Katello
     end
 
     def test_delete_manifest
-      Provider.any_instance.stubs(:delete_manifest)
-      assert_async_task(::Actions::Katello::Provider::ManifestDelete) do |provider|
-        assert_equal(@organization.redhat_provider.id, provider.id)
+      assert_async_task(::Actions::Katello::Organization::ManifestDelete) do |org|
+        assert_equal @organization, org
       end
       post :delete_manifest, :organization_id => @organization.id
       assert_response :success

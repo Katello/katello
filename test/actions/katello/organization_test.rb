@@ -85,4 +85,89 @@ module ::Actions::Katello::Organization
                                 label:  organization.label)
     end
   end
+
+  class ManifestRefreshTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::ManifestRefresh }
+
+    it 'plans' do
+      upstream = {}
+      rhel7 = katello_repositories(:rhel_7_x86_64)
+      organization.stubs(:owner_details).returns({})
+      organization.products.stubs(:redhat).returns([rhel7.product])
+      action.stubs(:action_subject).with(organization)
+      action.stubs(:rand).returns('1234')
+      plan_action(action, organization)
+
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::UpstreamUpdate,
+                                 organization_id: organization.id,
+                                 upstream: upstream
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::UpstreamExport,
+                                 organization_id: organization.id,
+                                 upstream: upstream,
+                                 path: "/tmp/1234.zip"
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::Import,
+                                 label: organization.label,
+                                 path: "/tmp/1234.zip"
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::ImportProducts,
+                                 organization_id: organization.id
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Katello::Repository::RefreshRepository,
+                                 rhel7
+                                )
+    end
+  end
+
+  class ManifestImportTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::ManifestImport }
+
+    it 'plans' do
+      rhel7 = katello_repositories(:rhel_7_x86_64)
+      organization.products.stubs(:redhat).returns([rhel7.product])
+      action.stubs(:action_subject).with(organization)
+      plan_action(action, organization, '/tmp/1234.zip', false)
+
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::Import,
+                                 label: organization.label,
+                                 path: "/tmp/1234.zip",
+                                 force: false
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::ImportProducts,
+                                 organization_id: organization.id
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Katello::Repository::RefreshRepository,
+                                 rhel7
+                                )
+    end
+  end
+
+  class ManifestDeleteTest < TestBase
+    let(:action_class) { ::Actions::Katello::Organization::ManifestDelete }
+
+    it 'plans' do
+      rhel7 = katello_repositories(:rhel_7_x86_64)
+      organization.products.stubs(:redhat).returns([rhel7.product])
+      action.stubs(:action_subject).with(organization)
+      plan_action(action, organization)
+
+      assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::DestroyImports,
+                                 label: organization.label
+                                )
+      assert_action_planned_with(action,
+                                 ::Actions::Katello::Repository::RefreshRepository,
+                                 rhel7
+                                )
+    end
+  end
 end
