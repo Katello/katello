@@ -74,7 +74,6 @@ module ::Actions::Katello::Product
     end
 
     it 'plans' do
-      product.orchestration_for = :create
       action.stubs(:action_subject).with do |subject, params|
         subject.must_equal(product)
         params[:cp_id].must_be_kind_of Dynflow::ExecutionPlan::OutputReference

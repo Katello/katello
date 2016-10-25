@@ -52,50 +52,6 @@ module Katello
       specify { @product.provider.must_equal(@provider) }
     end
 
-    describe "import manifest via RED HAT provider" do
-      before(:each) do
-        disable_org_orchestration
-        @organization = get_organization(:organization2)
-        @organization.setup_label_from_name
-        @organization.create_redhat_provider
-        @organization.create_anonymous_provider
-        @organization.save!
-        @provider = @organization.redhat_provider
-      end
-
-      it "should make correct calls" do
-        @provider.expects(:owner_import).once.returns(true)
-        @provider.expects(:import_products_from_cp).once.returns(true)
-
-        @provider.import_manifest "path_to_manifest"
-      end
-
-      describe "marketing to product id mapping" do
-        let(:pools) do
-          ProductTestData::POOLS.merge(
-            "derivedProductId" => "200",
-            "derivedProvidedProducts" => [ProductTestData::DERIVED_PROVIDED_PRODUCT.merge("productId" => "700")]
-          )
-        end
-
-        before do
-          Resources::Candlepin::Owner.stubs(:pools).returns([pools])
-        end
-
-        it "should be generated correctly" do
-          mapping = @provider.send(:marketing_to_engineering_product_ids_mapping)
-          # keys should include product and derived product ids.
-          mapping.assert_valid_keys('rhel6-server', '200')
-
-          # Ensure provided product is mapped to product
-          mapping['rhel6-server'].must_equal(['20'])
-
-          # Ensure derived provided product is mapped to derived product
-          mapping['200'].must_equal(['700'])
-        end
-      end
-    end
-
     describe "products refresh(katello)" do
       def product_content(name)
         Candlepin::ProductContent.new(

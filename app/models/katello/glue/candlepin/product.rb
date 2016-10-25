@@ -31,11 +31,9 @@ module Katello
       attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
 
       product = Product.new(attrs, &block)
-      product.orchestration_for = :import_from_cp_ar_setup
       product.save!
       product.productContent_will_change!
       product.productContent = product.build_product_content(product_content_attrs)
-      product.orchestration_for = :import_from_cp
       product.save!
 
     rescue => e
