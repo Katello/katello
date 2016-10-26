@@ -173,6 +173,12 @@ module Katello
 
       facts['network.fqdn'] = 'foo.domain.com'
       assert_equal 'foo.domain.com', Host::SubscriptionFacet.propose_name_from_facts(facts)
+
+      Setting[:register_hostname_fact] = 'network.hostname'
+      assert_equal 'foo', Host::SubscriptionFacet.propose_name_from_facts(facts)
+
+      Setting[:register_hostname_fact] = 'trumpedupfact'
+      assert_equal facts['network.fqdn'], Host::SubscriptionFacet.propose_name_from_facts(facts)
     end
 
     def test_duplicate_usernames

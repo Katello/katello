@@ -4,8 +4,11 @@ class Setting::Content < Setting
   def self.load_defaults
     return unless super
 
+    BLANK_ATTRS << 'register_hostname_fact'
+
     download_policies = proc { Hash[::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
     proxy_download_policies = proc { Hash[::SmartProxy::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
+
     self.transaction do
       [
         self.set('katello_default_provision', N_("Default provisioning template for new Operating Systems"), 'Katello Kickstart Default'),
@@ -35,7 +38,9 @@ class Setting::Content < Setting
         self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt"),
         self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false),
         self.set('use_pulp_oauth', N_("use oauth authentication for pulp instead of the default cert based authentication"), false),
-        self.set('unregister_delete_host', N_("When unregistering host via subscription-manager, also delete server-side host record"), false)
+        self.set('unregister_delete_host', N_("When unregistering host via subscription-manager, also delete server-side host record"), false),
+        self.set('register_hostname_fact', N_("When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"),
+                  '', N_('Subscription manager name registration fact'), nil)
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true
