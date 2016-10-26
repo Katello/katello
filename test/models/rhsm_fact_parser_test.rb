@@ -9,7 +9,9 @@ module Katello
         'net.interface.eth0.1.mac_address' => '00:00:00:00:00:12',
         'net.interface.eth0.1.ipv4_address' => '192.168.0.2',
         'net.interface.ethnone.mac_address' => 'none',
-        'net.interface.eth2.mac_address' => '00:00:00:00:00:13'
+        'net.interface.eth2.mac_address' => '00:00:00:00:00:13',
+        'net.interface.eth3.ipv4_address' => 'Unknown',
+        'net.interface.eth3.mac_address' => '00:00:00:00:00:14'
       }
       @parser = RhsmFactParser.new(@facts)
     end
@@ -42,6 +44,11 @@ module Katello
         'ipaddress' => nil
       }
       assert_equal expected_eth1, @parser.get_facts_for_interface('eth1')
+    end
+
+    def test_get_facts_for_interface_with_invalid_ip
+      assert_equal @facts['net.interface.eth3.mac_address'], @parser.get_facts_for_interface('eth3')['macaddress']
+      assert_empty @parser.get_facts_for_interface('eth3')['ipaddress']
     end
 
     def test_valid_centos_os
