@@ -90,5 +90,28 @@ module Katello
         @rule.save!
       end
     end
+
+    def test_default_types_with_errata_id
+      # if an errata_id is set, then types is left empty
+      @rule.save!
+      assert_empty @rule.types
+    end
+
+    def test_default_types_with_types
+      # if an errata_id is not set and types is set, that value is stored
+      @rule.errata_id = nil
+      @rule.start_date = @start_date
+      @rule.types = ['enhancement']
+      @rule.save!
+      assert_equal @rule.types, ['enhancement']
+    end
+
+    def test_default_types_without_types
+      # if an errata_id is not set and types is not set, they will be set by default
+      @rule.errata_id = nil
+      @rule.start_date = @start_date
+      @rule.save!
+      assert_equal @rule.types, ContentViewErratumFilter::ERRATA_TYPES.keys
+    end
   end
 end

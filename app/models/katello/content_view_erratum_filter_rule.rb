@@ -2,6 +2,8 @@ module Katello
   class ContentViewErratumFilterRule < Katello::Model
     self.include_root_in_json = false
 
+    before_create :default_types
+
     ISSUED = "issued".freeze
     UPDATED = "updated".freeze
     DATE_TYPES = [ISSUED, UPDATED].freeze
@@ -31,6 +33,12 @@ module Katello
 
     def pulp_date_type
       self.date_type == ISSUED ? "issued" : "updated"
+    end
+
+    def default_types
+      if errata_id.nil? && types.blank?
+        self.types = ContentViewErratumFilter::ERRATA_TYPES.keys
+      end
     end
   end
 end
