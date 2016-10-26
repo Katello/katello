@@ -91,11 +91,20 @@ module Katello
       end
 
       def self.propose_name_from_facts(facts)
-        facts['network.fqdn'] || facts['network.hostname-override'] || facts['network.hostname']
+        setting_fact = Setting[:register_hostname_fact]
+        if !setting_fact.blank? && facts[setting_fact]
+          facts[setting_fact]
+        else
+          Rails.logger.warn(_("register_hostname_fact set for %s, but no fact found.") % setting_fact) unless setting_fact.blank?
+          facts['network.fqdn'] || facts['network.hostname-override'] || facts['network.hostname']
+        end
       end
 
       def self.propose_existing_hostname(facts)
-        if ::Host.where(:name => facts['network.hostname'].downcase).any?
+        setting_fact = Setting[:register_hostname_fact]
+        if !setting_fact.blank? && !facts[setting_fact].blank? && ::Host.where(:name => setting_fact.downcase).any?
+          name = facts[setting_fact]
+        elsif ::Host.where(:name => facts['network.hostname'].downcase).any?
           name = facts['network.hostname']
         elsif facts['network.fqdn'] && ::Host.where(:name => facts['network.fqdn'].downcase).any?
           name = facts['network.fqdn']
