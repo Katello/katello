@@ -23,7 +23,7 @@ module Katello
       {
         'link' => true,
         'macaddress' => facts["net.interface.#{interface}.mac_address"],
-        'ipaddress' => facts["net.interface.#{interface}.ipv4_address"]
+        'ipaddress' => get_rhsm_ip(interface)
       }
     end
 
@@ -70,6 +70,13 @@ module Katello
     end
 
     def ipmi_interface
+    end
+
+    private
+
+    def get_rhsm_ip(interface)
+      ip = facts["net.interface.#{interface}.ipv4_address"]
+      Net::Validations.validate_ip(ip) ? ip : nil
     end
   end
 end
