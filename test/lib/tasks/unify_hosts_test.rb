@@ -14,6 +14,8 @@ module Katello
       Katello::Candlepin::Consumer.any_instance.stubs(:entitlement_status).returns(Katello::Candlepin::Consumer::ENTITLEMENTS_VALID)
 
       ENV['HOSTS'] = nil
+      ENV['DRYRUN'] = nil
+      ENV['USE_NAME'] = nil
       setup_two_hosts
     end
 
@@ -33,6 +35,14 @@ module Katello
 
       assert_nil ::Host.find_by(:id => @host2.id)
       refute_nil @host1.reload.subscription_facet.uuid
+    end
+
+    def test_unify_hosts_dry_run
+      ENV['DRYRUN'] = 'true'
+      Rake.application.invoke_task('katello:unify_hosts')
+
+      refute_nil ::Host.find_by(:id => @host2.id)
+      assert_nil @host1.reload.subscription_facet
     end
 
     def test_unify_two
@@ -81,6 +91,27 @@ module Katello
 
       refute_nil ::Host.find_by(:id => @host2.id)
       assert_equal 'abcd-efgh', @host1.reload.subscription_facet.uuid
+    end
+
+    def test_use_name
+      @host1.primary_interface.update_attributes!(:mac => '52:bc:bc:bc:bc:bc')
+      ENV['USE_NAME'] = 'true'
+      Rake.application.invoke_task('katello:unify_hosts')
+
+      assert_nil ::Host.find_by(:id => @host2.id)
+      refute_nil @host1.reload.subscription_facet
+    end
+
+    def test_use_name_uppercase
+      @host1.primary_interface.update_attributes!(:mac => '52:bc:bc:bc:bc:bc')
+      @host2.name = @host1.name.upcase
+      @host2.save!(:validate => false)
+
+      ENV['USE_NAME'] = 'true'
+      Rake.application.invoke_task('katello:unify_hosts')
+
+      assert_nil ::Host.find_by(:id => @host2.id)
+      refute_nil @host1.reload.subscription_facet
     end
   end
 end
