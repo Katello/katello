@@ -67,6 +67,9 @@ module Katello
     has_many :kickstart_content_facets, :class_name => "Katello::Host::ContentFacet", :foreign_key => :kickstart_repository_id,
                           :inverse_of => :kickstart_repository, :dependent => :nullify
 
+    has_many :kickstart_hostgroups, :class_name => "::Hostgroup", :foreign_key => :kickstart_repository_id,
+             :inverse_of => :kickstart_repository, :dependent => :nullify
+
     # rubocop:disable HasAndBelongsToMany
     # TODO: change this into has_many :through association
     has_and_belongs_to_many :filters, :class_name => "Katello::ContentViewFilter",
