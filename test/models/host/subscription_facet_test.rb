@@ -175,6 +175,16 @@ module Katello
       assert_equal 'foo.domain.com', Host::SubscriptionFacet.propose_name_from_facts(facts)
     end
 
+    def test_duplicate_usernames
+      host2 = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+                                     :lifecycle_environment => library, :organization => org)
+      user = User.first
+      host.subscription_facet.update_attributes!(:user_id => user.id)
+      host2.subscription_facet.update_attributes!(:user_id => user.id)
+
+      assert ::Katello::Host::SubscriptionFacet.where(:user_id => user.id).count > 1
+    end
+
     def test_propose_existing_hostname_fqdn_exists
       host = FactoryGirl.create(:host)
       host.update_attributes!(:name => 'foo.bar.com')
