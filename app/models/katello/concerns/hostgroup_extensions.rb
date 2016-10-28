@@ -5,7 +5,8 @@ module Katello
 
       included do
         before_save :add_organization_for_environment
-        belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id
+        belongs_to :kickstart_repository, :class_name => "::Katello::Repository",
+                   :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_hostgroups
         belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hostgroups
         belongs_to :content_view, :inverse_of => :hostgroups, :class_name => "::Katello::ContentView"
         belongs_to :lifecycle_environment, :inverse_of => :hostgroups, :class_name => "::Katello::KTEnvironment"

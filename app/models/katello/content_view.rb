@@ -42,7 +42,7 @@ module Katello
     has_many :hosts,      :class_name => "::Host::Managed", :through => :content_facets,
                           :inverse_of => :content_view
     has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_view_id,
-                          :inverse_of => :content_view, :dependent => :restrict_with_exception
+                          :inverse_of => :content_view, :dependent => :nullify
 
     validates_lengths_from_database :except => [:label]
     validates :label, :uniqueness => {:scope => :organization_id},
