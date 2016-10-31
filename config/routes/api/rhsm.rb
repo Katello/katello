@@ -41,6 +41,7 @@ Katello::Engine.routes.draw do
       match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
       match '/consumers/:id/profile/' => 'candlepin_proxies#upload_package_profile', :via => :put
       match '/consumers/:id/packages/' => 'candlepin_proxies#upload_package_profile', :via => :put
+      match '/consumers/:id/tracer/' => 'candlepin_proxies#upload_tracer_profile', :via => :put
       match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
       match '/consumers/:id' => 'candlepin_proxies#facts', :via => :put
       match '/consumers/:id/guestids/' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_guestids_path

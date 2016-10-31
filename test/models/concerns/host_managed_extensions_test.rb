@@ -138,4 +138,22 @@ module Katello
       assert_includes ::Host::Managed.search_for("installed_package_name = foo"), @foreman_host
     end
   end
+  class HostTracerTest < HostManagedExtensionsTestBase
+    def setup
+      super
+      tracer_json = {"sshd": {"type": "daemon", "helper": "sudo systemctl restart sshd"}}
+      @foreman_host.import_tracer_profile(tracer_json)
+    end
+
+    def test_known_traces
+      assert_equal 1, @foreman_host.host_traces.count
+      assert_equal 'sshd', @foreman_host.host_traces.first.application
+    end
+
+    def test_search_known_traces
+      assert_includes ::Host::Managed.search_for("trace_app_type =  daemon"), @foreman_host
+      assert_includes ::Host::Managed.search_for("trace_app = sshd"), @foreman_host
+      assert_includes ::Host::Managed.search_for("trace_helper = \"sudo systemctl restart sshd\""), @foreman_host
+    end
+  end
 end

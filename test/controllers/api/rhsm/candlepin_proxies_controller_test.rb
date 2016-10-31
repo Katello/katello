@@ -165,6 +165,13 @@ module Katello
       end
     end
 
+    it "test_upload_tracer_profile_protected" do
+      Resources::Candlepin::Consumer.stubs(:get)
+      assert_protected_action(:upload_tracer_profile, :edit_hosts) do
+        put :upload_tracer_profile, :id => @host.subscription_facet.uuid
+      end
+    end
+
     def test_regenerate_indentity_certificates
       consumer_stub = stub(:regenerate_identity_certificates => true)
 

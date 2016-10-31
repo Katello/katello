@@ -128,6 +128,12 @@
                 Errata
               </a>
             </li>
+            <li ng-class="{active: isState('content-hosts.details.traces.index')}">
+              <a translate
+                 ui-sref="content-hosts.details.traces.index">
+                Traces
+              </a>
+            </li>
             <li ng-hide="denied('view_products')" ng-class="{active: isState('content-hosts.details.products')}">
               <a translate
                  ui-sref="content-hosts.details.products">
