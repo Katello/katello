@@ -54,7 +54,7 @@ module Katello
             else
               filename = file
             end
-            filename.include?("vmlinuz") || filename.include?("pxeboot")
+            filename.include?('vmlinuz') || filename.include?('pxeboot') || filename.include?('kernel.img') || filename.include?('initrd.img')
           end
         end
 

@@ -336,6 +336,14 @@ module Katello
       assert_equal @fedora_17_x86_64.distribution_bootable?, true
     end
 
+    def test_class_distribution_bootable?
+      assert ::Katello::Repository.distribution_bootable?('files' => [{:relativepath => '/foo/kernel.img'}])
+      assert ::Katello::Repository.distribution_bootable?('files' => [{:relativepath => '/foo/initrd.img'}])
+      assert ::Katello::Repository.distribution_bootable?('files' => [{:relativepath => '/bar/vmlinuz'}])
+      assert ::Katello::Repository.distribution_bootable?('files' => [{:relativepath => '/bar/foo/pxeboot'}])
+      refute ::Katello::Repository.distribution_bootable?('files' => [{:relativepath => '/bar/foo'}])
+    end
+
     def test_find_packages_by_name
       refute_empty @fedora_17_x86_64.find_packages_by_name('elephant')
     end
