@@ -1,54 +1,46 @@
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
-      <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>{{ gpgKey.name }}</h2>
+  </header>
 
-      <div ng-hide="panel.error">
-        <header class="details-header new-header">
-          <h2 class="fl" translate>
-            GPG Key {{ gpgKey.name }}
-          </h2>
+  <div data-block="item-actions">
+    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-link dropdown-toggle">
+        <span class="fa fa-ellipsis-v"></span>
+      </button>
 
-          <div class="details-actions fr">
-            <button class="btn btn-default"
-                    ng-click="openModal()"
-                    ng-hide="denied('destroy_gpg_keys', gpgKey)"
-                    translate>
-              Remove GPG Key
-            </button>
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu ng-hide="denied('destroy_gpg_keys', gpgKey)" role="menu">
+        <li role="menuitem">
+          <a ng-click="openModal()" translate>
+            Remove GPG Key
+          </a>
+        </li>
+      </ul>
+    </div>
 
-            <button class="btn btn-default" ng-click="table.closeItem()">
-              <i class="fa fa-remove"></i>
-              <span translate>Close</span>
-            </button>
+    <div bst-modal="removeGPGKey(gpgKey)" model="gpgKey">
+      <div data-block="modal-header" translate>Remove GPG Key {{ gpgKey.name }}</div>
+      <div data-block="modal-body" translate>Are you sure you want to remove GPG key {{ gpgKey.name }}?</div>
+    </div>
+  </div>
 
-            <div bst-modal="removeGPGKey(gpgKey)" model="gpgKey">
-              <div data-block="modal-header" translate>Remove GPG Key {{ gpgKey.name }}</div>
-              <div data-block="modal-body" translate>Are you sure you want to remove GPG key {{ gpgKey.name }}?</div>
-            </div>
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs details-nav">
+      <li ng-class="{active: isState('gpg-key.info')}">
+        <a ui-sref="gpg-key.info" translate>Details</a>
+      </li>
 
-          </div>
-        </header>
+      <li ng-class="{active: stateIncludes('gpg-key.products')}">
+        <a ui-sref="gpg-key.products" translate>Products</a>
+      </li>
 
-        <nav class="details-navigation">
-          <ul>
-            <li ng-class="{active: isState('gpg-keys.details.info')}">
-              <a ui-sref="gpg-keys.details.info" translate>Details</a>
-            </li>
+      <li ng-class="{active: stateIncludes('gpg-key.repositories')}">
+        <a ui-sref="gpg-key.repositories" translate>Repositories</a>
+      </li>
+    </ul>
+  </nav>
 
-            <li ng-class="{active: stateIncludes('gpg-keys.details.products')}">
-              <a ui-sref="gpg-keys.details.products" translate>Products</a>
-            </li>
-
-            <li ng-class="{active: stateIncludes('gpg-keys.details.repositories')}">
-              <a ui-sref="gpg-keys.details.repositories" translate>Repositories</a>
-            </li>
-          </ul>
-        </nav>
-        <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-
-        <section class="nutupane-sub-section" ui-view></section>
-      </div>
-    </section>
+  <div data-block="content">
+    <section ui-view></section>
   </div>
 </div>

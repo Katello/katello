@@ -29,24 +29,5 @@ angular.module('Bastion.gpg-keys').controller('GPGKeysController',
         $scope.panel = {loading: false};
         $scope.removeRow = nutupane.removeRow;
         $scope.controllerName = 'katello_gpg_keys';
-
-        if ($scope.$state.current.collapsed) {
-            $scope.panel.loading = true;
-        }
-
-        $scope.table.openGPGKey = function (gpgKey) {
-            $scope.panel.loading = true;
-            $scope.transitionTo('gpg-keys.details.info', {gpgKeyId: gpgKey.id});
-        };
-
-        $scope.transitionToNewGPGKey = function () {
-            $scope.panel.loading = true;
-            $scope.transitionTo('gpg-keys.new');
-        };
-
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('gpg-keys.index');
-        };
-
     }]
 );
