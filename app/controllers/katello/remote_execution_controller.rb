@@ -32,6 +32,8 @@ module Katello
       def inputs
         if feature_name == 'katello_errata_install'
           { :errata => params[:name] }
+        elsif feature_name == 'katello_service_restart'
+          { :helper => params[:name] }
         else
           { :package => params[:name] }
         end

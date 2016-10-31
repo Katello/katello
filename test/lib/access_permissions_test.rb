@@ -17,6 +17,7 @@ module Katello
     # Our Foreman routes have the foreman test skipped in ./lib/katello/plugin.rb
 
     KATELLO_SUB_MAN_AUTH = [
+      'katello/api/rhsm/candlepin_proxies/upload_tracer_profile',
       'katello/api/rhsm/candlepin_proxies/consumer_destroy',
       'katello/api/rhsm/candlepin_proxies/enabled_repos',
       'katello/api/rhsm/candlepin_proxies/checkin',

@@ -9,9 +9,9 @@ module Katello
     around_action :repackage_message
     before_action :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                         :upload_package_profile, :regenerate_identity_certificates, :facts,
-                                        :available_releases, :serials]
+                                        :available_releases, :serials, :upload_tracer_profile]
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates]
+    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates, :upload_tracer_profile]
     before_action :authorize_client_or_admin, :only => [:hypervisors_update]
     before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
@@ -134,6 +134,15 @@ module Katello
     def upload_package_profile
       User.as_anonymous_admin do
         async_task(::Actions::Katello::Host::UploadPackageProfile, @host, params[:_json])
+      end
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
+    end
+
+    api :PUT, "/consumers/:id/tracer", N_("Update services requiring restart")
+    param :traces, Hash, :required => true
+    def upload_tracer_profile
+      User.as_anonymous_admin do
+        @host.import_tracer_profile(params[:traces])
       end
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end

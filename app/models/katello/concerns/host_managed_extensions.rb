@@ -14,6 +14,7 @@ module Katello
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :destroy
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
+        has_many :host_traces, :class_name => "::Katello::HostTracer", :foreign_key => :host_id, :dependent => :destroy
 
         has_many :host_collection_hosts, :class_name => "::Katello::HostCollectionHosts", :foreign_key => :host_id, :dependent => :destroy
         has_many :host_collections, :class_name => "::Katello::HostCollection", :through => :host_collection_hosts
@@ -25,6 +26,9 @@ module Katello
         scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
         scoped_search :in => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
+        scoped_search :in => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
+        scoped_search :in => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
+        scoped_search :in => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
       end
 
       def validate_media_with_capsule?
@@ -96,6 +100,13 @@ module Katello
         existing_nvras = self.installed_packages.pluck(:nvra)
         simple_packages.each do |simple_package|
           self.installed_packages.create!(:name => simple_package.name, :nvra => simple_package.nvra) unless existing_nvras.include?(simple_package.nvra)
+        end
+      end
+
+      def import_tracer_profile(tracer_profile)
+        self.host_traces.destroy_all
+        tracer_profile.each do |trace, attributes|
+          self.host_traces.create!(:application => trace, :helper => attributes[:helper], :app_type => attributes[:type])
         end
       end
 

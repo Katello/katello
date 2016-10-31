@@ -99,6 +99,9 @@ Foreman::Application.routes.draw do
               delete :destroy
             end
           end
+
+          resources :traces, :only => [:index], :controller => :host_tracer do
+          end
         end
       end
     end

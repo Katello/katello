@@ -283,6 +283,18 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         permission: 'view_hosts',
         collapsed: true,
         templateUrl: 'content-hosts/content/views/errata-details.html'
+    })
+    .state('content-hosts.details.traces', {
+        abstract: true,
+        collapsed: true,
+        controller: 'ContentHostTracesController',
+        template: '<div ui-view></div>'
+    })
+    .state('content-hosts.details.traces.index', {
+        url: '/traces',
+        permission: 'view_hosts',
+        collapsed: true,
+        templateUrl: 'content-hosts/content/views/content-host-traces.html'
     });
 
 }]);
