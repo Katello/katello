@@ -28,7 +28,14 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionAc
         nutupane = new Nutupane(ActivationKey, params);
 
         nutupane.searchTransform = function (term) {
-            var addition = "(environment_id:(" + $scope.selectedEnvironmentIds().join(" OR ") + "))";
+            var addition,
+                envClausses = [];
+
+            angular.forEach($scope.selectedEnvironmentNames(), function(env) {
+                envClausses.push("environment = " + env);
+            });
+            addition = '(' + envClausses.join(" OR ") + ')';
+            addition = addition + " AND content_view_id = " + $scope.contentView.id;
             if (term === "" || angular.isUndefined(term)) {
                 return addition;
             }
