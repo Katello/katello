@@ -24,7 +24,7 @@ describe('Controller: NewGPGKeyController', function() {
             $scope: $scope,
             GPGKey: GPGKey,
             CurrentOrganization:CurrentOrganization,
-            GlobalNotification: GlobalNotification,
+            GlobalNotification: GlobalNotification
         });
 
     }));
@@ -34,7 +34,6 @@ describe('Controller: NewGPGKeyController', function() {
     });
 
     it('should save a new gpg key resource', function() {
-        spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
         spyOn(GlobalNotification, "setSuccessMessage");
         $scope.uploadContent({"status": "success"});
@@ -42,12 +41,10 @@ describe('Controller: NewGPGKeyController', function() {
         expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.uploadStatus).toBe('success');
 
-        expect($scope.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-keys.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-key.info', jasmine.any(Object));
     });
 
     it('should error on a new gpg key resource', function() {
-        spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
         spyOn(GlobalNotification, "setSuccessMessage");
         $scope.uploadContent({"errors": "....", "displayMessage":"......"});
@@ -56,7 +53,6 @@ describe('Controller: NewGPGKeyController', function() {
         expect($scope.errorMessages.length).toBe(1);
 
         expect($scope.uploadStatus).toBe('error');
-        expect($scope.table.addRow).not.toHaveBeenCalled();
     });
 
 });

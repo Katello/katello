@@ -1,37 +1,33 @@
-<section class="details details-full">
-  <h4 translate>Repositories</h4>
+<span page-title ng-model="gpgKey">{{ 'Products for ' | translate }} {{ gpgKey.name }}</span>
 
-  <input type="text"
-         class="form-control filter-input"
-         placeholder="{{ 'Filter' | translate }}"
-         ng-model="repositorySearch"/>
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Repositories associated with this GPG Key.
+  </span>
 
-  <table class="table table-striped" ng-show="gpgKey.repositories.length > 0">
-    <thead>
-      <tr>
-        <th translate>Name</th>
-        <th translate>Product</th>
-        <th translate>Type</th>
-      </tr>
-    </thead>
+  <div data-block="table">
+    <table class="table table-striped" ng-show="gpgKey.repositories.length > 0">
+      <thead>
+        <tr>
+          <th translate>Name</th>
+          <th translate>Product</th>
+          <th translate>Type</th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr ng-repeat="repository in gpgKey.repositories | filter:repositorySearch">
-        <td>
-          <a ng-href="/products/{{ repository.product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
-        </td>
-        <td>
-          <a ui-sref="repositories({productId: repository.product.id})">
-            {{ repository.product.name }}
-          </a>
-        </td>
-        <td>{{ repository.content_type }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-</section>
-
-<p bst-alert="info" ng-show="gpgKey.repositories.length === 0">
-  <span translate>You currently don't have any Repositories associated with this GPG Key.</span>
-</p>
+      <tbody>
+        <tr ng-repeat="repository in table.rows">
+          <td>
+            <a ui-sref="repository.info({productId: repository.product.id, repositoryId: repository.id})">{{ repository.name }}</a>
+          </td>
+          <td>
+            <a ui-sref="product.repositories({productId: repository.product.id})">
+              {{ repository.product.name }}
+            </a>
+          </td>
+          <td>{{ repository.content_type }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

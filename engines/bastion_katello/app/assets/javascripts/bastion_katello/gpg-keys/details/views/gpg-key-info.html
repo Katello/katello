@@ -1,15 +1,17 @@
-<div class="details fl gpg-details" >
-  <div class="detail">
-    <span class="info-label" translate>Name</span>
-    <span class="info-value"
-          bst-edit-text="gpgKey.name"
+
+<div class="row">
+  <div class="col-sm-12">
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd bst-edit-text="gpgKey.name"
           on-save="save(gpgKey)"
           readonly="denied('edit_gpg_keys', gpgKey)">
-    </span>
-  </div>
-  <div class="detail" ng-if="permitted('edit_gpg_keys', gpgKey)">
-    <span class="info-label" translate>Upload GPG Key</span>
-    <span class="info-value">
+      </dd>
+
+      <dt translate>Content</dt>
+      <dd bst-edit-custom="gpgKey.content"
+          readonly="denied('edit_gpg_keys', gpgKey)"
+          on-save="save(gpgKey)">
         <form role="form"
               action="{{ uploadURL }}"
               ng-upload="uploadContent(content)"
@@ -18,8 +20,13 @@
               upload-options-enable-rails-csrf>
 
           <div class="form-group">
-              <input type="file" name="content"/>
+            <textarea class="form-control" ng-model="gpgKey.content"></textarea>
           </div>
+
+          <div class="form-group">
+            <input type="file" name="content"/>
+          </div>
+
           <div class="form-group">
             <button class="btn btn-default" upload-submit ng-click="progress.uploading = true">
               <i class="fa fa-spinner fa-spin" ng-show="progress.uploading"></i>
@@ -28,16 +35,21 @@
             </button>
           </div>
         </form>
-    </span>
-  </div>
+      </dd>
 
-  <div class="detail">
-    <span class="info-label" translate>Content</span>
-    <span class="gpg-bst-edit info-value"
-        bst-edit-textarea="gpgKey.content"
-        readonly="denied('edit_gpg_keys', gpgKey)"
-        on-save="save(gpgKey)">
-     </span>
-  </div>
+      <dt translate>Products</dt>
+      <dd>
+        <a ui-sref="gpg-key.products">
+          {{ gpgKey.products.length }}
+        </a>
+      </dd>
 
+      <dt translate>Repositories</dt>
+      <dd>
+        <a ui-sref="gpg-key.repositories">
+          {{ gpgKey.repositories.length }}
+        </a>
+      </dd>
+    </dl>
+  </div>
 </div>

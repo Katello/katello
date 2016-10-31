@@ -20,14 +20,14 @@
 
         var customProducts = [
             'products.new.form',
-            'product-discovery',
-            'product-discovery.scan',
-            'product-discovery.create',
-            'gpg-keys.index',
+            'products.discovery',
+            'products.discovery.scan',
+            'products.discovery.create',
+            'gpg-keys',
             'gpg-keys.new',
-            'gpg-keys.details.info',
-            'gpg-keys.details.products',
-            'gpg-keys.details.repositories'
+            'gpg-key.info',
+            'gpg-key.products',
+            'gpg-key.repositories'
         ];
 
         FeatureFlag.addStates('remote_actions', remoteActions);

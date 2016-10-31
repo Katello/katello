@@ -1,32 +1,33 @@
-<section class="details details-full">
-  <h4 translate>Products</h4>
-  <input type="text"
-         class="form-control filter-input"
-         placeholder="{{ 'Filter' | translate }}"
-         ng-model="productSearch"/>
+<span page-title ng-model="gpgKey">{{ 'Repositories for ' | translate }} {{ gpgKey.name }}</span>
 
-  
-  <table bst-table="table" class="table table-striped" ng-show="gpgKey.products.length > 0">
-    <thead>
-      <tr bst-table-head>
-        <th bst-table-column="name" sortable><span translate>Name</span></th>
-        <th bst-table-column class="number-cell" translate>Repositories</th>
-      </tr>
-    </thead>
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Products associated with this GPG Key.
+  </span>
 
-    <tbody>
-      <tr bst-table-row ng-repeat="product in gpgKey.products | filter:productSearch">
-        <td bst-table-cell>
-          <a ui-sref="repositories({productId: product.id})">
-            {{ product.name }}
-          </a>
-        </td>
-        <td bst-table-cell class="number-cell">{{ product.repository_count }}</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+  <div data-block="table">
+    <table bst-table="table" class="table table-striped">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name" sortable><span translate>Name</span></th>
+          <th bst-table-column class="number-cell" translate>Repositories</th>
+        </tr>
+      </thead>
 
-<p bst-alert="info" ng-show="gpgKey.products.length === 0">
-  <span translate>You currently don't have any Products associated with this GPG Key.</span>
-</p>
+      <tbody>
+        <tr bst-table-row ng-repeat="product in table.rows">
+          <td bst-table-cell>
+            <a ui-sref="product.info({productId: product.id})">
+              {{ product.name }}
+            </a>
+          </td>
+          <td bst-table-cell class="number-cell">
+            <a ui-sref="product.repositories({productId: product.id})">
+              {{ product.repository_count }}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

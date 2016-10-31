@@ -60,11 +60,9 @@ describe('Controller: GPGKeyDetailsController', function() {
     });
 
     it('should provide a way to remove a gpg key', function() {
-        spyOn($scope, 'removeRow');
         spyOn($scope, 'transitionTo');
         $scope.removeGPGKey($scope.gpgKey);
-        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-keys.index');
-        expect($scope.removeRow).toHaveBeenCalledWith(1);
+        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-keys');
     });
 
 });
