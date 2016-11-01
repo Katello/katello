@@ -14,19 +14,19 @@ module Katello
       %(<option data-id="#{inherited_value}" value="">#{blank_or_inherit_f(f, attr)}</option>)
     end
 
-    def envs_by_kt_org
-      ::Environment.all.find_all(&:katello_id).group_by do |env|
-        if env.katello_id
-          env.katello_id.split('/').first
-        end
-      end
-    end
-
     def content_view(host)
       if host.is_a?(Hostgroup)
         host.content_view
       else
         host.content_facet.try(:content_view)
+      end
+    end
+
+    def organizations(host)
+      if host.is_a?(Hostgroup)
+        host.organizations
+      else
+        host.organization ? [host.organization] : []
       end
     end
 
@@ -91,26 +91,49 @@ module Katello
       selected_content_view if selected_content_view.present?
     end
 
+    def accessible_lifecycle_environments(org, host)
+      selected = lifecycle_environment(host)
+      envs = org.kt_environments.readable
+      envs |= [selected] if selected.present? && org == selected.organization
+      envs
+    end
+
+    def accessible_content_proxies(obj)
+      list = accessible_resource_records(:smart_proxy).with_content.to_a
+      current = obj.content_source
+      list |= [current] if current.present?
+      list
+    end
+
+    def relevant_organizations(host)
+      host_orgs = organizations(host)
+      if Organization.current
+        [Organization.current]
+      elsif host_orgs.present?
+        host_orgs
+      else
+        Organization.my_organizations
+      end
+    end
+
     def lifecycle_environment_options(host, options = {})
       include_blank = options.fetch(:include_blank, nil)
-      if include_blank == true #check for true specifically
-        include_blank = '<option></option>'
-      end
-      selected_id = fetch_lifecycle_environment(host, options).try(:id)
+      include_blank = '<option></option>' if include_blank == true #check for true specifically
 
-      orgs = Organization.current ? [Organization.current] : Organization.my_organizations
+      selected_id = fetch_lifecycle_environment(host, options).try(:id)
+      orgs = relevant_organizations(host)
       all_options = []
       orgs.each do |org|
         env_options = ""
-        org.kt_environments.each do |env|
+        accessible_lifecycle_environments(org, host).each do |env|
           selected = selected_id == env.id ? 'selected' : ''
           env_options << %(<option value="#{env.id}" class="kt-env" #{selected}>#{h(env.name)}</option>)
         end
 
-        if Organization.current
-          all_options << env_options
-        else
+        if orgs.count > 1
           all_options << %(<optgroup label="#{org.name}">#{env_options}</optgroup>)
+        else
+          all_options << env_options
         end
       end
 
@@ -129,7 +152,8 @@ module Katello
 
       views = []
       if lifecycle_environment
-        views = Katello::ContentView.in_environment(lifecycle_environment)
+        views = Katello::ContentView.in_environment(lifecycle_environment).readable
+        views |= [content_view] if content_view.present? && content_view.in_environment?(lifecycle_environment)
       elsif content_view
         views = [content_view]
       end
