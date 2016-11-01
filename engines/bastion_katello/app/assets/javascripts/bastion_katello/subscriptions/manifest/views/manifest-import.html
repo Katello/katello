@@ -41,7 +41,7 @@
       </button>
       <span ng-show="upstream.idCert == undefined || upstream.idCert.cert == undefined"
         translate>
-        Refreshing manifest not suppported by this manifest.
+        Refreshing manifest not supported by this manifest.
       </span>
     </div>
   </div>
@@ -80,5 +80,5 @@
 
   <div ng-include="'subscriptions/manifest/views/manifest-import-history.html'"></div>
 
-  <a ui-sref="subscriptions.manifest.history()" ng-show="showHistoryMoreLink" translate>More...</a>
+  <a ui-sref="subscriptions-manifest.history" ng-show="showHistoryMoreLink" translate>More...</a>
 </section>

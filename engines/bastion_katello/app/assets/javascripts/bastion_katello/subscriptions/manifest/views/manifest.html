@@ -1,46 +1,31 @@
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>Subscription Manifest</h2>
+  </header>
 
-      <header class="details-header">
-        <h2 class="pull-left" translate>Subscription Manifest</h2>
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs details-nav" role="menu">
+      <li role="menuitem" ui-sref-active="active">
+        <a ui-sref="subscriptions-manifest.details">
+          <span translate>Details</span>
+        </a>
+      </li>
 
-        <div class="fr">
-          <button class="btn btn-default" ui-sref="subscriptions.index">
-            <i class="fa fa-remove"></i>
-            {{ "Close" | translate }}
-          </button>
-        </div>
-      </header>
+      <li role="menuitem" ui-sref-active="active">
+        <a ui-sref="subscriptions-manifest.import">
+          <span translate>Import/Remove Manifest</span>
+        </a>
+      </li>
 
-      <nav>
-        <ul class="nav nav-tabs">
-          <li ng-class="{active: isState('subscriptions.manifest.details')}">
-            <a class="clickable"
-               translate
-               ui-sref="subscriptions.manifest.details()">
-              Details
-            </a>
-          </li>
-          <li ng-class="{active: stateIncludes('subscriptions.manifest.import')}">
-            <a class="clickable"
-               translate
-               ui-sref="subscriptions.manifest.import()">
-              Actions
-            </a>
-          </li>
-          <li ng-class="{active: stateIncludes('subscriptions.manifest.history')}">
-            <a class="clickable"
-               translate
-               ui-sref="subscriptions.manifest.history()">
-              Import History
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <li role="menuitem" ui-sref-active="active">
+        <a ui-sref="subscriptions-manifest.history">
+          <span translate>Import History</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
-      <section class="nutupane-sub-section" ui-view></section>
-
-    </section>
+  <div data-block="content">
+    <section ui-view></section>
   </div>
 </div>

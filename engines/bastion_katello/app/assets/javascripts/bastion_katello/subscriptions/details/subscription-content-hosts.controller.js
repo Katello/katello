@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.subscriptions.controller:SubscriptionAssociationsContentHostsController
+ * @name  Bastion.subscriptions.controller:SubscriptionContentHostsController
  *
  * @requires $scope
  * @requires translate
@@ -8,9 +8,9 @@
  * @requires ContentHostsHelper
  *
  * @description
- *   Provides the functionality for the subscription details for content host associations.
+ *   Provides the functionality for the subscription details for content hosts.
  */
-angular.module('Bastion.subscriptions').controller('SubscriptionAssociationsContentHostsController',
+angular.module('Bastion.subscriptions').controller('SubscriptionContentHostsController',
     ['$scope', 'translate', 'Subscription', 'ContentHostsHelper',
     function ($scope, translate, Subscription, ContentHostsHelper) {
 
@@ -19,6 +19,8 @@ angular.module('Bastion.subscriptions').controller('SubscriptionAssociationsCont
         } else {
             $scope.working = true;
         }
+
+        $scope.table = {};
 
         Subscription.get({id: $scope.$stateParams.subscriptionId}, function (subscription) {
             $scope.contentHosts = subscription.systems;

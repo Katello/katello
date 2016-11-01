@@ -15,7 +15,7 @@ angular.module('Bastion.subscriptions').controller('ManifestDetailsController',
     function ($scope, $q, CurrentOrganization, Organization) {
 
         $scope.organization = Organization.get({id: CurrentOrganization});
-
+        $scope.redhatProvider = Organization.redhatProvider();
 
         $q.all([$scope.organization.$promise]).then(function () {
             $scope.details = $scope.organization['owner_details'];

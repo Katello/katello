@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.subscriptions.controller:SubscriptionAssociationsActivationKeysController
+ * @name  Bastion.subscriptions.controller:SubscriptionActivationKeysController
  *
  * @requires $scope
  * @requires $q
@@ -8,9 +8,9 @@
  * @requires Subscription
  *
  * @description
- *   Provides the functionality for the subscription details for activation key associations.
+ *   Provides the functionality for the subscription details for activation keys.
  */
-angular.module('Bastion.subscriptions').controller('SubscriptionAssociationsActivationKeysController',
+angular.module('Bastion.subscriptions').controller('SubscriptionActivationKeysController',
     ['$scope', '$q', 'translate', 'Subscription',
     function ($scope, $q, translate, Subscription) {
 
@@ -19,6 +19,8 @@ angular.module('Bastion.subscriptions').controller('SubscriptionAssociationsActi
         } else {
             $scope.working = true;
         }
+
+        $scope.table = {};
 
         Subscription.get({id: $scope.$stateParams.subscriptionId}, function (subscription) {
             $scope.activationKeys = subscription['activation_keys'];
