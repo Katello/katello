@@ -1,0 +1,32 @@
+<span page-title ng-model="tag">{{ 'Details for Docker Tag:' | translate }} {{ tag.full_name }}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <header data-block="header">
+    <h2>{{ tag.full_name }}</h2>
+  </header>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs details-nav">
+      <li ng-class="{active: isState('docker-tag.info')}">
+        <a ui-sref="docker-tag.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('docker-tag.environments')}">
+        <a ui-sref="docker-tag.environments">
+          <span translate>
+            Lifecycle Environments
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

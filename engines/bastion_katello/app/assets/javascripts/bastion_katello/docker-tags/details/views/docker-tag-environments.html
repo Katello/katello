@@ -1,0 +1,50 @@
+
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search">
+    <div class="col-sm-6">
+      <form class="form-inline">
+        <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="{{ 'Filter' | translate }}"
+                   ng-model="dockerTagFilter"/>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div data-block="table">
+    <table bst-table="table"
+           class="table table-striped"
+           ng-class="{'table-mask': table.working}"
+           ng-show="table.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="environment" translate>Environment</th>
+          <th bst-table-column="version" translate>Content View Version</th>
+          <th bst-table-column="path" translate>Published At</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row
+            ng-repeat="tag in table.rows | filter:dockerTagFilter">
+          <td bst-table-cell>
+            <a ui-sref="environments.environment.details({environmentId: tag.environment.id})">
+              {{ tag.environment.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            <a ui-sref="content-views.details.version.docker({contentViewId: tag.content_view_version.content_view_id, versionId: tag.content_view_version.id})">
+              {{ tag.content_view_version.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            {{ tag.repository.full_path }}:{{ tag.name }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

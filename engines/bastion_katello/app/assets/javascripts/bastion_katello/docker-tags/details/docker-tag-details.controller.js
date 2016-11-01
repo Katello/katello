@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.docker-tags.controller:DockerTagsDetailsController
+ * @name  Bastion.docker-tags.controller:DockerTagDetailsController
  *
  * @requires $scope
  * @requires $location
@@ -11,7 +11,7 @@
  * @description
  *   Provides the functionality for the docker tags details action pane.
  */
-angular.module('Bastion.docker-tags').controller('DockerTagsDetailsController',
+angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
     ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'ApiErrorHandler',
     function ($scope, $location, Nutupane, DockerTag, CurrentOrganization, ApiErrorHandler) {
         $scope.successMessages = [];
