@@ -13,7 +13,6 @@ describe('Controller: NewSyncPlanController', function() {
         GlobalNotification = $injector.get('GlobalNotification');
         $scope = $injector.get('$rootScope').$new();
         $scope.$state = {go: function () {}};
-        $scope.nutupane = {refresh: function () {}};
 
         translate = function (string) { return string; };
 
@@ -91,8 +90,7 @@ describe('Controller: NewSyncPlanController', function() {
 
         expect($scope.working).toBe(false);
         expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-        expect($scope.syncPlanTable.rows.unshift).toHaveBeenCalledWith(syncPlan);
-        expect($scope.$state.go).toHaveBeenCalledWith('sync-plans.details.info', {syncPlanId: syncPlan.id});
+        expect($scope.$state.go).toHaveBeenCalledWith('sync-plan.info', {syncPlanId: syncPlan.id});
     });
 
     it('should save a new sync plan resource and transform to the product if called from there', function() {

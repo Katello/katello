@@ -29,7 +29,7 @@ describe('Factory: Product', function() {
     });
 
     it('provides a way to get a list of products', function() {
-        $httpBackend.expectGET('/katello/api/products').respond(products);
+        $httpBackend.expectGET('/katello/api/v2/products').respond(products);
 
         Product.queryPaged(function(products) {
             expect(products.records.length).toBe(2);
@@ -40,7 +40,7 @@ describe('Factory: Product', function() {
         var updatedProduct = products.records[0];
 
         updatedProduct.name = 'NewProductName';
-        $httpBackend.expectPUT('/katello/api/products/1').respond(updatedProduct);
+        $httpBackend.expectPUT('/katello/api/v2/products/1').respond(updatedProduct);
 
         Product.update({ id: 1 }, function(product) {
             expect(product).toBeDefined();
@@ -49,7 +49,7 @@ describe('Factory: Product', function() {
     });
 
     it('provides a way to sync a product', function() {
-        $httpBackend.expectPOST('/katello/api/products/1/sync').respond(products[0]);
+        $httpBackend.expectPOST('/katello/api/v2/products/1/sync').respond(products[0]);
 
         Product.sync({ id: 1 });
     });
@@ -58,7 +58,7 @@ describe('Factory: Product', function() {
         var updatedProduct = products.records[0];
 
         updatedProduct.sync_plan_id = 2;
-        $httpBackend.expectPOST('/katello/api/products/1/sync_plan').respond(updatedProduct);
+        $httpBackend.expectPOST('/katello/api/v2/products/1/sync_plan').respond(updatedProduct);
 
         Product.updateSyncPlan({ id: 1, plan_id: 2 }, function(product) {
             expect(product).toBeDefined();

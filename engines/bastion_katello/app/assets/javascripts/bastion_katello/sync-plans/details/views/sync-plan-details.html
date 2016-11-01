@@ -1,64 +1,71 @@
 <span page-title ng-model="syncPlan">{{ 'Sync Plan:' | translate }} {{ syncPlan.name }}</span>
 
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2>{{ syncPlan.name }}</h2>
+  </header>
 
-      <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+  <div data-block="messages">
+    <div bst-alert="info" ng-show="task">
+      <span translate>
+        A sync has been initiated in the background, <a href="/foreman_tasks/tasks/{{ task.id }}">click for more details</a>
+      </span>
+    </div>
+  </div>
 
-      <div ng-hide="panel.error">
-        <header class="details-header">
-          <h2 class="fl" translate>Sync Plan {{ syncPlan.name }}</h2>
+  <nav data-block="item-actions">
+    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-link dropdown-toggle">
+        <span class="fa fa-ellipsis-v"></span>
+      </button>
 
-          <div class="fr">
-            <div bst-modal="removeSyncPlan(syncPlan)" model="syncPlan">
-              <div data-block="modal-header" translate>Remove Sync Plan "{{ syncPlan.name }}"?</div>
-              <div data-block="modal-body" translate>Are you sure you want to remove Sync Plan "{{ syncPlan.name }}"?</div>
-            </div>
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+        <li role="menuitem" ng-hide="denied('sync_products')">
+          <a ng-click="runSyncPlan()">
+            <span translate>Run Sync Plan</span>
+          </a>
+        </li>
 
-            <button class="btn btn-default" ng-click="runSyncPlan()" ng-hide="denied('sync_products')">
-              <i class="fa fa-refresh"></i>
-              {{ "Run Sync Plan" | translate }}
-            </button>
-            <button class="btn btn-default" ng-click="openModal()" ng-hide="denied('destroy_sync_plans', syncPlan)">
-              <i class="fa fa-trash-o"></i>
-              {{ "Remove Sync Plan" | translate }}
-            </button>
-            <button class="btn btn-default" ui-sref="sync-plans.index">
-              <i class="fa fa-remove"></i>
-              {{ "Close" | translate }}
-            </button>
-          </div>
-        </header>
+        <li class="divider" ng-hide="denied('destroy_sync_plans')"></li>
 
-        <nav>
-          <ul class="nav nav-tabs">
-            <li ng-class="{active: stateIncludes('sync-plans.details.info')}">
-              <a translate
-                 ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
-                Details
-              </a>
-            </li>
-            <li ng-class="{active: stateIncludes('sync-plans.details.products')}">
-              <a translate
-                 ui-sref="sync-plans.details.products.list({syncPlanId: syncPlan.id})">
-                Products
-              </a>
-            </li>
-            <li ng-repeat="menuItem in menuExpander.getMenu('syncPlan')">
-              <a href="{{ menuItem.url }}">
-                {{ menuItem.label }}
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-        <div bst-alert="info" ng-show="task">
-          A sync has been initiated in the background, <a href="/foreman_tasks/tasks/{{ task.id }}">click for more details</a>
-        </div>
-
-        <section class="nutupane-sub-section" ui-view></section>
+        <li role="menuitem" ng-hide="denied('destroy_sync_plans', syncPlan)">
+          <a ng-click="openModal()">
+            <span translate>Remove</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div bst-modal="removeSyncPlan(syncPlan)" model="syncPlan">
+        <div data-block="modal-header" translate>Remove Sync Plan "{{ syncPlan.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove Sync Plan "{{ syncPlan.name }}"?</div>
       </div>
-    </section>
+    </div>
+  </nav>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs details-nav">
+      <li ng-class="{active: stateIncludes('sync-plan.info')}">
+        <a translate
+           ui-sref="sync-plan.info({syncPlanId: syncPlan.id})">
+          Details
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('sync-plan.products')}">
+        <a translate
+           ui-sref="sync-plan.products.list({syncPlanId: syncPlan.id})">
+          Products
+        </a>
+      </li>
+      <li ng-repeat="menuItem in menuExpander.getMenu('syncPlan')">
+        <a href="{{ menuItem.url }}">
+          {{ menuItem.label }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+
+  <div data-block="content">
+    <section ui-view></section>
   </div>
 </div>

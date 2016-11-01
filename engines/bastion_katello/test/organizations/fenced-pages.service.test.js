@@ -12,7 +12,7 @@ describe('Factory: FencedPages', function() {
     });
 
     it("should find if page is in the list", function () {
-        expect(FencedPages.isFenced({name: "sync-plans.details.show"})).toBe(true);
+        expect(FencedPages.isFenced({name: "sync-plan.info"})).toBe(true);
         expect(FencedPages.isFenced({name: "non-fenced-page.details.show"})).toBe(false);
     });
 });
