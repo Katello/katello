@@ -1,7 +1,5 @@
-describe('Controller: SubscriptionAssociationsContentHostsController', function() {
-    var $scope,
-        Subscription,
-        translate;
+describe('Controller: SubscriptionContentHostsController', function() {
+    var $scope, translate;
 
     beforeEach(module(
         'Bastion.subscriptions',
@@ -20,7 +18,7 @@ describe('Controller: SubscriptionAssociationsContentHostsController', function(
             return message;
         };
 
-        $controller('SubscriptionAssociationsContentHostsController', {
+        $controller('SubscriptionContentHostsController', {
             $scope: $scope,
             translate: translate,
             Subscription: Subscription,

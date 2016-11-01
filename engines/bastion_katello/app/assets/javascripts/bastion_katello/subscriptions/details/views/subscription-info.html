@@ -1,102 +1,76 @@
-<div class="details-full pull-left">
-  <section>
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
     <h4 translate>Subscription Info</h4>
 
-    <div class="detail">
-      <span class="info-label" translate>Name</span>
-      <span class="info-value">{{ subscription.name }}</span>
-    </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd>{{ subscription.name }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Description</span>
-      <span class="info-value">{{ subscription.description }}</span>
-    </div>
+      <dt translate>Description</dt>
+      <dd>{{ subscription.description }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Consumed</span>
-      <span class="info-value">{{ subscription | subscriptionConsumedFilter }}</span>
-    </div>
+      <dt translate>Consumed</dt>
+      <dd>{{ subscription | subscriptionConsumedFilter }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Starts</span>
-      <span class="info-value">{{ subscription.start_date | date:"short" }}</span>
-    </div>
+      <dt translate>Starts</dt>
+      <dd>{{ subscription.start_date | date:"short" }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Ends</span>
-      <span class="info-value">{{ subscription.end_date | date:"short" }}</span>
-    </div>
+      <dt translate>Ends</dt>
+      <dd>{{ subscription.end_date | date:"short" }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Product ID</span>
-      <span class="info-value">{{ subscription.product_id }}</span>
-    </div>
+      <dt translate>Product ID</dt>
+      <dd>{{ subscription.product_id }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Contract Number</span>
-      <span class="info-value">{{ subscription.contract_number }}</span>
-    </div>
+      <dt translate>Contract Number</dt>
+      <dd>{{ subscription.contract_number }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Account Number</span>
-      <span class="info-value">{{ subscription.account_number }}</span>
-    </div>
+      <dt translate>Account Number</dt>
+      <dd>{{ subscription.account_number }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Support Level</span>
-      <span class="info-value">{{ subscription.support_level }}</span>
-    </div>
+      <dt translate>Support Level</dt>
+      <dd>{{ subscription.support_level }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Support Type</span>
-      <span class="info-value">{{ subscription.support_type }}</span>
-    </div>
+      <dt translate>Support Type</dt>
+      <dd>{{ subscription.support_type }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Architecture(s)</span>
-      <span class="info-value">{{ subscription.arch }}</span>
-    </div>
+      <dt translate>Architecture(s)</dt>
+      <dd>{{ subscription.arch }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Type</span>
-      <span class="info-value">{{ subscription.type }}</span>
-    </div>
+      <dt translate>Type</dt>
+      <dd>{{ subscription.type }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Limits</span>
-      <span class="info-value">{{ subscriptionLimits(subscription) }}</span>
-    </div>
+      <dt translate>Limits</dt>
+      <dd>{{ subscriptionLimits(subscription) }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Multi-entitlement</span>
-      <span class="info-value">{{ subscription.multi_entitlement | booleanToYesNo }}</span>
-    </div>
+      <dt translate>Multi-entitlement</dt>
+      <dd>{{ subscription.multi_entitlement | booleanToYesNo }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Instance-based</span>
-      <span class="info-value">{{ formatInstanceBased(subscription) }}</span>
-    </div>
+      <dt translate>Instance-based</dt>
+      <dd>{{ formatInstanceBased(subscription) }}</dd>
 
-    <div class="detail" ng-hide="subscription.stacking_id == ''">
-      <span class="info-label" translate>Stacking ID</span>
-      <span class="info-value">{{ subscription.stacking_id }}</span>
-    </div>
+      <dt ng-hide="subscription.stacking_id == ''" translate>Stacking ID</dt>
+      <dd ng-hide="subscription.stacking_id == ''">{{ subscription.stacking_id }}</dd>
 
-    <div class="detail" ng-hide="subscription.source_pool_id == undefined || subscription.source_pool_id == ''">
-      <span class="info-label" translate>Virtual Guest From</span>
-      <span class="info-value">{{ subscription.name }}</span>
-    </div>
+      <dt ng-hide="subscription.source_pool_id == undefined || subscription.source_pool_id == ''" translate>Virtual Guest From</dt>
+      <dd ng-hide="subscription.source_pool_id == undefined || subscription.source_pool_id == ''">{{ subscription.name }}</dd>
 
-    <div class="detail" ng-hide="subscription.host_id == undefined || subscription.host_id == ''">
-      <span class="info-label" translate>Required Host</span>
-      <span class="info-value">{{ subscription.host.name }}</span>
-    </div>
-  </section>
+      <dt ng-hide="subscription.host_id == undefined || subscription.host_id == ''" translate>Required Host</dt>
+      <dd ng-hide="subscription.host_id == undefined || subscription.host_id == ''">{{ subscription.host.name }}</dd>
+    </dl>
+  </div>
 
-  <section ng-show="subscription.provided_products.length > 0" class="subscription-products">
+  <div data-block="right-column">
     <h4 translate>Provided Products</h4>
-    <div class="detail" ng-repeat="product in subscription.provided_products">
-      <div class="product">{{ product.name }}</div>
-    </div>
-  </section>
+
+    <ul>
+      <li ng-repeat="product in subscription.provided_products">
+        {{ product.name }}
+      </li>
+    </ul>
+
+    <p ng-show="subscription.provided_products.length === 0" translate>
+      No Products are provided by this Subscription.
+    </p>
+  </div>
 </div>
+

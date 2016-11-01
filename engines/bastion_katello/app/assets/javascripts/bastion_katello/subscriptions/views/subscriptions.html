@@ -1,15 +1,19 @@
 <span page-title>{{ 'Subscriptions' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
+<div data-extend-template="layouts/table-with-header.html">
 
-  <div data-block="header">
-    {{ 'Subscriptions' | translate }}
-  </div>
+  <header data-block="header">
+    <h2 translate>Subscriptions</h2>
+  </header>
 
-  <div data-block="actions">
-    <button class="btn btn-primary" ui-sref="subscriptions.manifest.import()"
+  <div data-block="list-actions">
+    <button class="btn btn-primary" ng-if="!hasManifest" ui-sref="subscriptions-manifest.import"
             ng-hide="denied('import_manifest') && denied('delete_manifest')">
-      {{ "Manage Manifest" | translate }}
+      <span translate>Import Manifest</span>
+    </button>
+    <button class="btn btn-primary" ng-if="hasManifest" ui-sref="subscriptions-manifest.details"
+            ng-hide="denied('import_manifest') && denied('delete_manifest')">
+      <span translate>Manage Manifest</span>
     </button>
   </div>
 
@@ -20,4 +24,41 @@
    <span data-block="no-search-results-message" translate>
      Your search returned zero Subscriptions.
    </span>
+
+  <div data-block="table">
+    <table class="table" ng-class="{'table-mask': table.working}" ng-show="table.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="consumed" class="align-center"><span translate>Consumed</span></th>
+          <th bst-table-column="type"><span translate>Type</span></th>
+          <th bst-table-column="startDate"><span translate>Starts</span></th>
+          <th bst-table-column="endDate"><span translate>Expires</span></th>
+          <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
+          <th bst-table-column="contractNumber"><span translate>Contract</span></th>
+          <th bst-table-column="accountNumber"><span translate>Account</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+          <td bst-table-cell colspan="7">
+            <b>{{ name }}</b>
+          </td>
+        </tr>
+        <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions">
+          <td bst-table-cell>
+            <a ui-sref="subscription.info({subscriptionId: subscription.id})">
+              {{ subscription | subscriptionConsumedFilter }}
+            </a>
+          </td>
+          <td bst-table-cell><div subscription-type="subscription"></div></td>
+          <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+          <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
+          <td bst-table-cell>{{ subscription.support_level }}</td>
+          <td bst-table-cell>{{ subscription.contract_number }}</td>
+          <td bst-table-cell>{{ subscription.account_number }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

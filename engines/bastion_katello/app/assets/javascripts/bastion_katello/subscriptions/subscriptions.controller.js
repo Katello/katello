@@ -31,17 +31,19 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         };
 
         nutupane = new Nutupane(Subscription, params);
+        nutupane.masterOnly = true;
         $scope.table = nutupane.table;
         $scope.refreshTable = nutupane.refresh;
         $scope.controllerName = 'katello_subscriptions';
 
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('subscriptions.index');
-        };
-
         $scope.groupedSubscriptions = {};
         $scope.$watch('table.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
+        });
+
+        $scope.hasManifest = false;
+        Organization.get({id: CurrentOrganization}, function (organization) {
+            $scope.hasManifest = organization['owner_details'] && organization['owner_details'].upstreamConsumer;
         });
 
         $scope.formatConsumed = function (subscription) {
@@ -58,13 +60,12 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         };
 
         $scope.redhatProvider = Organization.redhatProvider();
-
         $scope.subscriptions = Subscription.queryPaged();
 
         $scope.$on('$stateChangeSuccess', function () {
             $scope.subscriptions.$promise.then(function () {
                 if ($scope.subscriptions.results.length < 1) {
-                    $scope.transitionTo('subscriptions.manifest.import');
+                    $scope.transitionTo('subscriptions-manifest.import');
                 }
             });
         });
