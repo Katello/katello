@@ -1,12 +1,9 @@
 <span page-title>{{ 'Docker Tags' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
+<div data-extend-template="layouts/table.html">
 
   <div data-block="header">
-    {{ 'Docker Tags' | translate }}
-  </div>
-
-  <div data-block="actions">
+    <h2 translate>Docker Tags</h2>
   </div>
 
   <span data-block="no-rows-message" translate>
@@ -17,4 +14,32 @@
     Your search returned zero Docker Tags.
   </span>
 
+  <div data-block="table">
+    <table class="table table-striped" ng-class="{'table-mask': table.working}">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name">{{ "Name" | translate }}</th>
+          <th bst-table-column="product">{{ "Product Name" | translate }}</th>
+          <th bst-table-column="repository">{{ "Repository Name" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="tag in table.rows">
+          <td bst-table-cell>
+            <a ui-sref="docker-tag({tagId: tag.id})">
+              {{ tag.full_name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            {{ tag.product.name }}
+          </td>
+          <td bst-table-cell>
+            {{ tag.repository.name }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
 </div>

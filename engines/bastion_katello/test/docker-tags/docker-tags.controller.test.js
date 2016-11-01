@@ -42,7 +42,7 @@ describe('Controller: DockerTagsController', function() {
         spyOn($scope, "transitionTo");
         $scope.table.closeItem();
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('docker-tags.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('docker-tags');
     });
 
 });

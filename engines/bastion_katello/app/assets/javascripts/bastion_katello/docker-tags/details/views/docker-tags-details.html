@@ -1,72 +1,51 @@
 <span page-title ng-model="tag">{{ 'Docker Tag: ' | translate }} {{ tag.full_name }}</span>
 
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
-      <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+<div data-extend-template="layouts/page-with-breadcrumbs.html">
+  <div data-block="header">
+    <h2>{{ tag.full_name }}</h2>
+  </div>
 
-      <div ng-hide="panel.error">
-        <header class="details-header">
-          <h2 class="fl">{{ tag.full_name }}</h2>
+  <div data-block="content">
+    <h4 translate>Basic Information</h4>
 
-          <div class="details-actions fr">
-            <button class="btn btn-default" ui-sref="docker-tags.index">
-              <i class="icon-remove"></i>
-              {{ "Close" | translate }}
-            </button>
-          </div>
-        </header>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Product</dt>
+      <dd>{{ tag.product.name }}</dd>
 
-        <div ng-show="panel.error" bst-alert="warning" success-messages="successMessages" error-messages="errorMessages"></div>
+      <dt translate>Repository</dt>
+      <dd>{{ tag.repository.name }}</dd>
+    </dl>
 
-        <div class="details" style="margin: 0 0 2em">
+    <table bst-table="table"
+           class="table table-striped"
+           ng-class="{'table-mask': table.working}"
+           ng-show="table.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="environment" translate>Environment</th>
+          <th bst-table-column="version" translate>Content View Version</th>
+          <th bst-table-column="manifest" translate>Manifest</th>
+          <th bst-table-column="path" translate>Published At</th>
+        </tr>
+      </thead>
 
-          <h4 translate>Basic Information</h4>
-
-          <div class="detail">
-            <span class="info-label" translate>Product</span>
-            <span class="info-value">{{ tag.product.name }}</span>
-          </div>
-
-          <div class="detail">
-            <span class="info-label" translate>Repository</span>
-            <span class="info-value">{{ tag.repository.name }}</span>
-          </div>
-
-        </div>
-
-        <table bst-table="table"
-               class="table table-striped"
-               ng-class="{'table-mask': table.working}"
-               ng-show="table.rows.length > 0">
-          <thead>
-            <tr bst-table-head>
-              <th bst-table-column="environment" translate>Environment</th>
-              <th bst-table-column="version" translate>Content View Version</th>
-              <th bst-table-column="manifest" translate>Manifest</th>
-              <th bst-table-column="path" translate>Published At</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr bst-table-row
-                ng-repeat="tag in table.rows">
-              <td bst-table-cell>
-                {{ tag.environment.name }}
-              </td>
-              <td bst-table-cell>
-                {{ tag.content_view_version.name }}
-              </td>
-              <td bst-table-cell>
-                {{ tag.manifest.name | limitTo:20 }}...
-              </td>
-              <td bst-table-cell>
-                {{ tag.repository.full_path }}:{{ tag.name }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+      <tbody>
+        <tr bst-table-row
+            ng-repeat="tag in table.rows">
+          <td bst-table-cell>
+            {{ tag.environment.name }}
+          </td>
+          <td bst-table-cell>
+            {{ tag.content_view_version.name }}
+          </td>
+          <td bst-table-cell>
+            {{ tag.manifest.name | limitTo:20 }}...
+          </td>
+          <td bst-table-cell>
+            {{ tag.repository.full_path }}:{{ tag.name }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

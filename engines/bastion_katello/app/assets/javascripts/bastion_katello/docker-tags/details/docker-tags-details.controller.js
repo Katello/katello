@@ -22,6 +22,8 @@ angular.module('Bastion.docker-tags').controller('DockerTagsDetailsController',
             loading: true
         };
 
+        $scope.table = {};
+
         if ($scope.tag) {
             $scope.panel.loading = false;
         }

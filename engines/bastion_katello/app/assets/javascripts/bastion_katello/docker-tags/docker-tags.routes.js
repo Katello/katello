@@ -9,31 +9,27 @@
  */
 angular.module('Bastion.docker-tags').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('docker-tags', {
-        abstract: true,
-        controller: 'DockerTagsController',
-        templateUrl: 'docker-tags/views/docker-tags.html'
-    })
-    .state('docker-tags.index', {
         url: '/docker_tags',
         permission: ['view_products', 'view_content_views'],
+        template: '<div ui-view></div>',
         views: {
-            'table': {
-                templateUrl: 'docker-tags/views/docker-tags-table-full.html'
+            '@': {
+                controller: 'DockerTagsController',
+                templateUrl: 'docker-tags/views/docker-tags.html'
             }
+        },
+        ncyBreadcrumb: {
+            label: "{{ 'Docker Tags' | translate }}"
         }
     })
-    .state('docker-tags.details', {
+    .state('docker-tag', {
         url: '/docker_tags/:tagId',
         permission: ['view_products', 'view_content_views'],
-        collapsed: true,
-        views: {
-            'table': {
-                templateUrl: 'docker-tags/views/docker-tags-table-collapsed.html'
-            },
-            'action-panel': {
-                controller: 'DockerTagsDetailsController',
-                templateUrl: 'docker-tags/details/views/docker-tags-details.html'
-            }
+        controller: 'DockerTagsDetailsController',
+        templateUrl: 'docker-tags/details/views/docker-tags-details.html',
+        ncyBreadcrumb: {
+            label: "{{ tag.full_name }}",
+            parent: 'docker-tags'
         }
     });
 }]);
