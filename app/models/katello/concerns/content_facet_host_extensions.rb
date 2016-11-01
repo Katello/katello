@@ -97,5 +97,5 @@ module Katello
 end
 
 class ::Host::Managed::Jail < Safemode::Jail
-  allow :content_view, :lifecycle_environment
+  allow :content_view, :lifecycle_environment, :content_source
 end
