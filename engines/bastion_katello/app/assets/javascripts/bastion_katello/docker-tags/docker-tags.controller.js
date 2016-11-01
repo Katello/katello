@@ -29,7 +29,7 @@ angular.module('Bastion.docker-tags').controller('DockerTagsController',
         $scope.controllerName = 'katello_docker_tags';
 
         $scope.table.closeItem = function () {
-            $scope.transitionTo('docker-tags.index');
+            $scope.transitionTo('docker-tags');
         };
     }]
 );
