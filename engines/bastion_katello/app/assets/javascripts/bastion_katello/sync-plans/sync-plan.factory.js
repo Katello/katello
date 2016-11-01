@@ -16,11 +16,9 @@ angular.module('Bastion.sync-plans').factory('SyncPlan',
             {id: '@id', organizationId: CurrentOrganization}, {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: { method: 'PUT' },
-                availableProducts: {method: 'GET', params: {action: 'products', 'available_for': 'sync_plan'}},
                 sync: { method: 'PUT', params: {action: 'sync'}},
                 addProducts: {method: 'PUT', params: {action: 'add_products'}},
-                removeProducts: {method: 'PUT', params: {action: 'remove_products'}},
-                products: {method: 'GET', params: {action: 'products'}}
+                removeProducts: {method: 'PUT', params: {action: 'remove_products'}}
             }
         );
 

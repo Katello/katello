@@ -1,6 +1,5 @@
 describe('Controller: SyncPlanAddProductsController', function() {
     var $scope,
-        $controller,
         translate,
         SyncPlan,
         Nutupane;
@@ -39,14 +38,14 @@ describe('Controller: SyncPlanAddProductsController', function() {
     }));
 
     it('attaches the products nutupane table to the scope', function() {
-        expect($scope.productsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("allows adding products groups to the sync plan", function() {
         var expected = {product_ids: [2]};
         spyOn(SyncPlan, 'addProducts');
 
-        $scope.productsTable.getSelected = function() {
+        $scope.table.getSelected = function() {
             return [{id: 2, name: "hello!"}];
         };
 

@@ -7,14 +7,16 @@
  * @requires $location
  * @requires translate
  * @requires SyncPlan
+ * @requires Product
+ * @requires CurrentOrganization
  * @requires Nutupane
  *
  * @description
  *   Provides the functionality for adding products to a sync plan.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
-    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Nutupane',
-        function ($scope, $q, $location, translate, SyncPlan, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Product', 'CurrentOrganization', 'Nutupane',
+        function ($scope, $q, $location, translate, SyncPlan, Product, CurrentOrganization, Nutupane) {
             var productsNutupane, params;
 
             $scope.successMessages = [];
@@ -25,18 +27,20 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
                 'sort_by': 'name',
                 'sort_order': 'ASC',
                 'full_result': true,
-                'id': $scope.$stateParams.syncPlanId
+                'organization_id': CurrentOrganization,
+                'sync_plan_id': $scope.$stateParams.syncPlanId,
+                'available_for': 'sync_plan'
             };
 
-            productsNutupane = new Nutupane(SyncPlan, params, 'availableProducts');
-            $scope.productsTable = productsNutupane.table;
+            productsNutupane = new Nutupane(Product, params);
+            $scope.table = productsNutupane.table;
 
             $scope.addProducts = function () {
                 var data,
                     success,
                     error,
                     deferred = $q.defer(),
-                    productsToAdd = _.map($scope.productsTable.getSelected(), 'id');
+                    productsToAdd = _.map($scope.table.getSelected(), 'id');
 
                 data = {
                     "product_ids": productsToAdd
@@ -44,9 +48,9 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
 
                 success = function (response) {
                     $scope.successMessages = [translate('Added %x products to sync plan "%y".')
-                        .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
-                    $scope.productsTable.working = false;
-                    $scope.productsTable.selectAll(false);
+                        .replace('%x', $scope.table.numSelected).replace('%y', $scope.syncPlan.name)];
+                    $scope.table.working = false;
+                    $scope.table.selectAll(false);
                     productsNutupane.refresh();
                     $scope.syncPlan.$get();
                     deferred.resolve(response);
@@ -55,10 +59,10 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
                 error = function (response) {
                     deferred.reject(response.data.errors);
                     $scope.errorMessages = response.data.errors.base;
-                    $scope.productsTable.working = false;
+                    $scope.table.working = false;
                 };
 
-                $scope.productsTable.working = true;
+                $scope.table.working = true;
                 SyncPlan.addProducts({id: $scope.syncPlan.id}, data, success, error);
                 return deferred.promise;
             };

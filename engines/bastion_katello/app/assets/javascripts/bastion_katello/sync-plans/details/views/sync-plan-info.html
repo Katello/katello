@@ -2,79 +2,67 @@
 
 <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-<div class="details fl">
-  <section>
+<div class="row">
+  <div class="col-sm-6">
     <h4 translate>Basic Information</h4>
 
-    <div class="detail">
-      <span class="info-label" translate>Name</span>
-      <span class="info-value"
-            bst-edit-text="syncPlan.name"
-            on-save="save(syncPlan)"
-            readonly="denied('edit_sync_plans', syncPlan)">
-      </span>
-    </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd bst-edit-text="syncPlan.name"
+          on-save="save(syncPlan)"
+          readonly="denied('edit_sync_plans', syncPlan)">
+      </dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Description</span>
-      <span class="info-value"
-            bst-edit-textarea="syncPlan.description"
-            on-save="save(syncPlan)"
-            readonly="denied('edit_sync_plans', syncPlan)">
-      </span>
-    </div>
+      <dt translate>Description</dt>
+      <dd bst-edit-textarea="syncPlan.description"
+          on-save="save(syncPlan)"
+          readonly="denied('edit_sync_plans', syncPlan)">
+      </dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Start Date</span>
-      <span class="info-value"
-            bst-edit-custom="syncPlan.sync_date"
-            formatter="date"
-            formatter-options="'medium'"
-            on-save="save(syncPlan)"
-            readonly="denied('edit_sync_plans', syncPlan)">
+      <dt translate>Start Date</dt>
+      <dd bst-edit-custom="syncPlan.sync_date"
+          formatter="date"
+          formatter-options="'medium'"
+          on-save="save(syncPlan)"
+          readonly="denied('edit_sync_plans', syncPlan)">
 
-           <input type="text" datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
-                  show-weeks="false" tabindex="4" required/>
+         <input type="text" datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
+                show-weeks="false" tabindex="4" required/>
 
-           <timepicker type="time" show-meridian="false" id="syncTime" name="syncTime" ng-model="syncPlan.syncTime"
-                       tabindex="5">
-           </timepicker>
-      </span>
-    </div>
+         <timepicker type="time" show-meridian="false" id="syncTime" name="syncTime" ng-model="syncPlan.syncTime"
+                     tabindex="5">
+         </timepicker>
+      </dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Next Sync</span>
-      <span class="info-value">{{ syncPlan.next_sync | date:'medium' }}</span>
-    </div>
+      <dt translate>Next Sync</dt>
+      <dd>{{ syncPlan.next_sync | date:'medium' }}</dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Sync Enabled</span>
-      <span class="info-value"
-            bst-edit-checkbox="syncPlan.enabled"
-            readonly="denied('edit_sync_plans', syncPlan)"
-            formatter="booleanToYesNo"
-            on-save="save(syncPlan)">
-      </span>
-    </div> 
+      <dt translate>Sync Enabled</dt>
+      <dd bst-edit-checkbox="syncPlan.enabled"
+          readonly="denied('edit_sync_plans', syncPlan)"
+          formatter="booleanToYesNo"
+          on-save="save(syncPlan)">
+      </dd>
 
-         
-    <div class="detail" ng-show="syncPlan.enabled">
-      <span class="info-label" translate>Interval</span>
-      <span class="info-value"
-            bst-edit-select="syncPlan.interval"
-            formatter="translate"
-            readonly="denied('edit_sync_plans', syncPlan)"
-            selector="syncPlan.interval"
-            options="intervals"
-            options-format="value.id as value.value for value in options"
-            on-save="save(syncPlan)">
-      </span>
-    </div>
+      <dt translate>Interval</dt>
+      <dd bst-edit-select="syncPlan.interval"
+          formatter="translate"
+          readonly="denied('edit_sync_plans', syncPlan)"
+          selector="syncPlan.interval"
+          options="intervals"
+          options-format="value.id as value.value for value in options"
+          on-save="save(syncPlan)">
+      </dd>
 
-    <div class="detail grey" ng-show="!syncPlan.enabled">
-      <span class="info-label" translate>Interval</span>
-      <span class="info-value" >{{ syncPlan.interval }}</span>
-    </div>    
-    
-  </section>
+      <dt translate>Interval</dt>
+      <dd>{{ syncPlan.interval }}</dd>
+
+      <dt translate>Products</dt>
+      <dd>
+        <a ui-sref="sync-plan.products.list">
+          {{ syncPlan.products.length }}
+        </a>
+      </dd>
+    </dl>
+  </div>
 </div>

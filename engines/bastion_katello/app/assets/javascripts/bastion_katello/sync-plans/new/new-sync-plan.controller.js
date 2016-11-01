@@ -20,18 +20,15 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
 
             $scope.syncPlan = new SyncPlan();
             $scope.syncPlan.interval = $scope.intervals[0].id;
-            $scope.syncPlan.startDate = new Date();
 
             function success(syncPlan) {
                 $scope.working = false;
                 GlobalNotification.setSuccessMessage(translate('New sync plan successfully created.'));
-                $scope.nutupane.refresh();
                 if ($scope.product) {
                     $scope.product['sync_plan_id'] = syncPlan.id;
                     $scope.$state.go('product.info', {productId: $scope.product.id});
-                } else if ($scope.syncPlanTable) {
-                    $scope.syncPlanTable.rows.unshift(syncPlan);
-                    $scope.$state.go('sync-plans.details.info', {syncPlanId: syncPlan.id});
+                } else {
+                    $scope.$state.go('sync-plan.info', {syncPlanId: syncPlan.id});
                 }
             }
 

@@ -1,14 +1,13 @@
 <span page-title>{{ 'Sync Plans' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
+<div data-extend-template="layouts/table-with-header.html">
 
-  <div data-block="header">
-    {{ 'Sync Plans' | translate }}
-  </div>
+  <header data-block="header">
+    <h2 translate>Sync Plans</h2>
+  </header>
 
-  <div data-block="actions">
-    <button class="btn btn-primary" ui-sref="sync-plans.new" ng-hide="denied('create_sync_plans')">
-      <i class="fa fa-signin leading-icon"></i>
+  <div data-block="list-actions">
+    <button class="btn btn-default" ui-sref="sync-plans.new" ng-hide="denied('create_sync_plans')">
       {{ "New Sync Plan" | translate }}
     </button>
   </div>
@@ -21,4 +20,37 @@
     Your search returned zero Sync Plans.
   </span>
 
+  <div data-block="table">
+    <table class="table table-striped"
+           ng-class="{'table-mask': syncPlanTable.working}"
+           ng-show="syncPlanTable.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name" sortable><span translate>Name</span></th>
+          <th bst-table-column="description"><span translate>Description</span></th>
+          <th bst-table-column="syncDate"><span translate>Original Sync Date</span></th>
+          <th bst-table-column="enabled"><span translate>Sync Enabled</span></th>
+          <th bst-table-column="interval"><span translate>Interval</span></th>
+          <th bst-table-column="nextSync"><span translate>Next Sync</span></th>
+        </tr>
+      </thead>
+
+      <div data-extend-template="layouts/select-all-results.html"></div>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="syncPlan in syncPlanTable.rows">
+          <td bst-table-cell>
+            <a ui-sref="sync-plan.info({syncPlanId: syncPlan.id})">
+              {{ syncPlan.name }}
+            </a>
+          </td>
+          <td bst-table-cell>{{ syncPlan.description }}</td>
+          <td bst-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+          <td bst-table-cell>{{ syncPlan.enabled }}</td>
+          <td bst-table-cell>{{ syncPlan.interval | translate | capitalize }}</td>
+          <td bst-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

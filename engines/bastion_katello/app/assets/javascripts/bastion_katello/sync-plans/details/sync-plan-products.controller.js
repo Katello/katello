@@ -7,36 +7,41 @@
  * @requires $location
  * @requires translate
  * @requires SyncPlan
+ * @requires Product
+ * @requires CurrentOrganization
  * @requires Nutupane
  *
  * @description
  *   Provides the functionality for the sync plan list products details action pane.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
-    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Nutupane',
-        function ($scope, $q, $location, translate, SyncPlan, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Product', 'CurrentOrganization', 'Nutupane',
+        function ($scope, $q, $location, translate, SyncPlan, Product, CurrentOrganization, Nutupane) {
             var productsNutupane, params;
 
             $scope.successMessages = [];
             $scope.errorMessages = [];
 
+            $scope.table = {};
+
             params = {
-                'id': $scope.$stateParams.syncPlanId,
                 'search': $location.search().search || "",
                 'sort_by': 'name',
                 'sort_order': 'ASC',
-                'full_result': true
+                'full_result': true,
+                'organization_id': CurrentOrganization,
+                'sync_plan_id': $scope.$stateParams.syncPlanId
             };
 
-            productsNutupane = new Nutupane(SyncPlan, params, 'products');
-            $scope.productsTable = productsNutupane.table;
+            productsNutupane = new Nutupane(Product, params);
+            $scope.table = productsNutupane.table;
 
             $scope.removeProducts = function () {
                 var data,
                     success,
                     error,
                     deferred = $q.defer(),
-                    productsToRemove = _.map($scope.productsTable.getSelected(), 'id');
+                    productsToRemove = _.map($scope.table.getSelected(), 'id');
 
                 data = {
                     "product_ids": productsToRemove
@@ -44,9 +49,9 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
 
                 success = function (response) {
                     $scope.successMessages = [translate('Removed %x products from sync plan "%y".')
-                        .replace('%x', $scope.productsTable.numSelected).replace('%y', $scope.syncPlan.name)];
-                    $scope.productsTable.working = false;
-                    $scope.productsTable.selectAll(false);
+                        .replace('%x', $scope.table.numSelected).replace('%y', $scope.syncPlan.name)];
+                    $scope.table.working = false;
+                    $scope.table.selectAll(false);
                     productsNutupane.refresh();
                     $scope.syncPlan.$get();
                     deferred.resolve(response);
@@ -55,10 +60,10 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
                 error = function (response) {
                     deferred.reject(response.data.errors);
                     $scope.errorMessages = response.data.errors;
-                    $scope.productsTable.working = false;
+                    $scope.table.working = false;
                 };
 
-                $scope.productsTable.working = true;
+                $scope.table.working = true;
                 SyncPlan.removeProducts({id: $scope.syncPlan.id}, data, success, error);
                 return deferred.promise;
             };

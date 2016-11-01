@@ -23,4 +23,19 @@ describe('Controller: SyncPlanDetailsController', function() {
         expect($scope.syncPlan).toBeDefined();
     });
 
+    it('provides a way to remove a sync plan', function() {
+        var syncPlanInstance = {
+            id: 1,
+            $remove: function (callback) {
+                callback();
+            }
+        };
+        spyOn($scope, 'transitionTo');
+        spyOn(syncPlanInstance, '$remove').and.callThrough();
+
+        $scope.removeSyncPlan(syncPlanInstance);
+
+        expect(syncPlanInstance.$remove).toHaveBeenCalled();
+        expect($scope.transitionTo).toHaveBeenCalledWith('sync-plans');
+    });
 });
