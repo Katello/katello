@@ -38,7 +38,7 @@ module Katello
     end
 
     def test_full_name
-      assert_equal "busybox:#{@tag.name}", @tag.full_name
+      assert_equal "#{@tag.docker_manifest.name}:#{@tag.name}", @tag.full_name
     end
   end
 end

@@ -1,0 +1,42 @@
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>Basic Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Product</dt>
+      <dd>
+        <a ui-sref="products.details.info({productId: tag.product.id})">
+          {{ tag.product.name }}
+        </a>
+      </dd>
+
+      <dt translate>Repository</dt>
+      <dd>
+        <a ui-sref="products.details.repositories.manage-content.docker-manifests({productId: tag.product.id, repositoryId: tag.repository.id})">
+          {{ tag.repository.name }}
+        </a>
+      </dd>
+    </dl>
+  </div>
+
+  <div data-block="right-column">
+    <h4 translate>Docker Manifest</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd>
+        {{ tag.manifest.name }}
+      </dd>
+
+      <dt translate>Digest</dt>
+      <dd>
+        {{ tag.manifest.digest }}
+      </dd>
+
+      <dt translate>Schema Version</dt>
+      <dd>
+        {{ tag.manifest.schema_version }}
+      </dd>
+    </dl>
+  </div>
+</div>

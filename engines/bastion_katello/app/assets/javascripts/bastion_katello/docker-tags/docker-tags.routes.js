@@ -23,13 +23,32 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
         }
     })
     .state('docker-tag', {
+        abstract: true,
         url: '/docker_tags/:tagId',
-        permission: ['view_products', 'view_content_views'],
-        controller: 'DockerTagsDetailsController',
-        templateUrl: 'docker-tags/details/views/docker-tags-details.html',
+        permission: 'view_products',
+        controller: 'DockerTagDetailsController',
+        templateUrl: 'docker-tags/details/views/docker-tag-details.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Docker Tags' | translate }}",
+            parent: 'docker-tags'
+        }
+    })
+    .state('docker-tag.info', {
+        url: '',
+        permission: 'view_products',
+        templateUrl: 'docker-tags/details/views/docker-tag-info.html',
         ncyBreadcrumb: {
             label: "{{ tag.full_name }}",
-            parent: 'docker-tags'
+            parent: 'docker-tag'
+        }
+    })
+    .state('docker-tag.environments', {
+        url: '/environments',
+        permission: 'view_environments',
+        templateUrl: 'docker-tags/details/views/docker-tag-environments.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Lifecycle Environments' | translate }}",
+            parent: 'docker-tag.info'
         }
     });
 }]);

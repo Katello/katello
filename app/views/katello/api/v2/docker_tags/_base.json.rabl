@@ -5,7 +5,7 @@ attributes :repository_id, :manifest_id
 
 child :docker_manifest => :manifest do
   attributes :uuid => :id
-  attributes :name
+  attributes :name, :schema_version, :digest
 end
 
 child :repository => :repository do
@@ -21,5 +21,5 @@ child :environment => :environment do
 end
 
 child :content_view_version do
-  attributes :id, :name
+  attributes :id, :name, :content_view_id
 end

@@ -7,9 +7,11 @@ module Katello
     validates :name, presence: true, uniqueness: {scope: :repository_id}
     validates :docker_manifest, presence: true
 
-    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :name, :complete_value => true, :rename => :tag
     scoped_search :in => :docker_manifest, :on => :name, :rename => :manifest,
-      :complete_value => true, :only_explicit => true
+      :complete_value => true, :only_explicit => false
+    scoped_search :in => :docker_manifest, :on => :digest, :rename => :digest,
+      :complete_value => false, :only_explicit => true
     scoped_search :in => :repository, :on => :name, :rename => :repository,
       :complete_value => true, :only_explicit => true
 
@@ -34,7 +36,7 @@ module Katello
     end
 
     def full_name
-      "#{repository.name}:#{name}"
+      "#{docker_manifest.name}:#{name}"
     end
 
     def related_tags
