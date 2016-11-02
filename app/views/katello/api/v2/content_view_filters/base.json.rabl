@@ -33,6 +33,11 @@ node :rules do |filter|
       partial('katello/api/v2/content_view_filter_rules/show', :object => rule)
     end
 
+  elsif filter.respond_to?(:docker_rules)
+    filter.docker_rules.map do |rule|
+      partial('katello/api/v2/content_view_filter_rules/show', :object => rule)
+    end
+
   else
     []
   end

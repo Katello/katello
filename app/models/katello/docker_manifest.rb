@@ -8,7 +8,7 @@ module Katello
 
     CONTENT_TYPE = Pulp::DockerManifest::CONTENT_TYPE
     scoped_search :on => :name, :complete_value => true
-    scoped_search :in => :docker_tag, :on => :name, :rename => :tag, :complete_value => true, :only_explicit => true
+    scoped_search :in => :docker_tags, :on => :name, :rename => :tag, :complete_value => true, :only_explicit => true
 
     def self.repository_association_class
       RepositoryDockerManifest

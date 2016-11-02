@@ -31,7 +31,8 @@ angular.module('Bastion.content-views').controller('FiltersController',
         }
 
         nutupane = new Nutupane(Filter, {
-            'content_view_id': $scope.$stateParams.contentViewId
+            'content_view_id': $scope.$stateParams.contentViewId,
+            'types[]': ["rpm", "package_group", "erratum"]
         });
 
         $scope.table = nutupane.table;

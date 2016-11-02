@@ -19,7 +19,7 @@ module Katello
     api :POST, "/content_view_filters/:content_view_filter_id/rules",
         N_("Create a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :name, [String, Array], :desc => N_("package and package group names")
+    param :name, [String, Array], :desc => N_("package, package group, or docker tag names")
     param :version, String, :desc => N_("package: version")
     param :arch, String, :desc => N_("package: architecture")
     param :min_version, String, :desc => N_("package: minimum version")
@@ -64,7 +64,7 @@ module Katello
         N_("Update a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
     param :id, :identifier, :desc => N_("rule identifier"), :required => true
-    param :name, String, :desc => N_("package or package group: name")
+    param :name, String, :desc => N_("package, package group, or docker tag: name")
     param :version, String, :desc => N_("package: version")
     param :min_version, String, :desc => N_("package: minimum version")
     param :max_version, String, :desc => N_("package: maximum version")
