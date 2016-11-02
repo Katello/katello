@@ -16,7 +16,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionFormControl
 
         function success(response) {
             $scope.table.addRow(response);
-            $scope.transitionTo('host-collections.details.info', {hostCollectionId: $scope.hostCollection.id});
+            $scope.transitionTo('host-collection.info', {hostCollectionId: $scope.hostCollection.id});
         }
 
         function error(response) {

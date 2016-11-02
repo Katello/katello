@@ -36,7 +36,7 @@ describe('Controller: HostCollectionAddHostsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it('adds selected hosts', function(){

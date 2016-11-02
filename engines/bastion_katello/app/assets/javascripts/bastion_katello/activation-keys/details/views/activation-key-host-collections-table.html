@@ -59,7 +59,7 @@
           <tbody>
             <tr bst-table-row ng-repeat="hostCollection in hostCollectionsTable.rows | filter:hostCollectionFilter" row-select="hostCollection">
               <td bst-table-cell>
-                <a ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
+                <a ui-sref="host-collections.info({hostCollectionId: hostCollection.id})">
                   {{ hostCollection.name }}
                 </a>
               </td>

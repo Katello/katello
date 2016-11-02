@@ -9,7 +9,6 @@ describe('Controller: HostCollectionDetailsController', function() {
 
         newHostCollection = {id: 8};
         HostCollection = $injector.get('MockResource').$new();
-        HostCollection.copy = function(params, success){success(newHostCollection)};
 
         $scope = $injector.get('$rootScope').$new();
 
@@ -38,12 +37,10 @@ describe('Controller: HostCollectionDetailsController', function() {
 
     it('provides a method to remove a host collection', function() {
         spyOn($scope, 'transitionTo');
-        spyOn($scope, 'removeRow');
 
         $scope.removeHostCollection($scope.hostCollection);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('host-collections.index');
-        expect($scope.removeRow).toHaveBeenCalledWith($scope.hostCollection.id);
+        expect($scope.transitionTo).toHaveBeenCalledWith('host-collections');
     });
 
     it('should save the product successfully', function() {
@@ -59,15 +56,6 @@ describe('Controller: HostCollectionDetailsController', function() {
 
         expect($scope.successMessages.length).toBe(0);
         expect($scope.errorMessages.length).toBe(1);
-    });
-
-    it('should be able to copy the host collection', function(){
-        spyOn($scope, 'transitionTo');
-        spyOn($scope.table, 'addRow');
-        $scope.copy(name);
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('host-collections.details.info', {hostCollectionId: newHostCollection.id});
-        expect($scope.table.addRow).toHaveBeenCalledWith(newHostCollection)
     });
 
     it("should be able to raise the host collection event on the .", function() {

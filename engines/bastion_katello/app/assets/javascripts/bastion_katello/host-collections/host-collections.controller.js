@@ -15,9 +15,8 @@
  *   within the table.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization', 'urlencodeFilter',
-    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization, urlencodeFilter) {
-
+    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization',
+    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization) {
         var params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -27,18 +26,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
         };
 
         var nutupane = new Nutupane(HostCollection, params);
+        nutupane.masterOnly = true;
+
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
         $scope.controllerName = 'katello_host_collections';
-
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('host-collections.index');
-        };
-
-        $scope.getHostCollectionSearchUrl = function (hostCollectionName) {
-            var search = 'host_collection="%s"'.replace('%s', hostCollectionName);
-            return '?select_all=true&search=' + urlencodeFilter(search);
-        };
 
         $scope.$on("updateContentHostCollection", function (event, hostCollectionRow) {
             $scope.table.replaceRow(hostCollectionRow);

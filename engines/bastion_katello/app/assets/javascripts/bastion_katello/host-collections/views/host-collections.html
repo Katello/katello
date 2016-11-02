@@ -1,16 +1,15 @@
 <span page-title>{{ 'Host Collections' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
+<div data-extend-template="layouts/table-with-header.html">
 
   <div data-block="header">
-    {{ 'Host Collections' | translate }}
+    <h2 translate>Host Collections</h2>
   </div>
 
-  <div data-block="actions">
-    <button class="btn btn-primary"
-            ui-sref="host-collections.new.form"
+  <div data-block="list-actions">
+    <button class="btn btn-default"
+            ui-sref="host-collections.new"
             ng-hide="denied('create_host_collections')">
-      <i class="fa fa-plus"></i>
       {{ "New Host Collection" | translate }}
     </button>
   </div>
@@ -23,4 +22,34 @@
     Your search returned zero Host Collections.
   </span>
 
+  <div data-block="table">
+    <table class="table table-striped"
+           ng-class="{'table-mask': table.working}"
+           ng-show="table.rows.length > 0">
+      <thead>
+      <tr bst-table-head>
+        <th bst-table-column="name" sortable><span translate>Name</span></th>
+        <th bst-table-column="hosts"><span translate>Content Hosts</span></th>
+        <th bst-table-column="limit"><span translate>Limit</span></th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr bst-table-row ng-repeat="hostCollection in table.rows">
+        <td bst-table-cell>
+          <a ui-sref="host-collection.info({hostCollectionId: hostCollection.id})">
+            {{ hostCollection.name }}
+          </a>
+          <i class="fa fa-chevron-right selected-icon" ng-show="hostCollection.selected"></i>
+        </td>
+        <td bst-table-cell>
+          <a ui-sref="host-collection.hosts.list({hostCollectionId: hostCollection.id})">
+            {{ hostCollection.total_hosts }}
+          </a>
+        </td>
+        <td bst-table-cell>{{ hostCollection.max_hosts | unlimitedFilter:hostCollection.unlimited_hosts }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,12 +1,10 @@
 <span page-title ng-model="hostCollection">{{ 'Add Content Hosts to: ' | translate }} {{ hostCollection.name }}</span>
 
-<div data-extend-template="layouts/details-nutupane.html">
+<div data-extend-template="layouts/partials/table.html">
 
-  <div data-block="messages"></div>
-
-  <div data-block="actions">
+  <div data-block="list-actions">
     <div ng-hide="hostCollection.readonly" class="nutupane-actions fr">
-       <button class="btn btn-primary"
+       <button class="btn btn-default"
                translate
                ng-hide="denied('edit_hosts')"
                ng-disabled="disableAddButton()"
@@ -25,9 +23,9 @@
   </span>
 
   <div data-block="table">
-    <table ng-class="{'table-mask': detailsTable.working}"
+    <table ng-class="{'table-mask': table.working}"
            class="table table-full table-striped"
-           ng-show="detailsTable.rows.length > 0">
+           ng-show="table.rows.length > 0">
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="name" translate>Name</th>
@@ -37,7 +35,7 @@
       </thead>
 
       <tbody>
-      <tr bst-table-row ng-repeat="host in detailsTable.rows">
+      <tr bst-table-row ng-repeat="host in table.rows">
         <td class="row-select">
           <input type="checkbox"
                  ng-model="host.selected"
