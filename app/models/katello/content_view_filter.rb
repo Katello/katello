@@ -2,11 +2,12 @@ module Katello
   class ContentViewFilter < Katello::Model
     self.include_root_in_json = false
 
+    DOCKER = 'docker'.freeze
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
-    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA].freeze
-    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }.freeze
+    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER].freeze
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Docker') => DOCKER }.freeze
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",
@@ -33,13 +34,18 @@ module Katello
     scoped_search :on => :type, :rename => :content_type,
                   :complete_value => {Rpm::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageFilter",
                                       PackageGroup::CONTENT_TYPE.to_sym => "Katello::ContentViewPackageGroupFilter",
-                                      Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter"}
+                                      Erratum::CONTENT_TYPE.to_sym => "Katello::ContentViewErratumFilter",
+                                      DOCKER.to_sym => "Katello::ContentViewDockerFilter"}
     scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
 
     def self.yum
       where(:type => [::Katello::ContentViewPackageGroupFilter.name,
                       ::Katello::ContentViewErratumFilter.name,
                       ::Katello::ContentViewPackageFilter.name])
+    end
+
+    def self.docker
+      where(:type => [::Katello::ContentViewDockerFilter.name])
     end
 
     def params_format
@@ -50,7 +56,8 @@ module Katello
       {
         ContentViewPackageFilter => RPM,
         ContentViewErratumFilter => ERRATA,
-        ContentViewPackageGroupFilter => PACKAGE_GROUP
+        ContentViewPackageGroupFilter => PACKAGE_GROUP,
+        ContentViewDockerFilter => DOCKER
       }[self.class]
     end
 
@@ -62,6 +69,8 @@ module Katello
         ContentViewPackageGroupFilter
       when ERRATA
         ContentViewErratumFilter
+      when DOCKER
+        ContentViewDockerFilter
       else
         fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
                  { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
@@ -76,6 +85,8 @@ module Katello
         ContentViewPackageGroupFilterRule
       when ContentViewErratumFilter.name
         ContentViewErratumFilterRule
+      when ContentViewDockerFilter.name
+        ContentViewDockerFilterRule
       else
         fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
                  { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
@@ -90,6 +101,8 @@ module Katello
         filter.package_group_rule_ids
       when ContentViewErratumFilter.name
         filter.erratum_rule_ids
+      when ContentViewDockerFilter.name
+        filter.docker_rule_ids
       else
         fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") %
                  { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
