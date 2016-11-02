@@ -18,4 +18,9 @@ FactoryGirl.define do
           :class => Katello::ContentViewPackageGroupFilter,
           :parent => :katello_content_view_filter do
   end
+
+  factory :katello_content_view_docker_filter,
+          :class => Katello::ContentViewDockerFilter,
+          :parent => :katello_content_view_filter do
+  end
 end

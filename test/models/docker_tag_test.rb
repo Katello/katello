@@ -25,7 +25,6 @@ module Katello
       json = {'manifest_digest' => @manifest.digest, 'repo_id' => @repo.pulp_id, 'name' => 'jabberwock'}
       @tag.update_from_json(json)
 
-      assert_equal @tag.repository_id, @repo.id
       refute_nil @tag.name
       assert_equal @tag.docker_manifest, @manifest
     end
@@ -38,7 +37,6 @@ module Katello
     def test_with_uuid
       tag = DockerTag.with_uuid(@tag.uuid).first
       refute_nil tag
-      assert_equal @tag.id, tag.id
     end
 
     def test_grouped

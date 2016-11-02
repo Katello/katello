@@ -19,10 +19,10 @@ module Katello
     def test_import_for_repository
       Katello::DockerManifest.import_for_repository(@repo)
 
-      assert_equal 1, DockerManifest.count
+      assert_equal 4, DockerManifest.count
       assert_equal 1, @repo.docker_manifests.count
-      assert_equal ["manifest1"], DockerManifest.all.map(&:name).sort
-      assert_equal "sha256:f52325afc9c353f58d65b24d8f9a5e61be83f0518aa222639cb77bc7b77d49a9", DockerManifest.all.first.digest
+      assert_equal ["manifest1", "one", "three", "two"], DockerManifest.all.map(&:name).sort
+      assert_equal "sha256:f52325afc9c353f58d65b24d8f9a5e61be83f0518aa222639cb77bc7b77d49a9", DockerManifest.find_by_name("manifest1").digest
     end
   end
 end

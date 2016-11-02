@@ -16,4 +16,10 @@ FactoryGirl.define do
           :class => Katello::ContentViewErratumFilterRule do
     association :filter, :factory => :katello_content_view_erratum_filter
   end
+
+  factory :katello_content_view_docker_filter_rule,
+          :class => Katello::ContentViewDockerFilterRule do
+    sequence(:name) { |n| "docker #{n}" }
+    association :filter, :factory => :katello_content_view_docker_filter
+  end
 end
