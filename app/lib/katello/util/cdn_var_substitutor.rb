@@ -102,9 +102,9 @@ module Katello
         else
           unless any_valid_metadata_file?(real_path)
             @resource.log :error, "No valid metadata files found for #{real_path}"
-            fail Errors::CdnSubstitutionError, _("%{substitutions} are not valid substitutions for %{content_url}."\
-                   " No valid metadata files found for %{real_path}") %
-              { substitutions: substitutions, content_url: content.contentUrl, real_path: real_path}
+            fail Errors::CdnSubstitutionError, _("The path %{real_path} does not seem to be a valid repository."\
+                   " If you think this is an error, please try refreshing your manifest.") %
+              {real_path: real_path}
           end
         end
       end
