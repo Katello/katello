@@ -12,6 +12,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("filter content view filters by name")
+    param :types, Array, :desc => N_("types of filters")
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end
@@ -19,6 +20,12 @@ module Katello
     def index_relation
       query = ContentViewFilter.where(:content_view_id => (@view || ContentView.readable))
       query = query.where(:name => params[:name]) if params[:name]
+      if params[:types]
+        types = params[:types].each.collect do |type|
+          ::Katello::ContentViewFilter.class_for(type)
+        end
+        query = query.where("#{::Katello::ContentViewFilter.table_name}.type IN (?)", types)
+      end
       query
     end
 
@@ -26,7 +33,7 @@ module Katello
     api :post, "/content_view_filters", N_("create a filter for a content view")
     param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the filter"), :required => true
-    param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum)"), :required => true
+    param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum, docker)"), :required => true
     param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
                                                        "(package filter only)")
     param :inclusion, :bool, :desc => N_("specifies if content should be included or excluded, default: inclusion=false")

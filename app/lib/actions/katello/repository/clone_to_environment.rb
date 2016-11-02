@@ -23,7 +23,7 @@ module Actions
             if repository.yum?
               plan_action(Repository::CloneYumContent, repository, clone, [], false)
             elsif repository.docker?
-              plan_action(Repository::CloneDockerContent, repository, clone)
+              plan_action(Repository::CloneDockerContent, repository, clone, [])
             elsif repository.ostree?
               plan_action(Repository::CloneOstreeContent, repository, clone)
             elsif repository.file?

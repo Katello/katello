@@ -321,14 +321,11 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       action = create_action action_class
-      plan_action(action, source_repo, target_repo)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerManifest,
-                                source_pulp_id: source_repo.pulp_id,
-                                target_pulp_id: target_repo.pulp_id)
-
+      plan_action(action, source_repo, target_repo, [])
       assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerTag,
                                 source_pulp_id: source_repo.pulp_id,
-                                target_pulp_id: target_repo.pulp_id)
+                                target_pulp_id: target_repo.pulp_id,
+                                clauses: nil)
 
       assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
     end
@@ -351,7 +348,7 @@ module ::Actions::Katello::Repository
 
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneDockerContent, source_repo, clone)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneDockerContent, source_repo, clone, [])
     end
   end
 
