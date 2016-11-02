@@ -8,16 +8,17 @@
  * @requires translate
  * @requires HostCollection
  * @requires ApiErrorHandler
+ * @requires urlencodeFilter
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'HostCollection', 'ApiErrorHandler',
-    function ($scope, $state, $q, translate, HostCollection, ApiErrorHandler) {
+    ['$scope', '$state', '$q', 'translate', 'HostCollection', 'ApiErrorHandler', 'urlencodeFilter',
+    function ($scope, $state, $q, translate, HostCollection, ApiErrorHandler, urlencodeFilter) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
-        $scope.copyErrorMessages = [];
+
         $scope.panel = {
             error: false,
             loading: true
@@ -41,6 +42,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             });
         };
 
+        $scope.getHostCollectionSearchUrl = function (hostCollectionName) {
+            var search = 'host_collection="%s"'.replace('%s', hostCollectionName);
+            return '?select_all=true&search=' + urlencodeFilter(search);
+        };
+
         $scope.save = function (hostCollection) {
             var deferred = $q.defer();
 
@@ -55,22 +61,9 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             return deferred.promise;
         };
 
-        $scope.copy = function (newName) {
-            HostCollection.copy({id: $scope.hostCollection.id, 'host_collection': {name: newName}}, function (response) {
-                $scope.showCopy = false;
-                $scope.table.addRow(response);
-                $scope.transitionTo('host-collections.details.info', {hostCollectionId: response.id});
-            }, function (response) {
-                $scope.copyErrorMessages.push(response.data.displayMessage);
-            });
-        };
-
         $scope.removeHostCollection = function (hostCollection) {
-            var id = hostCollection.id;
-
             hostCollection.$delete(function () {
-                $scope.removeRow(id);
-                $scope.transitionTo('host-collections.index');
+                $scope.transitionTo('host-collections');
                 $scope.successMessages.push(translate('Host Collection removed.'));
             }, function (response) {
                 $scope.errorMessages.push(translate("An error occurred removing the Host Collection: ") + response.data.displayMessage);

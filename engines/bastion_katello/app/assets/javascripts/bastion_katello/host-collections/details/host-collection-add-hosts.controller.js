@@ -37,17 +37,17 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
             return term + " and " + addition;
         };
 
-        $scope.detailsTable = contentNutupane.table;
+        $scope.table = contentNutupane.table;
         $scope.isAdding = false;
-        $scope.detailsTable.closeItem = function () {};
+        $scope.table.closeItem = function () {};
 
         $scope.disableAddButton = function () {
-            return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
+            return $scope.table.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {
             var selected;
-            selected = _.map($scope.detailsTable.getSelected(), 'id');
+            selected = _.map($scope.table.getSelected(), 'id');
 
             $scope.isAdding = true;
             HostCollection.addHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {

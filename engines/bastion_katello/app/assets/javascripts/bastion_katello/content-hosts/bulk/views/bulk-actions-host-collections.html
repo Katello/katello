@@ -63,12 +63,12 @@
         <tbody>
           <tr bst-table-row ng-repeat="hostCollection in detailsTable.rows" row-select="hostCollection">
             <td bst-table-cell>
-              <a class="clickable" ui-sref="host-collections.details.info({hostCollectionId: hostCollection.id})">
+              <a ui-sref="host-collection.info({hostCollectionId: hostCollection.id})">
                 {{ hostCollection.name }}
               </a>
             </td>
             <td bst-table-cell>
-              <a class="clickable" ui-sref="host-collections.details.content-hosts({hostCollectionId: hostCollection.id})">
+              <a ui-sref="host-collection.content-hosts({hostCollectionId: hostCollection.id})">
                 {{ hostCollection.total_hosts }}
               </a>
             </td>

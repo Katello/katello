@@ -1,63 +1,96 @@
 <span page-title ng-model="hostCollection">{{ 'Host Collection: ' | translate }} {{ hostCollection.name }}</span>
 
-<section>
+<section data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h3 translate>Basic Information</h3>
 
-  <div class="details fl">
-    <section>
-      <div class="detail">
-        <span class="info-label" translate>Name</span>
-        <span class="info-value"
-              bst-edit-text="hostCollection.name"
-              readonly="denied('edit_host_collection', hostCollection)"
-              on-save="save(hostCollection)">
-        </span>
-      </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd bst-edit-text="hostCollection.name"
+          readonly="denied('edit_host_collection', hostCollection)"
+          on-save="save(hostCollection)">
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Description</span>
-        <span class="info-value"
-              bst-edit-textarea="hostCollection.description"
-              readonly="denied('edit_host_collection', hostCollection)"
-              on-save="save(hostCollection)">
-        </span>
-      </div>
+      <dt translate>Description</dt>
+        <dd bst-edit-textarea="hostCollection.description"
+            readonly="denied('edit_host_collection', hostCollection)"
+            on-save="save(hostCollection)">
+        </dd>
 
-      <div class="detail">
+      <dt translate>Content Hosts</dt>
+      <dd>
+        <a ui-sref="host-collection.hosts.add" ng-show="hostCollection.total_hosts === 0">
+          {{ hostCollection.total_hosts }}
+        </a>
+        <a ui-sref="host-collection.hosts.list" ng-hide="hostCollection.total_hosts === 0">
+          {{ hostCollection.total_hosts }}
+        </a>
+      </dd>
 
-        <span class="info-label" translate>Content Host Limit</span>
+      <dt translate>Content Host Limit</dt>
+      <dd bst-edit-custom="hostCollection.max_hosts"
+          readonly="denied('edit_host_collection', hostCollection)"
+          formatter="unlimitedFilter"
+          formatter-options="hostCollection.unlimited_hosts"
+          on-save="save(hostCollection)">
 
-        <span class="info-value"
-              bst-edit-custom="hostCollection.max_hosts"
-              readonly="denied('edit_host_collection', hostCollection)"
-              formatter="unlimitedFilter"
-              formatter-options="hostCollection.unlimited_hosts"
-              on-save="save(hostCollection)">
-
-          <div class="form input">
-            <div>
-              <span translate>
-                Unlimited Content Hosts:
-              </span>
-              <input type='checkbox' ng-model="hostCollection.unlimited_hosts"/>
-            </div>
-            <div ng-hide="hostCollection.unlimited_hosts" >
-              <span translate>
-                Limit:
-              </span>
-              <input ng-model="hostCollection.max_hosts"
-                     name="max_hosts"
-                     type="number"
-                     min="1"
-                     ng-required="!hostCollection.unlimited_hosts"
-                     tabindex="2"/>
-              <span class="note error" ng-show="hostCollection.max_hosts.$invalid">
-                <ul><li ng-repeat="message in hostCollection.max_hosts.$error.messages">{{ message }}</li></ul>
-              </span>
-            </div>
+        <div class="form input">
+          <div>
+            <span translate>
+              Unlimited Content Hosts:
+            </span>
+            <input type='checkbox' ng-model="hostCollection.unlimited_hosts"/>
           </div>
+          <div ng-hide="hostCollection.unlimited_hosts" >
+            <span translate>
+              Limit:
+            </span>
+            <input ng-model="hostCollection.max_hosts"
+                   name="max_hosts"
+                   type="number"
+                   min="1"
+                   ng-required="!hostCollection.unlimited_hosts"
+                   tabindex="2"/>
+            <span class="note error" ng-show="hostCollection.max_hosts.$invalid">
+              <ul><li ng-repeat="message in hostCollection.max_hosts.$error.messages">{{ message }}</li></ul>
+            </span>
+          </div>
+        </div>
+      </dd>
+    </dl>
+  </div>
 
-        </span>
-      </div>
-    </section>
+  <div data-block="right-column">
+    <h3 translate>Actions</h3>
+
+    <p translate>
+      The following actions can be performed on content hosts in this host collection:
+    </p>
+
+    <ul class="list-unstyled">
+      <li bst-feature-flag="remote_actions">
+        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+          Package Installation, Removal, and Update
+        </a>
+      </li>
+
+      <li bst-feature-flag="remote_actions">
+        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+          Errata Installation
+        </a>
+      </li>
+
+      <li>
+        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.host-collections') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+          Host Collection Membership
+        </a>
+      </li>
+
+      <li bst-feature-flag="lifecycle_environments">
+        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.environment') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+          Change assigned Lifecycle Environment or Content View
+        </a>
+      </li>
+    </ul>
   </div>
 </section>
