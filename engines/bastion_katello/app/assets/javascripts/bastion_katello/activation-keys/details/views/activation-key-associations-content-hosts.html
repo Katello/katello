@@ -1,11 +1,6 @@
 <span page-title ng-model="activationKey">{{ 'Content Hosts for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="messages"></div>
-  <div data-block="actions"></div>
-  <div data-block="selection-summary"></div>
-
+<div data-extend-template="layouts/partials/table.html">
   <span data-block="no-rows-message" translate>
     This activation key is not associated with any content hosts.
   </span>
@@ -15,7 +10,7 @@
   </span>
 
   <div data-block="table">
-    <table class="table table-bordered table-striped" bst-table="table" ng-class="{'table-mask': detailsTable.working}">
+    <table class="table table-bordered table-striped" bst-table="table" ng-class="{'table-mask': table.working}">
       <thead>
         <tr bst-table-head>
           <th bst-table-column="name" sortable><span translate>Name</span></th>
@@ -30,10 +25,10 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="host in detailsTable.rows"
+        <tr bst-table-row ng-repeat="host in table.rows"
             ng-controller="ContentHostStatusController">
           <td bst-table-cell>
-            <a ui-sref="content-hosts.details.info({hostId: host.host_id})">
+            <a ui-sref="content-hosts.details.info({hostId: host.id})">
               {{ host.name }}
             </a>
           </td>

@@ -44,7 +44,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             activationKey.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages.push(translate('Activation Key updated'));
-                $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
                 $scope.errorMessages.push(translate("An error occurred saving the Activation Key: ") + response.data.displayMessage);
@@ -56,22 +55,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsContro
             $scope.activationKey = activationKey;
         };
 
-        $scope.copy = function (newName) {
-            ActivationKey.copy({id: $scope.activationKey.id, 'new_name': newName}, function (response) {
-                $scope.showCopy = false;
-                $scope.table.addRow(response);
-                $scope.transitionTo('activation-keys.details.info', {activationKeyId: response.id});
-            }, function (response) {
-                $scope.copyErrorMessages.push(response.data.displayMessage);
-            });
-        };
-
         $scope.removeActivationKey = function (activationKey) {
-            var id = activationKey.id;
-
             activationKey.$delete(function () {
-                $scope.removeRow(id);
-                $scope.transitionTo('activation-keys.index');
+                $scope.transitionTo('activation-keys');
                 GlobalNotification.setSuccessMessage(translate('Activation Key removed.'));
             }, function (response) {
                 GlobalNotification.setErrorMessage(translate("An error occurred removing the Activation Key: ") + response.data.displayMessage);

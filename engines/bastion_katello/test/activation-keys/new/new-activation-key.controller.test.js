@@ -19,10 +19,7 @@ describe('Controller: NewActivationKeyController', function() {
 
 
         $scope.activationKeyForm = $injector.get('MockForm');
-        $scope.table = {
-            addRow: function() {},
-            closeItem: function() {}
-        };
+        $scope.table = {};
 
         paths = [[{name: "Library", id: 1}, {name: "Dev", id: 2}]]
 
@@ -64,14 +61,12 @@ describe('Controller: NewActivationKeyController', function() {
     it('should save a new activation key resource', function() {
         var activationKey = $scope.activationKey;
 
-        spyOn($scope.table, 'addRow');
         spyOn($scope, 'transitionTo');
         spyOn(activationKey, '$save').and.callThrough();
         $scope.save(activationKey);
 
         expect(activationKey.$save).toHaveBeenCalled();
-        expect($scope.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('activation-keys.details.info',
+        expect($scope.transitionTo).toHaveBeenCalledWith('activation-key.info',
                                                          {activationKeyId: $scope.activationKey.id})
     });
 

@@ -294,7 +294,7 @@
           <ul ng-show="host.subscription_facet_attributes.activation_keys.length > 0">
             <li ng-repeat="activation_key in host.subscription_facet_attributes.activation_keys">
               <span>
-                <a ui-sref="activation-keys.details.info({activationKeyId: activation_key.id})">
+                <a ui-sref="activation-key.info({activationKeyId: activation_key.id})">
                   {{ activation_key.name }}
                 </a>
               </span>

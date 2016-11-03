@@ -304,12 +304,12 @@ describe('Controller: ActivationKeyAddSubscriptionsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function () {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it('groups subscriptions', function () {
         spyOn(SubscriptionsHelper, 'groupByProductName').and.callThrough();
-        $scope.detailsTable.rows = subscriptions.results;
+        $scope.table.rows = subscriptions.results;
         $scope.$digest();
         expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalled();
         expect($scope.groupedSubscriptions["Red Hat Enterprise Linux Server, Premium (8 sockets) (Up to 4 guests)"].length).toBe(2);

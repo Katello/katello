@@ -29,14 +29,14 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
         };
 
         hostCollectionsPane = new Nutupane(ActivationKey, params, 'availableHostCollections');
-        $scope.hostCollectionsTable = hostCollectionsPane.table;
+        $scope.table = hostCollectionsPane.table;
 
         $scope.addHostCollections = function () {
             var data,
                 success,
                 error,
                 deferred = $q.defer(),
-                hostCollectionsToAdd = _.map($scope.hostCollectionsTable.getSelected(), 'id');
+                hostCollectionsToAdd = _.map($scope.table.getSelected(), 'id');
 
             data = {
                 "activation_key": {
@@ -46,10 +46,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
 
             success = function (response) {
                 $scope.successMessages = [translate('Added %x host collections to activation key "%y".')
-                    .replace('%x', $scope.hostCollectionsTable.numSelected)
+                    .replace('%x', $scope.table.numSelected)
                     .replace('%y', $scope.activationKey.name)];
-                $scope.hostCollectionsTable.working = false;
-                $scope.hostCollectionsTable.selectAll(false);
+                $scope.table.working = false;
+                $scope.table.selectAll(false);
                 hostCollectionsPane.refresh();
                 $scope.activationKey.$get();
                 deferred.resolve(response);
@@ -58,10 +58,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
             error = function (response) {
                 deferred.reject(response.data.errors);
                 $scope.errorMessages = response.data.errors.base;
-                $scope.hostCollectionsTable.working = false;
+                $scope.table.working = false;
             };
 
-            $scope.hostCollectionsTable.working = true;
+            $scope.table.working = true;
             ActivationKey.addHostCollections({id: $scope.activationKey.id}, data, success, error);
             return deferred.promise;
         };

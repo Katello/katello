@@ -17,9 +17,8 @@ angular.module('Bastion.activation-keys').controller('NewActivationKeyController
     ['$scope', '$q', 'FormUtils', 'ActivationKey', 'Organization', 'CurrentOrganization', 'ContentView',
     function ($scope, $q, FormUtils, ActivationKey, Organization, CurrentOrganization, ContentView) {
 
-        function success(response) {
-            $scope.table.addRow(response);
-            $scope.transitionTo('activation-keys.details.info', {activationKeyId: $scope.activationKey.id});
+        function success() {
+            $scope.transitionTo('activation-key.info', {activationKeyId: $scope.activationKey.id});
         }
 
         function error(response) {

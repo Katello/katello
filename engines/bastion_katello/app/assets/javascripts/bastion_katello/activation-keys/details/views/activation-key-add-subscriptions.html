@@ -1,11 +1,8 @@
 <span page-title ng-model="activationKey">{{ 'Add Subscriptions for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="messages"></div>
-
-  <div data-block="actions">
-    <div ng-hide="denied('edit_activation_keys', activationKey)" class="nutupane-actions fr">
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="list-actions">
+    <div ng-hide="denied('edit_activation_keys', activationKey)">
        <button class="btn btn-primary"
                translate
                ng-disabled="disableAddButton()"
@@ -24,7 +21,7 @@
   </span>
 
   <div data-block="table">
-    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full">
+    <table ng-class="{'table-mask': table.working}" class="table table-full">
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>

@@ -25,23 +25,23 @@ angular.module('Bastion.activation-keys').controller('ActivationKeySubscriptions
         };
 
         $scope.contentNutupane = new Nutupane(ActivationKey, params, "subscriptions");
-        $scope.detailsTable = $scope.contentNutupane.table;
+        $scope.table = $scope.contentNutupane.table;
         $scope.contentNutupane.masterOnly = true;
         $scope.contentNutupane.setSearchKey('subscriptionSearch');
         $scope.isRemoving = false;
 
         $scope.groupedSubscriptions = {};
-        $scope.$watch('detailsTable.rows', function (rows) {
+        $scope.$watch('table.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
         $scope.disableRemoveButton = function () {
-            return $scope.detailsTable.numSelected === 0 || $scope.isRemoving;
+            return $scope.table.numSelected === 0 || $scope.isRemoving;
         };
 
         $scope.removeSelected = function () {
             var selected;
-            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.detailsTable);
+            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.table);
 
             $scope.isRemoving = true;
             ActivationKey.removeSubscriptions({id: $scope.activationKey.id, 'subscriptions': selected}, function () {

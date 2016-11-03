@@ -22,8 +22,8 @@
 
 <nav>
   <ul class="nav nav-tabs" ng-show="permitted('edit_activation_keys', activationKey)">
-    <li ng-class="{active: isState('activation-keys.details.subscriptions.list')}">
-      <a ui-sref="activation-keys.details.subscriptions.list">
+    <li ng-class="{active: isState('activation-key.subscriptions.list')}">
+      <a ui-sref="activation-key.subscriptions.list">
         <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->
         <span translate>
           List/Remove
@@ -32,8 +32,8 @@
     </li>
 
     <!-- TODO: permissions? ng-show="activationKey.permissions.editable" -->
-    <li ng-class="{active: stateIncludes('activation-keys.details.subscriptions.add')}">
-      <a ui-sref="activation-keys.details.subscriptions.add">
+    <li ng-class="{active: stateIncludes('activation-key.subscriptions.add')}">
+      <a ui-sref="activation-key.subscriptions.add">
         <span translate>
           Add
         </span>
