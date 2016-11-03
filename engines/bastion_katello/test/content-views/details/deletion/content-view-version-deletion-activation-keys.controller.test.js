@@ -78,6 +78,6 @@ describe('Controller: ContentViewVersionDeletionActivationKeysController', funct
 
         expect($scope.activationKeyLink()).toBe('activationKeys?search=search');
         expect($scope.searchString).toHaveBeenCalledWith($scope.contentView, $scope.deleteOptions.environments);
-        expect($scope.$state.href).toHaveBeenCalledWith('activation-keys.index');
+        expect($scope.$state.href).toHaveBeenCalledWith('activation-keys');
     });
 });

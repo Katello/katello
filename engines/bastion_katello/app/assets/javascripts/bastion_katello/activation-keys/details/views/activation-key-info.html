@@ -1,132 +1,123 @@
 <span page-title ng-model="activationKey">{{ 'Details for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div alert type="'info'">
-  <p translate>
-    This activation key may be used during system registration. For example:
-  </p>
-  <p translate>
-    subscription-manager register --org="{{ activationKey.organization.label }}" --activationkey="{{ activationKey.name }}"
-  </p>
+<div data-block="messages">
+  <div alert type="'info'">
+    <p translate>
+      This activation key may be used during system registration. For example:
+    </p>
+    <p translate>
+      subscription-manager register --org="{{ activationKey.organization.label }}" --activationkey="{{ activationKey.name }}"
+    </p>
+  </div>
 </div>
 
-<section>
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>Basic Information</h4>
 
-  <div class="details pull-left">
-    <section>
-      <div class="detail">
-        <span class="info-label" translate>Name</span>
-        <span class="info-value"
-              bst-edit-text="activationKey.name"
-              readonly="denied('edit_activation_keys', activationKey)"
-              on-save="save(activationKey)">
-        </span>
-      </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd bst-edit-text="activationKey.name"
+          readonly="denied('edit_activation_keys', activationKey)"
+          on-save="save(activationKey)">
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Description</span>
-        <span class="info-value"
-              bst-edit-textarea="activationKey.description"
-              readonly="denied('edit_activation_keys', activationKey)"
-              on-save="save(activationKey)">
-        </span>
-        </div>
+      <dt translate>Description</dt>
+      <dd bst-edit-textarea="activationKey.description"
+          readonly="denied('edit_activation_keys', activationKey)"
+          on-save="save(activationKey)">
+      </dd>
 
-      <div class="detail">
+      <dt translate>Host Limit</dt>
+      <dd bst-edit-custom="activationKey.max_hosts"
+          formatter="unlimitedFilter"
+          formatter-options="activationKey.unlimited_hosts"
+          readonly="denied('edit_activation_keys', activationKey)"
+          on-save="save(activationKey)">
 
-        <span class="info-label" translate>Host Limit</span>
-
-        <span class="info-value"
-              bst-edit-custom="activationKey.max_hosts"
-              formatter="unlimitedFilter"
-              formatter-options="activationKey.unlimited_hosts"
-              readonly="denied('edit_activation_keys', activationKey)"
-              on-save="save(activationKey)">
-
-          <div class="form input">
-            <div>
-              <span translate>
-                Unlimited Content Hosts:
-              </span>
-              <input type='checkbox' ng-model="activationKey.unlimited_hosts"/>
-            </div>
-            <div ng-hide="activationKey.unlimited_hosts" >
-              <span translate>
-                Limit:
-              </span>
-              <input ng-model="activationKey.max_hosts"
-                     name="max_hosts"
-                     type="number"
-                     min="1"
-                     ng-required="!activationKey.unlimited_hosts"
-                     tabindex="2"/>
-            </div>
+        <div class="form input">
+          <div>
+            <span translate>
+              Unlimited Content Hosts:
+            </span>
+            <input type='checkbox' ng-model="activationKey.unlimited_hosts"/>
           </div>
+          <div ng-hide="activationKey.unlimited_hosts" >
+            <span translate>
+              Limit:
+            </span>
+            <input ng-model="activationKey.max_hosts"
+                   name="max_hosts"
+                   type="number"
+                   min="1"
+                   ng-required="!activationKey.unlimited_hosts"
+                   tabindex="2"/>
+          </div>
+        </div>
+      </dd>
 
-        </span>
-      </div>
-      <div class="detail">
-        <span class="info-label" translate>Service Level</span>
-        <span class="info-value"
-              bst-edit-select="activationKey.service_level"
-              readonly="denied('edit_activation_keys', activationKey)"
-              selector="activationKey.service_level"
-              options="serviceLevels()"
-              options-format="option for option in options"
-              deletable="activationKey.service_level && activationKey.service_level != ''"
-              on-delete="clearServiceLevel()"
-              on-save="save(activationKey)">
-        </span>
-      </div>
-    </section>
+      <dt translate>Service Level</dt>
+      <dd bst-edit-select="activationKey.service_level"
+          readonly="denied('edit_activation_keys', activationKey)"
+          selector="activationKey.service_level"
+          options="serviceLevels()"
+          options-format="option for option in options"
+          deletable="activationKey.service_level && activationKey.service_level != ''"
+          on-delete="clearServiceLevel()"
+          on-save="save(activationKey)">
+      </dd>
+    </dl>
   </div>
 
-  <div class="details pull-left">
-    <section>
-      <h4 translate>Activation Key Content</h4>
+  <div data-block="right-column">
+    <h4 translate>Activation Key Content</h4>
 
-      <div class="detail">
-        <span class="info-label" translate>Release Version</span>
-        <span class="info-value"
-              bst-edit-select="activationKey.release_version"
-              readonly="denied('edit_activation_keys', activationKey)"
-              selector="activationKey.release_version"
-              options="releaseVersions()"
-              options-format="option for option in options"
-              deletable="activationKey.release_version && activationKey.release_version != ''"
-              on-delete="clearReleaseVersion()"
-              on-save="save(activationKey)">
-        </span>
-      </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Release Version</dt>
+      <dd bst-edit-select="activationKey.release_version"
+          readonly="denied('edit_activation_keys', activationKey)"
+          selector="activationKey.release_version"
+          options="releaseVersions()"
+          options-format="option for option in options"
+          deletable="activationKey.release_version && activationKey.release_version != ''"
+          on-delete="clearReleaseVersion()"
+          on-save="save(activationKey)">
+      </dd>
 
-      <div class="detail" bst-feature-flag="lifecycle_environments">
+      <dt bst-feature-flag="lifecycle_environments">
+        <span translate>Environment</span>
+      </dt>
+      <dd bst-feature-flag="lifecycle_environments">
+        <div path-selector="environments"
+             ng-model="activationKey.environment"
+             mode="singleSelect"
+             selection-required="selectionRequired"
+             disabled="denied('edit_activation_keys', activationKey)"
+             disable-trigger="disableEnvironmentSelection">
+        </div>
+      </dd>
+
+      <dt bst-feature-flag="lifecycle_environments">
+        <span translate>Content View</span>
+      </dt>
+      <dd bst-feature-flag="lifecycle_environments">
+        <div bst-edit-select="activationKey.content_view.name"
+             readonly="denied('edit_activation_keys', activationKey)"
+             selector="activationKey.content_view.id"
+             options="contentViews()"
+             on-cancel="cancelContentViewUpdate()"
+             on-save="saveContentView(activationKey)"
+             edit-trigger="editContentView">
+        </div>
+
         <div alert type="info" ng-show="editEnvironment">
           <p translate>You must select a content view in order to save your environment.</p>
         </div>
         <div alert type="info" ng-show="editContentView && !editEnvironment">
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
-        <span class="info-label" translate>Environment</span>
-        <span path-selector="environments"
-              ng-model="activationKey.environment"
-              mode="singleSelect"
-              selection-required="selectionRequired"
-              disabled="denied('edit_activation_keys', activationKey)"
-              disable-trigger="disableEnvironmentSelection">
-        </span>
-      </div>
-
-      <div class="detail" bst-feature-flag="lifecycle_environments">
-        <span class="info-label" translate>Content View</span>
-        <span class="info-value"
-              bst-edit-select="activationKey.content_view.name"
-              readonly="denied('edit_activation_keys', activationKey)"
-              selector="activationKey.content_view.id"
-              options="contentViews()"
-              on-cancel="cancelContentViewUpdate()"
-              on-save="saveContentView(activationKey)"
-              edit-trigger="editContentView">
-        </span>
-      </div>
-    </section>
+      </dd>
+    </dl>
   </div>
-</section>
+</div>
+

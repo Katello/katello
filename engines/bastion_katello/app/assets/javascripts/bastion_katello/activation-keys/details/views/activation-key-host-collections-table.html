@@ -1,9 +1,8 @@
 <section class="nutupane-sub-section">
   <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <div class="row">
-
-    <div class="col-sm-3">
+  <div data-extend-template="layouts/partials/table.html">
+    <div data-block="search">
       <div class="input-group">
         <input type="text"
                class="form-control"
@@ -12,63 +11,46 @@
       </div>
     </div>
 
-    <div class="fr select-action">
-      <span class="nutupane-info">
-        <span translate>{{ hostCollectionsTable.numSelected }} Selected</span>
-      </span>
-
-      <button ng-if="isState('activation-keys.details.host-collections.list')"
+    <div data-block="list-actions">
+      <button ng-if="isState('activation-key.host-collections.list')"
               class="btn btn-default"
               ng-hide="denied('edit_activation_keys', activationKey)"
-              ng-disabled="hostCollectionsTable.numSelected == 0 || hostCollectionsTable.working"
+              ng-disabled="table.numSelected == 0 || table.working"
               ng-click="removeHostCollections()">
         {{ 'Remove Selected' | translate }}
       </button>
-      <button ng-if="isState('activation-keys.details.host-collections.add')"
+      <button ng-if="isState('activation-key.host-collections.add')"
               class="btn btn-default"
               ng-hide="denied('edit_activation_keys', activationKey)"
-              ng-disabled="hostCollectionsTable.numSelected == 0 || hostCollectionsTable.working"
+              ng-disabled="table.numSelected == 0 || table.working"
               ng-click="addHostCollections()">
         {{ 'Add Selected' | translate }}
       </button>
-
     </div>
-  </div>
 
-  <div bst-table="hostCollectionsTable" class="nutupane">
-    <div bst-container-scroll>
-      <div infinite-scroll="hostCollectionsTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">        <div ng-show="hostCollectionsTable.rows.length == 0">
-          <div class="loading-mask" ng-show="hostCollectionsTable.working">
-            <i class="fa fa-spinner fa-spin"></i>
-            {{ "Loading..." | translate }}
-          </div>
+    <div data-block="table">
+      <table ng-show="table.rows.length > 0"
+             ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+          <tr bst-table-head row-select="hostCollection">
+            <th bst-table-column="name" translate>Name</th>
+            <th bst-table-column="description" translate>Description</th>
+            <th bst-table-column="capacity" translate>Capacity</th>
+          </tr>
+        </thead>
 
-          <p ng-hide="hostCollectionsTable.working" translate>No host collections</p>
-        </div>
-
-        <table ng-show="hostCollectionsTable.rows.length > 0"
-               ng-class="{'table-mask': hostCollectionsTable.working}" class="table table-full table-striped">
-          <thead>
-            <tr bst-table-head row-select="hostCollection">
-              <th bst-table-column="name" translate>Name</th>
-              <th bst-table-column="description" translate>Description</th>
-              <th bst-table-column="capacity" translate>Capacity</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr bst-table-row ng-repeat="hostCollection in hostCollectionsTable.rows | filter:hostCollectionFilter" row-select="hostCollection">
-              <td bst-table-cell>
-                <a ui-sref="host-collections.info({hostCollectionId: hostCollection.id})">
-                  {{ hostCollection.name }}
-                </a>
-              </td>
-              <td bst-table-cell>{{ hostCollection.description }}</td>
-              <td bst-table-cell>{{ hostCollection.total_hosts }} / {{ hostCollection.max_hosts | unlimitedFilter:hostCollection.unlimited_hosts }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <tbody>
+          <tr bst-table-row ng-repeat="hostCollection in table.rows | filter:hostCollectionFilter" row-select="hostCollection">
+            <td bst-table-cell>
+              <a ui-sref="host-collection.info({hostCollectionId: hostCollection.id})">
+                {{ hostCollection.name }}
+              </a>
+            </td>
+            <td bst-table-cell>{{ hostCollection.description }}</td>
+            <td bst-table-cell>{{ hostCollection.total_hosts }} / {{ hostCollection.max_hosts | unlimitedFilter:hostCollection.unlimited_hosts }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>

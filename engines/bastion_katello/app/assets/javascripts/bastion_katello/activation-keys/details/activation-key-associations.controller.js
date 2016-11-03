@@ -39,11 +39,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
         contentHostsNutupane.masterOnly = true;
         contentHostsNutupane.setSearchKey('contentHostSearch');
 
-        $scope.detailsTable = contentHostsNutupane.table;
-        $scope.detailsTable.working = true;
+        $scope.table = contentHostsNutupane.table;
+        $scope.table.working = true;
 
         if ($scope.contentHosts) {
-            $scope.detailsTable.working = false;
+            $scope.table.working = false;
         }
 
         $scope.activationKey.$promise.then(function () {

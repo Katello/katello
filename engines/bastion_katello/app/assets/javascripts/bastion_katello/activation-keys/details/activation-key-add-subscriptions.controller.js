@@ -30,23 +30,23 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
         };
 
         $scope.contentNutupane = new Nutupane(Subscription, params);
-        $scope.detailsTable = $scope.contentNutupane.table;
+        $scope.table = $scope.contentNutupane.table;
         $scope.isAdding = false;
         $scope.contentNutupane.setSearchKey('subscriptionSearch');
         $scope.contentNutupane.masterOnly = true;
 
         $scope.groupedSubscriptions = {};
-        $scope.$watch('detailsTable.rows', function (rows) {
+        $scope.$watch('table.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
         $scope.disableAddButton = function () {
-            return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
+            return $scope.table.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {
             var selected;
-            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.detailsTable);
+            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.table);
 
             $scope.isAdding = true;
             ActivationKey.addSubscriptions({id: $scope.activationKey.id, 'subscriptions': selected}, function () {

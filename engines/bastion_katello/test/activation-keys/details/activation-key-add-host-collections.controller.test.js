@@ -60,7 +60,7 @@ describe('Controller: ActivationKeyAddHostCollectionsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function () {
-        expect($scope.hostCollectionsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
 });

@@ -1,29 +1,14 @@
 <span page-title ng-model="activationKey">{{ 'Current Subscriptions for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="messages"></div>
-
-  <span data-block="search">
-    <div class="input-group">
-      <input type="text"
-             class="form-control"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="subscriptionSearch"/>
-    </div>
-  </span>
-
-
-  <div data-block="actions">
-    <div class="nutupane-actions pull-right">
-       <button class="btn btn-primary"
-               translate
-               ng-hide="denied('edit_activation_keys', activationKey)"
-               ng-disabled="disableRemoveButton()"
-               ng-click="removeSelected()">
-         Remove Selected
-       </button>
-    </div>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="list-actions">
+    <button class="btn btn-primary"
+           translate
+           ng-hide="denied('edit_activation_keys', activationKey)"
+           ng-disabled="disableRemoveButton()"
+           ng-click="removeSelected()">
+     Remove Selected
+    </button>
   </div>
 
   <span data-block="no-rows-message" translate>
@@ -35,7 +20,7 @@
   </span>
 
   <div data-block="table">
-    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full">
+    <table ng-class="{'table-mask': table.working}" class="table table-full">
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>

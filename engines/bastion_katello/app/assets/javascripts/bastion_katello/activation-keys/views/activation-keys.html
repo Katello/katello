@@ -1,13 +1,13 @@
 <span page-title>{{ 'Activation Keys' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
+<div data-extend-template="layouts/table-with-header.html">
 
   <div data-block="header">
-    {{ 'Activation Keys' | translate }}
+    <h2 translate>Activation Keys</h2>
   </div>
 
-  <div data-block="actions">
-    <button class="btn btn-primary" ui-sref="activation-keys.new" ng-hide="denied('create_activation_keys')">
+  <div data-block="list-actions">
+    <button class="btn btn-default" ui-sref="activation-keys.new" ng-hide="denied('create_activation_keys')">
       <i class="fa fa-plus"></i>
       {{ "New Activation Key" | translate }}
     </button>
@@ -17,7 +17,34 @@
     You currently don't have any Activation Keys, you can add Activation Keys using the button on the right.
   </span>
 
-   <span data-block="no-search-results-message" translate>
-     Your search returned zero Activation Keys.
-   </span>
+  <span data-block="no-search-results-message" translate>
+    Your search returned zero Activation Keys.
+  </span>
+
+  <div data-block="table">
+    <table class="table table-striped" ng-class="{'table-mask': table.working}">
+      <thead>
+      <tr bst-table-head>
+        <th bst-table-column="name" sortable><span translate>Name</span></th>
+        <th bst-table-column="consumed"><span translate>Host Limit</span></th>
+        <th bst-table-column="environment"><span translate>Environment</span></th>
+        <th bst-table-column="contentView"><span translate>Content View</span></th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr bst-table-row ng-repeat="activationKey in table.rows">
+        <td bst-table-cell>
+          <a ui-sref="activation-key.info({activationKeyId: activationKey.id})">
+            {{ activationKey.name }}
+          </a>
+          <i class="fa fa-chevron-right selected-icon" ng-show="activationKey.selected"></i>
+        </td>
+        <td bst-table-cell>{{ activationKey | activationKeyConsumedFilter }}</td>
+        <td bst-table-cell>{{ activationKey.environment.name || "" }}</td>
+        <td bst-table-cell>{{ activationKey.content_view.name || "" }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

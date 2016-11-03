@@ -29,14 +29,14 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
         };
 
         hostCollectionsPane = new Nutupane(ActivationKey, params, 'hostCollections');
-        $scope.hostCollectionsTable = hostCollectionsPane.table;
+        $scope.table = hostCollectionsPane.table;
 
         $scope.removeHostCollections = function () {
             var data,
                 success,
                 error,
                 deferred = $q.defer(),
-                hostCollectionsToRemove = _.map($scope.hostCollectionsTable.getSelected(), 'id');
+                hostCollectionsToRemove = _.map($scope.table.getSelected(), 'id');
 
             data = {
                 "activation_key": {
@@ -46,10 +46,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
 
             success = function (response) {
                 $scope.successMessages = [translate('Removed %x host collections from activation key "%y".')
-                    .replace('%x', $scope.hostCollectionsTable.numSelected)
+                    .replace('%x', $scope.table.numSelected)
                     .replace('%y', $scope.activationKey.name)];
-                $scope.hostCollectionsTable.working = false;
-                $scope.hostCollectionsTable.selectAll(false);
+                $scope.table.working = false;
+                $scope.table.selectAll(false);
                 hostCollectionsPane.refresh();
                 $scope.activationKey.$get();
                 deferred.resolve(response);
@@ -58,10 +58,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
             error = function (response) {
                 deferred.reject(response.data.errors);
                 $scope.errorMessages = response.data.errors;
-                $scope.hostCollectionsTable.working = false;
+                $scope.table.working = false;
             };
 
-            $scope.hostCollectionsTable.working = true;
+            $scope.table.working = true;
             ActivationKey.removeHostCollections({id: $scope.activationKey.id}, data, success, error);
             return deferred.promise;
         };
