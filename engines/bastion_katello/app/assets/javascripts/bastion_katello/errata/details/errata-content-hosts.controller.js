@@ -34,7 +34,7 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
         $scope.detailsTable = nutupane.table;
         $scope.nutupane.searchTransform = function(term) {
             var addition = '( ' + $scope.errataSearchString($scope.restrictInstallable) + ' )';
-            if (angular.isDefined($scope.environment_id)) {
+            if (angular.isDefined($scope.environmentId)) {
                 addition = addition + ' and lifecycle_environment_id = ' + $scope.environmentId;
             }
 
