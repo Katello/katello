@@ -20,7 +20,7 @@ module Actions
 
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
-          need_updates = repos_needing_updates(capsule_content, environment, content_view)
+          need_updates = repos_needing_updates(capsule_content, environment, content_view, repository)
           repository_ids = get_repository_ids(capsule_content, environment, content_view, repository)
           unless repository_ids.blank?
             sequence do
@@ -73,8 +73,12 @@ module Actions
           repository_ids
         end
 
-        def repos_needing_updates(capsule_content, environment, content_view)
-          repos = capsule_content.repos_available_to_capsule(environment, content_view)
+        def repos_needing_updates(capsule_content, environment, content_view, repository)
+          repos = if repository
+                    [repository]
+                  else
+                    capsule_content.repos_available_to_capsule(environment, content_view)
+                  end
           need_importer_update = ::Katello::Repository.needs_importer_updates(repos, capsule_content)
           need_distributor_update = ::Katello::Repository.needs_distributor_updates(repos, capsule_content)
           (need_distributor_update + need_importer_update).uniq
