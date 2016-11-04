@@ -1,11 +1,9 @@
 <form name="errataForm" class="col-sm-5">
-  <div data-block="messages" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
   <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
 
   <div bst-form-buttons
-       on-cancel="transitionTo('content-views.details.filters.list', {contentViewId: contentView.id})"
+       on-cancel="transitionTo('content-view.filters', {contentViewId: contentView.id})"
        on-save="save(rule, filter)"
        working="rule.working">
   </div>
-
 </form>

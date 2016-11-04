@@ -1,37 +1,28 @@
 <span page-title ng-model="filter">{{ 'Package Filter:' | translate }} {{ filter.name }}</span>
 
-<div class="details details-full">
+<nav>
+  <ul class="nav nav-tabs">
 
-  <div data-block="messages" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+    <li ng-class="{active: isState('content-view.filter.rpm.edit')}">
+      <a ui-sref="content-view.filter.rpm.edit" translate>
+        Details
+      </a>
+    </li>
 
-  <nav>
-    <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('content-view.filter.rpm.details')}">
+      <a ui-sref="content-view.filter.rpm.details" translate>
+        RPMs
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.filters.details.rpm.edit')}">
-        <a ui-sref="content-views.details.filters.details.rpm.edit">
-        <span translate>
-	  Details
-        </span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.filter.rpm.repositories')}"
+        ng-show="!contentView.permissions.editable">
+      <a ui-sref="content-view.filter.rpm.repositories({filterId: filter.id})"
+         ng-include="'content-views/details/filters/views/partials/filter-repositories-count.html'">
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.filters.details.rpm.details')}">
-        <a ui-sref="content-views.details.filters.details.rpm.details">
-        <span translate>
-          RPMs
-        </span>
-        </a>
-      </li>
+  </ul>
+</nav>
 
-      <li ng-class="{active: isState('content-views.details.filters.details.rpm.repositories')}"
-          ng-show="!contentView.permissions.editable">
-        <a ui-sref="content-views.details.filters.details.rpm.repositories({filterId: filter.id})"
-           ng-include="'content-views/details/filters/views/partials/filter-repositories-count.html'">
-        </a>
-      </li>
-
-    </ul>
-  </nav>
-
-  <div ui-view></div>
-</div>
+<div ui-view></div>

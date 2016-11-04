@@ -4,14 +4,21 @@
  *
  * @requires $scope
  * @requires translate
+ * @requires Nutupane
+ * @requires ContentViewVersion
+ * @requires AggregateTask
+ * @requires ApiErrorHandler
+ * @requires GlobalNotification
  *
  * @description
- *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
+ *   Provides the functionality specific to ContentViews for use with the table view UI pattern.
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
-    ['$scope', 'translate', function ($scope, translate) {
+    ['$scope', 'translate', 'Nutupane', 'ContentViewVersion', 'AggregateTask', 'ApiErrorHandler', 'GlobalNotification',
+    function ($scope, translate, Nutupane, ContentViewVersion, AggregateTask, ApiErrorHandler, GlobalNotification) {
+        var nutupane;
 
         function pluralSafe(count, strings) {
             if (count === 1) {
@@ -21,42 +28,111 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             return strings[1];
         }
 
+        function publishingMessage(count) {
+            var messages = [translate("Publishing and promoting to 1 environment."),
+                translate("Publishing and promoting to %count environments.").replace(
+                    '%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function promotingMessage(count) {
+            var messages = [translate('Promoting to 1 environment.'),
+                translate("Promoting to %count environments.").replace('%count', count)];
+            return pluralSafe(count, messages);
+        }
+
+        function deletingMessage(count) {
+            var messages = [translate('Deleting from 1 environment.'),
+                translate("Deleting from %count environments.").replace('%count', count)];
+            return pluralSafe(count, messages);
+        }
+
         function findTaskTypes(activeHistory, taskType) {
             return _.filter(activeHistory, function (history) {
                 return history.task.label === taskType;
             });
         }
 
-        function deleteMessage(count) {
-            var messages = [translate('Deleting from 1 environment.'),
-                            translate("Deleting from %count environments.").replace('%count', count)];
-            return pluralSafe(count, messages);
+        function publishCompleteMessage(version) {
+            return translate("Successfully published %cv version %ver and promoted to Library")
+                .replace('%cv', version['content_view'].name)
+                .replace('%ver', version.version);
         }
 
-        function publishMessage(count) {
-            var messages = [translate("Publishing and promoting to 1 environment."),
-                            translate("Publishing and promoting to %count environments.").replace(
-                                        '%count', count)];
-            return pluralSafe(count, messages);
+        function promotionCompleteMessage(version, task) {
+            return translate("Successfully promoted %cv version %ver to %env")
+                .replace('%cv', version['content_view'].name)
+                .replace('%ver', version.version)
+                .replace('%env', task.input['environment_name']);
         }
 
-        function promoteMessage(count) {
-            var messages = [translate('Promoting to 1 environment.'),
-                            translate("Promoting to %count environments.").replace('%count', count)];
-            return pluralSafe(count, messages);
+        function deletionCompleteMessage(version, task) {
+            var message;
+
+            if (task.input['content_view_ids'] && task.input['content_view_ids'].length > 0) {
+                message = translate("Successfully deleted %cv version %ver.")
+                    .replace('%cv', version['content_view'].name)
+                    .replace('%ver', version.version);
+            } else {
+                message = translate("Successfully removed %cv version %ver from environments: %env")
+                    .replace('%cv', version['content_view'].name)
+                    .replace('%ver', version.version)
+                    .replace('%env', task.input['environment_names'].join(', '));
+            }
+            return message;
         }
 
-        $scope.table = {};
+        function updateVersion(version) {
+            var versionIds = _.map($scope.table.rows, 'id'),
+                versionIndex = versionIds.indexOf(version.id);
 
-        $scope.reloadVersions();
+            ContentViewVersion.get({'id': version.id}).$promise.then(function (newVersion) {
+                $scope.panel.loading = false;
+                $scope.contentView.versions[versionIndex] = newVersion;
+                $scope.table.rows[versionIndex] = newVersion;
+            }, function (response) {
+                $scope.panel.loading = false;
+                ApiErrorHandler.handleGETRequestErrors(response, $scope);
+            });
+        }
 
-        $scope.$on('$destroy', function () {
-            _.each($scope.versions, function (version) {
-                if (version.task) {
-                    version.task.unregisterAll();
+        function taskUpdated(version, task) {
+            var taskTypes = $scope.taskTypes;
+
+            if (!task.pending) {
+                $scope.pendingVersionTask = false;
+
+                if (task.result === 'success') {
+                    if (task.label === taskTypes.promotion) {
+                        GlobalNotification.setSuccessMessage(promotionCompleteMessage(version, task));
+                    } else if (task.label === taskTypes.publish) {
+                        GlobalNotification.setSuccessMessage(publishCompleteMessage(version));
+                    } else if (task.label === taskTypes.deletion) {
+                        GlobalNotification.setSuccessMessage(deletionCompleteMessage(version, task));
+                        $scope.reloadVersions();
+                    }
+                }
+            } else {
+                $scope.pendingVersionTask = true;
+            }
+        }
+
+        function processTasks(versions) {
+            _.each(versions, function (version) {
+                var taskIds = _.map(version['active_history'], function (history) {
+                    return history.task.id;
+                });
+
+                if (taskIds.length > 0) {
+                    version.task = AggregateTask.new(taskIds, function (task) {
+                        taskUpdated(version, task);
+                        if (task.label === $scope.taskTypes.publish && !task.pending && task.result === 'success') {
+                            updateVersion(version);
+                        }
+                    });
                 }
             });
-        });
+        }
 
         $scope.hideProgress = function (version) {
             return version['active_history'].length === 0 || (version.task.state === 'stopped' &&
@@ -92,11 +168,11 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
                 messages = "";
 
             if (deletionEvents.length > 0) {
-                messages = deleteMessage(deletionEvents.length);
+                messages = deletingMessage(deletionEvents.length);
             } else if (promotionEvents.length > 0) {
-                messages = promoteMessage(promotionEvents.length);
+                messages = promotingMessage(promotionEvents.length);
             } else if (publishEvents.length > 0) {
-                messages = publishMessage(publishEvents.length);
+                messages = publishingMessage(publishEvents.length);
             }
 
             return messages;
@@ -117,5 +193,37 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             }
             return failed;
         };
+
+        $scope.reloadVersions = function () {
+            $scope.table.rows = [];
+            nutupane.refresh();
+        };
+
+        $scope.$watch('table.rows', function () {
+            if ($scope.table && $scope.table.rows.length > 0) {
+                processTasks($scope.table.rows);
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            _.each($scope.versions, function (version) {
+                if (version.task) {
+                    version.task.unregisterAll();
+                }
+            });
+        });
+
+        $scope.panel = {
+            error: false,
+            loading: true
+        };
+
+        nutupane = new Nutupane(ContentViewVersion, {'content_view_id': $scope.$stateParams.contentViewId});
+        nutupane.setSearchKey('contentViewVersionSearch');
+        nutupane.masterOnly = true;
+        $scope.table = nutupane.table;
+
+        $scope.pendingVersionTask = false;
+        $scope.reloadVersions();
     }]
 );

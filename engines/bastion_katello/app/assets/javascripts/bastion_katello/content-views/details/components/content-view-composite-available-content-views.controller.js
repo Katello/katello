@@ -24,8 +24,9 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
             };
 
             nutupane = new Nutupane(ContentView, params);
+            nutupane.masterOnly = true;
             nutupane.table.initialLoad = false;
-            $scope.detailsTable = nutupane.table;
+            $scope.table = nutupane.table;
 
             $scope.contentView.$promise.then(function (contentView) {
                 var filterIds = [];
@@ -44,7 +45,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
 
             $scope.addContentViews = function () {
                 var selectedRows = nutupane.getAllSelectedResults().included.resources,
-                    components = [];
+                    components;
                 components = _.map(selectedRows, function (view) {
                     var component = {};
                     if ((!view.versionId) || view.versionId === "latest") {

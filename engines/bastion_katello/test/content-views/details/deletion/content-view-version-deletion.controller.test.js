@@ -39,7 +39,7 @@ describe('ContentViewVersionDeletionController', function() {
 
         $scope.transitionToNext($scope.stepStates.environments);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith("content-views.details.version-deletion.content-hosts",
+        expect($scope.transitionTo).toHaveBeenCalledWith("content-view.version-deletion.content-hosts",
             {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
     });
 
@@ -50,7 +50,7 @@ describe('ContentViewVersionDeletionController', function() {
         $state.current.name = $scope.stepStates.environments;
         $scope.transitionToNext();
 
-        expect($scope.transitionTo).toHaveBeenCalledWith("content-views.details.version-deletion.content-hosts",
+        expect($scope.transitionTo).toHaveBeenCalledWith("content-view.version-deletion.content-hosts",
             {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
     });
 
@@ -61,7 +61,7 @@ describe('ContentViewVersionDeletionController', function() {
 
         $scope.transitionToNext($scope.stepStates.contentHosts);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith("content-views.details.version-deletion.activation-keys",
+        expect($scope.transitionTo).toHaveBeenCalledWith("content-view.version-deletion.activation-keys",
                 {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
     });
 
@@ -71,7 +71,7 @@ describe('ContentViewVersionDeletionController', function() {
 
         $scope.transitionBack($scope.stepStates.activationKeys);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith("content-views.details.version-deletion.content-hosts",
+        expect($scope.transitionTo).toHaveBeenCalledWith("content-view.version-deletion.content-hosts",
             {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
     });
 
@@ -82,7 +82,7 @@ describe('ContentViewVersionDeletionController', function() {
 
         $scope.transitionBack($scope.stepStates.activationKeys);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith("content-views.details.version-deletion.environments",
+        expect($scope.transitionTo).toHaveBeenCalledWith("content-view.version-deletion.environments",
             {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
     });
 
@@ -92,7 +92,7 @@ describe('ContentViewVersionDeletionController', function() {
         spyOn($scope, 'transitionTo');
 
         $scope.validateEnvironmentSelection();
-        expect($scope.transitionTo).toHaveBeenCalledWith("content-views.details.version-deletion.environments",
+        expect($scope.transitionTo).toHaveBeenCalledWith("content-view.version-deletion.environments",
                 {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
     });
 

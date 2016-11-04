@@ -1,6 +1,5 @@
 describe('Controller: FiltersController', function() {
-    var $scope,
-        Filter;
+    var $scope, Filter, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -18,6 +17,10 @@ describe('Controller: FiltersController', function() {
                 };
             };
 
+        GlobalNotification = {
+            setSuccessMessage: function () {}
+        };
+
         Filter = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
@@ -27,28 +30,31 @@ describe('Controller: FiltersController', function() {
             $scope: $scope,
             translate: translate,
             Filter: Filter,
-            Nutupane: Nutupane
+            Nutupane: Nutupane,
+            GlobalNotification: GlobalNotification
         });
     }));
 
     it("puts a table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("should provide a method to remove one or more filters", function() {
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.removeFilters();
 
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("provides a way to get the filter's state", function() {
         expect($scope.getFilterState({type: 'erratum', rules: [{types: false}]})).
-            toBe('content-views.details.filters.details.erratum.list({filterId: filter.id})');
+            toBe('content-view.filter.erratum.list({filterId: filter.id})');
         expect($scope.getFilterState({type: 'erratum', rules: [{types: true}]})).
-            toBe('content-views.details.filters.details.erratum.dateType({filterId: filter.id})');
+            toBe('content-view.filter.erratum.dateType({filterId: filter.id})');
         expect($scope.getFilterState({type: 'rpm'})).
-            toBe('content-views.details.filters.details.rpm({filterId: filter.id})');
+            toBe('content-view.filter.rpm({filterId: filter.id})');
         expect($scope.getFilterState({type: 'package_group'})).
-            toBe('content-views.details.filters.details.package_group.list({filterId: filter.id})');
+            toBe('content-view.filter.package_group.list({filterId: filter.id})');
     });
 });

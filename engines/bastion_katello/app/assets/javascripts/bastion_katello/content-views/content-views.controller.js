@@ -22,13 +22,9 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
             'sort_by': 'name',
             'sort_order': 'ASC'
         });
+        nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
-        $scope.removeRow = nutupane.removeRow;
         $scope.controllerName = 'katello_content_views';
-
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('content-views.index');
-        };
     }]
 );

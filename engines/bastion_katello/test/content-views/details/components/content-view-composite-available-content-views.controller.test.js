@@ -55,7 +55,7 @@ describe('Controller: ContentViewCompositeAvailableContentViewsController', func
     }));
 
     it("puts a content view table on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it('provides a method to add components views to a composite content view', function() {

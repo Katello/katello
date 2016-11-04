@@ -41,7 +41,7 @@ describe('Controller: ContentViewCompositeContentViewsListController', function(
     }));
 
     it("puts a content view version table on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("provides a way to update the content view's version", function () {

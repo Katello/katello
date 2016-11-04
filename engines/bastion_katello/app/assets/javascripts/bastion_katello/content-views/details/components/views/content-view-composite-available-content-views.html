@@ -1,6 +1,12 @@
 <span page-title ng-model="contentView">{{ 'Available Content Views for Composite Content View:' | translate }} {{ contentView.name }}</span>
 
-<div data-extend-template="layouts/details-nutupane.html">
+<header data-block="sub-header">
+  <h3 translate>
+    Add Content Views to {{ contentView.name }}
+  </h3>
+</header>
+
+<div data-extend-template="layouts/partials/table.html">
   <div data-block="messages">
     <p bst-alert="info" ng-show="contentView.components.length === 0">
       <span translate>
@@ -9,23 +15,21 @@
     </p>
   </div>
 
-  <div data-block="actions">
-    <button class="btn btn-primary fr"
-            ng-disabled="detailsTable.numSelected === 0"
+  <div data-block="list-actions">
+    <button class="btn btn-primary"
+            ng-disabled="table.numSelected === 0"
             ng-click="addContentViews()">
-      <i class="fa fa-plus"></i>
       <span translate>Add Content Views</span>
     </button>
   </div>
 
-  <div data-block="search">
-    <input type="text"
-           class="form-control"
-           placeholder="{{ 'Filter...' | translate }}"
-           ng-model="contentViewFilter"/>
-  </div>
+  <span data-block="no-rows-message" translate>
+    No Content Views available to add to {{ contentView.name }}.  Create some non-composite Content Views first.
+  </span>
 
-  <span data-block="result-count"></span>
+  <span data-block="no-search-results-message" translate>
+    No Content Views match the search.
+  </span>
 
   <div data-block="table">
     <table class="table table-bordered table-striped">
@@ -41,7 +45,7 @@
 
       <tbody>
       <tr bst-table-row
-          ng-repeat="componentContentView in detailsTable.rows | filter:contentViewFilter | orderBy:'name'"
+          ng-repeat="componentContentView in table.rows"
           row-select="componentContentView" ng-init="componentContentView.versionId='latest'">
         <td bst-table-cell>{{ componentContentView.name }}</td>
         <td bst-table-cell ng-init="availableVersions = getAvailableVersions(componentContentView)">
@@ -66,12 +70,12 @@
         <td bst-table-cell>{{ componentContentView.description }}</td>
         <td bst-table-cell>
           <div>
-            <a ui-sref="content-views.details.repositories.yum.list({contentViewId: componentContentView.id})" translate>
+            <a ui-sref="content-view.repositories.yum.list({contentViewId: componentContentView.id})" translate>
               {{ componentContentView.repositories.length || 0 }} Repositories
             </a>
           </div>
           <div>
-            <a ui-sref="content-views.details.puppet-modules.list({contentViewId: componentContentView.id})" translate>
+            <a ui-sref="content-view.puppet-modules.list({contentViewId: componentContentView.id})" translate>
               {{ componentContentView.puppet_modules.length || 0 }} Puppet Modules
             </a>
           </div>

@@ -6,22 +6,21 @@
  * @requires translate
  * @requires Nutupane
  * @requires ContentViewPuppetModule
+ * @requires GlobalNotification
  *
  * @description
  *   Provides functionality to the Content View existing Puppet Modules list.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModulesController',
-    ['$scope', 'translate', 'Nutupane', 'ContentViewPuppetModule',
-    function ($scope, translate, Nutupane, ContentViewPuppetModule) {
+    ['$scope', 'translate', 'Nutupane', 'ContentViewPuppetModule', 'GlobalNotification',
+    function ($scope, translate, Nutupane, ContentViewPuppetModule, GlobalNotification) {
         var nutupane = new Nutupane(ContentViewPuppetModule, {
             contentViewId: $scope.$stateParams.contentViewId
         });
 
         nutupane.masterOnly = true;
 
-        $scope.detailsTable = nutupane.table;
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
+        $scope.table = nutupane.table;
 
         $scope.versionText = function (module) {
             var version;
@@ -37,7 +36,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
         };
 
         $scope.selectNewVersion = function (module) {
-            $scope.transitionTo('content-views.details.puppet-modules.versionsForModule',
+            $scope.transitionTo('content-view.puppet-modules.versionsForModule',
                 {
                     contentViewId: $scope.$stateParams.contentViewId,
                     moduleName: module.name,
@@ -50,14 +49,14 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
             var success, error;
 
             success = function () {
-                $scope.successMessages = [translate('Module %s removed from Content View.')
-                    .replace('%s', module.name)];
+                GlobalNotification.setSuccessMessage(translate('Module %s removed from Content View.')
+                    .replace('%s', module.name));
                 nutupane.removeRow(module.id);
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages = [translate("An error occurred updating the Content View: ") + errorMessage];
+                    GlobalNotification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
                 });
             };
 

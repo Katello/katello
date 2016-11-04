@@ -4,8 +4,6 @@
 
   <h3 translate>Delete Version {{ version.version }}</h3>
 
-  <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
-
   <div class="details details-full">
     <div bst-alert="warning" ng-hide="allSelectable()">
        <span translate> This Version cannot be deleted from some of the Lifecycle Environments due to one of the reasons below.</span>
@@ -60,7 +58,7 @@
 
     <br/>
     <div class="fr">
-      <a ui-sref="content-views.details.versions({contentViewId: contentView.id})" >
+      <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
         <button class="btn btn-default" translate>
           Cancel
         </button>

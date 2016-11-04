@@ -3,8 +3,6 @@
   <section class="details details-full">
     <h3 translate>Activation Keys using Version {{ version.version }}</h3>
 
-    <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
-
     <p translate>
       The Activation Keys listed below are currently using this Content View Version.  Before deleting the Version you must move these Activation Keys to a Lifecycle Environment where this Version is not in use.
     </p>
@@ -47,7 +45,7 @@
       </div>
 
       <div class="fr">
-        <a ui-sref="content-views.details.versions({contentViewId: contentView.id})" >
+        <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
           <button class="btn btn-default" translate>
             Cancel
           </button>
@@ -68,7 +66,7 @@
     </a>
 
     <div ng-show="showKeys">
-      <div data-extend-template="layouts/details-nutupane.html">
+      <div data-extend-template="layouts/partials/table.html">
         <h5 translate>Affected Activation Keys</h5>
 
         <div data-block="selection-summary"></div>
@@ -82,7 +80,7 @@
           </thead>
 
           <tbody>
-            <tr bst-table-row ng-repeat="key in detailsTable.rows">
+            <tr bst-table-row ng-repeat="key in table.rows">
               <td bst-table-cell>
                   {{ key.name }}
               </td>

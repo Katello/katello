@@ -5,24 +5,25 @@
  * @requires $scope
  * @requires Filter
  * @requires Rule
+ * @requires GlobalNotification
  *
  * @description
  */
 angular.module('Bastion.content-views').controller('NewFilterController',
-    ['$scope', 'Filter', 'Rule', function ($scope, Filter, Rule) {
+    ['$scope', 'Filter', 'Rule', 'GlobalNotification', function ($scope, Filter, Rule, GlobalNotification) {
         var filterType;
 
         function transitionToDetails(filter) {
             var state = '';
 
             if (filterType === 'erratumId') {
-                state = 'content-views.details.filters.details.erratum.available';
+                state = 'content-view.filter.erratum.available';
             } else if (filterType === 'erratumDateType') {
-                state = 'content-views.details.filters.details.erratum.dateType';
+                state = 'content-view.filter.erratum.dateType';
             } else if (filterType === 'rpm') {
-                state = 'content-views.details.filters.details.rpm.details';
+                state = 'content-view.filter.rpm.details';
             } else if (filterType === 'package_group') {
-                state = 'content-views.details.filters.details.package_group.available';
+                state = 'content-view.filter.package_group.available';
             }
 
             $scope.$emit('filter.created');
@@ -40,7 +41,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
             };
 
             error = function (response) {
-                $scope.errorMessages = [response.data.displayMessage];
+                GlobalNotification.setErrorMessage(response.data.displayMessage);
             };
 
             rule.$save({filterId: filter.id}, addSuccess, error);

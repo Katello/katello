@@ -34,7 +34,7 @@ describe('Controller: NewFilterController', function() {
         $scope.save($scope.filter, $scope.contentView);
 
         expect($scope.transitionTo).toHaveBeenCalledWith(
-            'content-views.details.filters.details.rpm.details',
+            'content-view.filter.rpm.details',
             {filterId: 1, contentViewId: 1}
         )
     });
@@ -47,7 +47,7 @@ describe('Controller: NewFilterController', function() {
         $scope.save($scope.filter, $scope.contentView);
 
         expect($scope.transitionTo).toHaveBeenCalledWith(
-            'content-views.details.filters.details.package_group.available',
+            'content-view.filter.package_group.available',
             {filterId: 1, contentViewId: 1}
         )
     });
@@ -60,7 +60,7 @@ describe('Controller: NewFilterController', function() {
         $scope.save($scope.filter, $scope.contentView);
 
         expect($scope.transitionTo).toHaveBeenCalledWith(
-            'content-views.details.filters.details.erratum.available',
+            'content-view.filter.erratum.available',
             {filterId: 1, contentViewId: 1}
         )
     });
@@ -73,7 +73,7 @@ describe('Controller: NewFilterController', function() {
         $scope.save($scope.filter, $scope.contentView);
 
         expect($scope.transitionTo).toHaveBeenCalledWith(
-            'content-views.details.filters.details.erratum.dateType',
+            'content-view.filter.erratum.dateType',
             {filterId: 1, contentViewId: 1}
         )
     });

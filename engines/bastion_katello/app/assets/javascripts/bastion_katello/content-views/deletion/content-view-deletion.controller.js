@@ -4,37 +4,27 @@
  *
  * @requires $scope
  * @requires ContentView
+ * @requires GlobalNotification
  *
  * @description
  *   Provides the functionality for deleting Content Views
  */
 angular.module('Bastion.content-views').controller('ContentViewDeletionController',
-    ['$scope', 'ContentView', function ($scope, ContentView) {
+    ['$scope', 'ContentView', 'GlobalNotification', function ($scope, ContentView, GlobalNotification) {
 
         function success() {
-            $scope.removeRow($scope.contentView.id);
-            $scope.transitionTo('content-views.index');
+            $scope.transitionTo('content-views');
             $scope.working = false;
         }
 
         function failure(response) {
-            $scope.$parent.errorMessages = [response.data.displayMessage];
+            GlobalNotification.setErrorMessage(response.data.displayMessage);
             $scope.working = false;
-        }
-
-        if (angular.isUndefined($scope.versions)) {
-            $scope.reloadVersions();
         }
 
         $scope.delete = function () {
             $scope.working = true;
             ContentView.remove({id: $scope.contentView.id}, success, failure);
-        };
-
-        $scope.conflictingVersions = function () {
-            return _.reject($scope.versions, function (version) {
-                return version.environments.length === 0;
-            });
         };
 
         $scope.environmentNames = function (version) {
@@ -47,5 +37,6 @@ angular.module('Bastion.content-views').controller('ContentViewDeletionControlle
             });
         };
 
+        $scope.conflictingVersions = ContentView.conflictingVersions({id: $scope.$stateParams.contentViewId});
     }]
 );

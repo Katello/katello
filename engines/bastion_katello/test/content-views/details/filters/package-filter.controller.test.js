@@ -1,5 +1,5 @@
 describe('Controller: PackageFilterController', function() {
-    var $scope, Rule, Package;
+    var $scope, Rule, Package, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -10,6 +10,10 @@ describe('Controller: PackageFilterController', function() {
 
         Rule = $injector.get('MockResource').$new();
         Package = $injector.get('MockResource').$new();
+
+        GlobalNotification = {
+            setSuccessMessage: function () {}
+        };
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
@@ -40,7 +44,8 @@ describe('Controller: PackageFilterController', function() {
             $scope: $scope,
             translate: translate,
             Rule: Rule,
-            Package: Package
+            Package: Package,
+            GlobalNotification: GlobalNotification
         });
     }));
 
@@ -50,11 +55,13 @@ describe('Controller: PackageFilterController', function() {
             version: 1
         };
 
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.addRule(rule, $scope.filter);
 
         expect($scope.rule.editMode).toBe(false);
         expect($scope.rule.working).toBe(false);
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.filter.rules.length).toBe(1);
     });
 
@@ -64,11 +71,13 @@ describe('Controller: PackageFilterController', function() {
             version: 1
         };
 
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.updateRule(rule, $scope.filter);
 
         expect(rule.editMode).toBe(false);
         expect(rule.working).toBe(false);
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("should provide a method to clear a rule", function() {

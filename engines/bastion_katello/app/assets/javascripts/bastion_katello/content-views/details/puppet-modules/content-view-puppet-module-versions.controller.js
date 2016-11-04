@@ -4,29 +4,27 @@
  *
  * @requires $scope
  * @requires translate
+ * @requires Nutupane
  * @requires ContentView
  * @requires ContentViewPuppetModule
+ * @requires GlobalNotification
  *
  * @description
  *   Provides the ability to select a version of a Puppet Module for a Content View.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersionsController',
-    ['$scope', 'translate', 'ContentView', 'ContentViewPuppetModule',
-    function ($scope, translate, ContentView, ContentViewPuppetModule) {
-        var success, error;
+    ['$scope', 'translate', 'Nutupane', 'ContentView', 'ContentViewPuppetModule', 'GlobalNotification',
+    function ($scope, translate, Nutupane, ContentView, ContentViewPuppetModule, GlobalNotification) {
+        var success, error, nutupane, params;
 
-        $scope.versionsLoading = true;
-        $scope.successMessages = [];
-        $scope.erroressages = [];
+        params = {
+            name: $scope.$stateParams.moduleName,
+            id: $scope.$stateParams.contentViewId
+        };
 
-        $scope.versions = ContentView.availablePuppetModules(
-            {
-                name: $scope.$stateParams.moduleName,
-                id: $scope.$stateParams.contentViewId
-            }, function () {
-                $scope.versionsLoading = false;
-            }
-        );
+        nutupane = new Nutupane(ContentView, params, 'availablePuppetModules');
+        nutupane.masterOnly = true;
+        $scope.table = nutupane.table;
 
         $scope.selectVersion = function (module) {
             var contentViewPuppetModule, contentViewPuppetModuleData = {
@@ -51,14 +49,14 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersi
         };
 
         success = function () {
-            $scope.transitionTo('content-views.details.puppet-modules.list',
+            $scope.transitionTo('content-view.puppet-modules.list',
                 {contentViewId: $scope.$stateParams.contentViewId});
-            $scope.successMessages = [translate('Puppet module added to Content View')];
+            GlobalNotification.setSuccessMessage(translate('Puppet module added to Content View'));
         };
 
         error = function (response) {
             angular.forEach(response.data.errors, function (errorMessage) {
-                $scope.errorMessages.push(translate("An error occurred updating the Content View: ") + errorMessage);
+                GlobalNotification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
             });
         };
     }]
