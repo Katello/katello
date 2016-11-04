@@ -1,3 +1,5 @@
+<% require 'erb' %>
+
 <h4 class="header">
   <%= _("Content Host Subscription Status") %>
 </h4>
@@ -10,6 +12,7 @@
   <% partial_consumer_count = owner_info.total_partial_compliance_consumers %>
   <% valid_consumer_count = owner_info.total_valid_compliance_consumers %>
   <% total_count = owner_info.total_consumers %>
+  <% subscription_status_url = '/content_hosts?search='  + ERB::Util.url_encode('subscription_status = ') %>
 
   <table class="table table-fixed table-striped table-bordered">
     <thead>
@@ -21,32 +24,32 @@
     <tbody>
       <tr>
         <td>
-          <%= link_to('/content_hosts?search=subscription_status=invalid') do %>
+          <%= link_to("#{subscription_status_url}" + 'invalid') do %>
             <i class="label label-danger" style="margin-right: 6px">&nbsp;</i><%= _("Invalid") %>
           <% end %>
         </td>
         <td style="text-align:right">
-          <%= link_to( "#{invalid_consumer_count}", '/content_hosts?search=subscription_status=invalid')%>
+          <%= link_to( "#{invalid_consumer_count}", "#{subscription_status_url}" + 'invalid')%>
         </td>
       </tr>
       <tr>
         <td>
-          <%= link_to('/content_hosts?search=subscription_status=partial') do %>
+          <%= link_to("#{subscription_status_url}" + 'partial') do %>
             <i class="label label-warning" style="margin-right: 6px">&nbsp;</i><%= _("Partial") %>
           <% end %>
         </td>
         <td style="text-align:right">
-          <%= link_to( "#{partial_consumer_count}", '/content_hosts?search=subscription_status=partial')%>
+          <%= link_to( "#{partial_consumer_count}", "#{subscription_status_url}" + 'partial')%>
         </td>
       </tr>
       <tr>
         <td>
-          <%= link_to('/content_hosts?search=subscription_status=valid') do %>
+          <%= link_to("#{subscription_status_url}" + 'valid') do %>
             <i class="label label-success" style="margin-right: 6px">&nbsp;</i><%= _("Valid") %>
           <% end %>
         </td>
         <td style="text-align:right">
-          <%= link_to( "#{valid_consumer_count}", '/content_hosts?search=subscription_status=valid')%>
+          <%= link_to( "#{valid_consumer_count}", "#{subscription_status_url}" + 'valid')%>
         </td>
       </tr>
       <tr>
