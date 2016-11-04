@@ -15,8 +15,8 @@ describe('Controller: ContentViewDeletionController', function() {
         $scope.$stateParams = {contentViewId: 1};
         $scope.contentView = {id: '99'};
 
-        $scope.reloadVersions = function () {
-            $scope.versions = versions;
+        ContentView.conflictingVersions = function () {
+            return versions;
         };
 
         $controller('ContentViewDeletionController', {
@@ -26,7 +26,7 @@ describe('Controller: ContentViewDeletionController', function() {
     }));
 
     it("properly detects conflicting versions", function() {
-        expect($scope.conflictingVersions()[0]).toBe(versions[0]);
+        expect($scope.conflictingVersions[0]).toBe(versions[0]);
     });
 
     it("properly extracts environment names", function () {

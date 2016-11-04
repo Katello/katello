@@ -3,8 +3,6 @@
 <section class="details details-full">
   <h3 translate>Confirm Version Removal: Version {{ version.version }}</h3>
 
-  <div data-extend-template="content-views/deletion/views/version-deletion-breadcrumb.html"></div>
-
   <div class="details">
 
     <div ng-hide="deleteOptions.environments.length === 0">
@@ -62,7 +60,7 @@
     </div>
 
     <div class="fr">
-      <a ui-sref="content-views.details.versions({contentViewId: contentView.id})" >
+      <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
         <button class="btn btn-default" ng-disabled="deleting" translate>
           Cancel
         </button>

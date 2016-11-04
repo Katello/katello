@@ -1,90 +1,75 @@
 <span page-title ng-model="version">{{ 'Version:' | translate }} {{ version.version }}</span>
 
-<div class="details details-full" ng-show="version.id !== undefined">
-
-  <ol class="breadcrumb">
-    <li ng-class="{active: isState('content-views.details.versions')}">
-      <a ui-sref="content-views.details.versions" translate>Versions</a>
+<nav role="navigation">
+  <ul class="nav nav-tabs nav-tabs-pf">
+    <li ng-show="contentView.composite" ng-class="{active: isState('content-view.version.components')}">
+      <a ui-sref="content-view.version.components({versionId: version.id})">
+        <span translate>Components</span>
+      </a>
     </li>
 
-    <li>
-      <span translate>Version {{ version.version }}</span>
+    <li ng-class="{active: isState('content-view.version.yum')}"
+        ng-show="hasRepositories(version, 'yum')">
+      <a ui-sref="content-view.version.yum({versionId: version.id})">
+        <span translate>Yum Repositories</span>
+      </a>
     </li>
-  </ol>
 
-  <nav class="details-navigation">
-    <ul>
+    <li ng-class="{active: isState('content-view.version.packages')}"
+        ng-show="version.package_count !== 0">
+      <a ui-sref="content-view.version.packages({versionId: version.id})">
+        <span translate>Packages</span>
+      </a>
+    </li>
 
-      <li ng-show="contentView.composite" ng-class="{active: isState('content-views.details.version.components')}">
-        <a ui-sref="content-views.details.version.components({versionId: version.id})">
-          <span translate>Components</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.package-groups')}"
+        ng-show="version.package_group_count !== 0">
+      <a ui-sref="content-view.version.package-groups({versionId: version.id})">
+        <span translate>Package Groups</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.yum')}"
-          ng-show="hasRepositories(version, 'yum')">
-        <a ui-sref="content-views.details.version.yum({versionId: version.id})">
-          <span translate>Yum Repositories</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.errata')}"
+        ng-show="hasErrata(version)">
+      <a ui-sref="content-view.version.errata({versionId: version.id})">
+        <span translate>Errata</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.packages')}"
-          ng-show="version.package_count !== 0">
-        <a ui-sref="content-views.details.version.packages({versionId: version.id})">
-          <span translate>Packages</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.puppet-modules')}"
+        ng-show="version.puppet_module_count !== 0">
+      <a ui-sref="content-view.version.puppet-modules({versionId: version.id})">
+        <span translate>Puppet Modules</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.package-groups')}"
-          ng-show="version.package_group_count !== 0">
-        <a ui-sref="content-views.details.version.package-groups({versionId: version.id})">
-          <span translate>Package Groups</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.docker')}"
+        ng-show="version.docker_tag_count !== 0 || version.docker_manifest_count !== 0">
+      <a ui-sref="content-view.version.docker({versionId: version.id})">
+        <span translate>Docker Repositories</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.errata')}"
-          ng-show="hasErrata(version)">
-        <a ui-sref="content-views.details.version.errata({versionId: version.id})">
-          <span translate>Errata</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.file')}">
+      <a ui-sref="content-view.version.file({versionId: version.id})">
+        <span translate>File Repositories</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.puppet-modules')}"
-          ng-show="version.puppet_module_count !== 0">
-        <a ui-sref="content-views.details.version.puppet-modules({versionId: version.id})">
-          <span translate>Puppet Modules</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.ostree-branches')}"
+        ng-show="version.ostree_branch_count !== 0">
+      <a ui-sref="content-view.version.ostree-branches({versionId: version.id})">
+        <span translate>OSTree Branches</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.docker')}"
-          ng-show="version.docker_tag_count !== 0 || version.docker_manifest_count !== 0">
-        <a ui-sref="content-views.details.version.docker({versionId: version.id})">
-          <span translate>Docker Repositories</span>
-        </a>
-      </li>
+    <li ng-class="{active: isState('content-view.version.details')}">
+      <a ui-sref="content-view.version.details({versionId: version.id})">
+        <span translate>Details</span>
+      </a>
+    </li>
 
-      <li ng-class="{active: isState('content-views.details.version.file')}">
-        <a ui-sref="content-views.details.version.file({versionId: version.id})">
-          <span translate>File Repositories</span>
-        </a>
-      </li>
+  </ul>
+</nav>
 
-      <li ng-class="{active: isState('content-views.details.version.ostree-branches')}"
-          ng-show="version.ostree_branch_count !== 0">
-        <a ui-sref="content-views.details.version.ostree-branches({versionId: version.id})">
-          <span translate>OSTree Branches</span>
-        </a>
-      </li>
-
-      <li ng-class="{active: isState('content-views.details.version.details')}">
-        <a ui-sref="content-views.details.version.details({versionId: version.id})">
-          <span translate>Details</span>
-        </a>
-      </li>
-
-    </ul>
-  </nav>
-
-  <div ui-view></div>
-
-</div>
+<div ui-view></div>

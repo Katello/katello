@@ -62,7 +62,7 @@
                 <i class="fa fa-chevron-down" ng-show="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
                 <i class="fa fa-chevron-right" ng-hide="update.componentsVisible && update.components" ng-click="toggleComponents(update)"></i>
               </span>
-              <a ui-sref="content-views.details.version.details({versionId: update.content_view_version.id, contentViewId: update.content_view_version.content_view.id})">{{ update.content_view_version.content_view.name }}</a> <span ng-show="{{update.components}}">*</span>
+              <a ui-sref="content-view.version.details({versionId: update.content_view_version.id, contentViewId: update.content_view_version.content_view.id})">{{ update.content_view_version.content_view.name }}</a> <span ng-show="{{update.components}}">*</span>
             </div>
             <div ng-show="update.componentsVisible">
               <span translate>
@@ -70,7 +70,7 @@
               </span>
               <ul>
                 <li ng-repeat="component in update.components" class="row">
-                  <a class="col-sm-offset-1" ui-sref="content-views.details.version.details({versionId: component.id, contentViewId: component.content_view_id">{{ component.name }}</a>
+                  <a class="col-sm-offset-1" ui-sref="content-view.version.details({versionId: component.id, contentViewId: component.content_view_id">{{ component.name }}</a>
                 </li>
               </ul>
             </div>

@@ -33,7 +33,7 @@ describe('Controller: ContentViewPublishController', function() {
     it('provides a method to publish a content view version', function() {
         $scope.publish($scope.contentView, $scope.version);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.versions',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.versions',
             {contentViewId: $scope.contentView.id});
     });
 

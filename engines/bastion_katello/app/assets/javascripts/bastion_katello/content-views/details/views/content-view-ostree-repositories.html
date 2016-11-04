@@ -1,84 +1,78 @@
 <span page-title ng-model="contentView">{{ 'Repositories for Content View:' | translate }} {{ contentView.name }}</span>
 
-<div class="details details-full">
-
+<header data-block="sub-header">
   <h3 translate>
-    Repository Selection
+    OSTree Repository Selection
   </h3>
+</header>
 
-  <nav>
-    <ul class="nav nav-tabs" ng-show="permitted('edit_content_views', contentView)">
-      <li ng-class="{active: isState('content-views.details.repositories.ostree.list')}">
-        <a ui-sref="content-views.details.repositories.ostree.list">
-          <span translate>
-            List/Remove
-          </span>
-        </a>
-      </li>
-
-      <li ng-class="{active: isState('content-views.details.repositories.ostree.available')}" ng-show="!contentView.permissions.editable">
-        <a ui-sref="content-views.details.repositories.ostree.available" translate>
-          Add
-        </a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="details-header row">
-    <div class="col-sm-8">
-      <div class="input-group">
-
-        <span class="input-group-addon">
-          <select ng-model="product" ng-options="product.name for (id, product) in products">
-          </select>
+<nav data-block="navigation">
+  <ul class="nav nav-tabs" ng-show="permitted('edit_content_views', contentView)">
+    <li ng-class="{active: isState('content-view.repositories.ostree.list')}">
+      <a ui-sref="content-view.repositories.ostree.list">
+        <span translate>
+          List/Remove
         </span>
+      </a>
+    </li>
 
-        <input type="text"
-               class="form-control filter-input"
-               placeholder="{{ 'Filter' | translate }}"
-               ng-model="repositorySearch"/>
+    <li ng-class="{active: isState('content-view.repositories.ostree.available')}" ng-show="!contentView.permissions.editable">
+      <a ui-sref="content-view.repositories.ostree.available" translate>
+        Add
+      </a>
+    </li>
+  </ul>
+</nav>
 
-      </div>
-    </div>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search">
+    <div class="col-sm-6">
+      <form class="form-inline">
+        <div class="form-group">
+            <select class="form-control" ng-model="product" ng-options="product.name for (id, product) in products"></select>
+            <input type="text"
+                   class="form-control"
+                   placeholder="{{ 'Filter' | translate }}"
+                   ng-model="repositorySearch"/>
 
-    <div class="col-sm-4">
-      <button class="btn btn-primary fr"
-              ng-disabled="repositoriesTable.numSelected === 0"
-              ng-show="isState('content-views.details.repositories.ostree.list') && permitted('edit_content_views', contentView)"
-              ng-click="removeRepositories(contentView)">
-        <i class="fa fa-trash-o"></i>
-        <span translate>Remove Repositories</span>
-      </button>
-      <button class="btn btn-primary fr"
-              ng-disabled="repositoriesTable.numSelected === 0"
-              ng-show="isState('content-views.details.repositories.ostree.available') && permitted('edit_content_views', contentView)"
-              ng-click="addRepositories(contentView)">
-        <i class="fa fa-plus"></i>
-        <span translate>Add Repositories</span>
-      </button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <div bst-table="repositoriesTable" class="nutupane">
+  <div data-block="list-actions">
+    <button class="btn btn-default"
+            ng-disabled="table.numSelected === 0"
+            ng-show="isState('content-view.repositories.ostree.list') && permitted('edit_content_views', contentView)"
+            ng-click="removeRepositories(contentView)">
+      <span translate>Remove Repositories</span>
+    </button>
 
     <div ng-show="repositoriesTable.rows.length === 0 && !repositoriesTable.working">
-      <p bst-alert="info" ng-show="isState('content-views.details.repositories.ostree.list')">
+      <p bst-alert="info" ng-show="isState('content-view.repositories.ostree.list')">
         <span translate>
           There are currently no repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
         </span>
       </p>
-      <p bst-alert="info" ng-show="isState('content-views.details.repositories.ostree.available')">
+      <p bst-alert="info" ng-show="isState('content-view.repositories.ostree.available')">
         <span translate>There are currently no repositories to add to this Content View,</span>
-        <a ui-sref="products" translate>add some repositories.</a>
+        <a ui-sref="products.index" translate>add some repositories.</a>
       </p>
     </div>
+  </div>
 
-    <div class="loading-mask loading-mask-panel" ng-show="repositoriesTable.working">
-      <i class="fa fa-spinner fa-spin"></i>
-      {{ "Loading..." | translate }}
-    </div>
+  <span data-block="no-rows-message">
+    <span ng-show="isState('content-view.repositories.ostree.list')" translate>
+      There are currently no OSTree Repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+    </span>
+    <span ng-show="isState('content-view.repositories.ostree.available')">
+      <span translate>There are currently no OSTree Repositories to add to this Content View,</span>
+      <a ui-sref="products" translate>add some repositories.</a>
+    </span>
+  </span>
 
-    <table ng-show="repositoriesTable.rows.length > 0"  class="table table-bordered table-striped">
+  <div data-block="table">
+    <table bst-table="table" class="table table-bordered table-striped">
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column translate>Name</th>
@@ -91,7 +85,7 @@
       <tbody>
         <tr bst-table-row
             row-select="repository"
-            ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch | filter:repositoryFilter as filteredItems">
+            ng-repeat="repository in table.rows | filter:repositorySearch | filter:repositoryFilter as filteredItems">
           <td bst-table-cell>
             <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.id})">
               {{ repository.name }}
@@ -117,5 +111,4 @@
       </tbody>
     </table>
   </div>
-
 </div>

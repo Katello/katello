@@ -1,38 +1,34 @@
 <span page-title ng-model="contentView">{{ 'Publish Content View:' | translate }} {{ contentView.name }}</span>
 
-<div class="details details-full">
+<h3 translate>Publish New Version</h3>
 
-  <h3 translate>Publish New Version</h3>
+<p translate>
+  A new version of {{ contentView.name }} will be created and promoted to the Library environment.
+  It can be promoted to other environments from the Versions tab of this Content View.
+</p>
 
-  <p translate>
-    A new version of {{ contentView.name }} will be created and promoted to the Library environment.
-    It can be promoted to other environments from the Versions tab of this Content View.
-  </p>
+<header class="details-header">
+  <h3 translate>Version Details</h3>
+</header>
 
-  <header class="details-header">
-    <h3 translate>Version Details</h3>
-  </header>
+<form name="versionForm" class="col-sm-5" role="form" novalidate>
 
-  <form name="versionForm" class="col-sm-5" role="form" novalidate>
+  <div bst-form-group label="{{ 'Version' | translate }}">
+    <span>{{ contentView['next_version'] }}</span>
+  </div>
 
-    <div bst-form-group label="{{ 'Version' | translate }}">
-      <span>{{ contentView['next_version'] }}</span>
-    </div>
+  <div bst-form-group label="{{ 'Description' | translate }}">
+    <textarea id="description"
+              name="description"
+              ng-model="version.description"
+              rows="10"
+              tabindex="1">
+    </textarea>
+  </div>
 
-    <div bst-form-group label="{{ 'Description' | translate }}">
-      <textarea id="description"
-                name="description"
-                ng-model="version.description"
-                rows="10"
-                tabindex="1">
-      </textarea>
-    </div>
-
-    <div bst-form-buttons
-         on-cancel="transitionTo('content-views.details.versions', {contentViewId: contentView.id})"
-         on-save="publish(contentView)"
-         working="working">
-    </div>
-  </form>
-
-</div>
+  <div bst-form-buttons
+       on-cancel="transitionTo('content-view.versions', {contentViewId: contentView.id})"
+       on-save="publish(contentView)"
+       working="working">
+  </div>
+</form>

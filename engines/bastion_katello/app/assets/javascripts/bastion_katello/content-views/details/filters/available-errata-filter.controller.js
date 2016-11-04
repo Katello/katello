@@ -7,26 +7,27 @@
  * @requires Nutupane
  * @requires Filter
  * @requires Rule
+ * @requires GlobalNotification
  *
  * @description
  *   Handles loading of errata that is available to be added to a filter and provides
  *   functionality to create filter rules based off selected errata.
  */
 angular.module('Bastion.content-views').controller('AvailableErrataFilterController',
-    ['$scope', 'translate', 'Nutupane', 'Erratum', 'Rule',
-    function ($scope, translate, Nutupane, Erratum, Rule) {
+    ['$scope', 'translate', 'Nutupane', 'Erratum', 'Rule', 'GlobalNotification',
+    function ($scope, translate, Nutupane, Erratum, Rule, GlobalNotification) {
 
         var nutupane, filterByDate;
 
         function success(data) {
             $scope.filter.rules = _.union($scope.filter.rules, data.results);
-            $scope.$parent.successMessages = [translate('Errata successfully added.')];
+            GlobalNotification.setSuccessMessage(translate('Errata successfully added.'));
             nutupane.table.selectAllResults(false);
             nutupane.refresh();
         }
 
         function failure(response) {
-            $scope.$parent.errorMessages = [response.data.displayMessage];
+            GlobalNotification.setErrorMessage(response.data.displayMessage);
         }
 
         function saveRules(rules, filter) {
@@ -99,7 +100,7 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
         };
 
         $scope.updateTypes($scope.types);
-        $scope.detailsTable = nutupane.table;
+        $scope.table = nutupane.table;
 
     }]
 );

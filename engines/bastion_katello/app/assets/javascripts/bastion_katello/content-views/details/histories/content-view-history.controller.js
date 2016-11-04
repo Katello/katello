@@ -21,7 +21,7 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
         });
 
         nutupane.table.closeItem = function () {};
-        $scope.detailsTable = nutupane.table;
+        $scope.table = nutupane.table;
 
         $scope.actionText = function (history) {
             var message,

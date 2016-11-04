@@ -1,36 +1,37 @@
-<section class="nutupane-sub-section">
-  <div bst-table="tasksTable">
-    <div bst-container-scroll>
-      <div infinite-scroll="tasksTable.nextPage()" infinite-scroll-container="'.nutupane-sub-section .container-scroll-wrapper'">
-        <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped tasks-table">
-          <thead>
-            <tr bst-table-head>
-              <th bst-table-column="Status" class='task-status' translate>Status</th>
-              <th bst-table-column="Event" translate>Event</th>
-              <th bst-table-column="User" class='task-user' translate>User</th>
-              <th bst-table-column="Date" translate>Date</th>
-            </tr>
-          </thead>
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="no-rows-message" translate>
+    No tasks exist for this resource.
+  </span>
 
-          <tbody>
-            <tr bst-table-row ng-repeat="task in tasksTable.rows">
-              <td bst-table-cell>
-                <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
-                  <span uib-progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
-                </div>
-              </td>
-              <td bst-table-cell>
-                <a class="active" ng-click="tasksTable.gotoDetails(task.id)">
-                  {{ task.humanized.action }}
-                  {{ task.humanized.input | taskInputReduce:knownContext | taskInputCompile }}
-                </a>
-              </td>
-              <td bst-table-cell>{{ task.username }}</td>
-              <td bst-table-cell>{{ task.started_at | date:"short" }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div data-block="table">
+    <table bst-table="table"
+           ng-class="{'table-mask': table.working}" class="table table-striped table-bordered">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="Status"><span translate>Status</span></th>
+          <th bst-table-column="Event"><span translate>Event</span></th>
+          <th bst-table-column="User"><span translate>User</span></th>
+          <th bst-table-column="Date"><span translate>Date</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="task in table.rows">
+          <td bst-table-cell>
+            <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
+              <span uib-progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
+            </div>
+          </td>
+          <td bst-table-cell>
+            <a class="active" ng-click="table.gotoDetails(task.id)">
+              {{ task.humanized.action }}
+              {{ task.humanized.input | taskInputReduce:knownContext | taskInputCompile }}
+            </a>
+          </td>
+          <td bst-table-cell>{{ task.username }}</td>
+          <td bst-table-cell>{{ task.started_at | date:"short" }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</section>
+</div>

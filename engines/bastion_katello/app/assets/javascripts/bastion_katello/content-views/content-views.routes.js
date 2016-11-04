@@ -9,493 +9,621 @@
  */
 angular.module('Bastion.content-views').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('content-views', {
-        abstract: true,
-        controller: 'ContentViewsController',
-        templateUrl: 'content-views/views/content-views.html'
-    })
-    .state('content-views.index', {
         url: '/content_views',
         permission: 'view_content_views',
         views: {
-            'table': {
-                templateUrl: 'content-views/views/content-views-table-full.html'
+            '@': {
+                controller: 'ContentViewsController',
+                templateUrl: 'content-views/views/content-views.html'
             }
+        },
+        ncyBreadcrumb: {
+            label: '{{ "Content Views" | translate }}'
         }
     })
-
     .state('content-views.new', {
-        collapsed: true,
-        url: '/content_views/new',
+        url: '/new',
         permission: 'create_content_views',
         views: {
-            'table': {
-                templateUrl: 'content-views/views/content-views-table-collapsed.html'
-            },
-            'action-panel': {
+            '@': {
                 controller: 'NewContentViewController',
                 templateUrl: 'content-views/new/views/content-view-new.html'
             }
+        },
+        ncyBreadcrumb: {
+            label: '{{ "New Content View" | translate }}',
+            parent: 'content-views'
         }
-    })
+    });
 
-    .state('content-views.details', {
+    $stateProvider.state('content-view', {
         abstract: true,
         url: '/content_views/:contentViewId',
         permission: 'view_content_views',
-        views: {
-            'table': {
-                templateUrl: 'content-views/views/content-views-table-collapsed.html'
-            },
-            'action-panel': {
-                controller: 'ContentViewDetailsController',
-                templateUrl: 'content-views/details/views/content-view-details.html'
-            }
-        }
+        controller: 'ContentViewDetailsController',
+        templateUrl: 'content-views/details/views/content-view-details.html'
     })
 
-    .state('content-views.details.versions', {
-        collapsed: true,
+    .state('content-view.versions', {
         url: '/versions',
         permission: 'view_content_views',
         controller: 'ContentViewVersionsController',
-        templateUrl: 'content-views/details/views/content-view-versions.html'
+        templateUrl: 'content-views/details/views/content-view-versions.html',
+        ncyBreadcrumb: {
+            label: '{{ "Versions" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.version', {
-        collapsed: true,
+    .state('content-view.version', {
         abstract: true,
         url: '/versions/:versionId',
         controller: 'ContentViewVersionController',
         templateUrl: 'content-views/versions/views/content-view-version.html'
     })
-    .state('content-views.details.version.details', {
-        collapsed: true,
-        url: '/details',
+    .state('content-view.version.details', {
+        url: '',
         permission: 'view_content_views',
-        templateUrl: 'content-views/versions/views/content-view-version-details.html'
+        templateUrl: 'content-views/versions/views/content-view-version-details.html',
+        ncyBreadcrumb: {
+            label: '{{ version.name }}',
+            parent: 'content-view.versions'
+        }
     })
-    .state('content-views.details.version.components', {
-        collapsed: true,
+    .state('content-view.version.components', {
         url: '/components',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-components.html'
+        templateUrl: 'content-views/versions/views/content-view-version-components.html',
+        ncyBreadcrumb: {
+            label: '{{ "Components" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.yum', {
-        collapsed: true,
+    .state('content-view.version.yum', {
         url: '/yum',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-yum.html'
+        templateUrl: 'content-views/versions/views/content-view-version-yum.html',
+        ncyBreadcrumb: {
+            label: '{{ "Yum Content" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.docker', {
-        collapsed: true,
+    .state('content-view.version.docker', {
         url: '/docker',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-docker.html'
+        templateUrl: 'content-views/versions/views/content-view-version-docker.html',
+        ncyBreadcrumb: {
+            label: '{{ "Docker" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.packages', {
-        collapsed: true,
+    .state('content-view.version.packages', {
         url: '/packages',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-packages.html'
+        templateUrl: 'content-views/versions/views/content-view-version-packages.html',
+        ncyBreadcrumb: {
+            label: '{{ "Packages" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.package-groups', {
-        collapsed: true,
+    .state('content-view.version.package-groups', {
         url: '/package_groups',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-package-groups.html'
+        templateUrl: 'content-views/versions/views/content-view-version-package-groups.html',
+        ncyBreadcrumb: {
+            label: '{{ "Package Groups" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.errata', {
-        collapsed: true,
+    .state('content-view.version.errata', {
         url: '/errata',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-errata.html'
+        templateUrl: 'content-views/versions/views/content-view-version-errata.html',
+        ncyBreadcrumb: {
+            label: '{{ "Errata" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.puppet-modules', {
-        collapsed: true,
+    .state('content-view.version.puppet-modules', {
         url: '/puppet_modules',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-puppet-modules.html'
+        templateUrl: 'content-views/versions/views/content-view-version-puppet-modules.html',
+        ncyBreadcrumb: {
+            label: '{{ "Puppet Modules" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.ostree-branches', {
-        collapsed: true,
+    .state('content-view.version.ostree-branches', {
         url: '/ostree_branches',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-ostree-branches.html'
+        templateUrl: 'content-views/versions/views/content-view-version-ostree-branches.html',
+        ncyBreadcrumb: {
+            label: '{{ "OSTree Branches" | translate }}',
+            parent: 'content-view.version.details'
+        }
     })
-    .state('content-views.details.version.file', {
-        collapsed: true,
+    .state('content-view.version.file', {
         url: '/file',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-file.html'
-    })
+        templateUrl: 'content-views/versions/views/content-view-version-file.html',
+        ncyBreadcrumb: {
+            label: '{{ "File" | translate }}',
+            parent: 'content-view.version.details'
+        }
+    });
 
-    .state('content-views.details.promotion', {
-        collapsed: true,
+    $stateProvider.state('content-view.promotion', {
         url: '/versions/:versionId/promotion',
         permission: 'promote_or_remove_content_views',
         controller: 'ContentViewPromotionController',
-        templateUrl: 'content-views/details/views/content-view-promotion.html'
+        templateUrl: 'content-views/details/views/content-view-promotion.html',
+        ncyBreadcrumb: {
+            label: '{{ "Promotion" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.version-deletion', {
-        collapsed: true,
+    .state('content-view.version-deletion', {
         abstract: true,
         controller: 'ContentViewVersionDeletionController',
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.version-deletion.environments', {
-        collapsed: true,
+    .state('content-view.version-deletion.environments', {
         url: '/versions/:versionId/delete/environments',
         permission: 'promote_or_remove_content_views',
         controller: 'ContentViewVersionDeletionEnvironmentsController',
-        templateUrl: 'content-views/deletion/views/version-deletion-environments.html'
+        templateUrl: 'content-views/deletion/views/version-deletion-environments.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deletion" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.version-deletion.content-hosts', {
+    .state('content-view.version-deletion.content-hosts', {
         url: '/versions/:versionId/delete/content-hosts',
         permission: 'promote_or_remove_content_views',
-        collapsed: true,
         controller: 'ContentViewVersionDeletionContentHostsController',
-        templateUrl: 'content-views/deletion/views/version-deletion-content-hosts.html'
+        templateUrl: 'content-views/deletion/views/version-deletion-content-hosts.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deletion" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.version-deletion.activation-keys', {
+    .state('content-view.version-deletion.activation-keys', {
         url: '/versions/:versionId/delete/activation-keys',
         permission: 'promote_or_remove_content_views',
-        collapsed: true,
         controller: 'ContentViewVersionDeletionActivationKeysController',
-        templateUrl: 'content-views/deletion/views/version-deletion-activation-keys.html'
+        templateUrl: 'content-views/deletion/views/version-deletion-activation-keys.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deletion" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.version-deletion.confirm', {
+    .state('content-view.version-deletion.confirm', {
         url: '/versions/:versionId/delete/confirm',
         permission: 'promote_or_remove_content_views',
-        collapsed: true,
         controller: 'ContentViewVersionDeletionConfirmController',
-        templateUrl: 'content-views/deletion/views/version-deletion-confirm.html'
+        templateUrl: 'content-views/deletion/views/version-deletion-confirm.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deletion" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.deletion', {
-        collapsed: true,
+    .state('content-view.deletion', {
         url: '/delete',
         permission: 'promote_or_remove_content_views',
         controller: 'ContentViewDeletionController',
-        templateUrl: 'content-views/deletion/views/content-view-deletion.html'
+        templateUrl: 'content-views/deletion/views/content-view-deletion.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deletion" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories', {
+    .state('content-view.repositories', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.repositories.yum', {
+    .state('content-view.repositories.yum', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.repositories.yum.list', {
-        collapsed: true,
+    .state('content-view.repositories.yum.list', {
         url: '/repositories/yum',
         permission: 'view_content_views',
         controller: 'ContentViewRepositoriesListController',
-        templateUrl: 'content-views/details/views/content-view-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Yum Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.yum.available', {
-        collapsed: true,
+    .state('content-view.repositories.yum.available', {
         url: '/repositories/yum/available',
         permission: 'view_content_views',
         controller: 'ContentViewAvailableRepositoriesController',
-        templateUrl: 'content-views/details/views/content-view-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Yum Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.file', {
+    .state('content-view.repositories.file', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.repositories.file.list', {
-        collapsed: true,
+    .state('content-view.repositories.file.list', {
         url: '/repositories/file',
         permission: 'view_content_views',
         controller: 'ContentViewFileRepositoriesListController',
-        templateUrl: 'content-views/details/views/content-view-file-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-file-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "File Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.file.available', {
-        collapsed: true,
+    .state('content-view.repositories.file.available', {
         url: '/repositories/file/available',
         permission: 'view_content_views',
         controller: 'ContentViewAvailableFileRepositoriesController',
-        templateUrl: 'content-views/details/views/content-view-file-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-file-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add File Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.docker', {
+    .state('content-view.repositories.docker', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.repositories.docker.list', {
-        collapsed: true,
+    .state('content-view.repositories.docker.list', {
         url: '/repositories/docker',
         permission: 'view_content_views',
         controller: 'ContentViewDockerRepositoriesListController',
-        templateUrl: 'content-views/details/views/content-view-docker-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-docker-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Docker Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.docker.available', {
-        collapsed: true,
+    .state('content-view.repositories.docker.available', {
         url: '/repositories/docker/available',
         permission: 'view_content_views',
         controller: 'ContentViewAvailableDockerRepositoriesController',
-        templateUrl: 'content-views/details/views/content-view-docker-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-docker-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Docker Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.ostree', {
+    .state('content-view.repositories.ostree', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.repositories.ostree.list', {
-        collapsed: true,
+    .state('content-view.repositories.ostree.list', {
         url: '/repositories/ostree',
         permission: 'view_content_views',
         controller: 'ContentViewOstreeRepositoriesListController',
-        templateUrl: 'content-views/details/views/content-view-ostree-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-ostree-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "OSTree Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.repositories.ostree.available', {
-        collapsed: true,
+    .state('content-view.repositories.ostree.available', {
         url: '/repositories/ostree/available',
         permission: 'view_content_views',
         controller: 'ContentViewAvailableOstreeRepositoriesController',
-        templateUrl: 'content-views/details/views/content-view-ostree-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-ostree-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add OSTree Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.history', {
-        collapsed: true,
-        url: '/history',
-        permission: 'view_content_views',
-        controller: 'ContentViewHistoryController',
-        templateUrl: 'content-views/details/histories/views/content-view-history.html'
-    })
-    .state('content-views.details.components', {
+    .state('content-view.components', {
         abstract: true,
-        template: '<div ui-view></div>',
-        collapsed: true
+        template: '<div ui-view></div>'
     })
-    .state('content-views.details.components.composite-content-views', {
+    .state('content-view.components.composite-content-views', {
         abstract: true,
-        collapsed: true,
         templateUrl: 'content-views/details/components/views/content-view-composite.html'
     })
-    .state('content-views.details.components.composite-content-views.list', {
-        collapsed: true,
+    .state('content-view.components.composite-content-views.list', {
         url: '/content-views',
         permission: 'view_content_views',
         controller: 'ContentViewCompositeContentViewsListController',
-        templateUrl: 'content-views/details/components/views/content-view-composite-content-views-list.html'
+        templateUrl: 'content-views/details/components/views/content-view-composite-content-views-list.html',
+        ncyBreadcrumb: {
+            label: '{{ "Content Views" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.components.composite-content-views.available', {
-        collapsed: true,
+    .state('content-view.components.composite-content-views.available', {
         url: '/content-views/available',
         permission: 'edit_content_views',
         controller: 'ContentViewCompositeAvailableContentViewsController',
-        templateUrl: 'content-views/details/components/views/content-view-composite-available-content-views.html'
+        templateUrl: 'content-views/details/components/views/content-view-composite-available-content-views.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Content Views" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.puppet-modules', {
+    .state('content-view.puppet-modules', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.puppet-modules.list', {
-        collapsed: true,
+    .state('content-view.puppet-modules.list', {
         url: '/puppet_modules',
         permission: 'view_content_views',
         controller: 'ContentViewPuppetModulesController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-modules.html'
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-modules.html',
+        ncyBreadcrumb: {
+            label: '{{ "Puppet Modules" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.puppet-modules.names', {
-        collapsed: true,
+    .state('content-view.puppet-modules.names', {
         url: '/puppet_modules/names',
         permission: 'edit_content_views',
         controller: 'ContentViewPuppetModuleNamesController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-names.html'
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-names.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Puppet Module" | translate }}',
+            parent: 'content-view.puppet-modules.list'
+        }
     })
-    .state('content-views.details.puppet-modules.versions', {
-        collapsed: true,
+    .state('content-view.puppet-modules.versions', {
         url: '/puppet_modules/:moduleName/versions',
         permission: 'edit_content_views',
         controller: 'ContentViewPuppetModuleVersionsController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html'
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html',
+        ncyBreadcrumb: {
+            label: '{{ "Version for Module:" | translate }} {{ }}',
+            parent: 'content-view.puppet-modules.names'
+        }
     })
     // Necessary until ui-router supports optional parameters, see https://github.com/angular-ui/ui-router/issues/108
-    .state('content-views.details.puppet-modules.versionsForModule', {
+    .state('content-view.puppet-modules.versionsForModule', {
         collapsed: true,
         url: '/puppet_modules/:moduleName/versions/:moduleId',
         permission: 'edit_content_views',
         controller: 'ContentViewPuppetModuleVersionsController',
-        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html'
+        templateUrl: 'content-views/details/puppet-modules/views/content-view-puppet-module-versions.html',
+        ncyBreadcrumb: {
+            label: '{{ "Versions for Module" | translate }}',
+            parent: 'content-view.puppet-modules.versions'
+        }
     })
-    .state('content-views.details.info', {
-        collapsed: true,
+    .state('content-view.history', {
+        url: '/history',
+        permission: 'view_content_views',
+        controller: 'ContentViewHistoryController',
+        templateUrl: 'content-views/details/histories/views/content-view-history.html',
+        ncyBreadcrumb: {
+            label: '{{ "History" | translate }}',
+            parent: 'content-view.info'
+        }
+    })
+    .state('content-view.info', {
         url: '/info',
         permission: 'view_content_views',
-        templateUrl: 'content-views/details/views/content-view-info.html'
+        templateUrl: 'content-views/details/views/content-view-info.html',
+        ncyBreadcrumb: {
+            label: '{{ contentView.name }}',
+            parent: 'content-views'
+        }
     })
-    .state('content-views.details.publish', {
-        collapsed: true,
+    .state('content-view.publish', {
         url: '/publish',
         permission: 'publish_content_views',
         controller: 'ContentViewPublishController',
-        templateUrl: 'content-views/details/views/content-view-publish.html'
+        templateUrl: 'content-views/details/views/content-view-publish.html',
+        ncyBreadcrumb: {
+            label: '{{ "Publish" | translate }}',
+            parent: 'content-view.info'
+        }
     })
 
-    .state('content-views.details.filters', {
-        abstract: true,
-        collapsed: true,
-        controller: 'FiltersController',
-        template: '<div ui-view></div>'
-    })
-    .state('content-views.details.filters.list', {
-        collapsed: true,
+    .state('content-view.filters', {
         url: '/filters',
         permission: 'view_content_views',
-        templateUrl: 'content-views/details/filters/views/filters.html'
+        controller: 'FiltersController',
+        templateUrl: 'content-views/details/filters/views/filters.html',
+        ncyBreadcrumb: {
+            label: '{{ "Filters" | translate }}',
+            parent: 'content-view.info'
+        }
+
     })
-    .state('content-views.details.filters.new', {
-        collapsed: true,
-        url: '/filters/new',
+    .state('content-view.filters.new', {
+        url: '/new',
         permission: 'edit_content_views',
-        controller: 'NewFilterController',
-        templateUrl: 'content-views/details/filters/views/new-filter.html'
-    })
-    .state('content-views.details.filters.details', {
+        views: {
+            '@content-view': {
+                controller: 'NewFilterController',
+                templateUrl: 'content-views/details/filters/views/new-filter.html'
+            }
+        },
+        ncyBreadcrumb: {
+            label: '{{ "Create Filter" | translate }}',
+            parent: 'content-view.filters'
+        }
+    });
+
+    $stateProvider.state('content-view.filter', {
         abstract: true,
-        collapsed: true,
         controller: 'FilterDetailsController',
         templateUrl: 'content-views/details/filters/views/filter-details.html'
     })
 
-    .state('content-views.details.filters.details.rpm', {
+    .state('content-view.filter.rpm', {
         abstract: true,
-        collapsed: true,
         url: '/filters/:filterId/package',
         permission: 'view_content_views',
         controller: 'PackageFilterController',
         templateUrl: 'content-views/details/filters/views/package-filter.html'
     })
-    .state('content-views.details.filters.details.rpm.details', {
+    .state('content-view.filter.rpm.details', {
         url: '/details',
         permission: 'view_content_views',
-        collapsed: true,
         controller: 'PackageFilterController',
-        templateUrl: 'content-views/details/filters/views/package-filter-details.html'
+        templateUrl: 'content-views/details/filters/views/package-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ filter.name }}',
+            parent: 'content-view.filters'
+        }
     })
-    .state('content-views.details.filters.details.rpm.edit', {
+    .state('content-view.filter.rpm.edit', {
         url: '/edit',
-        collapsed: true,
         controller: 'FilterEditController',
         permission: 'edit_content_views',
-        templateUrl: 'content-views/details/filters/views/edit-filter.html'
+        templateUrl: 'content-views/details/filters/views/edit-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ "Edit" | translate}} {{ filter.name }}',
+            parent: 'content-view.filters'
+        }
     })
-    .state('content-views.details.filters.details.rpm.repositories', {
-        collapsed: true,
+    .state('content-view.filter.rpm.repositories', {
         url: '/repositories',
         permission: 'view_content_views',
         controller: 'FilterRepositoriesController',
-        templateUrl: 'content-views/details/filters/views/filter-repositories.html'
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Repositories" | translate }}',
+            parent: 'content-view.filter.rpm.edit'
+        }
     })
 
-    .state('content-views.details.filters.details.package_group', {
+    .state('content-view.filter.package_group', {
         abstract: true,
-        collapsed: true,
-        controller: 'PackageGroupFilterController',
         url: '/filters/:filterId/package-group',
         templateUrl: 'content-views/details/filters/views/package-group-filter.html'
     })
-    .state('content-views.details.filters.details.package_group.edit', {
+    .state('content-view.filter.package_group.edit', {
         url: '/edit',
-        collapsed: true,
         controller: 'FilterEditController',
         permission: 'edit_content_views',
-        templateUrl: 'content-views/details/filters/views/edit-filter.html'
+        templateUrl: 'content-views/details/filters/views/edit-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ "Edit" | translate }} {{ filter.name }}',
+            parent: 'content-view.filters'
+        }
     })
-    .state('content-views.details.filters.details.package_group.list', {
-        collapsed: true,
+    .state('content-view.filter.package_group.list', {
         url: '/list',
         permission: 'view_content_views',
         controller: 'PackageGroupFilterListController',
-        templateUrl: 'content-views/details/filters/views/package-group-filter-details.html'
+        templateUrl: 'content-views/details/filters/views/package-group-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ "Package Groups" | translate }}',
+            parent: 'content-view.filter.package_group.edit'
+        }
     })
-    .state('content-views.details.filters.details.package_group.available', {
-        collapsed: true,
+    .state('content-view.filter.package_group.available', {
         url: '/available',
         permission: 'edit_content_views',
         controller: 'AvailablePackageGroupFilterController',
-        templateUrl: 'content-views/details/filters/views/package-group-filter-details.html'
+        templateUrl: 'content-views/details/filters/views/package-group-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Package Groups" | translate }}',
+            parent: 'content-view.filter.package_group.edit'
+        }
     })
-    .state('content-views.details.filters.details.package_group.repositories', {
-        collapsed: true,
+    .state('content-view.filter.package_group.repositories', {
         url: '/repositories',
         permission: 'view_content_views',
         controller: 'FilterRepositoriesController',
-        templateUrl: 'content-views/details/filters/views/filter-repositories.html'
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Repositories | translate }}',
+            parent: 'content-view.filter.package_group.edit'
+        }
     })
 
-    .state('content-views.details.filters.details.erratum', {
+    .state('content-view.filter.erratum', {
         abstract: true,
-        collapsed: true,
         url: '/filters/:filterId/errata',
         controller: 'ErrataFilterController',
         templateUrl: 'content-views/details/filters/views/errata-filter.html'
     })
-    .state('content-views.details.filters.details.erratum.edit', {
+    .state('content-view.filter.erratum.edit', {
         url: '/edit',
-        collapsed: true,
         controller: 'FilterEditController',
         permission: 'edit_content_views',
-        templateUrl: 'content-views/details/filters/views/edit-filter.html'
+        templateUrl: 'content-views/details/filters/views/edit-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ "Edit" | translate }} {{ filter.name }}',
+            parent: 'content-view.filters'
+        }
     })
-    .state('content-views.details.filters.details.erratum.list', {
-        collapsed: true,
+    .state('content-view.filter.erratum.list', {
         url: '/list',
         permission: 'view_content_views',
         controller: 'ErrataFilterListController',
-        templateUrl: 'content-views/details/filters/views/errata-filter-details.html'
+        templateUrl: 'content-views/details/filters/views/errata-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ "Erratum" | translate }}',
+            parent: 'content-view.filter.erratum.edit'
+        }
     })
-    .state('content-views.details.filters.details.erratum.available', {
-        collapsed: true,
+    .state('content-view.filter.erratum.available', {
         url: '/available',
         permission: 'edit_content_views',
         controller: 'AvailableErrataFilterController',
-        templateUrl: 'content-views/details/filters/views/errata-filter-details.html'
+        templateUrl: 'content-views/details/filters/views/errata-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Erratum" | translate }}',
+            parent: 'content-view.filter.erratum.edit'
+        }
     })
-    .state('content-views.details.filters.details.erratum.dateType', {
-        collapsed: true,
+    .state('content-view.filter.erratum.dateType', {
         url: '/date_type',
         permission: 'view_content_views',
         controller: 'DateTypeErrataFilterController',
-        templateUrl: 'content-views/details/filters/views/date-type-errata-filter.html'
+        templateUrl: 'content-views/details/filters/views/date-type-errata-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ filter.name }}',
+            parent: 'content-view.filters'
+        }
+
     })
-    .state('content-views.details.filters.details.erratum.repositories', {
-        collapsed: true,
+    .state('content-view.filter.erratum.repositories', {
         url: '/repositories',
         permission: 'view_content_views',
         controller: 'FilterRepositoriesController',
-        templateUrl: 'content-views/details/filters/views/filter-repositories.html'
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Repositories" | translate }}',
+            parent: 'content-view.filter.erratum.edit'
+        }
     })
 
-    .state('content-views.details.tasks', {
+    .state('content-view.tasks', {
         abstract: true,
-        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views.details.tasks.index', {
+    .state('content-view.tasks.index', {
         url: '/tasks',
         permission: 'view_content_views',
-        collapsed: true,
-        templateUrl: 'content-views/details/views/content-view-details-tasks.html'
+        templateUrl: 'content-views/details/views/content-view-details-tasks.html',
+        ncyBreadcrumb: {
+            label: '{{ "Tasks" | translate }}',
+            parent: 'content-view.info'
+        }
     })
-    .state('content-views.details.tasks.details', {
+    .state('content-view.task', {
         url: '/tasks/:taskId',
         permission: 'view_content_views',
-        collapsed: true,
         controller: 'TaskDetailsController',
-        templateUrl: 'tasks/views/task-details.html'
+        templateUrl: 'tasks/views/task-details.html',
+        ncyBreadcrumb: {
+            label: '{{ task.id }}',
+            parent: 'content-view.tasks'
+        }
     });
 }]);

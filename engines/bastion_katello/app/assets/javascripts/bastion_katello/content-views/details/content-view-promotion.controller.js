@@ -8,6 +8,7 @@
  * @requires ContentViewVersion
  * @requires Organization
  * @requires CurrentOrganization
+ * @requires GlobalNotification
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -15,21 +16,21 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPromotionController',
-    ['$scope', '$q', 'translate', 'ContentViewVersion', 'Organization', 'CurrentOrganization',
-    function ($scope, $q, translate, ContentViewVersion, Organization, CurrentOrganization) {
+    ['$scope', '$q', 'translate', 'ContentViewVersion', 'Organization', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, $q, translate, ContentViewVersion, Organization, CurrentOrganization, GlobalNotification) {
 
         function success() {
             var message = translate('Successfully initiated promotion of %cv version %ver to %env.');
             message = message.replace('%cv', $scope.contentView.name).replace('%env', $scope.selectedEnvironment.name);
             message = message.replace('%ver', $scope.version.version);
             $scope.promoting = false;
-            $scope.$parent.successMessages = [message];
-            $scope.transitionTo('content-views.details.versions', {contentViewId: $scope.contentView.id});
+            GlobalNotification.setSuccessMessage(message);
+            $scope.transitionTo('content-view.versions', {contentViewId: $scope.contentView.id});
         }
 
         function failure(response) {
             $scope.promoting = false;
-            $scope.$parent.errorMessages = [response.data.displayMessage];
+            GlobalNotification.setErrorMessage(response.data.displayMessage);
         }
 
         $scope.promotion = {};

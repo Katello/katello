@@ -21,6 +21,14 @@ angular.module('Bastion.content-views').factory('ContentView',
                 publish: {method: 'POST', params: {action: 'publish'}},
                 removeAssociations: {method: 'PUT', params: {action: 'remove'}},
                 versions: {method: 'GET', isArray: false, params: {action: 'content_view_versions'}},
+                conflictingVersions: {method: 'GET', isArray: true, params: {action: 'content_view_versions'},
+                    transformResponse: function (data) {
+                        var response = angular.fromJson(data);
+                        return _.reject(response.results, function (version) {
+                            return version.environments.length === 0;
+                        });
+                    }
+                },
                 contentViewComponents: {method: 'GET', transformResponse: function (data) {
                     var contentView = angular.fromJson(data);
                     return {results: contentView.content_view_components};

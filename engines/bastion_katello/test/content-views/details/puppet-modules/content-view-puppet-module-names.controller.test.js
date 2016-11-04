@@ -26,7 +26,7 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
     }));
 
     it("sets a nutupane table on the $scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("provides a way to select a new version of the puppet module", function () {
@@ -34,7 +34,7 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
 
         $scope.selectVersion("puppet");
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.puppet-modules.versions',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.versions',
             {contentViewId: 1, moduleName: "puppet"}
         );
     });
@@ -42,7 +42,7 @@ describe('Controller: ContentViewPuppetModuleNamesController', function() {
     it("Auto completes to puppet modules", function() {
         spyOn(PuppetModule, 'autocomplete').and.callThrough();
 
-        $scope.detailsTable.fetchAutocomplete('foobar');
+        $scope.table.fetchAutocomplete('foobar');
         expect(PuppetModule.autocomplete).toHaveBeenCalledWith({'organization_id': 1, search: 'foobar'})
     });
 });

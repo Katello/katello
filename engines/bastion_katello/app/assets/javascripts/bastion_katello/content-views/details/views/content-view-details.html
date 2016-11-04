@@ -1,164 +1,132 @@
 <span page-title ng-model="contentView">{{ 'Content View:' | translate }} {{ contentView.name }}</span>
 
-<div data-extend-template="layouts/panel.html">
-  <div data-block="panel">
-    <section class="nutupane-details" ng-cloak bst-container-scroll>
-      <div ng-show="panel.error" bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-      <div bst-alert="info" ng-show="pendingVersionTask">
-       <span translate>Many Content View actions are disabled while a version task is in progress.</span>
-      </div>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>{{ contentView.name }}</h2>
+  </header>
 
-      <div ng-hide="panel.error">
-        <header class="details-header row">
-          <h2 class="col-sm-6" ng-hide="contentView.composite">{{ contentView.name }}</h2>
-          <h2 class="col-sm-6" ng-show="contentView.composite" translate>Composite Content View {{ contentView.name }}</h2>
-
-          <div class="col-sm-6">
-            <div class="fr">
-              <button class="btn btn-primary" ng-click="$state.go('content-views.details.publish')"
-                 ng-disabled="pendingVersionTask"
-                 ng-hide="denied('publish_content_views', contentView)">
-                <i class="fa fa-paste"></i>
-                <span translate>Publish New Version</span>
-              </button>
-
-              <button class="btn btn-default"
-                 ng-disabled="pendingVersionTask"
-                 ng-hide="denied('create_content_views')"
-                 ng-click="showCopy = true">
-                <i class="fa fa-copy"></i>
-                <span translate>Copy View</span>
-              </button>
-
-              <button class="btn btn-default" ng-click="$state.go('content-views.details.deletion')"
-                      ng-disabled="pendingVersionTask"
-                      ng-hide="denied('destroy_content_views', contentView)">
-                <i class="fa fa-trash-o"></i>
-                {{ "Remove View" | translate }}
-              </button>
-
-              <a class="btn btn-default" ui-sref="content-views.index">
-                <i class="fa fa-remove"></i>
-                <span translate>Close</span>
-              </a>
-            </div>
-
-          </div>
-        </header>
-
-        <div ng-show="showCopy" class="fr action-pane" >
-          <form>
-            <h5 translate>Copy</h5>
-            <div class="input">
-              <div bst-alerts error-messages="copyErrorMessages"></div>
-              <div class="info-label">
-                <label for="copy_name" translate>New Name:</label>
-              </div>
-              <input ng-model="copyName"
-                     id="copy_name"
-                     name="copy_name"
-                     tabindex="1"
-                     autofocus
-                     required/>
-              <div>
-                <button class="btn btn-default" ng-click="copy(copyName)">
-                    <span translate>Create</span>
-                </button>
-                <button class="btn btn-default" ng-click="showCopy = false">
-                  <span translate>Cancel</span>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <nav>
-          <ul class="nav nav-tabs" ng-show="contentView.$resolved">
-            <li ng-class="{active: stateIncludes('content-views.details.version') || stateIncludes('content-views.details.versions')}">
-              <a ui-sref="content-views.details.versions" translate>
-                Versions
-              </a>
-            </li>
-
-            <li ng-class="{active: stateIncludes('content-views.details.components.composite-content-views')}" ng-show="contentView.composite">
-              <a ui-sref="content-views.details.components.composite-content-views.list" translate>
-                Content Views
-              </a>
-            </li>
-
-            <li uib-dropdown
-                ng-class="{active: stateIncludes('content-views.details.repositories.yum') || stateIncludes('content-views.details.filters')}"
-                ng-hide="contentView.composite">
-              <a uib-dropdown-toggle>
-                <span translate>Yum Content</span>
-                <i class="fa fa-chevron-down"></i>
-              </a>
-              <ul uib-dropdown-menu>
-                <li>
-                  <a ui-sref="content-views.details.repositories.yum.list" translate>
-                    Repositories
-                  </a>
-                </li>
-                <li>
-                  <a ui-sref="content-views.details.filters.list" translate>
-                    Filters
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            <li ng-class="{active: stateIncludes('content-views.details.repositories.file')}"
-                ng-hide="contentView.composite">
-              <a ui-sref="content-views.details.repositories.file.list" translate>
-                File Repositories
-              </a>
-            </li>
-
-            <li ng-class="{active: stateIncludes('content-views.details.puppet-modules')}"
-                ng-hide="contentView.composite">
-              <a ui-sref="content-views.details.puppet-modules.list" translate>
-                Puppet Modules
-              </a>
-            </li>
-
-            <li ng-class="{active: stateIncludes('content-views.details.repositories.docker')}"
-                ng-hide="contentView.composite">
-              <a ui-sref="content-views.details.repositories.docker.list" translate>
-                Docker Content
-              </a>
-            </li>
-
-            <li ng-class="{active: stateIncludes('content-views.details.repositories.ostree')}"
-                ng-hide="contentView.composite">
-              <a ui-sref="content-views.details.repositories.ostree.list" translate>
-                OSTree Content
-              </a>
-            </li>
-
-            <li ng-class="{active: isState('content-views.details.history')}">
-              <a ui-sref="content-views.details.history" translate>
-                History
-              </a>
-            </li>
-
-            <li ng-class="{active: isState('content-views.details.info') || isState('content-views.details.deletion')}">
-              <a ui-sref="content-views.details.info" translate>
-                Details
-              </a>
-            </li>
-            <li ng-class="{active: stateIncludes('content-views.details.tasks')}">
-              <a translate
-                 ui-sref="content-views.details.tasks.index({contentViewId: contentView.id})">
-                Tasks
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-        <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-        <div ui-view></div>
-      </div>
-    </section>
+  <div data-block="messages">
+    <div bst-alert="info" ng-show="pendingVersionTask">
+      <span translate>Many Content View actions are disabled while a version task is in progress.</span>
+    </div>
   </div>
+
+  <nav data-block="item-actions">
+    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-link dropdown-toggle">
+        <span class="fa fa-ellipsis-v"></span>
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+        <li role="menuitem" ng-hide="denied('publish_content_views', contentView)">
+          <a ui-sref="content-view.publish">
+            <span translate>Publish New Version</span>
+          </a>
+        </li>
+
+        <li role="menuitem" ng-hide="denied('publish_content_views', contentView)">
+          <a ui-sref="content-view.copy">
+            <span translate>Copy Content View</span>
+          </a>
+        </li>
+
+        <li class="divider" ng-hide="denied('destroy_content_views', contentView)"></li>
+
+        <li role="menuitem" ng-hide="denied('destroy_content_views', contentView)">
+          <a ui-sref="content-view.deletion">
+            <span translate>Remove Content View</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs" ng-show="contentView.$resolved">
+      <li ng-class="{active: isState('content-view.info') || isState('content-view.deletion')}">
+        <a ui-sref="content-view.info" translate>
+          Details
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.version') || stateIncludes('content-view.versions')}">
+        <a ui-sref="content-view.versions" translate>
+          Versions
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.components.composite-content-views')}" ng-show="contentView.composite">
+        <a ui-sref="content-view.components.composite-content-views.list" translate>
+          Content Views
+        </a>
+      </li>
+
+      <li uib-dropdown
+          ng-class="{active: stateIncludes('content-view.repositories.yum') || stateIncludes('content-view.filters')}"
+          ng-hide="contentView.composite">
+        <a uib-dropdown-toggle>
+          <span translate>Yum Content</span>
+          <i class="fa fa-chevron-down"></i>
+        </a>
+        <ul uib-dropdown-menu>
+          <li>
+            <a ui-sref="content-view.repositories.yum.list" translate>
+              Repositories
+            </a>
+          </li>
+          <li>
+            <a ui-sref="content-view.filters" translate>
+              Filters
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.repositories.file')}"
+          ng-hide="contentView.composite">
+        <a ui-sref="content-view.repositories.file.list" translate>
+          File Repositories
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.puppet-modules')}"
+          ng-hide="contentView.composite">
+        <a ui-sref="content-view.puppet-modules.list" translate>
+          Puppet Modules
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.repositories.docker')}"
+          ng-hide="contentView.composite">
+        <a ui-sref="content-view.repositories.docker.list" translate>
+          Docker Content
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.repositories.ostree')}"
+          ng-hide="contentView.composite">
+        <a ui-sref="content-view.repositories.ostree.list" translate>
+          OSTree Content
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-view.history')}">
+        <a ui-sref="content-view.history" translate>
+          History
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-view.tasks')}">
+        <a translate
+           ui-sref="content-view.tasks.index({contentViewId: contentView.id})">
+          Tasks
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <section data-block="content">
+    <div ui-view></div>
+  </section>
 </div>

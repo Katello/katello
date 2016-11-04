@@ -13,7 +13,6 @@ describe('Controller: ContentViewsVersionContentController', function() {
             this.table = {
                 showColumns: function() {}
             };
-            this.removeRow = function() {};
             this.get = function() {};
             this.enableSelectAllResults = function() {};
             this.refresh = function () {};
@@ -56,57 +55,57 @@ describe('Controller: ContentViewsVersionContentController', function() {
     }
 
     it("puts a table object on the scope", function() {
-        SetupController('content-views.details.version.packages');
-        expect($scope.detailsTable).toBeDefined();
+        SetupController('content-view.version.packages');
+        expect($scope.table).toBeDefined();
     });
 
     it("setups up Package resource when the state is 'package'", function() {
-        SetupController('content-views.details.version.packages');
+        SetupController('content-view.version.packages');
         expect($scope.nutupane.resource).toBe(Package);
     });
 
     it("setups up PackageGroup resource when is state is 'package groups'", function() {
-        SetupController('content-views.details.version.package-groups');
+        SetupController('content-view.version.package-groups');
         expect($scope.nutupane.resource).toBe(PackageGroup);
     });
 
     it("setups up Erratum resource when is state is 'errata'", function() {
-        SetupController('content-views.details.version.errata');
+        SetupController('content-view.version.errata');
         expect($scope.nutupane.resource).toBe(Erratum);
     });
 
     it("setups up PuppetModule resource when is state is 'puppet modules'", function() {
-        SetupController('content-views.details.version.puppet-modules');
+        SetupController('content-view.version.puppet-modules');
         expect($scope.nutupane.resource).toBe(PuppetModule);
     });
 
     it("setups up OSTree Branches resource when is state is 'ostree-branches'", function() {
-        SetupController('content-views.details.version.ostree-branches');
+        SetupController('content-view.version.ostree-branches');
         expect($scope.nutupane.resource).toBe(OstreeBranch);
     });
 
     it("setups up docker Repo resource when is state is 'docker content'", function() {
-        SetupController('content-views.details.version.docker');
+        SetupController('content-view.version.docker');
         expect($scope.nutupane.resource).toBe(Repository);
     });
 
     it("setups up yum Repo resource when is state is 'yum content'", function() {
-        SetupController('content-views.details.version.yum');
+        SetupController('content-view.version.yum');
         expect($scope.nutupane.resource).toBe(Repository);
     });
 
     it("setups up ContentViewVersion resource when is state is 'components'", function() {
-        SetupController('content-views.details.version.components');
+        SetupController('content-view.version.components');
         expect($scope.nutupane.resource).toBe(ContentViewVersion);
     });
 
     it("builds a list of repositories from the version", function() {
-        SetupController('content-views.details.version.packages');
+        SetupController('content-view.version.packages');
         expect($scope.repositories.length).toBe(2);
     });
 
     it("builds a list of repositories from the version", function() {
-        SetupController('content-views.details.version.packages');
+        SetupController('content-view.version.packages');
         spyOn($scope.nutupane, 'refresh');
 
         $scope.repositories = {id: 2};
