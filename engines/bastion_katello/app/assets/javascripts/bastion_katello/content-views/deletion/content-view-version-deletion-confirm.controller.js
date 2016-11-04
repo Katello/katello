@@ -5,14 +5,15 @@
  * @requires $scope
  * @requires ContentView
  * @requires translate
+ * @requires GlobalNotification
  *
  * @description
  *   Provides the confirmation and submit code for the content view version deletion
  *   workflow
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionDeletionConfirmController',
-    ['$scope', 'ContentView', 'translate',
-    function ($scope, ContentView, translate) {
+    ['$scope', 'ContentView', 'translate', 'GlobalNotification',
+    function ($scope, ContentView, translate, GlobalNotification) {
 
         function success() {
             var message = translate('Successfully initiated removal of %cv version %ver.');
@@ -22,13 +23,15 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
             }
 
             message = message.replace('%cv', $scope.contentView.name).replace('%ver', $scope.version.version);
-            $scope.successMessages.push(message);
-            $scope.transitionTo('content-views.details.versions', {contentViewId: $scope.contentView.id});
+            GlobalNotification.setSuccessMessage(message);
+            $scope.transitionTo('content-view.versions', {contentViewId: $scope.contentView.id});
         }
 
         function error(response) {
             $scope.deleting = false;
-            $scope.$parent.$parent.errorMessages = response.data.errors;
+            angular.forEach(response.data.errors, function (responseError) {
+                GlobalNotification.setErrorMessage(responseError);
+            });
         }
 
         $scope.validateEnvironmentSelection();

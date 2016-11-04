@@ -20,7 +20,7 @@
       <tbody>
         <tr bst-table-row ng-repeat="version in detailsTable.rows">
           <td bst-table-cell>
-            <a ui-sref="content-views.details.info({contentViewId: version.content_view.id})">
+            <a ui-sref="content-view.info({contentViewId: version.content_view.id})">
               {{ version.content_view.name }}
             </a>
           </td>

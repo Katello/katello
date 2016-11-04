@@ -14,13 +14,12 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
     function ($scope, ContentView, FormUtils, CurrentOrganization) {
 
         function success(response) {
-            var successState = 'content-views.details.repositories.yum.available';
+            var successState = 'content-view.repositories.yum.available';
 
             if (response.composite) {
-                successState = 'content-views.details.components.composite-content-views.available';
+                successState = 'content-view.components.composite-content-views.available';
             }
 
-            $scope.$parent.table.addRow(response);
             $scope.transitionTo(successState, {contentViewId: response.id});
         }
 

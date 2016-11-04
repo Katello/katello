@@ -19,10 +19,10 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
         $scope.version = ContentViewVersion.get({id: $scope.$stateParams.versionId});
 
         $scope.stepStates = {
-            environments: 'content-views.details.version-deletion.environments',
-            activationKeys: 'content-views.details.version-deletion.activation-keys',
-            contentHosts: 'content-views.details.version-deletion.content-hosts',
-            confirm: 'content-views.details.version-deletion.confirm'
+            environments: 'content-view.version-deletion.environments',
+            activationKeys: 'content-view.version-deletion.activation-keys',
+            contentHosts: 'content-view.version-deletion.content-hosts',
+            confirm: 'content-view.version-deletion.confirm'
         };
 
         if (angular.isUndefined($scope.deleteOptions)) {
@@ -92,7 +92,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
         $scope.validateEnvironmentSelection = function () {
             if (!$scope.deleteOptions.deleteArchive && $scope.deleteOptions.environments.length === 0) {
-                $scope.transitionTo("content-views.details.version-deletion.environments",
+                $scope.transitionTo("content-view.version-deletion.environments",
                         {contentViewId: $scope.$stateParams.contentViewId, versionId: $scope.$stateParams.versionId});
             }
         };

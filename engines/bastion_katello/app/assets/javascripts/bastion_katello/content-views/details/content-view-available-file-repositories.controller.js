@@ -29,7 +29,7 @@
 
         nutupane.load();
 
-        $scope.repositoriesTable = nutupane.table;
+        $scope.table = nutupane.table;
 
         $scope.addRepositories = function (contentView) {
             $scope.addSelectedRepositoriesToContentView(nutupane, contentView);

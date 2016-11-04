@@ -51,11 +51,11 @@ angular.module('Bastion.tasks').directive('tasksTable',
                 knownContext: '@'
             },
             controller: ['$scope', '$state', function ($scope, $state) {
-                // we need to set the tasksTable before the template
+                // we need to set the table before the template
                 // is compiled. Therefore we're doing that in the
                 // controller
                 $scope.tasksNutupane = new TasksNutupane();
-                $scope.tasksTable = $scope.tasksNutupane.table;
+                $scope.table = $scope.tasksNutupane.table;
 
                 // to be able to navigate to task details from the table
                 $scope.tasksNutupane.table.gotoDetails = function (taskId) {

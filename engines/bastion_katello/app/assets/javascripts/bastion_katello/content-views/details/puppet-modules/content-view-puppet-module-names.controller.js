@@ -19,9 +19,9 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleNames
             'availablePuppetModuleNames'
         );
         nutupane.masterOnly = true;
-        $scope.detailsTable = nutupane.table;
+        $scope.table = nutupane.table;
 
-        $scope.detailsTable.fetchAutocomplete = function (term) {
+        $scope.table.fetchAutocomplete = function (term) {
             var promise;
 
             promise = PuppetModule.autocomplete({'organization_id': CurrentOrganization, search: term}).$promise;
@@ -32,7 +32,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleNames
         };
 
         $scope.selectVersion = function (moduleName) {
-            $scope.transitionTo('content-views.details.puppet-modules.versions',
+            $scope.transitionTo('content-view.puppet-modules.versions',
                 {
                     contentViewId: $scope.$stateParams.contentViewId,
                     moduleName: moduleName

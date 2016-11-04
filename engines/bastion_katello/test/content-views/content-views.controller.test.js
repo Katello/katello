@@ -10,7 +10,6 @@ describe('Controller: ContentViewsController', function() {
             this.table = {
                 showColumns: function() {}
             };
-            this.removeRow = function() {};
             this.get = function() {};
             this.enableSelectAllResults = function() {}
         };

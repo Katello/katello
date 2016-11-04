@@ -32,7 +32,7 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
             scope.products = {};
             scope.filteredItems = [];
 
-            scope.$watch('repositoriesTable.rows', function (repositories) {
+            scope.$watch('table.rows', function (repositories) {
                 scope.products = extractProducts(repositories);
             });
 

@@ -28,13 +28,13 @@ describe('Service: ContentViewRepositoriesService', function() {
         expect($scope.repositoryFilter(repository)).toBe(false);
     });
 
-    it("should watch repositoriesTable rows and set the scope products list", function() {
-        $scope.repositoriesTable = {rows: []};
+    it("should watch table rows and set the scope products list", function() {
+        $scope.table = {rows: []};
         $scope.$digest();
 
         expect(Object.keys($scope.products).length).toBe(1);
 
-        $scope.repositoriesTable['rows'] = [{product: {id: 1}}];
+        $scope.table['rows'] = [{product: {id: 1}}];
         $scope.$digest();
 
         expect(Object.keys($scope.products).length).toBe(2);

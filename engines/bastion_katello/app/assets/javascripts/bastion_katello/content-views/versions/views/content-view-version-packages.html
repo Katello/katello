@@ -1,8 +1,4 @@
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <div data-block="selection-summary"></div>
-
+<div data-extend-template="layouts/partials/table.html">
   <div data-block="filters">
     <div class="row">
       <div class="form-group col-sm-4">
@@ -23,7 +19,7 @@
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="package in detailsTable.rows">
+      <tr bst-table-row ng-repeat="package in table.rows">
         <td bst-table-cell>{{ package.name }}</td>
         <td bst-table-cell>{{ package.version }}</td>
         <td bst-table-cell>{{ package.release }}</td>
@@ -31,5 +27,4 @@
       </tr>
     </tbody>
   </table>
-
 </div>

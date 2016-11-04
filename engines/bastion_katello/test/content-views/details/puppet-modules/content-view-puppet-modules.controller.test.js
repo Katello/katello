@@ -1,5 +1,5 @@
 describe('Controller: ContentViewPuppetModulesController', function() {
-    var $scope, Nutupane, ContentViewPuppetModule, puppetModule;
+    var $scope, Nutupane, ContentViewPuppetModule, puppetModule, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'));
 
@@ -9,6 +9,11 @@ describe('Controller: ContentViewPuppetModulesController', function() {
         Nutupane = function () {
             this.removeRow = function () {};
             this.table = {};
+        };
+
+        GlobalNotification = {
+            setErrorMessage: function () {},
+            setSuccessMessage: function () {}
         };
 
         ContentViewPuppetModule = $injector.get('MockResource').$new();
@@ -25,12 +30,13 @@ describe('Controller: ContentViewPuppetModulesController', function() {
         $controller('ContentViewPuppetModulesController', {
             $scope: $scope,
             Nutupane: Nutupane,
-            ContentViewPuppetModule: ContentViewPuppetModule
+            ContentViewPuppetModule: ContentViewPuppetModule,
+            GlobalNotification: GlobalNotification
         });
     }));
 
     it("puts a content view version table on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     describe("can determine the version text based on the puppet module", function () {
@@ -49,7 +55,7 @@ describe('Controller: ContentViewPuppetModulesController', function() {
 
         $scope.selectNewVersion(puppetModule);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.puppet-modules.versionsForModule',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.versionsForModule',
             {contentViewId: 1, moduleName: "puppet", moduleId: 3}
         );
     });
@@ -65,18 +71,24 @@ describe('Controller: ContentViewPuppetModulesController', function() {
         });
 
         it("and succeeds", function () {
+            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(GlobalNotification, 'setSuccessMessage');
+
             $scope.removeModule(puppetModule);
 
-            expect($scope.successMessages.length).toBe(1);
-            expect($scope.errorMessages.length).toBe(0);
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
         });
 
         it("and fails", function () {
+            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(GlobalNotification, 'setSuccessMessage');
+
             ContentViewPuppetModule.failed = true;
             $scope.removeModule(puppetModule);
 
-            expect($scope.successMessages.length).toBe(0);
-            expect($scope.errorMessages.length).toBe(1);
+            expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
+            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
         });
     });
 });

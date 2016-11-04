@@ -1,15 +1,8 @@
 <span page-title>{{ 'New Content View' | translate }}</span>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-
-  <header class="new-header details-header">
-    <h2 class="fl" translate>New Content View</h2>
-    <div class="fr">
-      <button class="btn btn-default" ui-sref="content-views.index">
-        <i class="fa fa-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
+<section data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2 translate>New Content View</h2>
   </header>
 
   <div class="row">
@@ -34,9 +27,7 @@
     </form>
   </div>
 
-  <div class="row">
-    <h3 class="col-sm-12" translate>View Details</h3>
-
+  <div data-block="content">
     <form name="contentViewForm" class="col-sm-5" novalidate role="form">
       <div bst-form-group label="{{ 'Name' | translate }}">
         <input id="name"
@@ -65,17 +56,22 @@
         </textarea>
       </div>
 
-      <div bst-form-group label="{{ 'Composite View?' | translate }}">
-        <input id="composite"
-               name="composite"
-               ng-model="contentView.composite"
-               type="checkbox"
-               tabindex="4"/>
+      <div bst-form-group>
+        <div class="checkbox">
+          <label for="composite">
+            <input id="composite"
+                   name="composite"
+                   ng-model="contentView.composite"
+                   type="checkbox"
+                   tabindex="4"/>
+            <span translate>Composite View?</span>
+          </label>
+        </div>
         <p class="help-block" translate>A composite view contains other content views.</p>
       </div>
 
       <div bst-form-buttons
-           on-cancel="transitionTo('content-views.index')"
+           on-cancel="transitionTo('content-views')"
            on-save="save(contentView)"
            working="working">
       </div>

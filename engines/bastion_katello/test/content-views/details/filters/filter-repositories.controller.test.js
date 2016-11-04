@@ -38,7 +38,7 @@ describe('Controller: FilterRepositoriesController', function() {
     }));
 
     it("puts a table object on the $scope", function() {
-        expect($scope.repositoriesTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("puts the filter on the $scope", function() {
@@ -56,10 +56,10 @@ describe('Controller: FilterRepositoriesController', function() {
 
             $controller('FilterRepositoriesController', dependencies);
 
-            expect($scope.repositoriesTable.rows[0].id).toBe(1);
-            expect($scope.repositoriesTable.rows[0].selected).toBe(true);
-            expect($scope.repositoriesTable.rows[1].id).toBe(2);
-            expect($scope.repositoriesTable.rows[1].selected).toBe(true);
+            expect($scope.table.rows[0].id).toBe(1);
+            expect($scope.table.rows[0].selected).toBe(true);
+            expect($scope.table.rows[1].id).toBe(2);
+            expect($scope.table.rows[1].selected).toBe(true);
         });
 
         it("to the filter's repositories if the filter has repositories", function() {
@@ -68,10 +68,10 @@ describe('Controller: FilterRepositoriesController', function() {
 
             $controller('FilterRepositoriesController', dependencies);
 
-            expect($scope.repositoriesTable.rows[0].id).toBe(1);
-            expect($scope.repositoriesTable.rows[0].selected).toBe(true);
-            expect($scope.repositoriesTable.rows[1].id).toBe(2);
-            expect($scope.repositoriesTable.rows[1].selected).toBe(false);
+            expect($scope.table.rows[0].id).toBe(1);
+            expect($scope.table.rows[0].selected).toBe(true);
+            expect($scope.table.rows[1].id).toBe(2);
+            expect($scope.table.rows[1].selected).toBe(false);
         });
     });
 
@@ -87,8 +87,8 @@ describe('Controller: FilterRepositoriesController', function() {
     });
 
     it("provides a way to update the selected repositories", function() {
-        $scope.repositoriesTable.getSelected = function () {};
-        spyOn($scope.repositoriesTable, 'getSelected').and.returnValue([{id: 1}, {id: 2}]);
+        $scope.table.getSelected = function () {};
+        spyOn($scope.table, 'getSelected').and.returnValue([{id: 1}, {id: 2}]);
         spyOn(Filter, 'update');
 
         $scope.filter.id = 2;

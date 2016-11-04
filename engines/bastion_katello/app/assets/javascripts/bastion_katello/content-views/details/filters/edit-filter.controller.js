@@ -5,29 +5,27 @@
  * @requires $scope
  * @requires $q
  * @requires translate
+ * @requires GlobalNotification
  *
  * @description
  *   Provides functionality for editing name and description of content view filters.
  */
 angular.module('Bastion.content-views').controller('FilterEditController',
-    ['$scope', '$q', 'translate', function ($scope, $q, translate) {
-    $scope.successMessages = [];
-    $scope.errorMessages = [];
-
+    ['$scope', '$q', 'translate', 'GlobalNotification', function ($scope, $q, translate, GlobalNotification) {
     $scope.save = function (filter) {
         var deferred = $q.defer();
         var success;
         var failure = function (response) {
             deferred.reject(response);
             angular.forEach(response.data.errors, function (errorMessage) {
-                $scope.errorMessages.push(translate("An error occurred saving the Filter: ") + errorMessage);
+                GlobalNotification.setErrorMessage(translate("An error occurred saving the Filter: ") + errorMessage);
             });
             $scope.working = false;
         };
 
         success = function (response) {
             deferred.resolve(response);
-            $scope.successMessages.push(translate('Filter Saved'));
+            GlobalNotification.setSuccessMessage(translate('Filter Saved'));
             $scope.working = false;
             $scope.$emit('filter.updated');
         };

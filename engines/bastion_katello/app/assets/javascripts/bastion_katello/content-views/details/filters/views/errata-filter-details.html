@@ -1,33 +1,29 @@
-<div ng-if="isState('content-views.details.filters.details.erratum.available')">
-  <div class="row">
-    <form name="errataForm" class="col-sm-5">
-      <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
-    </form>
-  </div>
+<div ng-if="isState('content-view.filter.erratum.available')">
+  <form name="errataForm" class="col-sm-5">
+    <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
+  </form>
 </div>
 
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <span data-block="no-rows-message" translate>No Errata to display</span>
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="no-rows-message" translate>
+    No Errata to display
+  </span>
 
   <span data-block="no-search-results-message" translate>
     Your search returned zero Errata.
   </span>
 
-  <div data-block="actions">
-    <button class="btn btn-primary fr"
-            ng-show="isState('content-views.details.filters.details.erratum.list') && permitted('edit_content_views', contentView)"
-            ng-disabled="detailsTable.working || detailsTable.numSelected === 0"
+  <div data-block="list-actions">
+    <button class="btn btn-primary"
+            ng-show="isState('content-view.filter.erratum.list') && permitted('edit_content_views', contentView)"
+            ng-disabled="table.working || table.numSelected === 0"
             ng-click="removeErrata(contentView)">
-      <i class="fa fa-trash-o"></i>
       <span translate>Remove Errata</span>
     </button>
-    <button class="btn btn-primary fr"
-            ng-show="isState('content-views.details.filters.details.erratum.available') && permitted('edit_content_views', contentView)"
-            ng-disabled="detailsTable.working || detailsTable.numSelected === 0"
+    <button class="btn btn-primary"
+            ng-show="isState('content-view.filter.erratum.available') && permitted('edit_content_views', contentView)"
+            ng-disabled="table.working || table.numSelected === 0"
             ng-click="addErrata(filter)">
-      <i class="fa fa-plus"></i>
       <span translate>Add Errata</span>
     </button>
   </div>
@@ -44,7 +40,7 @@
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="errata in detailsTable.rows" row-select="errata">
+      <tr bst-table-row ng-repeat="errata in table.rows" row-select="errata">
         <td bst-table-cell>{{ errata.errata_id }}</td>
         <td bst-table-cell>
           {{ errata.type }}
@@ -59,5 +55,4 @@
       </tr>
     </tbody>
   </table>
-
 </div>

@@ -6,13 +6,14 @@
  * @requires translate
  * @requires Filter
  * @requires ContentViewRepositoriesUtl
+ * @requires GlobalNotification
  *
  * @description
  *   Provides a way for users to select which repositories the filter applies to.
  */
 angular.module('Bastion.content-views').controller('FilterRepositoriesController',
-    ['$scope', 'translate', 'Filter', 'ContentViewRepositoriesUtil',
-    function ($scope, translate, Filter, ContentViewRepositoriesUtil) {
+    ['$scope', 'translate', 'Filter', 'ContentViewRepositoriesUtil', 'GlobalNotification',
+    function ($scope, translate, Filter, ContentViewRepositoriesUtil, GlobalNotification) {
         var refreshTable, success, error;
 
         ContentViewRepositoriesUtil($scope);
@@ -35,31 +36,31 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
                 });
             }
 
-            $scope.repositoriesTable.rows = displayedRepositories;
+            $scope.table.rows = displayedRepositories;
             $scope.showRepos = filterRepositories.length !== 0;
         };
 
         success = function (filter) {
             refreshTable(filter);
-            $scope.successMessages = [translate('Affected repositories have been updated.')];
+            GlobalNotification.setSuccessMessage(translate('Affected repositories have been updated.'));
         };
 
         error = function (response) {
-            $scope.errorMessages = response.data.errors;
+            angular.forEach(response.errors, function (responseError) {
+                GlobalNotification.setErrorMessage(responseError);
+            });
         };
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
         $scope.showRepos = false;
-        $scope.repositoriesTable = {};
+        $scope.table = {};
 
         $scope.filter.$promise.then(refreshTable);
 
         $scope.updateRepositories = function () {
-            var repositoryIds = _.map($scope.repositoriesTable.getSelected(), 'id');
+            var repositoryIds = _.map($scope.table.getSelected(), 'id');
 
             if (repositoryIds.length === 0) {
-                $scope.errorMessages = [translate('You must select at least one repository.')];
+                GlobalNotification.setErrorMessage(translate('You must select at least one repository.'));
             } else {
                 Filter.update({id: $scope.filter.id, 'repository_ids': repositoryIds}, success, error);
             }

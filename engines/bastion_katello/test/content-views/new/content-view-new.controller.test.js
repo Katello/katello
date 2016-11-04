@@ -18,7 +18,6 @@ describe('Controller: NewContentViewController', function() {
         };
 
         $scope.contentViewForm = $injector.get('MockForm');
-        $scope.$parent.table = {addRow: function () {}};
 
         dependencies = {
             $scope: $scope,
@@ -37,20 +36,17 @@ describe('Controller: NewContentViewController', function() {
     it('should save a new content view resource', function() {
         var contentView = $scope.contentView;
 
-        spyOn($scope.$parent.table, 'addRow');
         spyOn($scope, 'transitionTo');
         spyOn(contentView, '$save').and.callThrough();
         $scope.save(contentView);
 
         expect(contentView.$save).toHaveBeenCalled();
-        expect($scope.$parent.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.repositories.yum.available',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.repositories.yum.available',
                                                          {contentViewId: 1})
     });
 
     it("should save a new composite content view resource", function () {
         var contentView = $scope.contentView;
-        spyOn($scope.$parent.table, 'addRow');
         spyOn($scope, 'transitionTo');
         spyOn(contentView, '$save').and.callThrough();
 
@@ -58,8 +54,7 @@ describe('Controller: NewContentViewController', function() {
         $scope.save(contentView);
 
         expect(contentView.$save).toHaveBeenCalled();
-        expect($scope.$parent.table.addRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.components.composite-content-views.available',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.components.composite-content-views.available',
             {contentViewId: 1})
     });
 

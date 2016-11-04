@@ -80,7 +80,7 @@
         nutupane.masterOnly = true;
 
         $scope.nutupane = nutupane;
-        $scope.detailsTable = nutupane.table;
+        $scope.table = nutupane.table;
 
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
         $scope.repositories = [];

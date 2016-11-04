@@ -17,7 +17,6 @@ describe('Controller: ContentViewHistoryController', function() {
             this.table = {
                 showColumns: function() {}
             };
-            this.removeRow = function() {};
             this.get = function() {};
         };
 
@@ -32,7 +31,7 @@ describe('Controller: ContentViewHistoryController', function() {
     }));
 
     it('defines details table', function() {
-        expect($scope.detailsTable).not.toBe(undefined);
+        expect($scope.table).not.toBe(undefined);
     });
 
 });

@@ -1,5 +1,5 @@
 describe('Controller: ContentViewPuppetModuleVersionsController', function() {
-    var $scope, $controller, dependencies, ContentView, ContentViewPuppetModule, puppetModule;
+    var $scope, $controller, dependencies, ContentView, ContentViewPuppetModule, puppetModule, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'))
 
@@ -15,6 +15,10 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
             author: 'Geppetto'
         };
 
+        GlobalNotification = {
+            setSuccessMessage: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
         $scope.transitionTo = function () {};
 
@@ -24,58 +28,50 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
         dependencies = {
             $scope: $scope,
             ContentView: ContentView,
-            ContentViewPuppetModule: ContentViewPuppetModule
+            ContentViewPuppetModule: ContentViewPuppetModule,
+            GlobalNotification: GlobalNotification
         };
 
         $controller('ContentViewPuppetModuleVersionsController', dependencies);
     }));
 
-    it("sets a versions loading indicator on the $scope", function() {
-        expect($scope.versionsLoading).toBe(true);
-    });
-
-    it("sets the puppet module versions on the $scope", function () {
-        ContentView.availablePuppetModules = function (data, callback) {
-            callback();
-        };
-
-        spyOn(ContentView, 'availablePuppetModules').and.callThrough();
-
-        $controller('ContentViewPuppetModuleVersionsController', dependencies);
-
-        expect(ContentView.availablePuppetModules).toHaveBeenCalledWith({id: 1, name: 'puppet'}, jasmine.any(Function));
-        expect($scope.versionsLoading).toBe(false);
+    it("sets a nutupane table on the $scope", function() {
+        expect($scope.table).toBeDefined();
     });
 
     it("provides a way to create a new content view puppet module", function () {
         spyOn($scope, 'transitionTo');
+        spyOn(GlobalNotification, 'setSuccessMessage');
 
         $scope.selectVersion(puppetModule);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.puppet-modules.list',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.list',
             {contentViewId: 1});
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("provides a way to updating an existing content view puppet module", function () {
         spyOn($scope, 'transitionTo');
+        spyOn(GlobalNotification, 'setSuccessMessage');
 
         $scope.$stateParams.moduleId = 3;
         $scope.selectVersion(puppetModule);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.puppet-modules.list',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.list',
             {contentViewId: 1});
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("provides a way to select the latest version of a puppet module", function () {
         spyOn($scope, 'transitionTo');
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         puppetModule.useLatest = true;
 
         $scope.selectVersion(puppetModule);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.puppet-modules.list',
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.list',
             {contentViewId: 1});
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
     });
 });

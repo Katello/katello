@@ -31,6 +31,10 @@ describe('Controller: ContentViewVersionsController', function() {
         expect($scope.table).toBeDefined();
     });
 
+    it("defines a method for deloading the versions", function() {
+        expect($scope.reloadVersions).toBeDefined();
+    });
+
     it("correctly hide a version's progress", function() {
         var version = {active_history: [], task: {state: 'running', progressbar: {type: 'success'}}};
         expect($scope.hideProgress(version)).toBe(true);
