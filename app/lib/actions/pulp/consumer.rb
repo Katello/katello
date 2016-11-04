@@ -15,7 +15,7 @@ module Actions
             if humanized_errors
               ret.concat(humanized_errors)
             end
-            return ret.join("\n")
+            return ret.sort.join("\n")
           else
             humanized_errors #show any errors if no packages were updated
           end
@@ -31,6 +31,12 @@ module Actions
           task_result && task_result[:details]
         end
 
+        def task_erratum_details
+          task_result_details &&
+              task_result_details[:erratum] &&
+              task_result_details[:erratum][:details]
+        end
+
         def task_rpm_details
           task_result_details &&
               task_result_details[:rpm] &&
@@ -41,6 +47,12 @@ module Actions
           task_result_details &&
               task_result_details[:package_group] &&
               task_result_details[:package_group][:details]
+        end
+
+        def task_erratum_succeeded?
+          task_result_details &&
+              task_result_details[:erratum] &&
+              task_result_details[:erratum][:succeeded] == true
         end
 
         def task_rpm_succeeded?
@@ -71,6 +83,12 @@ module Actions
               task_package_group_details[:resolved] + task_package_group_details[:deps]
             else
               task_package_group_details[:message]
+            end
+          elsif task_erratum_details
+            if task_erratum_succeeded?
+              task_erratum_details[:resolved] + task_erratum_details[:deps]
+            else
+              task_erratum_details[:message]
             end
           end
         end

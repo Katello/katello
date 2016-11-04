@@ -34,8 +34,8 @@ module ::Actions::Katello::Host::PackageGroup
 
         specify do
           action.humanized_output.must_equal <<-OUTPUT.chomp
-amanda-client-2.6.1p2-8.el6.x86_64
 amanda-2.6.1p2-8.el6.x86_64
+amanda-client-2.6.1p2-8.el6.x86_64
             OUTPUT
         end
       end
@@ -79,8 +79,8 @@ emacss: No package(s) available to install
 
           specify do
             action.humanized_output.must_equal <<-OUTPUT.chomp
-amanda-client-2.6.1p2-8.el6.x86_64
 amanda-2.6.1p2-8.el6.x86_64
+amanda-client-2.6.1p2-8.el6.x86_64
             OUTPUT
           end
         end
