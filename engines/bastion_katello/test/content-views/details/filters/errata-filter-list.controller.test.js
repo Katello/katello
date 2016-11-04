@@ -1,6 +1,5 @@
 describe('Controller: ErrataFilterListController', function() {
-    var $scope,
-        Rule;
+    var $scope, Rule, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -18,6 +17,10 @@ describe('Controller: ErrataFilterListController', function() {
                 };
             };
 
+        GlobalNotification = {
+            setSuccessMessage: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
         $scope.filter = Filter.get({id: 1});
         $scope.filter.rules = [
@@ -32,18 +35,21 @@ describe('Controller: ErrataFilterListController', function() {
             translate: translate,
             Nutupane: Nutupane,
             Filter: Filter,
-            Rule: Rule
+            Rule: Rule,
+            GlobalNotification: GlobalNotification
         });
     }));
 
     it("puts a table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("should provide a method to remove errata from the filter", function () {
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.removeErrata();
 
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.filter.rules.length).toBe(0);
     });
 

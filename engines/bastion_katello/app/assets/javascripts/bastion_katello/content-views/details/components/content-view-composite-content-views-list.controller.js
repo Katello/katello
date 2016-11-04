@@ -21,7 +21,8 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeContentV
             'full_result': true
         }, 'contentViewComponents');
 
-        $scope.detailsTable = nutupane.table;
+        nutupane.masterOnly = true;
+        $scope.table = nutupane.table;
 
         $scope.saveContentViewComponent = function (contentViewComponent) {
             var component = {

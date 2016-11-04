@@ -1,13 +1,17 @@
 describe('Controller: PackageGroupFilterListController', function() {
-    var $scope,
-        Rule;
+    var $scope, Rule, Nutupane, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             Filter = $injector.get('MockResource').$new(),
-            translate = $injector.get('translateMock'),
+            translate = $injector.get('translateMock');
+
+            GlobalNotification = {
+                setSuccessMessage: function () {}
+            };
+
             Nutupane = function() {
                 this.table = {};
                 this.getAllSelectedResults = function () {
@@ -31,18 +35,21 @@ describe('Controller: PackageGroupFilterListController', function() {
             translate: translate,
             Filter: Filter,
             Rule: Rule,
-            Nutupane: Nutupane
+            Nutupane: Nutupane,
+            GlobalNotification: GlobalNotification
         });
     }));
 
     it("puts a table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("should provide a method to remove package groups from the filter", function () {
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.removePackageGroups();
 
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.filter.rules.length).toBe(0);
     });
 

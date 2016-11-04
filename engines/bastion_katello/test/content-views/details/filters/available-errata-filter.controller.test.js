@@ -1,5 +1,5 @@
 describe('Controller: AvailableErrataFilterController', function() {
-    var $scope, Rule;
+    var $scope, Rule, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -28,6 +28,10 @@ describe('Controller: AvailableErrataFilterController', function() {
                 }
             };
 
+        GlobalNotification = {
+            setSuccessMessage: function () {}
+        };
+
         Rule = $injector.get('MockResource').$new();
         spyOn(Rule, 'save');
 
@@ -40,20 +44,23 @@ describe('Controller: AvailableErrataFilterController', function() {
             translate: translate,
             Nutupane: Nutupane,
             Filter: Filter,
-            Rule: Rule
+            Rule: Rule,
+            GlobalNotification: GlobalNotification
         });
     }));
 
     it("puts a table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("should provide a method to add errata to the filter", function () {
         spyOn($scope.nutupane, 'refresh');
         spyOn($scope.nutupane.table, 'selectAllResults');
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.addErrata($scope.filter);
 
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.nutupane.refresh).toHaveBeenCalled();
         expect($scope.nutupane.table.selectAllResults).toHaveBeenCalledWith(false);
     });

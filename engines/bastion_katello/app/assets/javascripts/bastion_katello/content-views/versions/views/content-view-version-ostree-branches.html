@@ -1,8 +1,4 @@
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <div data-block="selection-summary"></div>
-
+<div data-extend-template="layouts/partials/table.html">
   <div data-block="filters">
     <div class="row">
       <div class="form-group col-sm-4">
@@ -23,7 +19,7 @@
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="branch in detailsTable.rows">
+      <tr bst-table-row ng-repeat="branch in table.rows">
         <td bst-table-cell>{{ branch.name }}</td>
         <td bst-table-cell>{{ branch.version }}</td>
         <td bst-table-cell>{{ branch.commit }}</td>

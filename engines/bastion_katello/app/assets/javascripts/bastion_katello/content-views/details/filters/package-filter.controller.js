@@ -5,11 +5,13 @@
  * @requires $scope
  * @requires translate
  * @requires Rule
+ * @requires Package
+ * @requires GlobalNotification
  *
  * @description
  */
 angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', 'translate', 'Rule', 'Package', function ($scope, translate, Rule, Package) {
+    ['$scope', 'translate', 'Rule', 'Package', 'GlobalNotification', function ($scope, translate, Rule, Package, GlobalNotification) {
 
         function type(rule) {
             var typeId;
@@ -30,7 +32,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
         }
 
         function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
+            GlobalNotification.setErrorMessage(response.data.displayMessage);
         }
 
         function addType(rules) {
@@ -50,7 +52,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                         $scope.filter.rules.splice(index, 1);
                     }
                 });
-                $scope.successMessages = [translate('Package successfully removed.')];
+                GlobalNotification.setSuccessMessage(translate('Package successfully removed.'));
             };
 
             Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
@@ -65,11 +67,8 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             addType([rule]);
             $scope.filter.rules.push(rule);
 
-            $scope.successMessages = [translate('Package successfully added.')];
+            GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
         }
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         $scope.rule = {
             type: 'all',
@@ -79,6 +78,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
 
         $scope.filter.$promise.then(function (filter) {
             addType(filter.rules);
+            $scope.table = {rows: filter.rules};
         });
 
         $scope.addRule = function (rule, filter) {
@@ -96,7 +96,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 rule.previous = {};
                 rule.editMode = false;
                 rule.working = false;
-                $scope.successMessages = [translate('Package successfully updated.')];
+                GlobalNotification.setSuccessMessage(translate('Package successfully updated.'));
             };
 
             error = function () {

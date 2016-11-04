@@ -1,49 +1,37 @@
 <span page-title ng-model="contentView">{{ 'Available Puppet Modules for Content View:' | translate }} {{ contentView.name }}</span>
 
-<ol class="breadcrumb">
-  <li class="active">
-    <a ui-sref="content-views.details.puppet-modules.list">
-      {{ "Module List" | translate }}
-    </a>
-  </li>
-</ol>
+<header data-block="sub-header">
+  <h3 translate>
+    Select A New Puppet Module To Add
+  </h3>
+</header>
 
-<div data-extend-template="layouts/details-nutupane.html">
-  <div class="loading-mask loading-mask-panel" ng-show="namesLoading">
-    <i class="fa fa-spinner fa-spin"></i>
-    {{ "Loading..." | translate }}
-  </div>
-
-  <a ui-sref="content-views.details.puppet-modules.list" >
-    <i class="fa fa-double-angle-left"></i>
-    {{ "Back to Module List" | translate }}
-  </a>
-
-  <span data-block="header" translate>Select A New Puppet Module To Add</span>
-  <span data-block="messages"></span>
-  <div data-block="search">
-    <div class="input-group input-group">
-    <input type="text"
-           class="form-control"
-           placeholder="{{ 'Search...' | translate }}"
-           ng-model="detailsTable.searchTerm"
-           bst-on-enter="detailsTable.search(detailsTable.searchTerm)"
-           ng-trim="false"
-           uib-typeahead="item.label for item in detailsTable.fetchAutocomplete($viewValue)"
-           typeahead-template-url="components/views/autocomplete-scoped-search.html"/>
-    <span class="input-group-btn">
-      <button ng-click="detailsTable.search(detailsTable.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-    </span>
-    </div>
-  </div>
-
-  <span data-block="selection-summary"></span>
-  <span data-block="no-rows-message" translate>No puppet modules found</span>
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="no-rows-message" translate>
+    No puppet modules found
+  </span>
 
   <span data-block="no-search-results-message" translate>
     Your search returned zero Puppet Modules.
   </span>
 
+  <div data-block="search">
+    <div class="col-sm-3">
+      <div class="input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Filter...' | translate }}"
+               ng-model="table.searchTerm"
+               bst-on-enter="table.search(table.searchTerm)"
+               ng-trim="false"
+               uib-typeahead="item.label for item in table.fetchAutocomplete($viewValue)"
+               typeahead-template-url="components/views/autocomplete-scoped-search.html"/>
+        <span class="input-group-btn">
+          <button ng-click="table.search(table.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+        </span>
+      </div>
+    </div>
+  </div>
 
   <div data-block="table">
     <table class="table table-striped table-bordered">
@@ -55,7 +43,7 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="item in detailsTable.rows | filter:filterTerm">
+        <tr bst-table-row ng-repeat="item in table.rows">
           <td >{{ item.name }}</td>
           <td  class="action-cell">
             <button translate
@@ -69,4 +57,3 @@
     </table>
   </div>
 </div>
-

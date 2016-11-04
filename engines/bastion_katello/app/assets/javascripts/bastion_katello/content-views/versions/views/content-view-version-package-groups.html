@@ -1,16 +1,12 @@
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <div data-block="selection-summary"></div>
-
-    <div data-block="filters">
-      <div class="row">
-        <div class="form-group col-sm-4">
-          <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories">
-          </select>
-        </div>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="filters">
+    <div class="row">
+      <div class="form-group col-sm-4">
+        <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories">
+        </select>
       </div>
     </div>
+  </div>
 
   <table data-block="table" class="table table-striped table-bordered">
     <thead>
@@ -21,11 +17,10 @@
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="packageGroup in detailsTable.rows">
+      <tr bst-table-row ng-repeat="packageGroup in table.rows">
         <td bst-table-cell>{{ packageGroup.name }}</td>
         <td bst-table-cell>{{ packageGroup.repository.name }}</td>
       </tr>
     </tbody>
   </table>
-
 </div>

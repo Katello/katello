@@ -28,9 +28,9 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableDockerRe
         },
         'queryUnpaged');
 
-        nutupane.load();
+        nutupane.masterOnly = true;
 
-        $scope.repositoriesTable = nutupane.table;
+        $scope.table = nutupane.table;
 
         $scope.addRepositories = function (contentView) {
             $scope.addSelectedRepositoriesToContentView(nutupane, contentView);

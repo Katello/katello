@@ -40,7 +40,7 @@ describe('Controller: ContentViewFileRepositoriesListController', function() {
     }));
 
     it("puts a repositories table on the scope", function() {
-        expect($scope.repositoriesTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it('provides a method to add repositories to a content view', function() {

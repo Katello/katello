@@ -43,8 +43,8 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
 
             return term + " AND " + addition;
         };
-        $scope.detailsTable = nutupane.table;
-        $scope.detailsTable.closeItem = function () {};
+        $scope.table = nutupane.table;
+        $scope.table.closeItem = function () {};
 
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
         $scope.initEnvironmentWatch($scope);

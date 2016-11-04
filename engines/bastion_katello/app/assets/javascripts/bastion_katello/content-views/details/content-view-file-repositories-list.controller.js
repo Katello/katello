@@ -27,7 +27,7 @@
 
         nutupane.load();
 
-        $scope.repositoriesTable = nutupane.table;
+        $scope.table = nutupane.table;
 
         $scope.removeRepositories = function () {
             $scope.removeSelectedRepositoriesFromContentView(nutupane, $scope.contentView);

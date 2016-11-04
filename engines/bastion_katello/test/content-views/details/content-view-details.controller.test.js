@@ -1,7 +1,5 @@
 describe('Controller: ContentViewDetailsController', function() {
-    var $scope,
-        ContentView,
-        newContentView;
+    var $scope, ContentView, newContentView, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -16,20 +14,23 @@ describe('Controller: ContentViewDetailsController', function() {
         ContentViewVersion = $injector.get('MockResource').$new();
         AggregateTask = {newAggregate: function(){}};
 
+        GlobalNotification = {
+            setSuccessMessage: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
         $scope.translate = function (value) { return value;}
 
         $scope.$stateParams = {contentViewId: 1};
-        $scope.table = {
-            addRow: function() {}
-        };
+        $scope.table = {};
 
         $controller('ContentViewDetailsController', {
             $scope: $scope,
             ContentView: ContentView,
             ContentViewVersion: ContentViewVersion,
             AggregateTask: AggregateTask,
-            translate: translate
+            translate: translate,
+            GlobalNotification: GlobalNotification
         });
     }));
 
@@ -37,23 +38,19 @@ describe('Controller: ContentViewDetailsController', function() {
         expect($scope.contentView).toBeDefined();
     });
 
-    it("defines a method for deloading the versions", function() {
-        expect($scope.reloadVersions).toBeDefined();
-    });
-
     it('provides a method to save a product', function() {
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.save($scope.contentView);
 
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should be able to copy the content view', function(){
         spyOn($scope, 'transitionTo');
-        spyOn($scope.table, 'addRow');
         $scope.copy(name);
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.info', {contentViewId: newContentView.id});
-        expect($scope.table.addRow).toHaveBeenCalledWith(newContentView);
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.info', {contentViewId: newContentView.id});
     });
 
     it("provides a method to get the available versions for a composite", function () {
