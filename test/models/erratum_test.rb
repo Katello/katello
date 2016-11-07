@@ -66,10 +66,22 @@ module Katello
     end
 
     def test_applicable_to_hosts_dashboard
-      errata = Erratum.applicable_to_hosts_dashboard([@host, @host_without_errata])
+      errata = Erratum.applicable_to_hosts_dashboard(::Host.where(:id => [@host.id, @host_without_errata.id]))
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
+    end
+
+    def test_applicable_to_hosts_dashboard_respects_filter
+      assert Erratum.applicable_to_hosts_dashboard(::Host.search_for("compute_resource = SOMENAME")).empty?
+      host = FactoryGirl.build(:host, :with_content, :with_subscription,
+                                      :content_view => katello_content_views(:library_dev_view),
+                                      :lifecycle_environment => katello_environments(:library),
+                                      :compute_resource_id => compute_resources(:one).id)
+      host.save
+      host.content_facet.applicable_errata << @security
+      host.save
+      refute Erratum.applicable_to_hosts_dashboard(::Host.search_for("compute_resource = #{compute_resources(:one).name}")).empty?
     end
 
     def test_not_applicable_to_hosts
