@@ -87,7 +87,7 @@ module Katello
       host_ids = params[:host_ids].map(&:to_i)
 
       @hosts = ::Host::Managed.where(id: host_ids)
-      @editable_hosts = @hosts.authorized(:edit_host)
+      @editable_hosts = @hosts.authorized(:edit_hosts)
 
       already_added_host_ids = @host_collection.host_ids & host_ids
       unfound_host_ids = host_ids - @hosts.pluck(:id)
@@ -121,7 +121,7 @@ module Katello
       host_ids = params[:host_ids].map(&:to_i)
 
       @hosts = ::Host::Managed.where(id: host_ids)
-      @editable_hosts = @hosts.authorized(:edit_host)
+      @editable_hosts = @hosts.authorized(:edit_hosts)
 
       already_removed_host_ids = @hosts.pluck(:id) - @host_collection.host_ids
       unfound_host_ids = host_ids - @hosts.pluck(:id)
