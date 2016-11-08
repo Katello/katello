@@ -39,6 +39,8 @@ module Katello
 
     def test_non_admin
       User.current = User.find(users(:restricted).id)
+      User.current.organizations = [@host.organization, @view.organization]
+      User.current.locations = [@host.location]
 
       refute @view.version(@library).all_hosts_editable?(@library)
     end

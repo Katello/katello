@@ -179,7 +179,7 @@ class ActiveSupport::TestCase
 
   def set_user(user = nil)
     user ||= users(:admin)
-    user = User.find(user.id) if user.id
+    user = User.unscoped.find(user.id) if user.id
     User.current = user
   end
 

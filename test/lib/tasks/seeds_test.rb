@@ -13,7 +13,8 @@ module Katello
 
     def seed
       # Authorisation is disabled usually when run from a rake db:* task
-      User.current = FactoryGirl.build(:user, :admin => true)
+      User.current = FactoryGirl.build(:user, :admin => true,
+                                       :organizations => [], :locations => [])
       load File.expand_path("#{Rails.root}/db/seeds.rb", __FILE__)
     end
 
@@ -57,10 +58,10 @@ module Katello
   class ProvisioningTemplatesTest < SeedsTest
     test "Make sure provisioning templates exist" do
       seed
-      assert ProvisioningTemplate.where(:default => true).exists?
+      assert ProvisioningTemplate.unscoped.where(:default => true).exists?
       template_names = ["Katello Kickstart Default", "Katello Kickstart Default User Data", "Katello Kickstart Default Finish", "subscription_manager_registration", "Katello Atomic Kickstart Default"]
 
-      ProvisioningTemplate.where(:default => true, :vendor => "Katello").each do |template|
+      ProvisioningTemplate.unscoped.where(:default => true, :vendor => "Katello").each do |template|
         assert template_names.include?(template.name)
         refute_empty template.organizations
       end

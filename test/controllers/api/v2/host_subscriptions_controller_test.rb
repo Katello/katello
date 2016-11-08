@@ -9,6 +9,8 @@ module Katello
 
     def models
       @host = FactoryGirl.create(:host, :with_subscription)
+      users(:restricted).update_attribute(:organizations, [@host.organization])
+      users(:restricted).update_attribute(:locations, [@host.location])
       @pool = katello_pools(:pool_one)
       @entitlements = [{:pool => {:id => @pool.cp_id}, :quantity => '3'}.with_indifferent_access]
     end

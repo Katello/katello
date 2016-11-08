@@ -450,6 +450,8 @@ module Katello
       end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
+        User.current.update_attribute(:organizations, [host.organization])
+        User.current.update_attribute(:locations, [host.location])
         put :remove, :id => content_view.id,
                      :environment_ids => env_ids,
                      :system_content_view_id => alternate_cv.id,
