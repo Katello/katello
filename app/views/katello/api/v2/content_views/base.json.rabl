@@ -5,8 +5,11 @@ attributes :composite
 attributes :repository_ids
 attributes :component_ids
 attributes :default
-attributes :next_version
 attributes :force_puppet_environment
+
+node :next_version do |content_view|
+  content_view.next_version.to_f.to_s
+end
 
 node :last_published do |content_view|
   unless content_view.versions.empty?
