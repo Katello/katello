@@ -7,9 +7,11 @@ module ControllerSupport
     permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
 
     permissions.each do |permission|
-      user = User.find(users(:restricted).id)
+      user = User.unscoped.find(users(:restricted).id)
       user.organizations = params[:organizations] if params[:organizations].present?
-      setup_user_with_permissions(permission, user)
+      as_admin do
+        setup_user_with_permissions(permission, user)
+      end
 
       action = params[:action]
       req = params[:request]

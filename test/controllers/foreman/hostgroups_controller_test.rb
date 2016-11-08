@@ -22,7 +22,7 @@ class HostgroupsControllerTest < ActionController::TestCase
     post :create, :hostgroup => {:name => "foobar", :content_view_id => @library_view.id,
                                  :lifecycle_environment_id => @library.id}
 
-    assert_equal 1, Hostgroup.where(:name => "foobar").count
+    assert_equal 1, Hostgroup.unscoped.where(:name => "foobar").count
     assert_response 302
   end
 end

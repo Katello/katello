@@ -14,9 +14,9 @@ module Katello
       @content_view = katello_content_views(:acme_default)
       @environment = katello_environments(:library)
 
+      @organization = get_organization
       @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                  :lifecycle_environment => @environment, :organization => @content_view.organization)
-      @organization = get_organization
     end
 
     describe "register with activation key should fail" do

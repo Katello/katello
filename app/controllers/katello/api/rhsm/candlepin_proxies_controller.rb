@@ -298,7 +298,7 @@ module Katello
         User.as_anonymous_admin { Resources::Candlepin::Consumer.get(uuid) }
         fail HttpErrors::NotFound, _("Couldn't find consumer '%s'") % uuid
       end
-      @host = facet.host
+      @host = ::Host::Managed.unscoped.find(facet.host_id)
     end
 
     def find_content_view_environment

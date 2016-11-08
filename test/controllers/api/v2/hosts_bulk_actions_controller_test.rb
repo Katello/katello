@@ -150,9 +150,15 @@ module Katello
       assert_response :success
     end
 
+    def allow_restricted_user_to_see_host
+      users(:restricted).update_attribute(:organizations, [@org])
+      users(:restricted).update_attribute(:locations, [@host1.location, @host2.location].uniq)
+    end
+
     def test_permissions
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
 
       assert_protected_action(:bulk_add_host_collections, good_perms, bad_perms) do
         put :bulk_add_host_collections,  :included => {:ids => @host_ids},
@@ -192,6 +198,7 @@ module Katello
     def test_environment_content_view_permission
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
 
       assert_protected_action(:environment_content_view, good_perms, bad_perms) do
         put :environment_content_view, :included => {:ids => @host_ids}, :organization_id => @org.id,

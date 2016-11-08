@@ -81,6 +81,10 @@ module Katello
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:apply, good_perms, bad_perms) do
+        @host.update_attribute(:organization, taxonomies(:organization1))
+        @host.update_attribute(:location, taxonomies(:location1))
+        User.current.update_attribute(:organizations, [@host.organization])
+        User.current.update_attribute(:locations, [@host.location])
         put :apply, :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231)
       end
     end

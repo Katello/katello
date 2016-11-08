@@ -104,6 +104,10 @@ module Katello
       bad_perms = [@update_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:index, good_perms, bad_perms) do
+        User.current.update_attribute(:organizations, [taxonomies(:organization1)])
+        @host.update_attribute(:organization, taxonomies(:organization1))
+        User.current.update_attribute(:locations, [taxonomies(:location1)])
+        @host.update_attribute(:location, taxonomies(:location1))
         get :index, :host_id => @host.id
       end
     end
@@ -111,6 +115,12 @@ module Katello
     def test_permissions
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @create_permission, @destroy_permission]
+
+      # Ensure the user that will run the actions has access to the host taxonomies
+      users(:restricted).update_attribute(:organizations, [taxonomies(:organization1)])
+      @host.update_attribute(:organization, taxonomies(:organization1))
+      users(:restricted).update_attribute(:locations, [taxonomies(:location1)])
+      @host.update_attribute(:location, taxonomies(:location1))
 
       assert_protected_action(:install, good_perms, bad_perms) do
         put :install, :host_id => @host.id, :packages => ["foo*"]
