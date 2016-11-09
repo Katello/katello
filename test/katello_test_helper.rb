@@ -237,6 +237,10 @@ class ActiveSupport::TestCase
     loc.katello_default = true
     loc.save!
   end
+
+  def reset_default_location
+    Location.where(katello_default: true).update_all(katello_default: false)
+  end
 end
 
 def disable_lazy_accessors
