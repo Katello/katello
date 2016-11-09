@@ -40,6 +40,11 @@ module Katello
           # In the future, we should have a better way to identify the 'default' location
           Location.where(:katello_default => true).first
         end
+
+        def default_location_ids
+          return [] unless default_location
+          [default_location.id]
+        end
       end
     end
   end

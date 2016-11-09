@@ -29,5 +29,11 @@ module Katello
         loc.save!
       end
     end
+
+    def test_default_location_ids
+      loc_ids = Location.default_location_ids
+      refute_nil loc_ids
+      assert_equal(loc_ids, [Location.default_location.id])
+    end
   end
 end
