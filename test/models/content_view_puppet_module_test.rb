@@ -58,5 +58,22 @@ module Katello
       )
       assert_equal nil, content_view_puppet_module.computed_version
     end
+
+    def test_latest_in_modules_by_author
+      repo = katello_repositories(:p_forge)
+      puppet_module_apt = katello_puppet_modules(:test_apt3)
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => puppet_module_apt.uuid,
+        :author => puppet_module_apt.author,
+        :content_view => @library_view
+      )
+      content_view_puppet_module.save!
+      repo.puppet_modules = [katello_puppet_modules(:test_apt1),
+                             katello_puppet_modules(:test_apt2),
+                             katello_puppet_modules(:test_apt3)]
+      modules = PuppetModule.in_repositories(repo)
+      modules = modules.where(:name => puppet_module_apt.name)
+      assert_equal true, content_view_puppet_module.latest_in_modules_by_author?(modules)
+    end
   end
 end
