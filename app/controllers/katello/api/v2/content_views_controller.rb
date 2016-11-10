@@ -92,17 +92,28 @@ module Katello
     param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
     param :name, String, :desc => N_("module name to restrict modules for"), :required => false
     def available_puppet_modules
-      current_uuids = @view.content_view_puppet_modules.where("uuid is NOT NULL").pluck(:uuid)
+      current_cv_puppet_modules = @view.content_view_puppet_modules.where("uuid is NOT NULL")
+      current_uuids = current_cv_puppet_modules.pluck(:uuid)
       repositories = @view.organization.library.puppet_repositories
-
       query = PuppetModule.in_repositories(repositories)
-      query = query.where(:name => params[:name]) if params[:name]
+      selected_latest_versions = []
+      if params[:name]
+        query = query.where(:name => params[:name])
+        if current_uuids.present?
+          module_by_name = current_cv_puppet_modules.find_by(:name => params[:name])
+          if module_by_name && module_by_name.latest_in_modules_by_author?(query)
+            current_uuids.delete(module_by_name.uuid)
+            selected_latest_versions.push(module_by_name.uuid)
+          end
+        end
+      end
       query = query.where("#{PuppetModule.table_name}.uuid NOT in (?)", current_uuids) if current_uuids.present?
       custom_sort = ->(sort_query) { sort_query.order('author, name, sortable_version DESC') }
-
-      respond_for_index :template => 'puppet_modules',
-                        :collection => scoped_search(query, nil, nil, :resource_class => PuppetModule,
-                                                     :custom_sort => custom_sort)
+      sorted_records = scoped_search(query, nil, nil, :resource_class => PuppetModule, :custom_sort => custom_sort)
+      if params[:name]
+        sorted_records[:results] = add_use_latest_records(sorted_records[:results].to_a, selected_latest_versions)
+      end
+      respond_for_index :template => 'puppet_modules', :collection => sorted_records
     end
 
     api :GET, "/content_views/:id/available_puppet_module_names",
@@ -199,6 +210,18 @@ module Katello
     def find_environment
       return if !params.key?(:environment_id) && params[:action] == "index"
       @environment = KTEnvironment.find(params[:environment_id])
+    end
+
+    def add_use_latest_records(module_records, selected_latest_versions)
+      module_records.group_by(&:author).each_pair do |_author, records|
+        top_rec = records[0]
+        latest = top_rec.dup
+        latest.version = _("Always Use Latest (currently %{version})") % { version: latest.version }
+        latest.uuid = nil
+        module_records.delete(top_rec) if selected_latest_versions.include?(top_rec.uuid)
+        module_records.push(latest)
+      end
+      module_records
     end
   end
 end
