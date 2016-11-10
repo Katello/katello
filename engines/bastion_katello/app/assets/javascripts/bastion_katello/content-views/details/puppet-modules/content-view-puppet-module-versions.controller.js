@@ -34,10 +34,6 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersi
                 name: module.name
             };
 
-            if (module.useLatest) {
-                contentViewPuppetModuleData.uuid = null;
-            }
-
             contentViewPuppetModule = new ContentViewPuppetModule(contentViewPuppetModuleData);
 
             if ($scope.$stateParams.moduleId) {
