@@ -35,16 +35,7 @@ angular.module('Bastion.content-views').factory('ContentView',
                 }},
                 availablePuppetModules: {method: 'GET', params: {action: 'available_puppet_modules'},
                     transformResponse: function (data) {
-                        var response = angular.fromJson(data);
-
-                        angular.forEach(_.groupBy(response.results, 'author'), function (puppetModules) {
-                            var latest = angular.copy(puppetModules[0]);
-                            latest.version = translate('Always Use Latest (currently %s)').replace('%s', latest.version);
-                            latest.useLatest = true;
-                            response.results.push(latest);
-                        });
-
-                        return response;
+                        return angular.fromJson(data);
                     }
                 },
                 availablePuppetModuleNames: {method: 'GET', params: {action: 'available_puppet_module_names'}},

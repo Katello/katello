@@ -34,6 +34,11 @@ module Katello
       puppet_module.try(:version)
     end
 
+    def latest_in_modules_by_author?(puppet_module_list)
+      latest_from_list = puppet_module_list.where(:author => self.author).order(:sortable_version => :desc).first
+      self.computed_version.eql?(latest_from_list.try(:version))
+    end
+
     before_save :set_attributes
 
     private

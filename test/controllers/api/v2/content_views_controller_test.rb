@@ -197,6 +197,35 @@ module Katello
       assert_equal '1.12.0', results.first['version']
     end
 
+    def test_available_puppet_modules_with_use_latest
+      create(:puppet_module, :version => "1.2.0")
+      create(:puppet_module, :version => "1.3.0")
+      PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
+
+      get :available_puppet_modules, :id => @library_dev_staging_view.id, :name => "trystero"
+      results = JSON.parse(response.body)['results']
+
+      assert_equal '1.3.0', results.first['version']
+      use_latest_rec = results.last
+      assert_equal 'Always Use Latest (currently 1.3.0)', use_latest_rec['version']
+      assert_equal nil, use_latest_rec['uuid']
+    end
+
+    def test_available_puppet_modules_when_latest_module_already_selected
+      content_view = katello_content_views(:library_view)
+      create(:puppet_module, :name => 'm1', :author => 'kavy', :version => "1.2.0")
+      puppet_module2 = create(:puppet_module, :name => 'm1', :author => 'kavy', :version => "1.3.0")
+      cv_puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_m1_module).id)
+      cv_puppet_module.uuid = puppet_module2.uuid
+      cv_puppet_module.save
+      PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
+      get :available_puppet_modules, :id => content_view.id, :name => 'm1'
+      results = JSON.parse(response.body)['results']
+      assert_equal '1.2.0', results.first['version']
+      assert_equal 2, results.count
+      assert_match(/\(currently 1\.3\.0\)/, results.last['version'])
+    end
+
     def test_available_puppet_modules_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
