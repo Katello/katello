@@ -6,19 +6,24 @@ module Actions
 
         def plan(repository)
           sequence do
-            content_create = plan_action(Candlepin::Product::ContentCreate,
-                                         name:        repository.name,
-                                         type:        repository.content_type,
-                                         label:       repository.custom_content_label,
-                                         content_url: content_url(repository))
+            if repository.content.nil?
+              content_create = plan_action(Candlepin::Product::ContentCreate,
+                                           name:        repository.name,
+                                           type:        repository.content_type,
+                                           label:       repository.custom_content_label,
+                                           content_url: content_url(repository))
+              content_id = content_create.output[:response][:id]
+              plan_action(Candlepin::Product::ContentAdd,
+                                    product_id: repository.product.cp_id,
+                                    content_id: content_id)
 
-            plan_action(Candlepin::Product::ContentAdd,
-                        product_id: repository.product.cp_id,
-                        content_id: content_create.output[:response][:id])
+            else
+              content_id = repository.content_id
+            end
 
             if repository.gpg_key
               plan_action(Candlepin::Product::ContentUpdate,
-                          content_id:  content_create.output[:response][:id],
+                          content_id:  content_id,
                           name:        repository.name,
                           type:        repository.content_type,
                           label:       repository.custom_content_label,
@@ -27,7 +32,7 @@ module Actions
             end
 
             plan_self(repository_id: repository.id,
-                      content_id: content_create.output[:response][:id])
+                      content_id: content_id)
           end
         end
 

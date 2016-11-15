@@ -303,21 +303,6 @@ module Katello
         end
       end
 
-      def refresh_pulp_repo
-        Katello.pulp_server.extensions.repository.update_importer(self.pulp_id, self.importers.first['id'], generate_importer.config)
-
-        existing_distributors = self.distributors
-        generate_distributors.each do |distributor|
-          found = existing_distributors.find { |i| i['distributor_type_id'] == distributor.type_id }
-          if found
-            Katello.pulp_server.extensions.repository.update_distributor(self.pulp_id, found['id'], distributor.config)
-          else
-            Katello.pulp_server.extensions.repository.associate_distributor(self.pulp_id, distributor.type_id, distributor.config,
-                                                                   :distributor_id => distributor.id)
-          end
-        end
-      end
-
       def populate_from(repos_map)
         found = repos_map[self.pulp_id]
         prepopulate(found) if found

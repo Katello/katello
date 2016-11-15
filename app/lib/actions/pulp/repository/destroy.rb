@@ -9,6 +9,9 @@ module Actions
 
         def invoke_external_task
           output[:pulp_tasks] = pulp_extensions.repository.delete(input[:pulp_id])
+        rescue RestClient::ResourceNotFound
+          Rails.logger.warn("Tried to delete repository #{input[:pulp_id]}, but it did not exist.")
+          []
         end
       end
     end
