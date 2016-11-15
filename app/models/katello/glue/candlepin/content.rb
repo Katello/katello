@@ -16,6 +16,8 @@ module Katello
           @content = Katello::Candlepin::Content.find(self.content_id)
         end
         @content
+      rescue RestClient::ResourceNotFound, RestClient::BadRequest
+        nil
       end
 
       def create_content

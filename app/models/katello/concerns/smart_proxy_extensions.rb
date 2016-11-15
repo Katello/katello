@@ -53,6 +53,12 @@ module Katello
         def self.default_capsule
           with_features(PULP_FEATURE).first
         end
+
+        def self.default_capsule!
+          capsule = default_capsule
+          fail _("Could not find a smart proxy with pulp feature.") if capsule.nil?
+          capsule
+        end
       end
 
       def puppet_path

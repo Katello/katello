@@ -262,7 +262,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/jenkins.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/setup.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/delete_orphaned_content.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/repository.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/reimport.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"

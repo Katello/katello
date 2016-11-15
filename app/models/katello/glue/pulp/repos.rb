@@ -236,11 +236,6 @@ module Katello
         end
       end
 
-      def update_repositories
-        repos = Repository.in_product(self).in_default_view
-        repos.each(&:refresh_pulp_repo)
-      end
-
       def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil, checksum_type = nil, download_policy = nil)
         unprotected = unprotected.nil? ? false : unprotected
 
