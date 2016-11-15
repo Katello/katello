@@ -2,7 +2,7 @@ module Katello
   class DockerManifest < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    has_one :docker_tag, :dependent => :destroy, :class_name => "Katello::DockerTag"
+    has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
     has_many :repository_docker_manifests, :dependent => :destroy
     has_many :repositories, :through => :repository_docker_manifests, :inverse_of => :docker_manifests
 

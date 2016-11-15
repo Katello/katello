@@ -58,12 +58,26 @@ module Katello
   end
 
   class GluePulpNonVcrTests < GluePulpRepoTestBase
-    def test_create_docker_no_tag
-      manifest = FactoryGirl.build(:docker_manifest)
+    def test_create_docker_new_tag
+      manifest = FactoryGirl.build(:docker_manifest, :name => 'manifest', :id => 1)
 
-      @fedora_17_x86_64.expects(:unit_search).returns([])
+      assert_nil ::Katello::DockerTag.find_by_name('asdf')
 
-      @fedora_17_x86_64.create_docker_tag(manifest, 'asdf')
+      tag = @fedora_17_x86_64.create_docker_tag(manifest, :name => 'asdf', :_id => '1234')
+      assert_equal 'asdf', tag.name
+      assert_equal '1234', tag.uuid
+      assert_equal 'manifest', tag.docker_manifest.name
+    end
+
+    def test_create_docker_existing_tag
+      manifest = FactoryGirl.build(:docker_manifest, :name => 'manifest', :id => 1)
+
+      existing_tag = ::Katello::DockerTag.create!(:repository_id => @fedora_17_x86_64.id,
+                                                 :docker_manifest => manifest,
+                                                 :name => 'zxcv', :uuid => '5678')
+      tag = @fedora_17_x86_64.create_docker_tag(manifest, :name => 'zxcv', :_id => '5678')
+      assert_equal existing_tag, tag
+      assert_equal existing_tag.docker_manifest, tag.docker_manifest
     end
 
     def test_importer_feed_url

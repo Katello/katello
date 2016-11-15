@@ -501,10 +501,14 @@ module Katello
       end
 
       def index_db_docker_manifests
-        docker_manifests_json.each do |manifest_json|
+        manifests_json = docker_manifests_json
+        manifests_json.each do |manifest_json|
           manifest = DockerManifest.where(:uuid => manifest_json[:_id]).first_or_create
           manifest.update_from_json(manifest_json)
-          create_docker_tag(manifest, manifest_json[:tag])
+        end
+        docker_tags_json.each do |tag_json|
+          manifest = DockerManifest.where(:digest => tag_json[:manifest_digest]).first
+          create_docker_tag(manifest, tag_json)
         end
         DockerManifest.sync_repository_associations(self, pulp_docker_manifest_ids)
       end
@@ -517,14 +521,25 @@ module Katello
         docker_manifests
       end
 
-      def create_docker_tag(manifest, tag_name)
-        tag = unit_search(:type_ids => [Runcible::Extensions::DockerTag.content_type],
-                          :filters => { :unit => { :manifest_digest => manifest.digest,
-                                                   :name => tag_name } }).first
-        if tag
-          DockerTag.where(:repository_id => id, :docker_manifest_id => manifest.id,
-                          :name => tag[:metadata][:name], :uuid => tag[:metadata][:_id]).first_or_create
+      def docker_tags_json
+        docker_tags = []
+        pulp_docker_tag_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+          docker_tags.concat(Katello.pulp_server.extensions.docker_tag.find_all_by_unit_ids(sub_list))
         end
+        docker_tags
+      end
+
+      def create_docker_tag(manifest, tag_json)
+        tag = DockerTag.where(:repository_id => id, :name => tag_json[:name]).first
+        if tag
+          tag.docker_manifest = manifest
+          tag.uuid = tag_json[:_id]
+          tag.save!
+        else
+          tag = DockerTag.create!(:repository_id => id, :docker_manifest => manifest,
+                                 :name => tag_json[:name], :uuid => tag_json[:_id])
+        end
+        tag
       end
 
       def package_group_categories(search_args = {})
@@ -543,6 +558,10 @@ module Katello
 
       def pulp_docker_manifest_ids
         Katello.pulp_server.extensions.repository.docker_manifest_ids(self.pulp_id)
+      end
+
+      def pulp_docker_tag_ids
+        Katello.pulp_server.extensions.repository.docker_tag_ids(self.pulp_id)
       end
 
       def pulp_ostree_branch_ids
