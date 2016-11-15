@@ -13,9 +13,12 @@ module Katello
 
       ids = @manifests.map { |attrs| attrs[:_id] }
       ::Katello::Repository.any_instance.stubs(:pulp_docker_manifest_ids).returns(ids)
+      Runcible::Extensions::DockerManifest.any_instance.stubs(:find_all_by_unit_ids).with(ids).returns(@manifests)
+
+      ids = @tags.map { |attrs| attrs[:_id] }
+      ::Katello::Repository.any_instance.stubs(:pulp_docker_tag_ids).returns(ids)
+      Runcible::Extensions::DockerTag.any_instance.stubs(:find_all_by_unit_ids).with(ids).returns(@tags)
       Runcible::Extensions::Repository.any_instance.stubs(:unit_search).returns(@tags)
-      Runcible::Extensions::DockerManifest.any_instance.stubs(:find_all_by_unit_ids).
-        with(ids).returns(@manifests)
     end
 
     def test_index_db_docker_manifests
@@ -24,9 +27,12 @@ module Katello
       assert_equal 1, @repo.docker_manifests.count
       assert_equal ["manifest1"], DockerManifest.all.map(&:name).sort
 
+      assert_equal "sha256:f52325afc9c353f58d65b24d8f9a5e61be83f0518aa222639cb77bc7b77d49a9", DockerManifest.all.first.digest
+
       manifest = DockerManifest.find_by_digest("sha256:f52325afc9c353f58d65b24d8f9a5e61be83f0518aa222639cb77bc7b77d49a9")
-      assert_equal "latest", manifest.docker_tag.name
-      assert_equal @repo.id, manifest.docker_tag.repository_id
+      assert_equal 1, manifest.docker_tags.count
+      assert_equal "latest", manifest.docker_tags[0].name
+      assert_equal @repo.id, manifest.docker_tags[0].repository_id
     end
   end
 end
