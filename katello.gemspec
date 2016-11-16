@@ -39,7 +39,7 @@ Gem::Specification.new do |gem|
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
   gem.add_dependency "jquery-ui-rails"
-  gem.add_dependency "bastion", ">= 3.3.4", "< 4.0.0"
+  gem.add_dependency "bastion", "3.3.4"
 
   # Testing
   gem.add_development_dependency "factory_girl_rails"

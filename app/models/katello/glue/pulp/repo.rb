@@ -71,7 +71,7 @@ module Katello
           repos.select do |repo|
             repo_details = capsule ? capsule.pulp_repo_facts(repo.pulp_id) : repo.pulp_repo_facts
             next unless repo_details
-            !repo.distributors_match?(repo_details["distributors"], capsule)
+            !repo.distributors_match?(repo_details["distributors"], capsule.try(:capsule))
           end
         end
       end
