@@ -179,10 +179,15 @@ module Katello
         consumer.sign!(request)
         # Extract the header and add it to the RestClient
         added_header = {'Authorization' => request['Authorization']}
-        RestClient::Resource.new url,
+
+        options = {
           :headers => added_header,
           :open_timeout => SETTINGS[:katello][:rest_client_timeout],
           :timeout => SETTINGS[:katello][:rest_client_timeout]
+        }
+        options[:ssl_ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
+
+        RestClient::Resource.new(url, options)
       end
 
       # Encode url element if its not nil. This helper method is used mainly in resource path methods.
