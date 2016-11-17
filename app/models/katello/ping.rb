@@ -13,70 +13,70 @@ module Katello
       # Calls "status" services in all backend engines.
       #
       # This should be called with User.current set if you want to check pulp_auth
-      #
-      # TODO: break up this method
-      # rubocop:disable MethodLength
       def ping(services: SERVICES, capsule_id: nil)
-        result = { :status => OK_RETURN_CODE, :services => {}}
-        services.each { |service| result[:services][service] = {} }
+        result = {}
+        services.each { |service| result[service] = {} }
+        result.delete(:pulp_auth) unless User.current
 
-        # pulp - ping without oauth
-        if services.include?(:pulp)
-          exception_watch(result[:services][:pulp]) do
-            Ping.pulp_without_auth(pulp_url(capsule_id))
-          end
-        end
+        ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
+        ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
 
-        # candlepin - ping without oauth
-        if services.include?(:candlepin)
-          url = SETTINGS[:katello][:candlepin][:url]
-          exception_watch(result[:services][:candlepin]) do
-            RestClient.get "#{url}/status"
-          end
-        end
-
-        # pulp - ping with oauth
-        if User.current && services.include?(:pulp_auth)
-          exception_watch(result[:services][:pulp_auth]) do
-            if result[:services][:pulp][:status] == OK_RETURN_CODE
-              Katello.pulp_server.resources.user.retrieve_all
-            else
-              fail _("Skipped pulp_auth check after failed pulp check")
-            end
-          end
-        else
-          result[:services].delete(:pulp_auth)
-        end
-
-        if services.include?(:candlepin_auth)
-          # candlepin - ping with oauth
-          exception_watch(result[:services][:candlepin_auth]) do
-            Katello::Resources::Candlepin::CandlepinPing.ping
-          end
-        end
-
-        if services.include?(:foreman_tasks)
-          exception_watch(result[:services][:foreman_tasks]) do
-            timeout   = 2
-            world     = ForemanTasks.dynflow.world
-            executors = world.coordinator.find_worlds(true)
-            if executors.empty?
-              fail _("foreman-tasks service not running or is not ready yet")
-            end
-
-            checks = executors.map { |executor| world.ping(executor.id, timeout) }
-            checks.each(&:wait)
-            if checks.any?(&:failed?)
-              fail _("some executors are not responding, check %{status_url}") % { :status_url => '/foreman_tasks/dynflow/status' }
-            end
-          end
-        end
+        ping_pulp_with_auth(result[:pulp_auth], result[:pulp][:status]) if result.include?(:pulp_auth)
+        ping_candlepin_with_auth(result[:candlepin_auth]) if result.include?(:candlepin_auth)
+        ping_foreman_tasks(result[:foreman_tasks]) if result.include?(:foreman_tasks)
 
         # set overall status result code
+        result = {:services => result}
         result[:services].each_value do |v|
-          result[:status] = FAIL_RETURN_CODE unless v[:status] == OK_RETURN_CODE
+          result[:status] = v[:status] == OK_RETURN_CODE ? OK_RETURN_CODE : FAIL_RETURN_CODE
         end
         result
+      end
+
+      def ping_pulp_without_auth(service_result, capsule_id)
+        exception_watch(service_result) do
+          Ping.pulp_without_auth(pulp_url(capsule_id))
+        end
+      end
+
+      def ping_candlepin_without_auth(service_result)
+        url = SETTINGS[:katello][:candlepin][:url]
+        exception_watch(service_result) do
+          RestClient.get "#{url}/status"
+        end
+      end
+
+      def ping_pulp_with_auth(service_result, pulp_without_auth_status)
+        exception_watch(service_result) do
+          if pulp_without_auth_status == OK_RETURN_CODE
+            Katello.pulp_server.resources.user.retrieve_all
+          else
+            fail _("Skipped pulp_auth check after failed pulp check")
+          end
+        end
+      end
+
+      def ping_candlepin_with_auth(service_result)
+        exception_watch(service_result) do
+          Katello::Resources::Candlepin::CandlepinPing.ping
+        end
+      end
+
+      def ping_foreman_tasks(service_result)
+        exception_watch(service_result) do
+          timeout   = 2
+          world     = ForemanTasks.dynflow.world
+          executors = world.coordinator.find_worlds(true)
+          if executors.empty?
+            fail _("foreman-tasks service not running or is not ready yet")
+          end
+
+          checks = executors.map { |executor| world.ping(executor.id, timeout) }
+          checks.each(&:wait)
+          if checks.any?(&:failed?)
+            fail _("some executors are not responding, check %{status_url}") % { :status_url => '/foreman_tasks/dynflow/status' }
+          end
+        end
       end
 
       # check for exception - set the result code properly
