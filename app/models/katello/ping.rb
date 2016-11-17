@@ -42,7 +42,11 @@ module Katello
       def ping_candlepin_without_auth(service_result)
         url = SETTINGS[:katello][:candlepin][:url]
         exception_watch(service_result) do
-          RestClient.get "#{url}/status"
+          ca_file = SETTINGS[:katello][:candlepin][:ca_cert_file]
+          options = {}
+          options[:ssl_ca_file] = ca_file unless ca_file.nil?
+          client = RestClient::Resource.new("#{url}/status", options)
+          client.get
         end
       end
 
