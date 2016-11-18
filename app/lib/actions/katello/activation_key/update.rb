@@ -25,6 +25,10 @@ module Actions
         def cp_changed?(activation_key, activation_key_params)
           !activation_key_params.nil? && activation_key.to_s != activation_key_params.to_s
         end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
       end
     end
   end
