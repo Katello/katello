@@ -50,6 +50,23 @@ module Katello
       assert_template "katello/api/v2/puppet_modules/index"
     end
 
+    def test_index_with_content_view_version
+      dev_puppet_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
+      ContentViewPuppetEnvironment.stubs(:archived).returns([dev_puppet_env])
+
+      get :index, :environment_id => dev_puppet_env.environment_id,
+          :content_view_version_id => dev_puppet_env.content_view_version.id
+
+      assert_response :success
+      results_puppet_module = JSON.parse(response.body)['results'].first
+
+      # the content view version in the dev puppet environment only has the 'dhcp' puppet module,
+      # which is the same as @puppet_module
+      assert_equal results_puppet_module['name'], @puppet_module.name
+      assert_equal results_puppet_module['author'], @puppet_module.author
+      assert_equal results_puppet_module['version'], @puppet_module.version
+    end
+
     def test_index_protected
       assert_protected_action(:index, @read_permission, @unauth_permissions) do
         get :index, :repository_id => @repo.id

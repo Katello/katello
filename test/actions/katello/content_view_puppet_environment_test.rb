@@ -76,6 +76,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     end
 
     it 'plans without existing cv puppet environment' do
+      dev_puppet_env.puppet_modules.delete_all
       dev_puppet_env.delete
 
       plan_action action, puppet_env.content_view_version, :environment => dev
@@ -97,6 +98,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     end
 
     it 'does not plan things when cvep does not already exist and no puppet modules' do
+      dev_puppet_env.puppet_modules.delete_all
       dev_puppet_env.delete
 
       plan_action action, puppet_env.content_view_version, :environment => dev, :puppet_modules_present => false

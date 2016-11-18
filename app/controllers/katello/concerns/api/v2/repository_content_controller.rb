@@ -77,7 +77,13 @@ module Katello
         collection = filter_by_repos(Repository.readable, collection)
         collection = filter_by_repos([@repo], collection) if @repo
         collection = filter_by_content_view_version(@version, collection) if @version
-        collection = filter_by_environment(@environment, collection) if @environment
+        if @environment && (@environment.library? || resource_class != Katello::PuppetModule)
+          # if the environment is not library and this is for puppet modules,
+          # we can skip environment filter, as those would be associated to
+          # content view puppet environments and handled by the puppet modules
+          # controller.
+          collection = filter_by_environment(@environment, collection)
+        end
         collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
         collection = filter_by_ids(params[:ids], collection) if params[:ids]
         @filter = ContentViewFilter.find(params[:filterId]) if params[:filterId]
