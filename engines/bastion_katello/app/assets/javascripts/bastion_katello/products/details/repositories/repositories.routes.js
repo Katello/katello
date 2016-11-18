@@ -23,8 +23,12 @@
         .state('product.repositories.new', {
             url: '/new',
             permission: 'create_products',
-            controller: 'NewRepositoryController',
-            templateUrl: 'products/details/repositories/new/views/repository-new.html',
+            views: {
+                '@product': {
+                    controller: 'NewRepositoryController',
+                    templateUrl: 'products/details/repositories/new/views/new-repository.html'
+                }
+            },
             ncyBreadcrumb: {
                 label: "{{ 'New Repository' | translate }}",
                 parent: 'product.repositories'

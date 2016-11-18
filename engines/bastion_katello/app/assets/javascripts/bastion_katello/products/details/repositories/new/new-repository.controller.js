@@ -19,8 +19,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
     ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig',
     function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig) {
 
-        function success(response) {
-            $scope.detailsTable.rows.push(response);
+        function success() {
             GlobalNotification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
             $scope.transitionTo('product.repositories', {productId: $scope.$stateParams.productId});
         }
