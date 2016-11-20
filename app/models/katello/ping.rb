@@ -42,11 +42,7 @@ module Katello
       def ping_candlepin_without_auth(service_result)
         url = SETTINGS[:katello][:candlepin][:url]
         exception_watch(service_result) do
-          ca_file = SETTINGS[:katello][:candlepin][:ca_cert_file]
-          options = {}
-          options[:ssl_ca_file] = ca_file unless ca_file.nil?
-          client = RestClient::Resource.new("#{url}/status", options)
-          client.get
+          backend_status(url, :candlepin)
         end
       end
 
@@ -117,7 +113,8 @@ module Katello
       # because it returns empty string, which is not enough to say
       # pulp is the one that responded
       def pulp_without_auth(url)
-        body = RestClient.get("#{url}/status/")
+        body = backend_status(url, :pulp)
+
         fail _("Pulp does not appear to be running.") if body.empty?
         json = JSON.parse(body)
 
@@ -143,6 +140,16 @@ module Katello
         resource_manager = worker_ids.any? { |worker| worker.include?("resource_manager@") }
         reservered_resource_worker = worker_ids.any? { |worker| worker =~ /reserved_resource_worker-./ }
         scheduler && resource_manager && reservered_resource_worker
+      end
+
+      private
+
+      def backend_status(url, backend)
+        ca_file = SETTINGS[:katello][backend][:ca_cert_file]
+        options = {}
+        options[:ssl_ca_file] = ca_file unless ca_file.nil?
+        client = RestClient::Resource.new("#{url}/status", options)
+        client.get
       end
     end
   end
