@@ -18,6 +18,10 @@ module Katello
           }
         }
 
+        if (ca_cert = SETTINGS[:katello][:pulp][:ca_cert_file])
+          runcible_params[:ca_cert_file] = ca_cert
+        end
+
         if Setting[:use_pulp_oauth]
           runcible_params[:oauth] = {
             :oauth_secret => SETTINGS[:katello][:pulp][:oauth_secret],
