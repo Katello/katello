@@ -51,16 +51,16 @@
 
       <tbody>
         <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions | groupedFilter: subscriptionSearch">
-          <td class="row-select">
-            <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
-              {{ name }}
-            </a>
-          </td>
+          <td bst-table-cell class="row-select" style="white-space:nowrap">{{ name }}</td>
           <td bst-table-cell colspan="8" ></td>
         </tr>
         <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
           <td bst-table-cell>{{ subscription | subscriptionAttachAmountFilter }}</td>
-          <td bst-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+          <td bst-table-cell>
+            <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
+              {{ subscription | subscriptionConsumedFilter }}
+            </a>
+          </td>
           <td bst-table-cell><div subscription-type="subscription"></div></td>
           <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
           <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
