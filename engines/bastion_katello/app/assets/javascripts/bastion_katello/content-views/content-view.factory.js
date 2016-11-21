@@ -31,7 +31,7 @@ angular.module('Bastion.content-views').factory('ContentView',
 
                         angular.forEach(_.groupBy(response.results, 'author'), function (puppetModules) {
                             var latest = angular.copy(puppetModules[0]);
-                            latest.version = translate('Use Latest (currently %s)').replace('%s', latest.version);
+                            latest.version = translate('Always Use Latest (currently %s)').replace('%s', latest.version);
                             latest.useLatest = true;
                             response.results.push(latest);
                         });
