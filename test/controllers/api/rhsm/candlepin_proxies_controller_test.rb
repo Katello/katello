@@ -4,6 +4,7 @@ require "katello_test_helper"
 
 module Katello
   describe Api::Rhsm::CandlepinProxiesController do
+    include Katello::AuthorizationSupportMethods
     include Support::ForemanTasks::Task
 
     before do
@@ -106,6 +107,25 @@ module Katello
 
         put :facts, :id => @host.subscription_facet.uuid, :facts => facts
         assert_equal 200, response.status
+      end
+    end
+
+    describe "update facts with non-consumer user" do
+      it "should prevent update facts for unauthorized user" do
+        login_user(setup_user_with_permissions(:view_hosts, User.find(users(:restricted).id)))
+        facts = {'rhsm_fact' => 'rhsm_value'}
+        put :facts, :id => @host.subscription_facet.uuid, :facts => facts
+        assert_response 403
+      end
+
+      it "should allow update facts for admin" do
+        login_user(User.find(users(:admin).id))
+        uuid = @host.subscription_facet.uuid
+        stub_cp_consumer_with_uuid(uuid)
+        facts = {'rhsm_fact' => 'rhsm_value'}
+        assert_sync_task(::Actions::Katello::Host::Update)
+        put :facts, :id => @host.subscription_facet.uuid, :facts => facts
+        assert_response 200
       end
     end
 
