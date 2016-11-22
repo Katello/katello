@@ -38,7 +38,7 @@ module Katello
 
         if release.present?
           if self.operator == EQUAL
-            version_clause = "#{release_clause}" 
+            version_clause = "#{release_clause}"
           else
             version_clause = "#{version_clause} OR #{release_clause}"
           end
