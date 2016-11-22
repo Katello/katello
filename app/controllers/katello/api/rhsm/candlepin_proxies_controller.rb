@@ -11,11 +11,11 @@ module Katello
                                         :upload_package_profile, :regenerate_identity_certificates, :facts,
                                         :available_releases, :serials, :upload_tracer_profile]
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates, :upload_tracer_profile]
+    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates, :upload_tracer_profile, :facts]
     before_action :authorize_client_or_admin, :only => [:hypervisors_update]
     before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
-                                               :enabled_repos, :facts, :available_releases]
+                                               :enabled_repos, :available_releases]
 
     before_action :add_candlepin_version_header
 
@@ -258,10 +258,8 @@ module Katello
     end
 
     def facts
-      User.as_anonymous_admin do
-        sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
-        update_host_registered_through(@host, request.headers)
-      end
+      sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
+      update_host_registered_through(@host, request.headers)
       render :json => {:content => _("Facts successfully updated.")}, :status => 200
     end
 
