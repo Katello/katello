@@ -57,14 +57,6 @@ node :redhat do |product|
   product.redhat?
 end
 
-node :permissions do |product|
-  {
-    :destroy_products => product.editable?,
-    :edit_products => product.deletable?,
-    :sync_products => product.syncable?
-  }
-end
-
 node :active_task_count do |product|
   ForemanTasks::Task::DynflowTask.for_resource(product).active.count
 end
