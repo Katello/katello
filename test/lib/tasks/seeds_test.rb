@@ -78,11 +78,4 @@ module Katello
       assert MailNotification[:sync_errata]
     end
   end
-
-  class EnsureSyncNotificationsTest < SeedsTest
-    test "Make sure sync notifications  notiffication got setup" do
-      Katello::Repository.expects(:ensure_sync_notification). returns(true)
-      seed
-    end
-  end
 end

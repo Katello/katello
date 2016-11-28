@@ -22,6 +22,7 @@ describe ::Actions::Katello::SyncPlan::AddProducts do
 
   it 'plans' do
     set_user
+    Katello::Repository.expects(:ensure_sync_notification)
     action.stubs(:action_subject).with(@sync_plan)
     plan_action(action, @sync_plan, [@product.id])
 

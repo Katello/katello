@@ -2,8 +2,12 @@ module Actions
   module Katello
     module SyncPlan
       class AddProducts < Actions::EntryAction
+        middleware.use Actions::Middleware::PulpServicesCheck
+
         def plan(sync_plan, product_ids)
           action_subject(sync_plan)
+
+          ::Katello::Repository.ensure_sync_notification
 
           products = ::Katello::Product.where(:id => product_ids).editable
           sync_plan.product_ids = (sync_plan.product_ids + products.collect { |p| p.id }).uniq
