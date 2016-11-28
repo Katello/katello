@@ -83,7 +83,6 @@ module Actions
                 suspended_action.notify_not_connected(message[:error])
                 break
               end
-              sleep 1
             rescue => e
               suspended_action.notify_fatal(e)
               raise e
