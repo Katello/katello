@@ -58,28 +58,6 @@ module Katello
   end
 
   class GluePulpNonVcrTests < GluePulpRepoTestBase
-    def test_create_docker_new_tag
-      manifest = FactoryGirl.build(:docker_manifest, :name => 'manifest', :id => 1)
-
-      assert_nil ::Katello::DockerTag.find_by_name('asdf')
-
-      tag = @fedora_17_x86_64.create_docker_tag(manifest, :name => 'asdf', :_id => '1234')
-      assert_equal 'asdf', tag.name
-      assert_equal '1234', tag.uuid
-      assert_equal 'manifest', tag.docker_manifest.name
-    end
-
-    def test_create_docker_existing_tag
-      manifest = FactoryGirl.build(:docker_manifest, :name => 'manifest', :id => 1)
-
-      existing_tag = ::Katello::DockerTag.create!(:repository_id => @fedora_17_x86_64.id,
-                                                 :docker_manifest => manifest,
-                                                 :name => 'zxcv', :uuid => '5678')
-      tag = @fedora_17_x86_64.create_docker_tag(manifest, :name => 'zxcv', :_id => '5678')
-      assert_equal existing_tag, tag
-      assert_equal existing_tag.docker_manifest, tag.docker_manifest
-    end
-
     def test_importer_feed_url
       pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
@@ -312,31 +290,6 @@ module Katello
       refute_nil @fedora_17_x86_64.sync_start
     end
 
-    def test_packages
-      @fedora_17_x86_64.index_db_rpms
-      refute_empty @fedora_17_x86_64.rpms.select { |package| package.name == 'elephant' }
-    end
-
-    def test_errata
-      refute_empty @fedora_17_x86_64.errata_json.select { |errata| errata['id'] == "RHEA-2010:0002" }
-    end
-
-    def test_index_db_errata
-      @fedora_17_x86_64.errata.destroy_all
-      assert_empty @fedora_17_x86_64.errata
-      @fedora_17_x86_64.index_db_errata
-      @fedora_17_x86_64.reload
-      refute_empty @fedora_17_x86_64.errata
-    end
-
-    def test_index_db_rpms
-      @fedora_17_x86_64.rpms.destroy_all
-      assert_empty @fedora_17_x86_64.rpms
-      @fedora_17_x86_64.index_db_rpms
-      @fedora_17_x86_64.reload
-      refute_empty @fedora_17_x86_64.rpms
-    end
-
     def test_import_distribution_data
       @fedora_17_x86_64.import_distribution_data
 
@@ -372,12 +325,6 @@ module Katello
       package_groups = @fedora_17_x86_64.package_groups
 
       refute_empty package_groups.select { |group| group.name == 'mammals' }
-    end
-
-    def test_package_group_categories
-      categories = @fedora_17_x86_64.package_group_categories
-
-      refute_empty categories.select { |category| category['name'] == 'all' }
     end
   end
 

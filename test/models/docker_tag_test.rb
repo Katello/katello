@@ -8,11 +8,26 @@ module Katello
 
     def setup
       @repo = Repository.find(katello_repositories(:busybox).id)
+      @manifest = create(:docker_manifest)
       @tag = create(:docker_tag, :repository => @repo)
 
       @repo.library_instances_inverse.each do |repo|
         repo.docker_tags << @tag.dup
       end
+    end
+
+    def test_import_from_json
+      @tag.repository_id = nil
+      @tag.docker_manifest_id = nil
+      @tag.name = nil
+      @tag.save!
+
+      json = {'manifest_digest' => @manifest.digest, 'repo_id' => @repo.pulp_id, 'name' => 'jabberwock'}
+      @tag.update_from_json(json)
+
+      assert_equal @tag.repository_id, @repo.id
+      refute_nil @tag.name
+      assert_equal @tag.docker_manifest, @manifest
     end
 
     def test_in_repositories
@@ -21,7 +36,7 @@ module Katello
     end
 
     def test_with_uuid
-      tag = DockerTag.with_uuid(@tag.id).first
+      tag = DockerTag.with_uuid(@tag.uuid).first
       refute_nil tag
       assert_equal @tag.id, tag.id
     end

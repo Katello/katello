@@ -79,22 +79,6 @@ module Katello
         async_tasks
       end
 
-      def package_groups(env, search_args = {})
-        groups = []
-        self.repos(env).each do |repo|
-          groups << repo.package_groups(search_args)
-        end
-        groups.flatten(1)
-      end
-
-      def package_group_categories(env, search_args = {})
-        categories = []
-        self.repos(env).each do |repo|
-          categories << repo.package_group_categories(search_args)
-        end
-        categories.flatten(1)
-      end
-
       def find_packages_by_name(env, name)
         packages = self.repos(env).collect do |repo|
           repo.find_packages_by_name(name).collect do |p|

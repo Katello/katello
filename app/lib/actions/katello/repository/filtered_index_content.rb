@@ -14,13 +14,13 @@ module Actions
           repo = ::Katello::Repository.find(input[:id])
           unit_ids = search_units(repo)
           if repo.puppet?
-            repo.index_db_puppet_modules
+            ::Katello::PuppetModule.import_for_repository(repo)
           elsif repo.docker?
-            repo.index_db_docker_manifests
+            ::Katello::DockerManifest.import_for_repository(repo)
           elsif repo.file?
-            repo.index_db_files
+            ::Katello::FileUnit.import_for_repository(repo)
           else
-            ::Katello::Rpm.import_all(unit_ids, true)
+            ::Katello::Rpm.import_all(unit_ids, :additive => true)
           end
         end
 

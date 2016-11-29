@@ -11,7 +11,7 @@ module Katello
 
         @repository = Repository.find(katello_repositories(:p_forge).id)
         RepositorySupport.create_and_sync_repo(@repository)
-        @repository.index_db_puppet_modules
+        @repository.index_content
 
         @names = ["cron", "httpd", "pureftpd", "samba"]
       end

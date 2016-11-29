@@ -207,22 +207,6 @@ module Katello
       "environment_#{id}_#{item}"
     end
 
-    def package_groups(search_args = {})
-      groups = []
-      self.products.each do |prod|
-        groups << prod.package_groups(self, search_args)
-      end
-      groups.flatten(1)
-    end
-
-    def package_group_categories(search_args = {})
-      categories = []
-      self.products.each do |prod|
-        categories << prod.package_group_categories(self, search_args)
-      end
-      categories.flatten(1)
-    end
-
     def find_packages_by_name(name)
       products = self.products.collect do |prod|
         prod.find_packages_by_name(self, name).collect do |p|

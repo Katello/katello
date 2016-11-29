@@ -19,6 +19,8 @@ module Katello
         @@package_groups = RepositorySupport.repo.package_groups
 
         @@package_group_names = ['bird', 'mammal']
+
+        Katello::PackageGroup.import_for_repository(RepositorySupport.repo)
       end
 
       def teardown
@@ -29,18 +31,15 @@ module Katello
 
     class PackageGroupTest < PackageGroupTestBase
       def test_repo_package_groups
-        RepositorySupport.repo.index_db_package_groups
         assert_equal 2, @@package_groups.length
         assert_equal @@package_group_names, @@package_groups.map(&:name).sort
       end
 
       def test_pulp_data
-        RepositorySupport.repo.index_db_package_groups
         assert_equal @@package_group_names[0], Pulp::PackageGroup.pulp_data(@@package_groups.sort_by(&:name).first.uuid)['id']
       end
 
       def test_update_from_json
-        RepositorySupport.repo.index_db_package_groups
         uuid = @@package_groups.first.uuid
         PackageGroup.where(:uuid => uuid).first.destroy! if PackageGroup.exists?(:uuid => uuid)
         package_group = PackageGroup.create!(:uuid => uuid)

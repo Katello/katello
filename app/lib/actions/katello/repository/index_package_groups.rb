@@ -10,7 +10,7 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:id])
-          repo.index_db_package_groups
+          ::Katello::PackageGroup.import_for_repository(repo)
         end
       end
     end

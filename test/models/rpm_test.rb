@@ -117,9 +117,10 @@ module Katello
         package.merge!(:repoids => [@repo.pulp_id])
       end
 
-      @repo.stubs(:rpms_json).returns(@packages)
-      @repo.stubs(:pulp_rpm_ids).returns(@packages.map { |p| p['_id'] })
-      @repo.index_db_rpms
+      Katello::Pulp::Rpm.stubs(:ids_for_repository).returns(@packages.map { |p| p['_id'] })
+      Katello::Pulp::Rpm.stubs(:fetch).returns(@packages)
+      Katello::Rpm.import_for_repository(@repo)
+
       @all_ids = @repo.rpms.pluck(:uuid).sort
     end
 

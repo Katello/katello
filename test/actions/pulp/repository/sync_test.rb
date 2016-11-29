@@ -24,7 +24,7 @@ module ::Actions::Pulp::Repository
   class SyncTest < VCRTestBase
     def test_sync
       ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).main_action
-      assert_equal 8, repo.pulp_rpm_ids.length
+      assert_equal 8, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
     end
   end
 

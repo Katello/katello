@@ -19,7 +19,7 @@ module ::Actions::Pulp::Repository
       run_action(::Actions::Pulp::Repository::DeleteUploadRequest,
                   upload_id: upload_request.output[:upload_id])
 
-      assert_equal 1, repo.pulp_puppet_module_ids.length
+      assert_equal 1, ::Katello::Pulp::PuppetModule.ids_for_repository(repo.pulp_id).length
     end
   end
 end
