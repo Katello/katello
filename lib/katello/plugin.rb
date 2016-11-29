@@ -203,6 +203,16 @@ Foreman::Plugin.register :katello do
                    :onlyif => proc { |proxy| proxy.has_feature?(SmartProxy::PULP_FEATURE) || proxy.has_feature?(SmartProxy::PULP_NODE_FEATURE) }
   end
 
+  register_facet Katello::Host::ContentFacet, :content_facet do
+    api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
+    api_docs :content_facet_attributes, ::Katello::Api::V2::HostContentsController
+  end
+
+  register_facet Katello::Host::SubscriptionFacet, :subscription_facet do
+    api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
+    api_docs :subscription_facet_attributes, ::Katello::Api::V2::HostSubscriptionsController
+  end
+
   if Katello.with_remote_execution?
     RemoteExecutionFeature.register(:katello_package_install, N_("Katello: Install Package"), :description => N_("Install package via Katello interface"), :provided_inputs => ['package'])
     RemoteExecutionFeature.register(:katello_package_update, N_("Katello: Update Package"), :description => N_("Update package via Katello interface"), :provided_inputs => ['package'])

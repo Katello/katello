@@ -79,19 +79,6 @@ module Katello
       end
 
       def inherited_attributes_with_katello
-        if hostgroup.present?
-          if content_facet.present?
-            self.content_facet.kickstart_repository_id ||= hostgroup.inherited_kickstart_repository_id
-          else
-            # facent may not be present when created via autoprovisioning
-            if hostgroup.inherited_content_view_id && hostgroup.inherited_lifecycle_environment_id
-              build_content_facet(
-                :kickstart_repository_id => hostgroup.inherited_kickstart_repository_id,
-                :content_view_id => hostgroup.inherited_content_view_id,
-                :lifecycle_environment_id => hostgroup.inherited_lifecycle_environment_id)
-            end
-          end
-        end
         inherited_attributes_without_katello.concat(%w(content_source_id))
       end
 
