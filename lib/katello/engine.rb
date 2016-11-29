@@ -223,15 +223,6 @@ module Katello
 
       #facet extensions
       ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
-      Facets.register(Katello::Host::ContentFacet, :content_facet) do
-        api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
-        api_docs :content_facet_attributes, ::Katello::Api::V2::HostContentsController
-      end
-
-      Facets.register(Katello::Host::SubscriptionFacet, :subscription_facet) do
-        api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
-        api_docs :subscription_facet_attributes, ::Katello::Api::V2::HostSubscriptionsController
-      end
       ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
 
       #Api controller extensions

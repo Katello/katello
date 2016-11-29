@@ -11,8 +11,6 @@ module Katello
           :unknown => Katello::ErrataStatus::UNKNOWN
         }.freeze
 
-        has_one :content_facet, :class_name => '::Katello::Host::ContentFacet', :foreign_key => :host_id, :inverse_of => :host, :dependent => :destroy
-
         has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id'
         scoped_search :on => :status, :in => :errata_status_object, :rename => :errata_status,
                      :complete_value => ERRATA_STATUS_MAP
@@ -32,7 +30,12 @@ module Katello
         scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
         scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
 
-        accepts_nested_attributes_for :content_facet, :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? }
+        # preserve options set by facets framework, but add new :reject_if statement
+        accepts_nested_attributes_for(
+          :content_facet,
+          self.nested_attributes_options[:content_facet].merge(
+            :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? })
+        )
       end
 
       module ClassMethods

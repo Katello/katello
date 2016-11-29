@@ -2,9 +2,9 @@ module Katello
   module Host
     class ContentFacet < Katello::Model
       self.table_name = 'katello_content_facets'
+      include Facets::Base
 
       belongs_to :kickstart_repository, :class_name => "::Katello::Repository", :foreign_key => :kickstart_repository_id, :inverse_of => :kickstart_content_facets
-      belongs_to :host, :inverse_of => :content_facet, :class_name => "::Host::Managed"
       belongs_to :content_view, :inverse_of => :content_facets, :class_name => "Katello::ContentView"
       belongs_to :lifecycle_environment, :inverse_of => :content_facets, :class_name => "Katello::KTEnvironment"
 
@@ -173,6 +173,13 @@ module Katello
                    "INNER JOIN #{content_table} on #{content_table}.id = #{repo_join_table}.#{content_model.unit_id_field}",
                    "INNER JOIN #{facet_join_table} on #{facet_join_table}.#{content_model.unit_id_field} = #{content_table}.id").
              where("#{facet_join_table}.content_facet_id = #{self.table_name}.id")
+      end
+
+      def self.inherited_attributes(hostgroup, facet_attributes)
+        facet_attributes[:kickstart_repository_id] ||= hostgroup.inherited_kickstart_repository_id
+        facet_attributes[:content_view_id] ||= hostgroup.inherited_content_view_id
+        facet_attributes[:lifecycle_environment_id] ||= hostgroup.inherited_lifecycle_environment_id
+        facet_attributes
       end
 
       private
