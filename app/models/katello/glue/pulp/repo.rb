@@ -317,18 +317,6 @@ module Katello
         Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
       end
 
-      def pulp_rpm_ids
-        Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
-      end
-
-      def pulp_file_ids
-        Katello.pulp_server.extensions.repository.file_ids(self.pulp_id)
-      end
-
-      def pulp_errata_ids
-        Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts
@@ -366,207 +354,6 @@ module Katello
           unassociate_by_filter(ContentViewPackageGroupFilter::CONTENT_TYPE,
                                  "id" => { "$in" => package_groups_to_delete })
         end
-      end
-
-      def index_db_errata(force = false)
-        if self.content_view.default? || force
-          errata_json.each do |erratum_json|
-            begin
-              erratum = Erratum.where(:uuid => erratum_json['_id']).first_or_create
-            rescue ActiveRecord::RecordNotUnique
-              retry
-            end
-            erratum.update_from_json(erratum_json)
-          end
-        end
-
-        Katello::Erratum.sync_repository_associations(self, pulp_errata_ids)
-      end
-
-      def index_db_rpms(force = false)
-        if self.content_view.default? || force
-          rpms_json.each do |rpm_json|
-            begin
-              rpm = Rpm.where(:uuid => rpm_json['_id']).first_or_create
-            rescue ActiveRecord::RecordNotUnique
-              retry
-            end
-            rpm.update_from_json(rpm_json)
-          end
-        end
-        Katello::Rpm.sync_repository_associations(self, pulp_rpm_ids)
-      end
-
-      def index_db_files(force = false)
-        if self.content_view.default? || force
-          files_json.each do |file_json|
-            begin
-              file = ::Katello::FileUnit.where(:uuid => file_json['_id']).first_or_create
-            rescue ActiveRecord::RecordNotUnique
-              retry
-            end
-            file.update_from_json(file_json)
-          end
-        end
-        Katello::FileUnit.sync_repository_associations(self, pulp_file_ids)
-      end
-
-      def index_db_puppet_modules(force = false)
-        if self.content_view.default? || force
-          puppet_modules_json.each do |puppet_module_json|
-            begin
-              puppet_module = Katello::PuppetModule.where(:uuid => puppet_module_json['_id']).first_or_create
-            rescue ActiveRecord::RecordNotUnique
-              retry
-            end
-            puppet_module.update_from_json(puppet_module_json)
-          end
-        end
-
-        Katello::PuppetModule.sync_repository_associations(self, pulp_puppet_module_ids)
-      end
-
-      def puppet_modules_json
-        tmp_puppet_modules = []
-        #we fetch ids and then fetch errata by id, because repo errata
-        #  do not contain all the info we need (bz 854260)
-        self.pulp_puppet_module_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          tmp_puppet_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
-        end
-        tmp_puppet_modules
-      end
-
-      def errata_json
-        tmp_errata = []
-        #we fetch ids and then fetch errata by id, because repo errata
-        #  do not contain all the info we need (bz 854260)
-        self.pulp_errata_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
-        end
-        tmp_errata
-      end
-
-      def index_db_package_groups
-        package_group_json.each do |pg_json|
-          begin
-            package_group = Katello::PackageGroup.where(:uuid => pg_json['_id']).first_or_create
-          rescue ActiveRecord::RecordNotUnique
-            retry
-          end
-          package_group.update_from_json(pg_json)
-        end
-        pg_ids = package_group_json.map { |pg| pg['_id'] }
-        Katello::PackageGroup.sync_repository_associations(self, pg_ids)
-      end
-
-      def package_group_json
-        Katello.pulp_server.extensions.repository.package_groups(self.pulp_id)
-      end
-
-      def rpms_json
-        tmp_packages = []
-        self.pulp_rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, ::Katello::Pulp::Rpm::PULP_INDEXED_FIELDS))
-        end
-        tmp_packages
-      end
-
-      def files_json
-        tmp_packages = []
-        self.pulp_file_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          tmp_packages.concat(
-            Katello.pulp_server.extensions.file.find_all_by_unit_ids(
-              sub_list,
-              ::Katello::Pulp::FileUnit::PULP_INDEXED_FIELDS
-            )
-          )
-        end
-        tmp_packages
-      end
-
-      def index_db_docker_manifests
-        manifests_json = docker_manifests_json
-        manifests_json.each do |manifest_json|
-          manifest = DockerManifest.where(:uuid => manifest_json[:_id]).first_or_create
-          manifest.update_from_json(manifest_json)
-        end
-        docker_tags_json.each do |tag_json|
-          manifest = DockerManifest.where(:digest => tag_json[:manifest_digest]).first
-          create_docker_tag(manifest, tag_json)
-        end
-        DockerManifest.sync_repository_associations(self, pulp_docker_manifest_ids)
-      end
-
-      def docker_manifests_json
-        docker_manifests = []
-        pulp_docker_manifest_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          docker_manifests.concat(Katello.pulp_server.extensions.docker_manifest.find_all_by_unit_ids(sub_list))
-        end
-        docker_manifests
-      end
-
-      def docker_tags_json
-        docker_tags = []
-        pulp_docker_tag_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          docker_tags.concat(Katello.pulp_server.extensions.docker_tag.find_all_by_unit_ids(sub_list))
-        end
-        docker_tags
-      end
-
-      def create_docker_tag(manifest, tag_json)
-        tag = DockerTag.where(:repository_id => id, :name => tag_json[:name]).first
-        if tag
-          tag.docker_manifest = manifest
-          tag.uuid = tag_json[:_id]
-          tag.save!
-        else
-          tag = DockerTag.create!(:repository_id => id, :docker_manifest => manifest,
-                                 :name => tag_json[:name], :uuid => tag_json[:_id])
-        end
-        tag
-      end
-
-      def package_group_categories(search_args = {})
-        categories = Katello.pulp_server.extensions.repository.package_categories(self.pulp_id)
-        unless search_args.empty?
-          categories.delete_if do |category_attrs|
-            search_args.any? { |attr, value| category_attrs[attr] != value }
-          end
-        end
-        categories
-      end
-
-      def pulp_puppet_module_ids
-        Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
-      end
-
-      def pulp_docker_manifest_ids
-        Katello.pulp_server.extensions.repository.docker_manifest_ids(self.pulp_id)
-      end
-
-      def pulp_docker_tag_ids
-        Katello.pulp_server.extensions.repository.docker_tag_ids(self.pulp_id)
-      end
-
-      def pulp_ostree_branch_ids
-        Katello.pulp_server.extensions.repository.ostree_branch_ids(self.pulp_id)
-      end
-
-      def index_db_ostree_branches
-        ostree_branches_json.each do |ostree_branch_json|
-          branch = OstreeBranch.where(:uuid => ostree_branch_json[:_id]).first_or_create
-          branch.update_from_json(ostree_branch_json)
-        end
-        OstreeBranch.sync_repository_associations(self, pulp_ostree_branch_ids)
-      end
-
-      def ostree_branches_json
-        ostree_branches = []
-        pulp_ostree_branch_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          ostree_branches.concat(Katello.pulp_server.extensions.ostree_branch.find_all_by_unit_ids(sub_list))
-        end
-        ostree_branches
       end
 
       def sync_schedule(date_and_time)
@@ -799,7 +586,8 @@ module Katello
         names = []
         filenames = []
         rpm_list = []
-        self.pulp_rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
+        rpm_ids = Katello::Pulp::Rpm.ids_for_repository(self)
+        rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
           rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
                                   sub_list, %w(filename name), :include_repos => false))
         end
@@ -915,14 +703,21 @@ module Katello
     end
 
     def index_content
-      self.index_db_rpms
-      self.index_db_errata
-      self.index_db_docker_manifests
-      self.index_db_puppet_modules
-      self.index_db_package_groups
-      self.index_db_ostree_branches if Katello::RepositoryTypeManager.find(Repository::OSTREE_TYPE).present?
-      self.import_distribution_data
-      self.index_db_files
+      if self.yum?
+        Katello::Rpm.import_for_repository(self)
+        Katello::Erratum.import_for_repository(self)
+        Katello::PackageGroup.import_for_repository(self)
+        self.import_distribution_data
+      elsif self.docker?
+        Katello::DockerManifest.import_for_repository(self)
+        Katello::DockerTag.import_for_repository(self)
+      elsif self.puppet?
+        Katello::PuppetModule.import_for_repository(self)
+      elsif self.ostree?
+        Katello::OstreeBranch.import_for_repository(self)
+      elsif self.file?
+        Katello::FileUnit.import_for_repository(self)
+      end
       true
     end
   end

@@ -26,19 +26,19 @@ module Katello
 
     class ErratumTest < ErratumTestBase
       def test_backend_data
-        RepositorySupport.repo.index_db_errata
+        Katello::Erratum.import_for_repository(RepositorySupport.repo)
         erratum = Pulp::Erratum.new(Erratum.find_by_errata_id(@@full_errata_id).uuid)
         assert @@full_errata_id, erratum .backend_data['id']
       end
 
       def test_pulp_data
-        RepositorySupport.repo.index_db_errata
+        Katello::Erratum.import_for_repository(RepositorySupport.repo)
         uuid = Erratum.find_by_errata_id(@@full_errata_id).uuid
         assert @@full_errata_id, Pulp::Erratum.pulp_data(uuid)['id']
       end
 
       def test_update_from_json
-        uuid = RepositorySupport.repo.errata_json.detect { |e| e['id'] == @@full_errata_id }['_id']
+        uuid = Katello::Pulp::Erratum.fetch_for_repository(RepositorySupport.repo.pulp_id).detect { |e| e['id'] == @@full_errata_id }['_id']
         errata_data = Pulp::Erratum.pulp_data(uuid)
         erratum = Erratum.create!(:uuid => errata_data['_id'])
         erratum.update_from_json(errata_data)

@@ -16,6 +16,10 @@ module Katello
         "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
 
+      def manage_repository_association
+        true
+      end
+
       def repository_association
         repository_association_class.name.demodulize.pluralize.underscore
       end
@@ -36,14 +40,34 @@ module Katello
       end
 
       # Import all units of a single type and refresh their repository associations
-      def import_all(uuids = nil, additive = false)
-        all_items = uuids ? content_unit_class.fetch_by_uuids(uuids) : content_unit_class.fetch_all
-        all_items.each do |item_json|
-          item = self.where(:uuid => item_json['_id']).first_or_create
-          item.update_from_json(item_json)
+      def import_all(uuids = nil, options = {})
+        additive = options.fetch(:additive, false)
+        index_repository_association = options.fetch(:index_repository_association, true)
+
+        process_block = lambda do |units|
+          units.each do |unit|
+            unit = unit.with_indifferent_access
+            item = Katello::Util::Support.active_record_retry do
+              self.where(:uuid => unit['_id']).first_or_create
+            end
+            item.update_from_json(unit)
+          end
+          update_repository_associations(units, additive) if index_repository_association && self.manage_repository_association
+          units.count
         end
-        update_repository_associations(all_items, additive)
-        all_items.count
+
+        if uuids
+          results = content_unit_class.fetch_by_uuids(uuids, &process_block)
+        else
+          results = content_unit_class.fetch_all(&process_block)
+        end
+        results.inject(:+)
+      end
+
+      def import_for_repository(repository, force = false)
+        ids = content_unit_class.ids_for_repository(repository.pulp_id)
+        self.import_all(ids, :index_repository_association => false) if repository.content_view.default? || force
+        self.sync_repository_associations(repository, ids) if self.manage_repository_association
       end
 
       def unit_id_field

@@ -22,17 +22,11 @@ module Katello
       Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
 
       importable_models = Katello::Model.subclasses.select { |model| model if model.respond_to?(:import_all) }
-      importable_models -= [Katello::DockerManifest]
-
       importable_models.each { |model| model.expects(:import_all) }
 
       key = katello_activation_keys(:simple_key)
       key.expects(:import_pools)
       Katello::ActivationKey.stubs(:all).returns([key])
-
-      docker_repo = katello_repositories(:redis)
-      docker_repo.expects(:index_db_docker_manifests)
-      Katello::Repository.stubs(:docker_type).returns([docker_repo])
 
       Rake.application.invoke_task('katello:reimport')
     end

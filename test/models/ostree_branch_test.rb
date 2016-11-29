@@ -10,13 +10,12 @@ module Katello
       @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
 
       ids = @branches.map { |attrs| attrs[:_id] }
-      ::Katello::Repository.any_instance.stubs(:pulp_ostree_branch_ids).returns(ids)
-      Runcible::Extensions::OstreeBranch.any_instance.stubs(:find_all_by_unit_ids).
-        with(ids).returns(@branches)
+      ::Katello::Pulp::OstreeBranch.stubs(:ids_for_repository).returns(ids)
+      ::Katello::Pulp::OstreeBranch.stubs(:fetch).returns(@branches)
     end
 
     def test_index_db_ostree_branches
-      @repo.index_db_ostree_branches
+      @repo.index_content
       assert_equal 1, OstreeBranch.count
       assert_equal 1, @repo.ostree_branches.count
       branch_names = @branches.map { |b| b[:branch] }

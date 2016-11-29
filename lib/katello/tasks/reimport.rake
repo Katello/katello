@@ -21,7 +21,9 @@ namespace :katello do
               Katello::Rpm,
               Katello::FileUnit,
               Katello::Subscription,
-              Katello::Pool]
+              Katello::Pool,
+              Katello::DockerManifest,
+              Katello::DockerTag]
 
     models << Katello::OstreeBranch if Katello::RepositoryTypeManager.find(Katello::Repository::OSTREE_TYPE).present?
 
@@ -33,12 +35,6 @@ namespace :katello do
     print "Importing Activation Key Subscriptions\n"
     Katello::ActivationKey.all.each do |ack_key|
       ack_key.import_pools
-    end
-
-    print "Importing Docker Content\n"
-    # For docker repositories, index all associated manifests and tags
-    Katello::Repository.docker_type.each do |docker_repo|
-      docker_repo.index_db_docker_manifests
     end
   end
 end

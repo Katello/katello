@@ -8,7 +8,7 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:id])
-          repo.index_db_errata
+          ::Katello::Erratum.import_for_repository(repo)
         end
       end
     end

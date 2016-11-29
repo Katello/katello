@@ -1,11 +1,9 @@
 module Katello
   class DockerTag < Katello::Model
+    include Concerns::PulpDatabaseUnit
     include ScopedSearchExtensions
     belongs_to :docker_manifest, :inverse_of => :docker_tags
     belongs_to :repository, :inverse_of => :docker_tags, :class_name => "Katello::Repository"
-
-    validates :name, presence: true, uniqueness: {scope: :repository_id}
-    validates :docker_manifest, presence: true
 
     scoped_search :on => :name, :complete_value => true, :rename => :tag
     scoped_search :in => :docker_manifest, :on => :name, :rename => :manifest,
@@ -25,9 +23,15 @@ module Katello
       where(:id => ids)
     end
 
-    # docker tag doesn't have a uuid in pulp
-    def self.with_uuid(uuid)
-      where(:id => uuid)
+    def update_from_json(json)
+      self.docker_manifest_id ||= ::Katello::DockerManifest.find_by(:digest => json['manifest_digest']).try(:id)
+      self.repository_id ||= ::Katello::Repository.find_by(:pulp_id => json['repo_id']).try(:id)
+      self.name = json['name']
+      self.save!
+    end
+
+    def self.manage_repository_association
+      false
     end
 
     # docker tag only has one repo
