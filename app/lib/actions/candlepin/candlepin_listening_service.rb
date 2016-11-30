@@ -6,6 +6,7 @@ module Actions
 
     class CandlepinListeningService
       RECONNECT_ATTEMPTS = 30
+      LOOP_RECEIVE_COUNT = 100
       TIMEOUT = Qpid::Messaging::Duration::SECOND
       NO_MESSAGE_AVAILABLE_ERROR_TYPE = 'NoMessageAvailable'.freeze
 
@@ -72,10 +73,14 @@ module Actions
       def poll_for_messages(suspended_action)
         @thread.kill if @thread
         @thread = Thread.new do
+          count = 0
           loop do
             begin
               message = fetch_message
-              if message[:result]
+              if (message[:result].nil? && message[:error].nil?) || count >= LOOP_RECEIVE_COUNT
+                sleep 1
+                count = 0
+              elsif message[:result]
                 result = message[:result]
                 @session.acknowledge(:message => result, :sync => true)
                 suspended_action.notify_message_received(result.message_id, result.subject, result.content)
@@ -86,6 +91,8 @@ module Actions
             rescue => e
               suspended_action.notify_fatal(e)
               raise e
+            ensure
+              count += 1
             end
           end
         end
