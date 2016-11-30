@@ -99,6 +99,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }
             return checksum;
         };
+        $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
 
         $scope.downloadPolicyDisplay = function (downloadPolicy) {
             return DownloadPolicy.downloadPolicyName(downloadPolicy);

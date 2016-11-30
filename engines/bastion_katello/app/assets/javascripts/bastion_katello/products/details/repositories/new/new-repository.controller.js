@@ -11,13 +11,14 @@
  * @requires GlobalNotification
  * @requires ApiErrorHandler
  * @requires BastionConfig
+ * @requires DownloadPolicy
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig',
-    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig) {
+    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig', 'DownloadPolicy',
+    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig, DownloadPolicy) {
 
         function success() {
             GlobalNotification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -70,6 +71,8 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         Repository.repositoryTypes({'creatable': true}, function (data) {
             $scope.repositoryTypes = data;
         });
+
+        $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
 
         $scope.$watch('repository.name', function () {
             if ($scope.repositoryForm && $scope.repositoryForm.name) {

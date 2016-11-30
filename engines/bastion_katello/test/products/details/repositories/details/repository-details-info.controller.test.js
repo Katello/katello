@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, repository;
+    var $scope, $state, translate, repository, DownloadPolicy;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -13,7 +13,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             Repository = $injector.get('MockResource').$new();
 
         repository = new Repository();
-
+        DownloadPolicy = $injector.get("DownloadPolicy");
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
 
@@ -98,6 +98,10 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.uploadSuccessMessages.length).toBe(0);
         expect($scope.uploadErrorMessages.length).toBe(1);
         expect($scope.uploadErrorMessages[0]).toContain('File too large');
+    });
+
+    it ('should set download policies', function() {
+       expect($scope.downloadPolicies).toBe(DownloadPolicy.downloadPolicies);
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
