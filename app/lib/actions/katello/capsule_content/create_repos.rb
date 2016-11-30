@@ -3,16 +3,27 @@ module Actions
     module CapsuleContent
       class CreateRepos < ::Actions::EntryAction
         # @param capsule_content [::Katello::CapsuleContent]
-        def plan(capsule_content, environment = nil, content_view = nil)
+        def plan(capsule_content, environment = nil, content_view = nil, repository = nil)
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
-          current_repos_on_capsule = capsule_content.current_repositories(environment, content_view)
-          list_of_repos_to_sync = capsule_content.repos_available_to_capsule(environment, content_view)
-          need_creation = list_of_repos_to_sync - current_repos_on_capsule
-
-          need_creation.each do |repo|
+          repos_to_create(capsule_content, environment, content_view, repository).each do |repo|
             create_repo_in_pulp(capsule_content, repo)
           end
+        end
+
+        def repos_to_create(capsule_content, environment, content_view, repository)
+          repos = []
+          current_repos_on_capsule = capsule_content.current_repositories(environment, content_view)
+
+          if repository
+            unless current_repos_on_capsule.include?(repository)
+              repos << repository
+            end
+          else
+            list_of_repos_to_sync = capsule_content.repos_available_to_capsule(environment, content_view)
+            repos = list_of_repos_to_sync - current_repos_on_capsule
+          end
+          repos
         end
 
         def create_repo_in_pulp(capsule_content, repository)

@@ -20,14 +20,15 @@ module Actions
 
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
-          need_updates = repos_needing_updates(capsule_content, environment, content_view, repository)
+          affected_repos = affected_repositories(capsule_content, environment, content_view, repository)
+          need_updates = repos_needing_updates(capsule_content, affected_repos)
           repository_ids = get_repository_ids(capsule_content, environment, content_view, repository)
           unless repository_ids.blank?
             sequence do
               need_updates.each do |repo|
                 plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
               end
-              plan_action(ConfigureCapsule, capsule_content, environment, content_view)
+              plan_action(ConfigureCapsule, capsule_content, environment, content_view, repository)
               sync_repos_to_capsule(capsule_content, repository_ids)
               plan_action(RemoveOrphans, :capsule_id => capsule_content.capsule.id)
             end
@@ -73,12 +74,15 @@ module Actions
           repository_ids
         end
 
-        def repos_needing_updates(capsule_content, environment, content_view, repository)
-          repos = if repository
-                    [repository]
-                  else
-                    capsule_content.repos_available_to_capsule(environment, content_view)
-                  end
+        def affected_repositories(capsule_content, environment, content_view, repository)
+          if repository
+            [repository]
+          else
+            capsule_content.repos_available_to_capsule(environment, content_view)
+          end
+        end
+
+        def repos_needing_updates(capsule_content, repos)
           need_importer_update = ::Katello::Repository.needs_importer_updates(repos, capsule_content)
           need_distributor_update = ::Katello::Repository.needs_distributor_updates(repos, capsule_content)
           (need_distributor_update + need_importer_update).uniq
