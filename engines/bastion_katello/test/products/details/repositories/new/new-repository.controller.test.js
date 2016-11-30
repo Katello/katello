@@ -2,6 +2,7 @@ describe('Controller: NewRepositoryController', function() {
     var $scope,
         FormUtils,
         GlobalNotification,
+        DownloadPolicy,
         $httpBackend;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
@@ -14,6 +15,7 @@ describe('Controller: NewRepositoryController', function() {
             Setting = $injector.get('MockResource').$new(),
             GPGKey = $injector.get('MockResource').$new();
 
+        DownloadPolicy = $injector.get('DownloadPolicy');
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
@@ -88,5 +90,9 @@ describe('Controller: NewRepositoryController', function() {
         $scope.$apply();
 
         expect(FormUtils.labelize).toHaveBeenCalled();
+    });
+
+    it ('should set download policies', function() {
+       expect($scope.downloadPolicies).toBe(DownloadPolicy.downloadPolicies);
     });
 });
