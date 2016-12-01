@@ -122,7 +122,7 @@ module Katello
       test "returns false when a sync occured after last published CV version" do
         cv_update_date = environment.content_view_environments.last.updated_at
 
-        task = FactoryGirl.create(:dynflow_task, :started_at => cv_update_date.change(:month => cv_update_date.month + 1))
+        task = FactoryGirl.create(:dynflow_task, :started_at => cv_update_date + 1.month)
         ForemanTasks::Lock.link!(capsule_content.capsule, task.id)
 
         refute capsule_content.environment_syncable?(environment)
