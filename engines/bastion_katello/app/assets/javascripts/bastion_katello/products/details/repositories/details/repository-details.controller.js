@@ -49,7 +49,7 @@
 
         $scope.syncRepository = function (repository) {
             Repository.sync({id: repository.id}, function (task) {
-                $state.go('repository.tasks.details', {taskId: task.id});
+                $state.go('product.repository.tasks.details', {taskId: task.id});
             }, errorHandler);
         };
 
