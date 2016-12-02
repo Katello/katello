@@ -24,7 +24,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       activation_key_includes = [:content_view, :environment, :host_collections, :organization]
-      respond(:collection => scoped_search(index_relation.uniq, :name, :desc, :includes => activation_key_includes))
+      respond(:collection => scoped_search(index_relation.uniq, :name, :asc, :includes => activation_key_includes))
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")
@@ -115,7 +115,7 @@ module Katello
       scoped = scoped.where(:organization_id => @activation_key.organization)
       scoped = scoped.where(:name => params[:name]) if params[:name]
 
-      respond_for_index(:collection => scoped_search(scoped, :name, :desc, :resource_class => HostCollection))
+      respond_for_index(:collection => scoped_search(scoped, :name, :asc, :resource_class => HostCollection))
     end
 
     api :GET, "/activation_keys/:id/releases", N_("Show release versions available for an activation key")

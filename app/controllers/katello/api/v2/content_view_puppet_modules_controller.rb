@@ -12,7 +12,7 @@ module Katello
     param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
+      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end
 
     api :POST, "/content_views/:content_view_id/content_view_puppet_modules",

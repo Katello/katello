@@ -34,7 +34,7 @@ module Katello
     param :available_for, String, :required => false,
           :desc => N_("Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.")
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :name, :desc))
+      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end
 
     def index_relation
