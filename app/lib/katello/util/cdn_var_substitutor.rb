@@ -8,104 +8,40 @@ module Katello
       # /content/rhel/6.2/listing) and returns the body response)
       def initialize(cdn_resource)
         @resource = cdn_resource
-        @substitutions = Thread.current[:cdn_var_substitutor_cache] || {}
-        @good_listings = Set.new
-        @bad_listings = Set.new
-      end
-
-      # using substitutor from whithin the block makes sure that every
-      # request is made only once.
-      def self.with_cache(&_block)
-        Thread.current[:cdn_var_substitutor_cache] = {}
-        yield
-      ensure
-        Thread.current[:cdn_var_substitutor_cache] = nil
-      end
-
-      # precalcuclate all paths at once - let's you discover errors and stop
-      # before it causes more pain
-      def precalculate(paths_with_vars)
-        paths_with_vars.uniq.reduce({}) do |ret, path_with_vars|
-          ret[path_with_vars] = substitute_vars(path_with_vars)
-          ret
-        end
       end
 
       # takes path e.g. "/rhel/server/5/$releasever/$basearch/os"
-      # returns hash substituting variables:
+      # returns PathWithSubstitutions objects
       #
       #  { {"releasever" => "6Server", "basearch" => "i386"} =>  "/rhel/server/5/6Server/i386/os",
       #    {"releasever" => "6Server", "basearch" => "x86_64"} =>  "/rhel/server/5/6Server/x84_64/os"}
       #
       # values are loaded from CDN
-      def substitute_vars(path_with_vars)
-        if path_with_vars =~ /^(.*\$\w+)(.*)$/
-          prefix_with_vars, suffix_without_vars = Regexp.last_match[1], Regexp.last_match[2]
-        else
-          prefix_with_vars, suffix_without_vars = "", path_with_vars
-        end
-
-        prefixes_without_vars = substitute_vars_in_prefix(prefix_with_vars)
-        paths_without_vars = prefixes_without_vars.reduce({}) do |h, (substitutions, prefix_without_vars)|
-          h[substitutions] = prefix_without_vars + suffix_without_vars
-          h
-        end
-        return paths_without_vars
+      def substitute_vars(path)
+        find_substitutions([PathWithSubstitutions.new(path, {})])
       end
 
-      # prefix_with_vars is the part of url containing some vars. We can cache
-      # calcualted values for this parts. So for example for:
-      #   "/a/$b/$c/d"
-      #   "/a/$b/$c/e"
-      # prefix_with_vars is "/a/$b/$c" and we store the result after resolving
-      # for the first path.
-      def substitute_vars_in_prefix(prefix_with_vars)
-        paths_with_vars = { {} => prefix_with_vars}
-        prefixes_without_vars = @substitutions[prefix_with_vars]
+      def validate_substitutions(content, substitutions)
+        path_with_subs = PathWithSubstitutions.new(content.contentUrl, substitutions)
+        real_path = path_with_subs.apply_substitutions
+        unused_substitutions = path_with_subs.unused_substitutions
+        needed_substitutions = PathWithSubstitutions.new(real_path, {}).substitutions_needed
 
-        unless prefixes_without_vars
-          prefixes_without_vars = {}
-          until paths_with_vars.empty?
-            substitutions, path = paths_with_vars.shift
-
-            if substituable? path
-              for_each_substitute_of_next_var substitutions, path do |new_substitution, new_path|
-                begin
-                  paths_with_vars[new_substitution] = new_path
-                rescue Errors::SecurityViolation
-                  # Some paths may not be accessible
-                  @resource.log :warn, "#{new_path} is not accessible, ignoring"
-                end
-              end
-            else
-              prefixes_without_vars[substitutions] = path
-            end
-          end
-          @substitutions[prefix_with_vars] = prefixes_without_vars
+        if unused_substitutions.any?
+          fail Errors::CdnSubstitutionError, _("%{unused_substitutes} cannot be specified for %{content_name}"\
+                 " as that information is not substitutable in %{content_url} ") %
+              { unaccepted_substitutions: unused_substitutions, content_name: content.name, content_url: content.contentUrl }
         end
-        return prefixes_without_vars
-      end
 
-      def substituable?(path)
-        path.include?("$")
-      end
-
-      def valid_substitutions(content, substitutions)
-        validate_all_substitutions_accepted(content, substitutions)
-        content_url = content.contentUrl
-        real_path = gsub_vars(content_url, substitutions)
-
-        if substituable?(real_path)
+        if needed_substitutions.any?
           fail Errors::CdnSubstitutionError, _("Missing arguments %{substitutions} for %{content_url}") %
-              { substitutions: substitutions_needed(real_path).join(', '),
-                content_url: real_path }
-        else
-          unless any_valid_metadata_file?(real_path)
-            @resource.log :error, "No valid metadata files found for #{real_path}"
-            fail Errors::CdnSubstitutionError, _("The path %{real_path} does not seem to be a valid repository."\
-                   " If you think this is an error, please try refreshing your manifest.") %
-              {real_path: real_path}
-          end
+              { substitutions: needed_substitutions.join(','), content_url: real_path }
+        end
+
+        unless any_valid_metadata_file?(real_path)
+          @resource.log :error, "No valid metadata files found for #{real_path}"
+          fail Errors::CdnSubstitutionError, _("The path %{real_path} does not seem to be a valid repository."\
+                 " If you think this is an error, please try refreshing your manifest.") % {real_path: real_path}
         end
       end
 
@@ -115,21 +51,28 @@ module Katello
 
       protected
 
-      def substitutions_needed(content_url)
-        # e.g. if content_url = "/content/dist/rhel/server/7/$releasever/$basearch/kickstart"
-        #      return ['releasever', 'basearch']
-        content_url.split('/').map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
-      end
+      def find_substitutions(paths_with_substitutions)
+        to_resolve = paths_with_substitutions.select { |path| path.substitutable? }
+        resolved = paths_with_substitutions - to_resolve
 
-      def validate_all_substitutions_accepted(content, substitutions)
-        unaccepted_substitutions = substitutions.keys.reject do |key|
-          content.contentUrl.include?("$#{key}")
+        return resolved if to_resolve.empty?
+
+        futures = to_resolve.map do |path_with_substitution|
+          Concurrent.future do
+            path_with_substitution.resolve_substitutions(@resource)
+          end
         end
-        if unaccepted_substitutions.size > 0
-          fail Errors::CdnSubstitutionError, _("%{unaccepted_substitutions} cannot be specified for %{content_name}"\
-                 " as that information is not substituable in %{content_url} ") %
-              { unaccepted_substitutions: unaccepted_substitutions, content_name: content.name, content_url: content.contentUrl }
+
+        futures.each do |future|
+          begin
+            resolved << future.value
+          rescue StandardError => e
+            Rails.logger.error("Error Recieved: #{e.to_s}")
+            Rails.logger.error("Error Recieved: #{e.backtrace.join("\n")}")
+          end
         end
+
+        find_substitutions(resolved.compact.flatten)
       end
 
       def valid_path?(path, postfix)
@@ -138,34 +81,6 @@ module Katello
         return true
       rescue Errors::NotFound
         return false
-      end
-
-      def gsub_vars(content_url, substitutions)
-        substitutions.reduce(content_url) do |url, (key, value)|
-          url.gsub("$#{key}", value)
-        end
-      end
-
-      def for_each_substitute_of_next_var(substitutions, path)
-        if path =~ /^(.*?)\$([^\/]*)/
-          base_path, var = Regexp.last_match[1], Regexp.last_match[2]
-          get_substitutions_from(base_path).compact.each do |value|
-            new_substitutions = substitutions.merge(var => value)
-            new_path = path.sub("$#{var}", value)
-
-            yield new_substitutions, new_path
-          end
-        end
-      end
-
-      def get_substitutions_from(base_path)
-        ret = @resource.get(File.join(base_path, "listing")).split("\n")
-        @good_listings << base_path
-        ret
-      rescue Errors::NotFound => e # some of listing file points to not existing content
-        @bad_listings << base_path
-        @resource.log :error, e.message
-        [] # return no substitution for unreachable listings
       end
     end
   end

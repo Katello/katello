@@ -125,7 +125,7 @@ module ::Actions::Katello::RepositorySet
 
       run_action planned_action do |run_action|
         substitutor = stub(:cdn_var_substitutor)
-        substitutor.stubs(substitute_vars: [substitutions])
+        substitutor.stubs(substitute_vars: [Katello::Util::PathWithSubstitutions.new(content_url, substitutions)])
         run_action.stubs(content: content)
         run_action.stubs(cdn_var_substitutor: substitutor)
       end

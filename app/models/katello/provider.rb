@@ -107,34 +107,6 @@ module Katello
       hash
     end
 
-    def available_releases
-      releases = []
-      begin
-        Util::CdnVarSubstitutor.with_cache do
-          self.products.each do |product|
-            cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],
-                                                             :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
-                                                             :ssl_client_key => OpenSSL::PKey::RSA.new(product.key)).substitutor
-            product.productContent.each do |pc|
-              if (url_to_releases = pc.content.contentUrl[/^.*\$releasever/])
-                begin
-                  cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, _path)|
-                    releases << Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]
-                  end
-                rescue Errors::SecurityViolation => e
-                  # Some products may not be accessible but these should not impact available releases available
-                  Rails.logger.info "Skipping unreadable product content: #{e}"
-                end
-              end
-            end
-          end
-        end
-      rescue => e
-        raise _("Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}") % {:url => self.repository_url, :error => e.to_s}
-      end
-      releases.uniq.sort
-    end
-
     def manifest_task
       return task_status
     end

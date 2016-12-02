@@ -34,8 +34,8 @@ module Actions
           else
             substitutor = cdn_var_substitutor
             return [] unless substitutor
-            substitutor.substitute_vars(content.contentUrl).map do |(substitutions, path)|
-              prepare_result(substitutions, path)
+            substitutor.substitute_vars(content.contentUrl).map do |path_with_substitutions|
+              prepare_result(path_with_substitutions.substitutions, path_with_substitutions.path)
             end
           end
         end
