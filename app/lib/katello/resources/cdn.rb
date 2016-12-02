@@ -17,7 +17,7 @@ module Katello
       class CdnResource
         CDN_DOCKER_CONTAINER_LISTING = "CONTAINER_REGISTRY_LISTING".freeze
 
-        attr_reader :url, :product
+        attr_reader :url, :product, :options
         attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password
 
         def substitutor(logger = nil)
@@ -37,25 +37,29 @@ module Katello
 
           @url = url
           @uri = URI.parse(url)
-          @net = net_http_class.new(@uri.host, @uri.port)
-          @net.use_ssl = @uri.is_a?(URI::HTTPS)
+          @options = options
+        end
 
-          @net.cert = options[:ssl_client_cert]
-          @net.key = options[:ssl_client_key]
-          @net.ca_file = options[:ssl_ca_file]
+        def http_downloader
+          net = net_http_class.new(@uri.host, @uri.port)
+          net.use_ssl = @uri.is_a?(URI::HTTPS)
+
+          net.cert = @options[:ssl_client_cert]
+          net.key = @options[:ssl_client_key]
+          net.ca_file = @options[:ssl_ca_file]
 
           # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
           # Valid values in ruby 1.9.3 are 'SSLv23' or 'TLSV1'
           # Run the following command in rails console to figure out other
           # valid constants in other ruby versions
           # "OpenSSL::SSL::SSLContext::METHODS"
-          @net.ssl_version = SETTINGS[:katello][:cdn_ssl_version] if SETTINGS[:katello].key?(:cdn_ssl_version)
+          net.ssl_version = SETTINGS[:katello][:cdn_ssl_version] if SETTINGS[:katello].key?(:cdn_ssl_version)
 
-          if (options[:verify_ssl] == false) || (options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
-            @net.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          elsif options[:verify_ssl].is_a? Integer
-            @net.verify_mode = options[:verify_ssl]
-            @net.verify_callback = lambda do |preverify_ok, ssl_context|
+          if (@options[:verify_ssl] == false) || (@options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
+            net.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          elsif @options[:verify_ssl].is_a? Integer
+            net.verify_mode = @options[:verify_ssl]
+            net.verify_callback = lambda do |preverify_ok, ssl_context|
               if !preverify_ok || ssl_context.error != 0
                 err_msg = "SSL Verification failed -- Preverify: #{preverify_ok}, Error: #{ssl_context.error_string} (#{ssl_context.error})"
                 fail RestClient::SSLCertificateNotVerified, err_msg
@@ -63,15 +67,17 @@ module Katello
               true
             end
           end
+          net
         end
 
         def get(path, _headers = {})
+          net = http_downloader
           path = File.join(@uri.request_uri, path)
           used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
           Rails.logger.debug "CDN: Requesting path #{used_url}"
           req = Net::HTTP::Get.new(path)
           begin
-            @net.start do |http|
+            net.start do |http|
               res = http.request(req, nil) { |http_response| http_response.read_body }
               code = res.code.to_i
               if code == 200
@@ -98,6 +104,13 @@ module Katello
           rescue RestClient::Forbidden
             raise Errors::SecurityViolation, _("CDN loading error: access forbidden to %s") % used_url
           end
+        end
+
+        def fetch_substitutions(base_path)
+          get(File.join(base_path, "listing")).split("\n")
+        rescue Errors::NotFound => e # some of listing file points to not existing content
+          log :error, e.message
+          [] # return no substitution for unreachable listings
         end
 
         def self.ca_file

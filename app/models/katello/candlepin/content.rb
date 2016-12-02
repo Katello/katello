@@ -94,7 +94,7 @@ module Katello
 
       def validate!
         return if katello_content_type == Repository::OSTREE_TYPE
-        substitutor.valid_substitutions(content, substitutions)
+        substitutor.validate_substitutions(content, substitutions)
       end
 
       def substitutor
