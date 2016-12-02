@@ -22,7 +22,7 @@ module Katello
     param :sync_date, String, :desc => N_("filter by sync date")
     param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
     def index
-      respond_for_index(:collection => scoped_search(index_relation.uniq, :name, :desc))
+      respond_for_index(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end
 
     def index_relation
