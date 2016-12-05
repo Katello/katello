@@ -29,7 +29,7 @@ module Katello
                                             :notes => "Failed description"
                                            )
 
-      assert 'Success description', @cvv.description
+      assert_equal 'Success description', @cvv.description
     end
 
     def test_promotable_in_sequence

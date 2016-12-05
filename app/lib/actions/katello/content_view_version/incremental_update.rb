@@ -166,7 +166,16 @@ module Actions
             end
             humanized_lines << ''
           end
-          version.description = humanized_lines.join("\n")
+
+          version_history = version.history.publish.first
+          if version_history.notes
+            version_history.notes += "\n"
+          else
+            version_history.notes = ''
+          end
+
+          version_history.notes += humanized_lines.join("\n")
+          version_history.save!
           version.save!
         end
 
