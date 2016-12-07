@@ -24,8 +24,9 @@ module Katello
         subscription_product_ids += sub['derivedProvidedProducts'].map { |p| p['id'] } if sub['derivedProvidedProducts']
       end
 
-      orphaned_product_ids = current_organization.redhat_provider.products.
-          where("cp_id not in (?)", subscription_product_ids).pluck(:id)
+      orphaned_products = current_organization.redhat_provider.products
+      orphaned_products = orphaned_products.where("cp_id not in (?)", subscription_product_ids) if subscription_product_ids.any?
+      orphaned_product_ids = orphaned_products.pluck(:id)
 
       render :partial => "katello/providers/redhat/tab",
              :locals => { :tab_id => params[:tab], :orphaned_product_ids => orphaned_product_ids }

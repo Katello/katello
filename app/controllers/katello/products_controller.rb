@@ -17,15 +17,14 @@ module Katello
         render_bad_parameters _('Repository sets are not available for custom products.')
       else
         task = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, params[:content_id])
-        if task.result == 'warning'
-          render :partial => 'katello/providers/redhat/errors', :locals => { :error_message => task_error(task), :task => task}
-        else
-          repos = task.output[:results]
-          repos = exclude_rolling_kickstart_repos(repos)
-          repos = available_synced_repos(repos) if params[:orphaned]
 
-          render :partial => 'katello/providers/redhat/repos', :locals => {:scan_cdn => task, :repos => repos}
-        end
+        repos = task.output[:results]
+        repos = exclude_rolling_kickstart_repos(repos)
+        repos = available_synced_repos(repos, params[:content_id])
+
+        locals = {:scan_cdn => task, :repos => repos, :error_message => nil}
+        locals[:error_message => task_error(task)] if task.result == 'warning'
+        render :partial => 'katello/providers/redhat/repos', :locals => locals
       end
     end
 
@@ -80,8 +79,8 @@ module Katello
       end
     end
 
-    def available_synced_repos(repos)
-      @product.repositories.each do |product_repo|
+    def available_synced_repos(repos, content_id)
+      @product.repositories.in_default_view.where(:content_id => content_id).find_each do |product_repo|
         found = repos.detect do |repo|
           product_repo.pulp_id == repo[:pulp_id]
         end
