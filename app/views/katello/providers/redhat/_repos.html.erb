@@ -1,3 +1,7 @@
+<% if error_message %>
+  <%= render :partial => "katello/providers/redhat/errors", :locals => { :error_message => error_message, :task => task} %>
+<%end%>
+
 <table class="repo_table" style="display: none">
   <% if repos.empty? %>
     <tbody>
