@@ -4,7 +4,7 @@ module Katello
       api_base_url "/katello/api"
     end
 
-    api :GET, '/capsules', 'List all capsules'
+    api :GET, '/capsules', 'List all smart proxies that have content'
     param_group :search, Api::V2::ApiController
     def index
       @smart_proxies = SmartProxy.with_content.authorized(:view_smart_proxies).includes(:features).
@@ -12,8 +12,8 @@ module Katello
       @total = SmartProxy.with_content.authorized(:view_smart_proxies).includes(:features).count
     end
 
-    api :GET, '/capsules/:id', 'Show the capsule details'
-    param :id, Integer, :desc => 'Id of the capsule', :required => true
+    api :GET, '/capsules/:id', 'Show the smart proxy details'
+    param :id, Integer, :desc => 'Id of the smart proxy', :required => true
     def show
       super
     end

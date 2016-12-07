@@ -3,7 +3,7 @@ module Actions
     module Repository
       class CapsuleGenerateAndSync < Actions::Base
         def humanized_name
-          _("Sync Repository on Capsule(s)")
+          _("Sync Repository on Smart proxy(ies)")
         end
 
         def plan(repo)

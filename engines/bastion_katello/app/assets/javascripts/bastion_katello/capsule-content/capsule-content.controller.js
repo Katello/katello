@@ -155,7 +155,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
             }
 
             if (currentSyncState.is(currentSyncState.SYNCING)) {
-                message = translate("Capsule currently syncing to your locations...");
+                message = translate("Smart proxy currently syncing to your locations...");
             } else if (currentSyncState.is(currentSyncState.SYNC_TRIGGERED)) {
                 message = translate("Synchronization is about to start...");
             } else if (currentSyncState.is(currentSyncState.CANCEL_TRIGGERED)) {
@@ -169,7 +169,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                                 .replace('%count', syncableEnvs.length)
                                 .replace('%envs', envNames);
                 } else {
-                    message = translate("Capsule is synchronized");
+                    message = translate("Smart proxy is synchronized");
                 }
             }
             return message;

@@ -3,7 +3,7 @@ module Actions
     module ContentView
       class CapsuleGenerateAndSync < Actions::Base
         def humanized_name
-          _("Sync Capsule with Content View")
+          _("Sync Smart proxy with Content View")
         end
 
         def plan(content_view, environment)

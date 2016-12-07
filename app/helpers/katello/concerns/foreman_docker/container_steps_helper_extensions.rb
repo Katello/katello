@@ -24,11 +24,11 @@ module Katello
           proxies = Organization.current.nil? ? [] : SmartProxy.with_content
           selected_proxy = proxies.size == 1 ? proxies.first.id : nil
 
-          field(f, 'capsule[id]', :label => _("Capsule"), :required => true) do
+          field(f, 'capsule[id]', :label => _("Smart proxy"), :required => true) do
             make_select_box(:capsule,
                              SmartProxy.with_content,
                              "load_capsules",
-                             :prompt => _("Select a Capsule"),
+                             :prompt => _("Select a Smart proxy"),
                              :selected => selected_proxy)
           end
         end
