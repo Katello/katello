@@ -2,7 +2,6 @@ object @resource
 
 attributes :id, :name, :schema_version, :digest
 
-child :docker_tag => :tag do
-  attributes :repository_id
-  attributes :name
+child :docker_tags => :tags do
+  attributes :id, :repository_id, :name
 end
