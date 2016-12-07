@@ -44,7 +44,7 @@
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column><span translate>Manifest Name</span></th>
-          <th bst-table-column><span translate>Tag</span></th>
+          <th bst-table-column><span translate>Tags</span></th>
           <th bst-table-column><span translate>Digest</span></th>
         </tr>
       </thead>
@@ -55,9 +55,11 @@
             {{ item.name }}
           </td>
           <td bst-table-cell>
-            <a ui-sref="docker-tag.info({tagId: item.id})">
-              {{ item.tag.name }}
-            </a>
+            <span ng-repeat="tag in tagsForManifest(item) ">
+              <a ui-sref="docker-tag.info({tagId: tag.id})">
+                {{ tag.name }}
+              </a>
+            </span>
           </td>
           <td bst-table-cell>
             {{ item.digest }}

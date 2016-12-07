@@ -17,8 +17,8 @@ describe('Controller: RepositoryManageContentController', function() {
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
-            productId: 1,
-            repositoryId: 1
+            productId: '1',
+            repositoryId: '1'
         };
         $state = { current: { name: 'manage-content.packages' } };
 
@@ -62,6 +62,14 @@ describe('Controller: RepositoryManageContentController', function() {
 
         expect(Repository.removeContent).toHaveBeenCalledWith({id: $scope.repository.id, ids: ['foo']},
             jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it('can fetch tags from a manifest', function() {
+        var tags, manifest;
+        manifest = {tags: [{id: 1, repository_id: 1}, {id: 2, repository_id: 2}]};
+        tags = $scope.tagsForManifest(manifest);
+        expect(tags.length).toBe(1);
+        expect(tags[0].id).toBe(1);
     });
 
 });
