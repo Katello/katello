@@ -38,7 +38,7 @@ namespace :katello do
           end
         end
 
-        Katello::Host::SubscriptionFacet.find_each do |subscription_facet|
+        Katello::Host::SubscriptionFacet.where.not(:uuid => nil).find_each do |subscription_facet|
           begin
             candlepin_attrs = subscription_facet.candlepin_consumer.consumer_attributes
             subscription_facet.import_database_attributes(candlepin_attrs)
