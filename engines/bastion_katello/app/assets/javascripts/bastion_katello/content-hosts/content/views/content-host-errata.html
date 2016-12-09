@@ -33,17 +33,15 @@
     </div>
 
     <span data-block="filters" bst-feature-flag="remote_actions">
-      <form class="well form-horizontal col-sm-12">
+      <form class="well col-sm-12">
         <div class="form-group">
-          <label translate class="control-label col-sm-1">
+          <label translate>
             Show from:
           </label>
-          <div class="col-sm-3">
-            <select class="form-control"
-                    ng-model="selectedErrataOption"
-                    ng-change="refreshErrata(selectedErrataOption)"
-                    ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'"></select>
-          </div>
+          <select class="form-control"
+                  ng-model="selectedErrataOption"
+                  ng-change="refreshErrata(selectedErrataOption)"
+                  ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'"></select>
         </div>
       </form>
     </span>
