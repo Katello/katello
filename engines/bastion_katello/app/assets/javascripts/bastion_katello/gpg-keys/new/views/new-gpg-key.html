@@ -4,7 +4,7 @@
   </header>
 
   <div data-block="content">
-    <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
+    <form name="gpgKeyForm" class="col-sm-5" novalidate role="form"
           action="{{ uploadURL }}"
           ng-upload="uploadContent(content)"
           upload-options-enable-rails-csrf>
@@ -30,10 +30,8 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-5 col-sm-offset-2">
-          <input type="file" name="file_path"/>
-          <p class="help-block" translate>Upload GPG Key file</p>
-        </div>
+        <input type="file" name="file_path"/>
+        <p class="help-block" translate>Upload GPG Key file</p>
       </div>
 
       <div bst-form-buttons upload-submit

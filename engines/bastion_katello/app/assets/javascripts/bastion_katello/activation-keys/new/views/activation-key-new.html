@@ -6,7 +6,7 @@
   </header>
 
   <div data-block="content">
-    <form name="activationKeyForm" class="form-horizontal" novalidate role="form">
+    <form name="activationKeyForm" class="col-sm-5" novalidate role="form">
 
       <div bst-form-group label="{{ 'Name' | translate }}">
         <input id="name"
@@ -44,13 +44,11 @@
 
       <span bst-feature-flag="lifecycle_environments">
         <div class="form-group">
-          <label class="control-label col-sm-2" translate>Environment</label>
-          <div class="col-sm-5 input">
-            <span path-selector="environments"
-                  ng-model="activationKey.environment"
-                  selection-required="false"
-                  mode="singleSelect">
-            </span>
+          <label translate>Environment</label>
+          <div path-selector="environments"
+                ng-model="activationKey.environment"
+                selection-required="false"
+                mode="singleSelect">
           </div>
         </div>
 

@@ -1,7 +1,9 @@
 <div ng-if="isState('content-views.details.filters.details.erratum.available')">
-  <form name="errataForm" class="form-horizontal">
-    <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
-  </form>
+  <div class="row">
+    <form name="errataForm" class="col-sm-5">
+      <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
+    </form>
+  </div>
 </div>
 
 <div data-extend-template="layouts/details-nutupane.html">
