@@ -94,7 +94,7 @@ module Katello
       end
 
       def import_data
-        pool_attributes = {}
+        pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
 
@@ -125,6 +125,8 @@ module Katello
         if pool_attributes.key?(:unmapped_guests_only) && pool_attributes[:unmapped_guests_only] == 'true'
           pool_attributes[:unmapped_guest] = true
         end
+
+        pool_attributes[:virt_who] = pool_attributes['virt_limit'] != "0" && !pool_attributes['virt_limit'].nil? && subscription.redhat?
 
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update_attributes(pool_attributes.except!(*exceptions))

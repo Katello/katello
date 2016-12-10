@@ -26,5 +26,19 @@ module Katello
       @other.products.delete(fedora)
       refute_includes Subscription.with_subscribable_content, @other
     end
+
+    def test_virt_who_scope
+      assert_equal 1, Subscription.using_virt_who.length
+    end
+
+    def test_virt_who
+      assert_equal 1, @basic.virt_who_pools.length
+      assert_equal 0, @other.virt_who_pools.length
+    end
+
+    def test_virt_who?
+      assert @basic.virt_who?
+      refute @other.virt_who?
+    end
   end
 end

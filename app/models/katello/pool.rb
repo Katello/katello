@@ -26,6 +26,7 @@ module Katello
     scoped_search :on => :consumed, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :account_number, :complete_value => true, :rename => :account, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :contract_number, :complete_value => true, :rename => :contract, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :virt_who, :complete_value => true, :only_explicit => true
     scoped_search :on => :name, :relation => :subscription, :complete_value => true, :rename => :name
     scoped_search :on => :support_level, :relation => :subscription, :complete_value => true
     scoped_search :on => :sockets, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
