@@ -8,6 +8,19 @@
 
       <dt translate>Description</dt>
       <dd>{{ subscription.description }}</dd>
+      
+      <dt>
+        <span translate>Virt-Who Usage Required</span>
+        <i class="pf pficon-info"
+          tooltip-html-unsafe="{{ virtWhoToolTip }}"
+           tooltip-trigger="click"
+           tooltip-animation="false"
+           tooltip-placement="right"
+           tooltip-close-popup-delay="5"
+           tooltip-append-to-body="true">
+        </i>
+      </dt>
+      <dd>{{ subscription.virt_who | booleanToYesNo }}</dd>
 
       <dt translate>Consumed</dt>
       <dd>{{ subscription | subscriptionConsumedFilter }}</dd>

@@ -144,6 +144,11 @@ module Katello
       assert_includes subscriptions, @pool_one
     end
 
+    def test_search_virt_who
+      subscriptions = Pool.search_for("virt_who = true")
+      assert_includes subscriptions, @pool_one
+    end
+
     def test_for_activation_key
       Pool::ActiveRecord_Relation.any_instance.expects(:where).with(cp_id: [1])
       Pool.for_activation_key(OpenStruct.new(get_key_pools: [{'id' => 1}]))

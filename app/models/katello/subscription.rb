@@ -17,6 +17,10 @@ module Katello
         where("#{Katello::Product.table_name}.id" => Product.with_subscribable_content)
     end
 
+    def self.using_virt_who
+      joins(:pools).where("#{Katello::Pool.table_name}.virt_who" => true)
+    end
+
     def redhat?
       self.products.any? { |product| product.redhat? }
     end
@@ -31,6 +35,14 @@ module Katello
 
     def recently_expired?
       pools.any?(&:recently_expired?)
+    end
+
+    def virt_who_pools
+      pools.where("#{Katello::Pool.table_name}.virt_who" => true)
+    end
+
+    def virt_who?
+      virt_who_pools.any?
     end
 
     def self.humanize_class_name(_name = nil)

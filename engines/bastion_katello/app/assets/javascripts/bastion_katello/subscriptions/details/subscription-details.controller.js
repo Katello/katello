@@ -51,5 +51,7 @@ angular.module('Bastion.subscriptions').controller('SubscriptionDetailsControlle
 
             return "";
         };
+
+        $scope.virtWhoToolTip = translate("If the virt-who field is Yes then the subscription requires the use of virt-who. Learn how to configure and use this tool in the <a href=\"https://access.redhat.com/documentation/en/red-hat-satellite/6.2/single/virtual-instances-guide/\">Virtual Instances Guide</a>.");
     }]
 );

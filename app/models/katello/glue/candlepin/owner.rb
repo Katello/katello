@@ -21,7 +21,9 @@ module Katello
       end
 
       def owner_details
-        Resources::Candlepin::Owner.find self.label
+        details = Resources::Candlepin::Owner.find self.label
+        details['virt_who'] = self.subscriptions.using_virt_who.any?
+        details
       end
 
       def service_level

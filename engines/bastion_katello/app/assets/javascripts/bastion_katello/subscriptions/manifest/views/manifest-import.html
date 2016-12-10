@@ -72,7 +72,12 @@
     </div>
 
   </form>
-
+  
+  <div bst-alert="info" ng-if="details.virt_who">
+    <span translate>
+      The uploaded manifest contains subscriptions that require the use of virt-who. Learn how to configure and use this tool in the <a href="https://access.redhat.com/documentation/en/red-hat-satellite/6.2/single/virtual-instances-guide/">Virtual Instances Guide</a>.
+    </span>
+  </div>
 </section>
 
 <section>
