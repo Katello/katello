@@ -197,11 +197,7 @@ module Actions
         end
 
         def promote(new_version, environments)
-          concurrence do
-            environments.each do |environment|
-              plan_action(Katello::ContentView::Promote, new_version, environment, true)
-            end
-          end
+          plan_action(Katello::ContentView::Promote, new_version, environments, true)
         end
 
         def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
