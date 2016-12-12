@@ -1,4 +1,4 @@
-describe('Controller: PuppetModulesDetailsContentViewsController', function() {
+describe('Controller: PuppetModuleContentViewsController', function() {
     var $scope;
 
     beforeEach(module('Bastion.puppet-modules', 'Bastion.test-mocks'));
@@ -17,7 +17,7 @@ describe('Controller: PuppetModulesDetailsContentViewsController', function() {
         $scope = $rootScope.$new();
         ContentViewVersion = MockResource.$new();
 
-        $controller('PuppetModulesDetailsContentViewsController', {
+        $controller('PuppetModuleContentViewsController', {
             $scope: $scope,
             Nutupane: Nutupane,
             ContentViewVersion: ContentViewVersion,
@@ -26,7 +26,7 @@ describe('Controller: PuppetModulesDetailsContentViewsController', function() {
     }));
 
     it('attaches a details table to the scope', function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it('provides a method to generate comma separated environment names', function() {

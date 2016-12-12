@@ -1,0 +1,32 @@
+<span page-title ng-model="puppetModule">{{ 'Puppet Module: ' | translate }} {{ puppetModule.title }}</span>
+
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>Basic Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Author</dt>
+      <dd>{{ puppetModule.author }}</dd>
+
+      <dt translate>Version</dt>
+      <dd>{{ puppetModule.version }}</dd>
+
+      <dt translate>Source</dt>
+      <dd>{{ puppetModule.source }}</dd>
+
+      <dt translate>Project Page</dt>
+      <dd>
+        <a ng-href="{{ puppetModule.project_page }}" target="_blank">{{ puppetModule.project_page }}</a>
+      </dd>
+
+      <dt translate>License</dt>
+      <dd>{{ puppetModule.license }}</dd>
+
+      <dt translate>Description</dt>
+      <dd>{{ puppetModule.description }}</dd>
+
+      <dt translate>Summary</dt>
+      <dd>{{ puppetModule.summary }}</dd>
+    </dl>
+  </div>
+</div>

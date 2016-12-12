@@ -2,12 +2,12 @@
 
     /**
      * @ngdoc object
-     * @name  Bastion.puppet-modules.controller:PuppetModulesDetailsContentViewsController
+     * @name  Bastion.puppet-modules.controller:PuppetModuleContentViewsController
      *
      * @description
      *   Provides the functionality for the puppet modules details contentViews page.
      */
-    function PuppetModulesDetailsContentViewsController($scope, Nutupane, ContentViewVersion, CurrentOrganization) {
+    function PuppetModuleContentViewsController($scope, Nutupane, ContentViewVersion, CurrentOrganization) {
         var contentViewsNutupane,
             params = {
                 'puppet_module_id': $scope.$stateParams.puppetModuleId,
@@ -18,7 +18,7 @@
         contentViewsNutupane.masterOnly = true;
         contentViewsNutupane.setSearchKey('contentViewsSearch');
 
-        $scope.detailsTable = contentViewsNutupane.table;
+        $scope.table = contentViewsNutupane.table;
 
         $scope.environmentNames = function (environments) {
             var names = _.map(environments, function (environment) {
@@ -31,9 +31,9 @@
 
     angular
         .module('Bastion.puppet-modules')
-        .controller('PuppetModulesDetailsContentViewsController', PuppetModulesDetailsContentViewsController);
+        .controller('PuppetModuleContentViewsController', PuppetModuleContentViewsController);
 
-    PuppetModulesDetailsContentViewsController.$inject = [
+    PuppetModuleContentViewsController.$inject = [
         '$scope',
         'Nutupane',
         'ContentViewVersion',

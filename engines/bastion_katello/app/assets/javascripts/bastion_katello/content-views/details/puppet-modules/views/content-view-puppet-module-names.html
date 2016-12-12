@@ -16,20 +16,18 @@
   </span>
 
   <div data-block="search">
-    <div class="col-sm-3">
-      <div class="input-group">
-        <input type="text"
-               class="form-control"
-               placeholder="{{ 'Filter...' | translate }}"
-               ng-model="table.searchTerm"
-               bst-on-enter="table.search(table.searchTerm)"
-               ng-trim="false"
-               uib-typeahead="item.label for item in table.fetchAutocomplete($viewValue)"
-               typeahead-template-url="components/views/autocomplete-scoped-search.html"/>
-        <span class="input-group-btn">
-          <button ng-click="table.search(table.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-        </span>
-      </div>
+    <div class="input-group">
+      <input type="text"
+             class="form-control"
+             placeholder="{{ 'Filter...' | translate }}"
+             ng-model="table.searchTerm"
+             bst-on-enter="table.search(table.searchTerm)"
+             ng-trim="false"
+             uib-typeahead="item.label for item in table.fetchAutocomplete($viewValue)"
+             typeahead-template-url="components/views/autocomplete-scoped-search.html"/>
+      <span class="input-group-btn">
+        <button ng-click="table.search(table.searchTerm)" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+      </span>
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-describe('Controller: PuppetModulesDetailsController', function() {
+describe('Controller: PuppetModuleController', function() {
     var $scope,
         PuppetModule;
 
@@ -12,7 +12,7 @@ describe('Controller: PuppetModulesDetailsController', function() {
             puppetModuleId: 1
         };
 
-        $controller('PuppetModulesDetailsController', {
+        $controller('PuppetModuleController', {
             $scope: $scope,
             PuppetModule: PuppetModule
         });
