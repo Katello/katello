@@ -19,12 +19,10 @@
         };
 
         nutupane = new Nutupane(PuppetModule, params);
+        nutupane.masterOnly = true;
+
         $scope.table = nutupane.table;
         $scope.controllerName = 'katello_puppet_modules';
-
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('puppet-modules.index');
-        };
     }
 
     angular

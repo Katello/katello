@@ -12,52 +12,54 @@
      */
     function PuppetModulesConfig($stateProvider) {
         $stateProvider.state('puppet-modules', {
-            abstract: true,
-            controller: 'PuppetModulesController',
-            templateUrl: 'puppet-modules/views/puppet-modules.html'
-        })
-        .state('puppet-modules.index', {
             url: '/puppet_modules',
             permission: ['view_products', 'view_content_views'],
             views: {
-                'table': {
-                    templateUrl: 'puppet-modules/views/puppet-modules-table-full.html'
+                '@': {
+                    controller: 'PuppetModulesController',
+                    templateUrl: 'puppet-modules/views/puppet-modules.html'
                 }
+            },
+            ncyBreadcrumb: {
+                label: "{{ 'Puppet Modules' | translate }}"
             }
         })
-        .state('puppet-modules.details', {
+        .state('puppet-module', {
+            abstract: true,
             url: '/puppet_modules/:puppetModuleId',
             permission: ['view_products', 'view_content_views'],
-            collapsed: true,
-            views: {
-                'table': {
-                    templateUrl: 'puppet-modules/views/puppet-modules-table-collapsed.html'
-                },
-                'action-panel': {
-                    controller: 'PuppetModulesDetailsController',
-                    templateUrl: 'puppet-modules/details/views/puppet-modules-details.html'
-                }
+            controller: 'PuppetModuleController',
+            templateUrl: 'puppet-modules/details/views/puppet-module.html'
+        })
+        .state('puppet-module.info', {
+            url: '',
+            permission: ['view_products', 'view_content_views'],
+            templateUrl: 'puppet-modules/details/views/puppet-module-info.html',
+            ncyBreadcrumb: {
+                label: "{{ puppetModule.name }}",
+                parent: 'puppet-modules'
             }
         })
-        .state('puppet-modules.details.info', {
-            url: '/info',
-            collapsed: true,
-            permission: ['view_products', 'view_content_views'],
-            templateUrl: 'puppet-modules/details/views/puppet-modules-details-info.html'
-        })
-        .state('puppet-modules.details.repositories', {
+        .state('puppet-module.repositories', {
             url: '/repositories',
-            collapsed: true,
             permission: ['view_products'],
-            controller: 'PuppetModulesDetailsRepositoriesController',
-            templateUrl: 'puppet-modules/details/views/puppet-modules-details-repositories.html'
+            controller: 'PuppetModuleRepositoriesController',
+            templateUrl: 'puppet-modules/details/views/puppet-module-repositories.html',
+            ncyBreadcrumb: {
+                label: "{{ 'Repositories' | translate }}",
+                parent: 'puppet-module.info'
+            }
         })
-        .state('puppet-modules.details.content-views', {
+        .state('puppet-module.content-views', {
             url: '/content_views',
             collapsed: true,
             permission: ['view_content_views'],
-            controller: 'PuppetModulesDetailsContentViewsController',
-            templateUrl: 'puppet-modules/details/views/puppet-modules-details-content-views.html'
+            controller: 'PuppetModuleContentViewsController',
+            templateUrl: 'puppet-modules/details/views/puppet-module-content-views.html',
+            ncyBreadcrumb: {
+                label: "{{ 'Content Views' | translate }}",
+                parent: 'puppet-module.info'
+            }
         });
     }
 

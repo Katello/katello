@@ -1,0 +1,37 @@
+<span page-title ng-model="puppetModule">{{ 'Puppet Module: ' | translate }} {{ puppetModule.name }}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <div data-block="header" translate>
+    {{ puppetModule.name }}
+  </div>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('puppet-module.info')}">
+        <a ui-sref="puppet-module.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+      <li ng-show="permitted('view_products')" ng-class="{active: isState('puppet-module.repositories')}">
+        <a ui-sref="puppet-module.repositories">
+          <span translate>
+            Library Repositories
+          </span>
+        </a>
+      </li>
+      <li ng-show="permitted('view_content_views')" ng-class="{active: isState('puppet-module.content-views')}">
+        <a ui-sref="puppet-module.content-views">
+          <span translate>
+            Content Views
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

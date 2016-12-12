@@ -59,7 +59,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'repository_id': $scope.$stateParams.repositoryId
         });
         $scope.table = $scope.contentNutupane.table;
-        $scope.table.closeItem = function () {};
+        $scope.contentNutupane.masterOnly = true;
 
         $scope.removeContent = function () {
             var selected = $scope.table.getSelected();

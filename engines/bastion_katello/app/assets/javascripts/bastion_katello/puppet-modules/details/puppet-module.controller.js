@@ -2,12 +2,12 @@
 
     /**
      * @ngdoc object
-     * @name  Bastion.puppet-modules.controller:PuppetModulesDetailsController
+     * @name  Bastion.puppet-modules.controller:PuppetModuleController
      *
      * @description
      *   Provides the functionality for the puppet modules details action pane.
      */
-    function PuppetModulesDetailsController($scope, PuppetModule, ApiErrorHandler) {
+    function PuppetModuleController($scope, PuppetModule, ApiErrorHandler) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -30,8 +30,8 @@
 
     angular
         .module('Bastion.puppet-modules')
-        .controller('PuppetModulesDetailsController', PuppetModulesDetailsController);
+        .controller('PuppetModuleController', PuppetModuleController);
 
-    PuppetModulesDetailsController.$inject = ['$scope', 'PuppetModule', 'ApiErrorHandler'];
+    PuppetModuleController.$inject = ['$scope', 'PuppetModule', 'ApiErrorHandler'];
 
 })();
