@@ -1,0 +1,11 @@
+<span page-title ng-model="package">{{ 'Package: ' | translate }} {{ package.nvrea }}</span>
+
+<header data-block="sub-header">
+  <h3 translate>Files in package {{ package.nvrea }}</h3>
+</header>
+
+<ul class="list-unstyled">
+  <li ng-repeat="item in package.files | orderBy:'toString()'">
+    {{ item }}
+  </li>
+</ul>

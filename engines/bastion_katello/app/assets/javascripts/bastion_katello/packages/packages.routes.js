@@ -9,58 +9,60 @@
  */
 angular.module('Bastion.packages').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('packages', {
-        url: '/packages',
-        abstract: true,
-        controller: 'PackagesController',
-        templateUrl: 'packages/views/packages.html'
-    })
-    .state('packages.index', {
-        url: '?repositoryId',
+        url: '/packages?repositoryId',
         permission: ['view_products', 'view_content_views'],
         views: {
-            'table': {
-                templateUrl: 'packages/views/packages-table-full.html'
+            '@': {
+                controller: 'PackagesController',
+                templateUrl: 'packages/views/packages.html'
             }
+        },
+        ncyBreadcrumb: {
+            label: "{{ 'Packages' | translate }}"
         }
     })
-    .state('packages.details', {
+    .state('package', {
         abstract: true,
-        url: '/:packageId',
+        url: '/packages/:packageId',
         permission: ['view_products', 'view_content_views'],
-        collapsed: true,
-        views: {
-            'table': {
-                templateUrl: 'packages/views/packages-table-collapsed.html'
-            },
-            'action-panel': {
-                controller: 'PackageDetailsController',
-                templateUrl: 'packages/details/views/packages-details.html'
-            }
+        controller: 'PackageController',
+        templateUrl: 'packages/details/views/package.html'
+    })
+    .state('package.info', {
+        url: '',
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'packages/details/views/package-info.html',
+        ncyBreadcrumb: {
+            label: "{{ package.nvra }}",
+            parent: 'packages'
         }
     })
-    .state('packages.details.info', {
-        url: '/info',
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        templateUrl: 'packages/details/views/packages-details-info.html'
-    })
-    .state('packages.details.dependencies', {
+    .state('package.dependencies', {
         url: '/dependencies',
-        collapsed: true,
         permission: ['view_products', 'view_content_views'],
-        templateUrl: 'packages/details/views/packages-details-dependencies.html'
+        templateUrl: 'packages/details/views/package-dependencies.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Dependencies' | translate }}",
+            parent: 'package.info'
+        }
     })
-    .state('packages.details.files', {
+    .state('package.files', {
         url: '/files',
-        collapsed: true,
         permission: ['view_products', 'view_content_views'],
-        templateUrl: 'packages/details/views/packages-details-files.html'
+        templateUrl: 'packages/details/views/package-files.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Files' | translate }}",
+            parent: 'package.info'
+        }
     })
-    .state('packages.details.repositories', {
+    .state('package.repositories', {
         url: '/repositories',
-        collapsed: true,
         permission: ['view_products', 'view_content_views'],
-        controller: 'PackageDetailsRepositoriesController',
-        templateUrl: 'packages/details/views/packages-details-repositories.html'
+        controller: 'PackageRepositoriesController',
+        templateUrl: 'packages/details/views/package-repositories.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Repositories' | translate }}",
+            parent: 'package.info'
+        }
     });
 }]);

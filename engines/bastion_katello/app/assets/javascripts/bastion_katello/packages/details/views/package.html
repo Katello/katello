@@ -1,0 +1,44 @@
+<span page-title ng-model="package">{{ 'Package: ' | translate }} {{ package.nvra}}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    <h2>{{ package.nvra }}</h2>
+  </header>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('package.info')}">
+        <a ui-sref="package.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: isState('package.files')}">
+        <a ui-sref="package.files">
+          <span translate>
+            Files
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: isState('package.dependencies')}">
+        <a ui-sref="package.dependencies">
+          <span translate>
+            Dependencies
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: isState('package.repositories')}">
+        <a ui-sref="package.repositories">
+          <span translate>
+            Repositories
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

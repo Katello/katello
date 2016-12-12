@@ -1,15 +1,17 @@
 /**
  * @ngdoc object
- * @name  Bastion.errata.controller:ErrataDetailsController
+ * @name  Bastion.packages.controller:PackageController
  *
  * @requires $scope
- * @requires Errata
+ * @requires Package
+ * @requires Host
+ * @requires CurrentOrganization
  * @requires ApiErrorHandler
  *
  * @description
- *   Provides the functionality for the errata details action pane.
+ *   Provides the functionality for the package page.
  */
-angular.module('Bastion.packages').controller('PackageDetailsController',
+angular.module('Bastion.packages').controller('PackageController',
     ['$scope', 'Package', 'Host', 'CurrentOrganization', 'ApiErrorHandler',
     function ($scope, Package, Host, CurrentOrganization, ApiErrorHandler) {
         $scope.panel = {

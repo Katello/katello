@@ -1,4 +1,4 @@
-describe('Controller: PackageDetailsRepositoriesController', function() {
+describe('Controller: PackageRepositoriesController', function() {
     var $scope, translate, Nutupane, ContentView, Environment, Repository,
         CurrentOrganization;
 
@@ -45,7 +45,7 @@ describe('Controller: PackageDetailsRepositoriesController', function() {
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {packageId: 1};
 
-        $controller('PackageDetailsRepositoriesController', {
+        $controller('PackageRepositoriesController', {
             $scope: $scope,
             $q: $q,
             translate: translate,
@@ -58,6 +58,6 @@ describe('Controller: PackageDetailsRepositoriesController', function() {
     }));
 
     it("puts the package repositories table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 });
