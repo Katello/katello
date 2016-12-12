@@ -25,13 +25,10 @@ angular.module('Bastion.packages').controller('PackagesController',
         };
 
         nutupane = $scope.nutupane = new Nutupane(Package, params);
+        nutupane.masterOnly = true;
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
         $scope.controllerName = 'katello_erratum_packages';
-
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('packages.index');
-        };
 
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
 

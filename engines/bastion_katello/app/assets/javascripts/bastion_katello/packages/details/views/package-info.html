@@ -1,0 +1,81 @@
+<span page-title ng-model="package">{{ 'Package: ' | translate }} {{ package.nvrea }}</span>
+
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>Package Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Installed On</dt>
+      <dd>
+        <i class="fa fa-spinner fa-spin" ng-show="installedPackageCount === undefined"></i>
+        <span ng-show="installedPackageCount !== undefined">
+          <a href="{{ '/content_hosts?search=' + createSearchString('installed_package') }}" translate>
+            {{ installedPackageCount }} Host(s)
+          </a>
+        </span>
+      </dd>
+
+      <dt translate>Applicable To</dt>
+      <dd>
+        <a href="{{ '/content_hosts?search=' + createSearchString('applicable_rpms') }}" translate>
+          {{ package.hosts_available_count }} Host(s)
+        </a>
+      </dd>
+
+      <dt translate>Upgradable For</dt>
+      <dd>
+        <a href="{{ '/content_hosts?search=' + createSearchString('upgradable_rpms') }}" translate>
+          {{ package.hosts_applicable_count }} Host(s)
+        </a>
+      </dd>
+
+      <dt translate>Description</dt>
+      <dd>{{ package.description }}</dd>
+
+      <dt translate>Summary</dt>
+      <dd>{{ package.summary }}</dd>
+
+      <dt translate>Group</dt>
+      <dd>{{ package.group }}</dd>
+
+      <dt translate>License</dt>
+      <dd>{{ package.license }}</dd>
+
+      <dt translate>Url</dt>
+      <dd>{{ package.url }}</dd>
+    </dl>
+
+    <div class="divider"></div>
+
+    <h4 translate>File Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Size</dt>
+      <dd translate>{{ package.human_readable_size }} ({{ package.size }} Bytes)</dd>
+
+      <dt translate>Filename</dt>
+      <dd>{{ package.filename}}</dd>
+
+      <dt translate>Checksum</dt>
+      <dd>{{ package.checksum }}</dd>
+
+      <dt translate>Checksum Type</dt>
+      <dd>{{ package.checksumtype }}</dd>
+    </dl>
+  </div>
+
+  <div data-block="right-column">
+    <h4 translate>Build Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Source RPM</dt>
+      <dd>{{ package.sourcerpm }}</dd>
+
+      <dt translate>Build Host</dt>
+      <dd>{{ package.buildhost }}</dd>
+
+      <dt translate>Build Time</dt>
+      <dd>{{ package.build_time }}</dd>
+    </dl>
+  </div>
+</div>

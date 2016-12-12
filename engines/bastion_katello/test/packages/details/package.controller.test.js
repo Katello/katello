@@ -1,4 +1,4 @@
-describe('Controller: PackageDetailsController', function() {
+describe('Controller: PackageController', function() {
     var $scope, Package, Host, fakePackage, currentOrganization;
 
     beforeEach(module('Bastion.packages', 'Bastion.test-mocks'));
@@ -19,7 +19,7 @@ describe('Controller: PackageDetailsController', function() {
         };
 
 
-        $controller('PackageDetailsController', {
+        $controller('PackageController', {
             $scope: $scope,
             Package: Package,
             Host: Host,

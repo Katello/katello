@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.errata.controller:ErrataDetailsRepositoriesController
+ * @name  Bastion.packages.controller:PackageRepositoriesController
  *
  * @requires $scope
  * @requires $q
@@ -11,9 +11,9 @@
  * @requires CurrentOrganization
  *
  * @description
- *   Provides the functionality for the errata details repositories page.
+ *   Provides the functionality for the package repositories page.
  */
-angular.module('Bastion.packages').controller('PackageDetailsRepositoriesController',
+angular.module('Bastion.packages').controller('PackageRepositoriesController',
     ['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization',
     function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization) {
         var repositoriesNutupane, environment, contentView;
@@ -23,8 +23,8 @@ angular.module('Bastion.packages').controller('PackageDetailsRepositoriesControl
         };
 
         repositoriesNutupane = new Nutupane(Repository, params);
-        $scope.detailsTable = repositoriesNutupane.table;
-        $scope.detailsTable.initialLoad = false;
+        $scope.table = repositoriesNutupane.table;
+        $scope.table.initialLoad = false;
         repositoriesNutupane.masterOnly = true;
         repositoriesNutupane.setSearchKey('repositoriesSearch');
 
@@ -38,10 +38,10 @@ angular.module('Bastion.packages').controller('PackageDetailsRepositoriesControl
             $scope.contentViewFilter = _.find($scope.contentViews, {'default': true});
         });
 
-        $scope.detailsTable.working = true;
+        $scope.table.working = true;
         $q.all([contentView.$promise, environment.$promise]).then(function () {
             $scope.filterPackages();
-            $scope.detailsTable.working = false;
+            $scope.table.working = false;
         });
 
         $scope.filterPackages = function () {
