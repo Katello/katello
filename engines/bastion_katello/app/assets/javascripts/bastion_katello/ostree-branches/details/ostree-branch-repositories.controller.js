@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.ostree-branches.controller:OstreeBranchesDetailsRepositoriesController
+ * @name  Bastion.ostree-branches.controller:OstreeBranchRepositoriesController
  *
  * @requires $scope
  * @requires $q
@@ -13,7 +13,7 @@
  * @description
  *   Provides the functionality for the OSTree branch repositories page.
  */
-angular.module('Bastion.ostree-branches').controller('OstreeBranchesDetailsRepositoriesController',
+angular.module('Bastion.ostree-branches').controller('OstreeBranchRepositoriesController',
     ['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization',
     function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization) {
         var repositoriesNutupane, environment, contentView, params;
@@ -24,8 +24,8 @@ angular.module('Bastion.ostree-branches').controller('OstreeBranchesDetailsRepos
         };
 
         repositoriesNutupane = new Nutupane(Repository, params);
-        $scope.detailsTable = repositoriesNutupane.table;
-        $scope.detailsTable.initialLoad = false;
+        $scope.table = repositoriesNutupane.table;
+        $scope.table.initialLoad = false;
         repositoriesNutupane.masterOnly = true;
         repositoriesNutupane.setSearchKey('repositoriesSearch');
 
@@ -39,10 +39,10 @@ angular.module('Bastion.ostree-branches').controller('OstreeBranchesDetailsRepos
             $scope.contentViewFilter = _.find($scope.contentViews, {'default': true});
         });
 
-        $scope.detailsTable.working = true;
+        $scope.table.working = true;
         $q.all([contentView.$promise, environment.$promise]).then(function () {
             $scope.filterBranches();
-            $scope.detailsTable.working = false;
+            $scope.table.working = false;
         });
 
         $scope.filterBranches = function () {

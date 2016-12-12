@@ -1,6 +1,6 @@
 /**
  * @ngdoc object
- * @name  Bastion.ostree-branches.controller:OstreeBranchesDetailsController
+ * @name  Bastion.ostree-branches.controller:OstreeBranchController
  *
  * @requires $scope
  * @requires OstreeBranch
@@ -9,7 +9,7 @@
  * @description
  *   Provides the functionality for the Ostree Branch action pane.
  */
-angular.module('Bastion.ostree-branches').controller('OstreeBranchesDetailsController', ['$scope', 'OstreeBranch', 'ApiErrorHandler',
+angular.module('Bastion.ostree-branches').controller('OstreeBranchController', ['$scope', 'OstreeBranch', 'ApiErrorHandler',
     function ($scope, OstreeBranch, ApiErrorHandler) {
         $scope.panel = {
             error: false,
