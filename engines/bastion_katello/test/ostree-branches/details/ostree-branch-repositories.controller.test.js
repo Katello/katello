@@ -1,4 +1,4 @@
-describe('Controller: OstreeBranchesDetailsRepositoriesController', function() {
+describe('Controller: OstreeBranchRepositoriesController', function() {
     var $scope, translate, Nutupane, ContentView, Environment, Repository,
         CurrentOrganization;
 
@@ -44,7 +44,7 @@ describe('Controller: OstreeBranchesDetailsRepositoriesController', function() {
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {branchId: 1};
 
-        $controller('OstreeBranchesDetailsRepositoriesController', {
+        $controller('OstreeBranchRepositoriesController', {
             $scope: $scope,
             $q: $q,
             translate: translate,
@@ -57,6 +57,6 @@ describe('Controller: OstreeBranchesDetailsRepositoriesController', function() {
     }));
 
     it("puts the ostree branches repositories table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 });

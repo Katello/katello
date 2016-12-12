@@ -1,4 +1,4 @@
-describe('Controller: OstreeBranchesDetailsController', function() {
+describe('Controller: OstreeBranchController', function() {
     var $scope, OstreeBranch;
 
     beforeEach(module('Bastion.ostree-branches', 'Bastion.test-mocks'));
@@ -11,7 +11,7 @@ describe('Controller: OstreeBranchesDetailsController', function() {
 
         $scope.$stateParams = {branchId: 1};
 
-        $controller('OstreeBranchesDetailsController', {
+        $controller('OstreeBranchController', {
             $scope: $scope,
             OstreeBranch: OstreeBranch
         });

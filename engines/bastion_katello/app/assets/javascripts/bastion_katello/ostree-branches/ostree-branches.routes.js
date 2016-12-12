@@ -9,45 +9,42 @@
  */
 angular.module('Bastion.ostree-branches').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('ostree-branches', {
-        abstract: true,
-        controller: 'OstreeBranchesController',
-        templateUrl: 'ostree-branches/views/ostree-branches.html'
-    })
-    .state('ostree-branches.index', {
         url: '/ostree_branches?repositoryId',
         permission: ['view_products', 'view_content_views'],
         views: {
-            'table': {
-                templateUrl: 'ostree-branches/views/ostree-branches-table-full.html'
+            '@': {
+                controller: 'OstreeBranchesController',
+                templateUrl: 'ostree-branches/views/ostree-branches.html'
             }
+        },
+        ncyBreadcrumb: {
+            label: "{{ 'OSTree Branches' | translate }}"
         }
     })
-    .state('ostree-branches.details', {
+    .state('ostree-branch', {
         abstract: true,
         url: '/ostree_branches/:branchId',
         permission: ['view_products', 'view_content_views'],
-        collapsed: true,
-        views: {
-            'table': {
-                templateUrl: 'ostree-branches/views/ostree-branches-table-collapsed.html'
-            },
-            'action-panel': {
-                controller: 'OstreeBranchesDetailsController',
-                templateUrl: 'ostree-branches/details/views/ostree-branches-details.html'
-            }
+        controller: 'OstreeBranchController',
+        templateUrl: 'ostree-branches/details/views/ostree-branch.html'
+    })
+    .state('ostree-branch.info', {
+        url: '',
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'ostree-branches/details/views/ostree-branch-info.html',
+        ncyBreadcrumb: {
+            label: "{{ branch.name }}",
+            parent: 'ostree-branches'
         }
     })
-    .state('ostree-branches.details.info', {
-        url: '/ostree_branches/info',
-        collapsed: true,
+    .state('ostree-branch.repositories', {
+        url: '/repositories',
         permission: ['view_products', 'view_content_views'],
-        templateUrl: 'ostree-branches/details/views/ostree-branches-details-info.html'
-    })
-    .state('ostree-branches.details.repositories', {
-        url: '/ostree_branches/repositories',
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        controller: 'OstreeBranchesDetailsRepositoriesController',
-        templateUrl: 'ostree-branches/details/views/ostree-branches-details-repositories.html'
+        controller: 'OstreeBranchRepositoriesController',
+        templateUrl: 'ostree-branches/details/views/ostree-branch-repositories.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Repositories' | translate }}",
+            parent: 'ostree-branch.info'
+        }
     });
 }]);
