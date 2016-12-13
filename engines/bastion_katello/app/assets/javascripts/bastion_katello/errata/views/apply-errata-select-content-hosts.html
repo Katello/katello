@@ -1,17 +1,10 @@
-<ol class="breadcrumb">
-  <li>
-    <a ui-sref="errata.index" translate>Errata List</a>
-  </li>
-  <li class="active" translate>Select Content Hosts</li>
-</ol>
-
-<div data-extend-template="errata/details/views/errata-details-content-hosts.html">
-  <div data-block="header"></div>
-  <div data-block="actions"></div>
+<div data-extend-template="errata/details/views/erratum-content-hosts.html">
+  <div data-block="sub-header"></div>
+  <div data-block="list-actions"></div>
 
   <div data-block="footer-actions" class="footer-actions">
-    <button type="button" class="btn btn-default" ng-click="transitionTo('errata.index')" translate>Cancel</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="detailsTable.numSelected === 0 || incrementalUpdateInProgress"
+    <button type="button" class="btn btn-default" ng-click="transitionTo('errata')" translate>Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="table.numSelected === 0 || incrementalUpdates.length > 0"
             ng-click="goToNextStep()" translate>Next</button>
   </div>
 </div>

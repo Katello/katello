@@ -1,0 +1,37 @@
+<span page-title ng-model="errata">{{ 'Errata: ' | translate }} {{ errata.title }}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    {{ errata.title }}
+  </header>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('erratum.info')}">
+        <a ui-sref="erratum.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: isState('erratum.content-hosts') || isState('erratum.apply')}">
+        <a ui-sref="erratum.content-hosts">
+          <span translate>
+            Content Hosts
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: isState('erratum.repositories')}">
+        <a ui-sref="erratum.repositories">
+          <span translate>
+            Repositories
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

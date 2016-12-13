@@ -1,19 +1,20 @@
 /**
  * @ngdoc object
- * @name  Bastion.errata.controller:ErrataContentHostsController
+ * @name  Bastion.errata.controller:ErratumContentHostsController
  *
  * @requires $scope
  * @requires Nutupane
- * @requires ContentHost
+ * @requires Host
+ * @requires IncrementalUpdate
  * @requires Environment
  * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the available host collection details action pane.
  */
-angular.module('Bastion.errata').controller('ErrataContentHostsController',
-    ['$scope', 'Nutupane', 'Host', 'Environment', 'CurrentOrganization',
-    function ($scope, Nutupane, Host, Environment, CurrentOrganization) {
+angular.module('Bastion.errata').controller('ErratumContentHostsController',
+    ['$scope', 'Nutupane', 'Host', 'IncrementalUpdate', 'Environment', 'CurrentOrganization',
+    function ($scope, Nutupane, Host, IncrementalUpdate, Environment, CurrentOrganization) {
         var nutupane, params;
 
         $scope.successMessages = [];
@@ -27,11 +28,11 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
         };
 
         nutupane = new Nutupane(Host, params, 'postIndex');
-        nutupane.table.closeItem = function () {};
+        nutupane.masterOnly = true;
         nutupane.enableSelectAllResults();
 
         $scope.nutupane = nutupane;
-        $scope.detailsTable = nutupane.table;
+        $scope.table = nutupane.table;
         $scope.nutupane.searchTransform = function(term) {
             var addition = '( ' + $scope.errataSearchString($scope.restrictInstallable) + ' )';
             if (angular.isDefined($scope.environmentId)) {
@@ -74,16 +75,15 @@ angular.module('Bastion.errata').controller('ErrataContentHostsController',
         };
 
         $scope.goToNextStep = function () {
-            $scope.$parent.numberOfContentHostsToUpdate = nutupane.table.allResultsSelectCount();
-            $scope.$parent.selectedContentHosts = nutupane.getAllSelectedResults();
+            IncrementalUpdate.setBulkContentHosts(nutupane.getAllSelectedResults());
 
             if ($scope.errata && $scope.errata.id) {
-                $scope.transitionTo('errata.details.apply', {errataId: $scope.errata.id});
+                $scope.transitionTo('erratum.apply', {errataId: $scope.errata.id});
             } else {
-                $scope.transitionTo('errata.apply.confirm');
+                $scope.transitionTo('apply-errata.confirm');
             }
         };
 
-        $scope.checkIfIncrementalUpdateRunning();
+        $scope.incrementalUpdates = IncrementalUpdate.getIncrementalUpdates();
     }
 ]);

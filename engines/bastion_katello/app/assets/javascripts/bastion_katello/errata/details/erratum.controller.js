@@ -1,15 +1,15 @@
 /**
  * @ngdoc object
- * @name  Bastion.errata.controller:ErrataDetailsController
+ * @name  Bastion.errata.controller:ErratumController
  *
  * @requires $scope
  * @requires Errata
  * @requires ApiErrorHandler
  *
  * @description
- *   Provides the functionality for the errata details action pane.
+ *   Provides the functionality for the errata pages.
  */
-angular.module('Bastion.errata').controller('ErrataDetailsController', ['$scope', 'Erratum', 'ApiErrorHandler',
+angular.module('Bastion.errata').controller('ErratumController', ['$scope', 'Erratum', 'ApiErrorHandler',
     function ($scope, Erratum, ApiErrorHandler) {
         $scope.panel = {
             error: false,

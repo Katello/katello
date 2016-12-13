@@ -13,7 +13,7 @@
             'content-hosts.details.provisioning',
             'content-hosts.bulk-actions.packages',
             'content-hosts.bulk-actions.errata.list',
-            'content-hosts.bulk-actions.errata.details',
+            'content-hosts.bulk-actions.erratum',
             'content-hosts.bulk-actions.errata.content-hosts',
             'content-hosts.bulk-actions.environment'
         ];

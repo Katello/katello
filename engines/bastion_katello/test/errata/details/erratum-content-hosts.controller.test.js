@@ -1,5 +1,5 @@
-describe('Controller: ErrataContentHostsController', function() {
-    var $scope, translate, Nutupane, ContentHost, ContentHostBulkAction,
+describe('Controller: ErratumContentHostsController', function() {
+    var $scope, translate, Nutupane, ContentHostBulkAction,
         CurrentOrganization;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
@@ -51,7 +51,7 @@ describe('Controller: ErrataContentHostsController', function() {
         $scope.$stateParams = {errataId: 1};
         $scope.checkIfIncrementalUpdateRunning = function () {};
 
-        $controller('ErrataContentHostsController', {
+        $controller('ErratumContentHostsController', {
             $scope: $scope,
             translate: translate,
             Nutupane: Nutupane,
@@ -63,7 +63,7 @@ describe('Controller: ErrataContentHostsController', function() {
     }));
 
     it("puts the errata content hosts table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("generates errata search string properly for single errata", function () {
@@ -109,12 +109,12 @@ describe('Controller: ErrataContentHostsController', function() {
         it("and goes to the errata details apply page if there is an errata", function () {
             $scope.errata = {id: 1};
             $scope.goToNextStep();
-            expect($scope.transitionTo).toHaveBeenCalledWith('errata.details.apply', {errataId: $scope.errata.id})
+            expect($scope.transitionTo).toHaveBeenCalledWith('erratum.apply', {errataId: $scope.errata.id})
         });
 
         it("and goes to the errata apply page if there is not an errata", function () {
             $scope.goToNextStep();
-            expect($scope.transitionTo).toHaveBeenCalledWith('errata.apply.confirm');
+            expect($scope.transitionTo).toHaveBeenCalledWith('apply-errata.confirm');
         });
     });
 });

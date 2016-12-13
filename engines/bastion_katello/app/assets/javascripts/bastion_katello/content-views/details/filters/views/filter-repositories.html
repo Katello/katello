@@ -102,7 +102,7 @@
                 </a>
               </div>
               <div ng-if="repository.content_counts.erratum && repository.content_counts.erratum > 0">
-                <a ui-sref="errata.index({repositoryId: repository.id})"
+                <a ui-sref="errata({repositoryId: repository.id})"
                    ng-show="repository.content_type == 'yum'"
                    translate>
                   {{ repository.content_counts.erratum }} Errata

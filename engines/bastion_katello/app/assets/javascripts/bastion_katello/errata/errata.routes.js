@@ -9,123 +9,116 @@
  */
 angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('errata', {
-        url: '/errata',
-        abstract: true,
-        controller: 'ErrataController',
-        templateUrl: 'errata/views/errata.html'
-    })
-    .state('errata.index', {
-        url: '?repositoryId',
+        url: '/errata?repositoryId',
         permission: ['view_products', 'view_content_views'],
         views: {
-            'table': {
-                templateUrl: 'errata/views/errata-table-full.html'
-            }
+          '@': {
+              controller: 'ErrataController',
+              templateUrl: 'errata/views/errata.html'
+          }
+        },
+        ncyBreadcrumb: {
+            label: "{{ 'Errata' | translate }}"
         }
-    })
+    });
 
-    .state('errata.apply', {
+    $stateProvider.state('errata-tasks', {
+        url: '/tasks',
+        abstract: true,
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'errata/views/errata-tasks.html'
+    })
+    .state('errata-tasks.details', {
+        url: '/:taskId',
+        permission: ['view_products', 'view_content_views'],
+        controller: 'TaskDetailsController',
+        templateUrl: 'errata/views/errata-task-details.html',
+        ncyBreadcrumb: {
+            label: '{{ task.id }}',
+            parent: 'errata'
+        }
+    });
+
+    $stateProvider.state('apply-errata', {
         url: '/errata/apply',
         abstract: true,
-        collapsed: true,
-        views: {
-            'table': {
-                templateUrl: 'errata/views/errata-table-collapsed.html'
-            },
-            'action-panel': {
-                templateUrl: 'errata/views/apply-errata.html'
-            }
-        }
+        templateUrl: 'errata/views/apply-errata.html'
     })
-    .state('errata.apply.select-content-hosts', {
+    .state('apply-errata.select-content-hosts', {
         url: '/select-content-hosts',
-        collapsed: true,
         permission: 'edit_hosts',
-        controller: 'ErrataContentHostsController',
-        templateUrl: 'errata/views/apply-errata-select-content-hosts.html'
+        controller: 'ErratumContentHostsController',
+        templateUrl: 'errata/views/apply-errata-select-content-hosts.html',
+        ncyBreadcrumb: {
+            label: '{{ "Select Content Host(s)" | translate }}',
+            parent: 'errata'
+        }
     })
-    .state('errata.apply.confirm', {
+    .state('apply-errata.confirm', {
         url: '/confirm',
-        collapsed: true,
         permission: 'edit_hosts',
         controller: 'ApplyErrataController',
-        templateUrl: 'errata/views/apply-errata-confirm.html'
-    })
+        templateUrl: 'errata/views/apply-errata-confirm.html',
+        ncyBreadcrumb: {
+            label: '{{ "Confirm" | translate }}',
+            parent: 'apply-errata.select-content-hosts'
+        }
+    });
 
-    .state('errata.details', {
+    $stateProvider.state('erratum', {
         abstract: true,
-        url: '/:errataId',
+        url: '/errata/:errataId',
         permission: ['view_products', 'view_content_views'],
-        collapsed: true,
-        views: {
-            'table': {
-                templateUrl: 'errata/views/errata-table-collapsed.html'
-            },
-            'action-panel': {
-                controller: 'ErrataDetailsController',
-                templateUrl: 'errata/details/views/errata-details.html'
-            }
+        controller: 'ErratumController',
+        templateUrl: 'errata/details/views/erratum.html'
+    })
+    .state('erratum.info', {
+        url: '',
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'errata/details/views/erratum-info.html',
+        ncyBreadcrumb: {
+            label: "{{ errata.title }}",
+            parent: 'errata'
         }
     })
-    .state('errata.details.apply', {
+    .state('erratum.apply', {
         url: '/apply',
-        collapsed: true,
         permission: 'edit_hosts',
         controller: 'ApplyErrataController',
-        templateUrl: 'errata/views/apply-errata-confirm.html'
-    })
-    .state('errata.details.info', {
-        url: '/info',
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        templateUrl: 'errata/details/views/errata-details-info.html'
-    })
-    .state('errata.details.content-hosts', {
-        url: '/content-hosts',
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        controller: 'ErrataContentHostsController',
-        templateUrl: 'errata/details/views/errata-details-content-hosts.html'
-    })
-    .state('errata.details.repositories', {
-        url: '/repositories',
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        controller: 'ErrataDetailsRepositoriesController',
-        templateUrl: 'errata/details/views/errata-details-repositories.html'
-    })
-    .state('errata.details.task-details', {
-        url: '/tasks/:taskId',
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        controller: 'TaskDetailsController',
-        templateUrl: 'errata/views/errata-task-details.html'
-    })
-
-    .state('errata.tasks', {
-        abstract: true,
-        collapsed: true,
-        permission: ['view_products', 'view_content_views'],
-        views: {
-            'table': {
-                templateUrl: 'errata/views/errata-table-collapsed.html'
-            },
-            'action-panel': {
-                templateUrl: 'errata/views/errata-tasks.html'
-            }
+        templateUrl: 'errata/views/apply-errata-confirm.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Apply' | translate }}",
+            parent: 'erratum.info'
         }
     })
-    .state('errata.tasks.index', {
-        url: '/tasks',
-        collapsed: true,
+    .state('erratum.content-hosts', {
+        url: '/content-hosts',
         permission: ['view_products', 'view_content_views'],
-        templateUrl: 'errata/views/errata-tasks-list.html'
+        controller: 'ErratumContentHostsController',
+        templateUrl: 'errata/details/views/erratum-content-hosts.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Content Hosts' | translate }}",
+            parent: 'erratum.info'
+        }
     })
-    .state('errata.tasks.details', {
+    .state('erratum.repositories', {
+        url: '/repositories',
+        permission: ['view_products', 'view_content_views'],
+        controller: 'ErratumRepositoriesController',
+        templateUrl: 'errata/details/views/erratum-repositories.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Repositories' | translate }}",
+            parent: 'erratum.info'
+        }
+    })
+    .state('erratum.task', {
         url: '/tasks/:taskId',
-        collapsed: true,
         permission: ['view_products', 'view_content_views'],
         controller: 'TaskDetailsController',
-        templateUrl: 'errata/views/errata-task-details.html'
+        templateUrl: 'errata/views/errata-task-details.html',
+        ncyBreadcrumb: {
+            label: "{{ task.id }}",
+            parent: 'erratum.info'
+        }
     });
 }]);

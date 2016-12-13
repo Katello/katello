@@ -1,49 +1,32 @@
 <span page-title>{{ 'Errata' | translate }}</span>
 
-<div data-extend-template="layouts/nutupane.html">
-
-  <div data-block="messages">
-    <div bst-alert="info" ng-show="incrementalUpdateInProgress">
-      <div>
-        <p translate>There is currently an Incremental Update task in progress.  This update must finish before applying existing updates.</p>
-        <div>
-          <a href="/foreman_tasks/tasks/{{incrementalUpdates[0].id}}" translate>Click here to check the status of the task.</a>
-        </div>
-      </div>
-    </div>
+<div data-extend-template="layouts/table-with-header.html">
+  <div data-block="header" translate>
+    Errata
   </div>
 
-  <div data-block="header">
-    {{ 'Errata' | translate }}
-  </div>
-
-  <div data-block="actions">
+  <div data-block="list-actions">
     <button class="btn btn-primary"
             ng-click="goToNextStep()"
             ng-hide="denied('edit_hosts')"
-            ng-disabled="table.numSelected == 0 || incrementalUpdateInProgress">
-      <i class="icon-plus"></i>
+            ng-disabled="table.numSelected == 0 || incrementalUpdates.length > 0">
       <span translate>Apply Errata</span>
     </button>
   </div>
 
   <div data-block="search-filter">
-    <div class="col-sm-3">
-      <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
-    </div>
+    <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
+    
+    <label class="checkbox-inline" title="{{ 'Only show Errata that are Applicable to one or more Content Hosts' | translate }}">
+      <input type="checkbox" ng-model="showApplicable" ng-disabled="showInstallable" ng-change="toggleFilters()"/>
+      <span translate>Applicable</span>
+      <i class="fa fa-question-circle" ng-show="showInstallable" title="{{ 'Errata are automatically Applicable if they are Installable' | translate }}"></i>
+    </label>
 
-    <div class="col-sm-3">
-      <label class="checkbox-inline" title="{{ 'Only show Errata that are Applicable to one or more Content Hosts' | translate }}">
-        <input type="checkbox" ng-model="showApplicable" ng-disabled="showInstallable" ng-change="toggleFilters()"/>
-        <span translate>Applicable</span>
-        <i class="fa fa-question-circle" ng-show="showInstallable" title="{{ 'Errata are automatically Applicable if they are Installable' | translate }}"></i>
-      </label>
-
-      <label class="checkbox-inline" title="{{ 'Only show Errata that are Installable on one or more Content Hosts' | translate }}">
-        <input type="checkbox" ng-model="showInstallable" ng-change="toggleFilters()"/>
-        <span translate>Installable</span>
-      </label>
-    </div>
+    <label class="checkbox-inline" title="{{ 'Only show Errata that are Installable on one or more Content Hosts' | translate }}">
+      <input type="checkbox" ng-model="showInstallable" ng-change="toggleFilters()"/>
+      <span translate>Installable</span>
+    </label>
   </div>
 
   <span data-block="no-rows-message">
@@ -59,5 +42,63 @@
     Your search returned zero Errata.
   </span>
 
+  <div data-block="messages">
+    <div bst-alert="info" ng-show="incrementalUpdates.length > 0">
+      <div>
+        <p translate>There is currently an Incremental Update task in progress.  This update must finish before applying existing updates.</p>
+        <div>
+          <a href="/foreman_tasks/tasks/{{incrementalUpdates[0].id}}" translate>Click here to check the status of the task.</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div data-block="table">
+    <table class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column="errata_id" sortable>{{ "Errata ID" | translate }}</th>
+          <th bst-table-column="title">{{ "Title" | translate }}</th>
+          <th bst-table-column="type">{{ "Type" | translate }}</th>
+          <th bst-table-column="numberOfContentHosts">{{ "Content Host Counts" | translate }}</th>
+          <th bst-table-column="updated" sortable>{{ "Updated" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="errata in table.rows" row-select="errata">
+          <td bst-table-cell>
+            <a ui-sref="erratum.info({errataId: errata.id})">
+              {{ errata.errata_id }}
+            </a>
+            <i class="fa fa-chevron-right selected-icon" ng-show="errata.selected"></i>
+          </td>
+          <td bst-table-cell>
+            {{ errata.title }}
+          </td>
+          <td bst-table-cell>
+            <span ng-show="errata.type == 'security'">
+              <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
+            </span>
+
+            <span ng-show="errata.type == 'bugfix'">
+              <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
+            </span>
+
+            <span ng-show="errata.type == 'enhancement'">
+              <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
+            </span>
+
+            {{ errata.type | errataType}}
+            <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
+          </td>
+          <td bst-table-cell>
+            <span translate>{{ errata.hosts_applicable_count || 0 }} Applicable, </span>
+            <span translate>{{ errata.hosts_available_count || 0 }} Installable</span>
+          </td>
+          <td bst-table-cell>{{ errata.updated | date:'shortDate'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
