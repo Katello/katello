@@ -1,16 +1,21 @@
 describe('Controller: ErrataController', function() {
     var $scope,
+        $state,
         $location,
         $controller,
         dependencies,
         Erratum,
-        Task,
+        IncrementalUpdate,
         Repository,
         Nutupane;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
 
     beforeEach(function() {
+        $state = {
+            transitionTo: function () {}
+        };
+
         Nutupane = function() {
             this.table = {
                 params: {},
@@ -23,9 +28,9 @@ describe('Controller: ErrataController', function() {
             this.getAllSelectedResults = function () {};
         };
 
-        Task = {
-            registerSearch: function() {},
-            unregisterSearch: function () {}
+        IncrementalUpdate = {
+            getIncrementalUpdates: function () {},
+            setBulkErrata: function () {}
         };
     });
 
@@ -38,10 +43,11 @@ describe('Controller: ErrataController', function() {
         $controller = _$controller_;
         dependencies = {
             $scope: $scope,
+            $state: $state,
             $location: $location,
             Nutupane: Nutupane,
             Erratum: Erratum,
-            Task: Task,
+            IncrementalUpdate: IncrementalUpdate,
             Repository: Repository,
             CurrentOrganization: 'CurrentOrganization',
             translate: translateMock
@@ -56,13 +62,6 @@ describe('Controller: ErrataController', function() {
 
     it('sets the total errata count on the scope', function () {
         expect($scope.errataCount).toBe(2);
-    });
-
-    it('sets the closeItem function to transition to the index page', function() {
-        spyOn($scope, "transitionTo");
-        $scope.table.closeItem();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('errata.index');
     });
 
     it('gets a list of yum repositories for the organization', function () {
@@ -102,13 +101,15 @@ describe('Controller: ErrataController', function() {
     });
 
     it("provides a way to go to the next apply step", function () {
-        spyOn($scope, 'transitionTo');
+        spyOn(IncrementalUpdate, 'setBulkErrata');
+        spyOn($state, 'transitionTo');
         spyOn($scope.nutupane, 'getAllSelectedResults');
 
         $scope.goToNextStep();
 
+        expect(IncrementalUpdate.setBulkErrata).toHaveBeenCalled();
         expect($scope.nutupane.getAllSelectedResults).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('errata.apply.select-content-hosts');
+        expect($state.transitionTo).toHaveBeenCalledWith('apply-errata.select-content-hosts');
     });
     
     it('allows the setting of the repositoryId via a query string parameter', function () {
@@ -119,25 +120,12 @@ describe('Controller: ErrataController', function() {
         expect($scope.repository.id).toBe(1);
     });
 
-    it('sets the incrementalUpdateInProgress to true if an incremental update is in progress', function () {
-        spyOn(Task, 'registerSearch').and.callFake(function (params, callback) {
-            callback([1]);
-        });
 
-        $scope.checkIfIncrementalUpdateRunning();
+    it('gets the incremental updates from the incremental update service', function () {
+        spyOn(IncrementalUpdate, 'getIncrementalUpdates');
 
-        expect(Task.registerSearch).toHaveBeenCalled();
-        expect($scope.incrementalUpdateInProgress).toBe(true);
-    });
+        $controller('ErrataController', dependencies);
 
-    it('sets the incrementalUpdateInProgress to false if no incremental update is in progress', function () {
-        spyOn(Task, 'registerSearch').and.callFake(function (params, callback) {
-            callback([]);
-        });
-
-        $scope.checkIfIncrementalUpdateRunning();
-
-        expect(Task.registerSearch).toHaveBeenCalled();
-        expect($scope.incrementalUpdateInProgress).toBe(false);
+        expect(IncrementalUpdate.getIncrementalUpdates).toHaveBeenCalled();
     });
 });

@@ -1,4 +1,4 @@
-describe('Controller: ErrataDetailsController', function() {
+describe('Controller: ErratumController', function() {
     var $scope, Erratum;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
@@ -11,7 +11,7 @@ describe('Controller: ErrataDetailsController', function() {
 
         $scope.$stateParams = {errataId: 1};
 
-        $controller('ErrataDetailsController', {
+        $controller('ErratumController', {
             $scope: $scope,
             Erratum: Erratum
         });

@@ -1,9 +1,10 @@
 /**
  * @ngdoc object
- * @name  Bastion.errata.controller:ApplyErrataController
+ * @name  Bastion.errata.controller:IncrementalUpdateController
  *
  * @requires $scope
  * @requires translate
+ * @requires IncrementalUpdate
  * @requires ContentHostBulkAction
  * @requires ContentViewVersion
  * @requires CurrentOrganization
@@ -12,16 +13,16 @@
  *   Display confirmation screen and apply Errata.
  */
 angular.module('Bastion.errata').controller('ApplyErrataController',
-    ['$scope', 'translate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization',
-        function ($scope, translate, HostBulkAction, ContentViewVersion, CurrentOrganization) {
+    ['$scope', 'translate', 'IncrementalUpdate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization',
+        function ($scope, translate, IncrementalUpdate, HostBulkAction, ContentViewVersion, CurrentOrganization) {
             var applyErrata, incrementalUpdate;
 
             function transitionToTask(task) {
                 if ($scope.$stateParams.hasOwnProperty('errataId')) {
-                    $scope.transitionTo('errata.details.task-details', {errataId: $scope.$stateParams.errataId,
+                    $scope.transitionTo('erratum.task', {errataId: $scope.$stateParams.errataId,
                         taskId: task.id});
                 } else {
-                    $scope.transitionTo('errata.tasks.details', {taskId: task.id});
+                    $scope.transitionTo('errata-tasks.details', {taskId: task.id});
                 }
                 $scope.applyingErrata = false;
             }
@@ -50,7 +51,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 $scope.applyingErrata = true;
 
                 params['add_content'] = {
-                    'errata_ids': $scope.errataIds
+                    'errata_ids': IncrementalUpdate.getErrataIds()
                 };
 
                 params['content_view_version_environments'] = [];
@@ -81,7 +82,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 });
 
                 if ($scope.applyErrata) {
-                    params['update_hosts'] = $scope.selectedContentHosts;
+                    params['update_hosts'] = IncrementalUpdate.getBulkContentHosts();
                 }
 
                 error = function (response) {
@@ -93,12 +94,12 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
             };
 
             applyErrata = function () {
-                var params = $scope.selectedContentHosts, error;
+                var params = IncrementalUpdate.getBulkContentHosts(), error;
 
                 $scope.applyingErrata = true;
 
                 params['content_type'] = 'errata';
-                params.content = $scope.errataIds;
+                params.content = IncrementalUpdate.getErrataIds();
                 params['organization_id'] = CurrentOrganization;
 
                 error = function (response) {
@@ -109,16 +110,9 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 HostBulkAction.installContent(params, transitionToTask, error);
             };
 
-            if ($scope.$stateParams.hasOwnProperty('errataId')) {
-                $scope.errataIds = [$scope.$stateParams.errataId];
-            } else {
-                if ($scope.selectedErrata) {
-                    $scope.errataIds = $scope.selectedErrata.included.ids;
-                }
-            }
-
-            if ($scope.selectedContentHosts && $scope.errataIds) {
-                $scope.selectedContentHosts['errata_ids'] = $scope.errataIds;
+            if (IncrementalUpdate.canApply()) {
+                $scope.selectedContentHosts = IncrementalUpdate.getBulkContentHosts();
+                $scope.selectedContentHosts['errata_ids'] = IncrementalUpdate.getErrataIds();
                 $scope.selectedContentHosts['organization_id'] = CurrentOrganization;
                 HostBulkAction.availableIncrementalUpdates($scope.selectedContentHosts, function (updates) {
                     $scope.updates = updates;
@@ -133,7 +127,9 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 }
             };
 
-            $scope.checkIfIncrementalUpdateRunning();
-
+            $scope.incrementalUpdates = IncrementalUpdate.getIncrementalUpdates();
+            $scope.selectedContentHosts = IncrementalUpdate.getBulkContentHosts();
+            $scope.contentHostIds = IncrementalUpdate.getContentHostIds();
+            $scope.errataIds = IncrementalUpdate.getErrataIds();
         }
     ]);

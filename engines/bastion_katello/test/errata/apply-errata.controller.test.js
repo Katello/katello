@@ -1,5 +1,5 @@
 describe('Controller: ApplyErrataController', function() {
-    var $controller, dependencies, $scope, translate, HostBulkAction, ContentViewVersion,
+    var $controller, dependencies, $scope, translate, HostBulkAction, ContentViewVersion, IncrementalUpdate,
         CurrentOrganization;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
@@ -35,8 +35,15 @@ describe('Controller: ApplyErrataController', function() {
 
         CurrentOrganization = 'foo';
 
+        IncrementalUpdate = {
+            canApply: function () {},
+            getContentHostIds: function () {},
+            getErrataIds: function () {},
+            getBulkContentHosts: function () {},
+            getIncrementalUpdates: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
-        $scope.checkIfIncrementalUpdateRunning = function () {};
         $scope.errorMessages = [];
         $scope.successMessages = [];
 
@@ -44,55 +51,63 @@ describe('Controller: ApplyErrataController', function() {
             $scope: $scope,
             translate: translate,
             HostBulkAction: HostBulkAction,
+            IncrementalUpdate: IncrementalUpdate,
             ContentViewVersion: ContentViewVersion,
             CurrentOrganization: CurrentOrganization
         };
     }));
 
-    describe("sets the errataIds on the scope", function () {
-        it("to the errataId in the $stateParams if present", function () {
-            $scope.$stateParams = {errataId: 2};
-            $controller('ApplyErrataController', dependencies);
-            expect($scope.errataIds).toEqual([2]);
-        });
-
-        it("to the selected errata from the errata table otherwise", function () {
-            $scope.selectedErrata = {included: {ids: [1]}};
-            $controller('ApplyErrataController', dependencies);
-            expect($scope.errataIds).toEqual([1]);
-        });
-    });
-
-    it("sets the updates on the $scope if there are selected content hosts", function () {
-        var updates = ['update'];
-        spyOn(HostBulkAction, 'availableIncrementalUpdates').and.callFake(function (params, success) {
-            success(updates);
-        });
-
-        $scope.$stateParams = {errataId: 2};
-        $scope.selectedContentHosts = ['abc'];
-
+    it("sets the errataIds on the scope", function () {
+        spyOn(IncrementalUpdate, 'getErrataIds').and.returnValue([2]);
         $controller('ApplyErrataController', dependencies);
-
-        expect(HostBulkAction.availableIncrementalUpdates).toHaveBeenCalledWith($scope.selectedContentHosts,
-            jasmine.any(Function));
-        expect($scope.updates).toEqual(updates);
+        expect(IncrementalUpdate.getErrataIds).toHaveBeenCalled();
+        expect($scope.errataIds).toEqual([2]);
     });
 
     describe("can apply errata", function () {
-        var expectedParams;
+        var expectedParams, bulkContentHosts;
+
+        bulkContentHosts = {
+            included: {
+                ids: [1, 2, 3]
+            }
+        };
 
         beforeEach(function () {
+            spyOn(IncrementalUpdate, 'canApply').and.returnValue(true);
+            spyOn(IncrementalUpdate,'getBulkContentHosts').and.returnValue(bulkContentHosts);
+            spyOn(IncrementalUpdate, 'getErrataIds').and.returnValue([10]);
+
             $controller('ApplyErrataController', dependencies);
-            $scope.selectedContentHosts = {include: [1, 2, 3]};
-            $scope.errataIds = [10];
         });
+
+        afterEach(function () {
+            expect(IncrementalUpdate.canApply).toHaveBeenCalled();
+            expect(IncrementalUpdate.getErrataIds).toHaveBeenCalled();
+            expect(IncrementalUpdate.getBulkContentHosts).toHaveBeenCalled();
+        });
+
+        it("by setting the updates on the $scope if there are selected content hosts", function () {
+            var updates = ['update'];
+
+            spyOn(HostBulkAction, 'availableIncrementalUpdates').and.callFake(function (params, success) {
+                success(updates);
+            });
+            
+            $controller('ApplyErrataController', dependencies);
+
+            expect(HostBulkAction.availableIncrementalUpdates).toHaveBeenCalledWith($scope.selectedContentHosts,
+                jasmine.any(Function));
+            expect($scope.updates).toEqual(updates);
+        });
+
 
         describe("if no incremental update is needed", function () {
             beforeEach(function () {
                 expectedParams = {
-                    include: [1, 2, 3],
+                    included: {ids: [1, 2, 3]},
                     'content_type': 'errata',
+                    errata_ids: [10],
                     content: [10],
                     'organization_id': CurrentOrganization
                 };
@@ -110,7 +125,7 @@ describe('Controller: ApplyErrataController', function() {
                 spyOn($scope, 'transitionTo');
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
             });
 
@@ -155,7 +170,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeFalsy();
             });
@@ -170,7 +185,8 @@ describe('Controller: ApplyErrataController', function() {
             });
 
             it("can pass a parameter to update the content hosts", function () {
-                expectedParams['update_hosts'] = {include: [1, 2, 3]};
+                expectedParams['update_hosts'] = {included: {ids: [1, 2, 3]}, errata_ids: [ 10 ],
+                    organization_id: 'foo', content_type: 'errata', content: [ 10 ]};
                 $scope.applyErrata = true;
 
                 $scope.confirmApply();
@@ -216,7 +232,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });
@@ -265,7 +281,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });

@@ -1,32 +1,15 @@
 <span page-title>{{ 'Apply Errata' | translate }}</span>
 
-<section class="nutupane-details" ng-cloak bst-container-scroll>
-
-  <header class="details-header">
-    <h2 class="fl" translate>Apply Errata</h2>
-
-    <div class="fr">
-      <button class="btn btn-default" ui-sref="errata.index">
-        <i class="icon-remove"></i>
-        {{ "Close" | translate }}
-      </button>
-    </div>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header" translate>
+    Apply Errata
   </header>
 
-  <div>
-    <div bst-alert="warning" ng-show="errataIds.length === 0">
-      <i class="icon-exclamation-sign"></i>
-      <span translate>At least one Errata needs to be selected to Apply.</span>
-    </div>
-
-    <div bst-alert="info" ng-show="state.working">
-      <i class="fa fa-spinner fa-spin"></i>
-      <span translate>Processing</span>
-    </div>
-
-    <span ng-disabled="table.numSelected == 0">
-      <div ui-view></div>
-    </span>
+  <div bst-alert="warning" ng-show="errataIds.length === 0">
+    <span translate>At least one Errata needs to be selected to Apply.</span>
   </div>
 
-</section>
+  <div data-block="content" ng-hide="errataIds.length > 0">
+    <section ui-view></section>
+  </div>
+</div>

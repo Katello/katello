@@ -1,0 +1,58 @@
+<span page-title ng-model="errata">{{ 'Errata: ' | translate }} {{ errata.title }}</span>
+
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>{{ errata.title }}</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Advisory</dt>
+      <dd>{{ errata.errata_id }}</dd>
+
+      <dt translate>CVEs</dt>
+      <dd>
+        <span ng-repeat="cve in errata.cves">
+          <a href="{{ cve.href }}">{{ cve.cve_id }}</a>
+          <span ng-show="!$last">,</span>
+        </span>
+        <span ng-show="errata.cves.length === 0" translate>N/A</span>
+      </dd>
+
+      <dt translate>Type</dt>
+      <dd>{{ errata.type | errataType }}</dd>
+
+      <dt translate>Severity</dt>
+      <dd>{{ errata.severity | errataSeverity }}</dd>
+
+      <dt translate>Issued</dt>
+      <dd>{{ errata.issued | date:'shortDate' }}</dd>
+
+      <dt translate>Last Updated On</dt>
+      <dd>{{ errata.updated | date:'shortDate' }}</dd>
+
+      <dt translate>Reboot Suggested?</dt>
+      <dd>{{ errata.reboot_suggested | booleanToYesNo }}</dd>
+    </dl>
+
+    <h3 translate>Topic</h3>
+    <p class="info-paragraph">{{ errata.summary }}</p>
+
+
+    <h3 translate>Description</h3>
+    <p class="info-paragraph">{{ errata.description }}</p>
+
+    <h3 translate>Solution</h3>
+    <p class="info-paragraph">{{ errata.solution }}</p>
+  </div>
+
+  <div data-block="right-column">
+    <h3 translate>Affected Packages</h3>
+
+    <ul class="list-unstyled">
+      <li ng-repeat="package in errata.packages">
+        <a href="/packages?search={{package}}">
+          {{ package }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

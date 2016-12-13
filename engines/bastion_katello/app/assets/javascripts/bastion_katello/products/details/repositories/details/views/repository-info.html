@@ -171,7 +171,7 @@
         <tr ng-show="repository.content_type === 'yum'">
           <td translate>Errata</td>
           <td class="align-center">
-            <a ui-sref="errata.index({repositoryId: repository.id})">
+            <a ui-sref="errata({repositoryId: repository.id})">
               {{ repository.content_counts.erratum || 0 }}
             </a>
           </td>

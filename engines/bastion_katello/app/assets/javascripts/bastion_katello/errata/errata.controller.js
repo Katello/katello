@@ -3,10 +3,12 @@
  * @name  Bastion.errata.controller:ErrataController
  *
  * @requires $scope
+ * @requires $state
  * @requires $location
  * @requires translate
  * @requires Nutupane
  * @requires Erratum
+ * @requires IncrementalUpdate
  * @requires Repository
  * @requires CurrentOrganization
  *
@@ -16,8 +18,8 @@
  *   within the table.
  */
 angular.module('Bastion.errata').controller('ErrataController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'Erratum', 'Task', 'Repository', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, Erratum, Task, Repository, CurrentOrganization) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'Erratum', 'IncrementalUpdate', 'Repository', 'CurrentOrganization',
+    function ($scope, $state, $location, translate, Nutupane, Erratum, IncrementalUpdate, Repository, CurrentOrganization) {
         var nutupane, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -36,31 +38,7 @@ angular.module('Bastion.errata').controller('ErrataController',
             $scope.errataCount = result.total;
         });
 
-        $scope.table.closeItem = function () {
-            $scope.transitionTo('errata.index');
-        };
-
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
-
-        $scope.checkIfIncrementalUpdateRunning = function () {
-            var searchId, taskSearchParams, taskSearchComplete;
-
-            taskSearchParams = {
-                'type': 'all',
-                "resource_type": "Organization",
-                "resource_id": CurrentOrganization,
-                "action_types": "Actions::Katello::ContentView::IncrementalUpdates",
-                "active_only": true
-            };
-
-            taskSearchComplete = function (results) {
-                $scope.incrementalUpdates = results;
-                $scope.incrementalUpdateInProgress = results.length > 0;
-                Task.unregisterSearch(searchId);
-            };
-
-            searchId = Task.registerSearch(taskSearchParams, taskSearchComplete);
-        };
 
         Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
             $scope.repositories = [$scope.repository];
@@ -104,10 +82,10 @@ angular.module('Bastion.errata').controller('ErrataController',
         });
 
         $scope.goToNextStep = function () {
-            $scope.selectedErrata = nutupane.getAllSelectedResults();
-            $scope.transitionTo('errata.apply.select-content-hosts');
+            IncrementalUpdate.setBulkErrata(nutupane.getAllSelectedResults());
+            $state.transitionTo('apply-errata.select-content-hosts');
         };
 
-        $scope.checkIfIncrementalUpdateRunning();
+        $scope.incrementalUpdates = IncrementalUpdate.getIncrementalUpdates();
     }]
 );
