@@ -30,14 +30,15 @@ end %>
   end
 end %>
 
-<% if @host %>
-  <input type="hidden" name="host[content_facet_attributes][id]" value="<%= @host.content_facet.try(:id) %>">
-<% end %>
-
 <% proxies = SmartProxy.with_content.unscoped.with_taxonomy_scope(@location,@organization,:path_ids) %>
-<% if proxies.count > 0 %>
-    <%= select_f f, :content_source_id, proxies, :id, :name,
-             { :include_blank => blank_or_inherit_f(f, :content_source) },
-             { :label       => _("Content Source"),
-               :help_inline => _("Use this as a source for installation and updates.") } %>
-<% end %>
+<% cs_select_id =  using_hostgroups_page? ? :hostgroup_content_source_id : :host_content_source_id %>
+<% cs_select_name =  using_hostgroups_page? ? 'hostgroup[content_source_id]' : 'host[content_facet_attributes][content_source_id]' %>
+<% cs_select_attr = using_hostgroups_page? ? 'content_source' : 'content_facet.content_source' %>
+<%= field(f, cs_select_attr, {:label => _("Content Source")}) do
+  if using_hostgroups_page?
+    select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, @hostgroup.content_source_id), :data => {"spinner_path" => spinner_path},
+               :class => 'form-control',  :name => cs_select_name, include_blank: true
+  else
+    select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, (@hostgroup || @host).content_source_id), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, include_blank: true
+  end
+end %>

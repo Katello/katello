@@ -26,4 +26,4 @@ child :host_collections => :host_collections do
   attributes :id, :name
 end
 
-attributes :description, :facts, :content_source_id
+attributes :description, :facts

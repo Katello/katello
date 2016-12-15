@@ -7,10 +7,8 @@ module Katello
 
       included do
         alias_method_chain :validate_media?, :capsule
-        alias_method_chain :inherited_attributes, :katello
         alias_method_chain :info, :katello
         alias_method_chain :smart_proxy_ids, :katello
-        belongs_to :content_source, :class_name => "::SmartProxy", :foreign_key => :content_source_id, :inverse_of => :hosts
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :destroy
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
@@ -21,7 +19,6 @@ module Katello
 
         before_save :correct_puppet_environment
 
-        scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :in => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true
         scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
@@ -76,10 +73,6 @@ module Katello
       def content_and_puppet_match?
         content_facet && content_facet.content_view_id == environment.try(:content_view).try(:id) &&
             content_facet.lifecycle_environment_id == self.environment.try(:lifecycle_environment).try(:id)
-      end
-
-      def inherited_attributes_with_katello
-        inherited_attributes_without_katello.concat(%w(content_source_id))
       end
 
       def import_package_profile(simple_packages)
