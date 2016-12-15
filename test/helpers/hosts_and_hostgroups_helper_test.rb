@@ -51,8 +51,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   test "kickstart_repository_options should provide options for a populated host" do
     host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
                       :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id})
-    host.content_source = @content_source
+                                                    :content_view_id => @cv.id,
+                                                    :content_source_id => @content_source.id})
     ret = [{:name => "boo" }]
 
     @os.expects(:kickstart_repos).returns(ret).with do |param_host|
@@ -133,8 +133,8 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
 
     @host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
                       :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id})
-    @host.content_source = @content_source
+                                                    :content_view_id => @cv.id,
+                                                    :content_source_id => @content_source.id})
   end
 
   test "must return host or host group kickstart id" do

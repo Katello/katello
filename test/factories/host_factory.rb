@@ -3,6 +3,7 @@ FactoryGirl.modify do
     transient do
       content_view nil
       lifecycle_environment nil
+      content_source nil
     end
 
     trait :with_content do
@@ -12,6 +13,7 @@ FactoryGirl.modify do
         if host.content_facet
           host.content_facet.content_view = evaluator.content_view if evaluator.content_view
           host.content_facet.lifecycle_environment = evaluator.lifecycle_environment if evaluator.lifecycle_environment
+          host.content_facet.content_source = evaluator.content_source if evaluator.content_source
         end
       end
     end

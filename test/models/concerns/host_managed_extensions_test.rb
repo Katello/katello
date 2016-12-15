@@ -38,7 +38,8 @@ module Katello
     def test_smart_proxy_ids_with_katello
       content_source = FactoryGirl.create(:smart_proxy,
                                           :features => [Feature.where(:name => "Pulp Node").first_or_create])
-      @foreman_host.content_source = content_source
+      Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
+      @foreman_host.content_facet.content_source = content_source
       assert @foreman_host.smart_proxy_ids.include?(@foreman_host.content_source_id)
     end
 
