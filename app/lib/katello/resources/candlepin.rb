@@ -577,8 +577,11 @@ module Katello
             subscription
           end
 
-          def get_for_owner(owner_key)
-            content_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{owner_key}/subscriptions", self.default_headers).body
+          def get_for_owner(owner_key, included = [])
+            included_list = included.map { |value| "include=#{value}" }.join('&')
+            content_json = Candlepin::CandlepinResource.get(
+              "/candlepin/owners/#{owner_key}/subscriptions?#{included_list}",
+              self.default_headers).body
             JSON.parse(content_json)
           end
 

@@ -16,8 +16,8 @@ module Katello
     def redhat_provider_tab
       #preload orphaned product information, as it is very slow per product
       subscription_product_ids = []
-
-      subscriptions = Resources::Candlepin::Subscription.get_for_owner(current_organization.label)
+      included_list = %w(product.id providedProducts.id derivedProvidedProducts.id)
+      subscriptions = Resources::Candlepin::Subscription.get_for_owner(current_organization.label, included_list)
       subscriptions.each do |sub|
         subscription_product_ids << sub['product']['id'] if sub['product']['id']
         subscription_product_ids += sub['providedProducts'].map { |p| p['id'] } if sub['providedProducts']
