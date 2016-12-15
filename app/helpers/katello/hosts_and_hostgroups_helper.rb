@@ -175,13 +175,13 @@ module Katello
 
         if (host.is_a? Hostgroup)
           new_host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => host.lifecycle_environment_id,
-                                                          :content_view_id => host.content_view_id)
+                                                          :content_view_id => host.content_view_id,
+                                                          :content_source_id => host.content_source_id)
         elsif host.content_facet.present?
           new_host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => host.content_facet.lifecycle_environment_id,
-                                                          :content_view_id => host.content_facet.content_view_id)
+                                                          :content_view_id => host.content_facet.content_view_id,
+                                                          :content_source_id => host.content_source_id)
         end
-
-        new_host.content_source = host.content_source
         new_host.operatingsystem.kickstart_repos(new_host).map { |repo| OpenStruct.new(repo) }
       else
         # case 2
@@ -208,8 +208,8 @@ module Katello
         lifecycle_env = Katello::KTEnvironment.find(host_params[:lifecycle_environment_id])
         content_view = Katello::ContentView.find(host_params[:content_view_id])
         host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => lifecycle_env.id,
-                                                    :content_view_id => content_view.id)
-        host.content_source = SmartProxy.find(host_params[:content_source_id])
+                                                    :content_view_id => content_view.id,
+                                                    :content_source => SmartProxy.find(host_params[:content_source_id]))
         if host.operatingsystem.is_a?(Redhat)
           view_options = host.operatingsystem.kickstart_repos(host).map { |repo| OpenStruct.new(repo) }
         end

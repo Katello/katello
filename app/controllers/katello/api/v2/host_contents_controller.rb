@@ -3,6 +3,7 @@ module Katello
     def_param_group :content_facet_attributes do
       param :content_view_id, Integer
       param :lifecycle_environment_id, Integer
+      param :content_source_id, Integer
       param :kickstart_repository_id, Integer, :desc => N_("Repository Id associated with the kickstart repo used for provisioning")
     end
   end
