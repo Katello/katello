@@ -67,9 +67,8 @@ module Katello
 
       @host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => @os,
                         :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
-                                                      :content_view_id => @repo_with_distro.content_view.id})
-
-      @host.content_source = @content_source
+                                                      :content_view_id => @repo_with_distro.content_view.id,
+                                                      :content_source => @content_source})
 
       @hostgroup = Hostgroup.new(:name => "testhg", :lifecycle_environment_id => @repo_with_distro.environment.id,
                                  :content_view_id => @repo_with_distro.content_view.id)
@@ -82,11 +81,11 @@ module Katello
       # create os
       @os.media.create!(:name => "my-media", :path => "http://www.foo.com/abcd")
       @host.medium = @os.media.first
-      @host.content_source = nil
+      @host.content_facet.content_source = nil
       @host.content_facet.kickstart_repository = @repo_with_distro
       assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
 
-      @host.content_source = @content_source
+      @host.content_facet.content_source = @content_source
       @host.content_facet.kickstart_repository = nil
       assert_equal @os.media.first.path, @os.medium_uri(@host).to_s
     end
@@ -115,7 +114,7 @@ module Katello
 
     def test_kickstart_repos_with_no_content_source
       @os.expects(:distribution_repositories).with(@host).returns([@repo_with_distro])
-      @host.content_source = nil
+      @host.content_facet.content_source = nil
       assert_empty @os.kickstart_repos(@host)
     end
 

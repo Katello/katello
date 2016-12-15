@@ -30,7 +30,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
 
     get :show, :id => host.id
     response = ActiveSupport::JSON.decode(@response.body)
-    assert_equal smart_proxy.id, response["content_source_id"]
+    assert_equal smart_proxy.id, response["content_facet_attributes"]["content_source_id"]
     assert_response :success
   end
 
@@ -70,10 +70,9 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_with_smartproxy
-    host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                              :lifecycle_environment => @environment)
     smart_proxy = FactoryGirl.create(:smart_proxy, :features => [FactoryGirl.create(:feature, name: 'Pulp')])
-    host.update_column(:content_source_id, smart_proxy.id)
+    host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                              :lifecycle_environment => @environment, :content_source => smart_proxy)
     host_show(host, smart_proxy)
   end
 

@@ -18,6 +18,7 @@ module Katello
         #associations for simpler scoped searches
         has_one :content_view, :through => :content_facet
         has_one :lifecycle_environment, :through => :content_facet
+        has_one :content_source, :through => :content_facet
         has_many :applicable_errata, :through => :content_facet
         has_many :applicable_rpms, :through => :content_facet
 
@@ -29,6 +30,7 @@ module Katello
         scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
         scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
+        scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
 
         # preserve options set by facets framework, but add new :reject_if statement
         accepts_nested_attributes_for(
