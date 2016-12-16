@@ -96,7 +96,7 @@ module Katello
           facts[setting_fact]
         else
           Rails.logger.warn(_("register_hostname_fact set for %s, but no fact found.") % setting_fact) unless setting_fact.blank?
-          facts['network.fqdn'] || facts['network.hostname-override'] || facts['network.hostname']
+          [facts['network.fqdn'], facts['network.hostname-override'], facts['network.hostname']].find { |name| !name.blank? }
         end
       end
 
@@ -106,9 +106,9 @@ module Katello
           name = facts[setting_fact]
         elsif ::Host.where(:name => facts['network.hostname'].downcase).any?
           name = facts['network.hostname']
-        elsif facts['network.fqdn'] && ::Host.where(:name => facts['network.fqdn'].downcase).any?
+        elsif !facts['network.fqdn'].blank? && ::Host.where(:name => facts['network.fqdn'].downcase).any?
           name = facts['network.fqdn']
-        elsif facts['network.hostname-override'] && ::Host.where(:name => facts['network.hostname-override'].downcase).any?
+        elsif !facts['network.hostname-override'].blank? && ::Host.where(:name => facts['network.hostname-override'].downcase).any?
           name = facts['network.hostname-override']
         else
           name = facts['network.hostname'] #fallback to default, even if it doesn't exist

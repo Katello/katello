@@ -168,6 +168,9 @@ module Katello
       facts = {'network.hostname' => 'foo'}
       assert_equal 'foo', Host::SubscriptionFacet.propose_name_from_facts(facts)
 
+      facts['network.hostname-override'] = ''
+      assert_equal 'foo', Host::SubscriptionFacet.propose_name_from_facts(facts)
+
       facts['network.hostname-override'] = 'foo.override'
       assert_equal 'foo.override', Host::SubscriptionFacet.propose_name_from_facts(facts)
 
