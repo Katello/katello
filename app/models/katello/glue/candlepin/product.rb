@@ -1,12 +1,25 @@
 module Katello
   module Glue::Candlepin::Product
+    PRODUCT_ATTRS = %w(name attributes.name attributes.value
+                       productContent.content.contentUrl
+                       productContent.content.label
+                       productContent.content.modifiedProductIds
+                       productContent.content.type
+                       productContent.content.id
+                       productContent.content.name).freeze
+
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
 
       base.class_eval do
         lazy_accessor :productContent, :multiplier, :href, :attrs,
-          :initializer => lambda { |_s| convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
+          :initializer => (lambda do |_s|
+            convert_from_cp_fields(
+              Resources::Candlepin::Product.get(cp_id, PRODUCT_ATTRS)[0]
+            )
+          end)
+
         # Certificate for this product - used for SSL certificate and key
         lazy_accessor :product_certificate,
           :initializer => lambda { |_s| Resources::Candlepin::Product.product_certificate(cp_id, self.organization.label) },
