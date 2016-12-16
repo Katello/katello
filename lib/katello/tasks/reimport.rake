@@ -1,7 +1,9 @@
+require File.expand_path("../engine", File.dirname(__FILE__))
+
 namespace :katello do
   desc "Runs a katello ping and prints out the statuses of each service"
-  task :check_ping do
-    User.current = User.anonymous_admin
+  task :check_ping => :environment do
+    ::User.current = ::User.anonymous_admin
     ping_results = Katello::Ping.ping
     if ping_results[:status] != "ok"
       pp ping_results
