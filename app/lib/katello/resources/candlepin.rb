@@ -73,6 +73,10 @@ module Katello
         def self.name_to_key(a_name)
           a_name.tr(' ', '_')
         end
+
+        def self.included_list(included)
+          included.map { |value| "include=#{value}" }.join('&')
+        end
       end
 
       class CandlepinPing < CandlepinResource
@@ -578,10 +582,10 @@ module Katello
           end
 
           def get_for_owner(owner_key, included = [])
-            included_list = included.map { |value| "include=#{value}" }.join('&')
             content_json = Candlepin::CandlepinResource.get(
-              "/candlepin/owners/#{owner_key}/subscriptions?#{included_list}",
-              self.default_headers).body
+              "/candlepin/owners/#{owner_key}/subscriptions?#{included_list(included)}",
+              self.default_headers
+            ).body
             JSON.parse(content_json)
           end
 
@@ -635,15 +639,20 @@ module Katello
             JSON.parse(self.post(path, attr.to_json, self.default_headers).body).with_indifferent_access
           end
 
-          def get(id = nil)
-            products_json = super(path(id), self.default_headers).body
+          def get(id = nil, included = [])
+            products_json = super(path(id + "/?#{included_list(included)}"), self.default_headers).body
             products = JSON.parse(products_json)
             products = [products] unless id.nil?
             ::Katello::Util::Data.array_with_indifferent_access products
           end
 
           def product_certificate(id, owner)
-            subscriptions_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{owner}/subscriptions", self.default_headers).body
+            included = %w(certificate product.id providedProducts.id
+                          derivedProvidedProducts.id)
+            subscriptions_json = Candlepin::CandlepinResource.get(
+              "/candlepin/owners/#{owner}/subscriptions?#{included_list(included)}",
+              self.default_headers
+            ).body
             subscriptions = JSON.parse(subscriptions_json)
 
             product_subscription = subscriptions.find do |sub|
