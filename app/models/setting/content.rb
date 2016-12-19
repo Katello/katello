@@ -38,7 +38,8 @@ class Setting::Content < Setting
         self.set('pulp_client_cert', N_("Path for ssl cert used for pulp server auth"), "/etc/pki/katello/certs/pulp-client.crt"),
         self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"), false),
         self.set('use_pulp_oauth', N_("use oauth authentication for pulp instead of the default cert based authentication"), false),
-        self.set('unregister_delete_host', N_("When unregistering host via subscription-manager, also delete server-side host record"), false),
+        self.set('unregister_delete_host', N_("When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host " \
+                                              "such as virtual machines and DNS records may also be deleted."), false),
         self.set('register_hostname_fact', N_("When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"),
                   '', N_('Subscription manager name registration fact'), nil)
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
