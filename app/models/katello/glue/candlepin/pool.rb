@@ -82,10 +82,11 @@ module Katello
       end
 
       def stacking_subscription(org_label, stacking_id)
-        subscription = ::Katello::Subscription.find_by(:product_id => stacking_id)
+        org = Organization.find_by(:label => org_label)
+        subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :product_id => stacking_id)
         if subscription.nil?
           found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
-          subscription = ::Katello::Subscription.find_by(:product_id => found_product['id']) if found_product
+          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :product_id => found_product['id']) if found_product
         end
         subscription
       end
