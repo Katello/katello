@@ -51,11 +51,13 @@ describe('Controller: FilterRepositoriesController', function() {
 
     describe("sets the repository table's selected rows", function() {
         it("to the content view's repositories if the filter doesn't have repositories", function() {
-            filter['content_view'].repositories = [{id: 1}, {id: 2}];
+            spyOn($scope, "stateIncludes").and.returnValue(true);
+            filter['content_view'].repositories = [{id: 1, "content_type": "yum"}, {id: 2, "content_type": "yum"}, {id: 3, "content_type": "docker"}];
             $scope.filter.repositories = [];
 
             $controller('FilterRepositoriesController', dependencies);
 
+            expect($scope.table.rows.length).toBe(2);
             expect($scope.table.rows[0].id).toBe(1);
             expect($scope.table.rows[0].selected).toBe(true);
             expect($scope.table.rows[1].id).toBe(2);
@@ -63,8 +65,9 @@ describe('Controller: FilterRepositoriesController', function() {
         });
 
         it("to the filter's repositories if the filter has repositories", function() {
-            filter['content_view'].repositories = [{id: 1}, {id: 2}];
-            $scope.filter.repositories = [{id: 1}];
+            spyOn($scope, "stateIncludes").and.returnValue(true);
+            filter['content_view'].repositories = [{id: 1, "content_type": "yum"}, {id: 2, "content_type": "yum"}];
+            $scope.filter.repositories = [{id: 1, "content_type": "yum"}];
 
             $controller('FilterRepositoriesController', dependencies);
 
@@ -72,6 +75,30 @@ describe('Controller: FilterRepositoriesController', function() {
             expect($scope.table.rows[0].selected).toBe(true);
             expect($scope.table.rows[1].id).toBe(2);
             expect($scope.table.rows[1].selected).toBe(false);
+        });
+
+        it("to the content view's docker repositories if the filter doesn't have repositories", function() {
+            spyOn($scope, "stateIncludes").and.returnValue(false);  // docker state
+            filter['content_view'].repositories = [{id: 1, "content_type": "yum"}, {id: 2, "content_type": "yum"}, {id: 3, "content_type": "docker"}];
+            $scope.filter.repositories = [];
+
+            $controller('FilterRepositoriesController', dependencies);
+
+            expect($scope.table.rows.length).toBe(1);
+            expect($scope.table.rows[0].id).toBe(3);
+            expect($scope.table.rows[0].selected).toBe(true);
+        });
+
+        it("to the filter's docker repositories if the filter has repositories", function() {
+            spyOn($scope, "stateIncludes").and.returnValue(false);  // docker state
+            filter['content_view'].repositories = [{id: 1, "content_type": "yum"}, {id: 2, "content_type": "yum"}, {id: 3, "content_type": "docker"}];
+            $scope.filter.repositories = [{id: 3, "content_type": "docker"}];
+
+            $controller('FilterRepositoriesController', dependencies);
+
+            expect($scope.table.rows.length).toBe(1);
+            expect($scope.table.rows[0].id).toBe(3);
+            expect($scope.table.rows[0].selected).toBe(true);
         });
     });
 

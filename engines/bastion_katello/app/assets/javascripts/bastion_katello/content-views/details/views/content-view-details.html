@@ -63,7 +63,7 @@
       </li>
 
       <li uib-dropdown
-          ng-class="{active: stateIncludes('content-view.repositories.yum') || stateIncludes('content-view.filters')}"
+          ng-class="{active: stateIncludes('content-view.repositories.yum') || stateIncludes('content-view.yum.filters')}"
           ng-hide="contentView.composite">
         <a uib-dropdown-toggle>
           <span translate>Yum Content</span>
@@ -76,7 +76,7 @@
             </a>
           </li>
           <li>
-            <a ui-sref="content-view.filters" translate>
+            <a ui-sref="content-view.yum.filters" translate>
               Filters
             </a>
           </li>
@@ -97,11 +97,25 @@
         </a>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-view.repositories.docker')}"
+      <li uib-dropdown
+          ng-class="{active: stateIncludes('content-view.repositories.docker') || stateIncludes('content-view.docker.filters')}"
           ng-hide="contentView.composite">
-        <a ui-sref="content-view.repositories.docker.list" translate>
-          Docker Content
+        <a uib-dropdown-toggle>
+          <span translate>Docker Content</span>
+          <i class="fa fa-chevron-down"></i>
         </a>
+        <ul uib-dropdown-menu>
+          <li>
+            <a ui-sref="content-view.repositories.docker.list" translate>
+              Repositories
+            </a>
+          </li>
+          <li>
+            <a ui-sref="content-view.docker.filters" translate>
+              Filters
+            </a>
+          </li>
+        </ul>
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.ostree')}"

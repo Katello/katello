@@ -21,7 +21,7 @@ module Katello
       query = ContentViewFilter.where(:content_view_id => (@view || ContentView.readable))
       query = query.where(:name => params[:name]) if params[:name]
       if params[:types]
-        types = params[:types].each.collect do |type|
+        types = params[:types].collect do |type|
           ::Katello::ContentViewFilter.class_for(type)
         end
         query = query.where("#{::Katello::ContentViewFilter.table_name}.type IN (?)", types)

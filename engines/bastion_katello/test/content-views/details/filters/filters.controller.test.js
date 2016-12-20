@@ -49,12 +49,12 @@ describe('Controller: FiltersController', function() {
 
     it("provides a way to get the filter's state", function() {
         expect($scope.getFilterState({type: 'erratum', rules: [{types: false}]})).
-            toBe('content-view.filter.erratum.list({filterId: filter.id})');
+            toBe('content-view.yum.filter.erratum.list({filterId: filter.id})');
         expect($scope.getFilterState({type: 'erratum', rules: [{types: true}]})).
-            toBe('content-view.filter.erratum.dateType({filterId: filter.id})');
+            toBe('content-view.yum.filter.erratum.dateType({filterId: filter.id})');
         expect($scope.getFilterState({type: 'rpm'})).
-            toBe('content-view.filter.rpm({filterId: filter.id})');
+            toBe('content-view.yum.filter.rpm({filterId: filter.id})');
         expect($scope.getFilterState({type: 'package_group'})).
-            toBe('content-view.filter.package_group.list({filterId: filter.id})');
+            toBe('content-view.yum.filter.package_group.list({filterId: filter.id})');
     });
 });

@@ -3,6 +3,16 @@ module Katello
     apipie_concern_subst(:a_resource => N_("a docker tag"), :resource => "docker_tags")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
+    before_action :find_repositories, :only => [:auto_complete_name]
+
+    def auto_complete_name
+      page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
+      tags = Katello::DockerTag.in_repositories(@repositories)
+      col = "#{Katello::DockerTag.table_name}.name"
+      tags = tags.where("#{Katello::DockerTag.table_name}.name ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
+      render :json => tags.pluck(col)
+    end
+
     def index
       if params[:grouped]
         # group docker tags by name, repo, and product
@@ -17,6 +27,10 @@ module Katello
     end
 
     private
+
+    def find_repositories
+      @repositories = Repository.readable.where(:id => params[:repoids])
+    end
 
     def resource_class
       DockerTag

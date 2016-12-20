@@ -429,18 +429,24 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         }
     })
 
-    .state('content-view.filters', {
+    .state('content-view.yum', {
+        url: '/repositories/yum',
+        abstract: true,
+        template: '<div ui-view></div>'
+    })
+
+    .state('content-view.yum.filters', {
         url: '/filters',
         permission: 'view_content_views',
         controller: 'FiltersController',
         templateUrl: 'content-views/details/filters/views/filters.html',
         ncyBreadcrumb: {
-            label: '{{ "Filters" | translate }}',
+            label: '{{ "Yum Filters" | translate }}',
             parent: 'content-view.info'
         }
 
     })
-    .state('content-view.filters.new', {
+    .state('content-view.yum.filters.new', {
         url: '/new',
         permission: 'edit_content_views',
         views: {
@@ -450,156 +456,232 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             }
         },
         ncyBreadcrumb: {
-            label: '{{ "Create Filter" | translate }}',
-            parent: 'content-view.filters'
+            label: '{{ "Create Yum Filter" | translate }}',
+            parent: 'content-view.yum.filters'
         }
     });
 
-    $stateProvider.state('content-view.filter', {
+    $stateProvider.state('content-view.yum.filter', {
         abstract: true,
         controller: 'FilterDetailsController',
         templateUrl: 'content-views/details/filters/views/filter-details.html'
     })
 
-    .state('content-view.filter.rpm', {
+    .state('content-view.yum.filter.rpm', {
         abstract: true,
         url: '/filters/:filterId/package',
         permission: 'view_content_views',
         controller: 'PackageFilterController',
         templateUrl: 'content-views/details/filters/views/package-filter.html'
     })
-    .state('content-view.filter.rpm.details', {
+    .state('content-view.yum.filter.rpm.details', {
         url: '/details',
         permission: 'view_content_views',
         controller: 'PackageFilterController',
         templateUrl: 'content-views/details/filters/views/package-filter-details.html',
         ncyBreadcrumb: {
             label: '{{ filter.name }}',
-            parent: 'content-view.filters'
+            parent: 'content-view.yum.filters'
         }
     })
-    .state('content-view.filter.rpm.edit', {
+    .state('content-view.yum.filter.rpm.edit', {
         url: '/edit',
         controller: 'FilterEditController',
         permission: 'edit_content_views',
         templateUrl: 'content-views/details/filters/views/edit-filter.html',
         ncyBreadcrumb: {
             label: '{{ "Edit" | translate}} {{ filter.name }}',
-            parent: 'content-view.filters'
+            parent: 'content-view.yum.filters'
         }
     })
-    .state('content-view.filter.rpm.repositories', {
+    .state('content-view.yum.filter.rpm.repositories', {
         url: '/repositories',
         permission: 'view_content_views',
         controller: 'FilterRepositoriesController',
         templateUrl: 'content-views/details/filters/views/filter-repositories.html',
         ncyBreadcrumb: {
             label: '{{ "Repositories" | translate }}',
-            parent: 'content-view.filter.rpm.edit'
+            parent: 'content-view.yum.filter.rpm.edit'
         }
     })
 
-    .state('content-view.filter.package_group', {
+    .state('content-view.yum.filter.package_group', {
         abstract: true,
         url: '/filters/:filterId/package-group',
         templateUrl: 'content-views/details/filters/views/package-group-filter.html'
     })
-    .state('content-view.filter.package_group.edit', {
+    .state('content-view.yum.filter.package_group.edit', {
         url: '/edit',
         controller: 'FilterEditController',
         permission: 'edit_content_views',
         templateUrl: 'content-views/details/filters/views/edit-filter.html',
         ncyBreadcrumb: {
             label: '{{ "Edit" | translate }} {{ filter.name }}',
-            parent: 'content-view.filters'
+            parent: 'content-view.yum.filters'
         }
     })
-    .state('content-view.filter.package_group.list', {
+    .state('content-view.yum.filter.package_group.list', {
         url: '/list',
         permission: 'view_content_views',
         controller: 'PackageGroupFilterListController',
         templateUrl: 'content-views/details/filters/views/package-group-filter-details.html',
         ncyBreadcrumb: {
             label: '{{ "Package Groups" | translate }}',
-            parent: 'content-view.filter.package_group.edit'
+            parent: 'content-view.yum.filter.package_group.edit'
         }
     })
-    .state('content-view.filter.package_group.available', {
+    .state('content-view.yum.filter.package_group.available', {
         url: '/available',
         permission: 'edit_content_views',
         controller: 'AvailablePackageGroupFilterController',
         templateUrl: 'content-views/details/filters/views/package-group-filter-details.html',
         ncyBreadcrumb: {
             label: '{{ "Add Package Groups" | translate }}',
-            parent: 'content-view.filter.package_group.edit'
+            parent: 'content-view.yum.filter.package_group.edit'
         }
     })
-    .state('content-view.filter.package_group.repositories', {
+    .state('content-view.yum.filter.package_group.repositories', {
         url: '/repositories',
         permission: 'view_content_views',
         controller: 'FilterRepositoriesController',
         templateUrl: 'content-views/details/filters/views/filter-repositories.html',
         ncyBreadcrumb: {
             label: '{{ "Repositories | translate }}',
-            parent: 'content-view.filter.package_group.edit'
+            parent: 'content-view.yum.filter.package_group.edit'
         }
     })
 
-    .state('content-view.filter.erratum', {
+    .state('content-view.yum.filter.erratum', {
         abstract: true,
         url: '/filters/:filterId/errata',
         controller: 'ErrataFilterController',
         templateUrl: 'content-views/details/filters/views/errata-filter.html'
     })
-    .state('content-view.filter.erratum.edit', {
+    .state('content-view.yum.filter.erratum.edit', {
         url: '/edit',
         controller: 'FilterEditController',
         permission: 'edit_content_views',
         templateUrl: 'content-views/details/filters/views/edit-filter.html',
         ncyBreadcrumb: {
             label: '{{ "Edit" | translate }} {{ filter.name }}',
-            parent: 'content-view.filters'
+            parent: 'content-view.yum.filters'
         }
     })
-    .state('content-view.filter.erratum.list', {
+    .state('content-view.yum.filter.erratum.list', {
         url: '/list',
         permission: 'view_content_views',
         controller: 'ErrataFilterListController',
         templateUrl: 'content-views/details/filters/views/errata-filter-details.html',
         ncyBreadcrumb: {
             label: '{{ "Erratum" | translate }}',
-            parent: 'content-view.filter.erratum.edit'
+            parent: 'content-view.yum.filter.erratum.edit'
         }
     })
-    .state('content-view.filter.erratum.available', {
+    .state('content-view.yum.filter.erratum.available', {
         url: '/available',
         permission: 'edit_content_views',
         controller: 'AvailableErrataFilterController',
         templateUrl: 'content-views/details/filters/views/errata-filter-details.html',
         ncyBreadcrumb: {
             label: '{{ "Add Erratum" | translate }}',
-            parent: 'content-view.filter.erratum.edit'
+            parent: 'content-view.yum.filter.erratum.edit'
         }
     })
-    .state('content-view.filter.erratum.dateType', {
+    .state('content-view.yum.filter.erratum.dateType', {
         url: '/date_type',
         permission: 'view_content_views',
         controller: 'DateTypeErrataFilterController',
         templateUrl: 'content-views/details/filters/views/date-type-errata-filter.html',
         ncyBreadcrumb: {
             label: '{{ filter.name }}',
-            parent: 'content-view.filters'
+            parent: 'content-view.yum.filters'
         }
 
     })
-    .state('content-view.filter.erratum.repositories', {
+    .state('content-view.yum.filter.erratum.repositories', {
         url: '/repositories',
         permission: 'view_content_views',
         controller: 'FilterRepositoriesController',
         templateUrl: 'content-views/details/filters/views/filter-repositories.html',
         ncyBreadcrumb: {
             label: '{{ "Repositories" | translate }}',
-            parent: 'content-view.filter.erratum.edit'
+            parent: 'content-view.yum.filter.erratum.edit'
+        }
+    })
+
+    .state('content-view.docker', {
+        url: '/repositories/docker',
+        abstract: true,
+        template: '<div ui-view></div>'
+    })
+
+    .state('content-view.docker.filters', {
+        url: '/filters',
+        permission: 'view_content_views',
+        controller: 'FiltersController',
+        templateUrl: 'content-views/details/filters/views/filters.html',
+        ncyBreadcrumb: {
+            label: '{{ "Docker Filters" | translate }}',
+            parent: 'content-view.info'
+        }
+
+    })
+    .state('content-view.docker.filters.new', {
+        url: '/new',
+        permission: 'edit_content_views',
+        views: {
+            '@content-view': {
+                controller: 'NewFilterController',
+                templateUrl: 'content-views/details/filters/views/new-filter.html'
+            }
+        },
+        ncyBreadcrumb: {
+            label: '{{ "Create Docker Filter" | translate }}',
+            parent: 'content-view.docker.filters'
+        }
+    });
+
+    $stateProvider.state('content-view.docker.filter', {
+        abstract: true,
+        controller: 'FilterDetailsController',
+        templateUrl: 'content-views/details/filters/views/filter-details.html'
+    })
+
+    .state('content-view.docker.filter.tag', {
+        abstract: true,
+        url: '/filters/:filterId/docker',
+        permission: 'view_content_views',
+        controller: 'DockerTagFilterController',
+        templateUrl: 'content-views/details/filters/views/docker-filter.html'
+    })
+    .state('content-view.docker.filter.tag.details', {
+        url: '/details',
+        permission: 'view_content_views',
+        controller: 'DockerTagFilterController',
+        templateUrl: 'content-views/details/filters/views/docker-tag-filter-details.html',
+        ncyBreadcrumb: {
+            label: '{{ filter.name }}',
+            parent: 'content-view.docker.filters'
+        }
+    })
+    .state('content-view.docker.filter.tag.edit', {
+        url: '/edit',
+        controller: 'FilterEditController',
+        permission: 'edit_content_views',
+        templateUrl: 'content-views/details/filters/views/edit-filter.html',
+        ncyBreadcrumb: {
+            label: '{{ "Edit" | translate}} {{ filter.name }}',
+            parent: 'content-view.docker.filters'
+        }
+    })
+    .state('content-view.docker.filter.tag.repositories', {
+        url: '/repositories',
+        permission: 'view_content_views',
+        controller: 'FilterRepositoriesController',
+        templateUrl: 'content-views/details/filters/views/filter-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Repositories" | translate }}',
+            parent: 'content-view.docker.filter.tag.edit'
         }
     })
 

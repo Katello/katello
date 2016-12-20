@@ -13,7 +13,7 @@
  */
 angular.module('Bastion.content-views').controller('FiltersController',
     ['$scope', 'translate', 'Filter', 'Nutupane', 'GlobalNotification', function ($scope, translate, Filter, Nutupane, GlobalNotification) {
-        var nutupane;
+        var nutupane, filterTypes;
 
         function removeFilter(id) {
             var success, failure;
@@ -30,9 +30,14 @@ angular.module('Bastion.content-views').controller('FiltersController',
             Filter.delete({filterId: id}, success, failure);
         }
 
+        if ($scope.stateIncludes('content-view.yum')) {
+            filterTypes = ['rpm', 'package_group', 'erratum'];
+        } else {
+            filterTypes = ['docker'];
+        }
         nutupane = new Nutupane(Filter, {
             'content_view_id': $scope.$stateParams.contentViewId,
-            'types[]': ["rpm", "package_group", "erratum"]
+            'types[]': filterTypes
         });
 
         $scope.table = nutupane.table;
@@ -58,21 +63,20 @@ angular.module('Bastion.content-views').controller('FiltersController',
 
             switch (filter.type) {
             case "erratum":
-                state = "content-view.filter.erratum.list({filterId: filter.id})";
+                state = "content-view.yum.filter.erratum.list({filterId: filter.id})";
                 if (filter.rules[0].types) {
-                    state = "content-view.filter.erratum.dateType({filterId: filter.id})";
+                    state = "content-view.yum.filter.erratum.dateType({filterId: filter.id})";
                 }
                 break;
             case "rpm":
-                state = "content-view.filter.rpm({filterId: filter.id})";
+                state = "content-view.yum.filter.rpm({filterId: filter.id})";
                 break;
             case "package_group":
-                state = "content-view.filter.package_group.list({filterId: filter.id})";
+                state = "content-view.yum.filter.package_group.list({filterId: filter.id})";
                 break;
             }
 
             return state;
         };
-
     }]
 );

@@ -3,6 +3,7 @@
  * @name  Bastion.content-views.controller:NewFilterController
  *
  * @requires $scope
+ * @requires translate
  * @requires Filter
  * @requires Rule
  * @requires GlobalNotification
@@ -10,20 +11,22 @@
  * @description
  */
 angular.module('Bastion.content-views').controller('NewFilterController',
-    ['$scope', 'Filter', 'Rule', 'GlobalNotification', function ($scope, Filter, Rule, GlobalNotification) {
+    ['$scope', 'translate', 'Filter', 'Rule', 'GlobalNotification', function ($scope, translate, Filter, Rule, GlobalNotification) {
         var filterType;
 
         function transitionToDetails(filter) {
             var state = '';
 
             if (filterType === 'erratumId') {
-                state = 'content-view.filter.erratum.available';
+                state = 'content-view.yum.filter.erratum.available';
             } else if (filterType === 'erratumDateType') {
-                state = 'content-view.filter.erratum.dateType';
+                state = 'content-view.yum.filter.erratum.dateType';
             } else if (filterType === 'rpm') {
-                state = 'content-view.filter.rpm.details';
+                state = 'content-view.yum.filter.rpm.details';
             } else if (filterType === 'package_group') {
-                state = 'content-view.filter.package_group.available';
+                state = 'content-view.yum.filter.package_group.available';
+            } else if (filterType === 'docker') {
+                state = 'content-view.docker.filter.tag.details';
             }
 
             $scope.$emit('filter.created');
@@ -65,6 +68,20 @@ angular.module('Bastion.content-views').controller('NewFilterController',
 
         $scope.filter = new Filter();
         $scope.working = false;
+
+        if ($scope.stateIncludes('content-view.yum')) {
+            $scope.filterChoices = [
+                {id: 'rpm', name: translate('Package')},
+                {id: 'package_group', name: translate('Package Group')},
+                {id: 'erratumId', name: translate('Erratum - by ID')},
+                {id: 'erratumDataType', name: translate('Erratum - Date and Type')}
+            ];
+        } else {
+            $scope.filter.type = "docker";
+            $scope.filterChoices = [
+                {id: 'docker', name: translate('Docker Tag')}
+            ];
+        }
 
         $scope.save = function (filter, contentView) {
             filterType = filter.type;

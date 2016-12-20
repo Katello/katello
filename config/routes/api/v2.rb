@@ -122,6 +122,7 @@ Katello::Engine.routes.draw do
         api_resources :docker_tags, :only => [:index, :show] do
           collection do
             get :auto_complete_search
+            get :auto_complete_name
           end
         end
 
