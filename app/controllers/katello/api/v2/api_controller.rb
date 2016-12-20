@@ -110,8 +110,10 @@ module Katello
 
     def find_organization
       @organization = Organization.current || find_optional_organization
-      fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") %
-          organization_id_keys.join(", ") if @organization.nil?
+      if @organization.nil?
+        fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") %
+            organization_id_keys.join(", ")
+      end
       @organization
     end
 

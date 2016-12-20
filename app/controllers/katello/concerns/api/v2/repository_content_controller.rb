@@ -151,8 +151,10 @@ module Katello
       def find_environment
         if params[:environment_id]
           @environment = KTEnvironment.readable.find_by(:id => params[:environment_id])
-          fail HttpErrors::NotFound, _("Could not find Lifecycle Environment with id '%{id}'.") %
-            {id: params[:environment_id]} if @environment.nil?
+          if @environment.nil?
+            fail HttpErrors::NotFound, _("Could not find Lifecycle Environment with id '%{id}'.") %
+              {id: params[:environment_id]}
+          end
         end
       end
 

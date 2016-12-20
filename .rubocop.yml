@@ -26,6 +26,14 @@ SpaceInsideHashLiteralBraces:
 HashSyntax:
   Enabled: false # don't force 1.9 hash syntax
 
+Rails/DynamicFindBy:
+  Enabled: False
+  Whitelist:
+    - find_by_cp_id
+    - find_by_katello_id
+    - find_by_unit_id
+    - find_by_version
+
 SpaceInsideHashLiteralBraces:
   Enabled: false # allow spaces (eg { :a => 1 })
 

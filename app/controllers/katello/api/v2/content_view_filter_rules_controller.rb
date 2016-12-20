@@ -39,7 +39,7 @@ module Katello
 
       rules += (rule_params[:errata_ids] || []).map do |errata_id|
         rule_clazz.create!(rule_params.except(:errata_ids)
-          .merge(filter:  @filter, errata_id: errata_id))
+          .merge(filter: @filter, errata_id: errata_id))
       end
 
       if rules.empty?

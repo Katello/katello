@@ -384,14 +384,20 @@ module Katello
       end
 
       if content_view.default?
-        fail _("Cannot clone repository from %{from_env} to %{to_env}. They are not sequential.") %
-                  {:from_env => self.environment.name, :to_env => to_env.name} if to_env.prior != self.environment
-        fail _("Repository has already been promoted to %{to_env}") %
-                {:to_env => to_env} if self.cloned_in?(to_env)
+        if to_env.prior != self.environment
+          fail _("Cannot clone repository from %{from_env} to %{to_env}. They are not sequential.") %
+                    {:from_env => self.environment.name, :to_env => to_env.name}
+        end
+        if self.cloned_in?(to_env)
+          fail _("Repository has already been promoted to %{to_env}") %
+                  {:to_env => to_env}
+        end
       else
-        fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
-                  {:to_env => to_env, :cv_name => content_view.name} if to_env &&
+        if to_env &&
             content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
+          fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
+                    {:to_env => to_env, :cv_name => content_view.name}
+        end
       end
 
       Repository.new(:environment => to_env,
