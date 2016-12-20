@@ -3,8 +3,13 @@
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
     <button class="btn btn-default"
-            ng-hide="denied('edit_content_views', contentView)"
-            ui-sref="content-view.filters.new">
+            ng-hide="denied('edit_content_views', contentView) || !stateIncludes('content-view.yum')"
+            ui-sref="content-view.yum.filters.new">
+      <span translate>New Filter</span>
+    </button>
+    <button class="btn btn-default"
+            ng-hide="denied('edit_content_views', contentView) || stateIncludes('content-view.yum')"
+            ui-sref="content-view.docker.filters.new">
       <span translate>New Filter</span>
     </button>
     <button class="btn btn-default"
@@ -41,19 +46,23 @@
         <tr bst-table-row ng-repeat="filter in table.rows" row-select="filter">
           <td bst-table-cell>
             <a ng-if="filter.type === 'erratum' && !filter.rules[0].types"
-               ui-sref="content-view.filter.erratum.list({filterId: filter.id})">
+               ui-sref="content-view.yum.filter.erratum.list({filterId: filter.id})">
               {{ filter.name }}
             </a>
             <a ng-if="filter.type === 'erratum' && filter.rules[0].types"
-               ui-sref="content-view.filter.erratum.dateType({filterId: filter.id})">
+               ui-sref="content-view.yum.filter.erratum.dateType({filterId: filter.id})">
               {{ filter.name }}
             </a>
             <a ng-if="filter.type === 'rpm'"
-               ui-sref="content-view.filter.rpm.details({filterId: filter.id})">
+               ui-sref="content-view.yum.filter.rpm.details({filterId: filter.id})">
               {{ filter.name }}
             </a>
             <a ng-if="filter.type === 'package_group'"
-               ui-sref="content-view.filter.package_group.list({filterId: filter.id})">
+               ui-sref="content-view.yum.filter.package_group.list({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
+            <a ng-if="filter.type === 'docker'"
+               ui-sref="content-view.docker.filter.tag.details({filterId: filter.id})">
               {{ filter.name }}
             </a>
           </td>

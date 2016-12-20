@@ -1,7 +1,8 @@
 <span page-title ng-model="contentView">{{ 'New Filter for Content View:' | translate }} {{ contentView.name }}</span>
 
 <header data-block="sub-header`">
-  <h3 translate>Add New Filter</h3>
+  <h3 ng-show="stateIncludes('content-view.yum')" translate>Add New Yum Filter</h3>
+  <h3 ng-show="stateIncludes('content-view.docker')" translate>Add New Docker Tag Filter</h3>
 </header>
 
 <form name="filterForm" class="col-sm-5" role="form" novalidate>
@@ -15,16 +16,13 @@
            required/>
   </div>
 
-  <div bst-form-group label="{{ 'Content Type' | translate }}">
+  <div bst-form-group ng-show="filterChoices.length > 1" label="{{ 'Content Type' | translate }}">
     <select id="type"
             name="type"
             ng-model="filter.type"
+            ng-options="filterChoice.id as filterChoice.name for filterChoice in filterChoices"
             tabindex="2"
             required>
-      <option value="rpm" translate>Package</option>
-      <option value="package_group" translate>Package Group</option>
-      <option value="erratumId" translate>Erratum - by ID</option>
-      <option value="erratumDateType" translate>Erratum - by Date and Type</option>
     </select>
   </div>
 
@@ -48,8 +46,15 @@
   </div>
 
   <div bst-form-buttons
-       on-cancel="transitionTo('content-view.filters', {contentViewId: contentView.id})"
+       on-cancel="transitionTo('content-view.yum.filters', {contentViewId: contentView.id})"
        on-save="save(filter, contentView)"
+       ng-show="stateIncludes('content-view.yum')"
+       working="working">
+  </div>
+  <div bst-form-buttons
+       on-cancel="transitionTo('content-view.yum.filters', {contentViewId: contentView.id})"
+       on-save="save(filter, contentView)"
+       ng-show="stateIncludes('content-view.docker')"
        working="working">
   </div>
 </form>

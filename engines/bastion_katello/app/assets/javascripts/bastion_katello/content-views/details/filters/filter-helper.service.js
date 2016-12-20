@@ -13,7 +13,8 @@ angular.module('Bastion.content-views').service('FilterHelper',
         this.contentTypes = {
             'rpm': translate('RPM'),
             'erratum': translate('Errata'),
-            'package_group': translate('Package Groups')
+            'package_group': translate('Package Groups'),
+            'docker': translate('Docker Tags')
         };
 
         this.contentType = function (type) {

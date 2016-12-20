@@ -1,5 +1,5 @@
-describe('Controller: PackageFilterController', function() {
-    var $scope, Rule, Package, GlobalNotification;
+describe('Controller: DockerTagFilterController', function() {
+    var $scope, Rule, DockerTag, GlobalNotification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -9,7 +9,7 @@ describe('Controller: PackageFilterController', function() {
             $q = $injector.get('$q');
 
         Rule = $injector.get('MockResource').$new();
-        Package = $injector.get('MockResource').$new();
+        DockerTag = $injector.get('MockResource').$new();
 
         GlobalNotification = {
             setSuccessMessage: function () {}
@@ -24,13 +24,7 @@ describe('Controller: PackageFilterController', function() {
         $scope.filter.rules = [];
         $scope.contentView = {'repository_ids': []};
 
-        Package.autocompleteName = function () {
-            return {
-                $promise: $q.defer().promise
-            };
-        };
-
-        Package.autocompleteArch = function () {
+        DockerTag.autocompleteName = function () {
             return {
                 $promise: $q.defer().promise
             };
@@ -40,11 +34,11 @@ describe('Controller: PackageFilterController', function() {
             return string;
         };
 
-        $controller('PackageFilterController', {
+        $controller('DockerTagFilterController', {
             $scope: $scope,
             translate: translate,
             Rule: Rule,
-            Package: Package,
+            DockerTag: DockerTag,
             GlobalNotification: GlobalNotification
         });
     }));
@@ -78,19 +72,6 @@ describe('Controller: PackageFilterController', function() {
         expect(rule.editMode).toBe(false);
         expect(rule.working).toBe(false);
         expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-    });
-
-    it("should provide a method to clear a rule", function() {
-        var rule = {
-            name: 'test',
-            min_version: '2',
-            max_version: '3',
-        };
-
-        $scope.clearValues(rule);
-
-        expect(rule.min_version).toBe(undefined);
-        expect(rule.max_version).toBe(undefined);
     });
 
     it("should provide a method to backup a rule", function() {
@@ -159,65 +140,14 @@ describe('Controller: PackageFilterController', function() {
         expect(result).toBe(false);
     });
 
-    it("should provide a method to determine if a rule is valid if no version and type is 'equal'", function() {
-        var result,
-            rule = {
-                type: 'equal'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
-    it("should provide a method to determine if a rule is valid if no max_version and type is 'less'", function() {
-        var result,
-            rule = {
-                type: 'less'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
-    it("should provide a method to determine if a rule is valid if no min_version and type is 'greater'", function() {
-        var result,
-            rule = {
-                type: 'greater'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
-    it("should provide a method to determine if a rule is valid if min_version but not max_version and type is 'range'", function() {
-        var result,
-            rule = {
-                type: 'range',
-                min_version: '2'
-            };
-
-        result = $scope.valid(rule);
-        expect(result).toBe(false);
-    });
-
     it("should provide a method to retrieve autocomplete name results", function () {
         var autocomplete;
 
-        spyOn(Package, 'autocompleteName').and.callThrough();
+        spyOn(DockerTag, 'autocompleteName').and.callThrough();
         autocomplete = $scope.fetchAutocompleteName('gir');
 
         expect(autocomplete.then).toBeDefined();
-        expect(Package.autocompleteName).toHaveBeenCalled();
-    });
-
-    it("should provide a method to retrieve autocomplete arch results", function () {
-        var autocomplete;
-
-        spyOn(Package, 'autocompleteArch').and.callThrough();
-        autocomplete = $scope.fetchAutocompleteArch('x86');
-
-        expect(autocomplete.then).toBeDefined();
-        expect(Package.autocompleteArch).toHaveBeenCalled();
+        expect(DockerTag.autocompleteName).toHaveBeenCalled();
     });
 
     it("should provide a method to filter repos by type", function() {
@@ -227,7 +157,7 @@ describe('Controller: PackageFilterController', function() {
 
         result = $scope.filterRepositoriesByType();
         expect(result.length).toBe(2);
-        expect(result[0].id).toBe(1);
-        expect(result[1].id).toBe(2);
+        expect(result[0].id).toBe(3);
+        expect(result[1].id).toBe(4);
     });
 });

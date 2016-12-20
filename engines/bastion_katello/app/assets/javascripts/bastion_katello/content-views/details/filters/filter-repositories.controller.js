@@ -20,7 +20,16 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
 
         refreshTable = function (filter) {
             var displayedRepositories = filter['content_view'].repositories,
+                repositoryType,
                 filterRepositories = filter.repositories;
+
+            if ($scope.stateIncludes('content-view.yum')) {
+                repositoryType = 'yum';
+            } else {
+                repositoryType = 'docker';
+            }
+            $scope.repositoryType = repositoryType;
+            displayedRepositories = _.filter(displayedRepositories, ["content_type", repositoryType]);
 
             $scope.$parent.filter = filter;
 

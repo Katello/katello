@@ -1,45 +1,21 @@
 /**
  * @ngdoc object
- * @name  Bastion.content-views.controller:PackageFilterController
+ * @name  Bastion.content-views.controller:DockerTagFilterController
  *
  * @requires $scope
  * @requires translate
  * @requires Rule
- * @requires Package
+ * @requires DockerTag
  * @requires GlobalNotification
  *
  * @description
- *   Handles package filter rules for a content view.
+ *   Handles docker tag filter rules for a content view.
  */
-angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', 'translate', 'Rule', 'Package', 'GlobalNotification', function ($scope, translate, Rule, Package, GlobalNotification) {
-
-        function type(rule) {
-            var typeId;
-
-            if (rule.version) {
-                typeId = 'equal';
-            } else if (rule['min_version'] && !rule['max_version']) {
-                typeId = 'greater';
-            } else if (!rule['min_version'] && rule['max_version']) {
-                typeId = 'less';
-            } else if (rule['min_version'] && rule['max_version']) {
-                typeId = 'range';
-            } else {
-                typeId = 'all';
-            }
-
-            return typeId;
-        }
+angular.module('Bastion.content-views').controller('DockerTagFilterController',
+    ['$scope', 'translate', 'Rule', 'DockerTag', 'GlobalNotification', function ($scope, translate, Rule, DockerTag, GlobalNotification) {
 
         function failure(response) {
             GlobalNotification.setErrorMessage(response.data.displayMessage);
-        }
-
-        function addType(rules) {
-            angular.forEach(rules, function (rule) {
-                rule.type = type(rule);
-            });
         }
 
         function removeRule(rule) {
@@ -53,32 +29,27 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                         $scope.filter.rules.splice(index, 1);
                     }
                 });
-                GlobalNotification.setSuccessMessage(translate('Package successfully removed.'));
+                GlobalNotification.setSuccessMessage(translate('Filter rule successfully removed.'));
             };
 
             Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
         }
 
         function addSuccess(rule) {
-            $scope.rule = {
-                type: 'all'
-            };
+            $scope.rule = {};
             $scope.rule.editMode = false;
             $scope.rule.working = false;
-            addType([rule]);
             $scope.filter.rules.push(rule);
 
-            GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
+            GlobalNotification.setSuccessMessage(translate('Filter rule successfully added.'));
         }
 
         $scope.rule = {
-            type: 'all',
             editMode: false,
             working: false
         };
 
         $scope.filter.$promise.then(function (filter) {
-            addType(filter.rules);
             $scope.table = {rows: filter.rules};
         });
 
@@ -97,7 +68,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 rule.previous = {};
                 rule.editMode = false;
                 rule.working = false;
-                GlobalNotification.setSuccessMessage(translate('Package successfully updated.'));
+                GlobalNotification.setSuccessMessage(translate('Filter rule successfully updated.'));
             };
 
             error = function () {
@@ -108,25 +79,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
         };
 
         $scope.valid = function (rule) {
-            var valid = rule.name ? true : false;
-
-            if (rule.type === 'equal') {
-                valid = valid && rule.version;
-            } else if (rule.type === 'less') {
-                valid = valid && rule['max_version'];
-            } else if (rule.type === 'greater') {
-                valid = valid && rule['min_version'];
-            } else if (rule.type === 'range') {
-                valid = valid && rule['min_version'] && rule['max_version'];
-            }
-
-            return valid;
-        };
-
-        $scope.clearValues = function (rule) {
-            rule.version = undefined;
-            rule['min_version'] = undefined;
-            rule['max_version'] = undefined;
+            return rule.name ? true : false;
         };
 
         $scope.backupPrevious = function (rule) {
@@ -159,18 +112,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
             var repositoryIds = $scope.contentView['repository_ids'],
                 promise;
 
-            promise = Package.autocompleteName({'repoids[]': repositoryIds, term: term}).$promise;
-
-            return promise.then(function (data) {
-                return data.results;
-            });
-        };
-
-        $scope.fetchAutocompleteArch = function (term) {
-            var repositoryIds = $scope.contentView['repository_ids'],
-                promise;
-
-            promise = Package.autocompleteArch({'repoids[]': repositoryIds, term: term}).$promise;
+            promise = DockerTag.autocompleteName({'repoids[]': repositoryIds, term: term}).$promise;
 
             return promise.then(function (data) {
                 return data.results;
@@ -178,7 +120,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
         };
 
         $scope.filterRepositoriesByType = function () {
-            return (_.filter($scope.filter.repositories, ["content_type", "yum"]));
+            return (_.filter($scope.filter.repositories, ["content_type", "docker"]));
         };
     }]
 );
