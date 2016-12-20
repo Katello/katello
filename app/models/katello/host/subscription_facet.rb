@@ -84,8 +84,10 @@ module Katello
 
       def self.find_or_create_host(organization, rhsm_params)
         host = find_host(rhsm_params[:facts], organization)
-        host = Katello::Host::SubscriptionFacet.new_host_from_facts(rhsm_params[:facts], organization,
-                                          Location.default_location) unless host
+        unless host
+          host = Katello::Host::SubscriptionFacet.new_host_from_facts(rhsm_params[:facts], organization,
+                                            Location.default_location)
+        end
         host.organization = organization unless host.organization
         host
       end

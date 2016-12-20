@@ -58,9 +58,11 @@ module Katello
           end
         end
 
-        json["calculatedAttributes"].each do |key|
-          json["suggested_quantity"] = json["calculatedAttributes"]["suggested_quantity"].to_i if key == 'suggested_quantity'
-        end if json["calculatedAttributes"]
+        if json["calculatedAttributes"]
+          json["calculatedAttributes"].each do |key|
+            json["suggested_quantity"] = json["calculatedAttributes"]["suggested_quantity"].to_i if key == 'suggested_quantity'
+          end
+        end
 
         json["product_id"] = json["productId"] if json["productId"]
 

@@ -44,10 +44,10 @@ module Katello
         start_date_int = record.start_date.to_time.to_i unless record.start_date.blank?
         end_date_int = record.end_date.to_time.to_i unless record.end_date.blank?
 
-        if start_date_int && (!start_date_int.is_a?(Fixnum) || !record.start_date.is_a?(String))
+        if start_date_int && (!start_date_int.is_a?(Integer) || !record.start_date.is_a?(String))
           record.errors[:base] << _("The erratum filter rule start date is in an invalid format or type.")
         end
-        if end_date_int && (!end_date_int.is_a?(Fixnum) || !record.end_date.is_a?(String))
+        if end_date_int && (!end_date_int.is_a?(Integer) || !record.end_date.is_a?(String))
           record.errors[:base] << _("The erratum filter rule end date is in an invalid format or type.")
         end
 

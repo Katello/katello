@@ -82,7 +82,7 @@ module ::Actions::Katello::Organization
       plan_action(action, organization)
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Owner::AutoAttach,
-                                label:  organization.label)
+                                label: organization.label)
     end
   end
 
