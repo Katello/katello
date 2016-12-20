@@ -291,6 +291,17 @@ module Katello
       end
     end
 
+    def publish_repositories
+      repositories = composite? ? repositories_to_publish_by_library_instance.values : repositories_to_publish
+      repositories.each do |repos|
+        if repos.is_a? Array
+          yield repos
+        else
+          yield [repos]
+        end
+      end
+    end
+
     # Returns actual puppet modules associated with all components
     def component_modules_to_publish
       composite? ? components.flat_map { |version| version.puppet_modules } : nil
