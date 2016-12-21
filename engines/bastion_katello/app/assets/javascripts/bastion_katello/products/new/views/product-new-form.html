@@ -5,7 +5,6 @@
            name="name"
            ng-model="product.name"
            type="text"
-           tabindex="1"
            autofocus
            required/>
   </div>
@@ -15,7 +14,6 @@
            name="label"
            ng-model="product.label"
            type="text"
-           tabindex="2"
            required/>
   </div>
 
@@ -23,8 +21,7 @@
     <select id="gpg_key_id"
             name="gpg_key_id"
             ng-model="product.gpg_key_id"
-            ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
-            tabindex="4">
+            ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
       <option value=""></option>
     </select>
   </div>
@@ -33,8 +30,7 @@
     <select id="sync_plan_id"
             name="sync_plan_id"
             ng-model="product.sync_plan_id"
-            ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans"
-            tabindex="5">
+            ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans">
       <option value=""></option>
     </select>
     <a ui-sref="products.new.sync-plan" translate>+ New Sync Plan</a>

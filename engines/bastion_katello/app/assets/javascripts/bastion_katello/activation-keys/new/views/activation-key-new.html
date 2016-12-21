@@ -13,7 +13,6 @@
                name="name"
                ng-model="activationKey.name"
                type="text"
-               tabindex="1"
                autofocus
                required/>
       </div>
@@ -32,16 +31,14 @@
                  ng-required="!activationKey.unlimited_hosts"
                  type="number"
                  min="1"
-                 max="2147483648"
-                 tabindex="2"/>
+                 max="2147483648"/>
         </div>
       </div>
 
       <div bst-form-group label="{{ 'Description' | translate }}">
         <textarea id="description"
                   name="description"
-                  ng-model="activationKey.description"
-                  tabindex="3">
+                  ng-model="activationKey.description">
         </textarea>
       </div>
 
@@ -63,7 +60,6 @@
                   name="content_view_id"
                   ng-model="activationKey.content_view_id"
                   ng-options="contentView.id as contentView.name for contentView in contentViews"
-                  tabindex="4"
                   autofocus>
           </select>
           <span class="help-block" ng-show="activationKey.environment !== undefined && contentViews.length === 0" translate>
