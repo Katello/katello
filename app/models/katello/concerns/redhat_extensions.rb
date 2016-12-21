@@ -70,7 +70,7 @@ module Katello
         content_view = host.try(:content_facet).try(:content_view) || host.try(:content_view)
         lifecycle_environment = host.try(:content_facet).try(:lifecycle_environment) || host.try(:lifecycle_environment)
 
-        if content_view && lifecycle_environment
+        if content_view && lifecycle_environment && host.os && host.architecture
           Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
               where(:distribution_version => host.os.release,
                     :distribution_arch => host.architecture.name,
