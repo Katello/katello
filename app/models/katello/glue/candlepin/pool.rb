@@ -23,12 +23,12 @@ module Katello
     end
 
     module ClassMethods
-      def candlepin_data(cp_id)
-        Katello::Resources::Candlepin::Pool.find(cp_id)
+      def candlepin_data(cp_id, included = [])
+        Katello::Resources::Candlepin::Pool.find(cp_id, included)
       end
 
-      def get_for_owner(organization)
-        Katello::Resources::Candlepin::Pool.get_for_owner(organization, true)
+      def get_for_owner(organization, included = [])
+        Katello::Resources::Candlepin::Pool.get_for_owner(organization, true, included)
       end
 
       def import_pool(cp_pool_id)
@@ -42,7 +42,10 @@ module Katello
 
     module InstanceMethods
       def import_lazy_attributes
-        json = self.backend_data
+        included = %w(productAttributes.name productAttributes.value
+                      attributes calculatedAttributes.suggested_quantity
+                      productId)
+        json = self.backend_data(included)
 
         pool_attributes = json["attributes"] + json["productAttributes"]
         json["virt_only"] = false
@@ -67,7 +70,10 @@ module Katello
         json["product_id"] = json["productId"] if json["productId"]
 
         if self.subscription
-          subscription.backend_data["product"]["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
+          included = %w(product.attributes.name product.attributes.value)
+          subscription.backend_data(included)["product"]["attributes"].map do |attr|
+            json[attr["name"].underscore.to_sym] = attr["value"]
+          end
         end
         json
       end
@@ -79,8 +85,8 @@ module Katello
         providers.any?
       end
 
-      def backend_data
-        self.class.candlepin_data(self.cp_id)
+      def backend_data(included = [])
+        self.class.candlepin_data(self.cp_id, included)
       end
 
       def stacking_subscription(org_label, stacking_id)
@@ -95,7 +101,11 @@ module Katello
 
       def import_data
         pool_attributes = {}
-        pool_json = self.backend_data
+        included = %w(productAttributes.name productAttributes.value
+                      attributes sourceStackId owner.key subscriptionId
+                      accountNumber contractNumber quantity startDate
+                      endDate accountNumber consumed)
+        pool_json = self.backend_data(included)
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
 
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
@@ -139,7 +149,7 @@ module Katello
       end
 
       def create_activation_key_associations
-        keys = Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id")
+        keys = Resources::Candlepin::ActivationKey.get(nil, %w(id pools.pool.id))
         activation_key_ids = keys.collect do |key|
           key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool'].try(:[], 'id') == cp_id }
         end

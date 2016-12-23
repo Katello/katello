@@ -6,18 +6,18 @@ module Katello
     end
 
     module ClassMethods
-      def candlepin_data(cp_id)
-        Katello::Resources::Candlepin::Subscription.get(cp_id)
+      def candlepin_data(cp_id, included = [])
+        Katello::Resources::Candlepin::Subscription.get(cp_id, included)
       end
 
-      def get_for_owner(organization = self.organization.label)
-        Katello::Resources::Candlepin::Subscription.get_for_owner(organization)
+      def get_for_owner(organization = self.organization.label, included = [])
+        Katello::Resources::Candlepin::Subscription.get_for_owner(organization, included)
       end
     end
 
     module InstanceMethods
-      def backend_data
-        self.class.candlepin_data(self.cp_id)
+      def backend_data(included = [])
+        self.class.candlepin_data(self.cp_id, included)
       end
 
       def query_products
