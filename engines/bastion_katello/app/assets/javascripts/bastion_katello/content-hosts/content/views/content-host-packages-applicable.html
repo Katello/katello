@@ -1,8 +1,10 @@
 <span page-title ng-model="host">{{ 'Packages for: ' | translate }} {{ host.name }}</span>
 
-<h4 translate>Applicable Packages</h4>
+<div data-block="sub-header">
+  <h3 translate>Applicable Packages</h3>
+</div>
 
-<div data-extend-template="layouts/details-nutupane.html">
+<div data-extend-template="layouts/partials/table.html">
 
   <span data-block="no-rows-message" translate>
     The host has not reported any applicable packages for upgrade.
@@ -19,13 +21,13 @@
         <span uib-dropdown class="btn-group">
           <button class="btn btn-default"
                   ng-hide="denied('edit_hosts', host)"
-                  ng-disabled="working || detailsTable.numSelected === 0"
+                  ng-disabled="working || table.numSelected === 0"
                   translate>
             Upgrade Selected
           </button>
           <button uib-dropdown-toggle class="btn btn-default"
                   ng-hide="!remoteExecutionPresent || denied('edit_hosts', contentHost)"
-                  ng-disabled="working ||  detailsTable.numSelected === 0"
+                  ng-disabled="working ||  table.numSelected === 0"
                   type="button" id="use-remote-execution">
             <span class="caret"></span>
           </button>
@@ -47,7 +49,7 @@
   </div>
 
   <div data-block="table">
-    <table ng-class="{'table-mask': detailsTable.working}" class="table table-full table-striped">
+    <table bst-table="table" ng-class="{'table-mask': table.working}" class="table table-full table-striped">
       <thead>
       <tr bst-table-head row-select>
         <th bst-table-column="name" translate>Upgradable Package</th>
@@ -55,7 +57,7 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="package in detailsTable.rows" row-select="package">
+        <tr bst-table-row ng-repeat="package in table.rows" row-select="package">
           <td bst-table-cell>{{ package.nvra }}</td>
         </tr>
       </tbody>

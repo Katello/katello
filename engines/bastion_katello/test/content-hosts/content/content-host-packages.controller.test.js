@@ -54,7 +54,7 @@ describe('Controller: ContentHostPackagesController', function() {
     it("provides a way to open the event details panel.", function() {
         spyOn($scope, "transitionTo");
         $scope.openEventInfo({ id: 2 });
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.events.details', {eventId: 2});
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-host.events.details', {eventId: 2});
     });
 
     it("performs a package update", function() {

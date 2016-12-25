@@ -14,9 +14,8 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         'Bastion.content-hosts',
         'Bastion.subscriptions',
         'Bastion.test-mocks',
-        'content-hosts/details/views/host-collections.html',
-        'content-hosts/views/content-hosts.html',
-        'content-hosts/views/content-hosts-table-full.html'
+        'content-hosts/details/views/content-host-host-collections.html',
+        'content-hosts/views/content-hosts.html'
     ));
 
     beforeEach(inject(function($injector) {
@@ -96,34 +95,34 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.contentNutupane).toBeDefined();
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.nutupane).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("groups subscriptions by product name", function () {
         var expected = [1];
         spyOn(SubscriptionsHelper, 'groupByProductName');
 
-        $scope.detailsTable.rows = expected;
+        $scope.table.rows = expected;
         $scope.$digest();
 
         expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalledWith(expected)
     });
 
     it("disables the add subscription button if necessary", function () {
-        $scope.detailsTable.numSelected = 0;
+        $scope.table.numSelected = 0;
         $scope.isAdding = true;
         expect($scope.disableAddButton()).toBe(true);
 
-        $scope.detailsTable.numSelected = 1;
+        $scope.table.numSelected = 1;
         $scope.isAdding = true;
         expect($scope.disableAddButton()).toBe(true);
 
-        $scope.detailsTable.numSelected = 0;
+        $scope.table.numSelected = 0;
         $scope.isAdding = false
         expect($scope.disableAddButton()).toBe(true);
 
-        $scope.detailsTable.numSelected = 1;
+        $scope.table.numSelected = 1;
         $scope.isAdding = false;
         expect($scope.disableAddButton()).toBe(false);
     });
@@ -136,7 +135,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
                                                     ]};
         spyOn(HostSubscription, 'addSubscriptions');
 
-        $scope.detailsTable.getSelected = function() {
+        $scope.table.getSelected = function() {
             return [
                      {id: 2, 'multi_entitlement': true},
                      {id: 3, 'multi_entitlement': true, 'amount': 1},

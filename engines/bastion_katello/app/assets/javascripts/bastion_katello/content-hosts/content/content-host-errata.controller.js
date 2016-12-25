@@ -12,7 +12,6 @@
  * @description
  *   Provides the functionality for the content host package list and actions.
  */
-/*jshint camelcase:false*/
 angular.module('Bastion.content-hosts').controller('ContentHostErrataController',
     ['$scope', '$timeout', '$window', 'translate', 'HostErratum', 'Nutupane', 'Organization', 'Environment', 'BastionConfig',
     function ($scope, $timeout, $window, translate, HostErratum, Nutupane, Organization, Environment, BastionConfig) {
@@ -30,12 +29,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         errataNutupane = new Nutupane(HostErratum, params, 'get');
         errataNutupane.masterOnly = true;
-        $scope.detailsTable = errataNutupane.table;
-        $scope.detailsTable.errataFilterTerm = "";
-        $scope.detailsTable.errataCompare = function (item) {
-            var searchText = $scope.detailsTable.errataFilterTerm;
+        $scope.table = errataNutupane.table;
+        $scope.table.errataFilterTerm = "";
+        $scope.table.errataCompare = function (item) {
+            var searchText = $scope.table.errataFilterTerm;
             return item.type.indexOf(searchText) >= 0 ||
-                item.errata_id.indexOf(searchText) >= 0 ||
+                item['errata_id'].indexOf(searchText) >= 0 ||
                 item.title.indexOf(searchText) >= 0;
         };
 
@@ -48,7 +47,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         $scope.selectedErrataOption = 'current';
         $scope.errataOptions = [{name: "Current Environment", label: 'current'}, {name: 'foo', label: 'bar'}];
 
-        $scope.detailsTable.initialLoad = false;
+        $scope.table.initialLoad = false;
 
         $scope.setupErrataOptions = function (host) {
             var libraryString = translate("Library Synced Content"),
@@ -59,8 +58,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content_facet_attributes.lifecycle_environment.name).replace("%cv", host.content_facet_attributes.content_view_name);
                 $scope.errataOptions = [{name: currentEnv, label: 'current', order: 3}];
 
-                if (!host.content_facet_attributes['lifecycle_environment_library?']) {
-                    Environment.get({id: host.content_facet_attributes.lifecycle_environment.id}).$promise.then(function (env) {
+                if (!host['content_facet_attributes']['lifecycle_environment_library?']) {
+                    Environment.get({id: host['content_facet_attributes'].lifecycle_environment.id}).$promise.then(function (env) {
                         previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_facet_attributes.content_view_name);
                         $scope.errataOptions.push({name: previousEnv,
                                                    label: 'prior', order: 2, 'content_view_id': host.content_facet_attributes.content_view_id, 'environment_id': env.prior.id});
@@ -68,9 +67,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                     });
                 }
                 if (!host.content_facet_attributes['content_view_default?']) {
-                    Organization.get({id: host.organization_id}).$promise.then(function (org) {
+                    Organization.get({id: host['organization_id']}).$promise.then(function (org) {
                         $scope.errataOptions.push({name: libraryString, label: 'library', order: 1,
-                                                   'content_view_id': org.default_content_view_id, 'environment_id': org.library_id});
+                                                   'content_view_id': org['default_content_view_id'], 'environment_id': org.library_id});
                     });
                 }
             }
@@ -78,7 +77,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
 
         $scope.host.$promise.then(function() {
             $scope.setupErrataOptions($scope.host);
-            if ($scope.host.content_facet_attributes && $scope.host.id) {
+            if ($scope.host['content_facet_attributes'] && $scope.host.id) {
                 errataNutupane.setParams({id: $scope.host.id});
                 errataNutupane.load();
             }
@@ -88,7 +87,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             $scope.calculatingApplicability = true;
             HostErratum.regenerateApplicability({id: $scope.host.id},
                 function (task) {
-                    $scope.transitionTo('content-hosts.details.tasks.details', {taskId: task.id});
+                    $scope.transitionTo('content-host.tasks.details', {taskId: task.id});
                 }, function() {
                     $scope.calculatingApplicability = false;
                 });
@@ -112,14 +111,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         $scope.transitionToErratum = function (erratum) {
-            loadErratum(erratum.errata_id);
-            $scope.transitionTo('content-hosts.details.errata.details', {errataId: erratum.errata_id});
+            loadErratum(erratum['errata_id']);
+            $scope.transitionTo('content-host.errata.details', {errataId: erratum.errata_id});
         };
 
         $scope.selectedErrataIds = function () {
-            var errataIds = [], selected = $scope.detailsTable.getSelected();
+            var errataIds = [], selected = $scope.table.getSelected();
             angular.forEach(selected, function (value) {
-                errataIds.push(value.errata_id);
+                errataIds.push(value['errata_id']);
             });
             return errataIds;
         };
@@ -129,8 +128,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             if (errataIds.length > 0) {
                 HostErratum.apply({id: $scope.host.id, 'errata_ids': errataIds},
                                    function (task) {
-                                        $scope.detailsTable.selectAll(false);
-                                        $scope.transitionTo('content-hosts.details.tasks.details', {taskId: task.id});
+                                        $scope.table.selectAll(false);
+                                        $scope.transitionTo('content-host.tasks.details', {taskId: task.id});
                                     });
             }
         };

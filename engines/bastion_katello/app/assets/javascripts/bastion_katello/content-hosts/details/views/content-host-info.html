@@ -4,246 +4,204 @@
   <div data-extend-template="common/views/registration.html"></div>
 </div>
 
-<section>
-  <div class="details fl" ng-show="host.hasSubscription()">
-    <section>
-      <h4 translate>Basic Information</h4>
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>Basic Information</h4>
 
-      <div class="detail">
-        <span class="info-label" translate>Name</span>
-        <span class="info-value"
-              bst-edit-text="host.name"
-              readonly="denied('edit_hosts', host)"
-              on-save="save(host)">
-        </span>
-      </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd bst-edit-text="host.name"
+          readonly="denied('edit_hosts', host)"
+          on-save="save(host)">
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>UUID</span>
-        <span class="info-value">{{ host.subscription_facet_attributes.uuid }}</span>
-      </div>
+      <dt translate>UUID</dt>
+      <dd>{{ host.subscription_facet_attributes.uuid }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Description</span>
-        <span class="info-value"
-              bst-edit-textarea="host.comment"
-              readonly="denied('edit_hosts', host)"
-              on-save="save(host)">
-        </span>
-      </div>
+      <dt translate>Description</dt>
+      <dd bst-edit-textarea="host.comment"
+          readonly="denied('edit_hosts', host)"
+          on-save="save(host)">
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Type</span>
-        <span class="info-value">{{ host.facts["virt::host_type"] }}</span>
-      </div>
+      <dt translate>Type</dt>
+      <dd>{{ host.facts["virt::host_type"] }}</dd>
 
-      <div class="detail"
-           bst-feature-flag="remote_actions">
-        <span class="info-label" translate>Katello Agent</span>
-        <span class="info-value" ng-show="host.content_facet_attributes.katello_agent_installed">
-          <span class="{{ contentHostTable.getHostStatusIcon(0) }}"></span>
+      <dt bst-feature-flag="remote_actions">
+        <span translate>Katello Agent</span>
+      </dt>
+      <dd bst-feature-flag="remote_actions">
+        <span ng-show="host.content_facet_attributes.katello_agent_installed">
+          <span class="{{ table.getHostStatusIcon(0) }}"></span>
           <span translate>Installed</span>
         </span>
-        <span class="info-value" ng-hide="host.content_facet_attributes.katello_agent_installed">
-          <span class="{{ contentHostTable.getHostStatusIcon(1) }}"></span>
+        <span ng-hide="host.content_facet_attributes.katello_agent_installed">
+          <span class="{{ table.getHostStatusIcon(1) }}"></span>
           <span translate>Not installed</span>
         </span>
+      </dd>
+
+      <dt ng-show="host.subscription_facet_attributes.virtual_guests" translate>Virtual Guests</dt>
+      <dd ng-show="host.subscription_facet_attributes.virtual_guests">
+        <a ng-click="reloadSearch(virtualGuestIds(host))"
+           translate translate-n="host.subscription_facet_attributes.virtual_guests.length"
+           translate-plural="{{ host.subscription_facet_attributes.virtual_guests.length }} Content Hosts">
+          1 Content Host
+        </a>
+      </dd>
+
+      <dt translate>Registered Through</dt>
+      <dd>{{ host.subscription_facet_attributes.registered_through || "Unknown" | translate}}</dd>
+
+      <dt ng-show="host.subscription_facet_attributes.virtual_host" translate>Virtual Host</dt>
+      <dd ng-show="host.subscription_facet_attributes.virtual_host">
+        <a ui-sref="content-host.info({hostId: host.subscription_facet_attributes.virtual_host.id })">{{ host.subscription_facet_attributes.virtual_host.name }}</a>
+      </dd>
+    </dl>
+
+    <div class="divider"></div>
+
+    <h4 translate>Subscriptions</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Subscription Status</dt>
+      <dd>
+        <i ng-class="table.getHostStatusIcon(host.subscription_global_status)"></i>
+        {{ host.subscription_status_label }}
+      </dd>
+
+      <dt translate>Details</dt>
+      <dd>
+        <ul class="compliance-reasons">
+          <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
+        </ul>
+      </dd>
+
+      <dt translate>Auto-Attach</dt>
+      <dd bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
+          readonly="denied('edit_hosts', host)"
+          formatter="booleanToYesNo"
+          on-save="saveSubscriptionFacet(host)">
+      </dd>
+
+      <dt translate>Service Level</dt>
+      <dd bst-edit-select="host.subscription_facet_attributes.service_level"
+          readonly="denied('edit_hosts', host)"
+          selector="host.subscription_facet_attributes.service_level"
+          options="serviceLevels()"
+          options-format="option for option in options"
+          deletable="true"
+          on-delete="clearServiceLevel()"
+          on-save="saveSubscriptionFacet(host)">
+      </dd>
+    </dl>
+
+    <div class="divider"></div>
+
+    <h4 translate>Content Host Properties</h4>
+
+    <dl class="dl-horizontal dl-hoizontal-left">
+      <dt translate>OS</dt>
+      <dd>{{ host.operatingsystem_name }}</dd>
+
+      <dt translate>Architecture</dt>
+      <dd>{{ host.architecture_name }}</dd>
+
+      <dt translate>Number of CPUs</dt>
+      <dd>{{ host.facts["cpu::cpu(s)"] }}</dd>
+
+      <dt translate>RAM (GB)</dt>
+      <dd>{{ convertMemtoGB(host.facts["memory::memtotal"]) }}</dd>
+    </dl>
+
+    <div class="divider"></div>
+
+    <h4 translate>Installed Products</h4>
+
+    <p translate ng-show="!host.subscription_facet_attributes.installed_products || host.subscription_facet_attributes.installed_products.length == 0">
+      You do not have any Installed Products
+    </p>
+
+    <div ng-show="host.subscription_facet_attributes.installed_products.length > 0">
+      <div ng-repeat="product in host.subscription_facet_attributes.installed_products" class="detail">
+        <dt translate>Product</dt>
+        <dd>{{ product.productName }} {{ product.version }}</dd>
       </div>
-
-      <div ng-show="host.subscription_facet_attributes.virtual_guests" class="detail">
-        <span class="info-label" translate>Virtual Guests</span>
-        <div class="info-value">
-          <a ng-click="reloadSearch(virtualGuestIds(host))"
-               translate translate-n="host.subscription_facet_attributes.virtual_guests.length"
-               translate-plural="{{ host.subscription_facet_attributes.virtual_guests.length }} Content Hosts">
-             1 Content Host
-          </a>
-        </div>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Registered Through</span>
-        <span class="info-value">{{ host.subscription_facet_attributes.registered_through || "Unknown"}}</span>
-      </div>
-
-      <div ng-show="host.subscription_facet_attributes.virtual_host" class="detail">
-        <span class="info-label" translate>Virtual Host</span>
-        <div class="info-value">
-          <a ui-sref="content-hosts.details.info({hostId: host.subscription_facet_attributes.virtual_host.id })">{{ host.subscription_facet_attributes.virtual_host.name }}</a>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-    </section>
-
-    <section>
-      <h4 translate>Subscriptions</h4>
-
-      <div class="detail">
-        <span class="info-label" translate>Subscription Status</span>
-        <span class="info-value">
-          <i ng-class="contentHostTable.getHostStatusIcon(host.subscription_global_status)"></i>
-          {{ host.subscription_status_label }}
-        </span>
-      </div>
-
-      <div ng-show=" host.subscription_facet_attributes.compliance_reasons.length > 0" class="detail">
-        <span class="info-label" translate>Details</span>
-        <div class="info-value">
-          <ul class="compliance-reasons">
-            <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Auto-Attach</span>
-        <span class="info-value"
-              bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
-              readonly="denied('edit_hosts', host)"
-              formatter="booleanToYesNo"
-              on-save="saveSubscriptionFacet(host)">
-        </span>
-      </div>
-      <div class="detail">
-        <span class="info-label" translate>Service Level</span>
-        <span class="info-value"
-              bst-edit-select="host.subscription_facet_attributes.service_level"
-              readonly="denied('edit_hosts', host)"
-              selector="host.subscription_facet_attributes.service_level"
-              options="serviceLevels()"
-              options-format="option for option in options"
-              deletable="true"
-              on-delete="clearServiceLevel()"
-              on-save="saveSubscriptionFacet(host)">
-          </span>
-      </div>
-
-      <div class="divider"></div>
-    </section>
-
-    <section>
-      <h4 translate>Content Host Properties</h4>
-
-      <div class="detail">
-        <span class="info-label" translate>OS</span>
-        <span class="info-value">{{ host.operatingsystem_name }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Architecture</span>
-        <span class="info-value">{{ host.architecture_name }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Number of CPUs</span>
-        <span class="info-value">{{ host.facts["cpu::cpu(s)"] }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>RAM (GB)</span>
-        <span class="info-value">{{ convertMemtoGB(host.facts["memory::memtotal"]) }}</span>
-      </div>
-
-      <div class="divider"></div>
-    </section>
-
-    <section>
-      <h4 translate>Installed Products</h4>
-
-      <p translate ng-show="!host.subscription_facet_attributes.installed_products || host.subscription_facet_attributes.installed_products.length == 0">
-        You do not have any Installed Products
-      </p>
-
-      <div ng-show="host.subscription_facet_attributes.installed_products.length > 0">
-        <div ng-repeat="product in host.subscription_facet_attributes.installed_products" class="detail">
-          <span class="info-label" translate>Product</span>
-          <span class="info-value">{{ product.productName }} {{ product.version }}</span>
-        </div>
-      </div>
-
-    </section>
+    </div>
   </div>
 
-  <div class="fr details" ng-show="host.hasSubscription()">
-    <section>
-      <h4 translate>Installable Errata</h4>
+  <div data-block="right-column">
+    <h4 translate>Installable Errata</h4>
 
-      <div class="detail">
-        <span class="info-label" translate>Security</span>
-        <span class="info-value">
-          <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=security'})">
-            <i class="fa fa-warning inline-icon"
-               ng-class="{black: host.content_facet_attributes.errata_counts.security === 0, red: host.content_facet_attributes.errata_counts.security > 0}"
-               title="{{ 'Security' | translate }}"></i>
-            {{ host.content_facet_attributes.errata_counts.security || 0 }}
-          </a>
-        </span>
-      </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Security</dt>
+      <dd>
+        <a ui-sref="content-host.errata.index({getSearch: 'type=security'})">
+          <i class="fa fa-warning inline-icon"
+             ng-class="{black: host.content_facet_attributes.errata_counts.security === 0, red: host.content_facet_attributes.errata_counts.security > 0}"
+             title="{{ 'Security' | translate }}"></i>
+          {{ host.content_facet_attributes.errata_counts.security || 0 }}
+        </a>
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Bug Fix</span>
-        <span class="info-value">
-          <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=bugfix'})">
-            <i class="fa fa-bug inline-icon"
-               ng-class="{black: host.content_facet_attributes.errata_counts.bugfix === 0, yellow: host.content_facet_attributes.errata_counts.bugfix > 0}"
-               title="{{ 'Bug Fix' | translate }}"></i>
-            {{ host.content_facet_attributes.errata_counts.bugfix || 0 }}
-          </a>
-        </span>
-      </div>
+      <dt translate>Bug Fix</dt>
+      <dd>
+        <a ui-sref="content-host.errata.index({getSearch: 'type=bugfix'})">
+          <i class="fa fa-bug inline-icon"
+             ng-class="{black: host.content_facet_attributes.errata_counts.bugfix === 0, yellow: host.content_facet_attributes.errata_counts.bugfix > 0}"
+             title="{{ 'Bug Fix' | translate }}"></i>
+          {{ host.content_facet_attributes.errata_counts.bugfix || 0 }}
+        </a>
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Enhancement</span>
-        <span class="info-value">
-          <a ui-sref="content-hosts.details.errata.index({getSearch: 'type=enhancement'})">
-            <i class="fa fa-plus-square inline-icon"
-               ng-class="{black: host.content_facet_attributes.errata_counts.enhancement === 0, yellow: host.content_facet_attributes.errata_counts.enhancement > 0}"
-               title="{{ 'Enhancement' | translate }}"></i>
-            {{ host.content_facet_attributes.errata_counts.enhancement || 0 }}
-          </a>
-        </span>
-      </div>
-      <div class="divider"></div>
-    </section>
+      <dt translate>Enhancement</dt>
+      <dd>
+        <a ui-sref="content-host.errata.index({getSearch: 'type=enhancement'})">
+          <i class="fa fa-plus-square inline-icon"
+             ng-class="{black: host.content_facet_attributes.errata_counts.enhancement === 0, yellow: host.content_facet_attributes.errata_counts.enhancement > 0}"
+             title="{{ 'Enhancement' | translate }}"></i>
+          {{ host.content_facet_attributes.errata_counts.enhancement || 0 }}
+        </a>
+      </dd>
+    </dl>
 
-    <section>
-      <h4 translate>Content Host Content</h4>
+    <div class="divider"></div>
 
-      <div class="detail">
-        <span class="info-label" translate>Release Version</span>
-        <span class="info-value"
-              bst-edit-select="host.subscription_facet_attributes.release_version"
-              readonly="denied('edit_hosts', host)"
-              selector="host.subscription_facet_attributes.release_version"
-              options="releaseVersions()"
-              options-format="option for option in options"
-              deletable="true"
-              on-delete="clearReleaseVersion()"
-              on-save="saveSubscriptionFacet(host)"
-              on-cancel="cancelReleaseVersionUpdate()">
-        </span>
+    <h4 translate>Content Host Content</h4>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Release Version</dt>
+      <dd>
+        <div bst-edit-select="host.subscription_facet_attributes.release_version"
+            readonly="denied('edit_hosts', host)"
+            selector="host.subscription_facet_attributes.release_version"
+            options="releaseVersions()"
+            options-format="option for option in options"
+            deletable="true"
+            on-delete="clearReleaseVersion()"
+            on-save="saveSubscriptionFacet(host)"
+            on-cancel="cancelReleaseVersionUpdate()">
+        </div>
         <div bst-alert="info" ng-show="showVersionAlert">
           <p translate>
             No alternate release version choices are available. The available releases are based upon what is available in "{{ host.content_facet_attributes.content_view.name }}", the selected <a href="/content_views">content view</a> this content host is attached to for the given <a href="/lifecycle_environments">lifecycle environment</a>, "{{ host.content_facet_attributes.lifecycle_environment.name }}".
           </p>
         </div>
-      </div>
+      </dd>
 
-      <div class="detail" bst-feature-flag="lifecycle_environments">
-        <span class="info-label" translate>Content View</span>
-        <span class="info-value"
-              bst-edit-select="host.content_facet_attributes.content_view.name"
-              readonly="denied('edit_hosts', host)"
-              selector="host.content_facet_attributes.content_view.id"
-              options="contentViews()"
-              on-cancel="cancelContentViewUpdate()"
-              on-save="saveContentView(host)"
-              edit-trigger="editContentView">
-        </span>
-      </div>
+      <dt translate>Content View</dt>
+      <dd bst-edit-select="host.content_facet_attributes.content_view.name"
+          readonly="denied('edit_hosts', host)"
+          selector="host.content_facet_attributes.content_view.id"
+          options="contentViews()"
+          on-cancel="cancelContentViewUpdate()"
+          on-save="saveContentView(host)"
+          edit-trigger="editContentView">
+      </dd>
 
-      <div class="detail" bst-feature-flag="lifecycle_environments">
+      <dt bst-feature-flag="lifecycle_environments">
+        <span translate>Environment</span>
+      </dt>
+      <dd bst-feature-flag="lifecycle_environments">
         <div bst-alert="info" ng-show="editContentView">
           <p translate ng-show="contentViews.length === 0">
             The host requires being attached to a content view and the environment you have chosen has no content views promoted to it.
@@ -256,98 +214,80 @@
             Use the cancel button on content view selection to revert your environment selection.
           </p>
         </div>
-        <span class="info-label" translate>Environment</span>
+
         <span path-selector="environments"
               ng-model="host.content_facet_attributes.lifecycle_environment"
               mode="singleSelect"
               disabled="denied('edit_hosts', host)"
               disable-trigger="disableEnvironmentSelection">
         </span>
-      </div>
+      </dd>
+    </dl>
 
-      <div class="divider"></div>
-    </section>
+    <div class="divider"></div>
 
-    <section>
-      <h4 translate>Content Host Status</h4>
+    <h4 translate>Content Host Status</h4>
 
-      <div class="detail">
-        <span class="info-label" translate>Registered</span>
-        <span class="info-value">{{ host.created | date:'short' }}</span>
-      </div>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Registered</dt>
+      <dd>{{ host.created | date:'short' }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate> Registered By</span>
-        <span class="info-value"
-              translate
-              ng-show="host.subscription_facet_attributes.activation_keys.length == 0">
-          {{ host.subscription_facet_attributes.user.login }}
-        </span>
-        <span class="info-value"
-              ng-show="host.subscription_facet_attributes.activation_keys.length > 0"
-              translate
-              translate-n="host.subscription_facet_attributes.activation_keys.length"
-              translate-plural="Activation Keys">
-          Activation Key
-        </span>
-        <span class="info-value">
-          <ul ng-show="host.subscription_facet_attributes.activation_keys.length > 0">
-            <li ng-repeat="activation_key in host.subscription_facet_attributes.activation_keys">
+      <dt translate> Registered By</dt>
+      <dd>
+          <span ng-show="host.subscription_facet_attributes.activation_keys.length == 0" translate>
+            {{ host.subscription_facet_attributes.user.login }}
+          </span>
+          <span ng-show="host.subscription_facet_attributes.activation_keys.length > 0"
+                translate
+                translate-n="host.subscription_facet_attributes.activation_keys.length"
+                translate-plural="Activation Keys">
+            Activation Key
+          </span>
+
+        <ul ng-show="host.subscription_facet_attributes.activation_keys.length > 0">
+          <li ng-repeat="activation_key in host.subscription_facet_attributes.activation_keys">
               <span>
                 <a ui-sref="activation-key.info({activationKeyId: activation_key.id})">
                   {{ activation_key.name }}
                 </a>
               </span>
-              <span ng-show="activation_key.description"> - {{ activation_key.description }}</span>
-            </li>
-          </ul>
-        </span>
-      </div>
+            <span ng-show="activation_key.description"> - {{ activation_key.description }}</span>
+          </li>
+        </ul>
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Last Checkin</span>
-        <span class="info-value">{{ (host.subscription_facet_attributes.last_checkin | date:'short') || ("Never checked in" | translate) }}</span>
-      </div>
+      <dt translate>Last Checkin</dt>
+      <dd>{{ (host.subscription_facet_attributes.last_checkin | date:'short') || ("Never checked in" | translate) }}</dd>
+    </dl>
+  </div>
 
-      <div class="divider"></div>
-    </section>
+  <div class="divider"></div>
 
-    <section>
-      <h4 translate>Networking</h4>
+  <h4 translate>Networking</h4>
 
-      <div class="detail">
-        <span class="info-label" translate>Hostname</span>
-        <span class="info-value">{{ host.name }}</span>
-      </div>
+  <dl class="dl-horizontal dl-horizontal-left">
+    <dt translate>Hostname</dt>
+    <dd>{{ host.name }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>IPv4 Address</span>
-        <span class="info-value">{{ host.facts["network::ipv4_address"] }}</span>
-      </div>
+    <dt translate>IPv4 Address</dt>
+    <dd>{{ host.facts["network::ipv4_address"] }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>IPv6 Address</span>
-        <span class="info-value">{{ host.facts["network::ipv6_address"] }}</span>
-      </div>
+    <dt translate>IPv6 Address</dt>
+    <dd>{{ host.facts["network::ipv6_address"] }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Interfaces</span>
-        <div class="info-value">
-          <div ng-repeat="(interfaceName, interface) in hostFactsAsObject.net.interface" >
-            <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
-               ng-hide="editMode" ng-click="expanded = !expanded"></i>
-            {{ interfaceName }}
-            <div class="sub-detail" ng-show="expanded">
-              <div ng-repeat="(key, value) in interface">
-                <span class="info-sub-label">{{ key.replace("_", " ") }}:</span>
-                <span class="info-sub-value">{{ value }}</span>
-              </div>
-            </div>
+    <dt translate>Interfaces</dt>
+    <dd>
+      <div ng-repeat="(interfaceName, interface) in hostFactsAsObject.net.interface" >
+        <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
+           ng-hide="editMode" ng-click="expanded = !expanded"></i>
+        {{ interfaceName }}
+        <div class="sub-detail" ng-show="expanded">
+          <div ng-repeat="(key, value) in interface">
+            <span class="info-sub-label">{{ key.replace("_", " ") }}:</span>
+            <span class="info-sub-value">{{ value }}</span>
           </div>
         </div>
       </div>
-
-      <div class="divider"></div>
-    </section>
-  </div>
-</section>
+    </dd>
+  </dl>
+</div>

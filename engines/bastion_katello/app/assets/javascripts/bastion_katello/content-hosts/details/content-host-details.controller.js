@@ -86,7 +86,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 deferred.resolve(response);
                 $scope.host = response;
                 $scope.successMessages.push(translate('Save Successful.'));
-                $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.error.full_messages, function (errorMessage) {
@@ -135,14 +134,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 host.$delete(function () {
                     host.deleting = false;
                     GlobalNotification.setSuccessMessage(translate('Host %s has been deleted.').replace('%s', host.name));
-                    $scope.removeRow(host.id);
-                    $scope.transitionTo('content-hosts.index');
+                    $scope.transitionTo('content-hosts');
                 }, errorHandler);
             } else {
                 HostSubscription.delete({id: host.id}, function () {
                     host.deleting = false;
                     GlobalNotification.setSuccessMessage(translate('Host %s has been unregistered.').replace('%s', host.name));
-                    $scope.transitionTo('content-hosts.index');
+                    $scope.transitionTo('content-hosts');
                 }, errorHandler);
             }
         };

@@ -89,18 +89,18 @@ describe('Controller: ContentHostErrataController', function() {
     }));
 
     it("Sets a table.", function() {
-        expect($scope.detailsTable).toBeTruthy();
+        expect($scope.table).toBeTruthy();
     });
 
     it("provide a way to apply errata", function() {
         spyOn(HostErratum, "apply").and.callThrough();
-        spyOn($scope.detailsTable, "selectAll");
+        spyOn($scope.table, "selectAll");
         spyOn($scope, "transitionTo");
         $scope.applySelected();
         expect(HostErratum.apply).toHaveBeenCalledWith({id: host.id, errata_ids: [mockErratum.errata_id]},
                                                          jasmine.any(Function));
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.tasks.details', {taskId: mockTask.id});
-        expect($scope.detailsTable.selectAll).toHaveBeenCalledWith(false);
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
+        expect($scope.table.selectAll).toHaveBeenCalledWith(false);
     });
 
     it("provide a way to regenerate applicability", function() {
@@ -108,7 +108,7 @@ describe('Controller: ContentHostErrataController', function() {
         spyOn($scope, "transitionTo");
         $scope.calculateApplicability();
         expect(HostErratum.regenerateApplicability).toHaveBeenCalledWith({id: host.id},  jasmine.any(Function), jasmine.any(Function));
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.details.tasks.details', {taskId: mockTask.id});
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-host.tasks.details', {taskId: mockTask.id});
     });
 
     it("should refresh errata with no options for current", function () {

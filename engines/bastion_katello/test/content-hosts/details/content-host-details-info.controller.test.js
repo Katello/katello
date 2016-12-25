@@ -10,8 +10,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
         'Bastion.host-collections',
         'Bastion.test-mocks',
         'content-hosts/details/views/content-host-info.html',
-        'content-hosts/views/content-hosts.html',
-        'content-hosts/views/content-hosts-table-full.html'
+        'content-hosts/views/content-hosts.html'
     ));
 
     beforeEach(inject(function($injector) {

@@ -1,5 +1,5 @@
-describe('Controller: ContentHostsBulkActionSubscriptionsController', function() {
-    var $scope, CurrentOrganization, HostBulkAction, HostCollection, SubscriptionsHelper;
+describe('Controller: ContentHostsBulkSubscriptionsModalController', function() {
+    var $scope, $uibModalInstance, Nutupane, hostIds, CurrentOrganization, HostBulkAction, HostCollection, SubscriptionsHelper;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -27,37 +27,50 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
             getAmountSelectorValues: function () {}
         };
 
+        $uibModalInstance = {
+            close: function () {},
+            dismiss: function () {}
+        };
+
+        Nutupane = function() {
+            this.getAllSelectedResults = function() {
+                return {
+                    included: { ids: hostCollectionIds }
+                };
+            };
+            this.invalidate = function () {};
+            this.setSearchKey = function () {};
+            this.table = { };
+        };
+
+        hostIds = {included: {ids: [1, 2, 3]}};
     });
 
     beforeEach(inject(function($rootScope, $controller) {
         $scope = $rootScope.$new();
-        $scope.nutupane = {
-            getAllSelectedResults: function() {
-                return {included: [1,2,3]}
-            }
-        };
 
-        $scope.setState = function () {};
-
-        $controller('ContentHostsBulkActionSubscriptionsController', {
+        $controller('ContentHostsBulkSubscriptionsModalController', {
             $scope: $scope,
+            $uibModalInstance: $uibModalInstance,
+            hostIds: hostIds,
+            Nutupane: Nutupane,
             CurrentOrganization: CurrentOrganization,
             HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
-            SubscriptionsHelper: SubscriptionsHelper,
+            SubscriptionsHelper: SubscriptionsHelper
         });
     }));
 
     it('attaches the nutupane table to the scope', function () {
         expect($scope.contentNutupane).toBeDefined();
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("groups subscriptions by product name", function () {
         var expected = [1];
         spyOn(SubscriptionsHelper, 'groupByProductName');
 
-        $scope.detailsTable.rows = expected;
+        $scope.table.rows = expected;
         $scope.$digest();
 
         expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalledWith(expected)
@@ -69,15 +82,12 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
 
     describe("manipulates subscriptions on the hosts", function () {
         beforeEach(function () {
-            spyOn($scope.nutupane, 'getAllSelectedResults').and.callThrough();
             spyOn(SubscriptionsHelper, 'getSelectedSubscriptionAmounts');
-            spyOn($scope, 'setState');
             spyOn($scope, 'transitionTo');
         });
 
         afterEach(function () {
-            expect($scope.nutupane.getAllSelectedResults).toHaveBeenCalled();
-            expect(SubscriptionsHelper.getSelectedSubscriptionAmounts).toHaveBeenCalledWith($scope.detailsTable);
+            expect(SubscriptionsHelper.getSelectedSubscriptionAmounts).toHaveBeenCalledWith($scope.table);
         });
 
         describe("by adding subscriptions", function () {
@@ -89,19 +99,17 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
 
                 $scope.addSelected();
 
-                expect($scope.setState).toHaveBeenCalledWith(false, [], []);
-                expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.bulk-actions.task-details', {taskId: response.id})
+                expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.bulk-task', {taskId: response.id})
             });
 
             it("and failing", function () {
-                var response = {errors: []};
+                var response = {data: {errors: []}};
 
                 spyOn(HostBulkAction, 'addSubscriptions').and.callFake(function (params, success, error) {
                     error(response);
                 });
 
                 $scope.addSelected();
-                expect($scope.setState).toHaveBeenCalledWith(false, [], response.errors);
                 expect($scope.transitionTo).not.toHaveBeenCalled();
             });
         });
@@ -115,21 +123,31 @@ describe('Controller: ContentHostsBulkActionSubscriptionsController', function()
 
                 $scope.removeSelected();
 
-                expect($scope.setState).toHaveBeenCalledWith(false, [], []);
-                expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.bulk-actions.task-details', {taskId: response.id})
+                expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.bulk-task', {taskId: response.id})
             });
 
             it("and failing", function () {
-                var response = {errors: []};
+                var response = {data: {errors: []}};
 
                 spyOn(HostBulkAction, 'removeSubscriptions').and.callFake(function (params, success, error) {
                     error(response);
                 });
 
                 $scope.removeSelected();
-                expect($scope.setState).toHaveBeenCalledWith(false, [], response.errors);
                 expect($scope.transitionTo).not.toHaveBeenCalled();
             });
         });
+    });
+
+    it("provides a function for closing the modal", function () {
+        spyOn($uibModalInstance, 'close');
+        $scope.ok();
+        expect($uibModalInstance.close).toHaveBeenCalled();
+    });
+
+    it("provides a function for cancelling the modal", function () {
+        spyOn($uibModalInstance, 'dismiss');
+        $scope.cancel();
+        expect($uibModalInstance.dismiss).toHaveBeenCalled();
     });
 });

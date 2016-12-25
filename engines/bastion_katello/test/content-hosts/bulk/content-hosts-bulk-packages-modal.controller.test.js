@@ -1,6 +1,6 @@
-describe('Controller: ContentHostsBulkActionPackagesController', function() {
-    var $scope, $q, translate, HostBulkAction, HostCollection, Organization,
-        Task, CurrentOrganization, selected;
+describe('Controller: ContentHostsBulkPackagesModalController', function() {
+    var $scope, $uibModalInstance, hostIds, translate, HostBulkAction, HostCollection, Organization,
+        Task, CurrentOrganization;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -26,18 +26,22 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         };
         translate = function() {};
         CurrentOrganization = 'foo';
-        selected = {included: {ids: [1, 2, 3]}}
+
+        $uibModalInstance = {
+            close: function () {},
+            dismiss: function () {}
+        };
+
+        hostIds = {included: {ids: [1, 2, 3]}};
     });
 
     beforeEach(inject(function($controller, $rootScope, $q, $window) {
         $window.AUTH_TOKEN = 'secret_token';
         $scope = $rootScope.$new();
-        $scope.nutupane = {};
-        $scope.nutupane.getAllSelectedResults = function () { return selected }
-        $scope.setState = function(){};
 
-        $controller('ContentHostsBulkActionPackagesController', {$scope: $scope,
-            $q: $q,
+        $controller('ContentHostsBulkPackagesModalController', {$scope: $scope,
+            $uibModalInstance: $uibModalInstance,
+            hostIds: hostIds,
             HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
             translate: translate,
@@ -57,7 +61,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(HostBulkAction.installContent).toHaveBeenCalledWith(
-            _.extend({}, selected, {
+            _.extend({}, hostIds, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             }),
@@ -76,7 +80,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(HostBulkAction.updateContent).toHaveBeenCalledWith(
-            _.extend({}, selected, {
+            _.extend({}, hostIds, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             }),
@@ -95,7 +99,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(HostBulkAction.removeContent).toHaveBeenCalledWith(
-            _.extend({}, selected, {
+            _.extend({}, hostIds, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             }),
@@ -114,7 +118,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(HostBulkAction.installContent).toHaveBeenCalledWith(
-            _.extend({}, selected, {
+            _.extend({}, hostIds, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             }),
@@ -133,7 +137,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(HostBulkAction.updateContent).toHaveBeenCalledWith(
-            _.extend({}, selected, {
+            _.extend({}, hostIds, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             }),
@@ -152,7 +156,7 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(HostBulkAction.removeContent).toHaveBeenCalledWith(
-            _.extend({}, selected, {
+            _.extend({}, hostIds, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             }),
@@ -160,5 +164,15 @@ describe('Controller: ContentHostsBulkActionPackagesController', function() {
         );
     });
 
+    it("provides a function for closing the modal", function () {
+        spyOn($uibModalInstance, 'close');
+        $scope.ok();
+        expect($uibModalInstance.close).toHaveBeenCalled();
+    });
 
+    it("provides a function for cancelling the modal", function () {
+        spyOn($uibModalInstance, 'dismiss');
+        $scope.cancel();
+        expect($uibModalInstance.dismiss).toHaveBeenCalled();
+    });
 });

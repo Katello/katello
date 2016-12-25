@@ -1,5 +1,5 @@
-describe('Controller: ContentHostsBulkActionHostCollectionsController', function() {
-    var $scope, $q, translate, HostBulkAction, HostCollection, Organization,
+describe('Controller: ContentHostsBulkHostCollectionsModalController', function() {
+    var $scope, $uibModalInstance, hostIds, translate, HostBulkAction, HostCollection, Organization,
         Task, CurrentOrganization, Nutupane, $location, hostCollectionIds;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
@@ -35,6 +35,13 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
         };
         translate = function() {};
         CurrentOrganization = 'foo';
+
+        $uibModalInstance = {
+            close: function () {},
+            dismiss: function () {}
+        };
+
+        hostIds = {included: {ids: [1, 2, 3]}};
     });
 
     beforeEach(inject(function($injector) {
@@ -43,18 +50,10 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.setState = function(){};
-        $scope.nutupane = new Nutupane();
-        $scope.nutupane.getAllSelectedResults = function() {
-            return {
-                included: {
-                    ids: ['sys1', 'sys2']
-                }
-            }
-        };
 
-        $controller('ContentHostsBulkActionHostCollectionsController', {$scope: $scope,
-            $q: $q,
+        $controller('ContentHostsBulkHostCollectionsModalController', {$scope: $scope,
+            $uibModalInstance: $uibModalInstance,
+            hostIds: hostIds,
             $location: $location,
             HostBulkAction: HostBulkAction,
             HostCollection: HostCollection,
@@ -66,6 +65,10 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
     }));
 
     it("can add host collections to multiple content hosts", function() {
+        var expected = hostIds;
+        expected.host_collection_ids = hostCollectionIds;
+        expected.organization_id = CurrentOrganization;
+
         $scope.hostCollections = {
             action: 'add'
         };
@@ -73,14 +76,15 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
         spyOn(HostBulkAction, 'addHostCollections');
         $scope.performHostCollectionAction();
 
-        expected = $scope.nutupane.getAllSelectedResults();
-        expected.host_collection_ids = hostCollectionIds;
-        expected.organization_id = CurrentOrganization;
         expect(HostBulkAction.addHostCollections).toHaveBeenCalledWith(expected,
             jasmine.any(Function), jasmine.any(Function));
     });
 
     it("can remove host collections from multiple content hosts", function() {
+        var expected = hostIds;
+        expected.host_collection_ids = hostCollectionIds;
+        expected.organization_id = CurrentOrganization;
+
         $scope.hostCollections = {
             action: 'remove'
         };
@@ -88,9 +92,7 @@ describe('Controller: ContentHostsBulkActionHostCollectionsController', function
         spyOn(HostBulkAction, 'removeHostCollections');
         $scope.performHostCollectionAction();
 
-        expected = $scope.nutupane.getAllSelectedResults();
-        expected.host_collection_ids = hostCollectionIds;
-        expected.organization_id = CurrentOrganization;
+
         expect(HostBulkAction.removeHostCollections).toHaveBeenCalledWith(expected,
             jasmine.any(Function), jasmine.any(Function));
     });

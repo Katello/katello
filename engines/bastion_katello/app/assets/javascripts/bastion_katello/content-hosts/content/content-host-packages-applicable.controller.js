@@ -19,7 +19,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
         var packagesNutupane, openEventInfo;
 
         $scope.getSelectedPackages = function () {
-            var selected = $scope.detailsTable.getSelected();
+            var selected = $scope.table.getSelected();
             selected = _.map(selected, function(pkg) {
                 return pkg.name + '-' + pkg.version + '-' + pkg.release + '.' + pkg.arch;
             });
@@ -44,8 +44,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesApplicabl
 
         packagesNutupane = new Nutupane(Package, {'host_id': $scope.$stateParams.hostId, 'packages_restrict_upgradable': true});
         packagesNutupane.masterOnly = true;
-        $scope.detailsTable = packagesNutupane.table;
-        $scope.detailsTable.openEventInfo = openEventInfo;
-        $scope.detailsTable.contentHost = $scope.contentHost;
+        $scope.table = packagesNutupane.table;
+        $scope.table.openEventInfo = openEventInfo;
+        $scope.table.contentHost = $scope.contentHost;
     }
 ]);

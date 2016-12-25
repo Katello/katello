@@ -1,57 +1,41 @@
 <span page-title ng-model="host">{{ 'Content Host' | translate }} {{ host.name }}</span>
 
-<section>
-  <div class="details fl">
-    <section>
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h4 translate>Provisioning Host Details</h4>
 
-      <h4 translate>Provisioning Host Details</h4>
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Name</dt>
+      <dd>
+        <a href="/hosts/{{ host.name }}">
+          {{ host.name }}
+        </a>
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Name</span>
-        <span class="info-value">
-          <a href="/hosts/{{ host.name }}">
-            {{ host.name }}
-          </a>
-        </span>
-      </div>
+      <dt translate>Status</dt>
+      <dd>
+        <i ng-class="table.getHostStatusIcon(host.global_status)"></i>
+        {{ host.global_status_label | translate }}
+      </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Status</span>
-        <span class="info-value">
-          <i ng-class="contentHostTable.getHostStatusIcon(host.global_status)"></i>
-          {{ host.global_status_label | translate }}
-        </span>
-      </div>
+      <dt translate>Operating System</dt>
+      <dd>{{ host.operatingsystem_name }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Operating System</span>
-        <span class="info-value">{{ host.operatingsystem_name }}</span>
-      </div>
+      <dt translate>Puppet Environment</dt>
+      <dd>{{ host.puppet_environment_name }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Puppet Environment</span>
-        <span class="info-value">{{ host.puppet_environment_name }}</span>
-      </div>
+      <dt translate>Last Puppet Report</dt>
+      <dd>{{ host.last_report | date:'short' }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Last Puppet Report</span>
-        <span class="info-value">{{ host.last_report | date:'short' }}</span>
-      </div>
+      <dt translate>Model</dt>
+      <dd>{{ host.model_name }}</dd>
 
-      <div class="detail">
-        <span class="info-label" translate>Model</span>
-        <span class="info-value">{{ host.model_name }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Host Group</span>
-        <span class="info-value">
-          <a href="/hostgroups/{{ host.hostgroup_id }}-{{ host.hostgroup_name }}/edit">
-            {{ host.hostgroup_name }}
-          </a>
-        </span>
-      </div>
-
-    </section>
+      <dt translate>Host Group</dt>
+      <dd>
+        <a href="/hostgroups/{{ host.hostgroup_id }}-{{ host.hostgroup_name }}/edit">
+          {{ host.hostgroup_name }}
+        </a>
+      </dd>
+    </dl>
   </div>
-</section>
+</div>

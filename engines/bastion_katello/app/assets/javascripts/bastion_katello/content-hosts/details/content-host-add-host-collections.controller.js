@@ -8,17 +8,19 @@
  * @requires translate
  * @requires HostCollection
  * @requires Host
+ * @requires CurrentOrganization
  * @requires Nutupane
  *
  * @description
  *   Provides the functionality for adding host collections to a content host.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'Nutupane',
-    function ($scope, $q, $location, translate, HostCollection, Host, Nutupane) {
-        var params, hostCollectionsPane;
+    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'CurrentOrganization', 'Nutupane',
+    function ($scope, $q, $location, translate, HostCollection, Host, CurrentOrganization, Nutupane) {
+        var params, nutupane;
 
         params = {
+            'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'sort_by': 'name',
             'sort_order': 'ASC',
@@ -27,8 +29,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
             'host_id': $scope.$stateParams.hostId
         };
 
-        hostCollectionsPane = new Nutupane(HostCollection, params);
-        $scope.hostCollectionsTable = hostCollectionsPane.table;
+        nutupane = new Nutupane(HostCollection, params);
+        nutupane.masterOnly = true;
+
+        $scope.table = nutupane.table;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -43,10 +47,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
             success = function (response) {
                 $scope.successMessages = [translate('Added %x host collections to content host "%y".')
-                    .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', host.name)];
-                $scope.hostCollectionsTable.working = false;
-                $scope.hostCollectionsTable.selectAll(false);
-                hostCollectionsPane.refresh();
+                    .replace('%x', $scope.table.numSelected).replace('%y', host.name)];
+                $scope.table.working = false;
+                $scope.table.selectAll(false);
+                nutupane.refresh();
                 $scope.host.$get();
                 deferred.resolve(response);
             };
@@ -54,13 +58,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
             error = function (response) {
                 deferred.reject(response.data.errors);
                 $scope.errorMessages = response.data.errors.base;
-                $scope.hostCollectionsTable.working = false;
+                $scope.table.working = false;
             };
 
-            $scope.hostCollectionsTable.working = true;
+            $scope.table.working = true;
 
             hostCollections = _.map(host['host_collections'], 'id');
-            hostCollectionsToAdd = _.map($scope.hostCollectionsTable.getSelected(), 'id');
+            hostCollectionsToAdd = _.map($scope.table.getSelected(), 'id');
             data = {"host_collection_ids": _.union(hostCollections, hostCollectionsToAdd)};
 
             Host.updateHostCollections({id: host.id}, data, success, error);

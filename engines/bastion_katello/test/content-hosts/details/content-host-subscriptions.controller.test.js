@@ -14,9 +14,8 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         'Bastion.content-hosts',
         'Bastion.subscriptions',
         'Bastion.test-mocks',
-        'content-hosts/details/views/host-collections.html',
-        'content-hosts/views/content-hosts.html',
-        'content-hosts/views/content-hosts-table-full.html'
+        'content-hosts/details/views/content-host-host-collections.html',
+        'content-hosts/views/content-hosts.html'
     ));
 
     beforeEach(inject(function($injector) {
@@ -50,7 +49,6 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         };
         Nutupane = function() {
             this.table = expectedTable;
-            this.removeRow = function() {};
             this.get = function() {};
             this.query = function() {};
             this.refresh = function() {};
@@ -81,7 +79,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("allows removing subscriptions from the content host", function() {
@@ -89,7 +87,7 @@ describe('Controller: ContentHostSubscriptionsController', function() {
         var expected = {id: $scope.host.id, subscriptions: [{id: 2, quantity: 5}]};
         spyOn(HostSubscription, 'removeSubscriptions');
 
-        $scope.detailsTable.getSelected = function() {
+        $scope.table.getSelected = function() {
             return [{id: 2, cp_id: "cpid2", quantity_consumed: 5}];
         };
 

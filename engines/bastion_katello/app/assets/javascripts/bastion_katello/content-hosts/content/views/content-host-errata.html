@@ -1,16 +1,21 @@
 <span page-title ng-model="host">{{ 'Errata for: ' | translate }} {{ host.name }}</span>
 
+<div data-block="sub-header" bst-feature-flag="remote_actions">
+  <h3 translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</h3>
+  <h3 translate ng-show="selectedErrataOption === 'current'">Installable Errata</h3>
+</div>
+
 <div class="details fl" ng-hide="host.hasContent()">
   <div data-extend-template="common/views/registration.html"></div>
 </div>
 
 <div ng-if="host && host.hasContent()">
-  <div data-block="messages" ng-show="detailsTable.rows.length > 0">
+  <div data-block="messages" ng-show="table.rows.length > 0">
     <p bst-alert="info" ng-hide="selectedErrataOption === 'current'">
-          <span translate>
-            Some of the Errata shown below may not be installable as they are not in this Content Host's
-            Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.
-          </span>
+      <span translate>
+        Some of the Errata shown below may not be installable as they are not in this Content Host's
+        Content View and Lifecycle Environment.  In order to apply such Errata an Incremental Update is required.
+      </span>
 
       <a ui-sref="errata.index" translate>Click here to select Errata for an Incremental Update.</a>
     </p>
@@ -26,24 +31,16 @@
     </p>
   </div>
 
-  <div data-extend-template="layouts/details-nutupane.html">
-    <div data-block="header" bst-feature-flag="remote_actions">
-      <span translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</span>
-      <span translate ng-show="selectedErrataOption === 'current'">Installable Errata</span>
-    </div>
-
+  <div data-extend-template="layouts/partials/table.html">
     <span data-block="filters" bst-feature-flag="remote_actions">
-      <form class="well col-sm-12">
-        <div class="form-group">
-          <label translate>
-            Show from:
-          </label>
-          <select class="form-control"
-                  ng-model="selectedErrataOption"
-                  ng-change="refreshErrata(selectedErrataOption)"
-                  ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'"></select>
-        </div>
-      </form>
+      <label translate>
+        Show from:
+      </label>
+      <select class="form-control"
+              ng-model="selectedErrataOption"
+              ng-change="refreshErrata(selectedErrataOption)"
+              ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'">
+      </select>
     </span>
 
     <form id="errataActionForm" method="post" action="/katello/remote_execution">
@@ -54,7 +51,7 @@
       <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
     </form>
 
-    <span data-block="actions" ng-hide="contentHost.readonly">
+    <span data-block="list-actions" ng-hide="contentHost.readonly">
       <div bst-modal="applySelected()" model="host">
         <div data-block="modal-header" translate>Apply Errata to Content Host "{{host.name}}"?</div>
         <div data-block="modal-body" translate>Are you sure you want to apply Errata to content host "{{ host.name }}"?</div>
@@ -63,16 +60,16 @@
 
         <span bst-feature-flag="remote_actions">
           <span uib-dropdown class="btn-group">
-            <button class="btn btn-primary"
+            <button class="btn btn-default"
                     translate
                     ng-hide="denied('edit_hosts', host)"
-                    ng-disabled="detailsTable.getSelected().length == 0"
+                    ng-disabled="table.getSelected().length == 0"
                     ng-click="openModal()">
               Apply Selected
             </button>
             <button uib-dropdown-toggle class="btn btn-primary"
                     ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)"
-                    ng-disabled="detailsTable.getSelected().length == 0"
+                    ng-disabled="table.getSelected().length == 0"
                     type="button" id="use-remote-execution">
               <span class="caret"></span>
             </button>
@@ -83,7 +80,7 @@
             </ul>
           </span>
         </span>
-        <button class="btn btn-primary"
+        <button class="btn btn-default"
                 translate
                 ng-hide="denied('edit_hosts', host)"
                 ng-disabled="calculatingApplicability"
@@ -102,7 +99,7 @@
     </span>
 
     <div data-block="table">
-      <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
+      <table class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
         <thead>
           <tr bst-table-head row-select>
             <th bst-table-column="type" translate>Type</th>
@@ -112,10 +109,10 @@
           </tr>
         </thead>
 
-	<div data-extend-template="layouts/select-all-results.html"></div>
+	      <div data-extend-template="layouts/select-all-results.html"></div>
 
         <tbody>
-          <tr bst-table-row ng-repeat="erratum in detailsTable.rows | filter:detailsTable.errataCompare" row-select="erratum">
+          <tr bst-table-row ng-repeat="erratum in table.rows | filter:table.errataCompare" row-select="erratum">
             <td bst-table-cell>
                 <span ng-show="erratum.type == 'security'">
                   <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
@@ -143,6 +140,5 @@
         </tbody>
       </table>
     </div>
-
   </div>
 </div>

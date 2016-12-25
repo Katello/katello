@@ -19,9 +19,6 @@ describe('Controller: ContentHostDetailsController', function() {
     beforeEach(inject(function(_$controller_, $rootScope, $state, $injector) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
-        $scope.table = {
-            replaceRow: function() {}
-        };
 
         translate = function(message) {
             return message;
@@ -75,7 +72,6 @@ describe('Controller: ContentHostDetailsController', function() {
         spyOn(Host, 'get').and.callThrough();
 
         $scope.$stateParams = {hostId: mockHost.id};
-        $scope.removeRow = function(){};
 
         $controller('ContentHostDetailsController', {
             $scope: $scope,
@@ -136,7 +132,7 @@ describe('Controller: ContentHostDetailsController', function() {
         $scope.unregisterContentHost(testHost);
 
         expect(HostSubscription.delete).toHaveBeenCalledWith({'id': 123}, jasmine.any(Function), jasmine.any(Function));
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts');
 
     });
 
@@ -150,12 +146,10 @@ describe('Controller: ContentHostDetailsController', function() {
         };
 
         spyOn($scope, "transitionTo");
-        spyOn($scope, "removeRow");
         spyOn(testHost, '$delete').and.callThrough();
 
         $scope.unregisterContentHost(testHost);
         expect(testHost.$delete).toHaveBeenCalled();
-        expect($scope.removeRow).toHaveBeenCalled();
-        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts');
     });
 });
