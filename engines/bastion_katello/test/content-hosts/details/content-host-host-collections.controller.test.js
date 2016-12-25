@@ -10,9 +10,8 @@ describe('Controller: ContentHostHostCollectionsController', function() {
         'Bastion.content-hosts',
         'Bastion.host-collections',
         'Bastion.test-mocks',
-        'content-hosts/details/views/host-collections.html',
-        'content-hosts/views/content-hosts.html',
-        'content-hosts/views/content-hosts-table-full.html'
+        'content-hosts/details/views/content-host-host-collections.html',
+        'content-hosts/views/content-hosts.html'
     ));
 
     beforeEach(inject(function($injector) {
@@ -48,13 +47,13 @@ describe('Controller: ContentHostHostCollectionsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.hostCollectionsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("allows removing host collections from the content host", function() {
         spyOn(Host, 'updateHostCollections');
 
-        $scope.hostCollectionsTable.getSelected = function() {
+        $scope.table.getSelected = function() {
             return [{id: 1, name: "lalala"}];
         };
 

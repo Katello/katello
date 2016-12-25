@@ -18,7 +18,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesInstalled
         var packagesNutupane;
 
         $scope.removeSelectedPackages = function () {
-            var selected = $scope.detailsTable.getSelected();
+            var selected = $scope.table.getSelected();
 
             if (!$scope.working) {
                 $scope.working = true;
@@ -31,7 +31,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesInstalled
 
         packagesNutupane = new Nutupane(HostPackage, {id: $scope.$stateParams.hostId});
         packagesNutupane.masterOnly = true;
-        $scope.detailsTable = packagesNutupane.table;
-        $scope.detailsTable.contentHost = $scope.contentHost;
+        $scope.table = packagesNutupane.table;
+        $scope.table.contentHost = $scope.contentHost;
     }
 ]);

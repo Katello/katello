@@ -54,7 +54,7 @@ describe('Controller: ContentHostPackagesInstalledController', function() {
     }));
 
     it("Sets a table.", function() {
-        expect($scope.detailsTable).toBeTruthy();
+        expect($scope.table).toBeTruthy();
     });
 
 
@@ -62,7 +62,7 @@ describe('Controller: ContentHostPackagesInstalledController', function() {
         var mockPackage, mockPackageClone;
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
         mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
-        spyOn($scope.detailsTable,  'getSelected').and.returnValue([mockPackage]);
+        spyOn($scope.table,  'getSelected').and.returnValue([mockPackage]);
 
         spyOn(HostPackage, 'remove');
         $scope.removeSelectedPackages();

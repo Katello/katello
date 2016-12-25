@@ -48,7 +48,7 @@ describe('Controller: ContentHostPackagesApplicableController', function() {
     }));
 
     it("Sets a table.", function() {
-        expect($scope.detailsTable).toBeTruthy();
+        expect($scope.table).toBeTruthy();
     });
 
     it("formats selected items", function() {

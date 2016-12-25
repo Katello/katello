@@ -3,10 +3,15 @@
  * @name  Bastion.content-hosts.controller:ContentHostsController
  *
  * @requires $scope
+ * @requires $q
  * @requires $location
+ * @requires $window
+ * @requires $uibModal
  * @requires translate
  * @requires Nutupane
- * @requires ContentHost
+ * @requires Host
+ * @requires HostBulkAction
+ * @requires GlobalNotification
  * @requires CurrentOrganization
  * @requires ContentHostsHelper
  *
@@ -16,8 +21,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'Host', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $state, $location, translate, Nutupane, Host, CurrentOrganization, ContentHostsHelper) {
+    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'GlobalNotification', 'CurrentOrganization', 'ContentHostsHelper',
+    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, GlobalNotification, CurrentOrganization, ContentHostsHelper) {
         var nutupane, params;
 
         $scope.successMessages = [];
@@ -31,14 +36,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         };
 
         nutupane = new Nutupane(Host, params);
-        $scope.contentHostTable = nutupane.table;
-        $scope.removeRow = nutupane.removeRow;
+        nutupane.masterOnly = true;
+
+        $scope.table = nutupane.table;
         $scope.nutupane = nutupane;
         $scope.controllerName = 'hosts';
 
         // @TODO begin hack necessary because of foreman API bug http://projects.theforeman.org/issues/13877
-        $scope.contentHostTable.sortBy = function (column) {
-            var sort = $scope.contentHostTable.resource.sort,
+        $scope.table.sortBy = function (column) {
+            var sort = $scope.table.resource.sort,
                 sortOrder;
             if (!column) {
                 return;
@@ -55,7 +61,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
             column.sortOrder = sortOrder;
             column.active = true;
-            $scope.contentHostTable.rows = [];
+            $scope.table.rows = [];
             $scope.nutupane.query();
         };
         // @TODO end hack
@@ -66,17 +72,103 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             nutupane.table.initialSelectAll = true;
         }
 
-        $scope.contentHostTable.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
+        $scope.table.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
 
-        $scope.contentHostTable.closeItem = function () {
-            $scope.transitionTo('content-hosts.index');
-        };
-
-        $scope.table = $scope.contentHostTable;
+        $scope.table = $scope.table;
 
         $scope.reloadSearch = function (search) {
             $scope.table.search(search);
-            $state.go('content-hosts.index');
+            $state.go('content-hosts');
+        };
+
+        $scope.performDestroyHosts = function () {
+            var destroyParams, success, error, deferred = $q.defer();
+
+            destroyParams = $scope.nutupane.getAllSelectedResults();
+            destroyParams['organization_id'] = CurrentOrganization;
+
+            success = function (data) {
+                deferred.resolve(data);
+                $window.location = "/foreman_tasks/tasks/" + data.id;
+            };
+
+            error = function (response) {
+                deferred.reject(response.data.errors);
+                angular.forEach(response.data.errors, function (responseError) {
+                    GlobalNotification.setErrorMessage(responseError);
+                });
+            };
+
+            HostBulkAction.destroyHosts(destroyParams, success, error);
+            return deferred.promise;
+        };
+
+        $scope.openHostCollectionsModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html',
+                controller: 'ContentHostsBulkHostCollectionsModalController',
+                size: 'lg',
+                resolve: {
+                    hostIds: function () {
+                        return $scope.nutupane.getAllSelectedResults('id');
+                    }
+                }
+            });
+        };
+
+        $scope.openPackagesModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-packages-modal.html',
+                controller: 'ContentHostsBulkPackagesModalController',
+                resolve: {
+                    hostIds: function () {
+                        return $scope.nutupane.getAllSelectedResults('id');
+                    }
+                }
+            });
+        };
+
+        $scope.openErrataModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-errata-modal.html',
+                controller: 'ContentHostsBulkErrataModalController',
+                size: 'lg',
+                resolve: {
+                    hostIds: function () {
+                        return $scope.nutupane.getAllSelectedResults('id');
+                    }
+                }
+            });
+        };
+
+        $scope.openEnvironmentModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-environment-modal.html',
+                controller: 'ContentHostsBulkEnvironmentModalController',
+                resolve: {
+                    hostIds: function () {
+                        return $scope.nutupane.getAllSelectedResults('id');
+                    }
+                }
+            });
+        };
+
+        $scope.openSubscriptionsModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html',
+                controller: 'ContentHostsBulkSubscriptionsModalController',
+                size: 'lg',
+                resolve: {
+                    hostIds: function () {
+                        return $scope.nutupane.getAllSelectedResults('id');
+                    }
+                }
+            });
         };
     }]
 );

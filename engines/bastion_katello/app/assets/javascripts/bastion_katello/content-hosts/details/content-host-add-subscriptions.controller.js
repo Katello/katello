@@ -25,40 +25,40 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             'host_id': $scope.$stateParams.hostId
         };
 
-        $scope.contentNutupane = new Nutupane(Subscription, params);
-        $scope.detailsTable = $scope.contentNutupane.table;
-        $scope.contentNutupane.setSearchKey('subscriptionSearch');
-        $scope.contentNutupane.masterOnly = true;
+        $scope.nutupane = new Nutupane(Subscription, params);
+        $scope.nutupane.setSearchKey('subscriptionSearch');
+        $scope.nutupane.masterOnly = true;
+        $scope.table = $scope.nutupane.table;
+
         $scope.isAdding = false;
         $scope.groupedSubscriptions = {};
 
-        $scope.$watch('detailsTable.rows', function (rows) {
+        $scope.$watch('table.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
         $scope.getAmountSelectorValues = SubscriptionsHelper.getAmountSelectorValues;
 
         $scope.disableAddButton = function () {
-            return $scope.detailsTable.numSelected === 0 || $scope.isAdding;
+            return $scope.table.numSelected === 0 || $scope.isAdding;
         };
 
         $scope.addSelected = function () {
             var selected;
-            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.detailsTable);
+            selected = SubscriptionsHelper.getSelectedSubscriptionAmounts($scope.table);
 
             $scope.isAdding = true;
             HostSubscription.addSubscriptions({id: $scope.$stateParams.hostId, 'subscriptions': selected}, function () {
                 Host.get({id: $scope.$stateParams.hostId}, function (host) {
                     $scope.$parent.host = host;
-                    $scope.table.replaceRow(host);
                     $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                     $scope.isAdding = false;
-                    $scope.contentNutupane.refresh();
+                    $scope.nutupane.refresh();
                 });
             }, function (response) {
                 $scope.errorMessages.push(response.data.displayMessage);
                 $scope.isAdding = false;
-                $scope.contentNutupane.refresh();
+                $scope.nutupane.refresh();
             });
         };
     }]

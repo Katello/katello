@@ -21,7 +21,7 @@ describe('Factory: HostCollection', function() {
     });
 
     it('makes a request to get the host collection list from the API.', function() {
-        $httpBackend.expectGET('/katello/api/host_collections').respond(hostCollections);
+        $httpBackend.expectGET('/katello/api/v2/host_collections').respond(hostCollections);
 
         HostCollection.queryPaged(function(response) {
             expect(response.results.length).toBe(hostCollections.results.length);
@@ -36,7 +36,7 @@ describe('Factory: HostCollection', function() {
         var hostCollection = hostCollections.results[0];
 
         hostCollection.name = 'NewName';
-        $httpBackend.expectPUT('/katello/api/host_collections/0').respond(hostCollection);
+        $httpBackend.expectPUT('/katello/api/v2/host_collections/0').respond(hostCollection);
 
         HostCollection.update({name: hostCollection.name, id: 0}, function(response) {
             expect(response).toBeDefined();
@@ -46,7 +46,7 @@ describe('Factory: HostCollection', function() {
 
     it('provides a way to add hosts', function() {
         var hosts = {test: 'this'};
-        $httpBackend.expectPUT('/katello/api/host_collections/0/add_hosts').respond(hosts);
+        $httpBackend.expectPUT('/katello/api/v2/host_collections/0/add_hosts').respond(hosts);
         HostCollection.addHosts({'host_collection': {'host_ids': [1,2]} , id: 0}, function(response) {
             expect(response.test).toBe('this');
         });
@@ -54,7 +54,7 @@ describe('Factory: HostCollection', function() {
 
     it('provides a way to remove hosts', function() {
         var hosts = {test: 'this'};
-        $httpBackend.expectPUT('/katello/api/host_collections/0/remove_hosts').respond(hosts);
+        $httpBackend.expectPUT('/katello/api/v2/host_collections/0/remove_hosts').respond(hosts);
         HostCollection.removeHosts({'host_collection': {'host_ids': [1,2]} , id: 0}, function(response) {
             expect(response.test).toBe('this');
         });

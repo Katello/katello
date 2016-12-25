@@ -10,7 +10,7 @@
      */
     function KatelloFeatures(FeatureFlag) {
         var remoteActions = [
-            'content-hosts.details.provisioning',
+            'content-host.provisioning',
             'content-hosts.bulk-actions.packages',
             'content-hosts.bulk-actions.errata.list',
             'content-hosts.bulk-actions.erratum',

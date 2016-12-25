@@ -1,5 +1,5 @@
-describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
-    var $scope, BulkAction, selectedContentHosts, CurrentOrganization, ContentView, paths, Organization;
+describe('Controller: ContentHostsBulkEnvironmentModalController', function() {
+    var $scope, $uibModalInstance, hostIds, BulkAction, CurrentOrganization, ContentView, paths, Organization;
 
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
 
@@ -10,7 +10,7 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
 
         CurrentOrganization = 'foo';
         paths = [[{name: "Library", id: 1}, {name: "Dev", id: 2}]];
-        selectedContentHosts = {included: {ids: [1, 2, 3]}};
+        hostIds = {included: {ids: [1, 2, 3]}};
         ContentView = $injector.get('MockResource').$new();
         Organization = $injector.get('MockResource').$new();
         ContentView.queryUnpaged = function(){return {}};
@@ -24,20 +24,27 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
 
             return response;
         };
+
+        $uibModalInstance = {
+            close: function () {},
+            dismiss: function () {}
+        };
+
+        hostIds = {included: {ids: [1, 2, 3]}};
     }));
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.nutupane = {};
-        $scope.nutupane.getAllSelectedResults = function () { return selectedContentHosts }
-        $scope.setState = function() {};
 
         $scope.table = {
             rows: [],
             numSelected: 5
         };
 
-        $controller('ContentHostsBulkActionEnvironmentController', {$scope: $scope,
+        $controller('ContentHostsBulkEnvironmentModalController', {
+            $scope: $scope,
+            $uibModalInstance: $uibModalInstance,
+            hostIds: hostIds,
             HostBulkAction: BulkAction,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
@@ -60,12 +67,24 @@ describe('Controller: ContentHostsBulkActionEnvironmentController', function() {
     });
 
     it("should perform the correct action", function () {
-        var params = _.extend(selectedContentHosts, {environment_id: paths[0][0].id, content_view_id: 109, organization_id: CurrentOrganization});
+        var params = _.extend(hostIds, {environment_id: paths[0][0].id, content_view_id: 109, organization_id: CurrentOrganization});
         $scope.selected.environment = paths[0][0];
         $scope.selected.contentView = {id: 109};
         spyOn(BulkAction, 'environmentContentView')
 
         $scope.performAction();
         expect(BulkAction.environmentContentView).toHaveBeenCalledWith(params, jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it("provides a function for closing the modal", function () {
+        spyOn($uibModalInstance, 'close');
+        $scope.ok();
+        expect($uibModalInstance.close).toHaveBeenCalled();
+    });
+
+    it("provides a function for cancelling the modal", function () {
+        spyOn($uibModalInstance, 'dismiss');
+        $scope.cancel();
+        expect($uibModalInstance.dismiss).toHaveBeenCalled();
     });
 });

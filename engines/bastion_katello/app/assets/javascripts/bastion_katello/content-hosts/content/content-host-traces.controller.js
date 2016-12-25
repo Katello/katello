@@ -24,10 +24,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
 
         tracesNutupane = new Nutupane(HostTraces, params, 'get');
         tracesNutupane.masterOnly = true;
-        $scope.detailsTable = tracesNutupane.table;
-        $scope.detailsTable.tracesFilterTerm = "";
-        $scope.detailsTable.tracesCompare = function (item) {
-            var searchText = $scope.detailsTable.tracesFilterTerm;
+        $scope.table = tracesNutupane.table;
+        $scope.table.tracesFilterTerm = "";
+        $scope.table.tracesCompare = function (item) {
+            var searchText = $scope.table.tracesFilterTerm;
             return item.app_type.indexOf(searchText) >= 0 ||
                 item.application.indexOf(searchText) >= 0 ||
                 item.helper.indexOf(searchText) >= 0;
@@ -43,7 +43,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
         });
 
         $scope.selectedTraceHelpers = function () {
-            var traceHelpers = [], selected = $scope.detailsTable.getSelected();
+            var traceHelpers = [], selected = $scope.table.getSelected();
             angular.forEach(selected, function (value) {
                 traceHelpers.push(value.helper);
             });

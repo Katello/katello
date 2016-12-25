@@ -21,9 +21,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostPackagesControlle
             // when the event has label defined, it means it comes
             // from foreman-tasks
             if (event.label) {
-                $scope.transitionTo('content-hosts.details.tasks.details', {taskId: event.id});
+                $scope.transitionTo('content-host.tasks.details', {taskId: event.id});
             } else {
-                $scope.transitionTo('content-hosts.details.events.details', {eventId: event.id});
+                $scope.transitionTo('content-host.events.details', {eventId: event.id});
             }
             $scope.working = false;
         };

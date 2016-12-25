@@ -1,15 +1,23 @@
-<span page-title>{{ 'Content Host Bulk Content' | translate }}</span>
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header" translate>Content Host Bulk Content</h4>
 
-<div class="details">
-  <section>
+  <div data-block="modal-body">
     <h4 translate>Assign Environment and Content View</h4>
 
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
     <div bst-alert="info" ng-show="showConfirm">
-      <p translate>
+      <span translate>
         Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?
-      </p>
-      <button class="btn btn-default" ng-click="hideConfirmDialog();" translate>No</button>
-      <button class="btn btn-default" ng-click="hideConfirmDialog(); performAction()" translate>Yes</button>
+      </span>
+      <div>
+        <button class="btn btn-default" ng-click="showConfirm = false; performAction()" translate>Yes</button>
+        <button class="btn btn-default" ng-click="showConfirm = false;" translate>No</button>
+      </div>
     </div>
 
     <div path-selector="environments"
@@ -42,11 +50,17 @@
       <button class="btn btn-default fr"
               translate
               ng-hide="denied('edit_hosts')"
-              ng-click="showConfirmDialog();"
+              ng-click="showConfirm = true;"
               ng-disabled="disableAssignButton(confirm)">
         Assign
       </button>
 
     </form>
-  </section>
+  </div>
+
+  <div data-block="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()" translate>
+      Done
+    </button>
+  </div>
 </div>

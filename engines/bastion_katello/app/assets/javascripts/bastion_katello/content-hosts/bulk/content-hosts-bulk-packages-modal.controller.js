@@ -1,23 +1,25 @@
 /**
  * @ngdoc object
- * @name  Bastion.content-hosts.controller:ContentHostsBulkActionController
+ * @name  Bastion.content-hosts.controller:ContentHostsBulkPackagesModalController
  *
  * @requires $scope
- * @requires $q
  * @resource $location
  * @resource $timeout
  * @resource $window
+ * @requires $uibModalInstance
  * @requires HostBulkAction
  * @requires CurrentOrganization
  * @requires translate
+ * @requires GlobalNotification
  * @requires BastionConfig
+ * @requires hostIds
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
-angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackagesController',
-    ['$scope', '$q', '$location', '$timeout', '$window', 'HostBulkAction', 'CurrentOrganization', 'translate', 'BastionConfig',
-    function ($scope, $q, $location, $timeout, $window, HostBulkAction, CurrentOrganization, translate, BastionConfig) {
+angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModalController',
+    ['$scope', '$location', '$timeout', '$window', '$uibModalInstance', 'HostBulkAction', 'CurrentOrganization', 'translate', 'GlobalNotification', 'BastionConfig', 'hostIds',
+    function ($scope, $location, $timeout, $window, $uibModalInstance, HostBulkAction, CurrentOrganization, translate, GlobalNotification, BastionConfig, hostIds) {
 
         function successMessage(type) {
             var messages = {
@@ -30,7 +32,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
         }
 
         function installParams() {
-            var params = $scope.nutupane.getAllSelectedResults();
+            var params = hostIds;
             params['content_type'] = $scope.content.contentType;
             if ($scope.content.action === "update all") {
                 params['update_all'] = true;
@@ -44,7 +46,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
 
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
-        $scope.setState(false, [], []);
+
         $scope.packageActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
         };
@@ -78,7 +80,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
         };
 
         $scope.performViaKatelloAgent = function (action, actionInput) {
-            var success, error, params, deferred = $q.defer();
+            var success, error, params;
 
             if (action) {
                 $scope.content.action = action;
@@ -89,16 +91,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
             }
 
             $scope.content.confirm = false;
-            $scope.setState(true, [], []);
 
-            success = function (data) {
-                deferred.resolve(data);
-                $scope.setState(false, [successMessage($scope.content.action)], []);
+            success = function () {
+                GlobalNotification.setSuccessMessage(successMessage($scope.content.action));
             };
 
             error = function (response) {
-                $scope.setState(false, [], response.data.errors);
-                deferred.reject(response.data.errors);
+                angular.forEach(response.data.errors, function (responseError) {
+                    GlobalNotification.setErrorMessage(responseError);
+                });
             };
 
             params = installParams();
@@ -111,12 +112,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
             } else if ($scope.content.action === "update all") {
                 HostBulkAction.updateContent(params, success, error);
             }
-
-            return deferred.promise;
         };
 
         $scope.performViaRemoteExecution = function(action, customize) {
-            var selectedHosts = $scope.nutupane.getAllSelectedResults();
+            var selectedHosts = hostIds;
 
             $scope.content.confirm = false;
             $scope.packageActionFormValues.customize = customize;
@@ -141,6 +140,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionPackag
             $timeout(function () {
                 angular.element('#packageActionForm').submit();
             }, 0);
+        };
+
+        $scope.ok = function () {
+            $uibModalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
         };
     }]
 );

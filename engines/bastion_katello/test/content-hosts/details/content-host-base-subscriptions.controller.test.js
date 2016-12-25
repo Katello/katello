@@ -13,9 +13,8 @@ describe('Controller: ContentHostBaseSubscriptionsController', function() {
         'Bastion.content-hosts',
         'Bastion.subscriptions',
         'Bastion.test-mocks',
-        'content-hosts/details/views/host-collections.html',
-        'content-hosts/views/content-hosts.html',
-        'content-hosts/views/content-hosts-table-full.html'
+        'content-hosts/details/views/content-host-host-collections.html',
+        'content-hosts/views/content-hosts.html'
     ));
 
     beforeEach(inject(function($injector) {

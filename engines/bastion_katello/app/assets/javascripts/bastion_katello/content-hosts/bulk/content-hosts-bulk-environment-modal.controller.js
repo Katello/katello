@@ -1,29 +1,32 @@
 /**
  * @ngdoc object
- * @name  Bastion.content-hosts.controller:ContentHostsBulkActionEnvironmentController
+ * @name  Bastion.content-hosts.controller:ContentHostsBulkEnvironmentModalController
  *
  * @requires $scope
+ * @requires $state
+ * @requires $uibModalInstance
  * @requires HostBulkAction
  * @requires Organization
  * @requires CurrentOrganization
  * @requires ContentView
+ * @requires GlobalNotification
+ * @requires hostIds
  *
  * @description
  *   A controller for providing bulk action functionality for setting content view and environment
  */
-angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnvironmentController',
-    ['$scope', '$state', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView',
-    function ($scope, $state, HostBulkAction, Organization, CurrentOrganization, ContentView) {
+angular.module('Bastion.content-hosts').controller('ContentHostsBulkEnvironmentModalController',
+    ['$scope', '$state', '$uibModalInstance', 'HostBulkAction', 'Organization', 'CurrentOrganization', 'ContentView', 'GlobalNotification', 'hostIds',
+    function ($scope, $state, $uibModalInstance, HostBulkAction, Organization, CurrentOrganization, ContentView, GlobalNotification, hostIds) {
 
         function actionParams() {
-            var params = $scope.nutupane.getAllSelectedResults();
+            var params = hostIds;
             params['organization_id'] = CurrentOrganization;
             params['environment_id'] = $scope.selected.environment.id;
             params['content_view_id'] = $scope.selected.contentView.id;
             return params;
         }
 
-        $scope.setState(false, [], []);
         $scope.selected = {
             environment: undefined,
             contentView: undefined
@@ -32,7 +35,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
         $scope.environments = Organization.readableEnvironments({id: CurrentOrganization});
 
         $scope.disableAssignButton = function (confirm) {
-            return confirm || $scope.table.numSelected === 0 || $scope.state.working ||
+            return confirm || hostIds === 0 ||
                 angular.isUndefined($scope.selected.environment) || angular.isUndefined($scope.selected.contentView);
         };
 
@@ -52,14 +55,22 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkActionEnviro
         };
 
         $scope.performAction = function () {
-            $scope.setState(true, [], []);
-
             HostBulkAction.environmentContentView(actionParams(), function (task) {
-                $scope.setState(false, [], []);
-                $state.go('content-hosts.bulk-actions.task-details', {taskId: task.id});
-            }, function (data) {
-                $scope.setState(false, [], data.errors);
+                $scope.ok();
+                $state.go('content-hosts.bulk-task', {taskId: task.id});
+            }, function (response) {
+                angular.forEach(response.data.errors, function (error) {
+                    GlobalNotification.setErrorMessage(error);
+                });
             });
+        };
+
+        $scope.ok = function () {
+            $uibModalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
         };
     }]
 );

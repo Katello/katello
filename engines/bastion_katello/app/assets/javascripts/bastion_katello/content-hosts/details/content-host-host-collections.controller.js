@@ -8,17 +8,19 @@
  * @requires translate
  * @requires HostCollection
  * @requires Host
+ * @requires CurrentOrganization
  * @requires Nutupane
  *
  * @description
  *   Provides the functionality for the list host collections details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'Nutupane',
-    function ($scope, $q, $location, translate, HostCollection, Host, Nutupane) {
-        var hostCollectionsPane, params;
+    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'CurrentOrganization', 'Nutupane',
+    function ($scope, $q, $location, translate, HostCollection, Host, CurrentOrganization, Nutupane) {
+        var nutupane, params;
 
         params = {
+            'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'sort_by': 'name',
             'sort_order': 'ASC',
@@ -26,8 +28,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
             'host_id': $scope.$stateParams.hostId
         };
 
-        hostCollectionsPane = new Nutupane(HostCollection, params);
-        $scope.hostCollectionsTable = hostCollectionsPane.table;
+        nutupane = new Nutupane(HostCollection, params);
+        nutupane.masterOnly = true;
+
+        $scope.table = nutupane.table;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -42,10 +46,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
 
             success = function (response) {
                 $scope.successMessages = [translate('Removed %x host collections from content host "%y".')
-                    .replace('%x', $scope.hostCollectionsTable.numSelected).replace('%y', host.name)];
-                $scope.hostCollectionsTable.working = false;
-                $scope.hostCollectionsTable.selectAll(false);
-                hostCollectionsPane.refresh();
+                    .replace('%x', $scope.table.numSelected).replace('%y', host.name)];
+                $scope.table.working = false;
+                $scope.table.selectAll(false);
+                nutupane.refresh();
                 $scope.host.$get();
                 deferred.resolve(response);
             };
@@ -53,12 +57,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
             error = function (response) {
                 deferred.reject(response.data.errors);
                 $scope.errorMessages = response.data.errors;
-                $scope.hostCollectionsTable.working = false;
+                $scope.table.working = false;
             };
 
-            $scope.hostCollectionsTable.working = true;
+            $scope.table.working = true;
             hostCollections = _.map(host['host_collections'], 'id');
-            hostCollectionsToRemove = _.map($scope.hostCollectionsTable.getSelected(), 'id');
+            hostCollectionsToRemove = _.map($scope.table.getSelected(), 'id');
 
             data = {"host_collection_ids": _.difference(hostCollections, hostCollectionsToRemove)};
             Host.updateHostCollections({id: host.id}, data, success, error);

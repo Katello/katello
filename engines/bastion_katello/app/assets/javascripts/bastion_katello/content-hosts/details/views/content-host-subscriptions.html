@@ -5,63 +5,60 @@
 </div>
 
 <div ng-if="host.hasSubscription()">
-  <button class="btn btn-primary fr"
-          ng-hide="denied('edit_hosts', host)"
-          ng-click="autoAttachSubscriptions()"
-          ng-disabled="subscription.workingMode">
-  {{ "Run Auto-Attach" | translate }}
-  </button>
+  <section class="row">
+    <div class="col-sm-6">
+      <h4 translate>Subscription Details</h4>
 
-  <span ng-show="subscription.workingMode">
-    <i class="fa fa-spinner inline-icon fa-spin fr"></i>
-    <span translate>Working</span>
-  </span>
-
-  <section class="details">
-    <h4 translate>Subscription Details</h4>
-    <div class="detail">
-      <span class="info-label" translate>Status</span>
-        <span class="info-value">
-          <i ng-class="contentHostTable.getHostStatusIcon(host.subscription_global_status)"></i>
+      <dl class="dl-horizontal dl-horizontal-left">
+        <dt translate>Status</dt>
+        <dd>
+          <i ng-class="table.getHostStatusIcon(host.subscription_global_status)"></i>
           {{ host.subscription_status_label | translate }}
-        </span>
-    </div>
+        </dd>
 
-    <div ng-show="host.subscription_facet_attributes.compliance_reasons.length > 0" class="detail">
-      <span class="info-label" translate>Details</span>
-      <div class="info-value">
-        <ul class="compliance-reasons">
-          <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
-        </ul>
-      </div>
-    </div>
+        <dt ng-show="host.subscription_facet_attributes.compliance_reasons.length > 0" translate>Details</dt>
+        <dd ng-show="host.subscription_facet_attributes.compliance_reasons.length > 0">
+          <ul class="compliance-reasons">
+            <li ng-repeat="reason in host.subscription_facet_attributes.compliance_reasons">{{ reason }}</li>
+          </ul>
+        </dd>
 
-    <div class="detail">
-      <span class="info-label" translate>Auto-Attach</span>
-      <span class="info-value"
-            bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
-            formatter="booleanToYesNo"
-            readonly="denied('edit_hosts', host)"
-            on-save="saveSubscriptionFacet(host)">
-      </span>
-    </div>
-    <div class="detail">
-      <span class="info-label" translate>Service Level</span>
-          <span class="info-value"
-                bst-edit-select="host.subscription_facet_attributes.service_level"
-                readonly="denied('edit_hosts', host)"
-                selector="host.subscription_facet_attributes.service_level"
-                options="serviceLevels()"
-                options-format="option for option in options"
-                on-save="saveSubscriptionFacet(host)">
+        <dt translate>Auto-Attach</dt>
+        <dd>
+          <div bst-edit-checkbox="host.subscription_facet_attributes.autoheal"
+               formatter="booleanToYesNo"
+               readonly="denied('edit_hosts', host)"
+               on-save="saveSubscriptionFacet(host)">
+          </div>
+
+          <a ng-hide="denied('edit_hosts', host)"
+             ng-click="autoAttachSubscriptions()"
+             ng-disabled="subscription.workingMode">
+            <span translate>Run Auto-Attach</span>
+          </a>
+
+          <span ng-show="subscription.workingMode">
+            <i class="fa fa-spinner inline-icon fa-spin"></i>
+            <span translate>Working</span>
           </span>
+        </dd>
+
+        <dt translate>Service Level</dt>
+        <dd bst-edit-select="host.subscription_facet_attributes.service_level"
+            readonly="denied('edit_hosts', host)"
+            selector="host.subscription_facet_attributes.service_level"
+            options="serviceLevels()"
+            options-format="option for option in options"
+            on-save="saveSubscriptionFacet(host)">
+        </dd>
+      </dl>
     </div>
   </section>
 
   <nav>
     <ul class="nav nav-tabs" ng-show="permitted('attach_subscriptions')">
-      <li ng-class="{active: isState('content-hosts.details.subscriptions.list')}">
-        <a ui-sref="content-hosts.details.subscriptions.list">
+      <li ng-class="{active: isState('content-host.subscriptions.list')}">
+        <a ui-sref="content-host.subscriptions.list">
           <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->
           <span translate>
             List/Remove
@@ -69,8 +66,8 @@
         </a>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-hosts.details.subscriptions.add')}">
-        <a ui-sref="content-hosts.details.subscriptions.add">
+      <li ng-class="{active: stateIncludes('content-host.subscriptions.add')}">
+        <a ui-sref="content-host.subscriptions.add">
           <span translate>
             Add
           </span>
@@ -82,35 +79,3 @@
   <div ui-view></div>
 
 </div>
-
-<!--
-http://projects.theforeman.org/issues/4253
-  <div ui-view></div>
-    <div class="filter-options">
-      <span class="filter-option">
-        <input type="checkbox"
-               id="subscriptions-match"
-               class="input"
-               ng-model="availableSubscriptionsTable.matchSystem"
-               ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
-        <label for="subscriptions-match" translate>Subscriptions match system</label>
-      </span>
-      <span class="filter-option">
-        <input type="checkbox"
-               id="subscriptions-match-installed"
-               class="input"
-               ng-model="availableSubscriptionsTable.matchInstalled"
-               ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
-        <label for="subscriptions-match-installed" translate>Subscriptions match installed software</label>
-      </span>
-
-      <span class="filter-option">
-        <input type="checkbox"
-               id="subscriptions-no-overlap"
-               class="input"
-               ng-model="availableSubscriptionsTable.noOverlap"
-               ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
-        <label for="subscriptions-no-overlap" translate>No overlap with current</label>
-        </span>
-    </div>
--->

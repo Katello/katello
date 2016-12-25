@@ -1,19 +1,9 @@
 <span page-title ng-model="host">{{ 'Subscriptions for Content Host:' | translate }} {{ host.name }}</span>
-<div data-extend-template="layouts/details-nutupane.html">
-  <div data-block="messages"></div>
 
-  <span data-block="search">
-    <div class="input-group">
-      <input type="text"
-             class="form-control"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="subscriptionSearch"/>
-    </div>
-  </span>
-
-  <div data-block="actions">
-    <div ng-hide="system.readonly" class="nutupane-actions fr">
-       <button class="btn btn-primary"
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="list-actions">
+    <div ng-hide="system.readonly">
+       <button class="btn btn-default"
                translate
                ng-hide="denied('edit_hosts', host)"
                ng-disabled="disableRemoveButton()"
@@ -24,17 +14,17 @@
   </div>
 
   <span data-block="no-rows-message" translate>
-       You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
+     You currently don't have any Subscriptions associated with this Content Host, you can add Subscriptions after selecting the 'Add' tab.
   </span>
 
   <span data-block="no-search-results-message" translate>
     Your search returned zero Subscriptions.
   </span>
 
-
   <div data-block="table">
-    <table ng-class="{'table-mask': detailsTable.working}"
-           class="table table-full" >
+    <table bst-table="table"
+           ng-class="{'table-mask': table.working}"
+           class="table table-bordered" >
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
@@ -49,13 +39,13 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions | groupedFilter: subscriptionSearch">
-          <td class="row-select">
+        <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+          <td class="row-select"></td>
+          <td colspan="8">
             <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
               {{ name }}
             </a>
           </td>
-          <td bst-table-cell colspan="8"></td>
         </tr>
         <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
           <td bst-table-cell>{{ subscription.quantity_consumed }}</td>
