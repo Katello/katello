@@ -14,7 +14,7 @@ module Katello
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :author, :complete_value => true
     scoped_search :on => :uuid, :complete_value => true
-    scoped_search :on => :name, :in => :content_view, :rename => :content_view_name
+    scoped_search :on => :name, :relation => :content_view, :rename => :content_view_name
 
     def puppet_module
       PuppetModule.find_by_uuid(self.uuid)

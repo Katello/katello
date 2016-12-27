@@ -50,8 +50,8 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
-    scoped_search :rename => :environment, :on => :name, :in => :environment, :complete_value => true
-    scoped_search :rename => :content_view, :on => :name, :in => :content_view, :complete_value => true
+    scoped_search :rename => :environment, :on => :name, :relation => :environment, :complete_value => true
+    scoped_search :rename => :content_view, :on => :name, :relation => :content_view, :complete_value => true
     scoped_search :on => :content_view_id, :complete_value => true, :only_explicit => true
     scoped_search :on => :description, :complete_value => true
 

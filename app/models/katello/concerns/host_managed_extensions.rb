@@ -21,14 +21,14 @@ module Katello
 
         before_save :correct_puppet_environment
 
-        scoped_search :in => :content_source, :on => :name, :complete_value => true, :rename => :content_source
-        scoped_search :in => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true
-        scoped_search :in => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
-        scoped_search :in => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
-        scoped_search :in => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
-        scoped_search :in => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
-        scoped_search :in => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
-        scoped_search :in => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
+        scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
+        scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true
+        scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
+        scoped_search :relation => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
+        scoped_search :relation => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
+        scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
+        scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
+        scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
       end
 
       def validate_media_with_capsule?

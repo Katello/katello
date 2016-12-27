@@ -9,7 +9,7 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :uuid, :rename => :id, :complete_value => true
-    scoped_search :in => :repositories, :on => :name, :rename => :repository, :complete_value => true
+    scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true
 
     def self.repository_association_class
       RepositoryPackageGroup

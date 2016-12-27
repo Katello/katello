@@ -32,7 +32,7 @@ module Katello
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
     scoped_search :on => :label, :complete_value => true
     scoped_search :on => :description
-    scoped_search :in => :provider, :on => :provider_type, :rename => :redhat,
+    scoped_search :relation => :provider, :on => :provider_type, :rename => :redhat,
                   :complete_value => {:true => Katello::Provider::REDHAT, :false => Katello::Provider::ANONYMOUS }
 
     def library_repositories

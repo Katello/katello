@@ -10,7 +10,7 @@ module Katello
     scoped_search :on => :commit, :complete_value => true
     scoped_search :on => :uuid, :complete_value => true
     scoped_search :on => :version_date, :complete_value => true, :rename => :created
-    scoped_search :in => :repositories, :on => :name, :rename => :repository, :complete_value => true
+    scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true
 
     CONTENT_TYPE = Pulp::OstreeBranch::CONTENT_TYPE
 

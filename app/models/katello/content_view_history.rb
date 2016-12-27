@@ -22,7 +22,7 @@ module Katello
     alias_method :version, :content_view_version
     alias_attribute :description, :notes
 
-    scoped_search :on => :name, :in => :environment, :rename => :environment, :complete_value => true
+    scoped_search :on => :name, :relation => :environment, :rename => :environment, :complete_value => true
 
     enum action: {
       publish: 1,

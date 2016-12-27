@@ -122,11 +122,11 @@ module Katello
     scope :subscribable, -> { where(content_type: SUBSCRIBABLE_TYPES) }
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :rename => :product, :on => :name, :in => :product, :complete_value => true
+    scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
     scoped_search :on => :content_type, :complete_value => -> do
       Katello::RepositoryTypeManager.repository_types.keys.each_with_object({}) { |value, hash| hash[value.to_sym] = value }
     end
-    scoped_search :on => :content_view_id, :in => :content_view_repositories
+    scoped_search :on => :content_view_id, :relation => :content_view_repositories
     scoped_search :on => :distribution_version, :complete_value => true
     scoped_search :on => :distribution_arch, :complete_value => true
     scoped_search :on => :distribution_family, :complete_value => true
