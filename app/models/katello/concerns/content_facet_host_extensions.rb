@@ -12,7 +12,7 @@ module Katello
         }.freeze
 
         has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id'
-        scoped_search :on => :status, :in => :errata_status_object, :rename => :errata_status,
+        scoped_search :on => :status, :relation => :errata_status_object, :rename => :errata_status,
                      :complete_value => ERRATA_STATUS_MAP
 
         #associations for simpler scoped searches
@@ -21,14 +21,14 @@ module Katello
         has_many :applicable_errata, :through => :content_facet
         has_many :applicable_rpms, :through => :content_facet
 
-        scoped_search :in => :content_view, :on => :name, :complete_value => true, :rename => :content_view
-        scoped_search :in => :content_facet, :on => :content_view_id, :rename => :content_view_id, :only_explicit => true
-        scoped_search :in => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
-        scoped_search :in => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id, :only_explicit => true
-        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
-        scoped_search :in => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
-        scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
-        scoped_search :in => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
+        scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view
+        scoped_search :relation => :content_facet, :on => :content_view_id, :rename => :content_view_id, :only_explicit => true
+        scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
+        scoped_search :relation => :content_facet, :on => :lifecycle_environment_id, :rename => :lifecycle_environment_id, :only_explicit => true
+        scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :applicable_errata, :complete_value => true, :ext_method => :find_by_applicable_errata, :only_explicit => true
+        scoped_search :relation => :applicable_errata, :on => :errata_id, :rename => :installable_errata, :complete_value => true, :ext_method => :find_by_installable_errata, :only_explicit => true
+        scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :applicable_rpms, :complete_value => true, :ext_method => :find_by_applicable_rpms, :only_explicit => true
+        scoped_search :relation => :applicable_rpms, :on => :nvra, :rename => :upgradable_rpms, :complete_value => true, :ext_method => :find_by_installable_rpms, :only_explicit => true
 
         # preserve options set by facets framework, but add new :reject_if statement
         accepts_nested_attributes_for(

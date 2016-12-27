@@ -26,13 +26,13 @@ module Katello
     scoped_search :on => :consumed, :complete_value => true
     scoped_search :on => :account_number, :complete_value => true, :rename => :account
     scoped_search :on => :contract_number, :complete_value => true, :rename => :contract
-    scoped_search :on => :name, :in => :subscription, :complete_value => true, :rename => :name
-    scoped_search :on => :support_level, :in => :subscription, :complete_value => true
-    scoped_search :on => :sockets, :in => :subscription, :complete_value => true
-    scoped_search :on => :cores, :in => :subscription, :complete_value => true
-    scoped_search :on => :product_id, :in => :subscription, :complete_value => true
-    scoped_search :on => :stacking_id, :in => :subscription, :complete_value => true
-    scoped_search :on => :instance_multiplier, :in => :subscription, :complete_value => true
+    scoped_search :on => :name, :relation => :subscription, :complete_value => true, :rename => :name
+    scoped_search :on => :support_level, :relation => :subscription, :complete_value => true
+    scoped_search :on => :sockets, :relation => :subscription, :complete_value => true
+    scoped_search :on => :cores, :relation => :subscription, :complete_value => true
+    scoped_search :on => :product_id, :relation => :subscription, :complete_value => true
+    scoped_search :on => :stacking_id, :relation => :subscription, :complete_value => true
+    scoped_search :on => :instance_multiplier, :relation => :subscription, :complete_value => true
 
     validates_lengths_from_database
 

@@ -170,11 +170,6 @@ module Katello
         return [] unless host.operatingsystem.is_a?(Redhat)
 
         new_host = ::Host.new
-        # there is foreman bug right now that prevents
-        # os and arch to get updated properly,
-        # http://projects.theforeman.org/issues/14737
-        # so we are going to hard code it to use what
-        # is in the param host for now.
         new_host.operatingsystem = param_host.operatingsystem.present? ? param_host.operatingsystem : host.operatingsystem
         new_host.architecture = param_host.architecture.present? ? param_host.architecture : host.architecture
 

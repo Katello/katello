@@ -6,11 +6,11 @@ module Katello
     belongs_to :repository, :inverse_of => :docker_tags, :class_name => "Katello::Repository"
 
     scoped_search :on => :name, :complete_value => true, :rename => :tag
-    scoped_search :in => :docker_manifest, :on => :name, :rename => :manifest,
+    scoped_search :relation => :docker_manifest, :on => :name, :rename => :manifest,
       :complete_value => true, :only_explicit => false
-    scoped_search :in => :docker_manifest, :on => :digest, :rename => :digest,
+    scoped_search :relation => :docker_manifest, :on => :digest, :rename => :digest,
       :complete_value => false, :only_explicit => true
-    scoped_search :in => :repository, :on => :name, :rename => :repository,
+    scoped_search :relation => :repository, :on => :name, :rename => :repository,
       :complete_value => true, :only_explicit => true
 
     scope :in_repositories, ->(repos) { where(:repository_id => repos) }

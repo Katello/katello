@@ -47,7 +47,7 @@ module Katello
 
     scoped_search :on => :content_view_id, :only_explicit => true
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
-    scoped_search :in => :repositories, :on => :name, :rename => :repository, :complete_value => true
+    scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true
 
     def self.find_by_version(_key, operator, value)
       conditions = ""
