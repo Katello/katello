@@ -21,8 +21,12 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             $scope.working = false;
             $scope.createRepoChoices.creating = false;
             angular.forEach(response.data.errors, function (errors, field) {
-                $scope.productForm[field].$setValidity('server', false);
-                $scope.productForm[field].$error.messages = errors;
+                if (angular.isUndefined($scope.productForm[field])) {
+                    $scope.productErrorMessages = 'An error occurred while saving the Product: ' + field + ' ' + errors;
+                } else {
+                    $scope.productForm[field].$setValidity('server', false);
+                    $scope.productForm[field].$error.messages = errors;
+                }
             });
         }
 
@@ -30,8 +34,8 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             var currentlyCreating = $scope.currentlyCreating;
             $scope.currentlyCreating = undefined;
             $scope.createRepoChoices.creating = false;
+            $scope.productErrorMessages = response.data.errors;
             currentlyCreating.form.$invalid = true;
-            currentlyCreating.form.messages = response.data.errors;
         }
 
         function convertToResource(repo) {
