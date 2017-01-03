@@ -175,6 +175,10 @@ module Katello
       expected = ["abc123-2"]
       assert_equal expected, results.map(&:uuid).sort
 
+      results = Rpm.in_repositories(@repo).search_version_equal("1.0.0-1.0")
+      expected = ["abc123-1", "abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
+
       results = Rpm.in_repositories(@repo).search_version_equal("1:1.0.0-1.0")
       expected = ["abc123-2"]
       assert_equal expected, results.map(&:uuid).sort
