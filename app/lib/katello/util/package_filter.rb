@@ -31,14 +31,33 @@ module Katello
       end
 
       def results
-        epoch_clause = "epoch #{operator} :epoch OR (epoch = :epoch AND (%s))"
         version_clause = "#{convert(:version_sortable)} #{operator} #{convert(':version')}"
-        release_clause = "(#{convert(:version_sortable)} = #{convert(':version')} AND " \
-            "#{convert(:release_sortable)} #{operator} #{convert(':release')})"
+        version_clause = add_release_clause(version_clause) unless release.blank?
+        version_clause = add_epoch_clause(version_clause) unless epoch.blank?
 
-        version_clause = "#{version_clause} OR #{release_clause}" unless release.blank?
-        version_clause = epoch_clause % version_clause unless epoch.blank?
         self.relation.where(version_clause, :version => version, :release => release, :epoch => epoch)
+      end
+
+      def add_release_clause(version_clause)
+        clause = "(#{convert(:version_sortable)} = #{convert(':version')} AND #{convert(:release_sortable)} #{operator} #{convert(':release')})"
+
+        # if we're using EQUAL, match: version = X AND release = Y
+        # else if we're using something like greater than, we need:
+        #   (version > X) OR (version = X AND release > Y)
+        if operator == EQUAL
+          clause
+        else
+          "#{version_clause} OR #{clause}"
+        end
+      end
+
+      def add_epoch_clause(version_clause)
+        if operator == EQUAL
+          clause = "(epoch = :epoch AND (%s))"
+        else
+          clause = "epoch #{operator} :epoch OR (epoch = :epoch AND (%s))"
+        end
+        clause % version_clause
       end
 
       def convert(name = '?')
