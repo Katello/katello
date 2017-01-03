@@ -29,6 +29,7 @@ module Katello
             @taxonomy = Organization.new(resource_params)
             sync_task(::Actions::Katello::Organization::Create, @taxonomy)
             @taxonomy.reload
+            switch_taxonomy
             if @count_nil_hosts > 0
               redirect_to send("step2_#{taxonomy_single}_path", @taxonomy)
             else
