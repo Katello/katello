@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.files = Dir["{app,vendor,lib,db,ca,config,locale}/**/*"] + ["LICENSE.txt", "README.md"]
   gem.files += Dir["engines/bastion_katello/{app,vendor,lib,config}/**/*"]
-  gem.files += Dir["engines/bastion_katello/{README.md,bastion_katello.gemspec}"]
+  gem.files += Dir["engines/bastion_katello/{README.md}"]
 
   gem.require_paths = ["lib"]
 
@@ -39,7 +39,7 @@ Gem::Specification.new do |gem|
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
   gem.add_dependency "jquery-ui-rails"
-  gem.add_dependency "bastion", ">= 3.4.2", "< 4.0.0"
+  gem.add_dependency "bastion", ">= 4.0.0", "< 5.0.0"
 
   # Testing
   gem.add_development_dependency "factory_girl_rails"
