@@ -7,7 +7,13 @@ module Actions
 
           destroy_env_content = !options.fetch(:skip_destroy_env_content, false)
           repos = destroy_env_content ? version.repositories : version.archived_repos
-          puppet_envs = destroy_env_content ? version.content_view_puppet_environments : [version.archive_puppet_environment]
+
+          puppet_envs = []
+          if destroy_env_content
+            puppet_envs = version.content_view_puppet_environments
+          elsif version.archive_puppet_environment
+            puppet_envs = [version.archive_puppet_environment]
+          end
 
           sequence do
             concurrence do
