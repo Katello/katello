@@ -69,7 +69,7 @@ module Actions
             new_repo = plan_action(Repository::CloneToVersion, source_repos, new_version, true).new_repository
             copy_output = copy_yum_content(new_repo, dep_solve, content[:package_ids], content[:errata_ids])
 
-            plan_action(Katello::Repository::MetadataGenerate, new_repo, nil)
+            plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
           end
           copy_output

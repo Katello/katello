@@ -661,6 +661,24 @@ module Katello
       end
     end
 
+    def test_republish
+      assert_async_task ::Actions::Katello::Repository::MetadataGenerate do |repo, options|
+        repo.id == @repository.id && options == {:force => true}
+      end
+
+      put :republish, :id => @repository.id
+      assert_response :success
+    end
+
+    def test_republish_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@read_permission, @create_permission, @destroy_permission]
+
+      assert_protected_action(:republish, allowed_perms, denied_perms) do
+        put :republish, :id => @repository.id
+      end
+    end
+
     def test_sync
       assert_async_task ::Actions::Katello::Repository::Sync do |repo|
         repo.id == @repository.id
