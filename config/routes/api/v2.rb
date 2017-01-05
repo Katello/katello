@@ -5,6 +5,7 @@ class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
 
+# rubocop:disable Metrics/BlockLength
 Katello::Engine.routes.draw do
   scope :katello, :path => '/katello' do
     namespace :api do
@@ -226,6 +227,9 @@ Katello::Engine.routes.draw do
             post :sync_complete
             get :auto_complete_search
             get :repository_types
+          end
+          member do
+            put :republish
           end
         end
 

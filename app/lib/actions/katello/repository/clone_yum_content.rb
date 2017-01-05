@@ -47,7 +47,8 @@ module Actions
               plan_action(Katello::Repository::IndexPackageGroups, target_repo)
             end
 
-            plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil) if generate_metadata
+            source_repository = filters.empty? ? source_repo : nil
+            plan_action(Katello::Repository::MetadataGenerate, target_repo, :source_repository => source_repository) if generate_metadata
           end
         end
 

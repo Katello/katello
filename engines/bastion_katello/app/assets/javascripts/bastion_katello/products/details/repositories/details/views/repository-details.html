@@ -32,6 +32,22 @@
           </span>
         </li>
 
+        <li role="menuitem">
+          <a ng-click="republishRepository(repository)"
+             ng-hide="syncInProgress(repository.last_sync) || denied('edit_products', product)"
+             translate>
+            Republish Repository Metadata
+          </a>
+
+          <span class="disabled" ng-show="syncInProgress(repository.last_sync)" translate>
+            Cannot republish Repository, a sync is already in progress.
+          </span>
+
+          <span class="disabled" ng-show="denied('sync_products', product)" translate>
+            Cannot republish Repository without the proper permissions.
+          </span>
+        </li>
+
         <li class="divider" bst-feature-flag="custom_products" ng-hide="denied('delete_repositories')"></li>
         <li role="menuitem" ng-hide="denied('delete_repositories')">
           <a ng-click="openModal()" ng-show="canRemove(repository, product)" translate>

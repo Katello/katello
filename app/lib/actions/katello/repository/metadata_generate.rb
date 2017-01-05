@@ -2,13 +2,26 @@ module Actions
   module Katello
     module Repository
       class MetadataGenerate < Actions::Base
-        def plan(repository, source_repository = nil, dependency = nil)
+        def plan(repository, options = {})
+          dependency = options.fetch(:dependency, nil)
+          source_repository = options.fetch(:source_repository, nil)
+          force = options.fetch(:force, false)
+
           distributors(repository, source_repository).each do |distributor|
             plan_action(Pulp::Repository::DistributorPublish,
-                        pulp_id: repository.pulp_id,
-                        distributor_type_id: distributor.type_id,
-                        source_pulp_id: source_repository.try(:pulp_id),
-                        dependency: dependency)
+                        :pulp_id => repository.pulp_id,
+                        :distributor_type_id => distributor.type_id,
+                        :source_pulp_id => source_repository.try(:pulp_id),
+                        :override_config => override_config(distributor, force),
+                        :dependency => dependency)
+          end
+        end
+
+        def override_config(distributor_class, force)
+          if distributor_class == Runcible::Models::YumDistributor
+            {:force_full => force}
+          else
+            {}
           end
         end
 

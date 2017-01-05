@@ -7,7 +7,7 @@ module Katello
     before_action :find_product_for_create, :only => [:create]
     before_action :find_organization_from_product, :only => [:create]
     before_action :find_repository, :only => [:show, :update, :destroy, :sync, :export,
-                                              :remove_content, :upload_content,
+                                              :remove_content, :upload_content, :republish,
                                               :import_uploads, :gpg_key_content]
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
@@ -162,6 +162,13 @@ module Katello
       creatable = ::Foreman::Cast.to_bool(params[:creatable])
       repo_types = creatable ? RepositoryTypeManager.creatable_repository_types : RepositoryTypeManager.repository_types
       render :json => repo_types.values
+    end
+
+    api :PUT, "/repositories/:id/republish", N_("Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem.")
+    param :id, :identifier, :desc => N_("Repository identifier"), :required => true
+    def republish
+      task = async_task(::Actions::Katello::Repository::MetadataGenerate, @repository, :force => true)
+      respond_for_async :resource => task
     end
 
     api :GET, "/repositories/:id", N_("Show a repository")

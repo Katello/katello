@@ -20,7 +20,8 @@ angular.module('Bastion.repositories').factory('Repository',
                 removePackages: { method: 'PUT', params: { action: 'remove_packages'}},
                 removeContent: { method: 'PUT', params: { action: 'remove_content'}},
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
-                repositoryTypes: {method: 'GET', isArray: true, params: {id: 'repository_types'}}
+                repositoryTypes: {method: 'GET', isArray: true, params: {id: 'repository_types'}},
+                republish: {method: 'PUT', params: { action: 'republish' }}
             }
         );
 
