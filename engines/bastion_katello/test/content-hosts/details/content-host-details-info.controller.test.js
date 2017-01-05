@@ -136,4 +136,8 @@ describe('Controller: ContentHostDetailsInfoController', function() {
         expect($scope.host.content_facet_attributes.lifecycle_environment.id).toBe(2);
         expect($scope.editContentView).toBe(false);
     });
+
+    it('should convert Mem to GB', function() {
+        expect($scope.convertMemToGB(74051368)).toBe('72.32')
+    });
 });
