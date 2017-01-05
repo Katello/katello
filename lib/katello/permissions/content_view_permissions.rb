@@ -65,13 +65,13 @@ Foreman::Plugin.find(:katello).security_block :content_views do
   permission :publish_content_views,
              {
                'katello/api/v2/content_views' => [:publish],
-               'katello/api/v2/content_view_versions' => [:incremental_update]
+               'katello/api/v2/content_view_versions' => [:incremental_update, :republish_repositories]
              },
              :resource_type => 'Katello::ContentView'
   permission :promote_or_remove_content_views,
              {
                'katello/api/v2/content_view_versions' => [:promote],
-               'katello/api/v2/content_views' => [:remove_from_environment, :remove]
+               'katello/api/v2/content_views' => [:remove_from_environment, :remove, :republish_repositories]
              },
              :resource_type => 'Katello::ContentView'
   permission :export_content_views,

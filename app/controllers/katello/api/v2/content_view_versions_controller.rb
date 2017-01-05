@@ -3,7 +3,7 @@ module Katello
     include Concerns::Api::V2::BulkHostsExtensions
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_content_view_version, :only => [:show, :promote, :destroy, :export]
+    before_action :find_content_view_version, :only => [:show, :promote, :destroy, :export, :republish_repositories]
     before_action :find_content_view, :except => [:incremental_update]
     before_action :find_environment, :only => [:index]
     before_action :find_environments, :only => [:promote]
@@ -60,6 +60,13 @@ module Katello
       task = async_task(::Actions::Katello::ContentView::Promote,
                         @version, @environments, is_force, params[:description],
                         :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration])
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata.")
+    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    def republish_repositories
+      task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @version)
       respond_for_async :resource => task
     end
 

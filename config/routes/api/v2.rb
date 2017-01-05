@@ -105,6 +105,7 @@ Katello::Engine.routes.draw do
           member do
             post :promote
             post :export
+            put :republish_repositories
           end
           collection do
             get :auto_complete_search

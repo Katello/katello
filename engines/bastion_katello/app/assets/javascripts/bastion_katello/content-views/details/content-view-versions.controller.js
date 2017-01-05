@@ -134,6 +134,12 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             });
         }
 
+        $scope.regenerateRepositories = function(version) {
+            ContentViewVersion.republishRepositories({id: version.id}, function(task) {
+                $scope.transitionTo('content-view.task', {taskId: task.id, contentViewId: version.content_view_id});
+            });
+        };
+
         $scope.hideProgress = function (version) {
             return version['active_history'].length === 0 || (version.task.state === 'stopped' &&
                 version.task.progressbar.type === 'success');
