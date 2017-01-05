@@ -1,5 +1,5 @@
 describe('Controller: ContentViewVersionsController', function() {
-    var $scope
+    var $scope, ContentViewVersion;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
@@ -18,12 +18,17 @@ describe('Controller: ContentViewVersionsController', function() {
             publish: "publish"
         };
 
-
+        $scope.transitionTo = function(){};
+        ContentViewVersion = $injector.get('MockResource').$new();
+        ContentViewVersion.republishRepositories = function(options, success){
+            success({id: 5});
+        };
         spyOn($scope, 'reloadVersions');
 
         $controller('ContentViewVersionsController', {
             $scope: $scope,
-            translate: translate
+            translate: translate,
+            ContentViewVersion: ContentViewVersion
         });
     }));
 
@@ -33,6 +38,15 @@ describe('Controller: ContentViewVersionsController', function() {
 
     it("defines a method for deloading the versions", function() {
         expect($scope.reloadVersions).toBeDefined();
+    });
+
+    it("republishes repositories", function() {
+        spyOn(ContentViewVersion, 'republishRepositories').and.callThrough();
+        spyOn($scope, 'transitionTo');
+
+        $scope.regenerateRepositories({id: 99, content_view_id: 9});
+
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-view.task', {taskId: 5, contentViewId: 9});
     });
 
     it("correctly hide a version's progress", function() {

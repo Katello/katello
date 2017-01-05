@@ -158,6 +158,15 @@ module Katello
       end
     end
 
+    def test_republish_repositories
+      version = @library_dev_staging_view.versions.first
+      @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::RepublishRepositories, version).returns({})
+      put :republish_repositories, :id => version.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/async'
+    end
+
     def test_promote
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@dev], false, 'trystero', :force_yum_metadata_regeneration => nil).returns({})

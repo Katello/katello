@@ -17,7 +17,8 @@ angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
                 update: {method: 'PUT'},
                 incrementalUpdate: {method: 'POST', params: {action: 'incremental_update'}},
-                promote: {method: 'POST', params: {action: 'promote'}}
+                promote: {method: 'POST', params: {action: 'promote'}},
+                republishRepositories: {method: 'PUT', params: {action: 'republish_repositories'}}
             }
         );
 
