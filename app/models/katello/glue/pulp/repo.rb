@@ -255,7 +255,7 @@ module Katello
           dist.auto_publish = true
           distributors = [dist]
         when Repository::PUPPET_TYPE
-          capsule ||= SmartProxy.default_capsule
+          capsule ||= SmartProxy.default_capsule!
           dist_options = { :id => self.pulp_id, :auto_publish => true }
           repo_path =  File.join(capsule.puppet_path,
                                  Environment.construct_name(self.organization,
