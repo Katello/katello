@@ -93,5 +93,11 @@ module Katello
       self.puppet_modules = PuppetModule.where(:id => associated_ids)
       self.save!
     end
+
+    def self.import_all
+      self.all.find_each do |cvpe|
+        cvpe.index_content(Katello::Pulp::PuppetModule.ids_for_repository(cvpe.pulp_id))
+      end
+    end
   end
 end
