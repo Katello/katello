@@ -5,6 +5,7 @@ namespace :katello do
         User.current = User.anonymous_api_admin
         puts _("Importing Puppet Modules")
         Katello::PuppetModule.import_all
+        Katello::ContentViewPuppetEnvironment.import_all
       end
     end
   end

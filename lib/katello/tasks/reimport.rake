@@ -25,7 +25,8 @@ namespace :katello do
               Katello::Subscription,
               Katello::Pool,
               Katello::DockerManifest,
-              Katello::DockerTag]
+              Katello::DockerTag,
+              Katello::ContentViewPuppetEnvironment]
 
     models << Katello::OstreeBranch if Katello::RepositoryTypeManager.find(Katello::Repository::OSTREE_TYPE).present?
 
