@@ -8,8 +8,7 @@ attributes :name
 attributes :content
 
 child :products => :products do
-  attributes :cp_id => :id
-  attributes :name
+  attributes :id, :cp_id, :name
   node :repository_count do |product|
     product.repositories.count
   end
@@ -25,8 +24,7 @@ child :repositories => :repositories do
   attribute :content_type
 
   child :product do |_product|
-    attributes :cp_id => :id
-    attribute :name
+    attributes :id, :cp_id, :name
   end
 end
 
