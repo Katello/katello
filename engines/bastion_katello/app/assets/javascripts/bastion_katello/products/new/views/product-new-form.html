@@ -33,7 +33,10 @@
             ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans">
       <option value=""></option>
     </select>
-    <a ui-sref="products.new.sync-plan" translate>+ New Sync Plan</a>
+    <a ui-sref="products.new.sync-plan" translate>
+      <i class="pficon pficon-add-circle-o"></i>
+      Create Sync Plan
+    </a>
   </div>
 
   <div bst-form-group label="{{ 'Description' | translate }}">
