@@ -36,7 +36,14 @@ module Katello
         release_clause = "(#{convert(:version_sortable)} = #{convert(':version')} AND " \
             "#{convert(:release_sortable)} #{operator} #{convert(':release')})"
 
-        version_clause = "#{version_clause} OR #{release_clause}" unless release.blank?
+        if release.present?
+          if self.operator == EQUAL
+            version_clause = "#{release_clause}"
+          else
+            version_clause = "#{version_clause} OR #{release_clause}"
+          end
+        end
+
         version_clause = epoch_clause % version_clause unless epoch.blank?
         self.relation.where(version_clause, :version => version, :release => release, :epoch => epoch)
       end
