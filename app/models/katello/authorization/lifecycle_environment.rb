@@ -20,21 +20,17 @@ module Katello
       authorized?(:destroy_lifecycle_environments)
     end
 
-    def promotable_or_removable?
-      authorized?(:promote_or_remove_content_views_to_environments)
-    end
-
     module ClassMethods
       def readable
         authorized(:view_lifecycle_environments)
       end
 
       def promotable
-        authorized(:promote_or_remove_content_views_to_environments)
+        authorized(:promote_or_remove_content_views)
       end
 
       def promotable?
-        User.current.can?(:promote_or_remove_content_views_to_environments)
+        User.current.can?(:promote_or_remove_content_views)
       end
 
       def any_promotable?

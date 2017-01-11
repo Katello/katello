@@ -40,8 +40,7 @@ node :permissions do |env|
     :create_lifecycle_environments => env.creatable?,
     :view_lifecycle_environments => env.readable?,
     :edit_lifecycle_environments => env.editable?,
-    :destroy_lifecycle_environments => env.deletable?,
-    :promote_or_remove_content_views_to_environments => env.promotable_or_removable?
+    :destroy_lifecycle_environments => env.deletable?
   }
 end
 
