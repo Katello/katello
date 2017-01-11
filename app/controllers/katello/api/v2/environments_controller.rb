@@ -125,7 +125,7 @@ module Katello
                   end
 
       paths = env_paths.inject([]) do |result, path|
-        result << { :environments => [@organization.library] + path }
+        result << { :environments => [@organization.library] + path.select(&:readable?) }
       end
       paths = [{ :environments => [@organization.library] }] if paths.empty?
 
