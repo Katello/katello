@@ -1,19 +1,19 @@
-/**
- * @ngdoc object
- * @name  Bastion.content-views.controller:ContentViewDockerRepositoriesListController
- *
- * @requires $scope
- * @requires Repository
- * @requires Nutupane
- * @requires CurrentOrganization
- * @requires ContentViewRepositoriesUtil
- *
- * @description
- *    Provides UI functionality list/remove docker repositories from a content view
- */
-angular.module('Bastion.content-views').controller('ContentViewDockerRepositoriesListController',
-    ['$scope', 'Repository', 'Nutupane', 'CurrentOrganization', 'ContentViewRepositoriesUtil',
-    function ($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
+(function () {
+
+    /**
+     * @ngdoc object
+     * @name  Bastion.content-views.controller:ContentViewDockerRepositoriesListController
+     *
+     * @requires $scope
+     * @requires Repository
+     * @requires Nutupane
+     * @requires CurrentOrganization
+     * @requires ContentViewRepositoriesUtil
+     *
+     * @description
+     *    Provides UI functionality list/remove docker repositories from a content view
+     */
+    function ContentViewDockerRepositoriesListController($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
         var nutupane;
 
         ContentViewRepositoriesUtil($scope);
@@ -22,16 +22,25 @@ angular.module('Bastion.content-views').controller('ContentViewDockerRepositorie
             'organization_id': CurrentOrganization,
             'content_view_id': $scope.$stateParams.contentViewId,
             'content_type': 'docker'
-
         },
         'queryUnpaged');
 
         nutupane.masterOnly = true;
+        nutupane.load();
 
         $scope.table = nutupane.table;
 
         $scope.removeRepositories = function () {
             $scope.removeSelectedRepositoriesFromContentView(nutupane, $scope.contentView);
         };
-    }]
-);
+    }
+
+    angular
+        .module('Bastion.content-views')
+        .controller('ContentViewDockerRepositoriesListController', ContentViewDockerRepositoriesListController);
+
+    ContentViewDockerRepositoriesListController.$inject = [
+        '$scope', 'Repository', 'Nutupane', 'CurrentOrganization', 'ContentViewRepositoriesUtil'
+    ];
+
+})();
