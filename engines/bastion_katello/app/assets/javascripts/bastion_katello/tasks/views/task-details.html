@@ -1,70 +1,57 @@
-<a data-block="back-button" href="" ng-click="transitionBack()">
-  <i class="fa fa-double-angle-left"></i>
-  {{ "Back" | translate }}
-</a>
+<h4 translate>Task Details</h4>
 
-<h3 translate>Task Details</h3>
+<dl class="dl-horizontal dl-horizontal-left">
+  <dt translate>Action Type</dt>
+  <dd>{{ task.humanized.action }}</dd>
 
-<div class="nutupane-sub-section">
-  <div class="details">
-    <section>
-      <div class="detail">
-        <span class="info-label" translate>Action Type</span>
-        <span class="info-value">{{ task.humanized.action }}</span>
+  <dt translate>User</dt>
+  <dd>{{ task.username }}</dd>
+
+  <dt translate>Started At</dt>
+  <dd>{{ task.started_at | date:"short"  }}</dd>
+
+  <dt translate>Finished At</dt>
+  <dd>{{ task.ended_at | date:"short"  }}</dd>
+
+  <dt translate>Parameters</dt>
+  <dd ng-switch="isArray(task.humanized.input)">
+    <span ng-switch-when="true">
+      <span ng-repeat="inputPart in task.humanized.input">
+        <span task-input-part  data="inputPart"></span>
+        <span ng-show="!$last">; </span>
+      </span>
+    </span>
+    <span ng-switch-default>{{task.humanized.input}}</span>
+  </dd>
+
+  <dt translate>State</dt>
+  <dd>{{ task.state }}</dd>
+
+  <dt translate>Result</dt>
+  <dd>
+    <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
+    {{ task.result }}
+
+    <div class="row">
+      <div class="col-sm-8">
+        <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
+          <span uib-progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
+        </div>
       </div>
+    </div>
+  </dd>
 
-      <div class="detail">
-        <span class="info-label" translate>User</span>
-        <span class="info-value">{{ task.username }}</span>
+  <dt ng-show="task.humanized.output.length > 0" translate>Details</dt>
+  <dd ng-show="task.humanized.output.length > 0">
+    <div class="row">
+      <div class="col-sm-8">
+        <pre>{{ task.humanized.output }}</pre>
       </div>
+    </div>
+  </dd>
+</dl>
 
-      <div class="detail">
-        <span class="info-label" translate>Started At</span>
-        <span class="info-value">{{ task.started_at | date:"short"  }}</span>
-      </div>
+ <a href="/foreman_tasks/tasks/{{task.id}}">
+   {{ "More Details" | translate }}
+ </a>
 
-      <div class="detail">
-        <span class="info-label" translate>Finished At</span>
-        <span class="info-value">{{ task.ended_at | date:"short"  }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Parameters</span>
-        <span class="info-value" ng-switch="isArray(task.humanized.input)">
-          <span ng-switch-when="true">
-            <span ng-repeat="inputPart in task.humanized.input">
-              <span task-input-part  data="inputPart"></span>
-              <span ng-show="!$last">; </span>
-            </span>
-          </span>
-          <span ng-switch-default>{{task.humanized.input}}</span>
-        </span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>State</span>
-        <span class="info-value">{{ task.state }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Result</span>
-        <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
-        <span class="info-value">{{ task.result }}</span>
-      </div>
-
-       <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
-         <span uib-progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
-       </div>
-
-       <div class="detail" ng-show="task.humanized.output.length > 0">
-         <span class="info-label" translate>Details</span>
-         <pre>{{ task.humanized.output }}</pre>
-       </div>
-
-       <a href="/foreman_tasks/tasks/{{task.id}}">
-         {{ "More Details" | translate }}
-       </a>
-
-    </section>
-  </div>
-</div>
