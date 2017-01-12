@@ -21,17 +21,17 @@ describe('Factory: ProductBulkAction', function() {
     });
 
     it('provides a way to remove products', function() {
-        $httpBackend.expect('PUT', '/katello/api/products/bulk/destroy', productParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/v2/products/bulk/destroy', productParams).respond();
         ProductBulkAction.removeProducts(productParams);
     });
 
     it('provides a way to sync products', function() {
-        $httpBackend.expect('PUT', '/katello/api/products/bulk/sync', productParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/v2/products/bulk/sync', productParams).respond();
         ProductBulkAction.syncProducts(productParams);
     });
 
     it('provides a way to update product sync plans', function() {
-        $httpBackend.expect('PUT', '/katello/api/products/bulk/sync_plan', productParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/v2/products/bulk/sync_plan', productParams).respond();
         ProductBulkAction.updateProductSyncPlan(productParams);
     });
 });
