@@ -25,7 +25,7 @@
         <table class="table table-bordered info-blocks">
           <tbody>
             <tr>
-              <td class="info-block-head"><a ui-sref="environments.environment.details({environmentId: library.id})" translate>Library</a></td>
+              <td class="info-block-head"><a ui-sref="environment.details({environmentId: library.id})" translate>Library</a></td>
               <td class="info-block" translate>Content Views <div>{{ library.counts.content_views || 0 }}</div></td>
               <td class="info-block" translate>Products <div>{{ library.counts.products || 0 }}</div></td>
               <td class="info-block" translate>Yum Repositories <div>{{ library.counts.yum_repositories || 0 }}</div></td>
@@ -54,7 +54,7 @@
             <tr>
               <th></th>
               <th ng-repeat="environment in path.environments">
-                <a ui-sref="environments.environment.details({environmentId: environment.id})">
+                <a ui-sref="environment.details({environmentId: environment.id})">
                   {{ environment.name }}
                 </a>
               </th>

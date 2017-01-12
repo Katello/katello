@@ -1,9 +1,5 @@
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <div data-block="selection-summary"></div>
-
-  <span class="input-group-addon" data-block="search-filter">
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="search-filter">
     <select ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
   </span>
 
@@ -24,11 +20,10 @@
     </span>
 
     <tbody>
-      <tr bst-table-row ng-repeat="repository in detailsTable.rows">
+      <tr bst-table-row ng-repeat="repository in table.rows">
         <td bst-table-cell>{{ repository.name }}</td>
         <td bst-table-cell>{{ repository.product.name }}</td>
       </tr>
     </tbody>
   </table>
-
 </div>

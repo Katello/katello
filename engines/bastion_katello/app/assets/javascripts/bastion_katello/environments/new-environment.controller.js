@@ -11,7 +11,7 @@
     function NewEnvironmentController($scope, Environment, FormUtils) {
 
         function success() {
-            $scope.transitionTo('environments.index');
+            $scope.transitionTo('environments');
         }
 
         function error(response) {

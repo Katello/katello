@@ -49,7 +49,7 @@
 
             function success() {
                 $scope.successMessages.push(translate('Remove Successful.'));
-                $scope.transitionTo('environments.index');
+                $scope.transitionTo('environments');
             }
 
             function error(response) {

@@ -1,53 +1,33 @@
-<div data-extend-template="layouts/panel.html">
-  <section data-block="panel" class="details-page">
-    <div ng-show="panel.error" bst-alerts error-messages="errorMessages"></div>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <header data-block="header">
+    {{ environment.name }}
+  </header>
 
-    <div ng-hide="panel.error">
-      <ol class="breadcrumb">
-        <li>
-          <a ui-sref="environments.index" translate>Environments List</a>
-        </li>
+  <div data-block="item-actions">
+    <button ng-show="!environment.library && !environment.successor"
+            ng-click="remove(environment)"
+            class="btn btn-default fr">
+      <span translate>Remove Environment</span>
+    </button>
+  </div>
 
-        <li class="active">
-          <a translate>
-            {{ environment.name }} Environment
-          </a>
-        </li>
-      </ol>
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('environment.details')}">
+        <a ui-sref="environment.details({environmentId: environment.id})">
+          <span translate>Details</span>
+        </a>
+      </li>
 
-      <div class="row">
-        <h1 class="col-sm-12">
-          <span translate>Environment: {{ environment.name }}</span>
-          <button ng-show="!environment.library && !environment.successor"
-                  ng-click="remove(environment)"
-                  class="btn btn-default fr">
-            <i class="fa fa-trash-o inline-icon"></i>
-            Remove Environment
-          </button>
-        </h1>
-      </div>
+      <li ng-repeat="type in contentTypes" ng-class="{active: isState('environment.' + type.state)}">
+        <a ng-href="{{ $state.href('environment.' + type.state, {environmentId: environment.id}) }}">
+          <span translate>{{ type.display }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
-      <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-
-      <nav>
-        <ul class="nav nav-tabs">
-
-          <li ng-repeat="type in contentTypes" ng-class="{active: isState('environments.environment.' + type.state)}">
-            <a ng-href="{{ $state.href('environments.environment.' + type.state, {environmentId: environment.id}) }}">
-              <span translate>{{ type.display }}</span>
-            </a>
-          </li>
-
-          <li ng-class="{active: isState('environments.environment.details')}">
-            <a ui-sref="environments.environment.details({environmentId: environment.id})">
-              <span translate>Details</span>
-            </a>
-          </li>
-
-        </ul>
-      </nav>
-
-      <div ui-view></div>
-    </div>
+  <section data-block="content">
+    <div ui-view></div>
   </section>
 </div>
