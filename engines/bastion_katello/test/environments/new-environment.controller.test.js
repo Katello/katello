@@ -45,7 +45,7 @@ describe('Controller: NewEnvironmentController', function() {
 
         expect(environment.$save).toHaveBeenCalled();
         expect(environment['prior_id']).toBe(1);
-        expect($scope.transitionTo).toHaveBeenCalledWith('environments.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('environments');
     });
 
     it('should fetch a label whenever the name changes', function() {

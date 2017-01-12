@@ -45,7 +45,7 @@ describe('Controller: EnvironmentContentController', function() {
     }));
 
     it("puts a table object on the scope", function() {
-        expect($scope.detailsTable).toBeDefined();
+        expect($scope.table).toBeDefined();
     });
 
     it("puts a nutupane object on the scope from the Content Service", function() {

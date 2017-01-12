@@ -73,7 +73,7 @@
         nutupane.masterOnly = true;
 
         $scope.nutupane = nutupane;
-        $scope.detailsTable = nutupane.table;
+        $scope.table = nutupane.table;
 
         $scope.contentView = {id: 'all', name: translate('All Content Views')};
 

@@ -1,8 +1,4 @@
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <div data-block="selection-summary"></div>
-
+<div data-extend-template="layouts/partials/table.html">
   <span data-block="no-rows-message" translate>
     There are no Content Views that match the criteria.
   </span>
@@ -10,7 +6,6 @@
   <span data-block="no-search-results-message" translate>
     Your search returned zero Content Views.
   </span>
-
 
   <table data-block="table" class="table table-striped table-bordered">
     <thead>
@@ -23,7 +18,7 @@
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="contentView in detailsTable.rows">
+      <tr bst-table-row ng-repeat="contentView in table.rows">
         <td bst-table-cell>
           <a ui-sref="content-view.versions({contentViewId: contentView.id})">
             {{ contentView.name }}
@@ -38,5 +33,4 @@
       </tr>
     </tbody>
   </table>
-
 </div>

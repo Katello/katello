@@ -1,13 +1,7 @@
-<div data-extend-template="layouts/details-nutupane.html">
-
-  <div data-block="header"></div>
-  <div data-block="selection-summary"></div>
-
-  <div class="well" data-block="filters">
-    <div>
-      <select ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
-      <select ng-model="repository" ng-change="repositorySelected(repository)" ng-options="repository.name for (id, repository) in repositories"></select>
-    </div>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="filters">
+    <select ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
+    <select ng-model="repository" ng-change="repositorySelected(repository)" ng-options="repository.name for (id, repository) in repositories"></select>
   </div>
 
   <span data-block="no-rows-message" translate>
@@ -28,12 +22,11 @@
     </thead>
 
     <tbody>
-      <tr bst-table-row ng-repeat="dockerTag in detailsTable.rows">
+      <tr bst-table-row ng-repeat="dockerTag in table.rows">
         <td bst-table-cell>{{ dockerTag.name }}</td>
         <td bst-table-cell>{{ dockerTag.product.name }}</td>
         <td bst-table-cell>{{ dockerTag.repository.name }}</td>
       </tr>
     </tbody>
   </table>
-
 </div>

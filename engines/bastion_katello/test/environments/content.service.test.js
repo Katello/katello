@@ -6,7 +6,7 @@ describe('Service: ContentService', function() {
     beforeEach(inject(function ($injector) {
         var $state = $injector.get('$state');
 
-        $state.current = {name: 'environments.environment.packages'};
+        $state.current = {name: 'environment.packages'};
         Package = $injector.get('Package');
         ContentService = $injector.get('ContentService');
     }));

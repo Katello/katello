@@ -31,7 +31,7 @@
         <tr bst-table-row
             ng-repeat="tag in table.rows | filter:dockerTagFilter">
           <td bst-table-cell>
-            <a ui-sref="environments.environment.details({environmentId: tag.environment.id})">
+            <a ui-sref="environment.details({environmentId: tag.environment.id})">
               {{ tag.environment.name }}
             </a>
           </td>
