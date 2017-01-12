@@ -138,6 +138,12 @@ module Katello
       app.routes_reloader.paths.unshift("#{Katello::Engine.root}/config/routes/overrides.rb")
     end
 
+    initializer "katello.add_rabl_view_path" do
+      Rabl.configure do |config|
+        config.view_paths << Katello::Engine.root.join('app', 'views')
+      end
+    end
+
     initializer "katello.helpers" do |_app|
       ActionView::Base.send :include, Katello::TaxonomyHelper
       ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
