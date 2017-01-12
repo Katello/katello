@@ -4,7 +4,7 @@
   <h3 translate>File Repositories</h3>
 </header>
 
-<nav>
+<nav data-block="navigation">
   <ul class="nav nav-tabs" ng-show="permitted('edit_content_views', contentView)">
     <li ng-class="{active: isState('content-view.repositories.file.list')}">
       <a ui-sref="content-view.repositories.file.list">
@@ -40,10 +40,10 @@
 
   <span data-block="no-rows-message">
     <span ng-show="isState('content-view.repositories.file.list')" translate>
-      There are currently no Repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+      There are currently no File Repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
     </span>
     <span ng-show="isState('content-view.repositories.file.available')">
-      <span translate>There are currently no Repositories to add to this Content View,</span>
+      <span translate>There are currently no File Repositories to add to this Content View,</span>
       <a ui-sref="products" translate>add some repositories.</a>
     </span>
   </span>
