@@ -6,7 +6,7 @@
     <h2 translate>Products</h2>
   </div>
 
-  <div data-block="list-actions" ng-controller="ProductsBulkActionController">
+  <div data-block="list-actions">
     <button class="btn btn-primary"
             ui-sref="products.new.form"
             bst-feature-flag="custom_products"
@@ -21,57 +21,50 @@
       <span translate>Repo Discovery</span>
     </button>
 
-    <button class="btn btn-default"
-            ng-show="permitted('sync_products')"
-            ng-disabled="table.numSelected == 0"
-            ng-click="syncProducts()">
-      <span translate>Sync</span>
-    </button>
-
     <div class="btn-group" uib-dropdown keyboard-nav>
-      <button uib-dropdown-toggle class="btn btn-default"
-              ng-show="permitted('edit_products')"
-              ng-disabled="table.numSelected == 0">
-        <span translate>Change Sync Plan</span>
+      <button class="btn btn-default"
+              ng-show="permitted('sync_products')"
+              ng-disabled="table.numSelected == 0"
+              ng-click="syncProducts()">
+        <span translate>Sync Selected</span>
+      </button>
+
+      <button type="button" class="btn btn-default" uib-dropdown-toggle
+              ng-disabled="table.numSelected === 0"
+              ng-show="permitted('sync_products') || permitted('destroy_products')">
         <span class="caret"></span>
       </button>
 
-      <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-        <li role="menuitem" ng-repeat="syncPlan in syncPlans.results" ng-show="syncPlans.results.length > 0">
-          <a ng-click="updateSyncPlan(syncPlan)">{{ syncPlan.name }}</a>
+      <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+        <li role="menuitem">
+          <a ng-click="syncProducts()" ng-show="permitted('sync_products')" translate>Sync Selected</a>
         </li>
 
-        <li role="menuitem" ng-hide="syncPlans.results.length > 0">
-          <a ui-sref="sync-plans.new" translate>Create Sync Plan</a>
+        <li role="menuitem">
+          <a ng-click="openSyncPlanModal()" ng-show="permitted('edit_products')" translate>Manage Sync Plan</a>
         </li>
 
         <li class="divider"></li>
+
         <li role="menuitem">
-          <a ng-click="removeSyncPlan()" translate>Remove Sync Plan</a>
+          <a ng-show="permitted('destroy_products')" ng-click="openModal()" translate>Remove</a>
+
+          <div bst-modal="removeProducts()" model="table">
+            <div data-block="modal-header"
+                 translate
+                 translate-n="table.getSelected().length"
+                 translate-plural="Remove {{ table.getSelected().length }} products?">
+              Remove product?
+            </div>
+            <div data-block="modal-body"
+                 translate
+                 translate-n="table.getSelected().length"
+                 translate-plural="Are you sure you want to remove {{ table.getSelected().length }} products selected?">
+              Are you sure you want to remove {{ table.getSelected()[0].name }}?
+            </div>
+          </div>
         </li>
       </ul>
-    </div>
-
-    <button class="btn btn-default"
-            ng-show="permitted('destroy_products')"
-            ng-disabled="table.numSelected == 0"
-            ng-click="openModal()">
-      <span translate>Remove</span>
-    </button>
-
-    <div bst-modal="removeProducts()" model="table">
-      <div data-block="modal-header"
-           translate
-           translate-n="table.getSelected().length"
-           translate-plural="Remove {{ table.getSelected().length }} products?">
-        Remove product?
-      </div>
-      <div data-block="modal-body"
-           translate
-           translate-n="table.getSelected().length"
-           translate-plural="Are you sure you want to remove {{ table.getSelected().length }} products selected?">
-        Are you sure you want to remove {{ table.getSelected()[0].name }}?
-      </div>
     </div>
   </div>
 

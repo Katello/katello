@@ -1,10 +1,10 @@
-describe('Controller: ProductsBulkActionController', function() {
-    var $scope, $q, translate, ProductBulkAction, CurrentOrganization, GlobalNotification, selected;
+describe('Controller: ProductsBulkSyncPlanModalController', function() {
+    var $scope, $q, $uibModalInstance, translate, ProductBulkAction, CurrentOrganization, GlobalNotification, bulkParams;
 
     beforeEach(module('Bastion.products'));
 
     beforeEach(function() {
-        selected = [{id: 1}, {id: 2}, {id: 3}];
+        bulkParams = {ids: [1, 2, 3]};
         ProductBulkAction = {
             removeProducts: function() {
                 var deferred = $q.defer();
@@ -19,6 +19,12 @@ describe('Controller: ProductsBulkActionController', function() {
                 return {$promise: deferred.promise};
             }
         };
+
+        $uibModalInstance = {
+            close: function () {},
+            dismiss: function () {}
+        };
+
         translate = function() {};
         CurrentOrganization = 'foo';
     });
@@ -32,8 +38,10 @@ describe('Controller: ProductsBulkActionController', function() {
             getSelected: function () { return selected; }
         };
 
-        $controller('ProductsBulkActionController', {
+        $controller('ProductsBulkSyncPlanModalController', {
             $scope: $scope,
+            $uibModalInstance: $uibModalInstance,
+            bulkParams: bulkParams,
             translate: translate,
             ProductBulkAction: ProductBulkAction,
             CurrentOrganization: CurrentOrganization,
@@ -41,29 +49,13 @@ describe('Controller: ProductsBulkActionController', function() {
         });
     }));
 
-    it("can remove multiple products", function() {
-        spyOn(ProductBulkAction, 'removeProducts').and.callThrough();
-
-        $scope.removeProducts();
-
-        expect(ProductBulkAction.removeProducts).toHaveBeenCalledWith(_.extend({ids: [1, 2, 3]}, {'organization_id': 'foo'}),
-            jasmine.any(Function), jasmine.any(Function));
-    });
-
-    it("can sync products", function() {
-        spyOn(ProductBulkAction, 'syncProducts').and.callThrough();
-        $scope.syncProducts();
-
-        expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3], 'organization_id': 'foo'},
-            jasmine.any(Function), jasmine.any(Function));
-    });
-
     it("allows the updating of the sync plan", function() {
         spyOn(ProductBulkAction, 'updateProductSyncPlan').and.callThrough();
 
-        $scope.updateSyncPlan({id: 10});
+        $scope.selectedSyncPlan = {id: 10};
+        $scope.updateSyncPlan();
 
-        expect(ProductBulkAction.updateProductSyncPlan).toHaveBeenCalledWith({ids: [1, 2, 3], 'organization_id': 'foo', 'plan_id': 10},
+        expect(ProductBulkAction.updateProductSyncPlan).toHaveBeenCalledWith({ids: [1, 2, 3], 'plan_id': 10},
             jasmine.any(Function), jasmine.any(Function));
     });
 
@@ -72,7 +64,19 @@ describe('Controller: ProductsBulkActionController', function() {
 
         $scope.removeSyncPlan();
 
-        expect(ProductBulkAction.updateProductSyncPlan).toHaveBeenCalledWith({ids: [1, 2, 3], 'organization_id': 'foo', 'plan_id': null},
+        expect(ProductBulkAction.updateProductSyncPlan).toHaveBeenCalledWith({ids: [1, 2, 3], 'plan_id': null},
             jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it("provides a function for closing the modal", function () {
+        spyOn($uibModalInstance, 'close');
+        $scope.ok();
+        expect($uibModalInstance.close).toHaveBeenCalled();
+    });
+
+    it("provides a function for cancelling the modal", function () {
+        spyOn($uibModalInstance, 'dismiss');
+        $scope.cancel();
+        expect($uibModalInstance.dismiss).toHaveBeenCalled();
     });
 });

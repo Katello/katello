@@ -1,0 +1,87 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header">Sync Plan Management</h4>
+
+  <div data-block="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="syncPlan.action == 'add'">
+      <span translate>
+        Are you sure you want to add the sync plan to the selected products(s)?
+      </span>
+      <div>
+        <button class="btn btn-default" ng-click="updateSyncPlan()" translate>Yes</button>
+        <button class="btn btn-default" ng-click="syncPlan.action = null; syncPlan.working = false" translate>No</button>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="syncPlan.action == 'remove'">
+      <span translate>
+        Are you sure you want to remove the sync plan from the selected product(s)?
+      </span>
+      <div>
+        <button class="btn btn-default" ng-click="removeSyncPlan()" translate>Yes</button>
+        <button class="btn btn-default" ng-click="syncPlan.action = null; syncPlan.working = false" translate>No</button>
+      </div>
+    </div>
+
+    <div data-extend-template="layouts/partials/table.html">
+      <div data-block="list-actions">
+        <button class="btn btn-default"
+                ng-hide="denied('edit_hosts')"
+                ng-disabled="!selectedSyncPlan"
+                ng-click="syncPlan.action = 'add'; syncPlan.working = true">
+          <span translate>Update Sync Plan</span>
+        </button>
+
+        <button class="btn btn-default"
+                ng-hide="denied('edit_hosts')"
+                ng-click="syncPlan.action = 'remove'; syncPlan.working = true">
+          <span translate>Remove Sync Plan</span>
+        </button>
+      </div>
+
+      <span data-block="no-rows-message" translate>
+        There are no Sync Plans available. You can create new Sync Plans after selecting 'Sync Plans' under 'Hosts' in main menu.
+      </span>
+
+      <span data-block="no-search-results-message" translate>
+        Your search returned zero Sync Plans.
+      </span>
+
+      <div data-block="table">
+        <table class="table table-striped table-bordered" ng-class="{'table-mask': state.working}">
+          <thead>
+            <tr bst-table-head>
+              <th bst-table-column="name"><span translate>Name</span></th>
+              <th bst-table-column="syncDate"><span translate>Original Sync Date</span></th>
+              <th bst-table-column="enabled"><span translate>Sync Enabled</span></th>
+              <th bst-table-column="interval"><span translate>Interval</span></th>
+              <th bst-table-column="nextSync"><span translate>Next Sync</span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr bst-table-row ng-repeat="syncPlan in table.rows" class="clickable-row"
+                ng-click="selectSyncPlan(syncPlan)" ng-class="{'selected-row': syncPlan === selectedSyncPlan }">
+              <td bst-table-cell>{{ syncPlan.name }}</td>
+              <td bst-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+              <td bst-table-cell>{{ syncPlan.enabled }}</td>
+              <td bst-table-cell>{{ syncPlan.interval | translate | capitalize }}</td>
+              <td bst-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-block="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()" translate>
+      Done
+    </button>
+  </div>
+</div>
