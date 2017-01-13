@@ -792,16 +792,25 @@ module Katello
     end
 
     def test_import_upload_ids
-      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1'
+      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', :unit_key => {}, :generate_metadata => false
 
-      put :import_uploads, :id => @repository.id, :upload_ids => [1]
+      put :import_uploads, :id => @repository.id, :upload_ids => [1], :publish_repository => 'false'
+
+      assert_response :success
+    end
+
+    def test_two_import_upload_ids
+      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', :unit_key => {}, :generate_metadata => false
+      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '2', :unit_key => {}, :generate_metadata => true
+
+      put :import_uploads, :id => @repository.id, :upload_ids => [1, 2]
 
       assert_response :success
     end
 
     def test_import_uploads
       unit_key = {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}
-      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', unit_key
+      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', :unit_key => unit_key, :generate_metadata => true
 
       put :import_uploads, :id => @repository.id, :uploads => [{'id' => 1}.merge(unit_key)]
 

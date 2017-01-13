@@ -324,36 +324,33 @@ module Katello
       param 'size', String
       param 'checksum', String
       param 'name', String
+      param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     end
     def import_uploads
+      generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
       if params['upload_ids'].empty? && params['uploads'].empty?
         fail HttpErrors::BadRequest, _('No upload param specified. Either uploads or upload_ids (deprecated) is required.')
       end
 
+      uploads = params['uploads'] || []
+
       if params.key?(:upload_ids)
         ::Foreman::Deprecation.api_deprecation_warning("The parameter upload_ids will be removed in Katello 3.3. Please update to use the uploads parameter.")
-
-        params[:upload_ids].each do |upload_id|
-          begin
-            sync_task(::Actions::Katello::Repository::ImportUpload, @repository, upload_id)
-          rescue => e
-            raise HttpErrors::BadRequest, e.message
-          end
-        end
+        params[:upload_ids].each { |upload_id| uploads << {'id' => upload_id} }
       end
 
-      if params.key?(:uploads)
-        params[:uploads].each do |upload|
-          begin
-            sync_task(
-              ::Actions::Katello::Repository::ImportUpload,
-              @repository,
-              upload['id'],
-              upload.except('id')
-            )
-          rescue => e
-            raise HttpErrors::BadRequest, e.message
-          end
+      uploads.each do |upload|
+        last_item = uploads.last == upload
+        begin
+          sync_task(
+            ::Actions::Katello::Repository::ImportUpload,
+            @repository,
+            upload['id'],
+            :unit_key => upload.except('id'),
+            :generate_metadata => last_item && generate_metadata
+          )
+        rescue => e
+          raise HttpErrors::BadRequest, e.message
         end
       end
 
