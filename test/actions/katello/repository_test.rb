@@ -227,6 +227,11 @@ module ::Actions::Katello::Repository
       plan_action action, puppet_repository
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
+
+    it "does not plan metadata generate for puppet repository" do
+      plan_action action, puppet_repository, :generate_metadata => false
+      refute_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
+    end
   end
 
   class SyncTest < TestBase
