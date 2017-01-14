@@ -26,6 +26,8 @@ module Actions
                                         checksum_type: repository.checksum_type,
                                         path: path,
                                         download_policy: repository.download_policy,
+                                        ostree_upstream_sync_depth: repository.compute_ostree_upstream_sync_depth,
+                                        ostree_publish_depth: repository.compute_ostree_upstream_sync_depth,
                                         with_importer: true,
                                         mirror_on_sync: repository.mirror_on_sync?,
                                         ssl_validation: certs[:ssl_validation],

@@ -429,6 +429,7 @@ ostree:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   unprotected:           <%= true %>
+  ostree_upstream_sync_policy: latest
 
 ostree_view1:
   name:                 ostree

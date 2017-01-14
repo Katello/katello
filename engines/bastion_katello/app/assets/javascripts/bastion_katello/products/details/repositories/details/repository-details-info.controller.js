@@ -8,13 +8,14 @@
  * @requires GPGKey
  * @requires CurrentOrganization
  * @requires DownloadPolicy
+ * @requires OstreeUpstreamSyncPolicy
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy',
-    function ($scope, $q, translate, GPGKey, CurrentOrganization, DownloadPolicy) {
+    ['$scope', '$q', 'translate', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
+    function ($scope, $q, translate, GPGKey, CurrentOrganization, DownloadPolicy, OstreeUpstreamSyncPolicy) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.uploadSuccessMessages = [];
@@ -100,10 +101,18 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return checksum;
         };
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
+        $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
 
         $scope.downloadPolicyDisplay = function (downloadPolicy) {
             return DownloadPolicy.downloadPolicyName(downloadPolicy);
         };
 
+        $scope.ostreeUpstreamSyncPolicyDisplay = function (repository) {
+            var policy = repository["ostree_upstream_sync_policy"];
+            if ( policy === "custom") {
+                return OstreeUpstreamSyncPolicy.syncPolicyName(policy, repository["ostree_upstream_sync_depth"]);
+            }
+            return OstreeUpstreamSyncPolicy.syncPolicyName(policy);
+        };
     }]
 );

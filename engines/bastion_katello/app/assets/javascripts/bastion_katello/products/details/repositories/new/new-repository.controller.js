@@ -12,13 +12,14 @@
  * @requires ApiErrorHandler
  * @requires BastionConfig
  * @requires DownloadPolicy
+ * @requires OstreeUpstreamSyncPolicy
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig', 'DownloadPolicy',
-    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig, DownloadPolicy) {
+    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
+    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig, DownloadPolicy, OstreeUpstreamSyncPolicy) {
 
         function success() {
             GlobalNotification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -59,7 +60,8 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
             'checksum_type': null, 'mirror_on_sync': true, 'verify_ssl_on_sync': true,
-            'download_policy': BastionConfig.defaultDownloadPolicy});
+            'download_policy': BastionConfig.defaultDownloadPolicy,
+            'ostree_upstream_sync_policy': 'latest'});
 
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
             $scope.page.loading = false;
@@ -73,6 +75,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         });
 
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
+        $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
 
         $scope.$watch('repository.name', function () {
             if ($scope.repositoryForm && $scope.repositoryForm.name) {

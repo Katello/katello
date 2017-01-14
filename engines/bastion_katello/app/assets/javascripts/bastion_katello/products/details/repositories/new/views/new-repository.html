@@ -47,6 +47,26 @@
 
       </div>
 
+      <div bst-form-group label="{{ 'Upstream Sync Policy' | translate }}"  ng-show="repository.content_type === 'ostree'">
+        <select required
+                id="ostree_upstream_sync_policy"
+                name="ostree_upstream_sync_policy"
+                ng-model="repository.ostree_upstream_sync_policy"
+                ng-options="id as name for (id, name) in ostreeUpstreamSyncPolicies">
+        </select>
+
+        <input id="ostree_upstream_sync_depth"
+               name="ostree_upstream_sync_depth"
+               ng-model="repository.ostree_upstream_sync_depth"
+               type="number"
+               ng-disabled="repository.ostree_upstream_sync_policy !== 'custom'"/>
+        <h6 translate>
+          Choose one of the policy selections for downloading ostree content from upstream url during synchronization. Choose "Latest" for downloading the latest version of the upstream branch. Choose "All History" to download all available versions of the upstream repository (this may take a large amount of space). Choose "Custom Depth" and provide an number to indicate the number of prior versions of the upstream branch to download.
+        </h6>
+
+      </div>
+
+
       <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
         <input id="docker_upstream_name"
                name="docker_upstream_name"

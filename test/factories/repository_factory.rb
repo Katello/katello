@@ -42,6 +42,12 @@ FactoryGirl.define do
       download_policy ""
     end
 
+    trait :ostree do
+      content_type "ostree"
+      download_policy ""
+      ostree_upstream_sync_policy "latest"
+    end
+
     factory :docker_repository, traits: [:docker]
   end
 end

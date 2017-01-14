@@ -35,6 +35,8 @@ module Katello
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA.")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
+      param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories.")
+      param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided.")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -151,6 +153,10 @@ module Katello
       repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       repository.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       repository.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
+      if repository.ostree?
+        repository.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
+        repository.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
+      end
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
@@ -246,6 +252,8 @@ module Katello
     param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA.")
     param :upstream_username, String, :desc => N_("Username of the upstream repository user for authentication")
     param :upstream_password, String, :desc => N_("Password of the upstream repository user for authentication")
+    param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories.")
+    param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided.")
     def update
       repo_params = repository_params
       sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
@@ -410,7 +418,9 @@ module Katello
     end
 
     def repository_params
-      keys = [:download_policy, :mirror_on_sync, :verify_ssl_on_sync, :upstream_password, :upstream_username]
+      keys = [:download_policy, :mirror_on_sync, :verify_ssl_on_sync, :upstream_password, :upstream_username,
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy
+             ]
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
