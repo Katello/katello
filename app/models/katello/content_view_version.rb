@@ -45,7 +45,7 @@ module Katello
       joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => organization_id)
     end
 
-    scoped_search :on => :content_view_id, :only_explicit => true
+    scoped_search :on => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :major, :rename => :version, :complete_value => true, :ext_method => :find_by_version
     scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true
 
