@@ -57,6 +57,14 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             $scope.unregisterSearch();
         });
 
+        $scope.isTaskPending = function () {
+            var pending = false;
+            if (($scope.task && $scope.task.pending) || ($scope.deleteTask && $scope.deleteTask.pending)) {
+                pending = true;
+            }
+            return pending;
+        };
+
         $scope.unregisterSearch = function () {
             Task.unregisterSearch($scope.searchId);
             $scope.searchId = undefined;
