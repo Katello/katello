@@ -3,6 +3,7 @@ describe('Controller: NewRepositoryController', function() {
         FormUtils,
         GlobalNotification,
         DownloadPolicy,
+        OstreeUpstreamSyncPolicy,
         $httpBackend;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
@@ -16,6 +17,7 @@ describe('Controller: NewRepositoryController', function() {
             GPGKey = $injector.get('MockResource').$new();
 
         DownloadPolicy = $injector.get('DownloadPolicy');
+        OstreeUpstreamSyncPolicy = $injector.get('OstreeUpstreamSyncPolicy');
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
@@ -94,5 +96,9 @@ describe('Controller: NewRepositoryController', function() {
 
     it ('should set download policies', function() {
        expect($scope.downloadPolicies).toBe(DownloadPolicy.downloadPolicies);
+    });
+
+    it ('should set ostree upstream sync policies', function() {
+       expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
     });
 });

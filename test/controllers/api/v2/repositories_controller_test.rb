@@ -527,6 +527,9 @@ module Katello
     end
 
     def test_create_with_ostree
+      repository = katello_repositories(:ostree_rhel7)
+      sync_depth = '123'
+      sync_policy = "custom"
       product = mock
       product.expects(:add_repo).with(
         'Fedora_Repository',
@@ -537,19 +540,23 @@ module Katello
         nil,
         nil,
         nil
-      ).returns(@repository)
+      ).returns(repository)
 
       product.expects(:gpg_key).returns(nil)
       product.expects(:organization).returns(@organization)
       product.expects(:redhat?).returns(false)
+      repository.expects(:ostree_upstream_sync_policy=).with(sync_policy)
+      repository.expects(:ostree_upstream_sync_depth=).with(sync_depth)
 
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+      assert_sync_task(::Actions::Katello::Repository::Create, repository, false, true)
 
       Product.stubs(:find).returns(product)
       post :create, :name => 'Fedora Repository',
                     :product_id => @product.id,
                     :url => 'http://hub.registry.com',
-                    :content_type => 'ostree'
+                    :content_type => 'ostree',
+                    :ostree_upstream_sync_policy => sync_policy,
+                    :ostree_upstream_sync_depth => sync_depth
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -609,7 +616,7 @@ module Katello
     def test_update_with_upstream_name
       repo = katello_repositories(:busybox)
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
-        attributes[:docker_upstream_name] = "helloworld"
+        attributes[:docker_upstream_name].must_equal "helloworld"
       end
       put :update, :id => repo.id, :docker_upstream_name => "helloworld"
     end
@@ -621,6 +628,17 @@ module Katello
 
       assert_response 422
       assert_equal(expected_message, body['errors']['download_policy'][0])
+    end
+
+    def test_update_with_upstream_sync_policy
+      sync_depth = '100'
+      sync_policy = "custom"
+      repo = katello_repositories(:ostree)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:ostree_upstream_sync_policy].must_equal sync_policy
+        attributes[:ostree_upstream_sync_depth].must_equal sync_depth
+      end
+      put :update, :id => repo.id, :ostree_upstream_sync_depth => sync_depth, :ostree_upstream_sync_policy => sync_policy
     end
 
     def test_remove_content

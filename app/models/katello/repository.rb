@@ -9,6 +9,7 @@ module Katello
     validates_lengths_from_database :except => [:label]
     before_destroy :assert_deletable
     before_create :downcase_pulp_id
+    before_validation :update_ostree_upstream_sync_policy
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Content if (SETTINGS[:katello][:use_cp] && SETTINGS[:katello][:use_pulp])
@@ -28,6 +29,11 @@ module Katello
 
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
     SUBSCRIBABLE_TYPES = [YUM_TYPE, OSTREE_TYPE].freeze
+
+    OSTREE_UPSTREAM_SYNC_POLICY_LATEST = "latest".freeze
+    OSTREE_UPSTREAM_SYNC_POLICY_ALL = "all".freeze
+    OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM = "custom".freeze
+    OSTREE_UPSTREAM_SYNC_POLICIES = [OSTREE_UPSTREAM_SYNC_POLICY_LATEST, OSTREE_UPSTREAM_SYNC_POLICY_ALL, OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM].freeze
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
     belongs_to :product, :inverse_of => :repositories
@@ -88,6 +94,9 @@ module Katello
       :message => _("must be a valid docker name")
     }
 
+    validates :ostree_upstream_sync_policy, :inclusion => {:in => OSTREE_UPSTREAM_SYNC_POLICIES, :allow_blank => true}, :if => :ostree?
+    validates :ostree_upstream_sync_depth, :presence => true, :numericality => { :only_integer => true },
+      :if => proc { |r| r.ostree? && r.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM }
     #validates :content_id, :presence => true #add back after fixing add_repo orchestration
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -106,6 +115,7 @@ module Katello
       :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
     }, if: :yum?
     validate :ensure_no_download_policy, if: ->(repo) { !repo.yum? }
+    validate :ensure_no_ostree_upstream_sync_policy, if: ->(repo) { !repo.ostree? }
     validate :ensure_valid_docker_attributes, :if => :docker?
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_has_url_for_ostree, :if => :ostree?
@@ -521,6 +531,20 @@ module Katello
       self.ostree_branches.map(&:name)
     end
 
+    def compute_ostree_upstream_sync_depth
+      if ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM
+        ostree_upstream_sync_depth
+      elsif ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_ALL
+        -1
+      else
+        0
+      end
+    end
+
+    def ostree_capsule_sync_depth
+      -1
+    end
+
     def units_for_removal(ids)
       table_name = removable_unit_association.table_name
       is_integer = Integer(ids.first) rescue false #assume all ids are either integers or not
@@ -675,6 +699,24 @@ module Katello
       # destroy any orphan docker manifests
       manifests.each do |manifest|
         manifest.destroy if manifest.repositories.empty?
+      end
+    end
+
+    def update_ostree_upstream_sync_policy
+      return unless ostree?
+      if self.ostree_upstream_sync_policy.blank?
+        self.ostree_upstream_sync_policy = OSTREE_UPSTREAM_SYNC_POLICY_LATEST
+      end
+
+      if self.ostree_upstream_sync_policy_changed? &&
+        previous_changes[:ostree_upstream_sync_policy].present?
+        self.ostree_upstream_sync_depth = nil unless self.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM
+      end
+    end
+
+    def ensure_no_ostree_upstream_sync_policy
+      if !ostree? && ostree_upstream_sync_policy.present?
+        errors.add(:ostree_upstream_sync_policy, N_("cannot be set for non-ostree repositories."))
       end
     end
   end
