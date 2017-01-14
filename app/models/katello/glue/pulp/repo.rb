@@ -167,7 +167,7 @@ module Katello
           Runcible::Models::DockerImporter.new(importer_ssl_options(capsule).merge(options))
         when Repository::OSTREE_TYPE
           options = importer_ssl_options(capsule)
-
+          options[:depth] = capsule.default_capsule? ? compute_ostree_upstream_sync_depth : ostree_capsule_sync_depth
           options[:feed] = self.importer_feed_url(capsule)
           Runcible::Models::OstreeImporter.new(options)
         else
@@ -277,7 +277,9 @@ module Katello
         when Repository::OSTREE_TYPE
           options = { :id => self.pulp_id,
                       :auto_publish => true,
-                      :relative_path => relative_path }
+                      :relative_path => relative_path,
+                      :depth => self.ostree_publish_depth }
+
           dist = Runcible::Models::OstreeDistributor.new(options)
           distributors = [dist]
         else
