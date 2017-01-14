@@ -18,21 +18,21 @@ module Katello
     include Glue::Candlepin::CandlepinObject
 
     scoped_search :on => :cp_id, :complete_value => true, :rename => :id, :only_explicit => true
-    scoped_search :on => :quantity, :complete_value => true
+    scoped_search :on => :quantity, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :start_date, :complete_value => true, :rename => :starts
     scoped_search :on => :end_date, :complete_value => true, :rename => :expires
-    scoped_search :on => :ram, :complete_value => true
+    scoped_search :on => :ram, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :multi_entitlement, :complete_value => true
-    scoped_search :on => :consumed, :complete_value => true
-    scoped_search :on => :account_number, :complete_value => true, :rename => :account
-    scoped_search :on => :contract_number, :complete_value => true, :rename => :contract
+    scoped_search :on => :consumed, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :account_number, :complete_value => true, :rename => :account, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :contract_number, :complete_value => true, :rename => :contract, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :name, :relation => :subscription, :complete_value => true, :rename => :name
     scoped_search :on => :support_level, :relation => :subscription, :complete_value => true
-    scoped_search :on => :sockets, :relation => :subscription, :complete_value => true
-    scoped_search :on => :cores, :relation => :subscription, :complete_value => true
+    scoped_search :on => :sockets, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :cores, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :product_id, :relation => :subscription, :complete_value => true
-    scoped_search :on => :stacking_id, :relation => :subscription, :complete_value => true
-    scoped_search :on => :instance_multiplier, :relation => :subscription, :complete_value => true
+    scoped_search :on => :stacking_id, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :instance_multiplier, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER
 
     validates_lengths_from_database
 

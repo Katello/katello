@@ -49,10 +49,10 @@ module Katello
     scope :in_environment, ->(env) { where(:environment_id => env) }
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true
+    scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :rename => :environment, :on => :name, :relation => :environment, :complete_value => true
     scoped_search :rename => :content_view, :on => :name, :relation => :content_view, :complete_value => true
-    scoped_search :on => :content_view_id, :complete_value => true, :only_explicit => true
+    scoped_search :on => :content_view_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :description, :complete_value => true
 
     def environment_exists

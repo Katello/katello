@@ -126,7 +126,7 @@ module Katello
     scoped_search :on => :content_type, :complete_value => -> do
       Katello::RepositoryTypeManager.repository_types.keys.each_with_object({}) { |value, hash| hash[value.to_sym] = value }
     end
-    scoped_search :on => :content_view_id, :relation => :content_view_repositories
+    scoped_search :on => :content_view_id, :relation => :content_view_repositories, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :distribution_version, :complete_value => true
     scoped_search :on => :distribution_arch, :complete_value => true
     scoped_search :on => :distribution_family, :complete_value => true

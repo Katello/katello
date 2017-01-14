@@ -27,7 +27,8 @@ module Katello
         scoped_search :on => :registered_at, :relation => :subscription_facet, :rename => :registered_at, :only_explicit => true
         scoped_search :on => :uuid, :relation => :subscription_facet, :rename => :subscription_uuid
         scoped_search :relation => :activation_keys, :on => :name, :rename => :activation_key, :complete_value => true, :ext_method => :find_by_activation_key
-        scoped_search :relation => :activation_keys, :on => :id, :rename => :activation_key_id, :complete_value => true, :ext_method => :find_by_activation_key_id, :only_explicit => true
+        scoped_search :relation => :activation_keys, :on => :id, :rename => :activation_key_id, :complete_value => true, :ext_method => :find_by_activation_key_id,
+                      :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
       end
 
       def update_action
