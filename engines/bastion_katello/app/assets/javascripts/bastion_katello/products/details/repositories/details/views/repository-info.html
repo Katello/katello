@@ -70,7 +70,6 @@
             readonly="denied('edit_products', product)">
         </dd>
       </span>
-      
       <dt translate>Publish via HTTPS</dt>
       <dd translate>Yes</dd>
 
@@ -94,6 +93,23 @@
           </span>
         </p>
       </dd>
+      <span ng-if="repository.content_type == 'ostree'">
+        <dt translate>Upstream Sync Policy</dt>
+        <dd bst-edit-custom="repository.ostree_upstream_sync_policy"
+            readonly="denied('edit_products', product)"
+            on-save="save(repository)"
+            formatter="ostreeUpstreamSyncPolicyFilter"
+            formatter-options="repository"
+            >
+            <select ng-options="id as name for (id, name) in ostreeUpstreamSyncPolicies" ng-model="repository.ostree_upstream_sync_policy">
+            </select>
+            <input id="ostree_upstream_sync_depth"
+              name="ostree_upstream_sync_depth"
+              ng-model="repository.ostree_upstream_sync_depth"
+              type="number"
+              ng-disabled="repository.ostree_upstream_sync_policy !== 'custom'"/>
+        </dd>
+      </span>
 
       <span ng-if="repository.content_type === 'yum' && !product.redhat">
         <dt translate>GPG Key</dt>
@@ -104,7 +120,6 @@
             on-save="save(repository)">
         </dd>
       </span>
-
       <span ng-if="repository.content_type == 'yum'">
         <dt translate>Download Policy</dt>
         <dd bst-edit-select="downloadPolicyDisplay(repository.download_policy)"
@@ -161,7 +176,7 @@
           <th colspan="2" translate>Content Type</th>
         </tr>
         </thead>
-        
+
         <tbody>
         <tr ng-show="repository.content_type === 'yum'">
           <td translate>Packages</td>

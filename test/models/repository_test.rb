@@ -237,6 +237,61 @@ module Katello
       @repo.unprotected = true
       refute @repo.save
     end
+
+    def test_ostree_upstream_sync_policy
+      @repo.content_type = Repository::OSTREE_TYPE
+      @repo.url = "http://foo.com"
+      @repo.download_policy = nil
+
+      @repo.ostree_upstream_sync_policy = 'latest'
+      assert @repo.valid?
+      @repo.ostree_upstream_sync_policy = 'all'
+      assert @repo.valid?
+      @repo.ostree_upstream_sync_policy = 'boo'
+      refute @repo.valid?
+      assert @repo.errors.include?(:ostree_upstream_sync_policy)
+
+      @repo.ostree_upstream_sync_policy = 'custom'
+      refute @repo.valid?
+      assert @repo.errors.include?(:ostree_upstream_sync_depth)
+
+      @repo.ostree_upstream_sync_depth = 123
+      assert @repo.valid?
+
+      @repo.content_type = 'puppet'
+      refute @repo.valid?
+      assert @repo.errors.include?(:ostree_upstream_sync_policy)
+    end
+
+    def test_ostree_upstream_sync_policy_update
+      @repo.content_type = Repository::OSTREE_TYPE
+      @repo.url = "http://foo.com"
+      @repo.download_policy = nil
+      @repo.ostree_upstream_sync_policy = 'custom'
+      @repo.ostree_upstream_sync_depth = 123
+      assert @repo.save
+
+      @repo.ostree_upstream_sync_policy = "all"
+      assert @repo.save
+      assert_nil @repo.ostree_upstream_sync_depth
+    end
+
+    def test_compute_ostree_upstream_sync_depth
+      @repo.content_type = Repository::OSTREE_TYPE
+      @repo.url = "http://foo.com"
+      @repo.download_policy = nil
+
+      @repo.ostree_upstream_sync_policy = 'all'
+      assert_equal(-1, @repo.compute_ostree_upstream_sync_depth)
+
+      @repo.ostree_upstream_sync_policy = 'latest'
+      assert_equal 0, @repo.compute_ostree_upstream_sync_depth
+
+      sync_depth = 124
+      @repo.ostree_upstream_sync_policy = 'custom'
+      @repo.ostree_upstream_sync_depth = sync_depth
+      assert_equal sync_depth, @repo.compute_ostree_upstream_sync_depth
+    end
   end
 
   class RepositoryGeneratedIdsTest < RepositoryTestBase

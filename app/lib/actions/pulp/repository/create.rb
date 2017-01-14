@@ -23,6 +23,8 @@ module Actions
           param :ssl_validation
           param :upstream_username
           param :upstream_password
+          param :ostree_upstream_sync_depth
+          param :ostree_publish_depth
         end
 
         def run
@@ -77,6 +79,7 @@ module Actions
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
           importer.ssl_validation  = input[:ssl_validation]
+          importer.depth           = input[:ostree_upstream_sync_depth]
           importer.basic_auth_username = input[:upstream_username] if input[:upstream_username].present?
           importer.basic_auth_password = input[:upstream_password] if input[:upstream_password].present?
           importer
@@ -180,6 +183,7 @@ module Actions
           options = { id: input[:pulp_id],
                       relative_path: input[:path],
                       auto_publish: true }
+          options[:depth] = input[:ostree_publish_depth] if input[:ostree_publish_depth]
           Runcible::Models::OstreeDistributor.new(options)
         end
       end

@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, repository, DownloadPolicy;
+    var $scope, $state, translate, repository, DownloadPolicy, OstreeUpstreamSyncPolicy;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -14,6 +14,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
         repository = new Repository();
         DownloadPolicy = $injector.get("DownloadPolicy");
+        OstreeUpstreamSyncPolicy = $injector.get("OstreeUpstreamSyncPolicy");
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
 
@@ -102,6 +103,10 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it ('should set download policies', function() {
        expect($scope.downloadPolicies).toBe(DownloadPolicy.downloadPolicies);
+    });
+
+    it ('should set ostree upstream sync policies', function() {
+       expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
