@@ -70,6 +70,17 @@ describe('Controller: ManifestImportController', function() {
         expect($scope.organization).toBeDefined();
     });
 
+    it('should provide a method to determine if a task is pending', function () {
+        expect($scope.isTaskPending()).toBe(false);
+
+        $scope.task = {pending: true};
+        expect($scope.isTaskPending()).toBe(true);
+
+        $scope.task = null;
+        $scope.deleteTask = {pending: true};
+        expect($scope.isTaskPending()).toBe(true);
+    });
+
     it('should provide a method for getting manifest history info', function() {
         $q.all([$scope.organization.$promise]).then(function () {
             expect($scope.manifestStatuses.length).toBe(3);
