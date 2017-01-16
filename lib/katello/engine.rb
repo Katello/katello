@@ -267,6 +267,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/import_applicability.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/clean_published_repo_directories.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/virt_who_report.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/update_subscription_facet_backend_data.rake"
 
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
@@ -278,6 +279,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/update_puppet_repository_distributors.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/update_subscription_facet_backend_data.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.3/import_subscriptions.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.3/hypervisors.rake"
     end
   end
 

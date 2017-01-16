@@ -83,4 +83,11 @@ module Katello
       assert MailNotification[:sync_errata]
     end
   end
+
+  class SubscriptionBookmarkstest < SeedsTest
+    test "Ensure hypervisor bookmark is created" do
+      seed
+      refute Bookmark.where(:name => "list hypervisors").empty?
+    end
+  end
 end

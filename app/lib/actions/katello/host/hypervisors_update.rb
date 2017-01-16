@@ -37,8 +37,8 @@ module Actions
           host ||= create_host_for_hypervisor(duplicate_name, organization)
           host.subscription_facet ||= ::Katello::Host::SubscriptionFacet.new
           host.subscription_facet.host_id = host.id
-          host.subscription_facet.update_from_consumer_attributes(hypervisor_json)
           host.subscription_facet.uuid = hypervisor_json[:uuid]
+          host.subscription_facet.import_database_attributes(host.subscription_facet.candlepin_consumer.consumer_attributes)
           host.subscription_facet.save!
           host.save!
         end

@@ -257,6 +257,7 @@ module Katello
       render :json => status
     end
 
+    #api :PUT, "/consumers/:id", N_("Update consumer information")
     def facts
       sync_task(::Actions::Katello::Host::Update, @host, rhsm_params)
       update_host_registered_through(@host, request.headers)

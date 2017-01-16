@@ -210,5 +210,66 @@ module Katello
       facts = {'network.hostname' => 'foo', 'network.hostname-override' => 'baz.com'}
       assert_equal 'foo', Host::SubscriptionFacet.propose_existing_hostname(facts)
     end
+
+    def test_search_hypervisor
+      subscription_facet.hypervisor = "true"
+      subscription_facet.save!
+
+      assert_includes ::Host.search_for("hypervisor = true"), host
+    end
+
+    def test_search_hypervisor_host
+      subscription_facet.hypervisor = "true"
+      subscription_facet.save!
+      guest_host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+                                      :lifecycle_environment => library, :organization => org)
+      Resources::Candlepin::Consumer.expects(:virtual_guests).returns([{'uuid' => guest_host.subscription_facet.uuid}])
+      #subscription_facet.candlepin_consumer.expects(:virtual_guests).returns(guest_host)
+      subscription_facet.update_guests({})
+
+      assert_includes ::Host.search_for("hypervisor_host = #{host.name}"), guest_host
+    end
+
+    def test_update_hypervisor_using_candlepin_type
+      consumer_params = {'type' => {'label' => 'hypervisor'}}
+      subscription_facet.update_hypervisor(consumer_params)
+
+      assert subscription_facet.hypervisor
+    end
+
+    def test_update_hypervisor_using_guest_ids
+      consumer_params = {'guestIds' => ['1']}
+      subscription_facet.update_hypervisor(consumer_params)
+
+      assert subscription_facet.hypervisor
+    end
+
+    def test_update_hypervisor_via_candlepin_api
+      consumer_params = {}
+      subscription_facet.candlepin_consumer.expects(:virtual_guests).returns(['1'])
+      subscription_facet.update_hypervisor(consumer_params)
+
+      assert subscription_facet.hypervisor
+    end
+
+    def test_update_guests_for_hypervisor
+      guest_host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+                                      :lifecycle_environment => library, :organization => org)
+      subscription_facet.hypervisor = true
+      Resources::Candlepin::Consumer.expects(:virtual_guests).returns([{'uuid' => guest_host.subscription_facet.uuid}])
+      subscription_facet.update_guests({})
+
+      assert_equal host, guest_host.subscription_facet.reload.hypervisor_host
+    end
+
+    def test_update_guests_for_guest
+      virt_host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+                                      :lifecycle_environment => library, :organization => org)
+      subscription_facet.hypervisor = false
+      subscription_facet.candlepin_consumer.expects(:virtual_host).returns(virt_host)
+      subscription_facet.update_guests({})
+
+      assert_equal virt_host, subscription_facet.hypervisor_host
+    end
   end
 end
