@@ -5,6 +5,7 @@ module Katello
       include Facets::Base
 
       belongs_to :user, :inverse_of => :subscription_facets, :class_name => "::User"
+      belongs_to :hypervisor_host, :class_name => "::Host::Managed", :foreign_key => "hypervisor_host_id"
 
       has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "Katello::ActivationKey"
       has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
@@ -23,6 +24,9 @@ module Katello
       end
 
       def import_database_attributes(consumer_params)
+        update_hypervisor(consumer_params)
+        update_guests(consumer_params)
+
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].blank?
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
@@ -32,6 +36,42 @@ module Katello
           release = consumer_params['releaseVer']
           release = release['releaseVer'] if release.is_a?(Hash)
           self.release_version = release
+        end
+      end
+
+      def update_hypervisor(consumer_params = candlepin_consumer.consumer_attributes)
+        if consumer_params.try(:[], 'type').try(:[], 'label') == 'hypervisor'
+          self.hypervisor = true
+        elsif !consumer_params.try(:[], 'guestIds').empty?
+          self.hypervisor = true
+        elsif !candlepin_consumer.virtual_guests.empty?
+          # Check by calling out to Candlepin last for efficiency
+          self.hypervisor = true
+        end
+      end
+
+      def update_guests(consumer_params)
+        if self.hypervisor
+          if !consumer_params.try(:[], 'guestIds').empty?
+            guest_ids = consumer_params['guestIds'].map do |id|
+              if id.is_a?(Hash)
+                id['guestId'].downcase
+              elsif id.is_a?(String)
+                id.downcase
+              end
+            end
+
+            guest_ids = FactValue.where("lower(value) IN (?)", guest_ids).
+                                  where(:fact_name_id => FactName.where(:name => 'virt::uuid')).
+                                  pluck(:host_id)
+          else
+            guest_ids = self.candlepin_consumer.virtual_guests.pluck(:id)
+          end
+
+          subscription_facets = SubscriptionFacet.where(:host_id => guest_ids)
+          subscription_facets.update_all(:hypervisor_host_id => self.host.id)
+        elsif (virtual_host = self.candlepin_consumer.virtual_host)
+          self.hypervisor_host = virtual_host
         end
       end
 
@@ -55,7 +95,7 @@ module Katello
             product
           end
         end
-        attrs
+        HashWithIndifferentAccess.new(attrs)
       end
 
       def candlepin_environment_id

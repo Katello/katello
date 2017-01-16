@@ -16,6 +16,8 @@ module Katello
 
         has_many :activation_keys, :through => :subscription_facet
         has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id'
+        has_one :hypervisor_host, :through => :subscription_facet
+
         scoped_search :on => :status, :relation => :subscription_status_object, :rename => :subscription_status,
                       :complete_value => SUBSCRIPTION_STATUS_MAP
 
@@ -29,6 +31,8 @@ module Katello
         scoped_search :relation => :activation_keys, :on => :name, :rename => :activation_key, :complete_value => true, :ext_method => :find_by_activation_key
         scoped_search :relation => :activation_keys, :on => :id, :rename => :activation_key_id, :complete_value => true, :ext_method => :find_by_activation_key_id,
                       :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+        scoped_search :on => :hypervisor, :relation => :subscription_facet, :complete_value => true
+        scoped_search :on => :name, :relation => :hypervisor_host, :complete_value => true, :rename => :hypervisor_host, :ext_method => :find_by_hypervisor_host
       end
 
       def update_action
@@ -55,6 +59,18 @@ module Katello
             { :conditions => "1=0" }
           else
             { :conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})" }
+          end
+        end
+
+        def find_by_hypervisor_host(_key, operator, value)
+          conditions = sanitize_sql_for_conditions(["#{::Host.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+          hosts = ::Host.where(conditions)
+          hosts = ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.hypervisor_host_id" => hosts)
+
+          if hosts.empty?
+            {:conditions => "1=0"}
+          else
+            {:conditions => "#{::Host::Managed.table_name}.id IN (#{hosts.pluck(:id).join(',')})"}
           end
         end
       end

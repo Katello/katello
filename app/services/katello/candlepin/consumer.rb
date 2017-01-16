@@ -99,11 +99,13 @@ module Katello
       end
 
       def virtual_guests
+        return [] if self.uuid.nil?
         guest_uuids = Resources::Candlepin::Consumer.virtual_guests(self.uuid).map { |guest| guest['uuid'] }
         ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => guest_uuids)
       end
 
       def virtual_host
+        return nil if self.uuid.nil?
         if (virtual_host_info = Resources::Candlepin::Consumer.virtual_host(self.uuid))
           ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => virtual_host_info[:uuid]).first
         end
