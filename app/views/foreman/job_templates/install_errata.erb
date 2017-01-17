@@ -16,4 +16,4 @@ foreign_input_sets:
 %>
 
 <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
-<%= render_template('Package Action - SSH Default', :action => 'update', :package => advisories) %>
+<%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
