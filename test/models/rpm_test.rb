@@ -106,6 +106,29 @@ module Katello
     end
   end
 
+  class RpmImportTest < RpmTestBase
+    def setup
+      super
+      @original_bulk_load_size = SETTINGS[:katello][:pulp][:bulk_load_size]
+    end
+
+    def test_import_all
+      SETTINGS[:katello][:pulp][:bulk_load_size] = 10
+      json = 30.times.map { |i| {'_id' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
+
+      Katello::Pulp::Rpm.stubs(:fetch).with(0, 10).returns(json[0..10])
+      Katello::Pulp::Rpm.stubs(:fetch).with(11, 10).returns(json[11..21])
+      Katello::Pulp::Rpm.stubs(:fetch).with(22, 10).returns(json[21..29])
+      Katello::Pulp::Rpm.stubs(:fetch).with(31, 10).returns([])
+      Rpm.import_all
+      assert_equal 30, @repo.reload.rpms.count
+    end
+
+    def teardown
+      SETTINGS[:katello][:pulp][:bulk_load_size] = @original_bulk_load_size
+    end
+  end
+
   class RpmSortTest < ActiveSupport::TestCase
     FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "rpms.yml")
 
