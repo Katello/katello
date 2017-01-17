@@ -6,7 +6,7 @@ module Actions
 
         def plan(host, consumer_params = nil)
           action_subject host
-          plan_self(:hostname => host.name)
+          plan_self(:hostname => host.name, :facts => consumer_params.try(:[], :facts), :host_id => host.id)
 
           sequence do
             host.content_facet.save! if host.content_facet
@@ -17,7 +17,6 @@ module Actions
               else
                 consumer_params = host.subscription_facet.consumer_attributes
               end
-              ::Katello::Host::SubscriptionFacet.update_facts(::Host.find(host.id), consumer_params[:facts]) unless consumer_params[:facts].blank?
               host.subscription_facet.save!
               plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
@@ -25,6 +24,14 @@ module Actions
             if host.subscription_facet.try(:autoheal)
               plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid)
             end
+          end
+        end
+
+        def run
+          host = ::Host.find(input[:host_id])
+          unless input[:facts].blank?
+            ::Katello::Host::SubscriptionFacet.update_facts(host, input[:facts])
+            input[:facts] = 'TRIMMED'
           end
         end
 
