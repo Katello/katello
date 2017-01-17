@@ -41,8 +41,7 @@ module Katello
 
       # Import all units of a single type and refresh their repository associations
       def import_all(uuids = nil, options = {})
-        additive = options.fetch(:additive, false)
-        index_repository_association = options.fetch(:index_repository_association, true)
+        index_repository_association = options.fetch(:index_repository_association, true) && self.manage_repository_association
 
         process_block = lambda do |units|
           units.each do |unit|
@@ -52,16 +51,20 @@ module Katello
             end
             item.update_from_json(unit)
           end
-          update_repository_associations(units, additive) if index_repository_association && self.manage_repository_association
-          units.count
+          if index_repository_association
+            units.map { |unit| unit.slice('_id', 'repository_memberships') }
+          else
+            units.count
+          end
         end
 
         if uuids
-          results = content_unit_class.fetch_by_uuids(uuids, &process_block)
+          content_unit_class.fetch_by_uuids(uuids, &process_block)
         else
           results = content_unit_class.fetch_all(&process_block)
+          results.flatten
+          update_repository_associations(results) if index_repository_association
         end
-        results.inject(:+)
       end
 
       def import_for_repository(repository, force = false)
@@ -110,9 +113,10 @@ module Katello
       def update_repository_associations(units_json, additive = false)
         ActiveRecord::Base.transaction do
           repo_unit_id = {}
+          repo_cache = {}
           units_json.each do |unit_json|
             unit_json['repository_memberships'].each do |repo_pulp_id|
-              if Repository.exists?(:pulp_id => repo_pulp_id)
+              if (repo_cache[repo_pulp_id] ||= Repository.exists?(:pulp_id => repo_pulp_id))
                 repo_unit_id[repo_pulp_id] ||= []
                 repo_unit_id[repo_pulp_id] << unit_json['_id']
               end
