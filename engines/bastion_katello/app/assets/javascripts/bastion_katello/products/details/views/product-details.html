@@ -6,21 +6,25 @@
   </header>
 
   <nav data-block="item-actions">
-    <div class="dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button class="btn btn-link" uib-dropdown-toggle>
-        <span class="fa fa-ellipsis-v"></span>
+    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button type="button" class="btn btn-default" ng-disabled="denied('sync_products')" ng-click="syncProduct()">
+        <span translate>Sync Now</span>
+      </button>
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span class="caret"></span>
+        <span class="sr-only" translate>Toggle Dropdown</span>
       </button>
 
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-        <li role="menuitem" ng-hide="denied('create_sync_plans')">
-          <a ui-sref="product.new-sync-plan">
-            <span translate>New Sync Plan</span>
-          </a>
-        </li>
-
         <li role="menuitem" ng-hide="denied('sync_products', product)">
           <a ng-click="syncProduct()">
             <span translate>Sync Now</span>
+          </a>
+        </li>
+
+        <li role="menuitem" ng-hide="denied('create_sync_plans')">
+          <a ui-sref="product.new-sync-plan">
+            <span translate>New Sync Plan</span>
           </a>
         </li>
 
@@ -54,11 +58,11 @@
           </span>
         </li>
       </ul>
+    </div>
 
-      <div bst-modal="removeProduct(product)" model="product">
-        <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
-      </div>
+    <div bst-modal="removeProduct(product)" model="product">
+      <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
+      <div data-block="modal-body" translate>Are you sure you want to remove product "{{ product.name }}"?</div>
     </div>
   </nav>
 
