@@ -6,9 +6,15 @@
   </header>
 
   <div data-block="item-actions">
-    <div class="dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button uib-dropdown-toggle class="btn btn-link">
-        <span class="fa fa-ellipsis-v"></span>
+    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button type="button" class="btn btn-default" ng-click="syncRepository(repository)"
+              ng-disabled="syncInProgress(repository.last_sync) || !repository.url || denied('sync_products', product)">
+        <span translate>Sync Now</span>
+      </button>
+
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span class="caret"></span>
+        <span class="sr-only" translate>Toggle Dropdown</span>
       </button>
 
       <ul class="dropdown-menu-right" uib-dropdown-menu role="menu">

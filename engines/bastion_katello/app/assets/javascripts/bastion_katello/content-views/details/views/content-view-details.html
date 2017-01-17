@@ -13,9 +13,14 @@
   </div>
 
   <nav data-block="item-actions">
-    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button class="btn btn-link dropdown-toggle" uib-dropdown-toggle>
-        <span class="fa fa-ellipsis-v"></span>
+    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-default" ng-disabled="denied('publish_content_views', contentView)" ui-sref="content-view.publish">
+        <span translate>Publish New Version</span>
+      </button>
+
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span class="caret"></span>
+        <span class="sr-only" translate>Toggle Dropdown</span>
       </button>
 
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">

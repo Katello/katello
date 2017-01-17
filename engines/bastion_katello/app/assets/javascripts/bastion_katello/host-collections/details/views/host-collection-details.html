@@ -6,11 +6,16 @@
   </div>
 
   <div data-block="item-actions">
-    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button class="btn btn-link" uib-dropdown-toggle>
-        <span class="fa fa-ellipsis-v"></span>
+    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-default" ui-sref="host-collection.copy" ng-disabled="denied('create_host_collections')">
+        <span translate>Copy Host Collection</span>
       </button>
-      
+
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span class="caret"></span>
+        <span class="sr-only" translate>Toggle Dropdown</span>
+      </button>
+
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
         <li role="menuitem" ng-hide="denied('create_host_collections')">
           <a ui-sref="host-collection.copy" translate>
