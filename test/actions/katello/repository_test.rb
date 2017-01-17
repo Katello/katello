@@ -136,6 +136,7 @@ module ::Actions::Katello::Repository
 
   class RemoveContentTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::RemoveContent }
+    let(:capsule_generate_action_class) { ::Actions::Katello::Repository::CapsuleGenerateAndSync }
 
     it 'plans' do
       to_remove = custom_repository.rpms
@@ -146,6 +147,20 @@ module ::Actions::Katello::Repository
       assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveRpm,
         pulp_id: custom_repository.pulp_id, clauses: {:association => {'unit_id' => {'$in' => uuids}}}
       assert_empty custom_repository.reload.rpms
+    end
+
+    it "does run capsule sync for custom repository" do
+      action.expects(:action_subject).with(custom_repository)
+      plan_action action, custom_repository, custom_repository.rpms
+
+      assert_action_planned_with(action, capsule_generate_action_class, custom_repository)
+    end
+
+    it "does not run capsule sync for custom repository" do
+      action.expects(:action_subject).with(custom_repository)
+      plan_action action, custom_repository, custom_repository.rpms, sync_capsule: false
+
+      refute_action_planned(action, capsule_generate_action_class)
     end
   end
 

@@ -284,9 +284,11 @@ module Katello
     desc "Remove content from a repository"
     param :id, :identifier, :required => true, :desc => "repository ID"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
+    param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
+      sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
       fail _("No content ids provided") if @content.blank?
-      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content)
+      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, sync_capsule: sync_capsule)
     end
 
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
@@ -319,15 +321,19 @@ module Katello
     api :PUT, "/repositories/:id/import_uploads", N_("Import uploads into a repository")
     param :id, :identifier, :required => true, :desc => N_("Repository id")
     param :upload_ids, Array, :desc => N_("Array of upload ids to import"), :deprecated => true
+    param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
+    param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
+    param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
       param 'size', String
       param 'checksum', String
       param 'name', String
-      param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     end
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
+      sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
+      async = ::Foreman::Cast.to_bool(params.fetch(:async, false))
       if params['upload_ids'].empty? && params['uploads'].empty?
         fail HttpErrors::BadRequest, _('No upload param specified. Either uploads or upload_ids (deprecated) is required.')
       end
@@ -339,22 +345,17 @@ module Katello
         params[:upload_ids].each { |upload_id| uploads << {'id' => upload_id} }
       end
 
-      uploads.each do |upload|
-        last_item = uploads.last == upload
-        begin
-          sync_task(
-            ::Actions::Katello::Repository::ImportUpload,
-            @repository,
-            upload['id'],
-            :unit_key => upload.except('id'),
-            :generate_metadata => last_item && generate_metadata
-          )
-        rescue => e
-          raise HttpErrors::BadRequest, e.message
-        end
-      end
+      upload_ids = uploads.map { |upload| upload['id'] }
+      unit_keys = uploads.map { |upload| upload.except('id') }
 
-      render :nothing => true
+      begin
+        task = send(async ? :async_task : :sync_task, ::Actions::Katello::Repository::ImportUpload,
+                    @repository, upload_ids, :unit_keys => unit_keys,
+                    :generate_metadata => generate_metadata, :sync_capsule => sync_capsule)
+        respond_for_async(resource: task)
+      rescue => e
+        raise HttpErrors::BadRequest, e.message
+      end
     end
 
     # returns the content of a repo gpg key, used directly by yum

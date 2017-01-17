@@ -4,7 +4,8 @@ module Actions
       class RemoveContent < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
-        def plan(repository, content_units)
+        def plan(repository, content_units, options = {})
+          sync_capsule = options.fetch(:sync_capsule, true)
           if repository.redhat?
             fail _("Cannot remove content from a non-custom repository")
           end
@@ -33,7 +34,9 @@ module Actions
                                      :clauses => {:association => {'unit_id' => {'$in' => uuids}}
             })
 
-            plan_self(:repository_id => repository.id, :user_id => ::User.current.id)
+            plan_self(:repository_id => repository.id, :user_id => ::User.current.id,
+                      sync_capsule: sync_capsule)
+            plan_action(CapsuleGenerateAndSync, repository) if sync_capsule
           end
         end
 
@@ -46,8 +49,8 @@ module Actions
         end
 
         def run
-          output[:task_id] = ForemanTasks.async_task(Actions::Katello::Repository::MetadataGenerate,
-                                                     ::Katello::Repository.find(input['repository_id'])).id
+          output[:task_id] = ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate,
+                                                    ::Katello::Repository.find(input[:repository_id])).id
         end
       end
     end

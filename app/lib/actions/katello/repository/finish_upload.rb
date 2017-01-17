@@ -2,6 +2,8 @@ module Actions
   module Katello
     module Repository
       class FinishUpload < Actions::Base
+        middleware.use Actions::Middleware::KeepCurrentUser
+
         def plan(repository, options = {})
           dependency = options.fetch(:dependency, nil)
           generate_metadata = options.fetch(:generate_metadata, true)
