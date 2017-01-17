@@ -626,7 +626,7 @@ module Katello
     def test_remove_content
       @repository.rpms << @rpm
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
-                                           @repository, [@rpm]).once.returns(::ForemanTasks::Task.new)
+                                           @repository, [@rpm], sync_capsule: true).once.returns(::ForemanTasks::Task.new)
 
       put :remove_content, :id => @repository.id, :ids => [@rpm.uuid]
 
@@ -792,27 +792,42 @@ module Katello
     end
 
     def test_import_upload_ids
-      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', :unit_key => {}, :generate_metadata => false
+      uploads = [{'id' => '1'}]
+      @controller.expects(:sync_task)
+        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads.map { |u| u['id'] },
+              unit_keys: uploads.map { |u| u.except('id') }, generate_metadata: false,
+              sync_capsule: false)
+        .returns(build_task_stub)
 
-      put :import_uploads, :id => @repository.id, :upload_ids => [1], :publish_repository => 'false'
+      put(:import_uploads, :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] },
+          :publish_repository => 'false', sync_capsule: 'false')
 
       assert_response :success
     end
 
     def test_two_import_upload_ids
-      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', :unit_key => {}, :generate_metadata => false
-      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '2', :unit_key => {}, :generate_metadata => true
+      uploads = [{'id' => '1'}, {'id' => '2'}]
+      @controller.expects(:sync_task)
+        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads.map { |u| u['id'] },
+              unit_keys: uploads.map { |u| u.except('id') }, generate_metadata: false,
+              sync_capsule: false)
+        .returns(build_task_stub)
 
-      put :import_uploads, :id => @repository.id, :upload_ids => [1, 2]
+      put(:import_uploads, :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] },
+          :publish_repository => 'false', sync_capsule: 'false')
 
       assert_response :success
     end
 
     def test_import_uploads
-      unit_key = {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}
-      assert_sync_task ::Actions::Katello::Repository::ImportUpload, @repository, '1', :unit_key => unit_key, :generate_metadata => true
+      uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+      @controller.expects(:sync_task)
+        .with(::Actions::Katello::Repository::ImportUpload, @repository,
+              uploads.map { |u| u['id'] }, unit_keys: uploads.map { |u| u.except('id') },
+              generate_metadata: true, sync_capsule: true)
+        .returns(build_task_stub)
 
-      put :import_uploads, :id => @repository.id, :uploads => [{'id' => 1}.merge(unit_key)]
+      put :import_uploads, id: @repository.id, uploads: uploads
 
       assert_response :success
     end
