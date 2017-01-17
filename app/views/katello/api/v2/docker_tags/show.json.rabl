@@ -8,5 +8,5 @@ child :docker_manifest => :manifest do
 end
 
 child :related_tags => :related_tags do
-  attributes :id, :name
+  attributes :id, :name, :uuid
 end
