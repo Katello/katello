@@ -24,8 +24,6 @@ module Actions
             host.subscription_facet = plan_subscription_facet(host, activation_keys, consumer_params)
             host.save!
 
-            ::Katello::Host::SubscriptionFacet.update_facts(host, consumer_params[:facts]) unless consumer_params[:facts].blank?
-
             action_subject host
 
             cp_create = plan_action(Candlepin::Consumer::Create, cp_environment_id: content_view_environment.cp_id,
@@ -33,7 +31,7 @@ module Actions
             return if cp_create.error
 
             plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name,
-                      user_id: User.current.id)
+                      user_id: User.current.id, :facts => consumer_params[:facts])
             plan_action(Pulp::Consumer::Create, uuid: cp_create.output[:response][:uuid], name: host.name)
           end
         end
@@ -43,6 +41,14 @@ module Actions
             _('Register Host %s') % (input[:hostname] || _('Unknown'))
           else
             _('Register Host')
+          end
+        end
+
+        def run
+          host = ::Host.find(input[:host_id])
+          unless input[:facts].blank?
+            ::Katello::Host::SubscriptionFacet.update_facts(host, input[:facts])
+            input[:facts] = 'TRIMMED'
           end
         end
 
