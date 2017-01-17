@@ -26,7 +26,6 @@ module Katello::Host
         action = create_action action_class
         new_host = Host::Managed.new(:name => 'foobar', :managed => false)
         action.stubs(:action_subject).with(new_host)
-        ::Katello::Host::SubscriptionFacet.expects(:update_facts).with(new_host, rhsm_params[:facts])
         plan_action action, new_host, rhsm_params, @content_view_environment
 
         assert_action_planed_with(action, candlepin_class, :cp_environment_id => @content_view_environment.cp_id,
