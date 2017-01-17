@@ -6,9 +6,14 @@
   </header>
 
   <div data-block="item-actions">
-    <div class="dropdown dropdown-kebab-pf pull-right" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button class="btn btn-link" uib-dropdown-toggle>
-        <span class="fa fa-ellipsis-v"></span>
+    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
+      <button class="btn btn-default" ng-disabled="denied('create_activation_key')" ui-sref="activation-key.copy">
+        <span translate>Copy Activation Key</span>
+      </button>
+
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span class="caret"></span>
+        <span class="sr-only" translate>Toggle Dropdown</span>
       </button>
 
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
@@ -27,9 +32,9 @@
         </li>
       </ul>
 
-      <div bst-modal="removeHostCollection(hostCollection)" model="hostCollection">
-        <div data-block="modal-header" translate>Remove Host Collection "{{ hostCollection.name }}"?</div>
-        <div data-block="modal-body" translate>Are you sure you want to remove Host Collection "{{ hostCollection.name }}"?</div>
+      <div bst-modal="removeActivationKey(activationKey)" model="activationKey">
+        <div data-block="modal-header" translate>Remove Activation Key "{{ activationKey.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove Activation Key "{{ activationKey.name }}"?</div>
       </div>
     </div>
   </div>
