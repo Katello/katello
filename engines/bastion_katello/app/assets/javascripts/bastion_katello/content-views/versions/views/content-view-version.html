@@ -50,7 +50,8 @@
       </a>
     </li>
 
-    <li ng-class="{active: isState('content-view.version.file')}">
+    <li ng-class="{active: isState('content-view.version.file')}"
+        ng-show="version.file_count !== 0">
       <a ui-sref="content-view.version.file({versionId: version.id})">
         <span translate>File Repositories</span>
       </a>
