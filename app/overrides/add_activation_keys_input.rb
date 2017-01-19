@@ -13,11 +13,6 @@ Deface::Override.new(:virtual_path => "hostgroups/_form",
                      :insert_before => 'erb[loud]:contains("hostgroup_puppet_environment_field")',
                      :partial => 'overrides/activation_keys/host_environment_select')
 
-Deface::Override.new(:virtual_path => "hosts/_form",
-                     :name => "hosts_update_environments_select",
-                     :insert_after => 'erb[loud]:contains("Deploy on")',
-                     :partial => 'overrides/activation_keys/host_environment_select')
-
 Deface::Override.new(:virtual_path => "common/os_selection/_operatingsystem",
                      :name => "hosts_select_media_type",
                      :insert_before => 'erb[loud]:contains("select_f"):contains(":medium_id")',
