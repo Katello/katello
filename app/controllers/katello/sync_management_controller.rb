@@ -4,6 +4,8 @@ module Katello
     include ActionView::Helpers::DateHelper
     include ActionView::Helpers::NumberHelper
     include SyncManagementHelper::RepoMethods
+    helper Rails.application.routes.url_helpers
+    helper ReactjsHelper
     respond_to :html, :json
 
     def section_id
