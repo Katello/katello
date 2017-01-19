@@ -62,18 +62,17 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         permission: 'edit_products',
         templateUrl: 'products/discovery/views/discovery.html',
         ncyBreadcrumb: {
-            label: "{{ 'Repository Discovery' | translate }}",
+            label: "{{ 'Discover Repositories' | translate }}",
             parent: 'products'
         }
-
     })
     .state("product-discovery.create", {
         url: '/scan/create',
         permission: 'edit_products',
         templateUrl: 'products/discovery/views/discovery-create.html',
-        controller: 'DiscoveryFormController',
+        controller: 'DiscoveryCreateController',
         ncyBreadcrumb: {
-            label: "{{ 'Create Products' | translate }}",
+            label: "{{ 'Create Repositories' | translate }}",
             parent: 'product-discovery.scan'
         }
     });

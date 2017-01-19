@@ -23,7 +23,8 @@ describe('Controller: DiscoveryController', function() {
     beforeEach(inject(function($controller, $rootScope, $injector) {
         var $http = $injector.get('$http'),
             $q = $injector.get('$q'),
-            $timeout = $injector.get('MockResource').$new();
+            $timeout = $injector.get('MockResource').$new(),
+            translate;
 
         Task = $injector.get('MockTask');
         new Task(mockTask);
@@ -31,12 +32,21 @@ describe('Controller: DiscoveryController', function() {
         Organization = $injector.get('MockOrganization');
         new Organization(mockOrg);
 
+        translate = function (message) {
+            return message;
+        };
+
         $scope = $rootScope.$new();
         $scope.panel = {};
-        $scope.discoveryTable = {
+        $scope.table = {
             getSelected: function() {},
             selectAll: function() {},
-            rows: []
+            rows: [],
+            resource: {
+                total: 0,
+                subtotal: 0
+            },
+            numSelected: 0
         };
 
         $httpBackend = $injector.get('$httpBackend');
@@ -48,14 +58,17 @@ describe('Controller: DiscoveryController', function() {
             $http: $http,
             Task: Task,
             Organization: Organization,
-            CurrentOrganization: CurrentOrganization
+            CurrentOrganization: CurrentOrganization,
+            translate: translate
         });
     }));
 
     it('setting up selected transitions to create state', function() {
-        var fakeSelected = [1,2,3];
-        spyOn($scope.discoveryTable, 'getSelected').and.returnValue(fakeSelected);
+        var fakeSelected = [1,2,3],
+            fakeUrl = 'http://fake/';
+        spyOn($scope.table, 'getSelected').and.returnValue(fakeSelected);
         spyOn($scope, 'transitionTo').and.returnValue({then: function () {}});
+        $scope.discovery.url = fakeUrl;
 
         $scope.setupSelected();
 
@@ -80,7 +93,7 @@ describe('Controller: DiscoveryController', function() {
         spyOn(Organization, 'cancelRepoDiscover');
         $scope.cancelDiscovery();
         expect(Organization.cancelRepoDiscover).toHaveBeenCalled();
-        expect($scope.discovery.working).toBe(true);
+        expect($scope.discovery.working).toBe(false);
     });
 
 
@@ -89,21 +102,33 @@ describe('Controller: DiscoveryController', function() {
     xit('should fetch discovery task through org and set details', function() {
         expect($scope.discovery.url).toBe(mockTask.parameters.url);
         expect($scope.discovery.pending).toBe(mockTask.pending);
-        expect($scope.discoveryTable.rows[0].url).toBe(mockTask.result[0]);
+        expect($scope.table.rows[0].url).toBe(mockTask.result[0]);
     });
 
-    it('should initiate discovery', function() {
+    it('should initiate yum discovery', function() {
         $scope.discovery.url = 'http://fake/';
         spyOn(Organization, 'repoDiscover').and.callThrough();
 
         $scope.discover();
 
-        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/'},
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'yum', upstream_username: undefined, upstream_password: undefined},
+                                                               jasmine.any(Function));
+    });
+
+    it('should initiate yum discovery', function() {
+        $scope.discovery.url = 'http://fake/';
+        $scope.discovery.contentType = 'docker';
+        spyOn(Organization, 'repoDiscover').and.callThrough();
+
+        $scope.discover();
+
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined},
                                                                jasmine.any(Function));
     });
 
     it('should set discovery table upon completed discovery', function() {
         $scope.discovery.url = 'http://fake/';
+        $scope.discovery.contentType = 'yum';
         spyOn(Task, 'get');
         $scope.discover();
 
@@ -111,13 +136,30 @@ describe('Controller: DiscoveryController', function() {
 
         Task.simulateBulkSearch(Organization.mockDiscoveryTask);
 
-        expect($scope.discoveryTable.rows[0].url).toBe(Organization.mockDiscoveryTask.output[0]);
-        expect($scope.discoveryTable.rows[0].path).toBe('foo');
+        expect($scope.table.rows[0].path).toBe('foo');
+        expect($scope.table.rows[0].name).toBe('foo');
+    });
+
+    it('should set discovery table upon completed discovery', function() {
+        $scope.discovery.url = 'http://fake/';
+        $scope.discovery.contentType = 'docker';
+        spyOn(Task, 'get');
+        $scope.discover();
+
+        expect(Task.get).not.toHaveBeenCalled();
+
+        Task.simulateBulkSearch(Organization.mockDiscoveryTask);
+
+        expect($scope.table.rows[0].path).toBe('http://fake/foo');
+        expect($scope.table.rows[0].name).toBe('http://fake/foo');
+        expect($scope.table.rows[0].dockerUpstreamName).toBe('http://fake/foo');
     });
 
     it('discovery should poll if task is pending', function() {
+        $scope.discovery.url = 'http://fake/';
+        $scope.discovery.contentType = 'yum';
         $scope.discover();
-        Organization.mockDiscoveryTask.pending = true
+        Organization.mockDiscoveryTask.state = 'running';
         spyOn(Task, 'unregisterSearch');
         Task.simulateBulkSearch(Organization.mockDiscoveryTask);
         expect(Task.unregisterSearch).not.toHaveBeenCalled();
@@ -125,11 +167,10 @@ describe('Controller: DiscoveryController', function() {
 
     it('discovery should stop polling if task is not pending', function() {
         $scope.discover();
-        Organization.mockDiscoveryTask.pending = false
+        Organization.mockDiscoveryTask.state = 'finished';
         spyOn(Task, 'unregisterSearch');
         Task.simulateBulkSearch(Organization.mockDiscoveryTask);
         expect(Task.unregisterSearch).toHaveBeenCalled();
     });
-
 });
 

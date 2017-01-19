@@ -1,86 +1,113 @@
-<span page-title>{{ 'Repository Discovery' | translate }}</span>
+<span page-title>{{ "Repository Discovery" | translate }}</span>
 
-<div>
-  <form ng-submit="discover()" name="discoveryForm" class="col-sm-6">
-    <div class="input-group">
+<div class="row">
+  <form ng-submit="discover()" name="discoveryForm" class="col-sm-5" role="form">
+    <div bst-form-group label="{{ 'Repository Type' | translate }}">
+      <select ng-model="discovery.contentType"
+              ng-options="contentType.id as contentType.name for contentType in contentTypes"/>
+    </div>
 
-      <input type="text"
+    <div bst-form-group ng-show="discovery.contentType === 'yum'"
+         label="{{ 'URL to Discover' | translate }}">
+      <input type="text" id="urlToDiscover"
+             class="form-control"
              ng-pattern="/^(file:\/\/|http:\/\/|https:\/\/).+/"
-             class="form-control input-lg"
-             placeholder="{{ 'URL to discover' | translate }}"
              ng-model="discovery.url"
-             ng-disabled="discovery.pending"
+             ng-disabled="discovery.working"
              name="discoveryUrl"
              required/>
-
-      <span class="input-group-btn input-group-lg">
-        <button ng-show="!discovery.pending && permitted('edit_products')"
-               ng-disabled="discoveryForm.discoveryUrl.$invalid"
-               translate
-               type="submit"
-               class="btn btn-primary btn-lg">
-          Discover
-        </button>
-
-        <button type="button"
-                ng-disabled="discovery.working"
-                ng-show="discovery.pending && permitted('edit_products')"
-                ng-click="cancelDiscovery()"
-                class="btn btn-primary btn-lg">
-          <i class="fa fa-spinner fa-spin" ng-show="discovery.pending"></i>
-          <span translate>Cancel</span>
-        </button>
-      </span>
-
     </div>
+
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry to Discover' | translate }}">
+      <input type="text" id="registryToDiscover"
+             class="form-control"
+             ng-model="discovery.url"
+             ng-disabled="discovery.working"
+             placeholder="Example: registry.access.redhat.com or https://registry.access.redhat.com"
+             name="discoveryUrl"
+             required/>
+    </div>
+
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry Username' | translate }}">
+      <input type="text" id="upstreamUsername"
+             class="form-control"
+             ng-model="discovery.upstreamUsername"
+             ng-disabled="discovery.working"
+             name="upstreamUsername"/>
+    </div>
+
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry Password' | translate }}">
+      <input id="upstreamPassword"
+             type="password"
+             class="form-control"
+             ng-model="discovery.upstreamPassword"
+             ng-disabled="discovery.working"
+             name="upstreamPassword"/>
+    </div>
+
+    <span class="input-group-btn">
+      <button ng-show="!discovery.working && permitted('edit_products')"
+              ng-disabled="discoveryForm.discoveryUrl.$invalid"
+              type="submit"
+              class="btn btn-default">
+        <span translate>Discover</span>
+      </button>
+
+      <button type="button"
+              ng-show="discovery.working && permitted('edit_products')"
+              ng-click="cancelDiscovery()"
+              class="btn">
+        <i class="fa fa-spinner fa-spin" ng-show="discovery.working"></i>
+        <span translate>Cancel</span>
+      </button>
+    </span>
   </form>
 </div>
 
-<section>
-  <div class="row">
-    <h3 class="col-sm-12" translate>Results</h3>
-
-    <div class="col-sm-4">
-      <input type="text"
-             class="form-control"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="discoveryTable.filterTerm"/>
-    </div>
-
-    <div class="fr">
-      <div class="fl nutupane-info">
-        <span translate>{{ discoveryTable.numSelected }} Selected</span>
-      </div>   
-
-      <div ng-hide="system.readonly" class="nutupane-actions fr">
-        <button type="button" class="btn btn-primary"
-                translate
-                ng-hide="denied('create_products')"
-                ng-disabled="discoveryTable.getSelected().length == 0"
-                ng-click="setupSelected()">
-            Create Selected
-        </button>
-      </div>      
-    </div>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search">
+    <input type="text" class="form-control" stop-event="click"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="tableFilter"/>
   </div>
 
-  <div class="row">
-    <div class="col-sm-12">
-      <table bst-table="discoveryTable" class="table table-striped table-bordered">
-        <thead>
-          <tr bst-table-head row-select>
-            <th bst-table-column translate>Discovered URLs</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr bst-table-row
-              row-select="urlRow"
-              ng-repeat="urlRow in discoveryTable.rows | filter:discoveryTable.filterTerm">
-            <td bst-table-cell>{{ urlRow.path }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div data-block="list-actions">
+    <button class="btn btn-primary"
+            translate
+            ng-click="setupSelected()"
+            ng-hide="denied('edit_products')"
+            ng-disabled="discovery.working || table.numSelected === 0">
+      Create Selected
+    </button>
   </div>
-</section>
+
+  <span data-block="no-rows-message" translate>
+    No discovered repositories.
+  </span>
+
+  <span data-block="no-search-results-message" translate>
+    Your search returned zero results.
+  </span>
+
+  <div data-block="table">
+    <table bst-table="table"
+           class="table table-full table-bordered"
+           ng-class="{'table-mask': discovery.working}"
+           ng-show="table.rows.length > 0">
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column="path" translate>Discovered Repository</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="urlRow in table.rows | filter:tableFilter" row-select="urlRow">
+          <td bst-table-cell style="white-space:nowrap">{{ urlRow.path }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

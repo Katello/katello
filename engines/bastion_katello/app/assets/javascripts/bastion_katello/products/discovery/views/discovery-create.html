@@ -1,116 +1,175 @@
-<span page-title>{{ 'Create Repositories' | translate }}</span>
+<span page-title>{{ "Create Discovered Repositories" | translate }}</span>
 
-<form name="productForm" class="col-sm-5" ng-disabled="creating()" novalidate role="form">
+<div class="row">
+  <form name="productForm" ng-disabled="creating()" novalidate class="col-sm-5" role="form">
+    <h4 translate>Product Options</h4>
 
-  <section>
-    <div bst-alerts error-messages="productErrorMessages"></div>
+    <div bst-form-group label="{{ 'Product' | translate }}">
+      <select ng-model="createRepoChoices.newProduct">
+        <option value="true" translate>New Product</option>
+        <option value="false" translate>Existing Product</option>
+      </select>
+    </div>
 
-    <h4 translate>Create Repositories Within:</h4>
+    <div bst-form-group ng-show="createRepoChoices.newProduct === 'false'"
+         label="{{ 'Name' | translate }}">
+      <select class="form-control" ng-disabled="creating()"
+              ng-model="createRepoChoices.existingProductId"
+              ng-options="product.id as product.name for product in products"
+              ng-required="createRepoChoices.newProduct === 'false'"/>
+    </div>
 
-    <div bst-form-group>
-      <label class="checkbox-inline">
-        <input type="radio"
-        name="newProduct"
-        value="false"
-        ng-model="createRepoChoices.newProduct"
-        ng-disabled="creating()"/>
-        <span translate>Existing Product</span>
-      </label>
+    <div bst-form-group ng-show="createRepoChoices.newProduct === 'true'"
+         label="{{ 'Name' | translate }}">
+      <input id="productName"
+             type="text"
+             class="form-control"
+             ng-model="createRepoChoices.product.name"
+             ng-disabled="creating()"
+             name="name"
+             ng-required="createRepoChoices.newProduct === 'true'"/>
+    </div>
 
-      <label class="checkbox-inline">
-        <input type="radio"
-        name="newProduct"
-        value="true"
-        ng-model="createRepoChoices.newProduct"
-        ng-disabled="creating()"/>
-        <span translate>New Product</span>
-      </label>
+    <div bst-form-group ng-show="createRepoChoices.newProduct === 'true'"
+         label="{{ 'Label' | translate }}">
+      <input id="productLabel"
+             type="text"
+             class="form-control"
+             ng-model="createRepoChoices.product.label"
+             ng-disabled="creating()"
+             name="label"
+             ng-required="createRepoChoices.newProduct === 'true'"/>
     </div>
 
 
-    <div ng-hide="createRepoChoices.newProduct === 'true'">
-      <div bst-form-group label="{{ 'Product' | translate }}">
-        <select class="form-control" ng-disabled="creating()"
-          ng-model="createRepoChoices.existingProductId"
-          ng-options="product.id as product.name for product in products">
-        </select>
-      </div>
+    <div bst-form-group ng-show="createRepoChoices.newProduct === 'true' && gpgKeys.length !== 0"
+         label="{{ 'GPG Key' | translate }}">
+      <select class="form-control" ng-model="createRepoChoices.product.gpg_key_id"
+              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"/>
     </div>
 
-    <div ng-show="createRepoChoices.newProduct === 'true'">
-      <div bst-form-group label="{{ 'Name' | translate }}">
-        <input ng-model="createRepoChoices.product.name"
-        id="name"
-        name="name"
-        type="text"
-        class="form-control"
-        tabindex=1
-        ng-required="createRepoChoices.newProduct === 'true'"/>
-      </div>
+    <h4 translate>Repository Options</h4>
 
-      <div bst-form-group label="{{ 'Label' | translate }}">
-        <input ng-model="createRepoChoices.product.label"
-        id="label"
-        name="label"
-        type="text"
-        class="form-control"
-        tabindex=2
-        ng-required="createRepoChoices.newProduct === 'true'"/>
-      </div>
-
-      <div bst-form-group label="{{ 'GPG Key' | translate }}">
-        <select class="form-control" ng-model="createRepoChoices.product.gpg_key_id"
-          ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
-        </select>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div bst-form-group label="{{ 'Options' | translate }}">
+    <div bst-form-group ng-show="discovery.contentType === 'yum'"
+         label="{{ 'Serve via HTTP' | translate }}">
       <input type="checkbox"
-      id="unprotected"
-      ng-model="createRepoChoices.unprotected"
-      ng-disabled="creating()"/>
-      <span translate>Serve via HTTP.</span>
+             id="unprotected"
+             ng-model="createRepoChoices.unprotected"
+             ng-disabled="creating()"/>
     </div>
-  </section>
 
-  <section>
-    <h4 ng-show="discovery.selected.length > 0" translate>Selected URLs:</h4>
-
-    <div ng-repeat="repo in discovery.selected">
-
-      <div class="col-sm-offset-0 bottom-padding">
-        <i class="fa fa-angle-right"></i>
-        <span>{{  repo.url }}</span>
-        <i class="fa fa-check" ng-show="repo.created"></i>
-      </div>
-
-      <div bst-form-group label="{{ 'Name' | translate }}">
-        <input ng-model="repo.name"
-        ng-disabled="creating() || repo.created"
-        name="repo_name"
-        type="text"
-        class="form-control"
-        required/>
-      </div>
-
-      <div bst-form-group label="{{ 'Label' | translate }}">
-        <input ng-model="repo.label"
-        ng-disabled="creating() || repo.created"
-        name="repo_label"
-        type="text"
-        class="form-control"
-        required/>
-      </div>
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry URL' | translate }}">
+      <input type="text"
+             id="registryUrl"
+             class="form-control"
+             ng-model="createRepoChoices.repositoryUrl"
+             ng-disabled="creating()"/>
     </div>
-    <button type="button" ng-click="createRepos()"
-      ng-disabled="creating() || !requiredFieldsEnabled()"
-      class="btn btn-primary">
-      <i class="pficon-add-circle-o inline-icon"></i>
-      <span translate>Create</span>
+
+    <div bst-form-group
+         label="{{ 'Verify SSL' | translate }}">
+      <input type="checkbox"
+             id="verify_ssl"
+             ng-model="createRepoChoices.verifySsl"
+             ng-disabled="creating()"/>
+    </div>
+
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry username' | translate }}">
+      <input id="registryUsername"
+             type="text"
+             class="form-control"
+             ng-model="createRepoChoices.upstreamUsername"
+             ng-disabled="creating()"
+             name="upstreamUsername"/>
+    </div>
+
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry Password' | translate }}">
+      <input id="registryPassword"
+             type="password"
+             class="form-control"
+             ng-model="createRepoChoices.upstreamPassword"
+             ng-disabled="creating()"
+             name="upstreamPassword"/>
+    </div>
+  </form>
+</div>
+
+  <h4 translate>Repositories to Create</h4>
+
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search">
+    <input type="text" class="form-control" stop-event="click"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="tableFilter"/>
+  </div>
+
+  <div data-block="list-actions">
+    <button class="btn btn-primary"
+            translate
+            ng-click="createRepos()"
+            ng-disabled="creating() || !requiredFieldsEnabled()">
+      Run Repository Creation
       <i class="fa fa-spinner fa-spin" ng-show="creating()"></i>
     </button>
-  </section>
-</form>
+  </div>
+
+  <span data-block="no-rows-message" translate>
+    No matching results.
+  </span>
+
+  <span data-block="no-search-results-message" translate>
+    Your search returned zero results.
+  </span>
+
+  <div data-block="table">
+    <table bst-table="table"
+           class="table table-full table-bordered"
+           ng-show="table.rows.length > 0">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="task" translate>Create Status</th>
+          <th bst-table-column="name" translate ng-show="discovery.contentType === 'docker'">Upstream Image Name</th>
+          <th bst-table-column="name" translate>Repository Name</th>
+          <th bst-table-column="label" translate>Repository Label</th>
+          <th bst-table-column="url" translate ng-show="discovery.contentType === 'yum'">Repository URL</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="repo in table.rows | filter:tableFilter">
+          <td bst-table-cell>
+            <span ng-class="createStatusIcon(repo)"></span>
+            <span ng-if="!repo.created">{{ createStatusMessages(repo) }}</span>
+            <span ng-if="repo.created"><a ui-sref="product.repository.info({productId: repo.productId, repositoryId: repo.repositoryId})" translate>Repository created</a></span>
+
+          </td>
+          <td bst-table-cell ng-show="discovery.contentType === 'docker'">
+            {{ repo.dockerUpstreamName }}
+          </td>
+          <td bst-table-cell>
+            <input class="form-control"
+                 ng-model="repo.name"
+                 name="repo_name"
+                 ng-hide="creating() || repo.created"
+                 required/>
+            <span ng-show="creating() || repo.created">{{ repo.name }}</span>
+          </td>
+          <td bst-table-cell ng-disabled="creating()">
+            <input class="form-control"
+                 ng-model="repo.label"
+                 name="repo_label"
+                 ng-hide="creating() || repo.created"
+                 required/>
+            <span ng-show="creating() || repo.created">{{ repo.label }}</span>
+          </td>
+          <td bst-table-cell ng-show="discovery.contentType === 'yum'">
+            {{ repo.url }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

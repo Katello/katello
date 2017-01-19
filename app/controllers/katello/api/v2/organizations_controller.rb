@@ -91,10 +91,14 @@ module Katello
 
     api :PUT, "/organizations/:id/repo_discover", N_("Discover Repositories")
     param :id, :number, :desc => N_("Organization ID"), :required => true
-    param :url, String, :desc => N_("base url to perform repo discovery on")
+    param :url, String, :desc => N_("Base URL to perform repo discovery on")
+    param :content_type, String, :desc => N_("One of yum or docker")
+    param :upstream_username, String, :desc => N_("Username to access URL")
+    param :upstream_password, String, :desc => N_("Password to access URL")
     def repo_discover
       fail _("url not defined.") if params[:url].blank?
-      task = async_task(::Actions::Katello::Repository::Discover, params[:url])
+      task = async_task(::Actions::Katello::Repository::Discover, params[:url], params[:content_type],
+                        params[:upstream_username], params[:upstream_password])
       respond_for_async :resource => task
     end
 

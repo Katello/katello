@@ -243,6 +243,7 @@ angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource
 
         myMock.mockDiscoveryTask = {
             pending: false,
+            state: 'finished',
             input: 'http://fake/',
             output: ['http://fake/foo']
         };

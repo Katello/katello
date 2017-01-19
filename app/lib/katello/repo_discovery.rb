@@ -2,10 +2,11 @@ module Katello
   class RepoDiscovery
     attr_reader :found, :crawled, :to_follow
 
-    def initialize(url, proxy = {}, crawled = [], found = [], to_follow = [])
-      #add a / on the end, as directories require it or else
-      #  They will get double slahes on them
+    def initialize(url, content_type = 'yum', upstream_username = nil, upstream_password = nil, proxy = {}, crawled = [], found = [], to_follow = [])
       @uri = uri(url)
+      @content_type = content_type
+      @upstream_username = upstream_username.empty? ? nil : upstream_username
+      @upstream_password = upstream_password.empty? ? nil : upstream_password
       @found = found
       @crawled = crawled
       @to_follow = to_follow
@@ -13,21 +14,45 @@ module Katello
     end
 
     def uri(url)
+      #add a / on the end, as directories require it or else
+      #  They will get double slahes on them
       url += '/' unless url.ends_with?('/')
       URI(url)
     end
 
     def run(resume_point)
-      if @uri.scheme == 'file'
-        file_crawl(uri(resume_point))
-      elsif %w(http https).include?(@uri.scheme)
-        http_crawl(uri(resume_point))
+      if @content_type == 'docker'
+        docker_search
       else
-        fail _("Unsupported URL protocol %s.") % @uri.scheme
+        if @uri.scheme == 'file'
+          file_crawl(uri(resume_point))
+        elsif %w(http https).include?(@uri.scheme)
+          http_crawl(uri(resume_point))
+        else
+          fail _("Unsupported URL protocol %s.") % @uri.scheme
+        end
       end
     end
 
     private
+
+    def docker_search
+      params = {
+        :accept => :json
+      }
+      params[:user] = @upstream_username unless @upstream_username.empty?
+      params[:password] = @upstream_password unless @upstream_password.empty?
+      begin
+        results = RestClient.get(@uri.to_s + "v1/search?q=*", params)
+        JSON.parse(results)['results'].each do |result|
+          @found << result['name']
+        end
+      rescue
+        results = RestClient.get(@uri.to_s + "v2/_catalog", params)
+        @found = JSON.parse(results)['repositories']
+      end
+      @found.sort!
+    end
 
     def http_crawl(resume_point)
       Anemone.crawl(resume_point, @proxy) do |anemone|

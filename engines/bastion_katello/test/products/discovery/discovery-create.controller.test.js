@@ -1,4 +1,4 @@
-describe('Controller: DiscoveryFormController', function() {
+describe('Controller: DiscoveryCreateController', function() {
     var $scope,
         Product,
         FormUtils,
@@ -12,23 +12,29 @@ describe('Controller: DiscoveryFormController', function() {
             $q = $injector.get('$q'),
             Provider = $injector.get('MockResource').$new(),
             Repository = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new();
+            GPGKey = $injector.get('MockResource').$new(),
+            translate;
+
+        translate = function (message) {
+            return message;
+        };
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         Product = $injector.get('MockResource').$new();
         FormUtils = $injector.get('FormUtils');
 
-        $controller('DiscoveryFormController', {
+        $scope.$stateParams.rows = [];
+
+        $controller('DiscoveryCreateController', {
             $scope: $scope,
-            $http: $http,
             $q: $q,
             CurrentOrganization: 'ACME',
-            Provider: Provider,
             Product: Product,
             Repository: Repository,
             GPGKey: GPGKey,
-            FormUtils: FormUtils
+            FormUtils: FormUtils,
+            translate: translate
         });
     }));
 
@@ -70,13 +76,59 @@ describe('Controller: DiscoveryFormController', function() {
         expect(Product.save).toHaveBeenCalled();
     });
 
-    it('should transition to repositories page if there are no repositories to be created', function() {
-        spyOn($scope, 'transitionTo');
+    it('should return "Not started" for repo', function() {
+        var repo = {
+            name: "abc"
+        };
 
-        $scope.createRepos();
-
-        expect($scope.transitionTo).toHaveBeenCalled();
+        expect($scope.createStatusMessages(repo)).toEqual("Not started");
     });
 
-});
+    it('should return messages for repo', function() {
+        var repo = {
+            messages: "here we go"
+        };
 
+        expect($scope.createStatusMessages(repo)).toEqual("here we go");
+    });
+
+    it('should return ok icon', function() {
+        var repo = {
+            name: "abc",
+            created: true
+        };
+
+        expect($scope.createStatusIcon(repo)).toEqual("pficon pficon-ok");
+    });
+
+    it('should return spinner icon', function() {
+        var repo = {
+            name: "abc",
+            created: false,
+            creating: true
+        };
+
+        expect($scope.createStatusIcon(repo)).toEqual("fa fa-spinner fa-spin");
+    });
+
+    it('should return no icon', function() {
+        var repo = {
+            name: "abc",
+            created: false,
+            creating: false
+        };
+
+        expect($scope.createStatusIcon(repo)).toEqual("");
+    });
+
+    it('should return error icon', function() {
+        var repo = {
+            name: "abc",
+            created: false,
+            creating: false,
+            messages: "some error"
+        };
+
+        expect($scope.createStatusIcon(repo)).toEqual("pficon pficon-error-circle-o");
+    });
+});
