@@ -6,14 +6,17 @@ module Actions
 
         input_format do
           param :url, String
+          param :content_type, String
+          param :upstream_username, String
+          param :upstream_password, String
         end
 
         output_format do
           param :repo_urls, array_of(String)
         end
 
-        def plan(url)
-          plan_self(url: url)
+        def plan(url, content_type, upstream_username, upstream_password)
+          plan_self(url: url, content_type: content_type, upstream_username: upstream_username, upstream_password: upstream_password)
         end
 
         def run(event = nil)
@@ -21,7 +24,9 @@ module Actions
           output[:crawled] = output[:crawled] || []
           output[:to_follow] = output[:to_follow] || [input[:url]]
 
-          repo_discovery = ::Katello::RepoDiscovery.new(input[:url], proxy, output[:crawled], output[:repo_urls], output[:to_follow])
+          repo_discovery = ::Katello::RepoDiscovery.new(input[:url], input[:content_type],
+                                                        input[:upstream_username], input[:upstream_password], proxy,
+                                                        output[:crawled], output[:repo_urls], output[:to_follow])
 
           match(event,
             (on nil do

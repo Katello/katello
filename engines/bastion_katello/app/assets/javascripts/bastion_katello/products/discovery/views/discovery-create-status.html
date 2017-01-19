@@ -1,0 +1,3 @@
+<span ng-class="createStatusIcon()"></span>
+<span ng-if="!repo.created">{{ createStatusMessages() }}</span>
+<span ng-if="repo.created"><a ui-sref="product.repository.info({productId: repo.productId, repositoryId: repo.repositoryId})">{{ "Repository created" | translate }}</a></span>

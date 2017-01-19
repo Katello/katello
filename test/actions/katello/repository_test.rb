@@ -120,7 +120,7 @@ module ::Actions::Katello::Repository
 
   class DyscoverTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Discover }
-    let(:action_planned) { create_and_plan_action action_class, 'http://' }
+    let(:action_planned) { create_and_plan_action action_class, 'http://', 'yum', nil, nil }
 
     it 'plans' do
       assert_run_phase action_planned
