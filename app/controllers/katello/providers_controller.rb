@@ -1,5 +1,7 @@
 module Katello
   class ProvidersController < Katello::ApplicationController
+    helper Rails.application.routes.url_helpers
+    helper ReactjsHelper
     before_action :find_rh_provider, :only => [:redhat_provider, :redhat_provider_tab]
     before_action :search_filter, :only => [:auto_complete_search]
 
@@ -37,7 +39,7 @@ module Katello
     end
 
     def controller_display_name
-      return 'provider'
+      'provider'
     end
 
     def search_filter

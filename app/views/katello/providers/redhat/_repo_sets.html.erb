@@ -32,7 +32,7 @@
                       <tr class="collapsed repo_set" id="repo_set_<%= product_content.content.id %>">
                         <td>
                           <span class="expander_area clickable"
-                                data-url="<%= available_repositories_product_path(product.id)%>"
+                                data-url="<%= katello.available_repositories_product_path(product.id)%>"
                                 data-content-id="<%= product_content.content.id %>"
                                 data-orphaned="<%= orphaned.to_s %>">
                             <%= image_tag( "katello/icons/spinner.gif", :class=>"hidden fl repo_set_spinner",

@@ -30,7 +30,7 @@
                      id="input_repo_<%= result[:pulp_id] %>"
                      type="checkbox"
                      value="<%= result[:pulp_id] %>"
-                     data-url="<%= toggle_repository_product_path(scan_cdn.input[:product_id]) %>"
+                     data-url="<%= katello.toggle_repository_product_path(scan_cdn.input[:product_id]) %>"
                      data-content-id="<%= scan_cdn.input[:content_id] %>"
                      data-pulp-id="<%= result[:pulp_id] %>"
                      <% if result[:registry_name] %>
