@@ -503,16 +503,22 @@ module Katello
 
       class Pool < CandlepinResource
         class << self
-          def find(pool_id)
-            pool_json = self.get(path(pool_id), self.default_headers).body
+          def find(pool_id, included = [])
+            pool_json = self.get(
+              "#{path(pool_id)}?#{included_list(included)}",
+              self.default_headers
+            ).body
             fail ArgumentError, "pool id cannot contain ?" if pool_id["?"]
             JSON.parse(pool_json).with_indifferent_access
           end
 
-          def get_for_owner(owner_key, include_temporary_guests = false)
+          def get_for_owner(owner_key,
+                            include_temporary_guests = false,
+                            included = [])
             url_path = "/candlepin/owners/#{owner_key}/pools"
-            url_params = "?attribute=unmapped_guests_only:!true"
-            url = include_temporary_guests ? url_path : url_path + url_params
+            url_path += "?#{included_list(included)}"
+            disable_unmapped_guests = "&attribute=unmapped_guests_only:!true"
+            url = include_temporary_guests ? url_path : url_path + disable_unmapped_guests
             pools_json = self.get(url, self.default_headers).body
             JSON.parse(pools_json)
           end
@@ -571,8 +577,11 @@ module Katello
             self.delete(path(subscription_id), self.default_headers).code.to_i
           end
 
-          def get(id = nil)
-            content_json = super(path(id), self.default_headers).body
+          def get(id = nil, included = [])
+            content_json = super(
+              "#{path(id)}?#{included_list(included)}",
+              self.default_headers
+            ).body
             JSON.parse(content_json)
           end
 
@@ -640,9 +649,9 @@ module Katello
           end
 
           def get(id = nil, included = [])
-            products_json = super(path(id + "/?#{included_list(included)}"), self.default_headers).body
+            products_json = super(path(id) + "/?#{included_list(included)}", self.default_headers).body
             products = JSON.parse(products_json)
-            products = [products] unless id.nil?
+            products = [products] unless id.blank?
             ::Katello::Util::Data.array_with_indifferent_access products
           end
 
@@ -754,8 +763,11 @@ module Katello
 
       class ActivationKey < CandlepinResource
         class << self
-          def get(id = nil, params = '')
-            akeys_json = super(path(id) + params, self.default_headers).body
+          def get(id = nil, included = [])
+            akeys_json = super(
+              "#{path(id)}?#{included_list(included)}",
+              self.default_headers
+            ).body
             akeys = JSON.parse(akeys_json)
             akeys = [akeys] unless id.nil?
             ::Katello::Util::Data.array_with_indifferent_access akeys
@@ -776,8 +788,8 @@ module Katello
             self.delete(path(id), self.default_headers).code.to_i
           end
 
-          def pools(owner_key)
-            Candlepin::Owner.pools(owner_key)
+          def pools(owner_key, filter = {})
+            Candlepin::Owner.pools(owner_key, filter)
           end
 
           def key_pools(id)

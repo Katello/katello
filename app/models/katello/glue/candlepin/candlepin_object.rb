@@ -5,12 +5,14 @@ module Katello
     module ClassMethods
       def get_for_organization(organization)
         # returns objects from AR database rather than candlepin data
-        pool_ids = self.get_for_owner(organization.label).collect { |x| x['id'] }
+        pool_ids = self.get_for_owner(organization.label, ['id']).
+          collect { |pool| pool['id'] }
         self.where(:cp_id => pool_ids)
       end
 
       def get_candlepin_ids(organization)
-        self.get_for_owner(organization).map { |subscription| subscription["id"] }
+        self.get_for_owner(organization, ['id']).
+          map { |subscription| subscription["id"] }
       end
 
       def import_candlepin_ids(organization)

@@ -18,16 +18,18 @@ module Katello
     end
 
     module InstanceMethods
-      def get_pools
-        Resources::Candlepin::ActivationKey.pools(self.organization.label)
+      def get_pools(filter = {})
+        Resources::Candlepin::ActivationKey.pools(self.organization.label, filter)
       end
 
       def get_keys
         Resources::Candlepin::ActivationKey.get
       end
 
-      def get_key_pools
-        key_pools = Resources::Candlepin::ActivationKey.get(self.cp_id)[0][:pools]
+      def get_key_pools(included_list = %w(pools.pool.amount pools.quantity pools.pool.id))
+        key_pools = Resources::Candlepin::ActivationKey.get(
+          self.cp_id, included_list
+        )[0][:pools]
         pools = []
         key_pools.each do |key_pool|
           key_pool[:pool][:amount] = (key_pool[:quantity] ? key_pool[:quantity] : 0)
