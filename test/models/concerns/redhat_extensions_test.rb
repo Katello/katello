@@ -59,7 +59,7 @@ module Katello
 
   class RedhatExtensionsMediaTest < ActiveSupport::TestCase
     def setup
-      User.current = User.find(users(:admin))
+      User.current = User.find(users(:admin).id)
       @repo_with_distro = katello_repositories(:fedora_17_x86_64)
       version = @repo_with_distro.distribution_version.split('.')
       @os = ::Redhat.create_operating_system("RedHat", version[0], version[1])

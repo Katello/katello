@@ -5,8 +5,6 @@ module Katello
 
       included do
         after_initialize :set_default_overrides, :if => :new_record?
-        before_create :set_katello_default
-        before_save :refute_katello_default_changed
         before_destroy :deletable?
       end
 
@@ -15,35 +13,45 @@ module Katello
         self.ignore_types << ::Hostgroup.name
       end
 
-      def set_katello_default
-        if Location.default_location.nil?
-          self.katello_default = true
-        else
-          self.katello_default = false
-        end
-        true
-      end
-
       def deletable?
-        if self.katello_default
-          errors.add(:base, _("Cannot delete the default Location"))
+        if ::Location.unscoped.count == 1
+          errors.add(
+            :base,
+            _('Cannot delete the last Location. '\
+              'Foreman needs at least one Location to put newly published '\
+              'Puppet content and Hosts registered via subscription-manager'))
           false
+        elsif title == ::Setting[:default_location_subscribed_hosts]
+          errors.add(
+            :base,
+            _('Cannot delete the default Location for subscribed hosts. If you '\
+              'no longer want this Location, change the default Location for '\
+              'subscribed hosts under Administer > Settings, tab Content.')
+          )
+          false
+        elsif title == ::Setting[:default_location_puppet_content]
+          errors.add(
+            :base,
+            _('Cannot delete the default Location for Puppet content. If you '\
+              'no longer want this Location, change the default Location for '\
+              'Puppet content under Administer > Settings, tab Content.')
+          )
+          false
+        else
+          true
         end
-      end
-
-      def refute_katello_default_changed
-        fail _("katello_default cannot be changed.") if Location.default_location && self.katello_default_changed?
       end
 
       module ClassMethods
-        def default_location
-          # In the future, we should have a better way to identify the 'default' location
-          Location.where(:katello_default => true).first
-        end
-
         def default_location_ids
-          return [] unless default_location
-          [default_location.id]
+          ids = []
+          if ::Setting[:default_location_puppet_content].present?
+            ids << ::Location.find_by_title(::Setting[:default_location_puppet_content]).id
+          end
+          if ::Setting[:default_location_subscribed_hosts].present?
+            ids << ::Location.find_by_title(::Setting[:default_location_subscribed_hosts]).id
+          end
+          ids.uniq
         end
       end
     end

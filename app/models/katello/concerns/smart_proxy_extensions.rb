@@ -16,7 +16,7 @@ module Katello
         alias_method_chain :refresh, :puppet_path
 
         before_create :associate_organizations
-        before_create :associate_default_location
+        before_create :associate_default_locations
         before_create :associate_lifecycle_environments
         before_validation :set_default_download_policy
 
@@ -98,17 +98,19 @@ module Katello
         self.organizations = Organization.all if self.default_capsule?
       end
 
-      def associate_default_location
-        if self.default_capsule?
-          default_location = Location.default_location
-          if default_location && !self.locations.include?(default_location)
+      def associate_default_locations
+        return unless default_capsule?
+        ['puppet_content', 'subscribed_hosts'].each do |type|
+          default_location = ::Location.unscoped.find_by_title(
+            ::Setting[:"default_location_#{type}"])
+          if default_location.present? && !locations.include?(default_location)
             self.locations << default_location
           end
         end
       end
 
       def set_default_download_policy
-        self.download_policy ||= Setting[:default_proxy_download_policy]
+        self.download_policy ||= ::Setting[:default_proxy_download_policy]
       end
 
       def associate_lifecycle_environments

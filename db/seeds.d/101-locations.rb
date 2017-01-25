@@ -4,9 +4,15 @@
 # !!! PLEASE KEEP THIS SCRIPT IDEMPOTENT !!!
 #
 
-if Location.exists? && !Location.default_location
+if Location.exists? &&
+    !Setting[:default_location_subscribed_hosts].present? ||
+    !Setting[:default_location_puppet_content].present?
   # Create a new location to be used as the Katello Default.
-  Location.create!(:name => "Default Location") do |loc|
-    loc.katello_default = true
+  default_location = Location.where(:name => ENV['SEED_LOCATION']).first_or_create
+  if Setting[:default_location_subscribed_hosts].empty?
+    Setting[:default_location_subscribed_hosts] = default_location.title
+  end
+  if Setting[:default_location_puppet_content].empty?
+    Setting[:default_location_puppet_content] = default_location.title
   end
 end

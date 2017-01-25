@@ -4,7 +4,8 @@ class Setting::Content < Setting
   def self.load_defaults
     return unless super
 
-    BLANK_ATTRS << 'register_hostname_fact'
+    BLANK_ATTRS.concat %w(register_hostname_fact default_location_subscribed_hosts
+                          default_location_puppet_content)
 
     download_policies = proc { Hash[::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
     proxy_download_policies = proc { Hash[::SmartProxy::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
@@ -62,7 +63,15 @@ class Setting::Content < Setting
         self.set('register_hostname_fact', N_("When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"),
                  '', N_('Subscription manager name registration fact'), nil),
         self.set('erratum_install_batch_size', N_("Errata installed via katello-agent will be triggered in batches of this size. Set to 0 to install all errata in one batch."),
-                 0, N_('Erratum Install Batch Size'))
+                 0, N_('Erratum Install Batch Size')),
+        self.set('default_location_subscribed_hosts',
+                 N_('Default Location where new subscribed hosts will put upon registration'),
+                 nil, N_('Default Location subscribed hosts'), nil,
+                 :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }),
+        self.set('default_location_puppet_content',
+                 N_('Default Location where new Puppet content will be put upon Content View publish'),
+                 nil, N_('Default Location Puppet content'), nil,
+                 :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] })
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true

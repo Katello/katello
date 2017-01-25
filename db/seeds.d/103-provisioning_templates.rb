@@ -36,8 +36,8 @@ end
 # Ensure all default templates are seeded into the first org and loc
 ProvisioningTemplate.where(:default => true).each do |template|
   template.organizations << Organization.first unless template.organizations.include?(Organization.first) || Organization.count.zero?
-  if Location.exists? && Location.default_location && !template.locations.include?(Location.default_location)
-    template.locations << Location.default_location
+  if Location.exists? && !template.location_ids.include?(Location.default_location_ids)
+    template.location_ids << Location.default_location_ids
   end
 end
 

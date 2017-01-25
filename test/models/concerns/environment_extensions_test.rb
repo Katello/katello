@@ -49,7 +49,6 @@ module Katello
     end
 
     def test_locations_disabled_build_by_katello_id
-      reset_default_location
       assert_nothing_raised do
         Environment.build_by_katello_id(@org, @env, @content_view)
       end
