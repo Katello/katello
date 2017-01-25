@@ -6,6 +6,8 @@ module Katello
       Setting.stubs(:[]).with(:administrator).returns("root@localhost")
       Setting.stubs(:[]).with(:send_welcome_email).returns(false)
       Setting.stubs(:[]).with(regexp_matches(/katello_default_/)).returns("Crazy Template")
+      Setting.stubs(:[]).with(:default_location_subscribed_hosts).returns('')
+      Setting.stubs(:[]).with(:default_location_puppet_content).returns('')
       Katello::Repository.stubs(:ensure_sync_notification)
     end
 
@@ -22,6 +24,7 @@ module Katello
 
   class LocationsTest < SeedsTest
     setup do
+      Setting.stubs(:[]).with(:entries_per_page).returns(20)
       Location.skip_callback(:destroy, :before, :deletable?)
       Location.destroy_all
     end
@@ -29,15 +32,17 @@ module Katello
     test "don't create a default location if no locations exist" do
       Location.stubs(:exists?).returns(false)
       seed
-      refute Location.default_location.present?
+      refute Location.default_location_ids.present?
     end
 
     test "create a default location on seed on a fresh install" do
       with_env('SEED_LOCATION' => 'seed_test') do
         seed
       end
-      assert Location.default_location.present?
-      assert_equal "seed_test", Location.default_location.name
+      Setting.unstub(:[])
+      assert Location.default_location_ids.present?
+      default_location = Location.find(Location.default_location_ids.first)
+      assert_equal 'seed_test', default_location.title
     end
   end
 

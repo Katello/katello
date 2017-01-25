@@ -233,13 +233,8 @@ class ActiveSupport::TestCase
   end
 
   def set_default_location
-    loc = Location.first
-    loc.katello_default = true
-    loc.save!
-  end
-
-  def reset_default_location
-    Location.where(katello_default: true).update_all(katello_default: false)
+    Setting[:default_location_subscribed_hosts] = Location.first.title
+    Setting[:default_location_puppet_content] = Location.first.title
   end
 end
 
