@@ -19,6 +19,12 @@
     </div>
 
     <div data-extend-template="layouts/partials/table.html">
+      <div data-block="search">
+        <input type="text" class="form-control" stop-event="click"
+               placeholder="{{ 'Filter...' | translate }}"
+               ng-model="errataFilter"/>
+      </div>
+
       <div data-block="list-actions">
         <button class="btn btn-default"
                 ng-disabled="table.numSelected === 0 || table.working"
@@ -69,7 +75,7 @@
          </thead>
 
          <tbody>
-           <tr bst-table-row ng-repeat="erratum in table.rows" row-select="erratum">
+           <tr bst-table-row ng-repeat="erratum in table.rows | filter:errataFilter" row-select="erratum">
              <td class="small" bst-table-cell>
                  {{ erratum.type }}
              </td>
