@@ -60,7 +60,9 @@ class Setting::Content < Setting
                                               "such as virtual machines and DNS records may also be deleted."),
                  false, N_('Delete Host upon unregister')),
         self.set('register_hostname_fact', N_("When registering a host via subscription-manager, force use the specified fact (in the form of 'fact.fact')"),
-                 '', N_('Subscription manager name registration fact'), nil)
+                 '', N_('Subscription manager name registration fact'), nil),
+        self.set('erratum_install_batch_size', N_("Errata installed via katello-agent will be triggered in batches of this size. Set to 0 to install all errata in one batch."),
+                 0, N_('Erratum Install Batch Size'))
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true

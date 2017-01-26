@@ -5,8 +5,10 @@ module ::Actions::Katello::Host::Erratum
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
-    let(:content_facet) { mock('a_system', uuid: 'uuid').mimic!(::Katello::Host::ContentFacet) }
+    let(:uuid) { 'uuid' }
+    let(:content_facet) { mock('a_system', uuid: uuid).mimic!(::Katello::Host::ContentFacet) }
     let(:host) { mock('a_host', content_facet: content_facet).mimic!(::Host::Managed) }
+    let(:errata_ids) { %w(RHBA-2014-1234 RHBA-2014-1235 RHBA-2014-1236 RHBA-2014-1237) }
     let(:action) do
       action = create_action action_class
       action.stubs(:action_subject).with(host, :errata => errata = %w(RHBA-2014-1234))
@@ -47,6 +49,19 @@ libotf-0.9.9-3.1.el6.x86_64
         specify do
           action.humanized_output.must_equal "No new packages installed"
         end
+      end
+    end
+
+    it 'plans installs with batching' do
+      Setting.stubs(:[]).returns(2)
+      action.stubs(:action_subject).with(host, :errata => errata_ids)
+      host.stubs(:content_facet).returns(content_facet)
+      content_facet.stubs(:uuid).returns(uuid)
+      plan_action action, host, errata_ids
+
+      errata_ids.each_slice(Setting['erratum_install_batch_size']) do |errata_ids_batch|
+        assert_action_planned_with(action, pulp_action_class, consumer_uuid: content_facet.uuid,
+                                   type: 'erratum', args: errata_ids_batch)
       end
     end
   end
