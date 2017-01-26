@@ -112,9 +112,13 @@ module Katello
       @original_bulk_load_size = SETTINGS[:katello][:pulp][:bulk_load_size]
     end
 
+    def random_json(count)
+      count.times.map { |i| {'_id' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
+    end
+
     def test_import_all
       SETTINGS[:katello][:pulp][:bulk_load_size] = 10
-      json = 30.times.map { |i| {'_id' => SecureRandom.hex, 'name' => "somename-#{i}", 'repository_memberships' => [@repo.pulp_id]} }
+      json = random_json(30)
 
       Katello::Pulp::Rpm.stubs(:fetch).with(0, 10).returns(json[0..10])
       Katello::Pulp::Rpm.stubs(:fetch).with(11, 10).returns(json[11..21])
@@ -122,6 +126,32 @@ module Katello
       Katello::Pulp::Rpm.stubs(:fetch).with(31, 10).returns([])
       Rpm.import_all
       assert_equal 30, @repo.reload.rpms.count
+    end
+
+    def test_import_all_uuids
+      json = random_json(10)
+      uuids = json.map { |obj| obj['_id'] }
+      Katello::Pulp::Rpm.stubs(:fetch).with(0, 10, uuids).returns(json)
+
+      Katello::Rpm.import_all(uuids)
+      uuids_in_repo = @repo.reload.rpms.pluck(:uuid)
+
+      uuids.each do |uuid|
+        assert_includes uuids_in_repo, uuid
+      end
+    end
+
+    def test_import_all_uuids_no_assoc
+      json = random_json(10)
+      uuids = json.map { |obj| obj['_id'] }
+      Katello::Pulp::Rpm.stubs(:fetch).with(0, 10, uuids).returns(json)
+
+      Katello::Rpm.import_all(uuids, :index_repository_association => false)
+      uuids_in_repo = @repo.reload.rpms.pluck(:uuid)
+
+      uuids.each do |uuid|
+        refute_includes uuids_in_repo, uuid
+      end
     end
 
     def teardown
