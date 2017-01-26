@@ -59,10 +59,10 @@ module Katello
         end
 
         if uuids
-          content_unit_class.fetch_by_uuids(uuids, &process_block)
+          results = content_unit_class.fetch_by_uuids(uuids, &process_block).flatten
+          update_repository_associations(results, true) if index_repository_association
         else
-          results = content_unit_class.fetch_all(&process_block)
-          results.flatten
+          results = content_unit_class.fetch_all(&process_block).flatten
           update_repository_associations(results) if index_repository_association
         end
       end

@@ -20,7 +20,7 @@ module Actions
           elsif repo.file?
             ::Katello::FileUnit.import_for_repository(repo)
           else
-            ::Katello::Rpm.import_all(unit_ids, :additive => true)
+            ::Katello::Rpm.import_all(unit_ids)
           end
         end
 
