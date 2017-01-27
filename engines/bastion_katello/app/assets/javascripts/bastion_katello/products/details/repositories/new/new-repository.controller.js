@@ -8,7 +8,7 @@
  * @requires GPGKey
  * @requires FormUtils
  * @requires translate
- * @requires GlobalNotification
+ * @requires Notification
  * @requires ApiErrorHandler
  * @requires BastionConfig
  * @requires Checksum
@@ -20,11 +20,11 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
-    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
+    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
+    function ($scope, Repository, Product, GPGKey, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
 
         function success() {
-            GlobalNotification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
+            Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
             $scope.transitionTo('product.repositories', {productId: $scope.$stateParams.productId});
         }
 
@@ -48,7 +48,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             });
 
             if (!foundError) {
-                GlobalNotification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
             }
         }
 
@@ -56,9 +56,6 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             error: false,
             loading: true
         };
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId, unprotected: true,
             'checksum_type': null, 'mirror_on_sync': true, 'verify_ssl_on_sync': true,

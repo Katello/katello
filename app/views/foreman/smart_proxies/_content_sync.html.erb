@@ -1,8 +1,6 @@
 <div>
   <h3><%= _('Content Sync') %></h3>
 
-  <div bst-alerts error-messages="syncErrorMessages"></div>
-
   {{ syncStatusText(syncState, syncStatus) }}
   <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED, syncState.FAILURE)">
     {{ syncTask.progressbar.value || 0 | number: 0 }}%

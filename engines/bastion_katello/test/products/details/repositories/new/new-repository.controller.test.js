@@ -1,7 +1,7 @@
 describe('Controller: NewRepositoryController', function() {
     var $scope,
         FormUtils,
-        GlobalNotification,
+        Notification,
         DownloadPolicy,
         OstreeUpstreamSyncPolicy,
         $httpBackend;
@@ -22,7 +22,7 @@ describe('Controller: NewRepositoryController', function() {
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
-        GlobalNotification = $injector.get('GlobalNotification');
+        Notification = $injector.get('Notification');
 
         $scope.detailsTable = {rows: []};
         $scope.$stateParams = {productId: 1};
@@ -44,7 +44,7 @@ describe('Controller: NewRepositoryController', function() {
             Product: Product,
             GPGKey: GPGKey,
             Architecture: Architecture,
-            GlobalNotification: GlobalNotification,
+            Notification: Notification,
             Setting: Setting
         });
     }));
@@ -71,11 +71,11 @@ describe('Controller: NewRepositoryController', function() {
 
         spyOn($scope, 'transitionTo');
         spyOn(repository, '$save').and.callThrough();
-        spyOn(GlobalNotification, "setSuccessMessage");
+        spyOn(Notification, "setSuccessMessage");
         $scope.save(repository);
 
         expect(repository.$save).toHaveBeenCalled();
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.transitionTo).toHaveBeenCalledWith('product.repositories', {productId: 1});
     });
 

@@ -11,7 +11,7 @@
  * @requires Nutupane
  * @requires Host
  * @requires HostBulkAction
- * @requires GlobalNotification
+ * @requires Notification
  * @requires CurrentOrganization
  * @requires ContentHostsHelper
  *
@@ -21,12 +21,9 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'GlobalNotification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer',
-    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, GlobalNotification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer) {
+    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'Notification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer',
+    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, Notification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer) {
         var nutupane, params, query;
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         if ($location.search().search) {
             query = '"' + $location.search().search + '"';
@@ -97,7 +94,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             error = function (response) {
                 deferred.reject(response.data.errors);
                 angular.forEach(response.data.errors, function (responseError) {
-                    GlobalNotification.setErrorMessage(responseError);
+                    Notification.setErrorMessage(responseError);
                 });
             };
 

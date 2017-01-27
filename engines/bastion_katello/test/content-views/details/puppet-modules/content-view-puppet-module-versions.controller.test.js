@@ -1,5 +1,5 @@
 describe('Controller: ContentViewPuppetModuleVersionsController', function() {
-    var $scope, $controller, dependencies, ContentView, ContentViewPuppetModule, puppetModule, GlobalNotification;
+    var $scope, $controller, dependencies, ContentView, ContentViewPuppetModule, puppetModule, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'))
 
@@ -15,7 +15,7 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
             author: 'Geppetto'
         };
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -29,7 +29,7 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
             $scope: $scope,
             ContentView: ContentView,
             ContentViewPuppetModule: ContentViewPuppetModule,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         };
 
         $controller('ContentViewPuppetModuleVersionsController', dependencies);
@@ -41,30 +41,30 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
 
     it("provides a way to create a new content view puppet module", function () {
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
 
         $scope.selectVersion(puppetModule);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.list',
             {contentViewId: 1});
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("provides a way to updating an existing content view puppet module", function () {
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
 
         $scope.$stateParams.moduleId = 3;
         $scope.selectVersion(puppetModule);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.list',
             {contentViewId: 1});
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("provides a way to select the latest version of a puppet module", function () {
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
 
         puppetModule.useLatest = true;
 
@@ -72,6 +72,6 @@ describe('Controller: ContentViewPuppetModuleVersionsController', function() {
 
         expect($scope.transitionTo).toHaveBeenCalledWith('content-view.puppet-modules.list',
             {contentViewId: 1});
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 });

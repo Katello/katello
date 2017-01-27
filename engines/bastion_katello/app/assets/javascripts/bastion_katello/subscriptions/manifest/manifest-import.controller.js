@@ -14,8 +14,8 @@
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestImportController',
-    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Organization', 'Task', 'Subscription', 'GlobalNotification',
-    function ($scope, $q, translate, CurrentOrganization, Organization, Task, Subscription, GlobalNotification) {
+    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Organization', 'Task', 'Subscription', 'Notification',
+    function ($scope, $q, translate, CurrentOrganization, Organization, Task, Subscription, Notification) {
 
         function buildManifestLink(upstream) {
             var url = upstream.webUrl,
@@ -80,7 +80,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 if (task.humanized.errors.length > 0) {
                     errorMessageWithDetails += ' ' + task.humanized.errors.join(' ');
                 }
-                GlobalNotification.setErrorMessage(errorMessageWithDetails);
+                Notification.setErrorMessage(errorMessageWithDetails);
                 $scope.histories = Subscription.manifestHistory();
             }
         };
@@ -92,7 +92,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.unregisterSearch();
                 if ($scope.task.result === 'success') {
                     $scope.refreshOrganizationInfo();
-                    GlobalNotification.setSuccessMessage(translate("Manifest successfully imported."));
+                    Notification.setSuccessMessage(translate("Manifest successfully imported."));
                 } else {
                     $scope.handleTaskErrors(task, translate("Error importing manifest."));
                 }
@@ -117,7 +117,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.unregisterSearch();
                 if ($scope.task.result === 'success') {
                     $scope.saveSuccess = true;
-                    GlobalNotification.setSuccessMessage(translate("Manifest successfully deleted."));
+                    Notification.setSuccessMessage(translate("Manifest successfully deleted."));
                     $scope.refreshOrganizationInfo();
                 } else {
                     $scope.handleTaskErrors(task, translate("Error deleting manifest."));
@@ -151,7 +151,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.unregisterSearch();
                 if ($scope.task.result === 'success') {
                     $scope.saveSuccess = true;
-                    GlobalNotification.setSuccessMessage(translate("Manifest successfully refreshed."));
+                    Notification.setSuccessMessage(translate("Manifest successfully refreshed."));
                     $scope.refreshOrganizationInfo();
                 } else {
                     $scope.handleTaskErrors(task, translate("Error refreshing manifest."));
@@ -175,11 +175,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             });
 
             deferred = Organization.update(whitelistedOrganizationObject, function () {
-                GlobalNotification.setSuccessMessage(translate('Repository URL updated'));
+                Notification.setSuccessMessage(translate('Repository URL updated'));
                 $scope.refreshOrganizationInfo();
             }, function (response) {
                 angular.forEach(response.data.error['full_messages'], function (message) {
-                    GlobalNotification.setErrorMessage(translate("An error occurred saving the URL: ") + message);
+                    Notification.setErrorMessage(translate("An error occurred saving the URL: ") + message);
                 });
             });
 

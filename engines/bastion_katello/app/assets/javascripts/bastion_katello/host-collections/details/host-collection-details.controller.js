@@ -9,17 +9,15 @@
  * @requires Host
  * @requires ContentHostsModalHelper
  * @requires HostCollection
+ * @requires Notification
  * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHostsModalHelper', 'HostCollection', 'ApiErrorHandler',
-    function ($scope, $state, $q, translate, Host, ContentHostsModalHelper, HostCollection, ApiErrorHandler) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
+    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHostsModalHelper', 'HostCollection', 'Notification', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, ContentHostsModalHelper, HostCollection, Notification, ApiErrorHandler) {
         $scope.panel = {
             error: false,
             loading: true
@@ -87,11 +85,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
 
             hostCollection.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(translate('Host Collection updated'));
+                Notification.setSuccessMessage(translate('Host Collection updated'));
                 $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
-                $scope.errorMessages.push(translate("An error occurred saving the Host Collection: ") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred saving the Host Collection: ") + response.data.displayMessage);
             });
             return deferred.promise;
         };
@@ -99,9 +97,9 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
         $scope.removeHostCollection = function (hostCollection) {
             hostCollection.$delete(function () {
                 $scope.transitionTo('host-collections');
-                $scope.successMessages.push(translate('Host Collection removed.'));
+                Notification.setSuccessMessage(translate('Host Collection removed.'));
             }, function (response) {
-                $scope.errorMessages.push(translate("An error occurred removing the Host Collection: ") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred removing the Host Collection: ") + response.data.displayMessage);
             });
         };
 

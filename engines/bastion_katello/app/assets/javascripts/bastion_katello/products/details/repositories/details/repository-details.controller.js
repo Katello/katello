@@ -1,5 +1,5 @@
 (function () {
-    function RepositoryDetailsController($scope, $state, translate, Repository, Product, ApiErrorHandler) {
+    function RepositoryDetailsController($scope, $state, translate, Repository, Product, ApiErrorHandler, Notification) {
         /**
          * @ngdoc object
          * @name  Bastion.repositories.controller:RepositoryDetailsController
@@ -9,17 +9,17 @@
          * @requires translate
          * @requires Repository
          * @requires ApiErrorHandler
+         * @requires Notification
          *
          * @description
          *   Core functionality for Repository.
          */
 
         var errorHandler = function errorHandler(response) {
-            $scope.errorMessages = response.data.errors;
+            angular.forEach(response.data.errors, function (error) {
+                Notification.setErrorMessage(error);
+            });
         };
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         $scope.page = {
             error: false,
@@ -84,7 +84,7 @@
 
             success = function () {
                 $scope.transitionTo('product.repositories', {productId: $scope.$stateParams.productId});
-                $scope.$parent.successMessages = [translate('Repository "%s" successfully deleted').replace('%s', repositoryName)];
+                Notification.setSuccessMessage(translate('Repository "%s" successfully deleted').replace('%s', repositoryName));
             };
 
             repository.$delete(success, errorHandler);
@@ -112,5 +112,5 @@
 
     angular.module('Bastion.repositories').controller('RepositoryDetailsController', RepositoryDetailsController);
 
-    RepositoryDetailsController.$inject = ['$scope', '$state', 'translate', 'Repository', 'Product', 'ApiErrorHandler'];
+    RepositoryDetailsController.$inject = ['$scope', '$state', 'translate', 'Repository', 'Product', 'ApiErrorHandler', 'Notification'];
 })();

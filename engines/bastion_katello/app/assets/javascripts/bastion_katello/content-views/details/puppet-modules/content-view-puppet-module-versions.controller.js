@@ -7,14 +7,14 @@
  * @requires Nutupane
  * @requires ContentView
  * @requires ContentViewPuppetModule
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides the ability to select a version of a Puppet Module for a Content View.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersionsController',
-    ['$scope', 'translate', 'Nutupane', 'ContentView', 'ContentViewPuppetModule', 'GlobalNotification',
-    function ($scope, translate, Nutupane, ContentView, ContentViewPuppetModule, GlobalNotification) {
+    ['$scope', 'translate', 'Nutupane', 'ContentView', 'ContentViewPuppetModule', 'Notification',
+    function ($scope, translate, Nutupane, ContentView, ContentViewPuppetModule, Notification) {
         var success, error, nutupane, params;
 
         params = {
@@ -49,12 +49,12 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersi
         success = function () {
             $scope.transitionTo('content-view.puppet-modules.list',
                 {contentViewId: $scope.$stateParams.contentViewId});
-            GlobalNotification.setSuccessMessage(translate('Puppet module added to Content View'));
+            Notification.setSuccessMessage(translate('Puppet module added to Content View'));
         };
 
         error = function (response) {
             angular.forEach(response.data.errors, function (errorMessage) {
-                GlobalNotification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
+                Notification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
             });
         };
     }]

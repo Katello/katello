@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsController', function() {
-    var $scope, $state, translate, repository, syncableRepo;
+    var $scope, $state, translate, Notification, repository, syncableRepo;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -27,6 +27,11 @@ describe('Controller: RepositoryDetailsController', function() {
             return message;
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         Repository.sync = function(params, callback) {
             callback.call(this, {'state': 'running'});
         };
@@ -37,6 +42,7 @@ describe('Controller: RepositoryDetailsController', function() {
             $scope: $scope,
             $state: $state,
             translate: translate,
+            Notification: Notification,
             Product: Product,
             Repository: Repository
         });

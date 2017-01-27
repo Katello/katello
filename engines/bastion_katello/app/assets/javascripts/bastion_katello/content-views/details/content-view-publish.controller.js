@@ -5,7 +5,7 @@
  * @requires $scope
  * @requires translate
  * @requires ContentView
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -13,7 +13,7 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', 'translate', 'ContentView', 'GlobalNotification', function ($scope, translate, ContentView, GlobalNotification) {
+    ['$scope', 'translate', 'ContentView', 'Notification', function ($scope, translate, ContentView, Notification) {
 
         function success() {
             $scope.transitionTo('content-view.versions',
@@ -26,7 +26,7 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         }
 
         function failure(response) {
-            GlobalNotification.setErrorMessage(response.data.displayMessage);
+            Notification.setErrorMessage(response.data.displayMessage);
             $scope.working = false;
         }
 

@@ -7,15 +7,15 @@
  * @requires Nutupane
  * @requires HostSubscription
  * @requires ContentOverrideHelper
- * @requires GlobalNotification
+ * @requires Notification
  * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the content-host products action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsController',
-    ['$scope', 'translate', 'Nutupane', 'HostSubscription', 'ContentOverrideHelper', 'GlobalNotification', 'CurrentOrganization',
-    function ($scope, translate, Nutupane, HostSubscription, ContentOverrideHelper, GlobalNotification, CurrentOrganization) {
+    ['$scope', 'translate', 'Nutupane', 'HostSubscription', 'ContentOverrideHelper', 'Notification', 'CurrentOrganization',
+    function ($scope, translate, Nutupane, HostSubscription, ContentOverrideHelper, Notification, CurrentOrganization) {
         var params, saveContentOverride, success, error;
 
         params = {
@@ -42,13 +42,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
 
         success = function () {
             $scope.table.working = false;
-            GlobalNotification.setSuccessMessage(translate('Repository Sets settings saved successfully.'));
+            Notification.setSuccessMessage(translate('Repository Sets settings saved successfully.'));
             $scope.nutupane.refresh();
         };
 
         error = function (response) {
             $scope.table.working = false;
-            GlobalNotification.setErrorMessage(response.data.errors);
+            Notification.setErrorMessage(response.data.errors);
         };
 
         saveContentOverride = function (contentOverrides) {

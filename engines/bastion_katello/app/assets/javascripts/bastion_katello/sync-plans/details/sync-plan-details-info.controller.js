@@ -7,15 +7,14 @@
  * @requires translate
  * @requires SyncPlan
  * @requires MenuExpander
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the sync plan details action pane.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
-    ['$scope', '$q', 'translate', 'SyncPlan', 'MenuExpander',
-        function ($scope, $q, translate, SyncPlan, MenuExpander) {
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
+    ['$scope', '$q', 'translate', 'SyncPlan', 'MenuExpander', 'Notification',
+        function ($scope, $q, translate, SyncPlan, MenuExpander, Notification) {
             $scope.intervals = [
                 {id: 'hourly', value: translate('hourly')},
                 {id: 'daily', value: translate('daily')},
@@ -49,14 +48,14 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
                 syncPlan.$update(function (response) {
                     updateSyncPlan(syncPlan);
                     deferred.resolve(response);
-                    $scope.successMessages.push(translate('Sync Plan Saved'));
+                    Notification.setSuccessMessage(translate('Sync Plan Saved'));
                 }, function (response) {
                     deferred.reject(response);
                     angular.forEach(response.data.errors, function (errorMessage, key) {
                         if (angular.isString(key)) {
                             errorMessage = [key, errorMessage].join(' ');
                         }
-                        $scope.errorMessages.push(translate("An error occurred saving the Sync Plan: ") + errorMessage);
+                        Notification.setErrorMessage(translate("An error occurred saving the Sync Plan: ") + errorMessage);
                     });
                 });
 

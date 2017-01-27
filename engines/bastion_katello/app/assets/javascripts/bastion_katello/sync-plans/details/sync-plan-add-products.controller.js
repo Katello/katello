@@ -10,17 +10,15 @@
  * @requires Product
  * @requires CurrentOrganization
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for adding products to a sync plan.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
-    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Product', 'CurrentOrganization', 'Nutupane',
-        function ($scope, $q, $location, translate, SyncPlan, Product, CurrentOrganization, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Product', 'CurrentOrganization', 'Nutupane', 'Notification',
+        function ($scope, $q, $location, translate, SyncPlan, Product, CurrentOrganization, Nutupane, Notification) {
             var productsNutupane, params;
-
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
 
             params = {
                 'search': $location.search().search || "",
@@ -48,8 +46,8 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
                 };
 
                 success = function (response) {
-                    $scope.successMessages = [translate('Added %x products to sync plan "%y".')
-                        .replace('%x', $scope.table.numSelected).replace('%y', $scope.syncPlan.name)];
+                    Notification.setSuccessMessage(translate('Added %x products to sync plan "%y".')
+                        .replace('%x', $scope.table.numSelected).replace('%y', $scope.syncPlan.name));
                     $scope.table.working = false;
                     $scope.table.selectAll(false);
                     productsNutupane.refresh();
@@ -59,7 +57,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanAddProductsController',
 
                 error = function (response) {
                     deferred.reject(response.data.errors);
-                    $scope.errorMessages = response.data.errors.base;
+                    Notification.setErrorMessage(response.data.errors.base);
                     $scope.table.working = false;
                 };
 

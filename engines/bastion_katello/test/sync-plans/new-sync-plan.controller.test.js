@@ -1,5 +1,5 @@
 describe('Controller: NewSyncPlanController', function() {
-    var $scope, translate, SyncPlan, SyncPlanHelper, GlobalNotification;
+    var $scope, translate, SyncPlan, SyncPlanHelper, Notification;
 
     beforeEach(module(
         'Bastion.sync-plans',
@@ -10,7 +10,7 @@ describe('Controller: NewSyncPlanController', function() {
         var $controller = $injector.get('$controller');
 
         SyncPlan = $injector.get('MockResource').$new()
-        GlobalNotification = $injector.get('GlobalNotification');
+        Notification = $injector.get('Notification');
         $scope = $injector.get('$rootScope').$new();
         $scope.$state = {go: function () {}};
         SyncPlanHelper = {
@@ -43,7 +43,7 @@ describe('Controller: NewSyncPlanController', function() {
             translate: translate,
             SyncPlan: SyncPlan,
             SyncPlanHelper: SyncPlanHelper,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -74,12 +74,12 @@ describe('Controller: NewSyncPlanController', function() {
 
         it('and succeed', function() {
             spyOn($scope.$state, 'go');
-            spyOn(GlobalNotification, "setSuccessMessage");
+            spyOn(Notification, "setSuccessMessage");
 
             $scope.createSyncPlan(syncPlan);
 
             expect($scope.working).toBe(false);
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
             expect($scope.$state.go).toHaveBeenCalledWith('sync-plan.info', {syncPlanId: syncPlan.id});
         });
 

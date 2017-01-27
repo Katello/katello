@@ -5,12 +5,13 @@
  * @requires $scope
  * @requires GPGKey
  * @requires translate
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the gpgKey details action pane.
  */
 angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
-    ['$scope', 'GPGKey', 'translate', function ($scope, GPGKey, translate) {
+    ['$scope', 'GPGKey', 'translate', 'Notification', function ($scope, GPGKey, translate, Notification) {
 
         $scope.panel = $scope.panel || {loading: false};
         $scope.progress = {uploading: false};
@@ -26,11 +27,11 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
         $scope.uploadContent = function (content) {
             if (content && (content !== "Please wait...")) {
                 if (content.status === 'success') {
-                    $scope.$parent.successMessages = [translate('GPG Key successfully uploaded')];
+                    Notification.setSuccessMessage(translate('GPG Key successfully uploaded'));
                     $scope.uploadStatus = 'success';
                     $scope.gpgKey.$get();
                 } else {
-                    $scope.$parent.errorMessages = [content.displayMessage];
+                    Notification.setErrorMessage(content.displayMessage);
                     $scope.uploadStatus = 'error';
                 }
 
@@ -44,7 +45,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
             } else {
                 error = content;
             }
-            $scope.$parent.errorMessages = [translate('Error during upload: ') + error];
+            Notification.setErrorMessage(translate('Error during upload: ') + error);
             $scope.uploadStatus = 'error';
             $scope.progress.uploading = false;
         };

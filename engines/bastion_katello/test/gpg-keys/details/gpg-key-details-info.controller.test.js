@@ -1,5 +1,5 @@
 describe('Controller: GPGKeyDetailsInfoController', function() {
-    var $scope, translate;
+    var $scope, translate, Notification;
 
     beforeEach(module(
         'Bastion.gpg-keys',
@@ -18,10 +18,16 @@ describe('Controller: GPGKeyDetailsInfoController', function() {
             return message;
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $controller('GPGKeyDetailsInfoController', {
             $scope: $scope,
             GPGKey: GPGKey,
-            translate: translate
+            translate: translate,
+            Notification: Notification
         });
 
     }));
@@ -31,20 +37,24 @@ describe('Controller: GPGKeyDetailsInfoController', function() {
     });
 
     it('should save a new gpg key resource on upload', function() {
+        spyOn(Notification, 'setSuccessMessage');
+
         spyOn($scope.gpgKey, '$get');
         $scope.uploadContent({"status": "success"});
 
-        expect($scope.errorMessage).not.toBeDefined();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
+
         expect($scope.uploadStatus).toBe('success');
         expect($scope.gpgKey.$get).toHaveBeenCalled();
     });
 
     it('should error on a new gpg key resource on upload', function() {
+        spyOn(Notification, 'setErrorMessage');
+
         spyOn($scope.gpgKey, '$get');
         $scope.uploadContent({"errors": "....", "displayMessage":"......"});
 
-        expect($scope.errorMessages).toBeDefined();
-        expect($scope.uploadStatus).toBe('error');
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
         expect($scope.gpgKey.$get).not.toHaveBeenCalled();
     });
 
@@ -59,11 +69,11 @@ describe('Controller: GPGKeyDetailsInfoController', function() {
             the request exceeds the capacity limit. \
             </body></html>';
 
+        spyOn(Notification, 'setErrorMessage');
         spyOn($scope.gpgKey, '$get');
         $scope.uploadError(error, text);
 
-        expect($scope.errorMessages).toBeDefined();
-        expect($scope.errorMessages[0]).toBe('Error during upload: File too large.');
+        expect(Notification.setErrorMessage).toHaveBeenCalledWith('Error during upload: File too large.');
         expect($scope.uploadStatus).toBe('error');
         expect($scope.gpgKey.$get).not.toHaveBeenCalled();
     });

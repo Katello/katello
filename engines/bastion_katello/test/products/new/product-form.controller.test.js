@@ -1,7 +1,7 @@
 describe('Controller: ProductFormController', function() {
     var $scope,
         FormUtils,
-        GlobalNotification,
+        Notification,
         modalResponse,
         SyncPlan,
         $uibModal,
@@ -22,7 +22,7 @@ describe('Controller: ProductFormController', function() {
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
-        GlobalNotification = $injector.get('GlobalNotification');
+        Notification = $injector.get('Notification');
 
         $scope.productForm = $injector.get('MockForm');
         $scope.panel = {};
@@ -54,7 +54,7 @@ describe('Controller: ProductFormController', function() {
             GPGKey: GPGKey,
             SyncPlan: SyncPlan,
             FormUtils: FormUtils,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 

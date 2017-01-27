@@ -8,17 +8,15 @@
  * @requires translate
  * @requires ActivationKey
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for adding host collections to an activation key.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'ActivationKey', 'Nutupane',
-    function ($scope, $q, $location, translate, ActivationKey, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'ActivationKey', 'Nutupane', 'Notification',
+    function ($scope, $q, $location, translate, ActivationKey, Nutupane, Notification) {
         var hostCollectionsPane, params;
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         params = {
             'search': $location.search().search || "",
@@ -46,9 +44,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
             };
 
             success = function (response) {
-                $scope.successMessages = [translate('Added %x host collections to activation key "%y".')
+                var message = translate('Added %x host collections to activation key "%y".')
                     .replace('%x', $scope.table.numSelected)
-                    .replace('%y', $scope.activationKey.name)];
+                    .replace('%y', $scope.activationKey.name);
+
+                Notification.setSuccessMessage(message);
                 $scope.table.working = false;
                 $scope.table.selectAll(false);
                 hostCollectionsPane.refresh();
@@ -58,7 +58,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddHostCollec
 
             error = function (response) {
                 deferred.reject(response.data.errors);
-                $scope.errorMessages = response.data.errors.base;
+                Notification.setErrorMessage(response.data.errors.base);
                 $scope.table.working = false;
             };
 

@@ -4,13 +4,13 @@
  *
  * @requires $scope
  * @requires ContentView
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for deleting Content Views
  */
 angular.module('Bastion.content-views').controller('ContentViewDeletionController',
-    ['$scope', 'ContentView', 'GlobalNotification', function ($scope, ContentView, GlobalNotification) {
+    ['$scope', 'ContentView', 'Notification', function ($scope, ContentView, Notification) {
 
         function success() {
             $scope.transitionTo('content-views');
@@ -18,7 +18,7 @@ angular.module('Bastion.content-views').controller('ContentViewDeletionControlle
         }
 
         function failure(response) {
-            GlobalNotification.setErrorMessage(response.data.displayMessage);
+            Notification.setErrorMessage(response.data.displayMessage);
             $scope.working = false;
         }
 

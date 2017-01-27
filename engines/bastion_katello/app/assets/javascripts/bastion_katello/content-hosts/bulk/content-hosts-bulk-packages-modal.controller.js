@@ -10,7 +10,7 @@
  * @requires HostBulkAction
  * @requires CurrentOrganization
  * @requires translate
- * @requires GlobalNotification
+ * @requires Notification
  * @requires BastionConfig
  * @requires hostIds
  *
@@ -18,8 +18,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModalController',
-    ['$scope', '$location', '$timeout', '$window', '$uibModalInstance', 'HostBulkAction', 'CurrentOrganization', 'translate', 'GlobalNotification', 'BastionConfig', 'hostIds',
-    function ($scope, $location, $timeout, $window, $uibModalInstance, HostBulkAction, CurrentOrganization, translate, GlobalNotification, BastionConfig, hostIds) {
+    ['$scope', '$location', '$timeout', '$window', '$uibModalInstance', 'HostBulkAction', 'CurrentOrganization', 'translate', 'Notification', 'BastionConfig', 'hostIds',
+    function ($scope, $location, $timeout, $window, $uibModalInstance, HostBulkAction, CurrentOrganization, translate, Notification, BastionConfig, hostIds) {
 
         function successMessage(type) {
             var messages = {
@@ -93,12 +93,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
             $scope.content.confirm = false;
 
             success = function () {
-                GlobalNotification.setSuccessMessage(successMessage($scope.content.action));
+                Notification.setSuccessMessage(successMessage($scope.content.action));
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (responseError) {
-                    GlobalNotification.setErrorMessage(responseError);
+                    Notification.setErrorMessage(responseError);
                 });
             };
 

@@ -1,5 +1,5 @@
 describe('Controller: DockerTagFilterController', function() {
-    var $scope, Rule, DockerTag, GlobalNotification;
+    var $scope, Rule, DockerTag, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -11,7 +11,7 @@ describe('Controller: DockerTagFilterController', function() {
         Rule = $injector.get('MockResource').$new();
         DockerTag = $injector.get('MockResource').$new();
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -39,7 +39,7 @@ describe('Controller: DockerTagFilterController', function() {
             translate: translate,
             Rule: Rule,
             DockerTag: DockerTag,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
 
         $scope.table.getSelected = function () {};
@@ -59,11 +59,11 @@ describe('Controller: DockerTagFilterController', function() {
                 version: 1
             };
 
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
         });
 
         afterEach(function () {
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and create the rule if it's new", function () {

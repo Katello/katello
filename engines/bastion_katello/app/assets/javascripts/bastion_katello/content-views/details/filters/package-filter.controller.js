@@ -10,17 +10,17 @@
  * @requires Filter
  * @requires Rule
  * @requires Package
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles package filter rules for a content view.
  */
 angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'Package', 'GlobalNotification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, Package, GlobalNotification) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'Package', 'Notification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, Package, Notification) {
         var nutupane, params;
 
         function failure(response) {
-            GlobalNotification.setErrorMessage(response.data.displayMessage);
+            Notification.setErrorMessage(response.data.displayMessage);
         }
 
         function createRule(rule) {
@@ -31,7 +31,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 rule.editMode = false;
                 rule.working = false;
 
-                GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
+                Notification.setSuccessMessage(translate('Package successfully added.'));
             };
 
             if ($scope.valid(rule)) {
@@ -48,7 +48,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 rule.previous = {};
                 rule.editMode = false;
                 rule.working = false;
-                GlobalNotification.setSuccessMessage(translate('Package successfully updated.'));
+                Notification.setSuccessMessage(translate('Package successfully updated.'));
             };
 
             error = function () {
@@ -63,7 +63,7 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
 
             success = function () {
                 nutupane.removeRow(ruleId);
-                GlobalNotification.setSuccessMessage(translate('Package successfully removed.'));
+                Notification.setSuccessMessage(translate('Package successfully removed.'));
             };
 
             Rule.delete({filterId: $scope.$stateParams.filterId, ruleId: ruleId}, success, failure);

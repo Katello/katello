@@ -9,7 +9,7 @@
  * @requires ProductBulkAction
  * @requires SyncPlan
  * @requires CurrentOrganization
- * @requires GlobalNotification
+ * @requires Notification
  * @requires $uibModalInstance
  * @requires bulkParams
  *
@@ -17,8 +17,8 @@
  *   A controller for providing bulk action functionality to the products page.
  */
 angular.module('Bastion.products').controller('ProductsBulkSyncPlanModalController',
-    ['$scope', '$state', 'translate', 'Nutupane', 'ProductBulkAction', 'SyncPlan', 'CurrentOrganization', 'GlobalNotification', '$uibModalInstance', 'bulkParams',
-        function ($scope, $state, translate, Nutupane, ProductBulkAction, SyncPlan, CurrentOrganization, GlobalNotification, $uibModalInstance, bulkParams) {
+    ['$scope', '$state', 'translate', 'Nutupane', 'ProductBulkAction', 'SyncPlan', 'CurrentOrganization', 'Notification', '$uibModalInstance', 'bulkParams',
+        function ($scope, $state, translate, Nutupane, ProductBulkAction, SyncPlan, CurrentOrganization, Notification, $uibModalInstance, bulkParams) {
             var success, error, nutupane, params;
 
             params = {
@@ -37,11 +37,11 @@ angular.module('Bastion.products').controller('ProductsBulkSyncPlanModalControll
 
             success = function (response) {
                 angular.forEach(response.displayMessages.success, function(message) {
-                    GlobalNotification.setSuccessMessage(message);
+                    Notification.setSuccessMessage(message);
                 });
 
                 angular.forEach(response.displayMessages.error, function(message) {
-                    GlobalNotification.setErrorMessage(message);
+                    Notification.setErrorMessage(message);
                 });
 
                 nutupane.invalidate();
@@ -49,7 +49,7 @@ angular.module('Bastion.products').controller('ProductsBulkSyncPlanModalControll
 
             error = function (response) {
                 angular.forEach(response.data.errors, function(message) {
-                    GlobalNotification.setErrorMessage(translate("An error occurred updating the sync plan: " ) + message);
+                    Notification.setErrorMessage(translate("An error occurred updating the sync plan: " ) + message);
                 });
             };
 

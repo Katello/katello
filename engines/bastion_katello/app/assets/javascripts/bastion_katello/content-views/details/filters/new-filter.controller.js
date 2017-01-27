@@ -6,12 +6,12 @@
  * @requires translate
  * @requires Filter
  * @requires Rule
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  */
 angular.module('Bastion.content-views').controller('NewFilterController',
-    ['$scope', 'translate', 'Filter', 'Rule', 'GlobalNotification', function ($scope, translate, Filter, Rule, GlobalNotification) {
+    ['$scope', 'translate', 'Filter', 'Rule', 'Notification', function ($scope, translate, Filter, Rule, Notification) {
         var filterType;
 
         function transitionToDetails(filter) {
@@ -44,7 +44,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
             };
 
             error = function (response) {
-                GlobalNotification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
             };
 
             rule.$save({filterId: filter.id}, addSuccess, error);
