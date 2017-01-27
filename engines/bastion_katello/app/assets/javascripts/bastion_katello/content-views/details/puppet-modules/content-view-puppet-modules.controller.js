@@ -6,14 +6,14 @@
  * @requires translate
  * @requires Nutupane
  * @requires ContentViewPuppetModule
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides functionality to the Content View existing Puppet Modules list.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModulesController',
-    ['$scope', 'translate', 'Nutupane', 'ContentViewPuppetModule', 'GlobalNotification',
-    function ($scope, translate, Nutupane, ContentViewPuppetModule, GlobalNotification) {
+    ['$scope', 'translate', 'Nutupane', 'ContentViewPuppetModule', 'Notification',
+    function ($scope, translate, Nutupane, ContentViewPuppetModule, Notification) {
         var nutupane = new Nutupane(ContentViewPuppetModule, {
             contentViewId: $scope.$stateParams.contentViewId
         });
@@ -49,14 +49,14 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
             var success, error;
 
             success = function () {
-                GlobalNotification.setSuccessMessage(translate('Module %s removed from Content View.')
+                Notification.setSuccessMessage(translate('Module %s removed from Content View.')
                     .replace('%s', module.name));
                 nutupane.removeRow(module.id);
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    GlobalNotification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
+                    Notification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
                 });
             };
 

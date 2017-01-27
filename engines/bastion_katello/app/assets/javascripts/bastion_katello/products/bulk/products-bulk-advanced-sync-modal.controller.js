@@ -8,7 +8,7 @@
  * @requires translate
  * @requires ProductBulkAction
  * @requires CurrentOrganization
- * @requires GlobalNotification
+ * @requires Notification
  * @requires $uibModalInstance
  * @requires bulkParams
  *
@@ -16,8 +16,8 @@
  *   A controller for providing bulk action functionality to the products page.
  */
 angular.module('Bastion.products').controller('ProductsBulkAdvancedSyncModalController',
-    ['$scope', '$state', '$sce', 'translate', 'ProductBulkAction', 'CurrentOrganization', 'GlobalNotification', '$uibModalInstance', 'bulkParams',
-        function ($scope, $state, $sce, translate, ProductBulkAction, CurrentOrganization, GlobalNotification, $uibModalInstance, bulkParams) {
+    ['$scope', '$state', '$sce', 'translate', 'ProductBulkAction', 'CurrentOrganization', 'Notification', '$uibModalInstance', 'bulkParams',
+        function ($scope, $state, $sce, translate, ProductBulkAction, CurrentOrganization, Notification, $uibModalInstance, bulkParams) {
             var success, error;
 
             success = function (task) {
@@ -27,12 +27,12 @@ angular.module('Bastion.products').controller('ProductsBulkAdvancedSyncModalCont
                 message = translate("Product syncs has been initiated in the background. " +
                     "Click %s to monitor the progress.");
 
-                GlobalNotification.setRenderedSuccessMessage(message.replace('%s', taskLink));
+                Notification.setRenderedSuccessMessage(message.replace('%s', taskLink));
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function(message) {
-                    GlobalNotification.setErrorMessage(translate("An error occurred initiating the sync: " ) + message);
+                    Notification.setErrorMessage(translate("An error occurred initiating the sync: " ) + message);
                 });
             };
 

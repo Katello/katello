@@ -7,23 +7,24 @@
  * @requires CurrentOrganization
  * @requires Subscription
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostBaseSubscriptionsController',
-    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'HostSubscription',
-    function ($scope, $location, translate, CurrentOrganization, Subscription, HostSubscription) {
+    ['$scope', '$location', 'translate', 'CurrentOrganization', 'Subscription', 'HostSubscription', 'Notification',
+    function ($scope, $location, translate, CurrentOrganization, Subscription, HostSubscription, Notification) {
 
         function success() {
             $scope.subscription.workingMode = false;
-            $scope.$parent.successMessages = [translate('Successfully updated subscriptions.')];
+            Notification.setSuccessMessage(translate('Successfully updated subscriptions.'));
             $scope.host.$get();
         }
 
         function failure() {
             $scope.subscription.workingMode = false;
-            $scope.$parent.errorMessages = [translate('An error occurred trying to auto-attach subscriptions.  Please check your log for further information.')];
+            Notification.setErrorMessage(translate('An error occurred trying to auto-attach subscriptions.  Please check your log for further information.'));
         }
 
         $scope.subscription = {

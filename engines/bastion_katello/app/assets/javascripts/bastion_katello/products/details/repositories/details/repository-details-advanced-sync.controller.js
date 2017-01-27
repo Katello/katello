@@ -4,16 +4,19 @@
  *
  * @requires $scope
  * @requires $state
+ * @requires Notification
  * @requires Repository
  *
  * @description
  *   Provides the functionality for advanced repository syncing
  */
 angular.module('Bastion.repositories').controller('RepositoryAdvancedSyncController',
-    ['$scope', '$state', 'Repository',
-    function ($scope, $state, Repository) {
+    ['$scope', '$state', 'Notification', 'Repository',
+    function ($scope, $state, Notification, Repository) {
         var errorHandler = function errorHandler(response) {
-            $scope.errorMessages = response.data.errors;
+            angular.forEach(response.data.errors, function (error) {
+                Notification.setErrorMessage(error);
+            });
             $scope.working = false;
         };
 

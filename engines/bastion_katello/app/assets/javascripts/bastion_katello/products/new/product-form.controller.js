@@ -17,8 +17,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', '$uibModal', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils', 'GlobalNotification',
-    function ($scope, $q, $uibModal, Product, GPGKey, SyncPlan, FormUtils, GlobalNotification) {
+    ['$scope', '$q', '$uibModal', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils', 'Notification',
+    function ($scope, $q, $uibModal, Product, GPGKey, SyncPlan, FormUtils, Notification) {
 
         function fetchGpgKeys() {
             return GPGKey.queryUnpaged(function (gpgKeys) {
@@ -43,7 +43,7 @@ angular.module('Bastion.products').controller('ProductFormController',
                     $scope.productForm[field].$setValidity('server', false);
                     $scope.productForm[field].$error.messages = errors;
                 } else {
-                    GlobalNotification.setErrorMessage("An error occurred while saving the Product: " + field + " " + errors);
+                    Notification.setErrorMessage("An error occurred while saving the Product: " + field + " " + errors);
                 }
             });
         }

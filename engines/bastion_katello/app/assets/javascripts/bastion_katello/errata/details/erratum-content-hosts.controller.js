@@ -19,9 +19,6 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             'overrideAutoLoad': true
         };
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         $scope.restrictInstallable = false;
 
         params = {

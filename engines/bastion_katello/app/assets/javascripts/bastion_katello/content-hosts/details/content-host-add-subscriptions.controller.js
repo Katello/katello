@@ -9,13 +9,14 @@
  * @requires Subscription
  * @requires ContentHost
  * @requires SubscriptionsHelper
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostSubscription', 'Subscription', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostSubscription, Subscription, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostSubscription', 'Subscription', 'SubscriptionsHelper', 'Notification',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostSubscription, Subscription, SubscriptionsHelper, Notification) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -63,12 +64,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             HostSubscription.addSubscriptions({id: $scope.$stateParams.hostId, 'subscriptions': selected}, function () {
                 Host.get({id: $scope.$stateParams.hostId}, function (host) {
                     $scope.$parent.host = host;
-                    $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
+                    Notification.setSuccessMessage(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                     $scope.isAdding = false;
                     $scope.nutupane.refresh();
                 });
             }, function (response) {
-                $scope.errorMessages.push(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
                 $scope.isAdding = false;
                 $scope.nutupane.refresh();
             });

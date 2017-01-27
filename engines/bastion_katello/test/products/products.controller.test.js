@@ -1,7 +1,7 @@
 describe('Controller: ProductsController', function() {
     var $scope,
         $uibModal,
-        GlobalNotification,
+        Notification,
         ProductBulkAction,
         Nutupane;
 
@@ -41,9 +41,9 @@ describe('Controller: ProductsController', function() {
         };
     });
 
-    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, $location) {
+    beforeEach(inject(function(_Notification_, $controller, $rootScope, $location) {
         $scope = $rootScope.$new();
-        GlobalNotification = _GlobalNotification_;
+        Notification = _Notification_;
 
         $controller('ProductsController', {
             $scope: $scope,
@@ -53,7 +53,7 @@ describe('Controller: ProductsController', function() {
             Product: Product,
             ProductBulkAction: ProductBulkAction,
             CurrentOrganization: 'foo',
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 

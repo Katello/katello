@@ -7,14 +7,14 @@
  * @requires translate
  * @requires SyncPlan
  * @requires ApiErrorHandler
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the sync plan details action pane.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanDetailsController',
-    ['$scope', '$state', 'translate', 'SyncPlan', 'ApiErrorHandler', 'GlobalNotification',
-        function ($scope, $state, translate, SyncPlan, ApiErrorHandler, GlobalNotification) {
+    ['$scope', '$state', 'translate', 'SyncPlan', 'ApiErrorHandler', 'Notification',
+        function ($scope, $state, translate, SyncPlan, ApiErrorHandler, Notification) {
             $scope.panel = {
                 error: false,
                 loading: true
@@ -35,13 +35,13 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsController',
                 SyncPlan.sync({id: $scope.$stateParams.syncPlanId}, function (task) {
                     $scope.task = task;
                 }, function (response) {
-                    GlobalNotification.setErrorMessage(response.data.errors[0]);
+                    Notification.setErrorMessage(response.data.errors[0]);
                 });
             };
 
             $scope.removeSyncPlan = function (syncPlan) {
                 syncPlan.$remove(function () {
-                    GlobalNotification.setSuccessMessage(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
+                    Notification.setSuccessMessage(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
                     $scope.transitionTo('sync-plans');
                 });
             };

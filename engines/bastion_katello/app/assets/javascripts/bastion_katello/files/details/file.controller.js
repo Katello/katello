@@ -8,9 +8,6 @@
      *   Provides the functionality for the files details action pane.
      */
     function FileController($scope, File, ApiErrorHandler) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         $scope.panel = {
             error: false,
             loading: true

@@ -4,6 +4,7 @@
  *
  * @requires $scope
  * @requires $location
+ * @requires Notification
  * @requires translate
  * @requires Nutupane
  * @requires CurrentOrganization
@@ -14,8 +15,8 @@
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionHostsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
+    ['$scope', '$location', 'Notification', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
+    function ($scope, $location, Notification, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
         var params, nutupaneParams;
 
         params = {
@@ -57,18 +58,18 @@ angular.module('Bastion.host-collections').controller('HostCollectionHostsContro
                 $scope.contentNutupane.refresh();
 
                 angular.forEach(data.displayMessages.success, function (success) {
-                    $scope.$parent.successMessages.push(success);
+                    Notification.setSuccessMessage(success);
                 });
 
                 angular.forEach(data.displayMessages.error, function (error) {
-                    $scope.$parent.errorMessages.push(error);
+                    Notification.setErrorMessage(error);
                 });
                 $scope.refreshHostCollection();
 
                 $scope.isRemoving = false;
             }, function (response) {
                 $scope.isRemoving = false;
-                $scope.$parent.errorMessages.push(translate("An error occurred removing the content hosts.") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred removing the content hosts.") + response.data.displayMessage);
             });
         };
 

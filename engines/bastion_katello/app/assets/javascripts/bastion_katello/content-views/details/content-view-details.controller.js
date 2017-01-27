@@ -7,21 +7,21 @@
  * @requires ContentView
  * @requires translate
  * @requires ApiErrorHandler
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides the functionality specific to the Content View Details page.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', '$q', 'ContentView', 'translate', 'ApiErrorHandler', 'GlobalNotification',
-    function ($scope, $q, ContentView, translate, ApiErrorHandler, GlobalNotification) {
+    ['$scope', '$q', 'ContentView', 'translate', 'ApiErrorHandler', 'Notification',
+    function ($scope, $q, ContentView, translate, ApiErrorHandler, Notification) {
         $scope.saveSuccess = function () {
-            GlobalNotification.setSuccessMessage(translate('Content View updated.'));
+            Notification.setSuccessMessage(translate('Content View updated.'));
         };
 
         $scope.saveError = function (response) {
             angular.forEach(response.data.errors, function (errorMessage) {
-                GlobalNotification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
+                Notification.setErrorMessage(translate("An error occurred updating the Content View: ") + errorMessage);
             });
         };
 
@@ -49,7 +49,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             ContentView.copy({id: $scope.contentView.id, 'content_view': {name: newName}}, function (response) {
                 $scope.transitionTo('content-view.info', {contentViewId: response.id});
             }, function (response) {
-                GlobalNotification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
             });
         };
 

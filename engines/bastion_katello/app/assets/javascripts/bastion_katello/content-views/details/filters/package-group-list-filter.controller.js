@@ -7,15 +7,15 @@
  * @requires Filter
  * @requires Rule
  * @requires Nutupane
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles loading package groups that have been added to the filter via filter rules
  *   and provides a method to remove them.
  */
 angular.module('Bastion.content-views').controller('PackageGroupFilterListController',
-    ['$scope', 'translate', 'PackageGroup', 'Rule', 'Nutupane', 'GlobalNotification',
-    function ($scope, translate, PackageGroup, Rule, Nutupane, GlobalNotification) {
+    ['$scope', 'translate', 'PackageGroup', 'Rule', 'Nutupane', 'Notification',
+    function ($scope, translate, PackageGroup, Rule, Nutupane, Notification) {
         var nutupane;
 
         function success(rule) {
@@ -23,11 +23,11 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
             $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
                 return rule.id === filterRule.id;
             });
-            GlobalNotification.setSuccessMessage(translate('Package Group successfully removed.'));
+            Notification.setSuccessMessage(translate('Package Group successfully removed.'));
         }
 
         function failure(response) {
-            GlobalNotification.setErrorMessage(response.data.displayMessage);
+            Notification.setErrorMessage(response.data.displayMessage);
         }
 
         function findRules(packageGroupIds) {

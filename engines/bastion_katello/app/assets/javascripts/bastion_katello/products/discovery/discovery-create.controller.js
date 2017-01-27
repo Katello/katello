@@ -4,6 +4,7 @@
  *
  * @requires $scope
  * @requires $q
+ * @requires Notification
  * @requires CurrentOrganization
  * @requires Product
  * @requires Repository
@@ -17,11 +18,8 @@
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryCreateController',
-    ['$scope', '$q', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils', 'DiscoveryRepositories', 'translate', 'ApiErrorHandler',
-    function ($scope, $q, CurrentOrganization, Product, Repository, GPGKey, FormUtils, DiscoveryRepositories, translate, ApiErrorHandler) {
-
-        $scope.errorMessages = [];
-        $scope.successMessages = [];
+    ['$scope', '$q', 'Notification', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils', 'DiscoveryRepositories', 'translate', 'ApiErrorHandler',
+    function ($scope, $q, Notification, CurrentOrganization, Product, Repository, GPGKey, FormUtils, DiscoveryRepositories, translate, ApiErrorHandler) {
 
         $scope.table = {
             rows: DiscoveryRepositories.getRows(),
@@ -100,7 +98,7 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
         function productCreateError(response) {
             $scope.createRepoChoices.creating = false;
             angular.forEach(response.data.errors, function (errors, field) {
-                $scope.errorMessages.push(translate('An error occurred while creating the Product: %s').replace('%s', field + ' ' + errors));
+                Notification.setErrorMessage(translate('An error occurred while creating the Product: %s').replace('%s', field + ' ' + errors));
                 if (!angular.isUndefined($scope.productForm[field])) {
                     $scope.productForm[field].$error.messages = errors;
                 }

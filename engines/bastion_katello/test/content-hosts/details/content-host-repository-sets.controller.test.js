@@ -5,7 +5,7 @@ describe('Controller: ContentHostRepositorySetsController', function () {
         HostSubscription,
         expectedTableSelection,
         ContentOverrideHelper,
-        GlobalNotification,
+        Notification,
         CurrentOrganization;
 
     beforeEach(module('Bastion.content-hosts'));
@@ -36,7 +36,7 @@ describe('Controller: ContentHostRepositorySetsController', function () {
             getDefaultContentOverrides: function () {}
         };
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {},
             setErrorMessage: function () {}
         };
@@ -77,7 +77,7 @@ describe('Controller: ContentHostRepositorySetsController', function () {
             $scope: $scope,
             translate: translate,
             HostSubscription: HostSubscription,
-            GlobalNotification: GlobalNotification,
+            Notification: Notification,
             ContentOverrideHelper: ContentOverrideHelper,
             CurrentOrganization: CurrentOrganization
         });
@@ -107,16 +107,16 @@ describe('Controller: ContentHostRepositorySetsController', function () {
         });
 
         it("and succeed", function () {
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
             $scope.overrideToEnabled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and fail", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
             HostSubscription.failed = true;
             $scope.overrideToEnabled();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 
@@ -134,16 +134,16 @@ describe('Controller: ContentHostRepositorySetsController', function () {
         });
 
         it("and succeed", function () {
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
             $scope.overrideToDisabled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and fail", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
             HostSubscription.failed = true;
             $scope.overrideToDisabled();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 
@@ -161,16 +161,16 @@ describe('Controller: ContentHostRepositorySetsController', function () {
         });
 
         it("and succeed", function () {
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
             $scope.resetToDefault();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and fail", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
             HostSubscription.failed = true;
             $scope.resetToDefault();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 

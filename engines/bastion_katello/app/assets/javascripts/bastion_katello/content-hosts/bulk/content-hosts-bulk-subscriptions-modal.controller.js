@@ -10,15 +10,15 @@
  * @requires Subscription
  * @requires ContentHost
  * @requires SubscriptionsHelper
- * @requires GlobalNotification
+ * @requires Notification
  * @requires hostIds
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscriptionsModalController',
-    ['$scope', '$location', '$uibModalInstance', 'Nutupane', 'CurrentOrganization', 'HostBulkAction', 'Subscription', 'SubscriptionsHelper', 'GlobalNotification', 'hostIds',
-        function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, GlobalNotification, hostIds) {
+    ['$scope', '$location', '$uibModalInstance', 'Nutupane', 'CurrentOrganization', 'HostBulkAction', 'Subscription', 'SubscriptionsHelper', 'Notification', 'hostIds',
+        function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, Notification, hostIds) {
             var success, error, params = {
                 'organization_id': CurrentOrganization,
                 'sort_order': 'ASC',
@@ -40,7 +40,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (responseError) {
-                    GlobalNotification.setErrorMessage(responseError);
+                    Notification.setErrorMessage(responseError);
                 });
             };
 

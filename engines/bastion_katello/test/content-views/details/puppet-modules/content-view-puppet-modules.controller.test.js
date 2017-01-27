@@ -1,5 +1,5 @@
 describe('Controller: ContentViewPuppetModulesController', function() {
-    var $scope, Nutupane, ContentViewPuppetModule, puppetModule, GlobalNotification;
+    var $scope, Nutupane, ContentViewPuppetModule, puppetModule, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks', 'Bastion.i18n'));
 
@@ -11,7 +11,7 @@ describe('Controller: ContentViewPuppetModulesController', function() {
             this.table = {};
         };
 
-        GlobalNotification = {
+        Notification = {
             setErrorMessage: function () {},
             setSuccessMessage: function () {}
         };
@@ -31,7 +31,7 @@ describe('Controller: ContentViewPuppetModulesController', function() {
             $scope: $scope,
             Nutupane: Nutupane,
             ContentViewPuppetModule: ContentViewPuppetModule,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -71,24 +71,24 @@ describe('Controller: ContentViewPuppetModulesController', function() {
         });
 
         it("and succeeds", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setErrorMessage');
+            spyOn(Notification, 'setSuccessMessage');
 
             $scope.removeModule(puppetModule);
 
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).not.toHaveBeenCalled();
         });
 
         it("and fails", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setErrorMessage');
+            spyOn(Notification, 'setSuccessMessage');
 
             ContentViewPuppetModule.failed = true;
             $scope.removeModule(puppetModule);
 
-            expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).not.toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 });

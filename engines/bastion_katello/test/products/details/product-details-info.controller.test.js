@@ -1,5 +1,5 @@
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope, translate, Product, GPGKey, MenuExpander;
+    var $scope, translate, Notification, Product, GPGKey, MenuExpander;
 
     beforeEach(module(
         'Bastion.products',
@@ -23,10 +23,16 @@ describe('Controller: ProductDetailsInfoController', function() {
             return message;
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $controller('ProductDetailsInfoController', {
             $scope: $scope,
             $q: $q,
             translate: translate,
+            Notification: Notification,
             Product: Product,
             SyncPlan: SyncPlan,
             GPGKey: GPGKey,
@@ -60,18 +66,20 @@ describe('Controller: ProductDetailsInfoController', function() {
     });
 
     it('should save the product successfully', function() {
+        spyOn(Notification, 'setSuccessMessage');
+
         $scope.save($scope.product);
 
-        expect($scope.successMessages.length).toBe(1);
-        expect($scope.errorMessages.length).toBe(0);
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should fail to save the product', function() {
+        spyOn(Notification, 'setErrorMessage');
+
         $scope.product.failed = true;
 
         $scope.save($scope.product);
 
-        expect($scope.successMessages.length).toBe(0);
-        expect($scope.errorMessages.length).toBe(1);
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
     });
 });

@@ -2,6 +2,7 @@ describe('Controller: ContentHostDetailsController', function() {
     var $scope,
         $controller,
         translate,
+        Notification,
         Host,
         HostSubscription,
         Organization,
@@ -22,6 +23,11 @@ describe('Controller: ContentHostDetailsController', function() {
 
         translate = function(message) {
             return message;
+        };
+
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
         };
 
         mockHost = {
@@ -77,10 +83,10 @@ describe('Controller: ContentHostDetailsController', function() {
             $scope: $scope,
             $state: $state,
             translate: translate,
+            Notification: Notification,
             Host: Host,
             Organization: Organization,
             HostSubscription: HostSubscription,
-            GlobalNotification: $injector.get('GlobalNotification'),
             MenuExpander: MenuExpander
         });
     }));
@@ -105,18 +111,18 @@ describe('Controller: ContentHostDetailsController', function() {
     });
 
     it('should save the host successfully', function() {
+        spyOn(Notification, 'setSuccessMessage');
         $scope.save(mockHost);
-
-        expect($scope.successMessages.length).toBe(1);
-        expect($scope.errorMessages.length).toBe(0);
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should fail to save the host', function() {
+        spyOn(Notification, 'setErrorMessage');
+
         Host.failed = true;
         $scope.save(mockHost);
 
-        expect($scope.successMessages.length).toBe(0);
-        expect($scope.errorMessages.length).toBe(1);
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
     });
 
 

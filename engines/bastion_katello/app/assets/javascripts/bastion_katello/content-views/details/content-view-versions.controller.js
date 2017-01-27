@@ -8,7 +8,7 @@
  * @requires ContentViewVersion
  * @requires AggregateTask
  * @requires ApiErrorHandler
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the table view UI pattern.
@@ -16,8 +16,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
-    ['$scope', 'translate', 'Nutupane', 'ContentViewVersion', 'AggregateTask', 'ApiErrorHandler', 'GlobalNotification',
-    function ($scope, translate, Nutupane, ContentViewVersion, AggregateTask, ApiErrorHandler, GlobalNotification) {
+    ['$scope', 'translate', 'Nutupane', 'ContentViewVersion', 'AggregateTask', 'ApiErrorHandler', 'Notification',
+    function ($scope, translate, Nutupane, ContentViewVersion, AggregateTask, ApiErrorHandler, Notification) {
         var nutupane;
 
         function pluralSafe(count, strings) {
@@ -104,11 +104,11 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
 
                 if (task.result === 'success') {
                     if (task.label === taskTypes.promotion) {
-                        GlobalNotification.setSuccessMessage(promotionCompleteMessage(version, task));
+                        Notification.setSuccessMessage(promotionCompleteMessage(version, task));
                     } else if (task.label === taskTypes.publish) {
-                        GlobalNotification.setSuccessMessage(publishCompleteMessage(version));
+                        Notification.setSuccessMessage(publishCompleteMessage(version));
                     } else if (task.label === taskTypes.deletion) {
-                        GlobalNotification.setSuccessMessage(deletionCompleteMessage(version, task));
+                        Notification.setSuccessMessage(deletionCompleteMessage(version, task));
                         $scope.reloadVersions();
                     }
                 }

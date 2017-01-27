@@ -1,5 +1,5 @@
 describe('Controller: GPGKeyDetailsController', function() {
-    var $scope, translate;
+    var $scope, translate, Notification;
 
     beforeEach(module(
         'Bastion.gpg-keys',
@@ -20,6 +20,11 @@ describe('Controller: GPGKeyDetailsController', function() {
             return message;
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $scope.removeRow = function(id) {};
         $scope.table = {
             replaceRow: function() {}
@@ -30,6 +35,7 @@ describe('Controller: GPGKeyDetailsController', function() {
             GPGKey: GPGKey,
             $q: $q,
             translate: translate,
+            Notification: Notification
         });
 
     }));
@@ -45,18 +51,20 @@ describe('Controller: GPGKeyDetailsController', function() {
     });
 
     it('should save the gpg key successfully', function() {
+        spyOn(Notification, 'setSuccessMessage');
+
         $scope.save($scope.gpgKey);
 
-        expect($scope.errorMessages.length).toBe(0);
-        expect($scope.successMessages.length).toBe(1);
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should fail to save the gpg key', function() {
+        spyOn(Notification, 'setErrorMessage');
+
         $scope.gpgKey.failed = true;
         $scope.save($scope.gpgKey);
 
-        expect($scope.successMessages.length).toBe(0);
-        expect($scope.errorMessages.length).toBe(1);
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
     });
 
     it('should provide a way to remove a gpg key', function() {

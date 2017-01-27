@@ -1,25 +1,5 @@
 <span page-title ng-model="product">{{ 'Repositories for Product:' | translate }} {{ product.name }}</span>
 
-<div data-block="messages">
-  <div bst-alert="success" ng-show="removingTasks.length > 0" close="close($index)" ng-repeat="task in removingTasks">
-    <div>
-      <p translate>Removal of selected repositories initiated successfully. </p>
-      <div><a href="/foreman_tasks/tasks/{{task}}" translate>Click here to check the status of the task.</a></div>
-    </div>
-  </div>
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-  <div bst-alert="danger" ng-show="warningMessages">
-    <strong translate>There were errors while removing the following Repositories:</strong>
-    <ol>
-      <li data-ng-repeat="message in warningMessages">
-        {{ message }}
-      </li>
-    </ol>
-    <a ui-sref="product.tasks.details({taskId: warningTaskId})" translate>Click here to see the task for the successful removals.</a>
-  </div>
-</div>
-
-
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
     <button type="button" class="btn btn-default"

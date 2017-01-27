@@ -12,7 +12,7 @@
  * @requires Nutupane
  * @requires CurrentOrganization
  * @requires Erratum
- * @requires GlobalNotification
+ * @requires Notification
  * @requires BastionConfig
  * @requires hostIds
  *
@@ -20,8 +20,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalController',
-    ['$scope', '$http', '$location', '$window', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'GlobalNotification', 'BastionConfig', 'hostIds',
-    function ($scope, $http, $location, $window, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, GlobalNotification, BastionConfig, hostIds) {
+    ['$scope', '$http', '$location', '$window', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds',
+    function ($scope, $http, $location, $window, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds) {
         var nutupane;
 
         function installParams() {
@@ -89,7 +89,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
                 },
                 function (response) {
                     angular.forEach(response.data.errors, function (error) {
-                        GlobalNotification.setErrorMessage(error);
+                        Notification.setErrorMessage(error);
                     });
                 });
         };

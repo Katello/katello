@@ -1,5 +1,5 @@
 describe('Controller: PackageFilterController', function() {
-    var $scope, Rule, Package, GlobalNotification;
+    var $scope, Rule, Package, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -11,7 +11,7 @@ describe('Controller: PackageFilterController', function() {
         Rule = $injector.get('MockResource').$new();
         Package = $injector.get('MockResource').$new();
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -45,7 +45,7 @@ describe('Controller: PackageFilterController', function() {
             translate: translate,
             Rule: Rule,
             Package: Package,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
 
         $scope.table.getSelected = function () {};
@@ -65,11 +65,11 @@ describe('Controller: PackageFilterController', function() {
                 version: 1
             };
 
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
         });
 
         afterEach(function () {
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and create the rule if it's new", function () {

@@ -7,13 +7,14 @@
  * @requires translate
  * @requires Subscription
  * @requires SubscriptionsHelper
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'Host', 'HostSubscription', 'SubscriptionsHelper',
-    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, Host, HostSubscription, SubscriptionsHelper) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'Host', 'HostSubscription', 'SubscriptionsHelper', 'Notification',
+    function ($scope, $location, translate, Nutupane, CurrentOrganization, Subscription, Host, HostSubscription, SubscriptionsHelper, Notification) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -51,12 +52,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
                     $scope.$parent.host = host;
                     $scope.nutupane.table.selectAll(false);
                     $scope.nutupane.refresh();
-                    $scope.successMessages.push(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
+                    Notification.setSuccessMessage(translate("Successfully removed %s subscriptions.").replace('%s', selected.length));
                     $scope.isRemoving = false;
                 });
             }, function (response) {
                 $scope.isRemoving = false;
-                $scope.errorMessages.push(translate("An error occurred removing the subscriptions.") + response.data.displayMessage);
+                Notification.setErrorMessage(translate("An error occurred removing the subscriptions.") + response.data.displayMessage);
             });
         };
     }

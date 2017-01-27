@@ -5,7 +5,7 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
         ActivationKey,
         expectedTableSelection,
         ContentOverrideHelper,
-        GlobalNotification,
+        Notification,
         CurrentOrganization;
 
     beforeEach(module('Bastion.activation-keys'));
@@ -36,7 +36,7 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
             getDefaultContentOverrides: function () {}
         };
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {},
             setErrorMessage: function () {}
         };
@@ -77,7 +77,7 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
             $scope: $scope,
             translate: translate,
             ActivationKey: ActivationKey,
-            GlobalNotification: GlobalNotification,
+            Notification: Notification,
             ContentOverrideHelper: ContentOverrideHelper,
             CurrentOrganization: CurrentOrganization
         });
@@ -107,16 +107,16 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
         });
 
         it("and succeed", function () {
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
             $scope.overrideToEnabled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and fail", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
             ActivationKey.failed = true;
             $scope.overrideToEnabled();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 
@@ -134,16 +134,16 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
         });
 
         it("and succeed", function () {
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
             $scope.overrideToDisabled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and fail", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
             ActivationKey.failed = true;
             $scope.overrideToDisabled();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 
@@ -161,16 +161,16 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
         });
 
         it("and succeed", function () {
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
             $scope.resetToDefault();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
 
         it("and fail", function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
             ActivationKey.failed = true;
             $scope.resetToDefault();
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).toHaveBeenCalled();
         });
     });
 

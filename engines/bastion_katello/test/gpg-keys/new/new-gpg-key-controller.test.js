@@ -1,5 +1,5 @@
 describe('Controller: NewGPGKeyController', function() {
-    var $scope, translate, GlobalNotification;
+    var $scope, translate, Notification;
 
     beforeEach(module(
         'Bastion.gpg-keys',
@@ -13,7 +13,7 @@ describe('Controller: NewGPGKeyController', function() {
             CurrentOrganization = "Foo";
 
         $scope = $injector.get('$rootScope').$new();
-        GlobalNotification = $injector.get('GlobalNotification');
+        Notification = $injector.get('Notification');
 
         $scope.table = {
             addRow: function() {},
@@ -24,7 +24,7 @@ describe('Controller: NewGPGKeyController', function() {
             $scope: $scope,
             GPGKey: GPGKey,
             CurrentOrganization:CurrentOrganization,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
 
     }));
@@ -35,10 +35,10 @@ describe('Controller: NewGPGKeyController', function() {
 
     it('should save a new gpg key resource', function() {
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, "setSuccessMessage");
+        spyOn(Notification, "setSuccessMessage");
         $scope.uploadContent({"status": "success"});
 
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.uploadStatus).toBe('success');
 
         expect($scope.transitionTo).toHaveBeenCalledWith('gpg-key.info', jasmine.any(Object));
@@ -46,11 +46,13 @@ describe('Controller: NewGPGKeyController', function() {
 
     it('should error on a new gpg key resource', function() {
         spyOn($scope, 'transitionTo');
-        spyOn(GlobalNotification, "setSuccessMessage");
+        spyOn(Notification, "setSuccessMessage");
+        spyOn(Notification, 'setErrorMessage');
+
         $scope.uploadContent({"errors": "....", "displayMessage":"......"});
 
-        expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
-        expect($scope.errorMessages.length).toBe(1);
+        expect(Notification.setSuccessMessage).not.toHaveBeenCalled();
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
 
         expect($scope.uploadStatus).toBe('error');
     });

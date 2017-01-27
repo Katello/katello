@@ -7,15 +7,15 @@
  * @requires Nutupane
  * @requires Filter
  * @requires Rule
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles displaying a list of errata currently added to the filter and the ability
  *   to remove errata from the filter.
  */
 angular.module('Bastion.content-views').controller('ErrataFilterListController',
-    ['$scope', 'translate', 'Nutupane', 'Erratum', 'Rule', 'GlobalNotification',
-    function ($scope, translate, Nutupane, Erratum, Rule, GlobalNotification) {
+    ['$scope', 'translate', 'Nutupane', 'Erratum', 'Rule', 'Notification',
+    function ($scope, translate, Nutupane, Erratum, Rule, Notification) {
         var nutupane;
 
         function findRules(errataIds) {
@@ -41,11 +41,11 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
             $scope.filter.rules = _.reject($scope.filter.rules, function (filterRule) {
                 return rule.id === filterRule.id;
             });
-            GlobalNotification.setSuccessMessage(translate('Errata successfully removed.'));
+            Notification.setSuccessMessage(translate('Errata successfully removed.'));
         }
 
         function failure(response) {
-            GlobalNotification.setErrorMessage(response.data.displayMessage);
+            Notification.setErrorMessage(response.data.displayMessage);
         }
 
         $scope.nutupane = nutupane = new Nutupane(Erratum, {

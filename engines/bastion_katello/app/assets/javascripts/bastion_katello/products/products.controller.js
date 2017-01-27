@@ -19,8 +19,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductsController',
-    ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'GlobalNotification',
-    function ($scope, $state, $sce, $location, $uibModal, translate, Nutupane, Product, ProductBulkAction, CurrentOrganization, GlobalNotification) {
+    ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'Notification',
+    function ($scope, $state, $sce, $location, $uibModal, translate, Nutupane, Product, ProductBulkAction, CurrentOrganization, Notification) {
         var nutupane, taskUrl, taskLink, getBulkParams, bulkError, params;
 
         getBulkParams = function () {
@@ -32,7 +32,7 @@ angular.module('Bastion.products').controller('ProductsController',
 
         bulkError = function (response) {
             angular.forEach(response.data.errors, function(message) {
-                GlobalNotification.setErrorMessage(translate("An error occurred: ") + message);
+                Notification.setErrorMessage(translate("An error occurred: ") + message);
             });
 
             nutupane.refresh();
@@ -58,7 +58,7 @@ angular.module('Bastion.products').controller('ProductsController',
             taskUrl = $scope.taskUrl(taskId);
             taskLink = $sce.trustAsHtml("<a href=" + taskUrl + ">here</a>");
             message = translate("Product delete operation has been initiated in the background. Click %s to monitor the progress.");
-            GlobalNotification.setRenderedSuccessMessage(message.replace("%", taskLink));
+            Notification.setRenderedSuccessMessage(message.replace("%", taskLink));
         });
 
         $scope.unsetProductDeletionTaskId = function () {
@@ -89,7 +89,7 @@ angular.module('Bastion.products').controller('ProductsController',
                 message = translate("Product sync has been initiated in the background. " +
                     "Click %s to monitor the progress.");
 
-                GlobalNotification.setRenderedSuccessMessage(message.replace('%s', taskLink));
+                Notification.setRenderedSuccessMessage(message.replace('%s', taskLink));
             };
 
             ProductBulkAction.syncProducts(getBulkParams(), success, bulkError);
@@ -130,11 +130,11 @@ angular.module('Bastion.products').controller('ProductsController',
 
             success = function (response) {
                 angular.forEach(response.displayMessages.success, function(message) {
-                    GlobalNotification.setSuccessMessage(message);
+                    Notification.setSuccessMessage(message);
                 });
 
                 angular.forEach(response.displayMessages.error, function(message) {
-                    GlobalNotification.setErrorMessage(message);
+                    Notification.setErrorMessage(message);
                 });
 
                 nutupane.refresh();
