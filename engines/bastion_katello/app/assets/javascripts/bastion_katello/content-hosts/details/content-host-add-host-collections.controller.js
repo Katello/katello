@@ -35,9 +35,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
         $scope.table = nutupane.table;
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         $scope.addHostCollections = function (host) {
             var deferred = $q.defer(),
                 success,
@@ -47,8 +44,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
                 hostCollectionsToAdd;
 
             success = function (response) {
-                $scope.successMessages = [translate('Added %x host collections to content host "%y".')
-                    .replace('%x', $scope.table.numSelected).replace('%y', host.name)];
+                Notification.setSuccessMessage(translate('Added %x host collections to content host "%y".')
+                    .replace('%x', $scope.table.numSelected).replace('%y', host.name));
                 $scope.table.working = false;
                 $scope.table.selectAll(false);
                 nutupane.refresh();
@@ -58,7 +55,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollection
 
             error = function (response) {
                 deferred.reject(response.data.errors);
-                $scope.errorMessages = response.data.errors.base;
+                Notification.setErrataIds(response.data.errors.base);
                 $scope.table.working = false;
             };
 

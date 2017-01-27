@@ -10,17 +10,15 @@
  * @requires Product
  * @requires CurrentOrganization
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the sync plan list products details action pane.
  */
 angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
-    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Product', 'CurrentOrganization', 'Nutupane',
-        function ($scope, $q, $location, translate, SyncPlan, Product, CurrentOrganization, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'SyncPlan', 'Product', 'CurrentOrganization', 'Nutupane', 'Notification',
+        function ($scope, $q, $location, translate, SyncPlan, Product, CurrentOrganization, Nutupane, Notification) {
             var productsNutupane, params;
-
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
 
             $scope.table = {};
 
@@ -49,8 +47,8 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
                 };
 
                 success = function (response) {
-                    $scope.successMessages = [translate('Removed %x products from sync plan "%y".')
-                        .replace('%x', $scope.table.numSelected).replace('%y', $scope.syncPlan.name)];
+                    Notification.setSuccessMessage(translate('Removed %x products from sync plan "%y".')
+                        .replace('%x', $scope.table.numSelected).replace('%y', $scope.syncPlan.name));
                     $scope.table.working = false;
                     $scope.table.selectAll(false);
                     productsNutupane.refresh();
@@ -60,7 +58,9 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
 
                 error = function (response) {
                     deferred.reject(response.data.errors);
-                    $scope.errorMessages = response.data.errors;
+                    angular.forEach(response.data.errors, function (responseError) {
+                        Notification.setErrorMessage(responseError);
+                    });
                     $scope.table.working = false;
                 };
 

@@ -1,5 +1,5 @@
 describe('Controller: HostCollectionDetailsController', function() {
-    var $scope, selected, translate, HostCollection, newHostCollection, newHost, Host,ContentHostsModalHelper;
+    var $scope, selected, translate, Notification, HostCollection, newHostCollection, newHost, Host,ContentHostsModalHelper;
 
     beforeEach(module('Bastion.host-collections', 'Bastion.test-mocks'));
     beforeEach(function() {
@@ -48,6 +48,12 @@ describe('Controller: HostCollectionDetailsController', function() {
             delete: function (success, error) {success()},
             $promise: {then: function(callback) {callback(newHost)}}
         };
+
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {hostCollectionId: 1};
         $scope.selected = selected;
@@ -73,6 +79,7 @@ describe('Controller: HostCollectionDetailsController', function() {
             $scope: $scope,
             $state: $state,
             translate: translate,
+            Notification: Notification,
             Host: Host,
             HostCollection: HostCollection,
             ContentHostsModalHelper: ContentHostsModalHelper,
@@ -93,18 +100,20 @@ describe('Controller: HostCollectionDetailsController', function() {
     });
 
     it('should save the product successfully', function() {
+        spyOn(Notification, 'setSuccessMessage');
+
         $scope.save($scope.hostCollection);
 
-        expect($scope.errorMessages.length).toBe(0);
-        expect($scope.successMessages.length).toBe(1);
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should fail to save the host collection', function() {
+        spyOn(Notification, 'setErrorMessage');
+
         $scope.hostCollection.failed = true;
         $scope.save($scope.hostCollection);
 
-        expect($scope.successMessages.length).toBe(0);
-        expect($scope.errorMessages.length).toBe(1);
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
     });
 
     it("should be able to raise the host collection event on the .", function() {

@@ -1,5 +1,5 @@
 describe('Controller: SyncPlanDetailsInfoController', function() {
-    var $scope, translate, MenuExpander;
+    var $scope, translate, MenuExpander, Notification;
 
     beforeEach(module('Bastion.sync-plans', 'Bastion.test-mocks'));
 
@@ -17,12 +17,18 @@ describe('Controller: SyncPlanDetailsInfoController', function() {
             return message;
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $controller('SyncPlanDetailsInfoController', {
             $scope: $scope,
             $q: $q,
             translate: translate,
             SyncPlan: SyncPlan,
-            MenuExpander: MenuExpander
+            MenuExpander: MenuExpander,
+            Notification: Notification
         });
     }));
 
@@ -37,18 +43,17 @@ describe('Controller: SyncPlanDetailsInfoController', function() {
     });
 
     it('should save the sync plan successfully', function() {
+        spyOn(Notification, 'setSuccessMessage');
         $scope.save($scope.syncPlan);
-
-        expect($scope.successMessages.length).toBe(1);
-        expect($scope.errorMessages.length).toBe(0);
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should fail to save the product', function() {
-        $scope.syncPlan.failed = true;
+        spyOn(Notification, 'setErrorMessage');
 
+        $scope.syncPlan.failed = true;
         $scope.save($scope.syncPlan);
 
-        expect($scope.successMessages.length).toBe(0);
-        expect($scope.errorMessages.length).toBe(1);
+        expect(Notification.setErrorMessage).toHaveBeenCalled();
     });
 });

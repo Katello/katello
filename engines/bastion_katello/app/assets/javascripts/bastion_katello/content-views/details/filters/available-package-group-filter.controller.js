@@ -7,15 +7,15 @@
  * @requires Filter
  * @requires Rule
  * @requires Nutupane
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles fetching package groups that are available to add to a filter and saving
  *   each selected package group as a filter rule.
  */
 angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterController',
-    ['$scope', 'translate', 'PackageGroup', 'Rule', 'Nutupane', 'GlobalNotification',
-    function ($scope, translate, PackageGroup, Rule, Nutupane, GlobalNotification) {
+    ['$scope', 'translate', 'PackageGroup', 'Rule', 'Nutupane', 'Notification',
+    function ($scope, translate, PackageGroup, Rule, Nutupane, Notification) {
         var nutupane;
 
         nutupane = new Nutupane(
@@ -34,12 +34,12 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
         function success(rule) {
             nutupane.removeRow(rule.uuid, 'uuid');
             $scope.filter.rules.push(rule);
-            GlobalNotification.setSuccessMessage(translate('Package Group successfully added.'));
+            Notification.setSuccessMessage(translate('Package Group successfully added.'));
         }
 
         function failure(response) {
             angular.forEach(response.data.displayMessage, function (error) {
-                GlobalNotification.setErrorMessage(error);
+                Notification.setErrorMessage(error);
             });
         }
 

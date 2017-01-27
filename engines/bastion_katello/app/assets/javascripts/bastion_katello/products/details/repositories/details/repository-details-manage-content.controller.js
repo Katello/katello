@@ -5,6 +5,7 @@
  * @requires $scope
  * @requries $state
  * @requires translate
+ * @requires Notification
  * @requires Nutupane
  * @requires Repository
  * @requires Package
@@ -17,8 +18,8 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'OstreeBranch', 'File',
-    function ($scope, $state, translate, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, OstreeBranch, File) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'OstreeBranch', 'File',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, OstreeBranch, File) {
         var currentState, contentTypes;
 
         function success(response, selected) {
@@ -32,13 +33,13 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             } else {
                 message = translate("Successfully removed %s items.").replace('%s', selected.length);
             }
-            $scope.successMessages = [message];
+            Notification.setSuccessMessage(message);
             $scope.generationTaskId = response.output['task_id'];
         }
 
         function error(data) {
             $scope.table.working = true;
-            $scope.errorMessages = [data.response.displayMessage];
+            Notification.setErrorMessage(data.response.displayMessage);
         }
 
         $scope.repository = Repository.get({id: $scope.$stateParams.repositoryId}, function (repository) {

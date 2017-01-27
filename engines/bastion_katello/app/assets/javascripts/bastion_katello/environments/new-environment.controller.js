@@ -8,7 +8,7 @@
      * @description
      *   Handles creating a new environment.
      */
-    function NewEnvironmentController($scope, Environment, FormUtils) {
+    function NewEnvironmentController($scope, Environment, FormUtils, Notification) {
 
         function success() {
             $scope.transitionTo('environments');
@@ -21,13 +21,10 @@
                     $scope.environmentForm[field].$setValidity('server', false);
                     $scope.environmentForm[field].$error.messages = errors;
                 } else {
-                    $scope.errorMessages.push(errors);
+                    Notification.setErrorMessage(errors);
                 }
             });
         }
-
-        $scope.errorMessages = [];
-        $scope.successMessages = [];
 
         $scope.loading = true;
         $scope.environment = new Environment();
@@ -55,6 +52,6 @@
         .module('Bastion.environments')
         .controller('NewEnvironmentController', NewEnvironmentController);
 
-    NewEnvironmentController.$inject = ['$scope', 'Environment', 'FormUtils'];
+    NewEnvironmentController.$inject = ['$scope', 'Environment', 'FormUtils', 'Notification'];
 
 })();

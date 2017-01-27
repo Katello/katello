@@ -15,11 +15,10 @@
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'GlobalNotification', 'MenuExpander', 'ApiErrorHandler',
-    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, GlobalNotification, MenuExpander, ApiErrorHandler) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler) {
         $scope.menuExpander = MenuExpander;
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
+
         $scope.panel = {
             error: false,
             loading: true
@@ -85,11 +84,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             Host.update({id: host.id, host: whitelistedHostObject}, function (response) {
                 deferred.resolve(response);
                 $scope.host = response;
-                $scope.successMessages.push(translate('Save Successful.'));
+                Notification.setSuccessMessage(translate('Save Successful.'));
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.error.full_messages, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred saving the Content Host: ") + errorMessage);
+                    Notification.setErrorMessage(translate("An error occurred saving the Content Host: ") + errorMessage);
                 });
             });
             // @TODO end hack
@@ -126,20 +125,20 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.unregisterContentHost = function (host) {
             var errorHandler = function (response) {
                 host.deleting = false;
-                GlobalNotification.setErrorMessage(translate('An error occured: %s').replace('%s', response.data.displayMessage));
+                Notification.setErrorMessage(translate('An error occured: %s').replace('%s', response.data.displayMessage));
             };
             host.deleting = true;
 
             if (host.unregisterDelete) {
                 host.$delete(function () {
                     host.deleting = false;
-                    GlobalNotification.setSuccessMessage(translate('Host %s has been deleted.').replace('%s', host.name));
+                    Notification.setSuccessMessage(translate('Host %s has been deleted.').replace('%s', host.name));
                     $scope.transitionTo('content-hosts');
                 }, errorHandler);
             } else {
                 HostSubscription.delete({id: host.id}, function () {
                     host.deleting = false;
-                    GlobalNotification.setSuccessMessage(translate('Host %s has been unregistered.').replace('%s', host.name));
+                    Notification.setSuccessMessage(translate('Host %s has been unregistered.').replace('%s', host.name));
                     $scope.transitionTo('content-hosts');
                 }, errorHandler);
             }

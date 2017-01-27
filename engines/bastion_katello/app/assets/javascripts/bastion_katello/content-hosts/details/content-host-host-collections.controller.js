@@ -10,13 +10,14 @@
  * @requires Host
  * @requires CurrentOrganization
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the list host collections details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'CurrentOrganization', 'Nutupane',
-    function ($scope, $q, $location, translate, HostCollection, Host, CurrentOrganization, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'CurrentOrganization', 'Nutupane', 'Notification',
+    function ($scope, $q, $location, translate, HostCollection, Host, CurrentOrganization, Nutupane, Notification) {
         var nutupane, params;
 
         params = {
@@ -34,9 +35,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
 
         $scope.table = nutupane.table;
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         $scope.removeHostCollections = function (host) {
             var deferred = $q.defer(),
                 success,
@@ -46,8 +44,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
                 hostCollectionsToRemove;
 
             success = function (response) {
-                $scope.successMessages = [translate('Removed %x host collections from content host "%y".')
-                    .replace('%x', $scope.table.numSelected).replace('%y', host.name)];
+                var message = translate('Removed %x host collections from content host "%y".')
+                    .replace('%x', $scope.table.numSelected).replace('%y', host.name);
+
+                Notification.setSuccessMessage(message);
                 $scope.table.working = false;
                 $scope.table.selectAll(false);
                 nutupane.refresh();
@@ -57,7 +57,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostHostCollectionsCo
 
             error = function (response) {
                 deferred.reject(response.data.errors);
-                $scope.errorMessages = response.data.errors;
+                angular.forEach(response.data.errors, function (responseError) {
+                    Notification.setErrorMessage(responseError);
+                });
                 $scope.table.working = false;
             };
 

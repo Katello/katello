@@ -8,15 +8,12 @@
      * @description
      *   For copying a host collection.
      */
-    function ActivationKeyCopyController($scope, ActivationKey) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
+    function ActivationKeyCopyController($scope, ActivationKey, Notification) {
         $scope.copy = function (newName) {
             ActivationKey.copy({id: $scope.activationKey.id, 'new_name': newName}, function (response) {
                 $scope.transitionTo('activation-key.info', {activationKeyId: response.id});
             }, function (response) {
-                $scope.copyErrorMessages.push(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
             });
         };
     }
@@ -25,6 +22,6 @@
         .module('Bastion.activation-keys')
         .controller('ActivationKeyCopyController', ActivationKeyCopyController);
 
-    ActivationKeyCopyController.$inject = ['$scope', 'ActivationKey'];
+    ActivationKeyCopyController.$inject = ['$scope', 'ActivationKey', 'Notification'];
 
 })();

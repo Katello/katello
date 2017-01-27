@@ -8,13 +8,14 @@
  * @requires ContentHostBulkAction
  * @requires ContentViewVersion
  * @requires CurrentOrganization
+ * @requires Notification
  *
  * @description
  *   Display confirmation screen and apply Errata.
  */
 angular.module('Bastion.errata').controller('ApplyErrataController',
-    ['$scope', 'translate', 'IncrementalUpdate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization',
-        function ($scope, translate, IncrementalUpdate, HostBulkAction, ContentViewVersion, CurrentOrganization) {
+    ['$scope', 'translate', 'IncrementalUpdate', 'HostBulkAction', 'ContentViewVersion', 'CurrentOrganization', 'Notification',
+        function ($scope, translate, IncrementalUpdate, HostBulkAction, ContentViewVersion, CurrentOrganization, Notification) {
             var applyErrata, incrementalUpdate;
 
             function transitionToTask(task) {
@@ -86,7 +87,9 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 }
 
                 error = function (response) {
-                    $scope.errorMessages = response.data.errors;
+                    angular.forEach(response.data.errors, function (responseError) {
+                        Notification.setErrorMessage(responseError);
+                    });
                     $scope.applyingErrata = false;
                 };
 
@@ -103,7 +106,9 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 params['organization_id'] = CurrentOrganization;
 
                 error = function (response) {
-                    $scope.errorMessages = response.data.errors;
+                    angular.forEach(response.data.errors, function (responseError) {
+                        Notification.setErrorMessage(responseError);
+                    });
                     $scope.applyingErrata = false;
                 };
 

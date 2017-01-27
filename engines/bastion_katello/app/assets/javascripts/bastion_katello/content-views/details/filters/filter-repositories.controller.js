@@ -6,14 +6,14 @@
  * @requires translate
  * @requires Filter
  * @requires ContentViewRepositoriesUtl
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Provides a way for users to select which repositories the filter applies to.
  */
 angular.module('Bastion.content-views').controller('FilterRepositoriesController',
-    ['$scope', 'translate', 'Filter', 'ContentViewRepositoriesUtil', 'GlobalNotification',
-    function ($scope, translate, Filter, ContentViewRepositoriesUtil, GlobalNotification) {
+    ['$scope', 'translate', 'Filter', 'ContentViewRepositoriesUtil', 'Notification',
+    function ($scope, translate, Filter, ContentViewRepositoriesUtil, Notification) {
         var refreshTable, success, error;
 
         ContentViewRepositoriesUtil($scope);
@@ -51,12 +51,12 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
 
         success = function (filter) {
             refreshTable(filter);
-            GlobalNotification.setSuccessMessage(translate('Affected repositories have been updated.'));
+            Notification.setSuccessMessage(translate('Affected repositories have been updated.'));
         };
 
         error = function (response) {
             angular.forEach(response.errors, function (responseError) {
-                GlobalNotification.setErrorMessage(responseError);
+                Notification.setErrorMessage(responseError);
             });
         };
 
@@ -69,7 +69,7 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
             var repositoryIds = _.map($scope.table.getSelected(), 'id');
 
             if (repositoryIds.length === 0) {
-                GlobalNotification.setErrorMessage(translate('You must select at least one repository.'));
+                Notification.setErrorMessage(translate('You must select at least one repository.'));
             } else {
                 Filter.update({id: $scope.filter.id, 'repository_ids': repositoryIds}, success, error);
             }

@@ -10,7 +10,7 @@ angular.module('Bastion.test-mocks').config(['$provide', function ($provide) {
         };
     });
 
-    $provide.service('GlobalNotification', function () {
+    $provide.service('Notification', function () {
         return {
             setSuccessMessage: function() {},
             setErrorMessage: function() {}

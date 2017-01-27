@@ -6,6 +6,7 @@
  * @requires $q
  * @requires $timeout
  * @requires $http
+ * @requires Notification
  * @requires Task
  * @requires Organization
  * @requires CurrentOrganization
@@ -16,12 +17,9 @@
  *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$q', '$timeout', '$http', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'translate',
-    function ($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization, DiscoveryRepositories, translate) {
+    ['$scope', '$q', '$timeout', '$http', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'translate',
+    function ($scope, $q, $timeout, $http, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, translate) {
         var transformRows, setDiscoveryDetails;
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
 
         $scope.discovery = {
             url: '',
@@ -119,7 +117,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
                     $scope.discovery.working = false;
                     Task.unregisterSearch($scope.taskSearchId);
                     if (task.result === "error") {
-                        $scope.errorMessages = [translate("Discovery failed. Error: %s").replace('%s', task.humanized.errors[0])];
+                        Notification.setErrorMessage(translate("Discovery failed. Error: %s").replace('%s', task.humanized.errors[0]));
                     }
                 }
             }
@@ -137,8 +135,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
                 'upstream_username': $scope.discovery.upstreamUsername,
                 'upstream_password': $scope.discovery.upstreamPassword
             };
-            $scope.successMessages = [];
-            $scope.errorMessages = [];
+
             Organization.repoDiscover(params, function (task) {
                 $scope.taskSearchId = Task.registerSearch({ 'type': 'task', 'task_id': task.id }, $scope.updateTask);
             });

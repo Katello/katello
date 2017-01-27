@@ -1,5 +1,5 @@
 describe('Controller: ProductsBulkSyncPlanModalController', function() {
-    var $scope, $q, $uibModalInstance, translate, ProductBulkAction, CurrentOrganization, GlobalNotification, bulkParams;
+    var $scope, $q, $uibModalInstance, translate, ProductBulkAction, CurrentOrganization, Notification, bulkParams;
 
     beforeEach(module('Bastion.products'));
 
@@ -21,10 +21,10 @@ describe('Controller: ProductsBulkSyncPlanModalController', function() {
         CurrentOrganization = 'foo';
     });
 
-    beforeEach(inject(function(_GlobalNotification_, $controller, $rootScope, _$q_) {
+    beforeEach(inject(function(_Notification_, $controller, $rootScope, _$q_) {
         $scope = $rootScope.$new();
         $q = _$q_;
-        GlobalNotification = _GlobalNotification_;
+        Notification = _Notification_;
 
         $scope.table = {
             getSelected: function () { return selected; }
@@ -37,7 +37,7 @@ describe('Controller: ProductsBulkSyncPlanModalController', function() {
             translate: translate,
             ProductBulkAction: ProductBulkAction,
             CurrentOrganization: CurrentOrganization,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 

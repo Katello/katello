@@ -4,6 +4,8 @@
  *
  * @requires $scope
  * @requires $location
+ * @requires Notification
+ * @requires translate
  * @requires ApiErrorHandler
  * @requires Product
  * @requires Repository
@@ -16,8 +18,8 @@
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', '$state', '$location', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane',
-    function ($scope, $state, $location, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane) {
+    ['$scope', '$state', '$location', 'Notification', 'translate', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane',
+    function ($scope, $state, $location, Notification, translate, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane) {
         var repositoriesNutupane = new Nutupane(Repository, {
             'product_id': $scope.$stateParams.productId,
             'search': $location.search().search || "",
@@ -35,8 +37,6 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             };
         }
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
         $scope.page = $scope.page || {loading: false};
 
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
@@ -45,13 +45,6 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             $scope.page.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
-
-        $scope.close = function(index) {
-            $scope.removingTasks.splice(index, 1);
-        };
-
-
-        $scope.removingTasks = [];
 
         $scope.table = repositoriesNutupane.table;
 
@@ -62,7 +55,9 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
                 $state.go('product.tasks.details', {taskId: task.id});
             },
             function (response) {
-                $scope.errorMessages = response.data.errors;
+                angular.forEach(response.data.errors, function (error) {
+                    Notification.setErrorMessage(error);
+                });
             });
         };
 
@@ -70,11 +65,17 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             var success, error, params = getParams(), removalPromise;
 
             success = function (response) {
-                $scope.removingTasks.push(response.task.id);
+                var message = translate('Removal of selected repositories initiated successfully. ');
+
+                message += translate('<a href="/foreman_tasks/tasks/%taskId">Click here to check the status of the task.</a>').
+                    replace('%taskId', response.task.id);
+                Notification.setSuccessMessage(message);
             };
 
             error = function (response) {
-                $scope.errorMessages = response.data.errors;
+                angular.forEach(response.data.errors, function (errorMessage) {
+                    Notification.setErrorMessage(errorMessage);
+                });
             };
 
             $scope.removingRepositories = true;

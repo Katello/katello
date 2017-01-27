@@ -35,7 +35,7 @@ describe('Controller: ManifestImportController', function() {
             translate;
         Organization = $injector.get('Organization');
         Subscription = $injector.get('Subscription');
-        GlobalNotification = $injector.get('GlobalNotification');
+        Notification = $injector.get('Notification');
 
         $httpBackend.expectGET('/api/organization/ACME/subscriptions/manifest_history').respond([]);
         $httpBackend.expectGET('/api/v2/organizations/ACME/redhat_provider').respond({name: "Red Hat"});
@@ -47,8 +47,8 @@ describe('Controller: ManifestImportController', function() {
         $scope.redhatProvider = Organization.redhatProvider();
         $scope.histories = Subscription.manifestHistory();
 
-        spyOn(GlobalNotification, "setSuccessMessage");
-        spyOn(GlobalNotification, "setErrorMessage");
+        spyOn(Notification, "setSuccessMessage");
+        spyOn(Notification, "setErrorMessage");
 
         Task = {registerSearch: function() {}, unregisterSearch: function () {}};
 
@@ -62,7 +62,7 @@ describe('Controller: ManifestImportController', function() {
             Organization: Organization,
             Subscription: Subscription,
             Task: Task,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -92,8 +92,8 @@ describe('Controller: ManifestImportController', function() {
         $httpBackend.expectPUT('/api/v2/organizations/ACME/');
         promise = $scope.saveCdnUrl($scope.organization);
         promise.then(function() {
-            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).not.toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 
@@ -102,8 +102,8 @@ describe('Controller: ManifestImportController', function() {
         spyOn(Subscription, 'deleteManifest').and.callThrough();
         $scope.deleteManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
-            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).not.toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 
@@ -112,8 +112,8 @@ describe('Controller: ManifestImportController', function() {
         spyOn(Subscription, 'refreshManifest').and.callThrough();
         $scope.refreshManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
-            expect(GlobalNotification.setErrorMessage).not.toHaveBeenCalled();
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setErrorMessage).not.toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 
@@ -121,7 +121,7 @@ describe('Controller: ManifestImportController', function() {
         $q.all([$scope.organization.$promise]).then(function () {
             $scope.uploadManifest('<pre>"There was an error"</pre>', true);
 
-            expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).not.toHaveBeenCalled();
             expect($scope.uploadErrorMessages.length).toBe(1);
         });
     });
@@ -130,7 +130,7 @@ describe('Controller: ManifestImportController', function() {
         $q.all([$scope.organization.$promise]).then(function () {
             $scope.uploadManifest('Could not parse JSON', 'Request Entity Too Large');
 
-            expect(GlobalNotification.setSuccessMessage).not.toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).not.toHaveBeenCalled();
             expect($scope.uploadErrorMessages.length).toBe(1);
             expect($scope.uploadErrorMessages[0]).toBe("Error during upload: File too large.");
         });
@@ -142,7 +142,7 @@ describe('Controller: ManifestImportController', function() {
 
             expect($scope.saveSuccess).toBe(true);
             expect($scope.uploadErrorMessages.length).toBe(0);
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
         });
     });
 

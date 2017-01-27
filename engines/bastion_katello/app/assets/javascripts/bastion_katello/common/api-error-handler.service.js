@@ -8,24 +8,14 @@
      * @description
      *   Provides common functionality in handling Katello/Foreman API Errors.
      */
-    function ApiErrorHandler(translate, GlobalNotification) {
+    function ApiErrorHandler(translate, Notification) {
         function handleError(response, $scope, defaultErrorMessage) {
-            var hasScopeErrorMessages = $scope && $scope.hasOwnProperty('errorMessages');
-
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('errors')) {
-                if (hasScopeErrorMessages) {
-                    $scope.errorMessages = response.data.errors;
-                } else {
-                    angular.forEach(response.data.errors, function (error) {
-                        GlobalNotification.setErrorMessage(error);
-                    });
-                }
+                angular.forEach(response.data.errors, function (error) {
+                    Notification.setErrorMessage(error);
+                });
             } else {
-                if (hasScopeErrorMessages) {
-                    $scope.errorMessages = [defaultErrorMessage];
-                } else {
-                    GlobalNotification.setErrorMessage(defaultErrorMessage);
-                }
+                Notification.setErrorMessage(defaultErrorMessage);
             }
 
             if ($scope && $scope.hasOwnProperty('panel')) {
@@ -45,5 +35,5 @@
     }
 
     angular.module('Bastion.common').service('ApiErrorHandler', ApiErrorHandler);
-    ApiErrorHandler.$inject = ['translate', 'GlobalNotification'];
+    ApiErrorHandler.$inject = ['translate', 'Notification'];
 })();
