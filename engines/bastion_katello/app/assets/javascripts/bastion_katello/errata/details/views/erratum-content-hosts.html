@@ -14,26 +14,25 @@
     </button>
   </div>
 
-  <div data-block="filters">
-    <form>
-      <select class="form-control"
-              ng-model="environmentFilter"
-              ng-options="environment.id as environment.name for environment in environments"
-              ng-change="selectEnvironment(environmentFilter)">
-        <option value="" disabled selected >Filter by Environment</option>
-      </select>
+  <div data-block="search-filter">
+    <select class="form-control"
+            ng-model="environmentFilter"
+            ng-options="environment.id as environment.name for environment in environments"
+            ng-change="selectEnvironment(environmentFilter)">
+      <option value="" disabled selected >Filter by Environment</option>
+    </select>
 
-      <a ng-show="environmentFilter" ng-click="selectEnvironment(undefined)">
-        <i class="fa fa-remove"></i>
-      </a>
 
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" ng-model="restrictInstallable" ng-change="toggleInstallable()"/>
-          <span translate>Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.</span>
-        </label>
-      </div>
-    </form>
+    <a ng-show="environmentFilter" ng-click="selectEnvironment(undefined)">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <div class="filters">
+    <label class="checkbox-inline">
+      <input type="checkbox" ng-model="restrictInstallable" ng-change="toggleInstallable()"/>
+      <span translate>Only show content hosts where the errata is currently installable in the host's Lifecycle Environment.</span>
+    </label>
   </div>
 
   <span data-block="no-rows-message" translate>

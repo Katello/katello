@@ -16,7 +16,9 @@
 
   <div data-block="search-filter">
     <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
-    
+  </div>
+
+  <div data-block="filters">
     <label class="checkbox-inline" title="{{ 'Only show Errata that are Applicable to one or more Content Hosts' | translate }}">
       <input type="checkbox" ng-model="showApplicable" ng-disabled="showInstallable" ng-change="toggleFilters()"/>
       <span translate>Applicable</span>

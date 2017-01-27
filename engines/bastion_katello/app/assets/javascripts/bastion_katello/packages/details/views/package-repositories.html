@@ -6,31 +6,23 @@
 
 <div data-extend-template="layouts/partials/table.html">
 
-  <div data-block="filters">
-    <form>
-      <div class="form-group">
-        <div class="col-sm-2">
-          <select class="form-control"
-                  ng-disabled="!environments"
-                  ng-model="environmentFilter"
-                  ng-options="e.id as e.name for e in environments"
-                  ng-change="filterPackages()">
-          </select>
-        </div>
+  <div data-block="search-filter">
+    <select class="form-control"
+            ng-disabled="!environments"
+            ng-model="environmentFilter"
+            ng-options="e.id as e.name for e in environments"
+            ng-change="filterPackages()">
+    </select>
 
-        <div class="col-sm-2">
-          <select class="form-control"
-                  ng-disabled="!contentViews || filteredCVs.length === 0"
-                  ng-model="contentViewFilter"
-                  ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter:{environments: environmentFilter})"
-                  ng-change="filterPackages()">
-          </select>
-          <p class="help-block" translate ng-show="filteredCVs.length === 0">
-            There are no Content Views in this Environment.
-          </p>
-        </div>
-      </div>
-    </form>
+    <select class="form-control"
+            ng-disabled="!contentViews || filteredCVs.length === 0"
+            ng-model="contentViewFilter"
+            ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter:{environments: environmentFilter})"
+            ng-change="filterPackages()">
+    </select>
+    <p class="help-block" translate ng-show="filteredCVs.length === 0">
+      There are no Content Views in this Environment.
+    </p>
   </div>
 
   <span data-block="no-rows-message" translate>

@@ -5,9 +5,9 @@
 </h3>
 
 <div data-extend-template="layouts/partials/table.html">
-
-  <div data-block="filters">
+  <div data-block="search-filter">
     <select class="form-control"
+            placeholder="{{ 'Select Environment' | translate }}"
             ng-disabled="!environments"
             ng-model="environmentFilter"
             ng-options="e.id as e.name for e in environments"
@@ -15,6 +15,7 @@
     </select>
 
     <select class="form-control"
+            placeholder="{{ 'Select Content View' | translate }}"
             ng-disabled="!contentViews || filteredCVs.length === 0"
             ng-model="contentViewFilter"
             ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter:{environments: environmentFilter})"

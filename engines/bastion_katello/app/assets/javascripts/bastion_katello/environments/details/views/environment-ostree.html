@@ -1,7 +1,7 @@
-<div data-extend-template="layouts/partial/table.html">
-  <div data-block="filters">
-    <select ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
-    <select ng-model="repository" ng-change="repositorySelected(repository)" ng-options="repository.name for (id, repository) in repositories"></select>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search-filter">
+    <select class="form-control" ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
+    <select class="form-control" ng-model="repository" ng-change="repositorySelected(repository)" ng-options="repository.name for (id, repository) in repositories"></select>
   </div>
 
   <span data-block="no-rows-message" translate>

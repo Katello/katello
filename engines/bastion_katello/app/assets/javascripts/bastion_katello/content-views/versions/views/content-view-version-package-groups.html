@@ -1,11 +1,6 @@
 <div data-extend-template="layouts/partials/table.html">
-  <div data-block="filters">
-    <div class="row">
-      <div class="form-group col-sm-4">
-        <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories">
-        </select>
-      </div>
-    </div>
+  <div data-block="search-filter">
+    <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
   </div>
 
   <table data-block="table" class="table table-striped table-bordered">

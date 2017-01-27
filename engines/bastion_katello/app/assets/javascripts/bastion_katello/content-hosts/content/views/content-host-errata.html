@@ -32,11 +32,12 @@
   </div>
 
   <div data-extend-template="layouts/partials/table.html">
-    <span data-block="filters" bst-feature-flag="remote_actions">
-      <label translate>
-        Show from:
+    <span data-block="search-filter" bst-feature-flag="remote_actions">
+      <label class="sr-only" translate>
+        Limit to environment
       </label>
       <select class="form-control"
+              placeholder="{{ 'Limit to Environment' | translate }}"
               ng-model="selectedErrataOption"
               ng-change="refreshErrata(selectedErrataOption)"
               ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'">
