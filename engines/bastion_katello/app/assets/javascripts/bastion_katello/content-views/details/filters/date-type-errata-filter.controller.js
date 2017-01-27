@@ -5,14 +5,14 @@
  * @requires $scope
  * @requires translate
  * @requires Rule
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles creating an errata filter that allows specification of a start date, end date and/or
  *   set of errata types by which to dynamically filter.
  */
 angular.module('Bastion.content-views').controller('DateTypeErrataFilterController',
-    ['$scope', 'translate', 'Rule', 'GlobalNotification', function ($scope, translate, Rule, GlobalNotification) {
+    ['$scope', 'translate', 'Rule', 'Notification', function ($scope, translate, Rule, Notification) {
 
         function convertRuleStringsToDates() {
             $scope.rule['start_date'] = new Date($scope.rule['start_date']);
@@ -21,13 +21,13 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
 
         function success() {
             convertRuleStringsToDates();
-            GlobalNotification.setSuccessMessage(translate('Updated errata filter - ' + $scope.filter.name));
+            Notification.setSuccessMessage(translate('Updated errata filter - ' + $scope.filter.name));
         }
 
         function failure(response) {
             $scope.rule.working = false;
             angular.forEach(response.data.errors, function (error) {
-                GlobalNotification.setErrorMessage(error);
+                Notification.setErrorMessage(error);
             });
         }
 

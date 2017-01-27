@@ -17,9 +17,6 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
     function ($scope, $q, $location, translate, ActivationKey, Nutupane) {
         var hostCollectionsPane, params;
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         params = {
             'id': $scope.$stateParams.activationKeyId,
             'search': $location.search().search || "",
@@ -46,9 +43,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
             };
 
             success = function (response) {
-                $scope.successMessages = [translate('Removed %x host collections from activation key "%y".')
+                var message = translate('Removed %x host collections from activation key "%y".')
                     .replace('%x', $scope.table.numSelected)
-                    .replace('%y', $scope.activationKey.name)];
+                    .replace('%y', $scope.activationKey.name);
+
+                Notification.setSuccessMessage(message);
                 $scope.table.working = false;
                 $scope.table.selectAll(false);
                 hostCollectionsPane.refresh();
@@ -58,7 +57,9 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
 
             error = function (response) {
                 deferred.reject(response.data.errors);
-                $scope.errorMessages = response.data.errors;
+                angular.forEach(response.data.errors, function (responseError) {
+                    Notification.setErrorMessage(responseError);
+                });
                 $scope.table.working = false;
             };
 

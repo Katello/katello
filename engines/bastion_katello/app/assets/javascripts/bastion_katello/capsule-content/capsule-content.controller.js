@@ -8,13 +8,16 @@
  * @requires translate
  * @requires CapsuleContent
  * @requires AggregateTask
+ * @requires CurrentOrganization
+ * @requires syncState
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the capsule-content page.
  */
 angular.module('Bastion.capsule-content').controller('CapsuleContentController',
-    ['$scope', '$urlMatcherFactory', '$location', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState',
-    function ($scope, $urlMatcherFactory, $location, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState) {
+    ['$scope', '$urlMatcherFactory', '$location', 'translate', 'CapsuleContent', 'AggregateTask', 'CurrentOrganization', 'syncState', 'Notification',
+    function ($scope, $urlMatcherFactory, $location, translate, CapsuleContent, AggregateTask, CurrentOrganization, syncState, Notification) {
 
         var refreshSyncStatus;
         var urlMatcher = $urlMatcherFactory.compile("/smart_proxies/:capsuleId");
@@ -22,7 +25,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
         function processError(response) {
             if (response.data && response.data.displayMessage) {
-                $scope.syncErrorMessages = [response.data.displayMessage];
+                Notification.setErrorMessage(response.data.displayMessage);
             }
         }
 
@@ -95,7 +98,7 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
                         } else if (errorCount > 1) {
                             errorMessage += " " + translate("Plus 1 more error");
                         }
-                        $scope.syncErrorMessages = [errorMessage];
+                        Notification.setErrorMessage(errorMessage);
                     }
                 }
                 $scope.syncState.set(stateFromTask($scope.syncTask));
@@ -125,7 +128,6 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
         $scope.syncCapsule = function (skipMetadataCheck) {
             if (!$scope.syncState.is(syncState.SYNCING)) {
 
-                $scope.syncErrorMessages = [];
                 $scope.syncState.set(syncState.SYNC_TRIGGERED);
 
                 CapsuleContent.sync({id: capsuleId, 'skip_metadata_check': skipMetadataCheck}).$promise.then(function (task) {

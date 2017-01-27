@@ -41,9 +41,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             }
         });
 
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         $scope.showVersionAlert = false;
         $scope.editContentView = false;
         $scope.disableEnvironmentSelection = false;

@@ -1,5 +1,5 @@
 describe('Controller: ProductDetailsController', function() {
-    var $scope, Product, $uibModal, modalResponse, GlobalNotification, ApiErrorHandler;
+    var $scope, Product, $uibModal, modalResponse, Notification, ApiErrorHandler;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
@@ -10,7 +10,11 @@ describe('Controller: ProductDetailsController', function() {
         Product = $injector.get('MockResource').$new();
         Product.sync = function() {};
 
-        GlobalNotification = $injector.get('GlobalNotification');
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         ApiErrorHandler = $injector.get('ApiErrorHandler');
 
         modalResponse = {
@@ -39,7 +43,7 @@ describe('Controller: ProductDetailsController', function() {
             Product: Product,
             $uibModal: $uibModal,
             ApiErrorHandler: ApiErrorHandler,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -114,11 +118,11 @@ describe('Controller: ProductDetailsController', function() {
                 success();
             });
 
-            spyOn(GlobalNotification, 'setSuccessMessage');
+            spyOn(Notification, 'setSuccessMessage');
 
             $scope.updateProduct();
 
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalledWith(jasmine.any(String));
+            expect(Notification.setSuccessMessage).toHaveBeenCalledWith(jasmine.any(String));
         });
 
         it("and fail", function () {

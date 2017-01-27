@@ -1,5 +1,5 @@
 describe('Controller: ContentViewDetailsController', function() {
-    var $scope, ContentView, newContentView, GlobalNotification;
+    var $scope, ContentView, newContentView, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -14,7 +14,7 @@ describe('Controller: ContentViewDetailsController', function() {
         ContentViewVersion = $injector.get('MockResource').$new();
         AggregateTask = {newAggregate: function(){}};
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -30,7 +30,7 @@ describe('Controller: ContentViewDetailsController', function() {
             ContentViewVersion: ContentViewVersion,
             AggregateTask: AggregateTask,
             translate: translate,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -39,11 +39,11 @@ describe('Controller: ContentViewDetailsController', function() {
     });
 
     it('provides a method to save a product', function() {
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
 
         $scope.save($scope.contentView);
 
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it('should be able to copy the content view', function(){

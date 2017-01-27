@@ -1,6 +1,6 @@
 describe('Controller: ApplyErrataController', function() {
-    var $controller, dependencies, $scope, translate, HostBulkAction, ContentViewVersion, IncrementalUpdate,
-        CurrentOrganization;
+    var $controller, dependencies, $scope, translate, Notification, HostBulkAction, ContentViewVersion,
+        IncrementalUpdate, CurrentOrganization;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
 
@@ -49,13 +49,17 @@ describe('Controller: ApplyErrataController', function() {
             }
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
-        $scope.errorMessages = [];
-        $scope.successMessages = [];
 
         dependencies = {
             $scope: $scope,
             translate: translate,
+            Notification: Notification,
             HostBulkAction: HostBulkAction,
             IncrementalUpdate: IncrementalUpdate,
             ContentViewVersion: ContentViewVersion,
@@ -132,16 +136,15 @@ describe('Controller: ApplyErrataController', function() {
                 $scope.confirmApply();
 
                 expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
-                expect($scope.errorMessages.length).toBe(0);
             });
 
             it("and fail", function () {
+                spyOn(Notification, 'setErrorMessage');
+
                 HostBulkAction.failed = true;
                 $scope.confirmApply();
 
-                expect($scope.successMessages.length).toBe(0);
-                expect($scope.errorMessages.length).toBe(1);
-                expect($scope.errorMessages[0]).toBe('error');
+                expect(Notification.setErrorMessage).toHaveBeenCalled();
             });
         });
 
@@ -177,17 +180,16 @@ describe('Controller: ApplyErrataController', function() {
                 $scope.confirmApply();
 
                 expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
-                expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeFalsy();
             });
 
             it("and fail", function () {
+                spyOn(Notification, 'setErrorMessage');
+
                 ContentViewVersion.failed = true;
                 $scope.confirmApply();
 
-                expect($scope.successMessages.length).toBe(0);
-                expect($scope.errorMessages.length).toBe(1);
-                expect($scope.errorMessages[0]).toBe('error');
+                expect(Notification.setErrorMessage).toHaveBeenCalled();
             });
 
             it("can pass a parameter to update the content hosts", function () {
@@ -239,7 +241,6 @@ describe('Controller: ApplyErrataController', function() {
                 $scope.confirmApply();
 
                 expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
-                expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });
         });
@@ -288,7 +289,6 @@ describe('Controller: ApplyErrataController', function() {
                 $scope.confirmApply();
 
                 expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
-                expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });
         });

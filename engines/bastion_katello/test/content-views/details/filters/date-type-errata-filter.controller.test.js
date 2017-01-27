@@ -1,5 +1,5 @@
 describe('Controller: DateTypeErrataFilterController', function() {
-    var $scope, Rule, GlobalNotification;
+    var $scope, Rule, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -10,7 +10,7 @@ describe('Controller: DateTypeErrataFilterController', function() {
 
         Rule = $injector.get('MockResource').$new();
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -27,7 +27,7 @@ describe('Controller: DateTypeErrataFilterController', function() {
             $scope: $scope,
             translate: translate,
             Rule: Rule,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -38,11 +38,11 @@ describe('Controller: DateTypeErrataFilterController', function() {
     });
 
     it("should provide a method to add errata to the filter", function () {
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
 
         $scope.save($scope.rule, $scope.filter);
 
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
 });

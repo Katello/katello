@@ -10,15 +10,15 @@
  * @requires HostBulkAction
  * @requires HostCollection
  * @requires CurrentOrganization
- * @requires GlobalNotification
+ * @requires Notification
  * @requires hostIds
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkHostCollectionsModalController',
-    ['$scope', '$location', '$uibModalInstance', 'translate', 'Nutupane', 'HostBulkAction', 'HostCollection', 'CurrentOrganization', 'GlobalNotification', 'hostIds',
-    function ($scope, $location, $uibModalInstance, translate, Nutupane, HostBulkAction, HostCollection, CurrentOrganization, GlobalNotification, hostIds) {
+    ['$scope', '$location', '$uibModalInstance', 'translate', 'Nutupane', 'HostBulkAction', 'HostCollection', 'CurrentOrganization', 'Notification', 'hostIds',
+    function ($scope, $location, $uibModalInstance, translate, Nutupane, HostBulkAction, HostCollection, CurrentOrganization, Notification, hostIds) {
         var nutupane, nutupaneParams;
 
         $scope.hostCollections = {
@@ -56,14 +56,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkHostCollecti
 
             success = function (data) {
                 angular.forEach(data.displayMessages, function (message) {
-                    GlobalNotification.setSuccessMessage(message);
+                    Notification.setSuccessMessage(message);
                 });
                 nutupane.invalidate();
             };
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (responseError) {
-                    GlobalNotification.setErrorMessage(responseError);
+                    Notification.setErrorMessage(responseError);
                 });
                 $scope.editMode = true;
             };

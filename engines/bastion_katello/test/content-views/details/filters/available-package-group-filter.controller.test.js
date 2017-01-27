@@ -1,5 +1,5 @@
 describe('Controller: AvailablePackageGroupFilterController', function() {
-    var $scope, Rule, rule, Nutupane, GlobalNotification;
+    var $scope, Rule, rule, Nutupane, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -18,7 +18,7 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
             };
         };
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -34,7 +34,7 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
             Nutupane: Nutupane,
             Filter: Filter,
             Rule: Rule,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -43,13 +43,13 @@ describe('Controller: AvailablePackageGroupFilterController', function() {
     });
 
     it("should provide a method to add package groups to the filter", function () {
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
         spyOn(rule, '$save').and.callThrough();
 
         $scope.addPackageGroups($scope.filter);
 
         expect(rule.$save).toHaveBeenCalled();
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.filter.rules.length).toBe(2);
     });
 

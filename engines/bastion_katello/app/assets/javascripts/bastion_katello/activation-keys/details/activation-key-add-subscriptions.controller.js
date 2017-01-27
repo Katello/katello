@@ -11,13 +11,14 @@
  * @requires Subscription
  * @requires ActivationKey
  * @requires SubscriptionsHelper
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the activation key add subscriptions pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscriptionsController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ActivationKey', 'SubscriptionsHelper',
-    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Subscription, ActivationKey, SubscriptionsHelper) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Subscription', 'ActivationKey', 'SubscriptionsHelper', 'Notification',
+    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Subscription, ActivationKey, SubscriptionsHelper, Notification) {
 
         var params;
 
@@ -51,11 +52,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
 
             $scope.isAdding = true;
             ActivationKey.addSubscriptions({id: $scope.activationKey.id, 'subscriptions': selected}, function () {
-                $scope.successMessages.push(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
+                Notification.setErrorMessage(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                 $scope.isAdding = false;
                 $scope.contentNutupane.refresh();
             }, function (response) {
-                $scope.errorMessages.push(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
                 $scope.isAdding = false;
                 $scope.contentNutupane.refresh();
             });

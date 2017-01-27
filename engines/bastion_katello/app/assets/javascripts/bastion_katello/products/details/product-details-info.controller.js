@@ -9,17 +9,14 @@
  * @requires SyncPlan
  * @requires GPGKey
  * @requires MenuExpander
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$state', '$q', 'translate', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander',
-    function ($scope, $state, $q, translate, Product, SyncPlan, GPGKey, MenuExpander) {
-
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
+    ['$scope', '$state', '$q', 'translate', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander', 'Notification',
+    function ($scope, $state, $q, translate, Product, SyncPlan, GPGKey, MenuExpander, Notification) {
         $scope.menuExpander = MenuExpander;
         $scope.page = $scope.page || {loading: false};
 
@@ -49,11 +46,11 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
 
             product.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages.push(translate('Product Saved'));
+                Notification.setSuccessMessage(translate('Product Saved'));
             }, function (response) {
                 deferred.reject(response);
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred saving the Product: ") + errorMessage);
+                    Notification.setErrorMessage(translate("An error occurred saving the Product: ") + errorMessage);
                 });
             });
 

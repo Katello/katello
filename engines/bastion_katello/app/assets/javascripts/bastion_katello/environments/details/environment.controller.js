@@ -8,11 +8,9 @@
      * @description
      *   Enter a description!
      */
-    function EnvironmentController($scope, Environment, translate, ContentService, ApiErrorHandler) {
+    function EnvironmentController($scope, Environment, translate, ContentService, ApiErrorHandler, Notification) {
 
         $scope.contentTypes = ContentService.contentTypes;
-        $scope.errorMessages = [];
-        $scope.successMessages = [];
         $scope.panel = {
             error: false,
             loading: true
@@ -29,12 +27,12 @@
             var promise;
 
             function success() {
-                $scope.successMessages.push(translate('Environment saved'));
+                Notification.setSuccessMessage(translate('Environment saved'));
             }
 
             function error(response) {
                 angular.forEach(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred saving the Environment: ") + errorMessage);
+                    Notification.setErrorMessage((translate("An error occurred saving the Environment: ") + errorMessage));
                 });
             }
 
@@ -48,12 +46,12 @@
             var promise;
 
             function success() {
-                $scope.successMessages.push(translate('Remove Successful.'));
+                Notification.setSuccessMessage(translate('Remove Successful.'));
                 $scope.transitionTo('environments');
             }
 
             function error(response) {
-                $scope.errorMessages.push(translate("An error occurred removing the environment: ") +
+                Notification.setErrorMessage(translate("An error occurred removing the environment: ") +
                     response.data.displayMessage);
             }
 

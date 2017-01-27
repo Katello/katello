@@ -8,9 +8,6 @@
      *   Provides the functionality for the puppet modules details action pane.
      */
     function PuppetModuleController($scope, PuppetModule, ApiErrorHandler) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-
         $scope.panel = {
             error: false,
             loading: true

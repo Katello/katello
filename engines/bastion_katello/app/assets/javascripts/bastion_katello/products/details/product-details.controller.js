@@ -7,16 +7,14 @@
  * @requires $uibModal
  * @requires translate
  * @requires Product
- * @requires GlobalNotification
+ * @requires Notification
  * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsController',
-    ['$scope', '$state', '$uibModal', 'translate', 'Product', 'GlobalNotification', 'ApiErrorHandler', function ($scope, $state, $uibModal, translate, Product, GlobalNotification, ApiErrorHandler) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
+    ['$scope', '$state', '$uibModal', 'translate', 'Product', 'Notification', 'ApiErrorHandler', function ($scope, $state, $uibModal, translate, Product, Notification, ApiErrorHandler) {
         $scope.page = {
             error: false,
             loading: true
@@ -45,7 +43,9 @@ angular.module('Bastion.products').controller('ProductDetailsController',
                 $state.go('product.tasks.details', {taskId: task.id});
             },
             function (response) {
-                $scope.errorMessages = response.data.errors;
+                angular.forEach(response.data.errors, function (error) {
+                    Notification.setErrorMessage(error);
+                });
             });
         };
 
@@ -71,7 +71,7 @@ angular.module('Bastion.products').controller('ProductDetailsController',
 
         $scope.updateProduct = function () {
             function success() {
-                GlobalNotification.setSuccessMessage(translate('Sync Plan created and assigned to product.'));
+                Notification.setSuccessMessage(translate('Sync Plan created and assigned to product.'));
             }
 
             function error(response) {

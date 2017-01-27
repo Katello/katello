@@ -57,18 +57,18 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
             $scope.isAdding = true;
             HostCollection.addHosts({id: $scope.hostCollection.id, 'host_ids': selected}, function (data) {
                 angular.forEach(data.displayMessages.success, function (success) {
-                    $scope.$parent.successMessages.push(success);
+                    Notification.setSuccessMessage(success);
                 });
 
                 angular.forEach(data.displayMessages.error, function (error) {
-                    $scope.$parent.errorMessages.push(error);
+                    Notification.setErrorMessage(error);
                 });
 
                 $scope.isAdding = false;
                 contentNutupane.refresh();
                 $scope.refreshHostCollection();
             }, function (response) {
-                $scope.$parent.errorMessages.push(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
                 $scope.isAdding = false;
             });
         };

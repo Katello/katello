@@ -1,5 +1,5 @@
 describe('Controller: SyncPlanDetailsController', function() {
-    var $scope;
+    var $scope, Notification;
 
     beforeEach(module('Bastion.sync-plans', 'Bastion.test-mocks'))
 
@@ -8,6 +8,11 @@ describe('Controller: SyncPlanDetailsController', function() {
             $state = $injector.get('$state'),
             SyncPlan = $injector.get('MockResource').$new();
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $scope = $injector.get('$rootScope').$new();
 
         $scope.$stateParams = {syncPlanId: 1};
@@ -15,6 +20,7 @@ describe('Controller: SyncPlanDetailsController', function() {
         $controller('SyncPlanDetailsController', {
             $scope: $scope,
             $state: $state,
+            Notification: Notification,
             SyncPlan: SyncPlan
         });
     }));

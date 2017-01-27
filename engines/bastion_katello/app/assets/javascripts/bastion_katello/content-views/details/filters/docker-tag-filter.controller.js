@@ -10,17 +10,17 @@
  * @requires Filter
  * @requires Rule
  * @requires DockerTag
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles docker tag filter rules for a content view.
  */
 angular.module('Bastion.content-views').controller('DockerTagFilterController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'DockerTag', 'GlobalNotification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, DockerTag, GlobalNotification) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'DockerTag', 'Notification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, DockerTag, Notification) {
         var nutupane, params;
 
         function failure(response) {
-            GlobalNotification.setErrorMessage(response.data.displayMessage);
+            Notification.setErrorMessage(response.data.displayMessage);
         }
 
         function createRule(rule) {
@@ -31,7 +31,7 @@ angular.module('Bastion.content-views').controller('DockerTagFilterController',
                 rule.editMode = false;
                 rule.working = false;
 
-                GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
+                Notification.setSuccessMessage(translate('Package successfully added.'));
             };
 
             if ($scope.valid(rule)) {
@@ -48,7 +48,7 @@ angular.module('Bastion.content-views').controller('DockerTagFilterController',
                 rule.previous = {};
                 rule.editMode = false;
                 rule.working = false;
-                GlobalNotification.setSuccessMessage(translate('Filter rule successfully updated.'));
+                Notification.setSuccessMessage(translate('Filter rule successfully updated.'));
             };
 
             error = function () {
@@ -63,7 +63,7 @@ angular.module('Bastion.content-views').controller('DockerTagFilterController',
 
             success = function () {
                 nutupane.removeRow(ruleId);
-                GlobalNotification.setSuccessMessage(translate('Filter rule successfully removed.'));
+                Notification.setSuccessMessage(translate('Filter rule successfully removed.'));
             };
 
             Rule.delete({filterId: $scope.$stateParams.filterId, ruleId: ruleId}, success, failure);

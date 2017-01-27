@@ -10,15 +10,15 @@
  * @requires HostBulkAction
  * @requires RepositorySet
  * @requires CurrentOrganization
- * @requires GlobalNotification
+ * @requires Notification
  * @requires hostIds
  *
  * @description
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkRepositorySetsModalController',
-    ['$scope', '$location', '$uibModalInstance', 'translate', 'Nutupane', 'HostBulkAction', 'RepositorySet', 'CurrentOrganization', 'GlobalNotification', 'hostIds',
-    function ($scope, $location, $uibModalInstance, translate, Nutupane, HostBulkAction, RepositorySet, CurrentOrganization, GlobalNotification, hostIds) {
+    ['$scope', '$location', '$uibModalInstance', 'translate', 'Nutupane', 'HostBulkAction', 'RepositorySet', 'CurrentOrganization', 'Notification', 'hostIds',
+    function ($scope, $location, $uibModalInstance, translate, Nutupane, HostBulkAction, RepositorySet, CurrentOrganization, Notification, hostIds) {
         var nutupane, nutupaneParams;
 
         $scope.repositorySets = {
@@ -83,7 +83,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkRepositorySe
 
             error = function (response) {
                 angular.forEach(response.data.errors, function (responseError) {
-                    GlobalNotification.setErrorMessage(responseError);
+                    Notification.setErrorMessage(responseError);
                 });
                 $scope.editMode = true;
             };

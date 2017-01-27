@@ -1,5 +1,5 @@
 describe('Controller: FiltersController', function() {
-    var $scope, Filter, GlobalNotification;
+    var $scope, Filter, Notification;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
 
@@ -17,7 +17,7 @@ describe('Controller: FiltersController', function() {
                 };
             };
 
-        GlobalNotification = {
+        Notification = {
             setSuccessMessage: function () {}
         };
 
@@ -31,7 +31,7 @@ describe('Controller: FiltersController', function() {
             translate: translate,
             Filter: Filter,
             Nutupane: Nutupane,
-            GlobalNotification: GlobalNotification
+            Notification: Notification
         });
     }));
 
@@ -40,11 +40,11 @@ describe('Controller: FiltersController', function() {
     });
 
     it("should provide a method to remove one or more filters", function() {
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        spyOn(Notification, 'setSuccessMessage');
 
         $scope.removeFilters();
 
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
     it("provides a way to get the filter's state", function() {

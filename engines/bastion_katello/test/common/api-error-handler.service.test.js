@@ -1,13 +1,13 @@
 describe('Service: ApiErrorHandler', function() {
-    var ApiErrorHandler, GlobalNotification;
+    var ApiErrorHandler, Notification;
 
     beforeEach(module('Bastion.common'));
 
     beforeEach(module(function($provide) {
-        GlobalNotification = {
+        Notification = {
             setErrorMessage: function () {}
         };
-        $provide.value('GlobalNotification', GlobalNotification);
+        $provide.value('Notification', Notification);
     }));
 
     beforeEach(inject(function($injector) {
@@ -18,7 +18,7 @@ describe('Service: ApiErrorHandler', function() {
         var response = {};
 
         beforeEach(function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
         });
 
         it("uses the errors array if it exists in the response", function () {
@@ -29,13 +29,13 @@ describe('Service: ApiErrorHandler', function() {
             };
 
             ApiErrorHandler.handleGETRequestErrors(response);
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[0]);
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[1]);
+            expect(Notification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[0]);
+            expect(Notification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[1]);
         });
 
         it("provides a generic message if the errors array does not exist in the response", function () {
             ApiErrorHandler.handleGETRequestErrors(response);
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(jasmine.any(String));
+            expect(Notification.setErrorMessage).toHaveBeenCalledWith(jasmine.any(String));
         });
 
         it("sets a panel error boolean if $scope is provided", function () {
@@ -49,7 +49,7 @@ describe('Service: ApiErrorHandler', function() {
         var response = {};
 
         beforeEach(function () {
-            spyOn(GlobalNotification, 'setErrorMessage');
+            spyOn(Notification, 'setErrorMessage');
         });
 
         it("uses the errors array if it exists in the response", function () {
@@ -60,13 +60,13 @@ describe('Service: ApiErrorHandler', function() {
             };
 
             ApiErrorHandler.handlePUTRequestErrors(response);
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[0]);
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[1]);
+            expect(Notification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[0]);
+            expect(Notification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[1]);
         });
 
         it("provides a generic message if the errors array does not exist in the response", function () {
             ApiErrorHandler.handlePUTRequestErrors(response);
-            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(jasmine.any(String));
+            expect(Notification.setErrorMessage).toHaveBeenCalledWith(jasmine.any(String));
         });
 
         it("sets a panel error boolean if $scope is provided", function () {

@@ -6,14 +6,14 @@
  * @requires translate
  * @requires SyncPlan
  * @requires SyncPlanHelper
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Controls the creation of an empty SyncPlan object for use by sub-controllers.
  */
 angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
-    ['$scope', '$rootScope', 'translate', 'SyncPlan', 'SyncPlanHelper', 'GlobalNotification',
-        function ($scope, $rootScope, translate, SyncPlan, SyncPlanHelper, GlobalNotification) {
+    ['$scope', '$rootScope', 'translate', 'SyncPlan', 'SyncPlanHelper', 'Notification',
+        function ($scope, $rootScope, translate, SyncPlan, SyncPlanHelper, Notification) {
             $scope.intervals = SyncPlanHelper.getIntervals();
 
             $scope.syncPlan = new SyncPlan();
@@ -22,7 +22,7 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
             function success(syncPlan) {
                 $scope.working = false;
                 $scope.$state.go('sync-plan.info', {syncPlanId: syncPlan.id});
-                GlobalNotification.setSuccessMessage(translate('New sync plan successfully created.'));
+                Notification.setSuccessMessage(translate('New sync plan successfully created.'));
             }
 
             function error(response) {

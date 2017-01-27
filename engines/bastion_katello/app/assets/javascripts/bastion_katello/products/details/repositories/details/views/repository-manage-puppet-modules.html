@@ -3,8 +3,6 @@
 <h3 translate>Manage Puppet Modules for {{ repository.name }}</h3>
 
 <div data-block="messages">
-  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
-
   <div bst-alert="success" ng-hide="generationTaskId === undefined">
     <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
     <p translate>

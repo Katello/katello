@@ -6,13 +6,13 @@
  * @requires translate
  * @requires Filter
  * @requires Nutupane
- * @requires GlobalNotification
+ * @requires Notification
  *
  * @description
  *   Handles loading all filters for a content view.
  */
 angular.module('Bastion.content-views').controller('FiltersController',
-    ['$scope', 'translate', 'Filter', 'Nutupane', 'GlobalNotification', function ($scope, translate, Filter, Nutupane, GlobalNotification) {
+    ['$scope', 'translate', 'Filter', 'Nutupane', 'Notification', function ($scope, translate, Filter, Nutupane, Notification) {
         var nutupane, filterTypes;
 
         function removeFilter(id) {
@@ -20,11 +20,11 @@ angular.module('Bastion.content-views').controller('FiltersController',
 
             success = function () {
                 nutupane.removeRow(id);
-                GlobalNotification.setSuccessMessage(translate('Filters successfully removed.'));
+                Notification.setSuccessMessage(translate('Filters successfully removed.'));
             };
 
             failure = function (response) {
-                GlobalNotification.setErrorMessage(response.data.displayMessage);
+                Notification.setErrorMessage(response.data.displayMessage);
             };
 
             Filter.delete({filterId: id}, success, failure);
