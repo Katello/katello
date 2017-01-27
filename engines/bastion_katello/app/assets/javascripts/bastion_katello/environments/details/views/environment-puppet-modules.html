@@ -1,6 +1,6 @@
 <div data-extend-template="layouts/partials/table.html">
-  <div data-block="filters">
-    <select ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
+  <div data-block="search-filter">
+    <select class="form-control" ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
   </div>
 
   <table data-block="table" class="table table-striped table-bordered">
