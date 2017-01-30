@@ -37,8 +37,10 @@
 
       <tbody>
         <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-          <td bst-table-cell class="row-select" style="white-space:nowrap">{{ name }}</td>
-          <td bst-table-cell colspan="8"></td>
+          <td class="row-select"></td>
+          <td colspan="8">
+            {{ name }}
+          </td>
         </tr>
         <tr bst-table-row 
             ng-repeat-end
@@ -57,7 +59,7 @@
             </select>
           </td>
           <td bst-table-cell>
-            <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
+            <a href='/subscriptions/{{ subscription.id }}' class="confined-text">
               {{ subscription | subscriptionConsumedFilter }}
             </a>
           </td>

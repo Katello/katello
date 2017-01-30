@@ -39,9 +39,7 @@
          <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
            <td class="row-select"></td>
            <td colspan="8">
-             <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
-              {{ name }}
-             </a>
+            {{ name }}
            </td>
          </tr>
          <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">

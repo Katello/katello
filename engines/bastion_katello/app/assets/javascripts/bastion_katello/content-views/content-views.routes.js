@@ -410,7 +410,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         }
     })
     .state('content-view.info', {
-        url: '/info',
+        url: '',
         permission: 'view_content_views',
         templateUrl: 'content-views/details/views/content-view-info.html',
         ncyBreadcrumb: {
