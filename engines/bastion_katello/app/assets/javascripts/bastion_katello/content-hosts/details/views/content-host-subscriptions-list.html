@@ -51,9 +51,7 @@
       <tbody>
         <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions | groupedFilter: subscriptionSearch">
           <td class="row-select">
-            <a href='/subscriptions/{{ subscription.id }}/info' class="confined-text">
               {{ name }}
-            </a>
           </td>
           <td bst-table-cell colspan="8"></td>
         </tr>
