@@ -118,5 +118,16 @@ module Katello
       assert_match(/\/PT24H$/, schedule)
       assert_includes schedule, @plan.next_sync_date.iso8601
     end
+
+    def test_schedule_format_disabled
+      @plan.interval = 'daily'
+      @plan.sync_date = DateTime.now - 3.days
+      @plan.enabled = false
+
+      schedule = @plan.schedule_format
+      refute_nil schedule
+      assert_match(/\/PT24H$/, schedule)
+      assert_includes schedule, @plan.sync_date.iso8601
+    end
   end
 end
