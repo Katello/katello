@@ -53,7 +53,7 @@ module Katello
     def schedule_format
       return nil if DURATION[self.interval].nil?
       date = self.sync_date
-      date = next_sync_date if self.sync_date < DateTime.now
+      date = next_sync_date if enabled? && self.sync_date < DateTime.now
       "#{date.iso8601}/P#{DURATION[self.interval]}"
     end
 
