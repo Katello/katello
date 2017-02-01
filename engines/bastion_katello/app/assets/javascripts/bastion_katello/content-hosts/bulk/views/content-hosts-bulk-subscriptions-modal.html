@@ -4,6 +4,22 @@
   </h4>
 
   <div data-block="modal-body">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-default" ng-click="autoAttach()" ng-disabled="table.numSelected > 0">
+          <span translate>Auto-Attach</span>
+        </button>
+        <p class="help-text" ng-show="table.numSelected === 0">
+          Auto-attach available subscriptions to all selected hosts.
+        </p>
+
+        <p class="help-text" ng-show="table.numSelected > 0">
+          Auto-attach uses all available subscriptions, not a selected subset.
+        </p>
+      </div>
+    </div>
+
     <div bst-alert="info">
       <span translate>
         This action will affect only those Content Hosts that require a change.
