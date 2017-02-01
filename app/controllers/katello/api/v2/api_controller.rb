@@ -74,7 +74,7 @@ module Katello
         query = query.paginate(paginate_options)
       end
       page = params[:page] || 1
-      per_page = params[:per_page] || ::Setting::General.entries_per_page
+      per_page = params[:per_page] || Setting[:entries_per_page]
       query = (total.zero? || sub_total.zero?) ? [] : query
 
       scoped_search_results(query, sub_total, total, page, per_page)
