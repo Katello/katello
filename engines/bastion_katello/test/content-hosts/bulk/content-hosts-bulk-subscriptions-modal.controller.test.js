@@ -11,6 +11,7 @@ describe('Controller: ContentHostsBulkSubscriptionsModalController', function() 
             removeHostCollections: function() {},
             addSubscriptions: function() {},
             removeSubscriptions: function() {},
+            autoAttach: function () {},
             installContent: function() {},
             updateContent: function() {},
             removeContent: function() {},
@@ -137,6 +138,32 @@ describe('Controller: ContentHostsBulkSubscriptionsModalController', function() 
                 expect($scope.transitionTo).not.toHaveBeenCalled();
             });
         });
+
+
+        describe("by auto attaching", function () {
+            it("and succeeding", function () {
+                var response = {id: 1};
+                spyOn(HostBulkAction, 'autoAttach').and.callFake(function (params, success) {
+                    success(response);
+                });
+
+                $scope.autoAttach();
+
+                expect($scope.transitionTo).toHaveBeenCalledWith('content-hosts.bulk-task', {taskId: response.id})
+            });
+
+            it("and failing", function () {
+                var response = {data: {errors: []}};
+
+                spyOn(HostBulkAction, 'autoAttach').and.callFake(function (params, success, error) {
+                    error(response);
+                });
+
+                $scope.autoAttach();
+                expect($scope.transitionTo).not.toHaveBeenCalled();
+            });
+        });
+
     });
 
     it("provides a function for closing the modal", function () {

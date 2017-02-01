@@ -45,6 +45,11 @@ describe('Factory: HostBulkAction', function() {
         $httpBackend.expect('PUT', '/api/v2/hosts/bulk/remove_subscriptions', subscriptionParams).respond();
         ContentHostBulkAction.removeSubscriptions(subscriptionParams);
     });
+
+    it('provides a way to auto attach subscriptions to content hosts', function() {
+        $httpBackend.expect('PUT', '/api/v2/hosts/bulk/auto_attach', subscriptionParams).respond();
+        ContentHostBulkAction.autoAttach(subscriptionParams);
+    });
     
     it('provides a way to install content on content hosts', function() {
         $httpBackend.expect('PUT', '/api/v2/hosts/bulk/install_content', contentHostParams).respond();

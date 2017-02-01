@@ -67,6 +67,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
                 HostBulkAction.removeSubscriptions(bulkParams, success, error);
             };
 
+            $scope.autoAttach = function () {
+                var bulkParams = getBulkSubscriptionParams();
+                HostBulkAction.autoAttach(bulkParams, success, error);
+            };
+
             $scope.ok = function () {
                 $uibModalInstance.close();
             };
