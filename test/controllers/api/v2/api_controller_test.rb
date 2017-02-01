@@ -28,7 +28,7 @@ module Katello
       assert_equal 3, response[:subtotal], "subtotal"
       assert_equal 3, response[:total], "total"
       assert_equal 1, response[:page], "page"
-      assert_equal ::Setting::General.entries_per_page, response[:per_page], "per page"
+      assert_equal Setting[:entries_per_page], response[:per_page], "per page"
       assert_nil response[:error], "error"
     end
 
