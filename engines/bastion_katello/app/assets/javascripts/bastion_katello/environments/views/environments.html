@@ -17,11 +17,9 @@
     </h2>
   </div>
 
-  <section class="row nutupane-sub-section">
-
+  <section class="row">
     <div class="col-sm-12">
-
-      <div class="col-sm-12" ng-hide="denied('view_lifecycle_environments', library)">
+      <div ng-hide="denied('view_lifecycle_environments', library)">
         <table class="table table-bordered info-blocks">
           <tbody>
             <tr>
@@ -39,7 +37,7 @@
         </table>
       </div>
 
-      <div class="col-sm-12 environment" ng-repeat="path in paths">
+      <div class="environment" ng-repeat="path in paths">
         <div class="row">
           <div class="col-sm-12">
             <a ng-hide="denied('create_lifecycle_environments', path['environments'][0])" ui-sref="environments.new({priorId: lastEnvironment(path).id})" class="btn btn-default fr">
@@ -73,8 +71,6 @@
           </tbody>
         </table>
       </div>
-
     </div>
   </section>
-
 </section>
