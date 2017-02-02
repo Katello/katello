@@ -6,35 +6,44 @@
  * Service that keeps track of pages that require an organization to be selected
  */
 
-angular.module('Bastion.organizations').service('FencedPages',
-    [function () {
+angular.module('Bastion.organizations').service('FencedPages', ['$state',
+    function ($state) {
         var fencedPages = [
-            'products',
             'activation-keys',
-            'environments',
-            'subscriptions',
-            'gpg-keys',
-            'sync-plans',
-            'docker-tags',
-            'sync-plan',
-            'content-views',
-            'errata',
             'content-hosts',
+            'content-views',
+            'docker-tags',
+            'errata',
+            'gpg-keys',
             'host-collections',
+            'lifecycle-environments',
+            'packages',
+            'products',
             'puppet-modules',
-            'packages'
+            'subscriptions',
+            'sync-plans'
         ];
+
+        function getRootPath(path) {
+            var rootPath = null;
+
+            if (path && angular.isString(path)) {
+                rootPath = path.replace('_', '-').split('/')[1];
+            }
+            return rootPath;
+        }
 
         this.addPages = function (pages) {
             fencedPages = _.uniq(fencedPages.concat(pages));
         };
 
         this.list = function () {
-            return fencedPages.slice();
+            return fencedPages;
         };
 
         this.isFenced = function (toState) {
-            return this.list().indexOf(toState.name.split('.')[0]) !== -1;
+            var stateUrl = $state.href(toState);
+            return fencedPages.indexOf(getRootPath(stateUrl)) !== -1;
         };
-    }]
-);
+    }
+]);

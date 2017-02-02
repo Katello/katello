@@ -1,7 +1,10 @@
 describe('Factory: FencedPages', function() {
+    var $state, FencedPages;
+
     beforeEach(module('Bastion.organizations'));
 
-    beforeEach(inject(function (_FencedPages_) {
+    beforeEach(inject(function (_$state_, _FencedPages_) {
+        $state = _$state_;
         FencedPages = _FencedPages_;
     }));
 
@@ -12,7 +15,12 @@ describe('Factory: FencedPages', function() {
     });
 
     it("should find if page is in the list", function () {
-        expect(FencedPages.isFenced({name: "sync-plan.info"})).toBe(true);
-        expect(FencedPages.isFenced({name: "non-fenced-page.details.show"})).toBe(false);
+        spyOn($state, 'href').and.returnValue('/products/repositories/blah/blah');
+        expect(FencedPages.isFenced({name: 'doesnt matter'})).toBe(true);
+    });
+
+    it("should not find if page is in the list", function () {
+        spyOn($state, 'href').and.returnValue('/not/in/the/list');
+        expect(FencedPages.isFenced({name: 'doesnt matter'})).toBe(false);
     });
 });
