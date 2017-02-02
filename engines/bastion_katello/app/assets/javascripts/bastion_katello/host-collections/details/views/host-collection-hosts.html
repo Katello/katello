@@ -1,7 +1,7 @@
 <span page-title ng-model="hostCollection">{{ 'Content Hosts for: ' | translate }} {{ hostCollection.name }}</span>
 
 <nav>
-  <ul class="nav nav-tabs" ng-show="permitted('edit_host_collections', hostCollection) && permitted('edit_hosts')">
+  <ul class="nav nav-tabs nav-tabs-pf" ng-show="permitted('edit_host_collections', hostCollection) && permitted('edit_hosts')">
     <li ng-class="{active: isState('host-collection.hosts.list')}">
       <a ui-sref="host-collection.hosts.list">
         <span translate>
