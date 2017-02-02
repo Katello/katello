@@ -62,7 +62,6 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
             var errataIds = nutupane.getAllSelectedResults('errata_id').included.ids,
                 rules;
 
-            nutupane.table.working = true;
             rules = findRules(errataIds);
 
             angular.forEach(rules, function (rule) {

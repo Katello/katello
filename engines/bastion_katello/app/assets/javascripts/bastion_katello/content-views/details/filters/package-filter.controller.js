@@ -3,7 +3,11 @@
  * @name  Bastion.content-views.controller:PackageFilterController
  *
  * @requires $scope
+ * @requires $location
  * @requires translate
+ * @requires Nutupane
+ * @requires CurrentOrganization
+ * @requires Filter
  * @requires Rule
  * @requires Package
  * @requires GlobalNotification
@@ -12,84 +16,31 @@
  *   Handles package filter rules for a content view.
  */
 angular.module('Bastion.content-views').controller('PackageFilterController',
-    ['$scope', 'translate', 'Rule', 'Package', 'GlobalNotification', function ($scope, translate, Rule, Package, GlobalNotification) {
-
-        function type(rule) {
-            var typeId;
-
-            if (rule.version) {
-                typeId = 'equal';
-            } else if (rule['min_version'] && !rule['max_version']) {
-                typeId = 'greater';
-            } else if (!rule['min_version'] && rule['max_version']) {
-                typeId = 'less';
-            } else if (rule['min_version'] && rule['max_version']) {
-                typeId = 'range';
-            } else {
-                typeId = 'all';
-            }
-
-            return typeId;
-        }
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'Package', 'GlobalNotification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, Package, GlobalNotification) {
+        var nutupane, params;
 
         function failure(response) {
             GlobalNotification.setErrorMessage(response.data.displayMessage);
         }
 
-        function addType(rules) {
-            angular.forEach(rules, function (rule) {
-                rule.type = type(rule);
-            });
-        }
+        function createRule(rule) {
+            var success;
 
-        function removeRule(rule) {
-            var success,
-                rulesCopy = angular.copy($scope.filter.rules),
-                ruleId = rule.id;
+            success = function (result) {
+                rule.id = result.id;
+                rule.editMode = false;
+                rule.working = false;
 
-            success = function () {
-                angular.forEach(rulesCopy, function (ruleCopy, index) {
-                    if (ruleCopy.id === ruleId) {
-                        $scope.filter.rules.splice(index, 1);
-                    }
-                });
-                GlobalNotification.setSuccessMessage(translate('Package successfully removed.'));
+                GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
             };
 
-            Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
-        }
-
-        function addSuccess(rule) {
-            $scope.rule = {
-                type: 'all'
-            };
-            $scope.rule.editMode = false;
-            $scope.rule.working = false;
-            addType([rule]);
-            $scope.filter.rules.push(rule);
-
-            GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
-        }
-
-        $scope.rule = {
-            type: 'all',
-            editMode: false,
-            working: false
-        };
-
-        $scope.filter.$promise.then(function (filter) {
-            addType(filter.rules);
-            $scope.table = {rows: filter.rules};
-        });
-
-        $scope.addRule = function (rule, filter) {
             if ($scope.valid(rule)) {
-                Rule.save({filterId: filter.id}, rule, addSuccess, failure);
+                Rule.save({filterId: $scope.filter.id}, rule, success, failure);
             }
-        };
+        }
 
-        $scope.updateRule = function (rule, filter) {
-            var params = {filterId: filter.id, ruleId: rule.id},
+        function updateRule(rule) {
+            var updateParams = {filterId: $scope.filter.id, ruleId: rule.id},
                 success, error;
 
             // Need access to the original rule
@@ -104,7 +55,44 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
                 rule.working = false;
             };
 
-            Rule.update(params, rule, success, error);
+            Rule.update(updateParams, rule, success, error);
+        }
+
+        function removeRule(rule) {
+            var success, ruleId = rule.id;
+
+            success = function () {
+                nutupane.removeRow(ruleId);
+                GlobalNotification.setSuccessMessage(translate('Package successfully removed.'));
+            };
+
+            Rule.delete({filterId: $scope.$stateParams.filterId, ruleId: ruleId}, success, failure);
+        }
+
+        params = {
+            filterId: $scope.$stateParams.filterId,
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
+        };
+
+        nutupane = new Nutupane(Filter, params, 'rules');
+        $scope.table = nutupane.table;
+
+        $scope.addRule = function () {
+            var rule = new Rule();
+            rule.editMode = true;
+            $scope.table.addRow(rule);
+        };
+
+        $scope.saveRule = function (rule) {
+            if (rule.id) {
+                updateRule(rule);
+            } else {
+                createRule(rule);
+            }
         };
 
         $scope.valid = function (rule) {
@@ -135,22 +123,16 @@ angular.module('Bastion.content-views').controller('PackageFilterController',
         };
 
         $scope.restorePrevious = function (rule) {
-            angular.copy(rule.previous, rule);
+            if (rule.id) {
+                angular.copy(rule.previous, rule);
+            } else {
+                $scope.table.rows.shift();
+            }
             rule.previous = {};
         };
 
-        $scope.getSelectedRules = function (filter) {
-            var rules = [];
-            angular.forEach(filter.rules, function (rule) {
-                if (rule.selected) {
-                    rules.push(rule);
-                }
-            });
-            return rules;
-        };
-
-        $scope.removeRules = function (filter) {
-            angular.forEach($scope.getSelectedRules(filter), function (rule) {
+        $scope.removeRules = function () {
+            angular.forEach($scope.table.getSelected(), function (rule) {
                 removeRule(rule);
             });
         };
