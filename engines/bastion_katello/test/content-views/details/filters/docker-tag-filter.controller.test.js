@@ -41,37 +41,44 @@ describe('Controller: DockerTagFilterController', function() {
             DockerTag: DockerTag,
             GlobalNotification: GlobalNotification
         });
+
+        $scope.table.getSelected = function () {};
     }));
 
     it("should provide a method to add a rule to the current filter", function() {
-        var rule = {
-            name: 'Test',
-            version: 1
-        };
-
-        spyOn(GlobalNotification, 'setSuccessMessage');
-
-        $scope.addRule(rule, $scope.filter);
-
-        expect($scope.rule.editMode).toBe(false);
-        expect($scope.rule.working).toBe(false);
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-        expect($scope.filter.rules.length).toBe(1);
+        $scope.addRule();
+        expect($scope.table.rows.length).toBe(1);
     });
 
-    it("should provide a method to update a rule", function() {
-        var rule = {
-            name: 'Test',
-            version: 1
-        };
+    describe("should provide a method to save a rule", function() {
+        var rule;
 
-        spyOn(GlobalNotification, 'setSuccessMessage');
+        beforeEach(function () {
+            rule = {
+                name: 'Test',
+                version: 1
+            };
 
-        $scope.updateRule(rule, $scope.filter);
+            spyOn(GlobalNotification, 'setSuccessMessage');
+        });
 
-        expect(rule.editMode).toBe(false);
-        expect(rule.working).toBe(false);
-        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        afterEach(function () {
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
+        });
+
+        it("and create the rule if it's new", function () {
+            spyOn(Rule, 'save').and.callThrough();
+            $scope.saveRule(rule);
+            expect(Rule.save).toHaveBeenCalled();
+        });
+
+        it("and update the rule if it exists", function () {
+            rule.id = 1;
+            spyOn(Rule, 'update').and.callThrough();
+            $scope.saveRule(rule);
+            expect(Rule.update).toHaveBeenCalled();
+        });
+
     });
 
     it("should provide a method to backup a rule", function() {
@@ -94,12 +101,14 @@ describe('Controller: DockerTagFilterController', function() {
 
     it("should provide a method to restore a rule", function() {
         var rule = {
+            id: 1,
             name: 'current',
             type: 'all',
             version: '1',
             min_version: '2',
             max_version: '3'
         }, previousRule = {
+            id: 1,
             name: 'previous',
             type: 'previous all',
             version: '10',
@@ -118,18 +127,14 @@ describe('Controller: DockerTagFilterController', function() {
         expect(Object.keys(rule.previous).length).toBe(0)
     });
 
-    it("should provide a method to get selected rules", function () {
-        $scope.filter.rules = [{id: 1, selected: true}, {id: 2, selected: false}];
-        expect($scope.getSelectedRules($scope.filter).length).toBe(1);
-        expect($scope.getSelectedRules($scope.filter)[0].id).toBe(1);
-    });
-
     it("should provide a method to delete a rule", function () {
-        $scope.filter.rules = [{id: 1, selected: true}, {id: 2, selected: false}];
+        var selected = [{id: 1, selected: true}];
+        spyOn($scope.table, 'getSelected').and.returnValue(selected);
+        $scope.table.rows = [{id: 1, selected: true}, {id: 2, selected: false}];
 
-        $scope.removeRules($scope.filter);
-        expect($scope.filter.rules.length).toBe(1);
-        expect($scope.filter.rules[0].id).toBe(2);
+        $scope.removeRules();
+        expect($scope.table.rows.length).toBe(1);
+        expect($scope.table.rows[0].id).toBe(2);
     });
 
     it("should provide a method to determine if a rule is valid if no name is given", function() {

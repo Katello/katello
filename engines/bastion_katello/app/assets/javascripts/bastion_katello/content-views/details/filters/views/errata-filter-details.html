@@ -1,7 +1,9 @@
 <div ng-if="isState('content-view.yum.filter.erratum.available')">
-  <form name="errataForm" class="col-sm-5">
-    <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
-  </form>
+  <div class="row">
+    <form name="errataForm" class="col-sm-5">
+      <div ng-include="'content-views/details/filters/views/date-type-errata.html'"></div>
+    </form>
+  </div>
 </div>
 
 <div data-extend-template="layouts/partials/table.html">

@@ -20,7 +20,15 @@ angular.module('Bastion.content-views').controller('AvailableErrataFilterControl
         var nutupane, filterByDate;
 
         function success(data) {
-            $scope.filter.rules = _.union($scope.filter.rules, data.results);
+            var rules;
+
+            if (data.results) {
+                rules = data.results;
+            } else {
+                rules = [data];
+            }
+
+            $scope.filter.rules = _.union($scope.filter.rules, rules);
             GlobalNotification.setSuccessMessage(translate('Errata successfully added.'));
             nutupane.table.selectAllResults(false);
             nutupane.refresh();

@@ -3,7 +3,11 @@
  * @name  Bastion.content-views.controller:DockerTagFilterController
  *
  * @requires $scope
+ * @requires $location
  * @requires translate
+ * @requires Nutupane
+ * @requires CurrentOrganization
+ * @requires Filter
  * @requires Rule
  * @requires DockerTag
  * @requires GlobalNotification
@@ -12,55 +16,31 @@
  *   Handles docker tag filter rules for a content view.
  */
 angular.module('Bastion.content-views').controller('DockerTagFilterController',
-    ['$scope', 'translate', 'Rule', 'DockerTag', 'GlobalNotification', function ($scope, translate, Rule, DockerTag, GlobalNotification) {
+    ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Filter', 'Rule', 'DockerTag', 'GlobalNotification', function ($scope, $location, translate, Nutupane, CurrentOrganization, Filter, Rule, DockerTag, GlobalNotification) {
+        var nutupane, params;
 
         function failure(response) {
             GlobalNotification.setErrorMessage(response.data.displayMessage);
         }
 
-        function removeRule(rule) {
-            var success,
-                rulesCopy = angular.copy($scope.filter.rules),
-                ruleId = rule.id;
+        function createRule(rule) {
+            var success;
 
-            success = function () {
-                angular.forEach(rulesCopy, function (ruleCopy, index) {
-                    if (ruleCopy.id === ruleId) {
-                        $scope.filter.rules.splice(index, 1);
-                    }
-                });
-                GlobalNotification.setSuccessMessage(translate('Filter rule successfully removed.'));
+            success = function (result) {
+                rule.id = result.id;
+                rule.editMode = false;
+                rule.working = false;
+
+                GlobalNotification.setSuccessMessage(translate('Package successfully added.'));
             };
 
-            Rule.delete({filterId: rule['content_view_filter_id'], ruleId: ruleId}, success, failure);
-        }
-
-        function addSuccess(rule) {
-            $scope.rule = {};
-            $scope.rule.editMode = false;
-            $scope.rule.working = false;
-            $scope.filter.rules.push(rule);
-
-            GlobalNotification.setSuccessMessage(translate('Filter rule successfully added.'));
-        }
-
-        $scope.rule = {
-            editMode: false,
-            working: false
-        };
-
-        $scope.filter.$promise.then(function (filter) {
-            $scope.table = {rows: filter.rules};
-        });
-
-        $scope.addRule = function (rule, filter) {
             if ($scope.valid(rule)) {
-                Rule.save({filterId: filter.id}, rule, addSuccess, failure);
+                Rule.save({filterId: $scope.filter.id}, rule, success, failure);
             }
-        };
+        }
 
-        $scope.updateRule = function (rule, filter) {
-            var params = {filterId: filter.id, ruleId: rule.id},
+        function updateRule(rule) {
+            var updateParams = {filterId: $scope.filter.id, ruleId: rule.id},
                 success, error;
 
             // Need access to the original rule
@@ -75,7 +55,44 @@ angular.module('Bastion.content-views').controller('DockerTagFilterController',
                 rule.working = false;
             };
 
-            Rule.update(params, rule, success, error);
+            Rule.update(updateParams, rule, success, error);
+        }
+
+        function removeRule(rule) {
+            var success, ruleId = rule.id;
+
+            success = function () {
+                nutupane.removeRow(ruleId);
+                GlobalNotification.setSuccessMessage(translate('Filter rule successfully removed.'));
+            };
+
+            Rule.delete({filterId: $scope.$stateParams.filterId, ruleId: ruleId}, success, failure);
+        }
+
+        params = {
+            filterId: $scope.$stateParams.filterId,
+            'organization_id': CurrentOrganization,
+            'search': $location.search().search || "",
+            'sort_by': 'name',
+            'sort_order': 'ASC',
+            'paged': true
+        };
+
+        nutupane = new Nutupane(Filter, params, 'rules');
+        $scope.table = nutupane.table;
+
+        $scope.addRule = function () {
+            var rule = new Rule();
+            rule.editMode = true;
+            $scope.table.addRow(rule);
+        };
+
+        $scope.saveRule = function (rule) {
+            if (rule.id) {
+                updateRule(rule);
+            } else {
+                createRule(rule);
+            }
         };
 
         $scope.valid = function (rule) {
@@ -88,22 +105,16 @@ angular.module('Bastion.content-views').controller('DockerTagFilterController',
         };
 
         $scope.restorePrevious = function (rule) {
-            angular.copy(rule.previous, rule);
+            if (rule.id) {
+                angular.copy(rule.previous, rule);
+            } else {
+                $scope.table.rows.shift();
+            }
             rule.previous = {};
         };
 
-        $scope.getSelectedRules = function (filter) {
-            var rules = [];
-            angular.forEach(filter.rules, function (rule) {
-                if (rule.selected) {
-                    rules.push(rule);
-                }
-            });
-            return rules;
-        };
-
-        $scope.removeRules = function (filter) {
-            angular.forEach($scope.getSelectedRules(filter), function (rule) {
+        $scope.removeRules = function () {
+            angular.forEach($scope.table.getSelected(), function (rule) {
                 removeRule(rule);
             });
         };

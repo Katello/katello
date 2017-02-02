@@ -1,12 +1,12 @@
-<div class="row header-bar">
-  <div class="col-sm-3">
-    <div>
-      <input type="text"
-             class="form-control filter-input"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="packageFilter"/>
-    </div>
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search">
+    <input type="text"
+           class="form-control"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="packageFilter"/>
+  </div>
 
+  <div data-block="filters">
     <div class="checkbox">
       <label>
         <input type="checkbox"
@@ -24,130 +24,87 @@
     </div>
   </div>
 
-  <button type="button" class="btn btn-default fr"
-          ng-disabled="getSelectedRules(filter).length === 0"
-          ng-hide="denied('edit_content_views', contentView)"
-          ng-click="removeRules(filter)">
-    <span translate>Remove RPMs</span>
-  </button>
-</div>
+  <div data-block="list-actions">
+    <button type="button" class="btn btn-default"
+            ng-click="addRule()"
+            ng-hide="denied('edit_content_views', contentView)">
+      <span translate>Add Rule</span>
+    </button>
 
-<table class="table table-bordered table-striped">
-  <thead>
-    <tr>
-      <th class="row-select">
-        <input type="checkbox"
-               ng-model="allSelected"
-               ng-change="selectAll(allSelected)"
-               ng-hide="denied('edit_content_views', contentView)"/>
-      </th>
-      <th class="col-sm-3" translate>RPM Name</th>
-      <th class="col-sm-1" translate>Architecture</th>
-      <th class="col-sm-6" translate>Detail</th>
-      <th></th>
-    </tr>
-  </thead>
+    <button type="button" class="btn btn-default"
+            ng-disabled="getSelectedRules(filter).length === 0"
+            ng-hide="denied('edit_content_views', contentView)"
+            ng-click="removeRules(filter)">
+      <span translate>Remove Rule</span>
+    </button>
+  </div>
 
-  <tbody>
-    <tr>
-      <td></td><!-- Empty cell since the first row is special -->
-      <td>
-        <input type="text"
-               class="form-control"
-               uib-typeahead="package for package in fetchAutocompleteName($viewValue)"
-               ng-hide="denied('edit_content_views', contentView)"
-               ng-model="rule.name"/>
-      </td>
+  <span data-block="no-rows-message" translate>
+     Create a rule using the add button above.
+  </span>
 
-      <td>
-        <input type="text"
-               class="form-control"
-               uib-typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
-               ng-hide="denied('edit_content_views', contentView)"
-               ng-model="rule.architecture"/>
-      </td>
+  <div data-block="table">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr bst-table-head row-select>
+          <th translate>RPM Name</th>
+          <th translate>Architecture</th>
+          <th translate>Version</th>
+          <th></th>
+        </tr>
+      </thead>
 
-      <td class="container">
-              <span ng-class="{ 'col-sm-12': rule.type === 'all', 'col-sm-5': rule.type != 'all'}">
-                <select class="form-control"
-                        ng-model="rule.type"
-                        ng-change="clearValues(rule)"
-                        ng-hide="denied('edit_content_views', contentView)">
-                  <option value="all" translate>All Versions</option>
-                  <option value="equal" translate>Equal To</option>
-                  <option value="greater" translate>Greater Than</option>
-                  <option value="less" translate>Less Than</option>
-                  <option value="range" translate>Range</option>
-                </select>
-              </span>
+      <tbody>
+        <tr bst-table-row ng-repeat="rule in table.rows | filter:packageFilter" row-select="rule">
+          <td bst-table-cell>
+            <div class="form-group">
+              <input class="form-control"
+                     ng-hide="denied('edit_content_views', contentView)"
+                     ng-model="rule.name"
+                     ng-readonly="!rule.editMode"/>
+            </div>
+          </td>
 
-              <span ng-show="rule.type === 'greater' || rule.type === 'less' || rule.type === 'range'">
-                <span class="col-sm-3">
-                  <input type="text"
-                         class="form-control"
-                         ng-model="rule.min_version"
-                         ng-hide="denied('edit_content_views', contentView)"
-                         ng-disabled="rule.type === 'less'"/>
+          <td bst-table-cell>
+            <div class="form-group">
+              <input class="form-control"
+                     ng-hide="denied('edit_content_views', contentView)"
+                     ng-model="rule.architecture"
+                     typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
+                     ng-readonly="!rule.editMode"/>
+            </div>
+          </td>
+
+          <td bst-table-cell>
+            <span ng-hide="rule.editMode">
+              <span ng-switch="rule.type">
+                <span ng-switch-when="equal">
+                  <span translate>Version {{ rule.version }}</span>
                 </span>
-                <span class="fl">-</span>
-                <span class="col-sm-3">
-                  <input type="text"
-                         class="form-control"
-                         ng-model="rule.max_version"
-                         ng-hide="denied('edit_content_views', contentView)"
-                         ng-disabled="rule.type === 'greater'"/>
-                </span>
-              </span>
 
-              <span ng-show="rule.type === 'equal'">
-                <span class="col-sm-5">
-                  <input type="text" class="form-control"
-                         ng-model="rule.version"
-                         ng-hide="denied('edit_content_views', contentView)"/>
+                <span ng-switch-when="greater">
+                  <span translate>Greater than version {{ rule.min_version }}</span>
+                </span>
+
+                <span ng-switch-when="less">
+                  <span translate>Less than version {{ rule.max_version }}</span>
+                </span>
+
+                <span ng-switch-when="range">
+                  <span translate>Between versions {{ rule.min_version }} and {{ rule.max_version }}</span>
+                </span>
+
+                <span ng-switch-default>
+                  <span translate>All Versions</span>
                 </span>
               </span>
-      </td>
+            </span>
 
-      <td class="action-cell">
-        <button type="button" class="btn btn-default"
-                ng-click="addRule(rule, filter)"
-                ng-hide="denied('edit_content_views', contentView)"
-                ng-disabled="!valid(rule)">
-          <i class="fa fa-plus"></i>
-          <span translate>Add</span>
-        </button>
-      </td>
-    </tr>
-
-    <tr ng-repeat="rule in filter.rules | filter:packageFilter" row-select="rule">
-      <td class="row-select">
-        <input type="checkbox"
-               ng-hide="denied('edit_content_views', contentView)"
-               ng-model="rule.selected"/>
-      </td>
-
-      <td>
-        <input class="form-control"
-               ng-hide="denied('edit_content_views', contentView)"
-               ng-model="rule.name"
-               ng-readonly="!rule.editMode"/>
-      </td>
-
-      <td>
-        <input class="form-control"
-               ng-hide="denied('edit_content_views', contentView)"
-               ng-model="rule.architecture"
-               typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
-               ng-readonly="!rule.editMode"/>
-      </td>
-
-      <td>
-              <span ng-class="{ 'col-sm-12': rule.type === 'all', 'col-sm-3': rule.type != 'all'}">
+            <div ng-show="rule.editMode">
+              <div class="form-group">
                 <select class="form-control"
                         ng-model="rule.type"
                         ng-hide="denied('edit_content_views', contentView)"
-                        ng-readonly="!rule.editMode"
-                        ng-disabled="!rule.editMode"
                         ng-change="clearValues(rule)">
                   <option value="all" translate>All Versions</option>
                   <option value="equal" translate>Equal To</option>
@@ -155,51 +112,66 @@
                   <option value="less" translate>Less Than</option>
                   <option value="range" translate>Range</option>
                 </select>
-              </span>
+              </div>
 
-              <span ng-show="rule.type === 'greater' || rule.type === 'less' || rule.type === 'range'">
-                <span class="col-sm-4">
-                  <input type="text"
-                         class="form-control"
-                         ng-model="rule.min_version"
-                         ng-readonly="!rule.editMode"
-                         ng-disabled="rule.type === 'less'"/>
-                </span>
-                <span class="fl">-</span>
-                <span class="col-sm-4">
-                  <input type="text"
-                         class="form-control"
-                         ng-model="rule.max_version"
-                         ng-readonly="!rule.editMode"
-                         ng-disabled="rule.type === 'greater'"/>
-                </span>
-              </span>
+              <div class="row">
+                <div ng-class="{ 'col-sm-12': rule.type != 'range', 'col-sm-5': rule.type === 'range'}"
+                     ng-show="rule.type === 'greater' || rule.type === 'range'">
 
-              <span ng-show="rule.type === 'equal'">
-                <span class="col-sm-9">
-                  <input type="text"
-                         class="form-control"
-                         ng-model="rule.version"
-                         ng-readonly="!rule.editMode"/>
-                </span>
-              </span>
-      </td>
+                  <div class="form-group">
+                    <label for="minVersion" translate>Minimum Version</label>
 
-      <td class="action-cell">
-        <button type="button" class="btn btn-default" ng-click="rule.editMode = true; backupPrevious(rule)" ng-hide="rule.editMode">
-          <i class="fa fa-edit"></i>
-          <span translate>Edit</span>
-        </button>
+                    <input id="minVersion" type="text"
+                           class="form-control"
+                           placeholder="{{ 'Minimum Version' | translate }}"
+                           ng-model="rule.min_version"
+                           ng-hide="denied('edit_content_views', contentView)"/>
+                  </div>
+                </div>
 
-        <button bst-save-control
-                on-cancel="restorePrevious(rule); rule.editMode = false"
-                on-save="updateRule(rule, filter)"
-                working="rule.working"
-                invalid="!valid(rule)"
-                ng-show="rule.editMode">
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                <div ng-class="{ 'col-sm-12': rule.type != 'range', 'col-sm-5': rule.type === 'range'}"
+                     ng-show="rule.type === 'less' || rule.type === 'range'">
 
+                  <div class="form-group">
+                    <label for="maxVersion" translate>Maximum Version</label>
+
+                    <input id="maxVersion" type="text"
+                           class="form-control"
+                           placeholder="{{ 'Maximum Version' | translate }}"
+                           ng-model="rule.max_version"
+                           ng-hide="denied('edit_content_views', contentView)"/>
+                  </div>
+                </div>
+
+                <div class="col-sm-12">
+                  <div class="form-group" ng-show="rule.type === 'equal'">
+                    <label for="version" translate>Version</label>
+
+                    <input id="version" type="text" class="form-control"
+                           placeholder="{{ 'Version' | translate }}"
+                           ng-model="rule.version"
+                           ng-hide="denied('edit_content_views', contentView)"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <td bst-table-cell class="action-cell">
+            <button type="button" class="btn btn-default" ng-click="rule.editMode = true; backupPrevious(rule)" ng-hide="rule.editMode">
+              <span translate>Edit</span>
+            </button>
+
+            <button bst-save-control
+                    on-cancel="restorePrevious(rule); rule.editMode = false"
+                    on-save="saveRule(rule)"
+                    working="rule.working"
+                    invalid="!valid(rule)"
+                    ng-show="rule.editMode">
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

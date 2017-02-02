@@ -19,6 +19,34 @@ angular.module('Bastion.content-views').factory('Filter',
                     method: 'GET',
                     params: {action: 'errata', 'available_for': 'content_view_filter'}
                 },
+                rules: {method: 'GET', transformResponse: function (data) {
+                    var response = angular.fromJson(data),
+                        rules = response.rules || [];
+
+                    function getType(rule) {
+                        var typeId;
+
+                        if (rule.version) {
+                            typeId = 'equal';
+                        } else if (rule['min_version'] && !rule['max_version']) {
+                            typeId = 'greater';
+                        } else if (!rule['min_version'] && rule['max_version']) {
+                            typeId = 'less';
+                        } else if (rule['min_version'] && rule['max_version']) {
+                            typeId = 'range';
+                        } else {
+                            typeId = 'all';
+                        }
+
+                        return typeId;
+                    }
+
+                    angular.forEach(rules, function (rule) {
+                        rule.type = getType(rule);
+                    });
+
+                    return {results: rules, subtotal: rules.length, total: rules.length};
+                }},
                 errata: {
                     method: 'GET',
                     params: {action: 'errata'}
