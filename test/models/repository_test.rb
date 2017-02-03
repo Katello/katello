@@ -107,7 +107,7 @@ module Katello
       @repo.content_type = 'docker'
       @repo.download_policy = nil
       refute_equal full_path, @repo.full_path
-      @repo.pulp_id = "abc123"
+      @repo.container_repository_name = "abc123"
       assert @repo.full_path =~ /abc123/
     end
 
@@ -235,6 +235,69 @@ module Katello
       @repo.download_policy = nil
       @repo.unprotected = true
       refute @repo.save
+    end
+  end
+
+  class RepositoryGeneratedIdsTest < RepositoryTestBase
+    def test_set_pulp_id_library_inst
+      SecureRandom.expects(:uuid).returns('SECURE-UUID')
+      @fedora_17_x86_64.pulp_id = nil
+      @fedora_17_x86_64.set_pulp_id
+
+      assert_equal 'SECURE-UUID', @fedora_17_x86_64.pulp_id
+    end
+
+    def test_set_pulp_id_archive
+      archive_repo = katello_repositories(:fedora_17_x86_64_library_view_1)
+      archive_repo.pulp_id = nil
+      archive_repo.set_pulp_id
+
+      assert_equal "#{archive_repo.organization.id}-published_library_view-v1_0-#{archive_repo.library_instance.pulp_id}", archive_repo.pulp_id
+    end
+
+    def test_set_pulp_id_cv_le
+      @fedora_17_dev_library_view.pulp_id = nil
+      @fedora_17_dev_library_view.set_pulp_id
+
+      assert_equal "#{@fedora_17_dev_library_view.organization.id}-published_library_view-dev_label-#{@fedora_17_dev_library_view.library_instance.pulp_id}",
+                   @fedora_17_dev_library_view.pulp_id
+    end
+
+    def test_set_pulp_id_max_chars
+      SecureRandom.expects(:uuid).returns('SECURE-UUID')
+
+      @fedora_17_dev_library_view.pulp_id = nil
+      @fedora_17_dev_library_view.content_view.update_column(:label, 'a' * 120)
+      @fedora_17_dev_library_view.environment.update_column(:label, 'b' * 120)
+      @fedora_17_dev_library_view.set_pulp_id
+
+      assert_equal 'SECURE-UUID', @fedora_17_dev_library_view.pulp_id
+    end
+
+    def test_set_pulp_id_no_overwrite
+      id = @fedora_17_x86_64.pulp_id
+      @fedora_17_x86_64.set_pulp_id
+      assert_equal id, @fedora_17_x86_64.pulp_id
+    end
+
+    def test_set_pulp_id_save
+      @fedora_17_x86_64.pulp_id = nil
+      @fedora_17_x86_64.save!
+      refute_nil @fedora_17_x86_64.pulp_id
+    end
+
+    def test_set_container_repository_name
+      repo = katello_repositories(:busybox)
+      repo.set_container_repository_name
+
+      assert_equal 'empty_organization-puppet_product-busybox', repo.container_repository_name
+    end
+
+    def test_set_container_repository_name_cv
+      repo = katello_repositories(:busybox_view1)
+      repo.set_container_repository_name
+
+      assert_equal 'empty_organization-published_library_view-1_0-puppet_product-busybox', repo.container_repository_name
     end
   end
 
@@ -485,17 +548,6 @@ module Katello
       clone = @fedora_17_library_library_view.create_clone(:environment => @staging, :content_view => @library_dev_staging_view)
       assert clone.id
       assert_equal @fedora_17_library_library_view.content_type, clone.content_type
-    end
-
-    def test_repo_id
-      @acme_corporation   = get_organization
-
-      @fedora             = Product.find(katello_products(:fedora).id)
-      @library            = KTEnvironment.find(katello_environments(:library).id)
-
-      repo_id = Repository.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label,
-                                   @acme_corporation.label, @library.default_content_view.label, nil)
-      assert_equal "Empty_Organization-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
     end
 
     def test_clone_repo_path

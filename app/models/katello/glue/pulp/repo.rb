@@ -270,7 +270,8 @@ module Katello
 
           distributors = [puppet_dist, puppet_install_dist]
         when Repository::DOCKER_TYPE
-          options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true}
+          options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true,
+                      :repo_registry_id => container_repository_name}
           docker_dist = Runcible::Models::DockerDistributor.new(options)
           distributors = [docker_dist]
         when Repository::OSTREE_TYPE
@@ -690,7 +691,7 @@ module Katello
       pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
       scheme   = (self.unprotected && !force_https) ? 'http' : 'https'
       if docker?
-        "#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}/#{pulp_id}"
+        "#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}/#{container_repository_name}"
       elsif file?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}/"
       elsif puppet?

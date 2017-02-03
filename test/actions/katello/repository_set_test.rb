@@ -29,13 +29,12 @@ module ::Actions::Katello::RepositorySet
                                         contentUrl: content_url)
     end
     let(:substitutions) { { basearch: 'x86_64', releasever: '6Server' } }
-    let(:expected_pulp_id) { "Empty_Organization-redhat_label-Content_123_x86_64_6Server" }
     let(:expected_relative_path) { "Empty_Organization/library_label/product/x86_64/6Server" }
 
     def repository_already_enabled!
       katello_repositories(:rhel_6_x86_64).
-          update_attributes!(relative_path: "#{expected_relative_path}",
-                             pulp_id: expected_pulp_id)
+          update_attributes!(:relative_path => "#{expected_relative_path}", :content_id => content.id,
+                            :arch => 'x86_64', :minor => '6Server')
     end
   end
 
@@ -44,7 +43,6 @@ module ::Actions::Katello::RepositorySet
 
     it 'plans' do
       action.expects(:action_subject).with do |repository|
-        repository.pulp_id.must_equal expected_pulp_id
         repository.relative_path.must_equal expected_relative_path
       end
       content.expects(:modifiedProductIds).returns([])
@@ -68,7 +66,6 @@ module ::Actions::Katello::RepositorySet
       repository_already_enabled!
 
       action.expects(:action_subject).with do |repository|
-        repository.pulp_id.must_equal expected_pulp_id
         repository.relative_path.must_equal expected_relative_path
       end
       plan_action action, product, content, substitutions
@@ -109,7 +106,6 @@ module ::Actions::Katello::RepositorySet
                          "path" => "/product/x86_64/6Server",
                          "repo_name" => "Content 123 x86_64 6Server",
                          "name" => "Content 123",
-                         "pulp_id" => "Empty_Organization-redhat_label-Content_123_x86_64_6Server",
                          "enabled" => false,
                          "promoted" => false}])
     end

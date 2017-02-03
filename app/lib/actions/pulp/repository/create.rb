@@ -162,7 +162,8 @@ module Actions
         def docker_distributor
           options = { protected: !input[:unprotected] || false,
                       id: input[:pulp_id],
-                      auto_publish: true }
+                      auto_publish: true,
+                      repo_registry_id: input[:repo_registry_id]}
           Runcible::Models::DockerDistributor.new(options)
         end
 
