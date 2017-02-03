@@ -430,7 +430,7 @@ module ::Actions::Katello::Repository
       Setting['pulp_export_destination'] = '/tmp'
 
       action.stubs(:action_subject)
-      plan_action(action, [repository], false, nil, 0, repository.pulp_id)
+      plan_action(action, [repository], false, nil, 0, "8")
 
       # ensure arguments get transformed and bubble through to pulp actions.
       # Org label defaults to blank for this test, hence the group ID starts
@@ -452,7 +452,7 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject)
 
       assert_raises(Foreman::Exception) do
-        plan_action(action, [repository], false, nil, 0, repository.pulp_id)
+        plan_action(action, [repository], false, nil, 0, "8")
       end
     end
 

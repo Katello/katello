@@ -3,6 +3,9 @@ module Katello
   class Repository < Katello::Model
     self.include_root_in_json = false
 
+    #pulp uses pulp id to sync with 'yum_distributor' on the end
+    PULP_ID_MAX_LENGTH = 220
+
     validates_lengths_from_database :except => [:label]
     before_destroy :assert_deletable
     before_create :downcase_pulp_id
@@ -108,6 +111,9 @@ module Katello
     validate :ensure_has_url_for_ostree, :if => :ostree?
     validate :ensure_ostree_repo_protected, :if => :ostree?
 
+    before_validation :set_pulp_id
+    before_validation :set_container_repository_name, :if => :docker?
+
     scope :has_url, -> { where('url IS NOT NULL') }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
 
@@ -140,6 +146,34 @@ module Katello
       else
         self.content_view.organization
       end
+    end
+
+    def set_pulp_id
+      return if self.pulp_id
+
+      if self.content_view.default?
+        items = [SecureRandom.uuid]
+      elsif self.environment
+        items = [organization.id, content_view.label, environment.label, library_instance.pulp_id]
+      else
+        version = self.content_view_version.version.gsub('.', '_')
+        items = [organization.id, content_view.label, "v#{version}", library_instance.pulp_id]
+      end
+      self.pulp_id = items.join('-')
+      self.pulp_id = SecureRandom.uuid if self.pulp_id.length > PULP_ID_MAX_LENGTH
+    end
+
+    def set_container_repository_name
+      return if container_repository_name
+      if content_view.default?
+        items = [organization.label, product.label, label]
+      elsif environment
+        items = [organization.label, environment.label, content_view.label, product.label, label]
+      else
+        items = [organization.label, content_view.label, content_view_version.version, product.label, label]
+      end
+      # docker repo names need to be in lower case
+      self.container_repository_name = items.compact.join("-").gsub(/[^-\w]/, "_").downcase
     end
 
     def content_view
@@ -324,26 +358,6 @@ module Katello
       end
     end
 
-    def self.repo_id(product_label, repo_label, env_label, organization_label,
-                     view_label, version, docker_repo_name = nil)
-      actual_repo_id = [organization_label,
-                        env_label,
-                        view_label,
-                        version,
-                        product_label,
-                        repo_label,
-                        docker_repo_name].compact.join("-").gsub(/[^-\w]/, "_")
-      # docker repo names need to be in lower case
-      actual_repo_id = actual_repo_id.downcase if docker_repo_name
-      actual_repo_id
-    end
-
-    def clone_id(env, content_view, version = nil)
-      Repository.repo_id(self.product.label, self.label, env.try(:label),
-                         organization.label, content_view.label,
-                         version)
-    end
-
     def packages_without_errata
       if errata_filenames.any?
         self.rpms.where("#{Rpm.table_name}.filename NOT in (?)", errata_filenames)
@@ -359,10 +373,6 @@ module Katello
     def errata_filenames
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
           where("#{RepositoryErratum.table_name}.repository_id" => self.id).pluck("#{Katello::ErratumPackage.table_name}.filename")
-    end
-
-    def container_repository_name
-      pulp_id if docker?
     end
 
     # TODO: break up method
@@ -415,7 +425,6 @@ module Katello
                      :download_policy => download_policy,
                      :unprotected => self.unprotected) do |clone|
         clone.checksum_type = self.checksum_type
-        clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
         options = {
           :repository => self,
           :environment => to_env,

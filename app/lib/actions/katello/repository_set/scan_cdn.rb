@@ -59,7 +59,6 @@ module Actions
               substitutions: {},
               path:          mapper.feed_url,
               repo_name:     mapper.name,
-              pulp_id:       mapper.pulp_id,
               registry_name: registry["name"],
               enabled:       !repo.nil?,
               promoted:      (!repo.nil? && repo.promoted?)
@@ -74,7 +73,6 @@ module Actions
             path:          mapper.path,
             repo_name:     mapper.name,
             name:          mapper.content.name,
-            pulp_id:       mapper.pulp_id,
             enabled:       !repo.nil?,
             promoted:      (!repo.nil? && repo.promoted?)
           }

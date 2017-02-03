@@ -46,8 +46,10 @@ module Katello
 
       def find_repository
         ::Katello::Repository.where(product_id: product.id,
+                                    content_id: content.id,
                                     environment_id: product.organization.library.id,
-                                    pulp_id: pulp_id).first
+                                    minor: minor,
+                                    arch: arch).first
       end
 
       def build_repository
@@ -56,7 +58,6 @@ module Katello
         repository = Repository.new(
           :environment => product.organization.library,
           :product => product,
-          :pulp_id => pulp_id,
           :cp_label => content.label,
           :content_id => content.id,
           :arch => arch,
@@ -105,10 +106,6 @@ module Katello
         repo_name_parts = [content.name,
                            sorted_substitutions].flatten.compact
         repo_name_parts.join(" ").gsub(/[^a-z0-9\-\._ ]/i, "")
-      end
-
-      def pulp_id
-        product.repo_id(name)
       end
 
       def path
@@ -212,7 +209,6 @@ module Katello
         end
         ::Katello::Repository.new(:environment => product.organization.library,
                                  :product => product,
-                                 :pulp_id => pulp_id,
                                  :cp_label => content.label,
                                  :content_id => content.id,
                                  :relative_path => relative_path,
@@ -235,10 +231,6 @@ module Katello
 
       def name
         "#{content.name} - (#{registry['name']})"
-      end
-
-      def pulp_id
-        product.repo_id(content.name, nil, registry['name'])
       end
 
       def feed_url

@@ -30,7 +30,8 @@ module Actions
                                         mirror_on_sync: repository.mirror_on_sync?,
                                         ssl_validation: certs[:ssl_validation],
                                         upstream_username: repository.upstream_username,
-                                        upstream_password: repository.upstream_password)
+                                        upstream_password: repository.upstream_password,
+                                        repo_registry_id: repository.container_repository_name)
 
             return if create_action.error
 
