@@ -54,6 +54,27 @@ module Katello
       refute_nil @host1.reload.subscription_facet.uuid
     end
 
+    def test_unify_two_compute_resource
+      ENV['HOSTS'] = 'foobar.example.com,foobar'
+      @host2.compute_resource = FactoryGirl.create(:compute_resource, :ec2)
+      @host2.uuid = SecureRandom.uuid
+      @host2.save!
+      Rake.application.invoke_task('katello:unify_hosts')
+
+      refute_nil ::Host.find_by(:id => @host2.id)
+      refute_nil @host2.reload.subscription_facet.uuid
+    end
+
+    def test_unify_two_managed
+      ENV['HOSTS'] = 'foobar.example.com,foobar'
+      @host2.managed = true
+      @host2.save(:validate => false)
+      Rake.application.invoke_task('katello:unify_hosts')
+
+      refute_nil ::Host.find_by(:id => @host2.id)
+      refute_nil @host2.reload.subscription_facet.uuid
+    end
+
     def test_unify_two_backwards
       ENV['HOSTS'] = 'foobar,foobar.example.com'
 

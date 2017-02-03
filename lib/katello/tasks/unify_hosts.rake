@@ -99,6 +99,16 @@ namespace :katello do
       provisioning_host, facet_host = pick_hosts(host_one, host_two)
       return if provisioning_host.nil? || facet_host.nil?
 
+      if facet_host.compute_resource
+        puts "Host #{facet_host.name} is registered with subscription-manager but is assigned to a compute resource, please un-assign this host first."
+        return
+      end
+
+      if facet_host.managed?
+        puts "Host #{facet_host.name} is registered with subscription-manager but is managed, please un-unmanage this host first."
+        return
+      end
+
       puts "Unifying #{provisioning_host.name} with #{facet_host.name}\n"
       return if ENV['DRYRUN']
 
