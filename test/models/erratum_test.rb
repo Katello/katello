@@ -8,7 +8,6 @@ module Katello
       @bugfix = katello_errata(:bugfix)
       @enhancement = katello_errata(:enhancement)
       @host = hosts(:one)
-      @host_dev = hosts(:two)
       @host_without_errata = @host.clone
       @host_without_errata.content_facet.applicable_errata = []
     end
@@ -168,16 +167,17 @@ module Katello
       refute_includes errata, @enhancement
     end
 
-    def test_installable_for_hosts_dev_environment
-      errata = Erratum.installable_for_hosts([@host_dev, @host_without_errata])
-      assert_includes errata, @security
-      assert_includes errata, @bugfix
-      refute_includes errata, @enhancement
+    def test_installable_for_hosts_with_no_bound_repos
+      # make sure the @host has no bound repositories
+      @host.content_facet.bound_repositories = []
+      @host.content_facet.save!
+      errata = Erratum.installable_for_hosts([@host, @host_without_errata])
+      assert_empty errata
     end
 
-    def test_installable_for_hosts_dev_environment_with_repos
+    def test_installable_for_hosts_with_repos
       #Tests issue #10681
-      errata = Erratum.installable_for_hosts([@host_dev, @host_without_errata]).in_repositories(@repo)
+      errata = Erratum.installable_for_hosts([@host, @host_without_errata]).in_repositories(@repo)
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
