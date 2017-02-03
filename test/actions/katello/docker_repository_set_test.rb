@@ -58,13 +58,10 @@ module ::Actions::Katello::DockerRepositorySet
       }
     end
 
-    let(:expected_pulp_id) { "empty_organization-redhat_label-docker_content_123-#{registry_name}".downcase }
     let(:expected_relative_path) { "Empty_Organization/library_label/product/x86_64/6Server" }
 
     def repository_already_enabled!
-      katello_repositories(:rhel_6_x86_64).
-          update_attributes!(relative_path: "#{expected_relative_path}",
-                             pulp_id: expected_pulp_id,
+      katello_repositories(:rhel_6_x86_64).update_attributes!(relative_path: "#{expected_relative_path}",
                              docker_upstream_name: registry_name)
     end
   end
@@ -93,7 +90,6 @@ module ::Actions::Katello::DockerRepositorySet
                                  [{ "substitutions" => {},
                                     "path" => "https://#{registry_feed_url}",
                                     "repo_name" => "#{content.name} - (#{registry_name})",
-                                    "pulp_id" => expected_pulp_id,
                                     "registry_name" => "dream-registry",
                                     "enabled" => false,
                                     "promoted" => false}])
@@ -118,7 +114,6 @@ module ::Actions::Katello::DockerRepositorySet
 
     it 'plans' do
       action.expects(:action_subject).with do |repository|
-        repository.pulp_id.must_equal expected_pulp_id
         repository.docker_upstream_name.must_equal registry_name
         repository.url.must_equal "https://#{registry_feed_url}"
       end
@@ -142,7 +137,6 @@ module ::Actions::Katello::DockerRepositorySet
       repository_already_enabled!
 
       action.expects(:action_subject).with do |repository|
-        repository.pulp_id.must_equal expected_pulp_id
         repository.docker_upstream_name.must_equal registry_name
       end
       plan_action action, product, content, options

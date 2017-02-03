@@ -105,28 +105,6 @@ module Katello
       end
     end
 
-    describe "product repos" do
-      before(:each) do
-        disable_product_orchestration
-        Katello.pulp_server.extensions.repository.stubs(:publish_all).returns([])
-      end
-
-      describe "repo id" do
-        before do
-          Resources::Candlepin::Product.stubs(:create).returns(:id => ProductTestData::PRODUCT_ID)
-          @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id))
-        end
-
-        specify "format" do
-          @p.repo_id('123', 'root').must_equal("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
-        end
-
-        it "should be the same as content id for cloned repository" do
-          @p.repo_id("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123").must_equal("#{@organization.label}-root-#{ProductTestData::SIMPLE_PRODUCT[:label]}-123")
-        end
-      end
-    end
-
     describe "#environments" do
       it "should contain a unique list of environments" do
         disable_repo_orchestration

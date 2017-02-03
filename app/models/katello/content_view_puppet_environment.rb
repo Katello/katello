@@ -27,6 +27,8 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :puppet_environment, :presence => true, :if => :environment
 
+    before_validation :set_pulp_id
+
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
 
@@ -84,8 +86,14 @@ module Katello
       end
     end
 
-    def self.generate_pulp_id(organization_label, env_label, view_label, version)
-      [organization_label, env_label, view_label, version].compact.join("-").gsub(/[^-\w]/, "_")
+    def set_pulp_id
+      if self.environment
+        label = "#{self.content_view.label}-#{self.environment.label}-puppet-#{SecureRandom.uuid}"
+      else
+        version = self.content_view_version.version.gsub('.', '_')
+        label = "#{self.content_view.label}-v#{version}-puppet-#{SecureRandom.uuid}"
+      end
+      self.pulp_id ||= "#{self.organization.id}-#{label}"
     end
 
     def index_content(puppet_module_uuids)

@@ -476,15 +476,10 @@ module Katello
       content_view = self
       to_version   = version || content_view.version(to_env)
 
-      # Construct the pulp id using org/view/version or org/env/view
-      pulp_id = ContentViewPuppetEnvironment.generate_pulp_id(organization.label, to_env.try(:label),
-                                                              self.label, version.try(:version))
-
       ContentViewPuppetEnvironment.new(
         :environment => to_env,
         :content_view_version => to_version,
-        :name => self.name,
-        :pulp_id => pulp_id
+        :name => self.name
       )
     end
 
