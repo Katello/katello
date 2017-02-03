@@ -47,6 +47,10 @@ module Katello
     end
 
     def self.applicable_to_hosts(hosts)
+      # Note: ContentFacetErrata actually holds the "Applicable Errata" to that host
+      # It is not the errata "belonging" to the host. Its rather the errata that is "applicable"
+      # which is calculated elsewhere.
+
       self.joins(:content_facets).
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
     end
@@ -85,12 +89,18 @@ module Katello
     end
 
     def self.installable_for_hosts(hosts = nil)
-      query = Katello::Erratum.joins(:content_facet_errata).joins(:repository_errata).
+      # Main goal of this query
+      # 1) Get me the applicable errata for these set of hosts
+      # 2) Now further prune this list. Only include errata from repos that have been "enabled" on those hosts.
+      #    In other words, prune the list to only include the errate in the "bound" repositories signified by
+      #    the inner join between ContentFacetRepository and RepositoryErratum
+      query = self.
         joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
         #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::ContentFacetErratum.table_name}.content_facet_id").
         joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS host_repo_errata ON \
-          host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id").
-        where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
+          host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id AND \
+          #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
+      query = query.joins(:content_facet_errata) unless hosts
 
       query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
       query.uniq
