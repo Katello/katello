@@ -39,7 +39,8 @@ Foreman::Plugin.find(:katello).security_block :products do
   permission :create_products,
              {
                'katello/api/v2/products' => [:create],
-               'katello/api/v2/repositories' => [:create]
+               'katello/api/v2/repositories' => [:create],
+               'katello/api/v2/package_groups' => [:create]
              },
              :resource_type => 'Katello::Product'
   permission :edit_products,
@@ -56,7 +57,8 @@ Foreman::Plugin.find(:katello).security_block :products do
                'katello/api/v2/products' => [:destroy],
                'katello/api/v2/repositories' => [:destroy],
                'katello/api/v2/products_bulk_actions' => [:destroy_products],
-               'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories]
+               'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories],
+               'katello/api/v2/package_groups' => [:destroy]
              },
              :resource_type => 'Katello::Product'
   permission :sync_products,

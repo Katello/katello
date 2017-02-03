@@ -2,6 +2,8 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::PackageGroupsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
+
     def models
       @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       @package_group_filter = katello_content_view_filters(:populated_package_group_filter)
@@ -98,6 +100,28 @@ module Katello
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
         get :show, :id => @repo.package_groups.first.id
       end
+    end
+
+    def test_create_and_delete
+      parameters = { :repository_id => @repo.id, :name => 'My_Group', :description => "My Group", :mandatory_package_names => ["katello-agent"]}
+      assert_sync_task(::Actions::Katello::Repository::UploadPackageGroup) do |repository, params|
+        repository.must_equal @repo
+        params[:repository_id].must_equal @repo.id.to_s
+        params[:name].must_equal parameters[:name]
+        params[:description].must_equal parameters[:description]
+        params[:mandatory_package_names].must_equal parameters[:mandatory_package_names]
+        params[:user_visible].must_equal true
+      end
+
+      post(:create, parameters)
+      assert_response :success
+
+      assert_sync_task(::Actions::Katello::Repository::DestroyPackageGroup) do |repository, pkg_group_id|
+        repository.must_equal @repo
+        pkg_group_id.must_equal "My_Group"
+      end
+      delete(:destroy, :name => "My_Group", :repository_id => @repo.id)
+      assert_response :success
     end
   end
 end

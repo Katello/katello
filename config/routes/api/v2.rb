@@ -193,6 +193,8 @@ Katello::Engine.routes.draw do
         api_resources :package_groups, :only => [:index, :show] do
           collection do
             get :auto_complete_search
+            post :create
+            delete :destroy
           end
         end
 
