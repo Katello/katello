@@ -7,6 +7,7 @@ module Actions
           param :unit_type_id
           param :upload_id
           param :unit_key
+          param :unit_metadata
         end
 
         def invoke_external_task
@@ -14,7 +15,7 @@ module Actions
                                                    input[:unit_type_id],
                                                    input[:upload_id],
                                                    input[:unit_key],
-                                                    unit_metadata: {})
+                                                   unit_metadata: input[:unit_metadata] || {})
         end
       end
     end
