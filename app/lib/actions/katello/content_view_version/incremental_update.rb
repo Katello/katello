@@ -108,7 +108,8 @@ module Actions
                 end
               end
             end
-            new_repos.concat(old_repos)
+            new_repos.concat(old_repos) unless old_repos.blank?
+            new_repos
           else
             [old_version_repo]
           end
