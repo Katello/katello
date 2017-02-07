@@ -74,7 +74,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
                 {id: 'rpm', name: translate('Package')},
                 {id: 'package_group', name: translate('Package Group')},
                 {id: 'erratumId', name: translate('Erratum - by ID')},
-                {id: 'erratumDataType', name: translate('Erratum - Date and Type')}
+                {id: 'erratumDateType', name: translate('Erratum - Date and Type')}
             ];
         } else {
             $scope.filter.type = "docker";
