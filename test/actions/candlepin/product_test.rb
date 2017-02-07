@@ -8,6 +8,27 @@ class Actions::Candlepin::Product::ContentUpdateTest < ActiveSupport::TestCase
     stub_remote_user
   end
 
+  describe 'Create' do
+    let(:action_class) { ::Actions::Candlepin::Product::Create }
+    let(:planned_action) do
+      create_and_plan_action action_class, :name => 'foo', :owner => 'default_org', :multiplier => nil, :attributes => {}
+    end
+
+    it 'runs' do
+      SecureRandom.expects(:random_number).returns(4) #chosen by fair dice roll. guarenteed to be random.
+      ::Katello::Resources::Candlepin::Product.expects(:create).with('default_org', :name => 'foo', :id => 4,
+                                                                     :multiplier => nil, :attributes => {})
+      run_action planned_action
+    end
+
+    it 'properly determines an unused id' do
+      katello_products(:fedora).update_attributes!(:cp_id => 4)
+      SecureRandom.stubs(:random_number).returns(4).then.returns(99)
+
+      assert_equal 99, create_action(action_class).unused_product_id
+    end
+  end
+
   describe 'ContentUpdate' do
     let(:action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:planned_action) do
