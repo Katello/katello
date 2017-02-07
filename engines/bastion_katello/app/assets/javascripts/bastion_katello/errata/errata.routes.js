@@ -22,20 +22,34 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
         }
     });
 
-    $stateProvider.state('errata-tasks', {
+    $stateProvider.state('errata.tasks', {
         url: '/tasks',
         abstract: true,
         permission: ['view_products', 'view_content_views'],
-        templateUrl: 'errata/views/errata-tasks.html'
+        views: {
+            '@': {
+                templateUrl: 'errata/views/errata-tasks.html'
+            }
+        }
     })
-    .state('errata-tasks.details', {
+    .state('errata.tasks.list', {
+        url: '',
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'errata/views/errata-tasks-list.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Tasks' | translate }}",
+            parent: 'errata'
+
+        }
+    })
+    .state('errata.tasks.task', {
         url: '/:taskId',
         permission: ['view_products', 'view_content_views'],
         controller: 'TaskDetailsController',
         templateUrl: 'errata/views/errata-task-details.html',
         ncyBreadcrumb: {
             label: '{{ task.id }}',
-            parent: 'errata'
+            parent: 'errata.tasks.list'
         }
     });
 

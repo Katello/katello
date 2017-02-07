@@ -125,7 +125,7 @@ describe('Controller: ApplyErrataController', function() {
                 spyOn($scope, 'transitionTo');
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
             });
 
@@ -170,7 +170,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeFalsy();
             });
@@ -232,7 +232,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });
@@ -281,7 +281,7 @@ describe('Controller: ApplyErrataController', function() {
 
                 $scope.confirmApply();
 
-                expect($scope.transitionTo).toHaveBeenCalledWith('errata-tasks.details', {taskId: 1});
+                expect($scope.transitionTo).toHaveBeenCalledWith('errata.tasks.task', {taskId: 1});
                 expect($scope.errorMessages.length).toBe(0);
                 expect($scope.hasComposites($scope.updates)).toBeTruthy();
             });
