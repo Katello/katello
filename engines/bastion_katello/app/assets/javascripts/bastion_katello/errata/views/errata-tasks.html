@@ -1,9 +1,9 @@
 <span page-title>{{ 'Errata Tasks' | translate }}</span>
 
-<section>
-  <h3 translate>Errata Task List</h3>
-  <div tasks-table  details-state="errata.task"
-       known-context="errata,organization"
-       resource-type="Katello::Erratum"
-       resource-id="{{ errara.id }}"/>
-</section>
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>
+
+

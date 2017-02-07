@@ -22,7 +22,7 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     $scope.transitionTo('erratum.task', {errataId: $scope.$stateParams.errataId,
                         taskId: task.id});
                 } else {
-                    $scope.transitionTo('errata-tasks.details', {taskId: task.id});
+                    $scope.transitionTo('errata.tasks.task', {taskId: task.id});
                 }
                 $scope.applyingErrata = false;
             }
