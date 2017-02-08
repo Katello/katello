@@ -1,6 +1,6 @@
 <span page-title ng-model="host">{{ 'Traces for: ' | translate }} {{ host.name }}</span>
 
-<div class="details fl" ng-hide="host.hasContent()">
+<div ng-hide="host.hasContent()">
   <div data-extend-template="common/views/registration.html"></div>
 </div>
 
