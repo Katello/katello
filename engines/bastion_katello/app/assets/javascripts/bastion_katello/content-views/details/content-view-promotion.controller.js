@@ -99,6 +99,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
             ContentViewVersion.promote({id: $scope.version.id,
                                         'environment_id': $scope.selectedEnvironment.id,
                                         'description': $scope.description,
+                                        'force_yum_metadata_regeneration': $scope.forceMetadataRegeneration,
                                         force: true},
                 success, failure);
         };

@@ -13,7 +13,8 @@ module Actions
                         :distributor_type_id => distributor.type_id,
                         :source_pulp_id => source_repository.try(:pulp_id),
                         :override_config => override_config(distributor, force),
-                        :dependency => dependency)
+                        :dependency => dependency,
+                        :matching_content => options[:matching_content])
           end
         end
 

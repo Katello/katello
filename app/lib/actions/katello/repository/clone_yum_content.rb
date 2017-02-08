@@ -38,6 +38,15 @@ module Actions
             plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
             plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
 
+            # Check for matching content before indexing happens, the content in pulp is
+            # actually updated, but it is not reflected in the database yet.
+            output = {}
+            if target_repo.environment && !options[:force_yum_metadata_regeneration]
+              output = plan_action(Katello::Repository::CheckMatchingContent,
+                                   :source_repo_id => source_repo.id,
+                                   :target_repo_id => target_repo.id).output
+            end
+
             plan_action(Katello::Repository::IndexContent, id: target_repo.id) if index_content
 
             if purge_empty_units
@@ -48,7 +57,13 @@ module Actions
             end
 
             source_repository = filters.empty? ? source_repo : nil
-            plan_action(Katello::Repository::MetadataGenerate, target_repo, :source_repository => source_repository) if generate_metadata
+
+            if generate_metadata
+              plan_action(Katello::Repository::MetadataGenerate,
+                          target_repo,
+                          :source_repository => source_repository,
+                          :matching_content => output[:matching_content])
+            end
           end
         end
 

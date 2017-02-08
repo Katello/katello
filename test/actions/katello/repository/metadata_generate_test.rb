@@ -20,7 +20,8 @@ module Actions
           :distributor_type_id => Runcible::Models::YumDistributor.type_id,
           :source_pulp_id => nil,
           :override_config => {:force_full => false},
-          :dependency => nil)
+          :dependency => nil,
+          :matching_content => nil)
     end
 
     it 'plans a yum refresh with force true' do
@@ -31,7 +32,8 @@ module Actions
           :distributor_type_id => Runcible::Models::YumDistributor.type_id,
           :source_pulp_id => nil,
           :override_config => {:force_full => true},
-          :dependency => nil)
+          :dependency => nil,
+          :matching_content => nil)
     end
 
     it 'plans a yum refresh with source repo' do
@@ -42,7 +44,8 @@ module Actions
           :distributor_type_id => Runcible::Models::YumCloneDistributor.type_id,
           :source_pulp_id => yum_repo2.pulp_id,
           :override_config => {},
-          :dependency => nil)
+          :dependency => nil,
+          :matching_content => nil)
     end
 
     it 'plans a puppet refresh' do
@@ -53,7 +56,8 @@ module Actions
           :distributor_type_id => Runcible::Models::PuppetDistributor.type_id,
           :source_pulp_id => nil,
           :override_config => {},
-          :dependency => nil)
+          :dependency => nil,
+          :matching_content => nil)
     end
   end
 end

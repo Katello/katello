@@ -76,8 +76,11 @@ module Katello
     api :POST, "/content_views/:id/publish", N_("Publish a content view")
     param :id, :identifier, :desc => N_("Content view identifier"), :required => true
     param :description, String, :desc => N_("Description for the new published content view version")
+    param :force_yum_metadata_regeneration, :bool, :desc => N_("Force yum metadata regeneration on the repositories " \
+                                                           "in the content view version")
     def publish
-      task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description])
+      task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
+                        :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration])
       respond_for_async :resource => task
     end
 

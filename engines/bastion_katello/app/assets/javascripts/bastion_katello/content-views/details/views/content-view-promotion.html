@@ -36,6 +36,20 @@
     </textarea>
   </div>
 
+  <div class="checkbox">
+    <label translate>
+      <input id="forceMetadataRegeneration"
+             name="forceMetadataRegeneration"
+             ng-model="forceMetadataRegeneration"
+             type="checkbox"/>
+      Force Yum Metadata Regeneration</label>
+    <i class="fa fa-question-circle"
+       uib-tooltip="{{ 'Forces metadata regeneration on yum repos even if the contents of the repo have not changed' | translate }}"
+       tooltip-animation="false"
+       tooltip-append-to-body="true">
+    </i>
+  </div>
+
   <div>
     <button type="button" class="btn btn-primary btn-lg" ng-disabled="promoting || !selectedEnvironment" ng-click="verifySelection()" translate>
       Promote Version
