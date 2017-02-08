@@ -145,7 +145,7 @@ module Katello
           end
 
           def checkin(uuid, checkin_date)
-            checkin_date ||= DateTime.now
+            checkin_date ||= Time.now
             self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
           end
 
@@ -683,9 +683,9 @@ module Katello
           end
 
           def create_unlimited_subscription(owner_key, product_id)
-            start_date ||= DateTime.now
+            start_date ||= Time.now
             # End it 100 years from now
-            end_date ||= start_date + 10_950
+            end_date ||= start_date + 10_950.days
 
             subscription = {
               'startDate' => start_date,
