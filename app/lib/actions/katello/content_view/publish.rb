@@ -6,7 +6,7 @@ module Actions
         middleware.use Actions::Middleware::KeepCurrentUser
 
         # rubocop:disable MethodLength
-        def plan(content_view, description = "")
+        def plan(content_view, description = "", options = {})
           action_subject(content_view)
           content_view.check_ready_to_publish!
           version = content_view.create_new_version
@@ -26,7 +26,8 @@ module Actions
               content_view.publish_repositories do |repositories|
                 sequence do
                   clone_to_version = plan_action(Repository::CloneToVersion, repositories, version)
-                  plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
+                  plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library,
+                              :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
                 end
               end
 

@@ -2,12 +2,15 @@ module Actions
   module Pulp
     module Repository
       class DistributorPublish < Pulp::AbstractAsyncTask
+        middleware.use Actions::Middleware::SkipIfMatchingContent
+
         input_format do
           param :pulp_id
           param :distributor_type_id
           param :source_pulp_id
           param :dependency
           param :override_config
+          param :matching_content
         end
 
         def invoke_external_task

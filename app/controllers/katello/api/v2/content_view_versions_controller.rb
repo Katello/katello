@@ -53,10 +53,13 @@ module Katello
     param :environment_id, :identifier, :deprecated => true, :desc => N_("LifeCycle Environment identifier")
     param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment")
     param :description, String, :desc => N_("The description for the content view version promotion")
+    param :force_yum_metadata_regeneration, :bool, :desc => N_("Force metadata regeneration on the repositories " \
+                                                           "in the content view version")
     def promote
       is_force = ::Foreman::Cast.to_bool(params[:force])
       task = async_task(::Actions::Katello::ContentView::Promote,
-                        @version, @environments, is_force, params[:description])
+                        @version, @environments, is_force, params[:description],
+                        :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration])
       respond_for_async :resource => task
     end
 

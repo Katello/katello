@@ -34,7 +34,8 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
 
         $scope.publish = function (contentView) {
             var description = $scope.version.description,
-                data = {'id': contentView.id, 'description': description};
+                forceMetadataRegeneration = $scope.version.forceMetadataRegeneration,
+                data = {'id': contentView.id, 'description': description, 'force_yum_metadata_regeneration': forceMetadataRegeneration};
             $scope.working = true;
             ContentView.publish(data, success, failure);
         };

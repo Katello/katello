@@ -5,7 +5,7 @@ module Actions
       class PromoteToEnvironment < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
-        def plan(version, environment, description)
+        def plan(version, environment, description, options = {})
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
@@ -17,7 +17,8 @@ module Actions
             concurrence do
               version.archived_repos.non_puppet.each do |repository|
                 sequence do
-                  plan_action(Repository::CloneToEnvironment, repository, environment)
+                  plan_action(Repository::CloneToEnvironment, repository, environment,
+                              :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
                 end
               end
 

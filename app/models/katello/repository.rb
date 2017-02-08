@@ -543,6 +543,17 @@ module Katello
       end
     end
 
+    def distribution_information
+      {
+        distribution_version: self.distribution_version,
+        distribution_arch: self.distribution_arch,
+        distribution_family: self.distribution_family,
+        distribution_variant: self.distribution_variant,
+        distribution_uuid: self.distribution_uuid,
+        distribution_bootable: self.distribution_bootable
+      }
+    end
+
     def check_duplicate_branch_names(branch_names)
       dupe_branch_checker = {}
       dupe_branch_checker.default = 0
