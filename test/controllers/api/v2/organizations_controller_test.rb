@@ -79,6 +79,11 @@ module Katello
       assert_response :success
     end
 
+    def test_create_with_exception
+      post(:create, :organization => { name: "test_cli_org", description: "desc", smart_proxy_ids: ["2"], domain_ids: ["1"], subnet_ids: ["1", "2"]})
+      assert_match Regexp.new("Couldn't find"), response.body
+    end
+
     def test_create_duplicate_name
       post(:create, :organization => {"name" => @organization.name})
       assert_response :unprocessable_entity
