@@ -12,31 +12,32 @@ module Actions
 
           create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            certs = repository.importer_ssl_options
-            create_action = plan_action(create_action,
-                                        content_type: repository.content_type,
-                                        pulp_id: repository.pulp_id,
-                                        name: repository.name,
-                                        docker_upstream_name: repository.docker_upstream_name,
-                                        feed: repository.url,
-                                        ssl_ca_cert: certs[:ssl_ca_cert],
-                                        ssl_client_cert: certs[:ssl_client_cert],
-                                        ssl_client_key: certs[:ssl_client_key],
-                                        unprotected: repository.unprotected,
-                                        checksum_type: repository.checksum_type,
-                                        path: path,
-                                        download_policy: repository.download_policy,
-                                        with_importer: true,
-                                        mirror_on_sync: repository.mirror_on_sync?,
-                                        ssl_validation: certs[:ssl_validation],
-                                        upstream_username: repository.upstream_username,
-                                        upstream_password: repository.upstream_password)
+            unless repository.pulp_repo_facts
+              certs = repository.importer_ssl_options
+              create_action = plan_action(create_action,
+                                          content_type: repository.content_type,
+                                          pulp_id: repository.pulp_id,
+                                          name: repository.name,
+                                          docker_upstream_name: repository.docker_upstream_name,
+                                          feed: repository.url,
+                                          ssl_ca_cert: certs[:ssl_ca_cert],
+                                          ssl_client_cert: certs[:ssl_client_cert],
+                                          ssl_client_key: certs[:ssl_client_key],
+                                          unprotected: repository.unprotected,
+                                          checksum_type: repository.checksum_type,
+                                          path: path,
+                                          download_policy: repository.download_policy,
+                                          with_importer: true,
+                                          mirror_on_sync: repository.mirror_on_sync?,
+                                          ssl_validation: certs[:ssl_validation],
+                                          upstream_username: repository.upstream_username,
+                                          upstream_password: repository.upstream_password)
 
-            return if create_action.error
-
+              return if create_action.error
+            end
             # when creating a clone, the following actions are handled by the
             # publish/promote process
-            unless clone
+            if !clone && repository.content_id.nil?
               if repository.product.redhat?
                 plan_action(ContentView::UpdateEnvironment, org.default_content_view,
                             org.library, repository.content_id)
