@@ -117,14 +117,14 @@ module ::Actions::Katello::DockerRepositorySet
         repository.docker_upstream_name.must_equal registry_name
         repository.url.must_equal "https://#{registry_feed_url}"
       end
-      plan_action action, product, content, options
+      plan_action action, product, content, {}, options
       assert_action_planed action, ::Actions::Katello::Repository::Create
     end
 
     it 'fails when repository already enabled' do
       repository_already_enabled!
       failed = lambda do
-        plan_action(action, product, content, options)
+        plan_action(action, product, content, {}, options)
       end
       failed.must_raise(::Katello::Errors::ConflictException)
     end
@@ -139,13 +139,13 @@ module ::Actions::Katello::DockerRepositorySet
       action.expects(:action_subject).with do |repository|
         repository.docker_upstream_name.must_equal registry_name
       end
-      plan_action action, product, content, options
+      plan_action action, product, content, {}, options
       assert_action_planed action, ::Actions::Katello::Repository::Destroy
     end
 
     it 'fails when repository not enabled' do
       failed = lambda do
-        plan_action(action, product, content, options)
+        plan_action(action, product, content, {}, options)
       end
       failed.must_raise(::Katello::Errors::NotFound)
     end

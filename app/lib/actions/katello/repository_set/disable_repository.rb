@@ -6,10 +6,10 @@ module Actions
           _("Disable")
         end
 
-        def plan(product, content, options)
+        def plan(product, content, substitutions, options = {})
           repository = repository_mapper(product,
                                          content,
-                                         options,
+                                         substitutions,
                                          options[:registry_name]).find_repository
           if repository
             action_subject(repository)
