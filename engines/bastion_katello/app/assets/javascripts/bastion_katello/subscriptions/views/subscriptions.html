@@ -7,11 +7,11 @@
   </header>
 
   <div data-block="list-actions">
-    <button class="btn btn-primary" ng-if="!hasManifest" ui-sref="subscriptions-manifest.import"
+    <button type="button" class="btn btn-primary" ng-if="!hasManifest" ui-sref="subscriptions-manifest.import"
             ng-hide="denied('import_manifest') && denied('delete_manifest')">
       <span translate>Import Manifest</span>
     </button>
-    <button class="btn btn-primary" ng-if="hasManifest" ui-sref="subscriptions-manifest.details"
+    <button type="button" class="btn btn-primary" ng-if="hasManifest" ui-sref="subscriptions-manifest.details"
             ng-hide="denied('import_manifest') && denied('delete_manifest')">
       <span translate>Manage Manifest</span>
     </button>

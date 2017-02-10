@@ -60,7 +60,7 @@
 
         <span bst-feature-flag="remote_actions">
           <span uib-dropdown class="btn-group">
-            <button class="btn btn-default"
+            <button class="btn btn-default" type="button"
                     translate
                     ng-hide="denied('edit_hosts', host)"
                     ng-disabled="table.getSelected().length == 0"
@@ -80,7 +80,7 @@
             </ul>
           </span>
         </span>
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 translate
                 ng-hide="denied('edit_hosts', host)"
                 ng-disabled="calculatingApplicability"

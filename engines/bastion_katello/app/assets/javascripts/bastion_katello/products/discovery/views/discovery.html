@@ -28,7 +28,7 @@
                 ng-click="cancelDiscovery()"
                 class="btn btn-primary btn-lg">
           <i class="fa fa-spinner fa-spin" ng-show="discovery.pending"></i>
-          {{ 'Cancel' | translate }}
+          <span translate>Cancel</span>
         </button>
       </span>
 
@@ -53,7 +53,7 @@
       </div>   
 
       <div ng-hide="system.readonly" class="nutupane-actions fr">
-        <button class="btn btn-primary"
+        <button type="button" class="btn btn-primary"
                 translate
                 ng-hide="denied('create_products')"
                 ng-disabled="discoveryTable.getSelected().length == 0"

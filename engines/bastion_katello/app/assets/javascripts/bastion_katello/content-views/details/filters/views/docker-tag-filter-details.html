@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <button class="btn btn-default fr"
+  <button type="button" class="btn btn-default"
           ng-disabled="getSelectedRules(filter).length === 0"
           ng-hide="denied('edit_content_views', contentView)"
           ng-click="removeRules(filter)">
@@ -42,7 +42,7 @@
       </td>
 
       <td class="action-cell">
-        <button class="btn btn-default"
+        <button type="button" class="btn btn-default"
                 ng-click="addRule(rule, filter)"
                 ng-hide="denied('edit_content_views', contentView)"
                 ng-disabled="!valid(rule)">
@@ -67,7 +67,7 @@
       </td>
 
       <td class="action-cell">
-        <button class="btn btn-default" ng-click="rule.editMode = true; backupPrevious(rule)" ng-hide="rule.editMode">
+        <button type="button" class="btn btn-default" ng-click="rule.editMode = true; backupPrevious(rule)" ng-hide="rule.editMode">
           <i class="fa fa-edit"></i>
           <span translate>Edit</span>
         </button>

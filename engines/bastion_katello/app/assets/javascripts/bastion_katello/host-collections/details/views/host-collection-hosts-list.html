@@ -4,7 +4,7 @@
 
   <div data-block="list-actions">
     <div ng-hide="denied('edit_hosts')" class="nutupane-actions fr">
-       <button class="btn btn-default"
+       <button type="button" class="btn btn-default"
                translate
                ng-disabled="table.getSelected().length == 0 || isRemoving"
                ng-click="removeSelected()">

@@ -22,20 +22,20 @@
 
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ui-sref="product.repositories.new({productId: product.id})"
             ng-hide="denied('edit_products', product) || product.redhat">
       <span translate>New Repository</span>
     </button>
 
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ng-click="syncSelectedRepositories()"
             ng-hide="denied('sync_products', product)"
             ng-disabled="syncInProgress || table.numSelected == 0">
       <span translate>Sync Now</span>
     </button>
 
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ng-click="openModal()"
             ng-show="canRemoveRepositories(product)"
             ng-disabled="removingRepositories || table.numSelected == 0">

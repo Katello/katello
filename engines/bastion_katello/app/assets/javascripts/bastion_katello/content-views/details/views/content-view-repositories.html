@@ -26,13 +26,13 @@
 
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-disabled="table.numSelected === 0"
             ng-show="isState('content-view.repositories.yum.list') && permitted('edit_content_views', contentView)"
             ng-click="removeRepositories(contentView)">
       <span translate>Remove Repositories</span>
     </button>
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-disabled="table.numSelected === 0"
             ng-show="isState('content-view.repositories.yum.available') && permitted('edit_content_views', contentView)"
             ng-click="addRepositories(contentView)">

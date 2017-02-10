@@ -2,17 +2,17 @@
 
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView) || !stateIncludes('content-view.yum')"
             ui-sref="content-view.yum.filters.new">
       <span translate>New Filter</span>
     </button>
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView) || stateIncludes('content-view.yum')"
             ui-sref="content-view.docker.filters.new">
       <span translate>New Filter</span>
     </button>
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView)"
             ng-disabled="table.numSelected === 0"
             ng-click="removeFilters()">

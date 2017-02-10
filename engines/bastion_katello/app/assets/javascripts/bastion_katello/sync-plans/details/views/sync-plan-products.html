@@ -22,18 +22,20 @@
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
     <button ng-if="isState('sync-plan.products.list')"
+            type="button"
             class="btn btn-default"
             ng-hide="denied('edit_products')"
             ng-disabled="table.numSelected == 0 || table.working"
             ng-click="removeProducts()">
-      {{ 'Remove Selected' | translate}}
+      <span translate>Remove Selected</span>
     </button>
     <button ng-if="isState('sync-plan.products.add')"
+            type="button"
             class="btn btn-default"
             ng-hide="denied('edit_products')"
             ng-disabled="table.numSelected == 0 || table.working"
             ng-click="addProducts()">
-      {{ 'Add Selected' | translate }}
+      <span translate>Add Selected</span>
     </button>
   </div>
 

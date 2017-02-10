@@ -105,11 +105,11 @@
         required/>
       </div>
     </div>
-    <button ng-click="createRepos()"
+    <button type="button" ng-click="createRepos()"
       ng-disabled="creating() || !requiredFieldsEnabled()"
-      translate
       class="btn btn-primary">
-      <i class="pficon-add-circle-o inline-icon"></i>	Create
+      <i class="pficon-add-circle-o inline-icon"></i>
+      <span translate>Create</span>
       <i class="fa fa-spinner fa-spin" ng-show="creating()"></i>
     </button>
   </section>

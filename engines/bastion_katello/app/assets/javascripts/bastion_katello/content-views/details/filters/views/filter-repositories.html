@@ -27,7 +27,7 @@
 <div ng-class="{'table-mask': !showRepos}">
   <div data-extend-template="layouts/partials/table.html">
     <div data-block="list-actions">
-      <button class="btn btn-default"
+      <button type="button" class="btn btn-default"
               translate
               ng-hide="denied('edit_content_views', contentView)"
               ng-disabled="!showRepos || table.numSelected === 0"

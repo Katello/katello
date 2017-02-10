@@ -19,7 +19,7 @@
       <form ng-submit="performDefaultUpdateAction()" role="form">
 
         <span uib-dropdown class="btn-group">
-          <button class="btn btn-default"
+          <button class="btn btn-default" type="button"
                   ng-hide="denied('edit_hosts', host)"
                   ng-disabled="working || table.numSelected === 0"
                   translate>
@@ -39,6 +39,7 @@
         </span>
 
         <button class="btn btn-primary"
+                type="button"
                 translate
                 ng-disabled="working"
                 ng-click="updateAll()">

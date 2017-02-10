@@ -59,12 +59,12 @@
     <br/>
     <div class="fr">
       <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
-        <button class="btn btn-default" translate>
+        <button type="button" class="btn btn-default" translate>
           Cancel
         </button>
       </a>
 
-      <button class="btn btn-primary" ng-click="processSelection()" ng-disabled="!anySelectable() || selectionEmpty()" translate>
+      <button type="button" class="btn btn-primary" ng-click="processSelection()" ng-disabled="!anySelectable() || selectionEmpty()" translate>
         Next
       </button>
     </div>

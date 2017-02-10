@@ -13,8 +13,8 @@
         Are you sure you want to add the sync plan to the selected products(s)?
       </span>
       <div>
-        <button class="btn btn-default" ng-click="updateSyncPlan()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="syncPlan.action = null; syncPlan.working = false" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="updateSyncPlan()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="syncPlan.action = null; syncPlan.working = false" translate>No</button>
       </div>
     </div>
 
@@ -23,21 +23,21 @@
         Are you sure you want to remove the sync plan from the selected product(s)?
       </span>
       <div>
-        <button class="btn btn-default" ng-click="removeSyncPlan()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="syncPlan.action = null; syncPlan.working = false" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="removeSyncPlan()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="syncPlan.action = null; syncPlan.working = false" translate>No</button>
       </div>
     </div>
 
     <div data-extend-template="layouts/partials/table.html">
       <div data-block="list-actions">
-        <button class="btn btn-default"
+        <button type="button" class="btn btn-default"
                 ng-hide="denied('edit_hosts')"
                 ng-disabled="!selectedSyncPlan"
                 ng-click="syncPlan.action = 'add'; syncPlan.working = true">
           <span translate>Update Sync Plan</span>
         </button>
 
-        <button class="btn btn-default"
+        <button type="button" class="btn btn-default"
                 ng-hide="denied('edit_hosts')"
                 ng-click="syncPlan.action = 'remove'; syncPlan.working = true">
           <span translate>Remove Sync Plan</span>
@@ -80,7 +80,7 @@
   </div>
 
   <div data-block="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()" translate>
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
       Done
     </button>
   </div>

@@ -32,7 +32,7 @@
                    ng-model="packageAction.term"/>
 
             <span uib-dropdown class="input-group-btn">
-              <button class="btn btn-default"
+              <button class="btn btn-default" type="button"
                       ng-hide="denied('edit_hosts', host)"
                       ng-disabled="working || packageAction.term === undefined || packageAction.term.length === 0"
                       translate>
@@ -54,7 +54,7 @@
         </div>
 
         <div class="form-group">
-          <button class="btn btn-primary"
+          <button class="btn btn-primary" type="button"
                   translate
                   ng-disabled="working"
                   ng-click="updateAll()">

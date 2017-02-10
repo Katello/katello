@@ -4,7 +4,7 @@
   <span data-block="header" translate>Currently Selected Puppet Modules</span>
 
   <div data-block="list-actions">
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ng-hide="denied('edit_content_views', contentView)"
             ui-sref="content-view.puppet-modules.names">
       <span translate>Add New Module</span>
@@ -36,12 +36,12 @@
           <td bst-table-cell >{{ contentViewPuppetModule.author}}</td>
           <td bst-table-cell >{{ versionText(contentViewPuppetModule) }}</td>
           <td bst-table-cell class="action-cell">
-            <button translate
+            <button type="button" class="btn btn-default" translate
                     ng-hide="denied('edit_content_views', contentView)"
                     ng-click="selectNewVersion(contentViewPuppetModule)">
               Select new version
             </button>
-            <button translate
+            <button type="button" class="btn btn-default" translate
                     ng-hide="denied('edit_content_views', contentView)"
                     ng-click="removeModule(contentViewPuppetModule)">
               Remove Module

@@ -24,7 +24,7 @@
           <td>{{ environmentNames(version).join(', ') }}</td>
           <td>
             <a ui-sref="content-view.version-deletion.environments({contentViewId: contentView.id, versionId: version.id})" ng-show="version.permissions.deletable">
-              <button class="btn btn-default">
+              <button class="btn btn-default" type="button" >
                 <span translate>Remove Version</span>
               </button>
             </a>
@@ -46,7 +46,7 @@
       </span>
     </div>
 
-    <button ng-disabled="working" class="btn btn-danger" ng-click="delete()" >
+    <button ng-disabled="working" type="button" class="btn btn-danger" ng-click="delete()" >
       <i class="fa fa-spinner fa-spin" ng-show="working"></i>
       <span translate>Remove</span>
     </button>

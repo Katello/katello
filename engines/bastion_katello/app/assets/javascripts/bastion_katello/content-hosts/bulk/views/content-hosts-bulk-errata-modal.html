@@ -7,8 +7,8 @@
         Are you sure you want to apply the {{ table.numSelected }} selected errata to the content hosts chosen?
       </span>
       <div>
-        <button class="btn btn-default" ng-click="showConfirm = false; installErrata()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="showConfirm = false;; table.working = false" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="showConfirm = false; installErrata()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="showConfirm = false;; table.working = false" translate>No</button>
       </div>
     </div>
 
@@ -26,19 +26,19 @@
       </div>
 
       <div data-block="list-actions">
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 ng-disabled="table.numSelected === 0 || table.working"
                 ng-click="fetchErrata()">
           <span translate>Refresh Table</span>
         </button>
 
         <span uib-dropdown class="btn-group">
-          <button class="btn btn-primary"
+          <button class="btn btn-primary" type="button"
                   ng-disabled="table.numSelected === 0 || table.working || table.numSelected === 0"
                   ng-click="showConfirm = true;">
             <span translate>Install Selected</span>
           </button>
-          <button uib-dropdown-toggle class="btn btn-primary"
+          <button uib-dropdown-toggle class="btn btn-primary" type="button"
                   ng-hide="!remoteExecutionPresent"
                   ng-disabled="table.numSelected === 0 || table.working || table.numSelected === 0"
                   type="button" id="use-remote-execution">
@@ -100,7 +100,7 @@
   </div>
 
   <div data-block="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()" translate>
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
       Done
     </button>
   </div>

@@ -68,7 +68,7 @@
 
       <div>
       <span uib-dropdown class="input-group-btn">
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 translate
                 ng-hide="denied('edit_hosts')"
                 ng-click="confirmContentAction('install', content)"
@@ -89,7 +89,7 @@
       </span>
 
       <span uib-dropdown class="input-group-btn">
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 translate
                 ng-hide="denied('edit_hosts')"
                 ng-click="confirmContentAction('update', content)"
@@ -111,7 +111,7 @@
       </span>
 
       <span uib-dropdown class="input-group-btn">
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 translate
                 ng-hide="content.contentType == 'errata' || denied('edit_hosts')"
                 ng-click="confirmContentAction('remove', content)"
@@ -146,7 +146,7 @@
           Are you sure you want to update all packages on the {{ getSelectedSystemIds().length }} system(s) selected?
         </div>
 
-        <button class="btn btn-default" ng-click="performContentAction()" translate>Yes</button>
+        <button type="submit" class="btn btn-default" ng-click="performContentAction()" translate>Yes</button>
         <button type="button" class="btn btn-default" ng-click="content.confirm = false" translate>No</button>
       </div>
 
@@ -154,7 +154,7 @@
   </div>
 
   <div data-block="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()" translate>
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
       Done
     </button>
   </div>
