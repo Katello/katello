@@ -14,13 +14,19 @@
 angular.module('Bastion.content-views').controller('DateTypeErrataFilterController',
     ['$scope', 'translate', 'Rule', 'GlobalNotification', function ($scope, translate, Rule, GlobalNotification) {
 
+        function convertRuleStringsToDates() {
+            $scope.rule['start_date'] = new Date($scope.rule['start_date']);
+            $scope.rule['end_date'] = new Date($scope.rule['end_date']);
+        }
+
         function success() {
+            convertRuleStringsToDates();
             GlobalNotification.setSuccessMessage(translate('Updated errata filter - ' + $scope.filter.name));
         }
 
         function failure(response) {
             $scope.rule.working = false;
-            angular.forEach(response.data.displayMessage, function (error) {
+            angular.forEach(response.data.errors, function (error) {
                 GlobalNotification.setErrorMessage(error);
             });
         }
@@ -32,6 +38,8 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
                 security: false
             };
             $scope.rule = new Rule(filter.rules[0]);
+
+            convertRuleStringsToDates();
 
             angular.forEach($scope.types, function (value, type) {
                 if ($scope.rule.types.indexOf(type) > -1) {
