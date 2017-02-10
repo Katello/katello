@@ -30,7 +30,7 @@ module Katello
           new_fact.parent = parent_fact_name
           new_fact.compose = is_parent
         end
-      rescue ActiveRecord::RecordNotUnique
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
         retry
       end
       FactValue.create(:fact_name => fact_name, :value => nil, :host => @host) if is_parent
