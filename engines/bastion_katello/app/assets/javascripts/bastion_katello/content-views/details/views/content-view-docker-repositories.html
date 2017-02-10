@@ -27,13 +27,13 @@
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
     <div class="col-sm-4">
-      <button class="btn btn-default"
+      <button type="button" class="btn btn-default"
               ng-disabled="table.numSelected === 0"
               ng-show="isState('content-view.repositories.docker.list') && permitted('edit_content_views', contentView)"
               ng-click="removeRepositories(contentView)">
         <span translate>Remove Repositories</span>
       </button>
-      <button class="btn btn-default"
+      <button type="button" class="btn btn-default"
               ng-disabled="table.numSelected === 0"
               ng-show="isState('content-view.repositories.docker.available') && permitted('edit_content_views', contentView)"
               ng-click="addRepositories(contentView)">

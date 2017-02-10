@@ -2,8 +2,8 @@
 
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
-    <button class="btn btn-primary"
-           translate
+    <button class="btn btn-primary" type="button"
+            translate
            ng-hide="denied('edit_activation_keys', activationKey)"
            ng-disabled="disableRemoveButton()"
            ng-click="removeSelected()">

@@ -7,14 +7,14 @@
   </div>
 
   <div data-block="list-actions">
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ui-sref="products.new.form"
             bst-feature-flag="custom_products"
             ng-show="permitted('create_products')">
       <span translate>Create Product</span>
     </button>
 
-    <button class="btn btn-default"
+    <button type="button" class="btn btn-default"
             ui-sref="product-discovery.scan"
             bst-feature-flag="custom_products"
             ng-show="permitted('edit_products')">
@@ -22,7 +22,7 @@
     </button>
 
     <div class="btn-group" uib-dropdown keyboard-nav>
-      <button class="btn btn-default"
+      <button type="button" class="btn btn-default"
               ng-show="permitted('sync_products')"
               ng-disabled="table.numSelected == 0"
               ng-click="syncProducts()">

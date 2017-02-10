@@ -15,8 +15,8 @@
         Are you sure you want to assign the {{ table.numSelected }} content host(s) selected to {{ selected.contentView.name }} in {{ selected.environment.name }}?
       </span>
       <div>
-        <button class="btn btn-default" ng-click="showConfirm = false; performAction()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="showConfirm = false;" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="showConfirm = false; performAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="showConfirm = false;" translate>No</button>
       </div>
     </div>
 
@@ -47,19 +47,19 @@
         </p>
       </div>
 
-      <button class="btn btn-default fr"
-              translate
+      <button class="btn btn-default"
+              type="button"
               ng-hide="denied('edit_hosts')"
               ng-click="showConfirm = true;"
               ng-disabled="disableAssignButton(confirm)">
-        Assign
+        <span translate>Assign</span>
       </button>
 
     </form>
   </div>
 
   <div data-block="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()" translate>
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
       Done
     </button>
   </div>

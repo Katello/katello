@@ -6,7 +6,7 @@
 
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-click="goToNextStep()"
             ng-hide="denied('edit_hosts')"
             ng-disabled="table.numSelected == 0 || incrementalUpdates.length > 0">

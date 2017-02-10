@@ -13,6 +13,7 @@
 
     <div data-block="list-actions">
       <button ng-if="isState('activation-key.host-collections.list')"
+              type="button"
               class="btn btn-default"
               ng-hide="denied('edit_activation_keys', activationKey)"
               ng-disabled="table.numSelected == 0 || table.working"
@@ -20,6 +21,7 @@
         {{ 'Remove Selected' | translate }}
       </button>
       <button ng-if="isState('activation-key.host-collections.add')"
+              type="button"
               class="btn btn-default"
               ng-hide="denied('edit_activation_keys', activationKey)"
               ng-disabled="table.numSelected == 0 || table.working"

@@ -13,8 +13,8 @@
         Are you sure you want to add the {{ table.numSelected }} content host(s) selected to the host collection(s) chosen?
       </span>
       <div>
-        <button class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="hostCollections.action = null; hostCollections.working = false" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="hostCollections.action = null; hostCollections.working = false" translate>No</button>
       </div>
     </div>
 
@@ -23,21 +23,21 @@
         Are you sure you want to remove the {{ table.numSelected }} content host(s) selected from the host collection(s) chosen?
       </span>
       <div>
-        <button class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
-        <button class="btn btn-default" ng-click="hostCollections.action = null; hostCollections.working = false" translate>No</button>
+        <button type="button" class="btn btn-default" ng-click="performHostCollectionAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="hostCollections.action = null; hostCollections.working = false" translate>No</button>
       </div>
     </div>
 
     <div data-extend-template="layouts/partials/table.html">
       <div data-block="list-actions">
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 ng-hide="denied('edit_hosts')"
                 ng-disabled="table.numSelected == 0"
                 ng-click="hostCollections.action = 'add'; hostCollections.working = true">
           <span translate>Add To</span>
         </button>
 
-        <button class="btn btn-default"
+        <button class="btn btn-default" type="button"
                 ng-hide="denied('edit_hosts')"
                 ng-disabled="table.numSelected == 0"
                 ng-click="hostCollections.action = 'remove'; hostCollections.working = true">
@@ -84,7 +84,7 @@
   </div>
 
   <div data-block="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()" translate>
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
       Done
     </button>
   </div>

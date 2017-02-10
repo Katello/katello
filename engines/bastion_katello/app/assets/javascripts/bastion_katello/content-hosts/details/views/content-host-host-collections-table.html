@@ -1,6 +1,7 @@
 <section data-extend-template="layouts/partials/table.html">
   <div data-block="list-actions">
     <button ng-if="isState('content-host.host-collections.list')"
+            type="button"
             class="btn btn-default"
             ng-hide="denied('edit_hosts', host)"
             ng-disabled="table.numSelected == 0 || table.working"
@@ -8,6 +9,7 @@
       <span translate>Remove Selected</span>
     </button>
     <button ng-if="isState('content-host.host-collections.add')"
+            type="button"
             class="btn btn-default"
             ng-hide="denied('edit_hosts', host)"
             ng-disabled="table.numSelected == 0 || table.working"

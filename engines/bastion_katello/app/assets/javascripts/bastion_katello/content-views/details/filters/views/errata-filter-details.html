@@ -14,13 +14,13 @@
   </span>
 
   <div data-block="list-actions">
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-show="isState('content-view.yum.filter.erratum.list') && permitted('edit_content_views', contentView)"
             ng-disabled="table.working || table.numSelected === 0"
             ng-click="removeErrata(contentView)">
       <span translate>Remove Errata</span>
     </button>
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-show="isState('content-view.yum.filter.erratum.available') && permitted('edit_content_views', contentView)"
             ng-disabled="table.working || table.numSelected === 0"
             ng-click="addErrata(filter)">

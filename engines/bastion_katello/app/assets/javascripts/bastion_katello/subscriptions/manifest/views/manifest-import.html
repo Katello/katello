@@ -26,14 +26,14 @@
     </div>
 
     <div class="detail pull-left" ng-show="upstream != null">
-      <button class="btn btn-default" ng-disabled="isTaskPending()"
+      <button type="button" class="btn btn-default" ng-disabled="isTaskPending()"
               ng-hide="denied('delete_manifest')"
               ng-click="deleteManifest()">
          <i class="fa fa-spinner fa-spin" ng-show="deleteTask.pending"></i>
           <span ng-show="deleteTask.pending" translate>Deleting Manifest...</span>
           <span ng-hide="deleteTask.pending" translate>Delete Manifest</span>
       </button>
-      <button class="btn btn-default" ng-disabled="upstream.idCert == undefined || upstream.idCert.cert == undefined"
+      <button type="button" class="btn btn-default" ng-disabled="upstream.idCert == undefined || upstream.idCert.cert == undefined"
         ng-click="refreshManifest()">
          <i class="fa fa-spinner fa-spin" ng-show="refreshTask.pending"></i>
           <span ng-show="refreshTask.pending" translate>Refreshing Manifest...</span>
@@ -64,7 +64,7 @@
     </div>
 
     <div class="form-group">
-      <button class="btn btn-primary" ng-disabled="isTaskPending()" upload-submit>
+      <button type="button" class="btn btn-primary" ng-disabled="isTaskPending()" upload-submit>
         <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
         <span ng-show="task.pending" translate>Uploading...</span>
         <span ng-hide="task.pending" translate>Upload</span>

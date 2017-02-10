@@ -45,6 +45,8 @@
           <td >{{ item.name }}</td>
           <td  class="action-cell">
             <button translate
+                    type="button"
+                    class="btn btn-default"
                     ng-hide="denied('edit_content_views', contentView)"
                     ng-click="selectVersion(item.name)">
               Select a Version

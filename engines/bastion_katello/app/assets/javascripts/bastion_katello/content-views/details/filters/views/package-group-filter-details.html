@@ -1,14 +1,14 @@
 <div data-extend-template="layouts/partials/table.html">
 
   <div data-block="list-actions">
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-disabled="table.numSelected === 0"
             ng-show="isState('content-view.yum.filter.package_group.list') && permitted('edit_content_views', contentView)"
             ng-click="removePackageGroups(filter)">
       <span translate>Remove Package Group</span>
     </button>
 
-    <button class="btn btn-primary"
+    <button type="button" class="btn btn-primary"
             ng-disabled="table.numSelected === 0"
             ng-show="isState('content-view.yum.filter.package_group.available') && permitted('edit_content_views', contentView)"
             ng-click="addPackageGroups(filter)">

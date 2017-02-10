@@ -4,12 +4,11 @@
 
   <div data-block="list-actions">
     <div ng-hide="hostCollection.readonly" class="nutupane-actions fr">
-       <button class="btn btn-default"
-               translate
+       <button type="button" class="btn btn-default"
                ng-hide="denied('edit_hosts')"
                ng-disabled="disableAddButton()"
                ng-click="addSelected()">
-         {{ 'Add Selected' | translate }}
+         <span translate>Add Selected</span>
        </button>
     </div>
   </div>
