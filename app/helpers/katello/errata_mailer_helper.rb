@@ -14,7 +14,7 @@ module Katello
     end
 
     def erratum_path(erratum)
-      "#{Setting[:foreman_url]}/errata/#{erratum.uuid}/info"
+      "#{Setting[:foreman_url]}/errata/#{erratum.uuid}"
     end
 
     def repository_erratum_path(repository, type = nil)
