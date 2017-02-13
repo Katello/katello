@@ -198,11 +198,11 @@ module Katello
         new_host.architecture = param_host.architecture.present? ? param_host.architecture : host.architecture
 
         if (host.is_a? Hostgroup)
-          new_host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => host.lifecycle_environment_id,
+          new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.lifecycle_environment_id,
                                                           :content_view_id => host.content_view_id,
                                                           :content_source_id => host.content_source_id)
         elsif host.content_facet.present?
-          new_host.content_facet = Host::ContentFacet.new(:lifecycle_environment_id => host.content_facet.lifecycle_environment_id,
+          new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.content_facet.lifecycle_environment_id,
                                                           :content_view_id => host.content_facet.content_view_id,
                                                           :content_source_id => host.content_source_id)
         end
