@@ -1,9 +1,7 @@
 <span page-title ng-model="contentView">{{ 'New Filter for Content View:' | translate }} {{ contentView.name }}</span>
 
-<header data-block="sub-header`">
-  <h3 ng-show="stateIncludes('content-view.yum')" translate>Add New Yum Filter</h3>
-  <h3 ng-show="stateIncludes('content-view.docker')" translate>Add New Docker Tag Filter</h3>
-</header>
+<h3 ng-show="stateIncludes('content-view.yum')" translate>Add New Yum Filter</h3>
+<h3 ng-show="stateIncludes('content-view.docker')" translate>Add New Docker Tag Filter</h3>
 
 <form name="filterForm" class="col-sm-5" role="form" novalidate>
   <div bst-form-group label="{{ 'Name' | translate }}">
