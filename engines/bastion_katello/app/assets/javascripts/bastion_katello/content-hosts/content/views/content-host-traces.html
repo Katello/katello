@@ -24,11 +24,9 @@
     <input type="hidden" name="authenticity_token" ng-value="traceActionFormValues.authenticityToken"/>
   </form>
 
-  <div data-extend-template="layouts/partials/table.html">
-    <div data-block="sub-header" bst-feature-flag="remote_actions" translate>
-      Traces
-    </div>
+  <h3 translate bst-feature-flag="remote_actions">Traces</h3>
 
+  <div data-extend-template="layouts/partials/table.html">
     <span data-block="list-actions" ng-hide="contentHost.readonly">
       <div bst-modal="performViaRemoteExecution(false)" model="host">
         <div data-block="modal-header" translate>Restart Services on Content Host "{{host.name}}"?</div>

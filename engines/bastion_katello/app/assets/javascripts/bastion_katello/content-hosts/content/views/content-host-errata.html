@@ -1,6 +1,6 @@
 <span page-title ng-model="host">{{ 'Errata for: ' | translate }} {{ host.name }}</span>
 
-<div data-block="sub-header" bst-feature-flag="remote_actions">
+<div bst-feature-flag="remote_actions">
   <h3 translate ng-hide="selectedErrataOption === 'current'">Applicable Errata</h3>
   <h3 translate ng-show="selectedErrataOption === 'current'">Installable Errata</h3>
 </div>
