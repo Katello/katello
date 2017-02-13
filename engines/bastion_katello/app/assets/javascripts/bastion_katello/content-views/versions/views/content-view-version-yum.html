@@ -4,6 +4,7 @@
       <tr bst-table-head>
         <th bst-table-column translate>Name</th>
         <th bst-table-column translate>Product</th>
+        <th bst-table-column translate>Content</th>
       </tr>
     </thead>
 
@@ -11,6 +12,18 @@
       <tr bst-table-row ng-repeat="repository in table.rows">
         <td bst-table-cell>{{ repository.name }}</td>
         <td bst-table-cell>{{ repository.product.name }}</td>
+        <td bst-table-cell>
+          <div>
+            <a ui-sref="products.repository.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})" translate>
+              {{ repository.content_counts.rpm }} Packages
+            </a>
+          </div>
+          <div>
+            <a ui-sref="errata({repositoryId: repository.id})" translate>
+              {{ repository.content_counts.erratum }} Errata
+            </a>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
