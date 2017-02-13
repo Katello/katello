@@ -1,7 +1,5 @@
 <div data-extend-template="errata/details/views/erratum-content-hosts.html">
-  <div data-block="list-actions"></div>
-
-  <div data-block="footer-actions" class="footer-actions">
+  <div data-block="list-actions">
     <button type="button" class="btn btn-default" ng-click="transitionTo('errata')" translate>Cancel</button>
     <button type="submit" class="btn btn-primary" ng-disabled="table.numSelected === 0 || incrementalUpdates.length > 0"
             ng-click="goToNextStep()" translate>Next</button>
