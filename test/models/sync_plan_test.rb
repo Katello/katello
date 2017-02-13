@@ -129,5 +129,26 @@ module Katello
       assert_match(/\/PT24H$/, schedule)
       assert_includes schedule, @plan.sync_date.iso8601
     end
+
+    def test_product_enabled
+      product = katello_products(:redhat)
+      @plan.products << product
+      assert(@plan.valid?, "Plan must be valid")
+    end
+
+    def test_remove_product
+      product = katello_products(:redhat)
+      @plan.products << product
+      assert(@plan.valid?, "Plan must be valid")
+      @plan.products.clear
+      assert(@plan.valid?, "Plan must be valid")
+    end
+
+    def test_invalid_product_enabled
+      product = katello_products(:empty_redhat)
+      @plan.products << product
+      refute(@plan.valid?, "Plan must be invalid")
+      assert(@plan.errors.full_messages.include?("Can not add product #{product.name} because it is disabled."), "Validation should give proper error message")
+    end
   end
 end
