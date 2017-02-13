@@ -23,12 +23,19 @@ module Katello
     validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
     validates :enabled, :inclusion => [true, false]
     validate :validate_sync_date
+    validate :product_enabled
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :interval, :complete_value => true
     scoped_search :on => :enabled, :complete_value => true
+
+    def product_enabled
+      products.each do |product|
+        errors.add :base, _("Can not add product %s because it is disabled.") % product.name unless product.enabled?
+      end
+    end
 
     def validate_sync_date
       errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
