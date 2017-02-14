@@ -2,6 +2,7 @@ require 'katello_test_helper'
 require 'helpers/product_test_data'
 
 module Katello
+  #rubocop:disable Metrics/BlockLength
   describe Provider do
     include OrchestrationHelper
 
