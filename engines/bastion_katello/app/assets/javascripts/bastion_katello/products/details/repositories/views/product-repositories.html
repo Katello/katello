@@ -141,6 +141,12 @@
                   {{ repository.content_counts.erratum || 0 }} Errata
                 </a>
               </div>
+
+              <div>
+                <a ui-sref="product.repository.manage-content.package-groups({productId: product.id, repositoryId: repository.id})">
+                  {{ repository.content_counts.package_group || 0 }} Package Groups
+                </a>
+              </div>
             </span>
 
             <span ng-show="repository.content_type == 'docker'">
