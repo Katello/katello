@@ -39,7 +39,7 @@ network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{sub
 
 rootpw --iscrypted <%= root_pass %>
 firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
-authconfig --useshadow --passalgo=sha256 --kickstart
+authconfig --useshadow --passalgo=<%= @host.operatingsystem.password_hash || 'sha256' %> --kickstart
 timezone --utc <%= @host.params['time-zone'] || 'UTC' %>
 
 <% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
