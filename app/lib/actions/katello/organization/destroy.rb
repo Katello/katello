@@ -19,7 +19,6 @@ module Actions
             destroy_contents(organization)
             plan_self
             plan_action(Candlepin::Owner::Destroy, label: organization.label) if ::SETTINGS[:katello][:use_cp]
-            plan_action(Candlepin::Product::DeleteUnused, organization)
           end
         end
 
