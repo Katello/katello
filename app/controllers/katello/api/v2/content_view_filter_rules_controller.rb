@@ -20,6 +20,7 @@ module Katello
         N_("Create a filter rule. The parameters included should be based upon the filter type.")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
     param :name, [String, Array], :desc => N_("package, package group, or docker tag names")
+    param :uuid, String, :desc => N_("package group: uuid")
     param :version, String, :desc => N_("package: version")
     param :arch, String, :desc => N_("package: architecture")
     param :min_version, String, :desc => N_("package: minimum version")
