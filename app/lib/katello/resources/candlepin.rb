@@ -399,12 +399,14 @@ module Katello
           end
 
           def pools(owner_label, filter = {})
+            filter[:add_future] ||= true
+            params = hash_to_query(filter)
             if owner_label
               # hash_to_query escapes the ":!" to "%3A%21" which candlepin rejects
-              params = hash_to_query(filter)
-              params += params == '?' ? '' : '&'
-              params += 'attribute=unmapped_guests_only:!true'
+              params += '&attribute=unmapped_guests_only:!true'
               json_str = self.get(join_path(path(owner_label), 'pools') + params, self.default_headers).body
+            else
+              json_str = self.get(join_path('candlepin', 'pools') + params, self.default_headers).body
             end
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
@@ -520,9 +522,8 @@ module Katello
           end
 
           def get_for_owner(owner_key, include_temporary_guests = false)
-            url_path = path(nil, owner_key)
-            url_params = "?attribute=unmapped_guests_only:!true"
-            url = include_temporary_guests ? url_path : url_path + url_params
+            url = "/candlepin/owners/#{owner_key}/pools?add_future=true"
+            url += "&attribute=unmapped_guests_only:!true" if include_temporary_guests
             pools_json = self.get(url, self.default_headers).body
             JSON.parse(pools_json)
           end
