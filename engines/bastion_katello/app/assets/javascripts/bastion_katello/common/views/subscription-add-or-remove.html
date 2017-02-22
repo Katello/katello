@@ -32,14 +32,14 @@
            <option value="">{{ "Automatic" | translate }}</option>
          </select>
        </td>
-       
+
        <td bst-table-cell>
          <a ui-sref="subscription.info({subscriptionId: subscription.id})">
            {{ subscription | subscriptionConsumedFilter }}
          </a>
        </td>
        <td bst-table-cell><div subscription-type="subscription"></div></td>
-       <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+       <td bst-table-cell><div subscription-start-date="subscription"></div></td>
        <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
        <td bst-table-cell>{{ subscription.support_level }}</td>
        <td bst-table-cell>{{ subscription.contract_number }}</td>

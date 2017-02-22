@@ -6,7 +6,9 @@
 
 Bookmark.without_auditing do
   bookmarks = [
-    {:name => "list hypervisors", :query => 'hypervisor = true', :controller => "hosts"}
+    {:name => "list hypervisors", :query => 'hypervisor = true', :controller => "hosts"},
+    {:name => "future", :query => 'starts > Today', :controller => "katello_subscriptions"},
+    {:name => "expiring soon", :query => 'expires 30 days from now', :controller => "katello_subscriptions"}
   ]
 
   bookmarks.each do |input|
