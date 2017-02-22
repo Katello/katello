@@ -24,7 +24,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json"
   gem.add_dependency "oauth"
   gem.add_dependency "rest-client"
-  gem.add_dependency "patternfly-sass", "~> 3.11.0"
   gem.add_dependency "rabl"
   gem.add_dependency "foreman-tasks", "~> 0.8.0"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
@@ -50,5 +49,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rubocop-checkstyle_formatter"
   gem.add_development_dependency "simplecov"
   gem.add_development_dependency "simplecov-rcov"
+  gem.add_development_dependency "patternfly-sass", "~> 3.11.0"
 end
 
