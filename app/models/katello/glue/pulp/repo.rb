@@ -161,7 +161,7 @@ module Katello
           Runcible::Models::PuppetImporter.new(importer_ssl_options(capsule).merge(options))
         when Repository::DOCKER_TYPE
           options = {}
-          options[:upstream_name] = capsule ? self.pulp_id : self.docker_upstream_name
+          options[:upstream_name] = capsule ? self.container_repository_name : self.docker_upstream_name
           options[:feed] = docker_feed_url(capsule)
           options[:enable_v1] = false
           Runcible::Models::DockerImporter.new(importer_ssl_options(capsule).merge(options))

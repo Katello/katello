@@ -43,7 +43,7 @@ module Actions
                       checksum_type: checksum_type,
                       path: relative_path,
                       with_importer: true,
-                      docker_upstream_name: repository.pulp_id,
+                      docker_upstream_name: repository.container_repository_name,
                       download_policy: repository.capsule_download_policy(capsule_content.capsule),
                       capsule_id: capsule_content.capsule.id)
         end

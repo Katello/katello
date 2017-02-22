@@ -136,7 +136,7 @@ module ::Actions::Katello::CapsuleContent
                          checksum_type: repository.checksum_type,
                          path: repository.relative_path,
                          with_importer: true,
-                         docker_upstream_name: repository.pulp_id,
+                         docker_upstream_name: repository.container_repository_name,
                          capsule_id: capsule_content.capsule.id
                         )
       end
