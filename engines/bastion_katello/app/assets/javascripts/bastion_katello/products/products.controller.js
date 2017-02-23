@@ -48,10 +48,10 @@ angular.module('Bastion.products').controller('ProductsController',
         };
 
         nutupane = new Nutupane(Product, params);
+        $scope.controllerName = 'katello_products';
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
-        $scope.controllerName = 'katello_products';
 
         $scope.$on('productDelete', function (event, taskId) {
             var message;

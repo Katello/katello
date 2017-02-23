@@ -29,6 +29,7 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
             'available_for': 'content_view'
         },
         'queryUnpaged');
+        $scope.controllerName = 'katello_repositories';
 
         nutupane.load();
 

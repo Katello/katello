@@ -23,6 +23,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
         };
 
         $scope.nutupane = new Nutupane(HostSubscription, params);
+        $scope.controllerName = 'katello_subscriptions';
         $scope.nutupane.table.initialLoad = false;
         $scope.table = $scope.nutupane.table;
         $scope.nutupane.masterOnly = true;

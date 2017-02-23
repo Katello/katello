@@ -18,6 +18,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleNames
             {id: $scope.$stateParams.contentViewId},
             'availablePuppetModuleNames'
         );
+        $scope.controllerName = 'katello_content_views';
         nutupane.masterOnly = true;
         $scope.table = nutupane.table;
 

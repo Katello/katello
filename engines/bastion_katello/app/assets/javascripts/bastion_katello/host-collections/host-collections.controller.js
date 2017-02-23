@@ -26,11 +26,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
         };
 
         var nutupane = new Nutupane(HostCollection, params);
+        $scope.controllerName = 'katello_host_collections';
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
-        $scope.controllerName = 'katello_host_collections';
 
         $scope.$on("updateContentHostCollection", function (event, hostCollectionRow) {
             $scope.table.replaceRow(hostCollectionRow);

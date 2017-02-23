@@ -30,6 +30,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
         };
 
         $scope.contentNutupane = new Nutupane(Subscription, params);
+        $scope.controllerName = 'katello_subscriptions';
         $scope.table = $scope.contentNutupane.table;
         $scope.isAdding = false;
         $scope.contentNutupane.setSearchKey('subscriptionSearch');

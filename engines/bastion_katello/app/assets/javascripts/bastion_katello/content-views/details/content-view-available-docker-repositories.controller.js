@@ -27,6 +27,7 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableDockerRe
             'available_for': 'content_view'
         },
         'queryUnpaged');
+        $scope.controllerName = 'katello_repositories';
 
         nutupane.masterOnly = true;
 

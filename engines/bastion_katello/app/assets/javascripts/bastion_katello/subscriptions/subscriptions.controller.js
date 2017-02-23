@@ -31,10 +31,10 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
         };
 
         nutupane = new Nutupane(Subscription, params);
+        $scope.controllerName = 'katello_subscriptions';
         nutupane.masterOnly = true;
         $scope.table = nutupane.table;
         $scope.refreshTable = nutupane.refresh;
-        $scope.controllerName = 'katello_subscriptions';
 
         $scope.groupedSubscriptions = {};
         $scope.$watch('table.rows', function (rows) {

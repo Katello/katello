@@ -34,6 +34,7 @@ angular.module('Bastion.sync-plans').controller('SyncPlanProductsController',
             };
 
             productsNutupane = new Nutupane(Product, params);
+            $scope.controllerName = 'katello_products';
             $scope.table = productsNutupane.table;
 
             $scope.removeProducts = function () {

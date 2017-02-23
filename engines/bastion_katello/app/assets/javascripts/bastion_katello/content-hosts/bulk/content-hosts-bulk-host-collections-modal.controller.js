@@ -34,6 +34,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkHostCollecti
         };
 
         nutupane = new Nutupane(HostCollection, nutupaneParams, 'queryPaged');
+        $scope.controllerName = 'katello_host_collections';
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;

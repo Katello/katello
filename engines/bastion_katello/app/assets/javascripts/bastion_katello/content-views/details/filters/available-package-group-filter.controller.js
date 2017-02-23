@@ -29,6 +29,7 @@ angular.module('Bastion.content-views').controller('AvailablePackageGroupFilterC
             },
             'queryUnpaged'
         );
+        $scope.controllerName = 'katello_package_groups';
 
         function success(rule) {
             nutupane.removeRow(rule.uuid, 'uuid');

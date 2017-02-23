@@ -27,12 +27,12 @@ angular.module('Bastion.sync-plans').controller('SyncPlansController',
             };
 
             nutupane = new Nutupane(SyncPlan, params);
+            $scope.controllerName = 'katello_sync_plans';
             nutupane.masterOnly = true;
 
             $scope.syncPlanTable = nutupane.table;
             $scope.removeRow = nutupane.removeRow;
             $scope.nutupane = nutupane;
-            $scope.controllerName = 'katello_sync_plans';
 
             nutupane.enableSelectAllResults();
 

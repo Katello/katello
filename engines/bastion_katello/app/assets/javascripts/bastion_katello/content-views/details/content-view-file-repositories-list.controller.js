@@ -24,6 +24,7 @@
             'content_type': 'file'
         },
         'queryUnpaged');
+        $scope.controllerName = 'katello_repositories';
 
         nutupane.load();
 

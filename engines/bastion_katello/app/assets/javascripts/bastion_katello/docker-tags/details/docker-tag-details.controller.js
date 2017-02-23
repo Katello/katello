@@ -45,6 +45,7 @@ angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
                 'ids[]': _.map($scope.tag['related_tags'], 'uuid')
             };
             var nutupane = new Nutupane(DockerTag, params);
+            $scope.controllerName = 'katello_docker_tags';
             $scope.table = nutupane.table;
             $scope.panel.loading = false;
             nutupane.refresh();

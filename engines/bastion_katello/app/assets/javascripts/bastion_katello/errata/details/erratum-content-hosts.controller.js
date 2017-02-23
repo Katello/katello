@@ -28,6 +28,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
         };
 
         nutupane = new Nutupane(Host, params, 'postIndex');
+        $scope.controllerName = 'hosts';
         nutupane.masterOnly = true;
         nutupane.enableSelectAllResults();
 

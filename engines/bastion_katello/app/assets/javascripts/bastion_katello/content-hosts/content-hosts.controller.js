@@ -36,11 +36,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
         };
 
         nutupane = new Nutupane(Host, params);
+        $scope.controllerName = 'hosts';
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
         $scope.nutupane = nutupane;
-        $scope.controllerName = 'hosts';
 
         // @TODO begin hack necessary because of foreman API bug http://projects.theforeman.org/issues/13877
         $scope.table.sortBy = function (column) {

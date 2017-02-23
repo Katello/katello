@@ -29,6 +29,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectio
         };
 
         hostCollectionsPane = new Nutupane(ActivationKey, params, 'hostCollections');
+        $scope.controllerName = 'katello_host_collections';
         $scope.table = hostCollectionsPane.table;
 
         $scope.removeHostCollections = function () {

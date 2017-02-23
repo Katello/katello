@@ -26,6 +26,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionAc
             'sort_order': 'ASC'
         };
         nutupane = new Nutupane(ActivationKey, params);
+        $scope.controllerName = 'katello_activation_keys';
 
         nutupane.searchTransform = function (term) {
             var addition,
