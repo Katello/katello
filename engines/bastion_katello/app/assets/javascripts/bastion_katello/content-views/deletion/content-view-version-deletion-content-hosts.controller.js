@@ -27,6 +27,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionDeletionCo
             'sort_order': 'ASC'
         };
         nutupane = new Nutupane(Host, params);
+        $scope.controllerName = 'hosts';
 
         nutupane.searchTransform = function (term) {
             var addition,

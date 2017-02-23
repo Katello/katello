@@ -19,6 +19,7 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
             'sort_by': 'created_at',
             'sort_order': 'DESC'
         });
+        $scope.controllerName = 'katello_content_views';
 
         nutupane.table.closeItem = function () {};
         $scope.table = nutupane.table;

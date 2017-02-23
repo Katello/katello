@@ -26,6 +26,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
         };
 
         contentHostsNutupane = new Nutupane(Host, params);
+        $scope.controllerName = 'hosts';
         contentHostsNutupane.searchTransform = function (term) {
             var searchQuery, addition = "activation_key_id=" + $scope.$stateParams.activationKeyId;
             if (term === "" || angular.isUndefined(term)) {

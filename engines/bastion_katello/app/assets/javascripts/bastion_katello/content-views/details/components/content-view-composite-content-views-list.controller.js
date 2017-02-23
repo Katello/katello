@@ -20,6 +20,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeContentV
             'id': $scope.$stateParams.contentViewId,
             'full_result': true
         }, 'contentViewComponents');
+        $scope.controllerName = 'katello_content_views';
 
         nutupane.masterOnly = true;
         $scope.table = nutupane.table;

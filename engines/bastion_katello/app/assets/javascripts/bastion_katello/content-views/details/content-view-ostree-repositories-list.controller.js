@@ -24,6 +24,7 @@
             'content_type': 'ostree'
         },
         'queryUnpaged');
+        $scope.controllerName = 'katello_repositories';
 
         nutupane.masterOnly = true;
         nutupane.load();

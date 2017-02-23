@@ -15,6 +15,7 @@
             };
 
         repositoriesNutupane = new Nutupane(Repository, params);
+        $scope.controllerName = 'katello_repositories';
         repositoriesNutupane.masterOnly = true;
         repositoriesNutupane.setSearchKey('repositoriesSearch');
 

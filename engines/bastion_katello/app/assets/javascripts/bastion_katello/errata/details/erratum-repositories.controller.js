@@ -22,6 +22,7 @@ function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrg
     };
 
     repositoriesNutupane = new Nutupane(Repository, params);
+    $scope.controllerName = 'katello_repositories';
     $scope.table = repositoriesNutupane.table;
     $scope.table.initialLoad = false;
     repositoriesNutupane.masterOnly = true;

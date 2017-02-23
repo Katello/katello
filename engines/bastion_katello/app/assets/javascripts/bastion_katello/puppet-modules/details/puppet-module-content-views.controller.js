@@ -15,6 +15,7 @@
             };
 
         contentViewsNutupane = new Nutupane(ContentViewVersion, params);
+        $scope.controllerName = 'katello_content_views';
         contentViewsNutupane.masterOnly = true;
         contentViewsNutupane.setSearchKey('contentViewsSearch');
 

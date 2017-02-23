@@ -55,6 +55,7 @@ angular.module('Bastion.content-views').controller('ErrataFilterListController',
             },
             'queryUnpaged'
         );
+        $scope.controllerName = 'katello_errata';
 
         $scope.table = nutupane.table;
 

@@ -30,6 +30,7 @@ angular.module('Bastion.products').controller('ProductsBulkSyncPlanModalControll
             };
 
             nutupane = new Nutupane(SyncPlan, params, 'queryPaged');
+            $scope.controllerName = 'katello_sync_plans';
             nutupane.masterOnly = true;
 
             $scope.table = nutupane.table;

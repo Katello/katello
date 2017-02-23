@@ -30,9 +30,9 @@ angular.module('Bastion.errata').controller('ErrataController',
         };
 
         nutupane = $scope.nutupane = new Nutupane(Erratum, params);
+        $scope.controllerName = 'katello_errata';
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
-        $scope.controllerName = 'katello_errata';
 
         Erratum.queryPaged({'organization_id': CurrentOrganization}, function (result) {
             $scope.errataCount = result.total;

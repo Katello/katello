@@ -28,6 +28,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
         };
 
         contentNutupane = new Nutupane(Host, params);
+        $scope.controllerName = 'hosts';
         contentNutupane.searchTransform = function (term) {
             var addition = "-host_collection_id=" + $scope.$stateParams.hostCollectionId;
             if (term === "" || angular.isUndefined(term)) {

@@ -26,9 +26,9 @@ angular.module('Bastion.ostree-branches').controller('OstreeBranchesController',
         };
 
         nutupane = $scope.nutupane = new Nutupane(OstreeBranch, params);
+        $scope.controllerName = 'katello_ostree_branches';
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
-        $scope.controllerName = 'katello_ostree_branches';
 
         $scope.table.closeItem = function () {
             $scope.transitionTo('ostree-branches.index');

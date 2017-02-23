@@ -23,8 +23,8 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
             'sort_order': 'ASC'
         });
         nutupane.masterOnly = true;
+        $scope.controllerName = 'katello_content_views';
 
         $scope.table = nutupane.table;
-        $scope.controllerName = 'katello_content_views';
     }]
 );

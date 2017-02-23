@@ -55,6 +55,7 @@ angular.module('Bastion.content-views').controller('PackageGroupFilterListContro
             },
             'queryUnpaged'
         );
+        $scope.controllerName = 'katello_package_groups';
 
         $scope.table = nutupane.table;
         nutupane.table.closeItem = function () {};

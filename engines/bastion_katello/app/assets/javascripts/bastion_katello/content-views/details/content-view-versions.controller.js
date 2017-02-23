@@ -219,6 +219,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
         };
 
         nutupane = new Nutupane(ContentViewVersion, {'content_view_id': $scope.$stateParams.contentViewId});
+        $scope.controllerName = 'katello_content_views';
         nutupane.setSearchKey('contentViewVersionSearch');
         nutupane.masterOnly = true;
         $scope.table = nutupane.table;

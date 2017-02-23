@@ -37,6 +37,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         }
 
         nutupane = new Nutupane(HostBulkAction, {}, 'installableErrata');
+        $scope.controllerName = 'katello_errata';
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;

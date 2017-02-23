@@ -15,6 +15,7 @@
         var nutupane = new Nutupane(GPGKey, {
             id: $scope.$stateParams.gpgKeyId
         }, 'products');
+        $scope.controllerName = 'katello_gpg_keys';
         nutupane.masterOnly = true;
 
         $scope.panel = $scope.panel || {error: false, loading: false};

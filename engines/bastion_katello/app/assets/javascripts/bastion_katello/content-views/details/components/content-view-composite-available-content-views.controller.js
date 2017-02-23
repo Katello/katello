@@ -24,6 +24,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
             };
 
             nutupane = new Nutupane(ContentView, params);
+            $scope.controllerName = 'katello_content_views';
             nutupane.masterOnly = true;
             nutupane.table.initialLoad = false;
             $scope.table = nutupane.table;
