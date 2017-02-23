@@ -689,21 +689,21 @@ module Katello
     end
 
     def test_sync_with_url_override
-      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, source_url|
+      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
         repo.id.must_equal(@repository.id)
         pulp_task_id.must_equal(nil)
-        source_url.must_equal('file:///tmp/')
+        options[:source_url].must_equal('file:///tmp/')
       end
       post :sync, :id => @repository.id, :source_url => 'file:///tmp/'
       assert_response :success
     end
 
     def test_sync_with_incremental_flag
-      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, source_url, incremental|
+      assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
         repo.id.must_equal(@repository.id)
         pulp_task_id.must_equal(nil)
-        source_url.must_equal('file:///tmp/')
-        incremental.must_equal true
+        options[:source_url].must_equal('file:///tmp/')
+        options[:incremental].must_equal true
       end
       post :sync, :id => @repository.id, :source_url => 'file:///tmp/', :incremental => true
       assert_response :success

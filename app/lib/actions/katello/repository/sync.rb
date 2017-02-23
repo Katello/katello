@@ -15,32 +15,40 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
-        # @param source_url optional url to override source URL with
-        def plan(repo, pulp_sync_task_id = nil, source_url = nil, incremental = false)
+        def plan(repo, pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
-          if repo.url.blank? && source_url.blank?
-            fail _("Unable to sync repo. This repository does not have a feed url.")
-          end
+          source_url = options.fetch(:source_url, nil)
+          incremental = options.fetch(:incremental, false)
+          validate_contents = options.fetch(:validate_contents, false)
+          skip_metadata_check = options.fetch(:skip_metadata_check, false) || validate_contents
+
+          pulp_sync_options = {}
+          pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents
+          pulp_sync_options[:force_full] = true if skip_metadata_check
+          pulp_sync_options[:auto_publish] = false if skip_metadata_check #skip auto publish, and force it later
+          pulp_sync_options[:remove_missing] = false if incremental
+
+          fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot validate contents on non-yum repositories.") if validate_contents && !repo.yum?
+          fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
           sequence do
-            sync_args = {:pulp_id => repo.pulp_id,
-                         :task_id => pulp_sync_task_id,
-                         :source_url => source_url}
-
-            sync_args[:remove_missing] = false if incremental
-
+            sync_args = {:pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
             output = plan_action(Pulp::Repository::Sync, sync_args).output
 
-            contents_changed = output[:contents_changed]
+            contents_changed = skip_metadata_check || output[:contents_changed]
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             concurrence do
+              plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents
+              plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check
               plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
-              plan_self(:id => repo.id, :sync_result => output, :user_id => ::User.current.id, :contents_changed => contents_changed)
               plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id, :contents_changed => contents_changed)
             end
+            plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
+                      :contents_changed => contents_changed)
             plan_action(Katello::Repository::ImportApplicability, :repo_id => repo.id, :contents_changed => contents_changed)
           end
         end
@@ -51,7 +59,13 @@ module Actions
         end
 
         def humanized_name
-          _("Synchronize") # TODO: rename class to Synchronize and remove this method, add Sync = Synchronize
+          if input[:validate_contents]
+            _("Synchronize: Validate Content")
+          elsif input[:skip_metadata_check]
+            _("Synchronize: Skip Metadata Check")
+          else
+            _("Synchronize")
+          end
         end
 
         def presenter

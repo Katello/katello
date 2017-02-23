@@ -259,7 +259,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository
 
       assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: nil, source_url: nil)
+                                pulp_id: repository.pulp_id, task_id: nil, source_url: nil, options: {})
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
       assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
@@ -274,17 +274,40 @@ module ::Actions::Katello::Repository
       plan_action action, repository, '123'
 
       assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: '123', source_url: nil)
+                                pulp_id: repository.pulp_id, task_id: '123', source_url: nil, options: {})
     end
 
     it 'passes the source URL to pulp sync action when provided' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
-      plan_action action, repository, nil, 'file:///tmp/'
+      plan_action action, repository, nil, :source_url => 'file:///tmp/'
 
       assert_action_planed_with(action, pulp_action_class,
                                 pulp_id: repository.pulp_id, task_id: nil,
-                                source_url: 'file:///tmp/')
+                                source_url: 'file:///tmp/', options: {})
+    end
+
+    it 'passes force_full when skip_metadata_check is nil' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository, nil, :skip_metadata_check => true
+
+      assert_action_planed_with(action, pulp_action_class, pulp_id: repository.pulp_id,
+                                task_id: nil, source_url: nil, options: {force_full: true, auto_publish: false})
+      assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
+    end
+
+    it 'calls download action when validate_contents is passed' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+      plan_action action, repository, nil, :validate_contents => true
+
+      assert_action_planed_with(action, pulp_action_class, source_url: nil,
+                                pulp_id: repository.pulp_id, task_id: nil,
+                                options: {download_policy: 'on_demand', force_full: true, auto_publish: false})
+      assert_action_planed_with(action, Actions::Pulp::Repository::Download, pulp_id: repository.pulp_id,
+                                options: {:verify_all_units => true})
+      assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
     end
 
     describe 'progress' do

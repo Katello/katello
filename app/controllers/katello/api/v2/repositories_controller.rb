@@ -181,7 +181,16 @@ module Katello
     param :id, :identifier, :required => true, :desc => N_("repository ID")
     param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     param :incremental, :bool, :desc => N_("perform an incremental import"), :required => false
+    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum repositories."), :required => false
+    param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Only used with yum repositories."), :required => false
     def sync
+      sync_options = {
+        :skip_metadata_check => ::Foreman::Cast.to_bool(params[:skip_metadata_check]),
+        :validate_contents => ::Foreman::Cast.to_bool(params[:validate_contents]),
+        :incremental => ::Foreman::Cast.to_bool(params[:incremental]),
+        :source_url => params[:source_url]
+      }
+
       if params[:source_url].present? && params[:source_url] !~ /\A#{URI.regexp}\z/
         fail HttpErrors::BadRequest, _("source URL is malformed")
       end
@@ -190,9 +199,10 @@ module Katello
         fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
       end
 
-      task = async_task(::Actions::Katello::Repository::Sync, @repository,
-                          nil, params[:source_url], ::Foreman::Cast.to_bool(params[:incremental]))
+      task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, sync_options)
       respond_for_async :resource => task
+    rescue Errors::InvalidActionOptionError => e
+      raise HttpErrors::BadRequest, e.message
     end
 
     api :POST, "/repositories/:id/export", N_("Export a repository")
