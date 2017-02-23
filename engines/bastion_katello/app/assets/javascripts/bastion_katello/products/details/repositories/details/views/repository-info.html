@@ -213,7 +213,11 @@
         </tr>
         <tr ng-show="repository.content_type === 'ostree'">
           <td translate>OSTree Branches</td>
-          <td class="align-center">{{ repository.content_counts.ostree_branch || 0 }}</td>
+          <td class="align-center">
+            <a ui-sref="product.repository.manage-content.ostree-branches({productId: product.id, repositoryId: repository.id})">
+               {{ repository.content_counts.ostree_branch || 0 }}
+            </a>
+          </td>
         </tr>
         <tr ng-show="repository.content_type === 'file'">
           <td translate>Files</td>
