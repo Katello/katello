@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsController', function() {
-    var $scope, $state, translate, repository;
+    var $scope, $state, translate, repository, syncableRepo;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -16,6 +16,8 @@ describe('Controller: RepositoryDetailsController', function() {
 
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
+
+        $scope.denied = function() {return false};
         $scope.$stateParams = {
             productId: 1,
             repositoryId: 1
@@ -28,6 +30,8 @@ describe('Controller: RepositoryDetailsController', function() {
         Repository.sync = function(params, callback) {
             callback.call(this, {'state': 'running'});
         };
+
+        syncableRepo = {content_type: 'yum', url: 'foo', last_sync: {state: 'stopped'}};
 
         $controller('RepositoryDetailsController', {
             $scope: $scope,
@@ -88,6 +92,23 @@ describe('Controller: RepositoryDetailsController', function() {
         repository.product_type = "custom";
         expect($scope.getRepoNonDeletableReason(repository, product)).toBe(null);
         expect($scope.canRemove(repository, product)).toBe(true);
+    });
+
+    it('should properly hide sync button when force is true', function() {
+        expect($scope.hideSyncButton(syncableRepo, true)).toBe(false);
+        syncableRepo.content_type = 'puppet';
+        expect($scope.hideSyncButton(syncableRepo, true)).toBe(true);
+    });
+
+    it('should properly hide sync button when syncing', function() {
+        expect($scope.hideSyncButton(syncableRepo, false)).toBe(false);
+        syncableRepo.last_sync.state = 'pending';
+        expect($scope.hideSyncButton(syncableRepo, false)).toBe(true);
+    });
+
+    it('should properly hide sync button when no url', function() {
+        syncableRepo.url = undefined;
+        expect($scope.hideSyncButton(syncableRepo, false)).toBe(true);
     });
 
     it('should provide a way to remove a repository', function() {

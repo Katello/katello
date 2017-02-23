@@ -20,8 +20,8 @@
       <ul class="dropdown-menu-right" uib-dropdown-menu role="menu">
         <li role="menuitem">
           <a ng-click="syncRepository(repository)"
-             ng-hide="syncInProgress(repository.last_sync) || !repository.url || denied('sync_products', product)"
-             translate>
+             ng-hide="hideSyncButton(repository, false)"
+          translate>
             Sync Now
           </a>
 
@@ -36,6 +36,14 @@
           <span class="disabled" ng-show="denied('sync_products', product)" translate>
             Cannot sync Repository without the proper permissions.
           </span>
+        </li>
+
+        <li role="menuitem">
+          <a ui-sref="product.repository.advanced_sync({repositoryId: repository.id})"
+             ng-hide="hideSyncButton(repository, true)"
+             translate>
+            Advanced Sync
+          </a>
         </li>
 
         <li role="menuitem">

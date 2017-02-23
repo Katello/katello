@@ -56,6 +56,16 @@
                 parent: 'product.repositories'
             }
         })
+        .state('product.repository.advanced_sync', {
+            url: '/advanced_sync',
+            permission: 'view_products',
+            controller: 'RepositoryAdvancedSyncController',
+            templateUrl: 'products/details/repositories/details/views/repository-advanced-sync.html',
+            ncyBreadcrumb: {
+                label: "{{ 'Advanced Sync' | translate }}",
+                parent: 'product.repository.info'
+            }
+        })
         .state('product.repository.manage-content', {
             abstract: true,
             url: '/content',
