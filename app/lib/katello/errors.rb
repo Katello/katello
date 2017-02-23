@@ -1,5 +1,7 @@
 module Katello
   module Errors
+    class InvalidActionOptionError < StandardError; end
+
     class InvalidRepositoryContent < StandardError; end
 
     class InvalidPuppetModuleError < InvalidRepositoryContent; end

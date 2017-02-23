@@ -8,6 +8,7 @@ module Actions
           param :pulp_id
           param :task_id # In case we need just pair this action with existing sync task
           param :source_url # allow overriding the feed URL
+          param :options # Pulp sync options
         end
 
         def invoke_external_task
@@ -27,10 +28,9 @@ module Actions
             end
 
             sync_options[:feed] = input[:source_url] if input[:source_url]
-
-            sync_options[:remove_missing] = input[:remove_missing] if input.key? :remove_missing
-
             sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
+
+            sync_options.merge(input[:options]) if input[:options]
 
             output[:pulp_tasks] = pulp_tasks =
                 [pulp_resources.repository.sync(input[:pulp_id], override_config: sync_options)]
