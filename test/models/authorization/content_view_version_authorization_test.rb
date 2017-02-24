@@ -28,7 +28,8 @@ module Katello
       super
       @library = katello_environments(:library)
       @view =  katello_content_views(:library_dev_view)
-      @host = FactoryGirl.create(:host, :with_content, :content_view => @view, :lifecycle_environment => @library)
+      @host = FactoryGirl.create(:host, :with_content, :content_view => @view, :lifecycle_environment => @library,
+                                 :organization => @view.organization, :location => taxonomies(:location1))
     end
 
     def test_admin
@@ -39,7 +40,7 @@ module Katello
 
     def test_non_admin
       User.current = User.find(users(:restricted).id)
-      User.current.organizations = [@host.organization, @view.organization]
+      User.current.organizations = [@host.organization, @view.organization].uniq
       User.current.locations = [@host.location]
 
       refute @view.version(@library).all_hosts_editable?(@library)
