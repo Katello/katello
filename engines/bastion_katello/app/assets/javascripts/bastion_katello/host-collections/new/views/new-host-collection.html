@@ -17,30 +17,31 @@
                required/>
       </div>
 
-      <div bst-form-group label="{{ 'Content Host Limit' | translate }}" field="max_hosts">
-        <span translate>Unlimited Hosts:</span>
-        <input type="checkbox"
-               name="limit"
-               ng-model="hostCollection.unlimited_hosts"/>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="limit" ng-model="hostCollection.unlimited_hosts"/>
+          <span translate>Unlimited Hosts</span>
+        </label>
 
-        <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="hostCollection.unlimited_hosts">
-          <input id="max_hosts"
-                 name="max_hosts"
-                 class="form-control"
-                 ng-model="hostCollection.max_hosts"
-                 ng-required="!hostCollection.unlimited_hosts"
-                 type="number"
-                 min="1"
-                 tabindex="2"/>
-        </div>
+      </div>
+
+      <div bst-form-group label="{{ 'Limit' | translate }}" ng-hide="hostCollection.unlimited_hosts" field="max_hosts">
+        <input id="max_hosts"
+               name="max_hosts"
+               class="form-control"
+               ng-model="hostCollection.max_hosts"
+               ng-required="!hostCollection.unlimited_hosts"
+               type="number"
+               min="1"
+               tabindex="2"/>
       </div>
 
       <div bst-form-group label="{{ 'Description' | translate }}">
-      <textarea id="description"
-                name="description"
-                ng-model="hostCollection.description"
-                tabindex="3">
-      </textarea>
+        <textarea id="description"
+                  name="description"
+                  ng-model="hostCollection.description"
+                  tabindex="3">
+        </textarea>
       </div>
 
       <div bst-form-buttons

@@ -50,12 +50,11 @@
 
     <h4 translate>Repository Options</h4>
 
-    <div bst-form-group ng-show="discovery.contentType === 'yum'"
-         label="{{ 'Serve via HTTP' | translate }}">
-      <input type="checkbox"
-             id="unprotected"
-             ng-model="createRepoChoices.unprotected"
-             ng-disabled="creating()"/>
+    <div class="checkbox" ng-show="discovery.contentType === 'yum'">
+      <label>
+        <input type="checkbox" id="unprotected" ng-model="createRepoChoices.unprotected" ng-disabled="creating()"/>
+        <span translate>Serve via HTTP</span>
+      </label>
     </div>
 
     <div bst-form-group ng-show="discovery.contentType === 'docker'"
@@ -67,12 +66,11 @@
              ng-disabled="creating()"/>
     </div>
 
-    <div bst-form-group
-         label="{{ 'Verify SSL' | translate }}">
-      <input type="checkbox"
-             id="verify_ssl"
-             ng-model="createRepoChoices.verifySsl"
-             ng-disabled="creating()"/>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="verify_ssl" ng-model="createRepoChoices.verifySsl" ng-disabled="creating()"/>
+        <span translate>Verify SSL</span>
+      </label>
     </div>
 
     <div bst-form-group ng-show="discovery.contentType === 'docker'"
