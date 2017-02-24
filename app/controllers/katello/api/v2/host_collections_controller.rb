@@ -92,7 +92,8 @@ module Katello
       already_added_host_ids = @host_collection.host_ids & host_ids
       unfound_host_ids = host_ids - @hosts.pluck(:id)
 
-      @host_collection.host_ids += @editable_hosts.pluck(:id)
+      @host_collection.host_ids = (@host_collection.host_ids +
+                                   @editable_hosts.pluck(:id)).uniq
       @host_collection.save!
 
       messages = format_bulk_action_messages(
