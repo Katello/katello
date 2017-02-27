@@ -18,12 +18,9 @@ module Katello::Host
       it 'plans' do
         profile = [{:name => "foo", :version => "1", :release => "3"}]
         action = create_action action_class
-        @host.expects(:import_package_profile)
-
-        ::Katello::Pulp::Consumer.any_instance.expects(:upload_package_profile)
         action.stubs(:action_subject).with(@host)
 
-        plan_action action, @host, profile
+        plan_action action, @host, profile.to_json
 
         assert_action_planed_with action, Actions::Katello::Host::GenerateApplicability, [@host]
       end

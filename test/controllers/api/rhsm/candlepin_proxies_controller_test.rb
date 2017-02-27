@@ -177,13 +177,6 @@ module Katello
       end
     end
 
-    it "test_upload_package_profile_protected" do
-      Resources::Candlepin::Consumer.stubs(:get)
-      assert_protected_action(:upload_package_profile, :edit_hosts) do
-        put :upload_package_profile, :id => @host.subscription_facet.uuid
-      end
-    end
-
     it "test_upload_tracer_profile_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:upload_tracer_profile, :edit_hosts) do

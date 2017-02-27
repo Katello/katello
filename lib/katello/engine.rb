@@ -2,6 +2,15 @@ module Katello
   class Engine < ::Rails::Engine
     isolate_namespace Katello
 
+    initializer 'katello.selective_params_parser', :before => :build_middleware_stack do |app|
+      require 'katello/params_parser_wrapper'
+      app.middleware.swap(
+        ActionDispatch::ParamsParser,
+        Katello::ParamsParserWrapper,
+        ->(env) { env['PATH_INFO'] =~ /consumers/ && env['PATH_INFO'] =~ /profile|packages/ }
+      )
+    end
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
