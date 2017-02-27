@@ -8,6 +8,7 @@ module Katello
 
     describe "routing" do
       let(:proxies_controller) { "katello/api/rhsm/candlepin_proxies" }
+      let(:dynflow_proxy_controller) { "katello/api/rhsm/candlepin_dynflow_proxy" }
 
       it "should route to the correct controller actions" do
         {:controller => proxies_controller, :action => "consumer_show", :id => "1"}.must_recognize(:method => "get", :path => "/rhsm/consumers/1")
@@ -23,7 +24,7 @@ module Katello
         {:controller => proxies_controller, :action => "get"}.must_recognize(:method => "get", :path => "/rhsm/pools")
         {:controller => proxies_controller, :action => "get", :id => "1"}.must_recognize(:method => "get", :path => "/rhsm/entitlements/1")
         {:controller => proxies_controller, :action => "post"}.must_recognize(:method => "post", :path => "/rhsm/subscriptions")
-        {:controller => proxies_controller, :action => "upload_package_profile", :id => "1"}.must_recognize(:method => "put", :path => "/rhsm/consumers/1/profile/")
+        {:controller => dynflow_proxy_controller, :action => "upload_package_profile", :id => "1"}.must_recognize(:method => "put", :path => "/rhsm/consumers/1/profile/")
         {:controller => proxies_controller, :action => "get", :id => "1"}.must_recognize(:method => "get", :path => "/rhsm/consumers/1/guestids/")
         {:controller => proxies_controller, :action => "get", :id => "1", :guest_id => "1"}.must_recognize(:method => "get", :path => "/rhsm/consumers/1/guestids/1")
         {:controller => proxies_controller, :action => "put", :id => "1"}.must_recognize(:method => "put", :path => "/rhsm/consumers/1/guestids/")

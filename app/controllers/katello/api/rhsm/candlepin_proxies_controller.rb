@@ -141,16 +141,6 @@ module Katello
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
 
-    #api :PUT, "/consumers/:id/packages", N_("Update installed packages")
-    #api :PUT, "/consumers/:id/profile", N_("Update installed packages")
-    #param :id, String, :desc => N_("UUID of the consumer"), :required => true
-    def upload_package_profile
-      User.as_anonymous_admin do
-        async_task(::Actions::Katello::Host::UploadPackageProfile, @host, params[:_json])
-      end
-      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
-    end
-
     api :PUT, "/consumers/:id/tracer", N_("Update services requiring restart")
     param :traces, Hash, :required => true
     def upload_tracer_profile
