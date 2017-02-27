@@ -703,9 +703,9 @@ module Katello
       end
     end
 
-    def index_content
+    def index_content(full_index = false)
       if self.yum?
-        Katello::Rpm.import_for_repository(self)
+        Katello::Rpm.import_for_repository(self, full_index)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
         self.import_distribution_data
