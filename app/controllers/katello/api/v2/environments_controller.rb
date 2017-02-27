@@ -47,6 +47,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier")
     param :library, [true, false], :desc => N_("set true if you want to see only library environments")
     param :name, String, :desc => N_("filter only environments containing this name")
+    param_group :search, Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation.uniq, :name, :asc, :resource_class => KTEnvironment))
     end
