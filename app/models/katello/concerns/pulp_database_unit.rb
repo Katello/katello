@@ -69,7 +69,15 @@ module Katello
 
       def import_for_repository(repository, force = false)
         ids = content_unit_class.ids_for_repository(repository.pulp_id)
-        self.import_all(ids, :index_repository_association => false) if repository.content_view.default? || force
+        # Rpms cannot change in Pulp so we do not index them if they are already present
+        # in our database. Errata and Package Groups can change in Pulp, so we index
+        # all of them in the repository on each sync.
+        if self == Katello::Rpm && !force
+          ids_to_import = ids - repository.rpms.map(&:uuid)
+        else
+          ids_to_import = ids
+        end
+        self.import_all(ids_to_import, :index_repository_association => false) if repository.content_view.default? || force
         self.sync_repository_associations(repository, ids) if self.manage_repository_association
       end
 

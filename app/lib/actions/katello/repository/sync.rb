@@ -38,7 +38,7 @@ module Actions
             output = plan_action(Pulp::Repository::Sync, sync_args).output
 
             contents_changed = skip_metadata_check || output[:contents_changed]
-            plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed)
+            plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed, :full_index => skip_metadata_check)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             concurrence do

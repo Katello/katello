@@ -13,7 +13,7 @@ module Katello
         VCR.insert_cassette('services/pulp/rpm')
         repo = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
         RepositorySupport.create_and_sync_repo(repo.id)
-        Katello::Rpm.import_for_repository(RepositorySupport.repo)
+        Katello::Rpm.import_for_repository(RepositorySupport.repo, true)
         @package_id = RepositorySupport.repo.rpms.first.id
       end
 
