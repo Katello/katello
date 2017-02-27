@@ -5,6 +5,7 @@ module Katello
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules", N_("List filter rules")
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
+    param_group :search, Api::V2::ApiController
     def index
       ids = ContentViewFilter.rule_ids_for(@filter)
       results = ids.map { |id| ContentViewFilter.rule_class_for(@filter).find(id) }

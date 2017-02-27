@@ -21,6 +21,7 @@ module Katello
     param :name, String, :desc => N_("filter by name")
     param :sync_date, String, :desc => N_("filter by sync date")
     param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
+    param_group :search, Api::V2::ApiController
     def index
       respond_for_index(:collection => scoped_search(index_relation.uniq, :name, :asc))
     end

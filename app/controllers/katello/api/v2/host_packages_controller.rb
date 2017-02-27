@@ -19,6 +19,7 @@ module Katello
 
     api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")
     param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param_group :search, Api::V2::ApiController
     def index
       collection = scoped_search(index_relation.uniq, :name, :asc, :resource_class => ::Katello::InstalledPackage)
       respond_for_index(:collection => collection)
