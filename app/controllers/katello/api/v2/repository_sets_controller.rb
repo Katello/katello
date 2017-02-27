@@ -13,6 +13,7 @@ module Katello
     api :GET, "/products/:product_id/repository_sets", N_("List repository sets for a product.")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
+    param_group :search, Api::V2::ApiController
     def index
       collection = {}
       collection[:results] = @product.displayable_product_contents
