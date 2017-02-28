@@ -36,11 +36,23 @@ namespace :test do
     task :test => ['db:test:prepare'] do
       test_task = Rake::TestTask.new('katello_test_task') do |t|
         t.libs << ["test", "#{Katello::Engine.root}/test"]
-        t.test_files = [
-          "#{Katello::Engine.root}/test/models/**/*_test.rb",
-          "#{Katello::Engine.root}/test/controllers/**/*_test.rb",
-          "#{Katello::Engine.root}/test/**/*_test.rb"
-        ]
+        if ENV['MATCH']
+          tests = ENV['MATCH'].split(',')
+          test_files = tests.map do |tst|
+            Dir.glob("#{Katello::Engine.root}/test/**/*#{tst}*").select do |fl|
+              fl.end_with?("_test.rb")
+            end
+          end
+          test_files.flatten!
+          t.test_files = test_files
+          puts "Running Tests #{test_files.inspect}"
+        else
+          t.test_files = [
+            "#{Katello::Engine.root}/test/models/**/*_test.rb",
+            "#{Katello::Engine.root}/test/controllers/**/*_test.rb",
+            "#{Katello::Engine.root}/test/**/*_test.rb"
+          ]
+        end
         t.verbose = true
         t.warning = false
       end
