@@ -4,6 +4,8 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::ApiControllerTest < ActionController::TestCase
+    include Katello::AuthorizationSupportMethods
+
     def setup
       @controller = Katello::Api::V2::ApiController.new
       @query = Erratum.all
@@ -62,8 +64,23 @@ module Katello
       assert_nil response[:error], "error"
     end
 
+    def test_with_reduced_perms
+      params = {}
+      @controller.stubs(:params).returns(params)
+      @default_sort = %w(name desc)
+
+      User.current = users(:restricted)
+      key = katello_activation_keys(:simple_key)
+      setup_current_user_with_permissions(:name => "view_activation_keys",
+                                          :search => "environment = #{key.environment}")
+
+      @options = { :resource_class => Katello::ActivationKey }
+      keys = @controller.scoped_search(ActivationKey.readable, @default_sort[0], @default_sort[1], @options)
+      assert_includes keys[:results], key
+    end
+
     def test_scoped_search_zero_total
-      @query = []
+      @query = Erratum.where('1=0')
       params = {}
       @controller.stubs(:params).returns(params)
 

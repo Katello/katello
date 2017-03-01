@@ -51,6 +51,7 @@ module Katello
 
       total = scoped_search_total(query, group)
 
+      query = query.pluck(:id) if query.respond_to?(:pluck)
       query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
 
       query = query.select(group).group(group) if group
