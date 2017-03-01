@@ -198,7 +198,7 @@
         <tr ng-show="repository.content_type === 'docker'">
           <td translate>Docker Manifests</td>
           <td class="align-center">
-            <a ui-sref="product.repository.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})" translate>
+            <a ui-sref="product.repository.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.docker_manifest || 0 }}
             </a>
           </td>
@@ -206,7 +206,7 @@
         <tr ng-show="repository.content_type === 'docker'">
           <td translate>Docker Tags</td>
           <td class="align-center">
-            <a ui-sref="product.repository.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})" translate>
+            <a ui-sref="product.repository.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.docker_tag || 0 }}
             </a>
           </td>
@@ -221,7 +221,11 @@
         </tr>
         <tr ng-show="repository.content_type === 'file'">
           <td translate>Files</td>
-          <td class="align-center">{{ repository.content_counts.file || 0 }}</td>
+          <td class="align-center">
+            <a ui-sref="product.repository.manage-content.files({productId: product.id, repositoryId: repository.id})">
+              {{ repository.content_counts.file || 0 }}
+            </a>
+          </td>
         </tr>
         </tbody>
       </table>

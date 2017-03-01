@@ -1,0 +1,64 @@
+<span page-title ng-model="repository">{{ 'Manage Files for Repository:' | translate }} {{ repository.name }}</span>
+
+<div data-block="messages">
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div bst-alert="success" ng-hide="generationTaskId === undefined">
+    <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
+    <p translate>
+      File removal been initiated in the background.  Click <a href="{{ taskUrl() }}">Here</a> to monitor the progress.
+    </p>
+  </div>
+</div>
+
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="list-actions">
+    <div bst-modal="removeContent()" model="table">
+      <div data-block="modal-header"
+           translate
+           translate-n="table.numSelected"
+           translate-plural="Remove {{ table.numSelected }} files?">
+        Remove File?
+      </div>
+      <div data-block="modal-body"
+           translate
+           translate-n="table.numSelected"
+           translate-plural="Are you sure you want to remove the {{ table.numSelected }} files selected?">
+        Are you sure you want to remove the {{ table.getSelected()[0].name }}?
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-default"
+            ng-hide="denied('edit_products')"
+            ng-click="openModal()"
+            ng-disabled="table.working || table.numSelected === 0">
+      <i class="fa fa-trash-o" ng-hide="table.working"></i>
+      <span translate>Remove Files</span>
+    </button>
+  </div>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" >
+
+      <thead>
+        <tr bst-table-head row-select>
+          <th bst-table-column><span translate>Name</span></th>
+          <th bst-table-column><span translate>Path</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="file in table.rows" row-select="file">
+          <td bst-table-cell>
+            {{ file.name }}
+          </td>
+          <td bst-table-cell>
+            {{ file.path }}
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

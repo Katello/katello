@@ -108,6 +108,15 @@
                 parent: 'product.repository.info'
             }
         })
+        .state('product.repository.manage-content.files', {
+            url: '/content/files',
+            permission: 'view_products',
+            templateUrl: 'products/details/repositories/details/views/repository-manage-files.html',
+            ncyBreadcrumb: {
+                label: "{{'Files' | translate }}",
+                parent: 'product.repository.info'
+            }
+        })
         .state('product.repository.manage-content.ostree-branches', {
             url: '/content/ostree_branches',
             permission: 'view_products',
