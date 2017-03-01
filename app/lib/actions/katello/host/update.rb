@@ -28,10 +28,12 @@ module Actions
         end
 
         def run
-          host = ::Host.find(input[:host_id])
-          unless input[:facts].blank?
-            ::Katello::Host::SubscriptionFacet.update_facts(host, input[:facts])
-            input[:facts] = 'TRIMMED'
+          User.as_anonymous_admin do
+            host = ::Host.find(input[:host_id])
+            unless input[:facts].blank?
+              ::Katello::Host::SubscriptionFacet.update_facts(host, input[:facts])
+              input[:facts] = 'TRIMMED'
+            end
           end
         end
 
