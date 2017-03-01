@@ -21,6 +21,7 @@ module BastionKatello
           content_hosts
           content_views
           docker_tags
+          files
           ostree_branches
           errata
           packages

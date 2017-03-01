@@ -5,6 +5,7 @@ BASTION_MODULES.push(
     'Bastion.content-views',
     'Bastion.content-views.versions',
     'Bastion.docker-tags',
+    'Bastion.files',
     'Bastion.ostree-branches',
     'Bastion.hosts',
     'Bastion.puppet-modules',

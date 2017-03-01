@@ -25,6 +25,9 @@
 //= require "bastion_katello/docker-tags/docker-tags.module.js"
 //= require_tree "./docker-tags"
 
+//= require "bastion_katello/files/files.module"
+//= require_tree "./files"
+
 //= require "bastion_katello/ostree-branches/ostree-branches.module.js"
 //= require_tree "./ostree-branches"
 
