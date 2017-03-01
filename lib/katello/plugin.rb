@@ -120,6 +120,15 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     menu :top_menu,
+         :files,
+         :caption => N_('Files'),
+         :url => '/files',
+         :url_hash => {:controller => 'katello/api/v2/file_units',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    menu :top_menu,
          :ostree_branches,
          :caption => N_('OSTree Branches'),
          :url => '/ostree_branches',

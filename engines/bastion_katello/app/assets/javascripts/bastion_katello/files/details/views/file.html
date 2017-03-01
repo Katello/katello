@@ -1,0 +1,37 @@
+<span page-title ng-model="file">{{ 'File: ' | translate }} {{ file.name }}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <div data-block="header" translate>
+    {{ file.name }}
+  </div>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('file.info')}">
+        <a ui-sref="file.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+      <li ng-show="permitted('view_products')" ng-class="{active: isState('file.repositories')}">
+        <a ui-sref="file.repositories">
+          <span translate>
+            Library Repositories
+          </span>
+        </a>
+      </li>
+      <li ng-show="permitted('view_content_views')" ng-class="{active: isState('file.content-views')}">
+        <a ui-sref="file.content-views">
+          <span translate>
+            Content Views
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

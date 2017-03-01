@@ -1,0 +1,15 @@
+<span page-title ng-model="file">{{ 'File: ' | translate }} {{ file.name }}</span>
+
+<div data-extend-template="layouts/full-page-details.html">
+  <div data-block="content">
+    <h4 translate>Basic Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Path</dt>
+      <dd>{{ file.path }}</dd>
+
+      <dt translate>Checksum</dt>
+      <dd>{{ file.checksum }}</dd>
+    </dl>
+  </div>
+</div>
