@@ -12,6 +12,9 @@ module Actions
           upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
 
           sequence do
+            plan_action(Candlepin::Owner::UpstreamRegenerateCertificates,
+                        :organization_id => organization.id,
+                        :upstream => upstream)
             plan_action(Candlepin::Owner::UpstreamUpdate,
                         :organization_id => organization.id,
                         :upstream => upstream)

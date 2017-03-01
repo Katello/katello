@@ -101,6 +101,11 @@ module ::Actions::Katello::Organization
       plan_action(action, organization)
 
       assert_action_planned_with(action,
+                                 ::Actions::Candlepin::Owner::UpstreamRegenerateCertificates,
+                                 organization_id: organization.id,
+                                 upstream: upstream
+                                )
+      assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::UpstreamUpdate,
                                  organization_id: organization.id,
                                  upstream: upstream
