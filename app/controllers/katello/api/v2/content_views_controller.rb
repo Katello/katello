@@ -111,7 +111,10 @@ module Katello
       custom_sort = ->(sort_query) { sort_query.order('author, name, sortable_version DESC') }
       sorted_records = scoped_search(query, nil, nil, :resource_class => PuppetModule, :custom_sort => custom_sort)
       if params[:name]
-        sorted_records[:results] = add_use_latest_records(sorted_records[:results].to_a, selected_latest_versions)
+        sorted_records_with_use_latest = add_use_latest_records(sorted_records[:results].to_a, selected_latest_versions)
+        sorted_records[:results] = sorted_records_with_use_latest
+        sorted_records[:total] = sorted_records_with_use_latest.count
+        sorted_records[:subtotal] = sorted_records_with_use_latest.count
       end
       respond_for_index :template => 'puppet_modules', :collection => sorted_records
     end
