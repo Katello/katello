@@ -4,8 +4,8 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_content_view, :except => [:index, :create, :auto_complete_search]
-    before_action :find_organization, :only => [:create]
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_required_nested_object, :only => [:create]
+    before_action :find_optional_nested_object, :only => [:index, :auto_complete_search]
     before_action :find_environment, :only => [:index, :remove_from_environment]
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))

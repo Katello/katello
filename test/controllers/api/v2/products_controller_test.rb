@@ -37,6 +37,13 @@ module Katello
       assert_template 'api/v2/products/index'
     end
 
+    def test_index_organization_name
+      get :index, :organization_id => @organization.name
+
+      assert_response :success
+      assert_template 'api/v2/products/index'
+    end
+
     def test_index_name
       get :index, :organization_id => @organization.id, :name => @product.name
 

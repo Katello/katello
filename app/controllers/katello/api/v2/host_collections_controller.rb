@@ -5,8 +5,8 @@ module Katello
                                                    :add_hosts, :remove_hosts, :hosts]
     before_action :find_activation_key
     before_action :find_host
-    before_action :find_optional_organization, :only => [:index]
-    before_action :find_organization, :only => [:create, :auto_complete_search]
+    before_action :find_optional_nested_object, :only => [:index]
+    before_action :find_required_nested_object, :only => [:create, :auto_complete_search]
 
     wrap_parameters :include => (HostCollection.attribute_names + %w(host_ids))
 

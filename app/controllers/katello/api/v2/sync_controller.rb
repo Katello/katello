@@ -1,6 +1,6 @@
 module Katello
   class Api::V2::SyncController < Api::V2::ApiController
-    before_action :find_optional_organization, :only => [:index]
+    before_action :find_optional_nested_resource, :only => [:index]
     before_action :find_object, :only => [:index]
     before_action :ensure_library, :only => [:index]
 

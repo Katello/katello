@@ -3,7 +3,7 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_activation_key, :only => [:index]
-    before_action :find_organization, :only => [:create, :index, :auto_complete_search]
+    before_action :find_required_nested_object, :only => [:create, :index, :auto_complete_search]
     before_action :find_product, :only => [:update, :destroy, :sync]
     before_action :find_organization_from_product, :only => [:update]
     before_action :authorize_gpg_key, :only => [:update, :create]

@@ -2,7 +2,7 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+    before_action :find_optional_nested_object, :only => [:index, :auto_complete_search]
     before_action :find_product, :only => [:index, :auto_complete_search]
     before_action :find_product_for_create, :only => [:create]
     before_action :find_organization_from_product, :only => [:create]
