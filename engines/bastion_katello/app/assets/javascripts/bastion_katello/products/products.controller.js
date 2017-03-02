@@ -49,6 +49,7 @@ angular.module('Bastion.products').controller('ProductsController',
 
         nutupane = new Nutupane(Product, params);
         $scope.controllerName = 'katello_products';
+        $scope.current_organization = CurrentOrganization;
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
