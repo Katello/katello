@@ -19,7 +19,8 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModuleVersi
 
         params = {
             name: $scope.$stateParams.moduleName,
-            id: $scope.$stateParams.contentViewId
+            id: $scope.$stateParams.contentViewId,
+            'full_result': true
         };
 
         nutupane = new Nutupane(ContentView, params, 'availablePuppetModules');
