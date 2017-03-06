@@ -249,7 +249,7 @@ module Katello
                                                                  :destination_distributor_id => yum_dist_id)
           export_dist = Runcible::Models::ExportDistributor.new(false, false, self.relative_path)
           distributors = [yum_dist, export_dist]
-          distributors << clone_dist unless capsule
+          distributors << clone_dist if capsule.nil? || capsule.default_capsule?
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
