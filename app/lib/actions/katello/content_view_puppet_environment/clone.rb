@@ -48,6 +48,10 @@ module Actions
             clone.puppet_environment.try(:save!) #manually save puppet environment in case of error
             clone.save!
             plan_action(ContentViewPuppetEnvironment::Clear, clone)
+
+            unless ::Katello::Repository.needs_distributor_updates([clone], ::Katello::CapsuleContent.new(::SmartProxy.default_capsule)).empty?
+              plan_action(Pulp::Repository::Refresh, clone)
+            end
           end
           clone
         end
