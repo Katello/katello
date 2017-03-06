@@ -63,6 +63,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     let(:source_puppet_env) { katello_content_view_puppet_environments(:archive_view_puppet_environment) }
 
     it 'plans with existing puppet environment' do
+      ::Katello::Repository.expects(:needs_distributor_updates).returns([{}])
       plan_action action, puppet_env.content_view_version, :environment => dev
 
       assert_action_planed_with action, ::Actions::Katello::ContentViewPuppetEnvironment::Clear, dev_puppet_env
@@ -105,6 +106,13 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       refute_action_planed action, ::Actions::Katello::ContentViewPuppetEnvironment::Create
       refute_action_planed action, ::Actions::Pulp::Repository::CopyPuppetModule
       refute_action_planed action, ::Actions::Katello::Repository::MetadataGenerate
+    end
+
+    it 'plans repository refresh when distributor config changes' do
+      ::Katello::Repository.expects(:needs_distributor_updates).returns([{}])
+      plan_action action, puppet_env.content_view_version, :environment => dev
+
+      assert_action_planed action, ::Actions::Pulp::Repository::Refresh
     end
   end
 
