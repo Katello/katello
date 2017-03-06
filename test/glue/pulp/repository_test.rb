@@ -180,8 +180,22 @@ module Katello
       assert Repository.delete_orphaned_content.is_a?(Hash)
     end
 
-    def test_generate_distributors
+    def test_generate_distributors_with_nil
       dists = @fedora_17_x86_64.generate_distributors
+      refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
+      refute_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
+      refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
+    end
+
+    def test_generate_distributors_with_external_capsule
+      dists = @fedora_17_x86_64.generate_distributors(OpenStruct.new(:default_capsule? => false))
+      refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
+      assert_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
+      refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
+    end
+
+    def test_generate_distributors_with_default_capsule
+      dists = @fedora_17_x86_64.generate_distributors(OpenStruct.new(:default_capsule? => true))
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
