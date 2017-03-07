@@ -29,6 +29,7 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Create }
 
     before do
+      FactoryGirl.create(:smart_proxy, :default_smart_proxy)
       repository.expects(:save!)
       action.expects(:action_subject).with(repository)
       action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|

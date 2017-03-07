@@ -150,7 +150,7 @@ module Katello
         raise PulpErrors::ServiceUnavailable.new(message, e)
       end
 
-      def generate_importer(capsule = nil)
+      def generate_importer(capsule = SmartProxy.default_capsule)
         case self.content_type
         when Repository::YUM_TYPE
           Runcible::Models::YumImporter.new(yum_importer_values(capsule))
@@ -161,7 +161,7 @@ module Katello
           Runcible::Models::PuppetImporter.new(importer_ssl_options(capsule).merge(options))
         when Repository::DOCKER_TYPE
           options = {}
-          options[:upstream_name] = capsule ? self.container_repository_name : self.docker_upstream_name
+          options[:upstream_name] = capsule.default_capsule? ? self.docker_upstream_name : self.container_repository_name
           options[:feed] = docker_feed_url(capsule)
           options[:enable_v1] = false
           Runcible::Models::DockerImporter.new(importer_ssl_options(capsule).merge(options))
@@ -175,40 +175,40 @@ module Katello
         end
       end
 
-      def docker_feed_url(capsule = false)
+      def docker_feed_url(capsule = SmartProxy.default_capsule)
         pulp_uri = URI.parse(SETTINGS[:katello][:pulp][:url])
-        if capsule
-          "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
-        else
+        if capsule.default_capsule?
           self.url if self.respond_to?(:url)
+        else
+          "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
         end
       end
 
-      def importer_feed_url(capsule = false)
-        if capsule
-          self.full_path(nil, true)
-        else
+      def importer_feed_url(capsule = SmartProxy.default_capsule)
+        if capsule.default_capsule?
           self.url if self.respond_to?(:url)
+        else
+          self.full_path(nil, true)
         end
       end
 
       def yum_importer_values(capsule)
-        if capsule
-          new_download_policy = capsule_download_policy(capsule)
-        else
+        if capsule.default_capsule?
           new_download_policy = self.download_policy
+        else
+          new_download_policy = capsule_download_policy(capsule)
         end
 
         config = {
           :feed => self.importer_feed_url(capsule),
           :download_policy => new_download_policy,
-          :remove_missing => capsule ? true : self.mirror_on_sync?
+          :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
         }
         config.merge(importer_ssl_options(capsule))
       end
 
-      def importer_ssl_options(capsule = nil)
-        if capsule
+      def importer_ssl_options(capsule = SmartProxy.default_capsule)
+        if !capsule.default_capsule?
           ueber_cert = ::Cert::Certs.ueber_cert(organization)
           importer_options = {
             :ssl_client_cert => ueber_cert[:cert],
@@ -236,7 +236,7 @@ module Katello
         importer_options
       end
 
-      def generate_distributors(capsule = nil)
+      def generate_distributors(capsule = SmartProxy.default_capsule)
         case self.content_type
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
@@ -249,7 +249,7 @@ module Katello
                                                                  :destination_distributor_id => yum_dist_id)
           export_dist = Runcible::Models::ExportDistributor.new(false, false, self.relative_path)
           distributors = [yum_dist, export_dist]
-          distributors << clone_dist if capsule.nil? || capsule.default_capsule?
+          distributors << clone_dist if capsule.default_capsule?
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
