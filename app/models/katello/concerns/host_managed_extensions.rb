@@ -52,6 +52,7 @@ module Katello
         info['parameters']['kt_cv'] = self.content_view.try(:label) #deprecated
         info['parameters']['lifecycle_environment'] = self.lifecycle_environment.try(:label)
         info['parameters']['content_view'] = self.content_view.try(:label)
+        info['parameters']['foreman_host_collections'] = self.host_collections.map(&:name)
         if self.content_facet.present?
           info['parameters']['kickstart_repository'] = self.content_facet.kickstart_repository.try(:label)
         end
