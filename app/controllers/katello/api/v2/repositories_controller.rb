@@ -338,7 +338,7 @@ module Katello
       param 'id', String, :required => true
       param 'size', String
       param 'checksum', String
-      param 'name', String
+      param 'name', String, :desc => N_("Needs to only be set for file repositories")
     end
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
@@ -356,7 +356,13 @@ module Katello
       end
 
       upload_ids = uploads.map { |upload| upload['id'] }
-      unit_keys = uploads.map { |upload| upload.except('id') }
+      unit_keys = uploads.map do |upload|
+        if @repository.file?
+          upload.except('id').except('name')
+        else
+          upload.except('id')
+        end
+      end
 
       begin
         task = send(async ? :async_task : :sync_task, ::Actions::Katello::Repository::ImportUpload,
