@@ -1,10 +1,11 @@
 module Katello
   module AuthorizationSupportMethods
     # permissions => Array of hashes in the following format
-    #   [{:name => :view_lifecycle_environment, :search => 'name=Dev'}, ..]
+    #   [{:name => :view_lifecycle_environment, :search => 'name=Dev', :resource_type => 'Katello::KTEnvironment'}, ..]
     def create_role_with_permissions(permissions)
       role = FactoryGirl.create(:role)
       permissions.each do |perm|
+        ensure_permission_exist(perm)
         begin
           role.add_permissions!([perm[:name]], :search => perm[:search])
         rescue ArgumentError => e
@@ -14,6 +15,19 @@ module Katello
         end
       end
       role
+    end
+
+    def ensure_permission_exist(hash)
+      perm = Permission.find_by :name => hash[:name]
+      return if perm
+      resource_type = hash[:resource_type] || resource_type_from_name(hash[:name])
+      FactoryGirl.create(:permission, :name => hash[:name], :resource_type => resource_type)
+    end
+
+    def resource_type_from_name(name)
+      "Katello::#{name.to_s.split('_')[1..-1].join('_').singularize.camelize}".constantize.to_s
+    rescue
+      nil
     end
 
     # permissions => can be a permission(s) in one of the following formats
