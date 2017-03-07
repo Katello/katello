@@ -108,7 +108,7 @@ module Katello
       self.products ? self.products.map(&:available_content).flatten.uniq { |product| product.content.id } : []
     end
 
-    def valid_content_label?(content_label)
+    def valid_content_override_label?(content_label)
       self.available_content.map(&:content).any? { |content| content.label == content_label }
     end
 

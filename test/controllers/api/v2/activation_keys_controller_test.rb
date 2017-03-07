@@ -7,7 +7,7 @@ module Katello
     include Support::ForemanTasks::Task
 
     def models
-      ActivationKey.any_instance.stubs(:valid_content_label?).returns(true)
+      ActivationKey.any_instance.stubs(:valid_content_override_label?).returns(true)
       ActivationKey.any_instance.stubs(:content_overrides).returns([])
       ActivationKey.any_instance.stubs(:products).returns([])
 
@@ -214,17 +214,32 @@ module Katello
     end
 
     def test_content_override
-      ActivationKey.any_instance.expects(:set_content_override).returns(true)
+      ActivationKey.any_instance.expects(:set_content_overrides).returns(true)
 
       put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content',
-                                                                              :name => 'enabled', :value => 1})
+                                                                              :value => 1})
+
+      assert_response :success
+      assert_template 'api/v2/activation_keys/show'
+    end
+
+    def test_content_override_bulk
+      ActivationKey.expects(:find).returns(@activation_key)
+      @activation_key.expects(:set_content_overrides).returns(true).once.with do |params|
+        params.size == 2 && params.map(&:content_label).include?("some-content")
+      end
+
+      put(:content_override, :id => @activation_key.id, :content_overrides => [{:content_label => 'some-content',
+                                                                                :value => 1},
+                                                                               {:content_label => 'some-content1',
+                                                                                :value => 0}])
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
 
     def test_content_override_empty
-      put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content', :name => 'enabled'})
+      put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content'})
 
       assert_response 400
     end
