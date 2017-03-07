@@ -11,6 +11,7 @@ module Katello
       set_user
       backend_stubs
 
+      FactoryGirl.create(:smart_proxy, :default_smart_proxy)
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       @fedora_17_library_library_view = Repository.find(FIXTURES['katello_repositories']['fedora_17_library_library_view']['id'])
@@ -59,20 +60,23 @@ module Katello
 
   class GluePulpNonVcrTests < GluePulpRepoTestBase
     def test_importer_feed_url
+      proxy = FactoryGirl.build(:bmc_smart_proxy)
+
       pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
 
       assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'
-      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
+      assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
 
       repo.unprotected = true
-      assert_equal repo.importer_feed_url(true), "https://#{pulp_host}/pulp/repos//elbow/"
+      assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
     end
 
     def test_importer_ssl_options
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      assert @fedora_17_x86_64.importer_ssl_options(true).key?(:ssl_validation)
-      refute @cvpe_one.importer_ssl_options(true).key?(:ssl_validation)
+      proxy = FactoryGirl.build(:bmc_smart_proxy)
+      assert @fedora_17_x86_64.importer_ssl_options(proxy).key?(:ssl_validation)
+      refute @cvpe_one.importer_ssl_options(proxy).key?(:ssl_validation)
     end
 
     def test_relative_path
