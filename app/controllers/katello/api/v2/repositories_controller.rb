@@ -316,7 +316,7 @@ module Katello
       param 'id', String, :required => true
       param 'size', String
       param 'checksum', String
-      param 'name', String
+      param 'name', String, :desc => N_("Needs to only be set for file repositories")
     end
     def import_uploads
       if params['upload_ids'].empty? && params['uploads'].empty?
@@ -337,6 +337,12 @@ module Katello
 
       if params.key?(:uploads)
         params[:uploads].each do |upload|
+          if @repository.file?
+            upload.except('id').except('name')
+          else
+            upload.except('id')
+          end
+
           begin
             sync_task(
               ::Actions::Katello::Repository::ImportUpload,
