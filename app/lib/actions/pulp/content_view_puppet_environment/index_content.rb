@@ -7,9 +7,11 @@ module Actions
         end
 
         def run
-          puppet_env = ::Katello::ContentViewPuppetEnvironment.find(input[:id])
-          puppet_module_ids = pulp_extensions.repository.puppet_module_ids(puppet_env.pulp_id)
-          puppet_env.index_content(puppet_module_ids)
+          User.as_anonymous_admin do
+            puppet_env = ::Katello::ContentViewPuppetEnvironment.find(input[:id])
+            puppet_module_ids = pulp_extensions.repository.puppet_module_ids(puppet_env.pulp_id)
+            puppet_env.index_content(puppet_module_ids)
+          end
         end
       end
     end
