@@ -107,9 +107,9 @@ module Katello
       assert_includes activation_keys, @dev_staging_view_key
     end
 
-    def test_valid_content_label?
+    def test_valid_content_override_label?
       @dev_key.stubs(:available_content).returns([OpenStruct.new(:content => OpenStruct.new(:label => 'some-label'))])
-      assert @dev_key.valid_content_label?('some-label')
+      assert @dev_key.valid_content_override_label?('some-label')
     end
 
     def test_max_hosts_not_exceeded

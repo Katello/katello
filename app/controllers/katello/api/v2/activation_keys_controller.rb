@@ -1,7 +1,7 @@
 module Katello
   class Api::V2::ActivationKeysController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-
+    include Katello::Concerns::Api::V2::ContentOverridesController
     before_action :verify_presence_of_organization_or_environment, :only => [:index]
     before_action :find_environment, :only => [:index, :create, :update]
     before_action :find_optional_organization, :only => [:index, :create, :show]
@@ -197,13 +197,25 @@ module Katello
 
     api :PUT, "/activation_keys/:id/content_override", N_("Override content for activation_key")
     param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
-    param :content_override, Hash, :desc => N_("Content override parameters") do
+    param :content_override, Hash, :desc => N_("Content override parameters"), :deprecated => true do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
-      param :value, [0, 1, "default"], :desc => N_("Override to 0/1, or 'default'"), :required => true
+      param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => true
+    end
+    param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
+      param :content_label, String, :desc => N_("Label of the content"), :required => true
+      param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => true
     end
     def content_override
-      content_override = validate_content_overrides(params[:content_override])
-      @activation_key.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
+      if params[:content_override]
+        ::Foreman::Deprecation.api_deprecation_warning("The parameter content_override will be removed in Katello 3.5. Please update to use the content_overrides parameter.")
+      end
+      content_overrides = params[:content_overrides] ? params[:content_overrides] : [params[:content_override]]
+      content_overrides = [] unless content_overrides
+      content_override_values = content_overrides.map do |content_override_params|
+        validate_content_overrides_enabled(content_override_params, @activation_key)
+      end
+
+      @activation_key.set_content_overrides(content_override_values)
       respond_for_show(:resource => @activation_key)
     end
 
@@ -223,24 +235,6 @@ module Katello
     end
 
     private
-
-    def validate_content_overrides(content_params)
-      case content_params[:value].to_s
-      when 'default'
-        content_params[:value] = nil
-      when '1'
-        content_params[:value] = 1
-      when '0'
-        content_params[:value] = 0
-      else
-        fail HttpErrors::BadRequest, _("Value must be 0/1, or 'default'")
-      end
-
-      unless @activation_key.valid_content_label?(content_params[:content_label])
-        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
-      end
-      content_params
-    end
 
     def subscription_index
       subs = @activation_key.subscriptions

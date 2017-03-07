@@ -63,8 +63,8 @@ module Katello
         self.import_pools
       end
 
-      def set_content_override(content_label, name, value = nil)
-        Resources::Candlepin::ActivationKey.update_content_override(self.cp_id, content_label, name, value)
+      def set_content_overrides(overrides)
+        Resources::Candlepin::ActivationKey.update_content_overrides(self.cp_id, overrides)
       end
 
       def content_overrides

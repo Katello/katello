@@ -809,16 +809,28 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
           end
 
-          def update_content_override(id, content_label, name, value = nil)
-            attrs = [{ :contentLabel => content_label, :name => name }]
-            if value
-              attrs[0][:value] = value
+          # expected params
+          # id : ID of the Activation Key
+          # content_overrides => Array of ::Katello::ContentOverride objects
+          def update_content_overrides(id, content_overrides)
+            attrs_to_delete = []
+            attrs_to_update = []
+            content_overrides.each do |content_override|
+              if content_override.value
+                attrs_to_update << content_override.to_entitlement_hash
+              else
+                attrs_to_delete << content_override.to_entitlement_hash
+              end
+            end
+
+            if attrs_to_update.present?
               result = Candlepin::CandlepinResource.put(join_path(path(id), 'content_overrides'),
-                                                        attrs.to_json, self.default_headers)
-            else
+                                                        attrs_to_update.to_json, self.default_headers)
+            end
+            if attrs_to_delete.present?
               client = Candlepin::CandlepinResource.rest_client(Net::HTTP::Delete, :delete,
                                                                 join_path(path(id), 'content_overrides'))
-              client.options[:payload] = attrs.to_json
+              client.options[:payload] = attrs_to_delete.to_json
               result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
             end
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
