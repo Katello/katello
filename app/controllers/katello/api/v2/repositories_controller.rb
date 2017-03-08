@@ -389,11 +389,13 @@ module Katello
     end
 
     def find_product_for_create
-      @product = Product.find(params[:product_id])
+      @product = Product.editable.where(:id => params[:product_id]).first
+      fail HttpErrors::NotFound, _("Couldn't find product '%s'") % params[:product_id] if @product.nil?
     end
 
     def find_repository
-      @repository = Repository.find(params[:id])
+      @repository = Repository.readable.where(:id => params[:id]).first
+      fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:id] if @repository.nil?
     end
 
     def find_gpg_key
