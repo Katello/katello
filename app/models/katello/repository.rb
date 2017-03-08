@@ -83,8 +83,8 @@ module Katello
     validates :product_id, :presence => true
     validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES, :allow_blank => true}
-    validates :docker_upstream_name, :allow_blank => true, :if => :docker?, :format => {
-      :with => /\A([a-z0-9\-_]{4,30}\/)?[a-z0-9\-_\.]{3,30}\z/,
+    validates :docker_upstream_name, :allow_blank => true, :if => :docker?, :length => { :maximum => 255 }, :format => {
+      :with => /\A([a-z0-9]+[a-z0-9\-\_\.]*)+(\/[a-z0-9]+[a-z0-9\-\_\.]*)?\z/,
       :message => _("must be a valid docker name")
     }
 
