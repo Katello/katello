@@ -78,28 +78,29 @@ module Katello
       @repo.unprotected = true
       @repo.content_type = 'docker'
       @repo.download_policy = nil
-      @repo.docker_upstream_name = 'valid'
-      assert @repo.valid?
-      @repo.docker_upstream_name = 'Invalid'
-      refute @repo.valid?
-      @repo.docker_upstream_name = '-_ok/valid'
-      assert @repo.valid?
-      @repo.docker_upstream_name = 'Invalid/valid'
-      refute @repo.valid?
-      @repo.docker_upstream_name = 'Invalid/Invalid'
-      refute @repo.valid?
-      @repo.docker_upstream_name = 'abcd/.-_'
-      assert @repo.valid?
-      @repo.docker_upstream_name = 'abc/valid'
-      refute @repo.valid?
-      @repo.docker_upstream_name = 'abcd/ab'
-      refute @repo.valid?
-      @repo.docker_upstream_name = '/valid'
-      refute @repo.valid?
-      @repo.docker_upstream_name = 'thisisnotvalidbecauseitistoolong/valid'
-      refute @repo.valid?
-      @repo.docker_upstream_name = 'valid/thisisnotvalidbecauseitistoolong'
-      refute @repo.valid?
+      valid = %w( valid
+                  abc/valid
+                  thisisareallylongbutstillvalidname
+                  soisthis/thisisareallylongbutstillvalidname
+                  single/slash
+                  )
+      valid << 'a' * 255
+      valid.each do |name|
+        @repo.docker_upstream_name = name
+        assert(@repo.valid?, "container image name is valid '#{name}'")
+      end
+      invalid = %w( things\ with\ spaces
+                    UPPERCASE Uppercase uppercasE Upper/case UPPER/case upper/Case
+                    $ymbols $tuff.th@t.m!ght.h@ve.w%!rd.r#g#x.m*anings()
+                    /startingslash trailingslash/
+                    abcd/.-_
+                    multiple/slash/es abc/def/invalid
+                    )
+      invalid << 'a' * 256
+      invalid.each do |name|
+        @repo.docker_upstream_name = name
+        refute(@repo.valid?, "container image name is not valid '#{name}'")
+      end
     end
 
     def test_docker_full_path
