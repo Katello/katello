@@ -64,7 +64,7 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
 
         $scope.$on('$stateChangeSuccess', function () {
             $scope.subscriptions.$promise.then(function () {
-                if ($scope.subscriptions.results.length < 1) {
+                if ($scope.subscriptions.results.length < 1 && $scope.permitted('import_manifest')) {
                     $scope.transitionTo('subscriptions-manifest.import');
                 }
             });
