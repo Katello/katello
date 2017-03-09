@@ -8,9 +8,17 @@ module Katello
       @overrides = overrides
     end
 
-    def enabled_override
-      override = overrides.find { |pc| pc[:contentLabel] == content.label }
-      override.nil? ? 'default' : override[:value]
+    def override
+      override = overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
+      override.nil? ? 'default' : override.value
+    end
+
+    def enabled_content_override
+      overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
+    end
+
+    def content_overrides
+      overrides.find { |pc| pc.content_label == content.label }
     end
   end
 end

@@ -64,11 +64,13 @@ module Katello
       end
 
       def set_content_overrides(overrides)
-        Resources::Candlepin::ActivationKey.update_content_overrides(self.cp_id, overrides)
+        Resources::Candlepin::ActivationKey.update_content_overrides(self.cp_id, overrides.map(&:to_entitlement_hash))
       end
 
       def content_overrides
-        Resources::Candlepin::ActivationKey.content_overrides(self.cp_id)
+        Resources::Candlepin::ActivationKey.content_overrides(self.cp_id).map do |overrides|
+          ::Katello::ContentOverride.from_entitlement_hash(overrides)
+        end
       end
 
       private

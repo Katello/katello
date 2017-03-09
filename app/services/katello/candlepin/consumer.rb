@@ -18,7 +18,11 @@ module Katello
       lazy_accessor :installed_products, :initializer => lambda { |_s| consumer_attributes['installedProducts'] }
       lazy_accessor :available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda { |_s| Resources::Candlepin::Consumer.available_pools(owner_label, uuid, true) }
-      lazy_accessor :content_overrides, :initializer => lambda { |_s| Resources::Candlepin::Consumer.content_overrides(uuid) }
+      lazy_accessor :content_overrides, :initializer => (lambda do |_s|
+                                                           Resources::Candlepin::Consumer.content_overrides(uuid).map do |override|
+                                                             ::Katello::ContentOverride.from_entitlement_hash(override)
+                                                           end
+                                                         end)
 
       attr_accessor :uuid, :owner_label
 
@@ -110,10 +114,6 @@ module Katello
         if (virtual_host_info = Resources::Candlepin::Consumer.virtual_host(self.uuid))
           ::Host.joins(:subscription_facet).where("#{Katello::Host::SubscriptionFacet.table_name}.uuid" => virtual_host_info[:uuid]).first
         end
-      end
-
-      def set_content_override(content_label, name, value = nil)
-        Resources::Candlepin::Consumer.update_content_override(self.uuid, content_label, name, value)
       end
 
       def products

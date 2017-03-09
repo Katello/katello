@@ -203,18 +203,29 @@ module Katello
     end
     param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
-      param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => true
+      param :value, String, :desc => N_("Override value. Provide a boolean value if name is 'enabled'"), :required => false
+      param :name, String, :desc => N_("Override key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
+      param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
     end
     def content_override
+      content_overrides = []
       if params[:content_override]
         ::Foreman::Deprecation.api_deprecation_warning("The parameter content_override will be removed in Katello 3.5. Please update to use the content_overrides parameter.")
-      end
-      content_overrides = params[:content_overrides] ? params[:content_overrides] : [params[:content_override]]
-      content_overrides = [] unless content_overrides
-      content_override_values = content_overrides.map do |content_override_params|
-        validate_content_overrides_enabled(content_override_params, @activation_key)
+        content_override_params = {:content_label => params[:content_override][:content_label]}
+        value = params[:content_override][:value]
+        if value == "default"
+          content_override_params[:remove] = true
+        elsif value
+          content_override_params[:value] = ::Foreman::Cast.to_bool(value)
+        end
+        content_overrides << content_override_params
+      elsif params[:content_overrides]
+        content_overrides = params[:content_overrides]
       end
 
+      content_override_values = content_overrides.map do |override_params|
+        validate_content_overrides_enabled(override_params, @activation_key)
+      end
       @activation_key.set_content_overrides(content_override_values)
       respond_for_show(:resource => @activation_key)
     end

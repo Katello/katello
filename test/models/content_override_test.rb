@@ -24,7 +24,7 @@ module Katello
       assert_equal label2, override2.content_label
     end
 
-    def test_entitlement_hash
+    def test_to_entitlement_hash
       label = "boo"
       value = 1
       override = ContentOverride.new(label)
@@ -39,6 +39,20 @@ module Katello
 
       override.name = nil
       assert_equal({"contentLabel" => label}, override.to_entitlement_hash)
+    end
+
+    def test_from_entitlement_hash
+      label = "boo"
+      value = 1
+      override = ContentOverride.new(label)
+      override.enabled = value
+      assert_equal(override, ContentOverride.from_entitlement_hash(override.to_entitlement_hash))
+
+      override.enabled = 0
+      assert_equal(override, ContentOverride.from_entitlement_hash(override.to_entitlement_hash))
+
+      override.name = "mirrorlist"
+      assert_equal(override, ContentOverride.from_entitlement_hash(override.to_entitlement_hash))
     end
   end
 end
