@@ -12,7 +12,7 @@ Bookmark.without_auditing do
   ]
 
   bookmarks.each do |input|
-    next if audit_modified? Bookmark, input[:name], :controller => input[:controller]
+    next if SeedHelper.audit_modified? Bookmark, input[:name], :controller => input[:controller]
     b = Bookmark.find_or_create_by({ :public => true }.merge(input))
     fail "Unable to create bookmark: #{format_errors b}" if b.nil? || b.errors.any?
   end
