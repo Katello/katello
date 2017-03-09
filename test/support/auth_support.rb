@@ -20,14 +20,26 @@ module Katello
     def ensure_permission_exist(hash)
       perm = Permission.find_by :name => hash[:name]
       return if perm
-      resource_type = hash[:resource_type] || resource_type_from_name(hash[:name])
+      resource_type = hash.key?(:resource_type) ? hash[:resource_type] : resource_type_from_name(hash[:name])
       FactoryGirl.create(:permission, :name => hash[:name], :resource_type => resource_type)
     end
 
     def resource_type_from_name(name)
-      "Katello::#{name.to_s.split('_')[1..-1].join('_').singularize.camelize}".constantize.to_s
-    rescue
-      nil
+      resource_name = name.to_s.split('_')[1..-1].join('_').singularize
+      mapping = {
+        "capsule_content" => "SmartProxy",
+        "lifecycle_environment" => "Katello::KTEnvironment",
+        "or_remove_content_views_to_environment" => "Katello::KTEnvironment",
+        "or_remove_content_view" => "Katello::ContentView"
+      }
+
+      mapping[resource_name] || verify_resource(resource_name.camelize)
+    end
+
+    def verify_resource(name_from_permission)
+      return name_from_permission.camelize.constantize.to_s rescue nil
+      return "Katello::#{name_from_permission.camelize}".constantize.to_s rescue nil
+      fail "Cannot infer resource_type from permission name. If resource_type is meant to be nil, please state it explicitely in your test."
     end
 
     # permissions => can be a permission(s) in one of the following formats
