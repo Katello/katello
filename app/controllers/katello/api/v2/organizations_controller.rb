@@ -7,7 +7,7 @@ module Katello
 
     before_action :local_find_taxonomy, :only => %w(repo_discover cancel_repo_discover
                                                     download_debug_certificate
-                                                    redhat_provider update
+                                                    redhat_provider update service_levels
                                                     autoattach_subscriptions)
 
     resource_description do
@@ -128,10 +128,20 @@ module Katello
                        :resource_name => "providers")
     end
 
+    api :GET, '/organizations/:id/service_levels', N_('List all service levels')
+    def service_levels
+      response = {
+        :results  => @organization.service_levels,
+        :total    => @organization.service_levels.size,
+        :subtotal => @organization.service_levels.size
+      }
+      respond_for_index :collection => response
+    end
+
     protected
 
     def action_permission
-      if %w(download_debug_certificate redhat_provider repo_discover
+      if %w(download_debug_certificate redhat_provider repo_discover service_levels
             cancel_repo_discover autoattach_subscriptions).include?(params[:action])
         :edit
       else

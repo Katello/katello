@@ -4,6 +4,7 @@ Foreman::AccessControl.permission(:view_organizations).actions.concat [
   'katello/api/v2/organizations/index',
   'katello/api/v2/organizations/show',
   'katello/api/v2/organizations/redhat_provider',
+  'katello/api/v2/organizations/service_levels',
   'katello/api/v2/organizations/download_debug_certificate',
   'katello/api/v2/tasks/index'
 ]
