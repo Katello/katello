@@ -224,15 +224,24 @@ module Katello
     end
 
     def test_content_override_bulk
+      overrides = [{:content_label => 'some-content', :name => "enabled", :value => true},
+                   {:content_label => 'some-content1', :value => 0},
+                   {:content_label => 'some-content3', :name => "mirrorlist", :remove => true}
+                  ]
+
+      expected_content_labels = overrides.map { |o| o[:content_label] }
+      expected_names = ["enabled", "enabled", "mirrorlist"]
+      expected_values = ["1", "0", nil]
+
       ActivationKey.expects(:find).returns(@activation_key)
       @activation_key.expects(:set_content_overrides).returns(true).once.with do |params|
-        params.size == 2 && params.map(&:content_label).include?("some-content")
+        params.size == overrides.size &&
+          params.map(&:content_label) == expected_content_labels &&
+          params.map(&:name) == expected_names &&
+          params.map(&:value) == expected_values
       end
 
-      put(:content_override, :id => @activation_key.id, :content_overrides => [{:content_label => 'some-content',
-                                                                                :value => 1},
-                                                                               {:content_label => 'some-content1',
-                                                                                :value => 0}])
+      put(:content_override, :id => @activation_key.id, :content_overrides => overrides)
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'

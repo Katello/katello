@@ -187,16 +187,45 @@ module Katello
     end
 
     def test_content_override
-      Resources::Candlepin::Consumer.expects(:update_content_override).with(@host.subscription_facet.uuid, 'some-content', 'enabled', 1)
+      content_label = "some-content"
+      value = "1"
+      assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides|
+        assert_equal @host, host
+        assert_equal 1, overrides.count
+        assert_equal content_label, overrides.first.content_label
+        assert_equal value, overrides.first.value
+      end
 
-      put :content_override, :host_id => @host.id, :content_label => 'some-content', :value => 1
+      put :content_override, :host_id => @host.id, :content_label => content_label, :value => value
+
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/content_override'
+    end
+
+    def test_content_override_bulk
+      content_overrides = [{:content_label => 'some-content', :value => 1}]
+      expected_content_labels = content_overrides.map { |override| override[:content_label] }
+      assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides|
+        assert_equal @host, host
+        assert_equal content_overrides.count, overrides.count
+        assert_equal expected_content_labels, overrides.map(&:content_label)
+      end
+
+      put :content_override, :host_id => @host.id, :content_overrides => content_overrides
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/content_override'
     end
 
     def test_content_override_accepts_string_values
-      Resources::Candlepin::Consumer.expects(:update_content_override).with(@host.subscription_facet.uuid, 'some-content', 'enabled', 1)
+      content_label = "some-content"
+      value = "1"
+      assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides|
+        assert_equal @host, host
+        assert_equal 1, overrides.count
+        assert_equal content_label, overrides.first.content_label
+        assert_equal value, overrides.first.value
+      end
 
       put :content_override, :host_id => @host.id, :content_label => 'some-content', :value => 'yes'
 

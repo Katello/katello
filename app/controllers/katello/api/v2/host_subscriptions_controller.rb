@@ -1,5 +1,6 @@
 module Katello
   class Api::V2::HostSubscriptionsController < Katello::Api::V2::ApiController
+    include Katello::Concerns::Api::V2::ContentOverridesController
     before_action :find_host, :except => :create
     before_action :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
     before_action :find_content_view_environment, :only => :create
@@ -133,12 +134,34 @@ module Katello
 
     api :PUT, "/hosts/:host_id/subscriptions/content_override", N_("Set content overrides for the host")
     param :host_id, String, :desc => N_("Id of the content host"), :required => true
-    param :content_label, String, :desc => N_("Label of the content"), :required => true
-    param :value, [0, 1, String], :desc => N_("Override to 'yes', 'no', or 'default'"), :required => true
+    param :content_label, String, :desc => N_("Label of the content"), :required => false
+    param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => false
+    param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
+      param :content_label, String, :desc => N_("Label of the content"), :required => true
+      param :value, String, :desc => N_("Override value. Provide a boolean value if name is 'enabled'"), :required => false
+      param :name, String, :desc => N_("Override key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
+      param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
+    end
     def content_override
-      content_override = validate_content_overrides(params)
-      @host.subscription_facet.candlepin_consumer.set_content_override(content_override[:content_label], 'enabled', content_override[:value])
+      content_overrides = []
+      if params[:content_label]
+        ::Foreman::Deprecation.api_deprecation_warning("The parameter content_label will be removed in Katello 3.5. Please update to use the content_overrides parameter.")
+        content_override_params = {:content_label => params[:content_label]}
+        value = params[:value]
+        if value == "default"
+          content_override_params[:remove] = true
+        elsif value
+          content_override_params[:value] = ::Foreman::Cast.to_bool(value)
+        end
+        content_overrides << content_override_params
+      elsif params[:content_overrides]
+        content_overrides = params[:content_overrides]
+      end
 
+      content_override_values = content_overrides.map do |override_params|
+        validate_content_overrides_enabled(override_params, @host)
+      end
+      sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values)
       product_content
     end
 
@@ -160,25 +183,6 @@ module Katello
     end
 
     private
-
-    def validate_content_overrides(content_params)
-      case content_params[:value].to_s.downcase
-      when 'default'
-        content_params[:value] = nil
-      when '1', 'yes'
-        content_params[:value] = 1
-      when '0', 'no'
-        content_params[:value] = 0
-      else
-        fail HttpErrors::BadRequest, _("Value must be 'yes', 'no', or 'default'")
-      end
-
-      available_content = @host.subscription_facet.candlepin_consumer.available_product_content
-      unless available_content.map(&:content).any? { |content| content.label == content_params[:content_label] }
-        fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
-      end
-      content_params
-    end
 
     def find_content_view_environment
       @content_view_environment = Katello::ContentViewEnvironment.where(:content_view_id => params[:content_view_id],

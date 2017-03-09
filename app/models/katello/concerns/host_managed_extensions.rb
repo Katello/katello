@@ -112,6 +112,11 @@ module Katello
         @errata_status_label ||= get_status(::Katello::ErrataStatus).to_label(options)
       end
 
+      def valid_content_override_label?(content_label)
+        available_content = subscription_facet.candlepin_consumer.available_product_content
+        available_content.map(&:content).any? { |content| content.label == content_label }
+      end
+
       protected
 
       def update_trace_status
