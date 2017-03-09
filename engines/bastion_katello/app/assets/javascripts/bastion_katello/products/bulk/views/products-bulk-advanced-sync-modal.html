@@ -1,0 +1,22 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header">Advanced Sync</h4>
+
+  <div data-block="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div data-extend-template="products/details/repositories/details/views/repository-advanced-sync-options.html"></div>
+
+    <div class="help-block">
+      <span translate>
+        Selecting "Complete Sync" will cause only Yum repositories of the selected product to be synced. Selecting "Validate Content" will cause only Yum repositories using the "Immediate" or "Background" download policies will be synced.
+      </span>
+    </div>
+
+
+  </div>
+  <span data-block="modal-confirm-button" translate>Sync</span>
+</div>

@@ -1,4 +1,4 @@
-describe('Controller: ProductsBulkSyncPlanModalController', function() {
+describe('Controller: ProductsBulkAdvancedSyncModalController', function() {
     var $scope, $q, $uibModalInstance, translate, ProductBulkAction, CurrentOrganization, GlobalNotification, bulkParams;
 
     beforeEach(module('Bastion.products'));
@@ -6,10 +6,18 @@ describe('Controller: ProductsBulkSyncPlanModalController', function() {
     beforeEach(function() {
         bulkParams = {ids: [1, 2, 3]};
         ProductBulkAction = {
+            removeProducts: function() {
+                var deferred = $q.defer();
+                return {$promise: deferred.promise};
+            },
             syncProducts: function() {
                 var deferred = $q.defer();
                 return {$promise: deferred.promise};
             },
+            updateProductSyncPlan: function() {
+                var deferred = $q.defer();
+                return {$promise: deferred.promise};
+            }
         };
 
         $uibModalInstance = {
@@ -30,7 +38,7 @@ describe('Controller: ProductsBulkSyncPlanModalController', function() {
             getSelected: function () { return selected; }
         };
 
-        $controller('ProductsBulkAdvancedSyncModalController', {
+        $controller('ProductsBulkSyncPlanModalController', {
             $scope: $scope,
             $uibModalInstance: $uibModalInstance,
             bulkParams: bulkParams,
@@ -41,23 +49,22 @@ describe('Controller: ProductsBulkSyncPlanModalController', function() {
         });
     }));
 
-    it("allows skip_metadata_generate sync", function() {
-        spyOn(ProductBulkAction, 'syncProducts').and.callThrough();
+    it("allows the updating of the sync plan", function() {
+        spyOn(ProductBulkAction, 'updateProductSyncPlan').and.callThrough();
 
-        $scope.syncType = 'skipMetadataCheck';
-        $scope.ok();
+        $scope.selectedSyncPlan = {id: 10};
+        $scope.updateSyncPlan();
 
-        expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3], 'skip_metadata_check': true},
+        expect(ProductBulkAction.updateProductSyncPlan).toHaveBeenCalledWith({ids: [1, 2, 3], 'plan_id': 10},
             jasmine.any(Function), jasmine.any(Function));
     });
 
-    it("allows validate_contents sync", function() {
-        spyOn(ProductBulkAction, 'syncProducts').and.callThrough();
+    it("allows the removal of the sync plan", function() {
+        spyOn(ProductBulkAction, 'updateProductSyncPlan').and.callThrough();
 
-        $scope.syncType = 'validateContents';
-        $scope.ok();
+        $scope.removeSyncPlan();
 
-        expect(ProductBulkAction.syncProducts).toHaveBeenCalledWith({ids: [1, 2, 3], 'validate_contents': true},
+        expect(ProductBulkAction.updateProductSyncPlan).toHaveBeenCalledWith({ids: [1, 2, 3], 'plan_id': null},
             jasmine.any(Function), jasmine.any(Function));
     });
 
@@ -72,5 +79,4 @@ describe('Controller: ProductsBulkSyncPlanModalController', function() {
         $scope.cancel();
         expect($uibModalInstance.dismiss).toHaveBeenCalled();
     });
-
 });

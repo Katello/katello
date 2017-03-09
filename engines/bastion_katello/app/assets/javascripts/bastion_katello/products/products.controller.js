@@ -111,6 +111,20 @@ angular.module('Bastion.products').controller('ProductsController',
             });
         };
 
+        $scope.openAdvancedSyncModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'products/bulk/views/products-bulk-advanced-sync-modal.html',
+                controller: 'ProductsBulkAdvancedSyncModalController',
+                size: 'lg',
+                resolve: {
+                    bulkParams: function () {
+                        return getBulkParams();
+                    }
+                }
+            });
+        };
+
         $scope.removeProducts = function () {
             var success;
 
