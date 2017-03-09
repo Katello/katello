@@ -23,13 +23,27 @@ module Katello
 
     api :PUT, "/products/bulk/sync", N_("Sync one or more products")
     param :ids, Array, :desc => N_("List of product ids"), :required => true
+    param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Non-yum repositories are skipped."), :required => false
+    param :validate_contents, :bool, :desc => N_("Force a sync and validate the checksums of all content. Non-yum repositories (or those with \
+                                                     On Demand download policy) are skipped."), :required => false
     def sync_products
+      skip_metadata_check = ::Foreman::Cast.to_bool(params[:skip_metadata_check])
+      validate_contents = ::Foreman::Cast.to_bool(params[:validate_contents])
+
       syncable_products = @products.syncable
       syncable_repositories = Repository.where(:product_id => syncable_products).has_url
 
+      syncable_repositories = syncable_repositories.where(:content_type => Repository::YUM_TYPE) if skip_metadata_check || validate_contents
+      syncable_repositories = syncable_repositories.where.not(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND) if validate_contents
+
+      fail _("No syncable repositories found for selected products and options.") if syncable_repositories.empty?
+
       task = async_task(::Actions::BulkAction,
                         ::Actions::Katello::Repository::Sync,
-                        syncable_repositories)
+                        syncable_repositories,
+                        nil,
+                        :skip_metadata_check => skip_metadata_check,
+                        :validate_contents => validate_contents)
 
       respond_for_async :resource => task
     end

@@ -5,60 +5,7 @@
 
   <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
 
-  <div class="radio">
-    <label>
-      <input type="radio" ng-model="syncType" value="standard" />
-      <span translate>
-        Optimized Sync
-      </span>
-    </label>
-    <div class="help-block">
-      <span translate>
-        Standard sync, optimized for speed by bypassing any unneeded steps.
-      </span>
-    </div>
-  </div>
-
-  <div class="radio">
-    <label>
-      <input type="radio" ng-model="syncType" value="skipMetadataCheck" />
-      <span translate>
-        Complete Sync
-      </span>
-    </label>
-    <div class="help-block">
-      <span translate>
-        Sync even if the upstream metadata appears to have no change.  This option will take longer than a normal sync.  Choose this option if:
-      </span>
-      <ul class="list-aligned">
-        <li translate>One or more RPMs are not showing up in the local repository even though they exist in the upstream repository.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="radio">
-    <label>
-      <input type="radio" ng-model="syncType" value="validateContents" />
-      <span translate>
-        Validate Content
-      </span>
-    </label>
-    <div class="help-block">
-      <span translate>
-        Performs a complete sync, verifying the checksum of all packages afterwards.  Any missing or corrupt RPMs will be re-downloaded.  This option will take the longest amount of time.  Choose this option if:
-      </span>
-      <ul class="list-aligned">
-        <li translate>Specific RPMs are throwing a 404 from yum or dnf.</li>
-        <li translate>RPMs are corrupt, often leading to an error "Package does not match intended download".</li>
-      </ul>
-      <span ng-show="repository.download_policy === 'on_demand'">
-        <i class="fa fa-warning"></i>
-        <span translate>
-          When validating content, repositories using the "On Demand" download policy will download all packages within the repository.
-        </span>
-      </span>
-    </div>
-  </div>
+  <div data-extend-template="products/details/repositories/details/views/repository-advanced-sync-options.html"></div>
 
   <div class="control-group buttons">
     <button class="btn btn-primary"

@@ -26,6 +26,12 @@ module Katello
       permissions
     end
 
+    def create_docker_repo
+      FactoryGirl.create(:katello_repository, :docker, :product_id => @products.first.id, :environment => @organization.library,
+                         :content_view_version => @organization.default_content_view.versions.first, :url => 'http://foo.com/foo',
+                         :docker_upstream_name => 'foobar', :unprotected => true)
+    end
+
     def test_destroy_products
       test_product = @products.first
       assert_async_task ::Actions::Katello::Product::Destroy do |product|
@@ -53,6 +59,35 @@ module Katello
       end
 
       put :sync_products, :ids => @products.collect(&:id), :organization_id => @organization.id
+
+      assert_response :success
+    end
+
+    def test_sync_with_skip_metadata_check
+      create_docker_repo
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
+        action_class.must_equal ::Actions::Katello::Repository::Sync
+        refute repos.empty?
+        assert repos.all? { |repo| repo.yum? }
+      end
+
+      put :sync_products, :ids => @products.collect(&:id), :organization_id => @organization.id, :skip_metadata_check => true
+
+      assert_response :success
+    end
+
+    def test_sync_with_validate_contents
+      create_docker_repo
+      FactoryGirl.create(:katello_repository, :content_type => 'yum', :product_id => @products.first.id, :environment => @organization.library,
+                         :content_view_version => @organization.default_content_view.versions.first, :download_policy => 'on_demand')
+
+      assert_async_task(::Actions::BulkAction) do |action_class, repos|
+        action_class.must_equal ::Actions::Katello::Repository::Sync
+        refute repos.empty?
+        assert repos.all? { |repo| repo.yum? } && repos.all? { |repo| repo.download_policy != ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND }
+      end
+
+      put :sync_products, :ids => @products.collect(&:id), :organization_id => @organization.id, :validate_contents => true
 
       assert_response :success
     end
