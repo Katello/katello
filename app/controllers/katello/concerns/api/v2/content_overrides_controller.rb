@@ -8,14 +8,16 @@ module Katello
         name = content_params[:name] || "enabled"
         compare_value = content_params[:value].to_s.downcase
         remove = content_params.key?(:remove) ? Foreman::Cast.to_bool(content_params[:remove]) : nil
+        content_label = content_params[:content_label]
 
-        if remove.nil? && name == "enabled" &&
+        if !remove && name == "enabled" &&
                        (compare_value.blank? || (compare_value != "default" &&
                         ::Foreman::Cast.to_bool(compare_value).nil?))
           fail HttpErrors::BadRequest, _("Value must either be a boolean or 'default' for 'enabled'")
         end
 
-        if overriden_object && !overriden_object.valid_content_override_label?(content_params[:content_label])
+        if content_label.blank? || (overriden_object &&
+                                    !overriden_object.valid_content_override_label?(content_label))
           fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
         end
 

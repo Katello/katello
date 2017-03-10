@@ -161,7 +161,7 @@ module Katello
       content_override_values = content_overrides.map do |override_params|
         validate_content_overrides_enabled(override_params, @host)
       end
-      sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values)
+      sync_task(::Actions::Katello::Host::UpdateContentOverrides, @host, content_override_values, false)
       product_content
     end
 
