@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::HostsBulkActionsController < Api::V2::ApiController
     include Concerns::Api::V2::BulkHostsExtensions
+    include Katello::Concerns::Api::V2::ContentOverridesController
 
     before_action :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, :only => [:environment_content_view]
@@ -172,6 +173,24 @@ module Katello
     param_group :bulk_params
     def auto_attach
       task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::AutoAttachSubscriptions, @hosts)
+      respond_for_async :resource => task
+    end
+
+    api :PUT, "/hosts/bulk/subscriptions/content_overrides", N_("Set content overrides to one or more hosts")
+    param_group :bulk_params
+    param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
+      param :content_label, String, :desc => N_("Label of the content"), :required => true
+      param :value, String, :desc => N_("Override value. Provide a boolean value if name is 'enabled'"), :required => false
+      param :name, String, :desc => N_("Override key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
+      param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
+    end
+    def content_overrides
+      content_overrides = params[:content_overrides] || []
+      content_override_values = content_overrides.map do |content_override_params|
+        validate_content_overrides_enabled(content_override_params)
+      end
+
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateContentOverrides, @hosts, content_override_values)
       respond_for_async :resource => task
     end
 

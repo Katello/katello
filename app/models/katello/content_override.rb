@@ -4,7 +4,12 @@ module Katello
 
     def initialize(content_label, params = {})
       @content_label = content_label
-      self.enabled = params[:enabled] if params.key?(:enabled)
+      if params.key?(:enabled)
+        self.enabled = params[:enabled]
+      else
+        @name = params[:name]
+        @value = params[:value]
+      end
     end
 
     def enabled=(value = nil)
@@ -41,6 +46,18 @@ module Katello
       self.content_label == other.content_label &&
         self.name == other.name &&
         self.value == other.value
+    end
+
+    def to_hash
+      {"content_label" => @content_label, "name" => @name, "value" => @value}
+    end
+
+    def self.fetch(params)
+      if params.is_a?(ContentOverride)
+        params
+      else
+        ContentOverride.new(params["content_label"], :name => params["name"], :value => params["value"])
+      end
     end
   end
 end
