@@ -65,6 +65,7 @@ Foreman::Application.routes.draw do
             match '/bulk/add_subscriptions' => 'hosts_bulk_actions#add_subscriptions', :via => :put
             match '/bulk/remove_subscriptions' => 'hosts_bulk_actions#remove_subscriptions', :via => :put
             match '/bulk/auto_attach' => 'hosts_bulk_actions#auto_attach', :via => :put
+            match '/bulk/content_overrides' => 'hosts_bulk_actions#content_overrides', :via => :put
 
             match '/bulk/install_content' => 'hosts_bulk_actions#install_content', :via => :put
             match '/bulk/installable_errata' => 'hosts_bulk_actions#installable_errata', :via => :post
