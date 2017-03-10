@@ -227,6 +227,33 @@ module Katello
       assert_response :success
     end
 
+    def test_subscription_permissions
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
+
+      pool = katello_pools(:pool_one)
+
+      assert_protected_action(:content_overrides, good_perms, bad_perms) do
+        put :content_overrides, :included => {:ids => @host_ids},
+            :content_overrides => [{:content_label => 'some-content', :value => 1}]
+      end
+
+      assert_protected_action(:add_subscriptions, good_perms, bad_perms) do
+        put :add_subscriptions, :included => {:ids => @host_ids},
+            :subscriptions => [{:id => pool.id, :quantity => 1}]
+      end
+
+      assert_protected_action(:remove_subscriptions, good_perms, bad_perms) do
+        put :remove_subscriptions, :included => {:ids => @host_ids},
+            :subscriptions => [{:id => pool.id, :quantity => 1}]
+      end
+
+      assert_protected_action(:auto_attach, good_perms, bad_perms) do
+        put :auto_attach, :included => {:ids => @host_ids}
+      end
+    end
+
     def test_add_subscriptions
       pool = katello_pools(:pool_one)
 
@@ -237,7 +264,7 @@ module Katello
         assert_equal pool, pools_with_quantities[0].pool
         assert_equal ["1"], pools_with_quantities[0].quantities
       end
-      post :add_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
+      put :add_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
       assert_response :success
     end
 
@@ -251,7 +278,7 @@ module Katello
         assert_equal pool, pools_with_quantities[0].pool
         assert_equal ["1"], pools_with_quantities[0].quantities
       end
-      post :remove_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
+      put :remove_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
       assert_response :success
     end
 
@@ -261,7 +288,25 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
-      post :auto_attach, :included => {:ids => @host_ids}
+      put :auto_attach, :included => {:ids => @host_ids}
+      assert_response :success
+    end
+
+    def test_content_overrides
+      expected_content_overrides = [{:content_label => 'some-content', :value => 1},
+                                    {:content_label => 'some-content2', :value => "default"}]
+      expected_content_labels = expected_content_overrides.map { |override| override[:content_label] }
+      expected_values = ["1", nil]
+
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts, content_overrides|
+        assert_equal action_class, ::Actions::Katello::Host::UpdateContentOverrides
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+        assert_equal expected_content_overrides.size, content_overrides.size
+        assert_equal expected_content_labels, content_overrides.map(&:content_label)
+        assert_equal expected_values, content_overrides.map(&:value)
+      end
+      put :content_overrides, :included => {:ids => @host_ids}, :content_overrides => expected_content_overrides
       assert_response :success
     end
   end
