@@ -28,6 +28,7 @@ module Katello
       resource_name = name.to_s.split('_')[1..-1].join('_').singularize
       mapping = {
         "capsule_content" => "SmartProxy",
+        "manifest" => "Katello::Subscription",
         "lifecycle_environment" => "Katello::KTEnvironment",
         "or_remove_content_views_to_environment" => "Katello::KTEnvironment",
         "or_remove_content_view" => "Katello::ContentView"
