@@ -7,6 +7,7 @@ module Actions
         end
 
         def plan(repository, input = {})
+          input[:capsule_id] ||= SmartProxy.default_capsule!.id
           repository_details = pulp_extensions(input[:capsule_id]).repository.retrieve_with_details(repository.pulp_id)
           update_or_associate_importer(input[:capsule_id], repository, repository_details)
           update_or_associate_distributors(input[:capsule_id], repository, repository_details)
