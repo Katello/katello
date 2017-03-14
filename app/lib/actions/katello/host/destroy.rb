@@ -43,6 +43,7 @@ module Actions
         def destroy_host_artifacts(host)
           host.get_status(::Katello::ErrataStatus).destroy
           host.get_status(::Katello::SubscriptionStatus).destroy
+          host.get_status(::Katello::TraceStatus).destroy
           host.installed_packages.destroy_all
         end
 
