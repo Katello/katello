@@ -254,32 +254,9 @@ module Katello
     end
 
     rake_tasks do
-      load "#{Katello::Engine.root}/lib/katello/tasks/test.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/jenkins.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/setup.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/delete_orphaned_content.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/repository.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/reimport.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/unify_hosts.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrade_check.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/import_applicability.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/clean_published_repo_directories.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/virt_who_report.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/update_subscription_facet_backend_data.rake"
-
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_package_groups.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_rpms.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_distributions.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_puppet_modules.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/2.4/import_subscriptions.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/add_export_distributor.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/delete_docker_v1_content.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/update_puppet_repository_distributors.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.0/update_subscription_facet_backend_data.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.3/import_subscriptions.rake"
-      load "#{Katello::Engine.root}/lib/katello/tasks/upgrades/3.3/hypervisors.rake"
+      Dir["#{Katello::Engine.root}/lib/katello/tasks/**/*"].each do |task|
+        load task if File.file?(task)
+      end
     end
   end
 
