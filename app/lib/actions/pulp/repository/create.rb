@@ -31,6 +31,9 @@ module Actions
                                                     importer,
                                                     distributors,
                                                     display_name: input[:name])
+        rescue RestClient::Conflict
+          Rails.logger.warn("Tried to add repository #{input[:pulp_id]} that already exists.")
+          []
         end
 
         def importer
