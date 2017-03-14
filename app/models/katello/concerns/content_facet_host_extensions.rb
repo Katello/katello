@@ -11,9 +11,18 @@ module Katello
           :unknown => Katello::ErrataStatus::UNKNOWN
         }.freeze
 
+        TRACE_STATUS_MAP = {
+          :reboot_needed => Katello::TraceStatus::REQUIRE_REBOOT,
+          :process_restart_needed => Katello::TraceStatus::REQUIRE_PROCESS_RESTART,
+          :updated => Katello::TraceStatus::UP_TO_DATE
+        }.freeze
+
         has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id'
         scoped_search :on => :status, :relation => :errata_status_object, :rename => :errata_status,
                      :complete_value => ERRATA_STATUS_MAP
+        has_one :trace_status_object, :class_name => 'Katello::TraceStatus', :foreign_key => 'host_id'
+        scoped_search :on => :status, :relation => :trace_status_object, :rename => :trace_status,
+                     :complete_value => TRACE_STATUS_MAP
 
         #associations for simpler scoped searches
         has_one :content_view, :through => :content_facet

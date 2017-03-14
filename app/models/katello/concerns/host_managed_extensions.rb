@@ -89,6 +89,7 @@ module Katello
         tracer_profile.each do |trace, attributes|
           self.host_traces.create!(:application => trace, :helper => attributes[:helper], :app_type => attributes[:type])
         end
+        self.update_trace_status
       end
 
       def subscription_status
@@ -109,6 +110,13 @@ module Katello
 
       def errata_status_label(options = {})
         @errata_status_label ||= get_status(::Katello::ErrataStatus).to_label(options)
+      end
+
+      protected
+
+      def update_trace_status
+        self.get_status(::Katello::TraceStatus).refresh!
+        self.refresh_global_status!
       end
     end
   end
