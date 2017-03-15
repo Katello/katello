@@ -404,8 +404,11 @@ module Katello
         fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
                                                                        unless content_classes[content_type]
         criteria = {}
-        if content_type == Runcible::Extensions::Rpm.content_type
+        case content_type
+        when Runcible::Extensions::Rpm.content_type
           criteria[:fields] = Pulp::Rpm::PULP_SELECT_FIELDS
+        when Runcible::Extensions::Errata.content_type
+          criteria[:fields] = Pulp::Erratum::PULP_SELECT_FIELDS
         end
 
         if filter_clauses && !filter_clauses.empty?
@@ -434,7 +437,9 @@ module Katello
 
           # Since the rpms will be copied above, during the copy of errata and package groups,
           # include the copy_children flag to request that pulp skip copying them again.
-          events << Katello.pulp_server.extensions.errata.copy(self.pulp_id, to_repo.pulp_id, :copy_children => false)
+          events << Katello.pulp_server.extensions.errata.copy(self.pulp_id, to_repo.pulp_id,
+                                                    :fields => Pulp::Erratum::PULP_SELECT_FIELDS,
+                                                    :copy_children => false)
           events << Katello.pulp_server.extensions.package_group.copy(self.pulp_id, to_repo.pulp_id, :copy_children => false)
           events << clone_file_metadata(to_repo)
         end
@@ -448,8 +453,11 @@ module Katello
 
       def unassociate_by_filter(content_type, filter_clauses)
         criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
-        if content_type == Katello.pulp_server.extensions.rpm.content_type
+        case content_type
+        when Katello.pulp_server.extensions.rpm.content_type
           criteria[:fields] = { :unit => Pulp::Rpm::PULP_SELECT_FIELDS}
+        when Katello.pulp_server.extensions.errata.content_type
+          criteria[:fields] = { :unit => Pulp::Erratum::PULP_SELECT_FIELDS}
         end
         Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id, criteria)
       end
