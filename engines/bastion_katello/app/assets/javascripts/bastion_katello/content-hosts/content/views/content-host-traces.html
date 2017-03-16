@@ -33,7 +33,11 @@
       <div bst-modal="performViaRemoteExecution(false)" model="host">
         <div data-block="modal-header" translate>Restart Services on Content Host "{{host.name}}"?</div>
         <div data-block="modal-body" translate>Are you sure you want to restart services on content host "{{ host.name }}"?</div>
-        <div data-block="modal-confirm-button" translate>Restart</div>
+        <span data-block="modal-confirm-button">
+          <button class="btn btn-primary" ng-click="ok()">
+            <span translate>Restart</span>
+          </button>
+        </span>
       </div>
 
       <span bst-feature-flag="remote_actions">
