@@ -61,6 +61,7 @@
               <input class="form-control"
                      ng-hide="denied('edit_content_views', contentView)"
                      ng-model="rule.name"
+                     uib-typeahead="name for name in fetchAutocompleteName($viewValue)"
                      ng-readonly="!rule.editMode"/>
             </div>
           </td>
@@ -70,7 +71,7 @@
               <input class="form-control"
                      ng-hide="denied('edit_content_views', contentView)"
                      ng-model="rule.architecture"
-                     typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
+                     uib-typeahead="arch for arch in fetchAutocompleteArch($viewValue)"
                      ng-readonly="!rule.editMode"/>
             </div>
           </td>
