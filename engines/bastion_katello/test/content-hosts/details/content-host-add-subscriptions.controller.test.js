@@ -40,6 +40,7 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             getSelected: function() {
                 return expectedRows;
             },
+            params: {},
             rows: function () {
                 return expectedRows;
             },
@@ -74,11 +75,6 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
             id: 12345
         });
 
-        $scope.addSubscriptionsPane = {
-            refresh: function() {},
-            table: {}
-        };
-
         $scope.$stateParams = {hostId: $scope.host.id};
 
         $controller('ContentHostAddSubscriptionsController', {
@@ -107,6 +103,26 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
         $scope.$digest();
 
         expect(SubscriptionsHelper.groupByProductName).toHaveBeenCalledWith(expected)
+    });
+
+    it("defaults filters to false", function () {
+        expect($scope.showMatchHost).toBe(false);
+        expect($scope.showMatchInstalled).toBe(false);
+        expect($scope.showNoOverlap).toBe(false);
+    });
+
+    it("provides a method to toggle the filters", function () {
+        $scope.showMatchHost = true;
+        $scope.showMatchInstalled = true;
+        $scope.showNoOverlap = true;
+        spyOn($scope.nutupane, 'refresh');
+
+        $scope.toggleFilters();
+
+        expect($scope.nutupane.table.params['match_host']).toBe(true);
+        expect($scope.nutupane.table.params['match_installed']).toBe(true);
+        expect($scope.nutupane.table.params['no_overlap']).toBe(true);
+        expect($scope.nutupane.refresh).toHaveBeenCalled();
     });
 
     it("disables the add subscription button if necessary", function () {
