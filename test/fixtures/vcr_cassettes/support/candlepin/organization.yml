@@ -192,4 +192,102 @@ http_interactions:
       base64_string: ''
     http_version: 
   recorded_at: Fri, 05 Feb 2016 17:34:38 GMT
-recorded_with: VCR 2.9.3
+- request:
+    method: post
+    uri: https://hamburger.example.com:8443/candlepin/owners/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJrZXkiOiJyZWdlbmVyYXRlX3VlYmVyX2NlcnRzX29yZyIsImRpc3BsYXlO
+        YW1lIjoicmVnZW5lcmF0ZV91ZWJlcl9jZXJ0c19vcmciLCJjb250ZW50UHJl
+        Zml4IjoiL3JlZ2VuZXJhdGVfdWViZXJfY2VydHNfb3JnLyRlbnYifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="RcjeFKzyjC7tNHihPC5JCXRqEbfWaaZ6",
+        oauth_nonce="WHiNri24qTBWnsK1UXmGxvqmOuFimqHpa0B3o35IA", oauth_signature="qUX8PYa%2FwnXlHjbFJUDM%2FkIIVgU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1490023031", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '130'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - fdfede8b-129a-4b3f-8a54-a192c524846c
+      X-Version:
+      - 2.0.26-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 20 Mar 2017 15:17:11 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJwYXJlbnRPd25lciI6bnVsbCwiaWQiOiI0MDI4Zjk0NTVhZWMwZTZhMDE1
+        YWVjNGIyMTJmMDAwMyIsImtleSI6InJlZ2VuZXJhdGVfdWViZXJfY2VydHNf
+        b3JnIiwiZGlzcGxheU5hbWUiOiJyZWdlbmVyYXRlX3VlYmVyX2NlcnRzX29y
+        ZyIsImNvbnRlbnRQcmVmaXgiOiIvcmVnZW5lcmF0ZV91ZWJlcl9jZXJ0c19v
+        cmcvJGVudiIsImRlZmF1bHRTZXJ2aWNlTGV2ZWwiOm51bGwsInVwc3RyZWFt
+        Q29uc3VtZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJhdXRvYmluZERpc2Fi
+        bGVkIjpudWxsLCJjb250ZW50QWNjZXNzTW9kZSI6bnVsbCwiY29udGVudEFj
+        Y2Vzc01vZGVMaXN0IjpudWxsLCJocmVmIjoiL293bmVycy9yZWdlbmVyYXRl
+        X3VlYmVyX2NlcnRzX29yZyIsImNyZWF0ZWQiOiIyMDE3LTAzLTIwVDE1OjE3
+        OjExKzAwMDAiLCJ1cGRhdGVkIjoiMjAxNy0wMy0yMFQxNToxNzoxMSswMDAw
+        In0=
+    http_version: 
+  recorded_at: Mon, 20 Mar 2017 15:17:11 GMT
+- request:
+    method: delete
+    uri: https://hamburger.example.com:8443/candlepin/owners/regenerate_ueber_certs_org
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - OAuth oauth_consumer_key="RcjeFKzyjC7tNHihPC5JCXRqEbfWaaZ6", oauth_nonce="oY0IMoIf7cNf6myfYMWhZBneJZUtkH8I5DWn1S0OLK0",
+        oauth_signature="%2Bzn6SudCIfVp7IxElIBh7lIRJP8%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1490023787", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - b407c1fe-7994-49c2-a1c4-d235593d5662
+      X-Version:
+      - 2.0.26-1
+      Date:
+      - Mon, 20 Mar 2017 15:29:47 GMT
+    body:
+      encoding: UTF-8
+      base64_string: ''
+    http_version: 
+  recorded_at: Mon, 20 Mar 2017 15:29:47 GMT
+recorded_with: VCR 3.0.3
