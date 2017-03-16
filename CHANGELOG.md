@@ -1,3 +1,65 @@
+# 3.3.1 Baltic Porter (2017-03-16)
+
+## Features 
+
+## Bug Fixes 
+
+### Upgrades
+ * katello 3.3.1 rc upgrade fails "NoMethodError: undefined method `default_capsule?' for nil:NilClass" ([#18886](http://projects.theforeman.org/issues/18886), [9a480e48](http://github.com/katello/katello/commit/9a480e48844e59d36298d9f05eef97be25415ee8))
+ * foreman-proxy-certs-generate overwrites /etc/httpd/conf.d/pulp.conf wrongfully on katello ([#18402](http://projects.theforeman.org/issues/18402), [12102b60](http://github.com/katello//commit/12102b60306abd30feb6d0ab6969269a7c3dea4c))
+ * Failed upgrade step doesn't prevent the following steps to proceed ([#17191](http://projects.theforeman.org/issues/17191), [24ef11bb](http://github.com/katello//commit/24ef11bbe83162dae7dd64b47a3544a6820491fb))
+ * upgrade failed at update_subscription_facet_backend_data (undefined method `inject' for nil:NilClass) ([#17612](http://projects.theforeman.org/issues/17612), [4f414f3d](http://github.com/katello/katello/commit/4f414f3d37ea05ee7529759acb130112814b50a7))
+
+### Documentation
+ * Documentation Katello 3.2 upgrade documentation failure ([#18840](http://projects.theforeman.org/issues/18840))
+ * Katello 3.3 Upgarde documentation wrong Repository URL provided ([#18839](http://projects.theforeman.org/issues/18839))
+ * Katello Capsule Upgrade to 3.3 ([#18714](http://projects.theforeman.org/issues/18714))
+ * Unrecognised option ([#18535](http://projects.theforeman.org/issues/18535))
+
+### Repositories
+ * RedHat Content sync stops working after upload of manifest ([#18816](http://projects.theforeman.org/issues/18816), [51811d4d](http://github.com/katello/katello/commit/51811d4d8d0b1b96d96cf6354d84620fa366b7f5))
+ * cannot disable repo of orphaned product ([#17607](http://projects.theforeman.org/issues/17607), [99741423](http://github.com/katello/katello/commit/9974142353f77b53522c184e52b24751bd32de3c))
+
+### Installer
+ * certs-tar option requires the absolute path but the result message of the foreman-installer does not ([#18797](http://projects.theforeman.org/issues/18797))
+ * Clarify Java version check ([#18537](http://projects.theforeman.org/issues/18537), [1f80ab65](http://github.com/katello//commit/1f80ab65271af6d55892682a4895f537903582b4))
+ * Going from signed ca/server cert back to self signed cert causes errors ([#18322](http://projects.theforeman.org/issues/18322), [2b4081ea](http://github.com/katello//commit/2b4081ea7730092b038bbc6ef341d63d97d96a21))
+ * Remove red error message on gutterball/elasticsearch during upgrade if already removed ([#18307](http://projects.theforeman.org/issues/18307), [c2c8933b](http://github.com/katello//commit/c2c8933b4d8caff4b719c83ccf82eee4cc4d1dfe))
+ * foreman-installer -v --scenario katello --noop deletes pulp.conf ([#18132](http://projects.theforeman.org/issues/18132), [e1c00d97](http://github.com/katello//commit/e1c00d97adbba419140b50b65b2458ea0cda3be9))
+ * unable to install katello with puppet 4 ([#17376](http://projects.theforeman.org/issues/17376))
+
+### Hosts
+ * Content host add/remove subscription lists columns span multiple column headers ([#18699](http://projects.theforeman.org/issues/18699))
+ * Undefined constant Katello::System ([#18621](http://projects.theforeman.org/issues/18621), [630b33f5](http://github.com/katello/katello/commit/630b33f5ab5291a2a9a46a146fcce3284284cd7e))
+ * ActiveRecord::StatementInvalid on host registration ([#18122](http://projects.theforeman.org/issues/18122), [98bb66d8](http://github.com/katello/katello/commit/98bb66d8b960e56a90401128313d2d5d996d11de), [62b30487](http://github.com/katello/katello/commit/62b304870cbe5d8d2916226bda7be2842e225eee))
+ * New host creation ignores permissions for lifecycle envs, content views, and conent sources (smart proxies) ([#17176](http://projects.theforeman.org/issues/17176), [b5202aef](http://github.com/katello/katello/commit/b5202aefc6fc40124aa781dfc50fbcc1b42f2503))
+
+### Puppet
+ * Puppet upgrade from 3 to 4: foreman-installer --upgrade-puppet fails on cp of ssl files ([#18548](http://projects.theforeman.org/issues/18548), [0f7ea8bc](http://github.com/katello//commit/0f7ea8bc942ebe138ea69a226f50bd24cd9ed632))
+ * Content view publishing puppet modules to wrong directory ([#17617](http://projects.theforeman.org/issues/17617), [2b86ed7e](http://github.com/katello/katello/commit/2b86ed7e8d19977dc47a6d10159b88146213441f), [b0c5c13e](http://github.com/katello//commit/b0c5c13ed2b414412bdfbe411c72854039ea4a1f))
+
+### Errata Management
+ * applicablity import job logs an error w/ stack instead of warning when host isnt found ([#18486](http://projects.theforeman.org/issues/18486), [6ccc80f1](http://github.com/katello/katello/commit/6ccc80f195012978bd09f36c2107049c615fa2ca))
+ * showing Content -> Errata with "Installable" checkbox checked hakes too much time and memory when on scale ([#18376](http://projects.theforeman.org/issues/18376), [bd158ce1](http://github.com/katello/katello/commit/bd158ce127aac9e6becbe28b97b533ec79947295))
+
+### Content Views
+ * `hammer content-view [add-version|remove-version|copy|update|delete]` missing organization options ([#18351](http://projects.theforeman.org/issues/18351), [0b917e2d](http://github.com/katello//commit/0b917e2d5efb9f9e6a907d2fb2cd575910c167ff))
+ * During selection of puppet module - "Use Latest" is incorrectly pointing to lower version than available in the repo ([#16327](http://projects.theforeman.org/issues/16327), [601291e3](http://github.com/katello/katello/commit/601291e3e215f23d25afc33af4af125fa5c55366))
+
+### Hammer
+ * Inconsistent Package Name when Uploading content into Repository via Web UI and Hammer CLI ([#17489](http://projects.theforeman.org/issues/17489), [22c390c9](http://github.com/katello/katello/commit/22c390c98adcbbc46e67c598ec8e3282b0e00eba))
+
+### Client/Agent
+ * Katello Agent RPM missing from fedora repos ([#15485](http://projects.theforeman.org/issues/15485))
+ * systems where 'hostname -f' returns an error fails registration ([#17721](http://projects.theforeman.org/issues/17721), [1544376d](http://github.com/katello/puppet-certs/commit/1544376db06fbe9b73e412758f67b00bd4870915))
+
+### Other
+ * Installer fails on Puppet 4 upgrade with no class Katello::Helpers ([#18890](http://projects.theforeman.org/issues/18890), [d8c68d12](http://github.com/katello//commit/d8c68d12c7e4c7f2e6996bb53800a879d7e8141b))
+ * Content Views Create/Promotion Fails with "undefined method '[]' for nil:NilClass (NoMethodError)  ([#18793](http://projects.theforeman.org/issues/18793), [ef20b996](http://github.com/katello/katello/commit/ef20b99665c41c1470e880704fcb83010d08b062))
+ * Upgrading to katello 3.3 from 3.2 breaks pulp certificate verification ([#18730](http://projects.theforeman.org/issues/18730))
+ * status emails contain HTML directives ([#18529](http://projects.theforeman.org/issues/18529), [ffe7dec8](http://github.com/katello/katello/commit/ffe7dec868358933e2a681ebe5736d51c1d5f3d4))
+ * Org destroy not unassociating host groups ([#15340](http://projects.theforeman.org/issues/15340), [c6a4c5bf](http://github.com/katello/katello/commit/c6a4c5bf14b009651ba9b90f8cd0c604f27cc4f6))
+ * Unattended template doesn't call 'built' ([#17903](http://projects.theforeman.org/issues/17903), [d3541c40](http://github.com/katello/katello/commit/d3541c40379d9dab7f4511199c0f9a0b1228d183))
 # 3.3 Baltic Porter (2017-02-23)
 
 ## Features 
