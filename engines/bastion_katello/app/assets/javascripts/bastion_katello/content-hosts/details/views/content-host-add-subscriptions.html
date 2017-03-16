@@ -11,6 +11,23 @@
      </button>
   </div>
 
+  <div data-block="filters">
+    <label class="checkbox-inline" title="{{ 'Only show Subscriptions which can be attached to this Host' | translate }}">
+      <input type="checkbox" ng-model="showMatchHost" ng-change="toggleFilters()"/>
+      <span translate>Applicable to Host</span>
+    </label>
+
+    <label class="checkbox-inline" title="{{ 'Only show Subscriptions which can be applied to products installed on this Host' | translate }}">
+      <input type="checkbox" ng-model="showMatchInstalled" ng-change="toggleFilters()"/>
+      <span translate>Installed Products</span>
+    </label>
+
+    <label class="checkbox-inline" title="{{ 'Only show Subscriptions for products not already covered by a Subscription' | translate }}">
+      <input type="checkbox" ng-model="showNoOverlap" ng-change="toggleFilters()"/>
+      <span translate>Products not covered</span>
+    </label>
+  </div>
+
   <span data-block="no-rows-message" translate>
       You currently don't have any Products to subscribe to, you can add Products after selecting 'Products' under 'Content' in the main menu
   </span>

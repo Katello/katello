@@ -40,6 +40,17 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
 
         $scope.getAmountSelectorValues = SubscriptionsHelper.getAmountSelectorValues;
 
+        $scope.showMatchHost = false;
+        $scope.showMatchInstalled = false;
+        $scope.showNoOverlap = false;
+
+        $scope.toggleFilters = function () {
+            $scope.nutupane.table.params['match_host'] = $scope.showMatchHost;
+            $scope.nutupane.table.params['match_installed'] = $scope.showMatchInstalled;
+            $scope.nutupane.table.params['no_overlap'] = $scope.showNoOverlap;
+            $scope.nutupane.refresh();
+        };
+
         $scope.disableAddButton = function () {
             return $scope.table.numSelected === 0 || $scope.isAdding;
         };
