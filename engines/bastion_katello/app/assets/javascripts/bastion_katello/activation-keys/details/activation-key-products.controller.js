@@ -29,18 +29,41 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyProductsContr
             return isAvailableContent;
         };
 
-        $scope.activationKey.$promise.then(function () {
-            ActivationKey.products({id: $scope.activationKey.id,
-                                    'organization_id': CurrentOrganization,
-                                    enabled: true,
-                                    'full_result': true,
-                                    'include_available_content': true
-                                   }, function (response) {
+        $scope.productType = "redhat";
+        $scope.allProducts = false;
+
+        $scope.refreshProducts = function () {
+            var params;
+
+            if ($scope.activationKey.$resolved === false) {
+                return;
+            }
+
+            $scope.displayArea.working = true;
+
+            params = {
+                id: $scope.activationKey.id,
+                'organization_id': CurrentOrganization,
+                enabled: true,
+                'full_result': true,
+                'include_available_content': true
+            }
+
+            var custom;
+            if ($scope.productType === "custom") {
+                params['custom'] = true;
+            }
+            if ($scope.allProducts == true) {
+                params['available_for'] = "organization";
+            }
+            ActivationKey.products(params, function (response) {
                 $scope.products = response.results;
                 $scope.displayArea.isAvailableContent = $scope.isAnyAvailableContent($scope.products);
                 $scope.displayArea.working = false;
             });
-        });
+        };
 
+        $scope.activationKey.$promise.then($scope.refreshProducts());
+        $scope.$watch('productType', $scope.refreshProducts());
     }]
 );

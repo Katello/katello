@@ -31,7 +31,7 @@ module Katello
     param :custom, :bool, :desc => N_("Filter products by custom")
     param :include_available_content, :bool, :desc => N_("Whether to include available content attribute in results")
     param :sync_plan_id, :identifier, :desc => N_("Filter products by sync plan id")
-    param :available_for, String, :desc => N_("Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' is supported."),
+    param :available_for, String, :desc => N_("Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' and 'organization' are supported."),
           :required => false
     param_group :search, Api::V2::ApiController
     def index
@@ -44,7 +44,7 @@ module Katello
       query = query.where(:provider_id => @organization.anonymous_provider.id) if params[:custom]
       query = query.where(:name => params[:name]) if params[:name]
       query = query.enabled if params[:enabled]
-      query = query.where(:id => @activation_key.products) if @activation_key
+      query = query.where(:id => @activation_key.products) if @activation_key && params[:available_for] != 'organization'
 
       if params[:subscription_id]
         pool = Pool.with_identifier(params[:subscription_id])
