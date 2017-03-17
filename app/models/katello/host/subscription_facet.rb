@@ -185,7 +185,7 @@ module Katello
       end
 
       def candlepin_consumer
-        @candlepin_consumer ||= Katello::Candlepin::Consumer.new(self.uuid)
+        @candlepin_consumer ||= Katello::Candlepin::Consumer.new(self.uuid, self.host.organization.label)
       end
 
       def backend_update_needed?

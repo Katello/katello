@@ -25,7 +25,7 @@ module Katello
       def setup
         super
         Katello::Candlepin::Consumer.any_instance.stubs(:entitlements).returns(ENTITLEMENTS)
-        @consumer = Katello::Candlepin::Consumer.new('foo')
+        @consumer = Katello::Candlepin::Consumer.new('foo', 'org_label')
       end
 
       def test_filter_entitlements_simple

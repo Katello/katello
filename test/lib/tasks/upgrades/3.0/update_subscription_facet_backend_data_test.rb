@@ -9,6 +9,7 @@ module Katello
       Rake::Task['katello:upgrades:3.0:update_subscription_facet_backend_data'].reenable
       Rake::Task.define_task(:environment)
       @host = hosts(:one)
+      @host.organization = get_organization
     end
 
     def test_run

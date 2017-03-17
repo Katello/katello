@@ -37,7 +37,7 @@ module Katello
 
     def to_status(_options = {})
       return UNKNOWN unless host.subscription_facet.try(:uuid)
-      case Katello::Candlepin::Consumer.new(host.subscription_facet.uuid).entitlement_status
+      case Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label).entitlement_status
       when Katello::Candlepin::Consumer::ENTITLEMENTS_VALID
         VALID
       when Katello::Candlepin::Consumer::ENTITLEMENTS_PARTIAL
