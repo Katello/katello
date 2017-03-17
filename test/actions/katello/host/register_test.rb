@@ -24,7 +24,7 @@ module Katello::Host
     describe 'Host Register' do
       it 'plans' do
         action = create_action action_class
-        new_host = Host::Managed.new(:name => 'foobar', :managed => false)
+        new_host = Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
         action.stubs(:action_subject).with(new_host)
         plan_action action, new_host, rhsm_params, @content_view_environment
 
@@ -47,7 +47,7 @@ module Katello::Host
         Katello::ActivationKey.any_instance.stubs(:cp_name).returns('cp_name_baz')
         cvpe = Katello::ContentViewEnvironment.where(:content_view_id => @activation_key.content_view, :environment_id => @activation_key.environment).first
         action = create_action action_class
-        new_host = Host::Managed.new(:name => 'foobar', :managed => false)
+        new_host = Host::Managed.new(:name => 'foobar', :managed => false, :organization => @host_collection.organization)
         action.stubs(:action_subject).with(new_host)
 
         activation_keys = []
@@ -69,7 +69,7 @@ module Katello::Host
 
       it 'plans with existing host' do
         @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
-                                   :lifecycle_environment => @library)
+                                   :lifecycle_environment => @library, :organization => @content_view.organization)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
         plan_action action, @host, rhsm_params, @content_view_environment

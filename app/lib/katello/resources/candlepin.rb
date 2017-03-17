@@ -149,8 +149,8 @@ module Katello
             self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
           end
 
-          def available_pools(uuid, listall = false)
-            url = Pool.path + "?consumer=#{uuid}&listall=#{listall}"
+          def available_pools(owner_label, uuid, listall = false)
+            url = Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}"
             response = Candlepin::CandlepinResource.get(url, self.default_headers).body
             JSON.parse(response)
           end
@@ -386,15 +386,13 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(imports_json)
           end
 
-          def pools(key, filter = {})
-            if key
+          def pools(owner_label, filter = {})
+            if owner_label
               # hash_to_query escapes the ":!" to "%3A%21" which candlepin rejects
               params = hash_to_query(filter)
               params += params == '?' ? '' : '&'
               params += 'attribute=unmapped_guests_only:!true'
-              json_str = self.get(join_path(path(key), 'pools') + params, self.default_headers).body
-            else
-              json_str = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
+              json_str = self.get(join_path(path(owner_label), 'pools') + params, self.default_headers).body
             end
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
           end
@@ -510,7 +508,7 @@ module Katello
           end
 
           def get_for_owner(owner_key, include_temporary_guests = false)
-            url_path = "/candlepin/owners/#{owner_key}/pools"
+            url_path = path(nil, owner_key)
             url_params = "?attribute=unmapped_guests_only:!true"
             url = include_temporary_guests ? url_path : url_path + url_params
             pools_json = self.get(url, self.default_headers).body
@@ -527,8 +525,14 @@ module Katello
             JSON.parse(entitlement_json)
           end
 
-          def path(id = nil)
-            "/candlepin/pools/#{id}"
+          def path(id = nil, owner_label = nil)
+            if owner_label && id
+              "/candlepin/owners/#{owner_label}/pools/#{id}"
+            elsif owner_label
+              "/candlepin/owners/#{owner_label}/pools/"
+            else
+              "/candlepin/pools/#{id}"
+            end
           end
         end
       end

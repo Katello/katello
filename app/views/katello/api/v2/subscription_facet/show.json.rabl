@@ -1,6 +1,6 @@
 child :subscription_facet => :subscription_facet_attributes do |facet|
   extends 'katello/api/v2/subscription_facet/base'
-  consumer = Katello::Candlepin::Consumer.new(facet.uuid)
+  consumer = Katello::Candlepin::Consumer.new(facet.uuid, facet.host.organization.label)
 
   node :compliance_reasons do
     consumer.compliance_reasons

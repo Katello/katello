@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class SubscriptionStatusTest < ActiveSupport::TestCase
     let(:host) do
-      FactoryGirl.build(:host, :with_subscription)
+      FactoryGirl.build(:host, :with_subscription, :organization => get_organization)
     end
 
     let(:status) { host.get_status(Katello::SubscriptionStatus) }
