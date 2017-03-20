@@ -150,7 +150,7 @@ module Katello
         raise PulpErrors::ServiceUnavailable.new(message, e)
       end
 
-      def generate_importer(capsule = SmartProxy.default_capsule)
+      def generate_importer(capsule = SmartProxy.default_capsule!)
         case self.content_type
         when Repository::YUM_TYPE
           Runcible::Models::YumImporter.new(yum_importer_values(capsule))
@@ -175,7 +175,7 @@ module Katello
         end
       end
 
-      def docker_feed_url(capsule = SmartProxy.default_capsule)
+      def docker_feed_url(capsule = SmartProxy.default_capsule!)
         pulp_uri = URI.parse(SETTINGS[:katello][:pulp][:url])
         if capsule.default_capsule?
           self.url if self.respond_to?(:url)
@@ -184,7 +184,7 @@ module Katello
         end
       end
 
-      def importer_feed_url(capsule = SmartProxy.default_capsule)
+      def importer_feed_url(capsule = SmartProxy.default_capsule!)
         if capsule.default_capsule?
           self.url if self.respond_to?(:url)
         else
@@ -207,7 +207,7 @@ module Katello
         config.merge(importer_ssl_options(capsule))
       end
 
-      def importer_ssl_options(capsule = SmartProxy.default_capsule)
+      def importer_ssl_options(capsule = SmartProxy.default_capsule!)
         if !capsule.default_capsule?
           ueber_cert = ::Cert::Certs.ueber_cert(organization)
           importer_options = {
@@ -236,7 +236,7 @@ module Katello
         importer_options
       end
 
-      def generate_distributors(capsule = SmartProxy.default_capsule)
+      def generate_distributors(capsule = SmartProxy.default_capsule!)
         case self.content_type
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
