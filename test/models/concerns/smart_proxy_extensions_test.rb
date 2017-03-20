@@ -5,7 +5,7 @@ require 'katello_test_helper'
 module Katello
   class SmartProxyExtensionsTest < ActiveSupport::TestCase
     def setup
-      @proxy = SmartProxy.new(:name => :foo, :url => 'http://fakepath.com/foo')
+      @proxy = FactoryGirl.build(:smart_proxy, :url => 'http://fakepath.com/foo')
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
 
