@@ -21,7 +21,7 @@ module Katello
     end
 
     def promotable_or_removable?
-      authorized?(:promote_or_remove_content_views) && Katello::KTEnvironment.any_promotable?
+      authorized?(:promote_or_remove_content_views)
     end
 
     module ClassMethods

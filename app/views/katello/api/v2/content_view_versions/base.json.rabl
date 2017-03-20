@@ -47,7 +47,6 @@ child :environments => :environments do
   node :permissions do |env|
     {
       :readable => env.readable?,
-      :promotable_or_removable => env.promotable_or_removable?,
       :all_hosts_editable => version.all_hosts_editable?(env),
       :all_keys_editable => Katello::ActivationKey.all_editable?(version.content_view_id, env.id)
     }
