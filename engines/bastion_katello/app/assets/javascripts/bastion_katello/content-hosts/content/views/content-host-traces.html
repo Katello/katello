@@ -24,7 +24,9 @@
     <input type="hidden" name="authenticity_token" ng-value="traceActionFormValues.authenticityToken"/>
   </form>
 
-  <h3 translate bst-feature-flag="remote_actions">Traces</h3>
+  <div bst-feature-flag="remote_actions">
+    <h3 translate>Traces</h3>
+  </div>
 
   <div data-extend-template="layouts/partials/table.html">
     <span data-block="list-actions" ng-hide="contentHost.readonly">
