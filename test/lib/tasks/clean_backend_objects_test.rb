@@ -20,6 +20,19 @@ module Katello
       ::Host.where("id != ?", except_id).destroy_all
     end
 
+    def test_missing_nil_uuid
+      clear_hosts(@host.id)
+      ENV['COMMIT'] = 'true'
+
+      @host.subscription_facet.update_attributes!(:uuid => nil)
+
+      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns([])
+
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host)
+
+      Rake.application.invoke_task('katello:clean_backend_objects')
+    end
+
     def test_missing_cp_consumer_commit
       clear_hosts(@host.id)
       ENV['COMMIT'] = 'true'
