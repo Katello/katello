@@ -14,7 +14,7 @@ namespace :katello do
       if host.content_facet.try(:uuid)
         test_method { Katello.pulp_server.extensions.consumer.retrieve(host.content_facet.uuid) }
       else
-        test_method { false }
+        false
       end
     end
 
@@ -22,9 +22,9 @@ namespace :katello do
       if host.subscription_facet && host.subscription_facet.uuid
         test_method { ::Katello::Resources::Candlepin::Consumer.get(host.subscription_facet.uuid) }
       elsif host.subscription_facet
-        test_method { true }
+        true
       else
-        test_method { false }
+        false
       end
     end
 
