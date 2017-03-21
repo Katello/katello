@@ -1,9 +1,9 @@
 <span page-title ng-model="activationKey">{{ 'Details for Activation Key:' | translate }} {{ activationKey.name }}</span>
 
 <div bst-alert="info">
-  <p translate>
+  <span translate>
     This activation key may be used during system registration. For example:
-  </p>
+  </span>
   <p translate>
     subscription-manager register --org="{{ activationKey.organization.label }}" --activationkey="{{ activationKey.name }}"
   </p>
