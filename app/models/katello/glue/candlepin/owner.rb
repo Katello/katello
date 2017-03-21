@@ -34,6 +34,10 @@ module Katello
         Resources::Candlepin::Owner.update(self.label, :defaultServiceLevel => level)
       end
 
+      def content_access_mode
+        self.owner_details['contentAccessMode']
+      end
+
       def pools(consumer_uuid = nil)
         if consumer_uuid
           Resources::Candlepin::Owner.pools self.label, :consumer => consumer_uuid

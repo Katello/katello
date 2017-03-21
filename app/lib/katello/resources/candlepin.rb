@@ -369,11 +369,8 @@ module Katello
 
           def import(organization_name, path_to_file, options)
             path = join_path(path(organization_name), 'imports')
-
-            query_params = {}
-            query_params[:force] = true if options[:force] == "true"
-            unless query_params.empty?
-              path << "?" << query_params.to_param
+            if options[:force] || SETTINGS[:katello].key?(:force_manifest_import)
+              path += "?force=#{SETTINGS[:katello][:force_manifest_import]}"
             end
 
             self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
