@@ -100,7 +100,7 @@ Multiple anonymous placeholders:
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
               %r{script/check-gettext\.rb},
-              %r{engines/bastion/node_modules},
+              %r{engines/bastion_katello/node_modules},
               %r{test/source_code_test\.rb}).
           check_lines doc do |line|
         line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
