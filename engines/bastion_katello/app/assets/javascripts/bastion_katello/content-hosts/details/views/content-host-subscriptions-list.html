@@ -22,44 +22,6 @@
   </span>
 
   <div data-block="table">
-    <table bst-table="table"
-           ng-class="{'table-mask': table.working}"
-           class="table table-bordered" >
-      <thead>
-        <tr bst-table-head row-select>
-          <th bst-table-column="quantity" sortable class="align-center"><span translate>Quantity</span></th>
-          <th bst-table-column="attached" sortable><span translate>Attached</span></th>
-          <th bst-table-column="type"><span translate>Type</span></th>
-          <th bst-table-column="startDate" sortable><span translate>Starts</span></th>
-          <th bst-table-column="endDate" sortable><span translate>Expires</span></th>
-          <th bst-table-column="supportLevel"><span translate>Support Level</span></th>
-          <th bst-table-column="contractNumber" sortable><span translate>Contract</span></th>
-          <th bst-table-column="accountNumber" sortable><span translate>Account</span></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-          <td class="row-select"></td>
-          <td colspan="8">
-            {{ name }}
-          </td>
-        </tr>
-        <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
-          <td bst-table-cell>{{ subscription.quantity_consumed }}</td>
-          <td bst-table-cell>
-            <a ui-sref="subscription.info({subscriptionId: subscription.id})">
-              {{ subscription | subscriptionConsumedFilter }}
-            </a>
-          </td>
-          <td bst-table-cell><div subscription-type="subscription"></div></td>
-          <td bst-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
-          <td bst-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
-          <td bst-table-cell>{{ subscription.support_level }}</td>
-          <td bst-table-cell>{{ subscription.contract_number }}</td>
-          <td bst-table-cell>{{ subscription.account_number }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div data-extend-template="common/views/subscription-add-or-remove.html"></div>
   </div>
 </div>
