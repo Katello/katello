@@ -24,7 +24,7 @@
           <th class="" title="<%= erratum.errata_type %>"><%= erratum.errata_type %></th>
           <th>
             <a href="/errata/<%= erratum.uuid %>">
-              <%= erratum.errata_id %> (<%= hosts.length %> <%= _('Hosts') %>)
+              <%= erratum.errata_id %> (<%= n_("%s Host", "%s Hosts", hosts.length) % hosts.length %>)
             </a>
           </th>
         </tr>
