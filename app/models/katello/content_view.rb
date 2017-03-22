@@ -315,7 +315,7 @@ module Katello
     end
 
     def component_repositories
-      components.map(&:repositories).flatten
+      components.map(&:archived_repos).flatten
     end
 
     def repos_in_product(env, product)
