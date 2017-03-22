@@ -68,8 +68,8 @@ module Katello
           pools = pools.select do |pool|
             pool['providedProducts'].all? do |provided_product|
               self.entitlements.all? do |consumed_entitlement|
-                consumed_entitlement.providedProducts.all? do |consumed_product|
-                  consumed_product.cp_id != provided_product['productId']
+                consumed_entitlement['pool']['providedProducts'].all? do |consumed_product|
+                  consumed_product['cp_id'] != provided_product['productId']
                 end
               end
             end

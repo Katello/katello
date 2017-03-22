@@ -3,7 +3,7 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_activation_key
-    before_action :find_host, :only => :index
+    before_action :find_host, :only => [:index, :auto_complete_search]
     before_action :find_optional_organization, :only => [:index, :available, :show]
     before_action :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
