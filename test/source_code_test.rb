@@ -103,9 +103,19 @@ Multiple anonymous placeholders:
               %r{engines/bastion/node_modules},
               %r{test/source_code_test\.rb}).
           check_lines doc do |line|
-        line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
-          gettext_str = match.first
-          gettext_str !~ /#\{.*?\}/ && gettext_str.scan(/%[a-z]/).size <= 1
+        begin
+          line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
+            gettext_str = match.first
+            gettext_str !~ /#\{.*?\}/ && gettext_str.scan(/%[a-z]/).size <= 1
+          end
+        rescue
+          output = "ERROR START
+            #{line.length};
+            [#{line}]
+"
+          puts output
+          Rails.logger.error(output)
+          raise output
         end
       end
     end

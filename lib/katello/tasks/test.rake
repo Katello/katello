@@ -48,9 +48,7 @@ namespace :test do
           puts "Running Tests #{test_files.inspect}"
         else
           t.test_files = [
-            "#{Katello::Engine.root}/test/models/**/*_test.rb",
-            "#{Katello::Engine.root}/test/controllers/**/*_test.rb",
-            "#{Katello::Engine.root}/test/**/*_test.rb"
+            "#{Katello::Engine.root}/test/*_test.rb"
           ]
         end
         t.verbose = true
@@ -135,7 +133,6 @@ namespace :test do
 
   desc "Run the entire Katello plugin test suite"
   task :katello do
-    Rake::Task['test:katello:spec'].invoke
     Rake::Task['test:katello:test'].invoke
   end
 end
