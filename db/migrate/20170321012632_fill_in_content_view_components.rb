@@ -1,18 +1,18 @@
 class FillInContentViewComponents < ActiveRecord::Migration
-  class FakeContentView < ActiveRecord::Base
+  class FakeContentView < ApplicationRecord
     self.table_name = 'katello_content_views'
 
     has_many :content_view_components, :class_name => "FakeContentViewVersion", :dependent => :destroy,
              :inverse_of => :composite_content_view, :foreign_key => :composite_content_view_id
   end
 
-  class FakeContentViewVersion < ActiveRecord::Base
+  class FakeContentViewVersion < ApplicationRecord
     self.table_name = 'katello_content_view_versions'
 
     has_many :content_view_components, :inverse_of => :content_view_version, :dependent => :destroy, :class_name => 'FakeContentViewComponent'
   end
 
-  class FakeContentViewComponent < ActiveRecord::Base
+  class FakeContentViewComponent < ApplicationRecord
     self.table_name = 'katello_content_view_components'
 
     belongs_to :content_view_version, :class_name => "FakeContentViewVersion",

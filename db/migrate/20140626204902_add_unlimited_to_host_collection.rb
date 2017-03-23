@@ -1,5 +1,5 @@
 class AddUnlimitedToHostCollection < ActiveRecord::Migration
-  class ::Katello::HostCollections < ActiveRecord::Base
+  class ::Katello::HostCollections < ApplicationRecord
   end
 
   def up

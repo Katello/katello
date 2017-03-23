@@ -1,7 +1,7 @@
 class MigrateContentHosts < ActiveRecord::Migration
   HYPERVISOR_CLASS = 'Katello::Hypervisor'.freeze
 
-  class Location < ActiveRecord::Base
+  class Location < ApplicationRecord
     self.table_name = "taxonomies"
 
     def self.default_location
@@ -10,20 +10,20 @@ class MigrateContentHosts < ActiveRecord::Migration
     end
   end
 
-  class Organization < ActiveRecord::Base
+  class Organization < ApplicationRecord
     self.table_name = "taxonomies"
 
     has_many :kt_environments, :class_name => "MigrateContentHosts::KTEnvironment",
              :dependent => :restrict_with_exception, :inverse_of => :organization
   end
 
-  class SmartProxy < ActiveRecord::Base
+  class SmartProxy < ApplicationRecord
     self.table_name = "smart_proxies"
 
     belongs_to :content_host, :class_name => "MigrateContentHosts::System", :inverse_of => :capsule
   end
 
-  class KTEnvironment < ActiveRecord::Base
+  class KTEnvironment < ApplicationRecord
     self.table_name = "katello_environments"
 
     belongs_to :organization, :class_name => "MigrateContentHosts::Organization", :inverse_of => :kt_environments
@@ -34,7 +34,7 @@ class MigrateContentHosts < ActiveRecord::Migration
              :dependent => :restrict_with_exception, :foreign_key => :environment_id
   end
 
-  class ContentView < ActiveRecord::Base
+  class ContentView < ApplicationRecord
     self.table_name = "katello_content_views"
 
     has_many :systems, :class_name => "MigrateContentHosts::System", :dependent => :restrict_with_exception
@@ -42,7 +42,7 @@ class MigrateContentHosts < ActiveRecord::Migration
              :inverse_of => :content_view, :dependent => :restrict_with_exception
   end
 
-  class Repository < ActiveRecord::Base
+  class Repository < ApplicationRecord
     self.table_name = "katello_repositories"
 
     has_many :content_facet_repositories, :class_name => "MigrateContentHosts::ContentFacetRepository", :dependent => :destroy
@@ -52,41 +52,41 @@ class MigrateContentHosts < ActiveRecord::Migration
     has_many :systems, :through => :system_repositories
   end
 
-  class SystemRepository < ActiveRecord::Base
+  class SystemRepository < ApplicationRecord
     self.table_name = "katello_system_repositories"
     belongs_to :system, :inverse_of => :system_repositories, :class_name => 'MigrateContentHosts::System'
     belongs_to :repository, :inverse_of => :system_repositories, :class_name => 'MigrateContentHosts::Repository'
   end
 
-  class HostCollection < ActiveRecord::Base
+  class HostCollection < ApplicationRecord
     self.table_name = "katello_host_collection"
 
     has_many :system_host_collections, :class_name => "MigrateContentHosts::SystemHostCollection", :dependent => :destroy
     has_many :systems, :through => :system_host_collections, :class_name => "MigrateContentHosts::System"
   end
 
-  class SystemHostCollections < ActiveRecord::Base
+  class SystemHostCollections < ApplicationRecord
     self.table_name = "katello_system_host_collections"
 
     belongs_to :system, :inverse_of => :system_host_collections, :class_name => 'MigrateContentHosts::System'
     belongs_to :host_collection, :inverse_of => :system_host_collections
   end
 
-  class Erratum < ActiveRecord::Base
+  class Erratum < ApplicationRecord
     self.table_name = "katello_errata"
 
     has_many :systems_applicable, :through => :system_errata, :class_name => "MigrateContentHosts::System", :source => :system
     has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :source => :erratum
   end
 
-  class SystemErratum < ActiveRecord::Base
+  class SystemErratum < ApplicationRecord
     self.table_name = "katello_system_errata"
 
     belongs_to :system, :inverse_of => :system_errata, :class_name => 'MigrateContentHosts::System'
     belongs_to :erratum, :inverse_of => :system_errata, :class_name => 'MigrateContentHosts::Erratum'
   end
 
-  class ActivationKey < ActiveRecord::Base
+  class ActivationKey < ApplicationRecord
     self.table_name = "katello_activation_keys"
 
     has_many :system_activation_keys, :class_name => "MigrateContentHosts::SystemActivationKey", :dependent => :destroy
@@ -94,14 +94,14 @@ class MigrateContentHosts < ActiveRecord::Migration
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
   end
 
-  class SystemActivationKey < ActiveRecord::Base
+  class SystemActivationKey < ApplicationRecord
     self.table_name = "katello_system_activation_keys"
 
     belongs_to :system, :inverse_of => :system_activation_keys
     belongs_to :activation_key, :inverse_of => :system_activation_keys
   end
 
-  class Host < ActiveRecord::Base
+  class Host < ApplicationRecord
     self.table_name = "hosts"
     self.inheritance_column = nil
 
@@ -112,7 +112,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     belongs_to :location, :class_name => "MigrateContentHosts::Location"
   end
 
-  class System < ActiveRecord::Base
+  class System < ApplicationRecord
     self.table_name = "katello_systems"
     self.inheritance_column = nil
 
@@ -139,7 +139,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     has_one :capsule, :class_name => "MigrateContentHosts::SmartProxy", :inverse_of => :content_host, :foreign_key => :content_host_id, :dependent => :nullify
   end
 
-  class ContentFacet < ActiveRecord::Base
+  class ContentFacet < ApplicationRecord
     self.table_name = "katello_content_facets"
 
     belongs_to :host, :inverse_of => :content_facet, :class_name => "MigrateContentHosts::Host"
@@ -152,21 +152,21 @@ class MigrateContentHosts < ActiveRecord::Migration
     has_many :content_facet_errata, :class_name => "MigrateContentHosts::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
   end
 
-  class ContentFacetRepository < ActiveRecord::Base
+  class ContentFacetRepository < ApplicationRecord
     self.table_name = "katello_content_facet_repositories"
 
     belongs_to :content_facet, :inverse_of => :content_facet_repositories, :class_name => 'MigrateContentHosts::ContentFacet'
     belongs_to :repository, :inverse_of => :content_facet_repositories, :class_name => 'MigrateContentHosts::Repository'
   end
 
-  class ContentFacetErratum < ActiveRecord::Base
+  class ContentFacetErratum < ApplicationRecord
     self.table_name = "katello_content_facet_errata"
 
     belongs_to :content_facet, :inverse_of => :content_facet_errata, :class_name => 'MigrateContentHosts::ContentFacet'
     belongs_to :erratum, :inverse_of => :content_facet_errata, :class_name => 'MigrateContentHosts::Erratum'
   end
 
-  class SubscriptionFacet < ActiveRecord::Base
+  class SubscriptionFacet < ApplicationRecord
     self.table_name = "katello_subscription_facets"
 
     belongs_to :host, :inverse_of => :subscription_facet, :class_name => "MigrateContentHosts::Host"
@@ -174,7 +174,7 @@ class MigrateContentHosts < ActiveRecord::Migration
     has_many :subscription_facet_activation_keys, :class_name => "MigrateContentHosts::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
   end
 
-  class SubscriptionFacetActivationKey < ActiveRecord::Base
+  class SubscriptionFacetActivationKey < ApplicationRecord
     self.table_name = "katello_subscription_facet_activation_keys"
 
     belongs_to :subscription_facet, :inverse_of => :subscription_facet_activation_keys, :class_name => 'MigrateContentHosts::SubscriptionFacet'

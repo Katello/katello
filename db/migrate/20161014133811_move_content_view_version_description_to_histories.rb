@@ -1,10 +1,10 @@
 class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration
-  class Katello::ContentViewVersion < ActiveRecord::Base
+  class Katello::ContentViewVersion < ApplicationRecord
     has_many :history, :class_name => "Katello::CVHistory", :inverse_of => :content_view_version,
                        :dependent => :destroy, :foreign_key => :katello_content_view_version_id
   end
 
-  class Katello::CVHistory < ActiveRecord::Base
+  class Katello::CVHistory < ApplicationRecord
     self.table_name = 'katello_content_view_histories'
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :foreign_key => :katello_content_view_version_id, :inverse_of => :history
     SUCCESSFUL = 'successful'.freeze

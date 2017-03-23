@@ -1,5 +1,5 @@
 class FixInvalidInterfaces < ActiveRecord::Migration
-  class FakeNic < ActiveRecord::Base
+  class FakeNic < ApplicationRecord
     self.table_name = 'nics'
 
     def type

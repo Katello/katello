@@ -1,5 +1,5 @@
 class AddUnlimitedToActivationKeys < ActiveRecord::Migration
-  class ::Katello::ActivationKeys < ActiveRecord::Base
+  class ::Katello::ActivationKeys < ApplicationRecord
   end
 
   def up

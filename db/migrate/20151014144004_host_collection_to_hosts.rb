@@ -1,21 +1,21 @@
 class HostCollectionToHosts < ActiveRecord::Migration
-  class Host < ActiveRecord::Base
+  class Host < ApplicationRecord
     self.table_name = "hosts"
   end
 
-  class System < ActiveRecord::Base
+  class System < ApplicationRecord
     self.table_name = "katello_systems"
   end
 
-  class HostCollection < ActiveRecord::Base
+  class HostCollection < ApplicationRecord
     self.table_name = "katello_host_collections"
   end
 
-  class SystemHostCollections < ActiveRecord::Base
+  class SystemHostCollections < ApplicationRecord
     self.table_name = "katello_system_host_collections"
   end
 
-  class HostCollectionHosts < ActiveRecord::Base
+  class HostCollectionHosts < ApplicationRecord
     self.table_name = "katello_host_collection_hosts"
   end
 

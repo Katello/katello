@@ -1,5 +1,5 @@
 module Katello
-  class Model < ActiveRecord::Base
+  class Model < ApplicationRecord
     include ActiveModel::ForbiddenAttributesProtection
     self.abstract_class = true
 
