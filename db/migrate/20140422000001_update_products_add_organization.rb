@@ -1,5 +1,5 @@
 class UpdateProductsAddOrganization < ActiveRecord::Migration
-  class Katello::Product < ActiveRecord::Base
+  class Katello::Product < ApplicationRecord
     belongs_to :provider
     self.inheritance_column = nil
   end

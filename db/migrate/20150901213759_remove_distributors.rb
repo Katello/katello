@@ -1,5 +1,5 @@
 class RemoveDistributors < ActiveRecord::Migration
-  class Katello::Distributor < ActiveRecord::Base
+  class Katello::Distributor < ApplicationRecord
     self.table_name = 'katello_distributors'
   end
 

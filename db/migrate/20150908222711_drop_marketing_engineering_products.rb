@@ -1,5 +1,5 @@
 class DropMarketingEngineeringProducts < ActiveRecord::Migration
-  class Katello::MarketingProduct < ActiveRecord::Base
+  class Katello::MarketingProduct < ApplicationRecord
     self.table_name = "katello_products"
   end
 

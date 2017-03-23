@@ -1,9 +1,9 @@
 class FixViewerRole < ActiveRecord::Migration
-  class Role < ActiveRecord::Base
+  class Role < ApplicationRecord
     has_many :filters
   end
 
-  class Filter < ActiveRecord::Base
+  class Filter < ApplicationRecord
     belongs_to :role
     has_many :filterings, :dependent => :destroy
     has_many :permissions, :through => :filterings
@@ -16,12 +16,12 @@ class FixViewerRole < ActiveRecord::Migration
     end
   end
 
-  class Filtering < ActiveRecord::Base
+  class Filtering < ApplicationRecord
     belongs_to :filter
     belongs_to :permission
   end
 
-  class Permission < ActiveRecord::Base
+  class Permission < ApplicationRecord
   end
 
   def change

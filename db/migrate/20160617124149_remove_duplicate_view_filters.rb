@@ -1,8 +1,8 @@
 class RemoveDuplicateViewFilters < ActiveRecord::Migration
-  class Role < ActiveRecord::Base
+  class Role < ApplicationRecord
   end
 
-  class Filter < ActiveRecord::Base
+  class Filter < ApplicationRecord
     belongs_to :role
     has_many :filterings, :dependent => :destroy
     has_many :permissions, :through => :filterings
@@ -10,12 +10,12 @@ class RemoveDuplicateViewFilters < ActiveRecord::Migration
     scope :unlimited, -> { where(:search => nil, :taxonomy_search => nil) }
   end
 
-  class Filtering < ActiveRecord::Base
+  class Filtering < ApplicationRecord
     belongs_to :filter
     belongs_to :permission
   end
 
-  class Permission < ActiveRecord::Base
+  class Permission < ApplicationRecord
     has_many :filterings, :dependent => :destroy
     has_many :filters, :through => :filterings
   end

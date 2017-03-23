@@ -1,5 +1,5 @@
 class MoveHostDescriptionToHostComment < ActiveRecord::Migration
-  class Host < ActiveRecord::Base
+  class Host < ApplicationRecord
     self.table_name = "hosts"
   end
 

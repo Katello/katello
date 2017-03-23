@@ -1,5 +1,5 @@
 class ChangeKatelloWidgetNames < ActiveRecord::Migration
-  class Widget < ActiveRecord::Base
+  class Widget < ApplicationRecord
     self.table_name = "widgets"
   end
 

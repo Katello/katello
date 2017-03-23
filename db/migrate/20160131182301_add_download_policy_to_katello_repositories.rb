@@ -1,5 +1,5 @@
 class AddDownloadPolicyToKatelloRepositories < ActiveRecord::Migration
-  class DownloadPolicyRepository < ActiveRecord::Base
+  class DownloadPolicyRepository < ApplicationRecord
     self.table_name = "katello_repositories"
   end
   def change

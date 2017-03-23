@@ -1,9 +1,9 @@
 class MoveSystemDescriptionToHost < ActiveRecord::Migration
-  class Host < ActiveRecord::Base
+  class Host < ApplicationRecord
     self.table_name = "hosts"
   end
 
-  class System < ActiveRecord::Base
+  class System < ApplicationRecord
     self.table_name = "katello_systems"
   end
 
