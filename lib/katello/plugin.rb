@@ -1,5 +1,7 @@
+require 'katello/permission_creator'
+
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.14'
+  requires_foreman '>= 1.15'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,
@@ -253,4 +255,7 @@ Foreman::Plugin.register :katello do
       .includes(:content_view, :lifecycle_environment, :subscription_facet, :applicable_errata)
       .includes(content_facet: [:bound_repositories, :applicable_errata, :content_view, :lifecycle_environment])
   end
+
+  Katello::PermissionCreator.new(self).define
+  add_all_permissions_to_default_roles
 end

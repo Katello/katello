@@ -90,6 +90,7 @@ module Katello
     # hook so that the resumed Dynflow tasks can rely on everything ready.
     initializer 'katello.register_plugin', :before => :finisher_hook do
       require 'katello/plugin'
+      # extend builtin permissions from core with new actions
       require 'katello/permissions'
     end
 
