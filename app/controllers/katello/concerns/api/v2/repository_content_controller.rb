@@ -7,7 +7,7 @@ module Katello
         include Katello::Concerns::FilteredAutoCompleteSearch
 
         before_action :find_repository
-        before_action :find_optional_organization, :only => [:index, :auto_complete_search]
+        before_action :find_optional_nested_object, :only => [:index, :auto_complete_search]
         before_action :find_environment, :only => [:index, :auto_complete_search]
         before_action :find_content_view_version, :only => [:index, :auto_complete_search]
         before_action :find_filter, :only => [:index, :auto_complete_search]

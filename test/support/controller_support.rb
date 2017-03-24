@@ -40,6 +40,10 @@ module ControllerSupport
         :organizations => organizations
     )
 
+    # Flush any roles to ensure the next check on refute_authorized
+    # does not carry an user with roles
+    User.unscoped.find(users(:restricted).id).roles = []
+
     unless denied_perms.empty?
       refute_authorized(
           :permission => denied_perms,

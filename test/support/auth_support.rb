@@ -63,7 +63,7 @@ module Katello
                             end
 
       role = create_role_with_permissions(actual_permissions)
-      user.roles = [role]
+      user.roles << role
       user
     end
 

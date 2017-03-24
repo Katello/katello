@@ -34,8 +34,8 @@ module Katello
     end
 
     respond_to :json
-    before_action :find_organization, :only => [:create, :paths, :auto_complete_search]
-    before_action :find_optional_organization, :only => [:index, :show, :update, :destroy]
+    before_action :find_required_nested_object, :only => [:create, :paths, :auto_complete_search]
+    before_action :find_optional_nested_object, :only => [:index, :show, :update, :destroy]
     before_action :find_prior, :only => [:create]
     before_action :find_environment, :only => [:show, :update, :destroy, :repositories]
     before_action :find_content_view, :only => [:repositories]

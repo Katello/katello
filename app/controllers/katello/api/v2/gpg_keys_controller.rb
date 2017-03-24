@@ -2,7 +2,7 @@ module Katello
   class Api::V2::GpgKeysController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :authorize
-    before_action :find_organization, :only => [:create, :index, :auto_complete_search]
+    before_action :find_required_nested_object, :only => [:create, :index, :auto_complete_search]
     before_action :find_gpg_key, :only => [:show, :update, :destroy, :content]
     skip_before_action :check_content_type, :only => [:create, :content]
 

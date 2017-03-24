@@ -109,15 +109,6 @@ module Katello
       return Util::Model.labelize(param_hash[:name]) unless param_hash.try(:[], :name).nil?
     end
 
-    def find_organization
-      @organization = Organization.current || find_optional_organization
-      if @organization.nil?
-        fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") %
-            organization_id_keys.join(", ")
-      end
-      @organization
-    end
-
     def sort_params
       options = {}
       options[:sort_by] = params[:sort_by] if params[:sort_by]
@@ -125,26 +116,11 @@ module Katello
       options
     end
 
-    def find_optional_organization
-      org_id = organization_id
-      return if org_id.nil?
-
-      @organization = get_organization(org_id)
-      fail HttpErrors::NotFound, _("Couldn't find organization '%s'") % org_id if @organization.nil?
-      @organization
-    end
-
-    def organization_id
-      key = organization_id_keys.find { |k| !params[k].nil? }
-      return params[key]
-    end
-
-    def organization_id_keys
-      return [:organization_id]
-    end
-
-    def get_organization(org_id)
-      return Organization.find_by(:id => org_id)
+    def find_required_nested_object
+      result = super
+      # Foreman tends to use @nested_obj - but Katello controllers tend
+      # to use @organization as it's the most common case for nested objects
+      instance_variable_set("@#{result.class.to_s.downcase}", result)
     end
 
     def find_default_organization_and_or_environment

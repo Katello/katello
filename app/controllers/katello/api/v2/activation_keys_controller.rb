@@ -4,7 +4,7 @@ module Katello
     include Katello::Concerns::Api::V2::ContentOverridesController
     before_action :verify_presence_of_organization_or_environment, :only => [:index]
     before_action :find_environment, :only => [:index, :create, :update]
-    before_action :find_optional_organization, :only => [:index, :create, :show]
+    before_action :find_optional_nested_object, :only => [:index, :create, :show]
     before_action :find_content_view, :only => [:index]
     before_action :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,

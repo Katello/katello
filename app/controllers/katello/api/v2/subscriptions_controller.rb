@@ -4,9 +4,9 @@ module Katello
 
     before_action :find_activation_key
     before_action :find_host, :only => :index
-    before_action :find_optional_organization, :only => [:index, :available, :show]
-    before_action :find_organization, :only => [:upload, :delete_manifest,
-                                                :refresh_manifest, :manifest_history]
+    before_action :find_optional_nested_object, :only => [:index, :available, :show]
+    before_action :find_required_nested_object, :only => [:upload, :delete_manifest,
+                                                          :refresh_manifest, :manifest_history]
     before_action :find_provider
     before_action :deprecated, :only => [:create, :destroy]
 
@@ -196,6 +196,36 @@ module Katello
     def deprecated
       ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 2.6, Please see /api/v2/activation_keys/:id/add_subscriptions and \
           /api/v2/activation_keys/:id/remove_subscriptions")
+    end
+
+    def parent_permission(child_permission)
+      case child_permission.to_s
+      when 'delete_manifest', 'import_manifest'
+        :view
+      when 'attach_subscriptions'
+        :create
+      when 'unattach_subscriptions'
+        :destroy
+      else
+        super
+      end
+    end
+
+    def action_permission
+      case params[:action]
+      when 'available', 'manifest_history', 'auto_complete_search'
+        :view
+      when 'create'
+        :attach
+      when 'destroy'
+        :unattach
+      when 'upload', 'refresh_manifest'
+        :import_manifest
+      when 'delete_manifest'
+        :delete_manifest
+      else
+        super
+      end
     end
   end
 end
