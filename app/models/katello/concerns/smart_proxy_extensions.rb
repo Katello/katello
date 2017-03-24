@@ -39,9 +39,10 @@ module Katello
                  :through    => :capsule_lifecycle_environments,
                  :source     => :lifecycle_environment
 
-        has_many :hosts,      :class_name => "::Host::Managed", :foreign_key => :content_source_id,
-                              :inverse_of => :content_source
-        has_many :hostgroups, :class_name => "::Hostgroup",     :foreign_key => :content_source_id,
+        has_many :content_facets, :class_name => "::Katello::Host::ContentFacet", :foreign_key => :content_source_id,
+                                  :inverse_of => :content_source
+
+        has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_source_id,
                               :inverse_of => :content_source
 
         validates :download_policy, inclusion: {
