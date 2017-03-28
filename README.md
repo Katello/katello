@@ -67,6 +67,10 @@ That's rather unfortunate. But don't worry! We can help. Just file a bug
 
 See the [developer documentation](http://www.katello.org/developers/index.html).
 
+## Annotated Pulp and Candlepin Workflows and test Scenarios
+
+See the [annotation docs](./test/scenarios/README.md) for more information.
+
 ## Contact & Resources
 
  * [Katello.org](http://katello.org)

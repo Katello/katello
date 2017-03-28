@@ -1,0 +1,375 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://dev.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/?include=productContent.content.name
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Authorization:
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="w2LhsNrw4JohS98LMqjA1M244vj1AC2oRyZa0URFU",
+        oauth_signature="%2B3eIsC2Ii7HGb4ph7LHG98ofp4Q%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1493910099", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 40f2f383-49d0-45dd-b821-78588d79b2e4
+      X-Version:
+      - 2.0.26-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuYW1lIjoiU2NlbmFyaW8gUHJvZHVjdCIsImF0dHJpYnV0ZXMiOlt7Im5h
+        bWUiOiJhcmNoIiwidmFsdWUiOiJBTEwifV0sInByb2R1Y3RDb250ZW50Ijpb
+        eyJjb250ZW50Ijp7ImlkIjoiMTQ5MzkxMDA3NTkzMyIsInR5cGUiOiJ5dW0i
+        LCJsYWJlbCI6InNjZW5hcmlvX3Rlc3RfU2NlbmFyaW9fUHJvZHVjdF9TY2Vu
+        YXJpb195dW1fcHJvZHVjdCIsIm5hbWUiOiJTY2VuYXJpbyB5dW0gcHJvZHVj
+        dCIsImNvbnRlbnRVcmwiOiIvY3VzdG9tL1NjZW5hcmlvX1Byb2R1Y3QvU2Nl
+        bmFyaW9feXVtX3Byb2R1Y3QiLCJtb2RpZmllZFByb2R1Y3RJZHMiOltdfSwi
+        ZW5hYmxlZCI6dHJ1ZX1dfQ==
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: delete
+    uri: https://dev.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: ACCEPTED
+    headers:
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2ZmYzUxNzQzLTVjY2QtNDk3NC05MmFhLTA4MDhiYmRlNjBhNS8iLCAi
+        dGFza19pZCI6ICJmZmM1MTc0My01Y2NkLTQ5NzQtOTJhYS0wODA4YmJkZTYw
+        YTUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/ffc51743-5ccd-4974-92aa-0808bbde60a5/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '553'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mZmM1MTc0My01Y2NkLTQ5NzQtOTJhYS0wODA4YmJkZTYw
+        YTUvIiwgInRhc2tfaWQiOiAiZmZjNTE3NDMtNWNjZC00OTc0LTkyYWEtMDgw
+        OGJiZGU2MGE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBu
+        dWxsLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwg
+        InByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAiTm9uZS5kcSIsICJz
+        dGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogbnVsbCwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTkw
+        YjQyNTQzZjdhZDU5MzI4NTEzNzkxIn0sICJpZCI6ICI1OTBiNDI1NDNmN2Fk
+        NTkzMjg1MTM3OTEifQ==
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/ffc51743-5ccd-4974-92aa-0808bbde60a5/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '649'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mZmM1MTc0My01Y2NkLTQ5NzQtOTJhYS0wODA4YmJkZTYw
+        YTUvIiwgInRhc2tfaWQiOiAiZmZjNTE3NDMtNWNjZC00OTc0LTkyYWEtMDgw
+        OGJiZGU2MGE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAi
+        MjAxNy0wNS0wNFQxNTowMTo0MFoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
+        YXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVl
+        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAZGV2LmV4YW1wbGUu
+        Y29tLmRxIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAZGV2LmV4YW1wbGUuY29tIiwg
+        InJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQi
+        OiAiNTkwYjQyNTQzZjdhZDU5MzI4NTEzNzkxIn0sICJpZCI6ICI1OTBiNDI1
+        NDNmN2FkNTkzMjg1MTM3OTEifQ==
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/ffc51743-5ccd-4974-92aa-0808bbde60a5/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '649'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mZmM1MTc0My01Y2NkLTQ5NzQtOTJhYS0wODA4YmJkZTYw
+        YTUvIiwgInRhc2tfaWQiOiAiZmZjNTE3NDMtNWNjZC00OTc0LTkyYWEtMDgw
+        OGJiZGU2MGE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAi
+        MjAxNy0wNS0wNFQxNTowMTo0MFoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
+        YXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVl
+        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAZGV2LmV4YW1wbGUu
+        Y29tLmRxIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAZGV2LmV4YW1wbGUuY29tIiwg
+        InJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQi
+        OiAiNTkwYjQyNTQzZjdhZDU5MzI4NTEzNzkxIn0sICJpZCI6ICI1OTBiNDI1
+        NDNmN2FkNTkzMjg1MTM3OTEifQ==
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/ffc51743-5ccd-4974-92aa-0808bbde60a5/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '668'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mZmM1MTc0My01Y2NkLTQ5NzQtOTJhYS0wODA4YmJkZTYw
+        YTUvIiwgInRhc2tfaWQiOiAiZmZjNTE3NDMtNWNjZC00OTc0LTkyYWEtMDgw
+        OGJiZGU2MGE1IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiAiMjAxNy0wNS0wNFQxNTowMTo0MFoiLCAiX25zIjogInRhc2tfc3RhdHVz
+        IiwgInN0YXJ0X3RpbWUiOiAiMjAxNy0wNS0wNFQxNTowMTo0MFoiLCAidHJh
+        Y2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNz
+        X3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTFAZGV2LmV4YW1wbGUuY29tLmRxIiwgInN0YXRlIjogImZpbmlzaGVk
+        IiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0x
+        QGRldi5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBu
+        dWxsLCAiX2lkIjogeyIkb2lkIjogIjU5MGI0MjU0M2Y3YWQ1OTMyODUxMzc5
+        MSJ9LCAiaWQiOiAiNTkwYjQyNTQzZjdhZDU5MzI4NTEzNzkxIn0=
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: delete
+    uri: https://dev.example.com:8443/candlepin/environments/119c4753ff6d3b7bd0b76de6d5a5f94a
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Authorization:
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="laefQES5AwOOD4GAUi1cfEowQTs3ekpbcoNbB6zbjsc",
+        oauth_signature="b2HoYYbphi9ZmV62bsTfSPCOIwI%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1493910100", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - fe4d6ed1-a73f-46c5-9dfd-309b27d5e466
+      X-Version:
+      - 2.0.26-1
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+    body:
+      encoding: UTF-8
+      base64_string: ''
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+- request:
+    method: delete
+    uri: https://dev.example.com:8443/candlepin/owners/scenario_test
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Authorization:
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="XsEZm71Ped8AKgzIM4vakmWPtcsW2OO1rz9Gct3ImM",
+        oauth_signature="1aGAGqAYXBRFiVkZ%2F1GxMbq5zZM%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1493910100", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - d7700031-9b49-4e1a-b6fa-46514eb29e47
+      X-Version:
+      - 2.0.26-1
+      Date:
+      - Thu, 04 May 2017 15:01:40 GMT
+    body:
+      encoding: UTF-8
+      base64_string: ''
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:40 GMT
+recorded_with: VCR 3.0.3
