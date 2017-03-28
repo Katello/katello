@@ -44,8 +44,9 @@ module Katello
       class CandlepinResource < HttpResource
         cfg = SETTINGS[:katello][:candlepin]
         url = cfg[:url]
-        self.prefix = URI.parse(url).path
-        self.site = url.gsub(self.prefix, "")
+        uri = URI.parse(url)
+        self.prefix = uri.path
+        self.site = "#{uri.scheme}://#{uri.host}"
         self.consumer_secret = cfg[:oauth_secret]
         self.consumer_key = cfg[:oauth_key]
         self.ca_cert_file = cfg[:ca_cert_file]
