@@ -16,7 +16,6 @@ angular.module('Bastion.activation-keys').factory('ActivationKey',
             copy: {method: 'POST', params: {action: 'copy'}},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             subscriptions: {method: 'GET', params: {action: 'subscriptions'}},
-            products: {method: 'GET', params: {action: 'products'}},
             contentHosts: {method: 'GET', params: {action: 'systems'}},
             removeSubscriptions: {method: 'PUT', isArray: false, params: {action: 'remove_subscriptions'}},
             addSubscriptions: {method: 'PUT', isArray: false, params: {action: 'add_subscriptions'}},
@@ -25,7 +24,8 @@ angular.module('Bastion.activation-keys').factory('ActivationKey',
             removeHostCollections: {method: 'PUT', isArray: false, params: {action: 'host_collections'}},
             addHostCollections: {method: 'POST', isArray: false, params: {action: 'host_collections'}},
             contentOverride: {method: 'PUT', isArray: false, params: {action: 'content_override'}},
-            autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
+            autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},
+            repositorySets: {method: 'GET', params: {action: 'product_content'}}
         });
     }]
 );

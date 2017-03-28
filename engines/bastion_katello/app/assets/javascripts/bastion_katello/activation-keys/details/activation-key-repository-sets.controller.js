@@ -1,0 +1,64 @@
+/**
+ * @ngdoc object
+ * @name  Bastion.activation-keys.controller:ActivationKeyRepositorySetsController
+ *
+ * @requires $scope
+ * @requires translate
+ * @requires Nutupane
+ * @requires ActivationKey
+ * @requires ContentOverrideHelper
+ * @requires GlobalNotification
+ * @requires CurrentOrganization
+ *
+ * @description
+ *   Provides the functionality for the activation-key products action pane.
+ */
+angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySetsController',
+    ['$scope', 'translate', 'Nutupane', 'ActivationKey', 'ContentOverrideHelper', 'GlobalNotification', 'CurrentOrganization',
+    function ($scope, translate, Nutupane, ActivationKey, ContentOverrideHelper, GlobalNotification, CurrentOrganization) {
+        var nutupane, params, saveContentOverride, success, error;
+
+        params = {
+            id: $scope.$stateParams.activationKeyId,
+            'organization_id': CurrentOrganization,
+            enabled: true,
+            'full_result': true,
+            'include_available_content': true
+        };
+
+        $scope.controllerName = 'katello_products';
+        nutupane = new Nutupane(ActivationKey, params, 'repositorySets');
+        $scope.table = nutupane.table;
+
+        success = function () {
+            $scope.table.working = false;
+            GlobalNotification.setSuccessMessage(translate('Repository Sets settings saved successfully.'));
+            nutupane.refresh();
+        };
+
+        error = function (response) {
+            $scope.table.working = false;
+            GlobalNotification.setErrorMessage(response.data.errors);
+        };
+
+        saveContentOverride = function (contentOverrides) {
+            $scope.table.working = true;
+            ActivationKey.contentOverride({id: $scope.$stateParams.activationKeyId}, contentOverrides, success, error);
+        };
+
+        $scope.overrideToEnabled = function () {
+            var contentOverrides = ContentOverrideHelper.getEnabledContentOverrides($scope.table.getSelected());
+            saveContentOverride(contentOverrides);
+        };
+
+        $scope.overrideToDisabled = function () {
+            var contentOverrides = ContentOverrideHelper.getDisabledContentOverrides($scope.table.getSelected());
+            saveContentOverride(contentOverrides);
+        };
+
+        $scope.resetToDefault = function () {
+            var contentOverrides = ContentOverrideHelper.getDefaultContentOverrides($scope.table.getSelected());
+            saveContentOverride(contentOverrides);
+        };
+    }]
+);

@@ -48,10 +48,10 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
     .state('activation-key.products', {
         url: '/products',
         permission: 'view_activation_keys',
-        controller: 'ActivationKeyProductsController',
-        templateUrl: 'activation-keys/details/views/activation-key-products.html',
+        controller: 'ActivationKeyRepositorySetsController',
+        templateUrl: 'activation-keys/details/views/activation-key-repository-sets.html',
         ncyBreadcrumb: {
-            label: '{{ "Products" | translate }}',
+            label: '{{ "Repository Sets" | translate }}',
             parent: 'activation-key.info'
         }
     })

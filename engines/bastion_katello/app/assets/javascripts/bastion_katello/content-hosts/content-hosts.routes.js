@@ -81,8 +81,8 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
     .state('content-host.products', {
         url: '/products',
         permission: 'view_products',
-        controller: 'ContentHostProductsController',
-        templateUrl: 'content-hosts/details/views/content-host-products.html',
+        controller: 'ContentHostRepositorySetsController',
+        templateUrl: 'content-hosts/details/views/content-host-repository-sets.html',
         ncyBreadcrumb: {
             label: "{{ 'Products' | translate }}",
             parent: 'content-host.info'
