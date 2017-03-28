@@ -61,6 +61,9 @@
 //= require "bastion_katello/products/products.module.js"
 //= require_tree "./products"
 
+//= require "bastion_katello/repository-sets/repository-sets.module.js"
+//= require_tree "./repository-sets"
+
 //= require "bastion_katello/sync-plans/sync-plans.module.js"
 //= require_tree "./sync-plans"
 

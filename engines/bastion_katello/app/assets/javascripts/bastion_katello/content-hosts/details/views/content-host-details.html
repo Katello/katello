@@ -127,9 +127,8 @@
         </a>
       </li>
       <li ng-hide="denied('view_products')" ng-class="{active: isState('content-host.products')}">
-        <a translate
-           ui-sref="content-host.products">
-          Product Content
+        <a ui-sref="content-host.products" translate>
+          Repository Sets
         </a>
       </li>
       <li ng-repeat="menuItem in menuExpander.getMenu('host')">

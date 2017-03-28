@@ -12,5 +12,6 @@ angular.module('Bastion.activation-keys', [
     'Bastion.i18n',
     'Bastion.utils',
     'Bastion.components',
-    'Bastion.host-collections'
+    'Bastion.host-collections',
+    'Bastion.repository-sets'
 ]);
