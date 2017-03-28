@@ -103,6 +103,24 @@ namespace :test do
         Rake::Task[test_task.name].invoke
       end
 
+      desc "Delete scenario vcr cassettes and run the katello scenario tests in live mode"
+      task :live_scenarios => ['db:test:prepare'] do
+        files = Dir[File.join(::Katello::Engine.root, 'test/fixtures/vcr_cassettes/scenarios/', '**/*.yml')]
+        files.each { |file| File.delete(file) }
+
+        ENV['mode'] = 'all'
+        test_task = Rake::TestTask.new('katello_scenario_test_task') do |t|
+          t.libs << ["test", "#{Katello::Engine.root}/test"]
+          t.test_files = [
+            "#{Katello::Engine.root}/test/scenarios/*_test.rb"
+          ]
+          t.verbose = true
+          t.warning = false
+        end
+
+        Rake::Task[test_task.name].invoke
+      end
+
       desc "Run the Katello plugin unit glue test suite."
       task :glue => ['db:test:prepare'] do
         test_task = Rake::TestTask.new('katello_glue_test_task') do |t|

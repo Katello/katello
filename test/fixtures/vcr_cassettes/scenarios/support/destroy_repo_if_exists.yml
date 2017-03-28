@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: NOT FOUND
+    headers:
+      Date:
+      - Thu, 04 May 2017 15:01:15 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '422'
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXNjZW5hcmlvX3Rlc3QiLCAiX2hyZWYiOiAiL3B1bHAvYXBp
+        L3YyL3JlcG9zaXRvcmllcy9zY2VuYXJpb190ZXN0Lz8iLCAiaHR0cF9zdGF0
+        dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEi
+        OiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJzY2VuYXJpb190ZXN0
+        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
+        b3NpdG9yeT1zY2VuYXJpb190ZXN0IiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        InNjZW5hcmlvX3Rlc3QifX0=
+    http_version: 
+  recorded_at: Thu, 04 May 2017 15:01:15 GMT
+recorded_with: VCR 3.0.3

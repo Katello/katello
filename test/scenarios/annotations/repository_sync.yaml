@@ -1,0 +1,61 @@
+---
+name: Repository Sync (default settings)
+cassette: repo_sync.yml
+annotations:
+- method: post
+  path: "/pulp/api/v2/repositories/scenario_test/actions/sync/"
+  title: Initiate the pulp repository sync
+  description:
+- method: get
+  starts_with: "/pulp/api/v2/tasks/"
+  title: Poll Sync task
+  description:
+  ignore_duplicates: true
+- method: get
+  starts_with: "/pulp/api/v2/tasks/"
+  title: Poll Publish task
+  description:
+  ignore_duplicates: true
+- method: post
+  path: "/pulp/api/v2/repositories/scenario_test/search/units/"
+  title: Distribution Search
+  description: Search for distribution information with all fields
+  request_body: 'distribution'
+- method: post
+  path: "/pulp/api/v2/repositories/scenario_test/search/units/"
+  request_body: 'rpm'
+  title: Fetch rpm unit ids for this repo
+  description:
+- method: post
+  path: "/pulp/api/v2/content/units/rpm/search/"
+  title: Fetch rpm units for this repository
+  description: Search for all rpms with the previously fetched ids.  We do this because historically we've wanted the list of all repo ids for each unit, which is only available via this endpoint.
+- method: post
+  path: "/pulp/api/v2/repositories/scenario_test/search/units/"
+  request_body: 'erratum'
+  title: Fetch Errata ids for repository
+  description:
+- method: post
+  path: "/pulp/api/v2/content/units/erratum/search/"
+  title: Fetch errata units.
+  description: Using the previously fetched ids, we fetch all errata in the repo.
+- method: post
+  path: "/pulp/api/v2/repositories/scenario_test/search/units/"
+  title: Fetch package group units for repository
+  description:
+- method: post
+  path: "/pulp/api/v2/content/units/package_group/search/"
+  title: Fetch package group ids for repository
+  description:  Using the previously fetched ids, we fetch all package groups in the repo.
+- method: post
+  path: "/pulp/api/v2/repositories/actions/content/regenerate_applicability//"
+  title: Request applicability generation for consumers bound to the repository
+  description:
+- method: get
+  starts_with: "/pulp/api/v2/task_groups/"
+  title: Monitor task group status
+  description: Monitor status of the applicability generation
+- method: get
+  starts_with: "/pulp/api/v2/repositories/scenario_test/"
+  title: Fetch repository details
+  description: Unclear why

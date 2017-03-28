@@ -1,0 +1,30 @@
+### Request # <%= count + 1 %>:  <%= annotation.title %>
+ <%= annotation.method.upcase %>  <%= annotation.path %>
+
+  Backend Service:
+   <%= annotation.backend_service %>
+
+  Description:
+   <%= annotation.description %>
+
+  <% if annotation.ignore_duplicates %>
+  Total Requests for this URL: <%= annotation.requests.count %>
+  <% end %>
+
+##### Request body
+<% if annotation.requests.first.request_body.blank? %>
+  None
+<% else %>
+```json
+<%= prettify_body(annotation.requests.last.request_body) %>
+```
+<% end %>
+
+##### Response body
+<% if annotation.requests.first.response_body.blank? %>
+  None
+<% else %>
+```json
+<%= prettify_body(annotation.requests.last.response_body) %>
+```
+<% end %>

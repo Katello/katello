@@ -1,0 +1,39 @@
+---
+name: Repository Create
+cassette: repo_create.yml
+annotations:
+- method: post
+  path: "/candlepin/owners/scenario_test/content/"
+  title: Create Content
+  description: Create Content object for repository, for subscription-manager content access
+- method: post
+  starts_with: "/candlepin/owners/scenario_test/products/"
+  title: Associate content object
+  description: Add the Content object to the product
+- method: get
+  path: "/candlepin/environments/119c4753ff6d3b7bd0b76de6d5a5f94a"
+  title: Retrieve candlepin environment
+  description: Retrieve the environment object (TODO WHY?)
+- method: post
+  path: "/pulp/api/v2/repositories/"
+  title: Create Pulp Repository
+  description:
+- method: post
+  path: "/candlepin/environments/119c4753ff6d3b7bd0b76de6d5a5f94a/content"
+  title: Add Content To environment
+  description: Associates content object to "Library" environment, so it is accessible by clients registered to Library
+- method: get
+  path: "/pulp/api/v2/repositories/scenario_test/"
+  title: Fetch repository information
+  description:
+- method: post
+  path: "/pulp/api/v2/repositories/scenario_test/actions/publish/"
+  title: Publish repository metadata
+  description: Publish the repository, generating empty metadata so that existing clients of that product do not get a 404.
+- method: get
+  starts_with: "/pulp/api/v2/tasks/"
+  ignore_duplicates: true
+  title: Poll Task
+  description: Monitor the task status of the publish
+
+
