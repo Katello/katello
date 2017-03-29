@@ -12,7 +12,7 @@ child @collection[:results] => :results do
     attribute :contentUrl => :content_url
   end
 
-  child :overrides => :content_overrides do
+  child :content_overrides => :overrides do
     attributes :name
     attribute :computed_value => :value
   end

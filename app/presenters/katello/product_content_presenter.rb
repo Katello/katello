@@ -18,7 +18,7 @@ module Katello
     end
 
     def content_overrides
-      overrides.find { |pc| pc.content_label == content.label }
+      overrides.select { |pc| pc.content_label == content.label }
     end
   end
 end
