@@ -103,7 +103,7 @@ module Katello
 
       it "should update facts" do
         facts = {'rhsm_fact' => 'rhsm_value'}
-        assert_sync_task(::Actions::Katello::Host::Update)
+        assert_async_task(::Actions::Katello::Host::Update)
 
         put :facts, :id => @host.subscription_facet.uuid, :facts => facts
         assert_equal 200, response.status
@@ -123,7 +123,7 @@ module Katello
         uuid = @host.subscription_facet.uuid
         stub_cp_consumer_with_uuid(uuid)
         facts = {'rhsm_fact' => 'rhsm_value'}
-        assert_sync_task(::Actions::Katello::Host::Update)
+        assert_async_task(::Actions::Katello::Host::Update)
         put :facts, :id => @host.subscription_facet.uuid, :facts => facts
         assert_response 200
       end
