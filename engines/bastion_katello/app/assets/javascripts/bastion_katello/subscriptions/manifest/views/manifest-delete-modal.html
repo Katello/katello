@@ -1,0 +1,19 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header" translate>Delete Manifest?</h4>
+  <div data-block="modal-body">
+    <p translate>Are you sure you want to delete the manifest?</p>
+    <p translate>Note: Deleting a subscription manifest is STRONGLY discouraged. Deleting a manifest will:</p>
+    <ul class="list-aligned">
+      <li translate>Delete all subscriptions that are attached to running hosts.</li>
+      <li translate>Delete all subscriptions attached to activation keys.</li>
+      <li translate>Disable Red Hat Insights</li>
+      <li translate>Require you to upload the subscription-manifest and re-attach subscriptions to hosts and activation keys.</li>
+    </ul>
+    <p translate>This action should only be taken in extreme circumstances or for debugging purposes.</p>
+  </div>
+  <span data-block="modal-confirm-button">
+    <button class="btn btn-danger" ng-click="ok()">
+        <span translate>Delete Manifest</span>
+    </button>
+  </span>
+</div>

@@ -28,7 +28,8 @@
     <div class="detail pull-left" ng-show="upstream != null">
       <button type="button" class="btn btn-default" ng-disabled="isTaskPending()"
               ng-hide="denied('delete_manifest')"
-              ng-click="deleteManifest()">
+              ng-click="openModal()">
+         <span bst-modal="deleteManifest()" template-url="subscriptions/manifest/views/manifest-delete-modal.html"></span>
          <i class="fa fa-spinner fa-spin" ng-show="deleteTask.pending"></i>
           <span ng-show="deleteTask.pending" translate>Deleting Manifest...</span>
           <span ng-hide="deleteTask.pending" translate>Delete Manifest</span>
