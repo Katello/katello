@@ -30,16 +30,16 @@
       </ul>
     </span>
 
-    <form id="packageActionForm" name="packageActionForm" class="form" method="post" action="/katello/remote_execution">
+    <div ng-form id="packageActionForm" name="packageActionForm" class="form" method="post" action="/katello/remote_execution">
       <input type="hidden" name="name" ng-value="content.content"/>
       <input type="hidden" name="remote_action" ng-value="packageActionFormValues.remoteAction"/>
       <input type="hidden" name="scoped_search" ng-value="packageActionFormValues.search"/>
       <input type="hidden" name="host_ids" ng-value="packageActionFormValues.hostIds"/>
       <input type="hidden" name="authenticity_token" ng-value="packageActionFormValues.authenticityToken"/>
       <input type="hidden" name="customize" ng-value="packageActionFormValues.customize"/>
-    </form>
+    </div>
 
-    <form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
+    <div ng-form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
       <div>
         <input id="package" type="radio"
                ng-model="content.contentType"
@@ -60,6 +60,7 @@
       <div class="form-group">
         <input class="form-control"
                type="text"
+               stop-event="click"
                placeholder="{{ content.placeholder }}"
                ng-model="content.content"
                ng-disabled="content.confirm"
@@ -150,7 +151,7 @@
         <button type="button" class="btn btn-default" ng-click="content.confirm = false" translate>No</button>
       </div>
 
-    </form>
+    </div>
   </div>
 
   <div data-block="modal-footer">
