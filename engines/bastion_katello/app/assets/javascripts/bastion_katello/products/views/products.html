@@ -22,36 +22,38 @@
     </button>
 
     <div class="btn-group" uib-dropdown keyboard-nav>
-      <button type="button" class="btn btn-default"
-              ng-show="permitted('sync_products')"
-              ng-disabled="table.numSelected == 0"
-              ng-click="syncProducts()">
-        <span translate>Sync Selected</span>
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span translate>Select Action</span>
       </button>
 
-      <button type="button" class="btn btn-default" uib-dropdown-toggle
-              ng-disabled="table.numSelected === 0"
-              ng-show="permitted('sync_products') || permitted('destroy_products')">
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
         <span class="caret"></span>
+        <span class="sr-only" translate>Toggle Dropdown</span>
       </button>
 
       <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-        <li role="menuitem">
-          <a ng-click="syncProducts()" ng-show="permitted('sync_products')" translate>Sync Selected</a>
+        <li role="menuitem" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="syncProducts()" ng-show="permitted('sync_products')" disable-link="table.numSelected === 0" translate>
+            Sync Selected
+          </a>
         </li>
 
-        <li role="menuitem">
-          <a ng-click="openAdvancedSyncModal()" ng-show="permitted('edit_products')" translate>Advanced Sync</a>
+        <li role="menuitem" ng-show="permitted('edit_products')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openAdvancedSyncModal()" disable-link="table.numSelected === 0" translate>
+            Advanced Sync
+          </a>
         </li>
 
-        <li role="menuitem">
-          <a ng-click="openSyncPlanModal()" ng-show="permitted('edit_products')" translate>Manage Sync Plan</a>
+        <li role="menuitem" ng-show="permitted('edit_products')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openSyncPlanModal()" disable-link="table.numSelected === 0" translate>
+            Manage Sync Plan
+          </a>
         </li>
 
         <li class="divider"></li>
 
-        <li role="menuitem">
-          <a ng-show="permitted('destroy_products')" ng-click="openModal()" translate>Remove</a>
+        <li role="menuitem" ng-show="permitted('destroy_products')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openModal()" disable-link="table.numSelected === 0" translate>Remove</a>
 
           <div bst-modal="removeProducts()" model="table">
             <div data-block="modal-header"

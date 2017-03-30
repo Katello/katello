@@ -26,35 +26,29 @@
     <div data-block="list-actions">
       <div class="btn-group" uib-dropdown keyboard-nav>
 
-        <button class="btn btn-default" type="button"
-                translate
-                ng-disabled="table.numSelected === 0"
-                ng-hide="denied('edit_activation_keys', activationKey)"
-                ng-click="overrideToEnabled()">
-          Override to Enabled
+        <button class="btn btn-default" type="button" uib-dropdown-toggle>
+          <span translate>Select Action</span>
         </button>
 
-        <button type="button" class="btn btn-default" uib-dropdown-toggle
-                ng-disabled="table.numSelected === 0"
-                ng-show="permitted('edit_activation_keys', activationKey)">
+        <button type="button" class="btn btn-default" uib-dropdown-toggle>
           <span class="caret"></span>
         </button>
 
         <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-          <li role="menuitem">
-            <a ng-click="overrideToEnabled()" ng-show="permitted('edit_activation_keys', activationKey)" translate>
+          <li role="menuitem" ng-show="permitted('edit_activation_keys', activationKey)" ng-class="{disabled: table.numSelected === 0}">
+            <a ng-click="overrideToEnabled()" disable-link="table.numSelected === 0" translate>
               Override to Enabled
             </a>
           </li>
 
-          <li role="menuitem">
-            <a ng-click="overrideToDisabled()" ng-show="permitted('edit_activation_keys', activationKey)" translate>
+          <li role="menuitem" ng-show="permitted('edit_activation_keys', activationKey)" ng-class="{disabled: table.numSelected === 0}">
+            <a ng-click="overrideToDisabled()" disable-link="table.numSelected === 0" translate>
               Override to Disabled
             </a>
           </li>
 
-          <li role="menuitem">
-            <a ng-click="resetToDefault()" ng-show="permitted('edit_activation_keys', activationKey)" translate>
+          <li role="menuitem" ng-show="permitted('edit_activation_keys', activationKey)" ng-class="{disabled: table.numSelected === 0}">
+            <a ng-click="resetToDefault()" disable-link="table.numSelected === 0" translate>
               Reset to Default
             </a>
           </li>
