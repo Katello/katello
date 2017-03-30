@@ -704,7 +704,7 @@ module Katello
             self.delete(join_path(path(owner_label, product_id), "content/#{content_id}"), self.default_headers).code.to_i
           end
 
-          def create_unlimited_subscription(owner_key, product_id)
+          def create_unlimited_subscription(owner_key, product_id, start_date)
             start_date ||= Time.now
             # End it 100 years from now
             end_date ||= start_date + 10_950.days
