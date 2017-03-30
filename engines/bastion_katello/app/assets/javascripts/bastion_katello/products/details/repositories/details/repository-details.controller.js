@@ -55,6 +55,10 @@
             return result;
         };
 
+        $scope.disableSyncLink = function (adavancedSync) {
+            return $scope.hideSyncButton($scope.repository, adavancedSync) || $scope.table.rows === 0;
+        };
+
         $scope.syncRepository = function (repository) {
             Repository.sync({id: repository.id}, function (task) {
                 $state.go('product.repository.tasks.details', {taskId: task.id});
