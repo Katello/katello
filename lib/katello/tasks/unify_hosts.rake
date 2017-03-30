@@ -105,7 +105,7 @@ namespace :katello do
       end
 
       if facet_host.managed?
-        puts "Host #{facet_host.name} is registered with subscription-manager but is managed, please un-unmanage this host first."
+        puts "Host #{facet_host.name} is registered with subscription-manager but is managed, please un-manage this host first."
         return
       end
 
