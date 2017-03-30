@@ -76,17 +76,18 @@ module ::Actions::Katello::Product
     end
 
     it 'plans' do
-      action.stubs(:action_subject).with do |subject, params|
+      action.stubs(:action_subject).with do |subject, _params|
         subject.must_equal(product)
-        params[:cp_id].must_be_kind_of Dynflow::ExecutionPlan::OutputReference
-        params[:cp_id].subkeys.must_equal %w(response id)
       end
       product.expects(:save!).returns([])
+      product.organization.label = 'somelabel'
 
+      Katello::Util::Data.expects(:md5hash).returns('foobar')
       plan_action(action, product, product.organization)
 
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Product::Create,
+                                :id => 'foobar',
                                 :name => product.name,
                                 :owner => product.organization.label,
                                 :multiplier => 1,

@@ -5,6 +5,12 @@ module Katello
         variable.map { |x| x.with_indifferent_access }
       end
 
+      def self.md5hash(string)
+        md5 = Digest::MD5.new
+        md5.update(string)
+        md5.hexdigest
+      end
+
       def self.ostructize(obj, options = {})
         options[:prefix_keys] ||= []
         options[:prefix] ||= '_'
