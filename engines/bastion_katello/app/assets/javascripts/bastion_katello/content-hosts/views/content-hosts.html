@@ -13,44 +13,39 @@
     </button>
 
     <div class="btn-group" uib-dropdown keyboard-nav>
-      <button type="button" class="btn btn-default"
-              ng-disabled="table.numSelected === 0"
-              ng-show="permitted('edit_hosts')"
-              ng-click="openHostCollectionsModal()">
-        <span translate>Change Host Collection</span>
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span translate>Select Action</span>
       </button>
 
-      <button type="button" class="btn btn-default" uib-dropdown-toggle
-              ng-disabled="table.numSelected === 0"
-              ng-show="permitted('edit_hosts') || permitted('destroy_hosts')">
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
         <span class="caret"></span>
       </button>
 
-      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-        <li role="menuitem">
-          <a ng-click="openHostCollectionsModal()" ng-show="permitted('edit_hosts')" translate>Change Host Collections</a>
+      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+        <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openHostCollectionsModal()" disable-link="table.numSelected === 0" translate>Change Host Collections</a>
         </li>
 
-        <li bst-feature-flag="remote_actions" role="menuitem">
-          <a ng-click="openPackagesModal()" ng-show="permitted('edit_hosts')" translate>Manage Packages</a>
+        <li bst-feature-flag="remote_actions" role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openPackagesModal()" disable-link="table.numSelected === 0" translate>Manage Packages</a>
         </li>
 
-        <li bst-feature-flag="remote_actions" role="menuitem">
-          <a ng-click="openErrataModal()" ng-show="permitted('edit_hosts')" translate>Manage Errata</a>
+        <li bst-feature-flag="remote_actions" role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openErrataModal()" disable-link="table.numSelected === 0" translate>Manage Errata</a>
         </li>
 
-        <li role="menuitem">
-          <a ng-click="openEnvironmentModal()" ng-show="permitted('edit_hosts')" translate>Change Lifecycle Environment</a>
+        <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openEnvironmentModal()" disable-link="table.numSelected === 0" translate>Change Lifecycle Environment</a>
         </li>
 
-        <li role="menuitem">
-          <a ng-click="openSubscriptionsModal()" ng-show="permitted('edit_hosts')" translate>Manage Subscriptions</a>
+        <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openSubscriptionsModal()" disable-link="table.numSelected === 0" translate>Manage Subscriptions</a>
         </li>
 
         <li class="divider"></li>
 
-        <li role="menuitem">
-          <a ng-click="openModal()" ng-show="permitted('destroy_hosts')" translate>Remove Hosts</a>
+        <li role="menuitem" ng-show="permitted('destroy_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openModal()" disable-link="table.numSelected === 0" translate>Remove Hosts</a>
           <span bst-modal="performDestroyHosts()" template-url="content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html"></span>
         </li>
       </ul>
