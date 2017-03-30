@@ -40,6 +40,7 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                 self.refreshTasks(tasks);
                 self.deleteOldRows(tasks);
                 self.table.working = false;
+                self.table.refreshing = false;
             };
 
             self.table.search = function () {
