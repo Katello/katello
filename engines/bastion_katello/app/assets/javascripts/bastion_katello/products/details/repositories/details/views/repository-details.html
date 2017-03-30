@@ -7,9 +7,8 @@
 
   <div data-block="item-actions">
     <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button type="button" class="btn btn-default" ng-click="syncRepository(repository)"
-              ng-disabled="syncInProgress(repository.last_sync) || !repository.url || denied('sync_products', product)">
-        <span translate>Sync Now</span>
+      <button type="button" class="btn btn-default" uib-dropdown-toggle>
+        <span translate>Select Action</span>
       </button>
 
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
@@ -18,10 +17,8 @@
       </button>
 
       <ul class="dropdown-menu-right" uib-dropdown-menu role="menu">
-        <li role="menuitem">
-          <a ng-click="syncRepository(repository)"
-             ng-hide="hideSyncButton(repository, false)"
-          translate>
+        <li role="menuitem" ng-hide="hideSyncButton(repository, false)" ng-class="{disabled: disableSyncLink()}">
+          <a ng-click="syncRepository(repository)" disable-link="disableSyncLink()" translate>
             Sync Now
           </a>
 
@@ -38,18 +35,14 @@
           </span>
         </li>
 
-        <li role="menuitem">
-          <a ui-sref="product.repository.advanced_sync({repositoryId: repository.id})"
-             ng-hide="hideSyncButton(repository, true)"
-             translate>
+        <li role="menuitem" ng-hide="hideSyncButton(repository, true)" ng-class="{disabled: disableSyncLink()}">
+          <a ui-sref="product.repository.advanced_sync({repositoryId: repository.id})" disable-link="disableSyncLink()" translate>
             Advanced Sync
           </a>
         </li>
 
-        <li role="menuitem">
-          <a ng-click="republishRepository(repository)"
-             ng-hide="syncInProgress(repository.last_sync) || denied('edit_products', product)"
-             translate>
+        <li role="menuitem" ng-hide="syncInProgress(repository.last_sync) || denied('edit_products', product)">
+          <a ng-click="republishRepository(repository)" translate>
             Republish Repository Metadata
           </a>
 
@@ -63,8 +56,8 @@
         </li>
 
         <li class="divider" bst-feature-flag="custom_products" ng-hide="denied('delete_repositories')"></li>
-        <li role="menuitem" ng-hide="denied('delete_repositories')">
-          <a ng-click="openModal()" ng-show="canRemove(repository, product)" translate>
+        <li role="menuitem" ng-show="canRemove(repository, product)">
+          <a ng-click="openModal()" translate>
             Remove Repository
           </a>
 
