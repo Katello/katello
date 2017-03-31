@@ -8,13 +8,13 @@ module ::Actions::Pulp
     include VCR::TestCase
 
     let(:uuid) { 'uuid' }
-    let(:name) { 'name' }
+    let(:consumer_name) { 'gregor' }
     let(:type) { 'rpm' }
     let(:args) { %w(vim vi) }
 
     def setup
       set_user
-      ::ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create, uuid: uuid, name: name)
+      ::ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create, uuid: uuid, name: consumer_name)
     end
 
     def teardown
@@ -41,7 +41,7 @@ module ::Actions::Pulp
     def test_create
       consumer = ::Katello.pulp_server.resources.consumer.retrieve(uuid)
       refute_nil consumer
-      assert_equal name, consumer[:display_name]
+      assert_equal consumer_name, consumer[:display_name]
     end
 
     def test_install_content
@@ -57,6 +57,22 @@ module ::Actions::Pulp
     def test_uninstall_content
       action = plan_consumer_action(::Actions::Pulp::Consumer::ContentUninstall)
       it_runs(action, :extensions, :consumer, :uninstall_content)
+    end
+
+    def test_regenerate_applicability
+      action = create_and_plan_action(::Actions::Pulp::Consumer::GenerateApplicability,
+                                      uuids: [uuid],
+                                      type: type,
+                                      args: args)
+      it_runs(action, :resources, :consumer, :regenerate_applicability_by_id)
+    end
+
+    def test_regenerate_applicability_multiple_uuid
+      action = create_and_plan_action(::Actions::Pulp::Consumer::GenerateApplicability,
+                                      uuids: [uuid, 'another-uuid'],
+                                      type: type,
+                                      args: args)
+      it_runs(action, :extensions, :consumer, :regenerate_applicability_by_ids)
     end
 
     def plan_consumer_action(action_class)
