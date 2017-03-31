@@ -44,9 +44,17 @@ KT.redhat_provider_page = (function($) {
         }
         options['pulp_id'] = checkbox.attr("data-pulp-id");
         options['content_id'] = checkbox.attr("data-content-id");
-        options['releasever'] = checkbox.attr("data-releasever");
-        options['basearch'] = checkbox.attr("data-basearch");
         options['registry_name'] = checkbox.attr("data-registry-name");
+
+        options['substitutions'] = {}
+
+        $.each(checkbox[0].attributes, function(index, attribute) {
+            var attribute_name = attribute.name;
+            if (attribute_name.indexOf("data-substitution_") == 0) {
+                var substitution_name = attribute_name.replace("data-substitution_", '');
+                options['substitutions'][substitution_name] = attribute.value;
+            }
+        });
 
         $(checkbox).hide();
         $('#spinner_'+id).removeClass('hidden').show();

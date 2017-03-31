@@ -6,8 +6,8 @@ module Actions
           _("Enable")
         end
 
-        def plan(product, content, options)
-          mapper = repository_mapper(product, content, options, options[:registry_name])
+        def plan(product, content, substitutions, options = {})
+          mapper = repository_mapper(product, content, substitutions, options[:registry_name])
           mapper.validate!
           if mapper.find_repository
             fail ::Katello::Errors::ConflictException, _("The repository is already enabled")

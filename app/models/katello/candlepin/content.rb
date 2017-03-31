@@ -45,11 +45,9 @@ module Katello
       end
 
       def find_repository
-        ::Katello::Repository.where(product_id: product.id,
-                                    content_id: content.id,
-                                    environment_id: product.organization.library.id,
-                                    minor: minor,
-                                    arch: arch).first
+        repos = ::Katello::Repository.in_default_view.where(product_id: product.id,
+                                                            content_id: content.id)
+        repos.with_substitutions(@substitutions).first
       end
 
       def build_repository
@@ -75,6 +73,7 @@ module Katello
           :unprotected => unprotected?,
           :download_policy => download_policy,
           :mirror_on_sync => true,
+          :containerver => containerver,
           :content_view_version => product.organization.
                                   library.default_content_view_version
         )
@@ -120,6 +119,10 @@ module Katello
 
       def feed_url
         product.repo_url(path)
+      end
+
+      def containerver
+        substitutions[:containerver]
       end
 
       def arch

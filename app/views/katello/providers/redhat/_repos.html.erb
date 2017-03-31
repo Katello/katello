@@ -33,14 +33,13 @@
                      data-url="<%= katello.toggle_repository_product_path(scan_cdn.input[:product_id]) %>"
                      data-content-id="<%= scan_cdn.input[:content_id] %>"
                      data-pulp-id="<%= result[:pulp_id] %>"
+
+                     <% result[:substitutions].each do |name, value| %>
+                        data-substitution_<%= name %>="<%= value %>"
+                     <% end %>
+
                      <% if result[:registry_name] %>
                        data-registry-name="<%= result[:registry_name] %>"
-                     <% end %>
-                     <% if result[:substitutions][:releasever] %>
-                       data-releasever="<%= result[:substitutions][:releasever] %>"
-                     <% end %>
-                     <% if result[:substitutions][:basearch] %>
-                       data-basearch="<%= result[:substitutions][:basearch] %>"
                      <% end %>
                      <% if result[:promoted] %>
                       disabled="disabled"

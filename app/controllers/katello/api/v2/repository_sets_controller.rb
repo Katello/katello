@@ -61,6 +61,7 @@ module Katello
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
     param :basearch, String, :required => false, :desc => N_("Basearch to enable")
     param :releasever, String, :required => false, :desc => N_("Releasever to enable")
+    param :containerver, String, :required => false, :desc => N_("Containerver to enable")
     def enable
       task = sync_task(::Actions::Katello::RepositorySet::EnableRepository, @product, @product_content.content, substitutions)
       respond_for_async :resource => task
@@ -71,6 +72,7 @@ module Katello
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
     param :basearch, String, :required => false, :desc => N_("Basearch to disable")
     param :releasever, String, :required => false, :desc => N_("Releasever to disable")
+    param :containerver, String, :required => false, :desc => N_("Containerver to enable")
     def disable
       task = sync_task(::Actions::Katello::RepositorySet::DisableRepository, @product, @product_content.content, substitutions)
       respond_for_async :resource => task
@@ -94,7 +96,7 @@ module Katello
     end
 
     def substitutions
-      params.slice(:basearch, :releasever)
+      params.slice(:basearch, :releasever, :containerver)
     end
   end
 end

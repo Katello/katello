@@ -34,7 +34,7 @@ module Katello
                      else
                        ::Actions::Katello::RepositorySet::DisableRepository
                      end
-      task = sync_task(action_class, @product, @content, substitutions)
+      task = sync_task(action_class, @product, @content, params[:substitutions], :registry_name => params[:registry_name])
       render :json => { :task_id => task.id }
     rescue => e
       render :partial => 'katello/providers/redhat/enable_errors', :locals => { :error_message => e.message}, :status => 500
@@ -59,10 +59,6 @@ module Katello
       end
     end
 
-    def substitutions
-      params.slice(:basearch, :releasever, :registry_name)
-    end
-
     def task_error(task)
       task.failed_steps.first.action(task.execution_plan).steps.map { |s| s.try(:error).try(:message) }.reject(&:blank?).join(', ')
     end
@@ -82,7 +78,7 @@ module Katello
     def available_synced_repos(repos, content_id)
       @product.repositories.in_default_view.where(:content_id => content_id).find_each do |product_repo|
         found = repos.detect do |repo|
-          product_repo.pulp_id == repo[:pulp_id]
+          product_repo.substitutions.compact == repo['substitutions'].compact
         end
         unless found
           repos << {
@@ -90,10 +86,7 @@ module Katello
             :path => product_repo.url,
             :pulp_id => product_repo.pulp_id,
             :content_id => product_repo.content_id,
-            :substitutions => {
-              :basearch => product_repo.arch,
-              :releasever => product_repo.minor
-            },
+            :substitutions => product_repo.substitutions,
             :enabled => true,
             :promoted => product_repo.promoted?,
             :registry_name => product_repo.docker_upstream_name

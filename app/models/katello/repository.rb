@@ -190,6 +190,15 @@ module Katello
       self.content_view_version.content_view
     end
 
+    def self.with_substitutions(substitutions)
+      substitutions = substitutions.with_indifferent_access
+      where(:minor => substitutions[:releasever], :arch => substitutions[:basearch], :containerver => substitutions[:containerver])
+    end
+
+    def substitutions
+      {:releasever => minor, :basearch => arch, :containerver => containerver}.with_indifferent_access
+    end
+
     def self.in_organization(org)
       where("#{Repository.table_name}.environment_id" => org.kt_environments.pluck("#{KTEnvironment.table_name}.id"))
     end
