@@ -49,7 +49,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
                 angular.forEach(path.environments, function (environment) {
                     environment.disabled = $scope.checkDisabled(environment, version.environments);
                     if ($scope.checkSuggested(environment, version.environments)) {
-                        environment.customClass = 'fa fa-star';
+                        environment.iconClass = 'fa fa-star';
                     }
                 });
             });
