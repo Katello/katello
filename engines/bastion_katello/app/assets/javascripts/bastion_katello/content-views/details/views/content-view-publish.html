@@ -11,38 +11,42 @@
   <h3 translate>Version Details</h3>
 </header>
 
-<form name="versionForm" class="col-sm-5" role="form" novalidate>
+<div class="row">
+  <div class="col-sm-5">
+    <form name="versionForm" role="form" novalidate>
 
-  <div bst-form-group label="{{ 'Version' | translate }}">
-    <span>{{ contentView['next_version'] }}</span>
-  </div>
+      <div bst-form-group label="{{ 'Version' | translate }}">
+        <span>{{ contentView['next_version'] }}</span>
+      </div>
 
-  <div bst-form-group label="{{ 'Description' | translate }}">
+      <div bst-form-group label="{{ 'Description' | translate }}">
     <textarea id="description"
               name="description"
               ng-model="version.description"
               rows="10"
               tabindex="1">
     </textarea>
-  </div>
+      </div>
 
-  <div class="checkbox">
-    <label translate>
-      <input id="forceMetadataRegeneration"
-             name="forceMetadataRegeneration"
-             ng-model="version.forceMetadataRegeneration"
-             type="checkbox"/>
-      Force Yum Metadata Regeneration
-    </label>
-    <i class="fa fa-question-circle"
-       uib-tooltip="{{ 'Forces metadata regeneration on yum repos even if the contents of the repo have not changed' | translate }}"
-       tooltip-animation="false"
-       tooltip-append-to-body="true"></i>
-  </div>
+      <div class="checkbox">
+        <label translate>
+          <input id="forceMetadataRegeneration"
+                 name="forceMetadataRegeneration"
+                 ng-model="version.forceMetadataRegeneration"
+                 type="checkbox"/>
+          Force Yum Metadata Regeneration
+        </label>
+        <i class="fa fa-question-circle"
+           uib-tooltip="{{ 'Forces metadata regeneration on yum repos even if the contents of the repo have not changed' | translate }}"
+           tooltip-animation="false"
+           tooltip-append-to-body="true"></i>
+      </div>
 
-  <div bst-form-buttons
-       on-cancel="transitionTo('content-view.versions', {contentViewId: contentView.id})"
-       on-save="publish(contentView)"
-       working="working">
+      <div bst-form-buttons
+           on-cancel="transitionTo('content-view.versions', {contentViewId: contentView.id})"
+           on-save="publish(contentView)"
+           working="working">
+      </div>
+    </form>
   </div>
-</form>
+</div>
