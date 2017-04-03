@@ -1,6 +1,10 @@
 describe('Directive: subscriptionType', function() {
     var $scope, $compile, element;
 
+    function removeExtraSpaces(string) {
+        return string.trim().replace(/(?:\r\n|\r|\n|\t)/g, '').replace(/\s\s+/g, ' ');
+    }
+    
     beforeEach(module(
         'Bastion.subscriptions',
         'subscriptions/views/subscription-type.html'
@@ -16,7 +20,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text().trim()).toEqual("Virtual");
+        expect(removeExtraSpaces(element.text())).toEqual("Virtual");
     });
 
     it("subscription type Physical when no host", function() {
@@ -24,7 +28,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text()).toEqual("\n\n  Physical\n\n\n\n");
+        expect(removeExtraSpaces(element.text())).toEqual("Physical");
     });
 
     it("subscription type Virtual when host", function() {
@@ -32,7 +36,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text().trim()).toEqual("Physical");
+        expect(removeExtraSpaces(element.text())).toEqual("Physical");
     });
 
     it("subscription type Guest when host", function() {
@@ -40,7 +44,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text().trim()).toEqual("Guests of\n  hypervisor");
+        expect(removeExtraSpaces(element.text())).toEqual("Guests of hypervisor");
     });
 
     it("subscription type Temporary when unmapped_guest is true", function() {
@@ -48,7 +52,7 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text().trim()).toEqual("Temporary");
+        expect(removeExtraSpaces(element.text())).toEqual("Temporary");
     });
 
     it("subscription type Temporary when unmapped_guest is false", function() {
@@ -56,6 +60,6 @@ describe('Directive: subscriptionType', function() {
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
-        expect(element.text().trim()).toEqual("Virtual");
+        expect(removeExtraSpaces(element.text())).toEqual("Virtual");
     });
 });
