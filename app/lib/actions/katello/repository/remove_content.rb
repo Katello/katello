@@ -2,6 +2,8 @@ module Actions
   module Katello
     module Repository
       class RemoveContent < Actions::EntryAction
+        include Dynflow::Action::WithSubPlans
+
         middleware.use Actions::Middleware::KeepCurrentUser
 
         def plan(repository, content_units, options = {})
@@ -33,11 +35,14 @@ module Actions
             plan_action(pulp_action, :pulp_id => repository.pulp_id,
                                      :clauses => {:association => {'unit_id' => {'$in' => uuids}}
             })
-
-            plan_self(:repository_id => repository.id, :user_id => ::User.current.id,
-                      sync_capsule: sync_capsule)
+            plan_self
             plan_action(CapsuleGenerateAndSync, repository) if sync_capsule
           end
+        end
+
+        def create_sub_plans
+          trigger(Actions::Katello::Repository::MetadataGenerate,
+                  ::Katello::Repository.find(input[:repository_id]))
         end
 
         def resource_locks
@@ -46,11 +51,6 @@ module Actions
 
         def humanized_name
           _("Remove Content")
-        end
-
-        def run
-          output[:task_id] = ForemanTasks.sync_task(Actions::Katello::Repository::MetadataGenerate,
-                                                    ::Katello::Repository.find(input[:repository_id])).id
         end
       end
     end
