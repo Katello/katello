@@ -42,6 +42,10 @@ child :gpg_key do |_gpg|
   attribute :id
 end
 
+node :upstream_password_exists do |repo|
+  repo.upstream_password.present?
+end
+
 if @object && @object.library_instance_id.nil?
 
   node :content_view_environments do |repository|
