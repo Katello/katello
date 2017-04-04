@@ -16,6 +16,7 @@ Katello::Engine.routes.draw do
       end
       match '/consumers' => 'candlepin_proxies#consumer_create', :via => :post
       match '/hypervisors' => 'candlepin_proxies#hypervisors_update', :via => :post
+      match '/hypervisors/:owner/' => 'candlepin_proxies#async_hypervisors_update', :via => :post
       match '/owners/:organization_id/environments' => 'candlepin_proxies#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
@@ -54,6 +55,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id/content_overrides/' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_content_overrides_delete_path
       match '/consumers/:id/available_releases' => 'candlepin_proxies#available_releases', :via => :get
       match '/systems/:id/enabled_repos' => 'candlepin_proxies#enabled_repos', :via => :put
+      match '/jobs/:jobId' => 'candlepin_proxies#get', :via => :get, :as => :proxy_jobs_get_path
       match '/status' => 'candlepin_proxies#server_status', :via => :get
     end
   end
