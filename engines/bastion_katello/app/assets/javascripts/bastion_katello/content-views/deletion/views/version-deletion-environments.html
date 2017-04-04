@@ -1,10 +1,10 @@
 <span page-title ng-model="version">{{ "Remove Version" | translate }} {{ version.version }}</span>
 
-<section class="details details-full">
+<section>
 
   <h3 translate>Delete Version {{ version.version }}</h3>
 
-  <div class="details details-full">
+  <div>
     <div bst-alert="warning" ng-hide="allSelectable()">
        <span translate> This Version cannot be deleted from some of the Lifecycle Environments due to one of the reasons below.</span>
        <ul>
@@ -46,18 +46,19 @@
 
   </table>
 
-  <br/>
-  <div class="details">
-    <span translate> Completely remove version? </span>
-    <span>
-      <input type="checkbox" ng-model="deleteOptions.deleteArchive" ng-disabled="!canDeleteArchive()"/>
-    </span>
-    <div bst-alert="info">
-      <span translate>Selecting this option will result in the Version being completely deleted and no longer being available for promotion.  The version must be removed from all Lifecycle Environments in order to select this option.</span>
+  <div>
+    <div class="checkbox">
+      <div bst-alert="warning" ng-show="deleteOptions.deleteArchive">
+        <span translate>Selecting this option will result in the Version being completely deleted and no longer being available for promotion.  The version must be removed from all Lifecycle Environments in order to select this option.</span>
+      </div>
+      
+      <label>
+        <input type="checkbox" ng-model="deleteOptions.deleteArchive" ng-disabled="!canDeleteArchive()"/>
+        <span translate>Completely remove version?</span>
+      </label>
     </div>
 
-    <br/>
-    <div class="fr">
+    <div class="pull-right">
       <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
         <button type="button" class="btn btn-default" translate>
           Cancel
@@ -69,5 +70,4 @@
       </button>
     </div>
   </div>
-
 </section>
