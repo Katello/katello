@@ -33,7 +33,7 @@ module Katello::Host
 
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
-        plan_action(action, @hypervisor_results)
+        plan_action(action, :hypervisors => @hypervisor_results)
         finalize_action(action)
       end
 
@@ -43,7 +43,7 @@ module Katello::Host
         ::Host.expects(:find_by).with(:name => @hypervisor_name).returns(@host)
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
-        plan_action(action, @hypervisor_results)
+        plan_action(action, :hypervisors => @hypervisor_results)
         finalize_action(action)
       end
 
@@ -53,7 +53,7 @@ module Katello::Host
         ::Katello::Host::SubscriptionFacet.expects(:new).never
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
-        plan_action(action, @hypervisor_results)
+        plan_action(action, :hypervisors => @hypervisor_results)
         finalize_action(action)
       end
 
@@ -64,7 +64,7 @@ module Katello::Host
 
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
-        plan_action(action, @hypervisor_results)
+        plan_action(action, :hypervisors => @hypervisor_results)
         action = finalize_action(action)
 
         action.state.must_equal :error

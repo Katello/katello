@@ -223,6 +223,20 @@ module Katello
       end
     end
 
+    describe "async_hypervisors_update" do
+      it "hypervisors_update" do
+        Katello::Resources::Candlepin::Consumer.expects(:async_hypervisors).returns('id' => 'foo')
+
+        assert_async_task(::Actions::Katello::Host::Hypervisors) do |params, options|
+          assert_nil params
+          assert_equal options, :task_id => 'foo'
+        end
+
+        post(:async_hypervisors_update, :owner => @organization.label, :env => 'dev/dev')
+        assert_response 200
+      end
+    end
+
     describe "hypervisors_update_with_consumer_auth" do
       before do
         @controller.stubs(:client_authorized?).returns(true)

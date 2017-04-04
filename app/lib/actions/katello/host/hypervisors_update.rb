@@ -4,8 +4,8 @@ module Actions
       class HypervisorsUpdate < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
 
-        def plan(hypervisors)
-          plan_self(:hypervisors => hypervisors)
+        input_format do
+          param :hypervisors
         end
 
         def run
