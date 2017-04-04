@@ -95,11 +95,13 @@ module Katello
         #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
         ca_file = nil
 
-        capabilities = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
+        params = {}
+        params[:capabilities] = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
           result << {'name' => element}
         end
+        params[:facts] = {:distributor_version => 'sat-6.3'}
         Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
-                                                      upstream['idCert']['key'], ca_file, :capabilities => capabilities)
+                                                      upstream['idCert']['key'], ca_file, params)
       end
 
       def owner_upstream_export(upstream, zip_file_path, _options)
