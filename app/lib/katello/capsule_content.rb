@@ -147,6 +147,12 @@ module Katello
       raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [@capsule.name, error])
     end
 
+    def verify_ueber_certs
+      self.capsule.organizations.each do |org|
+        Cert::Certs.verify_ueber_cert(org)
+      end
+    end
+
     def self.with_environment(environment, include_default = false)
       features = [SmartProxy::PULP_NODE_FEATURE]
       features << SmartProxy::PULP_FEATURE if include_default

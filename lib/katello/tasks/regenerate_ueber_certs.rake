@@ -8,7 +8,7 @@ namespace :katello do
     organizations = user_org.present? ? [user_org] : Organization.all
 
     organizations.each do |org|
-      ::Katello::Resources::Candlepin::Owner.generate_ueber_cert(org.label)
+      org.regenerate_ueber_cert
     end
     puts "Regenerated the ueber certificate(s) for #{organizations.map(&:name).join(', ')}"
   end

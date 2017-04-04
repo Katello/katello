@@ -154,6 +154,10 @@ module Katello
           end
           discovery
         end
+
+        def regenerate_ueber_cert
+          ::Katello::Resources::Candlepin::Owner.generate_ueber_cert(self.label)
+        end
       end
     end
   end
