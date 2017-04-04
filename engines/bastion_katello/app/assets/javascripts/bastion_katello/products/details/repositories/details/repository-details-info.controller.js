@@ -114,5 +114,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }
             return OstreeUpstreamSyncPolicy.syncPolicyName(policy);
         };
+
+        $scope.clearUpstreamPassword = function () {
+            $scope.repository['upstream_password'] = null;
+            $scope.repository['upstream_password_exists'] = false;
+            $scope.save($scope.repository);
+        };
     }]
 );

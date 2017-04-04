@@ -18,3 +18,12 @@ angular.module('Bastion.components.formatters').filter('ostreeUpstreamSyncPolicy
         return OstreeUpstreamSyncPolicy.syncPolicyName(policy);
     };
 }]);
+
+angular.module('Bastion.components.formatters').filter('upstreamPasswordFilter', [function () {
+    return function (displayValue, repository) {
+        if (repository["upstream_password_exists"]) {
+            return "******";
+        }
+        return null;
+    };
+}]);

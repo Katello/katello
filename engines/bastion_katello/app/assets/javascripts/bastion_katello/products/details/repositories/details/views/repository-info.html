@@ -49,9 +49,18 @@
       </dd>
 
       <dt translate>Upstream Password</dt>
-      <dd bst-edit-text="repository.upstream_password"
+      <dd bst-edit-custom="repository.upstream_password_exists"
+          readonly="denied('edit_products', product)"
           on-save="save(repository)"
-          readonly="product.redhat || denied('edit_products', product)">
+          formatter="upstreamPasswordFilter"
+          formatter-options="repository"
+          deletable="repository.upstream_password_exists"
+          on-delete="clearUpstreamPassword()"
+          >
+          <input id="upstream_password"
+            name="upstream_password"
+            type="password"
+            ng-model="repository.upstream_password"/>
       </dd>
 
       <span ng-show="repository.content_type === 'yum'">
