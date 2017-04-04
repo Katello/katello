@@ -63,7 +63,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             return translate("Successfully promoted %cv version %ver to %env")
                 .replace('%cv', version['content_view'].name)
                 .replace('%ver', version.version)
-                .replace('%env', task.input['environment_name']);
+                .replace('%env', task.input.environments.join(", "));
         }
 
         function deletionCompleteMessage(version, task) {
