@@ -11,8 +11,8 @@ module Katello
                                         :upload_package_profile, :regenerate_identity_certificates, :facts,
                                         :available_releases, :serials, :upload_tracer_profile]
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates, :upload_tracer_profile, :facts]
-    before_action :authorize_client_or_admin, :only => [:hypervisors_update]
+    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
+    before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update]
     before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :available_releases]
@@ -20,8 +20,10 @@ module Katello
     before_action :add_candlepin_version_header
 
     before_action :proxy_request_path, :proxy_request_body
-    before_action :set_organization_id, :except => :hypervisors_update
-    before_action :find_hypervisor_organization, :only => [:hypervisors_update]
+    before_action :set_organization_id, :except => [:hypervisors_update, :async_hypervisors_update]
+    before_action :find_hypervisor_organization, :only => [:async_hypervisors_update, :hypervisors_update]
+
+    before_action :check_content_type, :except => :async_hypervisors_update
 
     def repackage_message
       yield
@@ -106,6 +108,17 @@ module Katello
       end
 
       respond_for_index :collection => @all_environments
+    end
+
+    #api :POST, "/hypervisors/OWNER"
+    # Note that this request comes in as content-type 'text/plain' so that
+    # tomcat won't parse the json.  Here we just pass the plain body through to candlepin
+    def async_hypervisors_update
+      raw_json = request.body.string
+      task = Katello::Resources::Candlepin::Consumer.async_hypervisors(params[:owner], raw_json)
+      async_task(::Actions::Katello::Host::Hypervisors, nil, :task_id => task['id'])
+
+      render :json => task
     end
 
     #api :POST, "/hypervisors", N_("Update the hypervisors information for environment")
@@ -442,6 +455,7 @@ module Katello
     end
 
     # rubocop:disable MethodLength
+    # rubocop:disable Metrics/CyclomaticComplexity
     def authorize_proxy_routes
       deny_access unless (authenticate || authenticate_client)
 
@@ -485,6 +499,8 @@ module Katello
         User.consumer?
       when "rhsm_proxy_deleted_consumers_path"
         current_user.admin?
+      when "rhsm_proxy_jobs_get_path"
+        User.consumer? || current_user.admin?
       else
         Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"
         deny_access

@@ -117,6 +117,14 @@ module Katello
             JSON.parse(response).with_indifferent_access
           end
 
+          def async_hypervisors(owner, raw_json)
+            url = "/candlepin/hypervisors/#{owner}"
+            headers = self.default_headers
+            headers['content-type'] = 'text/plain'
+            response = self.post(url, raw_json, headers)
+            JSON.parse(response).with_indifferent_access
+          end
+
           def register_hypervisors(params)
             url = "/candlepin/hypervisors"
             url << "?owner=#{params[:owner]}&env=#{params[:env]}"
@@ -619,8 +627,8 @@ module Katello
             NOT_FINISHED_STATES.include?(job[:state])
           end
 
-          def get(id)
-            job_json = super(path(id), self.default_headers).body
+          def get(id, params = {})
+            job_json = super(path(id) + hash_to_query(params), self.default_headers).body
             job = JSON.parse(job_json)
             job.with_indifferent_access
           end
