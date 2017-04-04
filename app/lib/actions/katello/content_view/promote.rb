@@ -10,6 +10,8 @@ module Actions
 
           fail ::Katello::HttpErrors::BadRequest, _("Cannot promote environment out of sequence. Use force to bypass restriction.") if !is_force && !version.promotable?(environments)
 
+          # Pass the environments as input in order to make them accessible to UI alerts
+          plan_self(environments: environments.map(&:name))
           environments.each do |environment|
             plan_action(ContentView::PromoteToEnvironment, version, environment, description,
                         :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
