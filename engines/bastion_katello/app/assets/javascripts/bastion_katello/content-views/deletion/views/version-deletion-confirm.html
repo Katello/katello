@@ -1,22 +1,21 @@
 <span page-title ng-model="version">{{ "Remove Version Confirmation" | translate }} {{ version.version }}</span>
 
-<section class="details details-full">
+<section>
   <h3 translate>Confirm Version Removal: Version {{ version.version }}</h3>
 
-  <div class="details">
-
-    <div ng-hide="deleteOptions.environments.length === 0">
+  <div class="row">
+    <div class="col-sm-12" ng-hide="deleteOptions.environments.length === 0">
       <h5 translate>Environments</h5>
       <i class="fa fa-warning"></i>
       <span translate>This version will be removed from:</span>
-      <ul class="bullet">
+      <ul>
         <li ng-repeat="env in deleteOptions.environments" ng-if="env.permissions.readable">{{ env.name }}</li>
       </ul>
     </div>
+  </div>
 
-    <br/>
-
-    <div>
+  <div class="row">
+    <div class="col-sm-12">
       <h5 translate>Archived Copy</h5>
       <p ng-hide="deleteOptions.deleteArchive" translate>
         The archive of this Version will not be deleted.  This Version will still be available to be promoted to a Lifecycle Environment.
@@ -28,10 +27,10 @@
         </span>
       </p>
     </div>
+  </div>
 
-    <br/>
-
-    <div>
+  <div class="row">
+    <div class="col-sm-12">
       <h5 translate>Content Hosts</h5>
       <p ng-show="totalHostCount() > 0">
         <i class="fa fa-warning"></i>
@@ -43,10 +42,10 @@
          No Content Hosts are affected.
       </p>
     </div>
+  </div>
 
-    <br/>
-
-    <div>
+  <div class="row">
+    <div class="col-sm-12">
       <h5 translate>Activation Keys</h5>
       <p ng-show="totalActivationKeyCount() > 0">
         <i class="fa fa-warning"></i>
@@ -58,21 +57,20 @@
         No activation keys are affected.
       </p>
     </div>
+  </div>
 
-    <div class="fr">
-      <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
-        <button type="button" class="btn btn-default" ng-disabled="deleting" translate>
-          Cancel
-        </button>
-      </a>
-      <button type="button" class="btn btn-default" ng-click="transitionBack()" ng-disabled="deleting" translate>
-        Back
+  <div class="pull-right">
+    <a ui-sref="content-view.versions({contentViewId: contentView.id})" >
+      <button type="button" class="btn btn-default" ng-disabled="deleting" translate>
+        Cancel
       </button>
-      <button type="button" class="btn btn-primary" ng-click="performDeletion()" ng-disabled="deleting">
-        <i class="fa fa-spinner fa-spin" ng-show="deleting"></i>
-        <span translate>Confirm Remove</span>
-      </button>
-    </div>
-
+    </a>
+    <button type="button" class="btn btn-default" ng-click="transitionBack()" ng-disabled="deleting" translate>
+      Back
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="performDeletion()" ng-disabled="deleting">
+      <i class="fa fa-spinner fa-spin" ng-show="deleting"></i>
+      <span translate>Confirm Remove</span>
+    </button>
   </div>
 </section>
