@@ -12,6 +12,7 @@ module Actions
 
         def plan(capsule_content, options = {})
           capsule_content.ping_pulp
+          capsule_content.verify_ueber_certs
           action_subject(capsule_content.capsule)
 
           environment = options.fetch(:environment, nil)
