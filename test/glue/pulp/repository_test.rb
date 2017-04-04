@@ -134,6 +134,28 @@ module Katello
                                                      'config' => docker_config}], capsule_content.capsule)
     end
 
+    def test_importer_upstream_username_passwd
+      repo = katello_repositories(:fedora_17_x86_64)
+      username = "justin"
+      password = "super-secret"
+      repo.update_attributes!(:upstream_username => username, :upstream_password => password)
+      importer = repo.generate_importer
+      assert_equal username,  importer.basic_auth_username
+      assert_equal password,  importer.basic_auth_password
+    end
+
+    def test_importer_upstream_username_passwd_with_capsule
+      ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
+      proxy = FactoryGirl.build(:bmc_smart_proxy)
+      repo = katello_repositories(:fedora_17_x86_64)
+      username = "justin"
+      password = "super-secret"
+      repo.update_attributes!(:upstream_username => username, :upstream_password => password)
+      importer = repo.generate_importer(proxy)
+      assert_nil importer.basic_auth_username
+      assert_nil importer.basic_auth_password
+    end
+
     def test_importer_matches?
       capsule = SmartProxy.new(:download_policy => 'on_demand')
       yum_config = {
@@ -149,6 +171,20 @@ module Katello
 
       yum_config['some_other_attribute'] = 'asdf'
       refute @fedora_17_x86_64.importer_matches?({'importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config}, capsule)
+    end
+
+    def test_pulp_update_needed_with_upstream_name_passwd?
+      repo = katello_repositories(:fedora_17_x86_64)
+      refute repo.pulp_update_needed?
+      repo.upstream_username = 'amazing'
+      repo.save!
+      assert repo.pulp_update_needed?
+
+      repo = katello_repositories(:fedora_17_x86_64).reload
+      refute repo.pulp_update_needed?
+      repo.upstream_password = 'amazing'
+      repo.save!
+      assert repo.pulp_update_needed?
     end
   end
 

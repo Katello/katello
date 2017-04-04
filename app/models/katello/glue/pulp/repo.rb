@@ -230,8 +230,10 @@ module Katello
         end
         unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
           importer_options.merge!(:ssl_validation => verify_ssl_on_sync?)
-          importer_options[:basic_auth_username] = upstream_username if upstream_username.present?
-          importer_options[:basic_auth_password] = upstream_password if upstream_password.present?
+          if capsule.default_capsule?
+            importer_options.merge!(:basic_auth_username => upstream_username,
+                                    :basic_auth_password => upstream_password)
+          end
         end
         importer_options
       end
@@ -376,7 +378,8 @@ module Katello
       end
 
       def pulp_update_needed?
-        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync)
+        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
+                                   upstream_username upstream_password)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
       end
