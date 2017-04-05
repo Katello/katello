@@ -419,16 +419,17 @@ rhel_6_x86_64_composite_view_version_1:
 
 ostree:
   name:                 ostree
-  pulp_id:              "Default_Organization-Test-ostree"
+  pulp_id:              100
   content_id:           1
   content_type:         ostree
   label:                ostree
+  url:                  "http://www.ostree-zoo.com/ostree"
   relative_path:        '/ACME_Corporation/library/ostree'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  unprotected:           <%= true %>
+  unprotected:           <%= false %>
   ostree_upstream_sync_policy: latest
 
 ostree_view1:
