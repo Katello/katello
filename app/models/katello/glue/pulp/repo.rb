@@ -280,7 +280,7 @@ module Katello
           options = { :id => self.pulp_id,
                       :auto_publish => true,
                       :relative_path => relative_path,
-                      :depth => self.ostree_publish_depth }
+                      :depth => self.compute_ostree_upstream_sync_depth }
 
           dist = Runcible::Models::OstreeDistributor.new(options)
           distributors = [dist]
@@ -379,7 +379,7 @@ module Katello
 
       def pulp_update_needed?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
-                                   upstream_username upstream_password)
+                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
       end

@@ -156,6 +156,34 @@ module Katello
       assert_nil importer.basic_auth_password
     end
 
+    def test_distributors_ostree
+      ostree_repo = katello_repositories(:ostree)
+      depth = 100
+      ostree_repo.expects(:compute_ostree_upstream_sync_depth).returns(depth)
+      distributors = ostree_repo.generate_distributors
+      assert 1, distributors.size
+      assert_equal depth, distributors.first.depth
+    end
+
+    def test_importer_ostree
+      ostree_repo = katello_repositories(:ostree)
+      depth = 100
+      ostree_repo.expects(:compute_ostree_upstream_sync_depth).returns(depth)
+      importer = ostree_repo.generate_importer
+      assert_equal depth, importer.depth
+    end
+
+    def test_importer_ostree_capsule
+      ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
+      capsule = FactoryGirl.build(:bmc_smart_proxy)
+      depth = 100
+      ostree_repo = katello_repositories(:ostree)
+      ostree_repo.expects(:compute_ostree_upstream_sync_depth).never
+      ostree_repo.expects(:ostree_capsule_sync_depth).returns(depth)
+      importer = ostree_repo.generate_importer(capsule)
+      assert_equal depth, importer.depth
+    end
+
     def test_importer_matches?
       capsule = SmartProxy.new(:download_policy => 'on_demand')
       yum_config = {
@@ -185,6 +213,21 @@ module Katello
       repo.upstream_password = 'amazing'
       repo.save!
       assert repo.pulp_update_needed?
+    end
+
+    def test_ostree_pulp_update_needed?
+      ostree_repo = katello_repositories(:ostree)
+      refute ostree_repo.pulp_update_needed?
+      ostree_repo.ostree_upstream_sync_policy = "custom"
+      ostree_repo.ostree_upstream_sync_depth = 10
+      ostree_repo.save!
+      assert ostree_repo.pulp_update_needed?
+
+      ostree_repo = katello_repositories(:ostree).reload
+      refute ostree_repo.pulp_update_needed?
+      ostree_repo.ostree_upstream_sync_depth = 5000
+      ostree_repo.save!
+      assert ostree_repo.pulp_update_needed?
     end
   end
 
