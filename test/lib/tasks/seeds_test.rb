@@ -8,6 +8,7 @@ module Katello
       Setting.stubs(:[]).with(regexp_matches(/katello_default_/)).returns("Crazy Template")
       Setting.stubs(:[]).with(:default_location_subscribed_hosts).returns('')
       Setting.stubs(:[]).with(:default_location_puppet_content).returns('')
+      Setting.stubs(:[]).with(:authorize_login_delegation_auth_source_user_autocreate).returns('EXTERNAL')
       Katello::Repository.stubs(:ensure_sync_notification)
     end
 
