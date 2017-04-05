@@ -56,7 +56,7 @@
         };
 
         $scope.disableSyncLink = function (adavancedSync) {
-            return $scope.hideSyncButton($scope.repository, adavancedSync) || $scope.table.rows === 0;
+            return $scope.hideSyncButton($scope.repository, adavancedSync);
         };
 
         $scope.syncRepository = function (repository) {
