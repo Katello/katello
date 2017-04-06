@@ -1,55 +1,57 @@
-<form name="productForm" class="col-sm-5" novalidate role="form">
+<div class="row">
+  <form name="productForm" class="col-sm-5" novalidate role="form">
 
-  <div bst-form-group label="{{ 'Name' | translate }}">
-    <input id="name"
-           name="name"
-           ng-model="product.name"
-           type="text"
-           autofocus
-           required/>
-  </div>
+    <div bst-form-group label="{{ 'Name' | translate }}">
+      <input id="name"
+             name="name"
+             ng-model="product.name"
+             type="text"
+             autofocus
+             required/>
+    </div>
 
-  <div bst-form-group label="{{ 'Label' | translate }}">
-    <input id="label"
-           name="label"
-           ng-model="product.label"
-           type="text"
-           required/>
-  </div>
+    <div bst-form-group label="{{ 'Label' | translate }}">
+      <input id="label"
+             name="label"
+             ng-model="product.label"
+             type="text"
+             required/>
+    </div>
 
-  <div bst-form-group label="{{ 'GPG Key' | translate }}">
-    <select id="gpg_key_id"
-            name="gpg_key_id"
-            ng-model="product.gpg_key_id"
-            ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
-      <option value=""></option>
-    </select>
-  </div>
+    <div bst-form-group label="{{ 'GPG Key' | translate }}">
+      <select id="gpg_key_id"
+              name="gpg_key_id"
+              ng-model="product.gpg_key_id"
+              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+        <option value=""></option>
+      </select>
+    </div>
 
-  <div bst-form-group label="{{ 'Sync Plan' | translate }}">
-    <select id="sync_plan_id"
-            name="sync_plan_id"
-            ng-model="product.sync_plan_id"
-            ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans">
-      <option value=""></option>
-    </select>
-    <a ui-sref="products.new.sync-plan" translate>
-      <i class="pficon pficon-add-circle-o"></i>
-      Create Sync Plan
-    </a>
-  </div>
+    <div bst-form-group label="{{ 'Sync Plan' | translate }}">
+      <select id="sync_plan_id"
+              name="sync_plan_id"
+              ng-model="product.sync_plan_id"
+              ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans">
+        <option value=""></option>
+      </select>
+      <a ui-sref="products.new.sync-plan" translate>
+        <i class="pficon pficon-add-circle-o"></i>
+        Create Sync Plan
+      </a>
+    </div>
 
-  <div bst-form-group label="{{ 'Description' | translate }}">
-    <textarea id="description"
-              name="description"
-              ng-model="product.description">
-    </textarea>
-  </div>
+    <div bst-form-group label="{{ 'Description' | translate }}">
+      <textarea id="description"
+                name="description"
+                ng-model="product.description">
+      </textarea>
+    </div>
 
-  <div bst-form-buttons
-       on-cancel="transitionTo('products')"
-       on-save="save(product)"
-       working="working">
-  </div>
+    <div bst-form-buttons
+         on-cancel="transitionTo('products')"
+         on-save="save(product)"
+         working="working">
+    </div>
 
-</form>
+  </form>
+</div>
