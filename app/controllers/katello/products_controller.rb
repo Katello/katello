@@ -82,7 +82,7 @@ module Katello
     def available_synced_repos(repos, content_id)
       @product.repositories.in_default_view.where(:content_id => content_id).find_each do |product_repo|
         found = repos.detect do |repo|
-          product_repo.pulp_id == repo[:pulp_id]
+          product_repo.id == repo[:repository_id]
         end
         unless found
           repos << {
