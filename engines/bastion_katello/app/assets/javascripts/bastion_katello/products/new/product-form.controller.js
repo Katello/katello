@@ -4,10 +4,12 @@
  *
  * @requires $scope
  * @requires $q
+ * @requires $uibModal
  * @requires Product
  * @requires GPGKey
  * @requires SyncPlan
  * @requires FormUtils
+ *
  *
  * @description
  *   Provides the functionality specific to Products for use with the Nutupane UI pattern.
@@ -15,8 +17,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils', 'GlobalNotification',
-    function ($scope, $q, Product, GPGKey, SyncPlan, FormUtils, GlobalNotification) {
+    ['$scope', '$q', '$uibModal', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils', 'GlobalNotification',
+    function ($scope, $q, $uibModal, Product, GPGKey, SyncPlan, FormUtils, GlobalNotification) {
 
         function fetchGpgKeys() {
             return GPGKey.queryUnpaged(function (gpgKeys) {
@@ -62,5 +64,16 @@ angular.module('Bastion.products').controller('ProductFormController',
         $q.all([fetchSyncPlans().$promise, fetchGpgKeys().$promise]).finally(function () {
             $scope.page.loading = false;
         });
+
+        $scope.openSyncPlanModal = function () {
+            $uibModal.open({
+                templateUrl: 'products/new/views/new-sync-plan-modal.html',
+                controller: 'NewSyncPlanModalController'
+            }).result.then(function ($value) {
+                fetchSyncPlans().$promise.then(function () {
+                    $scope.product['sync_plan_id'] = $value.id;
+                });
+            });
+        };
     }]
 );
