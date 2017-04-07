@@ -3,6 +3,8 @@ KT.hosts = {};
 
 $(document).on('ContentLoad', function(){
     KT.hosts.onKatelloHostEditLoad();
+    window.tfm.hosts.registerPluginAttributes("os",
+         ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id']);
 
     $("#hostgroup_lifecycle_environment_id").change(KT.hosts.fetchContentViews);
     $("#host_lifecycle_environment_id").change(KT.hosts.fetchContentViews);
@@ -247,31 +249,4 @@ KT.hosts.set_media_selection_bindings = function() {
   KT.hosts.set_install_media_bindings();
   KT.hosts.set_synced_content_bindings();
   KT.hosts.get_media_selector_elements().change(KT.hosts.media_selection_changed);
-};
-
-// Note we are overriding the os_selected method in foreman
-// Hopefully when this gets resolved http://projects.theforeman.org/issues/14699
-// This method will get backed out.
-function os_selected(element){
-    var url = $(element).attr('data-url');
-    var type = $(element).attr('data-type');
-    var attrs = {};
-    attrs[type] = attribute_hash(['operatingsystem_id', 'organization_id', 'location_id', 'content_view_id',
-                                  'lifecycle_environment_id', 'content_source_id', 'architecture_id', 'hostgroup_id',
-                                  'medium_id', 'kickstart_repository_id']);
-  tfm.tools.showSpinner();
-  $.ajax({
-    data: attrs,
-    type:'post',
-    url: url,
-    complete: function(){
-      reloadOnAjaxComplete(element);
-    },
-    success: function(request) {
-      $('#media_select').html(request);
-        reload_host_params();
-        reload_puppetclass_params();
-    }
-  });
-  update_provisioning_image();
 };
