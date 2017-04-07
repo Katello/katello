@@ -27,18 +27,18 @@
       </select>
     </div>
 
-    <div bst-form-group label="{{ 'Sync Plan' | translate }}">
-      <select id="sync_plan_id"
-              name="sync_plan_id"
-              ng-model="product.sync_plan_id"
-              ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans">
-        <option value=""></option>
-      </select>
-      <a ui-sref="products.new.sync-plan" translate>
-        <i class="pficon pficon-add-circle-o"></i>
-        Create Sync Plan
-      </a>
-    </div>
+  <div bst-form-group label="{{ 'Sync Plan' | translate }}">
+    <select id="sync_plan_id"
+            name="sync_plan_id"
+            ng-model="product.sync_plan_id"
+            ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans">
+      <option value=""></option>
+    </select>
+    <a ng-click="openSyncPlanModal()">
+      <i class="pficon pficon-add-circle-o"></i>
+      <span translate>Create Sync Plan</span>
+    </a>
+  </div>
 
     <div bst-form-group label="{{ 'Description' | translate }}">
       <textarea id="description"
