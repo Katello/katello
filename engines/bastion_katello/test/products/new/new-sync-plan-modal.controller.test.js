@@ -1,5 +1,5 @@
-describe('Controller: NewSyncPlanController', function() {
-    var $scope, translate, SyncPlan, SyncPlanHelper, GlobalNotification;
+describe('Controller: NewSyncPlanModalController', function() {
+    var $scope, $uibModalInstance, SyncPlan, SyncPlanHelper;
 
     beforeEach(module(
         'Bastion.sync-plans',
@@ -9,18 +9,22 @@ describe('Controller: NewSyncPlanController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller');
 
-        SyncPlan = $injector.get('MockResource').$new()
-        GlobalNotification = $injector.get('GlobalNotification');
+        SyncPlan = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
-        $scope.$state = {go: function () {}};
+
+        $uibModalInstance = {
+            close: function () {},
+            dismiss: function () {}
+        };
+
         SyncPlanHelper = {
             createSyncPlan: function (syncPlan, success, error) {
                 if (this.failed) {
                     var response = {
                         data: {errors:
-                            {
-                                name: 'has already been taken'
-                            }
+                        {
+                            name: 'has already been taken'
+                        }
                         }
                     };
 
@@ -36,14 +40,11 @@ describe('Controller: NewSyncPlanController', function() {
             setForm: function () {}
         };
 
-        translate = function (string) { return string; };
-
-        $controller('NewSyncPlanController', {
+        $controller('NewSyncPlanModalController', {
             $scope: $scope,
-            translate: translate,
+            $uibModalInstance: $uibModalInstance,
             SyncPlan: SyncPlan,
-            SyncPlanHelper: SyncPlanHelper,
-            GlobalNotification: GlobalNotification
+            SyncPlanHelper: SyncPlanHelper
         });
     }));
 
@@ -59,7 +60,7 @@ describe('Controller: NewSyncPlanController', function() {
         expect($scope.syncPlan.interval).toBe(1);
     });
 
-    describe("should save a new sync plan", function () {
+    describe("should save a sync plan", function () {
         var startDate, syncPlan;
 
         beforeEach(function () {
@@ -73,46 +74,42 @@ describe('Controller: NewSyncPlanController', function() {
         });
 
         it('and succeed', function() {
-            spyOn($scope.$state, 'go');
-            spyOn(GlobalNotification, "setSuccessMessage");
-
-            $scope.createSyncPlan(syncPlan);
-
-            expect($scope.working).toBe(false);
-            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-            expect($scope.$state.go).toHaveBeenCalledWith('sync-plan.info', {syncPlanId: syncPlan.id});
+            spyOn($uibModalInstance, 'close');
+            $scope.ok(syncPlan);
+            expect($uibModalInstance.close).toHaveBeenCalledWith(syncPlan);
         });
 
         it('and fail', function() {
             var form = {
                 name: {
-                    $setValidity: function () {},
+                $setValidity: function () {},
                     $error: {
                         messages: []
                     }
                 }
             };
-            
+
             SyncPlanHelper.failed = true;
 
             spyOn(SyncPlanHelper, 'getForm').and.returnValue(form);
-            spyOn($scope.$state, 'go');
             spyOn(form.name, '$setValidity');
 
-            $scope.createSyncPlan(syncPlan);
+            $scope.ok(syncPlan);
 
-            expect($scope.working).toBe(false);
-            expect($scope.$state.go).not.toHaveBeenCalled();
             expect(form.name.$setValidity).toHaveBeenCalledWith('server', false);
             expect(form.name.$error.messages).toBe('has already been taken');
         });
-
     });
 
-    it("should set the form via the sync plan helper", function () {
-        var form = {blah: 'blah'};
-        spyOn(SyncPlanHelper, 'setForm');
-        $scope.setForm(form);
-        expect(SyncPlanHelper.setForm).toHaveBeenCalledWith(form);
+    it("provides a function for cancelling the modal", function () {
+        spyOn($uibModalInstance, 'dismiss');
+        $scope.cancel();
+        expect($uibModalInstance.dismiss).toHaveBeenCalled();
+    });
+
+    it("provides a function for determining if the form is disabled", function () {
+        spyOn(SyncPlanHelper, 'getForm');
+        $scope.isFormDisabled();
+        expect(SyncPlanHelper.getForm).toHaveBeenCalled();
     });
 });

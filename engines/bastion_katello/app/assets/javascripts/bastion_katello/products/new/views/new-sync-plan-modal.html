@@ -1,0 +1,18 @@
+<div data-extend-template="components/views/bst-modal.html" ng-controller="NewSyncPlanController">
+  <h4 data-block="modal-header" translate>
+    New Sync Plan
+  </h4>
+
+  <div data-block="modal-body">
+    <div ng-include="'sync-plans/new/views/new-sync-plan-form.html'"></div>
+  </div>
+
+  <span data-block="modal-confirm-button">
+    <button class="btn btn-primary" ng-click="ok(syncPlan)"
+            ng-disabled="isFormDisabled()">
+      <span translate>Save</span>
+    </button>
+  </span>
+</div>
+
+

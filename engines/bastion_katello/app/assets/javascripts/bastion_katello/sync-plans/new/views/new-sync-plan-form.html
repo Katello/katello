@@ -1,65 +1,69 @@
-<form ng-controller="NewSyncPlanController" name="syncPlanForm" class="col-sm-5" novalidate role="form">
- <div bst-form-group label="{{ 'Name' | translate }}">
-   <input id="name"
-          name="name"
-          ng-model="syncPlan.name"
-          type="text"
-          tabindex="1"
-          autofocus
-          required/>
- </div>
+<div ng-form name="syncPlanForm" novalidate role="form">
+  <div bst-form-group label="{{ 'Name' | translate }}">
+    <input id="name"
+           name="name"
+           ng-model="syncPlan.name"
+           type="text"
+           tabindex="1"
+           autofocus
+           required/>
+  </div>
 
- <div bst-form-group label="{{ 'Description' | translate }}">
+  <div bst-form-group label="{{ 'Description' | translate }}">
    <textarea id="description"
              name="description"
              ng-model="syncPlan.description"
              tabindex="2">
    </textarea>
- </div>
+  </div>
 
- <div bst-form-group label="{{ 'Interval' | translate }}">
-   <select id="interval"
-           name="interval"
-           ng-model="syncPlan.interval"
-           ng-options="interval.id as interval.value for interval in intervals"
-           tabindex="3"
-           required>
+  <div bst-form-group label="{{ 'Interval' | translate }}">
+    <select id="interval"
+            name="interval"
+            ng-model="syncPlan.interval"
+            ng-options="interval.id as interval.value for interval in intervals"
+            tabindex="3"
+            required>
       <option value="" translate>-- select an interval --</option>
-   </select>
- </div>
+    </select>
+  </div>
 
- <div bst-form-group label="{{ 'Start Date' | translate }}">
-   <div class="input-group">
-     <input type="text" uib-datepicker-popup
-            id="startDate"
-            name="startDate"
-            is-open="isOpen"
-            ng-model="syncPlan.startDate"
-            show-weeks="false"
-            tabindex="4"
-            required/>
+  <div bst-form-group label="{{ 'Start Date' | translate }}">
+    <div class="input-group">
+      <input type="text" uib-datepicker-popup
+             id="startDate"
+             name="startDate"
+             is-open="isOpen"
+             ng-model="syncPlan.startDate"
+             show-weeks="false"
+             tabindex="4"
+             required/>
 
      <span class="input-group-btn">
        <button type="button" class="btn btn-default" ng-click="isOpen = !isOpen">
          <i class="fa fa-calendar"></i>
        </button>
      </span>
-   </div>
- </div>
+    </div>
+  </div>
 
- <div bst-form-group label="{{ 'Start Time' | translate }}">
-   <div uib-timepicker show-meridian="false"
-          id="startTime"
-          name="startTime"
-          ng-model="syncPlan.startTime"
-          tabindex="5">
-   </div>
-   <p class="help-block" translate>The time the sync should happen in your current time zone.</p>
- </div>
+  <div bst-form-group label="{{ 'Start Time' | translate }}">
+    <div uib-timepicker show-meridian="false"
+         id="startTime"
+         name="startTime"
+         ng-model="syncPlan.startTime"
+         tabindex="5">
+    </div>
+    <p class="help-block" translate>The time the sync should happen in your current time zone.</p>
+  </div>
 
- <div bst-form-buttons
-      on-cancel="transitionBack()"
-      on-save="createSyncPlan(syncPlan)"
-      working="working">
- </div>
-</form>
+  <div ng-init="setForm(syncPlanForm);"></div>
+
+  <div ng-show="isState('sync-plans.new')">
+    <div bst-form-buttons
+         on-cancel="transitionBack()"
+         on-save="createSyncPlan(syncPlan)"
+         working="working">
+    </div>
+  </div>
+</div>

@@ -7,7 +7,8 @@ describe('Controller: ProductFormController', function() {
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var $controller = $injector.get('$controller'),
+        var $uibModal,
+            $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
             $q = $injector.get('$q'),
             Product = $injector.get('MockResource').$new(),
@@ -23,10 +24,23 @@ describe('Controller: ProductFormController', function() {
         $scope.productForm = $injector.get('MockForm');
         $scope.panel = {};
 
+        $uibModal = {
+            open: function () {
+                return {
+                    result: {
+                        then: function (callback) {
+                            callback();
+                        }
+                    }
+                }
+            }
+        };
+
         $controller('ProductFormController', {
             $scope: $scope,
             $http: $http,
             $q: $q,
+            $uibModal: $uibModal,
             Product: Product,
             Provider: Provider,
             GPGKey: GPGKey,
