@@ -1,17 +1,10 @@
 
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="search">
-    <div class="col-sm-6">
-      <form class="form-inline">
-        <div class="form-group">
-            <input type="text"
-                   class="form-control"
-                   placeholder="{{ 'Filter' | translate }}"
-                   ng-model="dockerTagFilter"/>
-
-        </div>
-      </form>
-    </div>
+    <input type="text"
+           class="form-control"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="dockerTagFilter"/>
   </div>
 
   <span data-block="no-rows-message" translate>
