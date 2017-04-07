@@ -54,14 +54,17 @@ module Actions
             mapper.registries = registries
             mapper.registry_repo = registry
             repo = mapper.find_repository
+            unique_id = repo.try(:pulp_id) || SecureRandom.uuid
 
             {
               substitutions: {},
               path:          mapper.feed_url,
               repo_name:     mapper.name,
+              pulp_id:       unique_id,
               registry_name: registry["name"],
               enabled:       !repo.nil?,
-              promoted:      (!repo.nil? && repo.promoted?)
+              promoted:      (!repo.nil? && repo.promoted?),
+              repository_id: repo.try(:id)
             }
           end
         end
@@ -69,12 +72,15 @@ module Actions
         def prepare_result(substitutions, _path)
           mapper = repository_mapper(substitutions)
           repo = mapper.find_repository
+          unique_id = repo.try(:pulp_id) || SecureRandom.uuid
           { substitutions: substitutions,
             path:          mapper.path,
             repo_name:     mapper.name,
+            pulp_id:       unique_id,
             name:          mapper.content.name,
             enabled:       !repo.nil?,
-            promoted:      (!repo.nil? && repo.promoted?)
+            promoted:      (!repo.nil? && repo.promoted?),
+            repository_id: repo.try(:id)
           }
         end
 

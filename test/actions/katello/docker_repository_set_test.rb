@@ -85,12 +85,15 @@ module ::Actions::Katello::DockerRepositorySet
     end
 
     it 'runs' do
+      SecureRandom.expects(:uuid).returns('foobar')
       action = simulate_run
       action.output.must_equal("results" =>
                                  [{ "substitutions" => {},
                                     "path" => "https://#{registry_feed_url}",
                                     "repo_name" => "#{content.name} - (#{registry_name})",
                                     "registry_name" => "dream-registry",
+                                    "pulp_id" => 'foobar',
+                                    "repository_id" => nil,
                                     "enabled" => false,
                                     "promoted" => false}])
     end
