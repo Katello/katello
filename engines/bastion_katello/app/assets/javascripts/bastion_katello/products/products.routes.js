@@ -40,15 +40,6 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         ncyBreadcrumb: {
             label: "{{ 'New Product' | translate }}"
         }
-    })
-    .state('products.new.sync-plan', {
-        url: '/new/sync-plan',
-        permission: 'create_sync_plans',
-        controller: 'NewSyncPlanController',
-        templateUrl: 'sync-plans/new/views/new-sync-plan-form.html',
-        ncyBreadcrumb: {
-            label: "{{ 'New Sync Plan' | translate }}"
-        }
     });
 
     $stateProvider.state("product-discovery", {
@@ -92,16 +83,6 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         ncyBreadcrumb: {
             label: "{{ product.name }}",
             parent: 'products'
-        }
-    })
-    .state('product.new-sync-plan', {
-        url: '/sync-plan/new',
-        permission: 'create_sync_plans',
-        controller: 'NewSyncPlanController',
-        templateUrl: 'products/details/views/product-new-sync-plan.html',
-        ncyBreadcrumb: {
-            label: "{{ 'New Sync Plan'  | translate}}",
-            parent: 'product.info'
         }
     });
 
