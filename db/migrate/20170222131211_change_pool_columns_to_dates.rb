@@ -1,6 +1,6 @@
 class ChangePoolColumnsToDates < ActiveRecord::Migration
   def up
-    if connection.adapter_name.downcase != 'sqlite3'
+    if connection.adapter_name.downcase != 'sqlite'
       change_column(:katello_pools, :start_date, 'timestamp USING CAST(start_date AS timestamp without time zone)')
       change_column(:katello_pools, :end_date, 'timestamp USING CAST(end_date AS timestamp without time zone)')
     end
@@ -9,7 +9,7 @@ class ChangePoolColumnsToDates < ActiveRecord::Migration
   end
 
   def down
-    if connection.adapter_name.downcase != 'sqlite3'
+    if connection.adapter_name.downcase != 'sqlite'
       change_column(:katello_pools, :start_date, :string, :limit => 255)
       change_column(:katello_pools, :end_date, :string, :limit => 255)
     end
