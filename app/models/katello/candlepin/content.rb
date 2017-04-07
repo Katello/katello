@@ -41,7 +41,7 @@ module Katello
       def initialize(product, content, substitutions)
         @product = product
         @content = content
-        @substitutions = substitutions
+        @substitutions = substitutions.try(:with_indifferent_access)
       end
 
       def find_repository

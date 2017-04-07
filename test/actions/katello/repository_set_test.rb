@@ -99,6 +99,7 @@ module ::Actions::Katello::RepositorySet
     end
 
     it 'runs' do
+      SecureRandom.expects(:uuid).returns('foobar')
       action = simulate_run
       action.output.
           must_equal("results" =>
@@ -106,6 +107,8 @@ module ::Actions::Katello::RepositorySet
                          "path" => "/product/x86_64/6Server",
                          "repo_name" => "Content 123 x86_64 6Server",
                          "name" => "Content 123",
+                         "pulp_id" => 'foobar',
+                         "repository_id" => nil,
                          "enabled" => false,
                          "promoted" => false}])
     end
