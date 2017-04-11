@@ -16,7 +16,7 @@
 angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsController',
     ['$scope', 'translate', 'Nutupane', 'HostSubscription', 'ContentOverrideHelper', 'GlobalNotification', 'CurrentOrganization',
     function ($scope, translate, Nutupane, HostSubscription, ContentOverrideHelper, GlobalNotification, CurrentOrganization) {
-        var nutupane, params, saveContentOverride, success, error;
+        var params, saveContentOverride, success, error;
 
         params = {
             id: $scope.$stateParams.hostId,
@@ -27,13 +27,23 @@ angular.module('Bastion.content-hosts').controller('ContentHostRepositorySetsCon
         };
 
         $scope.controllerName = 'katello_products';
-        nutupane = new Nutupane(HostSubscription, params, 'repositorySets');
-        $scope.table = nutupane.table;
+        $scope.nutupane = new Nutupane(HostSubscription, params, 'repositorySets');
+        $scope.table = $scope.nutupane.table;
+
+        $scope.contentAccessModes = {
+            contentAccessModeAll: false,
+            contentAccessModeEnv: false
+        };
+        $scope.toggleFilters = function () {
+            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll;
+            $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
+            $scope.nutupane.refresh();
+        };
 
         success = function () {
             $scope.table.working = false;
             GlobalNotification.setSuccessMessage(translate('Repository Sets settings saved successfully.'));
-            nutupane.refresh();
+            $scope.nutupane.refresh();
         };
 
         error = function (response) {
