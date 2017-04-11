@@ -30,7 +30,7 @@ module Actions
             sync_options[:feed] = input[:source_url] if input[:source_url]
             sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
 
-            sync_options.merge(input[:options]) if input[:options]
+            sync_options.merge!(input[:options]) if input[:options]
 
             output[:pulp_tasks] = pulp_tasks =
                 [pulp_resources.repository.sync(input[:pulp_id], override_config: sync_options)]
