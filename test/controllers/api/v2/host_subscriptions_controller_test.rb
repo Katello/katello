@@ -144,7 +144,6 @@ module Katello
 
       ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host).returns(@host)
       assert_sync_task(::Actions::Katello::Host::Register, @host, expected_consumer_params, content_view_environment)
-
       post(:create, :lifecycle_environment_id => content_view_environment.environment_id,
            :content_view_id => content_view_environment.content_view_id, :facts => facts, :installed_products => installed_products)
 
@@ -170,8 +169,22 @@ module Katello
     end
 
     def test_product_content
-      get :product_content, :host_id => @host.id
+      result = get(:product_content, :host_id => @host.id)
+      content = JSON.parse(result.body)['results'][0]['content']
 
+      assert_equal('some-content', content['label'])
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/product_content'
+    end
+
+    def test_product_content_access_mode_all
+      mode_all = true
+      mode_env = false
+      result = get(:product_content, :host_id => @host.id, :content_access_mode_all => mode_all,
+                   :content_view_version_env => mode_env)
+      content = JSON.parse(result.body)['results'][0]['content']
+
+      assert_equal('some-content', content['label'])
       assert_response :success
       assert_template 'api/v2/host_subscriptions/product_content'
     end
