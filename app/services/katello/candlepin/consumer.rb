@@ -121,8 +121,28 @@ module Katello
         Katello::Product.joins(:subscriptions => :pools).where("#{Katello::Pool.table_name}.cp_id" => pool_ids).enabled.uniq
       end
 
-      def available_product_content
-        products.flat_map(&:available_content)
+      def all_products
+        org_id = ::Katello::Host::SubscriptionFacet.find_by_uuid(self.uuid).host.organization.id
+        Katello::Product.joins(:subscriptions => :pools).where(:organization_id => org_id).enabled.uniq
+      end
+
+      def available_product_content(content_access_mode_all = false, content_access_mode_env = false)
+        if content_access_mode_env
+          host = ::Katello::Host::ContentFacet.find_by_uuid(self.uuid)
+          return [] unless host.lifecycle_environment_id && host.content_view_id
+          version = ContentViewVersion.in_environment(host.lifecycle_environment_id).where(:content_view_id => host.content_view_id).first
+          content_view_version_id = version.id
+        end
+        if content_access_mode_all
+          content = all_products.flat_map do |product|
+            product.available_content(content_view_version_id)
+          end
+        else
+          content = products.flat_map do |product|
+            product.available_content(content_view_version_id)
+          end
+        end
+        content.uniq
       end
 
       def compliance_reasons

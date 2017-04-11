@@ -173,4 +173,14 @@ describe('Controller: ContentHostRepositorySetsController', function () {
             expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
         });
     });
+
+    describe("can toggle repository set filters", function () {
+        it("all and env toggles", function () {
+            $scope.contentAccessModes.contentAccessModeAll = true;
+            $scope.contentAccessModes.contentAccessModeEnv = false;
+            $scope.toggleFilters();
+            expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
+            expect($scope.nutupane.table.params['content_access_mode_env']).toEqual($scope.contentAccessModes.contentAccessModeEnv);
+        });
+    });
 });
