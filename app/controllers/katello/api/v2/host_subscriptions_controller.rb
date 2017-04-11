@@ -167,8 +167,12 @@ module Katello
 
     api :GET, "/hosts/:host_id/subscriptions/product_content", N_("Get content and overrides for the host")
     param :host_id, String, :desc => N_("Id of the host"), :required => true
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
+    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the host's content view version")
     def product_content
-      content = @host.subscription_facet.candlepin_consumer.available_product_content
+      content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
+      content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
+      content = @host.subscription_facet.candlepin_consumer.available_product_content(content_access_mode_all, content_access_mode_env)
       overrides = @host.subscription_facet.candlepin_consumer.content_overrides
       results = content.map { |product_content| Katello::ProductContentPresenter.new(product_content, overrides) }
 
