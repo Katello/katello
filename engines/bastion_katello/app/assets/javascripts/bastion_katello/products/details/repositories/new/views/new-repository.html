@@ -118,6 +118,11 @@
                 ng-model="repository.download_policy"
                 ng-options="id as name for (id, name) in downloadPolicies">
         </select>
+        <p class="help-block" translate>
+          For On Demand synchronization, only the metadata is downloaded during sync and packages are fetched and stored on the filesystem when clients request them.
+          For Background synchronization, a background task will download all packages after the initial sync.
+          The Immediate option will download all metadata and packages immediately during the sync. 
+        </p>
       </div>
 
       <div class="checkbox" ng-show="repository.content_type === 'yum'">
