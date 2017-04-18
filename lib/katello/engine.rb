@@ -224,6 +224,7 @@ module Katello
       end
 
       load 'katello/repository_types.rb'
+      load 'katello/scheduled_jobs.rb'
     end
 
     rake_tasks do
