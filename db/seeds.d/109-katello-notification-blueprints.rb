@@ -12,6 +12,12 @@ blueprints = [
         title: N_('Details')
       ]
     }
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'subs_expire_soon',
+    message: N_('%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.'),
+    level: 'warning'
   }
 ]
 

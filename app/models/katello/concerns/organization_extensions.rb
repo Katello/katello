@@ -182,6 +182,17 @@ module Katello
         def regenerate_ueber_cert
           ::Katello::Resources::Candlepin::Owner.generate_ueber_cert(self.label)
         end
+
+        def expiring_subscriptions
+          subscriptions.select(&:expiring_soon?)
+        end
+
+        def notification_recipients_ids
+          users = User.unscoped.all.find_all do |user|
+            user.can?(:import_manifest) && user.can?(:view_organizations, self)
+          end
+          users.pluck(:id)
+        end
       end
     end
   end
