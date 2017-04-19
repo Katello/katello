@@ -37,6 +37,7 @@ module Katello
     def custom_index_relation(collection)
       collection = filter_by_cve(params[:cve], collection) if params[:cve]
       hosts = ::Host::Managed.authorized("view_hosts")
+      hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
       if ::Foreman::Cast.to_bool(params[:errata_restrict_applicable])
         collection = collection.applicable_to_hosts(hosts)
       end
