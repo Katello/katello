@@ -45,13 +45,17 @@ module Katello
         if @host
           collection = collection.installable_for_hosts([@host])
         else
-          collection = collection.installable_for_hosts(::Host::Managed.authorized("view_hosts"))
+          hosts = ::Host::Managed.authorized("view_hosts")
+          hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
+          collection = collection.installable_for_hosts(hosts)
         end
       elsif ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || @host
         if @host
           collection = collection.applicable_to_hosts([@host])
         else
-          collection = collection.applicable_to_hosts(::Host::Managed.authorized("view_hosts"))
+          hosts = ::Host::Managed.authorized("view_hosts")
+          hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
+          collection = collection.applicable_to_hosts(hosts)
         end
       end
 
