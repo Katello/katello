@@ -28,7 +28,9 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'katello/api/rhsm/candlepin_proxies/regenerate_identity_certificates',
   'katello/api/rhsm/candlepin_proxies/hypervisors_update',
   'katello/api/rhsm/candlepin_proxies/async_hypervisors_update',
-  'katello/api/rhsm/candlepin_proxies/upload_tracer_profile'
+  'katello/api/rhsm/candlepin_proxies/upload_tracer_profile',
+  'katello/remote_execution/new',
+  'katello/remote_execution/create'
 ]
 
 Foreman::AccessControl.permission(:view_hosts).actions.concat [
