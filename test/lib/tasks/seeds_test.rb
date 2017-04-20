@@ -9,6 +9,7 @@ module Katello
       Setting.stubs(:[]).with(:default_location_subscribed_hosts).returns('')
       Setting.stubs(:[]).with(:default_location_puppet_content).returns('')
       Setting.stubs(:[]).with(:authorize_login_delegation_auth_source_user_autocreate).returns('EXTERNAL')
+      Setting.stubs(:[]).with(:entries_per_page).returns(20)
       Katello::Repository.stubs(:ensure_sync_notification)
     end
 
@@ -26,7 +27,6 @@ module Katello
 
   class LocationsTest < SeedsTest
     setup do
-      Setting.stubs(:[]).with(:entries_per_page).returns(20)
       Location.skip_callback(:destroy, :before, :deletable?)
       Location.destroy_all
     end
