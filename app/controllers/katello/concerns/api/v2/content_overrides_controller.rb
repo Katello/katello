@@ -7,7 +7,7 @@ module Katello
       def validate_content_overrides_enabled(content_params, overriden_object = nil)
         name = content_params[:name] || "enabled"
         compare_value = content_params[:value].to_s.downcase
-        remove = content_params.key?(:remove) ? Foreman::Cast.to_bool(content_params[:remove]) : nil
+        remove = content_params.key?(:remove) ? ::Foreman::Cast.to_bool(content_params[:remove]) : nil
         content_label = content_params[:content_label]
 
         if !remove && name == "enabled" &&
