@@ -1,7 +1,5 @@
 module Katello
   class ContentViewPuppetModule < Katello::Model
-    self.include_root_in_json = false
-
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
 
     validates_lengths_from_database

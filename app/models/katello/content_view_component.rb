@@ -1,7 +1,5 @@
 module Katello
   class ContentViewComponent < Katello::Model
-    self.include_root_in_json = false
-
     belongs_to :composite_content_view, :class_name => "Katello::ContentView",
                               :inverse_of => :content_view_components
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",

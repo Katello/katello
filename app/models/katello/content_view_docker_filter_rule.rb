@@ -1,7 +1,5 @@
 module Katello
   class ContentViewDockerFilterRule < Katello::Model
-    self.include_root_in_json = false
-
     belongs_to :filter,
                :class_name => "Katello::ContentViewDockerFilter",
                :inverse_of => :docker_rules,

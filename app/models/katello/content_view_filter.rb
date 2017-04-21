@@ -1,7 +1,5 @@
 module Katello
   class ContentViewFilter < Katello::Model
-    self.include_root_in_json = false
-
     DOCKER = 'docker'.freeze
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE

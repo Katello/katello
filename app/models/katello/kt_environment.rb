@@ -1,7 +1,5 @@
 module Katello
   class KTEnvironment < Katello::Model
-    self.include_root_in_json = false
-
     include ForemanTasks::Concerns::ActionSubject
     include Authorization::LifecycleEnvironment
 

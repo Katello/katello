@@ -1,7 +1,6 @@
 module Katello
   class Pool < Katello::Model
     include Katello::Authorization::Pool
-
     belongs_to :subscription, :inverse_of => :pools, :class_name => "Katello::Subscription"
 
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
@@ -9,8 +8,6 @@ module Katello
 
     scope :in_org, ->(org_id) { joins(:subscription).where("#{Katello::Subscription.table_name}.organization_id = ?", org_id) }
     scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }
-
-    self.include_root_in_json = false
 
     include Glue::Candlepin::Pool
     include Glue::Candlepin::CandlepinObject

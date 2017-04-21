@@ -2,8 +2,6 @@ require 'time'
 
 module Katello
   class SyncPlan < Katello::Model
-    self.include_root_in_json = false
-
     include Glue
     include Katello::Authorization::SyncPlan
     include ForemanTasks::Concerns::ActionSubject

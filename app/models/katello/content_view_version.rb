@@ -1,7 +1,5 @@
 module Katello
   class ContentViewVersion < Katello::Model
-    self.include_root_in_json = false
-
     include Authorization::ContentViewVersion
     include ForemanTasks::Concerns::ActionSubject
 

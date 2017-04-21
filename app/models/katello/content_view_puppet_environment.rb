@@ -1,7 +1,5 @@
 module Katello
   class ContentViewPuppetEnvironment < Katello::Model
-    self.include_root_in_json = false
-
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
     include Glue if SETTINGS[:katello][:use_pulp]
