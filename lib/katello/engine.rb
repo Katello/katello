@@ -242,6 +242,7 @@ module Katello
       end
 
       Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
+      Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
 
       ::HostsController.class_eval do
         helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
