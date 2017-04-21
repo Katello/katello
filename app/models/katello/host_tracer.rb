@@ -1,7 +1,5 @@
 module Katello
   class HostTracer < Katello::Model
-    self.include_root_in_json = false
-
     belongs_to :host, :inverse_of => :host_traces, :class_name => '::Host::Managed'
 
     validates :application, :length => {:maximum => 255}, :presence => true

@@ -1,7 +1,5 @@
 module Katello
   class TaskStatus < Katello::Model
-    self.include_root_in_json = false
-
     include Util::TaskStatus
 
     serialize :result

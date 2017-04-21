@@ -1,8 +1,6 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class ContentView < Katello::Model
-    self.include_root_in_json = false
-
     include Ext::LabelFromName
     include Katello::Authorization::ContentView
     include ForemanTasks::Concerns::ActionSubject

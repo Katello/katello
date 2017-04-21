@@ -1,8 +1,6 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
-    self.include_root_in_json = false
-
     #pulp uses pulp id to sync with 'yum_distributor' on the end
     PULP_ID_MAX_LENGTH = 220
 

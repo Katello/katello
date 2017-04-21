@@ -1,7 +1,5 @@
 module Katello
   class HostCollectionHosts < Katello::Model
-    self.include_root_in_json = false
-
     belongs_to :host, :inverse_of => :host_collection_hosts, :class_name => 'Host::Managed'
     belongs_to :host_collection, :inverse_of => :host_collection_hosts
 

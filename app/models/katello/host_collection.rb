@@ -1,7 +1,5 @@
 module Katello
   class HostCollection < Katello::Model
-    self.include_root_in_json = false
-
     include Katello::Authorization::HostCollection
 
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy

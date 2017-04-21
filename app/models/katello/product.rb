@@ -1,7 +1,5 @@
 module Katello
   class Product < Katello::Model
-    self.include_root_in_json = false
-
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Product if SETTINGS[:katello][:use_cp]
     include Glue::Pulp::Repos if SETTINGS[:katello][:use_pulp]

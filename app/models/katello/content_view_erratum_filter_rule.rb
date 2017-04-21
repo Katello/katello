@@ -1,7 +1,5 @@
 module Katello
   class ContentViewErratumFilterRule < Katello::Model
-    self.include_root_in_json = false
-
     before_create :default_types
 
     ISSUED = "issued".freeze
