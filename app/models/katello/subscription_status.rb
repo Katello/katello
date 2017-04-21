@@ -35,9 +35,12 @@ module Katello
       end
     end
 
-    def to_status(_options = {})
+    def to_status(options = {})
       return UNKNOWN unless host.subscription_facet.try(:uuid)
-      case Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label).entitlement_status
+      status_override = options.fetch(:status_override, nil)
+      status = status_override || Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label).entitlement_status
+
+      case status
       when Katello::Candlepin::Consumer::ENTITLEMENTS_VALID
         VALID
       when Katello::Candlepin::Consumer::ENTITLEMENTS_PARTIAL
