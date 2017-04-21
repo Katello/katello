@@ -106,8 +106,15 @@ module Katello
         end
       end
 
-      def update_subscription_status
-        host.get_status(::Katello::SubscriptionStatus).refresh!
+      def update_subscription_status(status_override = nil)
+        status = host.get_status(::Katello::SubscriptionStatus)
+        if status_override
+          status.status = status.to_status(:status_override => status_override)
+          status.save!
+        else
+          host.get_status(::Katello::SubscriptionStatus).refresh!
+        end
+
         host.refresh_global_status!
       end
 
