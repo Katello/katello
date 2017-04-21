@@ -30,5 +30,5 @@
     }
 
     angular.module('Bastion.repository-sets').filter('repositorySetsEnabled', repositorySetsEnabled);
-    repositorySetsEnabled().$inject = ['translate'];
+    repositorySetsEnabled.$inject = ['translate'];
 })();
