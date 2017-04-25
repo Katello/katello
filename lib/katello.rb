@@ -14,7 +14,6 @@ require 'foreman_docker'
 require "runcible"
 
 require "deface"
-require 'jquery-ui-rails'
 require 'qpid_messaging'
 
 require "securerandom"
