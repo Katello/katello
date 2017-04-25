@@ -29,9 +29,16 @@ module Katello
           options.reverse_merge!(:verify_ssl => 9)
           options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl,
                                     :product)
-          if options[:ssl_client_cert]
-            options.reverse_merge!(:ssl_ca_file => CdnResource.ca_file)
+
+          ca = Katello::Repository.feed_ca_file(url)
+          if ca && URI(url).scheme == 'https'
+            options.reverse_merge!(:ssl_ca_file => ca)
+          elsif URI(url).scheme == 'https'
+            store = OpenSSL::X509::Store.new
+            store.set_default_paths
+            options.reverse_merge!(:cert_store => store)
           end
+
           load_proxy_settings
           @product = options[:product]
 
@@ -40,13 +47,21 @@ module Katello
           @options = options
         end
 
+        def self.redhat_cdn?(url)
+          url.include?(SETTINGS[:katello][:redhat_repository_url])
+        end
+
         def http_downloader
           net = net_http_class.new(@uri.host, @uri.port)
           net.use_ssl = @uri.is_a?(URI::HTTPS)
 
-          net.cert = @options[:ssl_client_cert]
-          net.key = @options[:ssl_client_key]
-          net.ca_file = @options[:ssl_ca_file]
+          if CdnResource.redhat_cdn?(@uri.to_s)
+            net.cert = @options[:ssl_client_cert]
+            net.key = @options[:ssl_client_key]
+            net.ca_file = @options[:ssl_ca_file] if @options[:ssl_ca_file]
+          else
+            net.cert_store = @options[:cert_store]
+          end
 
           # NOTE: This was added because some proxies dont support SSLv23 and do not handle TLS 1.2
           # Valid values in ruby 1.9.3 are 'SSLv23' or 'TLSV1'
