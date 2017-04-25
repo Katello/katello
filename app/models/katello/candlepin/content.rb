@@ -67,7 +67,7 @@ module Katello
           :name => name,
           :label => label,
           :url => feed_url,
-          :feed_ca => ca,
+          :feed_ca => ::Katello::Repository.feed_ca_cert(feed_url),
           :feed_cert => certificate_and_key[:cert],
           :feed_key => certificate_and_key[:key],
           :content_type => katello_content_type,
@@ -173,10 +173,6 @@ module Katello
           ""
         end
       end
-
-      def ca
-        File.read(::Katello::Resources::CDN::CdnResource.ca_file)
-      end
     end
 
     class DockerRepositoryMapper
@@ -216,7 +212,7 @@ module Katello
                                  :docker_upstream_name => registry["name"],
                                  :label => label,
                                  :url => feed_url,
-                                 :feed_ca => ca,
+                                 :feed_ca => ::Katello::Repository.feed_ca_cert(feed_url),
                                  :feed_cert => product.certificate,
                                  :feed_key => product.key,
                                  :content_type => ::Katello::Repository::DOCKER_TYPE,
@@ -250,10 +246,6 @@ module Katello
 
       def relative_path
         ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, content.contentUrl)
-      end
-
-      def ca
-        File.read(::Katello::Resources::CDN::CdnResource.ca_file)
       end
     end
   end

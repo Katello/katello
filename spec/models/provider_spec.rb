@@ -309,17 +309,7 @@ module Katello
 
         it "'https://dr.pepper.yum:123/nutrition/facts/'" do
           @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
-          @provider.wont_be :valid?
-        end
-
-        it "'https://katello.org/cdn.redhat.com'" do
-          @provider.repository_url = "https://katello.org/cdn.redhat.com"
-          @provider.wont_be :valid?
-        end
-
-        it "'https://ltl.url/'" do
-          @provider.repository_url = "https://ltl.url/"
-          @provider.wont_be :valid?
+          @provider.must_be :valid?
         end
 
         it "'repo.fedorahosted.org/reposity'" do

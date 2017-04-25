@@ -205,6 +205,15 @@ module Katello
         .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
     end
 
+    def self.feed_ca_cert(url)
+      file = feed_ca_file(url)
+      File.read(file) if file
+    end
+
+    def self.feed_ca_file(url)
+      ::Katello::Resources::CDN::CdnResource.ca_file if ::Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
+    end
+
     def archive?
       self.environment.nil?
     end
