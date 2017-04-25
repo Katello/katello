@@ -41,8 +41,8 @@ module Katello
       content_views = content_views.where(:organization_id => @organization.id) if @organization
       content_views = content_views.in_environment(@environment) if @environment
       content_views = content_views.non_default if params[:nondefault]
-      content_views = content_views.non_composite if params[:noncomposite]
-      content_views = content_views.composite if params[:composite]
+      content_views = ::Foreman::Cast.to_bool(params[:noncomposite]) ? content_views.non_composite : content_views.composite if params[:noncomposite]
+      content_views = ::Foreman::Cast.to_bool(params[:composite]) ? content_views.composite : content_views.non_composite if params[:composite]
       content_views = content_views.where(:name => params[:name]) if params[:name]
       content_views = content_views.where("#{ContentView.table_name}.id NOT IN (?)", params[:without]) if params[:without]
       content_views
