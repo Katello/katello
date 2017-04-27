@@ -59,6 +59,29 @@ namespace :katello do
     end
   end
 
+  desc "Change the download policy of all repos. Specify DOWNLOAD_POLICY=policy. Options are #{::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')}."
+  task :change_download_policy => ["environment", "check_ping"] do
+    policy = ENV['DOWNLOAD_POLICY']
+    unless ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.include?(policy)
+      puts "Invalid download policy specified: '#{policy}'. "
+      puts "Options are #{::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.to_sentence}."
+      next
+    end
+
+    User.current = User.anonymous_api_admin
+    repos = Katello::Repository.yum_type.where(library_instance_id: nil)
+
+    repos.find_each.with_index do |repo, index|
+      puts "Processing Repository #{index + 1}/#{repos.count}: #{repo.name} (#{repo.id})"
+      begin
+        ForemanTasks.sync_task(::Actions::Katello::Repository::Update, repo,
+                               download_policy: policy)
+      rescue => e
+        puts "Failed to update repository #{repo.name} (#{repo.id}): #{e.message}"
+      end
+    end
+  end
+
   def lookup_repositories
     lifecycle_envs = Katello::KTEnvironment.where(:name => ENV['LIFECYCLE_ENVIRONMENT']) if ENV['LIFECYCLE_ENVIRONMENT']
     content_views = Katello::ContentView.where(:name => ENV['CONTENT_VIEW']) if ENV['CONTENT_VIEW']

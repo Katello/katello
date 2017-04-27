@@ -13,6 +13,7 @@ module Katello
       Rake::Task['katello:disable_dynflow'].reenable
       Rake::Task['katello:correct_puppet_environments'].reenable
       Rake::Task['katello:check_ping'].reenable
+      Rake::Task['katello:change_download_policy'].reenable
       Katello::Ping.expects(:ping).returns(:status => 'ok')
 
       Rake::Task.define_task(:environment)
@@ -126,6 +127,26 @@ module Katello
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::ContentViewPuppetEnvironment::Create, @puppet_env)
 
       Rake.application.invoke_task('katello:correct_puppet_environments')
+    end
+
+    def test_change_download_policy
+      ENV['DOWNLOAD_POLICY'] = 'background'
+      Katello::Repository.stubs(:yum_type).returns(Katello::Repository.where(:id => @library_repo))
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Update,
+                                            @library_repo,
+                                            download_policy: 'background')
+
+      Rake.application.invoke_task('katello:change_download_policy')
+    end
+
+    def test_change_download_policy_bad_policy
+      ForemanTasks.expects(:sync_task).never
+
+      ENV['DOWNLOAD_POLICY'] = nil
+      Rake.application.invoke_task('katello:change_download_policy')
+
+      ENV['DOWNLOAD_POLICY'] = 'invalid'
+      Rake.application.invoke_task('katello:change_download_policy')
     end
   end
 end
