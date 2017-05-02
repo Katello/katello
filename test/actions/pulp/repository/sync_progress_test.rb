@@ -1,4 +1,5 @@
 require 'katello_test_helper'
+require_relative 'test_base.rb'
 
 module ::Actions::Pulp::Repository
   class SyncProgressTest < TestBase
