@@ -32,8 +32,8 @@ module Actions
 
       def source_action
         parent = self.action
-        until parent.trigger.nil?
-          parent = parent.trigger
+        until parent.triggering_action.nil?
+          parent = parent.triggering_action
         end
         parent
       end
