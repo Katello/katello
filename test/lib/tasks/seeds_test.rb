@@ -27,7 +27,6 @@ module Katello
 
   class LocationsTest < SeedsTest
     setup do
-      Location.skip_callback(:destroy, :before, :deletable?)
       Location.destroy_all
     end
 
