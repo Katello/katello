@@ -246,14 +246,14 @@ Foreman::Plugin.register :katello do
 
   add_controller_action_scope(HostsController, :index) do |base_scope|
     base_scope
-      .includes(:content_view, :lifecycle_environment, :subscription_facet, :applicable_errata)
-      .includes(content_facet: [:bound_repositories, :applicable_errata, :content_view, :lifecycle_environment])
+      .preload(:content_view, :lifecycle_environment, :subscription_facet, :applicable_errata)
+      .preload(content_facet: [:bound_repositories, :applicable_errata, :content_view, :lifecycle_environment])
   end
 
   add_controller_action_scope(Api::V2::HostsController, :index) do |base_scope|
     base_scope
-      .includes(:content_view, :lifecycle_environment, :subscription_facet, :applicable_errata)
-      .includes(content_facet: [:bound_repositories, :applicable_errata, :content_view, :lifecycle_environment])
+      .preload(:content_view, :lifecycle_environment, :subscription_facet, :applicable_errata)
+      .preload(content_facet: [:bound_repositories, :applicable_errata, :content_view, :lifecycle_environment])
   end
 
   Katello::PermissionCreator.new(self).define
