@@ -64,6 +64,8 @@ module Katello
 
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
 
+    has_many :docker_meta_tags, :dependent => :destroy, :class_name => "Katello::DockerMetaTag"
+
     has_many :repository_ostree_branches, :class_name => "Katello::RepositoryOstreeBranch", :dependent => :delete_all
     has_many :ostree_branches, :through => :repository_ostree_branches
 
@@ -646,6 +648,10 @@ module Katello
       ::Host.joins(:content_facet => :bound_repositories).where("#{Katello::Repository.table_name}.id" => (self.clones.pluck(:id) + [self.id]))
     end
 
+    def docker_meta_tag_count
+      DockerMetaTag.in_repositories(self.id).count
+    end
+
     protected
 
     def removable_unit_association
@@ -704,7 +710,9 @@ module Katello
 
     def remove_docker_content(manifests)
       self.docker_tags.where(:docker_manifest_id => manifests.map(&:id)).destroy_all
+      DockerMetaTag.cleanup_tags
       self.docker_manifests -= manifests
+
       # destroy any orphan docker manifests
       manifests.each do |manifest|
         manifest.destroy if manifest.repositories.empty?

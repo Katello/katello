@@ -16,5 +16,9 @@ module Katello
     def custom_index_relation(collection)
       collection.includes(:docker_tags)
     end
+
+    def default_sort
+      lambda { |query| query.default_sort }
+    end
   end
 end
