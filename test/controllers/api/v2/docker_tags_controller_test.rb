@@ -6,6 +6,7 @@ module Katello
       @repo = Repository.find(katello_repositories(:redis).id)
       @manifest = @repo.docker_manifests.create!(:name => "abc123", :uuid => "123xyz")
       @tag = @repo.docker_tags.create!(:name => "wat", :docker_manifest => @manifest)
+      @meta_tag = DockerMetaTag.create!(:name => @tag.name, :schema1 => @tag, :repository => @repo)
     end
 
     def setup
@@ -42,7 +43,7 @@ module Katello
     end
 
     def test_show
-      get :show, :repository_id => @repo.id, :id => @tag.id
+      get :show, :repository_id => @repo.id, :id => @meta_tag.id
 
       assert_response :success
       assert_template "katello/api/v2/docker_tags/show"

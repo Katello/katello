@@ -45,6 +45,7 @@
         <tr bst-table-head row-select>
           <th bst-table-column><span translate>Manifest Name</span></th>
           <th bst-table-column><span translate>Tags</span></th>
+          <th bst-table-column><span translate>Schema Version</span></th>
           <th bst-table-column><span translate>Digest</span></th>
         </tr>
       </thead>
@@ -60,6 +61,9 @@
                 {{ tag.name }}
               </a>
             </span>
+          </td>
+          <td bst-table-cell>
+            {{ item.schema_version }}
           </td>
           <td bst-table-cell>
             {{ item.digest }}

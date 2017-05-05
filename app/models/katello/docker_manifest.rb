@@ -2,7 +2,7 @@ module Katello
   class DockerManifest < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
+    has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag", :foreign_key => :docker_manifest_id
     has_many :repository_docker_manifests, :dependent => :destroy
     has_many :repositories, :through => :repository_docker_manifests, :inverse_of => :docker_manifests
 
@@ -20,6 +20,10 @@ module Katello
                         :digest => json[:digest],
                         :downloaded => json[:downloaded]
                        )
+    end
+
+    def self.default_sort
+      order(:name).order(:schema_version)
     end
   end
 end

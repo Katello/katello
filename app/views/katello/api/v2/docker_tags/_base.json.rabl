@@ -1,7 +1,17 @@
 object @resource
 
 attributes :id, :name, :full_name
-attributes :repository_id, :manifest_id
+attributes :repository_id
+
+child :schema1_manifest => :manifest_schema1 do
+  attributes :uuid => :id
+  attributes :name, :schema_version, :digest
+end
+
+child :schema2_manifest => :manifest_schema2 do
+  attributes :uuid => :id
+  attributes :name, :schema_version, :digest
+end
 
 child :docker_manifest => :manifest do
   attributes :uuid => :id

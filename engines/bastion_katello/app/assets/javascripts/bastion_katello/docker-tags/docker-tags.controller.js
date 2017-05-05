@@ -31,5 +31,17 @@ angular.module('Bastion.docker-tags').controller('DockerTagsController',
         $scope.table.closeItem = function () {
             $scope.transitionTo('docker-tags');
         };
+
+        $scope.availableSchemaVersions = function (tag) {
+            var versions = [];
+            if (tag.manifest_schema1) {
+                versions.push(1);
+            }
+
+            if (tag.manifest_schema2) {
+                versions.push(2);
+            }
+            return versions.join(", ");
+        };
     }]
 );
