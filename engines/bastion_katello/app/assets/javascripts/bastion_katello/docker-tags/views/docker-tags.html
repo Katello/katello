@@ -19,6 +19,7 @@
       <thead>
         <tr bst-table-head>
           <th bst-table-column="name">{{ "Name" | translate }}</th>
+          <th bst-table-column="schema_version">{{ "Available Schema Versions" | translate }}</th>
           <th bst-table-column="product">{{ "Product Name" | translate }}</th>
           <th bst-table-column="repository">{{ "Repository Name" | translate }}</th>
         </tr>
@@ -30,6 +31,9 @@
             <a ui-sref="docker-tag.info({tagId: tag.id})">
               {{ tag.full_name }}
             </a>
+          </td>
+          <td bst-table-cell>
+            {{ availableSchemaVersions(tag) }}
           </td>
           <td bst-table-cell>
             {{ tag.product.name }}

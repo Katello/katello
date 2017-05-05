@@ -7,8 +7,8 @@ module Katello
 
     def auto_complete_name
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
-      tags = Katello::DockerTag.in_repositories(@repositories)
-      col = "#{Katello::DockerTag.table_name}.name"
+      tags = Katello::DockerMetaTag.in_repositories(@repositories)
+      col = "#{Katello::DockerMetaTag.table_name}.name"
       tags = tags.where("#{Katello::DockerTag.table_name}.name ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
       render :json => tags.pluck(col)
     end
@@ -18,8 +18,7 @@ module Katello
         # group docker tags by name, repo, and product
         repos = Repository.readable
         repos = repos.in_organization(@organization) if @organization
-        collection = Katello::DockerTag.in_repositories(repos).grouped
-
+        collection = Katello::DockerMetaTag.in_repositories(repos, true)
         respond(:collection => scoped_search(collection, "name", "DESC"))
       else
         super
@@ -33,7 +32,7 @@ module Katello
     end
 
     def resource_class
-      DockerTag
+      DockerMetaTag
     end
   end
 end

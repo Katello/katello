@@ -21,22 +21,33 @@
 
   <div data-block="right-column">
     <h4 translate>Docker Manifest</h4>
+    <div ng-if="!_.isEmpty(tag.manifest_schema1)">
+      <h5 translate>Schema Version 1</h5>
+      <dl class="dl-horizontal dl-horizontal-left">
+        <dt translate>Name</dt>
+        <dd>
+          {{ tag.manifest_schema1.name }}
+        </dd>
 
-    <dl class="dl-horizontal dl-horizontal-left">
-      <dt translate>Name</dt>
-      <dd>
-        {{ tag.manifest.name }}
-      </dd>
+        <dt translate>Digest</dt>
+        <dd>
+          {{ tag.manifest_schema1.digest }}
+        </dd>
+      </dl>
+    </div>
+    <div ng-if="!_.isEmpty(tag.manifest_schema2)">
+      <h5 translate>Schema Version 2</h5>
+      <dl class="dl-horizontal dl-horizontal-left">
+        <dt translate>Name</dt>
+        <dd>
+          {{ tag.manifest_schema2.name }}
+        </dd>
 
-      <dt translate>Digest</dt>
-      <dd>
-        {{ tag.manifest.digest }}
-      </dd>
-
-      <dt translate>Schema Version</dt>
-      <dd>
-        {{ tag.manifest.schema_version }}
-      </dd>
-    </dl>
+        <dt translate>Digest</dt>
+        <dd>
+          {{ tag.manifest_schema2.digest }}
+        </dd>
+      </dl>
+    </div>
   </div>
-</div>
+ </div>
