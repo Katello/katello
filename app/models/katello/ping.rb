@@ -115,19 +115,19 @@ module Katello
       def pulp_without_auth(url)
         body = backend_status(url, :pulp)
 
-        fail _("Pulp does not appear to be running.") if body.empty?
+        fail _("Pulp does not appear to be running at %s.") % url if body.empty?
         json = JSON.parse(body)
 
         if json['database_connection'] && json['database_connection']['connected'] != true
-          fail _("Pulp database connection issue.")
+          fail _("Pulp database connection issue at %s.") % url
         end
 
         if json['messaging_connection'] && json['messaging_connection']['connected'] != true
-          fail _("Pulp message bus connection issue.")
+          fail _("Pulp message bus connection issue at %s.") % url
         end
 
         unless all_pulp_workers_present?(json)
-          fail _("Not all necessary pulp workers running.")
+          fail _("Not all necessary pulp workers running at %s.") % url
         end
 
         json
