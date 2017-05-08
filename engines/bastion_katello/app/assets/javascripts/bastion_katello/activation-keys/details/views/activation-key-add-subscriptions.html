@@ -37,7 +37,10 @@
 
       <tbody>
         <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
-          {{ name }}
+          <td class="row-select"></td>
+          <td colspan="8">
+           {{ name }}
+          </td>
         </tr>
         <tr bst-table-row 
             ng-repeat-end

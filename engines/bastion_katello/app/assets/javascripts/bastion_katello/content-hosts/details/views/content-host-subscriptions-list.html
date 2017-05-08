@@ -50,10 +50,10 @@
 
       <tbody>
         <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions | groupedFilter: subscriptionSearch">
-          <td class="row-select">
-              {{ name }}
+          <td class="row-select"></td>
+          <td colspan="8">
+           {{ name }}
           </td>
-          <td bst-table-cell colspan="8"></td>
         </tr>
         <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
           <td bst-table-cell>{{ subscription.quantity_consumed }}</td>
