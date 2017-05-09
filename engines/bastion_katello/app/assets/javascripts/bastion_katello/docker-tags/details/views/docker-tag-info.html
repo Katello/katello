@@ -5,14 +5,14 @@
     <dl class="dl-horizontal dl-horizontal-left">
       <dt translate>Product</dt>
       <dd>
-        <a ui-sref="products.details.info({productId: tag.product.id})">
+        <a ui-sref="product.info({productId: tag.product.id})">
           {{ tag.product.name }}
         </a>
       </dd>
 
       <dt translate>Repository</dt>
       <dd>
-        <a ui-sref="products.details.repositories.manage-content.docker-manifests({productId: tag.product.id, repositoryId: tag.repository.id})">
+        <a ui-sref="product.repository.manage-content.docker-manifests({productId: tag.product.id, repositoryId: tag.repository.id})">
           {{ tag.repository.name }}
         </a>
       </dd>
