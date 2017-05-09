@@ -2,6 +2,7 @@ attributes :id, :uuid
 attributes :content_view_id, :content_view_name
 attributes :lifecycle_environment_id, :lifecycle_environment_name
 attributes :content_source_id, :content_source_name
+attributes :kickstart_repository_id
 
 child :content_view => :content_view do
   attributes :id, :name
