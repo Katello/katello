@@ -13,6 +13,11 @@
   </div>
 
   <nav data-block="item-actions">
+    <button type="button" class="btn btn-primary" ng-hide="denied('publish_content_views', contentView)"
+            ui-sref="content-view.publish">
+      <span translate>Publish New Version</span>
+    </button>
+    
     <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
         <span translate>Select Action</span>
@@ -24,12 +29,6 @@
       </button>
 
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-        <li role="menuitem" ng-hide="denied('publish_content_views', contentView)">
-          <a ui-sref="content-view.publish">
-            <span translate>Publish New Version</span>
-          </a>
-        </li>
-
         <li role="menuitem" ng-hide="denied('publish_content_views', contentView)">
           <a ui-sref="content-view.copy">
             <span translate>Copy Content View</span>
