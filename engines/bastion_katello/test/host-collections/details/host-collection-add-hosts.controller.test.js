@@ -16,6 +16,7 @@ describe('Controller: HostCollectionAddHostsController', function() {
             };
             this.get = function() {};
             this.setSearchKey = function() {};
+            this.refresh = function() {};
         };
         HostCollection = {addHosts: function(){}};
     });
