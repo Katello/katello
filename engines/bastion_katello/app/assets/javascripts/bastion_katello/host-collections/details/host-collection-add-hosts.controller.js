@@ -38,6 +38,7 @@ angular.module('Bastion.host-collections').controller('HostCollectionAddHostsCon
             return term + " and " + addition;
         };
 
+        contentNutupane.refresh();
         $scope.table = contentNutupane.table;
         $scope.isAdding = false;
         $scope.table.closeItem = function () {};
