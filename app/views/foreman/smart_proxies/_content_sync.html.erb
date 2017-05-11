@@ -8,7 +8,7 @@
     {{ syncTask.progressbar.value || 0 | number: 0 }}%
     <a href="<%= @task_search_url %>" target="_self">
       <div ng-class="{ active: isTaskInProgress(syncTask) }" class="progress progress-striped">
-        <span progressbar
+        <span uib-progressbar
           animate="false"
           value="syncTask.progressbar.value || 0"
           type="{{ progressbarType(syncTask) }}"></span>
