@@ -14,13 +14,16 @@
     <label class="checkbox-inline" title="{{ 'Only show Packages that are Applicable to one or more Content Hosts' | translate }}">
       <input type="checkbox" ng-model="showApplicable" ng-disabled="showUpgradable" ng-change="toggleFilters()"/>
       <span translate>Applicable</span>
-      <i class="fa fa-question-circle" ng-show="showUpgradable" title="{{ 'Packages are automatically Applicable if they are Upgradable' | translate }}"></i>
     </label>
 
     <label class="checkbox-inline" title="{{ 'Only show Packages that are Upgradable on one or more Content Hosts' | translate }}">
       <input type="checkbox" ng-model="showUpgradable" ng-change="toggleFilters()"/>
       <span translate>Upgradable</span>
     </label>
+
+    <p ng-show="showUpgradable" translate>
+      Packages are automatically Applicable if they are Upgradable
+    </p>
   </div>
 
   <span data-block="no-rows-message">
