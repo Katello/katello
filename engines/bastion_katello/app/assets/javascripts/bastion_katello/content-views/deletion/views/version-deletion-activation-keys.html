@@ -28,19 +28,22 @@
        ng-model="selectedEnvironment"
        mode="singleSelect"></div>
 
-  <div>
-    <span translate>Content View:</span>
-    <select ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length > 0"
-            ng-options="cv.id as cv.name for cv in contentViewsForEnvironment"
-            ng-model="selectedContentViewId"></select>
-    <i ng-show="fetchingViews" class="fa fa-spinner fa-spin"></i>
-    <span translate ng-hide="selectedEnvironment">
-      Please select a Lifecycle Environment.
-    </span>
-    <span translate ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length === 0">
-      No Content Views available, please select another environment.
-    </span>
+  <div class="row">
+    <div class="col-sm-4">
+      <span translate>Content View:</span>
+      <select class="form-control" ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length > 0"
+              ng-options="cv.id as cv.name for cv in contentViewsForEnvironment"
+              ng-model="selectedContentViewId">
+      </select>
+      <i ng-show="fetchingViews" class="fa fa-spinner fa-spin"></i>
+      <span translate ng-hide="selectedEnvironment">
+        Please select a Lifecycle Environment.
+      </span>
+      <span translate ng-show="!fetchingViews && selectedEnvironment && contentViewsForEnvironment.length === 0">
+        No Content Views available, please select another environment.
+      </span>
     </div>
+  </div>
 
   <a ng-click="toggleKeys()">
     <p ng-show="!showKeys" translate>Show affected Activation Keys</p>
