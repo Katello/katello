@@ -212,9 +212,10 @@ module Katello
       repositories.any?(&:url?)
     end
 
-    def available_content
+    def available_content(content_view_version_id = nil)
       self.productContent.select do |content|
-        self.repositories.subscribable.where(content_id: content.content.id).exists?
+        repos = self.repositories.subscribable.where(content_id: content.content.id)
+        repos.exists? && (content_view_version_id.nil? || repos.where(content_view_version_id: content_view_version_id.to_i).count > 0)
       end
     end
 

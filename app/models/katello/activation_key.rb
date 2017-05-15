@@ -99,11 +99,30 @@ module Katello
           Rails.logger.error("Pool #{pool.id} is missing its subscription id.")
         end
       end
-      all_products.flatten!
+      all_products.uniq.flatten
     end
 
-    def available_content
-      self.products ? self.products.map(&:available_content).flatten.uniq { |product| product.content.id } : []
+    def all_products
+      Katello::Product.joins(:subscriptions => :pools).where(:organization_id => organization.id).enabled.uniq
+    end
+
+    def available_content(content_access_mode_all = false, content_access_mode_env = false)
+      if content_access_mode_env
+        return [] unless environment_id && content_view_id
+        version = ContentViewVersion.in_environment(environment_id).where(:content_view_id => content_view_id).first
+        content_view_version_id = version.id
+      end
+
+      if content_access_mode_all
+        content = all_products.flat_map do |product|
+          product.available_content(content_view_version_id)
+        end
+      else
+        content = products.flat_map do |product|
+          product.available_content(content_view_version_id)
+        end
+      end
+      content.uniq
     end
 
     def valid_content_override_label?(content_label)
