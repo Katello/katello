@@ -81,13 +81,13 @@ module ::Actions::Katello::Product
       end
       product.expects(:save!).returns([])
       product.organization.label = 'somelabel'
+      Katello::Product.expects(:unused_product_id).returns(3)
 
-      Katello::Util::Data.expects(:md5hash).returns('foobar')
       plan_action(action, product, product.organization)
 
       assert_action_planed_with(action,
                                 ::Actions::Candlepin::Product::Create,
-                                :id => 'foobar',
+                                :id => '3',
                                 :name => product.name,
                                 :owner => product.organization.label,
                                 :multiplier => 1,

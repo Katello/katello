@@ -18,6 +18,7 @@ class ScenarioSupport
   end
 
   def create_product(product, org)
+    Katello::Product.expects(:unused_product_id).returns('7c825013cab01349ae8cb8db187de391')
     record("product_create") { ForemanTasks.sync_task(::Actions::Katello::Product::Create, product, org, Time.utc(2017, "jan", 1, 20, 15, 1).iso8601) }
   end
 
