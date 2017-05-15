@@ -136,6 +136,16 @@ module Katello
       assert_empty @dev_key.products
     end
 
+    def test_not_all_available_content
+      @dev_key.expects(:products).returns([]).at_least_once
+      @dev_key.available_content(false, false)
+    end
+
+    def test_all_available_content
+      @dev_key.expects(:all_products).returns([]).at_least_once
+      @dev_key.available_content(true, false)
+    end
+
     def test_available_subscriptions
       pool_one = katello_pools(:pool_one)
       pool_two = katello_pools(:pool_two)

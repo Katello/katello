@@ -131,8 +131,12 @@ module Katello
 
     api :GET, "/activation_keys/:id/product_content", N_("Show content available for an activation key")
     param :id, String, :desc => N_("ID of the activation key"), :required => true
+    param :content_access_mode_all, :bool, :desc => N_("Get all content available, not just that provided by subscriptions")
+    param :content_access_mode_env, :bool, :desc => N_("Limit content to just that available in the activation key's content view version")
     def product_content
-      content = @activation_key.available_content
+      content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
+      content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
+      content = @activation_key.available_content(content_access_mode_all, content_access_mode_env)
       response = {
         :results => content,
         :total => content.size,
