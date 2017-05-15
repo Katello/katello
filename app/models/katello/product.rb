@@ -248,5 +248,14 @@ module Katello
     def self.humanize_class_name(_name = nil)
       _("Product and Repositories")
     end
+
+    def self.unused_product_id
+      id = SecureRandom.random_number(999_999_999_999)
+      if ::Katello::Product.find_by(:cp_id => id)
+        unused_product_id
+      else
+        id
+      end
+    end
   end
 end

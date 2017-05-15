@@ -60,8 +60,7 @@ module Katello
 
   class GluePulpNonVcrTests < GluePulpRepoTestBase
     def test_importer_feed_url
-      proxy = FactoryGirl.build(:bmc_smart_proxy)
-
+      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
       pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
 
@@ -74,7 +73,7 @@ module Katello
 
     def test_importer_ssl_options
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      proxy = FactoryGirl.build(:bmc_smart_proxy)
+      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
       assert @fedora_17_x86_64.importer_ssl_options(proxy).key?(:ssl_validation)
       refute @cvpe_one.importer_ssl_options(proxy).key?(:ssl_validation)
     end

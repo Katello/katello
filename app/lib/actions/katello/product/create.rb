@@ -7,7 +7,7 @@ module Actions
             product.provider = organization.anonymous_provider
             product.organization = organization
             product.setup_label_from_name
-            product.cp_id = unused_product_id(organization.label, product.label)
+            product.cp_id = ::Katello::Product.unused_product_id
             product.save!
 
             plan_action(::Actions::Candlepin::Product::Create,
@@ -29,17 +29,6 @@ module Actions
             plan_self
             plan_action Katello::Product::ReindexSubscriptions, product, subscription_id
           end
-        end
-
-        def unused_product_id(owner, product_label)
-          id = ::Katello::Util::Data.md5hash("#{owner}-#{product_label}")
-
-          count = 0
-          while ::Katello::Product.find_by(:cp_id => id)
-            id = ::Katello::Util::Data.md5hash("#{owner}-#{product_label}#{count}")
-            count += 1
-          end
-          id
         end
 
         def finalize
