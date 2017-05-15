@@ -16,6 +16,18 @@
            ng-model="repositorySetFilter"/>
   </div>
 
+  <div data-block="filters">
+    <label class="checkbox-inline" title="{{ 'Show all Repository Sets in Organization' | translate }}">
+      <input type="checkbox" ng-model="contentAccessModes.contentAccessModeAll" ng-change="toggleFilters()"/>
+      <span translate>Show All</span>
+    </label>
+    <label class="checkbox-inline" title="{{ 'Limit Repository Sets to only those available in this Activation Key\'s Lifecycle Environment' | translate }}">
+      <input type="checkbox" ng-model="contentAccessModes.contentAccessModeEnv" ng-change="toggleFilters()"/>
+      <span translate>Limit to Environment</span>
+    </label>
+  </div>
+
+
   <div data-block="list-actions">
     <div class="btn-group" uib-dropdown keyboard-nav>
 

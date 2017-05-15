@@ -40,7 +40,7 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
             setSuccessMessage: function () {},
             setErrorMessage: function () {}
         };
-        
+
         expectedTableSelection = [
             {
                 "enabled": false,
@@ -171,6 +171,16 @@ describe('Controller: ActivationKeyRepositorySetsController', function () {
             ActivationKey.failed = true;
             $scope.resetToDefault();
             expect(GlobalNotification.setErrorMessage).toHaveBeenCalled();
+        });
+    });
+
+    describe("can toggle repository set filters", function () {
+        it("all and env toggles", function () {
+            $scope.contentAccessModes.contentAccessModeAll = false;
+            $scope.contentAccessModes.contentAccessModeEnv = false;
+            $scope.toggleFilters();
+            expect($scope.nutupane.table.params['content_access_mode_env']).toEqual($scope.contentAccessModes.contentAccessModeEnv);
+            expect($scope.nutupane.table.params['content_access_mode_all']).toEqual($scope.contentAccessModes.contentAccessModeAll);
         });
     });
 });

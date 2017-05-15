@@ -10,6 +10,7 @@ module Katello
       ActivationKey.any_instance.stubs(:valid_content_override_label?).returns(true)
       ActivationKey.any_instance.stubs(:content_overrides).returns([])
       ActivationKey.any_instance.stubs(:products).returns([])
+      ActivationKey.any_instance.stubs(:all_products).returns([])
 
       @organization = get_organization
       @activation_key = ActivationKey.find(katello_activation_keys(:simple_key).id)
@@ -199,6 +200,16 @@ module Katello
     def test_product_content
       get :product_content, :id => @activation_key.id, :organization_id => @organization.id
 
+      assert_response :success
+      assert_template 'api/v2/activation_keys/product_content'
+    end
+
+    def test_product_content_access_modes
+      ActivationKey.any_instance.expects(:all_products).once.returns([])
+      mode_all = true
+      mode_env = false
+      get(:product_content, :id => @activation_key.id,
+          :content_access_mode_all => mode_all, :content_access_mode_env => mode_env)
       assert_response :success
       assert_template 'api/v2/activation_keys/product_content'
     end
