@@ -12,15 +12,7 @@
       <span translate>Register Content Host</span>
     </button>
 
-    <div class="btn-group" uib-dropdown keyboard-nav>
-      <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span translate>Select Action</span>
-      </button>
-
-      <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span class="caret"></span>
-      </button>
-
+    <span select-action-dropdown>
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
         <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
           <a ng-click="openHostCollectionsModal()" disable-link="table.numSelected === 0" translate>Change Host Collections</a>
@@ -49,7 +41,7 @@
           <span bst-modal="performDestroyHosts()" template-url="content-hosts/bulk/views/content-hosts-bulk-destroy-modal.html"></span>
         </li>
       </ul>
-    </div>
+    </span>
   </div>
 
   <span data-block="no-rows-message" translate>

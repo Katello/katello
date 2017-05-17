@@ -17,16 +17,7 @@
   </div>
 
   <div data-block="list-actions">
-    <div class="btn-group" uib-dropdown keyboard-nav>
-
-      <button class="btn btn-default" type="button" uib-dropdown-toggle translate>
-        Select Action
-      </button>
-
-      <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span class="caret"></span>
-      </button>
-
+    <div class="btn-group" select-action-dropdown>
       <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
         <li role="menuitem" ng-show="permitted('edit_activation_keys', activationKey)" ng-class="{disabled: table.numSelected === 0}">
           <a ng-click="overrideToEnabled()" disable-link="table.numSelected === 0" translate>
