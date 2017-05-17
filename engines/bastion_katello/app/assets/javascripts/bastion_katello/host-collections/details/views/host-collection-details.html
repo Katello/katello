@@ -6,16 +6,7 @@
   </div>
 
   <div data-block="item-actions">
-    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span translate>Select Action</span>
-      </button>
-
-      <button type="button" type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span class="caret"></span>
-        <span class="sr-only" translate>Toggle Dropdown</span>
-      </button>
-
+    <span select-action-dropdown>
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
         <li role="menuitem" ng-hide="denied('create_host_collections')">
           <a ui-sref="host-collection.copy" translate>
@@ -36,7 +27,7 @@
         <div data-block="modal-header" translate>Remove Host Collection "{{ hostCollection.name }}"?</div>
         <div data-block="modal-body" translate>Are you sure you want to remove Host Collection "{{ hostCollection.name }}"?</div>
       </div>
-    </div>
+    </span>
   </div>
 
   <nav data-block="navigation" ng-hide="isState('host-collection.copy')">
