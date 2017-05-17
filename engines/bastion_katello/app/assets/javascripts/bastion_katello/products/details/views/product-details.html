@@ -5,16 +5,8 @@
     <h2 translate>{{ product.name }}</h2>
   </header>
 
-  <nav data-block="item-actions">
-    <div class="btn-group" uib-dropdown keyboard-nav bst-feature-flag="custom_products">
-      <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span translate>Select Action</span>
-      </button>
-      <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        <span class="caret"></span>
-        <span class="sr-only" translate>Toggle Dropdown</span>
-      </button>
-
+  <nav data-block="item-actions" bst-feature-flag="custom_products">
+    <span select-action-dropdown>
       <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
         <li role="menuitem" ng-hide="denied('sync_products', product)">
           <a ng-click="syncProduct()">
@@ -58,7 +50,7 @@
           </span>
         </li>
       </ul>
-    </div>
+    </span>
 
     <div bst-modal="removeProduct(product)" model="product">
       <div data-block="modal-header" translate>Remove Product "{{ product.name }}"?</div>
