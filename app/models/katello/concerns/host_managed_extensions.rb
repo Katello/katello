@@ -46,13 +46,30 @@ module Katello
         ids.uniq.compact
       end
 
+      #rubocop:disable Metrics/AbcSize
       def info_with_katello
         info = info_without_katello
         info['parameters']['kt_env'] = self.lifecycle_environment.try(:label) #deprecated
         info['parameters']['kt_cv'] = self.content_view.try(:label) #deprecated
-        info['parameters']['lifecycle_environment'] = self.lifecycle_environment.try(:label)
-        info['parameters']['content_view'] = self.content_view.try(:label)
         info['parameters']['foreman_host_collections'] = self.host_collections.map(&:name)
+        info['parameters']['lifecycle_environment'] = self.lifecycle_environment.try(:label)
+
+        info['parameters']['content_view'] = self.content_view.try(:label)
+        info['parameters']['content_view_info'] = {}
+        info['parameters']['content_view_info']['label'] = self.content_view.try(:label)
+        info['parameters']['content_view_info']['latest-version'] = self.content_view.try(:latest_version)
+        info['parameters']['content_view_info']['version'] = self.content_view.try(:version, self.lifecycle_environment).try(:version)
+        info['parameters']['content_view_info']['published'] = self.content_view.try(:version, self.lifecycle_environment).try(:created_at)
+        info['parameters']['content_view_info']['components'] = {}
+        if self.content_view.try(:composite)
+          self.content_view.try(:version, self.lifecycle_environment).try(:content_view_version_components).each do |cv|
+            cv_label = cv.component_version.content_view.label
+            info['parameters']['content_view_info']['components'][cv_label] = {}
+            info['parameters']['content_view_info']['components'][cv_label]['version'] = cv.component_version.try(:version)
+            info['parameters']['content_view_info']['components'][cv_label]['published'] = cv.component_version.try(:created_at)
+          end
+        end
+
         if self.content_facet.present?
           info['parameters']['kickstart_repository'] = self.content_facet.kickstart_repository.try(:label)
         end
