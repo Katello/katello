@@ -2,19 +2,22 @@ describe('Controller: ProductFormController', function() {
     var $scope,
         FormUtils,
         GlobalNotification,
+        modalResponse,
+        SyncPlan,
+        $uibModal,
         $httpBackend;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var $uibModal,
-            $controller = $injector.get('$controller'),
+        var $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
             $q = $injector.get('$q'),
             Product = $injector.get('MockResource').$new(),
             Provider = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new(),
-            SyncPlan = $injector.get('MockResource').$new();
+            GPGKey = $injector.get('MockResource').$new();
+
+        SyncPlan = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
@@ -24,17 +27,22 @@ describe('Controller: ProductFormController', function() {
         $scope.productForm = $injector.get('MockForm');
         $scope.panel = {};
 
+        modalResponse = {
+            id: 3
+        };
+
         $uibModal = {
             open: function () {
                 return {
                     result: {
                         then: function (callback) {
-                            callback();
+                            callback(modalResponse);
                         }
                     }
                 }
             }
         };
+
 
         $controller('ProductFormController', {
             $scope: $scope,
@@ -87,5 +95,28 @@ describe('Controller: ProductFormController', function() {
         expect(FormUtils.labelize).toHaveBeenCalled();
     });
 
+    it("should open a new sync plan modal", function () {
+        var result;
+
+        spyOn(SyncPlan, 'queryUnpaged').and.callFake(function () {
+            return {
+                $promise: {
+                    then: function (callback) {
+                        callback();
+                    }
+                }
+            };
+        });
+
+        spyOn($uibModal, 'open').and.callThrough();
+
+        $scope.openSyncPlanModal();
+
+        result = $uibModal.open.calls.argsFor(0)[0];
+
+        expect(result.templateUrl).toContain('new-sync-plan-modal.html');
+        expect(result.controller).toBe('NewSyncPlanModalController');
+        expect($scope.product['sync_plan_id']).toBe(modalResponse.id);
+    });
 });
 
