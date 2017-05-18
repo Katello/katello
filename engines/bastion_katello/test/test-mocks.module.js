@@ -19,7 +19,8 @@ angular.module('Bastion.test-mocks').config(['$provide', function ($provide) {
 
     $provide.service('ApiErrorHandler', function () {
         return {
-            handleGETRequestErrors: function () {}
+            handleGETRequestErrors: function () {},
+            handlePUTRequestErrors: function () {}
         };
     })
 }]);

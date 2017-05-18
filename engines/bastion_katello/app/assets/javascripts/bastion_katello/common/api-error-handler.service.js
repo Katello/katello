@@ -9,7 +9,7 @@
      *   Provides common functionality in handling Katello/Foreman API Errors.
      */
     function ApiErrorHandler(translate, GlobalNotification) {
-        this.handleGETRequestErrors = function (response, $scope) {
+        function handleError(response, $scope, defaultErrorMessage) {
             var hasScopeErrorMessages = $scope && $scope.hasOwnProperty('errorMessages');
 
             if (response.hasOwnProperty('data') && response.data.hasOwnProperty('errors')) {
@@ -22,20 +22,28 @@
                 }
             } else {
                 if (hasScopeErrorMessages) {
-                    $scope.errorMessages = [translate('Something went wrong when retrieving the resource.')];
+                    $scope.errorMessages = [defaultErrorMessage];
                 } else {
-                    GlobalNotification.setErrorMessage(translate('Something went wrong when retrieving the resource.'));
+                    GlobalNotification.setErrorMessage(defaultErrorMessage);
                 }
             }
 
             if ($scope && $scope.hasOwnProperty('panel')) {
                 $scope.panel.error = true;
             }
+        }
+
+        this.handleGETRequestErrors = function (response, $scope) {
+            var defaultErrorMessage = translate('Something went wrong when retrieving the resource.');
+            handleError(response, $scope, defaultErrorMessage);
+        };
+
+        this.handlePUTRequestErrors = function (response, $scope) {
+            var defaultErrorMessage = translate('Something went wrong when saving the resource.');
+            handleError(response, $scope, defaultErrorMessage);
         };
     }
 
     angular.module('Bastion.common').service('ApiErrorHandler', ApiErrorHandler);
-
     ApiErrorHandler.$inject = ['translate', 'GlobalNotification'];
-
 })();
