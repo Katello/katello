@@ -4,14 +4,17 @@
  *
  * @requires $scope
  * @requires $state
+ * @requires $uibModal
+ * @requires translate
  * @requires Product
+ * @requires GlobalNotification
  * @requires ApiErrorHandler
  *
  * @description
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsController',
-    ['$scope', '$state', 'Product', 'ApiErrorHandler', function ($scope, $state, Product, ApiErrorHandler) {
+    ['$scope', '$state', '$uibModal', 'translate', 'Product', 'GlobalNotification', 'ApiErrorHandler', function ($scope, $state, $uibModal, translate, Product, GlobalNotification, ApiErrorHandler) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.page = {
@@ -64,6 +67,28 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             }
 
             return readOnlyReason;
+        };
+
+        $scope.updateProduct = function () {
+            function success() {
+                GlobalNotification.setSuccessMessage(translate('Sync Plan created and assigned to product.'));
+            }
+
+            function error(response) {
+                ApiErrorHandler.handlePUTRequestErrors(response, $scope);
+            }
+
+            $scope.product.$update(success, error);
+        };
+
+        $scope.openSyncPlanModal = function () {
+            $uibModal.open({
+                templateUrl: 'products/new/views/new-sync-plan-modal.html',
+                controller: 'NewSyncPlanModalController'
+            }).result.then(function ($value) {
+                $scope.product['sync_plan_id'] = $value.id;
+                $scope.updateProduct();
+            });
         };
     }]
 );
