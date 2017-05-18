@@ -1,5 +1,5 @@
 describe('Controller: ProductDetailsController', function() {
-    var $scope, Product;
+    var $scope, Product, $uibModal, modalResponse, GlobalNotification, ApiErrorHandler;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
@@ -10,6 +10,25 @@ describe('Controller: ProductDetailsController', function() {
         Product = $injector.get('MockResource').$new();
         Product.sync = function() {};
 
+        GlobalNotification = $injector.get('GlobalNotification');
+        ApiErrorHandler = $injector.get('ApiErrorHandler');
+
+        modalResponse = {
+            id: 3
+        };
+
+        $uibModal = {
+            open: function () {
+                return {
+                    result: {
+                        then: function (callback) {
+                            callback(modalResponse);
+                        }
+                    }
+                }
+            }
+        };
+
         $scope = $injector.get('$rootScope').$new();
 
         $scope.$stateParams = {productId: 1};
@@ -17,7 +36,10 @@ describe('Controller: ProductDetailsController', function() {
         $controller('ProductDetailsController', {
             $scope: $scope,
             $state: $state,
-            Product: Product
+            Product: Product,
+            $uibModal: $uibModal,
+            ApiErrorHandler: ApiErrorHandler,
+            GlobalNotification: GlobalNotification
         });
     }));
 
@@ -66,5 +88,51 @@ describe('Controller: ProductDetailsController', function() {
 
         expect(Product.sync).toHaveBeenCalledWith({id: $scope.$stateParams.productId},
             jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it('provides a way to open a modal to add a new sync plan', function() {
+        var result;
+
+        spyOn($uibModal, 'open').and.callThrough();
+
+        $scope.openSyncPlanModal();
+
+        result = $uibModal.open.calls.argsFor(0)[0];
+
+        expect(result.templateUrl).toContain('new-sync-plan-modal.html');
+        expect(result.controller).toBe('NewSyncPlanModalController');
+        expect($scope.product['sync_plan_id']).toBe(modalResponse.id);
+    });
+
+    describe("provides a way to update the product", function () {
+        afterEach(function () {
+            expect($scope.product.$update).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
+        });
+
+        it("and succeed", function () {
+            spyOn($scope.product, '$update').and.callFake(function (success ) {
+                success();
+            });
+
+            spyOn(GlobalNotification, 'setSuccessMessage');
+
+            $scope.updateProduct();
+
+            expect(GlobalNotification.setSuccessMessage).toHaveBeenCalledWith(jasmine.any(String));
+        });
+
+        it("and fail", function () {
+            var response = {};
+
+            spyOn($scope.product, '$update').and.callFake(function (success, error) {
+                error(response);
+            });
+
+            spyOn(ApiErrorHandler, 'handlePUTRequestErrors');
+
+            $scope.updateProduct();
+
+            expect(ApiErrorHandler.handlePUTRequestErrors).toHaveBeenCalledWith(response, $scope);
+        });
     });
 });
