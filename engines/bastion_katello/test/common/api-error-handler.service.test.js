@@ -44,4 +44,35 @@ describe('Service: ApiErrorHandler', function() {
             expect(scope.panel.error).toBe(true);
         });
     });
+
+    describe("Provides a function to handle PUT request errors", function() {
+        var response = {};
+
+        beforeEach(function () {
+            spyOn(GlobalNotification, 'setErrorMessage');
+        });
+
+        it("uses the errors array if it exists in the response", function () {
+            response = {
+                data: {
+                    errors: ['an error', 'another one']
+                }
+            };
+
+            ApiErrorHandler.handlePUTRequestErrors(response);
+            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[0]);
+            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(response.data.errors[1]);
+        });
+
+        it("provides a generic message if the errors array does not exist in the response", function () {
+            ApiErrorHandler.handlePUTRequestErrors(response);
+            expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith(jasmine.any(String));
+        });
+
+        it("sets a panel error boolean if $scope is provided", function () {
+            var scope = {panel: {}};
+            ApiErrorHandler.handlePUTRequestErrors(response, scope);
+            expect(scope.panel.error).toBe(true);
+        });
+    });
 });
