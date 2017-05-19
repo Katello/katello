@@ -34,6 +34,8 @@ module Actions
 
         def unregister(host)
           if host.content_facet
+            host.content_facet.bound_repositories = []
+            host.content_facet.applicable_errata = []
             host.content_facet.uuid = nil
             host.content_facet.save!
           end
