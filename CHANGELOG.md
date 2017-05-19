@@ -1,6 +1,6 @@
-# 3.4.0  (2017-04-11)
+# 3.4.0 Oud Bruin (2017-05-18)
 
-## Features
+## Features 
 
 ### Hammer
  * hammer  host subscriptions product-content  needs to show available product content  ([#19080](http://projects.theforeman.org/issues/19080))
@@ -20,6 +20,7 @@
  * Add top level file type UI page ([#18754](http://projects.theforeman.org/issues/18754), [a216a1a8](http://github.com/katello/katello/commit/a216a1a89e0da8f432857c5c2abe427acaf76e99))
  * Add option to force sync repository ([#18558](http://projects.theforeman.org/issues/18558), [71532079](http://github.com/katello/katello/commit/71532079d8be4d3220372311a9ec990355a125cc), [241d6aac](http://github.com/katello/katello/commit/241d6aacf3df7564d0676d774afe1fe077c2b772))
  * OSTree Sync pulls only the latest version ([#17427](http://projects.theforeman.org/issues/17427), [dffc419f](http://github.com/katello/katello/commit/dffc419fa416148352f682823a8b22dc161dacbd))
+ * Add a rake task to bulk update the download_policy on all repos ([#19420](http://projects.theforeman.org/issues/19420), [a48012a9](http://github.com/katello/katello/commit/a48012a97cbb31335f3996ee2a05337f5bd42b8f))
 
 ### Tooling
  * Need a way to run bunch of tests based of wildcard ([#18727](http://projects.theforeman.org/issues/18727), [32ee9253](http://github.com/katello/katello/commit/32ee925336ce3e0d93c948aadea2ea0e7b4a27e7))
@@ -62,8 +63,12 @@
  * Remove nutupane from OSTree branches pages ([#17642](http://projects.theforeman.org/issues/17642), [16bba7aa](http://github.com/katello/katello/commit/16bba7aa22765adb2b9111859b7eadf677aadfbb))
  * Eliminate capsule-remove in favor of katello-remove ([#17567](http://projects.theforeman.org/issues/17567), [9b68a1fb](http://github.com/katello/katello-packaging/commit/9b68a1fb7a5b1365252d18fe03bbedf1551b3fc4))
  * Upgrade bastion to 5.0.0 part 2 the sequel ([#19074](http://projects.theforeman.org/issues/19074), [57190666](http://github.com/katello/katello-packaging/commit/5719066637386b63b688ed96dfd3191daaa33949))
+ * File big issue into syslog when katello-service performs an action ([#19018](http://projects.theforeman.org/issues/19018), [6ccf8e14](http://github.com/katello/katello-packaging/commit/6ccf8e1421deff879824483ad0df1e73953f4605))
+ * Add schema to full backup if dbfiles are corrupted ([#18925](http://projects.theforeman.org/issues/18925), [7aa546f3](http://github.com/katello/katello-packaging/commit/7aa546f3d2f954e974ef2d9210d13d34ef0d40f1))
+ * katello-backup should take backup of redhat-release file ([#18277](http://projects.theforeman.org/issues/18277), [96735b22](http://github.com/katello/katello-packaging/commit/96735b22879ab48f31e51ec82657d6395b5961e2))
+ * Need a server side tool to assist with the process of changing the hostname of the Katello server ([#17522](http://projects.theforeman.org/issues/17522), [571239eb](http://github.com/katello/katello-packaging/commit/571239ebf38f5f332b301a836d2f361dd40a608e))
 
-## Bug Fixes
+## Bug Fixes 
 
 ### Installer
  * Add foreman CLI deployment through installer ([#19118](http://projects.theforeman.org/issues/19118), [730de817](http://github.com/katello/katello-installer/commit/730de817f3681978ba5efc33b7394337719aa577))
@@ -81,6 +86,9 @@
  * obsolete squid directives ([#17219](http://projects.theforeman.org/issues/17219))
  * Repeated SSL warnings in httpd logs ([#16256](http://projects.theforeman.org/issues/16256), [0ae1d294](http://github.com/katello//commit/0ae1d294a71129a9d00eca3d8574a663da0ef4ff))
  * Fix indentation in answers files ([#18884](http://projects.theforeman.org/issues/18884), [d1f7895d](http://github.com/katello/katello-installer/commit/d1f7895d0997757d34a10803654514e06f61e7fe))
+ * --reset should stop workers or it will fail on pulp-manage-db ([#19276](http://projects.theforeman.org/issues/19276), [f05e8d73](http://github.com/katello/katello-installer/commit/f05e8d737e4a463c16bb3694c61e8c6e13ebd359))
+ * Reset does not recreate candlepin db due to cpdp/cpinit in wrong location ([#19273](http://projects.theforeman.org/issues/19273), [b06c57d0](http://github.com/katello/katello-installer/commit/b06c57d074dd2b448c0109d272161dc1c4d1434a))
+ * --certs-regenerate-ca should also regenerate ueber certificates ([#18987](http://projects.theforeman.org/issues/18987), [a0541934](http://github.com/katello/katello/commit/a0541934a469879d381d0cb4d4437bd0020979f9))
 
 ### Web UI
  * Tasks table not setting table.working to false correctly ([#19089](http://projects.theforeman.org/issues/19089), [c8dcb913](http://github.com/katello/katello/commit/c8dcb9138f6c126efd9db5113d83fb3f410331c3))
@@ -100,6 +108,9 @@
  * 3.3 - Search box is small on CV puppet modules page ([#18827](http://projects.theforeman.org/issues/18827))
  * [RFE] add confirmation step for manifest deletion (explaining when refresh will do, and when have to use delete) ([#18696](http://projects.theforeman.org/issues/18696), [367b534f](http://github.com/katello/katello/commit/367b534fa1fbe009e45282cf55baa27a4bd2546f))
  * Upgrade bastion to 5.0.0 ([#19073](http://projects.theforeman.org/issues/19073), [634a3dab](http://github.com/katello/katello/commit/634a3dab6e3c67f5907625b2aa50377de84840da))
+ * Repository Sets pages are not being displayed in production because of dependency injection typo ([#19339](http://projects.theforeman.org/issues/19339), [a19a5767](http://github.com/katello/katello/commit/a19a576763a4d8ad43fd56ba9c6f0b43dfd9be61))
+ * Wrong link in foreman.tld/subscriptions to hypervisor hosts ([#19128](http://projects.theforeman.org/issues/19128), [86dfe0cc](http://github.com/katello/katello/commit/86dfe0cc48e7137574697c74d8bd2e42cbf09cbf))
+ * Creating a sync plan while creating a product doesn't work ([#19194](http://projects.theforeman.org/issues/19194), [53267230](http://github.com/katello/katello/commit/532672308e8a5e3387a17ccf3ae06441dbcbb4db))
 
 ### Hosts
  * Need to address Inconsistent Json between product content jsons ([#19057](http://projects.theforeman.org/issues/19057), [218d4db8](http://github.com/katello/katello/commit/218d4db8f5c80600ec85d9ba8dd1439dd167fb8e))
@@ -111,6 +122,8 @@
  * [UX] content host page for unregistered host shows both states ([#18423](http://projects.theforeman.org/issues/18423), [499e326a](http://github.com/katello/katello/commit/499e326ae357a17caab347d650f0d2cc3bb7adf0))
  * db:migrate fails with wrong number of arguments (1 for 0) due to pagelets change ([#18360](http://projects.theforeman.org/issues/18360), [b90716cb](http://github.com/katello/katello/commit/b90716cb621954ff76f766b9d1e3a92c622ac5a6))
  * [UX] change dropdown buttons in katello to use "Select Action" and correct patternfly styling ([#18370](http://projects.theforeman.org/issues/18370), [4aaf93aa](http://github.com/katello/katello/commit/4aaf93aa84cad0c7b8a8f7222594f17cc3a31a46))
+ * [regression] host search by organization never finishes but causes mem.leak in foreman process ([#19461](http://projects.theforeman.org/issues/19461), [83cb2c2e](http://github.com/katello/katello/commit/83cb2c2ee19c617dcf862b3a122f7e9c22630425))
+ * Content host add/remove subscription lists columns span multiple column headers ([#18699](http://projects.theforeman.org/issues/18699))
 
 ### Subscriptions
  * Getting error "no implicit conversion of Fixnum into String" while performing manifest refresh ([#19042](http://projects.theforeman.org/issues/19042), [59799d59](http://github.com/katello/katello/commit/59799d596e852f25e2e05cbde4e8f5eb7a65be3a))
@@ -120,6 +133,8 @@
  * create a virt-who guest and hypervisor report ([#17663](http://projects.theforeman.org/issues/17663), [9c283d9e](http://github.com/katello/katello/commit/9c283d9ec0830ffc554d94179df49151c0b2a425))
  * removing multiple subscriptions causes parallel calls to candlepin ([#19158](http://projects.theforeman.org/issues/19158), [e95fc6d6](http://github.com/katello/katello/commit/e95fc6d637b7dcc0775b17ac80082f93b2eb8b90))
  * uploading facts involves synchronous dynflow task, can cause bottleneck ([#19061](http://projects.theforeman.org/issues/19061), [d80a3f67](http://github.com/katello/katello/commit/d80a3f67691b1ca4aab7c1d5312ca586fd6897f0))
+ * Stop calling back to candlepin for qpid messages ([#19026](http://projects.theforeman.org/issues/19026), [65854cbc](http://github.com/katello/katello/commit/65854cbc823245d3007f55433c4a9a49e396de79))
+ * As a user, I want a clear indication in UI when content access mode is org_environment ([#19004](http://projects.theforeman.org/issues/19004), [ff031981](http://github.com/katello/katello/commit/ff031981b14b2b687acd8999c0358046d70ebbf8))
 
 ### Client/Agent
  * After katello-agent installation goferd is not started ([#19038](http://projects.theforeman.org/issues/19038), [5bda77da](http://github.com/katello/katello-packaging/commit/5bda77da0e7680e8db55d542cb1c181554105b4a))
@@ -132,6 +147,7 @@
  * Unable to delete smart-proxies ([#19010](http://projects.theforeman.org/issues/19010), [a345dc12](http://github.com/katello/katello/commit/a345dc1203812b2eacfad024e991de53ec70d5ea))
  * Race condition among capsule sync tasks to destroy/create pulp repos ([#18706](http://projects.theforeman.org/issues/18706), [271f5808](http://github.com/katello/katello/commit/271f580840ca34c7f3ea5938323ca2b401661831))
  * smart proxy refresh throws stackerror ([#18185](http://projects.theforeman.org/issues/18185), [1e8efa1e](http://github.com/katello/katello/commit/1e8efa1ed249099beaa5114a93eb148255937bcf))
+ * Foreman Proxy with content ping check doesn't report capsule with issues ([#19421](http://projects.theforeman.org/issues/19421), [cd281b6e](http://github.com/katello/katello/commit/cd281b6ea9553185dc4b47bbd1d6e81b3673da58))
 
 ### Tests
  * tests failing with ArgumentError: invalid byte sequence in UTF-8 ([#18991](http://projects.theforeman.org/issues/18991), [d6f2b3c1](http://github.com/katello/katello/commit/d6f2b3c1c5e861c7482d940e5fdc1147c28914eb))
@@ -141,10 +157,12 @@
  * rake katello:rubocop does not provide accurate return code ([#18503](http://projects.theforeman.org/issues/18503), [a4ec6015](http://github.com/katello/katello/commit/a4ec6015325169e7d164373b7d85c5290c5490f5))
  * require test file in content_view add_repository_test.rb ([#18392](http://projects.theforeman.org/issues/18392), [f6d7bb23](http://github.com/katello/hammer-cli-katello/commit/f6d7bb23c56e8d135313cb0f88dcf2d7adb6c295))
  * Fix typo in unify_hosts script ([#19100](http://projects.theforeman.org/issues/19100), [00bae46f](http://github.com/katello/katello/commit/00bae46f965a43831b43eea1cee32d157298f29b))
+ * Ensure that satellite-clone hammer script is tested ([#19184](http://projects.theforeman.org/issues/19184), [ac9868b7](http://github.com/katello/hammer-cli-katello/commit/ac9868b7249555336870462e612ed6be33d171fb))
 
 ### Candlepin
  * rake katello:clean_backend_objects fails with Must specify at least one search criteria. ([#18984](http://projects.theforeman.org/issues/18984), [e985ff12](http://github.com/katello/katello/commit/e985ff120baf6948b6ed9e76cb67a24fd4ae5a13))
  * candlepin 2.0 requires numeric ids for products ([#18413](http://projects.theforeman.org/issues/18413), [6332e46d](http://github.com/katello/katello/commit/6332e46ddc186ba66f0f9e939d3828b5bf991755))
+ * virt-who reporting fails with "No route matches [POST] /rhsm/hypervisors/Default_Organization" ([#19120](http://projects.theforeman.org/issues/19120), [d5957b0b](http://github.com/katello/katello/commit/d5957b0b0909aaf10e5a61109f064240993df35a))
 
 ### Dashboard
  * Latest errata widget host count isn't correctly pluralized ([#18979](http://projects.theforeman.org/issues/18979), [37be60a4](http://github.com/katello/katello/commit/37be60a44e2c55bc387edcb75a94771953d4734b))
@@ -167,6 +185,11 @@
  * new container from content view ui page not working ([#18223](http://projects.theforeman.org/issues/18223), [0097078d](http://github.com/katello/katello/commit/0097078d8bd563afb1ecc532e78436e05404db2c))
  * Hammer- can't remove puppet module from content view by id -- uuid is sent instead ([#18923](http://projects.theforeman.org/issues/18923), [954a560a](http://github.com/katello/hammer-cli-katello/commit/954a560a23dece6e040352bff041b81b14b79bed))
  * Succesfully promoted <content_view_version> to undefined ([#18421](http://projects.theforeman.org/issues/18421), [4600cff5](http://github.com/katello/katello/commit/4600cff5b39bf7a8cecdefbd4dcb60a928d33f96))
+ * Create New View button should be blue on content view page ([#19282](http://projects.theforeman.org/issues/19282))
+ * [UX] content view action button needs switching to "select action" ([#19207](http://projects.theforeman.org/issues/19207), [dc68fc67](http://github.com/katello/katello/commit/dc68fc6714111d8d0d158bcc5deb7234f213aa9b))
+ * Fix styling issues on CV deletion pages ([#19166](http://projects.theforeman.org/issues/19166), [910d086e](http://github.com/katello/katello/commit/910d086e68688affd37aadab06ae72e35e9da903))
+ * Table columns are misaligned on content view filter repositories page ([#19283](http://projects.theforeman.org/issues/19283), [084b9b42](http://github.com/katello/katello/commit/084b9b42e0824ed74fcc8302f14fc4d8c59fc44c))
+ * CV publishing with puppet module does not add puppet class ([#19338](http://projects.theforeman.org/issues/19338), [a2a56f2e](http://github.com/katello/katello/commit/a2a56f2ee750fd406f9a4b1a7748cd4c0ebe95d9))
 
 ### Provisioning
  * Fix Smart Proxies test to use factory girl ([#18907](http://projects.theforeman.org/issues/18907), [aa4af5a6](http://github.com/katello/katello/commit/aa4af5a652a62510c1c7e3702f4eb61c0b7ea0b5))
@@ -177,6 +200,11 @@
  * FileUnitPresenter has the wrong filename ([#17865](http://projects.theforeman.org/issues/17865), [4dc96eaa](http://github.com/katello/katello/commit/4dc96eaa595df75c4448be57dce478baed299476))
  * Remove katello-disconnected (or katello-utils) ([#15758](http://projects.theforeman.org/issues/15758))
  * clean_backend_objects doesn't handle nil subscription_facet uuids properly ([#18972](http://projects.theforeman.org/issues/18972), [49fbe735](http://github.com/katello/katello/commit/49fbe73556babe762ff4de77aa6f1901e903cb5c))
+ * katello-service should include puppetserver ([#19216](http://projects.theforeman.org/issues/19216), [1f35a433](http://github.com/katello/katello-packaging/commit/1f35a4338a87cf5caff9a9cada6bda5f94bd77bf))
+ * Add hammer ping and katello-service status commands to foreman-debug script ([#17060](http://projects.theforeman.org/issues/17060), [306dedf4](http://github.com/katello/katello-packaging/commit/306dedf4f05ee78e829f8a4c54a22ac0c7c9e1dc))
+ *  katello-remove should remove Puppet 4 content ([#19155](http://projects.theforeman.org/issues/19155), [55b9c716](http://github.com/katello/katello-packaging/commit/55b9c716a1a7d2291983518f94c356112055c79f))
+ * katello-remove errors if a directory is also a mount point ([#19263](http://projects.theforeman.org/issues/19263), [20b8fa36](http://github.com/katello/katello-packaging/commit/20b8fa36f7fad4b06b5175e9fc43fdcd4f61f8fc))
+ * katello-service uses logger -p without a priority ([#19498](http://projects.theforeman.org/issues/19498), [7fefa473](http://github.com/katello/katello-packaging/commit/7fefa473891b3e3918019a5fd3b498a7fba6fb88))
 
 ### Upgrades
  * upgrade fail with error : Upgrade Step: set_virt_who_on_pools (this may take a while) ... ([#18879](http://projects.theforeman.org/issues/18879), [e8ea1407](http://github.com/katello/katello/commit/e8ea1407b17194b8244352710ba85a81c07b1693))
@@ -190,6 +218,7 @@
  * Hammer repository remove-content should allow reposotiry ID resolution by name, organization, and product ([#15555](http://projects.theforeman.org/issues/15555), [417fc2d9](http://github.com/katello/hammer-cli-katello/commit/417fc2d97befc521c0ada6cf772576960a5d8bf7))
  * Package list in CLI lacks information ([#15189](http://projects.theforeman.org/issues/15189), [0b91a0a3](http://github.com/katello/hammer-cli-katello/commit/0b91a0a32b3adbb25cb410ddb9661d4f51b0bfc4))
  * Adapt hammer-cli-katello to use the new options changes in hammer-cli ([#19079](http://projects.theforeman.org/issues/19079), [c073fe95](http://github.com/katello/hammer-cli-katello/commit/c073fe95498e5bb443970ff2aec3fbfcaf3a2e3b))
+ * hammer ping returns exit code 0 when service is failing ([#19262](http://projects.theforeman.org/issues/19262), [7a886226](http://github.com/katello/hammer-cli-katello/commit/7a8862260842eb22af207a4aa7a5ddbe130169bb))
 
 ### Repositories
  * Support verify content sync on bulk products ([#18844](http://projects.theforeman.org/issues/18844), [9b7942bd](http://github.com/katello/katello/commit/9b7942bdb751026f986b25506a16eee806c02cdc))
@@ -202,6 +231,11 @@
  * Unpacking tree in Red Hat Repositories sequentially contacts CDN for each and every CDN path ([#17564](http://projects.theforeman.org/issues/17564), [1897a6bb](http://github.com/katello/katello/commit/1897a6bbfe52be9a357c5a67b55bf2b17814955f))
  * JS error on repository page ([#19178](http://projects.theforeman.org/issues/19178), [cc3be615](http://github.com/katello/katello/commit/cc3be615f07e0054a0111784f347f5c338d81767))
  * need mechanism to clear repository upstream username and password ([#16824](http://projects.theforeman.org/issues/16824), [fa1546bb](http://github.com/katello/katello/commit/fa1546bb59f4a7bfac4b5265d13be228c334ca26))
+ * Repo sync: several parameters not passed to pulp ([#19250](http://projects.theforeman.org/issues/19250), [222d933d](http://github.com/katello/katello/commit/222d933dae12dcb70ac225de81c3382ea26f3ace))
+ * 6.3 Red Hat Repositories Page: repository enable checkbox does not render properly ([#19210](http://projects.theforeman.org/issues/19210), [65a4e244](http://github.com/katello/katello/commit/65a4e2441eca331a03903fb86cfb1b29a00e9666))
+ * Deleting a product results in "product not found" cp errors ([#18973](http://projects.theforeman.org/issues/18973), [821cdc0c](http://github.com/katello/katello/commit/821cdc0caf6c6a2ddc998475e89cbd4e2c0e283f))
+ * Content -> Errata & Packages do not take selected organization into consideration ([#19323](http://projects.theforeman.org/issues/19323), [6d7d85f0](http://github.com/katello/katello/commit/6d7d85f04e321d6947b18f63b6932e5f0ad94af1))
+ * Potential for stuck task in repository remove_content action ([#19023](http://projects.theforeman.org/issues/19023), [759d94dc](http://github.com/katello/katello/commit/759d94dc0cf648a865f892b8458a8bc49541b271))
 
 ### Activation Key
  * PG::Error: ERROR:  missing FROM-clause entry for table "katello_environments" when viewing activation keys as a user with customized viewing permissions ([#18738](http://projects.theforeman.org/issues/18738), [211df8bc](http://github.com/katello/katello/commit/211df8bc4758f1f828a6115bfc92a9edee0191ce))
@@ -215,6 +249,7 @@
 
 ### Host Collections
  * Trying to apply errata on host-collection using hammer fails ([#18536](http://projects.theforeman.org/issues/18536), [f1497c05](http://github.com/katello/hammer-cli-katello/commit/f1497c05fb8953af783779b0284c9afc9fde19f5))
+ * The same client is showing under host collections list/remove and add tabs ([#19119](http://projects.theforeman.org/issues/19119), [4b95e38b](http://github.com/katello/katello/commit/4b95e38b78fb3fd9c4f1a902702fdf176e42b856))
 
 ### API
  * Hammer does not list over 20 item per page for some resources ([#18470](http://projects.theforeman.org/issues/18470), [d3e60743](http://github.com/katello/katello/commit/d3e607438e7b3c0bcec90e381a3063b244d5822d))
@@ -224,6 +259,7 @@
  * cannot go to task details from errata task list  ([#18393](http://projects.theforeman.org/issues/18393), [2769723a](http://github.com/katello/katello/commit/2769723aece9cabb1aae2b28c4cff9208c623353))
  * Allow batched content install actions during errata install ([#18258](http://projects.theforeman.org/issues/18258), [34eee5e6](http://github.com/katello/katello/commit/34eee5e67e856d92ca71b423b3a9dae2de497ad5))
  * Inconsistent naming of errata applicable vs affected ([#17911](http://projects.theforeman.org/issues/17911), [b7e0d437](http://github.com/katello/katello/commit/b7e0d437659bbad4371cd18b1c1376b1deaa9ad8))
+ * 400 on installable bulk errata on content hosts page ([#19136](http://projects.theforeman.org/issues/19136), [764ceb7b](http://github.com/katello/katello/commit/764ceb7b3eb8a3b122f0b3b8441bf7caa18a4f2d))
 
 ### Organizations and Locations
  * Organization delete fails when products exist ([#18453](http://projects.theforeman.org/issues/18453), [e919963a](http://github.com/katello/katello/commit/e919963a944ce0a3738d4dd14a98c1c50861e57f))
@@ -237,18 +273,29 @@
 
 ### Backup & Restore
  * The Script katello-backup reports Permission denied messages ([#18137](http://projects.theforeman.org/issues/18137))
+ * katello-backup does not apply postgres group owner to the whole backup path ([#19453](http://projects.theforeman.org/issues/19453), [0639c3cf](http://github.com/katello/katello-packaging/commit/0639c3cf8a2990041175f84bbc0c7e4b45186a3a))
+ * Incremental backup script in effect is performing full backup. ([#19446](http://projects.theforeman.org/issues/19446), [744ea662](http://github.com/katello/katello-packaging/commit/744ea66261cac609acaa5c47b9f2319a1040f678))
 
 ### Lifecycle Environments
  * Lifecycle environments not displayed correctly with restricted permissions ([#18034](http://projects.theforeman.org/issues/18034), [eb14a2f8](http://github.com/katello/katello/commit/eb14a2f886c270792ac2049d1fdfb9dafdbe9b97))
 
 ### Docker
  * update content view docker to include filters ([#17726](http://projects.theforeman.org/issues/17726), [31ceb776](http://github.com/katello/katello/commit/31ceb776fc06327e48924d94582267d5f4360e72))
+ * Docker tags lifecycle environments filter is badly styled ([#19203](http://projects.theforeman.org/issues/19203), [dfaabcb8](http://github.com/katello/katello/commit/dfaabcb8ab89fa69d6e6892b4273b1c9f038f9e0))
+ * Add Schema column for Docker Manifest ([#19467](http://projects.theforeman.org/issues/19467))
 
 ### Sync Plans
  * Non-enabled products can be added to a sync plan by ID via the API ([#16052](http://projects.theforeman.org/issues/16052), [3252332f](http://github.com/katello/katello/commit/3252332f6bc5f157a127fd393a2048cefc4e497d))
+ * Interval is shown twice on sync plan info page ([#19209](http://projects.theforeman.org/issues/19209), [e3726b10](http://github.com/katello/katello/commit/e3726b102f2df61d048e3690172cd236b4eba25e))
 
 ### Database
  * db:migrate breaks RPM build ([#19189](http://projects.theforeman.org/issues/19189), [493c5c9f](http://github.com/katello/katello/commit/493c5c9fe50ff06e1d77ddab056ed941f0f69ef9), [35de7e89](http://github.com/katello/katello/commit/35de7e892031410d4894e7e2378f9ebe0a38349e))
+
+### Roles and Permissions
+ * Remote execution from Host Collections with non-admin user fails with error 'rendering 403 because of missing permission' ([#19336](http://projects.theforeman.org/issues/19336), [30fab48e](http://github.com/katello/katello/commit/30fab48e94162ec43c5ee879866109dd2e7d3f65))
+
+### GPG Keys
+ * Some new item forms are indented ([#19195](http://projects.theforeman.org/issues/19195), [c4a28296](http://github.com/katello/katello/commit/c4a28296a77a052690e436b36342ed33e1f067a1))
 
 ### Other
  * use single-consumer call when regenerating applicability ([#19076](http://projects.theforeman.org/issues/19076), [59c58a8e](http://github.com/katello/katello/commit/59c58a8ebd9dbd0a5a8bc6fdb3c0a4b5318608c3))
@@ -282,3 +329,18 @@
  * Custom product content published in Library isn't syncing to capsule ([#18028](http://projects.theforeman.org/issues/18028), [1c9ad27d](http://github.com/katello/katello/commit/1c9ad27d5a15ff21fe910a1689582ec1fb91312a), [9c239083](http://github.com/katello/hammer-cli-katello/commit/9c239083f62ac30d2a54d94ab71c920f6e170cd3))
  * Fix tests that depend on CVE 2016-7078 ([#17266](http://projects.theforeman.org/issues/17266), [236abac4](http://github.com/katello/katello/commit/236abac4f8df9ed7f74a2710646e1ffa01669d26))
  * Update foreman-tasks to 0.9.0 ([#19162](http://projects.theforeman.org/issues/19162), [74dbf758](http://github.com/katello/katello/commit/74dbf7581041b31de015daf99b3ad0abf668f452))
+ * Update `trigger` usage to `triggering_action` from dynflow change ([#19433](http://projects.theforeman.org/issues/19433), [0f964ad6](http://github.com/katello/katello/commit/0f964ad6607c0fce829a21bd3ef6e5223b59d801))
+ * hammer --noncomposite ignores the value passed to it and always removed composite views ([#19371](http://projects.theforeman.org/issues/19371), [c47afc3d](http://github.com/katello/katello/commit/c47afc3d87061049174fd2f818ee33b47869e7ad))
+ * Missing "Override to no" option for enabled field in "Product Content" tabs ([#19274](http://projects.theforeman.org/issues/19274))
+ * katello-change-hostname should check services before running ([#19227](http://projects.theforeman.org/issues/19227), [b9f809c9](http://github.com/katello/katello-packaging/commit/b9f809c950ce264b752eea51647875a004cc6b14))
+ * katello-backup should backup certs & foreman_cache_data on Puppet 4  ([#19154](http://projects.theforeman.org/issues/19154), [55b9c716](http://github.com/katello/katello-packaging/commit/55b9c716a1a7d2291983518f94c356112055c79f))
+ * Katello backup uses special characters in directory name ([#19054](http://projects.theforeman.org/issues/19054), [9cd751a9](http://github.com/katello/katello-packaging/commit/9cd751a99f5c7ce18a21f7f3d9e990e81b8c221f))
+ * Do not bring all services down during offline backup ([#18965](http://projects.theforeman.org/issues/18965), [8a0f5012](http://github.com/katello/katello-packaging/commit/8a0f501219cc1cc95c7f2c02b4ef94290a74265e))
+ * katello-backup --incremental failure does not provide adequate error message ([#18756](http://projects.theforeman.org/issues/18756), [4f6d966d](http://github.com/katello/katello-packaging/commit/4f6d966db0ae2603dd1a7485805076ed1dab4afa))
+ * Offload upload package profile to dynflow executor ([#18682](http://projects.theforeman.org/issues/18682), [a968d292](http://github.com/katello/katello/commit/a968d2928f73f561c3210c53f0efe4da609ac7b4))
+ * Collect additional pulp configurations left out by katello-debug ([#18396](http://projects.theforeman.org/issues/18396), [67140ee5](http://github.com/katello/katello-packaging/commit/67140ee5e12db1f64008624d96ac3f60d3c5d9de))
+ * no implicit conversion of String into Array (TypeError) when running katello-restore ([#18368](http://projects.theforeman.org/issues/18368), [e5f2b88f](http://github.com/katello/katello-packaging/commit/e5f2b88f8cd9f12af9d56597abf10d6fd87cc3e7))
+ * Unable to pull content from katello after registering a content host after hostname change process ([#18268](http://projects.theforeman.org/issues/18268))
+ * katello-debug to collect httpd pulp logs ([#18198](http://projects.theforeman.org/issues/18198), [2e1d226e](http://github.com/katello/katello-packaging/commit/2e1d226e565d7cf35d141dc95e5cb1821a75e30e))
+ * Make katello-remove aware of Puppet4 ([#18118](http://projects.theforeman.org/issues/18118), [5feda28a](http://github.com/katello/katello-packaging/commit/5feda28ad4adcf66d49a2040a8aecc1267b4d850))
+ * Make katello-backup aware of Puppet4 ([#18117](http://projects.theforeman.org/issues/18117), [5feda28a](http://github.com/katello/katello-packaging/commit/5feda28ad4adcf66d49a2040a8aecc1267b4d850))
