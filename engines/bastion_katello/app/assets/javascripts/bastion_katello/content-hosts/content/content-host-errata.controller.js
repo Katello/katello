@@ -19,7 +19,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
             'sort_by': 'updated',
             'sort_order': 'DESC',
             'paged': true,
-            'errata_restrict_applicable': true
+            'errata_restrict_applicable': true,
+            'id': $scope.$stateParams.hostId
         };
 
         function loadErratum(errataId) {
