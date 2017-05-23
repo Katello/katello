@@ -1,3 +1,42 @@
+# 3.3.2 Baltic Porter (2017-05-23)
+
+## Bug Fixes 
+
+### Hosts
+ * [regression] host search by organization never finishes but causes mem.leak in foreman process ([#19461](http://projects.theforeman.org/issues/19461), [83cb2c2e](http://github.com/katello/katello/commit/83cb2c2ee19c617dcf862b3a122f7e9c22630425))
+ * Content host add/remove subscription lists columns span multiple column headers ([#18699](http://projects.theforeman.org/issues/18699))
+ * New host creation ignores permissions for lifecycle envs, content views, and conent sources (smart proxies) ([#17176](http://projects.theforeman.org/issues/17176), [b5202aef](http://github.com/katello/katello/commit/b5202aefc6fc40124aa781dfc50fbcc1b42f2503))
+
+### Subscriptions
+ * uploading facts involves synchronous dynflow task, can cause bottleneck ([#19061](http://projects.theforeman.org/issues/19061), [d80a3f67](http://github.com/katello/katello/commit/d80a3f67691b1ca4aab7c1d5312ca586fd6897f0))
+
+### Foreman Proxy Content
+ * Unable to delete smart-proxies ([#19010](http://projects.theforeman.org/issues/19010), [a345dc12](http://github.com/katello/katello/commit/a345dc1203812b2eacfad024e991de53ec70d5ea))
+ * Race condition among capsule sync tasks to destroy/create pulp repos ([#18706](http://projects.theforeman.org/issues/18706), [271f5808](http://github.com/katello/katello/commit/271f580840ca34c7f3ea5938323ca2b401661831))
+ * smart proxy refresh throws stackerror ([#18185](http://projects.theforeman.org/issues/18185), [1e8efa1e](http://github.com/katello/katello/commit/1e8efa1ed249099beaa5114a93eb148255937bcf))
+
+### Tooling
+ * clean_backend_objects doesn't handle nil subscription_facet uuids properly ([#18972](http://projects.theforeman.org/issues/18972), [49fbe735](http://github.com/katello/katello/commit/49fbe73556babe762ff4de77aa6f1901e903cb5c))
+
+### Web UI
+ * Empty name and Version in Composite Content View (WebUI) ([#18820](http://projects.theforeman.org/issues/18820), [798a84b8](http://github.com/katello/katello/commit/798a84b890ee8722010fb3e67ec285ca80117f59))
+
+### Content Views
+ * unable to add a puppet module from GUI ([#17930](http://projects.theforeman.org/issues/17930), [3a35c40c](http://github.com/katello/katello/commit/3a35c40c59d48a734a08125d4faa091698614f3e))
+ * During selection of puppet module - "Use Latest" is incorrectly pointing to lower version than available in the repo ([#16327](http://projects.theforeman.org/issues/16327), [601291e3](http://github.com/katello/katello/commit/601291e3e215f23d25afc33af4af125fa5c55366))
+
+### Client/Agent
+ * systems where 'hostname -f' returns an error fails registration ([#17721](http://projects.theforeman.org/issues/17721), [1544376d](http://github.com/katello/puppet-certs/commit/1544376db06fbe9b73e412758f67b00bd4870915))
+
+### Upgrades
+ * upgrade failed at update_subscription_facet_backend_data (undefined method `inject' for nil:NilClass) ([#17612](http://projects.theforeman.org/issues/17612), [4f414f3d](http://github.com/katello/katello/commit/4f414f3d37ea05ee7529759acb130112814b50a7))
+
+### Repositories
+ * cannot disable repo of orphaned product ([#17607](http://projects.theforeman.org/issues/17607), [99741423](http://github.com/katello/katello/commit/9974142353f77b53522c184e52b24751bd32de3c))
+
+### Other
+ * Unattended template doesn't call 'built' ([#17903](http://projects.theforeman.org/issues/17903), [d3541c40](http://github.com/katello/katello/commit/d3541c40379d9dab7f4511199c0f9a0b1228d183))
+
 # 3.3.1 Baltic Porter (2017-03-16)
 
 ## Features 
