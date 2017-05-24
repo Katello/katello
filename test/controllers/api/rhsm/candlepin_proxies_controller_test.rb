@@ -187,7 +187,7 @@ module Katello
     def test_regenerate_indentity_certificates
       consumer_stub = stub(:regenerate_identity_certificates => true)
 
-      Candlepin::Consumer.expects(:new).with(@host.subscription_facet.uuid).returns(consumer_stub)
+      Candlepin::Consumer.expects(:new).with(@host.subscription_facet.uuid, @host.organization.label).returns(consumer_stub)
       Resources::Candlepin::Consumer.expects(:get).with(@host.subscription_facet.uuid)
 
       post :regenerate_identity_certificates, :id => @host.subscription_facet.uuid
