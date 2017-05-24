@@ -137,7 +137,7 @@ module Katello
     #param :date, String, :desc => N_("check-in time")
     def consumer_checkin
       @host.update_attributes(:last_checkin => params[:date])
-      Candlepin::Consumer.new(@host.subscription_facet.uuid).checkin(params[:date])
+      Candlepin::Consumer.new(@host.subscription_facet.uuid, @host.organization.label).checkin(params[:date])
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
 
@@ -165,7 +165,7 @@ module Katello
     #desc 'Schedules the consumer identity certificate regeneration'
     def regenerate_identity_certificates
       uuid = @host.subscription_facet.uuid
-      Candlepin::Consumer.new(uuid).regenerate_identity_certificates
+      Candlepin::Consumer.new(uuid, @host.organization.label).regenerate_identity_certificates
       render :json => Resources::Candlepin::Consumer.get(uuid)
     end
 
