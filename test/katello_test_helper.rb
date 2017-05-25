@@ -88,7 +88,7 @@ module FixtureTestCase
 
     Setting::Content.load_defaults
 
-    @@admin = ::User.find(FIXTURES['users']['admin']['id'])
+    @@admin = ::User.unscoped.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
   end
 end
@@ -185,7 +185,7 @@ class ActiveSupport::TestCase
 
   def get_organization(org = nil)
     saved_user = User.current
-    User.current = User.find(users(:admin).id)
+    User.current = User.unscoped.find(users(:admin).id)
     org = org.nil? ? :empty_organization : org
     organization = Organization.find(taxonomies(org.to_sym).id)
     organization.stubs(:label_not_changed).returns(true)
