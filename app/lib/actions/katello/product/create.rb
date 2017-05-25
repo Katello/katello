@@ -31,6 +31,10 @@ module Actions
           end
         end
 
+        def run
+          ::Katello::Repository.ensure_sync_notification
+        end
+
         def finalize
           product = ::Katello::Product.find(input[:product][:id])
           product.cp_id = input[:cp_id]
