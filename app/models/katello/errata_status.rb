@@ -11,7 +11,7 @@ module Katello
 
     def to_label(_options = {})
       installable = Setting[:errata_status_installable]
-      case to_status
+      case status
       when NEEDED_SECURITY_ERRATA
         installable ? N_("Security errata installable") : N_("Security errata applicable")
       when NEEDED_ERRATA
@@ -26,7 +26,7 @@ module Katello
     end
 
     def to_global(_options = {})
-      case to_status
+      case status
       when NEEDED_SECURITY_ERRATA
         ::HostStatus::Global::ERROR
       when NEEDED_ERRATA
