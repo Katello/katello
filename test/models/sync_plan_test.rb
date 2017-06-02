@@ -32,7 +32,7 @@ module Katello
     def test_sync_date_if_bad_interval
       @plan.sync_date = '1999-11-17 18:26:48 UTC'
       @plan.interval = 'blah'
-      @plan.next_sync.must_equal(nil)
+      assert_nil @plan.next_sync
     end
 
     def test_next_run_hourly

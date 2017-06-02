@@ -31,15 +31,15 @@ module Katello
         @org.service_level = 'Premium'
       end
       refute_nil JSON.parse(e.response)['displayMessage']
-      assert_equal nil, @org.service_level
+      assert_nil @org.service_level
 
       # Should be able to set clear the default
       @org.service_level = ''
-      assert_equal nil, @org.service_level
+      assert_nil @org.service_level
 
       # ...with a nil too
       @org.service_level = nil
-      assert_equal nil, @org.service_level
+      assert_nil @org.service_level
     end
   end
 end

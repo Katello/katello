@@ -208,7 +208,7 @@ module Katello
       assert_equal '1.3.0', results.first['version']
       use_latest_rec = results.last
       assert_equal 'Always Use Latest (currently 1.3.0)', use_latest_rec['version']
-      assert_equal nil, use_latest_rec['uuid']
+      assert_nil use_latest_rec['uuid']
     end
 
     def test_available_puppet_modules_when_latest_module_already_selected

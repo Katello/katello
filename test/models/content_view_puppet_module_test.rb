@@ -56,7 +56,7 @@ module Katello
         :uuid => nil,
         :content_view => @library_view
       )
-      assert_equal nil, content_view_puppet_module.computed_version
+      assert_nil content_view_puppet_module.computed_version
     end
 
     def test_latest_in_modules_by_author

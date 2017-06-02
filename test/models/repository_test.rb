@@ -671,7 +671,7 @@ module Katello
       new_repo.url = nil
       assert new_repo.save
       assert new_repo.persisted?
-      assert_equal nil, new_repo.reload.url
+      assert_nil new_repo.reload.url
       refute new_repo.url?
     end
 
@@ -728,8 +728,8 @@ module Katello
 
     def test_capsule_download_policy
       proxy = SmartProxy.new(:download_policy => 'on_demand')
-      assert_equal @content_view_puppet_environment.capsule_download_policy(proxy), nil
-      assert_equal @puppet_forge.capsule_download_policy(proxy), nil
+      assert_nil @content_view_puppet_environment.capsule_download_policy(proxy)
+      assert_nil @puppet_forge.capsule_download_policy(proxy)
       assert_not_nil @fedora_17_x86_64.download_policy
     end
   end
