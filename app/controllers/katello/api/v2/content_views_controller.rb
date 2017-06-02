@@ -40,7 +40,7 @@ module Katello
       content_views = ContentView.readable
       content_views = content_views.where(:organization_id => @organization.id) if @organization
       content_views = content_views.in_environment(@environment) if @environment
-      content_views = content_views.non_default if params[:nondefault]
+      content_views = ::Foreman::Cast.to_bool(params[:nondefault]) ? content_views.non_default : content_views.default if params[:nondefault]
       content_views = ::Foreman::Cast.to_bool(params[:noncomposite]) ? content_views.non_composite : content_views.composite if params[:noncomposite]
       content_views = ::Foreman::Cast.to_bool(params[:composite]) ? content_views.composite : content_views.non_composite if params[:composite]
       content_views = content_views.where(:name => params[:name]) if params[:name]
