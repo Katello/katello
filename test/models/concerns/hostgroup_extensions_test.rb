@@ -48,16 +48,16 @@ module Katello
       @child.content_view = @view
       @child.save!
 
-      assert_equal @view, @child.content_view
-      assert_equal nil, @root.content_view
+      assert @view == @child.content_view
+      assert_nil @root.content_view
     end
 
     def test_inherited_lifecycle_environment_with_ancestry_nil
       @child.lifecycle_environment = @library
       @child.save!
 
-      assert_equal @library, @child.lifecycle_environment
-      assert_equal nil, @root.lifecycle_environment
+      assert @library == @child.lifecycle_environment
+      assert_nil @root.lifecycle_environment
     end
 
     def test_content_and_puppet_match?

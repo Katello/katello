@@ -49,12 +49,12 @@ module Katello
 
     test "key can be copied" do
       new_key = @dev_key.copy("new key name")
-      assert_equal new_key.name, "new key name"
-      assert_equal new_key.description, @dev_key.description
-      assert_equal new_key.host_collections, @dev_key.host_collections
-      assert_equal new_key.content_view, @dev_key.content_view
-      assert_equal new_key.organization, @dev_key.organization
-      assert_equal new_key.max_hosts, @dev_key.max_hosts
+      assert new_key.name == "new key name"
+      assert new_key.description == @dev_key.description
+      assert new_key.host_collections == @dev_key.host_collections
+      assert new_key.content_view == @dev_key.content_view
+      assert new_key.organization == @dev_key.organization
+      assert new_key.max_hosts == @dev_key.max_hosts
     end
 
     test "unlimited hosts requires no max hosts" do

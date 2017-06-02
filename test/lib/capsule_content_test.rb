@@ -83,7 +83,7 @@ module Katello
 
       test "last sync time is nil when there's no successful sync" do
         @tasks[:successful].destroy
-        assert_equal(nil, capsule_content.last_sync_time)
+        assert_nil capsule_content.last_sync_time
       end
 
       test "last failed sync tasks" do
