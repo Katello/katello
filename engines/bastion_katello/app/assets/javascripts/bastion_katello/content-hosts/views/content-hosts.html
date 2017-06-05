@@ -34,6 +34,10 @@
           <a ng-click="openSubscriptionsModal()" disable-link="table.numSelected === 0" translate>Manage Subscriptions</a>
         </li>
 
+        <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+          <a ng-click="openRepositorySetsModal()" disable-link="table.numSelected === 0" translate>Manage Repository Sets</a>
+        </li>
+
         <li class="divider"></li>
 
         <li role="menuitem" ng-show="permitted('destroy_hosts')" ng-class="{disabled: table.numSelected === 0}">

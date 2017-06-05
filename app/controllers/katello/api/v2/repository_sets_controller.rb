@@ -2,7 +2,8 @@ module Katello
   class Api::V2::RepositorySetsController < Api::V2::ApiController
     respond_to :json
 
-    before_action :find_product
+    before_action :find_product, :except => [:index]
+    before_action :find_optional_product, :only => [:index]
     before_action :custom_product?
     before_action :find_product_content, :except => [:index]
 
@@ -16,7 +17,11 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       collection = {}
-      collection[:results] = @product.displayable_product_contents
+      if @product.nil?
+        collection[:results] = available_repository_sets
+      else
+        collection[:results] = @product.displayable_product_contents
+      end
       # filter on name if it is provided
       collection[:results] = collection[:results].select { |pc| pc.content.name == params[:name] } if params[:name]
       collection[:subtotal] = collection[:results].size
@@ -83,18 +88,34 @@ module Katello
       fail HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
     end
 
-    def find_product
+    def find_optional_product
       @product = Product.find_by(:id => params[:product_id])
+      @organization = @product.organization unless @product.nil?
+      find_organization if @organization.nil?
+      @product
+    end
+
+    def find_product
+      @product = find_optional_product
       fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
       @organization = @product.organization
     end
 
     def custom_product?
-      fail _('Repository sets are not available for custom products.') if @product.custom?
+      fail _('Repository sets are not available for custom products.') if @product && @product.custom?
     end
 
     def substitutions
       params.slice(:basearch, :releasever)
+    end
+
+    def available_repository_sets
+      repository_sets = @organization.products.enabled.uniq.flat_map do |product|
+        product.available_content
+      end
+      repository_sets.uniq.sort_by do |repository_set|
+        repository_set.content.name.downcase
+      end
     end
   end
 end

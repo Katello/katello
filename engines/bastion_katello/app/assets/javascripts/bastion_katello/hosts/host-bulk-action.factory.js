@@ -13,6 +13,7 @@ angular.module('Bastion.hosts').factory('HostBulkAction',
         return BastionResource('/api/v2/hosts/bulk/:action', {}, {
             addHostCollections: {method: 'PUT', params: {action: 'add_host_collections'}},
             removeHostCollections: {method: 'PUT', params: {action: 'remove_host_collections'}},
+            updateRepositorySets: {method: 'PUT', params: {action: 'content_overrides'}},
             addSubscriptions: {method: 'PUT', params: {action: 'add_subscriptions'}},
             removeSubscriptions: {method: 'PUT', params: {action: 'remove_subscriptions'}},
             installableErrata: {method: 'POST', params: {action: 'installable_errata'}},

@@ -3,8 +3,7 @@ module Katello
     module Api::V2::ContentOverridesController
       extend ActiveSupport::Concern
 
-      # overriden_object => pass it either an activation key or content host
-      def validate_content_overrides_enabled(content_params, overriden_object = nil)
+      def validate_content_overrides_enabled(content_params)
         name = content_params[:name] || "enabled"
         compare_value = content_params[:value].to_s.downcase
         remove = content_params.key?(:remove) ? ::Foreman::Cast.to_bool(content_params[:remove]) : nil
@@ -16,8 +15,7 @@ module Katello
           fail HttpErrors::BadRequest, _("Value must either be a boolean or 'default' for 'enabled'")
         end
 
-        if content_label.blank? || (overriden_object &&
-                                    !overriden_object.valid_content_override_label?(content_label))
+        if content_label.blank?
           fail HttpErrors::BadRequest, _("Invalid content label: %s") % content_params[:content_label]
         end
 

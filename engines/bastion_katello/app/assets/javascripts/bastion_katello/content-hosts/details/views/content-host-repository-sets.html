@@ -81,7 +81,7 @@
           <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="productRepoSet in table.rows | filter:repositorySetFilter" row-select="productRepoSet">
             <td bst-table-cell>{{ productRepoSet.content.name }}</td>
             <td bst-table-cell>
-              <a ui-sref="product.info({productId: id})">
+              <a ui-sref="product.info({productId: productRepoSet.product.id})">
                 {{ productRepoSet.product.name }}
               </a>
             </td>

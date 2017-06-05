@@ -117,6 +117,20 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             });
         };
 
+        $scope.openRepositorySetsModal = function () {
+            nutupane.invalidate();
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-repository-sets-modal.html',
+                controller: 'ContentHostsBulkRepositorySetsModalController',
+                size: 'lg',
+                resolve: {
+                    hostIds: function () {
+                        return $scope.nutupane.getAllSelectedResults('id');
+                    }
+                }
+            });
+        };
+
         $scope.openPackagesModal = function () {
             nutupane.invalidate();
             $uibModal.open({
