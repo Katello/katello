@@ -24,7 +24,7 @@ module Katello
       models
       permissions
 
-      @content = OpenStruct.new(id: 'content-123')
+      @content = OpenStruct.new(name: 'content-123', id: 'content-123', 'displayable?': true)
 
       Product.any_instance.stubs(productContent: [OpenStruct.new(content: @content)])
     end
@@ -125,6 +125,19 @@ module Katello
             id: @content.id,
             basearch: 'x86_64', releasever: '6Server'
       end
+    end
+
+    def test_repositories_index_with_product
+      get :index, product_id: @product.id
+      assert_response :success
+    end
+
+    def test_repositories_index_without_product
+      Organization.stubs(:current).returns(@organization)
+      @organization.products.stubs(:enabled).returns([@product])
+      Product.any_instance.stubs(available_content: [OpenStruct.new(content: @content)])
+      get :index
+      assert_response :success
     end
   end
 end

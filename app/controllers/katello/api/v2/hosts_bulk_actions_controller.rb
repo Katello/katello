@@ -176,7 +176,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/hosts/bulk/subscriptions/content_overrides", N_("Set content overrides to one or more hosts")
+    api :PUT, "/hosts/bulk/content_overrides", N_("Set content overrides to one or more hosts")
     param_group :bulk_params
     param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
@@ -190,7 +190,7 @@ module Katello
         validate_content_overrides_enabled(content_override_params)
       end
 
-      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateContentOverrides, @hosts, content_override_values)
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateContentOverrides, @hosts, content_override_values, false)
       respond_for_async :resource => task
     end
 

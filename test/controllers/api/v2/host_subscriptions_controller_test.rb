@@ -247,10 +247,22 @@ module Katello
       assert_response :success
     end
 
-    def test_invalid_content_fails
-      put :content_override, :host_id => @host.id, :content_label => 'wrong-content', :value => 1
+    # content overrides may be added before the host has access to the content
+    def test_invalid_content_succeeds
+      content_label = "wrong-content"
+      value = "1"
+      assert_sync_task(::Actions::Katello::Host::UpdateContentOverrides) do |host, overrides, prune_invalid|
+        assert_equal @host, host
+        assert_equal 1, overrides.count
+        assert_equal content_label, overrides.first.content_label
+        assert_equal value, overrides.first.value
+        assert_equal false, prune_invalid
+      end
 
-      assert_response 400
+      put :content_override, :host_id => @host.id, :content_label => content_label, :value => value
+
+      assert_response :success
+      assert_template 'api/v2/host_subscriptions/content_override'
     end
 
     def test_available_release_versions

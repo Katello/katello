@@ -122,8 +122,7 @@ module Katello
       end
 
       def all_products
-        org_id = ::Katello::Host::SubscriptionFacet.find_by_uuid(self.uuid).host.organization.id
-        Katello::Product.joins(:subscriptions => :pools).where(:organization_id => org_id).enabled.uniq
+        ::Katello::Host::SubscriptionFacet.find_by_uuid(self.uuid).host.organization.products.enabled.uniq
       end
 
       def available_product_content(content_access_mode_all = false, content_access_mode_env = false)

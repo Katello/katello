@@ -1,0 +1,113 @@
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header">Repository Sets Management</h4>
+
+  <div data-block="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div bst-global-notification></div>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="repositorySets.action == 'enable'">
+      <span translate>
+        Are you sure you want to enable the {{ table.numSelected }} repository set(s) chosen?
+      </span>
+      <div>
+        <button type="button" class="btn btn-default" ng-click="performRepositorySetAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="repositorySets.action = null; repositorySets.working = false" translate>No</button>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="repositorySets.action == 'disable'">
+      <span translate>
+        Are you sure you want to disable the {{ table.numSelected }} repository set(s) chosen?
+      </span>
+      <div>
+        <button type="button" class="btn btn-default" ng-click="performRepositorySetAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="repositorySets.action = null; repositorySets.working = false" translate>No</button>
+      </div>
+    </div>
+
+    <div bst-alert="info" ng-show="repositorySets.action == 'reset'">
+      <span translate>
+        Are you sure you want to reset to default the {{ table.numSelected }} repository set(s) chosen?
+      </span>
+      <div>
+        <button type="button" class="btn btn-default" ng-click="performRepositorySetAction()" translate>Yes</button>
+        <button type="button" class="btn btn-default" ng-click="repositorySets.action = null; repositorySets.working = false" translate>No</button>
+      </div>
+    </div>
+
+    <div data-extend-template="layouts/partials/table.html">
+      <div data-block="search">
+        <input type="text" class="form-control" stop-event="click"
+               placeholder="{{ 'Filter...' | translate }}"
+               ng-model="repositorySetFilter"/>
+      </div>
+
+      <div data-block="list-actions">
+        <div class="btn-group" select-action-dropdown>
+          <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+            <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+              <a ng-click="repositorySetsAction('enable')" disable-link="table.numSelected === 0" translate>
+                Override to Enabled
+              </a>
+            </li>
+
+            <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+              <a ng-click="repositorySetsAction('disable')" disable-link="table.numSelected === 0" translate>
+                Override to Disabled
+              </a>
+            </li>
+
+            <li role="menuitem" ng-show="permitted('edit_hosts')" ng-class="{disabled: table.numSelected === 0}">
+              <a ng-click="repositorySetsAction('reset')" disable-link="table.numSelected === 0" translate>
+                Reset to Default
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <span data-block="no-rows-message" translate>
+        No Repository Sets provided through subscriptions.
+      </span>
+
+      <span data-block="no-search-results-message" translate>
+        Your search returned zero Repository Sets.
+      </span>
+
+      <div data-block="table">
+        <table class="table table-striped table-bordered" ng-class="{'table-mask': state.working}">
+          <thead>
+            <tr bst-table-head row-select>
+              <th bst-table-column="repository_name" translate>Repository Name</th>
+              <th bst-table-column="product_name" translate>Product Name</th>
+              <th bst-table-column="repository_path" translate>Repository Path</th>
+              <th bst-table-column="enabled" translate>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="repositorySet in table.rows | filter:repositorySetFilter" row-select="repositorySet">
+              <td bst-table-cell>{{ repositorySet.name }}</td>
+              <td bst-table-cell>
+                <a ui-sref="product.info({productId: repositorySet.product.id})">
+                  {{ repositorySet.product.name }}
+                </a>
+              </td>
+              <td bst-table-cell>{{ repositorySet.contentUrl }}</td>
+              <td bst-table-cell>{{ repositorySet | repositorySetsEnabled }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-block="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ok()" translate>
+      Done
+    </button>
+  </div>
+</div>

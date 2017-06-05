@@ -228,7 +228,7 @@ module Katello
       end
 
       content_override_values = content_overrides.map do |override_params|
-        validate_content_overrides_enabled(override_params, @activation_key)
+        validate_content_overrides_enabled(override_params)
       end
       @activation_key.set_content_overrides(content_override_values)
       respond_for_show(:resource => @activation_key)
