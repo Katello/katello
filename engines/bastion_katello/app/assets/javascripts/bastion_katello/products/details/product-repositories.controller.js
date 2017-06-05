@@ -16,8 +16,8 @@
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', '$state', '$location', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane', 'translate',
-    function ($scope, $state, $location, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane, translate) {
+    ['$scope', '$state', '$location', 'ApiErrorHandler', 'Product', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane',
+    function ($scope, $state, $location, ApiErrorHandler, Product, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane) {
         var repositoriesNutupane = new Nutupane(Repository, {
             'product_id': $scope.$stateParams.productId,
             'search': $location.search().search || "",
@@ -53,7 +53,6 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
 
         $scope.removingTasks = [];
 
-        $scope.checksums = [{name: translate('Default'), id: null}, {id: 'sha256', name: 'sha256'}, {id: 'sha1', name: 'sha1'}];
         $scope.table = repositoriesNutupane.table;
 
         $scope.syncSelectedRepositories = function () {
