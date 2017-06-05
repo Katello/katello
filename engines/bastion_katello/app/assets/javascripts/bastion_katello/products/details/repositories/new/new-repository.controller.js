@@ -11,6 +11,7 @@
  * @requires GlobalNotification
  * @requires ApiErrorHandler
  * @requires BastionConfig
+ * @requires Checksum
  * @requires DownloadPolicy
  * @requires OstreeUpstreamSyncPolicy
  *
@@ -18,8 +19,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
-    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig, DownloadPolicy, OstreeUpstreamSyncPolicy) {
+    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'GlobalNotification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
+    function ($scope, Repository, Product, GPGKey, FormUtils, translate, GlobalNotification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy) {
 
         function success() {
             GlobalNotification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -74,6 +75,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             $scope.repositoryTypes = data;
         });
 
+        $scope.checksums = Checksum.checksums;
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
         $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
 
