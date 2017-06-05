@@ -123,7 +123,7 @@ module Katello
       when :package
         p = self.parameters[:packages]
         unless p && p.length > 0
-          if "package_update" == self.task_type
+          if self.task_type == "package_update"
             return _("all packages")
           end
           return ""
@@ -163,7 +163,7 @@ module Katello
         p = self.parameters[:packages]
         first_package = p.first.is_a?(Hash) ? p.first[:name] : p.first
         unless p && p.length > 0
-          if "package_update" == self.task_type
+          if self.task_type == "package_update"
             case self.overall_status
             when "running"
               return "updating"

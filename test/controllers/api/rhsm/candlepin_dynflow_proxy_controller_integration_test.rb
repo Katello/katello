@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require "katello_test_helper"
 
 module Katello

@@ -195,7 +195,7 @@ module Katello
     end
 
     def check_subscriptions
-      fail HttpErrors::BadRequest, _("subscriptions not specified") if params[:subscriptions].nil? || params[:subscriptions].empty?
+      fail HttpErrors::BadRequest, _("subscriptions not specified") if params[:subscriptions].blank?
     end
 
     def find_host

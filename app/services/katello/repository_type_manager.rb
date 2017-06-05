@@ -7,7 +7,7 @@ module Katello
 
       # Plugin constructor
       def register(id, &block)
-        unless find(id).present?
+        if find(id).blank?
           repository_type = ::Katello::RepositoryType.new(id)
           repository_type.instance_eval(&block) if block_given?
           repository_types[id.to_s] = repository_type

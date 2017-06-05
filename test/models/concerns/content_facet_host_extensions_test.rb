@@ -12,7 +12,7 @@ module Katello
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
       FactoryGirl.create(:host, :with_content, :content_view => view,
-                                     :lifecycle_environment =>  library)
+                                     :lifecycle_environment => library)
     end
   end
 

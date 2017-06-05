@@ -239,10 +239,10 @@ Foreman::Plugin.register :katello do
   end
 
   tests_to_skip("AccessPermissionsTest" => [
-    'foreman_tasks/api/tasks/callback should have a permission that grants access',
-    'bastion/bastion/index should have a permission that grants access',
-    'bastion/bastion/index_ie should have a permission that grants access'
-  ])
+                  'foreman_tasks/api/tasks/callback should have a permission that grants access',
+                  'bastion/bastion/index should have a permission that grants access',
+                  'bastion/bastion/index_ie should have a permission that grants access'
+                ])
 
   add_controller_action_scope(HostsController, :index) do |base_scope|
     base_scope

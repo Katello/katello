@@ -33,9 +33,9 @@ module ::Actions::Katello::Host::PackageGroup
         let(:fixture_variant) { :package_group_success }
 
         specify do
-          action.humanized_output.must_equal <<-OUTPUT.chomp
-amanda-2.6.1p2-8.el6.x86_64
-amanda-client-2.6.1p2-8.el6.x86_64
+          action.humanized_output.must_equal <<-OUTPUT.strip_heredoc.chomp
+            amanda-2.6.1p2-8.el6.x86_64
+            amanda-client-2.6.1p2-8.el6.x86_64
             OUTPUT
         end
       end
@@ -52,9 +52,9 @@ amanda-client-2.6.1p2-8.el6.x86_64
         let(:fixture_variant) { :error }
 
         specify do
-          action.humanized_output.must_equal <<-MSG.chomp
-No new packages installed
-emacss: No package(s) available to install
+          action.humanized_output.must_equal <<-MSG.strip_heredoc.chomp
+            No new packages installed
+            emacss: No package(s) available to install
             MSG
         end
       end
@@ -78,9 +78,9 @@ emacss: No package(s) available to install
           let(:fixture_variant) { :package_group_success }
 
           specify do
-            action.humanized_output.must_equal <<-OUTPUT.chomp
-amanda-2.6.1p2-8.el6.x86_64
-amanda-client-2.6.1p2-8.el6.x86_64
+            action.humanized_output.must_equal <<-OUTPUT.strip_heredoc.chomp
+              amanda-2.6.1p2-8.el6.x86_64
+              amanda-client-2.6.1p2-8.el6.x86_64
             OUTPUT
           end
         end

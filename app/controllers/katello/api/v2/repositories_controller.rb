@@ -217,7 +217,7 @@ module Katello
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
     def export
-      if !params[:export_to_iso].present? && params[:iso_mb_size].present?
+      if params[:export_to_iso].blank? && params[:iso_mb_size].present?
         fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
       end
 
@@ -325,7 +325,6 @@ module Katello
       else
         fail HttpErrors::BadRequest, _("No file uploaded")
       end
-
     rescue Katello::Errors::InvalidRepositoryContent => error
       respond_for_exception(
         error,

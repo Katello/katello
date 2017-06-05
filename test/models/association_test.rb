@@ -85,7 +85,7 @@ module Katello
 
             it('is using correct foreign_key') do
               class_name = association.class_name
-              unless %w(:: Katello User Organization Docker ).any? { |word| class_name.start_with?(word) }
+              unless %w(:: Katello User Organization Docker).any? { |word| class_name.start_with?(word) }
                 class_name = "Katello::" + association.class_name
               end
               other_model = class_name.constantize

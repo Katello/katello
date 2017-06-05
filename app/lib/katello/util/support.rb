@@ -68,7 +68,7 @@ module Katello
         end
         diff_data = diff_data.compact.flatten
 
-        return diff_data unless diff_data.nil? || diff_data.empty?
+        return diff_data unless diff_data.blank?
         stringify(params.keys) - stringify(rule.keys)
       end
 

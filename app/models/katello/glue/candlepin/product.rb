@@ -49,7 +49,6 @@ module Katello
       product.productContent_will_change!
       product.productContent = product.build_product_content(product_content_attrs)
       product.save!
-
     rescue => e
       [Rails.logger, import_logger].each do |logger|
         logger.error "Failed to create product #{attrs['name']}: #{e}" if logger

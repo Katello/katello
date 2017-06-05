@@ -684,14 +684,14 @@ module Katello
         begin
           history = Katello.pulp_server.extensions.repository.sync_status(pulp_id)
 
-          if history.nil? || history.empty?
+          if history.blank?
             history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
           end
         rescue
           history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
         end
 
-        if history.nil? || history.empty?
+        if history.blank?
           return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED)
         else
           history = sort_sync_status(history)

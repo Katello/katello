@@ -56,7 +56,7 @@ module Katello
 
     # make the structure plain setting it's attributes according to the tree (namely id and class)
     def normalize(children, parent_set = [], data = [], item_type = nil)
-      children.sort { |a, b| a[:name] <=> b[:name] }.each do |child|
+      children.sort_by { |a| a[:name] }.each do |child|
         new_set = parent_set + [child[:id]]
 
         item = { :id    => id(new_set),

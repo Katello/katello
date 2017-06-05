@@ -72,7 +72,7 @@ module Katello
     end
 
     def update_content_view
-      if content_view_version.present? && !content_view.present?
+      if content_view_version.present? && content_view.blank?
         self.content_view = content_view_version.content_view
       end
     end
