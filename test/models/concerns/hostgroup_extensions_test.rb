@@ -15,7 +15,7 @@ module Katello
 
     def inherited_content_source_id_with_ancestry
       @root.content_source =
-      @root.save!
+        @root.save!
 
       assert_equal @puppet_env, @child.content_source
       assert_equal @puppet_env, @root.content_source

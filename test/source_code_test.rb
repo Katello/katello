@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require 'ripper'
 
 if ENV['RAILS_ENV'] != 'build' # ok
@@ -87,15 +88,15 @@ class SourceCodeTest < ActiveSupport::TestCase
 
   describe 'gettext' do
     it 'does not use interpolation or multiple anonymous placeholders' do
-      doc = <<-DOC
+      doc = <<-DOC.strip_heredoc
 
-Interpolation example:
-  _("This is a malformed string with \#{interpolated_variable} within")
-  # should be _("This is a malformed string with %s within") % interpolated_variable
-Multiple anonymous placeholders:
-  _("This is a malformed string with %s, and another %s") % [var1, var2]
-  # should be _("This is a malformed string with %{var1}, and another %{var2}") %
-  #              {:var1 => var1, :var2 => var2}
+        Interpolation example:
+          _("This is a malformed string with \#{interpolated_variable} within")
+          # should be _("This is a malformed string with %s within") % interpolated_variable
+        Multiple anonymous placeholders:
+          _("This is a malformed string with %s, and another %s") % [var1, var2]
+          # should be _("This is a malformed string with %{var1}, and another %{var2}") %
+          #              {:var1 => var1, :var2 => var2}
       DOC
       SourceCode.
           new('**/*.{rb,js,scss,haml}',

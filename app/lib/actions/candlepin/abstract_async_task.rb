@@ -26,7 +26,7 @@ module Actions
       end
 
       def done?
-        ! ::Katello::Resources::Candlepin::Job.not_finished?(external_task)
+        !::Katello::Resources::Candlepin::Job.not_finished?(external_task)
       end
 
       private

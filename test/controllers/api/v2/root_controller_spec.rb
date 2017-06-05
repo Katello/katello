@@ -27,7 +27,7 @@ module Katello
       assert_empty results.select { |r| r['rel'].blank? }
 
       # none hrefs end with an id
-      assert_empty rhsm_results.select { |r| r['href'].end_with?(:id) || r['href'].end_with?(:guest_id) }
+      assert_empty rhsm_results.select { |r| r['href'].end_with?(:id, :guest_id) }
 
       # check for a few of the expected routes
       refute_empty rhsm_results.select { |r| r['href'] == "/rhsm/consumers" && r['rel'] == 'consumers' }

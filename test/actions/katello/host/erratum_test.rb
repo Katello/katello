@@ -34,11 +34,11 @@ module ::Actions::Katello::Host::Erratum
         let(:fixture_variant) { :success }
 
         specify do
-          action.humanized_output.must_equal <<-OUTPUT.chomp
-1:emacs-23.1-21.el6_2.3.x86_64
-libXaw-1.0.11-2.el6.x86_64
-libXmu-1.1.1-2.el6.x86_64
-libotf-0.9.9-3.1.el6.x86_64
+          action.humanized_output.must_equal <<-OUTPUT.strip_heredoc.chomp
+            1:emacs-23.1-21.el6_2.3.x86_64
+            libXaw-1.0.11-2.el6.x86_64
+            libXmu-1.1.1-2.el6.x86_64
+            libotf-0.9.9-3.1.el6.x86_64
           OUTPUT
         end
       end

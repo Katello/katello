@@ -14,7 +14,6 @@ module Katello
       task_list = [task_list] unless task_list.is_a?(Array)
       ignore_exception = options.fetch(:ignore_exception, false)
       PulpTaskStatus.wait_for_tasks(task_list)
-
     rescue RuntimeError => e
       unless ignore_exception
         puts e

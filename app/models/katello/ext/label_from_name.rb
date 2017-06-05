@@ -9,7 +9,7 @@ module Katello
       end
 
       def setup_label_from_name
-        unless label.present?
+        if label.blank?
           self.label = Util::Model.labelize(name)
           if self.class.where(:label => self.label).any?
             self.label = Util::Model.uuid

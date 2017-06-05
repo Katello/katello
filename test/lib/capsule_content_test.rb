@@ -152,10 +152,10 @@ module Katello
 
       before do
         capsule_content.capsule.stubs(:pulp_repositories).returns([
-          repo_lib_cv1,
-          repo_lib_cv2,
-          repo_dev_cv2
-        ])
+                                                                    repo_lib_cv1,
+                                                                    repo_lib_cv2,
+                                                                    repo_dev_cv2
+                                                                  ])
       end
 
       test "filters by environment" do

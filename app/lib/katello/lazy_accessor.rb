@@ -105,7 +105,7 @@ module Katello
 
       def lazy_attribute_will_change!(attr)
         changed_remote_attributes[attr.to_s] ||=
-            instance_variable_get("@#{attr}").nil? ? remote_attribute_value(attr) : instance_variable_get("@#{attr}")
+          instance_variable_get("@#{attr}").nil? ? remote_attribute_value(attr) : instance_variable_get("@#{attr}")
       end
 
       def lazy_attribute_change(attr)
