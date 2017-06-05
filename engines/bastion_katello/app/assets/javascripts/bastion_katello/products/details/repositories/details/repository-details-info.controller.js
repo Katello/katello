@@ -7,6 +7,7 @@
  * @requires translate
  * @requires GPGKey
  * @requires CurrentOrganization
+ * @requires Checksum
  * @requires DownloadPolicy
  * @requires OstreeUpstreamSyncPolicy
  *
@@ -14,8 +15,8 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'GPGKey', 'CurrentOrganization', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
-    function ($scope, $q, translate, GPGKey, CurrentOrganization, DownloadPolicy, OstreeUpstreamSyncPolicy) {
+    ['$scope', '$q', 'translate', 'GPGKey', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
+    function ($scope, $q, translate, GPGKey, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.uploadSuccessMessages = [];
@@ -94,14 +95,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.progress.uploading = false;
         };
 
-        $scope.checksumTypeDisplay = function (checksum) {
-            if (checksum === null) {
-                checksum = translate('Default');
-            }
-            return checksum;
-        };
+        $scope.checksums = Checksum.checksums;
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
         $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
+
+        $scope.checksumTypeDisplay = function (checksum) {
+            return Checksum.checksumType(checksum);
+        };
 
         $scope.downloadPolicyDisplay = function (downloadPolicy) {
             return DownloadPolicy.downloadPolicyName(downloadPolicy);
