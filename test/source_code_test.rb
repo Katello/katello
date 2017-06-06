@@ -84,6 +84,14 @@ class SourceCodeTest < ActiveSupport::TestCase
               %r{app/services/katello/authentication/client_authentication\.rb},
               %r{lib/util/puppet\.rb})
     end
+
+    it "does not have debugger statements" do
+      doc = "forgot to remove a debugger statement"
+      SourceCode.new('**/*.{rb,js,haml}').check_lines(doc) do |line|
+        line !~ /\A\s+debugger/
+      end
+    end
+
   end
 
   describe 'gettext' do
