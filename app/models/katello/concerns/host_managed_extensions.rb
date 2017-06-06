@@ -6,6 +6,7 @@ module Katello
       include ForemanTasks::Concerns::ActionSubject
 
       included do
+        include ::Katello::KatelloUrlsHelper
         alias_method_chain :validate_media?, :capsule
         alias_method_chain :info, :katello
         alias_method_chain :smart_proxy_ids, :katello
