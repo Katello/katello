@@ -24,6 +24,7 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates :name, :presence => true
     validates :name, :uniqueness => {:scope => :organization_id}
+    validates :description, :length => {:maximum => 1000}
     validate :environment_exists
     validates :max_hosts, :numericality => {:less_than => 2**31, :allow_nil => true}
     validates_each :max_hosts do |record, attr, value|
