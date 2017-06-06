@@ -8,7 +8,8 @@ module Katello
     tests Katello::Api::V2::HostSubscriptionsController
 
     def models
-      @host = FactoryGirl.create(:host, :with_subscription)
+      @host = FactoryGirl.create(:host, :with_subscription, :location => taxonomies(:location1),
+                                 :organization => taxonomies(:empty_organization))
       users(:restricted).update_attribute(:organizations, [@host.organization])
       users(:restricted).update_attribute(:locations, [@host.location])
       @pool = katello_pools(:pool_one)
