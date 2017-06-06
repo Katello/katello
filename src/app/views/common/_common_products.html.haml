@@ -1,0 +1,21 @@
+= javascript do
+  :plain
+    KT.products = $.parseJSON('#{escape_javascript(get_products({:record => record,
+                                                                 :readable_products => readable_products,
+                                                                 :editable_products => editable_products}).to_json)}');
+
+    KT.editable_products = $.parseJSON('#{escape_javascript(get_products({:record => record,
+                                                                          :readable_products => readable_products,
+                                                                          :editable_products => editable_products}).
+                                                                        reject{|key,val|!val[:editable]}.to_json)}');
+
+    KT.filters.set_current_filter($.parseJSON('#{escape_javascript(objectify(record).to_json)}'));
+
+    localize({
+      "no_products_repos"  : '#{escape_javascript(_("No products or repositories are currently associated."))}',
+      "all_repos" : '#{escape_javascript(_("All Repositories"))}',
+      "select_repos" : '#{escape_javascript(_("Select Repositories: "))}',
+      "x_of_y_repos" : function(x,y){ return '#{escape_javascript(_("(%X of %Y repositories selected)"))}'.replace("%X", x).replace("%Y", y); },
+      "entire_selected" : '#{escape_javascript(_("(Entire product selected)"))}',
+      "no_packages" : '#{escape_javascript(_("No packages are currently filtered."))}'
+      });

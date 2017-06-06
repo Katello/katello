@@ -1,0 +1,7 @@
+%tr
+  %td
+    - if editable
+      .panel_link
+        = check_box_tag "units[#{unit[:name]}]", unit[:name], false, {'data-id' => unit[:name]}
+        %label
+          = unit[:name]

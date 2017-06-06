@@ -1,0 +1,6 @@
+%ul.expand_list
+  %section
+    - errata_filters.each do |filter|
+      %li.slide_link
+        .simple_link.link_details{:id=>filter[:id]}
+          #{filter[:label]}

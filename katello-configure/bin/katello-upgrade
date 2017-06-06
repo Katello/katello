@@ -1,0 +1,340 @@
+#!/usr/bin/ruby
+# vim: ts=2:sw=2:et:
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+
+# to test the script on a development setup you can use:
+#   KATELLO_UPGRADE_PREFIX=. KATELLO_UPGRADE_LOG=/dev/null \
+#   KATELLO_UPGRADE_HISTORY=/dev/null KATELLO_UPGRADE_DIR=upgrade-scripts \
+#   bin/katello-upgrade --trace --norootcheck --deployment katello -n -y
+
+KATELLO_DIR = ENV['KATELLO_DIR'] || '/usr/share/katello/'
+PREFIX = ENV['KATELLO_UPGRADE_PREFIX'] || '/usr/share/katello/install/puppet'
+KATELLO_UPGRADE_DIR = ENV['KATELLO_UPGRADE_DIR'] || '/usr/share/katello/install/upgrade-scripts'
+KATELLO_UPGRADE_HISTORY = ENV['KATELLO_UPGRADE_HISTORY'] || '/var/lib/katello/upgrade-history'
+KATELLO_UPGRADE_LOG = ENV['KATELLO_UPGRADE_LOG'] || '/var/log/katello/katello_upgrade.log'
+
+require 'optparse'
+require "#{PREFIX}/lib/util/functions.rb"
+
+# error codes for exit_with function
+UPGRADE_ERROR_CODES = {
+  :success => 0,
+  :interrupted => 1, # prints continuation banner
+  :general_error => 2,
+  :not_root => 3,
+  :stop_error => 4,
+  # error which does not print "More info in the log file"
+  :option_parser_error => 101,
+  :validate_error => 102,
+  :headpin_check_error => 103,
+  :stopped => 127,
+}
+
+def opt(name)
+  $options[name]
+end
+
+# Terminate script with error code from UPGRADE_ERROR_CODES hash
+# (Overrides exit_with defined in helper lib - we need our own handling)
+def exit_with(code = :general_error, message = nil, e = nil)
+  if opt(:trace) and not e.nil?
+    $stderr.puts "#{e.backtrace.first}: #{e.message} (#{e.class})", e.backtrace.drop(1).map{|s| "\t#{s}"}
+  end
+  $stderr.puts message unless message.nil?
+  code = UPGRADE_ERROR_CODES[code.to_sym] || UPGRADE_ERROR_CODES[:general_error]
+  $stderr.puts "More info in #{KATELLO_UPGRADE_LOG}" if code > 0 and code < 100
+  if code == :interrupted
+    $stderr.puts "One-time steps will be skipped, regular upgrade steps can be safely"
+    $stderr.puts "re-executed or skipped manually in the interactive mode when"
+    $stderr.puts "katello-upgrade is re-run."
+  end
+  exit code
+end
+
+$options = {}
+$options[:verbose] = true
+begin
+  option_parser = OptionParser.new
+  option_parser.banner = "Katello upgrade script\nUsage: #{$0} [options]"
+
+  option_parser.on('-a', '--autostop', 'Automatically stop services using "katello-service stop"') do
+    $options[:auto_stop] = true
+  end
+
+  option_parser.on('-y', '--assumeyes', 'Work non-intearactively and proceed without asking') do
+    $options[:assumeyes] = true
+  end
+
+  option_parser.on('-n', '--dryrun', 'Prints the upgrade steps without modifying anything') do
+    $options[:dry_run] = true
+  end
+
+  option_parser.on('-q', '--quiet', 'Do not print anything on the stdout/stderr (only log)') do
+    $options[:verbose] = false
+  end
+
+  option_parser.on('--describe', 'Only describe all the upgrade steps without modifying anything') do
+    $options[:describe] = true
+  end
+
+  option_parser.on('--trace', 'Print exception stacktrace on error') do
+    $options[:trace] = true
+  end
+
+  option_parser.on('--noservicecheck', 'Do not check if all services are stopped (use with care)') do
+    $options[:skip_service_check] = true
+  end
+
+  option_parser.on('--norootcheck', 'Disable check for root (use with care)') do
+    $options[:skip_root_check] = true
+  end
+
+  option_parser.on('--deployment=DEPLOYMENT', 'Force deployment mode (use with care)') do |value|
+    raise "Deployment must be katello or headpin" unless ['katello', 'headpin'].include? value
+    $options[:deployment] = value
+  end
+
+  option_parser.on('-h', '--help', 'Show this short summary') do
+    puts option_parser.help + "\n"
+    exit_with :success
+  end
+
+  option_parser.parse!
+rescue => e
+  $stderr.puts "Error while parsing options: #{e.message}\n\n"
+  $stderr.puts option_parser.help + "\n"
+  exit_with :option_parser_error
+end
+
+def log string
+  if opt(:verbose)
+    puts "#{string}"
+  end
+  File.open(KATELLO_UPGRADE_LOG, 'a') do |f|
+    t = Time.now.strftime "%D %T"
+    f.puts "#{t} #{string}" unless string.start_with? 'Description:'
+  end
+rescue => e
+  $stderr.puts "Cannot write to log file: #{e.message}"
+end
+
+# check if running as root
+if not opt(:skip_root_check) and Process.uid != 0
+  exit_with :not_root, "You must run katello-upgrade as root"
+end
+
+def deployment_type
+  return opt(:deployment) unless opt(:deployment).nil?
+  if open('/etc/katello/katello-configure.conf').grep(/deployment.*=.*(headpin|sam)/).count > 0
+    "headpin"
+  else
+    "katello"
+  end
+rescue
+  exit_with :headpin_check_error, "Unable to determine deployment from katello-configure.conf"
+end
+
+def ask_yes_no_skip? message = "Do you want to proceed with this step?"
+  return :yes if opt(:assumeyes)
+  while true
+    print "#{message}: [(y)es/(n)o/(s)kip]: "
+    case gets.strip
+    when /^[yY](es)?$/
+      return :yes
+    when /^[sS](kip)?$/
+      return :skip
+    when /^[nN]o?$/
+      return :no
+    end
+  end
+end
+
+def execute_command command
+  cwd = Dir.pwd
+  if opt(:dry_run)
+    true
+  else
+    if File.extname(command) == '.runner'
+      command = "#{KATELLO_DIR}/script/rails  runner -e production #{command}"
+    end
+    Dir.chdir(KATELLO_DIR)
+    IO.popen("#{command} 2>&1") do |io|
+      while (line = io.gets)
+        log line
+      end
+    end
+    return_code = $?
+    Dir.chdir(cwd)
+    return_code.success?
+  end
+rescue => e
+  exit_with :general_error, "Error during execution of: #{command}", e
+end
+
+class Script
+  attr_accessor :name, :apply, :run, :filename, :path, :description
+
+  def initialize(script_path)
+    @path = script_path
+    @name = ""
+    @run = ""
+    @filename = File.basename(script_path)
+    @apply = []
+    parse_script_file script_path
+    # validate
+    exit_with :validate_error, "Script #{filename} is missing 'name' header" if @name.empty?
+    exit_with :validate_error, "Script #{filename} is missing 'apply' header" if @apply.empty?
+    exit_with :validate_error, "Script #{filename} is missing 'run' header" if @run.empty?
+    unless ['once', 'always'].include? @run
+      exit_with :validate_error, "Script #{filename} has incorrect 'run' header '#{@run}'"
+    end
+  end
+
+  def done?
+    return false if @run == 'always'
+    @done ||= open(KATELLO_UPGRADE_HISTORY).grep(/^#{@filename}$/).count > 0
+    @done
+  rescue => e
+    log "No history file, will create one: #{e.message}"
+    false
+  end
+
+  def done!
+    return if @run == 'always' or done?
+    File.open(KATELLO_UPGRADE_HISTORY, 'a') do |f|
+      f.puts @filename
+    end
+  rescue => e
+    exit_with :general_error, "Error when writing into history file", e
+  end
+
+  def execute
+    result = execute_command @path
+    done! if result
+    result
+  rescue => e
+    exit_with :general_error, "Error during execution", e
+  end
+
+  private
+
+  def parse_script_file(script_path)
+    File.open(script_path, 'r') do |f|
+      f.each_line do |line|
+        process_line line
+      end
+    end
+  rescue => e
+    exit_with :general_error, "Error", e
+  end
+
+  def process_line(line)
+    @in_desc ||= false
+
+    if line =~ /#\s*name:\s*(.*)\s*$/
+      @name = $1
+      @in_desc = false
+    elsif line =~ /#\s*apply:\s*(.*)$/
+      @apply = $1.strip.split(/\s/)
+      @in_desc = false
+    elsif line =~ /#\s*run:\s*(.*)$/
+      @run = $1.strip
+      @in_desc = false
+    elsif /#\s*description:\s*(.*)\s*$/.match line
+      @description = $1
+      @in_desc = true
+    elsif ( line =~ /^\s*#.*/ ) and @in_desc
+      @description ||= ""
+      @description += "\n" + line.gsub(/\s*#/, "").strip
+      @description.strip!
+    else
+      @in_desc = false
+    end
+  end
+end
+
+def print_step_info(script, step_no, steps_total)
+  log "Step:        #{script.name} (#{step_no}/#{steps_total})"
+  log "Runs:        #{script.run}"
+  desc_label = "Description: "
+  desc = "#{desc_label}#{script.description}"
+  desc = word_rewrap(desc, COLUMNS - desc_label.length, ' ' * desc_label.length)
+  log "#{desc}\n\n"
+end
+
+# enqueue steps
+upgrade_queue = []
+upgrade_files = Dir.glob("#{KATELLO_UPGRADE_DIR}/*")
+upgrade_files.sort.each do |filename|
+  if File.executable? filename and not File.directory? filename
+    deployment = deployment_type
+    basename = File.basename filename
+    script = Script.new filename
+    upgrade_queue << script if script.apply.include? deployment and not script.done?
+  else
+    log "Skipping non-executable script #{filename}"
+  end
+end
+
+# describe steps (optional)
+steps_total = upgrade_queue.size
+step_no = 0
+if opt(:describe)
+  log "Upgrade plan:"
+  upgrade_queue.each do |script|
+    step_no += 1
+    print_step_info script, step_no, steps_total
+  end
+  exit_with :success
+end
+
+# auto stop
+if opt(:auto_stop)
+  log "Stopping all katello services"
+  unless execute_command("/usr/bin/katello-service stop")
+    exit_with :stop_error, "Unable to stop services, do manually and re-run without -a option"
+  end
+end
+
+# check if all services are off
+unless opt(:skip_service_check)
+  unless execute_command("/usr/bin/katello-service allstopped")
+    exit_with :stop_error, "Not all services are stopped, stop them or run with -a option"
+  end
+end
+
+# execute steps
+step_no = 0
+log "Loaded #{steps_total} steps to the upgrade queue"
+upgrade_queue.each do |script|
+  step_no += 1
+  print_horizontal_line if opt(:verbose)
+  print_step_info script, step_no, steps_total
+  case ask_yes_no_skip?
+  when :skip
+    log "Skipping step #{script.name}"
+    next
+  when :yes
+    log "Starting step #{script.name}"
+    result = script.execute
+    if result
+      log "Successfuly finished step: #{script.name}"
+    else
+      exit_with :interrupted, "Upgrade script did not return zero, investigate, stop services and re-run upgrade."
+    end
+  when :no
+    exit_with :interrupted, "Stopping upgrade, you can re-run katello-upgrade later."
+  end
+end
+
+print_horizontal_line if opt(:verbose)
+log "Upgrade finished, all services are running now."

@@ -1,0 +1,386 @@
+#!/bin/bash
+# vim: sw=4:ts=4:et
+script_dir_link=$(dirname "$(readlink "$0")")
+if [[ $script_dir_link == "." ]]; then
+    script_dir=$(dirname "$0")
+else
+    script_dir=$script_dir_link
+fi
+export PYTHONPATH=$script_dir/../../cli/src
+export TESTDIR=$script_dir
+
+. $script_dir/helpers
+
+# fake beaker environment and load it if present
+function rlPhaseStartTest() {
+    return 0
+}
+function rlPhaseEnd() {
+    return 0
+}
+function rlFail() {
+    return 0
+}
+[ -f /usr/bin/rhts-environment.sh ] && . /usr/bin/rhts-environment.sh
+[ -f /usr/lib/beakerlib/beakerlib.sh ] && . /usr/lib/beakerlib/beakerlib.sh
+
+USER='admin'
+PASSWORD='admin'
+if [ -x "$script_dir/../../cli/bin/katello" ]; then
+    # running it from the git repo
+    CMD_NOUSER="$script_dir/../../cli/bin/katello"
+else
+    # running from rpm
+    CMD_NOUSER="katello"
+fi
+CMD="$CMD_NOUSER -u $USER -p $PASSWORD"
+KATELLO_CMD=$CMD
+TEST_DIR=$script_dir'/cli_tests/'
+COLUMNS=$(tput cols)
+
+test_cnt=0
+failed_cnt=0
+
+# Text color variables
+txtred=$(tput setaf 1)    # Red
+txtgrn=$(tput setaf 2)    # Green
+txtyel=$(tput setaf 3)    # Yellow
+txtrst=$(tput sgr0)       # Text reset
+
+all_tests=`ls $TEST_DIR/ | grep -v '^_.*' | sed 's/.sh//g'`
+required_tests=""
+
+PRINT_ALL=0
+SHELL_MODE=0
+TEST_ALL=0
+NO_BASE=0
+NO_CLEANUP=0
+RUN_DISABLED=0
+RAND_PREFIX=""
+TERMINATE=9999
+while [ $# -gt 0 ]; do
+    case "$1" in
+        "-h"|"--help")
+            printf "System test script for testing Katello CLI\n\n"
+            printf "It will fill your database with resources, and then delete them!\n\n"
+            printf " -h, --help      prints this help\n"
+            printf " -v,--verbose    verbose mode, prints full command output\n"
+            printf " -b,--nobase     no base tests\n"
+            printf " -c,--nocleanup  no base cleanup tests\n"
+            printf " -d,--disabled   run disabled tests as well\n"
+            printf " --logfile       file to capture the xml log output\n"
+            printf " -s, --shell     runs tests in the shell mode\n"
+            printf " -p, --ping      checks whether the server is ready\n"
+            printf " --rand-prefix   prefixes random hash with given value\n"
+            printf " -t, --termfirst terminate on the first error\n"
+            printf " --termn [N]     terminate on the n-th error\n"
+            printf "\n"
+            printf "Available tests:\n"
+            printf " all\n"
+            for t in $all_tests; do
+            printf " %s\n" "$t"
+            done
+            printf "\n"
+            printf "Usage:\n"
+            printf " $0 <parameters> <list of tests>\n"
+            printf "\n"
+            exit
+            ;;
+        "-p"|"--ping")
+            $CMD ping 2>&1
+            exit $?
+            ;;
+        "-v"|"--verbose")
+            PRINT_ALL=1
+            ;;
+        "-b"|"--nobase")
+            NO_BASE=1
+            ;;
+        "-c"|"--nocleanup")
+            NO_CLEANUP=1
+            ;;
+        "-d"|"--disabled")
+            RUN_DISABLED=1
+            ;;
+        "--rand-prefix")
+            shift
+            RAND_PREFIX=$1
+            ;;
+        "-t"|"--termfirst")
+            TERMINATE=1
+            ;;
+        "--termn")
+            shift
+            TERMINATE=$1
+            ;;
+        "-s"|"--shell")
+            SHELL_MODE=1
+            ;;
+        "--logfile")
+            shift
+            LOGFILE=$1
+            ;;
+        "all")
+            TEST_ALL=1
+            ;;
+        *)
+            required_tests="$required_tests $1"
+            ;;
+    esac
+    shift
+done
+
+PLAIN_RAND=$(openssl rand -base64 9 | tr '/+' 'XX')
+if [ "$RAND_PREFIX" == "" ]; then
+    RAND="${PLAIN_RAND}"
+else
+    RAND="${RAND_PREFIX}_${PLAIN_RAND}"
+fi
+
+
+if [ $TEST_ALL -eq 1 ]; then
+    #use all tests
+    required_tests=$all_tests
+else
+    #check if the tests exist
+    for t in $required_tests; do
+        if [ "`echo $all_tests | grep $t`" == "" ]; then
+            printf "Requred test suite [ $t ] does not exist.\n"
+            exit
+        fi
+    done
+fi
+
+function excape_xml() {
+    echo "$*" | sed -e 's/&/\&amp;/g'\
+        -e 's/</\&lt;/g'\
+        -e 's/>/\&gt;/g'\
+        -e 's/"/\&quot;/g'\
+        -e "s/'/\&apos;/g"
+}
+
+function log_test_result() {
+    test_results=("${test_results[@]}" "`excape_xml $1`")
+    test_names=("${test_names[@]}" "`excape_xml $2`")
+    test_output=("${test_output[@]}" "$3")
+    test_suits=("${test_suits[@]}" "`excape_xml $current_suite`")
+}
+
+function summarize_log() {
+    if [ "$LOGFILE" == "" ]; then
+        return
+    fi
+
+    printf "" > "$LOGFILE"
+    printf '<?xml version="1.0" encoding="UTF-8"?>\n' >> "$LOGFILE"
+    printf '<testsuite hostname="%s" name="%s" tests="%s" failures="%s" timestamp="%s" time="0.0" errors="0">\n'\
+    "$(hostname)" "" "$test_cnt" "$failed_cnt" "$(date "+%d %b %Y %H:%M:%S %Z")" >> "$LOGFILE"
+
+    for ((i = 0; i < ${#test_results[@]}; i++)); do
+        printf '\t<testcase name="%s" time="0.0" classname="cli.system_tests.%s"' "${test_names[$i]}" "${test_suits[$i]}" >> "$LOGFILE"
+        if [ ${test_results[$i]} -eq 0 ]; then
+            # failed tests
+            printf ' >\n' >> "$LOGFILE"
+            printf '\t\t<failure message="%s failed">\n' "${test_names[$i]}" >> "$LOGFILE"
+            printf '\t\t<![CDATA[%s]]>\n' "${test_output[$i]}" >> "$LOGFILE"
+            printf '\t\t</failure>\n' >> "$LOGFILE"
+            printf '\t</testcase>\n' >> "$LOGFILE"
+        else
+            # passed tests
+            printf ' />\n' >> "$LOGFILE"
+        fi
+
+    done
+    echo "</testsuite>" >> "$LOGFILE"
+}
+
+function msg_status() {
+    let POS="$COLUMNS - 12"
+    printf "%-${POS}s" "$1"
+    printf "[ %s ]" "$2"
+    if [ $# -gt 2 ]; then
+        printf "\n%s\n" "$3"
+    else
+        printf "\n"
+    fi
+}
+
+function test_cmd() {
+    test_success=$1; shift
+    test_name=$1; shift
+
+    # beaker
+    rlPhaseStartTest "$test_name"
+
+    if [ $PRINT_ALL -eq 1 ]; then
+        echo $*
+    fi
+
+    if [ $SHELL_MODE -eq 1 ]; then
+        result=`echo -e "$*\nexit" | $CMD shell 2>&1`
+        result=`echo "$result" | sed 's/katello>//g'`
+    else
+        result=`$CMD "$@" 2>&1`
+    fi
+
+    ret=$?
+    if [ $ret -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" != "" ]; then
+        #command failed
+        if [ $test_success = "S" ]; then
+            status=0;
+        else
+            if [ $test_success = "F" ]; then
+                status=1;
+            else
+               ! [ $ret -eq $test_success ];
+               status=$?
+            fi
+        fi
+    else
+        #command succeeded
+        if [ $test_success = "S" ]; then status=1; else status=0; fi
+    fi
+
+
+    if [ $status -eq 0 ]; then
+        if [ $PRINT_ALL -eq 1 ]; then
+            printf "%s\n\n" "$result"
+        else
+            msg_status "$test_name" "${txtred}FAILED${txtrst}"
+            printf "%s\n" "$*"
+            printf "%s\n" "$result"
+            # beaker
+            rlFail
+        fi
+        let failed_cnt+=1
+        let "TERMINATE=$TERMINATE - 1"
+    else
+        if [ $PRINT_ALL -eq 1 ]; then
+            printf "%s\n\n" "$result"
+        else
+            msg_status "$test_name" "${txtgrn}OK${txtrst}"
+        fi
+    fi
+    log_test_result "$status" "$test_name" "$result"
+    let test_cnt+=1
+
+    # beaker
+    rlPhaseEnd
+
+    # termination support
+    if [ $status -eq 0 -a $TERMINATE -le 0 ]; then
+        # immediate termination
+        echo "Failure, exiting:"
+        echo "$*"
+        exit 1
+    fi
+}
+
+
+function test_success() {
+    test_cmd "S" "$@"
+}
+
+
+function test_failure() {
+    test_cmd "F" "$@"
+}
+
+function test_own_cmd_success() {
+    MSG=$1
+    shift
+    CMD="" SHELL_MODE=0 test_success "$MSG" "$@"
+}
+
+function test_own_cmd_failure() {
+    MSG=$1
+    shift
+    CMD="" SHELL_MODE=0 test_failure "$MSG" "$@"
+}
+
+function test_own_cmd_exit_code() {
+    EXIT_CODE=$1
+    MSG=$2
+    shift
+    shift
+    CMD="" SHELL_MODE=0 test_cmd $EXIT_CODE "$MSG" "$@"
+}
+
+
+function skip_message() {
+    msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+}
+
+function skip_test_success() {
+    if [ $RUN_DISABLED -eq 1 ]; then
+        MSG=$1
+        shift
+        shift
+        test_success "$MSG" "$@"
+    else
+        skip_message "$1" "$2"
+    fi
+}
+
+function skip_test_failure() {
+    if [ $RUN_DISABLED -eq 1 ]; then
+        MSG=$1
+        shift
+        shift
+        test_failure "$MSG" "$@"
+    else
+        skip_message "$1" "$2"
+    fi
+}
+
+function todo() {
+  msg_status "$1" "TODO"
+}
+
+function print_separator() {
+    printf "%${COLUMNS}s\n"|tr ' ' '-'
+}
+
+function summarize() {
+
+    print_separator
+    if [ $failed_cnt -eq 0 ]; then
+        printf "%s tests, all passed\n" "$test_cnt"
+    else
+        printf "%s tests, %s failed\n" "$test_cnt" "$failed_cnt"
+    fi
+
+    exit $failed_cnt
+}
+
+
+function run_rest_suite() {
+    local t=$1
+    if [ "`printf "$executed_suits" | grep $t`" == "" ]; then
+        executed_suits="$t\n$executed_suits"
+        [ -f $TEST_DIR/$t.sh ] && . $TEST_DIR/*$t.sh
+    fi
+}
+
+function require() {
+    local t=$1
+    if [ "`printf "$executed_suits" | grep $t`" == "" ]; then
+        run_rest_suite $t
+    fi
+}
+
+function header() {
+    current_suite="$(echo "$1" | sed -e 's/\s/_/g' )"
+    print_separator
+    echo "Test suite $1"
+    print_separator
+}
+
+[ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_setup.sh
+for t in $required_tests; do
+    run_rest_suite $t
+done
+[ $NO_BASE -eq 0 ] && [ $NO_CLEANUP -eq 0 ] && . $TEST_DIR/_base_cleanup.sh
+
+summarize_log
+summarize

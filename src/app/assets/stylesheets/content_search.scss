@@ -1,0 +1,615 @@
+@import "katello_base";
+@import "overrides";
+
+$browse_box-width: 230px;
+$browse_box-height: 500px;
+$browse_box_header-height: 40px;
+$browse_box-margin-top: 25px;
+$browse_box-margin-left: 0px;
+$browse_box-margin-right: 10px;
+
+$comparison_grid-width: $static_width - $browse_box-width - $browse_box-margin-left - $browse_box-margin-right - 24;
+$comparison_grid_header_h2-height:  45px;
+$comparison_grid_column_header-height:  35px;
+$comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height + 20;
+$comparison_grid-height: 350px;
+$comparison_grid_filter-width: 190px - 2px;
+$comparison_grid_column_1-width: 100px - 10px - 1px;
+$comparison_grid_column_2-width: 200px - 10px - 1px;
+$comparison_grid_column_3-width: 300px - 10px - 1px;
+$comparison_grid_column_4-width: 400px - 10px - 1px;
+$comparison_grid_column_5-width: 500px - 10px - 1px;
+$comparison_grid_row-height: 32px;
+$comparison_grid-margin-top: $browse_box-margin-top;
+$comparison_grid_footer-height: 45px;
+
+$environment_selector-width: 97px;
+
+$comparison_grid-border-color:              #D7D7D7;
+$comparison_grid_column_header-background:  $white_color;
+$grid_row_level_2-color:                    saturate(lighten($primary_color, 66%), 17%);
+$grid_row_level_3-color:                    saturate(lighten($primary_color, 70%), 17%);
+$grid_cell_hover-background-color:          #585E64;
+$grid_cell_hover_link-color:                lighten($primary_color, 40%);
+//@mixin grid_row_level_1-color { background: #91CFED; @include background-image(linear-gradient(#91CFED, #77C4E9)); }
+@mixin grid_row_level_1-color {
+  background: saturate(lighten($primary_color, 72%), 3%);
+  @include background-image(linear-gradient(lighten($primary_color, 64%), lighten($primary_color, 58%)));
+}
+@mixin collapse_button-background-color {
+    @include background-image(linear-gradient(#F1F1F1, #C9C9C9));
+}
+
+.no_border { border: none !important; }
+
+.content-tipsy {
+  .example {
+    margin-left: 6px;
+    margin-bottom: 6px;
+  }
+}
+
+.view_tipsy {
+  &:hover { background: $details_icon_black; }
+  vertical-align: top;
+  margin-top: 4px;
+}
+
+.browse_tipsy:hover { background: $details_icon_black; }
+
+.tipsify-errata {
+  &:hover {
+    color: $kselected_color;
+  }
+}
+.tipsify-errata.tipsy-hover {
+  color: $kselected_color;
+  background-color: transparent;
+}
+.tipsify-errata.tipsy-nohover {
+  background-color: transparent;
+}
+
+.tipsy-inner{
+  .spinner {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 70px;
+    margin-right: 70px;
+  }
+}
+
+.errata-icon {
+    @extend .errata_icon;
+    float: left;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 4px;
+}
+
+
+#browse_box {
+  width: $browse_box-width;
+  min-height: $browse_box-height;
+  float: left;
+  border: 1px solid $comparison_grid-border-color;
+  margin-bottom: 50px;
+  margin-left: $browse_box-margin-left;
+  margin-right: $browse_box-margin-right;
+  margin-top: $browse_box-margin-top;
+  @include border-radius(3px);
+  @include widget-background-color;
+
+  .help-icon {
+    background: $details_icon_grey;
+    @extend .errata_icon;
+    float: right;
+    &:hover { background: $details_icon_black; }
+    padding: 0px;
+    margin-left: 0;
+    margin-top: 5px;
+    margin-right: 3px;
+  }
+
+  header {
+    height: $browse_box_header-height;
+    border-bottom: 1px solid $comparison_grid-border-color;
+
+    h2 {
+        padding: 0 0 0 17px;
+        font-size: 18px;
+        line-height: $browse_box_header-height;
+        vertical-align: middle;
+        float: left;
+        font-weight: normal;
+    }
+
+    aside {
+      width: 38px;
+      border-left: 1px solid $widget-border-color;
+      height: $browse_box_header-height + 1;
+      float: right;
+      @include collapse_button-background-color;
+    }
+  }
+
+  #filters {
+    min-height: $browse_box-height - $browse_box_header-height - 5;
+    border: 2px solid $widget-border-color;
+
+    label { font-weight: normal; }
+
+    fieldset:first-child {
+      margin: 20px 6px 20px 8px;
+
+      select { width: 210px; }
+    }
+
+    fieldset:first-child ~fieldset {
+      margin: 20px 6px 12px 8px;
+
+      .button { margin-left: 2px; }
+      input[type="radio"] { margin: 0 0 0 6px; }
+      input[type="text"] {
+        border-width: 1px;
+        width: 148px;
+        border-color: $widget-border-color;
+        margin-left: 6px;
+        @include box-shadow(inset 0 0 1px rgba(0, 0, 0, 0.05));
+        padding: 4px;
+
+        &:focus { padding: 4px }
+      }
+
+      div:nth-child(2) {
+        border: 1px solid $comparison_grid-border-color;
+        @include border-radius(3px 3px 0 0);
+        @include background-image(linear-gradient(#F7F7F7, #F9F9F9));
+      }
+
+      div {
+        border: 1px solid $comparison_grid-border-color;
+        border-top: none;
+        padding: 8px 0 8px 0;
+        background: $white_color;
+
+        .auto_complete_input { width: 126px; }
+        ul {
+          padding-left: 28px;
+          margin-top: 6px;
+
+          li {
+            font-style: italic;
+            font-size: 10px;
+
+            span { vertical-align: bottom; }
+          }
+        }
+      }
+    }
+
+    fieldset:nth-child(2) div {
+      .auto_complete_input { width: 148px !important; }
+      ul { padding-left: 6px !important; }
+    }
+  }
+
+  #browse_button { margin: 0 8px 12px 0; }
+}
+
+#comparison_grid {
+  width: $comparison_grid-width;
+  min-height: $comparison_grid-height;
+  float: left;
+  border: 1px solid $comparison_grid-border-color;
+  margin-bottom: 20px;
+  margin-top: $comparison_grid-margin-top;
+  position: relative;
+  @include border-radius(3px);
+  @include widget-background-color;
+  font-family: $screenfont;
+
+  #grid_loading_screen {
+    position: absolute;
+    top: $comparison_grid_header-height + 3;
+    z-index: 10;
+    width: $comparison_grid-width - 1;
+    min-height: $comparison_grid-height - $comparison_grid_header-height;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  #grid_header {
+    min-height: $comparison_grid_header-height;
+    border-bottom: 2px solid $widget-border-color;
+    position: relative;
+
+    header {
+      height: $comparison_grid_header_h2-height - 8px;
+      padding-top: 8px;
+
+      h2 {
+        padding: 0 0 0 17px;
+        font-size: 18px;
+        vertical-align: middle;
+        font-weight: normal;
+
+        &[data-title="details"] { max-width: 350px; }
+      }
+
+      #left_select {
+        margin-left: 32px;
+        margin-top: 4px;
+
+        select { width: 100px; }
+      }
+
+      #right_select {
+        margin-right: 8px;
+        margin-top: 4px;
+
+        select { width: 100px; }
+      }
+
+      .button { margin: 0 0 0 8px; }
+      label { font-size: 12px; margin-right: 6px; font-weight: normal; float: left; margin-top: 2px; }
+    }
+
+    aside {
+      width: $comparison_grid_filter-width;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    #column_headers_container {
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1px;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border: 1px solid $comparison_grid-border-color;
+      border-right: none;
+      border-bottom: none;
+
+      .slide_arrow {
+        position: absolute;
+        z-index: 2;
+        width: 16px;
+        line-height: $comparison_grid_column_header-height;
+        height: $comparison_grid_column_header-height;
+        background: $white_color;
+
+        &[data-arrow_direction='left'] {
+          left: 0;
+          border-right: 1px solid $widget-border-color;
+        }
+
+        &[data-arrow_direction='right'] {
+          right: 25px;
+          border-left: 1px solid $widget-border-color;
+          border-right: 1px solid $widget-border-color;
+        }
+      }
+      .slide_arrow_hover {  background: $widget-background-color; }
+
+      .slide_trigger {
+        position: absolute;
+        right: 0;
+        z-index: 3;
+        width: 16px;
+        line-height: $comparison_grid_column_header-height;
+        height: $comparison_grid_column_header-height;
+        background: transparent;
+      }
+
+      #more_columns_fade {
+        width: 99px;
+        position: absolute;
+        right: 0;
+        z-index: 1;
+        height: 35px;
+        @include background-image(linear-gradient(right, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 100%));
+      }
+
+
+      #column_headers_window {
+        position: relative;
+        float: left;
+        width: 600px;
+        overflow: hidden;
+      }
+
+      #column_headers {
+        width: 0;
+        position: relative;
+        top: 0;
+        left: 0;
+      }
+
+      .column_header {
+        float: left;
+        line-height: $comparison_grid_column_header-height;
+        text-align: left;
+        border-right: 1px solid $comparison_grid-border-color;
+        font-size: 12px;
+        background: $comparison_grid_column_header-background;
+        padding: 0 5px;
+
+        span { display: block; line-height: 17px; }
+
+        &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
+        &[data-span="2"] { width: $comparison_grid_column_2-width; }
+        &[data-span="3"] { width: $comparison_grid_column_3-width; }
+        &[data-span="4"] { width: $comparison_grid_column_4-width; }
+        &[data-span="5"] { width: $comparison_grid_column_5-width; }
+      }
+
+      #column_selector {
+        width: 20px;
+        position: absolute;
+        right: -1px;
+        z-index: 15;
+        padding: 0 0 0 5px;
+        background: $white_color;
+        line-height: $comparison_grid_column_header-height;
+        height: $comparison_grid_column_header-height;
+        border-left: 1px dotted $widget-border-color;
+        border-right: 1px solid $widget-border-color;
+
+        &:hover {
+          background: $widget-background-color;
+        }
+      }
+    }
+  }
+
+  section {
+    min-height: $comparison_grid-height - $comparison_grid_header-height;
+
+    #grid_row_headers {
+      width: $comparison_grid_filter-width;
+      border-right: 1px solid $comparison_grid-border-color;
+      min-height: $comparison_grid-height - $comparison_grid_header-height;
+      float: left;
+      background: $white_color;
+
+      [class*="-icon-"] {
+        vertical-align: top;
+      }
+
+      .row_header {
+        width: $comparison_grid_filter-width - 6;
+        padding: 8px 3px;
+        border-bottom: 1px solid $comparison_grid_border-color;
+        height: $comparison_grid_row-height - 16;
+        vertical-align: bottom;
+        font-weight: bold;
+
+        &[data-collapsed] span {
+          width: 90%;
+          display: inline-block;
+        };
+      }
+
+      .row_height_2 {
+        height: 32px;
+        padding: 6px 3px;
+      }
+      .row_height_3 {
+        height: 48px;
+      }
+
+      .grid_row_level_0 {
+        width: $comparison_grid_filter-width - 6;
+        font-weight: normal;
+      }
+
+      .grid_row_level_2 {
+        padding-left: 20px;
+        padding-right: 9px;
+        width: $comparison_grid_filter-width - 29;
+        font-weight: normal;
+
+        &[data-collapsed] {
+          padding-left: 9px;
+          width: $comparison_grid_filter-width - 18;
+        }
+      }
+
+      .grid_row_level_3 {
+        padding-left: 25px;
+        padding-right: 10px;
+        width: $comparison_grid_filter-width - 35;
+        font-weight: normal;
+
+        span {
+          width: 100%;
+
+          span:first-child { font-weight: bold; display: block; }
+        }
+      }
+
+      .grid_row_level_4 {
+        padding-left: 25px;
+        padding-right: 10px;
+        width: $comparison_grid_filter-width - 35;
+        font-weight: normal;
+
+        span {
+          width: 100%;
+
+          span:first-child { font-weight: bold; display: block; }
+        }
+      }
+
+      span {
+        vertical-align: bottom;
+      }
+    }
+
+    .grid_row_level_1 {
+      font-size: 11px;
+      @include grid_row_level_1-color;
+    }
+
+    .grid_row_level_2 {
+      background: $grid_row_level_2-color;
+      font-size: 11px;
+    }
+
+    .grid_row_level_3 {
+      background: $grid_row_level_3-color;
+      font-size: 10px;
+    }
+
+    .grid_row_level_4 {
+      font-size: 10px;
+    }
+
+    #grid_content_window {
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+      min-height: $comparison_grid-height - $comparison_grid_header-height;
+      float: left;
+      background: $white_color;
+      overflow: hidden;
+
+      #grid_content {
+        width: 0;
+        position: relative;
+        top: 0;
+        left: 0;
+
+        .grid_row {
+          height: $comparison_grid_row-height;
+          border-bottom: 1px solid $comparison_grid_border-color;
+          width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+
+          .grid_cell_data, i { margin-top: 8px; display: inline-block; }
+        }
+
+        .row_height_2 {
+          height: 44px !important;
+
+          .grid_cell_data, i { margin-top: 14px; }
+        }
+        .row_height_3 {
+          height: 64px !important;
+
+          .grid_cell_data, i { margin-top: 24px; }
+        }
+
+        .load_row {
+          background-color: $widget-background-color;
+          height: $comparison_grid_row-height - 6;
+          padding: 6px 0 0 10px;
+
+          span { margin-left: 10px; }
+          a { margin-left: 5px; }
+          i { margin-top: 0px; }
+          .down_arrow_icon-black { background-position-y: -18px; margin-top: 0; }
+        }
+
+        .grid_cell {
+          display: inline-block;
+          text-align: left;
+          border-right: 1px solid $comparison_grid_border-color;
+          float: left;
+          position: relative;
+          height: inherit;
+          padding: 0 5px;
+
+          &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
+          &[data-span="2"] { width: $comparison_grid_column_2-width; }
+          &[data-span="3"] { width: $comparison_grid_column_3-width; }
+          &[data-span="4"] { width: $comparison_grid_column_4-width; }
+          &[data-span="5"] { width: $comparison_grid_column_5-width; }
+
+          input[type="checkbox"] {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            z-index: 5;
+          }
+        }
+
+        .grid_cell_hover {
+          height: $comparison_grid_row-height;
+          line-height: 18px;
+          text-align: center;
+          color: $white_color;
+          padding: 0 5px;
+          background: $grid_cell_hover-background-color;
+          position: absolute;
+          left: 0;
+          top: 0;
+
+          &.row_height_2 {
+            height: 48px !important;
+            line-height: 24px !important;
+          }
+          &.row_height_3 {
+            height: 64px !important;
+            line-height: 32px !important;
+          }
+
+          a { color: $grid_cell_hover_link-color; }
+
+          &[data-span="1"] { width: $comparison_grid_column_1-width; }
+          &[data-span="2"] { width: $comparison_grid_column_2-width; }
+          &[data-span="3"] { width: $comparison_grid_column_3-width; }
+          &[data-span="4"] { width: $comparison_grid_column_4-width; }
+          &[data-span="5"] { width: $comparison_grid_column_5-width; }
+        }
+      }
+    }
+  }
+
+  span {
+    word-wrap: break-word;
+  }
+
+  footer {
+    height: $comparison_grid_footer-height;
+    min-height: 0;
+    background: $widget-background-color;
+    border-top: 1px solid $widget-border-color;
+    margin: 0;
+
+    div {
+      width: $comparison_grid_filter-width;
+      border-right: 1px solid $widget-border-color;
+      height: $comparison_grid_footer-height;
+    }
+
+    ul {
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1 - 10;
+      height: $comparison_grid_footer-height - 20;
+      padding: 10px 5px;
+    }
+
+  }
+
+  .large_spinner {
+    margin: 0 auto;
+    margin-top: 20%;
+    height: 32px;
+    width: 32px;
+    position: relative;
+    z-index: 1000;
+    background-size: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }
+}
+
+.down_arrow_icon-black { background-position: -529px -18px; }
+.button { margin: 0; }
+.button:active { padding: 4px 8px; }
+.one-line-ellipsis { display: inline-block; }
+
+#content_search {
+  .container_16 {
+    margin-left: 10px;
+  }
+}

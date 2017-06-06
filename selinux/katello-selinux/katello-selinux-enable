@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Install SELinux policy modules in one transaction
+for selinuxvariant in targeted
+do
+  /usr/sbin/semodule -s ${selinuxvariant} -l >/dev/null 2>&1 && \
+  /usr/sbin/semanage -S $selinuxvariant -i - << _EOF
+  module -a /usr/share/selinux/${selinuxvariant}/katello.pp.bz2
+  boolean -m --on httpd_can_network_connect
+  boolean -m --on httpd_tmp_exec
+_EOF
+done

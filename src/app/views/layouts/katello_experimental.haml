@@ -1,0 +1,44 @@
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
+
+= content_for(:stylesheets_block) do
+  = stylesheet_link_tag :katello_experimental
+  = stylesheet_link_tag controller.section_id
+  = stylesheet_link_tag 'header'
+  = yield :stylesheets
+
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = javascript_include_tag  :html5
+  / [if IE]
+    = stylesheet_link_tag :ie, :embed_assets => false
+
+= content_for(:body) do
+  %article{ 'ng-app' => 'Katello' }
+    = render :file => "common/menu"
+    -#%section.subnav-container
+      .center
+        %nav.subnav#subnav
+          = render_main_sub_menu
+    %section.maincontent
+      = yield
+
+= content_for(:javascripts_block) do
+  = javascript_include_tag :common
+  = javascript_include_tag 'common/experimental'
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
+    = render :partial => "common/common_i18n"
+    = render :partial => 'common/config'
+    = render :partial => 'common/ajax_notices'
+    = render :partial => 'common/notification'
+    = yield :inline_javascript
+
+  = yield :javascripts
+
+= render :file => 'alchemy/layouts/base'

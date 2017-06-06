@@ -1,0 +1,12 @@
+<Proxy balancer://foremanthinservers>
+  <%- scope.lookupvar("foreman::thin_process_count").to_i.times do |i| -%>
+    <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('foreman::thin_start_port').to_i + i}/#{scope.lookupvar('foreman::deployment_url')}" %>
+  <%- end -%>
+</Proxy>
+
+<Location /foreman>
+  RequestHeader set X_FORWARDED_PROTO 'https' env=HTTPS
+  ProxyPass balancer://foremanthinservers
+  ProxyPassReverse balancer://foremanthinservers
+</Location>
+

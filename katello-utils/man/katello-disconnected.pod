@@ -1,0 +1,152 @@
+=head1 NAME
+
+katello-disconnected - Tool for fetching content from CDN
+
+=head1 SYNOPSIS
+
+  katello-disconnected [global_options] [subcommand [options]]
+
+  Possible commands are:
+
+      setup       set pulp configuration (oauth is required)
+      import      import a manifest
+      list        list all or enabled repositories
+      enable      enable particular repository or all repos
+      disable     disable particular repository or all repos
+      configure   create and configure repositories in pulp
+      sync        start synchronizing all or particular repos
+      watch       watch synchronization progress
+      export      export all or particular repos
+      refresh     redownload repository information from CDN
+      clean       remove all repositories from pulp
+
+=head1 DESCRIPTION
+
+The B<katello-disconnected> script communicates with pulp instance using REST
+and OAuth to synchronize repositories exporting them into a directory structure
+that can be imported into Katello later on. It is able to import a manifest
+file retrieving all provided products and repositories from the Red Hat CDN,
+creating those repositories in Pulp, initiating synchronization, watching the
+progress of a sync, exporting the content into a directory and refreshing
+already imported manifest.
+
+=head1 WORKFLOW
+
+After installation of katello-disconnected and Pulp it is necessary to set some
+key options using B<setup> command. The most important are --oauth-key and
+--oauth-secret which must match configuration in /etc/pulp/pulp.conf.
+
+Once this is configured, a manifest must be imported with the B<import> command
+which takes --manifest parameter. Please note the import process can take a
+while because script is walking down the CDN content determining all provided
+product versions and architectures. Depending on your connection, this can take
+several minutes. It is recommended to use -v global option.
+
+After successful import, new file ~/.katello-disconnected/repos.conf is created
+where repositories can be enabled and disabled. This can be done manually via a
+text editor, or with B<enable> and B<disable> commands. Please note most of the
+repositories are disabled by default. To get a list of all enabled
+repositories, use B<list> command.
+
+The next step is to create all enabled repositories in Pulp, so they can be
+synchronized. To do this, use B<configure> command that adds all missing
+repositories in Pulp. It has an optional parameter --remove which also removes
+repositories that are no longer enabled. If you enabled many repositories, the
+configuration process can take a while. If you enable or disable repositories
+after configuration was done, you can re-configure pulp again with the same
+command. The content will remain there as long as repositories are kept
+enabled.
+
+Once repositories are created, synchronization can be initiated. Use B<sync>
+command to start synchronization of all repositories that has been enabled, or
+use --repos option to specify which repositories you want to synchronize
+(separate with commas). Synchronization process can take some time according to
+the internet connection.
+
+You can watch the progress using B<watch> command which is querying Pulp every
+ten seconds and showing list of repositories being synchronized and a
+repository queue. You can query the status with --once option, or configure
+different delay option with --delay. Also, particular repository status can be
+queried with --repos option (separate with commas).
+
+Once synchronization is finished, repositories can be exported with B<export>
+command which requires --target option specifying directory where the export
+should be created. Particular repos can be specified with --repos option,
+--overwrite option forces overwriting existing files. If katello-disconnected
+is executed under root, file ownership is changed to "apache" automatically.
+
+When a new product version is released in the CDN, product information must be
+refreshed. Use B<refresh> command for this. It will add new entries to the
+repos.conf file while keeping current setting. Every refresh or import command
+creates a backup of the repos.conf file in the same directory to prevent
+loosing previous setting. You can use GNU diff utility to compare latest backup
+to see what versions and architectures have been added.
+
+If you need to start over, all repositories can be deleted from Pulp using
+B<clean> command.
+
+=head1 PERMISSIONS
+
+The katello-disconnected must be run as root, because export step needs change
+ownership of directories to apache. It is possible to run it under non-root
+user, but then the export need to be divided into two phases. In the first
+phase, --onlycreate must be provided - directory structure for export will be
+prepared and messages "Cannot chown" will appear. After this, you can change
+ownership to apache/apache and do the second phase, where --onlyexport option
+is used.
+
+Please note configuration, manifest information and repositories selection is
+stored in ~/.katello-disconnected directory. If you want to migrate or backup,
+include this directory too.
+
+=head1 TRANSFERRING THE CONTENT
+
+The export must be transferred to a host that is reachable for Katello instance
+via http. It can be any machine in the network, or the Katello server itself.
+Apache configuration must be created to serve the content, please check file
+and directory ownership, permissions and SELinux setting to serve it correctly.
+The content itself must be available via http (not https).
+
+On the import screen base URL must be changed from the cdn.redhat.com to the
+URL that has been configured. Please note the content must start with
+./content subdirectory. Therefore if a repository is available as:
+
+    http://host/export/content/dist/rhel/server/6/6.3/x86_64/os/
+
+the URL that should be configured is:
+
+    http://host/export
+
+You can use Katello CLI tool to import the content, but Red Hat provider URL
+must be changed prior to importing the manifest. Use the following commands to
+change the URL and import the manifest:
+
+    katello provider update --name "Red Hat" --url http://host/export
+    katello provider import_manifest --name "Red Hat" --file xyz.zip
+
+Date range export and ISO creation is not supported in this version.
+
+For incremental exporting, it is recommended to use --overwrite option and
+rsync command to copy the content onto a device (HDD, DVD-ROM).
+
+=head1 IMPORTING NEW MANIFEST
+
+To import a new manifest, use the ordinary B<import> command. It will create
+new repos.conf file and a backup. GNU diff utility can be used to compare the
+contents of those files. Please note if you delete an entry from the
+repos.conf, the default value is taken - it can be either enabled or disabled
+according to information from manifest.
+
+=head1 USING PULP-ADMIN
+
+Once repositories are created, you can use pulp-admin to perform additional
+actions on them. For example scheduling sync plans or filter content. Please
+refer to pulp-admin help screens or man page for more details about this.
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+pulp-admin(1), diff(1)

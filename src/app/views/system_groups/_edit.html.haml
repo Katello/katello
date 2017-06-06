@@ -1,0 +1,52 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
+= render :partial => "system_groups/tupane_header"
+
+= content_for :content do
+  #system_group_edit
+    %input{:name=> @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
+    .grid_8
+      %h5 #{_("System Group Info")}
+
+      = form_for(@group, :html => {:multipart => true, :method => :put, :id => 'system_group_edit', :remote => true}, :url => system_group_path(@group)) do |f|
+        %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Name")}:
+          .grid_5.la#system_group_name{'name' => 'system_group[name]', 'data-url' => system_group_path(@group.id), :class=>("edit_name editable" if editable)} #{@group.name}
+
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Description")}:
+          .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'system_group[description]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_textarea" if editable)}<> #{@group.description}
+
+        %h5 #{_("System Properties")}
+
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Total")}:
+          .grid_5.la.panel_link
+            = link_to(@group.systems.length, systems_system_group_path(@group.id))
+
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("System Limit")}:
+          .grid_8.la
+            - if @group.max_systems == -1
+              .grid_2.ra
+                %label #{_("Unlimited")}:
+              .grid_5.la
+                %input.unlimited_members{:type=>"checkbox", :value=>:true, :checked => :true}
+              .grid_2.ra.limit{:style => "display:none;"}
+                %label #{_("Limit")}:
+              .grid_5.la.limit#system_group_max_systems{'name' => 'system_group[max_systems]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_max_systems" if editable), :style => "display:none;"}
+            - else
+              .grid_2.ra
+                %label #{_("Unlimited")}:
+              .grid_5.la
+                %input.unlimited_members{:type=>"checkbox", :value=>:true}
+              .grid_2.ra.limit
+                %label #{_("Limit")}:
+              .grid_5.la.limit#system_group_max_systems{'name' => 'system_group[max_systems]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_max_systems" if editable)} #{@group.max_systems}
+
+= render :template => "layouts/tupane_layout"

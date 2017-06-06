@@ -1,0 +1,9 @@
+<% if defined?(ActiveRecord::Fixtures) %>
+  <% fixtures = ActiveRecord::Fixtures %>
+<% else %>
+  <% fixtures = Fixtures %>
+<% end %>
+
+simpler_server_simple_group:
+  system_group_id:  <%= fixtures.identify(:simple_group) %>
+  system_id:        <%= fixtures.identify(:simple_server) %>

@@ -1,0 +1,21 @@
+%div
+  %div{:class=>'column_1'}
+    %div.one-line-ellipsis{:style=>"padding-top: 2px; font-weight: bold;"}
+      = item.product_name
+%div
+  %div{:class=>'column_2'}
+    %ul
+      %li
+        - if item.quantity < 0
+          = _("Consumed: Unlimited")
+        - else
+          = _("Consumed: %{consumed} of %{total}") % {:consumed => item.consumed, :total => item.quantity}
+      %li
+        = _("Expires: %s") % format_time(item.end_date)
+  %div{:class=>'column_2'}
+    %ul
+      %li
+        = _("SLA: %s") % item.support_level
+      %li
+        = item.pool_derived ? _('Virtual Guest') : ''
+.arrow-right

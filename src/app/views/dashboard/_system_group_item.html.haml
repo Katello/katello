@@ -1,0 +1,18 @@
+.system_groups
+
+  .col_1
+    - if updates == :critical
+      %a{:href => "#{generate_url(system_groups_path, {:id => group.id, :panel_page => "errata"}, "system_group")}", :title => "#{_('Critical')}"}
+        .status_icon.red
+    - elsif updates == :warning
+      %a{:href => "#{generate_url(system_groups_path, {:id => group.id, :panel_page => "errata"}, "system_group")}", :title => "#{_('Warning')}"}
+        .status_icon.yellow
+    - else
+      %a{:href => "#{generate_url(system_groups_path, {:id => group.id, :panel_page => "errata"}, "system_group")}", :title => "#{_('Up to date')}"}
+        .status_icon.green
+
+  .col_2.one-line-ellipsis
+    = link_to(group.name, generate_url(system_groups_path, {:id => group.id, :panel_page => "edit"}, "system_group"))
+
+  .col_3.one-line-ellipsis
+    = link_to(group.systems.length, generate_url(system_groups_path, {:id => group.id, :panel_page => "systems"}, "system_group"))

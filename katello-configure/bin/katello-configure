@@ -1,0 +1,262 @@
+#!/usr/bin/ruby
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+
+PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install'
+
+require 'optparse'
+require 'fcntl'
+require 'fileutils'
+require 'rubygems'
+require 'ruby-progressbar'
+require 'socket'
+require 'tempfile'
+require 'puppet'
+require 'puppet/util/selinux'
+require "#{PREFIX}/puppet/lib/util/functions.rb"
+
+$stdout.sync = true
+
+default_path = "#{PREFIX}/default-answer-file"
+options_format_path = "#{PREFIX}/options-format-file"
+result_config_path = "/etc/katello/katello-configure.conf"
+puppet_cmd = "puppet apply --modulepath #{PREFIX}/puppet/modules --libdir #{PREFIX}/puppet/lib -v -d"
+log_parent_directory = '/var/log/katello'
+default_progressbar_title = 'Katello configuration'
+
+# main dictionaries
+$default_options = {}
+$default_options_order = []
+$default_options_errors = ''
+$titles = {}
+$temp_options = {}
+
+# We first parse the default answer file. The list of options
+# found in the default file also determines the command line
+# options that can be specified (that's why we parse the default
+# file first), as well as values that can be overwritten in user
+# answer file.
+if File.file?(default_path)
+  $default_options, $default_options_order, $default_options_errors, $titles = read_answer_file(default_path)
+end
+
+# After having read the default option list, we parse the
+# command line options.
+options = {}
+
+# answer file is always loaded by default
+FileUtils.touch result_config_path
+options['answer_file'] = result_config_path
+
+option_parser = OptionParser.new
+show_resulting_answer_file = false
+nobars = false
+debug_stdout = false
+katello_configuration_files_only = false
+begin
+  option_parser.banner = "Usage: #{$0} [options]"
+  option_parser.summary_width = 8
+  option_parser.summary_indent = ' ' * 2
+
+  $default_options_order.each do |key|
+    option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, word_wrap($titles[key])) do |value|
+      options[key] = value
+    end
+  end
+
+  option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
+    nobars = true
+  end
+  option_parser.on_tail.on('--katello-configuration-files-only',
+                           'Configure only Katello config files. Do NOT use! (used internally by katello-upgrade)') do
+    katello_configuration_files_only = true
+  end
+  option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
+    debug_stdout = true
+  end
+  option_parser.on_tail.on('-c', '--only-show-config', 'Print the resulting configuration and exit') do
+    show_resulting_answer_file = true
+  end
+  option_parser.on_tail.on('-h', '--help', 'Show this short summary (more in the man page)') do
+    puts option_parser
+    exit
+  end
+  option_parser.parse!
+rescue => e
+  $stderr.puts e.message
+  $stderr.puts option_parser
+  exit_with :general
+end
+
+# We only warn about possible errors in the default answer
+# file here, to make it possible to use for example --help,
+# even if there are errors in the default file.
+if $default_options_errors != ''
+  $stderr.puts $default_options_errors
+  exit_with :default_option_error
+end
+
+# If there was an answer file specified, we parse it.
+$final_options = parse_answer_option(options['answer_file'], $default_options)
+
+# The command line options take precedence over the user
+# answer file values.
+$final_options.update(options)
+$final_options.delete('answer_file')
+
+# read required parameter list and its format
+mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
+# require the user's password explicitly when ldap is not used
+auth_method = $final_options['auth_method'] || $default_options['auth_method']
+if !$final_options['reset-data'] && !File.exists?('/var/lib/katello/db_seed_done') && auth_method != 'ldap'
+  mandatory['user_pass'] = true
+end
+
+
+non_interactive_option = _get_valid_option_value('non_interactive', $default_options, $final_options)
+ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', $default_options, $final_options)
+
+mandatory.each do |key, mand|
+  if (not $final_options.has_key?(key) and mandatory[key]) or
+  (not $final_options[key].nil? and not $final_options[key].to_s() =~ Regexp.new(regex[key]))
+    $final_options[key] = _request_option_interactively(key, $titles[key], regex[key], _get_valid_option_value(key, $default_options, $final_options), _is_option_true(non_interactive_option))
+    if not $default_options_order.include?(key)
+      $default_options_order.push(key)
+    end
+  end
+end
+
+if $default_options_errors != ''
+  $stderr.puts $default_options_errors
+  exit 6
+end
+
+# We will only keep values that are different from the default ones.
+$final_options.each do |key, value|
+  if $default_options[key] == value
+    $final_options.delete(key)
+  end
+end
+
+# Set the deployment to be the relative url
+url_root = $final_options['deployment'].nil? ? $default_options['deployment'] : $final_options['deployment']
+# Don't let a headpin user install in katello/cfse mode
+if url_root == 'katello' || url_root == 'cfse'
+  if %x[rpm -qa katello-headpin] != ''
+    $stderr.puts "You have attempted to set up #{url_root} with katello-headpin installed."
+    $stderr.puts "Please consult the documentation or use a valid --deployment flag."
+    exit_with :default_option_error
+  end
+end
+
+ENV['RAILS_RELATIVE_URL_ROOT'] = "/" + url_root
+
+# handle ca password separately, because we do not want
+# to store it into the katello-configure.conf
+begin
+  File.open(ssl_ca_password_file_option, 'w') do |f|
+    f.write(_get_valid_option_value('ssl_ca_password', $default_options, $final_options))
+  end
+rescue
+  $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
+  exit 8
+end
+remove_option!($default_options_order, $final_options, 'ssl_ca_password')
+
+# reset options are too dangerous - not storing them in the result answer file
+# and moving them to the temporary file which is merged and then deleted
+remove_option!($default_options_order, $final_options, 'user_pass', $temp_options)
+remove_option!($default_options_order, $final_options, 'reset_data', $temp_options)
+remove_option!($default_options_order, $final_options, 'reset_cache', $temp_options)
+
+if show_resulting_answer_file
+  display_resulting_answer_file($default_options_order, $final_options)
+  exit
+end
+
+check_root_id('katello-configure')
+
+# we MUST change the current directory to /root because Puppet expects that
+Dir.chdir '/root'
+
+# <BEFORE CONFIGURATION CHECKS>
+check_hostname
+
+if not `java -version 2>&1`.include? 'OpenJDK'
+  $stderr.puts "Command 'java -version' does not return OpenJDK, only OpenJDK is supported."
+  exit_with :java_error
+end
+# </BEFORE CONFIGURATION CHECKS>
+
+# Puppet tries to determine FQDN from /etc/resolv.conf and we do NOT want this behavior
+# (see https://bugzilla.redhat.com/show_bug.cgi?id=760265)
+facter_hostname = Socket.gethostname
+ENV['FACTER_fqdn'] = facter_hostname
+
+# start configuring
+puts 'Starting Katello configuration'
+create_answer_file(result_config_path, $final_options, $default_options_order, $titles)
+
+# additional temporary file which is also used (but deleted afterwards)
+temp_config_path = create_temp_config_file($temp_options)
+
+now = Time.now.strftime("%Y%m%d-%H%M%S")
+log_directory = log_parent_directory + '/katello-configure-' + now
+log_directory_link = log_parent_directory + '/katello-configure'
+if File.symlink?(log_directory_link)
+  begin
+    File.unlink(log_directory_link)
+	rescue
+	end
+end
+if File.directory?(log_directory_link)
+	File.rename(log_directory_link, log_directory_link + '-backup-' + now)
+end
+
+FileUtils.mkdir_p(log_directory, :mode => 0775)
+FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
+FileUtils.chown('katello', 'katello', log_directory)
+FileUtils.chown('katello', 'katello', log_directory_link)
+FileUtils.cp result_config_path, log_directory
+(Object.new.extend Puppet::Util::SELinux).set_selinux_context(log_directory_link, 'system_u', :seluser)
+
+ENV['KATELLO_ANSWER_FILE'] = result_config_path
+ENV['KATELLO_TEMP_ANSWER_FILE'] = temp_config_path
+
+commands_by_logfiles = { # numbers are expected lines in those logs, alas currently not used
+  '/var/log/katello/katello-configure/certificates.log' => ['Creating SSL certificates', 59],
+  '/var/log/katello/katello-configure/cpdb.log' => ['Creating Candlepin database', 222 ],
+  '/var/log/katello/katello-configure/cpinit.log' => [ 'Candlepin setup', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 2 ],
+  '/var/log/katello/katello-configure/create-postgresql-foreman-database.log' => [ 'Creating Foreman database user', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-foreman-user.log' => [ 'Creating Foreman database user', 2 ],
+  '/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 2 ],
+  '/var/log/katello/katello-configure/db_env.log' => [ 'Logging environment setup', 113],
+  '/var/log/katello/katello-configure/db_migrate.log' => [ 'Populating Katello database schema', 968 ],
+  '/var/log/katello/katello-configure/db_seed.log' => [ 'Initializing Katello data', 10],
+  '/var/log/katello/katello-configure/foreman-db-migrate.log' => [ 'Populating Foreman database schema', 1076 ],
+  '/var/log/katello/katello-configure/pulp_migrate.log' => [ 'Populating Pulp database schema', 2],
+}
+
+puppet_logfile_filename = log_directory + '/main.log'
+puppet_logfile_aprox_size = 1296
+
+main_puppet(puppet_cmd,
+            nobars,
+            default_progressbar_title,
+            puppet_logfile_filename,
+            puppet_logfile_aprox_size,
+            debug_stdout,
+            commands_by_logfiles,
+            katello_configuration_files_only ? 'include katello::config::files' : 'include katello')
+
+exit

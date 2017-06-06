@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+# Configures rhsm on client. Called from the certificate RPM.
+#
+
+KATELLO_SERVER=<%= has_variable?("fqdn") ? fqdn : hostname %>
+PORT=443
+<% if scope.lookupvar("katello::params::deployment") == 'katello' %>
+BASEURL=https://$KATELLO_SERVER/pulp/repos
+<% else %>
+BASEURL=https://$KATELLO_SERVER:8088
+<% end %>
+CFG=/etc/rhsm/rhsm.conf
+CFG_BACKUP=$CFG.kat-backup
+
+# Get version of RHSM
+RHSM_V="`rpm -q --queryformat='%{VERSION}' subscription-manager 2> /dev/null | tr . ' '`"
+if test $? != 0 ; then 
+  RHSM_V="0 0 0"
+fi
+declare -a RHSM_VERSION=($RHSM_V)
+
+# exit on non-RHEL systems or when rhsm.conf is not found
+test -f $CFG || exit
+type -P subscription-manager >/dev/null || type -P subscription-manager-cli >/dev/null || exit
+
+# backup configuration during the first run
+test -f $CFG_BACKUP || cp $CFG $CFG_BACKUP
+
+# configure rhsm
+# the config command was introduced in rhsm 0.96.6
+# fallback left for older versions
+if test ${RHSM_VERSION[0]:-0} -gt 0 -o ${RHSM_VERSION[1]:-0} -gt 96 -o \( ${RHSM_VERSION[1]:-0} -eq 96 -a ${RHSM_VERSION[2]:-0} -gt 6 \); then
+  subscription-manager config \
+    --server.hostname="$KATELLO_SERVER" \
+    --server.port="$PORT" \
+    --rhsm.repo_ca_cert="%%(ca_cert_dir)scandlepin-local.pem" \
+    --rhsm.baseurl="$BASEURL"
+else
+  sed -i "s/^hostname\s*=.*/hostname = $KATELLO_SERVER/g" $CFG
+  sed -i "s/^port\s*=.*/port = $PORT/g" $CFG
+  sed -i 's/^repo_ca_cert\s*=.*/repo_ca_cert = %%(ca_cert_dir)scandlepin-local.pem/g' $CFG
+  sed -i "s|^baseurl\s*=.*|baseurl=$BASEURL|g" $CFG
+fi
+
+# restart goferd if it is installed and running
+[ -f /etc/init.d/goferd ] && \
+  service goferd status >/dev/null && \
+  service goferd restart >/dev/null 2&>1
+
+exit 0
+
+# vim:sw=2:ts=2:et:

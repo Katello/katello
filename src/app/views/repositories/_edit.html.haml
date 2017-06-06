@@ -1,0 +1,59 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
+= javascript do
+  :plain
+    $(document).ready(function() {
+        $('.remove_item.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content-tipsy', title:function() { return $('.hidden-text.hidden').html();} });
+    });
+
+
+= content_for :title do
+  = _("Product: ") + @product.name
+
+= content_for :remove_item do
+  -if editable
+    = link_to _("Remove Repository"), {:controller=>"repositories", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this repository?'), :method => :delete, :class=>"remove_item", :remote=>true
+  -else
+    .remove_item.disabled
+      #{_("Remove Repository")}
+    %span.hidden-text.hidden
+      .la.content-tipsy
+        = _("Before removing this repository from the product, it must first be deleted from the following environments using a deletion changeset: ") + cloned_in_environments.join(', ')
+
+
+= content_for :subcontent do
+  %h3
+    = _("Repository Details")
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la.multiline#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id)} #{@repository[:name]}
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Label")}:
+    .grid_5.la.multiline#repo_label #{@repository[:label]}
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("URL")}:
+    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository.feed}
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Publish via http")}
+    .grid_5.la
+      = @repository.unprotected ? _("Yes") : _("No")
+
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("GPG Key")}:
+    - if gpg_keys.length != 0
+      .grid_5.la{'name' => 'gpg_key', 'class' => ("editable edit_select" if editable), 'data-url' => update_repo_gpg_key_provider_product_repository_path(@provider.id, @product.id, @repository.id), 'data-options' => gpg_keys_edit } #{@repository.gpg_key.name if @repository.gpg_key}
+    - else
+      .grid_5.la
+        #{_("None defined for this Organization.")}
+
+= render :template => "layouts/tupane_layout"

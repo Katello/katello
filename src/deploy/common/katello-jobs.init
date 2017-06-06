@@ -1,0 +1,269 @@
+#!/bin/bash
+#
+# Init script for katello-jobs
+#
+# chkconfig: - 88 12
+# description: Init script for katello-jobs
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ -f /etc/sysconfig/katello ]; then
+    . /etc/sysconfig/katello
+fi
+
+prog=katello-jobs
+RETVAL=0
+KATELLO_USER=${KATELLO_USER:-katello}
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
+KATELLO_JOB_WORKERS=${KATELLO_JOB_WORKERS:-1}
+KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--p katello}
+KATELLO_PID_DIR=$KATELLO_HOME/tmp/pids
+KATELLO_PID=$KATELLO_PID_DIR/delayed_job*monitor.pid
+KATELLO_PIDS_ALL=$KATELLO_PID_DIR/delayed_job*.pid
+export RAILS_ENV=$KATELLO_ENV
+export KATELLO_LOGGING=${KATELLO_LOGGING:-warn}
+export KATELLO_LOGGING_SQL=${KATELLO_LOGGING_SQL:-warn}
+KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
+export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
+export BUNDLER_EXT_GROUPS
+export BUNDLER_EXT_NOSTRICT
+export BUNDLER_EXT_HOME=$KATELLO_HOME
+
+print_higher() {
+    if [ 0$1 -gt 0$2 ]; then
+        echo $1
+    else
+        echo $2
+    fi
+}
+
+print_lower() {
+    if [ 0$1 -gt 0$2 ]; then
+        echo $2
+    else
+        echo $1
+    fi
+}
+
+status_of_one() {
+    PID_FILE="$1"
+    local RC
+    local RETVAL
+    if [ -f "$PID_FILE" ]; then
+        # set $pid
+        __pids_var_run NOT_USED $PID_FILE
+        RC=$?
+        if [ -n "$pid" -o 0$RC -gt 0 ]; then
+            RETVAL=2 # Program is dead and pid file exists
+        fi
+        #check if proces with pid from the file is running
+        if checkpid $pid; then
+            echo "running."
+            RETVAL=0
+        else
+            echo "not running."
+            RETVAL=1
+        fi
+    else
+        echo "not running."
+        RETVAL=3
+    fi
+    return $RETVAL
+}
+
+kstatus() {
+    local SECONDVAL
+    local RC
+    if [ 0$KATELLO_JOB_WORKERS -eq 1 ]; then
+       echo -n "delayed_job is "
+       status_of_one $KATELLO_PID_DIR/delayed_job.pid
+       RETVAL=$?
+       SECONDVAL=$?
+       echo -n "delayed_job_monitor is "
+       status_of_one $KATELLO_PID_DIR/delayed_job_monitor.pid
+       RC=$?
+       RETVAL=$( print_higher $RC $RETVAL )
+       SECONDVAL=$( print_lower $RC $RETVAL )
+    else
+       RETVAL=0
+       SECONDVAL=0
+       for i in $( seq 0 $(($KATELLO_JOB_WORKERS - 1)) ); do
+           echo -n "delayed_job $i is "
+           status_of_one $KATELLO_PID_DIR/delayed_job.$i.pid
+           RC=$?
+           RETVAL=$( print_higher $RC $RETVAL )
+           SECONDVAL=$( print_lower $RC $RETVAL )
+           echo -n "delayed_job_monitor $i is "
+           status_of_one $KATELLO_PID_DIR/delayed_job.${i}_monitor.pid
+           RC=$?
+           RETVAL=$( print_higher $RC $RETVAL )
+           SECONDVAL=$( print_lower $RC $RETVAL )
+       done
+    fi
+    if [  0$SECONDVAL -eq 0  -a  0$RETVAL -gt 0 ]; then
+       # some is running, some not
+       return 10
+    else
+       return $RETVAL
+    fi
+}
+
+status_q() {
+    kstatus &> /dev/null
+    return $?
+}
+
+start() {
+
+    if [ ! -f $KATELLO_DATA_DIR/db_seed_done ]; then
+        echo "Please run katello-configure first"
+        echo_failure
+        return 1
+    fi
+
+    echo -n $"Starting $prog: "
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 ]; then
+        echo -n $"$prog is already running. "
+        RETVAL=0
+        echo_success
+    elif [ 0$STATUS -eq 10 ]; then
+        echo -n $"Some processes of $prog is already running. Some not. Please stop $prog first."
+        RETVAL=10
+        echo_failure
+    else
+        # rails expects you to run from the root of the app
+        pushd ${KATELLO_HOME} >/dev/null
+        # start jobs
+        runuser -s /bin/bash - katello -c "\
+            BUNDLER_EXT_NOSTRICT='$BUNDLER_EXT_NOSTRICT' \
+            BUNDLER_EXT_HOME='$BUNDLER_EXT_HOME' \
+            RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' \
+            RAILS_ENV='$RAILS_ENV' \
+            KATELLO_LOGGING='$KATELLO_LOGGING' \
+            KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' \
+            script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start &>>/var/log/katello/jobs-startup.log"
+        RETVAL=$?
+        if [ $RETVAL = 0 ]; then
+            echo_success
+        else
+            echo_failure
+        fi
+        popd >/dev/null
+    fi
+
+    echo
+    return $RETVAL
+}
+
+stop() {
+
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
+        # rails expects you to run from the root of the app
+        pushd ${KATELLO_HOME} >/dev/null
+        runuser -s /bin/bash - katello -c "\
+            BUNDLER_EXT_NOSTRICT='$BUNDLER_EXT_NOSTRICT' \
+            BUNDLER_EXT_HOME='$BUNDLER_EXT_HOME' \
+            RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' \
+            RAILS_ENV='$RAILS_ENV' \
+            KATELLO_LOGGING='$KATELLO_LOGGING' \
+            KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' \
+            script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS stop &>>/var/log/katello/jobs-startup.log"
+        if [ 0$KATELLO_JOB_WORKERS -eq 1 ]; then
+            if [ -f $KATELLO_PID_DIR/delayed_job_monitor.pid ]; then
+                echo -n $"Stopping delayed_job_monitor: "
+                killproc -p $KATELLO_PID_DIR/delayed_job_monitor.pid
+                echo
+            fi
+            if [ -f $KATELLO_PID_DIR/delayed_job.pid ]; then
+                echo -n $"Stopping delayed_job: "
+                killproc -p $KATELLO_PID_DIR/delayed_job.pid
+                echo
+            fi
+        else
+            for i in $( seq 0 $(($KATELLO_JOB_WORKERS - 1)) ); do
+                if [ -f $KATELLO_PID_DIR/delayed_job.${i}_monitor.pid ]; then
+                    echo -n $"Stopping delayed_job_monitor $i: "
+                    killproc -p $KATELLO_PID_DIR/delayed_job.${i}_monitor.pid
+                    echo
+                fi
+                if [ -f $KATELLO_PID_DIR/delayed_job.$i.pid ]; then
+                    echo -n $"Stopping delayed_job $i: "
+                    killproc -p $KATELLO_PID_DIR/delayed_job.$i.pid
+                    echo
+                fi
+            done
+        fi
+        popd >/dev/null
+        RETVAL=0
+    else
+        RETVAL=0
+        echo -n "Stopping $prog: "
+        echo_failure
+        echo
+    fi
+
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
+
+condstop() {
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
+        stop
+    else
+        RETVAL=0
+    fi
+}
+
+condrestart() {
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
+        restart
+    else
+        RETVAL=0
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    condrestart|try-restart)
+        condrestart
+        ;;
+    condstop)
+        condstop
+        ;;
+    status)
+        kstatus
+        RETVAL=$?
+        ;;
+    *)
+        echo "Usage: {start|stop|restart|condrestart|condstop|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL
+
+# vim:set sw=4 ts=4 et:

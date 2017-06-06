@@ -1,0 +1,50 @@
+
+= content_for :title do
+  #{_("New System Group")}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :content do
+  #system_group_new
+    = form_for @group, :html => {:method => :post}, :url => system_groups_path do |form|
+
+      %fieldset.fl.clear
+        .grid_2.ra
+          %label #{_("Name")}:
+        .grid_4.la
+          = form.text_field :name
+
+      %fieldset.fl.clear
+        .grid_2.ra
+          %label #{_("Description")}:
+        .grid_4.la
+          = form.text_area :description, :rows=>8
+
+      %fieldset.fl.clear
+        .grid_4
+          %label #{_("System Limit")}:
+        .grid_8.la
+          - if @group.max_systems == -1
+            .grid_2.ra
+              %label #{_("Unlimited")}:
+            .grid_5.la
+              %input.unlimited_members{:type=>"checkbox", :value=>:true, :checked => :true}
+            .grid_2.ra.limit{:style => "display:none;"}
+              %label #{_("Limit")}:
+            .grid_5.la.limit{:style => "display:none;"}
+              = form.number_field :max_systems, {:size => 5, :value => "-1"}
+          - else
+            .grid_2.ra
+              %label #{_("Unlimited")}:
+            .grid_5.la
+              %input.unlimited_members{:type=>"checkbox", :value=>:true}
+            .grid_2.ra.limit
+              %label #{_("Limit")}:
+            .grid_5.la.limit
+              = form.number_field :max_systems, {:size => 5}
+
+      .grid_4.la.prefix_2
+        = button_to _("Save"), {:action => "create", :controller => "system_groups"}, :method => :post, :id => :group_save
+
+= render :template => "layouts/tupane_layout"

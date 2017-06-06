@@ -1,0 +1,27 @@
+= content_for(:title) do
+  #{@activation_key.name}
+
+= content_for(:remove_item) do
+  - if editable
+    = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for(:navigation) do
+  = render_menu(1..2, activation_keys_navigation)
+
+= content_for(:content) do
+  #system_groups
+    %table
+      %thead
+        %tr.no_sort
+          %th= _('Name')
+          %th= _('OS')
+          %th= _('Registered')
+          %th= _('Last Checked In')
+      %tbody
+        %tr#empty_row{:class=>(:hidden if !@systems.blank?)}
+          %td{:colspan => 4}
+            = _("This activation key is not currently associated with a System.")
+
+        = render :partial => 'system', :collection => @systems
+
+= render :template => "layouts/tupane_layout"

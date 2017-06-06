@@ -1,0 +1,169 @@
+# Path of the answer file.
+answer_file =
+
+# Katello administrative user (default: admin)
+user_name = admin
+
+# Katello user's password
+user_pass =
+
+# Katello user's email (default: root@localhost)
+user_email = root@localhost
+
+# Katello initial Organization (default: ACME_Corporation)
+org_name = ACME_Corporation
+
+# HTTP Proxy URL (example: http://172.31.1.1)
+proxy_url = NONE
+
+# HTTP Proxy port (default: 3128)
+proxy_port = NONE
+
+# HTTP Proxy user (proxy username, if auth is required)
+proxy_user = NONE
+
+# HTTP Proxy pass (proxy password, if auth is required)
+proxy_pass = NONE
+
+# Katello database name.
+# PostgreSQL database name used to store the Katello database
+# objects.
+db_name = katelloschema
+
+# Katello database user.
+db_user = katellouser
+
+# Katello database password.
+db_password = katellopw
+
+# Candlepin database user
+candlepin_db_user = candlepin
+
+# Candlepin databse password
+candlepin_db_password = candlepin
+
+# Candlepin database name
+candlepin_db_name = candlepin
+
+# Deployment type (one of "katello", "headpin", "cfse", "sam")
+deployment = katello
+
+# Non-interactive installer mode
+non_interactive = true
+
+# SSL CA password
+ssl_ca_password = katellocapw
+
+# SSL CA country
+ssl_ca_country = US
+
+# SSL CA state
+ssl_ca_state = North Carolina
+
+# SSL CA city
+ssl_ca_city = Raleigh
+
+# SSL CA organization
+ssl_ca_org = SomeOrg
+
+# SSL CA organization unit
+ssl_ca_org_unit = SomeOrgUnit
+
+# SSL CA common name
+ssl_ca_cn = Katello machine
+
+# SSL CA e-mail address
+ssl_ca_email = root@localhost
+
+# SSL certificate expiration (in days)
+ssl_cert_expiration = 365
+
+# SSL CA password file path
+ssl_ca_password_file = /etc/katello/ssl_ca_password-file
+
+# Candlepin CA password file path
+candlepin_ca_password_file = /etc/katello/candlepin_ca_password-file
+
+# Keystore password file path for Candlepin
+keystore_password_file = /etc/katello/keystore_password-file
+
+# NSS db password file path
+nss_db_password_file = /etc/katello/nss_db_password-file
+
+# NSS database path
+nss_db_dir = /etc/pki/katello/nssdb
+
+# PKCS12 password file path
+ssl_pk12_password_file = /etc/katello/pk12_password-file
+
+# Authentication method (database, ldap)
+auth_method = database
+
+# LDAP server hostname
+ldap_server = localhost
+
+# LDAP server hostname
+ldap_port = 389
+
+# LDAP server type (:posix, :active_directory, :free_ipa)
+ldap_server_type = :posix
+
+# Encryption method used in communication with LDAP server (<empty>, start_tls)
+ldap_encryption =
+
+# Base DN for users accounts
+ldap_users_basedn = ou=People,dc=company,dc=com
+
+# Base DN for users groups
+ldap_groups_basedn = ou=Groups,dc=company,dc=com
+
+# Use LDAP for roles membership definition (true, false)
+ldap_roles = false
+
+# Allow anonymous queries (true, false) for AD or FreeIPA
+ldap_anon_queries = false
+
+# Service username for non-anon queries (IPA, AD)
+ldap_service_user =
+
+# Service password for non-anon queries (IPA, AD)
+ldap_service_pass =
+
+# Domain for AD LDAP queries
+ldap_ad_domain =
+
+# ElasticSearch ES_MIN_MEM java heap setting
+es_min_mem = 256m
+
+# ElasticSearch ES_MAX_MEM java heap setting
+es_max_mem = 256m
+
+# PostgreSQL superuser password (NONE for no password)
+psql_password_file = NONE
+
+# OAuth token file
+oauth_token_file = /etc/katello/oauth_token-file
+
+# Pulp user password file
+pulp_user_password_file = /etc/katello/pulp_user_password-file
+
+# Set to 'YES' to erase all databases.
+# WARNING: This is dangerous option! Only value of 'YES' (uppercase)
+# triggers the action. (This value is not remembered in
+# katello-configure.conf).
+reset_data = NONE
+
+# Set to 'YES' to erase RPM packages from Pulp.
+# Erases downloaded RPM packages from /var/lib/pulp/packages.
+# Only value of 'YES' (uppercase) triggers the action. (This value
+# is not remembered in katello-configure.conf).
+reset_cache = NONE
+
+# Background job workers (default 1)
+job_workers = 1
+
+# Katello thin workers (the default is computed from system resources)
+katello_web_workers = NONE
+
+# Foreman thin workers (the default is computed from system resources)
+foreman_web_workers = NONE

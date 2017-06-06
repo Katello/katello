@@ -1,0 +1,16 @@
+%table
+  %thead
+    %th= _("Sync plan")
+    %th= _("Interval")
+    %th= _("Start Date")
+    %th= _("Time")
+    %th= _("Organization")
+
+  %tbody
+    - @sync_plans.each do |sync_plan|
+      %tr{:class => cycle("", "alt", :name => 'syncplan'), :title => sync_plan.description}
+        %td= sync_plan.name
+        %td= sync_plan.interval
+        %td= sync_plan.plan_date
+        %td= sync_plan.plan_time
+        %td= sync_plan.organization.name

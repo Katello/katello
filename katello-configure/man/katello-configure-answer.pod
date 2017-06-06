@@ -1,0 +1,58 @@
+
+=head1 NAME
+
+katello-configure-answer - Katello configure answer file tool
+
+=head1 SYNOPSIS
+
+    katello-configure-answer [value]
+      [ -a | --answer-file ]
+      [ -h | --help ]
+
+=head1 DESCRIPTION
+
+The B<katello-configure-answer> tool shows all katello-configure answer
+file values and allows to query for particular values.
+
+By default answers are loaded from
+B</etc/katello/katello-configure.conf>
+file and default values are loaded from
+B</usr/share/katello/install/default-answer-file>.
+
+When executed without any options, it shows all answers as key-value
+pairs.
+
+When given a value, the key is searched in the answer file and the
+content is returned on stdout.
+
+=head1 COMMAND LINE PARAMETERS
+
+=over
+
+=item --answer-file, -a
+
+Use different answer file instead of default one:
+B</etc/katello/katello-configure.conf>
+
+=item --version, -v
+
+Display version information.
+
+=item --help, -h
+
+Display short summary of all options.
+
+=back
+
+=head1 EXIT STATUS
+
+Returns non-zero value if answer file or default answer file cannot
+be found.
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+katello-configure(1)

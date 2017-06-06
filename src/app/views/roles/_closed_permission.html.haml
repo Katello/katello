@@ -1,0 +1,22 @@
+.clear
+.grid_1.ra
+  = _("Type")
+.grid_6.la
+  - if perm.resource_type
+    = perm.resource_type.name.capitalize
+.grid_1.ra
+  = _("Scope")
+.grid_6.la
+  - if perm.all_tags?
+    #{_("All")}
+  - elsif perm.tags.nil? || perm.tags.empty?
+    #{_("None")}
+  - else
+    = perm.tags.collect{|tag| tag.name}.join(", ")
+.grid_1.ra
+  = _("Verbs")
+.grid_6.la
+  - if perm.all_verbs?
+    #{_("All")}
+  - else
+    = perm.verbs.collect{|verb| verb.display_name perm.resource_type.name}.join(", ")

@@ -1,0 +1,30 @@
+= javascript 'widgets/filtertable'
+
+= content_for :title do
+  = @errata.id
+
+= content_for :navigation do
+  = render_menu(1..2, promotion_errata_navigation)
+
+
+
+= content_for :content do
+  - if @errata.pkglist.length > 0 and @errata.pkglist[0][:packages].length > 0
+    = render :partial => "common/filter_table"
+    %table.filter_table.errata.ajaxScroll
+      %thead
+        %th
+          #{_("Package")}
+      %tbody
+        -@errata.pkglist[0][:packages].each do |pkg|
+          %tr
+            %td
+              - if pkg[:epoch] == "0"
+                = pkg[:name] + "-" + pkg[:version] + '-' + pkg[:release] + "." + pkg[:arch]
+              - else
+                = (pkg[:name] || _("Missing")) + "-" + (pkg[:epoch] || _("Missing")) + ":" + (pkg[:version] || _("Missing")) + '-' + (pkg[:release] || _("Missing")) + "." + (pkg[:arch] || _("Missing"))
+
+  - else
+    %p #{_("There are no packages to display.")}
+
+= render :template => "layouts/tupane_layout"

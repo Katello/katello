@@ -1,0 +1,35 @@
+= content_for :title do
+  #{_("New Changeset")}
+
+= content_for :content do
+  .grid_7#new_changeset123
+
+    = kt_form_for Changeset.new do |form|
+
+      %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
+      - if !@next_environment.nil?
+        %input{:type => "hidden", :name => "next_env_id", :value => @next_environment.id}
+
+      = form.text_field :name, :label => _("Name"), :grid => [2,4]
+
+      = form.text_area :description, :label => _("Description"), :grid => [2,4]
+
+      -# if the user is currently in the Library, only changesets of type 'promotion' are allowed;
+      -# else if the user is currently in the last env on the path, only changesets of type
+      -# 'deletion' are allowed; otherwise, let the user choose the type
+      %fieldset
+        .grid_2.ra
+          %label #{_("Type")}
+        .grid_4.la
+          - if @environment.library
+            %input{:type => "hidden", :name => "changeset[action_type]", :value => Changeset::PROMOTION} #{Changeset::PROMOTION}
+          - elsif @next_environment.nil?
+            %input{:type => "hidden", :name => "changeset[action_type]", :value => Changeset::DELETION} #{Changeset::DELETION}
+          - else
+            = select_tag "changeset[action_type]",
+              options_for_select(Changeset::TYPES, :selected => (changeset_type == 'deletion' ? Changeset::DELETION : Changeset::PROMOTION)),
+              :label => _("Type"), :style => "padding-right:5px;"
+
+      = form.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => changesets_path
+
+= render :template => "layouts/tupane_layout"

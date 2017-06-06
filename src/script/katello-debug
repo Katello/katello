@@ -1,0 +1,223 @@
+#!/usr/bin/env ruby
+# :vim:sw=2:ts=2:et:
+
+require "optparse"
+require "fileutils"
+
+NAME="katello-debug"
+PAD="  "
+
+# Set up the options
+options = {}
+
+optparse = OptionParser.new do|opts|
+  opts.banner = "Usage: #{NAME} [options] command"
+
+  options[:basedir] = '/tmp'
+  opts.on( '--dir [DIRECTORY]', 'Directory to place the tarball. Defaults to /tmp' ) do |opt|
+    options[:basedir] = opt
+  end
+
+  options[:archive] = true
+  opts.on( '--notar', 'Do not generate a tar file, just copy the files to target dir' ) do
+    options[:archive] = false
+  end
+
+  opts.on( '--help', 'Display help and exit' ) do
+    puts opts
+    exit
+  end
+end
+
+optparse.parse!
+
+use_foreman = system('rpm -q foreman &>/dev/null')
+
+# Check that we are running as root
+if Process.uid != 0
+  puts("#{NAME} must be run as root")
+  exit
+end
+
+# Get the deployment type
+deployment = File.read("/etc/katello/client.conf").split("\n").grep(/^path.+/).first.split("/").last
+if (deployment == "headpin" || deployment == "sam")
+  deployment = "headpin"
+else
+  deployment = "katello"
+end
+puts "detected deployment: \t#{deployment}"
+
+# Define what we want to collect
+MISC = [
+"/var/log/audit/audit.log",
+"/var/log/httpd",
+"/etc/httpd/conf.d"
+]
+
+CANDLEPIN = [
+"/var/log/tomcat6",
+"/etc/candlepin/candlepin.conf",
+"/etc/tomcat6/server.xml"
+]
+
+THUMBSLUG = [
+"/etc/thumbslug",
+"/var/log/thumbslug"
+]
+
+KATELLO_HEADPIN = [
+"/var/log/katello",
+"/etc/katello/client.conf",
+"/etc/katello/katello.yml",
+"/etc/katello/mapping.yml",
+"/etc/katello/thin.yml",
+"/etc/katello/katello-configure.conf",
+"/etc/httpd/conf.d/katello.conf",
+"/etc/katello/environment.rb"
+]
+
+ELASTIC_SEARCH = [
+"/var/log/elasticsearch",
+"/etc/elasticsearch"
+]
+
+PULP = [
+"/etc/pulp/server.conf",
+"/var/log/pulp",
+"/etc/httpd/conf.d/pulp.conf",
+"/etc/qpidd.conf"
+]
+
+FOREMAN = [
+"/var/log/foreman",
+"/etc/foreman/settings.yaml",
+"/etc/foreman/thin.yml",
+"/etc/foreman/email.yaml",
+"/etc/foreman/database.yml",
+"/etc/sysconfig/foreman"
+]
+
+# Exclude these files from the debug
+EXCLUDES = [
+"/etc/tomcat6/keystore",
+"/etc/candlepin/certs/candlepin-ca.key",
+"/etc/candlepin/certs/candlepin-ca.crt",
+"/etc/candlepin/certs/candlepin-upstream-ca.crt",
+"/etc/katello/pk12_password-file",
+"/etc/katello/candlepin_ca_password-file",
+"/etc/katello/nss_db_password-file",
+"/etc/katello/keystore_password-file",
+"/etc/katello/ssl_ca_password-file",
+"/etc/katello/pulp_user_password-file",
+"/etc/katello/oauth_token-file"
+]
+
+
+# sources list for katello or headpin deployment
+sources = []
+sources += MISC
+sources += KATELLO_HEADPIN
+sources += ELASTIC_SEARCH
+sources += CANDLEPIN
+sources += PULP if deployment == 'katello'
+sources += FOREMAN if use_foreman
+sources += THUMBSLUG if deployment == 'headpin'
+
+
+# Collect the files
+timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
+target_dir = File.join(options[:basedir], timename)
+
+if File.exists?(target_dir)
+  puts("#{target_dir} already exists. Please delete it")
+  exit
+end
+
+FileUtils.mkdir_p(target_dir)
+puts("created directory #{target_dir}")
+
+missing_files = Array.new
+sources.each do |source|
+  if File.exists?(source)
+    complete_target = File.join(target_dir, File.dirname(source))
+    FileUtils.mkdir_p(complete_target)
+    puts("#{PAD}copying over #{source}")
+    `/bin/cp -r --preserve #{source} #{complete_target}`
+  else
+    missing_files << source
+    puts "#{PAD}skipping #{source} since it does not exist"
+  end
+end
+
+# Store missing filenames to archive if there are any
+if not missing_files.empty?
+  missing_target = File.join(target_dir, 'missing_files')
+  File.open(missing_target, 'w') do |missing|
+    missing.puts missing_files.join("\n")
+  end
+end
+
+# Remove security sensitive data
+EXCLUDES.each do |exclude|
+  target = File.join(target_dir, exclude)
+  if File.exists?(target)
+    puts("#{PAD}removing #{target} from archive")
+    File.delete(target)
+  end
+end
+
+# Remove passwords from config files
+if deployment == 'katello'
+  `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/server.conf')}`
+  `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/server.conf')}`
+  if use_foreman
+  `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
+  end
+end
+`sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
+`sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
+`sed -i -e 's/^\\(\\s*oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
+`sed -i -e 's/^\\(\\s*password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
+`sed -i -e 's/\\(keystorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
+`sed -i -e 's/\\(truststorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
+`find #{target_dir} -name "*katello-configure.conf" -type f -exec sed -i -e 's/\\(\\(password\\|pass\\)\\s[^=]*=\\)\\(.*\\)$/\\1 ***************/' {} \\;`
+`find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e 's/echo password/echo *********/' {} \\;`
+`find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(password => '\\)[^']*'/\\1*********'/g" {} \\;`
+`find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(PASSWORD '\\)[^']*'/\\1*********'/g" {} \\;`
+
+# Pick qpidd messages from syslog
+if deployment == 'katello'
+  FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
+  `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/qpidd.log")}`
+end
+
+# Create certificates report
+`katello-debug-certificates --perms >> #{File.join(target_dir, "certificates")}`
+
+# Add list of ssl-build dir
+`find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
+
+# Below are custom system calls to get more info
+`rpm -qa >> #{File.join(target_dir, "packages")}`
+
+# Also show firewall settings
+`iptables -L > #{File.join(target_dir, "iptables")}`
+
+if (options[:archive])
+    # Tar the output and log it
+    tarfile = target_dir + ".tar.gz"
+    pwd = Dir.pwd()
+    Dir.chdir(options[:basedir])
+    `tar -czf #{tarfile} #{timename}`
+    Dir.chdir(pwd)
+
+    puts "A debug file has been created at #{tarfile}."
+    puts "Make sure it contains no security sensitive data before making it public!"
+
+    # Clean up
+    FileUtils.rm_r(target_dir)
+else
+    puts "Debug files have been created at #{target_dir}"
+    puts "Make sure it contains no security sensitive data before making it public!"
+end

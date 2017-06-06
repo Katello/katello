@@ -1,0 +1,47 @@
+
+KATELLO CLI GENERATOR
+=====================
+
+Description:
+
+  This utility semi-automatically generates python code for Katello CLI 
+  based on json exports from apipie [1] documentation tool.
+
+  It generates:
+   * python bindings for the documented api (goes into: /katello/client/api/<RESOURCE_NAME>.py)
+   * code for cli command                   (goes into: /katello/client/core/<RESOURCE_NAME>.py)
+   * code frame for actions                 (goes into: --^ )
+   * code for wiring commands and actions into the cli (goes into: /katello/client/main.py)
+
+  The tool requires python-mako [2] and python-inflector templating library installed [3].
+  The latter is available in our nightly katello repo.
+
+  [1] https://github.com/Pajk/apipie-rails/
+  [2] http://www.makotemplates.org/
+  [3] https://github.com/bermi/Python-Inflector
+
+Options:
+
+  -h, --help            show this help message and exit
+  --binding, --api      generate python api bindings
+  --command             generate cli command frame
+  --action              generate cli action for a method
+  --main                generate code for wiring commands and actions into cli
+  -r RESOURCE, --resource=RESOURCE
+  -m METHOD, --method=METHOD
+  -i INPUT, --input=INPUT
+                        input file with json apipie documentation export
+
+
+Example usage:
+
+  curl http://foreman-rhel:3000/apidoc.json | ./generate.py --resource operatingsystems --api
+  curl http://foreman-rhel:3000/apidoc.json | ./generate.py --resource operatingsystems --command
+  curl http://foreman-rhel:3000/apidoc.json | ./generate.py --resource operatingsystems --method index --action
+  curl http://foreman-rhel:3000/apidoc.json | ./generate.py --resource operatingsystems --main
+
+  or
+
+  wget http://foreman-rhel:3000/apidoc.json
+  ./generate.py --resource operatingsystems --api -i ./apidoc.json
+

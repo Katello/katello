@@ -1,0 +1,55 @@
+= javascript 'providers/products_repos'
+
+= content_for :title do
+  #{@gpg_key.name}
+
+= content_for :remove_item do
+  - if @gpg_key.manageable?
+    = link_to _("Remove GPG Key"), {:action => "destroy", :controller => "gpg_keys"}, :method => :delete, :confirm => _('Are you sure you want to delete this GPG Key?'), :class => "remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, gpg_keys_navigation)
+
+= content_for :content do
+  #products_repos
+
+    -if products.length == 0 and products_repos.length == 0
+      #{_("This GPG Key is not currently assigned to any products or repositories.")}
+
+    -if products.length > 0
+      %h5
+        #{_("GPG Key assigned at the Product Level for")}:
+      %ul.bordered-table
+        %div.block_head
+          %div.column_head.column_1
+            = _("Products")
+
+        -products.each do |product|
+          - cssclass = cycle("", "alt")
+          %div{:class => cssclass}
+            &nbsp;#{product.name}
+
+      &nbsp;
+
+    -if products_repos.length > 0
+      %h5
+        #{_("GPG Key assigned at the Repository Level for")}:
+      %ul.bordered-table
+        %div.block_head
+          %div.column_head.column_1
+            = _("Repositories")
+
+        -products_repos.each do |element|
+          - product = element[0]
+          - repos = element[1]
+          - cssclass = cycle("", "alt")
+          %div.parent{:class => cssclass}
+            %label #{_("Product")}:
+            &nbsp;#{product}
+
+          - repos.each do |repo|
+            %div.child{:class => cssclass}
+              %label #{_("Repository")}:
+              &nbsp;#{repo.name}
+
+= render :template => "layouts/tupane_layout"

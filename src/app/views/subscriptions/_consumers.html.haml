@@ -1,0 +1,53 @@
+
+= render :partial=>"subscriptions_tupane_header_nav"
+
+= content_for :content do
+  .grid_10
+    %table#systems_table
+      %thead
+        %th #{_("Systems")}
+      %tbody
+        - if systems.length < 1
+          %tr
+            %td
+              = _("None")
+        - else
+          - systems.each do |system|
+            - cycle_class = cycle("", "alt")
+            %tr{:class => cycle_class}
+              %td
+                = subscriptions_system_link_helper system.uuid
+
+    - reset_cycle
+    %table#actkeys_table
+      %thead
+        %th #{_("Activation Keys")}
+      %tbody
+        - if activation_keys.length < 1
+          %tr
+            %td
+              = _("None")
+        - else
+          - activation_keys.each do |key|
+            - cycle_class = cycle("", "alt")
+            %tr{:class => cycle_class}
+              %td
+                = subscriptions_activation_key_link_helper key
+
+    - reset_cycle
+    %table#distributors_table
+      %thead
+        %th #{_("Subscription Management Applications")}
+      %tbody
+        - if distributors.length < 1
+          %tr
+            %td
+              = _("None")
+        - else
+          - distributors.each do |distributor|
+            - cycle_class = cycle("", "alt")
+            %tr{:class => cycle_class}
+              %td
+                = subscriptions_distributor_link_helper distributor
+
+= render :template => "layouts/tupane_layout"

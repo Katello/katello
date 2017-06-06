@@ -1,0 +1,74 @@
+= javascript :system_events
+
+= javascript do
+  -if editable
+    :plain
+      $(document).ready(function() {
+        KT.system.errata.init(true, 'system_group');
+      });
+  -else
+    :plain
+      $(document).ready(function() {
+        KT.system.errata.init(false, 'system_group');
+      });
+
+= render :partial => "system_groups/tupane_header"
+
+= content_for :header do
+  #errata_header.clear
+    %h5.fl
+      #{_("Display")}
+    %span
+      = select_tag "display_errata_type", options_for_select([[_('All Errata'), 'All'], [_('Bug Fix'), 'BugFix'], [_('Enhancement'), ('Enhancement')], [_('Security'), 'Security']])
+    -#
+      %span
+        = radio_button_tag "errata_state_radio", "outstanding", true
+        %label
+          #{_("Outstanding")}
+      %span
+        = radio_button_tag "errata_state_radio", "applied"
+        %label
+          #{_("Applied")}
+
+= content_for :content do
+  %input.events{:type => "hidden", 'data-url' => status_system_group_events_path(@group.id)}
+
+  #errata_container{ "data-parent_id" => @group.id }
+    %table.filter_table.ajaxScroll
+      %thead
+        - if editable
+          %th
+            -# = check_box_tag "select_all_errata", "select_all_errata"
+        %th
+          #{_("TYPE")}
+        %th
+          #{_("ERRATA")}
+        %th
+          #{_("TITLE")}
+        %th
+          #{_("DETAILS")}
+        %th
+          #{_("SYSTEMS")}
+      %tbody
+        -#= render :partial => "system_groups/errata/items", :locals => { :errata => errata, :editable => editable }
+    #list-spinner
+      = image_tag("icons/spinner.gif", :class=>"ajax_scroll")
+
+= content_for :footer do
+  %a#load_more_errata{"data-scroll_url"=>url_for(system_group_errata_path(@group.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl", "style" => "display:none"} #{_("Load %{n} More") % {:n => offset}}
+  %span.fl{:id => 'loaded_summary', :style => 'margin-left: 20px;', 'data-total' => 0, "data-current_count" => 0 }
+    #{_("Viewing %{n} of %{t} results (%{t} Total Errata)") % {:n => 0, :t => 0 }}
+
+  - if editable
+    %span.fr
+      %button.button.disabled{:id => 'run_errata_button', 'data-url' => system_group_errata_path(@group.id) }
+        #{_('Install')}
+    .selection_group
+      %span.fr
+        %button.button{:id => 'deselect_all_button'}
+          #{_('Deselect all')}
+      %span.fr
+        %button.button{:id => 'select_all_button'}
+          #{_('Select all')}
+
+= render :template => "layouts/tupane_layout"

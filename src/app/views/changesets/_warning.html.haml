@@ -1,0 +1,23 @@
+- error ||= []
+- syncing ||= []
+
+- if !syncing.empty?
+  #{_("The following repositories are currently syncing.  It is recommended that you wait for them to complete before continuing the promotion.")}
+  %div
+    %ul
+      - for name in syncing
+        %li
+          = name
+%div
+  %br
+  - if !error.empty?
+    #{_("The following repositories encountered an error on their last sync.  It is highly recommended to fix these errors and resync before promoting.  Ignoring these may result in a broken repository in the %s environment.") % @environment.name}
+    %div
+      %ul
+        - for name in error
+          %li
+            = name
+
+%div
+  %br
+  #{_("If you continue having trouble, please contact an Administrator.")}

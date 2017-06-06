@@ -1,0 +1,147 @@
+#!/bin/bash
+#
+# Start/stop script for katello stack (Pulp/Candlepin/Foreman...)
+#
+# Usage:
+#
+# katello-stack start|stop|restart|status
+#  Working with all Katello services
+#
+# katello-stack update|update-disabled
+#  Updates RPMs using yum (disabled = use --enablerepo option) and
+#  stores database snapshots for later initialization
+#
+# katello-stack on|off
+#  Controls services autostart (using chkconfig)
+#
+# katello-stack initdb
+#  Initializes all backend engine databases from snapshots (faster than
+#  full redeployment)
+#
+# Run as root.
+#
+# Typical use (from src/ directory):
+#
+# sudo ../scripts/test/katello-stack initdb && rake setup --trace &&
+#  ../scripts/test/katello-cli-simple-test.sh
+#
+
+SERVICES_START=(mongod qpidd httpd postgresql tomcat6)
+SERVICES_STOP=(tomcat6 qpidd httpd mongod postgresql)
+YUM_PARAMS="--disableplugin=subscription-manager,pulp-profile-update,katello"
+
+print_usage()
+{
+  echo "Usage: `basename $0` start|restart|stop|status|on|off|update|update-disabled|initdb" && exit 1
+}
+
+post_update()
+{
+  pulp-migrate
+  # we dont store snapshot for mongodb - its fast enough
+
+  if [ -e /usr/share/candlepin/cpdb ]; then
+    /usr/share/candlepin/cpdb --update
+  else
+    # Just for backward compatibility for Candlepin versions < 0.5.28-1
+    # without cpdb tool.
+    # Feel free to remove after some time
+    cp /etc/candlepin/candlepin.conf /etc/candlepin/candlepin.conf.original
+    /usr/share/candlepin/cpsetup
+    mv /etc/candlepin/candlepin.conf.original /etc/candlepin/candlepin.conf
+    su - postgres -c 'pg_dump -c candlepin > /var/lib/pgsql/backups/candlepin_clean.sql'
+  fi
+}
+
+update_system()
+{
+  yum -y $YUM_PARAMS update pulp candlepin-tomcat6
+  post_update
+}
+
+update_disabled()
+{
+  yum $YUM_PARAMS --enablerepo=fedora-pulp --enablerepo=fedora-candlepin makecache
+  yum -y $YUM_PARAMS --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
+    update pulp candlepin-tomcat6
+  post_update
+}
+
+initdb()
+{
+  # clean pulp
+  #echo 'db.dropDatabase();' | mongo pulp_database
+  service mongod stop
+  rm -rf /var/lib/mongodb/pulp_database*
+  service mongod start
+  pulp-migrate
+
+  if [ -e /usr/share/candlepin/cpdb ]; then
+    /usr/share/candlepin/cpdb --create --drop
+  else
+    # Just for backward compatibility for Candlepin versions < 0.5.28-1
+    # without cpdb tool.
+    # Feel free to remove after some time
+    su - postgres -c 'psql candlepin < /var/lib/pgsql/backups/candlepin_clean.sql'
+  fi
+
+  # clean candlepin from snapshot
+  service pulp-server restart
+  service tomcat6 restart
+}
+
+EXPECTED_ARGS=1
+if [ $# -lt $EXPECTED_ARGS ]; then
+  print_usage
+fi
+
+case "$1" in
+  start|status)
+    for SERVICE in ${SERVICES_START[*]}; do
+      service $SERVICE $1
+    done
+    ;;
+  stop)
+    for SERVICE in ${SERVICES_STOP[*]}; do
+      service $SERVICE $1
+    done
+    ;;
+  repair)
+    service mongod stop
+    rm /var/lib/mongodb/mongod.lock
+    sudo -u mongodb mongod -f /etc/mongodb.conf --repair
+    ;;
+  restart)
+    for SERVICE in ${SERVICES_STOP[*]}; do
+      service $SERVICE stop
+    done
+    echo
+    for SERVICE in ${SERVICES_START[*]}; do
+      service $SERVICE start
+    done
+    ;;
+  on|off)
+    for SERVICE in ${SERVICES_START[*]}; do
+      chkconfig $SERVICE $1
+    done
+    ;;
+  update)
+    update_system
+    ;;
+  update-disabled)
+    for SERVICE in ${SERVICES_START[*]}; do
+      service $SERVICE start
+    done
+    update_disabled
+    ;;
+  initdb)
+    initdb
+    ;;
+  *)
+    print_usage
+    ;;
+esac
+
+exit 0
+
+# :vim:sw=2:ts=2:et:

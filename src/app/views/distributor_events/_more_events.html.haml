@@ -1,0 +1,3 @@
+- if cycle_extra
+  = cycle("alt", "")
+= render :partial => 'event_items', :locals => {:distributor => distributor, :include_tr => true}, :collection=> tasks, :as=>:t

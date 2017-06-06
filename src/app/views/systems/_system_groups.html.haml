@@ -1,0 +1,26 @@
+= render :partial => "system_tupane_header_nav"
+
+= content_for(:content) do
+  #system_groups
+    %table
+      %thead
+        %tr.no_sort
+          %th
+            #{_("Name")}
+
+      -if editable
+        %tr#add_groups.no_sort
+          %td
+            %form{:id=>'add_group_form'}
+              = select_tag :system_group, options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+              %input.button{:type=>'submit', :id=>'add_groups', :value=>_('Add'), 'data-url'=> add_system_groups_system_path(@system)}
+
+        %tr#empty_row{:class=>(:hidden if !@system.system_groups.empty?)}
+          %td
+            = _("This system is not currently associated with a System Group.")
+        = render :partial=>'system_group_items', :locals=>{:system_groups=>@system.system_groups}
+
+    - if @system.editable?
+      %input.fr.button{:type=>"button", :id=>"remove_groups", :value=>_("Remove"), 'data-url'=> remove_system_groups_system_path(@system)}
+
+= render :template => "layouts/tupane_layout"

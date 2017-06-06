@@ -1,0 +1,232 @@
+# vim: sw=2:ts=2:et
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+## <summary>policy for httpd_katello_script</summary>
+
+
+########################################
+## <summary>
+##	Transition to httpd_katello_script.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`httpd_katello_script_domtrans',`
+	gen_require(`
+		type httpd_katello_script_t, httpd_katello_script_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, httpd_katello_script_exec_t, httpd_katello_script_t)
+')
+
+
+########################################
+## <summary>
+##	Read httpd_katello_script's log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`httpd_katello_script_read_log',`
+	gen_require(`
+		type httpd_katello_script_log_t;
+	')
+
+	logging_search_logs($1)
+	read_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+')
+
+########################################
+## <summary>
+##	Append to httpd_katello_script log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_append_log',`
+	gen_require(`
+		type httpd_katello_script_log_t;
+	')
+
+	logging_search_logs($1)
+	append_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+')
+
+########################################
+## <summary>
+##	Manage httpd_katello_script log files
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_manage_log',`
+	gen_require(`
+		type httpd_katello_script_log_t;
+	')
+
+	logging_search_logs($1)
+	manage_dirs_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+	manage_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+	manage_lnk_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+')
+
+########################################
+## <summary>
+##	Search httpd_katello_script lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_search_lib',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	allow $1 httpd_katello_script_var_lib_t:dir search_dir_perms;
+	files_search_var_lib($1)
+')
+
+########################################
+## <summary>
+##	Read httpd_katello_script lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_read_lib_files',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	read_files_pattern($1, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage httpd_katello_script lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_manage_lib_files',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_files_pattern($1, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage httpd_katello_script lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_manage_lib_dirs',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_dirs_pattern($1, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+')
+
+
+########################################
+## <summary>
+##	All of the rules required to administrate
+##	an httpd_katello_script environment
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`httpd_katello_script_admin',`
+	gen_require(`
+		type httpd_katello_script_t;
+	type httpd_katello_script_log_t;
+	type httpd_katello_script_var_lib_t;
+	')
+
+	allow $1 httpd_katello_script_t:process { ptrace signal_perms };
+	ps_process_pattern($1, httpd_katello_script_t)
+
+	logging_search_logs($1)
+	admin_pattern($1, httpd_katello_script_log_t)
+
+	files_search_var_lib($1)
+	admin_pattern($1, httpd_katello_script_var_lib_t)
+')
+
+########################################
+## <summary>
+##      Read extra secure config files in /etc/katello/secure.
+## </summary>
+## <desc>
+##      <p>
+##        These files has extra domain because contains sensitive data
+##      </ul>
+## </desc>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <infoflow type="read" weight="10"/>
+#
+interface(`katello_files_read_secetc_files',`
+  gen_require(`
+    type katello_secetc_file_t;
+    ')
+
+  allow $1 katello_secetc_file_t:dir list_dir_perms;
+  read_files_pattern($1, katello_secetc_file_t, katello_secetc_file_t)
+  read_lnk_files_pattern($1, katello_secetc_file_t, katello_secetc_file_t)
+')

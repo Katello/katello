@@ -1,0 +1,22 @@
+-# Partial to contain a treetable of all definitions and the views within them.
+%table#view_definitions
+  %thead
+    %th
+      = _('Name')
+    %th
+      = _('Published')
+  %tbody
+    - view_definitions.each do |definition|
+      - if definition.content_views.length > 0
+        %tr.definition{:id => "definition_#{definition.id}"}
+          %td{:colspan => 2}
+            %label #{_('Definition')}:
+            #{definition.name}
+
+        - definition.content_views.each do |view|
+          %tr.view{:class => "child-of-definition_#{definition.id}"}
+            %td.view_checkbox
+              = check_box_tag "content_views[#{view.id}]", "1", view_checked?(view.id, views),
+                {:tabindex => form.tabindex, 'data-view_id' => view.id}
+              #{view.name}
+            %td #{view.version(current_organization.library).try(:task_status).try(:finish_time)}

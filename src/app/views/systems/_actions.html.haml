@@ -1,0 +1,91 @@
+= javascript do
+  :plain
+    localize({
+      "validation_error_pkg_name_format" : '#{escape_javascript(_('One or more package names are invalid.'))}',
+      "validation_error_pkg_list_empty" : '#{escape_javascript(_('At least one name must be provided.'))}',
+      "validation_error_pkg_group_list_empty" : '#{escape_javascript(_('At least one package group name must be provided.'))}',
+      "validation_error_errata_list_empty" : '#{escape_javascript(_('At least one erratum ID must be provided.'))}',
+      "validation_error_select_content_type" : '#{escape_javascript(_('Please select Package(s) or Package Group(s).'))}',
+      "validation_error_system_group_empty" : '#{escape_javascript(_('At least one system group must be selected.'))}',
+
+      "confirm_system_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to delete the %X selected system(s)?"))}'.replace("%X", x); },
+      "confirm_package_action" : function(x,y,z){ return '#{escape_javascript(_("Are you sure you want to %X the %Y entered on the %Z selected system(s)?"))}'.replace("%X", x).replace("%Y", y).replace("%Z", z); },
+      "confirm_errata_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to install the errata entered on the %X selected system(s)?"))}'.replace("%X", x); },
+
+      "confirm_system_group_add_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to add the %X selected system(s) to the system group(s) entered?"))}'.replace("%X", x); },
+      "confirm_system_group_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"))}'.replace("%X", x); }
+      });
+
+%h4
+  #{_('List Actions')}:
+
+.panel_action{:class=>"disabled", 'data-id'=>"remove_systems", 'data-url'=>bulk_destroy_systems_path(), 'data-method'=>"DELETE"}
+  .delete_icon.fl
+  %a.request_action
+    #{_("Remove System(s)")}
+  .options
+    %div.confirmation_text
+    .actions
+      %input.cancel.button{:type=>"button", :value=>_('No')}
+      %input.trigger.button{:type=>"button", :value=>_('Yes') }
+    %br.clearfloat
+
+- if Katello.config.katello?
+  .panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
+    .package_icon.fl
+    = radio_button_tag :systems_action, :packages, false, :disabled => 'disabled'
+    = label_tag _('Package')
+    = radio_button_tag :systems_action, :package_groups, false, :disabled => 'disabled'
+    = label_tag _('Package Group')
+    %div
+      - help_text = _("Enter Package or Group Name(s)...")
+      %input{:type=>'text', :id=>'packages_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+      %input.request_action.package.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_install_systems_path()}
+      %input.request_action.package.button{:type=>'button', :value=>_('Update'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_update_systems_path()}
+      %input.request_action.package.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_remove_systems_path()}
+
+    %div.validation_error
+    .options
+      %div.confirmation_text
+      .actions
+        %input.cancel.button{:type=>"button", :value=>_('No')}
+        %input.trigger.button{:type=>"button", :value=>_('Yes') }
+      %br.clearfloat
+
+- if Katello.config.katello?
+  .panel_action{:class=>"disabled", 'data-id'=>"systems_errata_action", 'data-url'=>bulk_errata_install_systems_path(), 'data-method'=>"POST"}
+    .erratum_icon.fl
+    %label
+      #{_("Errata")}
+    %div
+      - help_text = _("Enter Errata...")
+      %input{:type=>'text', :id=>'errata_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+      %input.request_action.errata.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled'}
+    %div.validation_error
+    .options
+      %div.confirmation_text
+      .actions
+        %input.cancel.button{:type=>"button", :value=>_('No')}
+        %input.trigger.button{:type=>"button", :value=>_('Yes') }
+      %br.clearfloat
+
+- if Katello.config.katello?
+  .panel_action{:class=>"disabled", 'data-id'=>"systems_system_groups_action"}
+    .system_group_icon.fl
+    %label
+      #{_("System Groups")}
+    %div
+      = select_tag 'bulk_system[system_group_id]', options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+      %input.request_action.system_group.button{:type=>'button', :value=>_('Add'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path(), 'data-action'=>'add_group'}
+      %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path(), 'data-action'=>'remove_group'}
+    %div.validation_error
+    .options
+      %div.confirmation_text
+      .actions
+        %input.cancel.button{:type=>"button", :value=>_('No')}
+        %input.trigger.button{:type=>"button", :value=>_('Yes') }
+      %br.clearfloat
+
+.panel_action{'data-id'=>"select_none"}
+  #select-result
+  %a#select-none #{_("Select None")}

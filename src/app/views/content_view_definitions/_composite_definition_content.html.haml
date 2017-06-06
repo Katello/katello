@@ -1,0 +1,20 @@
+-# Partial for the 'Content' pane of a composite content view definition.
+= javascript do
+  :plain
+    KT.content_view_definition.set_view_repos($.parseJSON('#{escape_javascript(view_repos(view_definitions).to_json)}'));
+
+= render :partial => "content_view_definitions/tupane_header"
+
+= content_for :content do
+
+  #composite_definition_content
+    = kt_form_for(view_definition, :html => {:id => "component_views_form"}) do |form|
+
+      = render :partial => "view_definitions", :locals => {:form => form,
+                                                           :view_definitions => view_definitions,
+                                                           :views => views}
+
+      %input.fr.button{:id=>'update_component_views', :type=>'button', :value=>_("Save"),
+                       'data-url'=>update_component_views_content_view_definition_path(view_definition.id)}
+
+= render :template => "layouts/tupane_layout"

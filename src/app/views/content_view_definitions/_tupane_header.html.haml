@@ -1,0 +1,22 @@
+= content_for :title do
+  #{_("%{definition_type}: %{definition_name}") % {:definition_type => definition_type(@view_definition), :definition_name => @view_definition.name}}
+
+= content_for :remove_item do
+  .pane_actions
+    - if ContentViewDefinition.creatable?(current_organization)
+      %a.pane_action.separator.copy-tipsy{'data-url' => clone_content_view_definition_path(@view_definition.id)}
+        = _('Clone')
+
+    - if @view_definition.editable?
+      - if @view_definition.has_promoted_views?
+        %a.pane_action.remove.disabled
+          = _('Remove')
+        %span.hidden-text.hidden
+          .la.content_definition-tipsy
+            = _("Before removing this definition, all promoted content views must first be deleted from their respective environments using a deletion changeset.")
+      - else
+        = link_to(_("Remove"), content_view_definition_path(@view_definition.id), :confirm => _('Are you sure?'),
+          :method => :delete, :class => "pane_action remove", :remote => true)
+
+= content_for :navigation do
+  = render_menu(1..2, content_view_definition_navigation)

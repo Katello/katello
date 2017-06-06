@@ -1,0 +1,53 @@
+= javascript :dashboard
+
+.about-information
+  %h2.about-header= _("About")
+
+  .sixty
+
+    - if can_read_system_info?
+      .dash
+        .dashhead
+          %h4= _("System Status")
+        .widget.scroll-pane
+          %table.about-info
+            %tr.header
+              %th
+              %th= _("Component")
+              %th= _("Status")
+              %th= _("Message")
+            - @ping[:status].sort.each do |component, status|
+              %tr
+                %td= component_status_icon(status[:result])
+                %th= component
+                %td= status[:result] == 'OK' ? _('OK') : _('FAIL')
+                %td= status[:message]
+    .dash
+      .dashhead
+        %h4= _("System Information")
+      .widget.scroll-pane
+        %table.about-info
+          %tr.header
+            %th= _("Parameter")
+            %th= _("Value")
+          - @system_info.sort.each do |param, val|
+            %tr
+              %td= param
+              %td= val
+
+  .forty
+
+    .dash
+      .dashhead
+        %h4= _("Support")
+      .widget.support
+        %p= ((_("To submit a new bug please visit %s.")) % redhat_bugzilla_link).html_safe
+
+
+    - if can_read_system_info?
+      .dash
+        .dashhead
+          %h4= _("Installed Packages")
+        .widget.scroll-pane.packages
+          - @packages.each do |package|
+            .package= package

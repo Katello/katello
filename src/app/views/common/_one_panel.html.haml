@@ -1,0 +1,15 @@
+.container
+  %div{:id => panel_id}
+    .left_panel
+      .list-title
+        %h2.fl #{title}
+      %br.clear
+      .list{"data-single-selection" => ("true" if single_select) }
+        %header
+          .block_head.clear
+            - for cname in column_titles
+              %div{:class => 'column_' + column_titles.length.to_s}
+                = cname
+        - for item in collection
+          = render :partial=>"common/one_panel_list_item", :locals=>{:item=>item, :accessor=>accessor, :columns=>columns,
+            :panel_id => panel_id, :hover_text => (send(hover_text_cb, item) if hover_text_cb)}

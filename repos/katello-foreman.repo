@@ -1,0 +1,18 @@
+# Place this file in your /etc/yum.repos.d/ directory
+
+# Foreman RPMs as supported by Katello - This is a coordinated 
+# copy of Foreman's packages in order to ensure compatibility
+[katello-foreman]
+name=Foreman Community Releases
+baseurl=http://fedorapeople.org/groups/katello/releases/yum/katello-foreman/@SUBDIR@/$releasever/$basearch/
+gpgkey=http://www.katello.org/gpg/RPM-GPG-KEY-katello-2012.gpg
+enabled=1
+gpgcheck=0
+
+[katello-foreman-source]
+name=Katello Foreman source
+baseurl=http://fedorapeople.org/groups/katello/releases/source/katello-foreman/@SUBDIR@/$releasever/
+gpgkey=http://www.katello.org/gpg/RPM-GPG-KEY-katello-2012.gpg
+enabled=0
+gpgcheck=0
+

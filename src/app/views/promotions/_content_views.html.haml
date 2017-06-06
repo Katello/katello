@@ -1,0 +1,26 @@
+%ul.expand_list
+  -if content_view_versions.empty?
+    #{_("No Content Views")}
+
+  -else
+
+    - content_view_versions.each do |view_version|
+
+      %li.no_slide.block{:id => view_version.id, 'data-ajax_url' => organization_environment_content_view_version_path(environment.organization, environment, view_version.id)}
+
+        - view = view_version.content_view
+        - promoted = next_env_view_version_ids.include?(view_version.id)
+
+        .fr
+          %span.added.tipsify.hidden #{_("Added")}
+          %a{:class => "fr content_add_remove remove_content_view st_button hidden","data-display_name"=> view.name,
+             "data-id" => view.id, "data-type" => "content_view", "data-promotable" => "#{!promoted}",
+             :id => "add_remove_content_view_#{view.id}"}
+
+        - if promoted
+          .fr.promoted
+            = _("Promoted")
+
+        .simple_link
+          %span
+            = view.name

@@ -1,0 +1,58 @@
+katello-service(8)
+==================
+:man source:  katello
+:man manual:  Katello User Manual
+
+NAME
+----
+katello-service - Script to control Katello server.
+
+SYNOPSIS
+--------
+
+*katello-service* {*start*|*stop*|*status*|*reload*|*restart*|*enable*|*disable*|*list*}
+
+DESCRIPTION
+-----------
+
+Katello server consist from several services. While each of such service has its own init.d script
+and you can start/stop each service separately, you usually want to control all services together.
+This script does exactly this.
+
+OPTIONS
+-------
+
+*start*|*stop*|*status*|*reload*|*restart*::
+	Behave exactly as *service* for every Katello service.
+
+*allstopped*::
+  Using status call it calculates how many services are not stopped. If all the required services
+  are stopped, it returns zero.
+
+*enable*|*disable*::
+	Behave exactly as *chkconfig* on/off for every Katello service.
+
+*list*::
+	List all Katello services and if it is enabled or disabled.
+
+*--no-wait-for-tomcat*::
+	By default, katello-service wait until tomcat is able to answer requests.
+	If you specify this option, katello-service will continue immediately when
+	tomcat service will start.
+
+*--exclude* SERVICE::
+	It will not start/stop SERVICE.
+
+*--level* LEVEL::
+	Pass LEVEL to chkconfig when you specify option *enable*.
+
+FILES
+-----
+
+In file */etc/katello/service-list* you can define which additional service you want
+to control by *katello-service*. E.g. database.
+
+SEE ALSO
+--------
+
+*service*(8) *chkconfig*(8)

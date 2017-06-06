@@ -1,0 +1,47 @@
+= javascript 'widgets/subpanel_new'
+
+= content_for :title do
+  #{_("Create Product")}
+
+= content_for :subcontent do
+  = kt_form_for [@provider, Product.new], :remote => true, :html => {:id => "new_subpanel"} do |form|
+
+    = form.text_field :name, :label => _("Name"), :class => :name_input
+
+    = form.field :label, :label => _("Label") do
+      = text_field_tag 'product[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_provider_products_path(@provider.id)
+      = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
+
+    = form.text_area :description, :label => _("Description"), :size => "40x5"
+
+    = form.field :gpg_key, :label => _("GPG Key") do
+      - if gpg_keys.present?
+        = select_tag 'product[gpg_key]', options_from_collection_for_select(gpg_keys, "id", "name"), :include_blank => true, :tabindex => form.tabindex
+        - help_message = _("GPG Keys are not required.  This field may be left blank.")
+        %span.tipsify.details_icon-grey{:title => help_message}
+      - else
+        = _("None defined for this Organization.")
+
+    = form.submit _("Create"), :class => 'subpanel_create create_button', :disable_with => _("Creating...")
+
+    -# Content to be implemented and used at a later date
+      %fieldset.clearfix
+        .grid_2.ra
+          = label :product, :feed, _("URL")
+        .grid_5.la
+          = text_field :product, :feed, :id=>"product_url_field", :tabindex => auto_tab_index
+      %fieldset.clearfix
+        .grid_2.ra
+          = label :product, :types, _("Types")
+        %br.clear
+        .grid_2.ra
+          = label :product, :types, _("Yum")
+        .grid_5.la
+          = check_box_tag :yum_type, :tabindex => auto_tab_index
+        %br.clear
+        .grid_2.ra
+          = label :product, :types, _("File")
+        .grid_5.la
+          = check_box_tag :file_type, :tabindex => auto_tab_index
+
+= render :template => "layouts/tupane_layout"

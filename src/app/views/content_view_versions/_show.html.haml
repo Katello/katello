@@ -1,0 +1,27 @@
+= content_for :title do
+  #{@view_version.content_view.name}
+
+= content_for :navigation do
+  = render_menu(1..2, promotion_content_view_navigation)
+
+= content_for :content do
+  .clear
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la
+      = @view_version.content_view.name
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Version")}:
+    .grid_5.la
+      = @view_version.version
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Description")}:
+    .grid_5.la
+      = @view_version.content_view.description
+
+= render :template => "layouts/tupane_layout"

@@ -1,0 +1,23 @@
+/* Override this file with custom rules */
+
+body {
+    line-height: 18px;
+}
+
+.docstring code, .docstring .object_link a, #filecontents code {
+    padding: 0px 3px 1px 3px;
+    border: 1px solid #eef;
+    background: #f5f5ff;
+}
+
+#filecontents pre code, .docstring pre code {
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+#filecontents pre.code, .docstring pre.code, .tags pre.example, .docstring code, .docstring .object_link a,
+#filecontents code {
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+}

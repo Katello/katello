@@ -1,0 +1,41 @@
+= javascript 'providers/redhat'
+= stylesheet 'widgets/tabs', :dashboard
+
+#redhat_provider
+  .grid_16
+    = help_tip_button('subscriptions-help')
+    = help_tip(_("Expand each Red Hat Product below to examine the different repository sets available.  When enabling a repository set, the different repositories within are discoverd and may be enabled individually."))
+
+  .grid_16
+    #providers
+      %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
+      #provider
+        %h4 #{_("Enable Red Hat Repositories")}
+
+  -#.grid_16
+    -#= _("Current status: %s") % @provider.failed_products_status
+    -#%br
+    -#= _("You can use this link to %s to products." % link_to(_('add missing repositories'),
+    -#  refresh_products_providers_path(:id => @provider), :method => :put, :remote => true))
+    -#= _("You can encounter missing repositories because of errors during manifest import or new content was uploaded to CDN.")
+    -#= _("Note that this action can take some time to complete.")
+  - if @provider.products.empty?
+    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
+  - else
+    - tabs = redhat_repo_tabs(@provider)
+    #content_tabs.grid_16
+
+      %ul
+        - for tab in tabs
+          %li
+            %a{:href=>"##{tab[:id]}"}
+              = tab[:name]
+      - for tab in tabs
+        %div{:id=>tab[:id]}
+          - if tab[:products].empty?
+            = _("No products are available containing this content type.")
+          - else
+            - reset_cycle
+            = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}
+
+

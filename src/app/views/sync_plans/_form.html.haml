@@ -1,0 +1,14 @@
+-# parameters: form
+- raise ArgumentError, "Sync Plan form requires :form be passed in :locals" unless local_assigns[:form]
+
+= form.text_field :name, :label => _("Name")
+
+= form.text_field :description, :label => _("Description")
+
+= form.select :interval, options_for_select(SyncPlan::TYPES, @plan.interval), :label => _("Interval")
+
+= form.text_field :plan_date, :id => 'datepicker', :label => _("Start Date")
+
+= form.text_field :plan_time, :id => 'timepicker', :label => _("Time")
+
+= form.submit _("Save"), :id => :plan_save

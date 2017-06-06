@@ -1,0 +1,21 @@
+- cssclass = "" if cssclass.nil?
+
+%tr.view_version{:class => "child-of-view_#{version.content_view.id}" + cssclass,
+  'data-pending_task_id' => (task.id if task && task.pending?)}
+
+  %td #{environments(version)}
+  %td #{version.version unless task && task.pending?}
+  %td #{task.finish_time unless task.nil?}
+
+  %td
+    .fl{:style => "padding-right: 16px;"}
+      - if task.nil?
+        #{_("Error generating version")}
+      - else
+        - if task.pending?
+          = image_tag("icons/spinner.gif")
+          #{_("Generating version: %{view_version}") % {:view_version => version.version}}
+        - elsif task.error?
+          #{_("Error generating version")}
+
+    = refresh_link(version, task)

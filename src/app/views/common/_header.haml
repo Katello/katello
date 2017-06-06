@@ -1,0 +1,26 @@
+= content_for(:appname) do
+  = Katello.config.app_name.upcase
+
+= content_for(:logo) do
+  = link_to Katello.config.app_name.upcase, dashboard_index_path, :title=>Katello.config.app_name.upcase, :class => "logo"
+
+= content_for(:header_title_2) do
+  = Katello.config.app_name.upcase
+
+= content_for(:tabs) do
+  - if !current_user.nil?
+    = render_correct_nav
+
+= content_for(:widgets) do
+  = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
+  = link_to _("Log Out"), logout_path, :method=>"POST", :class => "header-widget"
+  - if current_user
+    %span#unread_notices.header-widget
+      = link_to Notice.for_user(current_user).for_org(current_organization).count,
+                notices_path, :id => "unread_notices_count", :title => _("System Notifications")
+    = link_to current_user.username, "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}", :class => "header-widget", :id=>"user_id", "data-user_id"=>current_user.id
+= content_for(:extra_header) do
+  - if (Organization.any_readable? && session[:menu_back]) or session[:notifications]
+    = link_to _("&laquo; Back"), dashboard_index_path, :class => "fl navlink"
+  - elsif current_user
+    = render :partial => '/layouts/org'

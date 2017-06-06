@@ -1,0 +1,19 @@
+# Place this file in your /etc/yum.repos.d/ directory
+
+
+# Candlepin RPMs as supported by Katello - This is a coordinated 
+# copy of Candlepin's packages in order to ensure compatibility
+
+[katello-candlepin]
+name=An open source entitlement management system.
+baseurl=http://fedorapeople.org/groups/katello/releases/yum/katello-candlepin/@SUBDIR@/$releasever/$basearch/
+gpgkey=http://www.katello.org/gpg/RPM-GPG-KEY-katello-2012.gpg
+enabled=1
+gpgcheck=0
+
+[katello-candlepin-source]
+name=Katello Candlepin source
+baseurl=http://fedorapeople.org/groups/katello/releases/source/katello-candlepin/@SUBDIR@/$releasever/
+gpgkey=http://www.katello.org/gpg/RPM-GPG-KEY-katello-2012.gpg
+enabled=0
+gpgcheck=0

@@ -1,0 +1,53 @@
+%table.filter_table
+  %thead
+    %tr
+      %th #{_("Subscription")}
+      %th #{_("Type")}
+      %th #{_("Start Date")}
+      %th #{_("End Date")}
+  %tbody
+    - if product_families.length > 0
+      - product_families.each do |product_family|
+
+        - cssclass = cycle("", "alt")
+
+        - product_family_name = product_family[0]
+        - subscriptions = product_family[1]
+        - num_subscriptions_per_family = product_family[1].nil? ? 0 : product_family[1].length
+
+        - if num_subscriptions_per_family > 1
+          %tr{:class => 'parent ' + cssclass, 'data-family_begin' => product_family_name}
+            %td{:colspan => "4"}
+              %a.clickable.product_family
+                = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
+
+              = check_box_tag "family[#{product_family_name}]", false, false, :class => :family_checkbox
+              %strong #{product_family_name} #{_("(%{n} Types)") % {:n =>num_subscriptions_per_family}}
+
+        - if num_subscriptions_per_family > 0
+          - subscriptions.each do |subscription|
+            - if num_subscriptions_per_family > 1
+              %tr{:class => 'child ' + cssclass, :style => 'display:none;', 'data-in_family' => product_family_name}
+                %td
+                  %span.fl.subscription_row
+                    = check_box_tag "subscription_id[#{subscription.cp_id}]", false
+                  &nbsp;
+                  = subscriptions_pool_link_helper(subscription.product_name, subscription.cp_id, subscription.provider_id, current_organization)
+                %td #{subscription.virt_only ? _("Virtual") : _("Physical")}
+                %td #{format_time(subscription.start_date)}
+                %td #{format_time(subscription.end_date)}
+            - else
+              %tr{:class => 'parent ' + cssclass}
+                %td
+                  %span.fl.subscription_row
+                    = check_box_tag "subscription_id[#{subscription.cp_id}]", false
+                  &nbsp;
+                  = subscriptions_pool_link_helper(subscription.product_name, subscription.cp_id, subscription.provider_id, current_organization)
+                %td #{subscription.virt_only ? _("Virtual") : _("Physical")}
+                %td #{format_time(subscription.start_date)}
+                %td #{format_time(subscription.end_date)}
+
+    - else
+      %tr
+        %td{:colspan=>4} #{_("There are no more subscriptions available.")}
+

@@ -1,0 +1,40 @@
+
+- if @environment.nil?
+  = no_env_available_msg
+- else
+  #path-widget.grid_10{:class => path_widget_class}
+    #path-container
+      #path-controller
+        - if @paths.length > 1
+          #path-collapsed.path_selector
+            = image_tag('icons/expander-collapsed-left.png', :alt => _('Expand'))
+          #path-expanded.path_selector
+            = image_tag('icons/expander-expanded.png', :alt => _('Collapse'))
+        - if @path
+          #path-selected.path_selected
+            .jbreadcrumb
+
+              %ul.breadcrumb
+                - @path.each_with_index do |env, count|
+                  %li
+                    %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, @path[count+1], @organization),
+                       "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
+                       "data-content_views_url"=>env_select_url(url_content_views_proc, env, @path[count+1], @organization),
+                       :class=>env_select_class(env, @environment, @path, @path, accessible_envs, library_clickable)}
+                      %div
+                        #{env.display_name}
+
+      - if @paths.length > 1
+        #path-entries.path_entries{:class => path_entries_class}
+          - for path in @paths
+            %div.path_entry
+              .jbreadcrumb
+                %ul
+                  - path.each_with_index do |env, count|
+                    %li
+                      %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
+                         "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
+                         "data-content_views_url"=>env_select_url(url_content_views_proc, env, @path[count+1], @organization),
+                         :class=>env_select_class(env, @environment, @path, path, accessible_envs, library_clickable)}
+                        %div
+                          #{env.display_name}

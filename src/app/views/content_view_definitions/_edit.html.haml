@@ -1,0 +1,24 @@
+= javascript "widgets/jquery.jeditable.helpers"
+
+= render :partial => "content_view_definitions/tupane_header"
+
+= content_for :content do
+  %input#panel_element_id{:name => view_definition.id, :type => "hidden", :value => "#{name}_#{view_definition.id}", "data-ajax_url"=>content_view_definition_path(view_definition.id)}
+
+  .grid_10#view_definition
+    %fieldset
+      .grid_2.ra
+        %label #{_("Name")}:
+      .grid_7.la{'name' => 'view_definition[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => content_view_definition_path(view_definition.id)} #{view_definition[:name]}
+
+    %fieldset
+      .grid_2.ra
+        %label #{_("Label")}:
+      .grid_7.la #{view_definition.label}
+
+    %fieldset
+      .grid_2.ra
+        %label #{_("Description")}:
+      .grid_7.la{:style => "word-wrap: break-word;", 'name' => 'view_definition[description]', :class => ("editable edit_textarea" if editable), 'data-url' => content_view_definition_path(view_definition.id)}<> #{view_definition[:description]}
+
+= render :template => "layouts/tupane_layout"

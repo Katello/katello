@@ -1,0 +1,79 @@
+
+=head1 NAME
+
+katello-configure - Katello project configurator
+
+=head1 SYNOPSIS
+
+    katello-configure
+        [ -h | --help ]
+	[ --only-show-config ]
+	CLI_OPTIONS
+
+=head1 DESCRIPTION
+
+The B<katello-configure> program will configure all aspects of the
+Katello project installation and its components. It can be run either
+with answer file which would contain the configuration values, or
+the configuration values can be specified as command line parameters
+on the command line. The values from user answer file override the
+default configuration values, and they are further overriden by
+options specified on the command line.
+
+All configuration options provided are stored in the
+/etc/katello/katello-configure.conf file which is always loaded 
+on subsequent executions of katello-configure. To override a value,
+provide it on the commandline or edit the configuration file.
+
+All the default options are stored in the
+/usr/share/katello/install/default-answer-file.
+
+=head1 COMMAND LINE PARAMETERS
+
+=over 4
+
+CLI_OPTIONS_LONG
+
+=item --no-bars, -b
+
+Do not print progress bars and show puppet log output instead.
+
+=item --debug, -d
+
+Increase loggingof puppet to debug (generates lots of log messages).
+
+=item --only-show-config, -c
+
+Only print the resulting configuration and exit, do not execute any of
+the configuration steps. The output is what would be stored in the
+C</etc/katello/katello-configure.conf> file, list of non-options
+collected from user answer files and command line options.
+
+=item --help, -h
+
+Display short summary of all options.
+
+=back
+
+=head1 EXAMPLE
+
+First Katello configuration with the most typical options:
+
+  katello-configure --user-name=superadmin \
+    --user-pass=MyPassWord123 \
+    --user-email=my.email@foobar.com \
+    --org-name=foobar_inc
+
+Additional change of ElasticSearch heap memory value:
+
+  katello-configure --es-min-mem=512m --es-max-mem=1024m
+
+All the parameters are kept in the answer file.
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+katello(8), katello(1)

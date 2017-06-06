@@ -1,0 +1,18 @@
+# Place this file in your /etc/yum.repos.d/ directory
+
+# Pulp RPMs as supported by Katello - This is a coordinated 
+# copy of Pulp's packages in order to ensure compatibility
+[katello-pulp]
+name=Pulp Community Releases
+baseurl=http://fedorapeople.org/groups/katello/releases/yum/katello-pulp/@SUBDIR@/$releasever/$basearch/
+gpgkey=http://www.katello.org/gpg/RPM-GPG-KEY-katello-2012.gpg
+enabled=1
+gpgcheck=0
+
+[katello-pulp-source]
+name=Katello Pulp source
+baseurl=http://fedorapeople.org/groups/katello/releases/source/katello-pulp/@SUBDIR@/$releasever/
+gpgkey=http://www.katello.org/gpg/RPM-GPG-KEY-katello-2012.gpg
+enabled=0
+gpgcheck=0
+

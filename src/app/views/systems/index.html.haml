@@ -1,0 +1,47 @@
+= stylesheet 'widgets/path_selector'
+= javascript do
+  :plain
+    localize({
+      "select_system_groups" : '#{escape_javascript(_('Select System Groups.'))}',
+      "group_does_not_exist" : '#{escape_javascript(_('System Group does not exist.  Would you like to create it?'))}',
+      "confirm_create" : '#{escape_javascript(_('+ Yes'))}'
+      });
+
+= javascript
+-# Add env selector and Set the flag appropriately to indicate if there is one
+-if defined? envsys
+  -if envsys == true
+    = javascript do
+      :plain
+        $(document).ready(function() {
+            env_select.envsys = true
+        });
+  -else
+    = javascript do
+      :plain
+        $(document).ready(function() {
+            env_select.envsys = false
+        });
+  .grid_16.center
+    = environment_selector(:library_clickable=>false, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
+-else
+  = javascript do
+    :plain
+      $(document).ready(function() {
+          env_select.envsys = false
+      });
+
+.grid_16#main
+  = two_panel(@systems, @panel_options)
+
+= javascript :systems
+
+-if defined? envsys
+  = javascript do
+    :plain
+      $(document).ready(function() {
+          env_select.env_changed_callback('#{@environment.id}');
+          env_select.click_callback = function(env_id) {
+              $.bbq.pushState({env_id : env_id});
+          };
+      });

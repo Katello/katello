@@ -1,0 +1,442 @@
+#!/usr/bin/ruby
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+# Manifest representation in Ruby
+#
+
+# workaround for: https://github.com/grosser/fast_gettext/issues/32
+Encoding.default_external='UTF-8' if RUBY_VERSION >= '1.9'
+
+APP_NAME = 'katello-disconnected'
+KATELLO_PREFIX = ENV['KATELLO_PREFIX'] || '/usr/share/katello'
+DISCONNECTED_PREFIX = ENV['DISCONNECTED_PREFIX'] || '/usr/share/katello-disconnected'
+
+require 'ostruct'
+require 'yaml'
+require 'optparse'
+require 'rubygems'
+require 'json'
+require 'openssl'
+require 'find'
+require 'uri'
+require 'net/http'
+require 'net/https'
+require 'active_support/all'
+require 'oauth'
+require 'rest_client'
+require 'runcible'
+require 'fast_gettext'
+
+require "#{DISCONNECTED_PREFIX}/lib/manifest_reader.rb"
+require "#{DISCONNECTED_PREFIX}/lib/simple_logger.rb"
+require "#{DISCONNECTED_PREFIX}/lib/disconnected_pulp.rb"
+
+require "#{KATELLO_PREFIX}/app/lib/util/cdn_var_substitutor.rb"
+require "#{KATELLO_PREFIX}/app/lib/http_resource.rb"
+
+include FastGettext::Translation
+locale_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'po'))
+if File.directory? locale_path
+  # git setup
+  FastGettext.add_text_domain(APP_NAME, :path => locale_path, :type => :po)
+else
+  # rpm setup
+  locale_path = "#{DISCONNECTED_PREFIX}/locale"
+  FastGettext.add_text_domain(APP_NAME, :path => locale_path)
+end
+# we also need katello domain for several translations from the katello lib
+FastGettext.add_text_domain("katello", :path => "#{KATELLO_PREFIX}/locale")
+# configure default domain and locales
+FastGettext.text_domain = APP_NAME
+FastGettext.available_locales = ['en'] + Dir.entries(locale_path).reject {|d| d =~ /(^\.|pot$)/ }
+FastGettext.locale = (ENV['LC_ALL'] || ENV['LC_MESSAGES'] || ENV['LANG'] || 'en').sub(/\.\w+$/, "")
+
+LOG = SimpleLogger.new
+module Rails; def self.logger; LOG; end; end
+
+CONFIG_DIR = File.expand_path "~/.#{APP_NAME}"
+CONFIG = YAML::load_file(CONFIG_DIR + "/config.yml") rescue {}
+
+RestClient.log = Object.new.tap do |proxy|
+  def proxy.<<(message)
+    LOG.debug message
+  end
+end
+Runcible::Base.config = {
+  :url      => "https://" + (CONFIG["hostname"] || 'localhost'),
+  :api_path => "/pulp/api/v2/",
+  :user     => (CONFIG["user"] || 'admin'),
+  :logger   => RestClient.log,
+  :oauth    => {
+    :oauth_secret => CONFIG["oauth_key"],
+    :oauth_key    => CONFIG["oauth_secret"] }
+}
+
+begin
+  require 'newt'
+  NEWT_PRESENT=true
+rescue LoadError
+  NEWT_PRESENT=false
+end
+
+DEFAULT_CDNURL = 'https://cdn.redhat.com'
+DEFAULT_CDNCA='/etc/rhsm/ca/redhat-uep.pem'
+
+options = {}
+
+subtext = _('Possible commands are:') + "\n\n" +
+'     ' + _('setup       set pulp configuration (oauth is required)') + "\n" +
+'     ' + _('import      import a manifest') + "\n" +
+'     ' + _('list        list all or enabled repositories') + "\n" +
+'     ' + _('enable      enable particular repository or all repos') + "\n" +
+'     ' + _('disable     disable particular repository or all repos') + "\n" +
+'     ' + _('configure   create and configure repositories in pulp') + "\n" +
+'     ' + _('sync        start synchronizing all or particular repos') + "\n" +
+'     ' + _('watch       watch synchronization progress') + "\n" +
+'     ' + _('export      export all or particular repos') + "\n" +
+'     ' + _('refresh     redownload repository information from CDN') + "\n" +
+'     ' + _('info        print (debugging) manifest information') + "\n" +
+'     ' + _('clean       remove all repositories from pulp') + "\n\n" +
+_('Typical workflow: import, edit repos.conf, configure, sync, watch, export.') + "\n" +
+_('More in the manual page katello-disconnected(1).') + "\n\n" +
+_('See "katello-disconnected COMMAND --help" for more information on a specific') + "\n" +
+_('command.')
+
+global = OptionParser.new do |opts|
+  opts.banner = _("Usage: katello-disconnected [global_options] [subcommand [options]]") +
+                "\n\n" + _("Global options:")
+
+  opts.on( '-q', '--quiet', _('Supress all output') ) do
+    LOG.level = Logger::ERROR
+  end
+  opts.on( '-v', '--verbose', _('Output more information') ) do
+    LOG.level = Logger::INFO
+  end
+  opts.on( '-d', '--debug', _('Print debugging information') ) do
+    LOG.level = Logger::DEBUG
+  end
+  opts.on( '-n', '--dry-run', _('Only print actions and do not modify anything') ) do
+    options[:dry_run] = true
+    # and enable verbose mode
+    LOG.level = Logger::WARN
+  end
+  opts.on( '-h', '--help', _('Display this screen') ) do
+    puts opts
+    exit
+  end
+  opts.separator ""
+  opts.separator subtext
+end
+
+options[:cdn_url] = DEFAULT_CDNURL
+options[:cdn_ca] = DEFAULT_CDNCA
+subcommands = {
+  'setup' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('setup [--option VALUE]')
+    opts.on('--host PULP_HOSTNAME', _('Pulp host (default "localhost")')) do |value|
+      CONFIG['hostname'] = value
+      options[:save_config] = true
+    end
+    opts.on('--oauth-key KEY', _('OAuth key (default "katello")')) do |value|
+      CONFIG['oauth_key'] = value
+      options[:save_config] = true
+    end
+    opts.on('--oauth-secret SECRET', _('OAuth secret string (REQUIRED)')) do |value|
+      CONFIG['oauth_secret'] = value
+      options[:save_config] = true
+    end
+    opts.on('--threads NUMBER', _('Number of download threads for sync (default 4)')) do |value|
+      CONFIG['threads'] = value
+      options[:save_config] = true
+    end
+    opts.on('--user PULP_USER', _('Pulp user to work under (default "admin")')) do |value|
+      CONFIG['user'] = value
+      options[:save_config] = true
+    end
+  end,
+  'import' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('import [--manifest MANIFEST]')
+    opts.on( '-m', '--manifest MANIFEST', _('Manifest to import - required') ) do |manifest|
+      LOG.fatal "Provide a valid file: #{manifest}" if not File.exists? manifest
+      options[:manifest] = manifest
+    end
+    opts.on( '-u', '--cdnurl URL', _("Base CDN URL (%s)") % DEFAULT_CDNURL ) do |value|
+      options[:cdn_url] = value
+    end
+    opts.on( '-a', '--cdnca FILE', _("CDN CA file (%s)") % DEFAULT_CDNCA ) do |value|
+      LOG.fatal "Provide a valid file: #{value}" if not File.exists? value
+      options[:cdn_ca] = value
+    end
+  end,
+  'refresh' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('refresh')
+    opts.on( '-a', '--cdnca FILE', _("CDN CA file (%s)") % DEFAULT_CDNCA ) do |value|
+      LOG.fatal "Provide a valid file: #{value}" if not File.exists? value
+      options[:cdn_ca] = value
+    end
+  end,
+  'info' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('info')
+  end,
+  'list' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('list [--disabled]')
+    opts.on( '-s', '--disabled', _('List also disabled repositories') ) do
+      options[:disabled] = true
+    end
+  end,
+  'enable' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('enable [-r repoid1,repoid2...] [--all]')
+    opts.on( '-r', '--repos REPOS', _('Repository ids to enable') ) do |value|
+      options[:repos] = value
+    end
+    opts.on( '-a', '--all', _('Enable all repositories') ) do
+      options[:all] = true
+    end
+  end,
+  'disable' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('disable [-r repoid1,repoid2...] [--all]')
+    opts.on( '-r', '--repos REPOS', _('Repository ids to disable') ) do |value|
+      options[:repos] = value
+    end
+    opts.on( '-a', '--all', _('Disable all repositories') ) do
+      options[:all] = true
+    end
+  end,
+  'select' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('select')
+  end,
+  'configure' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('configure')
+    opts.on( '-r', '--remove', _('Remove repositories that was disabled') ) do
+      options[:remove] = true
+    end
+  end,
+  'sync' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('sync')
+    opts.on( '-r', '--repos REPOS', _('Sync only selected repos (separate with comma)') ) do |value|
+      options[:repos] = value
+    end
+  end,
+  'watch' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('watch')
+    opts.on( '-d', '--delay SECONDS', _('Delay between polls (default: 10 seconds)') ) do |value|
+      options[:delay] = value
+    end
+    opts.on( '-r', '--repos REPOS', _('Watch only given repositories (separate with comma)') ) do |value|
+      options[:repos] = value
+    end
+    opts.on( '-1', '--once', _('Request status just once and exit') ) do
+      options[:once] = true
+    end
+  end,
+  'export' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('export')
+    opts.on( '-r', '--repos REPOS', _('Export only given repositories (separate with comma)') ) do |value|
+      options[:repos] = value
+    end
+    opts.on( '-t', '--target SERVER_DIRECTORY', _('Directory on the server where for export - required') ) do |value|
+      options[:target] = value
+    end
+    opts.on( '-o', '--overwrite', _('Overwrite existing files') ) do
+      options[:overwrite] = true
+    end
+    opts.on( '-c', '--onlycreate', _('Do not export and only create directory structure') ) do
+      options[:onlycreate] = true
+    end
+    opts.on( '-e', '--onlyexport', _('Do not create directory structure and only export') ) do
+      options[:onlyexport] = true
+    end
+  end,
+  'clean' => OptionParser.new do |opts|
+    opts.banner = _("Usage:") + " " + _('clean')
+  end,
+}
+
+begin
+  global.order!
+  command = ARGV.shift || LOG.fatal(global.help)
+  subcommands[command].order! if subcommands[command]
+rescue OptionParser::InvalidOption => e
+  LOG.fatal e.message
+end
+
+# ActiveManifest class represent current manifest file which is stored in user's home
+# directory as manifest.bin. Basically it is a ZIP manifest enriched with repositories
+# which has been fetched from CDN during import. Also this class provides access to
+# repository state (enabled/disabled) which is stored in the same directory in the
+# repos.conf file.
+#
+class ActiveManifest
+  attr_accessor :manifest
+  attr_accessor :active_dir, :import_dir
+  attr_accessor :manifest_filename, :repos_conf_filename
+  attr_accessor :cdn_url, :cdn_ca
+
+  def initialize options={}
+    prepare_config_dir
+    @cdn_url = options[:cdn_url]
+    @cdn_ca = options[:cdn_ca]
+    load_existing
+  end
+
+  def prepare_config_dir
+    if not File.directory?(CONFIG_DIR)
+      Dir.mkdir(CONFIG_DIR, 0700)
+    end
+    @manifest_filename = File.join(CONFIG_DIR, 'manifest.bin')
+    @repos_conf_filename = File.join(CONFIG_DIR, 'repos.conf')
+  end
+
+  def load_existing
+    if File.exists?(manifest_filename)
+      @manifest = ManifestReader::Manifest.load manifest_filename, repos_conf_filename
+      LOG.debug _("Existing manifest %s loaded") % @manifest.created
+    end
+  end
+
+  def import manifest_file, cdnca_file
+    # import basic manifest
+    LOG.fatal _("Please provide a manifest using --manifest option") if manifest_file.nil?
+    LOG.fatal _("Unable to read file %s, specify --cdnca option") % cdnca_file unless File.exist? cdnca_file
+    imanifest = ManifestReader::Manifest.new manifest_file, cdn_url, cdn_ca
+
+    # populate repositories
+    total_repos = imanifest.populate_repositories
+    LOG.verbose _("Total repositories found: %s") % total_repos
+
+    # import successful - move to active
+    @manifest = imanifest
+    save
+  end
+
+  def refresh cdnca_file
+    unless File.exist? cdnca_file
+      LOG.fatal _("Unable to read file %s, specify --cdnca option") % cdnca_file
+    end
+    total_repos = @manifest.populate_repositories
+    LOG.verbose _("Total repositories found: %s") % total_repos
+    save
+  end
+
+  def save
+    @manifest.save manifest_filename, repos_conf_filename
+  end
+
+  def save_repo_conf
+    LOG.debug _("Saving repos to %s") % repos_conf_filename
+    manifest.save_repo_conf repos_conf_filename
+  end
+
+  def print_info
+    manifest.print_info
+  end
+end
+
+# Newt mode is not working and it is unsupported (ruby binding is not complete and
+# we are not able to read values from the tree unfortunately).
+def newt_select active_manifest
+  if ! NEWT_PRESENT
+    LOG.fatal "Ruby-newt library not available on this system, use enable/disable\nor edit manually repos.conf."
+  end
+  Newt::Screen.new
+  at_exit do
+    Newt::Screen.finish
+  end
+
+  product_index = 0
+  repo_index = 1000
+  flag = 0
+  checktree = Newt::CheckboxTree.new(-1, -1, 20, Newt::FLAG_SCROLL)
+  active_manifest.entitlements.each_value do |entitlement|
+    entitlement.provided_products.each do |product|
+      product.content.each_value do |content|
+        checktree.add(content.name, 0, 0, Newt::ARG_APPEND)
+        content.repositories.each do |repo|
+          if repo.enabled
+            flag = Newt::FLAG_SELECTED
+          else
+            flag = 0
+          end
+          checktree.add(repo.repoid, 0, flag, product_index, Newt::ARG_APPEND)
+          repo_index += 1
+        end
+        product_index += 1
+      end
+    end
+  end
+
+  button_save_exit = Newt::Button.new(-1, -1, "Save and Exit")
+  button_exit = Newt::Button.new(-1, -1, "Exit")
+
+  grid_buttons = Newt::Grid.new(2, 1)
+  grid_buttons.set_field(0, 0, Newt::GRID_COMPONENT, button_save_exit, 0, 0, 0, 0, 0, 0)
+  grid_buttons.set_field(1, 0, Newt::GRID_COMPONENT, button_exit, 0, 0, 0, 0, 0, 0)
+
+  grid_tree = Newt::Grid.new(1, 2)
+  grid_tree.set_field(0, 0, Newt::GRID_COMPONENT, checktree, 0, 0, 0, 1, Newt::ANCHOR_RIGHT, 0)
+  grid_tree.set_field(0, 1, Newt::GRID_SUBGRID, grid_buttons, 0, 0, 0, 0, 0, 0)
+
+  grid_tree.wrapped_window("Katello Disconnected Repository Selection")
+
+  form = Newt::Form.new
+  form.add(checktree, button_save_exit, button_exit)
+  answer = form.run()
+  Newt::Screen.finish
+
+  if answer == button_save_exit
+    # ruby-newt binding is missing some important functions
+    puts "SAVING NOT YET IMPLEMENTED! Please manually edit the configuration."
+  end
+end
+
+active_manifest = ActiveManifest.new options
+if command == 'import'
+  active_manifest.import options[:manifest], options[:cdn_ca]
+elsif command == 'refresh'
+  active_manifest.refresh options[:cdn_ca]
+elsif command == 'info'
+  active_manifest.print_info
+elsif command == 'select' # not supported yet
+  newt_select active_manifest.manifest
+elsif command == 'list'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.list options[:disabled]
+elsif command == 'enable'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.enable true, options[:repos], options[:all]
+elsif command == 'disable'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.enable false, options[:repos], options[:all]
+elsif command == 'sync' or command == 'synchronize'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.synchronize options[:repos]
+elsif command == 'watch'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.watch options[:delay], options[:repos], options[:once]
+elsif command == 'export'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.export options[:target], options[:repos], options[:overwrite],
+    options[:onlycreate], options[:onlyexport]
+elsif command == 'clean'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.clean
+elsif command == 'configure' or command == 'config'
+  pulp = DisconnectedPulp.new active_manifest, options, LOG
+  pulp.configure options[:remove]
+elsif command == 'setup'
+  File.open(CONFIG_DIR + "/config.yml", "w") do |file|
+    LOG.debug _("Saving configuration to %s/config.yml") % CONFIG_DIR
+    file.write CONFIG.to_yaml
+  end if options[:save_config]
+else
+  LOG.error _('Unknown action, use -h or --help.')
+end

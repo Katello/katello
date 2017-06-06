@@ -1,0 +1,108 @@
+#!/usr/bin/ruby
+
+require 'optparse'
+require 'fileutils'
+
+options = {:kt_home => File.expand_path("../..", __FILE__)}
+
+OptionParser.new do |opts|
+  opts.banner = <<BANNER
+Script that lets you turn a system set up by katello-configure
+into a development machine. It allows you to run Katello from sources in
+KT_HOME directory, installs all the development dependnecies and reconfigures
+web server to use this location.
+BANNER
+  opts.on("-d", "--directory KATELLO_HOME", "#{options[:kt_home]} by default") do |val|
+    options[:kt_home] = val
+  end
+
+  opts.on("-h", "--help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+kt_home = options[:kt_home]
+origin_home = "/usr/share/katello"
+httpd_kt_conf_file = "/etc/httpd/conf.d/katello.conf"
+httpd_kt_conf_file_dev_bak = "/etc/httpd/conf.d/katello.conf.dev_bak"
+
+unless File.exists?(File.join(origin_home, "Gemfile.lock"))
+  STDERR.puts("#{origin_home}/Gemfile.lock not found: you should run production at least once")
+  exit 2
+end
+
+def run_command(cmd)
+  puts "Running #{cmd}"
+  unless system(cmd)
+    STDERR.puts("Failed")
+    exit 1
+  end
+end
+
+def yum_install(*packages)
+  run_command("yum install -y #{packages.join(" ")}")
+end
+
+yum_install("git")
+
+unless File.exist?(kt_home)
+  run_command("git clone --recursive git://github.com/Katello/katello.git #{kt_home}")
+end
+
+unless File.exists?(File.join(kt_home, "src", "Gemfile"))
+  STDERR.puts("#{kt_home} is not a valid Katello source directory")
+  exit 1
+end
+
+unless File.exists?(httpd_kt_conf_file_dev_bak)
+  FileUtils.cp(httpd_kt_conf_file, httpd_kt_conf_file_dev_bak)
+end
+
+httpd_kt_conf = File.read(httpd_kt_conf_file_dev_bak)
+httpd_kt_conf.gsub!(/^.*500[1-9].*\n/,"") # use only one port
+httpd_kt_conf.gsub!(origin_home, File.join(kt_home, "src"))
+File.open(httpd_kt_conf_file, "w") { |f| f << httpd_kt_conf }
+
+run_command("service httpd restart")
+
+run_command("service katello stop")
+run_command("chkconfig katello off")
+
+run_command("service katello-jobs stop")
+run_command("chkconfig katello-jobs off")
+
+yum_install("gcc","ruby-devel","postgresql-devel","sqlite-devel","libxml2",
+             "libxml2-devel","libxslt","libxslt-devel")
+
+unless File.read("/etc/katello/katello.yml").include?("katellotest")
+  File.open("/etc/katello/katello.yml", "a") { |f| f << <<EOF }
+test:
+  database:
+   adapter: postgresql
+   username: katellouser
+   password: katellopw
+   database: katellotest
+   host: localhost
+   encoding: UTF8
+EOF
+end
+
+FileUtils.cd(File.join(kt_home, "src"))
+
+FileUtils.cp(File.join(origin_home, "Gemfile.lock"), File.join(kt_home, "src"))
+
+run_command("bundle install --without checking")
+
+puts <<EOF
+Turning your machine into a development mode finished successfully.
+After it's finished use this commands to run a web server:
+
+    cd #{kt_home}/src
+    setenforce 0 # to allow static files to be read from the new location
+    RAILS_RELATIVE_URL_ROOT=/katello rails s thin -p 5000
+
+and this command to run a delayed tasks:
+
+    #{kt_home}/src/script/delayed_job run KATELLO_LOG=debug
+EOF

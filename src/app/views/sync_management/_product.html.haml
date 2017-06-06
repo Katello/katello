@@ -1,0 +1,18 @@
+- pid = prod[:id]
+- cycle_class = cycle("", "alt", :name => 'product')
+%tr.product{:id=>product_id(pid), :class => cycle_class}
+  %td= prod[:name]
+  %td.max_width.start_time
+  %td.max_width.duration
+  %td.size= @product_size[pid]
+  %td.result{:id =>'table_#{pid}'}
+  - if @show_org
+    %td= prod[:organization]
+
+- unless prod[:children].empty?
+  = render :partial => "children",
+      :locals => {:children => prod[:children], :parent_set => [pid], :cycle_class => cycle_class}
+
+- unless prod[:repos].empty?
+  = render :partial => "repo", :collection => prod[:repos], :as=>:repo,
+      :locals => {:parent_set => [pid], :cycle_class => cycle_class}

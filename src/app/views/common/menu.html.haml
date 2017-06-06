@@ -1,0 +1,22 @@
+= javascript 'menu/menu.controller'
+
+= generate_menu
+
+%div{ 'ng-controller' => 'MenuController' }
+  %header.header.logo-header
+    %a.fl.logo{ 'href' => 'dashboard' }
+    %span#experimental_indicator
+      = "experimental"
+    %nav{ 'alch-menu' => "user_menu" }
+  %header.header.nav-header
+    = render :file => 'components/org_switcher_experimental'
+    .nav(compact){ "alch-menu" => "menu" }
+    .nav.right
+      %ul.menu-container.menu-item-notices
+        %li.menu-item{ "ng-mouseenter" => "handle_hover(notices, true)", "ng-mouseleave" => "handle_hover(notices, false)" }
+          %a.menu-item-link{ :href => "{{ notices.url }}", "ng-class" => "{ 'active-item' : notices.active }"}
+            %span#unread_notices{"ng-cloak" => true}
+              %i.validation_icon-white.icon
+              %span#unread_notices_count
+                {{notices.count}}
+    .nav.admin_menu{ "alch-menu" => "admin_menu" }

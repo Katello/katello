@@ -1,0 +1,95 @@
+# vim: sw=2:ts=2:et
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+policy_module(katello, 1.0.0)
+
+require {
+  type unconfined_t;
+  type httpd_t;
+  type setfiles_t;
+  type postgresql_t;
+}
+
+########################################
+#
+# Declarations
+#
+
+apache_content_template(katello)
+
+permissive httpd_katello_script_t;
+
+type httpd_katello_script_log_t;
+logging_log_file(httpd_katello_script_log_t)
+
+type httpd_katello_script_var_lib_t;
+files_type(httpd_katello_script_var_lib_t)
+
+# extra config file domain for /etc/katello/secure
+type katello_secetc_file_t;
+files_type(katello_secetc_file_t)
+
+type katello_secetc_dir_t;
+files_type(katello_secetc_dir_t)
+
+########################################
+#
+# httpd_katello_script local policy
+#
+
+manage_dirs_pattern(httpd_katello_script_t, httpd_katello_script_log_t, httpd_katello_script_log_t)
+manage_files_pattern(httpd_katello_script_t, httpd_katello_script_log_t, httpd_katello_script_log_t)
+logging_log_filetrans(httpd_katello_script_t, httpd_katello_script_log_t, { dir file })
+
+manage_dirs_pattern(httpd_katello_script_t, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+manage_files_pattern(httpd_katello_script_t, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+files_var_lib_filetrans(httpd_katello_script_t, httpd_katello_script_var_lib_t, { dir file })
+
+sysnet_dns_name_resolve(httpd_katello_script_t)
+corenet_all_recvfrom_unlabeled(httpd_katello_script_t)
+
+allow httpd_katello_script_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(httpd_katello_script_t)
+corenet_tcp_sendrecv_generic_node(httpd_katello_script_t)
+corenet_tcp_sendrecv_all_ports(httpd_katello_script_t)
+corenet_tcp_bind_generic_node(httpd_katello_script_t)
+corenet_tcp_bind_http_port(httpd_katello_script_t)
+corenet_tcp_connect_http_port(httpd_katello_script_t)
+
+domain_use_interactive_fds(httpd_katello_script_t)
+
+files_read_etc_files(httpd_katello_script_t)
+
+logging_send_syslog_msg(httpd_katello_script_t)
+
+miscfiles_read_localization(httpd_katello_script_t)
+
+mta_send_mail(httpd_katello_script_t)
+
+# temporary fix for RHEL 6.2 GOLD (base policy is coming out soon)
+gen_require(`
+  type qpidd_t;
+')
+files_list_tmp(qpidd_t)
+miscfiles_read_certs(qpidd_t)   
+
+# for extra config file domain
+filetrans_pattern(unconfined_t, katello_secetc_dir_t, katello_secetc_file_t, file)
+
+# katello-configure
+init_rw_script_tmp_files(httpd_t)
+init_rw_script_tmp_files(postgresql_t)
+init_rw_script_tmp_files(setfiles_t)
+
+# TODO katello runs unconfined temporarily - uncomment this to allow secure files reading
+#katello_files_read_secetc_files(katello_not_yet_defined_t)

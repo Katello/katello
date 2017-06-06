@@ -1,0 +1,5 @@
+-products.each do |p|
+  %tr
+    %td{:class=>'product'}
+      .status_icon{:class => "#{@system.product_compliance_color p['productId']}"}
+      #{p['productName']}

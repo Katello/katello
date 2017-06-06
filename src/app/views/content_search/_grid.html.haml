@@ -1,0 +1,60 @@
+%article#comparison_grid
+  #grid_header
+    %header
+      %a.fl.button.hidden#return_to_results_btn
+        %i.left_arrow_icon-black
+        = _("Back to Results")
+      %h2.fl{ "data-title" => "results" }
+        = _("Results")
+      %div.fl.hidden#left_select
+        %label
+          = _("Show")
+        %select
+      %h2.hidden.fl.one-line-ellipsis{ "data-title" => "details" }
+      %div.fr.hidden#right_select
+        %label
+          = _("View")
+        %select
+        %i.view_tipsy.details_icon-grey
+          %span.hidden-text.hidden
+            .la.content-tipsy
+              %ul
+                %li
+                  =_('Union:')
+                  .example
+                    = _("Show all results regardless of which columns they exist in.")
+                %li
+                  =_('Intersection:')
+                  .example
+                    = _("Show only results that exist in all selected columns.")
+                %li
+                  =_('Difference:')
+                  .example
+                    = _("Show only results that do not exist in all selected columns.")
+    %div
+      %aside
+        -#"Filter goes here"
+      %div#column_headers_container
+        .slide_arrow.hidden{ 'data-arrow_direction' => 'left' }
+          .slide_trigger
+          %span.left_arrow_icon-black.disabled
+        #more_columns_fade.hidden
+        .slide_arrow.hidden{ 'data-arrow_direction' => 'right' }
+          .slide_trigger
+          %span.right_arrow_icon-black
+        #column_selector
+          %span.path_button.selector_icon-black
+        #column_headers_window
+          %ul#column_headers
+  %section
+    %ul#grid_row_headers
+    #grid_content_window
+      #grid_content
+    #grid_loading_screen.hidden
+      .large_spinner
+  %footer
+    %div.fl
+    %ul.fl
+      %li
+        %a.button#compare_btn.hidden{ :title => _("Select a set of items that you wish to compare the contents of by clicking the checkboxes inside the cells.") }
+          = _("Compare Selected")

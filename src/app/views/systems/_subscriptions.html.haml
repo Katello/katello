@@ -1,0 +1,30 @@
+= javascript do
+  :plain
+    localize({
+        "systemSelectAutoheal": '#{escape_javascript(_("Select Auto-attach Level..."))}'
+    });
+= javascript 'widgets/jquery.jeditable.helpers', 'systems/system_subscriptions'
+
+= render :partial => "system_tupane_header_nav"
+
+= content_for :content do
+  .subs
+    .subs_top
+      .subs_image_wrapper
+        .subs_image{:class => "#{@system.compliance_color}"}
+      .subs_text.fl
+        - if @system.compliance_color == 'green'
+          - until_time = @system.compliant_until
+          = until_time ? _("Subscriptions are Current Until %s") % format_time(until_time) : _("Subscriptions are Current")
+        - elsif @system.compliance_color == 'yellow'
+          = _("Insufficient Subscriptions are Attached to This System")
+        - else
+          = _("Subscriptions are not Current")
+    .subs_servicelevel{'name' => 'system[serviceLevel]', 'class' => ("editable edit_select_system_servicelevel" if editable), 'data-url' => system_path(system.id), 'data-options' => system_servicelevel_edit(system)}
+      = system_servicelevel(system)
+    .clear
+  #subs_data
+    = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable, :subscription_filters=>subscription_filters}
+  %br.clear
+
+= render :template => "layouts/tupane_layout"

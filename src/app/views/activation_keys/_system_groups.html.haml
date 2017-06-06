@@ -1,0 +1,34 @@
+= content_for(:title) do
+  #{@activation_key.name}
+
+= content_for(:remove_item) do
+  - if editable
+    = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for(:navigation) do
+  = render_menu(1..2, activation_keys_navigation)
+
+= content_for(:content) do
+  #system_groups
+    %table
+      %thead
+        %tr.no_sort
+          %th
+            #{_("Name")}
+
+      -if editable
+        %tr#add_groups.no_sort
+          %td
+            %form{:id=>'add_group_form'}
+              = select_tag :system_group, options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+              %input.button{:type=>'submit', :id=>'add_groups', :value=>_('Add'), 'data-url'=> add_system_groups_activation_key_path(@activation_key)}
+
+        %tr#empty_row{:class=>(:hidden if !@activation_key.system_groups.empty?)}
+          %td
+            = _("This activation key is not currently associated with a System Group.")
+        = render :partial=>'system_group_items', :locals=>{:system_groups=>@activation_key.system_groups, :editable=>editable}
+
+    - if editable
+      %input.fr.button{:type=>"button", :id=>"remove_groups", :value=>_("Remove"), 'data-url'=> remove_system_groups_activation_key_path(@activation_key)}
+
+= render :template => "layouts/tupane_layout"

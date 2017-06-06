@@ -1,0 +1,33 @@
+= javascript "widgets/jquery.jeditable.helpers"
+
+= content_for :title do
+  #{_("Subscription Manifest")}
+
+= render :partial=>"subscriptions_tupane_header_new_nav"
+
+= content_for :content do
+  #subscription_history
+    .grid_13
+      %table
+        %thead
+          %th #{_("Message")}
+          %th #{_("Import Time")}
+        - if @statuses
+          %tbody
+            - @statuses.each do |status|
+              - cycle_class = cycle(nil, 'alt')
+              %tr{:class => cycle_class}
+                %td{:style => "width: 400px;"}
+                  %span.icon_wrap.fl
+                    %span.fl{:class => (status["status"] == "FAILURE" ? "shield_icon-black" : "check_icon-black")}
+                  = status["statusMessage"]
+                %td
+                  = _("%s ago") % time_ago_in_words(status["created"])
+              - if status['webAppPrefix']
+                %tr{:class => cycle_class}
+                  %td{:colspan => 2}
+                    &nbsp; &nbsp; &nbsp;
+                    = _('Manifest from %s') % status['upstreamName']
+                    = subscriptions_manifest_link_helper status
+
+= render :template => "layouts/tupane_layout"

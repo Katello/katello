@@ -1,0 +1,37 @@
+#dashboard_sync.small_widget.scroll-pane{"data-quantity"=>quantity}
+  - if (products = products_synced()).empty?
+    #{_("No recently synced products.")}
+  - else
+    %ul
+    - for product in products
+      %li
+        .col_1
+          %h5
+            = link_to product.name, sync_management_index_path
+        - if product.sync_status.state == PulpSyncStatus::RUNNING
+          .col_progress{:title=>product.sync_status.progress.step}
+            %span
+              .progressbar{:percentage=>sync_percentage(product)}
+          .col_percent
+            %div
+              #{sync_percentage(product)}%
+        - else
+          .col_2
+            - if product.sync_status.state == PulpSyncStatus::ERROR
+              .error_icon.fl
+                &nbsp;
+              #{_("Error")}
+            - elsif product.sync_status.state == PulpSyncStatus::FINISHED
+              .check_icon.fl
+                &nbsp;
+              #{_("Success")}
+            - elsif product.sync_status.state == PulpSyncStatus::CANCELED
+              #{_("Cancelled")}
+            - elsif product.sync_status.state == PulpSyncStatus::WAITING
+              #{_("Waiting")}
+            - elsif product.sync_status.state == PulpSyncStatus::RUNNING
+              #{_("Running")}
+            - else
+              #{product.sync_status.state}
+          .col_3
+            #{format_time product.sync_status.finish_time}

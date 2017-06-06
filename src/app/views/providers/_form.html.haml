@@ -1,0 +1,8 @@
+-# parameters: form
+- raise ArgumentError, "Provider form requires :form be passed in :locals" unless local_assigns[:form]
+
+= form.text_field :name, :label => _("Name")
+
+= form.text_area :description, :label => _("Description"), :size => "40x5"
+
+= form.submit _("Save")

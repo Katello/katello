@@ -1,0 +1,45 @@
+= javascript 'gpg_keys/gpg_key_edit'
+
+= content_for :title do
+  #{@gpg_key.name}
+
+= content_for :remove_item do
+  - if editable
+    = link_to _("Remove GPG Key"), gpg_key_path(@gpg_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, gpg_keys_navigation)
+
+= content_for :content do
+  = help_tip_button('gpg_keys_edit-help')
+
+  %input#panel_element_id{:name => @gpg_key.id, :type => "hidden", :value => "#{name}_#{@gpg_key.id}", "data-ajax_url"=>gpg_key_path(@gpg_key.id)}
+
+  %div
+    .full
+      = help_tip(_("Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."), 'gpg_keys_edit-help') |
+
+    .full
+      %fieldset
+        .grid_1.ra
+          %label #{_("Name")}:
+        .grid_8.la#gpg_key_name{'name' => 'gpg_key[name]', :class => editable_class(editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:name]}
+      = form_tag gpg_key_path(@gpg_key.id), :method => "post", "data-url" => gpg_key_path(@gpg_key.id), :id => "upload_gpg_key" do
+        - if editable
+          %fieldset
+            .grid_1.ra
+              %label #{_("Upload")}:
+            .grid_3.la
+              = file_field_tag 'gpg_key[content_upload]', :id => "gpg_key_content_upload_update", :tabindex => auto_tab_index
+          %fieldset
+            .grid_2.la.push_1
+              %input.button{ "type" => "button", :id => :update_upload_gpg_key, :disabled => "disabled", :tabindex => auto_tab_index, "value" => _("Upload") }
+            .grid_1.push_2.ra
+              %input.button{ "type" => "button", :id => :clear_upload_gpg_key, :disabled => "disabled", :tabindex => auto_tab_index, "value" => _("Clear") }
+      %fieldset
+        .grid_1.ra
+          %label #{_("Key")}:
+        .grid_8.la
+          .grid_8.la.multiline#gpg_key_content{'name' => 'gpg_key[content]', :class => ("editable edit_textarea" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:content]}
+
+= render :template => "layouts/tupane_layout"

@@ -1,0 +1,15 @@
+= javascript do
+  :plain
+    $(document).ready(function() {
+        KT.system_group.events.init();
+    });
+
+.grid_10
+  %table.ajaxScroll
+    %thead
+      %th
+        #{_("Event")}
+      %th
+        #{_("Date")}
+    %tbody
+      = render :partial => 'system_groups/events/system_items', :locals => {:include_tr => true}, :collection=> tasks, :as=>:t

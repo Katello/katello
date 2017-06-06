@@ -1,0 +1,32 @@
+= content_for :title do
+  = _("Edit Systems' Environment and Content View")
+
+= content_for :subcontent do
+
+  = form_tag update_systems_system_group_path(@group.id), :id => 'update_form',
+    :method => :put, :class => 'env_content_view_selector' do
+
+    = hidden_field_tag 'update_fields[environment_id]', @environment.id, :id => :environment_id
+
+    %fieldset
+      .grid_2.ra
+        %label #{_('Choose Environment:')}
+
+      .grid_10.la
+        = environment_selector(:path_widget_class => "grid_7",
+            :path_entries_class => "grid_7", :library_clickable => false,
+            :accessible_envs => accessible_envs,
+            :url_content_views_proc => url_content_views_proc)
+
+    %fieldset
+      .grid_2.ra
+        %label #{_('Content View:')}
+
+      .grid_10.la
+        = select_tag 'update_fields[content_view_id]',
+          options_for_select(content_view_select_labels(@organization, @environment), no_content_view),
+          :id => :content_view_id
+
+    = submit_tag _('Save'), :class => 'submit dialogbutton', :id=>"save_button"
+
+= render :template => "layouts/tupane_layout"

@@ -1,0 +1,88 @@
+/**
+ Copyright 2013 Red Hat, Inc.
+
+ This software is licensed to you under the GNU General Public
+ License as published by the Free Software Foundation; either version
+ 2 of the License (GPLv2) or (at your option) any later version.
+ There is NO WARRANTY for this software, express or implied,
+ including the implied warranties of MERCHANTABILITY,
+ NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+ have received a copy of GPLv2 along with this software; if not, see
+ http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+*/
+
+//katello specific mixins
+
+@mixin column-count($c) {
+  -moz-column-count: $c;
+  -o-column-count: $c;
+  -webkit-column-count: $c;
+  column-count: $c;
+}
+
+@mixin column-gap($g) {
+  -moz-column-gap: $g;
+  -o-column-gap: $g;
+  -webkit-column-gap: $g;
+  column-gap: $g;
+}
+
+@mixin background-size($size) {
+  -webkit-background-size: $size;
+  -o-background-size: $size;
+  -moz-background-size: $size;
+  background-size: $size;
+}
+
+
+@mixin crumb-disable-hover {
+  &:hover {
+    background: $breadcrumbbg_color !important;
+    color: #000;
+    @include text-shadow(none);
+
+    &:after { border-left-color: $breadcrumbbg_color !important; }
+  }
+}
+
+@mixin crumb-disable-hover-selected {
+  &:hover {
+    background: $listhover_color !important;
+    color: $white_color;
+    @include text-shadow(2px 2px 2px rgba(0,0,0,0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
+    }
+  }
+}
+
+@mixin crumb-nohover {
+  .crumb-nohover {
+    // crumb without any hover effect (color, cursor...etc)
+    cursor: default;
+    @include crumb-disable-hover;
+  }
+  .crumb-nohover-selected {
+    // a selected crumb without any hover effect (color, cursor...etc)
+    cursor: default;
+    @include crumb-disable-hover-selected;
+  }
+  .crumb-editable {
+    // a crumb that is editable... hover effect disabled, but cursor will be a hand
+    @include crumb-disable-hover;
+  }
+  .crumb-editable-selected {
+    // a selected crumb that is editable... hover effect disabled, but cursor will be a hand
+    @include crumb-disable-hover-selected;
+  }
+}
+
+@mixin product-sprite {
+  background: $base_product_icon;
+  height: 16px;
+  width: 16px;
+  margin-top: 2px;
+  margin-left: 4px;
+  margin-right: 4px;
+  float: left;
+}

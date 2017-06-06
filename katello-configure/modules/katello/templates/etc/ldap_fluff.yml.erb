@@ -1,0 +1,11 @@
+---
+host: <%= scope.lookupvar("katello::params::ldap_server") %>
+port: <%= scope.lookupvar("katello::params::ldap_port") %>
+encryption: <%= scope.lookupvar("katello::params::ldap_encryption") %>
+base_dn: <%= scope.lookupvar("katello::params::ldap_users_basedn") %>
+group_base: <%= scope.lookupvar("katello::params::ldap_groups_basedn") %>
+server_type: <%= scope.lookupvar("katello::params::ldap_server_type") %>
+service_user: <%= scope.lookupvar("katello::params::ldap_service_user") %>
+service_pass: <%= scope.lookupvar("katello::params::ldap_service_pass") %>
+anon_queries: <%= scope.lookupvar("katello::params::ldap_anon_queries") %>
+ad_domain: <%= scope.lookupvar("katello::params::ldap_ad_domain") %>

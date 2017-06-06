@@ -1,0 +1,15 @@
+= content_for :title do
+  = @package.nvrea
+
+= content_for :navigation do
+  = render_menu(1..2, promotion_packages_navigation)
+
+= content_for :content do
+  -#%h2
+    -#= _("Filelist")
+
+  file 1
+  %br
+  file 2
+
+= render :template => "layouts/tupane_layout"
