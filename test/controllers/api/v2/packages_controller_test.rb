@@ -86,6 +86,25 @@ module Katello
       assert_includes JSON.parse(response.body), @rpm.name
     end
 
+    def test_compare
+      @fedora_repo = katello_repositories(:fedora_17_x86_64)
+      @fedora_dev_repo = katello_repositories(:fedora_17_x86_64_dev)
+
+      response = get :compare, :content_view_version_ids => [@fedora_repo.content_view_version_id, @fedora_dev_repo.content_view_version_id]
+      results = JSON.parse(response.body)["results"]
+
+      assert_response :success
+      assert results.count > 0
+
+      fedora_repo_packages = @fedora_repo.rpms.map(&:nvra)
+      fedora_repo_results = results.select { |result| fedora_repo_packages.include?(result["item"]) }
+      fedora_repo_results.each { |result| assert result["comparison"].include?(@fedora_repo.content_view_version_id) }
+
+      fedora_dev_repo_packages = @fedora_dev_repo.rpms.map(&:nvra)
+      fedora_dev_repo_results = results.select { |result| fedora_dev_repo_packages.include?(result["item"]) }
+      fedora_dev_repo_results.each { |result| assert result["comparison"].include?(@fedora_dev_repo.content_view_version_id) }
+    end
+
     def test_show
       get :show, :id => @rpm.id
 
