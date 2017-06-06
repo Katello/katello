@@ -11,7 +11,9 @@ class MoveSystemDescriptionToHost < ActiveRecord::Migration
     add_column :hosts, :description, :text
 
     System.find_each do |system|
-      system.foreman_host.update_attribute(:description, system.description)
+      if system.foreman_host
+        system.foreman_host.update_attribute(:description, system.description)
+      end
     end
 
     remove_column :katello_systems, :description
@@ -21,7 +23,9 @@ class MoveSystemDescriptionToHost < ActiveRecord::Migration
     add_column :katello_systems, :description, :text
 
     System.find_each do |system|
-      system.update_attribute(:description, system.foreman_host.description)
+      if system.foreman_host
+        system.update_attribute(:description, system.foreman_host.description)
+      end
     end
 
     remove_column :hosts, :description
