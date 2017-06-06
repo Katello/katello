@@ -234,7 +234,6 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
       require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp"
-      require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
 
       #facet extensions
