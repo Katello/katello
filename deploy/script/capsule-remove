@@ -1,0 +1,144 @@
+#!/bin/bash
+
+echo ""
+echo "WARNING: This script will erase many packages and config files."
+echo "Important packages such as the following will be removed:"
+echo ""
+echo "  * httpd (apache)"
+echo "  * mongodb"
+echo "  * tomcat"
+echo "  * puppet"
+echo "  * ruby"
+echo "  * rubygems"
+echo "  * All Katello and Foreman Packages"
+echo ""
+echo "Once these packages and configuration files are removed there is no going back."
+echo "If you use this system for anything other than Katello and Foreman you probably"
+echo "do not want to execute this script."
+echo ""
+read -p "Read the source for a list of what is removed.  Are you sure(Y/N)? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo "** cancelled **"
+    exit 1
+fi
+
+echo ""
+echo "ARE YOU SURE?: This script permanently deletes data and configuration."
+read -p "Read the source for a list of what is removed.  Type [remove] to continue? " -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY = remove ]]
+then
+    echo "** cancelled **"
+    exit 1
+fi
+
+CONFIG_FILES=(
+    /etc/pulp/
+    /usr/share/capsule-installer/
+    /var/lib/puppet/
+    /var/lib/mongodb/
+    /var/lib/pulp/
+    /etc/httpd/
+    /usr/share/pulp
+    /etc/foreman-proxy
+    /var/lib/foreman-proxy
+    /etc/katello-installer
+    /etc/foreman-proxy/
+    /etc/puppet/environments
+    /etc/pki/katello-certs-tools
+)
+
+LOG_FILES=(
+    /var/log/capsule-installer/
+    /var/log/pulp/
+    /var/log/httpd/
+    /var/log/mongodb/
+    /var/log/foreman-proxy
+)
+
+RPMS=(
+    `rpm -qa | grep puppetlabs-release`
+    `rpm -qa | grep foreman-release`
+    `rpm -qa | grep foreman-client`
+    `rpm -qa | grep foreman-proxy`
+    `rpm -qa | grep katello`
+    `rpm -qa | grep ^pulp`
+    `rpm -qa | grep ^python-pulp`
+    `rpm -qa | grep ^pulp-`
+    `rpm -qa | grep mongo`
+    `rpm -qa | grep ^mod_`
+    `rpm -qa | grep ^rubygem`
+    `rpm -qa | grep ^ruby193`
+    `rpm -qa | grep ^foreman`
+    `rpm -qa | grep ^qpid`
+    `rpm -qa | grep ^lucene`
+    `rpm -qa | grep ^python-crane`
+    `rpm -qa | grep ^python-celery`
+    `rpm -qa | grep ^python-gofer`
+    `rpm -qa | grep ^python-qpid`
+    `rpm -qa | grep ^python-kombu`
+    `rpm -qa | grep ^python-webpy`
+    `rpm -qa | grep ^python-nectar`
+    `rpm -qa | grep ^python-saslwrapper`
+    `rpm -qa | grep ^python-amqp`
+    `rpm -qa | grep ^python-billiard`
+    `rpm -qa | grep ^python-semantic-version`
+    `rpm -qa | grep ^python-requests`
+    `rpm -qa | grep ^python-isodate`
+    `rpm -qa | grep gutterball`
+    `rpm -qa | grep $HOSTNAME`
+    saslwrapper
+    snappy-java
+    ruby
+    rubygems
+    httpd
+    puppet
+)
+
+CERT_FILES=(
+    /etc/pki/pulp/
+    /etc/pki/katello
+    /root/ssl-build
+)
+
+# checking to see what version of rhel we have if 6 do service if 7 do systemctl so we dont have redirect messages going to the customer
+
+var4=$(cat /etc/redhat-release | awk '{print int($7)}')
+if [[ $var4 = 6 ]]
+then
+    service httpd stop
+    service mongod stop
+    service qpidd stop
+    service puppet stop
+    service pulp_workers stop
+    service pulp_celerybeat stop
+    service pulp_resource_manager stop
+    service goferd stop
+    service foreman-proxy stop
+else
+    systemctl stop httpd
+    systemctl stop mongod
+    systemctl stop qpidd
+    systemctl stop puppet
+    systemctl stop pulp_workers
+    systemctl stop pulp_celerybeat
+    systemctl stop pulp_resource_manager
+    systemctl stop goferd
+    systemctl stop foreman-proxy
+fi
+
+echo "Removing RPMs"
+yum erase -y ${RPMS[*]}
+
+echo "Cleaning up configuration files"
+rm -rf ${CONFIG_FILES[*]}
+
+echo "Cleaning up log files"
+# logs
+rm -rf ${LOG_FILES[*]}
+
+echo "Cleaning up Certs"
+# pulp cert stuff 
+rm -rf ${CERT_FILES[*]}
