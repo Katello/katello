@@ -26,7 +26,7 @@ module Katello
 
     def test_update_candlepin_owner_service_level
       # Without any choices, should not be able to set a service level
-      assert_equal nil, @org.service_level
+      assert_nil @org.service_level
       e = assert_raises(RestClient::BadRequest) do
         @org.service_level = 'Premium'
       end
