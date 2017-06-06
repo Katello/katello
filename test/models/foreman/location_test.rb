@@ -14,7 +14,7 @@ module Katello
       end
 
       test 'default location for subs or puppet cannot be destroyed' do
-        loc = Location.first
+        loc = Location.find_by_title(Setting[:default_location_subscribed_hosts])
         refute_nil loc
         loc.destroy
         refute_empty Location.where(:id => loc.id)
