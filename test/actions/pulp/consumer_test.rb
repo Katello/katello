@@ -59,22 +59,6 @@ module ::Actions::Pulp
       it_runs(action, :extensions, :consumer, :uninstall_content)
     end
 
-    def test_regenerate_applicability
-      action = create_and_plan_action(::Actions::Pulp::Consumer::GenerateApplicability,
-                                      uuids: [uuid],
-                                      type: type,
-                                      args: args)
-      it_runs(action, :resources, :consumer, :regenerate_applicability_by_id)
-    end
-
-    def test_regenerate_applicability_multiple_uuid
-      action = create_and_plan_action(::Actions::Pulp::Consumer::GenerateApplicability,
-                                      uuids: [uuid, 'another-uuid'],
-                                      type: type,
-                                      args: args)
-      it_runs(action, :extensions, :consumer, :regenerate_applicability_by_ids)
-    end
-
     def plan_consumer_action(action_class)
       create_and_plan_action(action_class,
                              consumer_uuid: uuid,
