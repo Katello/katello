@@ -21,7 +21,7 @@ module Actions
           optional[:override_config] = input[:override_config] if input[:override_config]
           content_extension.copy(input[:source_pulp_id],
                                  input[:target_pulp_id],
-                                 criteria)
+                                 optional)
         end
 
         def criteria
