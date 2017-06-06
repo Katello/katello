@@ -366,9 +366,9 @@ module Katello
       upload_ids = uploads.map { |upload| upload['id'] }
       unit_keys = uploads.map do |upload|
         if @repository.file?
-          upload.except('id').except('name')
-        else
           upload.except('id')
+        else
+          upload.except('id').except('name')
         end
       end
 
