@@ -56,6 +56,16 @@ module Katello
         fail _("No content_view_version_ids provided") if params[:content_view_version_ids].empty?
         @versions = ContentViewVersion.readable.where(:id => params[:content_view_version_ids])
 
+        sort_options = []
+        options = {}
+        if default_sort.is_a?(Array)
+          sort_options = default_sort
+        elsif default_sort.is_a?(Proc)
+          options[:custom_sort] = default_sort
+        else
+          fail "Unsupported default_sort type"
+        end
+
         if @versions.count != params[:content_view_version_ids].uniq.length
           missing = params[:content_view_version_ids] - @versions.pluck(:id)
           fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
@@ -63,10 +73,11 @@ module Katello
 
         collection = resource_class.all
         repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
-        repos = repos.where(:library_instance_id => @repo.id) if @repo
+        repos = repos.where(:id => @repo.id) if @repo
 
-        collection = scoped_search(filter_by_repos(repos, collection).uniq, default_sort[0], default_sort[1])
+        collection = scoped_search(filter_by_repos(repos, collection).uniq, sort_options[0], sort_options[1], options)
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
+
         respond_for_index(:collection => collection)
       end
 
