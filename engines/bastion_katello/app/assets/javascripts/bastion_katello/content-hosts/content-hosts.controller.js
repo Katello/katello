@@ -21,20 +21,27 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'GlobalNotification', 'CurrentOrganization', 'ContentHostsHelper',
-    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, GlobalNotification, CurrentOrganization, ContentHostsHelper) {
-        var nutupane, params;
+    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'GlobalNotification', 'CurrentOrganization', 'ContentHostsHelper', '$httpParamSerializer',
+    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, GlobalNotification, CurrentOrganization, ContentHostsHelper, $httpParamSerializer) {
+        var nutupane, params, query;
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
+        if ($location.search().search) {
+            query = '"' + $location.search().search + '"';
+        } else {
+            query = "";
+        }
+
         params = {
             'organization_id': CurrentOrganization,
-            'search': $location.search().search || "",
+            'search': query,
             'sort_by': 'name',
             'sort_order': 'ASC'
         };
 
+        $scope.csvQuery = $httpParamSerializer(params);
         nutupane = new Nutupane(Host, params);
         $scope.controllerName = 'hosts';
         nutupane.masterOnly = true;

@@ -23,6 +23,7 @@ Foreman::Application.routes.draw do
 
   resources :hosts, :only => [] do
     get 'puppet_environment_for_content_view', :on => :collection
+    get :content_hosts, :on => :collection
   end
 
   resources :smart_proxies, :only => [] do
