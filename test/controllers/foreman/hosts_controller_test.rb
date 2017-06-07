@@ -23,4 +23,38 @@ class HostsControllerTest < ActionController::TestCase
 
     assert_response :success
   end
+
+  context 'csv' do
+    setup do
+      models
+      @host = FactoryGirl.create(:host, :with_content, :lifecycle_environment => @library,
+                                        :content_view => @library_dev_staging_view)
+      @host2 = FactoryGirl.create(:host, :with_content, :organization_id => @host.organization_id,
+                                       :content_view => @library_dev_staging_view,
+                                       :lifecycle_environment =>  @library)
+    end
+
+    def test_csv_export
+      get :content_hosts, :format => 'csv',
+                          :organization_id => @host.organization_id
+      assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]
+      assert_equal "no-cache", response.headers["Cache-Control"]
+      assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"", response.headers["Content-Disposition"]
+      buf = response.stream.instance_variable_get(:@buf)
+      assert buf.is_a? Enumerator
+      assert_equal "Name,Subscription Status,Installable Updates - Security,Installable Updates - Bug \
+Fixes,Installable Updates - Enhancements,Installable Updates - Package Count,OS,Environment,\
+Content View,Registered,Last Checkin\n",
+        buf.next
+      assert_equal 3, buf.count
+    end
+
+    def test_csv_export_search
+      get :content_hosts, :format => 'csv',
+                          :organization_id => @host.organization_id,
+                          :search => "name = #{@host.name}"
+      buf = response.stream.instance_variable_get(:@buf)
+      assert_equal 2, buf.count
+    end
+  end
 end

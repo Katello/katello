@@ -3,7 +3,10 @@ module Katello
     module HostsControllerExtensions
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
+
       included do
+        alias_method_chain :action_permission, :katello
+
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
           process_success(:success_redirect => hosts_path)
@@ -22,6 +25,36 @@ module Katello
           version = view.version(environment)
           cvpe = Katello::ContentViewPuppetEnvironment.where(:environment_id => environment, :content_view_version_id => version).first
           render :json => cvpe.nil? ? nil : {:name => cvpe.puppet_environment.name, :id => cvpe.puppet_environment.id}
+        end
+
+        def content_hosts
+          respond_to do |format|
+            format.csv do
+              @hosts = resource_base_with_search.where(organization_id: params[:organization_id])
+                         .preload(:subscription_facet, :host_statuses, :operatingsystem,
+                                  :applicable_rpms, :lifecycle_environment, :content_view)
+              csv_response(@hosts,
+                [:name, :subscription_status_label, 'applicable_errata.security.size',
+                 'applicable_errata.bugfix.size', 'applicable_errata.enhancement.size',
+                 'applicable_rpms.size', :operatingsystem, :lifecycle_environment, :content_view,
+                 'subscription_facet.registered_at', 'subscription_facet.last_checkin'],
+                ['Name', 'Subscription Status', 'Installable Updates - Security',
+                 'Installable Updates - Bug Fixes', 'Installable Updates - Enhancements',
+                 'Installable Updates - Package Count', 'OS', 'Environment', 'Content View',
+                 'Registered', 'Last Checkin'])
+            end
+          end
+        end
+      end
+
+      private
+
+      def action_permission_with_katello
+        case params[:action]
+        when 'content_hosts'
+          'view'
+        else
+          action_permission_without_katello
         end
       end
     end
