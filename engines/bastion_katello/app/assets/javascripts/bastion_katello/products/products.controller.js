@@ -32,7 +32,7 @@ angular.module('Bastion.products').controller('ProductsController',
 
         bulkError = function (response) {
             angular.forEach(response.data.errors, function(message) {
-                GlobalNotification.setErrorMessage(translate("An error occurred updating the sync plan: ") + message);
+                GlobalNotification.setErrorMessage(translate("An error occurred : ") + message);
             });
 
             nutupane.refresh();
