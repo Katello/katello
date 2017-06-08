@@ -71,7 +71,7 @@ describe('Controller: RepositoryDetailsController', function() {
             repository = {id: 200, $resolved: true};
 
         $scope.denied = function (perm, prod) {
-            expect(perm).toBe("destroy_products");
+            expect(perm).toBe("deletable");
             return true;
         };
         expect($scope.getRepoNonDeletableReason(repository, product)).toBe("permissions");
