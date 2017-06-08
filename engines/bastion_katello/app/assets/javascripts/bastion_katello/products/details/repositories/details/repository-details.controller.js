@@ -98,12 +98,12 @@
             var readOnlyReason = null;
 
             if (repo.$resolved && product.$resolved) {
-                if ($scope.denied('destroy_products', product)) {
-                    readOnlyReason = 'permissions';
-                } else if (repo.promoted) {
+                if (repo.promoted) {
                     readOnlyReason = 'published';
                 } else if (repo['product_type'] === "redhat") {
                     readOnlyReason = 'redhat';
+                } else if ($scope.denied('deletable', repo)) {
+                    readOnlyReason = 'permissions';
                 }
             }
             return readOnlyReason;

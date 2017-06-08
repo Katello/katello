@@ -46,12 +46,13 @@
           </span>
         </li>
 
-        <li class="divider" bst-feature-flag="custom_products" ng-hide="denied('delete_repositories')"></li>
+        <li class="divider" bst-feature-flag="custom_products"></li>
         <li role="menuitem" ng-show="canRemove(repository, product)">
           <a ng-click="openModal()" translate>
             Remove Repository
           </a>
-
+        </li>
+        <li>
           <span class="disabled" ng-hide="canRemove(repository, product)">
             <span translate>Cannot Remove</span>
 
