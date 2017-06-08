@@ -55,20 +55,22 @@ module Actions
         end
 
         def finalize
-          host = ::Host.find(input[:host_id])
-          host.content_facet.uuid = input[:uuid]
-          host.subscription_facet.uuid = input[:uuid]
+          User.as_anonymous_admin do
+            host = ::Host.find(input[:host_id])
+            host.content_facet.uuid = input[:uuid]
+            host.subscription_facet.uuid = input[:uuid]
 
-          user = ::User.find(input[:user_id])
-          host.subscription_facet.user = user unless user.nil? || user.hidden?
+            user = ::User.find(input[:user_id])
+            host.subscription_facet.user = user unless user.nil? || user.hidden?
 
-          host.content_facet.save!
-          host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
-              consumer_attributes.except(:installedProducts, :guestIds, :facts))
-          host.subscription_facet.save!
-          host.subscription_facet.update_subscription_status
-          host.content_facet.update_errata_status
-          host.refresh_global_status!
+            host.content_facet.save!
+            host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
+                consumer_attributes.except(:installedProducts, :guestIds, :facts))
+            host.subscription_facet.save!
+            host.subscription_facet.update_subscription_status
+            host.content_facet.update_errata_status
+            host.refresh_global_status!
+          end
         end
 
         def rescue_strategy
