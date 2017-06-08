@@ -114,8 +114,7 @@ module Katello
     # Note that this request comes in as content-type 'text/plain' so that
     # tomcat won't parse the json.  Here we just pass the plain body through to candlepin
     def async_hypervisors_update
-      raw_json = request.body.string
-      task = Katello::Resources::Candlepin::Consumer.async_hypervisors(params[:owner], raw_json)
+      task = Katello::Resources::Candlepin::Consumer.async_hypervisors(params[:owner], request.raw_post)
       async_task(::Actions::Katello::Host::Hypervisors, nil, :task_id => task['id'])
 
       render :json => task
