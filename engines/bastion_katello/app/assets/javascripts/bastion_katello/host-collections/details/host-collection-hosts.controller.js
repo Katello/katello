@@ -16,7 +16,7 @@
 angular.module('Bastion.host-collections').controller('HostCollectionHostsController',
     ['$scope', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
     function ($scope, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
-        var params;
+        var params, nutupaneParams;
 
         params = {
             'organization_id': CurrentOrganization,
@@ -27,7 +27,11 @@ angular.module('Bastion.host-collections').controller('HostCollectionHostsContro
             'paged': true
         };
 
-        $scope.contentNutupane = new Nutupane(Host, params);
+        nutupaneParams = {
+            'disableAutoLoad': true
+        };
+
+        $scope.contentNutupane = new Nutupane(Host, params, undefined, nutupaneParams);
         $scope.controllerName = 'hosts';
         $scope.contentNutupane.searchTransform = function (term) {
             var addition = "host_collection_id=" + $scope.$stateParams.hostCollectionId;
