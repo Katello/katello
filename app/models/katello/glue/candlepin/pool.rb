@@ -135,7 +135,7 @@ module Katello
       end
 
       def hosts
-        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id)
+        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
         uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
         ::Host.where(:id => Katello::Host::SubscriptionFacet.where(:uuid => uuids).pluck(:host_id))
       end
