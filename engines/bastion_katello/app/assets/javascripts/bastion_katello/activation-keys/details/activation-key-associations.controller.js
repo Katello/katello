@@ -16,7 +16,7 @@
 angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsController',
     ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'ContentHostsHelper', 'CurrentOrganization', 'Host',
     function ($scope, $location, translate, Nutupane, ActivationKey, ContentHostsHelper, CurrentOrganization, Host) {
-        var contentHostsNutupane, params = {
+        var contentHostsNutupane, nutupaneParams, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
             'page': 1,
@@ -25,7 +25,11 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAssociationsC
             'paged': true
         };
 
-        contentHostsNutupane = new Nutupane(Host, params);
+        nutupaneParams = {
+            'disableAutoLoad': true
+        };
+
+        contentHostsNutupane = new Nutupane(Host, params, undefined, nutupaneParams);
         $scope.controllerName = 'hosts';
         contentHostsNutupane.searchTransform = function (term) {
             var searchQuery, addition = "activation_key_id=" + $scope.$stateParams.activationKeyId;
