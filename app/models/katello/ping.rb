@@ -12,11 +12,9 @@ module Katello
       #
       # Calls "status" services in all backend engines.
       #
-      # This should be called with User.current set if you want to check pulp_auth
       def ping(services: SERVICES, capsule_id: nil)
         result = {}
         services.each { |service| result[service] = {} }
-        result.delete(:pulp_auth) unless User.current
 
         ping_pulp_without_auth(result[:pulp], capsule_id) if result.include?(:pulp)
         ping_candlepin_without_auth(result[:candlepin]) if result.include?(:candlepin)
