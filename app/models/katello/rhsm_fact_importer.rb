@@ -1,12 +1,27 @@
 module Katello
-  class RhsmFactImporter < ::FactImporter
+  class RhsmFactImporter < ::StructuredFactImporter
     def fact_name_class
       Katello::RhsmFactName
     end
 
-    def initialize(host, facts = {})
-      super
-      @facts = change_separator(@facts)
+    def normalize(facts)
+      facts = super
+      facts = change_separator(facts)
+      add_compose_facts(facts)
+    end
+
+    def add_compose_facts(facts)
+      additional_keys = []
+      facts.keys.each do |fact_name|
+        parts = fact_name.split(RhsmFactName::SEPARATOR)
+        additional_keys += parts[0..-2].reduce([]) { |memo, part| memo << [memo.last, part].compact.join(RhsmFactName::SEPARATOR) }
+      end
+
+      # add the facts hierarchy to facts hash
+      additional_keys.uniq.each do |key|
+        facts[key] = nil
+      end
+      facts
     end
 
     def change_separator(facts)
@@ -15,31 +30,6 @@ module Katello
         to_ret[key.split('.').join(RhsmFactName::SEPARATOR)] = value
       end
       to_ret
-    end
-
-    def add_new_facts
-      @facts.keys.each { |key| add_fact_name(key) }
-      super
-    end
-
-    def add_fact_name(name, is_parent = false)
-      begin
-        parent_name = find_parent(name)
-        parent_fact_name = add_fact_name(parent_name, true) if parent_name
-        fact_name = RhsmFactName.where(:name => name).first_or_create! do |new_fact|
-          new_fact.parent = parent_fact_name
-          new_fact.compose = is_parent
-        end
-      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
-        retry
-      end
-      FactValue.create(:fact_name => fact_name, :value => nil, :host => @host) if is_parent
-      fact_name
-    end
-
-    def find_parent(name)
-      split = name.split(Katello::RhsmFactName::SEPARATOR)
-      split[0..split.length - 2].join(Katello::RhsmFactName::SEPARATOR) if split.length > 1
     end
   end
 end
