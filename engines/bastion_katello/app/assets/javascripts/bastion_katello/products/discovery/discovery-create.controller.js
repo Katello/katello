@@ -17,8 +17,8 @@
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryCreateController',
-    ['$scope', '$q', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils', 'DiscoveryRepositories', 'translate',
-    function ($scope, $q, CurrentOrganization, Product, Repository, GPGKey, FormUtils, DiscoveryRepositories, translate) {
+    ['$scope', '$q', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils', 'DiscoveryRepositories', 'translate', 'ApiErrorHandler',
+    function ($scope, $q, CurrentOrganization, Product, Repository, GPGKey, FormUtils, DiscoveryRepositories, translate, ApiErrorHandler) {
 
         $scope.errorMessages = [];
         $scope.successMessages = [];
@@ -172,15 +172,13 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
             return fieldsEnabled;
         };
 
-        $scope.gpgKeys = function () {
-            var deferred = $q.defer();
-
-            GPGKey.queryUnpaged(function (response) {
-                deferred.resolve(response.results);
-            });
-
-            return deferred.promise;
-        };
+        $scope.gpgKeys = [];
+        GPGKey.queryUnpaged(function (gpgKeys) {
+            $scope.gpgKeys = gpgKeys.results;
+        }, function (response) {
+            $scope.gpgKeys = [];
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
+        });
 
         $scope.$watch('table.rows', function (newList, oldList) {
             if (newList) {
