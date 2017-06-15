@@ -31,6 +31,10 @@ angular.module('Bastion.subscriptions').controller('SubscriptionContentHostsCont
 
         $scope.memory = ContentHostsHelper.memory;
 
+        $scope.convertMemToGB = function (memoryValue) {
+            return (memoryValue / 1048576).toFixed(2);
+        };
+
         $scope.virtual = function (facts) {
             if (angular.isUndefined(facts.virt) || angular.isUndefined(facts.virt['is_guest'])) {
                 return false;
