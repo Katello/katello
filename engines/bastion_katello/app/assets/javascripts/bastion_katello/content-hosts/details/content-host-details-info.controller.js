@@ -131,7 +131,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         };
 
         $scope.convertMemToGB = function (memoryValue) {
-            return (memoryValue / 1024000).toFixed(2);
+            return (memoryValue / 1048576).toFixed(2);
         };
     }]
 );

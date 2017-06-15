@@ -136,7 +136,7 @@ describe('Controller: ContentHostDetailsInfoController', function() {
         expect($scope.editContentView).toBe(false);
     });
 
-    it('should convert Mem to GB', function() {
-        expect($scope.convertMemToGB(74051368)).toBe('72.32')
+    it('should convert Memory to GB', function() {
+        expect($scope.convertMemToGB(1020120)).toBe('0.97')
     });
 });

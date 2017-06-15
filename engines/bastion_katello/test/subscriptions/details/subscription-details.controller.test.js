@@ -45,7 +45,6 @@ describe('Controller: SubscriptionDetailsController', function() {
             var subscription = {sockets: 2, cores: 4};
             expect($scope.subscriptionLimits(subscription)).toBe("Sockets: 2, Cores: 4");
         });
-
     });
 
 });
