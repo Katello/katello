@@ -34,4 +34,8 @@ describe('Controller: SubscriptionContentHostsController', function() {
         expect($scope.virtual({ })).toBe(false);
     });
 
+    it('should convert Memory to GB', function() {
+        expect($scope.convertMemToGB(1020120)).toBe('0.97')
+    });
+
 });
