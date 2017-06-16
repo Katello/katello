@@ -146,6 +146,7 @@ module Katello
         ca_file = SETTINGS[:katello][backend][:ca_cert_file]
         options = {}
         options[:ssl_ca_file] = ca_file unless ca_file.nil?
+        options[:verify_ssl] = SETTINGS[:katello][backend][:verify_ssl] if SETTINGS[:katello][backend].key?(:verify_ssl)
         client = RestClient::Resource.new("#{url}/status", options)
         client.get
       end

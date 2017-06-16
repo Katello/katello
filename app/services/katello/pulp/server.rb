@@ -5,7 +5,7 @@ module Katello
         uri = URI.parse(url)
 
         runcible_params = {
-          :url => "#{uri.scheme}://#{uri.host.downcase}",
+          :url => "#{uri.scheme}://#{uri.host.downcase}:#{uri.port}",
           :api_path => uri.path,
           :user => user_remote_id,
           :timeout => SETTINGS[:katello][:rest_client_timeout],
@@ -25,6 +25,8 @@ module Katello
         if (ca_cert = SETTINGS[:katello][:pulp][:ca_cert_file])
           runcible_params[:ca_cert_file] = ca_cert
         end
+
+        runcible_params[:verify_ssl] = SETTINGS[:katello][:pulp][:verify_ssl] if SETTINGS[:katello][:pulp].key?(:verify_ssl)
 
         Runcible::Instance.new(runcible_params)
       end
