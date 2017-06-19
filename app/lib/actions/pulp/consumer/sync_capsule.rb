@@ -5,6 +5,7 @@ module Actions
         input_format do
           param :capsule_id, Integer
           param :repo_pulp_id, String
+          param :sync_options
         end
 
         def humanized_name
@@ -12,7 +13,7 @@ module Actions
         end
 
         def invoke_external_task
-          pulp_resources.repository.sync(input[:repo_pulp_id])
+          pulp_resources.repository.sync(input[:repo_pulp_id], override_config: input[:sync_options])
         end
 
         def run_progress
