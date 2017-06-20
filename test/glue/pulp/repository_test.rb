@@ -58,6 +58,48 @@ module Katello
     end
   end
 
+  class GluePulpNonVcrNeedPublishUpdateTests < GluePulpRepoTestBase
+    def setup
+      super
+      @new_task = {'finish_time' => '2017-06-20T13:52:17Z', 'errors' => nil }
+      @old_task = {'finish_time' => '2017-06-20T12:52:17Z', 'errors' => nil }
+      @new_error_task = {'finish_time' => '2017-06-20T14:52:17Z', 'error' => 'bad_error' }
+    end
+
+    def test_needs_metadata_publish_true
+      @fedora_17_x86_64.stubs(:last_publish_task).returns(@old_task)
+      @fedora_17_x86_64.stubs(:last_sync_task).returns(@new_task)
+      assert @fedora_17_x86_64.needs_metadata_publish?
+    end
+
+    def test_needs_metadata_publish_missing_publish
+      @fedora_17_x86_64.stubs(:last_publish_task).returns(nil)
+      @fedora_17_x86_64.stubs(:last_sync_task).returns(@new_task)
+      assert @fedora_17_x86_64.needs_metadata_publish?
+    end
+
+    def test_needs_metadata_publish_missing_sync
+      @fedora_17_x86_64.stubs(:last_publish_task).returns(@old_task)
+      @fedora_17_x86_64.stubs(:last_sync_task).returns(nil)
+      refute @fedora_17_x86_64.needs_metadata_publish?
+    end
+
+    def test_needs_metadata_publish_false
+      @fedora_17_x86_64.stubs(:last_publish_task).returns(@new_task)
+      @fedora_17_x86_64.stubs(:last_sync_task).returns(@old_task)
+      refute @fedora_17_x86_64.needs_metadata_publish?
+    end
+
+    def test_most_recent_task
+      assert_nil @fedora_17_x86_64.most_recent_task([])
+      assert_equal @new_task, @fedora_17_x86_64.most_recent_task([@old_task, @new_task])
+      assert_equal @new_task, @fedora_17_x86_64.most_recent_task([@new_task, @old_task])
+      assert_equal @new_error_task, @fedora_17_x86_64.most_recent_task([@new_error_task])
+      assert_nil @fedora_17_x86_64.most_recent_task([@new_error_task], true)
+      assert_equal @new_task, @fedora_17_x86_64.most_recent_task([@new_error_task, @new_task], true)
+    end
+  end
+
   class GluePulpNonVcrTests < GluePulpRepoTestBase
     def test_importer_feed_url
       proxy = SmartProxy.new(:url => 'http://foo.com/foo')
