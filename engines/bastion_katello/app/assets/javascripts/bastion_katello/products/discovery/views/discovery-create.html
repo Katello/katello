@@ -164,7 +164,7 @@
             <span ng-show="creating() || repo.created">{{ repo.label }}</span>
           </td>
           <td bst-table-cell ng-show="discovery.contentType === 'yum'">
-            {{ repo.url }}
+            {{ repo.url + repo.path }}
           </td>
         </tr>
       </tbody>
