@@ -1,5 +1,5 @@
 describe('Controller: ContentHostsController', function() {
-    var $scope, $uibModal, translate, selected, HostBulkAction, Nutupane;
+    var $scope, $uibModal, translate, selected, HostBulkAction, ContentHostsModalHelper, Nutupane;
 
     // load the content hosts module and template
     beforeEach(module('Bastion.content-hosts', 'Bastion.test-mocks'));
@@ -29,7 +29,15 @@ describe('Controller: ContentHostsController', function() {
         };
         $uibModal = {
             open: function () {}
-        }
+        };
+        ContentHostsModalHelper ={
+            resolveFunc: function(){return selected;},
+            openHostCollectionsModal : function () {},
+            openPackagesModal :function () {},
+            openErrataModal : function () {},
+            openEnvironmentModal : function () {},
+            openSubscriptionsModal : function (){}
+        };
     });
 
     // Initialize controller
@@ -43,6 +51,7 @@ describe('Controller: ContentHostsController', function() {
             HostBulkAction: HostBulkAction,
             Nutupane: Nutupane,
             $uibModal: $uibModal,
+            ContentHostsModalHelper:ContentHostsModalHelper,
             CurrentOrganization: 'CurrentOrganization'
         });
     }));
@@ -60,64 +69,4 @@ describe('Controller: ContentHostsController', function() {
         );
     });
 
-    it("can open a bulk host collections modal", function () {
-        var result;
-        spyOn($uibModal, 'open');
-
-        $scope.openHostCollectionsModal();
-
-        result = $uibModal.open.calls.argsFor(0)[0];
-
-        expect(result.templateUrl).toContain('content-hosts-bulk-host-collections-modal.html');
-        expect(result.controller).toBe('ContentHostsBulkHostCollectionsModalController');
-    });
-
-    it("can open a bulk packages modal", function () {
-        var result;
-        spyOn($uibModal, 'open');
-
-        $scope.openPackagesModal();
-
-        result = $uibModal.open.calls.argsFor(0)[0];
-
-        expect(result.templateUrl).toContain('content-hosts-bulk-packages-modal.html');
-        expect(result.controller).toBe('ContentHostsBulkPackagesModalController');
-    });
-
-
-    it("can open a bulk errata modal", function () {
-        var result;
-        spyOn($uibModal, 'open');
-
-        $scope.openErrataModal();
-
-        result = $uibModal.open.calls.argsFor(0)[0];
-
-        expect(result.templateUrl).toContain('content-hosts-bulk-errata-modal.html');
-        expect(result.controller).toBe('ContentHostsBulkErrataModalController');
-    });
-
-    it("can open a bulk environment modal", function () {
-        var result;
-        spyOn($uibModal, 'open');
-
-        $scope.openEnvironmentModal();
-
-        result = $uibModal.open.calls.argsFor(0)[0];
-
-        expect(result.templateUrl).toContain('content-hosts-bulk-environment-modal.html');
-        expect(result.controller).toBe('ContentHostsBulkEnvironmentModalController');
-    });
-
-    it("can open a bulk subscriptions modal", function () {
-        var result;
-        spyOn($uibModal, 'open');
-
-        $scope.openSubscriptionsModal();
-
-        result = $uibModal.open.calls.argsFor(0)[0];
-
-        expect(result.templateUrl).toContain('content-hosts-bulk-subscriptions-modal.html');
-        expect(result.controller).toBe('ContentHostsBulkSubscriptionsModalController');
-    });
 });
