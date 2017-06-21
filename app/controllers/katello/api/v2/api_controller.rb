@@ -44,6 +44,13 @@ module Katello
         :subtotal => collection.count }
     end
 
+    def empty_search_query?
+      search_options[0].blank?
+    end
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/PerceivedComplexity
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
@@ -51,8 +58,10 @@ module Katello
 
       total = scoped_search_total(query, group)
 
-      query = query.pluck(:id) if query.respond_to?(:pluck)
-      query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
+      unless empty_search_query?
+        query = query.pluck(:id) if query.respond_to?(:pluck)
+        query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
+      end
 
       query = query.select(group).group(group) if group
       sub_total = total.zero? ? 0 : scoped_search_total(query, group)
