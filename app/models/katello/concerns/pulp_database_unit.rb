@@ -32,7 +32,7 @@ module Katello
       end
 
       def in_repositories(repos)
-        self.joins(repository_association.to_sym).where("#{repository_association_class.table_name}.repository_id" => repos)
+        where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
       end
 
       def pulp_data(uuid)

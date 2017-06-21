@@ -22,9 +22,9 @@ module Katello
 
     module ClassMethods
       def readable
-        in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products)).pluck(:id)
-        in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).pluck(:id)
-        in_versions = Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.readable).pluck(:id)
+        in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products)).select(:id)
+        in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
+        in_versions = Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
         where("#{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?)", in_products, in_content_views, in_versions)
       end
 

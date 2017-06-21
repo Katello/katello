@@ -38,7 +38,7 @@ module Katello
           fail "Unsupported default_sort type"
         end
 
-        respond(:collection => scoped_search(index_relation.uniq, sort_options[0], sort_options[1], options))
+        respond(:collection => scoped_search(index_relation, sort_options[0], sort_options[1], options))
       end
 
       api :GET, "/:resource_id/:id", N_("Show :a_resource")
@@ -74,17 +74,19 @@ module Katello
       param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
         collection = resource_class.all
-        collection = filter_by_repos(Repository.readable, collection)
-        collection = filter_by_repos([@repo], collection) if @repo
-        collection = filter_by_content_view_version(@version, collection) if @version
+        repos = Repository.readable
+        repos = repos.where(:id => @repo) if @repo
+        repos = repos.where(:id => Repository.readable.in_organization(@organization)) if @organization
         if @environment && (@environment.library? || resource_class != Katello::PuppetModule)
           # if the environment is not library and this is for puppet modules,
           # we can skip environment filter, as those would be associated to
           # content view puppet environments and handled by the puppet modules
           # controller.
-          collection = filter_by_environment(@environment, collection)
+          repos = repos.where(:id => @environment.repositories)
         end
-        collection = filter_by_repos(Repository.readable.in_organization(@organization), collection) if @organization
+
+        collection = filter_by_repos(repos, collection)
+        collection = filter_by_content_view_version(@version, collection) if @version
         collection = filter_by_ids(params[:ids], collection) if params[:ids]
         @filter = ContentViewFilter.find(params[:filterId]) if params[:filterId]
         if params[:available_for] == "content_view_filter" && self.respond_to?(:available_for_content_view_filter)
@@ -113,10 +115,6 @@ module Katello
 
       def filter_by_content_view_version(version, collection)
         collection.where(:id => version.send(controller_name))
-      end
-
-      def filter_by_environment(environment, collection)
-        filter_by_repos(environment.repositories, collection)
       end
 
       def find_content_resource
