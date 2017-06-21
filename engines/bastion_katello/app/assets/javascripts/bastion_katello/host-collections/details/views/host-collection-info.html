@@ -69,26 +69,32 @@
 
     <ul class="list-unstyled">
       <li bst-feature-flag="remote_actions">
-        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.packages') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+        <a translate ng-click ="openPackagesModal()">
           Package Installation, Removal, and Update
         </a>
       </li>
 
       <li bst-feature-flag="remote_actions">
-        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.errata.list') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+        <a translate ng-click="openErrataModal()">
           Errata Installation
         </a>
       </li>
 
       <li>
-        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.host-collections') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+        <a translate ng-click = "openHostCollectionsModal()">
           Host Collection Membership
         </a>
       </li>
 
       <li bst-feature-flag="lifecycle_environments">
-        <a translate ng-href="{{ $state.href('content-hosts.bulk-actions.environment') }}{{ getHostCollectionSearchUrl(hostCollection.name) }}">
+        <a translate ng-click="openEnvironmentModal()">
           Change assigned Lifecycle Environment or Content View
+        </a>
+      </li>
+
+      <li bst-feature-flag="subscription_management">
+        <a translate ng-click="openSubscriptionsModal()">
+          Subscription Management
         </a>
       </li>
     </ul>
