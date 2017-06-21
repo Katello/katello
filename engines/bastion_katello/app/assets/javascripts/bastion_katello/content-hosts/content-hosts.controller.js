@@ -21,8 +21,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'GlobalNotification', 'CurrentOrganization', 'ContentHostsHelper', '$httpParamSerializer',
-    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, GlobalNotification, CurrentOrganization, ContentHostsHelper, $httpParamSerializer) {
+    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'GlobalNotification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer',
+    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, GlobalNotification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer) {
         var nutupane, params, query;
 
         $scope.successMessages = [];
@@ -109,19 +109,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             HostBulkAction.destroyHosts(destroyParams, success, error);
             return deferred.promise;
         };
+        $scope.getHostIds = function() {
+            return $scope.nutupane.getAllSelectedResults('id');
+        };
 
-        $scope.openHostCollectionsModal = function () {
+        ContentHostsModalHelper.resolveFunc = $scope.getHostIds;
+
+        $scope.openHostCollectionsModal = function() {
             nutupane.invalidate();
-            $uibModal.open({
-                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-host-collections-modal.html',
-                controller: 'ContentHostsBulkHostCollectionsModalController',
-                size: 'lg',
-                resolve: {
-                    hostIds: function () {
-                        return $scope.nutupane.getAllSelectedResults('id');
-                    }
-                }
-            });
+            ContentHostsModalHelper.openHostCollectionsModal();
         };
 
         $scope.openRepositorySetsModal = function () {
@@ -140,56 +136,22 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
         $scope.openPackagesModal = function () {
             nutupane.invalidate();
-            $uibModal.open({
-                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-packages-modal.html',
-                controller: 'ContentHostsBulkPackagesModalController',
-                resolve: {
-                    hostIds: function () {
-                        return $scope.nutupane.getAllSelectedResults('id');
-                    }
-                }
-            });
+            ContentHostsModalHelper.openPackagesModal();
         };
 
         $scope.openErrataModal = function () {
             nutupane.invalidate();
-            $uibModal.open({
-                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-errata-modal.html',
-                controller: 'ContentHostsBulkErrataModalController',
-                size: 'lg',
-                resolve: {
-                    hostIds: function () {
-                        return $scope.nutupane.getAllSelectedResults('id');
-                    }
-                }
-            });
+            ContentHostsModalHelper.openErrataModal();
         };
 
         $scope.openEnvironmentModal = function () {
             nutupane.invalidate();
-            $uibModal.open({
-                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-environment-modal.html',
-                controller: 'ContentHostsBulkEnvironmentModalController',
-                resolve: {
-                    hostIds: function () {
-                        return $scope.nutupane.getAllSelectedResults('id');
-                    }
-                }
-            });
+            ContentHostsModalHelper.openEnvironmentModal();
         };
 
         $scope.openSubscriptionsModal = function () {
             nutupane.invalidate();
-            $uibModal.open({
-                templateUrl: 'content-hosts/bulk/views/content-hosts-bulk-subscriptions-modal.html',
-                controller: 'ContentHostsBulkSubscriptionsModalController',
-                size: 'lg',
-                resolve: {
-                    hostIds: function () {
-                        return $scope.nutupane.getAllSelectedResults('id');
-                    }
-                }
-            });
+            ContentHostsModalHelper.openSubscriptionsModal();
         };
     }]
 );

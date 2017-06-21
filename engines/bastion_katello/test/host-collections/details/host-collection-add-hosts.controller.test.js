@@ -19,6 +19,9 @@ describe('Controller: HostCollectionAddHostsController', function() {
             this.refresh = function() {};
         };
         HostCollection = {addHosts: function(){}};
+        Host = {
+            results: [{id: 1, name: "booyah"}]
+        };
     });
 
     beforeEach(inject(function($controller, $rootScope, $location) {

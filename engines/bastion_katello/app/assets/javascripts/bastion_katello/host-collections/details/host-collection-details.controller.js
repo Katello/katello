@@ -6,16 +6,17 @@
  * @requires $state
  * @requires $q
  * @requires translate
+ * @requires Host
+ * @requires ContentHostsModalHelper
  * @requires HostCollection
  * @requires ApiErrorHandler
- * @requires urlencodeFilter
  *
  * @description
  *   Provides the functionality for the host collection details action pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'HostCollection', 'ApiErrorHandler', 'urlencodeFilter',
-    function ($scope, $state, $q, translate, HostCollection, ApiErrorHandler, urlencodeFilter) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'ContentHostsModalHelper', 'HostCollection', 'ApiErrorHandler',
+    function ($scope, $state, $q, translate, Host, ContentHostsModalHelper, HostCollection, ApiErrorHandler) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -36,15 +37,49 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
+        $scope.getHostIds = function() {
+            return $scope.selected;
+        };
+
+        $scope.host = Host.get({search: "host_collection_id = " + $scope.$stateParams.hostCollectionId}, function (response) {
+            $scope.selected = {
+                included: {
+                    ids: _.map(response.results, 'id')
+                },
+                excluded: {
+                    ids: []
+                }};
+        ContentHostsModalHelper.resolveFunc = $scope.getHostIds;}, function (response) {
+            $scope.panel.loading = false;
+            ApiErrorHandler.handleGETRequestErrors(response, $scope);
+        });
+
         $scope.refreshHostCollection = function () {
             $scope.hostCollection.$get().then(function (hostCollection) {
                 $scope.$emit("updateContentHostCollection", hostCollection);
             });
         };
 
-        $scope.getHostCollectionSearchUrl = function (hostCollectionName) {
-            var search = 'host_collection="%s"'.replace('%s', hostCollectionName);
-            return '?select_all=true&search=' + urlencodeFilter(search);
+        $scope.openPackagesModal = function () {
+            ContentHostsModalHelper.openPackagesModal();
+        };
+
+        $scope.openErrataModal = function () {
+            ContentHostsModalHelper.openErrataModal();
+        };
+
+        $scope.openHostCollectionsModal = function () {
+            ContentHostsModalHelper.openHostCollectionsModal();
+        };
+
+
+        $scope.openEnvironmentModal = function () {
+            ContentHostsModalHelper.openEnvironmentModal();
+        };
+
+
+        $scope.openSubscriptionsModal = function () {
+            ContentHostsModalHelper.openSubscriptionsModal();
         };
 
         $scope.save = function (hostCollection) {
