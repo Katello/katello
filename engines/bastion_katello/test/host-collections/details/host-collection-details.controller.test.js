@@ -1,18 +1,56 @@
 describe('Controller: HostCollectionDetailsController', function() {
-    var $scope, translate, HostCollection, newHostCollection;
+    var $scope, selected, translate, HostCollection, newHostCollection, newHost, Host,ContentHostsModalHelper;
 
     beforeEach(module('Bastion.host-collections', 'Bastion.test-mocks'));
-
+    beforeEach(function() {
+        selected = {included: {ids: [1, 2, 3]}};
+    });
     beforeEach(inject(function($injector) {
+        var ApiErrorHandler = $injector.get('ApiErrorHandler');
         var $controller = $injector.get('$controller'),
             $state = $injector.get('$state');
 
         newHostCollection = {id: 8};
         HostCollection = $injector.get('MockResource').$new();
+        newHost = {
+            failed: false,
+            id: 1,
+            hasSubscription: function(){ return true; },
+            facts: {
+                cpu: "Itanium",
+                "lscpu.architecture": "Intel Itanium architecture",
+                "lscpu.instructionsPerCycle": "6",
+                anotherFact: "yes"
+            },
+            subscription: {uuid: 'abcd-1234'},
 
+            $update: function(success, error) {
+                if (newHost.failed) {
+                    error({data: {error: {full_messages: ['error!']}}});
+                } else {
+                    success(newHost);
+                }
+            }
+        };
+        Host = {
+            failed: false,
+            get: function(params, callback) {
+                callback(newHost);
+                return newHost;
+            },
+            update: function (data, success, error) {
+                if (this.failed) {
+                    error({data: {error: {full_messages: ['error!']}}});
+                } else {
+                    success(newHost);
+                }
+            },
+            delete: function (success, error) {success()},
+            $promise: {then: function(callback) {callback(newHost)}}
+        };
         $scope = $injector.get('$rootScope').$new();
-
         $scope.$stateParams = {hostCollectionId: 1};
+        $scope.selected = selected;
         $scope.removeRow = function() {};
         $scope.table = {
             addRow: function() {},
@@ -22,12 +60,23 @@ describe('Controller: HostCollectionDetailsController', function() {
         translate = function(message) {
             return message;
         };
+        ContentHostsModalHelper ={
+            resolveFunc: function(){},
+            openHostCollectionsModal : function () {},
+            openPackagesModal :function () {},
+            openErrataModal : function () {},
+            openEnvironmentModal : function () {},
+            openSubscriptionsModal : function (){}
+        };
 
         $controller('HostCollectionDetailsController', {
             $scope: $scope,
             $state: $state,
             translate: translate,
-            HostCollection: HostCollection
+            Host: Host,
+            HostCollection: HostCollection,
+            ContentHostsModalHelper: ContentHostsModalHelper,
+            ApiErrorHandler: ApiErrorHandler
         });
     }));
 
