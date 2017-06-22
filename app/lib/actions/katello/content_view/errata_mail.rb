@@ -11,7 +11,7 @@ module Actions
 
           content_view = ::Katello::ContentView.find(input[:content_view])
           environment = ::Katello::KTEnvironment.find(input[:environment])
-          users = ::User.select { |user| user.receives?(:promote_errata) && user.can?(:view_content_views, content_view) }
+          users = ::User.select { |user| user.receives?(:promote_errata) && user.organization_ids.include?(content_view.organization_id) && user.can?(:view_content_views, content_view) }
 
           begin
             MailNotification[:promote_errata].deliver_now(:users => users, :content_view => content_view, :environment => environment) unless users.blank?
