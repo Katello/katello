@@ -12,12 +12,13 @@
     Your search returned zero Packages.
   </span>
 
-  <div data-block="actions" bst-feature-flag="remote_actions">
+  <div data-block="list-actions" bst-feature-flag="remote_actions">
     <div ng-hide="denied('edit_hosts', host)" class="nutupane-actions fr">
       <form ng-submit="performDefaultUpdateAction()" role="form">
 
         <span uib-dropdown class="btn-group">
-          <button class="btn btn-default" type="button"
+          <button class="btn btn-primary" type="button"
+                  ng-click="performDefaultUpdateAction()"
                   ng-hide="denied('edit_hosts', host)"
                   ng-disabled="working || table.numSelected === 0"
                   translate>
@@ -36,7 +37,7 @@
           </ul>
         </span>
 
-        <button class="btn btn-primary"
+        <button class="btn btn-default"
                 type="button"
                 translate
                 ng-disabled="working"
