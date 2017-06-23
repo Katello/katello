@@ -142,13 +142,11 @@ describe('Controller: ManifestImportController', function() {
 
     it('should set the upload status to success and refresh data if upload status is success', function() {
         $q.all([$scope.organization.$promise]).then(function () {
-            spyOn($scope, 'refreshTable');
             $scope.uploadManifest('<pre>{"status": "success"}</pre>', true);
 
             expect($scope.saveSuccess).toBe(true);
             expect($scope.uploadErrorMessages.length).toBe(0);
             expect(GlobalNotification.setSuccessMessage).toHaveBeenCalled();
-            expect($scope.refreshTable).toHaveBeenCalled();
         });
     });
 

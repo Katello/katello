@@ -92,7 +92,6 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 if ($scope.task.result === 'success') {
                     $scope.refreshOrganizationInfo();
                     GlobalNotification.setSuccessMessage(translate("Manifest successfully imported."));
-                    $scope.refreshTable();
                 } else {
                     $scope.handleTaskErrors(task, translate("Error importing manifest."));
                 }
@@ -116,7 +115,6 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 if ($scope.deleteTask.result === 'success') {
                     $scope.saveSuccess = true;
                     GlobalNotification.setSuccessMessage(translate("Manifest successfully deleted."));
-                    $scope.refreshTable();
                     $scope.refreshOrganizationInfo();
                 } else {
                     $scope.handleTaskErrors(task, translate("Error deleting manifest."));
@@ -149,7 +147,6 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 if ($scope.refreshTask.result === 'success') {
                     $scope.saveSuccess = true;
                     GlobalNotification.setSuccessMessage(translate("Manifest successfully refreshed."));
-                    $scope.refreshTable();
                     $scope.refreshOrganizationInfo();
                 } else {
                     $scope.handleTaskErrors(task, translate("Error refreshing manifest."));
@@ -174,10 +171,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
 
             deferred = Organization.update(whitelistedOrganizationObject, function () {
                 GlobalNotification.setSuccessMessage(translate('Repository URL updated'));
-                $scope.refreshTable();
                 $scope.refreshOrganizationInfo();
             }, function (response) {
-                GlobalNotification.setErrorMessage(translate("An error occurred saving the URL: ") + response.data.error.message);
+                angular.forEach(response.data.error['full_messages'], function (message) {
+                    GlobalNotification.setErrorMessage(translate("An error occurred saving the URL: ") + message);
+                });
             });
 
             return deferred.$promise;
