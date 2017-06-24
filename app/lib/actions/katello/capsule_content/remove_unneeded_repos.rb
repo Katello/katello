@@ -8,7 +8,7 @@ module Actions
 
           need_removal = currently_on_capsule - needed_on_capsule
           need_removal += capsule_content.orphaned_repos
-          need_removal.each do |pulp_id|
+          need_removal.compact.each do |pulp_id|
             plan_action(Pulp::Repository::Destroy,
                         :pulp_id => pulp_id,
                         :capsule_id => capsule_content.capsule.id)
