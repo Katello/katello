@@ -418,6 +418,15 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-views'
         }
     })
+    .state('content-view.copy', {
+        url: '/copy',
+        permission: 'create_content_views',
+        templateUrl: 'content-views/details/views/content-view-copy.html',
+        ncyBreadcrumb: {
+            label: '{{ "Copy" | translate }}',
+            parent: 'content-view.info'
+        }
+    })
     .state('content-view.publish', {
         url: '/publish',
         permission: 'publish_content_views',
