@@ -12,10 +12,13 @@ module Katello
         {:id => :beta, :name => _('Beta'), :products => {}},
         {:id => :isos, :name => _('ISOs'), :products => {}},
         {:id => :ostree, :name => _('OSTree'), :products => {}},
+        {:id => :images, :name => _('Images'), :products => {}},
+        {:id => :files, :name => _('Files'), :products => {}},
         {:id => :other, :name => _('Other'), :products => {}}
       ]
     end
 
+    # rubocop:disable MethodLength
     def redhat_repo_tab(provider, tab_id)
       tabs = {}.with_indifferent_access
       redhat_repo_tabs.each { |tab| tabs[tab[:id]] = tab }
@@ -35,6 +38,10 @@ module Katello
             key = :isos
           elsif name.include?("(RPMs)")
             key = :rpms
+          elsif name.include?("(Images)")
+            key = :images
+          elsif name.include?("(Files)")
+            key = :files
           elsif name.include?("(Kickstart)")
             key = :kickstarts
           else
