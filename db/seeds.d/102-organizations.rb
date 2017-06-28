@@ -5,9 +5,9 @@
 #
 
 Organization.all.each do |org|
-  User.current = User.anonymous_admin
-  ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) unless org.library
-  User.current = nil
+  User.as(::User.anonymous_api_admin.login) do
+    ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) unless org.library
+  end
 end
 
 if ENV['SEED_ORGANIZATION']

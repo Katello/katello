@@ -61,8 +61,10 @@ module ::Actions::Katello::DockerRepositorySet
     let(:expected_relative_path) { "Empty_Organization/library_label/product/x86_64/6Server" }
 
     def repository_already_enabled!
-      katello_repositories(:rhel_6_x86_64).update_attributes!(relative_path: "#{expected_relative_path}",
-                             docker_upstream_name: registry_name)
+      as_admin do
+        katello_repositories(:rhel_6_x86_64).update_attributes!(relative_path: "#{expected_relative_path}",
+                               docker_upstream_name: registry_name)
+      end
     end
   end
 

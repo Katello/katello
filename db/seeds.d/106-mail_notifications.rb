@@ -3,40 +3,38 @@
 #
 # !!! PLEASE KEEP THIS SCRIPT IDEMPOTENT !!!
 #
-::User.current = ::User.anonymous_api_admin
+User.as(::User.anonymous_api_admin.login) do
+  # The notification names are used as humanized labels. These need to be
+  # translated as well as the description
+  N_('Host errata advisory')
+  N_('Sync errata')
+  N_('Promote errata')
 
-# The notification names are used as humanized labels. These need to be
-# translated as well as the description
-N_('Host errata advisory')
-N_('Sync errata')
-N_('Promote errata')
+  # Mail Notifications
+  notifications = [
+    {:name              => :host_errata_advisory,
+     :description       => N_('A summary of available and applicable errata for your hosts'),
+     :mailer            => 'Katello::ErrataMailer',
+     :method            => 'host_errata',
+     :subscription_type => 'report'
+    },
 
-# Mail Notifications
-notifications = [
-  {:name              => :host_errata_advisory,
-   :description       => N_('A summary of available and applicable errata for your hosts'),
-   :mailer            => 'Katello::ErrataMailer',
-   :method            => 'host_errata',
-   :subscription_type => 'report'
-  },
+    {:name              => :sync_errata,
+     :description       => N_('A summary of new errata after a repository is synchronized'),
+     :mailer            => 'Katello::ErrataMailer',
+     :method            => 'sync_errata',
+     :subscription_type => 'alert'
+    },
 
-  {:name              => :sync_errata,
-   :description       => N_('A summary of new errata after a repository is synchronized'),
-   :mailer            => 'Katello::ErrataMailer',
-   :method            => 'sync_errata',
-   :subscription_type => 'alert'
-  },
+    {:name              => :promote_errata,
+     :description       => N_('A post-promotion summary of hosts with installable errata'),
+     :mailer            => 'Katello::ErrataMailer',
+     :method            => 'promote_errata',
+     :subscription_type => 'alert'
+    }
+  ]
 
-  {:name              => :promote_errata,
-   :description       => N_('A post-promotion summary of hosts with installable errata'),
-   :mailer            => 'Katello::ErrataMailer',
-   :method            => 'promote_errata',
-   :subscription_type => 'alert'
-  }
-]
-
-notifications.each do |notification|
-  ::MailNotification.where(name: notification[:name]).first_or_create!(notification)
+  notifications.each do |notification|
+    ::MailNotification.where(name: notification[:name]).first_or_create!(notification)
+  end
 end
-
-::User.current = nil

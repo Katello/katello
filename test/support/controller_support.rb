@@ -8,8 +8,8 @@ module ControllerSupport
 
     permissions.each do |permission|
       user = User.unscoped.find(users(:restricted).id)
-      user.organizations = params[:organizations] if params[:organizations].present?
       as_admin do
+        user.organizations = params[:organizations] if params[:organizations].present?
         setup_user_with_permissions(permission, user)
       end
 
