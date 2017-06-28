@@ -1,7 +1,7 @@
 require 'katello/permission_creator'
 
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.15'
+  requires_foreman '>= 1.16'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'), :after => :monitor_menu do
     menu :top_menu,

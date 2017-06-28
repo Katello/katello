@@ -32,9 +32,11 @@ module ::Actions::Katello::RepositorySet
     let(:expected_relative_path) { "Empty_Organization/library_label/product/x86_64/6Server" }
 
     def repository_already_enabled!
-      katello_repositories(:rhel_6_x86_64).
-          update_attributes!(:relative_path => "#{expected_relative_path}", :content_id => content.id,
-                            :arch => 'x86_64', :minor => '6Server')
+      as_admin do
+        katello_repositories(:rhel_6_x86_64).
+            update_attributes!(:relative_path => "#{expected_relative_path}", :content_id => content.id,
+                              :arch => 'x86_64', :minor => '6Server')
+      end
     end
   end
 

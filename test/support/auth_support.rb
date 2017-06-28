@@ -48,23 +48,25 @@ module Katello
     # [{:name => :view_lifecycle_environments, :search => 'name=Dev'}, ..] OR
     # :view_lifecycle_environments
     def setup_user_with_permissions(permissions, user)
-      actual_permissions =  if permissions.is_a?(Hash)
-                              [permissions]
-                            elsif permissions.is_a?(Array)
-                              permissions.collect do |perm|
-                                if perm.is_a?(Hash)
-                                  perm
-                                else
-                                  {:name => perm}
-                                end
-                              end
-                            else
-                              [{:name => permissions}]
-                            end
+      as_admin do
+        actual_permissions = if permissions.is_a?(Hash)
+                               [permissions]
+                             elsif permissions.is_a?(Array)
+                               permissions.collect do |perm|
+                                 if perm.is_a?(Hash)
+                                   perm
+                                 else
+                                   {:name => perm}
+                                 end
+                               end
+                             else
+                               [{:name => permissions}]
+                             end
 
-      role = create_role_with_permissions(actual_permissions)
-      user.roles = [role]
-      user
+        role = create_role_with_permissions(actual_permissions)
+        user.roles = [role]
+        user
+      end
     end
 
     def setup_current_user_with_permissions(permissions)

@@ -104,10 +104,14 @@ module Katello
       bad_perms = [@update_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:index, good_perms, bad_perms) do
-        User.current.update_attribute(:organizations, [taxonomies(:organization1)])
-        @host.update_attribute(:organization, taxonomies(:organization1))
-        User.current.update_attribute(:locations, [taxonomies(:location1)])
-        @host.update_attribute(:location, taxonomies(:location1))
+        user = User.current
+        as_admin do
+          user.update_attribute(:organizations, [taxonomies(:organization1)])
+          @host.update_attribute(:organization, taxonomies(:organization1))
+          user.update_attribute(:locations, [taxonomies(:location1)])
+          @host.update_attribute(:location, taxonomies(:location1))
+        end
+
         get :index, :host_id => @host.id
       end
     end
