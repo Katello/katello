@@ -27,6 +27,12 @@ module Katello
       permissions
     end
 
+    def test_index
+      get :index, :host_id => @host.id
+
+      assert_response :success
+    end
+
     def test_install_package
       assert_async_task ::Actions::Katello::Host::Package::Install do |host, packages|
         host.id == @host.id && packages == %w(foo)
