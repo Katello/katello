@@ -14,6 +14,7 @@ module Katello
     param :errata_restrict_installable, :bool, :desc => N_("show only errata with one or more installable hosts")
     param_group :search, Api::V2::ApiController
     def index
+      params[:errata_restrict_applicable] = false if ::Foreman::Cast.to_bool(params[:errata_restrict_installable])
       super
     end
 
@@ -39,11 +40,11 @@ module Katello
       hosts = ::Host::Managed.authorized("view_hosts")
       hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
       if ::Foreman::Cast.to_bool(params[:errata_restrict_applicable])
-        collection = collection.applicable_to_hosts(hosts)
+        collection = collection.where(:id => Erratum.applicable_to_hosts(hosts))
       end
 
       if ::Foreman::Cast.to_bool(params[:errata_restrict_installable])
-        collection = collection.installable_for_hosts(hosts)
+        collection = collection.where(:id => Erratum.ids_installable_for_hosts(hosts))
       end
       collection
     end
