@@ -52,7 +52,7 @@ module Katello
       # which is calculated elsewhere.
 
       self.joins(:content_facets).
-        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts)
     end
 
     def self.applicable_to_hosts_dashboard(hosts)
@@ -89,21 +89,31 @@ module Katello
     end
 
     def self.installable_for_hosts(hosts = nil)
+      self.where(:id => ids_installable_for_hosts(hosts))
+    end
+
+    def self.ids_installable_for_hosts(hosts = nil)
+      hosts = ::Host.where(:id => hosts) if hosts && hosts.is_a?(Array)
+
       # Main goal of this query
       # 1) Get me the applicable errata for these set of hosts
       # 2) Now further prune this list. Only include errata from repos that have been "enabled" on those hosts.
       #    In other words, prune the list to only include the errate in the "bound" repositories signified by
       #    the inner join between ContentFacetRepository and RepositoryErratum
-      query = self.
+      query = self.joins(:content_facet_errata).
         joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
         #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::ContentFacetErratum.table_name}.content_facet_id").
         joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS host_repo_errata ON \
           host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id AND \
           #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
-      query = query.joins(:content_facet_errata) unless hosts
 
-      query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
-      query.uniq
+      if hosts
+        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet))
+      else
+        query = query.joins(:content_facet_errata)
+      end
+
+      query
     end
 
     def update_from_json(json)
