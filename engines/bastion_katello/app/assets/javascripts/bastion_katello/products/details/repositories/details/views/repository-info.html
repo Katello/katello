@@ -71,7 +71,8 @@
             options="checksums"
             on-save="save(repository)">
         </dd>
-
+      </span>
+        <span ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
         <dt translate>Mirror on Sync</dt>
         <dd bst-edit-checkbox="repository.mirror_on_sync"
             formatter="booleanToYesNo"

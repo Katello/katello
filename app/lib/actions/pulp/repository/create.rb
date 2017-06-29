@@ -92,6 +92,7 @@ module Actions
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
           importer.ssl_validation  = input[:ssl_validation]
+          importer.remove_missing  = input[:mirror_on_sync]
           importer.basic_auth_username = input[:upstream_username] if input[:upstream_username].present?
           importer.basic_auth_password = input[:upstream_password] if input[:upstream_password].present?
           importer
