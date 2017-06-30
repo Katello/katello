@@ -25,7 +25,7 @@ module Containers
       # Only match the container.js part - as the response.body will contain
       # something like "digest+container.js" on Sprockets 3.x, even on the
       # test environment
-      assert_match(/container.js/, response.body)
+      assert_match(/container.*\.js/, response.body)
       docker_image = @controller.instance_eval do
         @docker_container_wizard_states_image
       end
