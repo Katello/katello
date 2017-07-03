@@ -5,7 +5,9 @@ module Actions
         def plan(puppet_environment, clone = false)
           internal_capsule = SmartProxy.default_capsule
           fail _("Content View %s  cannot be published without an internal capsule." % puppet_environment.name) unless internal_capsule
-          puppet_environment.save!
+
+          User.as_anonymous_admin { puppet_environment.save! }
+
           action_subject(puppet_environment)
           plan_self
 
