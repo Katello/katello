@@ -15,7 +15,7 @@ end
 
 node :last_published do |content_view|
   unless content_view.versions.empty?
-    content_view.versions.last.created_at
+    content_view.versions.order(:created_at).last.created_at
   end
 end
 
