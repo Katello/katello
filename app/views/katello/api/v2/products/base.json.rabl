@@ -13,7 +13,7 @@ attributes :gpg_key_id
 attributes :available_content => :available_content, :if => params[:include_available_content]
 
 child :sync_plan do
-  attributes :name, :description, :sync_date, :interval, :next_sync
+  attributes :id, :name, :description, :sync_date, :interval, :next_sync
 end
 
 node :repository_count do |product|
