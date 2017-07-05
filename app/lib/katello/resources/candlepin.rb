@@ -295,9 +295,9 @@ module Katello
 
             uri.scheme = URI.parse(proxy_config[:host]).scheme
             uri.host = URI.parse(proxy_config[:host]).host
-            uri.port = proxy_config[:port].to_s
-            uri.user = proxy_config[:user].to_s
-            uri.password = proxy_config[:password].to_s
+            uri.port = proxy_config[:port].try(:to_s)
+            uri.user = proxy_config[:user].try(:to_s)
+            uri.password = proxy_config[:password].try(:to_s)
 
             RestClient.proxy = uri.to_s
           end
