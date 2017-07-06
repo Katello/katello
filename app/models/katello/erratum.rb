@@ -113,7 +113,7 @@ module Katello
       if self.updated.blank? || (custom_json['updated'].to_datetime != self.updated.to_datetime)
         custom_json['errata_id'] = custom_json.delete('id')
         custom_json['errata_type'] = custom_json.delete('type')
-
+        custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated']
         self.update_attributes!(custom_json)
 
         unless json['references'].blank?
