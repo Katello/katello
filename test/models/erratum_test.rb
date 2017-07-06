@@ -104,6 +104,14 @@ module Katello
       assert_equal Erratum.find(errata.id).updated_at, last_updated
     end
 
+    def test_update_from_json_without_updated_date
+      errata = katello_errata(:singletonissue)
+      issued_at = errata.issued
+      json = errata.attributes
+      errata.update_from_json(json)
+      assert_equal Erratum.find(errata.id).updated, issued_at
+    end
+
     def test_update_from_json_truncates_title
       errata = katello_errata(:security)
       title = "There is a tide in the affairs of men, Which taken at the flood, leads on to " \
