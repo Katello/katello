@@ -31,10 +31,11 @@ module Katello
         where("#{self.table_name}.id = (?) or #{self.table_name}.cp_id = (?)", id_integers, ids)
       end
 
-      def import_all
+      def import_all(organization = nil)
+        organizations = organization ? [organization] : Organization.all
         candlepin_ids = []
 
-        Organization.all.each do |org|
+        organizations.each do |org|
           import_candlepin_ids(org.label)
           candlepin_ids.concat(get_candlepin_ids(org.label))
         end
