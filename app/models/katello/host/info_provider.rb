@@ -1,3 +1,5 @@
+require 'host_info'
+
 module Katello
   module Host
     class InfoProvider < ::HostInfo::Provider
