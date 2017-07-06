@@ -1,6 +1,6 @@
 module Katello
   module Host
-    class InfoProvider < HostInfo::Provider
+    class InfoProvider < ::HostInfo::Provider
       def host_info
         info = {}
         info['parameters'] = {
