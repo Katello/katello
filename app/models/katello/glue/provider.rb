@@ -191,13 +191,13 @@ module Katello
           Rails.logger.warn "Orphaned Product id #{product.id} found while refreshing/importing manifest."
         end
 
-        self.index_subscriptions
+        self.index_subscriptions(self.organization)
         true
       end
 
-      def index_subscriptions
-        Katello::Subscription.import_all
-        Katello::Pool.import_all
+      def index_subscriptions(organization = nil)
+        Katello::Subscription.import_all(organization)
+        Katello::Pool.import_all(organization)
       end
 
       def rules_source
