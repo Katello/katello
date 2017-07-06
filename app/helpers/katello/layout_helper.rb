@@ -1,5 +1,7 @@
 module Katello
   module LayoutHelper
+    include ::LayoutHelper
+
     def stylesheet(*args)
       args.map { |arg| content_for(:stylesheets) { stylesheet_link_tag(arg) } }
       return ""
