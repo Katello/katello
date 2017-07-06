@@ -388,7 +388,7 @@ module Katello
     param :id, :identifier, :required => true
     def gpg_key_content
       if @repository.gpg_key && @repository.gpg_key.content.present?
-        render(:text => @repository.gpg_key.content, :layout => false)
+        render(:plain => @repository.gpg_key.content, :layout => false)
       else
         head(404)
       end
