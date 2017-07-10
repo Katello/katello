@@ -3,15 +3,16 @@ module Actions
     module ContentView
       class CapsuleGenerateAndSync < Actions::Base
         def humanized_name
-          _("Sync Smart proxy with Content View")
+          _("Sync Content View on Smart Proxy(ies)")
         end
 
         def plan(content_view, environment)
           sequence do
             concurrence do
-              ::Katello::CapsuleContent.with_environment(environment).each do |capsule_content|
-                plan_action(Katello::CapsuleContent::Sync, capsule_content, :content_view => content_view,
-                            :environment => environment)
+              smart_proxies = ::Katello::CapsuleContent.with_environment(environment).map { |capsule| capsule.capsule }
+              unless smart_proxies.blank?
+                plan_action(::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync, smart_proxies,
+                            :content_view_id => content_view.id, :environment_id => environment.id)
               end
             end
           end

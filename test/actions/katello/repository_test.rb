@@ -438,13 +438,15 @@ module ::Actions::Katello::Repository
 
     let(:action_class) { ::Actions::Katello::Repository::CapsuleGenerateAndSync }
 
-    before do
-      capsule_content.add_lifecycle_environment(repository.environment)
-    end
-
     it 'plans' do
+      capsule_content_1 = new_capsule_content(:three)
+      capsule_content_2 = new_capsule_content(:four)
+      capsule_content_1.add_lifecycle_environment(repository.environment)
+      capsule_content_2.add_lifecycle_environment(repository.environment)
+
       plan_action(action, repository)
-      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :repository => repository)
+      assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync,
+                                 [capsule_content_1.capsule, capsule_content_2.capsule], :repository_id => repository.id)
     end
   end
 

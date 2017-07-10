@@ -49,7 +49,7 @@ module ::Actions::Katello::CapsuleContent
     it 'plans' do
       capsule_content.add_lifecycle_environment(environment)
       action_class.any_instance.expects(:repos_needing_updates).returns([repository])
-      capsule_content_sync = plan_action(action, capsule_content)
+      capsule_content_sync = plan_action(action, capsule_content.capsule)
 
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
@@ -64,7 +64,7 @@ module ::Actions::Katello::CapsuleContent
     it 'allows limiting scope of the syncing to one environment' do
       capsule_content.add_lifecycle_environment(dev_environment)
       action_class.any_instance.expects(:repos_needing_updates).returns([])
-      capsule_content_sync = plan_action(action, capsule_content, :environment => dev_environment)
+      capsule_content_sync = plan_action(action, capsule_content.capsule, :environment_id => dev_environment.id)
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
       assert_equal synced_repos.uniq.count, 7
@@ -73,7 +73,7 @@ module ::Actions::Katello::CapsuleContent
     it 'fails when trying to sync to the default capsule' do
       Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
       assert_raises(RuntimeError) do
-        plan_action(action, capsule_content, :environment => dev_environment)
+        plan_action(action, capsule_content.capsule, :environment_id => dev_environment.id)
       end
     end
 
@@ -82,7 +82,7 @@ module ::Actions::Katello::CapsuleContent
 
       Katello::CapsuleContent.any_instance.stubs(:lifecycle_environments).returns([])
       assert_raises(RuntimeError) do
-        plan_action(action, capsule_content, :environment => staging_environment)
+        plan_action(action, capsule_content.capsule, :environment_id => staging_environment.id)
       end
     end
   end
