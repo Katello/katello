@@ -71,9 +71,9 @@ module Katello
     end
 
     def test_sync
-      assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule_content, options|
-        capsule_content.capsule.id.must_equal proxy_with_pulp.id
-        options[:environment].id.must_equal environment.id
+      assert_async_task ::Actions::Katello::CapsuleContent::Sync do |capsule, options|
+        capsule.id.must_equal proxy_with_pulp.id
+        options[:environment_id].must_equal environment.id
       end
 
       post :sync, :id => proxy_with_pulp.id, :environment_id => environment.id

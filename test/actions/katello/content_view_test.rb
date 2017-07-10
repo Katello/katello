@@ -281,13 +281,16 @@ module ::Actions::Katello::ContentView
       katello_environments(:library)
     end
 
-    before do
-      capsule_content.add_lifecycle_environment(library)
-    end
-
     it 'plans' do
+      capsule_content_1 = new_capsule_content(:three)
+      capsule_content_2 = new_capsule_content(:four)
+      capsule_content_1.add_lifecycle_environment(library)
+      capsule_content_2.add_lifecycle_environment(library)
+
       plan_action(action, content_view, library)
-      assert_action_planed_with(action, ::Actions::Katello::CapsuleContent::Sync, capsule_content, :content_view => content_view, :environment => library)
+      assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync,
+                                 [capsule_content_1.capsule, capsule_content_2.capsule],
+                                 :content_view_id => content_view.id, :environment_id => library.id)
     end
   end
 
