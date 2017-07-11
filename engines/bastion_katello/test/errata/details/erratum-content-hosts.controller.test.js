@@ -1,5 +1,5 @@
 describe('Controller: ErratumContentHostsController', function() {
-    var $scope, translate, Nutupane, ContentHostBulkAction,
+    var $scope, translate, Nutupane, IncrementalUpdate, ContentHostBulkAction,
         CurrentOrganization;
 
     beforeEach(module('Bastion.errata', 'Bastion.test-mocks'));
@@ -44,6 +44,12 @@ describe('Controller: ErratumContentHostsController', function() {
             }
         };
 
+        IncrementalUpdate = {
+            getIncrementalUpdates: function () {},
+            getErrataIds: function () {},
+            setBulkContentHosts: function () {}
+        };
+
         Environment = MockResource.$new();
         CurrentOrganization = 'foo';
         
@@ -56,6 +62,7 @@ describe('Controller: ErratumContentHostsController', function() {
             translate: translate,
             Nutupane: Nutupane,
             Host: Host,
+            IncrementalUpdate: IncrementalUpdate,
             Environment: Environment,
             ContentHostBulkAction: ContentHostBulkAction,
             CurrentOrganization: CurrentOrganization                      
@@ -75,10 +82,9 @@ describe('Controller: ErratumContentHostsController', function() {
 
     it("generates errata search string properly for multiple errata", function () {
         $scope.errata = undefined;
-        $scope.table = {};
-        $scope.table.getSelected = function() {
-            return [{'errata_id': 'foo'},{'errata_id': 'bar'}];
-        };
+        spyOn(IncrementalUpdate, 'getErrataIds').and.callFake(function() {
+            return ['foo', 'bar'];
+        });
 
         expect($scope.errataSearchString(false)).toBe('applicable_errata = "foo" or applicable_errata = "bar"');
         expect($scope.errataSearchString(true)).toBe('installable_errata = "foo" or installable_errata = "bar"');

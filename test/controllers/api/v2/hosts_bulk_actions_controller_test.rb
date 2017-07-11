@@ -223,7 +223,7 @@ module Katello
       @missing_erratum = unavailable.first
 
       assert @missing_erratum
-      post :available_incremental_updates, :included => {:ids => [@host1.id]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.uuid]
+      post :available_incremental_updates, :included => {:ids => [@host1.id]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.errata_id]
       assert_response :success
     end
 
