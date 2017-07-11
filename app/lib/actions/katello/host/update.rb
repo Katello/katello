@@ -6,8 +6,6 @@ module Actions
 
         def plan(host, consumer_params = nil)
           action_subject host
-          plan_self(:hostname => host.name, :facts => consumer_params.try(:[], :facts), :host_id => host.id)
-
           sequence do
             host.content_facet.save! if host.content_facet
 
@@ -15,24 +13,34 @@ module Actions
               unless consumer_params
                 consumer_params = host.subscription_facet.consumer_attributes
               end
-
-              host.subscription_facet.update_from_consumer_attributes(consumer_params)
-              host.subscription_facet.save!
-              plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
+              cp_update = plan_action(::Actions::Candlepin::Consumer::Update, host.subscription_facet.uuid, consumer_params)
             end
 
-            if host.subscription_facet.try(:autoheal)
+            if consumer_params.present? && consumer_params['autoheal']
               plan_action(::Actions::Candlepin::Consumer::AutoAttachSubscriptions, :uuid => host.subscription_facet.uuid)
             end
+
+            plan_self(:hostname => host.name, :consumer_params => consumer_params, :host_id => host.id,
+                      :dependency => cp_update.try(:output))
           end
         end
 
         def run
           User.as_anonymous_admin do
             host = ::Host.find(input[:host_id])
-            unless input[:facts].blank?
-              ::Katello::Host::SubscriptionFacet.update_facts(host, input[:facts])
-              input[:facts] = 'TRIMMED'
+            unless input[:consumer_params][:facts].blank?
+              ::Katello::Host::SubscriptionFacet.update_facts(host, input[:consumer_params][:facts])
+            end
+          end
+        end
+
+        def finalize
+          User.as_anonymous_admin do
+            unless input[:consumer_params].blank?
+              host = ::Host.find(input[:host_id])
+              host.subscription_facet.update_from_consumer_attributes(input[:consumer_params])
+              host.subscription_facet.save!
+              input[:consumer_params][:facts] = 'TRIMMED' unless input[:consumer_params][:facts].blank?
             end
           end
         end
