@@ -7,8 +7,10 @@ module Actions
         def plan(host, profile_string)
           action_subject host
 
-          plan_self(:host_id => host.id, :hostname => host.name, :profile_string => profile_string)
-          plan_action(GenerateApplicability, [host])
+          sequence do
+            plan_self(:host_id => host.id, :hostname => host.name, :profile_string => profile_string)
+            plan_action(GenerateApplicability, [host])
+          end
         end
 
         def humanized_name
