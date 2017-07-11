@@ -9,6 +9,7 @@ module Actions
 
         def run
           ::Katello::Resources::Candlepin::Consumer.update(input[:uuid], input[:consumer_params])
+          output[:uuid] = input[:uuid]
         end
 
         def finalize

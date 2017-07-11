@@ -28,7 +28,7 @@ module Katello
         update_guests(consumer_params)
 
         self.autoheal = consumer_params['autoheal'] unless consumer_params['autoheal'].blank?
-        self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].blank?
+        self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].nil?
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
 
