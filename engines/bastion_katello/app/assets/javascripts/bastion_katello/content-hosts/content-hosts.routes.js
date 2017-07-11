@@ -10,7 +10,7 @@
 
 angular.module('Bastion.content-hosts').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('content-hosts', {
-        url: '/content_hosts',
+        url: '/content_hosts?search',
         permission: 'view_hosts',
         views: {
             '@': {
