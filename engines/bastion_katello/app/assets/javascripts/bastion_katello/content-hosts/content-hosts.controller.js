@@ -83,11 +83,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
         $scope.table = $scope.table;
 
-        $scope.reloadSearch = function (search) {
-            $scope.table.search(search);
-            $state.go('content-hosts');
-        };
-
         $scope.performDestroyHosts = function () {
             var destroyParams, success, error, deferred = $q.defer();
 
