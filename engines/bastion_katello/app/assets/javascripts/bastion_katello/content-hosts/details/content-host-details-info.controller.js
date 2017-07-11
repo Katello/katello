@@ -123,9 +123,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
 
         $scope.virtualGuestIds = function (host) {
             var ids = [];
-            angular.forEach(host.subscription_facet_attributes['virtual_guests'], function (guest) {
-                ids.push('name = %s'.replace('%s', guest.name));
-            });
+            if (host && host.subscription_facet_attributes) {
+                angular.forEach(host.subscription_facet_attributes['virtual_guests'], function (guest) {
+                    ids.push('name = %s'.replace('%s', guest.name));
+                });
+            }
 
             return ids.join(" or ");
         };
