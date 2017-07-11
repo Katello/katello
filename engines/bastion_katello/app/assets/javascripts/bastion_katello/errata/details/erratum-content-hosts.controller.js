@@ -15,7 +15,9 @@
 angular.module('Bastion.errata').controller('ErratumContentHostsController',
     ['$scope', 'Nutupane', 'Host', 'IncrementalUpdate', 'Environment', 'CurrentOrganization',
     function ($scope, Nutupane, Host, IncrementalUpdate, Environment, CurrentOrganization) {
-        var nutupane, params;
+        var nutupane, params, nutupaneParams = {
+            'overrideAutoLoad': true
+        };
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -27,7 +29,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             'organization_id': CurrentOrganization
         };
 
-        nutupane = new Nutupane(Host, params, 'postIndex');
+        nutupane = new Nutupane(Host, params, 'postIndex', nutupaneParams);
         $scope.controllerName = 'hosts';
         nutupane.masterOnly = true;
         nutupane.enableSelectAllResults();
@@ -35,7 +37,10 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;
         $scope.nutupane.searchTransform = function(term) {
-            var addition = '( ' + $scope.errataSearchString($scope.restrictInstallable) + ' )';
+            var addition, errataSearchStringAddition = $scope.errataSearchString($scope.restrictInstallable);
+            if (errataSearchStringAddition) {
+                addition = '( ' + errataSearchStringAddition + ' )';
+            }
             if (angular.isDefined($scope.environmentId)) {
                 addition = addition + ' and lifecycle_environment_id = ' + $scope.environmentId;
             }
@@ -61,7 +66,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             if ($scope.errata) {
                 errataIds = [$scope.errata['errata_id']];
             } else {
-                errataIds = _.map($scope.table.getSelected(), 'errata_id');
+                errataIds = IncrementalUpdate.getErrataIds();
             }
 
             searchStatements = _.map(errataIds, function(errataId) {
@@ -69,6 +74,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             });
             return searchStatements.join(" or ");
         };
+        nutupane.load();
 
         $scope.selectEnvironment = function (environmentId) {
             $scope.environmentId = environmentId;

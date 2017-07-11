@@ -82,7 +82,7 @@ angular.module('Bastion.errata').controller('ErrataController',
         });
 
         $scope.goToNextStep = function () {
-            IncrementalUpdate.setBulkErrata(nutupane.getAllSelectedResults());
+            IncrementalUpdate.setBulkErrata(nutupane.getAllSelectedResults('errata_id'));
             $state.transitionTo('apply-errata.select-content-hosts');
         };
 
