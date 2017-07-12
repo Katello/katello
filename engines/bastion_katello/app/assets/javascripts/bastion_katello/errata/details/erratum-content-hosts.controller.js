@@ -61,7 +61,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             if ($scope.errata) {
                 errataIds = [$scope.errata['errata_id']];
             } else {
-                errataIds = _.map($scope.table.getSelected(), 'errata_id');
+                errataIds = IncrementalUpdate.getErrataIds();
             }
 
             searchStatements = _.map(errataIds, function(errataId) {
