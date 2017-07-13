@@ -17,6 +17,17 @@
   <div class="details">
     <h4 translate>Subscription Manifest</h4>
 
+    <div ng-show="isTaskPending()">
+      <a ng-href="/foreman_tasks/tasks/{{ task.id }}">
+
+        <div ng-class="{ active: isTaskPending() }"
+             class="progress progress-striped">
+          <span uib-progressbar animate="false" value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
+        </div>
+      </a>
+      {{ taskStatusText }}
+    </div>
+
     <div class="detail">
       <span class="info-label" translate>Upstream Subscription Management Application</span>
       <span class="info-value" ng-show="upstream.uuid != undefined">
@@ -30,18 +41,13 @@
               ng-hide="denied('delete_manifest')"
               ng-click="openModal()">
          <span bst-modal="deleteManifest()" template-url="subscriptions/manifest/views/manifest-delete-modal.html"></span>
-         <i class="fa fa-spinner fa-spin" ng-show="deleteTask.pending"></i>
-          <span ng-show="deleteTask.pending" translate>Deleting Manifest...</span>
-          <span ng-hide="deleteTask.pending" translate>Delete Manifest</span>
+          <span translate>Delete Manifest</span>
       </button>
-      <button type="button" class="btn btn-default" ng-disabled="upstream.idCert == undefined || upstream.idCert.cert == undefined"
+      <button type="button" class="btn btn-default" ng-disabled="isTaskPending() || upstream.idCert == undefined || upstream.idCert.cert == undefined"
         ng-click="refreshManifest()">
-         <i class="fa fa-spinner fa-spin" ng-show="refreshTask.pending"></i>
-          <span ng-show="refreshTask.pending" translate>Refreshing Manifest...</span>
-          <span ng-hide="refreshTask.pending" translate>Refresh Manifest</span>
+          <span translate>Refresh Manifest</span>
       </button>
-      <span ng-show="upstream.idCert == undefined || upstream.idCert.cert == undefined"
-        translate>
+      <span ng-show="upstream.idCert == undefined || upstream.idCert.cert == undefined" translate>
         Refreshing manifest not supported by this manifest.
       </span>
     </div>
@@ -66,9 +72,7 @@
 
     <div class="form-group">
       <button type="button" class="btn btn-primary" ng-disabled="isTaskPending()" upload-submit>
-        <i class="fa fa-spinner fa-spin" ng-show="task.pending"></i>
-        <span ng-show="task.pending" translate>Uploading...</span>
-        <span ng-hide="task.pending" translate>Upload</span>
+        <span translate>Upload</span>
       </button>
     </div>
 

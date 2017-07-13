@@ -71,13 +71,9 @@ describe('Controller: ManifestImportController', function() {
     });
 
     it('should provide a method to determine if a task is pending', function () {
-        expect($scope.isTaskPending()).toBe(false);
+        expect($scope.isTaskPending()).toBeFalsy();
 
         $scope.task = {pending: true};
-        expect($scope.isTaskPending()).toBe(true);
-
-        $scope.task = null;
-        $scope.deleteTask = {pending: true};
         expect($scope.isTaskPending()).toBe(true);
     });
 
