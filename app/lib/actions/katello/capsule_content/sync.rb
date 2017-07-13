@@ -30,6 +30,7 @@ module Actions
           repository = ::Katello::Repository.find(repository_id) if repository_id
           content_view_id = options.fetch(:content_view_id, nil)
           content_view = ::Katello::ContentView.find(content_view_id) if content_view_id
+          skip_metadata_check = options.fetch(:skip_metadata_check, false)
 
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
@@ -42,12 +43,12 @@ module Actions
                 plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
               end
               plan_action(ConfigureCapsule, capsule_content, environment, content_view, repository)
-              sync_repos_to_capsule(capsule_content, repository_ids)
+              sync_repos_to_capsule(capsule_content, repository_ids, skip_metadata_check)
             end
           end
         end
 
-        def sync_repos_to_capsule(capsule_content, repository_ids)
+        def sync_repos_to_capsule(capsule_content, repository_ids, skip_metadata_check)
           concurrence do
             repository_ids.each do |repo_id|
               sequence do
@@ -59,10 +60,18 @@ module Actions
                               capsule_id: capsule_content.capsule.id,
                               repo_pulp_id: repo_id)
                 end
+                pulp_options = { remove_missing: repo && ["puppet", "yum"].include?(repo.content_type) }
+                pulp_options[:force_full] = true if skip_metadata_check && repo.content_type == "yum"
                 plan_action(Pulp::Consumer::SyncCapsule,
                             capsule_id: capsule_content.capsule.id,
                             repo_pulp_id: repo_id,
-                            sync_options: { remove_missing: repo && ["puppet", "yum"].include?(repo.content_type) })
+                            sync_options: pulp_options)
+                if skip_metadata_check
+                  plan_action(Katello::Repository::MetadataGenerate,
+                              repo,
+                              capsule_id: capsule_content.capsule.id,
+                              force: true)
+                end
               end
             end
           end

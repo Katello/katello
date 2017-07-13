@@ -26,7 +26,6 @@ module Actions
           pulp_sync_options = {}
           pulp_sync_options[:download_policy] = ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND if validate_contents
           pulp_sync_options[:force_full] = true if skip_metadata_check
-          pulp_sync_options[:auto_publish] = false if skip_metadata_check #skip auto publish, and force it later
           pulp_sync_options[:remove_missing] = false if incremental
 
           fail ::Katello::Errors::InvalidActionOptionError, _("Unable to sync repo. This repository does not have a feed url.") if repo.url.blank? && source_url.blank?

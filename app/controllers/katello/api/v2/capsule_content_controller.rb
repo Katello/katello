@@ -49,9 +49,14 @@ module Katello
     api :POST, '/capsules/:id/content/sync', N_('Synchronize the content to the smart proxy')
     param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
     param :environment_id, Integer, :desc => N_('Id of the environment to limit the synchronization on')
+    param :skip_metadata_check, :bool, :desc => N_('Skip metadata check on each repository on the smart proxy')
     def sync
       find_environment if params[:environment_id]
-      task = async_task(::Actions::Katello::CapsuleContent::Sync, capsule_content.capsule, :environment_id => @environment.try(:id))
+      skip_metadata_check = ::Foreman::Cast.to_bool(params[:skip_metadata_check])
+      task = async_task(::Actions::Katello::CapsuleContent::Sync,
+                        capsule_content.capsule,
+                        :environment_id => @environment.try(:id),
+                        :skip_metadata_check => skip_metadata_check)
       respond_for_async :resource => task
     end
 
