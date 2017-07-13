@@ -43,6 +43,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
             }
         }
 
+        function getInitialTask() {
+            return {pending: true};
+
+        }
+
         $scope.uploadErrorMessages = [];
         $scope.progress = {uploading: false};
         $scope.uploadURL = '/katello/api/v2/organizations/' + CurrentOrganization + '/subscriptions/upload';
@@ -58,11 +63,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         });
 
         $scope.isTaskPending = function () {
-            var pending = false;
-            if (($scope.task && $scope.task.pending) || ($scope.deleteTask && $scope.deleteTask.pending)) {
-                pending = true;
-            }
-            return pending;
+            return $scope.task && $scope.task.pending;
         };
 
         $scope.unregisterSearch = function () {
@@ -99,9 +100,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.deleteManifest = function () {
+            $scope.task = getInitialTask();
+            $scope.taskStatusText = translate('Removing Manifest');
             Subscription.deleteManifest({}, function (returnData) {
-                $scope.deleteTask = returnData;
-                $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.deleteTask.id}, $scope.deleteManifestTask);
+                $scope.task = returnData;
+                $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.task.id}, $scope.deleteManifestTask);
             }, function (response) {
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
@@ -109,10 +112,10 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.deleteManifestTask = function (task) {
-            $scope.deleteTask = task;
-            if (!$scope.deleteTask.pending) {
+            $scope.task = task;
+            if (!$scope.task.pending) {
                 $scope.unregisterSearch();
-                if ($scope.deleteTask.result === 'success') {
+                if ($scope.task.result === 'success') {
                     $scope.saveSuccess = true;
                     GlobalNotification.setSuccessMessage(translate("Manifest successfully deleted."));
                     $scope.refreshOrganizationInfo();
@@ -131,9 +134,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.refreshManifest = function () {
+            $scope.task = getInitialTask();
+            $scope.taskStatusText = translate('Refreshing Manifest');
             Subscription.refreshManifest({}, function (returnData) {
-                $scope.refreshTask = returnData;
-                $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.refreshTask.id}, $scope.refreshManifestTask);
+                $scope.task = returnData;
+                $scope.searchId = Task.registerSearch({'type': 'task', 'task_id': $scope.task.id}, $scope.refreshManifestTask);
             }, function (response) {
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
@@ -141,10 +146,10 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         };
 
         $scope.refreshManifestTask = function (task) {
-            $scope.refreshTask = task;
-            if (!$scope.refreshTask.pending) {
+            $scope.task = task;
+            if (!$scope.task.pending) {
                 $scope.unregisterSearch();
-                if ($scope.refreshTask.result === 'success') {
+                if ($scope.task.result === 'success') {
                     $scope.saveSuccess = true;
                     GlobalNotification.setSuccessMessage(translate("Manifest successfully refreshed."));
                     $scope.refreshOrganizationInfo();
@@ -184,6 +189,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         $scope.uploadManifest = function (content) {
             var returnData;
             if (content) {
+                $scope.task = getInitialTask();
+                $scope.taskStatusText = translate('Uploading Manifest');
+
                 try {
                     returnData = angular.fromJson(angular.element(content).html());
                 } catch (err) {
