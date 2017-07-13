@@ -63,23 +63,29 @@ describe('Controller: CapsuleContentController', function() {
         it('has no effect when sync is in progress', function() {
             spyOn(CapsuleContent, 'sync').and.callThrough();
             syncState.set(syncState.SYNCING);
-            $scope.syncCapsule();
+            $scope.syncCapsule(false);
             expect(CapsuleContent.sync).not.toHaveBeenCalled();
         });
 
         it('starts capsule synchronization', function() {
             spyOn(CapsuleContent, 'sync').and.callThrough();
-            $scope.syncCapsule();
-            expect(CapsuleContent.sync).toHaveBeenCalledWith({ id: '83' });
+            $scope.syncCapsule(false);
+            expect(CapsuleContent.sync).toHaveBeenCalledWith({ id: '83', 'skip_metadata_check': false });
+        });
+
+        it('starts capsule synchronization with skip metadata option', function() {
+            spyOn(CapsuleContent, 'sync').and.callThrough();
+            $scope.syncCapsule(true);
+            expect(CapsuleContent.sync).toHaveBeenCalledWith({ id: '83', 'skip_metadata_check': true });
         });
 
         it('sets state to SYNC_TRIGGERED', function() {
-            $scope.syncCapsule();
+            $scope.syncCapsule(false);
             expect(syncState.is(syncState.SYNC_TRIGGERED)).toBeTruthy();
         });
 
         it('sets state to SYNCING when the response is successful', function() {
-            $scope.syncCapsule();
+            $scope.syncCapsule(false);
             deferred.resolve({id: '1'});
             $scope.$apply();
 
@@ -90,7 +96,7 @@ describe('Controller: CapsuleContentController', function() {
         it('adds task to active_sync_tasks when the response is successful', function() {
             var taskCount = $scope.syncStatus['active_sync_tasks'].length;
 
-            $scope.syncCapsule();
+            $scope.syncCapsule(false);
             deferred.resolve({id: '1'});
             $scope.$apply();
 
@@ -98,7 +104,7 @@ describe('Controller: CapsuleContentController', function() {
         });
 
         it('sets state to DEFAULT when there is some error', function() {
-            $scope.syncCapsule();
+            $scope.syncCapsule(false);
             deferred.reject({});
             $scope.$apply();
 

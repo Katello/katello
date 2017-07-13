@@ -21,15 +21,32 @@
   </div>
 
   <br>
-
-  <div>
-    <a ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)"
-      ng-click="cancelSync()" class="btn btn-default" ng-disabled="!syncState.is(syncState.SYNCING)">
+  <div ng-show="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)">
+    <a ng-click="cancelSync()" class="btn btn-default" ng-disabled="!syncState.is(syncState.SYNCING)">
       <span translate>Cancel Sync</span>
     </a>
-    <a ng-hide="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)"
-      ng-click="syncCapsule()" class="btn btn-default">
-      <span translate>Synchronize</span>
-    </a>
+  </div>
+  <div class="dropdown" ng-hide="syncState.is(syncState.SYNCING, syncState.SYNC_TRIGGERED, syncState.CANCEL_TRIGGERED)">
+    <button class="btn btn-default dropdown-toggle" type="button" id="syncDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      Synchronize
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="syncDropdown">
+      <li>
+        <a ng-click="syncCapsule(false)">
+          <span translate>
+            <strong>Optimized Sync</strong>
+            <p>Optimized Sync is a standard sync, optimized for speed by bypassing any unneeded steps.</p>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a ng-click="syncCapsule(true)">
+          <span translate><strong>Complete Sync</strong></span>
+          <p> A Complete Sync will sync repositories even if the upstream metadata appears to have no change.<br>
+              Complete Sync is only relevant for yum repositories and will take longer than an optimized sync.</p>
+        </a>
+      </li>
+    </ul>
   </div>
 </div>

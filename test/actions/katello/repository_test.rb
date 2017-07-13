@@ -294,7 +294,7 @@ module ::Actions::Katello::Repository
       plan_action action, repository, nil, :skip_metadata_check => true
 
       assert_action_planed_with(action, pulp_action_class, pulp_id: repository.pulp_id,
-                                task_id: nil, source_url: nil, options: {force_full: true, auto_publish: false})
+                                task_id: nil, source_url: nil, options: {force_full: true})
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
     end
 
@@ -305,7 +305,7 @@ module ::Actions::Katello::Repository
 
       assert_action_planed_with(action, pulp_action_class, source_url: nil,
                                 pulp_id: repository.pulp_id, task_id: nil,
-                                options: {download_policy: 'on_demand', force_full: true, auto_publish: false})
+                                options: {download_policy: 'on_demand', force_full: true})
       assert_action_planed_with(action, Actions::Pulp::Repository::Download, pulp_id: repository.pulp_id,
                                 options: {:verify_all_units => true})
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)

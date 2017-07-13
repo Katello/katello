@@ -122,13 +122,13 @@ angular.module('Bastion.capsule-content').controller('CapsuleContentController',
 
         $scope.isTaskInProgress = isTaskInProgress;
 
-        $scope.syncCapsule = function () {
+        $scope.syncCapsule = function (skipMetadataCheck) {
             if (!$scope.syncState.is(syncState.SYNCING)) {
 
                 $scope.syncErrorMessages = [];
                 $scope.syncState.set(syncState.SYNC_TRIGGERED);
 
-                CapsuleContent.sync({id: capsuleId}).$promise.then(function (task) {
+                CapsuleContent.sync({id: capsuleId, 'skip_metadata_check': skipMetadataCheck}).$promise.then(function (task) {
                     $scope.syncStatus['active_sync_tasks'].push(task);
                     $scope.syncTask = aggregateTasks($scope.syncStatus['active_sync_tasks']);
                     $scope.syncState.set(syncState.SYNCING);
