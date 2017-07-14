@@ -33,18 +33,18 @@ module Katello
 
       def import_all(organization = nil)
         organizations = organization ? [organization] : Organization.all
-        candlepin_ids = []
 
         organizations.each do |org|
           import_candlepin_ids(org.label)
-          candlepin_ids.concat(get_candlepin_ids(org.label))
-        end
+          candlepin_ids = get_candlepin_ids(org.label)
 
-        self.all.each do |item|
-          if candlepin_ids.include?(item.cp_id)
-            item.import_data
-          else
-            item.destroy
+          objects = self.in_organization(org) + self.where(:cp_id => candlepin_ids)
+          objects.uniq.each do |item|
+            if candlepin_ids.include?(item.cp_id)
+              item.import_data
+            else
+              item.destroy
+            end
           end
         end
       end

@@ -76,7 +76,7 @@ module Katello
       #  RecordNotUnique exceptions
       def self.active_record_retry(retries = 3)
         yield
-      rescue ActiveRecord::RecordNotUnique => e
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid => e
         retries -= 1
         if retries == 0
           raise e
