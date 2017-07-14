@@ -49,7 +49,9 @@ module Katello
         cp_product_ids.each do |cp_id|
           product = ::Katello::Product.where(:cp_id => cp_id, :organization_id => self.organization_id)
           if product.any?
-            ::Katello::SubscriptionProduct.where(:subscription_id => self.id, :product_id => product.first.id).first_or_create
+            ::Katello::Util::Support.active_record_retry do
+              ::Katello::SubscriptionProduct.where(:subscription_id => self.id, :product_id => product.first.id).first_or_create
+            end
           end
         end
       end
