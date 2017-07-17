@@ -4,11 +4,13 @@ module Katello
 
     initializer 'katello.selective_params_parser', :before => :build_middleware_stack do |app|
       require 'katello/params_parser_wrapper'
-      app.middleware.swap(
-        ActionDispatch::ParamsParser,
-        Katello::ParamsParserWrapper,
-        ->(env) { env['PATH_INFO'] =~ /consumers/ && env['PATH_INFO'] =~ /profile|packages/ }
-      )
+      if Rails::VERSION::MAJOR == 4
+        app.middleware.swap(
+          ActionDispatch::ParamsParser,
+          Katello::ParamsParserWrapper,
+          ->(env) { env['PATH_INFO'] =~ /consumers/ && env['PATH_INFO'] =~ /profile|packages/ }
+        )
+      end
     end
 
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
