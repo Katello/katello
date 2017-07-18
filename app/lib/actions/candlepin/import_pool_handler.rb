@@ -66,7 +66,7 @@ module Actions
         if message.content['newEntity']
           parsed = JSON.parse(message.content['newEntity'])
           uuid = parsed['consumer']['uuid']
-          sub_status = parsed['consumer']['entitlementStatus']
+          sub_status = parsed['status']['status']
           subscription_facet = ::Katello::Host::SubscriptionFacet.find_by_uuid(uuid)
 
           if subscription_facet && sub_status
