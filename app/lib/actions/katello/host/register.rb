@@ -33,6 +33,18 @@ module Actions
             plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name,
                       user_id: User.current.id, :facts => consumer_params[:facts])
             plan_action(Pulp::Consumer::Create, uuid: cp_create.output[:response][:uuid], name: host.name)
+
+            begin
+              host.content_facet.uuid = cp_create.input[:response][:uuid]
+              host.subscription_facet.uuid = cp_create.input[:response][:uuid]
+              user = ::User.find(User.current.id) 
+              host.subscription_facet.user = user unless user.nil? || user.hidden?
+              host.content_facet.save!
+              host.subscription_facet.save!
+            rescue
+              ::Katello::Resources::Candlepin::Consumer.destroy(cp_create.input[:response][:uuid])
+              raise 'Registration failed: ' + $ERROR_INFO.message
+            end
           end
         end
 
@@ -55,20 +67,15 @@ module Actions
         end
 
         def finalize
-          host = ::Host.find(input[:host_id])
-          host.content_facet.uuid = input[:uuid]
-          host.subscription_facet.uuid = input[:uuid]
-
-          user = ::User.find(input[:user_id])
-          host.subscription_facet.user = user unless user.nil? || user.hidden?
-
-          host.content_facet.save!
-          host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
-              consumer_attributes.except(:installedProducts, :guestIds, :facts))
-          host.subscription_facet.save!
-          host.subscription_facet.update_subscription_status
-          host.content_facet.update_errata_status
-          host.refresh_global_status!
+          User.as_anonymous_admin do
+            host = ::Host.find(input[:host_id])
+            host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
+               consumer_attributes.except(:installedProducts, :guestIds, :facts))
+            host.subscription_facet.save!
+            host.subscription_facet.update_subscription_status
+            host.content_facet.update_errata_status
+            host.refresh_global_status!
+          end
         end
 
         def rescue_strategy
