@@ -25,8 +25,8 @@
               <%= history.content_view_version.content_view.name %> <%= history.content_view_version.version %>
             </a>
           </td>
-          <td><%= history.humanized_action %></td>
-          <td><%= history.humanized_status %> on <%= history.updated_at.to_s(:short) %></td>
+          <td class='ellipsis'><%= history.humanized_action %></td>
+          <td class='ellipsis'><%= history.humanized_status %> on <%= history.updated_at.to_s(:short) %></td>
         </tr>
       <% end %>
     </tbody>
