@@ -85,7 +85,7 @@ module Katello
         last.nil? ? nil : last.to_s
       end
 
-      def initialize(attrs = nil, options = {})
+      def initialize(attrs = nil)
         if attrs.nil?
           super
         else
@@ -97,7 +97,7 @@ module Katello
           attrs_used_by_model = attrs.reject do |k, _v|
             !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
           end
-          super(attrs_used_by_model, options)
+          super(attrs_used_by_model)
         end
       end
 

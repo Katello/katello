@@ -57,7 +57,7 @@ module Katello
     end
 
     module InstanceMethods
-      def initialize(attribs = nil, options = {})
+      def initialize(attribs = nil)
         unless attribs.nil?
           attributes_key = attribs.key?(:attributes) ? :attributes : 'attributes'
           if attribs.key?(attributes_key)
