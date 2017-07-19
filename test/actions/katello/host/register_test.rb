@@ -14,6 +14,7 @@ module Katello::Host
       @activation_key = katello_activation_keys(:library_dev_staging_view_key)
       @host_collection = katello_host_collections(:simple_host_collection)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
+      Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:input).returns(response: {:uuid => ' '})
     end
 
     let(:action_class) { ::Actions::Katello::Host::Register }
