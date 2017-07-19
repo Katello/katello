@@ -16,7 +16,6 @@ module Actions
               content_view_environment ||= lookup_content_view_environment(activation_keys)
               set_host_collections(host, activation_keys)
             end
-
             fail _('Content View and Environment not set for registration.') if content_view_environment.nil?
 
             host.save!
@@ -33,6 +32,13 @@ module Actions
             plan_self(uuid: cp_create.output[:response][:uuid], host_id: host.id, hostname: host.name,
                       user_id: User.current.id, :facts => consumer_params[:facts])
             plan_action(Pulp::Consumer::Create, uuid: cp_create.output[:response][:uuid], name: host.name)
+
+            begin
+              set_content_and_subscription_uuids(host, cp_create.input[:response][:uuid])
+            rescue => e
+              ::Katello::Resources::Candlepin::Consumer.destroy(cp_create.input[:response][:uuid])
+              raise e
+            end
           end
         end
 
@@ -57,13 +63,6 @@ module Actions
         def finalize
           User.as_anonymous_admin do
             host = ::Host.find(input[:host_id])
-            host.content_facet.uuid = input[:uuid]
-            host.subscription_facet.uuid = input[:uuid]
-
-            user = ::User.find(input[:user_id])
-            host.subscription_facet.user = user unless user.nil? || user.hidden?
-
-            host.content_facet.save!
             host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
                 consumer_attributes.except(:installedProducts, :guestIds, :facts))
             host.subscription_facet.save!
@@ -118,6 +117,14 @@ module Actions
           subscription_facet.save!
           subscription_facet.activation_keys = activation_keys
           subscription_facet
+        end
+
+        def set_content_and_subscription_uuids(host, uuid)
+          host.content_facet.uuid = uuid
+          host.subscription_facet.uuid = uuid
+          host.subscription_facet.user = User.current unless User.current.nil? || User.current.hidden?
+          host.content_facet.save!
+          host.subscription_facet.save!
         end
       end
     end
