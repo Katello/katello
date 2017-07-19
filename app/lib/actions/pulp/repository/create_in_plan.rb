@@ -7,11 +7,11 @@ module Actions
         def plan(input)
           plan_self(input)
           pulp_extensions.repository.create_with_importer_and_distributors(input[:pulp_id],
-                                                                                      importer,
-                                                                                      distributors,
-                                                                                      display_name: input[:name])
+                                                                           importer,
+                                                                           distributors,
+                                                                           display_name: input[:name])
         rescue => e
-          raise error_message(e.http_body) || e
+          raise e.try(:http_body) ? error_message(e.http_body) || e : e
         end
 
         def error_message(body)
