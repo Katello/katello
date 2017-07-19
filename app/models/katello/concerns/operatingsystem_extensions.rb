@@ -21,7 +21,7 @@ module Katello
               provisioning_template_name = Setting["katello_default_#{kind.name}"]
             end
 
-            if (template = ProvisioningTemplate.find_by_name(provisioning_template_name))
+            if (template = ProvisioningTemplate.unscoped.find_by_name(provisioning_template_name))
               provisioning_templates << template unless provisioning_templates.include?(template)
               if OsDefaultTemplate.where(:template_kind_id => kind.id, :operatingsystem_id => id).empty?
                 OsDefaultTemplate.create(:template_kind_id => kind.id, :provisioning_template_id => template.id, :operatingsystem_id => id)
@@ -29,7 +29,7 @@ module Katello
             end
           end
 
-          if (ptable = Ptable.find_by_name(Setting["katello_default_ptable"]))
+          if (ptable = Ptable.unscoped.find_by_name(Setting["katello_default_ptable"]))
             ptables << ptable unless ptables.include?(ptable)
           end
         end
