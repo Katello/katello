@@ -68,7 +68,7 @@ module Katello
 
     before_create :assign_unique_label
 
-    def initialize(attrs = nil, options = {})
+    def initialize(attrs = nil)
       unless attrs.nil?
         attrs = attrs.with_indifferent_access
 
