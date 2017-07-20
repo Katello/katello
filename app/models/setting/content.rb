@@ -28,6 +28,7 @@ class Setting::Content < Setting
                  'Discovery Red Hat kexec', N_('Default synced OS kexec template')),
         self.set('katello_default_atomic_provision', N_("Default provisioning template for new Atomic Operating Systems created from synced content"),
                  'Katello Atomic Kickstart Default', N_('Default synced OS Atomic template')),
+        self.set('manifest_refresh_timeout', N_('Timeout when refreshing a manifest (in seconds)'), 60 * 20, N_("Manifest refresh timeout")),
         self.set('content_action_accept_timeout', N_("Time in seconds to wait for a Host to pickup a remote action"),
                  20, N_('Accept action timeout')),
         self.set('content_action_finish_timeout', N_("Time in seconds to wait for a Host to finish a remote action"),
