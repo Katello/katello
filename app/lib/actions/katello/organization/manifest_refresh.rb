@@ -12,27 +12,34 @@ module Actions
           upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
 
           sequence do
-            plan_action(Candlepin::Owner::UpstreamRegenerateCertificates,
+            regen_certs = plan_action(Candlepin::Owner::UpstreamRegenerateCertificates,
                         :organization_id => organization.id,
                         :upstream => upstream)
-            plan_action(Candlepin::Owner::UpstreamUpdate,
-                        :organization_id => organization.id,
-                        :upstream => upstream)
-            plan_action(Candlepin::Owner::UpstreamExport,
+            upstream_update = plan_action(Candlepin::Owner::UpstreamUpdate,
                         :organization_id => organization.id,
                         :upstream => upstream,
-                        :path => path)
-            plan_action(Candlepin::Owner::Import,
+                        :dependency => regen_certs.output)
+            export_action = plan_action(Candlepin::Owner::UpstreamExport,
+                        :organization_id => organization.id,
+                        :upstream => upstream,
+                        :path => path,
+                        :dependency => upstream_update.output)
+            owner_import = plan_action(Candlepin::Owner::Import,
                         :label => organization.label,
-                        :path => path)
-            plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id)
+                        :path => path,
+                        :dependency => export_action.output)
+            import_products = plan_action(Candlepin::Owner::ImportProducts, :organization_id => organization.id, :dependency => owner_import.output)
 
             if manifest_update && SETTINGS[:katello][:use_pulp]
               organization.products.redhat.flat_map(&:repositories).each do |repo|
-                plan_action(Katello::Repository::RefreshRepository, repo)
+                plan_action(Katello::Repository::RefreshRepository, repo, :dependency => import_products.output)
               end
             end
           end
+        end
+
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
         end
 
         def humanized_name
