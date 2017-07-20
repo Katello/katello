@@ -52,7 +52,7 @@ module Katello
     end
 
     def plan_date_time
-      self.sync_date.strftime('%Y/%m/%d %H:%M:%S %Z')
+      self.sync_date.strftime('%Y/%m/%d %H:%M:%S %z')
     end
 
     def schedule_format
@@ -103,7 +103,7 @@ module Katello
     end
 
     def next_sync
-      next_sync_date.try(:strftime, '%Y/%m/%d %H:%M:%S %Z')
+      next_sync_date.try(:strftime, '%Y/%m/%d %H:%M:%S %z')
     end
 
     def self.humanize_class_name(_name = nil)
