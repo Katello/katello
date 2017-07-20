@@ -100,34 +100,39 @@ module ::Actions::Katello::Organization
       action.stubs(:rand).returns('1234')
       plan_action(action, organization)
 
-      assert_action_planned_with(action,
-                                 ::Actions::Candlepin::Owner::UpstreamRegenerateCertificates,
-                                 organization_id: organization.id,
-                                 upstream: upstream
-                                )
-      assert_action_planned_with(action,
+      found = assert_action_planned_with(action,
+                                         ::Actions::Candlepin::Owner::UpstreamRegenerateCertificates,
+                                         organization_id: organization.id,
+                                         upstream: upstream
+                                        )
+      found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::UpstreamUpdate,
                                  organization_id: organization.id,
-                                 upstream: upstream
-                                )
-      assert_action_planned_with(action,
+                                 upstream: upstream,
+                                 dependency: found.first.output
+                                        )
+      found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::UpstreamExport,
                                  organization_id: organization.id,
                                  upstream: upstream,
-                                 path: "/tmp/1234.zip"
-                                )
-      assert_action_planned_with(action,
+                                 path: "/tmp/1234.zip",
+                                 dependency: found.first.output
+                                        )
+      found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::Import,
                                  label: organization.label,
-                                 path: "/tmp/1234.zip"
-                                )
-      assert_action_planned_with(action,
+                                 path: "/tmp/1234.zip",
+                                 dependency: found.first.output
+                                        )
+      found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::ImportProducts,
-                                 organization_id: organization.id
-                                )
+                                 organization_id: organization.id,
+                                 dependency: found.first.output
+                                        )
       assert_action_planned_with(action,
                                  ::Actions::Katello::Repository::RefreshRepository,
-                                 rhel7
+                                 rhel7,
+                                 dependency: found.first.output
                                 )
     end
   end
