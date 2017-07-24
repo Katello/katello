@@ -25,7 +25,7 @@ module Katello
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'puppet', 'docker', or 'ostree')")
+      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'deb', 'puppet', 'docker', or 'ostree')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
@@ -35,6 +35,9 @@ module Katello
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
       param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories.")
       param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided.")
+      param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
+      param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
+      param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing.")
     end
 
@@ -49,8 +52,9 @@ module Katello
     param :environment_id, :number, :desc => N_("ID of an environment to show repositories in")
     param :content_view_id, :number, :desc => N_("ID of a content view to show repositories in")
     param :content_view_version_id, :number, :desc => N_("ID of a content view version to show repositories in")
+    param :deb_id, String, :desc => N_("Id of a deb package to find repositories that contain the deb")
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
-    param :rpm_id, String, :desc => N_("Id of a package to find repositories that contain the rpm")
+    param :rpm_id, String, :desc => N_("Id of a rpm package to find repositories that contain the rpm")
     param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
@@ -68,6 +72,10 @@ module Katello
       query = index_relation_product(query)
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query = query.where(:name => params[:name]) if params[:name]
+
+      if params[:deb_id]
+        query = query.joins(:debs).where("#{Deb.table_name}.id" => Deb.with_identifiers(params[:deb_id]))
+      end
 
       if params[:erratum_id]
         query = query.joins(:errata).where("#{Erratum.table_name}.id" => Erratum.with_identifiers(params[:erratum_id]))
@@ -130,7 +138,7 @@ module Katello
 
     api :POST, "/repositories", N_("Create a custom repository")
     param_group :repo
-    def create
+    def create # rubocop:disable Metrics/MethodLength
       repo_params = repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
@@ -156,6 +164,11 @@ module Katello
       if repository.ostree?
         repository.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
         repository.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
+      end
+      if repository.deb?
+        repository.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
+        repository.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
+        repository.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
       end
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
@@ -418,7 +431,8 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
+              :deb_releases, :deb_components, :deb_architectures
              ]
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?

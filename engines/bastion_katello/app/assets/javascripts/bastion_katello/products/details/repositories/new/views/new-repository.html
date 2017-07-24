@@ -55,6 +55,33 @@
         </p>
 
       </div>
+      <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Releases' | translate }}">
+        <input id="deb_releases"
+               name="deb_releases"
+               ng-model="repository.deb_releases"
+               type="text"/>
+        <p class="help-block" translate>
+          Comma separated list of releases (suite or codename) to sync from. Default: stable
+        </p>
+      </div>
+      <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Components' | translate }}">
+        <input id="deb_comonents"
+               name="deb_components"
+               ng-model="repository.deb_components"
+               type="text"/>
+        <p class="help-block" translate>
+          Comma separated list of components to sync from (leave clear to sync all). Example: main
+        </p>
+      </div>
+      <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Architectures' | translate }}">
+        <input id="deb_architectures"
+               name="deb_architectures"
+               ng-model="repository.deb_architectures"
+               type="text"/>
+        <p class="help-block" translate>
+          Comma separated list of processor architectures to filter the sync by. Example: amd64
+        </p>
+      </div>
 
       <div bst-form-group label="{{ 'Upstream Sync Policy' | translate }}"  ng-show="repository.content_type === 'ostree'">
         <select required
@@ -157,7 +184,7 @@
       </div>
     </div>
 
-    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
+    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet' || repository.content_type === 'deb'">
       <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
 
       <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type === 'yum'">

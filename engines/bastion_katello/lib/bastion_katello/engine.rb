@@ -20,6 +20,7 @@ module BastionKatello
           activation_keys
           content_hosts
           content_views
+          debs
           docker_tags
           files
           ostree_branches

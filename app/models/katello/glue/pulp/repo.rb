@@ -144,6 +144,8 @@ module Katello
             importer = Runcible::Models::YumImporter.new
           when Repository::PUPPET_TYPE
             importer = Runcible::Models::PuppetImporter.new
+          when Repository::DEB_TYPE
+            importer = Runcible::Models::DebImporter.new
           end
         end
 
@@ -177,6 +179,8 @@ module Katello
           options[:depth] = capsule.default_capsule? ? compute_ostree_upstream_sync_depth : ostree_capsule_sync_depth
           options[:feed] = self.importer_feed_url(capsule)
           Runcible::Models::OstreeImporter.new(options)
+        when Repository::DEB_TYPE
+          Runcible::Models::DebImporter.new(deb_importer_values(capsule))
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
@@ -222,6 +226,16 @@ module Katello
         config = {
           :feed => self.importer_feed_url(capsule),
           :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
+        }
+        config.merge(importer_connection_options(capsule))
+      end
+
+      def deb_importer_values(capsule)
+        config = {
+          feed: self.importer_feed_url(capsule),
+          releases: self.deb_releases,
+          components: self.deb_components,
+          architectures: self.deb_architectures
         }
         config.merge(importer_connection_options(capsule))
       end
@@ -305,6 +319,15 @@ module Katello
 
           dist = Runcible::Models::OstreeDistributor.new(options)
           distributors = [dist]
+        when Repository::DEB_TYPE
+          options = {
+            id: self.pulp_id,
+            auto_publish: true
+          }
+          http = self.unprotected
+          https = true
+          dist = Runcible::Models::DebDistributor.new(self.relative_path, http, https, options)
+          distributors = [dist]
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
@@ -324,6 +347,8 @@ module Katello
           Runcible::Models::DockerImporter::ID
         when Repository::OSTREE_TYPE
           Runcible::Models::OstreeImporter::ID
+        when Repository::DEB_TYPE
+          Runcible::Models::DebImporter::ID
         else
           fail _("Unexpected repo type %s") % self.content_type
         end
@@ -402,6 +427,7 @@ module Katello
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
                                    upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy)
         changeable_attributes << "name" if docker?
+        changeable_attributes += %w(deb_releases deb_components deb_architectures) if deb?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
       end
 
@@ -583,6 +609,8 @@ module Katello
           "ostree"
         when Repository::FILE_TYPE
           "iso"
+        when Repository::DEB_TYPE
+          "deb"
         end
       end
 
@@ -630,6 +658,10 @@ module Katello
 
       def ostree?
         self.content_type == Repository::OSTREE_TYPE
+      end
+
+      def deb?
+        self.content_type == Repository::DEB_TYPE
       end
 
       def published?
@@ -738,6 +770,8 @@ module Katello
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}/"
       elsif ostree?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{relative_path}"
+      elsif deb?
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/deb/#{relative_path}"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
@@ -786,6 +820,8 @@ module Katello
         Katello::OstreeBranch.import_for_repository(self)
       elsif self.file?
         Katello::FileUnit.import_for_repository(self)
+      elsif self.deb?
+        Katello::Deb.import_for_repository(self)
       end
       true
     end

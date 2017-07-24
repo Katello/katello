@@ -39,6 +39,27 @@
           on-save="save(repository)"
           readonly="product.redhat || denied('edit_products', product)">
       </dd>
+      <span ng-if="repository.content_type == 'deb'">
+        <dt translate>Releases</dt>
+        <dd bst-edit-text="repository.deb_releases"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
+      <span ng-if="repository.content_type == 'deb'">
+        <dt translate>Components</dt>
+        <dd bst-edit-text="repository.deb_components"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
+      <span ng-if="repository.content_type == 'deb'">
+        <dt translate>Architectures</dt>
+        <dd bst-edit-text="repository.deb_architectures"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
 
       <span ng-show="repository.content_type === 'docker'" >
         <dt translate>Upstream Repository Name</dt>
@@ -288,6 +309,14 @@
           <td class="align-center">
             <a ui-sref="product.repository.manage-content.files({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.file || 0 }}
+            </a>
+          </td>
+        </tr>
+        <tr ng-show="repository.content_type === 'deb'">
+          <td translate>deb Packages</td>
+          <td class="align-center">
+            <a ui-sref="product.repository.manage-content.debs({productId: product.id, repositoryId: repository.id})">
+              {{ repository.content_counts.deb || 0 }}
             </a>
           </td>
         </tr>

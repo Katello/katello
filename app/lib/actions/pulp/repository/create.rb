@@ -25,6 +25,9 @@ module Actions
           param :upstream_password
           param :ostree_upstream_sync_depth
           param :ostree_publish_depth
+          param :deb_releases
+          param :deb_architectures
+          param :deb_components
         end
 
         def run
@@ -48,6 +51,8 @@ module Actions
             docker_importer
           when ::Katello::Repository::OSTREE_TYPE
             ostree_importer
+          when ::Katello::Repository::DEB_TYPE
+            deb_importer
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end
@@ -113,6 +118,18 @@ module Actions
           importer
         end
 
+        def deb_importer
+          Runcible::Models::DebImporter.new.tap do |importer|
+            importer.feed = input[:feed]
+            importer.releases = input[:deb_releases] if input[:deb_releases]
+            importer.architectures = input[:deb_architectures] if input[:deb_architectures]
+            importer.components = input[:deb_components] if input[:deb_components]
+            importer.ssl_validation = input[:ssl_validation]
+            importer.basic_auth_username = input[:upstream_username] if input[:upstream_username].present?
+            importer.basic_auth_password = input[:upstream_password] if input[:upstream_password].present?
+          end
+        end
+
         def distributors
           case input[:content_type]
           when ::Katello::Repository::YUM_TYPE
@@ -127,6 +144,8 @@ module Actions
             distributors = [docker_distributor]
           when ::Katello::Repository::OSTREE_TYPE
             distributors = [ostree_distributor]
+          when ::Katello::Repository::DEB_TYPE
+            distributors = [deb_distributor]
           else
             fail _("Unexpected repo type %s") % input[:content_type]
           end
@@ -190,6 +209,16 @@ module Actions
                       auto_publish: true }
           options[:depth] = input[:ostree_publish_depth] if input[:ostree_publish_depth]
           Runcible::Models::OstreeDistributor.new(options)
+        end
+
+        def deb_distributor
+          deb_dist_options = { id: input[:pulp_id],
+                               auto_publish: true }
+          deb_dist_options[:checksum_type] = input[:checksum_type] if input[:checksum_type]
+          Runcible::Models::DebDistributor.new(input[:path],
+                                               input[:unprotected] || false,
+                                               true,
+                                               deb_dist_options)
         end
       end
     end

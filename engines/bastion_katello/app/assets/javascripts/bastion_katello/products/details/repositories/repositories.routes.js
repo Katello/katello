@@ -134,6 +134,15 @@
                 label: "{{'OSTree Branches' | translate }}",
                 parent: 'product.repository.info'
             }
+        })
+        .state('product.repository.manage-content.debs', {
+            url: '/content/debs',
+            permission: 'view_products',
+            templateUrl: 'products/details/repositories/details/views/repository-manage-debs.html',
+            ncyBreadcrumb: {
+                label: "{{'Debs' | translate }}",
+                parent: 'product.repository.info'
+            }
         });
 
         $stateProvider.state('product.repository.tasks', {

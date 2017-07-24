@@ -34,6 +34,9 @@
 //= require "bastion_katello/ostree-branches/ostree-branches.module.js"
 //= require_tree "./ostree-branches"
 
+//= require "bastion_katello/debs/debs.module.js"
+//= require_tree "./debs"
+
 //= require "bastion_katello/errata/errata.module"
 //= require_tree "./errata"
 

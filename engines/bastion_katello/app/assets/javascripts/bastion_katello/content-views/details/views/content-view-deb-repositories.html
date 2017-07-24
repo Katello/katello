@@ -1,0 +1,87 @@
+<span page-title ng-model="contentView">{{ 'Repositories for Content View:' | translate }} {{ contentView.name }}</span>
+
+<h3 translate>Deb Repositories</h3>
+
+<nav data-block="navigation">
+  <ul class="nav nav-tabs nav-tabs-pf" ng-show="permitted('edit_content_views', contentView)">
+    <li ng-class="{active: isState('content-view.repositories.deb.list')}">
+      <a ui-sref="content-view.repositories.deb.list">
+        <span translate>
+          List/Remove
+        </span>
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('content-view.repositories.deb.available')}" ng-show="!contentView.permissions.editable">
+      <a ui-sref="content-view.repositories.deb.available" translate>
+        Add
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="list-actions">
+    <button type="button" class="btn btn-primary"
+            ng-disabled="table.numSelected === 0"
+            ng-show="isState('content-view.repositories.deb.list') && permitted('edit_content_views', contentView)"
+            ng-click="removeRepositories(contentView)">
+      <span translate>Remove Repositories</span>
+    </button>
+    <button type="button" class="btn btn-primary"
+            ng-disabled="table.numSelected === 0"
+            ng-show="isState('content-view.repositories.deb.available') && permitted('edit_content_views', contentView)"
+            ng-click="addRepositories(contentView)">
+      <span translate>Add Repositories</span>
+    </button>
+  </div>
+
+  <span data-block="no-rows-message">
+    <span ng-show="isState('content-view.repositories.deb.list')" translate>
+      There are currently no Deb Repositories associated with this Content View, you can add some by clicking on the "Add" tab above.
+    </span>
+    <span ng-show="isState('content-view.repositories.deb.available')">
+      <span translate>There are currently no Deb Repositories to add to this Content View,</span>
+      <a ui-sref="products" translate>add some repositories.</a>
+    </span>
+  </span>
+
+  <table data-block="table" class="table table-bordered table-striped">
+    <thead>
+      <tr bst-table-head row-select>
+        <th bst-table-column translate>Name</th>
+        <th bst-table-column translate>Product</th>
+        <th bst-table-column translate>Last Sync</th>
+        <th bst-table-column translate>Sync State</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr bst-table-row
+          row-select="repository"
+          ng-repeat="repository in table.rows | filter:repositorySearch | filter:repositoryFilter as filteredItems">
+        <td bst-table-cell>
+          <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.id})">
+            {{ repository.name }}
+          </a>
+        </td>
+        <td bst-table-cell>{{ repository.product.name }}</td>
+        <td bst-table-cell>
+          <span ng-show="repository.url && repository.last_sync == null" translate>
+            Not Synced
+          </span>
+          <span ng-show="repository.url">
+            {{ repository.last_sync.ended_at | date:"short" }}
+          </span>
+          <span ng-hide="repository.url" translate>N/A</span>
+        </td>
+        <td bst-table-cell>
+          <span ng-show="repository.url">
+            <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize }}</a>
+          </span>
+          <span ng-hide="repository.url" translate>N/A</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

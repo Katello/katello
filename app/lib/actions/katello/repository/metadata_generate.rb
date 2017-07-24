@@ -48,6 +48,8 @@ module Actions
             [Runcible::Models::DockerDistributor]
           when ::Katello::Repository::OSTREE_TYPE
             [Runcible::Models::OstreeDistributor]
+          when ::Katello::Repository::DEB_TYPE
+            [Runcible::Models::DebDistributor]
           end
         end
       end

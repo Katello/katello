@@ -1,0 +1,43 @@
+<span page-title>{{ 'Deb Packages' | translate }}</span>
+
+<div data-extend-template="layouts/table-with-header.html">
+  <div data-block="header" translate>
+    Debs
+  </div>
+
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Debs.
+  </span>
+
+  <span data-block="no-search-results-message" translate>
+    Your search returned zero Debs.
+  </span>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name"><span translate>Name</span></th>
+          <th bst-table-column="version"><span translate>Version</span></th>
+          <th bst-table-column="architecture"><span translate>Architecture</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="deb in table.rows">
+          <td bst-table-cell>
+            <a ui-sref="deb.info({debId: deb.id})">
+              {{ deb.name }}
+            </a>
+          </td>
+          <td bst-table-cell>
+            {{ deb.version }}
+          </td>
+          <td bst-table-cell>
+            {{ deb.architecture }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

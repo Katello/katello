@@ -1,0 +1,41 @@
+<span page-title ng-model="deb">{{ 'Content Views for Deb: ' | translate }} {{ deb.name }}_{{ deb.version }}_{{ deb.architecture }}</span>
+
+<h3 translate>Content Views that contain this Deb</h3>
+
+<div data-extend-template="layouts/partials/table.html">
+  <span data-block="no-rows-message" translate>
+    No Content Views contain this Deb
+  </span>
+
+  <span data-block="no-search-results-message" translate>
+    Your search returned zero Content Views
+  </span>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
+      <thead>
+        <tr bst-table-head>
+          <th bst-table-column="name"><span translate>Name</span></th>
+          <th bst-table-column="name"><span translate>Environment</span></th>
+          <th bst-table-column="name"><span translate>Version</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr bst-table-row ng-repeat="version in table.rows">
+          <td bst-table-cell>
+            <a ui-sref="content-view.info({contentViewId: version.content_view.id})">
+              {{ version.content_view.name }}
+            </a>
+          </td>
+          <td>
+            {{ environmentNames(version.environments) }}
+          </td>
+          <td>
+            {{ version.version }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

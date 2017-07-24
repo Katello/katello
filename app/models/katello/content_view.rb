@@ -193,6 +193,10 @@ module Katello
       Katello::Rpm.in_repositories(self.repos(env)).count
     end
 
+    def total_deb_package_count(env)
+      Katello::Deb.in_repositories(self.repos(env)).count
+    end
+
     def total_puppet_module_count(env)
       repoids = self.repos(env).collect { |r| r.pulp_id }
       result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)

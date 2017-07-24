@@ -3,10 +3,10 @@
 
     /**
      * @ngdoc controller
-     * @name  Bastion.puppet-modules.controller:FilesController
+     * @name  Bastion.files.controller:FilesController
      *
      * @description
-     *   Handles fetching puppet modules content and populating Nutupane based on the current
+     *   Handles fetching files and populating Nutupane based on the current
      *   ui-router state.
      */
     function FilesController($scope, Nutupane, File, CurrentOrganization) {

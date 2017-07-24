@@ -1,0 +1,19 @@
+<div data-extend-template="layouts/partials/table.html">
+  <table data-block="table" class="table table-striped table-bordered">
+    <thead>
+      <tr bst-table-head>
+        <th bst-table-column translate>Name</th>
+        <th bst-table-column translate>Version</th>
+        <th bst-table-column translate>Architecture</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr bst-table-row ng-repeat="deb in table.rows">
+        <td bst-table-cell>{{ deb.name }}</td>
+        <td bst-table-cell>{{ deb.version }}</td>
+        <td bst-table-cell>{{ deb.architecture }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
