@@ -4,8 +4,9 @@ module Katello
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
     ERRATA          = Erratum::CONTENT_TYPE
-    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER].freeze
-    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Docker') => DOCKER }.freeze
+    DEB             = Deb::CONTENT_TYPE
+    CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER, DEB].freeze
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Docker') => DOCKER, _('deb Packages') => DEB }.freeze
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",
@@ -40,6 +41,11 @@ module Katello
       where(:type => [::Katello::ContentViewPackageGroupFilter.name,
                       ::Katello::ContentViewErratumFilter.name,
                       ::Katello::ContentViewPackageFilter.name])
+    end
+
+    def self.deb
+      # TODO
+      []
     end
 
     def self.docker

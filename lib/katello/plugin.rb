@@ -89,6 +89,15 @@ Foreman::Plugin.register :katello do
     divider :top_menu, :caption => N_('Content Types'), :parent => :content_menu
 
     menu :top_menu,
+         :debs,
+         :caption => N_('Deb Packages'),
+         :url => '/debs',
+         :url_hash => {:controller => 'katello/api/v2/debs',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    menu :top_menu,
          :docker_tags,
          :caption => N_('Docker Tags'),
          :url => '/docker_tags',

@@ -14,13 +14,15 @@
  * @requires DockerManifest
  * @requires DockerManifestList
  * @requires OstreeBranch
+ * @requires File
+ * @requires Deb
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'OstreeBranch', 'File',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, OstreeBranch, File) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'OstreeBranch', 'File', 'Deb',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, OstreeBranch, File, Deb) {
         var contentTypes;
 
         function success(response, selected) {
@@ -56,7 +58,8 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'docker-manifests': { type: DockerManifest },
             'docker-manifest-lists': { type: DockerManifestList },
             'ostree-branches': { type: OstreeBranch },
-            'files': {type: File}
+            'files': { type: File },
+            'debs': { type: Deb }
         };
 
         $scope.contentNutupane = new Nutupane(contentTypes[$scope.currentState].type, {

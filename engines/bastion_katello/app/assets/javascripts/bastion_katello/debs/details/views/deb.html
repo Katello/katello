@@ -1,0 +1,37 @@
+<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.name }}</span>
+
+<div data-extend-template="layouts/details-page-with-breadcrumbs.html">
+  <div data-block="header" translate>
+    {{ deb.name }}
+  </div>
+
+  <nav data-block="navigation">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('deb.info')}">
+        <a ui-sref="deb.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+      <li ng-show="permitted('view_products')" ng-class="{active: isState('deb.repositories')}">
+        <a ui-sref="deb.repositories">
+          <span translate>
+            Library Repositories
+          </span>
+        </a>
+      </li>
+      <li ng-show="permitted('view_content_views')" ng-class="{active: isState('deb.content-views')}">
+        <a ui-sref="deb.content-views">
+          <span translate>
+            Content Views
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div data-block="content">
+    <section ui-view></section>
+  </div>
+</div>

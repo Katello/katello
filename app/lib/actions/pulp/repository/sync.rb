@@ -98,6 +98,8 @@ module Actions
             Presenters::DockerPresenter.new(self)
           elsif repo.try(:ostree?)
             Presenters::OstreePresenter.new(self)
+          elsif repo.try(:deb?)
+            Presenters::DebPresenter.new(self)
           end
         end
 

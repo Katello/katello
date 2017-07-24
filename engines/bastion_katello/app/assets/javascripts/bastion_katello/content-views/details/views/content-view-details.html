@@ -80,6 +80,13 @@
         </ul>
       </li>
 
+      <li ng-class="{active: stateIncludes('content-view.repositories.deb')}"
+          ng-hide="contentView.composite">
+        <a ui-sref="content-view.repositories.deb.list" translate>
+          Apt Repositories
+        </a>
+      </li>
+
       <li ng-class="{active: stateIncludes('content-view.repositories.file')}"
           ng-hide="contentView.composite">
         <a ui-sref="content-view.repositories.file.list" translate>

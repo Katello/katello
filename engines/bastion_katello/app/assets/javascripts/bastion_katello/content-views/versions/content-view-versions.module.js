@@ -16,5 +16,7 @@ angular.module('Bastion.content-views.versions', [
     'Bastion.errata',
     'Bastion.package-groups',
     'Bastion.puppet-modules',
-    'Bastion.ostree-branches'
+    'Bastion.ostree-branches',
+    'Bastion.files',
+    'Bastion.debs'
 ]);

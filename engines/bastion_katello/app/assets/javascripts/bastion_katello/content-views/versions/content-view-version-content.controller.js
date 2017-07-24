@@ -10,7 +10,7 @@
      *   ui-router state.
      */
     function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum,
-                                                 PackageGroup, PuppetModule, OstreeBranch, Repository,
+                                                 PackageGroup, PuppetModule, OstreeBranch, Deb, Repository,
                                                  ContentViewVersion) {
         var nutupane, contentTypes, currentState, params;
 
@@ -72,6 +72,17 @@
                     'content_view_version_id': $scope.$stateParams.versionId,
                     library: true
                 }
+            },
+            'apt': {
+                type: Repository,
+                params: {
+                    'content_type': 'deb',
+                    'content_view_version_id': $scope.$stateParams.versionId,
+                    library: true
+                }
+            },
+            'deb': {
+                type: Deb
             }
         };
 
@@ -110,6 +121,6 @@
         .controller('ContentViewVersionContentController', ContentViewVersionContentController);
 
     ContentViewVersionContentController.$inject = ['$scope', 'translate', 'Nutupane', 'Package', 'Erratum',
-                                                   'PackageGroup', 'PuppetModule', 'OstreeBranch', 'Repository', 'ContentViewVersion'];
+                                                   'PackageGroup', 'PuppetModule', 'OstreeBranch', 'Deb', 'Repository', 'ContentViewVersion'];
 
 })();

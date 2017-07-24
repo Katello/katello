@@ -168,6 +168,14 @@
               </div>
             </span>
 
+            <span ng-show="repository.content_type == 'deb'">
+              <div>
+                <a translate ui-sref="product.repository.manage-content.debs({productId: product.id, repositoryId: repository.id})">
+                  {{ repository.content_counts.deb || 0 }} deb Packages
+                </a>
+              </div>
+            </span>
+
           </td>
         </tr>
       </tbody>

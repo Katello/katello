@@ -158,6 +158,26 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             label: '{{ "File" | translate }}',
             parent: 'content-view.version.details'
         }
+    })
+    .state('content-view.version.apt', {
+        url: '/apt',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-apt.html',
+        ncyBreadcrumb: {
+            label: '{{ "Apt Repositories" | translate }}',
+            parent: 'content-view.version.details'
+        }
+    })
+    .state('content-view.version.deb', {
+        url: '/deb',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-deb.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deb" | translate }}',
+            parent: 'content-view.version.details'
+        }
     });
 
     $stateProvider.state('content-view.promotion', {
@@ -274,6 +294,30 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         templateUrl: 'content-views/details/views/content-view-file-repositories.html',
         ncyBreadcrumb: {
             label: '{{ "Add File Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
+    })
+    .state('content-view.repositories.deb', {
+        abstract: true,
+        template: '<div ui-view></div>'
+    })
+    .state('content-view.repositories.deb.list', {
+        url: '/repositories/deb',
+        permission: 'view_content_views',
+        controller: 'ContentViewDebRepositoriesListController',
+        templateUrl: 'content-views/details/views/content-view-deb-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Deb Repositories" | translate }}',
+            parent: 'content-view.info'
+        }
+    })
+    .state('content-view.repositories.deb.available', {
+        url: '/repositories/deb/available',
+        permission: 'view_content_views',
+        controller: 'ContentViewAvailableDebRepositoriesController',
+        templateUrl: 'content-views/details/views/content-view-deb-repositories.html',
+        ncyBreadcrumb: {
+            label: '{{ "Add Deb Repositories" | translate }}',
             parent: 'content-view.info'
         }
     })

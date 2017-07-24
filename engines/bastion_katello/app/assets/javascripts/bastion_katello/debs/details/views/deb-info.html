@@ -1,0 +1,21 @@
+<span page-title ng-model="deb">{{ 'Deb: ' | translate }} {{ deb.name }}_{{ deb.version }}_{{ deb.architecture }}</span>
+
+<div data-extend-template="layouts/full-page-details.html">
+  <div data-block="content">
+    <h4 translate>Basic Information</h4>
+
+    <dl class="dl-horizontal dl-horizontal-left">
+      <dt translate>Version</dt>
+      <dd>{{ deb.version }}</dd>
+
+      <dt translate>Architecture</dt>
+      <dd>{{ deb.architecture }}</dd>
+
+      <dt translate>Checksum</dt>
+      <dd>{{ deb.checksum }}</dd>
+
+      <dt translate>Description</dt>
+      <dd>{{ deb.description }}</dd>
+    </dl>
+  </div>
+</div>

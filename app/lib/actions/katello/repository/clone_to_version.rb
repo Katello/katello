@@ -24,6 +24,9 @@ module Actions
                 if new_repository.yum?
                   plan_action(Repository::CloneYumContent, repository, new_repository, filters, !incremental,
                               :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
+                elsif new_repository.deb?
+                  plan_action(Repository::CloneDebContent, repository, new_repository, filters, !incremental,
+                              :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
                 elsif new_repository.docker?
                   plan_action(Repository::CloneDockerContent, repository, new_repository, filters)
                 elsif new_repository.ostree?

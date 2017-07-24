@@ -18,14 +18,14 @@
     <li ng-class="{active: isState('content-view.version.packages')}"
         ng-show="version.package_count !== 0">
       <a ui-sref="content-view.version.packages({versionId: version.id})">
-        <span translate>Packages</span>
+        <span translate>rpm Packages</span>
       </a>
     </li>
 
     <li ng-class="{active: isState('content-view.version.package-groups')}"
         ng-show="version.package_group_count !== 0">
       <a ui-sref="content-view.version.package-groups({versionId: version.id})">
-        <span translate>Package Groups</span>
+        <span translate>rpm Package Groups</span>
       </a>
     </li>
 
@@ -33,6 +33,20 @@
         ng-show="hasErrata(version)">
       <a ui-sref="content-view.version.errata({versionId: version.id})">
         <span translate>Errata</span>
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('content-view.version.apt')}"
+        ng-show="version.deb_module_count !== 0">
+      <a ui-sref="content-view.version.apt({versionId: version.id})">
+        <span translate>Apt Repositories</span>
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('content-view.version.deb')}"
+        ng-show="version.deb_module_count !== 0">
+      <a ui-sref="content-view.version.deb({versionId: version.id})">
+        <span translate>Deb Packages</span>
       </a>
     </li>
 

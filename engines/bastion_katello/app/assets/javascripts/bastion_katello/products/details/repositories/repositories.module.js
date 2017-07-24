@@ -19,7 +19,8 @@ angular.module('Bastion.repositories', [
     'Bastion.products',
     'Bastion.docker-manifests',
     'Bastion.docker-manifest-lists',
-    'Bastion.files'
+    'Bastion.files',
+    'Bastion.debs'
 ]);
 
 angular.module('Bastion.repositories').run(['$rootScope', '$state', '$stateParams',

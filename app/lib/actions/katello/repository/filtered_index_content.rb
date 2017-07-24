@@ -19,6 +19,8 @@ module Actions
             ::Katello::DockerManifest.import_for_repository(repo)
           elsif repo.file?
             ::Katello::FileUnit.import_for_repository(repo)
+          elsif repo.deb?
+            ::Katello::Deb.import_all(unit_ids)
           else
             ::Katello::Rpm.import_all(unit_ids)
           end

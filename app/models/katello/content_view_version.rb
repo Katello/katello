@@ -265,6 +265,14 @@ module Katello
       ::Katello::DockerMetaTag.where(:repository_id => repositories.archived.docker_type).count
     end
 
+    def debs
+      Katello::Deb.in_repositories(self.repositories.archived).uniq
+    end
+
+    def deb_count
+      debs.count
+    end
+
     def errata(errata_type = nil)
       errata = Erratum.in_repositories(archived_repos).uniq
       errata = errata.of_type(errata_type) if errata_type

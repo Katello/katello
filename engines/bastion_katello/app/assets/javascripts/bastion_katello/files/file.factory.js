@@ -3,7 +3,7 @@
 
     /**
      * @ngdoc factory
-     * @name  Bastion.puppet-modules.factory:File
+     * @name  Bastion.files.factory:File
      *
      * @description
      *   Provides a BastionResource for interacting with Files

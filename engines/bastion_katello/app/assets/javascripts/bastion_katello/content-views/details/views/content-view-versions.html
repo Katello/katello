@@ -80,6 +80,9 @@
             <div translate ng-if="version.file_count && version.file_count > 0">
               {{ version.file_count }} Files
             </div>
+            <div translate ng-if="version.deb_count && version.deb_count > 0">
+              {{ version.deb_count }} deb Packages
+            </div>
           </td>
           <td bst-table-cell class="preserve-newlines">{{ version.description }}</td>
           <td class="col-sm-2">
