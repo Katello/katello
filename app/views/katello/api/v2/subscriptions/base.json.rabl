@@ -16,10 +16,3 @@ attributes :name => :product_name
 attributes :unmapped_guest
 attributes :virt_only
 attributes :virt_who
-
-node :host, :if => lambda { |sub| sub && sub.hypervisor } do |subscription|
-  {
-    id: subscription.hypervisor.id,
-    name: subscription.hypervisor.name
-  }
-end

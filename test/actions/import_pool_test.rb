@@ -4,10 +4,14 @@ module Katello
   describe ::Actions::Candlepin::ImportPoolHandler do
     let(:pool_id) { 'abc123' }
     let(:pool) { OpenStruct.new(:id => pool_id) }
+    let(:pool_two) { katello_pools(:pool_two) }
+    let(:subscription_facet) { katello_subscription_facets(:one) }
 
     before do
       ::Katello::Pool.stubs(:search).returns([pool])
       ::Katello::Pool.any_instance.stubs(:import_data).returns(true)
+      ::Katello::Candlepin::MessageHandler.any_instance.stubs(:get_pool_by_reference_id).returns(pool_two)
+      ::Katello::Candlepin::MessageHandler.any_instance.stubs(:subscription_facet).returns(subscription_facet)
     end
 
     def message(subject, content = {})

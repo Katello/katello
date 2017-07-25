@@ -111,8 +111,17 @@
         <dt translate>Number of CPUs</dt>
         <dd>{{ host.facts["cpu::cpu(s)"] }}</dd>
 
+        <dt translate>Sockets</dt>
+        <dd>{{ host.facts['cpu::cpu_socket(s)'] }}</dd>
+
+        <dt translate>Cores per Socket</dt>
+        <dd>{{ host.facts['cpu::core(s)_per_socket'] }}</dd>
+
         <dt translate>RAM (GB)</dt>
         <dd>{{ convertMemToGB(host.facts["memory::memtotal"]) }}</dd>
+
+        <dt translate>Virtual Guest</dt>
+        <dd>{{ virtual(host.facts['virt::is_guest']) | booleanToYesNo }}</dd>
       </dl>
 
       <div class="divider"></div>
