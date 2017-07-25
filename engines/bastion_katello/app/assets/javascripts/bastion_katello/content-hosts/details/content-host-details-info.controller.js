@@ -119,8 +119,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             return '/activation_keys!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
         };
 
-        $scope.memory = ContentHostsHelper.memory;
-
         $scope.virtualGuestIds = function (host) {
             var ids = [];
             if (host && host.subscription_facet_attributes) {
@@ -132,8 +130,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
             return ids.join(" or ");
         };
 
-        $scope.convertMemToGB = function (memoryValue) {
-            return (memoryValue / 1048576).toFixed(2);
+        $scope.convertMemToGB = ContentHostsHelper.convertMemToGB;
+
+        $scope.virtual = function (virt) {
+            return (virt === true || virt === 'true');
         };
     }]
 );

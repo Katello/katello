@@ -1,21 +1,5 @@
 module Actions
   module Candlepin
-    class MessageWrapper
-      attr_accessor :message
-
-      def initialize(message)
-        @message = message
-      end
-
-      def subject
-        @message.subject
-      end
-
-      def content
-        JSON.parse(@message.content)
-      end
-    end
-
     class ImportPoolHandler
       def initialize(logger)
         @logger = logger
@@ -27,56 +11,37 @@ module Actions
 
         ::User.current = ::User.anonymous_admin
 
-        wrapped_message = MessageWrapper.new(message)
-        case message.subject
+        message_handler = ::Katello::Candlepin::MessageHandler.new(message)
+
+        case message_handler.subject
         when /entitlement\.created/
-          import_pool(wrapped_message.content['referenceId'])
+          message_handler.import_pool_by_reference_id
+          message_handler.create_pool_on_host
         when /entitlement\.deleted/
-          import_pool(wrapped_message.content['referenceId'])
+          message_handler.import_pool_by_reference_id
+          message_handler.remove_pool_from_host
         when /pool\.created/
-          import_pool(wrapped_message.content['entityId'])
+          message_handler.import_pool_by_entity_id
         when /pool\.deleted/
-          remove_pool(wrapped_message.content['entityId'])
+          message_handler.import_pool_by_entity_id
         when /compliance\.created/
-          reindex_consumer(wrapped_message)
+          reindex_consumer(message_handler)
         end
       end
 
       private
 
-      def import_pool(pool_id)
-        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
-        if pool
-          ::Katello::EventQueue.push_event(::Katello::Events::ImportPool::EVENT_TYPE, pool.id)
-        else
-          ::Katello::Pool.import_pool(pool_id)
-        end
-      end
-
-      def remove_pool(pool_id)
-        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
-        if pool
-          pool.destroy!
-        else
-          @logger.debug "Couldn't find pool with candlepin id #{pool_id} in the database"
-        end
-      end
-
-      def reindex_consumer(message)
-        if message.content['newEntity']
-          parsed = JSON.parse(message.content['newEntity'])
-          uuid = parsed['consumer']['uuid']
-          sub_status = parsed['status']['status']
-          subscription_facet = ::Katello::Host::SubscriptionFacet.find_by_uuid(uuid)
-
-          if subscription_facet && sub_status
-            @logger.debug "re-indexing content host #{subscription_facet.host.name}"
-            subscription_facet.update_subscription_status(sub_status)
-          elsif subscription_facet.nil?
-            @logger.debug "skip re-indexing of non-existent content host #{uuid}"
-          elsif sub_status.nil?
-            @logger.debug "skip re-indexing of empty subscription status #{uuid}"
-          end
+      def reindex_consumer(message_handler)
+        subscription_facet = message_handler.subscription_facet
+        sub_status = message_handler.sub_status
+        uuid = message_handler.consumer_uuid
+        if subscription_facet && sub_status
+          @logger.debug "re-indexing content host #{subscription_facet.host.name}"
+          subscription_facet.update_subscription_status(sub_status)
+        elsif subscription_facet.nil?
+          @logger.debug "skip re-indexing of non-existent content host #{uuid}"
+        elsif sub_status.nil?
+          @logger.debug "skip re-indexing of empty subscription status #{uuid}"
         end
       end
     end

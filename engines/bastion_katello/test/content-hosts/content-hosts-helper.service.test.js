@@ -22,4 +22,9 @@ describe('Controller: ContentHostsController', function() {
         expect(ContentHostsHelper.getHostStatusIcon(2)).toBe(redStatus);
     });
 
+    it('should convert Memory to GB', function() {
+        expect(ContentHostsHelper.convertMemToGB(1020120)).toBe('0.97')
+        expect(ContentHostsHelper.convertMemToGB('5946304')).toBe('5.67')
+        expect(ContentHostsHelper.convertMemToGB('5 GB')).toBe('5')
+    });
 });
