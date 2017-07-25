@@ -7,6 +7,7 @@ module Katello
       @view = katello_content_views(:library_dev_view)
       @pool_one = katello_pools(:pool_one)
       @pool_two = katello_pools(:pool_two)
+      @host_one = hosts(:one)
     end
 
     def test_active
@@ -52,12 +53,7 @@ module Katello
     end
 
     def test_hosts
-      active_pool = FactoryGirl.build(:katello_pool, :active)
-      host_one = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @view,
-                                    :lifecycle_environment => @library)
-      pool_data = [{"pool" => {"id" => 'foo'}, "consumer" => {"uuid" => host_one.subscription_facet.uuid}}]
-      Resources::Candlepin::Pool.expects(:entitlements).returns(pool_data)
-      assert_equal active_pool.hosts, [host_one]
+      assert_equal @pool_one.hosts, [@host_one]
     end
 
     def test_search_consumed

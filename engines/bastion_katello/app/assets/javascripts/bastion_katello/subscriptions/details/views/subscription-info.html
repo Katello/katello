@@ -73,6 +73,36 @@
   </div>
 
   <div data-block="right-column">
+    <h4 translate>Associations</h4>
+    <section>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th translate>Resource</th>
+            <th translate>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Content Hosts</td>
+            <td>
+              <a ui-sref="content-hosts({search: searchQuery(subscription)})" translate>
+                {{ subscription.host_count }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>Activation Keys</td>
+            <td>
+              <a ui-sref="activation-keys({search: searchQuery(subscription)})" translate>
+                {{ subscription.activation_keys.length }}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <h4 translate>Provided Products</h4>
 
     <ul>
@@ -84,6 +114,7 @@
     <p ng-show="subscription.provided_products.length === 0" translate>
       No Products are provided by this Subscription.
     </p>
+
   </div>
 </div>
 

@@ -38,7 +38,8 @@ module Katello
       :katello_content_facets => Katello::Host::ContentFacet,
       :katello_subscription_facets => Katello::Host::SubscriptionFacet,
       :katello_docker_manifests => Katello::DockerManifest,
-      :katello_docker_tags => Katello::DockerTag
+      :katello_docker_tags => Katello::DockerTag,
+      :katello_subscription_facet_pools => Katello::SubscriptionFacetPool
     }.freeze
 
     # rubocop:disable Style/AccessorMethodName

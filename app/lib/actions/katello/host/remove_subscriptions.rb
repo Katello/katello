@@ -26,7 +26,7 @@ module Actions
         end
 
         def finalize
-          ::Katello::Pool.where(:cp_id => input[:pool_ids]).each(&:import_data)
+          ::Katello::Pool.where(:cp_id => input[:pool_ids]).map { |pool| pool.import_data(false) }
           host = ::Host.find_by(:id => input[:host_id])
           host.subscription_facet.update_subscription_status
         end

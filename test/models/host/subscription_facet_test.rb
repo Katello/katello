@@ -8,6 +8,8 @@ module Katello
     let(:view)  { katello_content_views(:library_dev_view) }
     let(:activation_key) { katello_activation_keys(:simple_key) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
+    let(:basic_subscription) { katello_subscriptions(:basic_subscription) }
+    let(:host_one) { hosts(:one) }
     let(:host) do
       FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
                                      :lifecycle_environment => library, :organization => org)
@@ -162,6 +164,14 @@ module Katello
     def test_search_by_activation_key
       host.subscription_facet.activation_keys << activation_key
       assert_includes ::Host.search_for("activation_key = \"#{activation_key.name}\""), host
+    end
+
+    def test_search_by_subscription_name
+      assert_includes ::Host.search_for("subscription_name = \"#{basic_subscription.name}\""), host_one
+    end
+
+    def test_search_by_subscription_id
+      assert_includes ::Host.search_for("subscription_id = \"#{basic_subscription.pools.first.id}\""), host_one
     end
 
     def test_propose_name_from_facts
