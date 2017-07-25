@@ -7,6 +7,19 @@
  */
 angular.module('Bastion.content-hosts').service('ContentHostsHelper',
     function () {
+        this.convertMemToGB = function (memoryValue) {
+            if (angular.isString(memoryValue)) {
+                memoryValue = memoryValue.toLowerCase();
+                if (_.includes(memoryValue, "gb")) {
+                    memoryValue = memoryValue.replace("gb", "").trim();
+                    return memoryValue;
+                }
+                memoryValue = parseInt(memoryValue);
+            }
+            memoryValue = (memoryValue / 1048576).toFixed(2);
+            return memoryValue;
+        };
+
         this.getHostStatusIcon = function (globalStatus) {
             var icons;
             var colors = {

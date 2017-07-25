@@ -31,12 +31,12 @@ module Katello
         Katello::Resources::Candlepin::Pool.get_for_owner(organization, true)
       end
 
-      def import_pool(cp_pool_id)
+      def import_pool(cp_pool_id, index_hosts = true)
         pool = nil
         ::Katello::Util::Support.active_record_retry do
           pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
         end
-        pool.import_data
+        pool.import_data(index_hosts)
       end
     end
 
@@ -94,7 +94,7 @@ module Katello
       end
 
       # rubocop:disable MethodLength
-      def import_data
+      def import_data(index_hosts = true)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
@@ -137,12 +137,24 @@ module Katello
         self.update_attributes(pool_attributes.except!(*exceptions))
         self.save!
         self.create_activation_key_associations
+        self.import_hosts if index_hosts
+      end
+
+      def import_hosts
+        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
+        uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
+        sub_facets = Katello::Host::SubscriptionFacet.where(:uuid => uuids)
+        sub_facet_ids = sub_facets.pluck(:id)
+        sub_facet_ids.each do |sub_facet_id|
+          Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => sub_facet_id).first_or_create
+        end
+        existing_associations = Katello::SubscriptionFacetPool.where(:pool_id => self.id)
+        correct_associations = Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => sub_facet_ids)
+        (existing_associations - correct_associations).map(&:destroy)
       end
 
       def hosts
-        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
-        uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
-        ::Host.where(:id => Katello::Host::SubscriptionFacet.where(:uuid => uuids).pluck(:host_id))
+        ::Host.where(:id => self.subscription_facets.pluck(:host_id))
       end
 
       def create_activation_key_associations

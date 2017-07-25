@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://centos7-devl2.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/?include=productContent.content.name
+    uri: https://ham.john.example.com:8443/candlepin/owners/scenario_test/products/7c825013cab01349ae8cb8db187de391/?include=productContent.content.name
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -14,9 +14,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
       Authorization:
-      - OAuth oauth_consumer_key="BuwYxVLAM5Q5nfZ5j6auFWWZnaZdQsif", oauth_nonce="37LEW7Am7txHsY0iiITLm7vMKBQRcpPbOMCRdxAvBk",
-        oauth_signature="PoCC1zdaeTE3zWuufD5noykoeVI%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1502315616", oauth_version="1.0"
+      - OAuth oauth_consumer_key="LwBmud4UwazmdJJMg9um3NyW7phVeWmt", oauth_nonce="DqLa68WVR0bFACvwm1gW5nhEWfKexIVhXLAmr3tdf5o",
+        oauth_signature="x14yJaIJBJ9n7QwKRlvk9%2FYsv4k%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1505325081", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -31,31 +31,31 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 7d79cbdf-9e5b-4351-8773-c0590a351838
+      - a9ec8c51-da61-4471-88ea-8151a73b5ea7
       X-Version:
-      - 2.0.35-1
+      - 2.1.3-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:21 GMT
     body:
       encoding: UTF-8
       base64_string: |
         eyJuYW1lIjoiU2NlbmFyaW8gUHJvZHVjdCIsImF0dHJpYnV0ZXMiOlt7Im5h
         bWUiOiJhcmNoIiwidmFsdWUiOiJBTEwifV0sInByb2R1Y3RDb250ZW50Ijpb
-        eyJjb250ZW50Ijp7ImlkIjoiMTUwMjMxNTU5MzU4MSIsInR5cGUiOiJ5dW0i
+        eyJjb250ZW50Ijp7ImlkIjoiMTUwNTMyNTA1ODQ5MyIsInR5cGUiOiJ5dW0i
         LCJsYWJlbCI6InNjZW5hcmlvX3Rlc3RfU2NlbmFyaW9fUHJvZHVjdF9TY2Vu
         YXJpb195dW1fcHJvZHVjdCIsIm5hbWUiOiJTY2VuYXJpbyB5dW0gcHJvZHVj
         dCIsImNvbnRlbnRVcmwiOiIvY3VzdG9tL1NjZW5hcmlvX1Byb2R1Y3QvU2Nl
         bmFyaW9feXVtX3Byb2R1Y3QiLCJtb2RpZmllZFByb2R1Y3RJZHMiOltdfSwi
         ZW5hYmxlZCI6dHJ1ZX1dfQ==
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:36 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:21 GMT
 - request:
     method: delete
-    uri: https://centos7-devl2.example.com/pulp/api/v2/repositories/scenario_test/
+    uri: https://ham.john.example.com/pulp/api/v2/repositories/scenario_test/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -74,27 +74,25 @@ http_interactions:
       message: ACCEPTED
     headers:
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:22 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Content-Length:
       - '172'
-      Connection:
-      - close
       Content-Type:
       - application/json; charset=utf-8
     body:
       encoding: UTF-8
       base64_string: |
         eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzRiMGQzZDcwLWU5YWUtNDNlMi04YzE5LTQ4YjczOTgxYjE4Yi8iLCAi
-        dGFza19pZCI6ICI0YjBkM2Q3MC1lOWFlLTQzZTItOGMxOS00OGI3Mzk4MWIx
-        OGIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+        c2tzLzIyMjY4NDQ5LWEyMzQtNGI0MC05YWNjLTM5MzM2YjdmZGIxYi8iLCAi
+        dGFza19pZCI6ICIyMjI2ODQ0OS1hMjM0LTRiNDAtOWFjYy0zOTMzNmI3ZmRi
+        MWIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:36 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:22 GMT
 - request:
     method: get
-    uri: https://centos7-devl2.example.com/pulp/api/v2/tasks/4b0d3d70-e9ae-43e2-8c19-48b73981b18b/
+    uri: https://ham.john.example.com/pulp/api/v2/tasks/22268449-a234-4b40-9acc-39336b7fdb1b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -113,15 +111,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:22 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
       - '571'
-      Connection:
-      - close
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -129,22 +125,22 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80YjBkM2Q3MC1lOWFlLTQzZTItOGMxOS00OGI3Mzk4MWIx
-        OGIvIiwgInRhc2tfaWQiOiAiNGIwZDNkNzAtZTlhZS00M2UyLThjMTktNDhi
-        NzM5ODFiMThiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        aS92Mi90YXNrcy8yMjI2ODQ0OS1hMjM0LTRiNDAtOWFjYy0zOTMzNmI3ZmRi
+        MWIvIiwgInRhc2tfaWQiOiAiMjIyNjg0NDktYTIzNC00YjQwLTlhY2MtMzkz
+        MzZiN2ZkYjFiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
         b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
         OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAi
-        MjAxNy0wOC0wOVQyMTo1MzozNloiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
+        MjAxNy0wOS0xM1QxNzo1MToyMloiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
         YXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVl
         dWUiOiAiTm9uZS5kcSIsICJzdGF0ZSI6ICJydW5uaW5nIiwgIndvcmtlcl9u
         YW1lIjogbnVsbCwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJf
-        aWQiOiB7IiRvaWQiOiAiNTk4Yjg0NjBiYmM2ZjRiOTM2NWY5MGY0In0sICJp
-        ZCI6ICI1OThiODQ2MGJiYzZmNGI5MzY1ZjkwZjQifQ==
+        aWQiOiB7IiRvaWQiOiAiNTliOTcwMWFmNDM1NGQyZTAyN2EzYjU0In0sICJp
+        ZCI6ICI1OWI5NzAxYWY0MzU0ZDJlMDI3YTNiNTQifQ==
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:36 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:22 GMT
 - request:
     method: get
-    uri: https://centos7-devl2.example.com/pulp/api/v2/tasks/4b0d3d70-e9ae-43e2-8c19-48b73981b18b/
+    uri: https://ham.john.example.com/pulp/api/v2/tasks/22268449-a234-4b40-9acc-39336b7fdb1b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -163,15 +159,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:22 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '669'
-      Connection:
-      - close
+      - '659'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -179,24 +173,24 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80YjBkM2Q3MC1lOWFlLTQzZTItOGMxOS00OGI3Mzk4MWIx
-        OGIvIiwgInRhc2tfaWQiOiAiNGIwZDNkNzAtZTlhZS00M2UyLThjMTktNDhi
-        NzM5ODFiMThiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        aS92Mi90YXNrcy8yMjI2ODQ0OS1hMjM0LTRiNDAtOWFjYy0zOTMzNmI3ZmRi
+        MWIvIiwgInRhc2tfaWQiOiAiMjIyNjg0NDktYTIzNC00YjQwLTlhY2MtMzkz
+        MzZiN2ZkYjFiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
         b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
         OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAi
-        MjAxNy0wOC0wOVQyMTo1MzozNloiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
+        MjAxNy0wOS0xM1QxNzo1MToyMloiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
         YXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVl
-        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAY2VudG9zNy1kZXZs
-        Mi5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6ICJydW5uaW5nIiwgIndvcmtl
-        cl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGNlbnRvczct
-        ZGV2bDIuZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjog
-        bnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1OThiODQ2MGJiYzZmNGI5MzY1Zjkw
-        ZjQifSwgImlkIjogIjU5OGI4NDYwYmJjNmY0YjkzNjVmOTBmNCJ9
+        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAaGFtLmpvaG4uZXhh
+        bXBsZS5jb20uZHEiLCAic3RhdGUiOiAicnVubmluZyIsICJ3b3JrZXJfbmFt
+        ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBoYW0uam9obi5leGFt
+        cGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsLCAiX2lk
+        IjogeyIkb2lkIjogIjU5Yjk3MDFhZjQzNTRkMmUwMjdhM2I1NCJ9LCAiaWQi
+        OiAiNTliOTcwMWFmNDM1NGQyZTAyN2EzYjU0In0=
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:36 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:22 GMT
 - request:
     method: get
-    uri: https://centos7-devl2.example.com/pulp/api/v2/tasks/4b0d3d70-e9ae-43e2-8c19-48b73981b18b/
+    uri: https://ham.john.example.com/pulp/api/v2/tasks/22268449-a234-4b40-9acc-39336b7fdb1b/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -215,15 +209,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:22 GMT
       Server:
       - Apache/2.4.6 (CentOS)
       Vary:
       - Accept-Encoding
       Content-Length:
-      - '688'
-      Connection:
-      - close
+      - '678'
       Content-Type:
       - application/json; charset=utf-8
     body:
@@ -231,25 +223,25 @@ http_interactions:
       base64_string: |
         eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
         LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
-        aS92Mi90YXNrcy80YjBkM2Q3MC1lOWFlLTQzZTItOGMxOS00OGI3Mzk4MWIx
-        OGIvIiwgInRhc2tfaWQiOiAiNGIwZDNkNzAtZTlhZS00M2UyLThjMTktNDhi
-        NzM5ODFiMThiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        aS92Mi90YXNrcy8yMjI2ODQ0OS1hMjM0LTRiNDAtOWFjYy0zOTMzNmI3ZmRi
+        MWIvIiwgInRhc2tfaWQiOiAiMjIyNjg0NDktYTIzNC00YjQwLTlhY2MtMzkz
+        MzZiN2ZkYjFiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
         b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
-        OiAiMjAxNy0wOC0wOVQyMTo1MzozNloiLCAiX25zIjogInRhc2tfc3RhdHVz
-        IiwgInN0YXJ0X3RpbWUiOiAiMjAxNy0wOC0wOVQyMTo1MzozNloiLCAidHJh
+        OiAiMjAxNy0wOS0xM1QxNzo1MToyMloiLCAiX25zIjogInRhc2tfc3RhdHVz
+        IiwgInN0YXJ0X3RpbWUiOiAiMjAxNy0wOS0xM1QxNzo1MToyMloiLCAidHJh
         Y2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNz
         X3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
-        a2VyLTFAY2VudG9zNy1kZXZsMi5leGFtcGxlLmNvbS5kcSIsICJzdGF0ZSI6
-        ICJmaW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6ICJyZXNlcnZlZF9yZXNvdXJj
-        ZV93b3JrZXItMUBjZW50b3M3LWRldmwyLmV4YW1wbGUuY29tIiwgInJlc3Vs
-        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNTk4
-        Yjg0NjBiYmM2ZjRiOTM2NWY5MGY0In0sICJpZCI6ICI1OThiODQ2MGJiYzZm
-        NGI5MzY1ZjkwZjQifQ==
+        a2VyLTBAaGFtLmpvaG4uZXhhbXBsZS5jb20uZHEiLCAic3RhdGUiOiAiZmlu
+        aXNoZWQiLCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTBAaGFtLmpvaG4uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwg
+        ImVycm9yIjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1OWI5NzAxYWY0MzU0
+        ZDJlMDI3YTNiNTQifSwgImlkIjogIjU5Yjk3MDFhZjQzNTRkMmUwMjdhM2I1
+        NCJ9
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:36 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:22 GMT
 - request:
     method: delete
-    uri: https://centos7-devl2.example.com:8443/candlepin/environments/119c4753ff6d3b7bd0b76de6d5a5f94a
+    uri: https://ham.john.example.com:8443/candlepin/environments/119c4753ff6d3b7bd0b76de6d5a5f94a
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -261,9 +253,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
       Authorization:
-      - OAuth oauth_consumer_key="BuwYxVLAM5Q5nfZ5j6auFWWZnaZdQsif", oauth_nonce="Mjc32GESjAGRfluGXQ5Lx8pZsBypGhgxjqT01TMGk",
-        oauth_signature="nYw%2FXtCh4uwpJZSWf8GhRrp4KlY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1502315616", oauth_version="1.0"
+      - OAuth oauth_consumer_key="LwBmud4UwazmdJJMg9um3NyW7phVeWmt", oauth_nonce="CP2yJPGUkJQJf8IE7YNPMREzBolduRgOarP9miY",
+        oauth_signature="DwYCSZc1i0CpfM7V10CYA0DEqT4%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1505325082", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -274,19 +266,19 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 8b0476b5-755f-4381-8795-0211c39896b8
+      - d38c17b8-78f6-480d-a285-8ae1ce8375a6
       X-Version:
-      - 2.0.35-1
+      - 2.1.3-1
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:21 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:36 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:22 GMT
 - request:
     method: delete
-    uri: https://centos7-devl2.example.com:8443/candlepin/owners/scenario_test
+    uri: https://ham.john.example.com:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -298,9 +290,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
       Authorization:
-      - OAuth oauth_consumer_key="BuwYxVLAM5Q5nfZ5j6auFWWZnaZdQsif", oauth_nonce="AjdA6KbxTwyEzJrt15CTq8t43tlbxrjIcrUG3WTsLU",
-        oauth_signature="ItO8TOxNKnUU%2F%2Fb1rzI1FarC5OY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1502315616", oauth_version="1.0"
+      - OAuth oauth_consumer_key="LwBmud4UwazmdJJMg9um3NyW7phVeWmt", oauth_nonce="hGwPUSvfveLBeVvaIKg04iC5ZeWX5oRsCFcnHwMKbm8",
+        oauth_signature="vsVyKxo%2FkfBpt6rPy5Dw%2BRJ2JKk%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1505325082", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -311,14 +303,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - bc87e527-4525-4782-a559-30b1b20e8d85
+      - 347b0b6e-c52e-4523-bba9-3c056312c9da
       X-Version:
-      - 2.0.35-1
+      - 2.1.3-1
       Date:
-      - Wed, 09 Aug 2017 21:53:36 GMT
+      - Wed, 13 Sep 2017 17:51:21 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Wed, 09 Aug 2017 21:53:37 GMT
+  recorded_at: Wed, 13 Sep 2017 17:51:22 GMT
 recorded_with: VCR 3.0.3

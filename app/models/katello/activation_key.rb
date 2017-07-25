@@ -4,6 +4,7 @@ module Katello
     include Glue if SETTINGS[:katello][:use_cp]
     include Katello::Authorization::ActivationKey
     include ForemanTasks::Concerns::ActionSubject
+    include ScopedSearchExtensions
 
     belongs_to :organization, :inverse_of => :activation_keys
     belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
@@ -14,6 +15,7 @@ module Katello
     has_many :host_collections, :through => :key_host_collections
 
     has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
+    has_many :subscriptions, :through => :pools
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
@@ -52,6 +54,8 @@ module Katello
     scoped_search :rename => :content_view, :on => :name, :relation => :content_view, :complete_value => true
     scoped_search :on => :content_view_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :description, :complete_value => true
+    scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
+    scoped_search :on => :id, :relation => :subscriptions, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id
 
     def environment_exists
       if environment_id && environment.nil?
@@ -75,10 +79,6 @@ module Katello
       else
         self.organization.library.available_releases
       end
-    end
-
-    def subscriptions
-      self.pools
     end
 
     def available_subscriptions
@@ -166,6 +166,26 @@ module Katello
 
     def self.humanize_class_name(_name = nil)
       _("Activation Keys")
+    end
+
+    def self.find_by_subscription_name(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["#{Katello::Subscription.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+      activation_keys = ::Katello::ActivationKey.joins(pools: :subscription).where(conditions)
+      return_activation_keys_by_id(activation_keys.pluck(:id))
+    end
+
+    def self.find_by_subscription_id(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["#{Katello::Subscription.table_name}.id #{operator} ?", value_to_sql(operator, value)])
+      activation_keys = ::Katello::ActivationKey.joins(pools: :subscription).where(conditions)
+      return_activation_keys_by_id(activation_keys.pluck(:id))
+    end
+
+    def self.return_activation_keys_by_id(activation_key_ids)
+      if activation_key_ids.empty?
+        {:conditions => "1=0"}
+      else
+        {:conditions => "#{Katello::ActivationKey.table_name}.id IN (#{activation_key_ids.join(',')})"}
+      end
     end
 
     private

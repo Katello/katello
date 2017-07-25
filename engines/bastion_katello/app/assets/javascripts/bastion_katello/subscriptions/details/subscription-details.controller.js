@@ -25,6 +25,10 @@ angular.module('Bastion.subscriptions').controller('SubscriptionDetailsControlle
             $scope.panel.loading = false;
         }
 
+        $scope.searchQuery = function (subscription) {
+            return 'subscription_id="%s"'.replace('%s', subscription.id);
+        };
+
         $scope.subscription = Subscription.get({id: $scope.$stateParams.subscriptionId}, function () {
             $scope.panel.loading = false;
         }, function (response) {
