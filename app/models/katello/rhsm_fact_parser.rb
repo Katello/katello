@@ -1,8 +1,9 @@
 module Katello
   class RhsmFactParser < ::FactParser
     def architecture
-      name = facts['lscpu.architecture']
+      name = facts['lscpu.architecture'] || facts['uname.machine']
       name = "x86_64" if name == "amd64"
+      name = "i386" if name == "i686"
       Architecture.where(:name => name).first_or_create unless name.blank?
     end
 

@@ -66,5 +66,12 @@ module Katello
 
       refute @parser.operatingsystem
     end
+
+    def test_uname_architecture
+      @facts['uname.machine'] = 'i686'
+      @parser = RhsmFactParser.new(@facts)
+
+      assert 'i386', @parser.architecture.name
+    end
   end
 end
