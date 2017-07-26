@@ -34,7 +34,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "gettext_i18n_rails"
 
   # Pulp
-  gem.add_dependency "runcible", ">= 2.0.0", "< 3.0.0"
+  gem.add_dependency "runcible", ">= 2.1.0", "< 3.0.0"
   gem.add_dependency "anemone"
 
   # UI
