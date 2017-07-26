@@ -2,6 +2,7 @@ module Actions
   module Pulp
     class AbstractAsyncTaskGroup < Pulp::Abstract
       include Actions::Base::Polling
+      include ::Dynflow::Action::Cancellable
 
       # A call report (documented https://github.com/pulp/pulp/blob/master/docs/dev-guide/integration/rest-api/consumer/applicability.rst#id65)
       # Looks like:
@@ -29,6 +30,23 @@ module Actions
         unless event == Dynflow::Action::Skip
           super
         end
+      end
+
+      def cancel!
+        cancel
+        self.external_task = poll_external_task
+        # We suspend the action and the polling will take care of finding
+        # out if the cancelling was successful
+        suspend unless done?
+      end
+
+      def cancel
+        group = output['pulp_task_group']
+        if group
+          task_resource.cancel(group['id'])
+        end
+      rescue RestClient::ResourceNotFound
+        nil #Pulp throws a 404 if there are no tasks in the task group https://pulp.plan.io/issues/2943
       end
 
       def humanized_state
