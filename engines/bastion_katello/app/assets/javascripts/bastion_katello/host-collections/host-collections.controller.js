@@ -15,8 +15,9 @@
  *   within the table.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionsController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'HostCollection', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, HostCollection, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'CsvExportUrl', 'Nutupane', 'HostCollection', 'CurrentOrganization',
+    function ($scope, $location, translate, CsvExportUrl, Nutupane, HostCollection, CurrentOrganization) {
+
         var params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -24,11 +25,10 @@ angular.module('Bastion.host-collections').controller('HostCollectionsController
             'sort_order': 'ASC',
             'paged': true
         };
-
         var nutupane = new Nutupane(HostCollection, params);
         $scope.controllerName = 'katello_host_collections';
         nutupane.masterOnly = true;
-
+        $scope.getCsvLink = CsvExportUrl.getCsvLink;
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 

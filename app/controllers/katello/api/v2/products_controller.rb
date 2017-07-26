@@ -1,7 +1,6 @@
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
-
     before_action :find_activation_key, :only => [:index]
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
     before_action :find_product, :only => [:update, :destroy, :sync]
@@ -36,7 +35,15 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       options = {:includes => [:sync_plan, :provider]}
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc, options))
+      products = scoped_search(index_relation.uniq, :name, :asc, options)
+      respond_to do |format|
+        format.csv do
+          csv_response(products[:results], [:name, :description, :last_sync_words, 'sync_plan.name'], ['Name', 'Description', 'Days since last sync', 'Sync Plan'])
+        end
+        format.any do
+          respond(:collection => products)
+        end
+      end
     end
 
     def index_relation

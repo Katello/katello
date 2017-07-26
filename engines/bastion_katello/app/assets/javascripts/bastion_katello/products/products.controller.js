@@ -19,8 +19,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductsController',
-    ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'GlobalNotification',
-    function ($scope, $state, $sce, $location, $uibModal, translate, Nutupane, Product, ProductBulkAction, CurrentOrganization, GlobalNotification) {
+    ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'CsvExportUrl', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'GlobalNotification',
+    function ($scope, $state, $sce, $location, $uibModal, translate, CsvExportUrl, Nutupane, Product, ProductBulkAction, CurrentOrganization, GlobalNotification) {
         var nutupane, taskUrl, taskLink, getBulkParams, bulkError, params;
 
         getBulkParams = function () {
@@ -52,6 +52,7 @@ angular.module('Bastion.products').controller('ProductsController',
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
+        $scope.getCsvLink = CsvExportUrl.getCsvLink;
 
         $scope.$on('productDelete', function (event, taskId) {
             var message;

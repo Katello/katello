@@ -18,8 +18,8 @@
  *   within the table.
  */
 angular.module('Bastion.errata').controller('ErrataController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'Erratum', 'IncrementalUpdate', 'Repository', 'CurrentOrganization',
-    function ($scope, $state, $location, translate, Nutupane, Erratum, IncrementalUpdate, Repository, CurrentOrganization) {
+    ['$scope', '$state', '$location', 'translate', 'CsvExportUrl', 'Nutupane', 'Erratum', 'IncrementalUpdate', 'Repository', 'CurrentOrganization',
+    function ($scope, $state, $location, translate, CsvExportUrl, Nutupane, Erratum, IncrementalUpdate, Repository, CurrentOrganization) {
         var nutupane, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -33,7 +33,7 @@ angular.module('Bastion.errata').controller('ErrataController',
         $scope.controllerName = 'katello_errata';
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
-
+        $scope.getCsvLink = CsvExportUrl.getCsvLink;
         Erratum.queryPaged({'organization_id': CurrentOrganization}, function (result) {
             $scope.errataCount = result.total;
         });

@@ -4,6 +4,7 @@ module Katello
     include Api::Version2
     include Api::V2::Rendering
     include Api::V2::ErrorHandling
+    include ::Foreman::Controller::CsvResponder
 
     # support for session (thread-local) variables must be the last filter in this class
     include Foreman::ThreadSession::Cleaner

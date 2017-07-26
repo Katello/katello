@@ -15,8 +15,8 @@
  *   within the table.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeysController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'ActivationKey', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, ActivationKey, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'CsvExportUrl', 'Nutupane', 'ActivationKey', 'CurrentOrganization',
+    function ($scope, $location, translate, CsvExportUrl, Nutupane, ActivationKey, CurrentOrganization) {
 
         var params = {
             'organization_id': CurrentOrganization,
@@ -27,8 +27,10 @@ angular.module('Bastion.activation-keys').controller('ActivationKeysController',
         };
 
         var nutupane = new Nutupane(ActivationKey, params);
+        $scope.currentOrganization = CurrentOrganization;
         $scope.controllerName = 'katello_activation_keys';
         nutupane.masterOnly = true;
         $scope.table = nutupane.table;
+        $scope.getCsvLink = CsvExportUrl.getCsvLink;
     }]
 );
