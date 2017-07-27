@@ -5,8 +5,6 @@ module Katello
       include ForemanTasks::Triggers
 
       included do
-        alias_method_chain :action_permission, :katello
-
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
           process_success(:success_redirect => hosts_path)
@@ -49,12 +47,12 @@ module Katello
 
       private
 
-      def action_permission_with_katello
+      def action_permission
         case params[:action]
         when 'content_hosts'
           'view'
         else
-          action_permission_without_katello
+          super
         end
       end
     end
