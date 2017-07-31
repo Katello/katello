@@ -48,7 +48,6 @@ module Katello
       search_options[0].blank?
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/PerceivedComplexity
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
