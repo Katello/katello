@@ -125,6 +125,15 @@ module Katello
       end
     end
 
+    def test_update_protected_and_filtered
+      permission = { :name => :edit_activation_keys, :search => 'name = foo' }
+      User.current = setup_user_with_permissions(permission, User.find(users(:restricted).id))
+
+      put :update, :id => @activation_key.id, :organization_id => @organization.id,
+          :activation_key => {:name => 'New Name'}
+      assert_response(403)
+    end
+
     def test_update_limit_below_consumed
       subscription_facet1 = Host::SubscriptionFacet.find(katello_subscription_facets(:one).id)
       subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two).id)
@@ -156,6 +165,14 @@ module Katello
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
       end
+    end
+
+    def test_destroy_protected_and_filtered
+      permission = { :name => @destroy_permission, :search => 'name = foo' }
+      User.current = setup_user_with_permissions(permission, User.find(users(:restricted).id))
+
+      delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
+      assert_response(403)
     end
 
     def test_copy

@@ -660,6 +660,14 @@ module Katello
       end
     end
 
+    def test_remove_content_protected_and_filtered
+      permission = { :name => :edit_products, :search => 'name = foo' }
+      User.current = setup_user_with_permissions(permission, User.find(users(:restricted).id))
+
+      put :remove_content, :id => @repository.id, :ids => %w(foo)
+      assert_response(403)
+    end
+
     def test_destroy
       assert_sync_task(::Actions::Katello::Repository::Destroy) do |repo|
         repo.id == @repository.id

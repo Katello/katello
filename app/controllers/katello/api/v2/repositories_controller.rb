@@ -304,6 +304,7 @@ module Katello
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
+      return deny_access unless @repository.editable?
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
       fail _("No content ids provided") if @content.blank?
       respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, sync_capsule: sync_capsule)

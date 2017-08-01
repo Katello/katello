@@ -6,10 +6,9 @@ module Katello
     before_action :find_environment, :only => [:index, :create, :update]
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_content_view, :only => [:index]
-    before_action :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
-                                                  :available_host_collections, :add_host_collections, :remove_host_collections,
-                                                  :content_override, :add_subscriptions, :remove_subscriptions,
-                                                  :subscriptions]
+    before_action :find_activation_key, :only => [:show, :available_releases, :product_content, :available_host_collections]
+    before_action :find_activation_key_write, :only => [:update, :destroy, :copy, :add_host_collections, :remove_host_collections,
+                                                  :content_override, :add_subscriptions, :remove_subscriptions]
     before_action :authorize
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
@@ -247,6 +246,11 @@ module Katello
       @activation_key = ActivationKey.find(params[:id])
       fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
       @activation_key
+    end
+
+    def find_activation_key_write
+      find_activation_key
+      return deny_access unless @activation_key.editable?
     end
 
     private
