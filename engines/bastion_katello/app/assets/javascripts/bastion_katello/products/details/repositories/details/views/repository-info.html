@@ -20,6 +20,13 @@
       <dt translate>Type</dt>
       <dd>{{ repository.content_type }}</dd>
 
+      <dt ng-show="repository.content_type === 'yum'" translate>Restrict to architecture</dt>
+      <dd bst-edit-select="repository.arch==='noarch'?'Default':repository.arch"
+          selector="repository.arch"
+          options="architectures()"
+          on-save="save(repository)">
+      </dd>
+
       <dt ng-show="repository.content_type !== 'docker'" translate>URL</dt>
       <dt ng-show="repository.content_type === 'docker'" translate>Registry URL</dt>
       <dd bst-edit-text="repository.url"
