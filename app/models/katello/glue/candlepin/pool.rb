@@ -93,6 +93,7 @@ module Katello
         subscription
       end
 
+      # rubocop:disable MethodLength
       def import_data
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
@@ -126,7 +127,11 @@ module Katello
           pool_attributes[:unmapped_guest] = true
         end
 
-        pool_attributes[:virt_who] = pool_attributes['virt_limit'] != "0" && !pool_attributes['virt_limit'].nil? && subscription.try(:redhat?)
+        if subscription.try(:redhat?)
+          pool_attributes[:virt_who] = pool_attributes['virt_limit'] != "0" && pool_attributes['virt_limit'].present?
+        else
+          pool_attributes[:virt_who] = false
+        end
 
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update_attributes(pool_attributes.except!(*exceptions))
