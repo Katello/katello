@@ -21,7 +21,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
         function ($scope, $location, $uibModalInstance, Nutupane, CurrentOrganization, HostBulkAction, Subscription, SubscriptionsHelper, GlobalNotification, hostIds) {
             var success, error, params = {
                 'organization_id': CurrentOrganization,
-                'search': $location.search().search || "",
                 'sort_order': 'ASC',
                 'available_for': 'host',
                 'host_id': $scope.$stateParams.hostId
