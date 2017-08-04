@@ -89,7 +89,7 @@ module Katello
 
       scoped_search_results(query, sub_total, total, page, per_page)
     rescue ScopedSearch::QueryNotSupported => error
-      return scoped_search_results(query, sub_total, total, page, per_page, error.message)
+      return scoped_search_results([], sub_total, total, page, per_page, error.message)
     end
 
     protected
