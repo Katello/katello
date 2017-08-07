@@ -26,6 +26,15 @@ namespace :katello do
     end
   end
 
+  task :reset_default_smart_proxy do
+    User.current = User.anonymous_admin
+    hostname = Socket.gethostname.chomp
+    Setting['ssl_ca_file'] = "/etc/pki/katello/certs/katello-default-ca.crt"
+    Setting['ssl_certificate'] = "/etc/pki/katello/certs/#{hostname}-foreman-client.crt"
+    Setting['ssl_priv_key'] = "/etc/pki/katello/private/#{hostname}-foreman-client.key"
+    SmartProxy.where(name: hostname, url: "https://#{hostname}:9090").first_or_create!
+  end
+
   desc "Resets Foreman/Katello development environemnt. WARNING: This will destroy all your Foreman and Katello data."
   task :reset_backends do
     Rake::Task['katello:reset_backends:candlepin'].invoke
@@ -43,5 +52,6 @@ namespace :katello do
     # Otherwise migration and seeds fail because they require a reloaded environment
     system('rake db:migrate')
     system('rake db:seed')
+    Rake::Task['katello:reset_default_smart_proxy'].invoke
   end
 end
