@@ -40,13 +40,23 @@ module Actions
       end
 
       def retrieve
-        return @receiver.fetch(TIMEOUT)
+        result = @receiver.fetch(TIMEOUT)
+        result
       rescue => e
         if e.class.name.include? "TransportFailure"
           raise ::Actions::Candlepin::ConnectionError, "failed to connect to #{@url}"
         else
           raise e unless e.class.name.include? NO_MESSAGE_AVAILABLE_ERROR_TYPE
         end
+      ensure
+        safe_release(result) if result
+      end
+
+      def safe_release(message)
+        @session.acknowledge(:message => message, :sync => true)
+      rescue => e
+        @session.release(message)
+        raise e
       end
 
       def start(suspended_action)
@@ -78,16 +88,17 @@ module Actions
           loop do
             begin
               message = fetch_message
-              if (message[:result].nil? && message[:error].nil?) || count >= LOOP_RECEIVE_COUNT
-                sleep 1
-                count = 0
-              elsif message[:result]
+              if message[:result]
                 result = message[:result]
-                @session.acknowledge(:message => result, :sync => true)
                 suspended_action.notify_message_received(result.message_id, result.subject, result.content)
               elsif message[:error]
                 suspended_action.notify_not_connected(message[:error])
                 break
+              end
+
+              if count >= LOOP_RECEIVE_COUNT || (message[:result].nil? && message[:error].nil?)
+                sleep 1
+                count = 0
               end
             rescue => e
               suspended_action.notify_fatal(e)
