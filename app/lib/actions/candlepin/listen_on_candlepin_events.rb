@@ -182,6 +182,7 @@ module Actions
           output[:connection] = "Connected"
           Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(event)
           output[:last_message] = "#{event.message_id} - #{event.subject}"
+          output[:last_message_time] = DateTime.now.to_s
           output[:messages] = event.message_id
         rescue => e
           output[:last_event_error] = e.message
