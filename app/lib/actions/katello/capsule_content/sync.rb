@@ -51,7 +51,8 @@ module Actions
           concurrence do
             repository_ids.each do |repo_id|
               sequence do
-                repo = ::Katello::Repository.find_by(pulp_id: repo_id)
+                repo = ::Katello::Repository.find_by(pulp_id: repo_id) ||
+                        ::Katello::ContentViewPuppetEnvironment.find_by(pulp_id: repo_id)
                 if repo && ['yum', 'puppet'].exclude?(repo.content_type)
                   # we unassociate units in non-yum/puppet repos in order to avoid version conflicts
                   # during publish. (i.e. two versions of a unit in the same repo)
