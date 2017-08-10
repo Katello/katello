@@ -1,12 +1,13 @@
 class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration
-  class Katello::ContentViewVersion < ApplicationRecord
-    has_many :history, :class_name => "Katello::CVHistory", :inverse_of => :content_view_version,
+  class FakeContentViewVersion < ApplicationRecord
+    self.table_name = 'katello_content_view_versions'
+    has_many :history, :class_name => "CVHistory", :inverse_of => :content_view_version,
                        :dependent => :destroy, :foreign_key => :katello_content_view_version_id
   end
 
-  class Katello::CVHistory < ApplicationRecord
+  class CVHistory < ApplicationRecord
     self.table_name = 'katello_content_view_histories'
-    belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :foreign_key => :katello_content_view_version_id, :inverse_of => :history
+    belongs_to :content_view_version, :class_name => "FakeContentViewVersion", :foreign_key => :katello_content_view_version_id, :inverse_of => :history
     SUCCESSFUL = 'successful'.freeze
     scope :successful, -> { where(:status => SUCCESSFUL) }
 
@@ -19,14 +20,14 @@ class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration
   end
 
   def up
-    Katello::ContentViewVersion.find_each do |version|
+    FakeContentViewVersion.find_each do |version|
       publish_history = version.history.publish.successful.first
       unless publish_history
-        publish_history = Katello::CVHistory.create!(action: Katello::CVHistory.actions[:publish],
-                                                     katello_content_view_version_id: version.id,
-                                                     status: 'successful',
-                                                     user: ''
-                                                    )
+        publish_history = CVHistory.create!(action: CVHistory.actions[:publish],
+                                            katello_content_view_version_id: version.id,
+                                            status: 'successful',
+                                            user: ''
+                                           )
       end
 
       publish_history.update_attributes!(notes: version[:description])
