@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, repository, DownloadPolicy, OstreeUpstreamSyncPolicy;
+    var $scope, $state, translate, GlobalNotification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -28,6 +28,11 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             return message;
         };
 
+        GlobalNotification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         Repository.sync = function(params, callback) {
             callback.call(this, {'state': 'running'});
         };
@@ -37,6 +42,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             $state: $state,
             $q: $q,
             translate: translate,
+            GlobalNotification: GlobalNotification,
             Repository: Repository,
             GPGKey: GPGKey
         });
@@ -71,25 +77,26 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should save the repository successfully', function() {
+        spyOn(GlobalNotification, 'setSuccessMessage');
+
         $scope.save($scope.repository);
 
-        expect($scope.errorMessages.length).toBe(0);
-        expect($scope.successMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalledWith('Repository Saved.');
     });
 
     it('should fail to save the repository', function() {
+        spyOn(GlobalNotification, 'setErrorMessage');
+
         $scope.repository.failed = true;
         $scope.save($scope.repository);
 
-        expect($scope.successMessages.length).toBe(0);
-        expect($scope.errorMessages.length).toBe(1);
+        expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith('An error occurred saving the Repository: error!');
     });
 
     it('should set an error message if a file upload status is not success', function() {
-        $scope.uploadContent('<pre>"There was an error"</pre>', true);
-
-        expect($scope.uploadSuccessMessages.length).toBe(0);
-        expect($scope.uploadErrorMessages.length).toBe(1);
+        spyOn(GlobalNotification, 'setErrorMessage');
+        $scope.uploadContent('<pre>{"displayMessage": "blah"}</pre>', true);
+        expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith('Error during upload: blah');
     });
 
     it('should handle 413 (file too large) responses by showing an error', function() {
@@ -103,10 +110,9 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             the request exceeds the capacity limit. \
             </body></html>';
 
+        spyOn(GlobalNotification, 'setErrorMessage');
         $scope.uploadError(error, text);
-        expect($scope.uploadSuccessMessages.length).toBe(0);
-        expect($scope.uploadErrorMessages.length).toBe(1);
-        expect($scope.uploadErrorMessages[0]).toContain('File too large');
+        expect(GlobalNotification.setErrorMessage).toHaveBeenCalledWith('Error during upload: File too large. Please use the CLI instead.');
     });
 
     it ('should set download policies', function() {
@@ -118,11 +124,11 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
+        spyOn(GlobalNotification, 'setSuccessMessage');
         spyOn($scope.repository, '$get');
         $scope.uploadContent('<pre>{"status": "success", "filenames": ["uploaded_file"]}</pre>', true);
 
-        expect($scope.uploadErrorMessages.length).toBe(0);
-        expect($scope.uploadSuccessMessages.length).toBe(1);
+        expect(GlobalNotification.setSuccessMessage).toHaveBeenCalledWith('Successfully uploaded content: uploaded_file');
         expect($scope.repository.$get).toHaveBeenCalled();
     });
 });

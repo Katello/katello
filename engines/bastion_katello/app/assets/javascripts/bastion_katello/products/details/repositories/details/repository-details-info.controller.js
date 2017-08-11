@@ -5,6 +5,7 @@
  * @requires $scope
  * @requires $q
  * @requires translate
+ * @requires GlobalNotification
  * @requires GPGKey
  * @requires CurrentOrganization
  * @requires Checksum
@@ -15,12 +16,8 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'GPGKey', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
-    function ($scope, $q, translate, GPGKey, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy) {
-        $scope.successMessages = [];
-        $scope.errorMessages = [];
-        $scope.uploadSuccessMessages = [];
-        $scope.uploadErrorMessages = [];
+    ['$scope', '$q', 'translate', 'GlobalNotification', 'GPGKey', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
+    function ($scope, $q, translate, GlobalNotification, GPGKey, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy) {
         $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
@@ -47,11 +44,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
             repository.$update(function (response) {
                 deferred.resolve(response);
-                $scope.successMessages = [translate('Repository Saved.')];
+                GlobalNotification.setSuccessMessage(translate('Repository Saved.'));
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(translate("An error occurred saving the Repository: ") + errorMessage);
+                    GlobalNotification.setErrorMessage(translate("An error occurred saving the Repository: ") + errorMessage);
                 });
             });
 
@@ -74,11 +71,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
                 if (returnData !== null && returnData.status === 'success') {
                     uploaded = returnData.filenames.join(', ');
-                    $scope.uploadSuccessMessages = [translate('Successfully uploaded content: ') + uploaded];
+                    GlobalNotification.setSuccessMessage(translate('Successfully uploaded content: ') + uploaded);
                     $scope.repository.$get();
                 } else {
                     error = returnData.displayMessage;
-                    $scope.uploadErrorMessages = [translate('Error during upload: ') + error];
+                    GlobalNotification.setErrorMessage(translate('Error during upload: ') + error);
                 }
 
                 $scope.progress.uploading = false;
@@ -91,7 +88,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             } else {
                 error = content;
             }
-            $scope.uploadErrorMessages = [translate('Error during upload: ') + error];
+            GlobalNotification.setErrorMessage(translate('Error during upload: ') + error);
             $scope.progress.uploading = false;
         };
 
