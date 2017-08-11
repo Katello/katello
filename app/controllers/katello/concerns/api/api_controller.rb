@@ -64,9 +64,11 @@ module Katello
         controller_name
       end
 
+=begin
       def resource_name
         controller_name.singularize
       end
+=end
 
       def respond(options = {})
         method_name = 'respond_for_' + params[:action].to_s

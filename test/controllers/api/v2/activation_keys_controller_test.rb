@@ -126,12 +126,12 @@ module Katello
     end
 
     def test_update_protected_and_filtered
-      permission = { :name => :edit_activation_keys, :search => 'name = foo' }
+      permission = { :name => @update_permission, :search => 'name = foo' }
       User.current = setup_user_with_permissions(permission, User.find(users(:restricted).id))
 
       put :update, :id => @activation_key.id, :organization_id => @organization.id,
           :activation_key => {:name => 'New Name'}
-      assert_response(403)
+      assert_response(404)
     end
 
     def test_update_limit_below_consumed
@@ -172,7 +172,7 @@ module Katello
       User.current = setup_user_with_permissions(permission, User.find(users(:restricted).id))
 
       delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
-      assert_response(403)
+      assert_response(404)
     end
 
     def test_copy
@@ -181,7 +181,7 @@ module Katello
       @activation_key.stubs(:release_version).returns("6Server")
       @activation_key.stubs(:auto_attach).returns(false)
       @controller.instance_variable_set(:@activation_key, @activation_key)
-      @controller.stubs(:find_activation_key).returns(@activation_key)
+      @controller.stubs(:find_resource).returns(true)
 
       assert_sync_task(::Actions::Katello::ActivationKey::Create)
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |_activation_key, activation_key_params|
@@ -261,8 +261,7 @@ module Katello
       expected_names = ["enabled", "enabled", "mirrorlist"]
       expected_values = ["1", "0", nil]
 
-      ActivationKey.expects(:find).returns(@activation_key)
-      @activation_key.expects(:set_content_overrides).returns(true).once.with do |params|
+      ActivationKey.any_instance.expects(:set_content_overrides).returns(true).once.with do |params|
         params.size == overrides.size &&
           params.map(&:content_label) == expected_content_labels &&
           params.map(&:name) == expected_names &&

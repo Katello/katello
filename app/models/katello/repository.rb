@@ -216,6 +216,10 @@ module Katello
       ::Katello::Resources::CDN::CdnResource.ca_file if ::Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
     end
 
+    def self.humanize_class_name(_name = nil)
+      _("Repository")
+    end
+
     def archive?
       self.environment.nil?
     end

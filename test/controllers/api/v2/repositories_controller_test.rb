@@ -20,6 +20,14 @@ module Katello
     end
 
     def permissions
+=begin
+      @read_permission = :view_repositories
+      @create_permission = :create_repositories
+      @update_permission = :edit_repositories
+      @destroy_permission = :destroy_repositories
+      @sync_permission = :sync_repositories
+      @export_permission = :export_repositories
+=end
       @read_permission = :view_products
       @create_permission = :create_products
       @update_permission = :edit_products
@@ -661,11 +669,11 @@ module Katello
     end
 
     def test_remove_content_protected_and_filtered
-      permission = { :name => :edit_products, :search => 'name = foo' }
+      permission = { :name => @update_permission, :search => 'name = foo' }
       User.current = setup_user_with_permissions(permission, User.find(users(:restricted).id))
 
       put :remove_content, :id => @repository.id, :ids => %w(foo)
-      assert_response(403)
+      assert_response(404)
     end
 
     def test_destroy
@@ -717,7 +725,7 @@ module Katello
     def test_sync_with_url_override
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
         repo.id.must_equal(@repository.id)
-        pulp_task_id.must_equal(nil)
+        assert_nil pulp_task_id
         options[:source_url].must_equal('file:///tmp/')
       end
       post :sync, :id => @repository.id, :source_url => 'file:///tmp/'
@@ -726,7 +734,7 @@ module Katello
 
     def test_sync_with_incremental_flag
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
-        repo.id.must_equal(@repository.id)
+        assert_equal repo.id @repository.id
         pulp_task_id.must_equal(nil)
         options[:source_url].must_equal('file:///tmp/')
         options[:incremental].must_equal true

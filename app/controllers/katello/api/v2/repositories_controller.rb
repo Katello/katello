@@ -6,7 +6,7 @@ module Katello
     before_action :find_product, :only => [:index, :auto_complete_search]
     before_action :find_product_for_create, :only => [:create]
     before_action :find_organization_from_product, :only => [:create]
-    before_action :find_repository, :only => [:show, :update, :destroy, :sync, :export,
+    before_action :find_resource, :only => [:show, :update, :destroy, :sync, :export,
                                               :remove_content, :upload_content, :republish,
                                               :import_uploads, :gpg_key_content]
     before_action :find_content, :only => :remove_content
@@ -304,7 +304,7 @@ module Katello
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
-      return deny_access unless @repository.editable?
+      #return deny_access unless @repository.editable?
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
       fail _("No content ids provided") if @content.blank?
       respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, sync_capsule: sync_capsule)
@@ -460,6 +460,31 @@ module Katello
         query = query.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => content_view_id)
       end
       query
+    end
+
+=begin
+    def resource_class
+      Katello::Product
+    end
+=end
+
+    def controller_permission
+      'products'
+    end
+
+    def action_permission
+      case params[:action]
+      when 'upload_content', 'remove_content', 'republish', 'import_uploads'
+        'edit'
+      when 'gpg_key_content', 'show'
+        'view'
+      when 'sync'
+        'sync'
+      when 'export'
+        'export'
+      else
+        super
+      end
     end
   end
 end
