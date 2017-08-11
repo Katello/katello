@@ -462,11 +462,9 @@ module Katello
       query
     end
 
-=begin
-    def resource_class
-      Katello::Product
-    end
-=end
+    #def resource_class
+    #  Katello::Product
+    #end
 
     def controller_permission
       'products'

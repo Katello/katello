@@ -300,10 +300,10 @@ module Katello
                          :resource_type => 'Katello::Product'
     end
 
-    def repository_permissions
+    def repository_permissions # rubocop:disable Metrics/MethodLength
       @plugin.permission :create_repositories,
                          {
-                           'katello/api/v2/repositories' => [:create],
+                           'katello/api/v2/repositories' => [:create]
                          },
                          :resource_type => 'Katello::Repository'
       @plugin.permission :edit_repositories,
@@ -315,18 +315,18 @@ module Katello
       @plugin.permission :destroy_repositories,
                          {
                            'katello/api/v2/repositories' => [:destroy],
-                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories],
+                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories]
                          },
                          :resource_type => 'Katello::Repository'
       @plugin.permission :view_repositories,
                          {
-                           'katello/api/v2/repositories' => [:index, :show],
+                           'katello/api/v2/repositories' => [:index, :show]
                          },
                          :resource_type => 'Katello::Repository'
       @plugin.permission :sync_repositories,
                          {
                            'katello/api/v2/repositories' => [:sync],
-                           'katello/api/v2/repositories_bulk_actions' => [:sync_repositories],
+                           'katello/api/v2/repositories_bulk_actions' => [:sync_repositories]
                          },
                          :resource_type => 'Katello::Repository'
       @plugin.permission :export_repositories,

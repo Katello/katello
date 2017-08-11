@@ -20,14 +20,12 @@ module Katello
     end
 
     def permissions
-=begin
-      @read_permission = :view_repositories
-      @create_permission = :create_repositories
-      @update_permission = :edit_repositories
-      @destroy_permission = :destroy_repositories
-      @sync_permission = :sync_repositories
-      @export_permission = :export_repositories
-=end
+      #@read_permission = :view_repositories
+      #@create_permission = :create_repositories
+      #@update_permission = :edit_repositories
+      #@destroy_permission = :destroy_repositories
+      #@sync_permission = :sync_repositories
+      #@export_permission = :export_repositories
       @read_permission = :view_products
       @create_permission = :create_products
       @update_permission = :edit_products
