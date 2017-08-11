@@ -5,8 +5,8 @@ module Actions
         def plan(organization)
           organization.setup_label_from_name
           organization.create_library
-          organization.create_anonymous_provider
-          organization.create_redhat_provider
+          organization.create_anonymous_provider unless organization.anonymous_provider
+          organization.create_redhat_provider unless organization.redhat_provider
           cp_create = nil
 
           organization.save!
