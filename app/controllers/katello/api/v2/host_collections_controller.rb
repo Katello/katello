@@ -27,7 +27,7 @@ module Katello
     api :GET, "/organizations/:organization_id/host_collections", N_("List host collections within an organization")
     api :GET, "/activation_keys/:activation_key_id/host_collections", N_("List host collections in an activation key")
     param_group :search, Api::V2::ApiController
-    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("host collection name to filter by")
     param :activation_key_id, :identifier, :desc => N_("activation key identifier")
     param :host_id, :identifier, :desc => N_("Filter products by host id")
