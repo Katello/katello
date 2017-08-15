@@ -143,11 +143,11 @@ module Katello
         gpg_key = @gpg_key
       end
       repo_params[:label] = labelize_params(repo_params)
+      repo_params[:arch] = repo_params[:arch] || 'noarch'
       repo_params[:url] = nil if repo_params[:url].blank?
-      unprotected =  repo_params.key?(:unprotected) ? repo_params[:unprotected] : true
-      repository = @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:url],
-                                     repo_params[:content_type], unprotected,
-                                     gpg_key, repository_params[:checksum_type], repo_params[:download_policy])
+      repo_params[:unprotected] = repo_params.key?(:unprotected) ? repo_params[:unprotected] : true
+      repo_params[:gpg_key] = gpg_key
+      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected, :gpg_key, :checksum_type, :download_policy).map { |k, v| [k.to_sym, v] }])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
       repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
@@ -417,7 +417,7 @@ module Katello
     end
 
     def repository_params
-      keys = [:download_policy, :mirror_on_sync, :verify_ssl_on_sync, :upstream_password, :upstream_username,
+      keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy
              ]
       keys += [:label, :content_type] if params[:action] == "create"

@@ -82,6 +82,9 @@
 //= require "bastion_katello/settings/settings.module.js"
 //= require_tree "./settings"
 
+//= require "bastion_katello/architectures/architectures.module.js"
+//= require_tree "./architectures"
+
 //= require "bastion_katello/i18n/translations.js"
 
 //= require "bastion_katello/bastion-katello-bootstrap.js"

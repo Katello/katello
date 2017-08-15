@@ -6,6 +6,7 @@ module Actions
           param :content_id
           param :name
           param :type
+          param :arches
           param :label
           param :content_url
           param :gpg_key_url
@@ -20,6 +21,7 @@ module Actions
                      contentUrl: input[:content_url],
                      gpgUrl: input[:gpg_key_url],
                      type: input[:type],
+                     arches: input[:arches],
                      label: input[:label],
                      metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
