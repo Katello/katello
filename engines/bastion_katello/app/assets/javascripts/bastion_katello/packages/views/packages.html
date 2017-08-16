@@ -6,6 +6,11 @@
     <h2 translate>Packages</h2>
   </header>
 
+  <div data-block="list-actions">
+    <a ng-href="{{getCsvLink(table.params)}}" ng-disabled="table.resource.subtotal == 0" class="btn btn-default" target="_self">
+      <span translate>Export</span>
+    </a>
+  </div>
   <div data-block="search-filter">
     <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
   </div>

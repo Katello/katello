@@ -16,8 +16,8 @@
  *   within the table.
  */
 angular.module('Bastion.packages').controller('PackagesController',
-    ['$scope', '$location', 'translate', 'Nutupane', 'Package', 'Task', 'Repository', 'CurrentOrganization',
-    function ($scope, $location, translate, Nutupane, Package, Task, Repository, CurrentOrganization) {
+    ['$scope', '$location', 'translate', 'CsvExportUrl', 'Nutupane', 'Package', 'Task', 'Repository', 'CurrentOrganization',
+    function ($scope, $location, translate, CsvExportUrl, Nutupane, Package, Task, Repository, CurrentOrganization) {
         var nutupane, params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -31,7 +31,7 @@ angular.module('Bastion.packages').controller('PackagesController',
         $scope.removeRow = nutupane.removeRow;
 
         $scope.repository = {name: translate('All Repositories'), id: 'all'};
-
+        $scope.getCsvLink = CsvExportUrl.getCsvLink;
         Repository.queryUnpaged({'organization_id': CurrentOrganization, 'content_type': 'yum'}, function (response) {
             $scope.repositories = [$scope.repository];
             $scope.repositories = $scope.repositories.concat(response.results);

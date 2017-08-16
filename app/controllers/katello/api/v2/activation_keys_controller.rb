@@ -24,7 +24,16 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       activation_key_includes = [:content_view, :environment, :host_collections, :organization]
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc, :includes => activation_key_includes))
+      activation_keys = scoped_search(index_relation.uniq, :name, :asc, :includes => activation_key_includes)
+      respond_to do |format|
+        format.csv do
+          #Specify columns to export here!
+          csv_response(activation_keys[:results], [:name, :usage_count, 'environment.name', 'content_view.name'], ['Name', 'Host Limit', 'Environment', 'Content View'])
+        end
+        format.any do
+          respond(:collection => activation_keys)
+        end
+      end
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")

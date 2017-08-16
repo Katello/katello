@@ -37,8 +37,16 @@ module Katello
         else
           fail "Unsupported default_sort type"
         end
-
-        respond(:collection => scoped_search(index_relation, sort_options[0], sort_options[1], options))
+        resources = scoped_search(index_relation, sort_options[0], sort_options[1], options)
+        respond_to do |format|
+          format.csv do
+            csv_response(resources[:results])
+            return
+          end
+          format.any do
+            respond(:collection => resources)
+          end
+        end
       end
 
       api :GET, "/:resource_id/:id", N_("Show :a_resource")

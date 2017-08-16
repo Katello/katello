@@ -7,6 +7,9 @@
   </div>
 
   <div data-block="list-actions">
+    <a ng-href="{{getCsvLink(table.params)}}" ng-disabled="table.resource.subtotal == 0" class="btn btn-default" target="_self">
+      <span translate>Export</span>
+    </a>
     <button type="button" class="btn btn-primary" ui-sref="activation-keys.new" ng-hide="denied('create_activation_keys')">
       <i class="pficon pficon-add-circle-o"></i>
       {{ "Create Activation Key" | translate }}

@@ -9,7 +9,6 @@
  */
 angular.module('Bastion.host-collections').factory('HostCollection',
     ['BastionResource', function (BastionResource) {
-
         return BastionResource('/katello/api/v2/host_collections/:id/:action', {id: '@id'}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
