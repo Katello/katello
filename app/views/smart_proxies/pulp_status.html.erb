@@ -1,23 +1,23 @@
 <div class="col-md-4">
-  <%= _('Pulp server version') %>
+  <strong><%= _('Pulp server version') %></strong>
 </div>
 <div class="col-md-8">
   <%= @pulp_status['versions']['platform_version'] %>
 </div>
 <div class="col-md-4">
-  <%= _('Database connection') %>
+  <strong><%= _('Database connection') %></strong>
 </div>
 <div class="col-md-8">
-  <%= boolean_to_icon(@pulp_status['database_connection']['connected']) %>
+  <strong><%= boolean_to_icon(@pulp_status['database_connection']['connected']) %></strong>
 </div>
 <div class="col-md-4">
-  <%= _('Messaging connection') %>
+  <strong><%= _('Messaging connection') %></strong>
 </div>
 <div class="col-md-8">
-  <%= boolean_to_icon(@pulp_status['messaging_connection']['connected']) %>
+  <strong><%= boolean_to_icon(@pulp_status['messaging_connection']['connected']) %></strong>
 </div>
 <div class="col-md-4">
-  <%= _('Workers') %>
+  <strong><%= _('Workers') %></strong>
 </div>
 <div class="col-md-8">
   <%= @pulp_status['known_workers'].size %><br />
