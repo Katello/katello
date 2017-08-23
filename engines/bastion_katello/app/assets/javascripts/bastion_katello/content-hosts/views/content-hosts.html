@@ -99,14 +99,13 @@
 
             <a ui-sref="content-host.packages.applicable({hostId: host.id})">
             <span class="aligned-errata-count">
-              <span class="errata-count">
+              <span class="errata-count"
+                 ng-class="{black: !host.content_facet_attributes.upgradable_package_count,
+                            green: host.content_facet_attributes.upgradable_package_count > 0}">
                 <span>
                   {{ host.content_facet_attributes.upgradable_package_count || 0 }}
                 </span>
-                <i class="fa fa-cube inline-icon"
-                   ng-class="{black: host.content_facet_attributes.upgradable_package_count === 0,
-                              green: host.content_facet_attributes.upgradable_package_count > 0}"
-                   title="{{ 'Package Updates' | translate }}"></i>
+                <i class="fa fa-cube inline-icon" title="{{ 'Package Updates' | translate }}"></i>
               </span>
             </span>
             </a>

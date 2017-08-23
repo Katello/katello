@@ -137,30 +137,24 @@
       <dl class="dl-horizontal dl-horizontal-left">
         <dt translate>Security</dt>
         <dd>
-          <a ui-sref="content-host.errata.index({getSearch: 'type=security'})">
-            <i class="fa fa-warning inline-icon"
-               ng-class="{black: host.content_facet_attributes.errata_counts.security === 0, red: host.content_facet_attributes.errata_counts.security > 0}"
-               title="{{ 'Security' | translate }}"></i>
+          <a ui-sref="content-host.errata.index({getSearch: 'type=security'})" ng-class="{black: !host.content_facet_attributes.errata_counts.security, red: host.content_facet_attributes.errata_counts.security > 0}">
+            <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
             {{ host.content_facet_attributes.errata_counts.security || 0 }}
           </a>
         </dd>
 
         <dt translate>Bug Fix</dt>
         <dd>
-          <a ui-sref="content-host.errata.index({getSearch: 'type=bugfix'})">
-            <i class="fa fa-bug inline-icon"
-               ng-class="{black: host.content_facet_attributes.errata_counts.bugfix === 0, yellow: host.content_facet_attributes.errata_counts.bugfix > 0}"
-               title="{{ 'Bug Fix' | translate }}"></i>
+          <a ui-sref="content-host.errata.index({getSearch: 'type=bugfix'})" ng-class="{black: !host.content_facet_attributes.errata_counts.bugfix, yellow: host.content_facet_attributes.errata_counts.bugfix > 0}">
+            <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
             {{ host.content_facet_attributes.errata_counts.bugfix || 0 }}
           </a>
         </dd>
 
         <dt translate>Enhancement</dt>
         <dd>
-          <a ui-sref="content-host.errata.index({getSearch: 'type=enhancement'})">
-            <i class="fa fa-plus-square inline-icon"
-               ng-class="{black: host.content_facet_attributes.errata_counts.enhancement === 0, yellow: host.content_facet_attributes.errata_counts.enhancement > 0}"
-               title="{{ 'Enhancement' | translate }}"></i>
+          <a ui-sref="content-host.errata.index({getSearch: 'type=enhancement'})" ng-class="{black: !host.content_facet_attributes.errata_counts.enhancement, yellow: host.content_facet_attributes.errata_counts.enhancement > 0}">
+            <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
             {{ host.content_facet_attributes.errata_counts.enhancement || 0 }}
           </a>
         </dd>
