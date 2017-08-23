@@ -16,7 +16,9 @@ module Actions
           hypervisors = input[:hypervisors]
 
           if hypervisors
-            hypervisors.each { |hypervisor| update_or_create_hypervisor(hypervisor) }
+            User.as_anonymous_admin do
+              hypervisors.each { |hypervisor| update_or_create_hypervisor(hypervisor) }
+            end
           end
         end
 
