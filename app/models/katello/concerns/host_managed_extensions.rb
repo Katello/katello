@@ -63,10 +63,67 @@ module Katello
       end
 
       def import_package_profile(simple_packages)
-        self.installed_packages.where("nvra not in (?)", simple_packages.map(&:nvra)).destroy_all
-        existing_nvras = self.installed_packages.pluck(:nvra)
+        if Setting[:bulk_query_installed_packages]
+          #this method is slow if the clean_installed_packages rake task has not been run, but faster if it has
+          found = import_package_profile_in_bulk(simple_packages)
+        else
+          found = import_package_profile_individually(simple_packages)
+        end
+
+        sync_package_associations(found.map(&:id))
+      end
+
+      def import_package_profile_in_bulk(simple_packages)
+        nvras = simple_packages.map { |sp| sp.nvra }
+        found = InstalledPackage.where(:nvra => nvras).pluck(:id, :nvra)
+        found_nvras = found.map(&:nvra)
+        new_packages = simple_packages.select { |sp| !found_nvras.include?(sp.nvra) }
+
+        new_packages.each do |simple_package|
+          ::Katello::Util::Support.active_record_retry do
+            found << InstalledPackage.where(:nvra => simple_package.nvra, :name => simple_package.name).first_or_create!
+          end
+        end
+        found
+      end
+
+      def import_package_profile_individually(simple_packages)
+        found = []
         simple_packages.each do |simple_package|
-          self.installed_packages.create!(:name => simple_package.name, :nvra => simple_package.nvra) unless existing_nvras.include?(simple_package.nvra)
+          ::Katello::Util::Support.active_record_retry do
+            #use limit(1)[0] here to avoid a sort by id
+            pkg = InstalledPackage.where(:nvra => simple_package.nvra, :name => simple_package.name).limit(1)[0]
+            if pkg.nil?
+              pkg = InstalledPackage.create!(:nvra => simple_package.nvra, :name => simple_package.name)
+            end
+            found << pkg
+          end
+        end
+        found
+      end
+
+      def sync_package_associations(new_installed_package_ids)
+        old_associated_ids = self.installed_package_ids
+        table_name = self.host_installed_packages.table_name
+
+        new_ids = new_installed_package_ids - old_associated_ids
+        delete_ids = old_associated_ids - new_installed_package_ids
+
+        queries = []
+
+        if delete_ids.any?
+          queries << "DELETE FROM #{table_name} WHERE host_id=#{self.id} AND installed_package_id IN (#{delete_ids.join(', ')})"
+        end
+
+        unless new_ids.empty?
+          inserts = new_ids.map { |unit_id| "(#{unit_id.to_i}, #{self.id.to_i})" }
+          queries << "INSERT INTO #{table_name} (installed_package_id, host_id) VALUES #{inserts.join(', ')}"
+        end
+
+        ActiveRecord::Base.transaction do
+          queries.each do |query|
+            ActiveRecord::Base.connection.execute(query)
+          end
         end
       end
 
