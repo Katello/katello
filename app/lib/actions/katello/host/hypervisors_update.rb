@@ -49,7 +49,7 @@ module Actions
           location ||= Location.unscoped.find_by_title(
             Setting[:default_location_subscribed_hosts])
           host = ::Host::Managed.new(:name => name, :organization => organization,
-                                     :location => location, :managed => false)
+                                     :location => location, :managed => false, :enabled => false)
           host.save!
           host
         end
