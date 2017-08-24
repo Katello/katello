@@ -127,6 +127,7 @@ module Katello
   class HostInstalledPackagesTest < HostManagedExtensionsTestBase
     def setup
       super
+      Setting[:bulk_query_installed_packages] = false
       package_json = {:name => "foo", :version => "1", :release => "1.el7", :arch => "x86_64"}
       @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
       @nvra = 'foo-1-1.el7.x86_64'
@@ -136,6 +137,21 @@ module Katello
       assert_equal 1, @foreman_host.installed_packages.count
       assert_equal 'foo', @foreman_host.installed_packages.first.name
       assert_equal @nvra, @foreman_host.installed_packages.first.nvra
+    end
+
+    def test_import_package_profile_adds_removes
+      package_json = {:name => "betterfoo", :version => "1", :release => "1.el7", :arch => "x86_64"}
+      @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+      assert_equal 1, @foreman_host.installed_packages.count
+      assert_equal 'betterfoo', @foreman_host.installed_packages.first.name
+    end
+
+    def test_import_package_profile_adds_removes_bulk
+      Setting[:bulk_query_installed_packages] = true
+      package_json = {:name => "betterfoo", :version => "1", :release => "1.el7", :arch => "x86_64"}
+      @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+      assert_equal 1, @foreman_host.installed_packages.count
+      assert_equal 'betterfoo', @foreman_host.installed_packages.first.name
     end
 
     def test_search_installed_package
