@@ -8,7 +8,9 @@ module Actions
 
         def run
           organization = ::Organization.find(input[:organization_id])
-          organization.redhat_provider.import_products_from_cp
+          User.as_anonymous_admin do
+            organization.redhat_provider.import_products_from_cp
+          end
         end
       end
     end
