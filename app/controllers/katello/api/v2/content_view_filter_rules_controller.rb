@@ -23,7 +23,7 @@ module Katello
     param :name, [String, Array], :desc => N_("package, package group, or docker tag names")
     param :uuid, String, :desc => N_("package group: uuid")
     param :version, String, :desc => N_("package: version")
-    param :arch, String, :desc => N_("package: architecture")
+    param :architecture, String, :desc => N_("package: architecture")
     param :min_version, String, :desc => N_("package: minimum version")
     param :max_version, String, :desc => N_("package: maximum version")
     param :errata_id, String, :desc => N_("erratum: id")
@@ -68,6 +68,7 @@ module Katello
     param :id, :identifier, :desc => N_("rule identifier"), :required => true
     param :name, String, :desc => N_("package, package group, or docker tag: name")
     param :version, String, :desc => N_("package: version")
+    param :architecture, String, :desc => N_("package: architecture")
     param :min_version, String, :desc => N_("package: minimum version")
     param :max_version, String, :desc => N_("package: maximum version")
     param :errata_id, String, :desc => N_("erratum: id")
