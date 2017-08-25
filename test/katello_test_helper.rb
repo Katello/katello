@@ -34,6 +34,7 @@ require "#{Katello::Engine.root}/test/support/fixtures_support"
 require 'dynflow/testing'
 Mocha::Mock.send :include, Dynflow::Testing::Mimic
 Dynflow::Testing.logger_adapter.level = 1
+require 'foreman_tasks/test_helpers'
 require "#{Katello::Engine.root}/test/support/actions/fixtures"
 require "#{Katello::Engine.root}/test/support/actions/pulp_task"
 require "#{Katello::Engine.root}/test/support/actions/remote_action"
@@ -96,6 +97,7 @@ end
 class ActionController::TestCase
   include LocaleHelperMethods
   include ControllerSupport
+  include ForemanTasks::TestHelpers::WithInThreadExecutor
 
   def setup_engine_routes
     @routes = Katello::Engine.routes
@@ -140,6 +142,7 @@ end
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
+  include ForemanTasks::TestHelpers::WithInThreadExecutor
 
   before do
     stub_ping
