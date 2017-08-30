@@ -24,7 +24,7 @@ module Actions
         end
 
         def humanized_name
-          if input[:version_id]
+          if input && input[:version_id]
             version = ::Katello::ContentViewVersion.find_by(:id => input[:version_id])
           end
 

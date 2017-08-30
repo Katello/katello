@@ -58,9 +58,9 @@ module Actions
         end
 
         def humanized_name
-          if input[:validate_contents]
+          if input && input[:validate_contents]
             _("Synchronize: Validate Content")
-          elsif input[:skip_metadata_check]
+          elsif input && input[:skip_metadata_check]
             _("Synchronize: Skip Metadata Check")
           else
             _("Synchronize")
