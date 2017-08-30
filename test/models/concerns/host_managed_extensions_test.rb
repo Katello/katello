@@ -44,27 +44,27 @@ module Katello
     end
 
     def test_info_with_katello
-      assert_equal @foreman_host.info['parameters']['content_view'], nil
-      assert_equal @foreman_host.info['parameters']['lifecycle_environment'], nil
-      assert_equal @foreman_host.info['parameters']['foreman_host_collections'], []
+      assert_equal @foreman_host.enc['parameters']['content_view'], nil
+      assert_equal @foreman_host.enc['parameters']['lifecycle_environment'], nil
+      assert_equal @foreman_host.enc['parameters']['foreman_host_collections'], []
 
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
       host_collection = katello_host_collections(:simple_host_collection)
       host_collection.hosts << @foreman_host
 
-      assert_equal @foreman_host.info['parameters']['content_view'], @foreman_host.content_view.label
-      assert_equal @foreman_host.info['parameters']['lifecycle_environment'], @foreman_host.lifecycle_environment.label
-      assert_includes @foreman_host.info['parameters']['foreman_host_collections'], host_collection.name
+      assert_equal @foreman_host.enc['parameters']['content_view'], @foreman_host.content_view.label
+      assert_equal @foreman_host.enc['parameters']['lifecycle_environment'], @foreman_host.lifecycle_environment.label
+      assert_includes @foreman_host.enc['parameters']['foreman_host_collections'], host_collection.name
     end
 
-    def test_info_with_katello_deprecated
-      assert_equal @foreman_host.info['parameters']['kt_cv'], nil
-      assert_equal @foreman_host.info['parameters']['kt_env'], nil
+    def test_enc_with_katello_deprecated
+      assert_equal @foreman_host.enc['parameters']['kt_cv'], nil
+      assert_equal @foreman_host.enc['parameters']['kt_env'], nil
 
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
 
-      assert_equal @foreman_host.info['parameters']['kt_cv'], @foreman_host.content_view.label
-      assert_equal @foreman_host.info['parameters']['kt_env'], @foreman_host.lifecycle_environment.label
+      assert_equal @foreman_host.enc['parameters']['kt_cv'], @foreman_host.content_view.label
+      assert_equal @foreman_host.enc['parameters']['kt_env'], @foreman_host.lifecycle_environment.label
     end
 
     def test_update_with_cv_env
