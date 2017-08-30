@@ -74,7 +74,7 @@ module Actions
 
         def total_counts(input)
           total_count = {}
-          if input[:version_outputs]
+          if input && input[:version_outputs]
             content_view_count = input[:version_outputs].length
             input[:version_outputs].map do |version_output|
               added_units = version_output.try(:[], :output).try(:[], :added_units)
