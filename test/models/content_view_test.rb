@@ -395,6 +395,10 @@ module Katello
       assert_equal @library_view, ContentView.search_for("name = \"#{@library_view.name}\"").first
     end
 
+    def test_search_label
+      assert_equal @library_view, ContentView.search_for("label = \"#{@library_view.label}\"").first
+    end
+
     def test_search_organization_id
       assert_includes ContentView.search_for("organization_id = #{@library_view.organization_id}"), @library_view
     end

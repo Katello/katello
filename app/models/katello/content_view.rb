@@ -65,6 +65,7 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
+    scoped_search :on => :label, :complete_value => true
     scoped_search :on => :composite, :complete_value => {true: true, false: false}
 
     def self.in_environment(env)
