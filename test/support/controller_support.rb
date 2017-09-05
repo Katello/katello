@@ -15,7 +15,7 @@ module ControllerSupport
 
       action = params[:action]
       req = params[:request]
-      @controller.define_singleton_method(action) { render :nothing => true }
+      @controller.define_singleton_method(action) { head :no_content }
 
       login_user(user)
       req.call

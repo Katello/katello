@@ -19,7 +19,7 @@ module Katello
     param :content, File, :required => true, :desc => N_("The actual file contents")
     def update
       pulp_content.upload_bits(params[:id], params[:offset], params[:content])
-      render :nothing => true
+      head :no_content
     end
 
     api :DELETE, "/repositories/:repository_id/content_uploads/:id", N_("Delete an upload request")
@@ -27,7 +27,7 @@ module Katello
     param :id, :identifier, :required => true, :desc => N_("Upload request id")
     def destroy
       pulp_content.delete_upload_request(params[:id])
-      render :nothing => true
+      head :no_content
     end
 
     private
