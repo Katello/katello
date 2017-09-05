@@ -13,7 +13,11 @@ module Katello
     end
 
     def allowed_perms
-      [:manage_capsule_content]
+      [[:view_capsule_content, :manage_capsule_content]]
+    end
+
+    def view_allowed_perms
+      [:view_capsule_content]
     end
 
     def denied_perms
@@ -30,7 +34,7 @@ module Katello
     end
 
     def test_lifecycle_environments_protected
-      assert_protected_action(:lifecycle_environments, allowed_perms, denied_perms) do
+      assert_protected_action(:lifecycle_environments, view_allowed_perms, denied_perms) do
         get :lifecycle_environments, :id => proxy_with_pulp.id
       end
     end
@@ -41,7 +45,7 @@ module Katello
     end
 
     def test_available_lifecycle_environments_protected
-      assert_protected_action(:available_lifecycle_environments, allowed_perms, denied_perms) do
+      assert_protected_action(:available_lifecycle_environments, view_allowed_perms, denied_perms) do
         get :available_lifecycle_environments, :id => proxy_with_pulp.id
       end
     end
@@ -52,7 +56,7 @@ module Katello
     end
 
     def test_add_lifecycle_environment_protected
-      assert_protected_action(:add_lifecycle_environment, [[:manage_capsule_content, :view_lifecycle_environments]], denied_perms) do
+      assert_protected_action(:add_lifecycle_environment, [[:view_capsule_content, :manage_capsule_content, :view_lifecycle_environments]], denied_perms) do
         post :add_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
       end
     end
@@ -65,7 +69,7 @@ module Katello
     end
 
     def test_remove_lifecycle_environment_protected
-      assert_protected_action(:remove_lifecycle_environment, [[:manage_capsule_content, :view_lifecycle_environments]], denied_perms) do
+      assert_protected_action(:remove_lifecycle_environment, [[:view_capsule_content, :manage_capsule_content, :view_lifecycle_environments]], denied_perms) do
         delete :remove_lifecycle_environment, :id => proxy_with_pulp.id, :environment_id => environment.id
       end
     end
@@ -92,7 +96,7 @@ module Katello
     end
 
     def test_sync_status_protected
-      assert_protected_action(:sync, allowed_perms, denied_perms) do
+      assert_protected_action(:sync, view_allowed_perms, denied_perms) do
         get :sync_status, :id => proxy_with_pulp.id
       end
     end
