@@ -41,8 +41,8 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             if (errataSearchStringAddition) {
                 addition = '( ' + errataSearchStringAddition + ' )';
             }
-            if (angular.isDefined($scope.environmentId)) {
-                addition = addition + ' and lifecycle_environment_id = ' + $scope.environmentId;
+            if (angular.isDefined($scope.environmentFilter)) {
+                addition = addition + ' and lifecycle_environment_id = ' + $scope.environmentFilter;
             }
 
             if (term === "" || angular.isUndefined(term)) {
@@ -77,7 +77,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
         nutupane.load();
 
         $scope.selectEnvironment = function (environmentId) {
-            $scope.environmentId = environmentId;
+            $scope.environmentFilter = environmentId;
             nutupane.refresh();
         };
 

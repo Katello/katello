@@ -99,7 +99,7 @@ describe('Controller: ErratumContentHostsController', function() {
         $scope.selectEnvironment('foo');
 
         expect(nutupane.refresh).toHaveBeenCalled();
-        expect($scope.environmentId).toBe('foo');
+        expect($scope.environmentFilter).toBe('foo');
     });
 
     describe("provides a way to go to the next apply step", function () {
