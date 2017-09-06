@@ -32,6 +32,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "qpid_messaging", '< 1.0.0'
   gem.add_dependency "gettext_i18n_rails"
+  gem.add_dependency "apipie-rails", ">= 0.5.2"
 
   # Pulp
   gem.add_dependency "runcible", ">= 2.1.0", "< 3.0.0"
