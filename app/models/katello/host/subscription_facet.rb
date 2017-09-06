@@ -145,11 +145,11 @@ module Katello
 
       def self.propose_name_from_facts(facts)
         setting_fact = Setting[:register_hostname_fact]
-        if !setting_fact.blank? && facts[setting_fact]
+        if !setting_fact.blank? && facts[setting_fact] && facts[setting_fact] != 'localhost'
           facts[setting_fact]
         else
-          Rails.logger.warn(_("register_hostname_fact set for %s, but no fact found.") % setting_fact) unless setting_fact.blank?
-          [facts['network.fqdn'], facts['network.hostname-override'], facts['network.hostname']].find { |name| !name.blank? }
+          Rails.logger.warn(_("register_hostname_fact set for %s, but no fact found, or was localhost.") % setting_fact) unless setting_fact.blank?
+          [facts['network.fqdn'], facts['network.hostname-override'], facts['network.hostname']].find { |name| !name.blank? && name != 'localhost' }
         end
       end
 
