@@ -150,6 +150,32 @@ module Katello
       assert_response :success
     end
 
+    def test_release_version
+      release_version = "7.2"
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts, release_version_param|
+        assert_equal action_class, ::Actions::Katello::Host::UpdateReleaseVersion
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+        assert_equal release_version, release_version_param
+      end
+
+      put :release_version, :included => {:ids => @host_ids}, :organization_id => @org.id,
+          :release_version => release_version
+
+      assert_response :success
+    end
+
+    def test_release_version_permission
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
+
+      assert_protected_action(:release_version, good_perms, bad_perms) do
+        put :release_version, :included => {:ids => @host_ids}, :organization_id => @org.id,
+          :release_version => "7.2"
+      end
+    end
+
     def allow_restricted_user_to_see_host
       users(:restricted).update_attribute(:organizations, [@org])
       users(:restricted).update_attribute(:locations, [@host1.location, @host2.location].uniq)

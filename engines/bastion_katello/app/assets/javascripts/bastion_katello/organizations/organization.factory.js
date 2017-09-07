@@ -15,6 +15,8 @@ angular.module('Bastion.organizations').factory('Organization',
             {id: '@id'},
             {
                 update: { method: 'PUT' },
+                releaseVersions: {method: 'GET', params: {action: 'releases'}},
+
                 select: {
                     method: 'GET',
                     url: '/organizations/:label/select'

@@ -141,6 +141,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             ContentHostsModalHelper.openEnvironmentModal();
         };
 
+        $scope.openSetReleaseVersionModal = function () {
+            nutupane.invalidate();
+            ContentHostsModalHelper.openReleaseVersionModal();
+        };
+
         $scope.openSubscriptionsModal = function () {
             nutupane.invalidate();
             ContentHostsModalHelper.openSubscriptionsModal();
