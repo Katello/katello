@@ -7,7 +7,7 @@ module Katello
 
     before_action :local_find_taxonomy, :only => %w(repo_discover cancel_repo_discover
                                                     download_debug_certificate
-                                                    redhat_provider update
+                                                    redhat_provider update releases
                                                     autoattach_subscriptions)
 
     resource_description do
@@ -120,6 +120,18 @@ module Katello
                 :type => "application/text"
     end
 
+    api :GET, "/organizations/:id/releases", N_("List available releases in the organization")
+    param :id, String, :desc => N_("ID of the Organization"), :required => true
+    def releases
+      available_releases = @organization.library.available_releases
+      response = {
+        :results => available_releases,
+        :total => available_releases.size,
+        :subtotal => available_releases.size
+      }
+      respond_for_index :collection => response
+    end
+
     api :POST, "/organizations/:id/autoattach_subscriptions", N_("Auto-attach available subscriptions to all hosts within an organization. Asynchronous operation."), :deprecated => true
     def autoattach_subscriptions
       task = async_task(::Actions::Katello::Organization::AutoAttachSubscriptions, @organization)
@@ -138,6 +150,8 @@ module Katello
       if %w(download_debug_certificate redhat_provider repo_discover
             cancel_repo_discover autoattach_subscriptions).include?(params[:action])
         :edit
+      elsif params[:action] == "releases"
+        :view
       else
         super
       end

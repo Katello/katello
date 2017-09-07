@@ -170,6 +170,7 @@ Katello::Engine.routes.draw do
             post :autoattach_subscriptions
             get :download_debug_certificate
             get :redhat_provider
+            get :releases
           end
           api_resources :products, :only => [:index]
           api_resources :repositories, :only => [:index]
