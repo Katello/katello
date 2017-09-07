@@ -191,11 +191,12 @@ module Katello
         # case 1
         selected_host_group = options.fetch(:selected_host_group, nil)
         host = selected_host_group.present? ? selected_host_group : param_host
-        return [] unless host.operatingsystem.is_a?(Redhat)
 
         new_host = ::Host.new
         new_host.operatingsystem = param_host.operatingsystem.present? ? param_host.operatingsystem : host.operatingsystem
         new_host.architecture = param_host.architecture.present? ? param_host.architecture : host.architecture
+
+        return [] unless new_host.operatingsystem.is_a?(Redhat)
 
         if (host.is_a? Hostgroup)
           new_host.content_facet = ::Katello::Host::ContentFacet.new(:lifecycle_environment_id => host.inherited_lifecycle_environment_id,
