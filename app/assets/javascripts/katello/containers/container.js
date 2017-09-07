@@ -1,6 +1,7 @@
 var KT = KT ? KT : {};
 
 KT.container = (function(){
+    var pre_selection = {};
     var setup = function() {
         var orgDropdown = $('#organization_id'),
             envDropdown = $('#kt_environment_id'),
@@ -136,6 +137,7 @@ KT.container = (function(){
                                     $('<option></option>').val(cv["id"]).html(cv["name"]));
                             });
                             enableContentViews(true);
+                            contentViewDropdown.val(pre_selection.content_view_id).trigger('change')
                         } else {
                             noCV.removeClass("hide");
                         }
@@ -173,6 +175,7 @@ KT.container = (function(){
                                     $('<option></option>').val(repo["id"]).html(repo["name"]));
                             });
                             enableRepositories(true);
+                            reposDropdown.val(pre_selection.repository_id).trigger('change');
                         } else {
                             noRepos.removeClass("hide");
                         }
@@ -204,6 +207,7 @@ KT.container = (function(){
                                 $('<option></option>').val(tag["id"]).html(tag["name"]));
                         });
                         enableTags(true);
+                        tagsDropdown.val(pre_selection.tag_id).trigger('change')
                 })
                 .fail(function(resp) {
                     $("#error_tags").removeClass("hide")
@@ -278,9 +282,14 @@ KT.container = (function(){
             spinner.addClass("hide")
         }
     };
-
+    setSelection = function(selection) {
+      pre_selection = selection;
+      $('#kt_environment_id').val(selection.environment_id)
+                             .trigger('change')
+    }
     return {
         setup: setup,
+        setSelection: setSelection,
         enableNext: enableNext
     };
 })();
