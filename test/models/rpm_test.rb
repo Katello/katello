@@ -40,7 +40,7 @@ module Katello
       Rpm.create!(:uuid => uuid)
       json = @rpm_one.attributes.merge('summary' => 'an update', 'version' => '3', 'release' => '4')
       @rpm_one.update_from_json(json.with_indifferent_access)
-      @rpm_one = Rpm.find(@rpm_one)
+      @rpm_one = @rpm_one.reload
 
       assert_equal @rpm_one.summary, json['summary']
       refute @rpm_one.release_sortable.blank?
@@ -52,7 +52,7 @@ module Katello
       last_updated = @rpm_one.updated_at
       json = @rpm_one.attributes
       @rpm_one.update_from_json(json)
-      assert_equal Rpm.find(@rpm_one).updated_at, last_updated
+      assert_equal @rpm_one.reload.updated_at, last_updated
     end
 
     def test_with_identifiers
@@ -186,6 +186,9 @@ module Katello
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0")
       assert_equal ["abc123-4", "abc123-6"], results.map(&:uuid).sort
 
+      results = Rpm.in_repositories(@repo).search_version_range("1.0.0", '')
+      assert_equal ["abc123-4", "abc123-6"], results.map(&:uuid).sort
+
       results = Rpm.in_repositories(@repo).search_version_range("1")
       expected = @all_ids - ["abc123-8"]
       assert_equal expected, results.map(&:uuid).sort
@@ -201,6 +204,9 @@ module Katello
 
     def test_max_version_filter
       results = Rpm.in_repositories(@repo).search_version_range(nil, "1:1.0.0")
+      assert_equal @all_ids - ["abc123-2"], results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_version_range('', "1:1.0.0")
       assert_equal @all_ids - ["abc123-2"], results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_range(nil, "0:1.0.0")
