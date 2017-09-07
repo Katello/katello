@@ -113,6 +113,17 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
     assert_equal ret.first[:name], options.first.name
   end
 
+  test "kickstart_repository_options should_handle_non_redhat_host" do
+    hostgroup = Hostgroup.new(:operatingsystem => @os)
+    host = ::Host.new(:architecture => @arch, :operatingsystem => operatingsystems(:opensuse), :hostgroup => hostgroup,
+                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
+                                                    :content_view_id => @cv.id,
+                                                    :content_source_id => @content_source.id})
+
+    options = kickstart_repository_options(host, :selected_host_group => hostgroup)
+    assert_empty options
+  end
+
   test "kickstart_repository_options should provide options for a populated hostgroup" do
     self.params = {}
     hostgroup = ::Hostgroup.new(:lifecycle_environment_id => @env.id,
