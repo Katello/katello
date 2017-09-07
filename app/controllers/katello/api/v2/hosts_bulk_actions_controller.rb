@@ -203,6 +203,14 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :PUT, "/hosts/bulk/release_version", N_("Assign the release version to one or more hosts")
+    param_group :bulk_params
+    param :release_version, String, :desc => N_("content release version")
+    def release_version
+      task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::UpdateReleaseVersion, @hosts, params["release_version"])
+      respond_for_async :resource => task
+    end
+
     api :POST, "/hosts/bulk/available_incremental_updates", N_("Given a set of hosts and errata, lists the content view versions" \
                                                                  " and environments that need updating.")
     param_group :bulk_params

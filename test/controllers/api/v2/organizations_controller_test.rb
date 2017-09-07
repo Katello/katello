@@ -157,5 +157,23 @@ module Katello
         post :autoattach_subscriptions, :id => @organization.id
       end
     end
+
+    def test_releases
+      results = JSON.parse(get(:releases, :id => @organization.id).body)
+
+      assert_response :success
+      assert_template "katello/api/v2/common/releases"
+
+      assert_empty ['results', 'subtotal', 'total'] - results.keys
+    end
+
+    def test_available_releases_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@create_permission, @delete_permission, @update_permission]
+
+      assert_protected_action(:releases, allowed_perms, denied_perms, [@organization]) do
+        get :releases, :id => @organization.id
+      end
+    end
   end
 end
