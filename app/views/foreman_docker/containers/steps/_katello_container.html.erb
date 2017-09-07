@@ -2,6 +2,16 @@
 <%= stylesheet "katello/containers/container" %>
 <div>
   <div class="form-group">
+    <% model_for("katello").errors.messages.select {|field, _| field == :katello_content }.each do |field, field_errors| %>
+    <div class="alert alert-danger">
+      <span class="pficon pficon-error-circle-o"></span>
+      <ul>
+        <% field_errors.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
     <%= hidden_field_tag :katello, true %>
     <% if Organization.current -%>
       <%= hidden_field_tag :organization_id, Organization.current.id%>
@@ -33,6 +43,10 @@
       <span id="no_capsules" class="hide"> <%= _("Selected organization has no smart proxies with Pulp or Pulp Node features. Please choose a different organization.")-%></span>
       <span id="error_capsules" class="hide"> <%= _("Unable to fetch any smart proxies. Please try again.")-%></span>
     </div>
-
+    <script type="text/javascript">
+      $(document).ready(function() {
+        KT.container.setSelection(<%= @state.image.try(:katello_content).to_json.html_safe %>)
+      })
+    </script>
   </div>
 </div>

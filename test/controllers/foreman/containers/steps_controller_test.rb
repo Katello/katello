@@ -45,7 +45,14 @@ module Containers
       @state.expects(:build_image).with(:repository_name => repo.pulp_id,
                                         :tag => tag.name,
                                         :capsule_id => capsule_id.to_s,
-                                        :katello => true).returns(image)
+                                        :katello => true,
+                                        :katello_content => {
+                                          :organization_id => nil,
+                                          :environment_id => nil,
+                                          :content_view_id => nil,
+                                          :repository_id => 100,
+                                          :tag_id => 200
+                                        }).returns(image)
 
       put :update, :wizard_state_id => @state.id,
                    :id => :image,
