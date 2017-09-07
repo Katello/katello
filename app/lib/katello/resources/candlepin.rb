@@ -158,7 +158,7 @@ module Katello
           end
 
           def available_pools(owner_label, uuid, listall = false)
-            url = Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}"
+            url = Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}&add_future=true"
             response = Candlepin::CandlepinResource.get(url, self.default_headers).body
             JSON.parse(response)
           end
