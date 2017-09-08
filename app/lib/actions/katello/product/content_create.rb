@@ -11,11 +11,11 @@ module Actions
                                            owner:       repository.product.organization.label,
                                            name:        repository.name,
                                            type:        repository.content_type,
+                                           arches:      repository.arch == "noarch" ? nil : repository.arch,
                                            label:       repository.custom_content_label,
                                            content_url: content_url(repository))
               content_id = content_create.output[:response][:id]
-              plan_action(Candlepin::Product::ContentAdd,
-                                    owner: repository.product.organization.label,
+              plan_action(Candlepin::Product::ContentAdd, owner: repository.product.organization.label,
                                     product_id: repository.product.cp_id,
                                     content_id: content_id)
 
@@ -29,13 +29,13 @@ module Actions
                           content_id:  content_id,
                           name:        repository.name,
                           type:        repository.content_type,
+                          arches:      repository.arch == "noarch" ? "" : repository.arch,
                           label:       repository.custom_content_label,
                           content_url: content_url(repository),
                           gpg_key_url: repository.yum_gpg_key_url)
             end
 
-            plan_self(repository_id: repository.id,
-                      content_id: content_id)
+            plan_self(repository_id: repository.id, content_id: content_id)
           end
         end
 

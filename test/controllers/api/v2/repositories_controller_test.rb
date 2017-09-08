@@ -228,14 +228,13 @@ module Katello
     def test_create
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://www.google.com',
-        'yum',
-        true,
-        nil,
-        nil,
-        nil
+        :label => 'Fedora_Repository',
+        :name => 'Fedora Repository',
+        :url => 'http://www.google.com',
+        :content_type => 'yum',
+        :arch => 'noarch',
+        :unprotected => true,
+        :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -248,7 +247,33 @@ module Katello
                     :product_id => @product.id,
                     :url => 'http://www.google.com',
                     :content_type => 'yum'
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
 
+    def test_create_with_arch
+      product = mock
+      product.expects(:add_repo).with(
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://www.google.com',
+          :content_type => 'yum',
+          :arch => 'x86_64',
+          :unprotected => true,
+          :gpg_key => nil
+      ).returns(@repository)
+
+      product.expects(:gpg_key).returns(nil)
+      product.expects(:organization).returns(@organization)
+      product.expects(:redhat?).returns(false)
+      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
+
+      Product.stubs(:find).returns(product)
+      post :create, :name => 'Fedora Repository',
+           :product_id => @product.id,
+           :url => 'http://www.google.com',
+           :content_type => 'yum',
+           :arch => 'x86_64'
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -256,14 +281,13 @@ module Katello
     def test_create_with_empty_string_url
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        nil,
-        'yum',
-        true,
-        nil,
-        nil,
-        nil
+        :label => 'Fedora_Repository',
+        :name => 'Fedora Repository',
+        :url => nil,
+        :content_type => 'yum',
+        :arch => 'noarch',
+        :unprotected => true,
+        :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -277,7 +301,6 @@ module Katello
                       :product_id => @product.id,
                       :url => '',
                       :content_type => 'yum'
-
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -286,14 +309,13 @@ module Katello
       key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://www.google.com',
-        'yum',
-        true,
-        key,
-        nil,
-        nil
+        :label => 'Fedora_Repository',
+        :name => 'Fedora Repository',
+        :url => 'http://www.google.com',
+        :content_type => 'yum',
+        :arch => 'noarch',
+        :unprotected => true,
+        :gpg_key => key
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(key)
@@ -315,14 +337,14 @@ module Katello
     def test_create_with_checksum
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        nil,
-        'yum',
-        true,
-        nil,
-        'sha256',
-        nil
+        :label => 'Fedora_Repository',
+        :name => 'Fedora Repository',
+        :url => nil,
+        :content_type => 'yum',
+        :arch => 'noarch',
+        :unprotected => true,
+        :gpg_key => nil,
+        :checksum_type => 'sha256'
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -344,14 +366,14 @@ module Katello
     def test_create_with_download_policy
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        nil,
-        'yum',
-        true,
-        nil,
-        nil,
-        'on_demand'
+        :label => 'Fedora_Repository',
+        :name => 'Fedora Repository',
+        :url => nil,
+        :content_type => 'yum',
+        :arch => 'noarch',
+        :unprotected => true,
+        :gpg_key => nil,
+        :download_policy => 'on_demand'
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -373,14 +395,13 @@ module Katello
     def test_create_with_protected_true
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://www.google.com',
-        'yum',
-        false,
-        nil,
-        nil,
-        nil
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://www.google.com',
+          :content_type => 'yum',
+          :arch => 'noarch',
+          :unprotected => false,
+          :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -403,14 +424,13 @@ module Katello
       mirror_on_sync = true
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://www.google.com',
-        'yum',
-        false,
-        nil,
-        nil,
-        nil
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://www.google.com',
+          :content_type => 'yum',
+          :arch => 'noarch',
+          :unprotected => false,
+          :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -434,14 +454,13 @@ module Katello
       verify_ssl_on_sync = true
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://www.google.com',
-        'yum',
-        false,
-        nil,
-        nil,
-        nil
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://www.google.com',
+          :content_type => 'yum',
+          :arch => 'noarch',
+          :unprotected => false,
+          :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -467,14 +486,13 @@ module Katello
       upstream_password = "genius_password"
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://www.google.com',
-        'yum',
-        false,
-        nil,
-        nil,
-        nil
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://www.google.com',
+          :content_type => 'yum',
+          :arch => 'noarch',
+          :unprotected => false,
+          :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
@@ -500,21 +518,19 @@ module Katello
     def test_create_with_protected_docker
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://hub.registry.com',
-        'docker',
-        true,
-        nil,
-        nil,
-        nil
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://hub.registry.com',
+          :content_type => 'docker',
+          :arch => 'noarch',
+          :unprotected => true,
+          :gpg_key => nil
       ).returns(@repository)
 
       product.expects(:gpg_key).returns(nil)
       product.expects(:organization).returns(@organization)
       product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
-
       Product.stubs(:find).returns(product)
       post :create, :name => 'Fedora Repository',
                     :product_id => @product.id,
@@ -532,14 +548,13 @@ module Katello
       sync_policy = "custom"
       product = mock
       product.expects(:add_repo).with(
-        'Fedora_Repository',
-        'Fedora Repository',
-        'http://hub.registry.com',
-        'ostree',
-        true,
-        nil,
-        nil,
-        nil
+          :label => 'Fedora_Repository',
+          :name => 'Fedora Repository',
+          :url => 'http://hub.registry.com',
+          :content_type => 'ostree',
+          :arch => 'noarch',
+          :unprotected => true,
+          :gpg_key => nil
       ).returns(repository)
 
       product.expects(:gpg_key).returns(nil)
