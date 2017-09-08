@@ -31,6 +31,11 @@ module Katello
       assert_equal Katello::SubscriptionStatus::INVALID, status.to_status
     end
 
+    def test_to_status_unsubscribed_hypervisor
+      stub_status('unsubscribed_hypervisor')
+      assert_equal Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR, status.to_status
+    end
+
     def test_no_subscription_facet
       assert_equal Katello::SubscriptionStatus::UNKNOWN, FactoryGirl.build(:host).get_status(Katello::SubscriptionStatus).to_status
     end
