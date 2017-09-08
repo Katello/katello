@@ -42,6 +42,7 @@ module Actions
           host.subscription_facet.uuid = hypervisor_json[:uuid]
           host.subscription_facet.import_database_attributes(host.subscription_facet.candlepin_consumer.consumer_attributes)
           host.subscription_facet.save!
+          host.subscription_facet.update_subscription_status
           host.save!
         end
 
