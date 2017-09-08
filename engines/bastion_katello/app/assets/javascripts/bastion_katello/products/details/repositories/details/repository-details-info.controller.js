@@ -11,13 +11,14 @@
  * @requires Checksum
  * @requires DownloadPolicy
  * @requires OstreeUpstreamSyncPolicy
+ * @requires Architecture
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'GlobalNotification', 'GPGKey', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy',
-    function ($scope, $q, translate, GlobalNotification, GPGKey, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy) {
+    ['$scope', '$q', 'translate', 'GlobalNotification', 'GPGKey', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
+    function ($scope, $q, translate, GlobalNotification, GPGKey, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
         $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
@@ -36,6 +37,23 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                 deferred.resolve(results);
             });
 
+            return deferred.promise;
+        };
+
+        $scope.architectures = function () {
+            var deferred = $q.defer();
+            Architecture.queryUnpaged(function (architectures) {
+                var results = architectures.results;
+                results.map(function(i) {
+                    i.id = i.name;
+                });
+                results.unshift({
+                    id: 'noarch',
+                    name: translate('Default'),
+                    value: null
+                });
+                deferred.resolve(results);
+            });
             return deferred.promise;
         };
 

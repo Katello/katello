@@ -11,6 +11,7 @@ angular.module('Bastion.products', [
     'Bastion',
     'Bastion.components',
     'Bastion.gpg-keys',
+    'Bastion.architectures',
     'Bastion.i18n',
     'Bastion.sync-plans',
     'Bastion.tasks',
