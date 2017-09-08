@@ -213,30 +213,30 @@ module Katello
         end
       end
 
-      def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil, checksum_type = nil, download_policy = nil)
-        unprotected = unprotected.nil? ? false : unprotected
+      def add_repo(repo_param)
+        repo_param[:unprotected] = repo_param[:unprotected].nil? ? false : repo_param[:unprotected]
 
-        if download_policy.blank? && repo_type == Repository::YUM_TYPE
-          download_policy = Setting[:default_download_policy]
+        if repo_param[:download_policy].blank? && repo_param[:content_type] == Repository::YUM_TYPE
+          repo_param[:download_policy] = Setting[:default_download_policy]
         end
 
-        rel_path = if repo_type == 'docker'
-                     Glue::Pulp::Repos.custom_docker_repo_path(self.library, self, label)
+        rel_path = if repo_param[:content_type] == 'docker'
+                     Glue::Pulp::Repos.custom_docker_repo_path(self.library, self, repo_param[:label])
                    else
-                     Glue::Pulp::Repos.custom_repo_path(self.library, self, label)
+                     Glue::Pulp::Repos.custom_repo_path(self.library, self, repo_param[:label])
                    end
         Repository.new(:environment => self.organization.library,
                        :product => self,
                        :relative_path => rel_path,
-                       :arch => arch,
-                       :name => name,
-                       :label => label,
-                       :url => url,
-                       :gpg_key => gpg,
-                       :unprotected => unprotected,
-                       :content_type => repo_type,
-                       :checksum_type => checksum_type,
-                       :download_policy => download_policy,
+                       :arch => repo_param[:arch],
+                       :name => repo_param[:name],
+                       :label => repo_param[:label],
+                       :url => repo_param[:url],
+                       :gpg_key => repo_param[:gpg_key],
+                       :unprotected => repo_param[:unprotected],
+                       :content_type => repo_param[:content_type],
+                       :checksum_type => repo_param[:checksum_type],
+                       :download_policy => repo_param[:download_policy],
                        :content_view_version => self.organization.library.default_content_view_version)
       end
 

@@ -14,7 +14,8 @@ describe('Controller: NewRepositoryController', function() {
             Repository = $injector.get('MockResource').$new(),
             Product = $injector.get('MockResource').$new(),
             Setting = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new();
+            GPGKey = $injector.get('MockResource').$new(),
+            Architecture = $injector.get('MockResource').$new();
 
         DownloadPolicy = $injector.get('DownloadPolicy');
         OstreeUpstreamSyncPolicy = $injector.get('OstreeUpstreamSyncPolicy');
@@ -42,6 +43,7 @@ describe('Controller: NewRepositoryController', function() {
             Repository: Repository,
             Product: Product,
             GPGKey: GPGKey,
+            Architecture: Architecture,
             GlobalNotification: GlobalNotification,
             Setting: Setting
         });
@@ -58,6 +60,10 @@ describe('Controller: NewRepositoryController', function() {
 
     it('should fetch available GPG Keys', function() {
         expect($scope.gpgKeys).toBeDefined();
+    });
+
+    it('should fetch available Architectures', function() {
+        expect($scope.architecture).toBeDefined();
     });
 
     it('should save a new repository resource', function() {

@@ -5,6 +5,7 @@ module Actions
         input_format do
           param :name
           param :type
+          param :arches
           param :label
           param :content_url
           param :owner
@@ -16,6 +17,7 @@ module Actions
                      name: input[:name],
                      contentUrl: input[:content_url],
                      type: input[:type],
+                     arches: input[:arches],
                      label: input[:label],
                      metadataExpire: 1,
                      vendor: ::Katello::Provider::CUSTOM)
