@@ -18,7 +18,8 @@ module Actions
                         :content_url => ::Katello::Glue::Pulp::Repos.custom_content_path(repository.product, repository.label),
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => repository.content.label,
-                        :type => repository.content_type)
+                        :type => repository.content_type,
+                        :arches => repository.arch == "noarch" ? nil : repository.arch)
           end
 
           if SETTINGS[:katello][:use_pulp] && repository.pulp_update_needed?
