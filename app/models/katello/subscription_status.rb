@@ -1,5 +1,6 @@
 module Katello
   class SubscriptionStatus < HostStatus::Status
+    UNSUBSCRIBED_HYPERVISOR = 4
     UNKNOWN = 3
     INVALID = 2
     PARTIAL = 1
@@ -17,6 +18,8 @@ module Katello
         N_("Partially entitled")
       when INVALID
         N_("Unentitled")
+      when UNSUBSCRIBED_HYPERVISOR
+        N_("Unsubscribed hypervisor")
       else
         N_("Unknown subscription status")
       end
@@ -26,18 +29,17 @@ module Katello
       case status
       when INVALID
         ::HostStatus::Global::ERROR
-      when PARTIAL
-        ::HostStatus::Global::WARN
       when VALID
         ::HostStatus::Global::OK
-      when UNKNOWN
+      else
         ::HostStatus::Global::WARN
       end
     end
 
     def to_status(options = {})
       return UNKNOWN unless host.subscription_facet.try(:uuid)
-      status_override = options.fetch(:status_override, nil)
+      status_override = 'unsubscribed_hypervisor' if host.subscription_facet.hypervisor && host.subscription_facet.candlepin_consumer.entitlements.empty?
+      status_override ||= options.fetch(:status_override, nil)
       status = status_override || Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label).entitlement_status
 
       case status
@@ -47,6 +49,8 @@ module Katello
         PARTIAL
       when Katello::Candlepin::Consumer::ENTITLEMENTS_INVALID
         INVALID
+      when 'unsubscribed_hypervisor'
+        UNSUBSCRIBED_HYPERVISOR
       else
         UNKNOWN
       end
