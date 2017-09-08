@@ -119,12 +119,15 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                 });
             }
 
-            $scope.confirmApply = function () {
-                if ($scope.updates.length === 0) {
-                    applyErrata();
-                } else {
-                    incrementalUpdate();
-                }
+            $scope.confirmApply = function() {
+                $scope.applyingErrata = true;
+                IncrementalUpdate.getIncrementalUpdates().then(function(updates) {
+                    if (updates.length === 0) {
+                        applyErrata();
+                    } else {
+                        incrementalUpdate();
+                    }
+                });
             };
 
             $scope.incrementalUpdates = IncrementalUpdate.getIncrementalUpdates();

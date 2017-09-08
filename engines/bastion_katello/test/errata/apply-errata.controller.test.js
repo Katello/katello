@@ -40,7 +40,13 @@ describe('Controller: ApplyErrataController', function() {
             getContentHostIds: function () {},
             getErrataIds: function () {},
             getBulkContentHosts: function () {},
-            getIncrementalUpdates: function () {}
+            getIncrementalUpdates: function () {
+                return {
+                    then: function(cb){
+                        cb($scope.updates)
+                    }
+                }
+            }
         };
 
         $scope = $injector.get('$rootScope').$new();
