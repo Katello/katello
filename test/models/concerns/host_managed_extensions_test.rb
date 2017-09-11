@@ -148,10 +148,14 @@ module Katello
 
     def test_import_package_profile_adds_removes_bulk
       Setting[:bulk_query_installed_packages] = true
-      package_json = {:name => "betterfoo", :version => "1", :release => "1.el7", :arch => "x86_64"}
-      @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
+      packages = [::Katello::Pulp::SimplePackage.new(:name => "betterfoo", :version => "1", :release => "1.el7", :arch => "x86_64")]
+      @foreman_host.import_package_profile(packages)
       assert_equal 1, @foreman_host.installed_packages.count
       assert_equal 'betterfoo', @foreman_host.installed_packages.first.name
+
+      packages << ::Katello::Pulp::SimplePackage.new(:name => "alphabeta", :version => "1", :release => "2", :arch => "x86_64")
+      @foreman_host.import_package_profile(packages)
+      assert_equal 2, @foreman_host.installed_packages.count
     end
 
     def test_search_installed_package
