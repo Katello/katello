@@ -102,6 +102,17 @@ module Katello
       assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHSA-1999-1231"], results.map(&:errata_id)
     end
 
+    def test_scoped_search_order_via_hammer_order
+      params = {:order => "errata_id DESC"}
+      @controller.stubs(:params).returns(params)
+
+      query = Erratum.all
+      options = {resource_class: Katello::Erratum}
+
+      results = @controller.scoped_search(query, "errata_id", "desc", options)[:results]
+      assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHSA-1999-1231"].sort.reverse, results.map(&:errata_id)
+    end
+
     def test_scoped_search_group
       types = Katello::Erratum.pluck(:errata_type).uniq
       4.times do
