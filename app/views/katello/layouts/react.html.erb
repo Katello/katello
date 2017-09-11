@@ -1,0 +1,16 @@
+<% content_for(:javascripts) do %>
+  <%= javascript_include_tag *webpack_asset_paths('katello', :extension => 'js'), "data-turbolinks-track" => true %>
+<% end %>
+
+<% content_for(:stylesheets) do %>
+  <%= stylesheet_link_tag *webpack_asset_paths('katello', :extension => 'css'), "data-turbolinks-track" => true %>
+<% end %>
+
+<%= content_for(:content) do %>
+  <%= render :partial => 'layouts/application_content' %>
+  <%= mount_react_component('Application', '#content')%>
+<% end %>
+
+<%= render :template => 'layouts/base' %>
+
+

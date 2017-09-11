@@ -30,13 +30,22 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     divider :top_menu, :parent => :content_menu
-    menu :top_menu,
-         :redhat_provider,
-         :caption => N_('Red Hat Repositories'),
-         :url_hash => {:controller => 'katello/providers',
-                       :action => 'redhat_provider'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+
+    if Setting[:katello_experimental_ui]
+      menu :top_menu,
+           :redhat_provider,
+           :caption => N_('Red Hat Repositories'),
+           :url => '/redhat_repositories',
+           :engine => Katello::Engine,
+           :turbolinks => false
+    else
+      menu :top_menu,
+           :redhat_provider,
+           :caption => N_('Red Hat Repositories'),
+           :url_hash => {:controller => 'katello/providers', :action => 'redhat_provider'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
     menu :top_menu,
          :products,
