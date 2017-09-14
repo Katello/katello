@@ -69,6 +69,7 @@ Foreman::Application.routes.draw do
             match '/bulk/content_overrides' => 'hosts_bulk_actions#content_overrides', :via => :put
 
             match '/bulk/install_content' => 'hosts_bulk_actions#install_content', :via => :put
+            match '/bulk/applicable_errata' => 'hosts_bulk_actions#applicable_errata', :via => :post
             match '/bulk/installable_errata' => 'hosts_bulk_actions#installable_errata', :via => :post
             match '/bulk/update_content' => 'hosts_bulk_actions#update_content', :via => :put
             match '/bulk/remove_content' => 'hosts_bulk_actions#remove_content', :via => :put

@@ -6,9 +6,9 @@ module Katello
     before_action :find_host_collections, :only => [:bulk_add_host_collections, :bulk_remove_host_collections]
     before_action :find_environment, :only => [:environment_content_view]
     before_action :find_content_view, :only => [:environment_content_view]
-    before_action :find_editable_hosts, :except => [:destroy_hosts, :installable_errata]
+    before_action :find_editable_hosts, :except => [:destroy_hosts, :applicable_errata, :installable_errata]
     before_action :find_deletable_hosts, :only => [:destroy_hosts]
-    before_action :find_readable_hosts, :only => [:installable_errata, :available_incremental_updates]
+    before_action :find_readable_hosts, :only => [:applicable_errata, :installable_errata, :available_incremental_updates]
     before_action :find_errata, :only => [:available_incremental_updates]
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
@@ -89,6 +89,14 @@ module Katello
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
                        :resource => { 'displayMessages' => display_messages }
+    end
+
+    api :POST, "/hosts/bulk/applicable_errata",
+        N_("Fetch applicable errata for a host.")
+    param_group :bulk_params
+    def applicable_errata
+      respond_for_index(:collection => scoped_search(Katello::Erratum.applicable_to_hosts(@hosts), 'updated', 'desc',
+                                                     :resource_class => Erratum))
     end
 
     api :POST, "/hosts/bulk/installable_errata",
