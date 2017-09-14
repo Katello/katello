@@ -64,9 +64,30 @@ module Katello
         self.applicable_rpms.in_repositories(repos).uniq
       end
 
+      def errata_counts
+        hash = {
+          :security => installable_security_errata_count,
+          :bugfix => installable_bugfix_errata_count,
+          :enhancement => installable_enhancement_errata_count
+        }
+        hash[:total] = hash.values.inject(:+)
+        hash
+      end
+
       def import_applicability(partial = false)
         import_errata_applicability(partial)
         import_rpm_applicability(partial)
+        update_applicability_counts
+      end
+
+      def update_applicability_counts
+        self.update_attributes!(
+            :installable_security_errata_count => self.installable_errata.security.count,
+            :installable_bugfix_errata_count => self.installable_errata.bugfix.count,
+            :installable_enhancement_errata_count => self.installable_errata.enhancement.count,
+            :applicable_rpm_count => self.applicable_rpms.count,
+            :upgradable_rpm_count => self.installable_rpms.count
+        )
       end
 
       def import_rpm_applicability(partial)

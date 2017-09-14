@@ -109,6 +109,16 @@ module Katello
       assert_includes content_facet.installable_errata, Erratum.find(katello_errata(:security).id)
     end
 
+    def test_update_applicability_counts
+      @view_repo = Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)
+      content_facet.bound_repositories = [@view_repo]
+      content_facet.update_applicability_counts
+
+      assert_equal 1, content_facet.installable_security_errata_count
+      assert_equal 0, content_facet.installable_enhancement_errata_count
+      assert_equal 0, content_facet.installable_bugfix_errata_count
+    end
+
     def test_with_installable_errata
       content_facet.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)]
       content_facet.save!
@@ -180,6 +190,16 @@ module Katello
       refute_includes ::Host.search_for("upgradable_rpms = #{rpm_two.nvra}"), host_one
     end
 
+    def test_update_applicability_counts
+      assert_includes rpm_one.repositories, repo
+      rpm_two.repositories = []
+      host_one.content_facet.bound_repositories << repo
+      host_one.content_facet.update_applicability_counts
+
+      assert_equal 2, host_one.content_facet.applicable_rpm_count
+      assert_equal 1, host_one.content_facet.upgradable_rpm_count
+    end
+
     def test_installable_rpms
       lib_applicable = host_one.applicable_rpms
       cf_one = host_one.content_facet
@@ -219,6 +239,20 @@ module Katello
       content_facet.import_errata_applicability(false)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
+    end
+
+    def test_errata_counts
+      content_facet.installable_security_errata_count = 1
+      content_facet.installable_bugfix_errata_count = 2
+      content_facet.installable_enhancement_errata_count = 3
+      expected = {
+        :security => 1,
+        :bugfix => 2,
+        :enhancement => 3,
+        :total => 6
+      }
+
+      assert_equal expected, content_facet.errata_counts
     end
   end
 
