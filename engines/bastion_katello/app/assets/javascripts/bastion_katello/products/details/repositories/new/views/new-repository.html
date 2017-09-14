@@ -7,7 +7,7 @@
 <div data-block="content" class="row">
   <form name="repositoryForm" class="col-sm-5" novalidate role="form">
     <div>
-      <h4 translate> General Information </h4>
+      <h4 translate> Basic Information </h4>
       <div bst-form-group label="{{ 'Name' | translate }}">
         <input id="name"
                name="name"
@@ -45,8 +45,8 @@
       </div>
     </div>
     <div ng-show="repository.content_type !== undefined">
-      <h4 translate> Sync Information </h4>
-      <div bst-form-group label="{{ 'URL' | translate }}">
+      <h4 translate> Sync Settings </h4>
+      <div bst-form-group label="{{ 'Upstream URL' | translate }}">
         <input id="url"
                name="url"
                ng-model="repository.url"
