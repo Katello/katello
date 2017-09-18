@@ -1,11 +1,12 @@
 module Katello
   class ContentViewDockerFilterRule < Katello::Model
+    include ::Katello::Concerns::ContentViewFilterRuleCommon
+
     belongs_to :filter,
                :class_name => "Katello::ContentViewDockerFilter",
                :inverse_of => :docker_rules,
                :foreign_key => :content_view_filter_id
 
-    validates_lengths_from_database
     validates :name, :presence => true
     validate :ensure_unique_attributes
 
