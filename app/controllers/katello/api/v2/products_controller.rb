@@ -25,12 +25,12 @@ module Katello
     api :GET, "/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
     api :GET, "/organizations/:organization_id/sync_plans/:sync_plan_id/products", N_("List of Products for sync plan")
     param :organization_id, :number, :desc => N_("Filter products by organization"), :required => true
-    param :subscription_id, :identifier, :desc => N_("Filter products by subscription")
+    param :subscription_id, :number, :desc => N_("Filter products by subscription")
     param :name, String, :desc => N_("Filter products by name")
     param :enabled, :bool, :desc => N_("Filter products by enabled or disabled")
     param :custom, :bool, :desc => N_("Filter products by custom")
     param :include_available_content, :bool, :desc => N_("Whether to include available content attribute in results")
-    param :sync_plan_id, :identifier, :desc => N_("Filter products by sync plan id")
+    param :sync_plan_id, :number, :desc => N_("Filter products by sync plan id")
     param :available_for, String, :desc => N_("Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' is supported."),
           :required => false
     param_group :search, Api::V2::ApiController
@@ -102,7 +102,7 @@ module Katello
     end
 
     api :POST, "/products/:id/sync", N_("Sync all repositories for a product")
-    param :id, :identifier, :required => true, :desc => "product ID"
+    param :id, :number, :required => true, :desc => "product ID"
     def sync
       syncable_repos = @product.library_repositories.has_url.syncable
       if syncable_repos.empty?

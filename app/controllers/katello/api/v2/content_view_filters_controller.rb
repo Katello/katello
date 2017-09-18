@@ -10,7 +10,7 @@ module Katello
     api :get, "/content_views/:content_view_id/filters", N_("list filters")
     api :get, "/content_view_filters", N_("list filters")
     param_group :search, Api::V2::ApiController
-    param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
+    param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("filter content view filters by name")
     param :types, Array, :desc => N_("types of filters")
     def index
@@ -31,7 +31,7 @@ module Katello
 
     api :post, "/content_views/:content_view_id/filters", N_("create a filter for a content view")
     api :post, "/content_view_filters", N_("create a filter for a content view")
-    param :content_view_id, :identifier, :desc => N_("content view identifier"), :required => true
+    param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the filter"), :required => true
     param :type, String, :desc => N_("type of filter (e.g. rpm, package_group, erratum, docker)"), :required => true
     param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
@@ -46,16 +46,16 @@ module Katello
 
     api :get, "/content_views/:content_view_id/filters/:id", N_("show filter info")
     api :get, "/content_view_filters/:id", N_("show filter info")
-    param :content_view_id, :identifier, :desc => N_("content view identifier")
-    param :id, :identifier, :desc => N_("filter identifier"), :required => true
+    param :content_view_id, :number, :desc => N_("content view identifier")
+    param :id, :number, :desc => N_("filter identifier"), :required => true
     def show
       respond :resource => @filter
     end
 
     api :put, "/content_views/:content_view_id/filters/:id", N_("update a filter")
     api :put, "/content_view_filters/:id", N_("update a filter")
-    param :content_view_id, :identifier, :desc => N_("content view identifier")
-    param :id, :identifier, :desc => N_("filter identifier"), :required => true
+    param :content_view_id, :number, :desc => N_("content view identifier")
+    param :id, :number, :desc => N_("filter identifier"), :required => true
     param :name, String, :desc => N_("new name for the filter")
     param :original_packages, :bool, :desc => N_("add all packages without errata to the included/excluded list. " \
                                                        "(package filter only)")
@@ -68,8 +68,8 @@ module Katello
 
     api :delete, "/content_views/:content_view_id/filters/:id", N_("delete a filter")
     api :delete, "/content_view_filters/:id", N_("delete a filter")
-    param :content_view_id, :identifier, :desc => N_("content view identifier")
-    param :id, :identifier, :desc => N_("filter identifier"), :required => true
+    param :content_view_id, :number, :desc => N_("content view identifier")
+    param :id, :number, :desc => N_("filter identifier"), :required => true
     def destroy
       @filter.destroy
       respond_for_show :resource => @filter

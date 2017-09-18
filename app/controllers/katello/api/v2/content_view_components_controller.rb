@@ -7,7 +7,7 @@ module Katello
 
     api :GET, "/content_views/:composite_content_view_id/content_view_components",
         N_("List components attached to this content view")
-    param :composite_content_view_id, :identifier, :desc => N_("composite content view identifier"), :required => true
+    param :composite_content_view_id, :number, :desc => N_("composite content view identifier"), :required => true
     def index
       respond :collection => index_response
     end
@@ -23,10 +23,10 @@ module Katello
 
     api :PUT, "/content_views/:composite_content_view_id/content_view_components/add",
                                         N_("Add components to the content view")
-    param :composite_content_view_id, :identifier, :desc => N_("composite content view identifier"), :required => true
+    param :composite_content_view_id, :number, :desc => N_("composite content view identifier"), :required => true
     param :components, Array, :desc => N_("Array of components to add"), :required => true do
-      param :content_view_version_id, :identifier, :desc => N_("identifier of the version of the component content view")
-      param :content_view_id, :identifier,
+      param :content_view_version_id, :number, :desc => N_("identifier of the version of the component content view")
+      param :content_view_id, :number,
             :desc => N_("content view identifier of the component who's latest version is desired")
       param :latest, :bool, :desc => N_("true if the latest version of the component's content view is desired")
     end
@@ -43,7 +43,7 @@ module Katello
 
     api :PUT, "/content_views/:composite_content_view_id/content_view_components/remove",
                                         N_("Remove components from the content view")
-    param :composite_content_view_id, :identifier, :desc => N_("composite content view identifier"), :required => true
+    param :composite_content_view_id, :number, :desc => N_("composite content view identifier"), :required => true
     param :component_ids, Array, :desc => N_("Array of content view component IDs to remove. Identifier of the component association"), :required => true
     def remove_components
       @view.remove_components(params.require(:component_ids))
@@ -53,16 +53,16 @@ module Katello
 
     api :GET, "/content_views/:composite_content_view_id/content_view_components/:id", N_("Show a content view component")
     param :composite_content_view_id, :number, :desc => N_("composite content view numeric identifier"), :required => true
-    param :id, :identifier, :desc => N_("content view component ID. Identifier of the component association"), :required => true
+    param :id, :number, :desc => N_("content view component ID. Identifier of the component association"), :required => true
     def show
       respond :resource => @component
     end
 
     api :PUT, "/content_views/:composite_content_view_id/content_view_components/:id",
         N_("Update a component associated with the content view")
-    param :composite_content_view_id, :identifier, :desc => N_("composite content view identifier"), :required => true
-    param :id, :identifier, :desc => N_("content view component ID. Identifier of the component association"), :required => true
-    param :content_view_version_id, :identifier, :desc => N_("identifier of the version of the component content view")
+    param :composite_content_view_id, :number, :desc => N_("composite content view identifier"), :required => true
+    param :id, :number, :desc => N_("content view component ID. Identifier of the component association"), :required => true
+    param :content_view_version_id, :number, :desc => N_("identifier of the version of the component content view")
     param :latest, :bool, :desc => N_("true if the latest version of the components content view is desired")
     def update
       cvv_id = component_params[:content_view_version_id]

@@ -14,12 +14,12 @@ module Katello
 
     api :GET, "/content_view_versions", N_("List content view versions")
     api :GET, "/content_views/:content_view_id/content_view_versions", N_("List content view versions")
-    param :content_view_id, :identifier, :desc => N_("Content view identifier"), :required => false
-    param :environment_id, :identifier, :desc => N_("Filter versions by environment"), :required => false
-    param :puppet_module_id, :identifier, :desc => N_("Filter versions by puppet module"), :required => false
+    param :content_view_id, :number, :desc => N_("Content view identifier"), :required => false
+    param :environment_id, :number, :desc => N_("Filter versions by environment"), :required => false
+    param :puppet_module_id, :number, :desc => N_("Filter versions by puppet module"), :required => false
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
-    param :composite_version_id, :identifier, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
-    param :organization_id, :identifier, :desc => N_("Organization identifier")
+    param :composite_version_id, :number, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
+    param :organization_id, :number, :desc => N_("Organization identifier")
     param_group :search, Api::V2::ApiController
     def index
       options = {
@@ -42,15 +42,15 @@ module Katello
     end
 
     api :GET, "/content_view_versions/:id", N_("Show content view version")
-    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def show
       respond :resource => @version
     end
 
     api :POST, "/content_view_versions/:id/promote", N_("Promote a content view version")
-    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :force, :bool, :desc => N_("force content view promotion and bypass lifecycle environment restriction")
-    param :environment_id, :identifier, :deprecated => true, :desc => N_("LifeCycle Environment identifier")
+    param :environment_id, :number, :deprecated => true, :desc => N_("LifeCycle Environment identifier")
     param :environment_ids, Array, :desc => N_("Identifiers for Lifecycle Environment")
     param :description, String, :desc => N_("The description for the content view version promotion")
     param :force_yum_metadata_regeneration, :bool, :desc => N_("Force metadata regeneration on the repositories " \
@@ -64,14 +64,14 @@ module Katello
     end
 
     api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata.")
-    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def republish_repositories
       task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @version)
       respond_for_async :resource => task
     end
 
     api :POST, "/content_view_versions/:id/export", N_("Export a content view version")
-    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :export_to_iso, :bool, :desc => N_("Export to ISO format"), :required => false
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
@@ -96,7 +96,7 @@ module Katello
     end
 
     api :DELETE, "/content_view_versions/:id", N_("Remove content view version")
-    param :id, :identifier, :desc => N_("Content view version identifier"), :required => true
+    param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def destroy
       task = async_task(::Actions::Katello::ContentViewVersion::Destroy, @version)
       respond_for_async :resource => task
@@ -104,7 +104,7 @@ module Katello
 
     api :POST, "/content_view_versions/incremental_update", N_("Perform an Incremental Update on one or more Content View Versions")
     param :content_view_version_environments, Array do
-      param :content_view_version_id, :identifier, :desc => N_("Content View Version Ids to perform an incremental update on.  May contain composites as well as one or more components to update.")
+      param :content_view_version_id, :number, :desc => N_("Content View Version Ids to perform an incremental update on.  May contain composites as well as one or more components to update.")
       param :environment_ids, Array, :desc => N_("The list of environments to promote the specified Content View Version to (replacing the older version).")
     end
     param :description, String, :desc => N_("The description for the new generated Content View Versions")
