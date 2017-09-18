@@ -7,14 +7,12 @@ module Katello
     param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
     param_group :search, Api::V2::ApiController
     def index
-      ids = ContentViewFilter.rule_ids_for(@filter)
-      results = ids.map { |id| ContentViewFilter.rule_class_for(@filter).find(id) }
-      collection = {
-        :results  => results.uniq,
-        :subtotal => results.count,
-        :total    => results.count
-      }
-      respond :collection => collection
+      respond(collection: scoped_search(index_relation, :name, :asc, resource_class: ContentViewFilter.rule_class_for(@filter)))
+    end
+
+    def index_relation
+      query = ContentViewFilter.rule_class_for(@filter).where(content_view_filter_id: @filter.id)
+      query
     end
 
     api :POST, "/content_view_filters/:content_view_filter_id/rules",
