@@ -612,9 +612,9 @@ module Katello
       key = GpgKey.find(katello_gpg_keys('fedora_gpg_key').id)
       assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
         repo.must_equal @repository
-        attributes.must_equal('gpg_key_id' => "#{key.id}")
+        attributes.to_hash.must_equal('gpg_key_id' => key.id.to_s)
       end
-      put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
+      put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id.to_s}
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -760,6 +760,7 @@ module Katello
     end
 
     def test_sync_complete
+      logout_user
       token = 'imalittleteapotshortandstout'
       SETTINGS[:katello][:post_sync_url] = "http://foo.com/foo?token=#{token}"
       Repository.stubs(:where).returns([@repository])
@@ -931,6 +932,7 @@ module Katello
     end
 
     def test_gpg_key_content
+      logout_user
       get :gpg_key_content, :id => @repository.id
 
       assert_response :success

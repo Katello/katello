@@ -287,7 +287,7 @@ module Katello
 
     def group
       library_repo = library_instance? ? self : library_instance
-      clones << library_repo
+      clones.to_a << library_repo
     end
 
     #is the repo cloned in the specified environment
