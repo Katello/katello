@@ -18,7 +18,7 @@ module Katello
     end
 
     api :GET, "/hosts/:host_id/packages", N_("List packages installed on the host")
-    param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param_group :search, Api::V2::ApiController
     def index
       collection = scoped_search(index_relation, :name, :asc, :resource_class => ::Katello::InstalledPackage)
@@ -26,7 +26,7 @@ module Katello
     end
 
     api :PUT, "/hosts/:host_id/packages/install", N_("Install packages remotely")
-    param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param_group :packages_or_groups
     def install
       if params[:packages]
@@ -44,7 +44,7 @@ module Katello
     end
 
     api :PUT, "/hosts/:host_id/packages/upgrade", N_("Update packages remotely")
-    param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param :packages, Array, :desc => N_("list of packages names"), :required => true
     def upgrade
       if params[:packages]
@@ -55,14 +55,14 @@ module Katello
     end
 
     api :PUT, "/hosts/:host_id/packages/upgrade_all", N_("Update packages remotely")
-    param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
     def upgrade_all
       task = async_task(::Actions::Katello::Host::Package::Update, @host, [])
       respond_for_async :resource => task
     end
 
     api :PUT, "/hosts/:host_id/packages/remove", N_("Uninstall packages remotely")
-    param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param_group :packages_or_groups
     def remove
       if params[:packages]

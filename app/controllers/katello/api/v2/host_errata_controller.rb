@@ -18,7 +18,7 @@ module Katello
     end
 
     api :GET, "/hosts/:host_id/errata", N_("List errata available for the content host")
-    param :host_id, :identifier, :desc => N_("UUID of the content host"), :required => true
+    param :host_id, :number, :desc => N_("UUID of the content host"), :required => true
     param :content_view_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Content View"), :required => false
     param :environment_id, :number, :desc => N_("Calculate Applicable Errata based on a particular Environment"), :required => false
     param_group :search, Api::V2::ApiController
@@ -38,7 +38,7 @@ module Katello
     end
 
     api :PUT, "/hosts/:host_id/errata/apply", N_("Schedule errata for installation")
-    param :host_id, :identifier, :desc => N_("Host ID"), :required => true
+    param :host_id, :number, :desc => N_("Host ID"), :required => true
     param :errata_ids, Array, :desc => N_("List of Errata ids to install"), :required => true
     def apply
       task = async_task(::Actions::Katello::Host::Erratum::Install, @host, params[:errata_ids])
@@ -46,7 +46,7 @@ module Katello
     end
 
     api :GET, "/hosts/:host_id/errata/:id", N_("Retrieve a single errata for a host")
-    param :host_id, :identifier, :desc => N_("Host ID"), :required => true
+    param :host_id, :number, :desc => N_("Host ID"), :required => true
     param :id, String, :desc => N_("Errata id of the erratum (RHSA-2012:108)"), :required => true
     def show
       errata = Erratum.find_by(:errata_id => params[:id])
@@ -55,7 +55,7 @@ module Katello
     end
 
     api :PUT, "/hosts/:host_id/errata/applicability", N_("Force regenerate applicability.")
-    param :host_id, :identifier, :desc => N_("Host ID"), :required => true
+    param :host_id, :number, :desc => N_("Host ID"), :required => true
     def applicability
       task = async_task(::Actions::Katello::Host::GenerateApplicability, [@host], false)
       respond_for_async :resource => task

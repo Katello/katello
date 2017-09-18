@@ -21,8 +21,8 @@ module Katello
       api :GET, "/content_view_filters/:content_view_filter_id/:resource_id", N_("List :resource_id")
       api :GET, "/repositories/:repository_id/:resource_id", N_("List :resource_id")
       param :organization_id, :number, :desc => N_("organization identifier")
-      param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
-      param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
+      param :content_view_version_id, :number, :desc => N_("content view version identifier")
+      param :content_view_filter_id, :number, :desc => N_("content view filter identifier")
       param :repository_id, :number, :desc => N_("repository identifier")
       param :environment_id, :number, :desc => N_("environment identifier")
       param :ids, Array, :desc => N_("ids to filter content by")
@@ -51,7 +51,7 @@ module Katello
 
       api :GET, "/compare/", N_("List :resource_id")
       param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
-      param :repository_id, :identifier, :desc => N_("Library repository id to restrict comparisons to")
+      param :repository_id, :number, :desc => N_("Library repository id to restrict comparisons to")
       def compare
         fail _("No content_view_version_ids provided") if params[:content_view_version_ids].empty?
         @versions = ContentViewVersion.readable.where(:id => params[:content_view_version_ids])

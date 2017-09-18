@@ -51,13 +51,13 @@ module Katello
     end
 
     api :GET, "/gpg_keys/:id", N_("Show a gpg key")
-    param :id, :identifier, :desc => N_("gpg key numeric identifier"), :required => true
+    param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     def show
       respond_for_show(:resource => @gpg_key)
     end
 
     api :PUT, "/gpg_keys/:id", N_("Update a repository")
-    param :id, :identifier, :desc => N_("gpg key numeric identifier"), :required => true
+    param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     param_group :gpg_key
     def update
       @gpg_key.update_attributes!(gpg_key_params)
