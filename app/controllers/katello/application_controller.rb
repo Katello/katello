@@ -86,24 +86,6 @@ module Katello
       end
     end
 
-    def require_user
-      if current_user
-        #don't redirect if the user is trying to set an org
-        if params[:action] != 'set_org' && params[:controller] != 'user_sessions'
-          #redirect to originally requested page
-          unless session[:original_uri].nil?
-            redirect_to session[:original_uri]
-            session[:original_uri] = nil
-          end
-        end
-
-        return true
-      else
-        #save original uri and redirect to login page
-        session[:original_uri] = request.fullpath
-      end
-    end
-
     # render bad params to user
     # @overload render_bad_parameters()
     #   render bad_parameters with `default_message` and status `400`

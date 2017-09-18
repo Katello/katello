@@ -16,8 +16,6 @@ module Katello
     before_action :error_on_rh_repo, :only => [:destroy]
 
     skip_before_action :authorize, :only => [:sync_complete, :gpg_key_content]
-    skip_before_action :require_org, :only => [:sync_complete]
-    skip_before_action :require_user, :only => [:sync_complete]
     skip_before_action :check_content_type, :only => [:upload_content]
 
     def_param_group :repo do

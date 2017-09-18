@@ -174,7 +174,7 @@ module Katello
       Katello::Pulp::Rpm.stubs(:fetch).returns(@packages)
       Katello::Rpm.import_for_repository(@repo)
 
-      @all_ids = @repo.rpms.pluck(:uuid).sort
+      @all_ids = @repo.reload.rpms.pluck(:uuid).sort
     end
 
     def test_no_version_filter

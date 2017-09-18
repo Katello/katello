@@ -123,6 +123,10 @@ class ActionController::TestCase
     end
   end
 
+  def logout_user
+    session[:user] = nil
+  end
+
   def setup_controller_defaults_api
     setup_controller_defaults(true)
   end
