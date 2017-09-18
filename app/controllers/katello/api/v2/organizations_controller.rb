@@ -47,7 +47,7 @@ module Katello
     end
 
     api :GET, '/organizations/:id', N_('Show organization')
-    param :id, :identifier, :desc => N_("organization ID"), :required => true
+    param :id, :number, :desc => N_("organization ID"), :required => true
     def show
       @render_template = 'katello/api/v2/organizations/show'
       super
@@ -58,7 +58,7 @@ module Katello
     # resource param_group instead of reusing the param_group :resource scoped from TaxonomiesController.
     # This is because name substitutions of the param group's name from :resource to :organization are limited
     # to the inclusion of a modules.
-    param :id, :identifier, :desc => N_("organization ID"), :required => true
+    param :id, :number, :desc => N_("organization ID"), :required => true
     param :redhat_repository_url, String, :desc => N_("Red Hat CDN URL")
     param_group :resource, ::Api::V2::TaxonomiesController
     def update

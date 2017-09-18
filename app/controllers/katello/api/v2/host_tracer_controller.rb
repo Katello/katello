@@ -10,7 +10,7 @@ module Katello
     end
 
     api :GET, "/hosts/:host_id/tracer", N_("List servises that need restarting on the host")
-    param :host_id, :identifier, :required => true, :desc => N_("ID of the host")
+    param :host_id, :number, :required => true, :desc => N_("ID of the host")
     def index
       collection = scoped_search(index_relation, :application, :asc, :resource_class => ::Katello::HostTracer)
       respond_for_index(:collection => collection)

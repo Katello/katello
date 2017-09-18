@@ -4,7 +4,7 @@ module Katello
     before_action :find_rule, :except => [:index, :create]
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules", N_("List filter rules")
-    param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
+    param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
     param_group :search, Api::V2::ApiController
     def index
       ids = ContentViewFilter.rule_ids_for(@filter)
@@ -19,7 +19,7 @@ module Katello
 
     api :POST, "/content_view_filters/:content_view_filter_id/rules",
         N_("Create a filter rule. The parameters included should be based upon the filter type.")
-    param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
+    param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
     param :name, [String, Array], :desc => N_("package, package group, or docker tag names")
     param :uuid, String, :desc => N_("package group: uuid")
     param :version, String, :desc => N_("package: version")
@@ -56,16 +56,16 @@ module Katello
     end
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules/:id", N_("Show filter rule info")
-    param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :id, :identifier, :desc => N_("rule identifier"), :required => true
+    param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
+    param :id, :number, :desc => N_("rule identifier"), :required => true
     def show
       respond :resource => @rule
     end
 
     api :PUT, "/content_view_filters/:content_view_filter_id/rules/:id",
         N_("Update a filter rule. The parameters included should be based upon the filter type.")
-    param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :id, :identifier, :desc => N_("rule identifier"), :required => true
+    param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
+    param :id, :number, :desc => N_("rule identifier"), :required => true
     param :name, String, :desc => N_("package, package group, or docker tag: name")
     param :version, String, :desc => N_("package: version")
     param :architecture, String, :desc => N_("package: architecture")
@@ -90,8 +90,8 @@ module Katello
     end
 
     api :DELETE, "/content_view_filters/:content_view_filter_id/rules/:id", N_("Delete a filter rule")
-    param :content_view_filter_id, :identifier, :desc => N_("filter identifier"), :required => true
-    param :id, :identifier, :desc => N_("rule identifier"), :required => true
+    param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
+    param :id, :number, :desc => N_("rule identifier"), :required => true
     def destroy
       @rule.destroy
       respond_for_show :resource => @rule
