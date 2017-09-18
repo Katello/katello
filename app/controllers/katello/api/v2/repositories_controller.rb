@@ -171,20 +171,20 @@ module Katello
     end
 
     api :PUT, "/repositories/:id/republish", N_("Forces a republish of the specified repository, regenerating metadata and symlinks on the filesystem.")
-    param :id, :identifier, :desc => N_("Repository identifier"), :required => true
+    param :id, :number, :desc => N_("Repository identifier"), :required => true
     def republish
       task = async_task(::Actions::Katello::Repository::MetadataGenerate, @repository, :force => true)
       respond_for_async :resource => task
     end
 
     api :GET, "/repositories/:id", N_("Show a repository")
-    param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :id, :number, :required => true, :desc => N_("repository ID")
     def show
       respond_for_show(:resource => @repository)
     end
 
     api :POST, "/repositories/:id/sync", N_("Sync a repository")
-    param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :id, :number, :required => true, :desc => N_("repository ID")
     param :source_url, String, :desc => N_("temporarily override feed URL for sync"), :required => false
     param :incremental, :bool, :desc => N_("perform an incremental import"), :required => false
     param :skip_metadata_check, :bool, :desc => N_("Force sync even if no upstream changes are detected. Only used with yum repositories."), :required => false
@@ -212,7 +212,7 @@ module Katello
     end
 
     api :POST, "/repositories/:id/export", N_("Export a repository")
-    param :id, :identifier, :desc => N_("Repository identifier"), :required => true
+    param :id, :number, :desc => N_("Repository identifier"), :required => true
     param :export_to_iso, :bool, :desc => N_("Export to ISO format"), :required => false
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
@@ -241,7 +241,7 @@ module Katello
 
     api :PUT, "/repositories/:id", N_("Update a repository")
     param :name, String, :desc => N_("New name for the repository")
-    param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :id, :number, :required => true, :desc => N_("repository ID")
     param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
     param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
     param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
@@ -261,7 +261,7 @@ module Katello
     end
 
     api :DELETE, "/repositories/:id", N_("Destroy a custom repository")
-    param :id, :identifier, :required => true
+    param :id, :number, :required => true
     def destroy
       sync_task(::Actions::Katello::Repository::Destroy, @repository)
       respond_for_destroy
@@ -300,7 +300,7 @@ module Katello
     api :PUT, "/repositories/:id/remove_puppet_modules"
     api :PUT, "/repositories/:id/remove_content"
     desc "Remove content from a repository"
-    param :id, :identifier, :required => true, :desc => "repository ID"
+    param :id, :number, :required => true, :desc => "repository ID"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
@@ -310,7 +310,7 @@ module Katello
     end
 
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
-    param :id, :identifier, :required => true, :desc => N_("repository ID")
+    param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Docker content.") if @repository.docker?
@@ -336,7 +336,7 @@ module Katello
     end
 
     api :PUT, "/repositories/:id/import_uploads", N_("Import uploads into a repository")
-    param :id, :identifier, :required => true, :desc => N_("Repository id")
+    param :id, :number, :required => true, :desc => N_("Repository id")
     param :upload_ids, Array, :desc => N_("Array of upload ids to import"), :deprecated => true
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
@@ -385,7 +385,7 @@ module Katello
     # we don't want to authenticate, authorize etc, trying to distinguish between a yum request and normal api request
     # might not always be 100% bullet proof, and its more important that yum can fetch the key.
     api :GET, "/repositories/:id/gpg_key_content", N_("Return the content of a repo gpg key, used directly by yum")
-    param :id, :identifier, :required => true
+    param :id, :number, :required => true
     def gpg_key_content
       if @repository.gpg_key && @repository.gpg_key.content.present?
         render(:plain => @repository.gpg_key.content, :layout => false)

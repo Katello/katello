@@ -18,8 +18,8 @@ module Katello
     api :GET, "/environments/:environment_id/activation_keys"
     api :GET, "/organizations/:organization_id/activation_keys"
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
-    param :environment_id, :identifier, :desc => N_("environment identifier")
-    param :content_view_id, :identifier, :desc => N_("content view identifier")
+    param :environment_id, :number, :desc => N_("environment identifier")
+    param :content_view_id, :number, :desc => N_("content view identifier")
     param :name, String, :desc => N_("activation key name to filter by")
     param_group :search, Api::V2::ApiController
     def index
@@ -32,8 +32,8 @@ module Katello
     param :name, String, :desc => N_("name"), :required => true
     param :description, String, :desc => N_("description")
     param :environment, Hash, :desc => N_("environment")
-    param :environment_id, :identifier, :desc => N_("environment id")
-    param :content_view_id, :identifier, :desc => N_("content view id")
+    param :environment_id, :number, :desc => N_("environment id")
+    param :content_view_id, :number, :desc => N_("content view id")
     param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
     param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
     def create
@@ -48,12 +48,12 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("name"), :required => false
     param :description, String, :desc => N_("description")
-    param :environment_id, :identifier, :desc => N_("environment id")
-    param :content_view_id, :identifier, :desc => N_("content view id")
+    param :environment_id, :number, :desc => N_("environment id")
+    param :content_view_id, :number, :desc => N_("content view id")
     param :max_hosts, :number, :desc => N_("maximum number of registered content hosts")
     param :unlimited_hosts, :bool, :desc => N_("can the activation key have unlimited hosts")
     param :release_version, String, :desc => N_("content release version")
@@ -65,7 +65,7 @@ module Katello
     end
 
     api :DELETE, "/activation_keys/:id", N_("Destroy an activation key")
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     def destroy
       task = sync_task(::Actions::Katello::ActivationKey::Destroy,
                        @activation_key)
@@ -73,7 +73,7 @@ module Katello
     end
 
     api :GET, "/activation_keys/:id", N_("Show an activation key")
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def show
       respond(:resource => @activation_key)
@@ -81,7 +81,7 @@ module Katello
 
     api :POST, "/activation_keys/:id/copy", N_("Copy an activation key")
     param :new_name, String, :desc => N_("Name of new activation key"), :required => true
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def copy
       fail HttpErrors::BadRequest, _("New name cannot be blank") unless params[:new_name]
@@ -146,7 +146,7 @@ module Katello
     end
 
     api :POST, "/activation_keys/:id/host_collections"
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :host_collection_ids, Array, :required => true, :desc => N_("List of host collection IDs to associate with activation key")
     def add_host_collections
       ids = activation_key_params[:host_collection_ids]
@@ -156,7 +156,7 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id/host_collections"
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :host_collection_ids, Array, :required => true, :desc => N_("List of host collection IDs to disassociate from the activation key")
     def remove_host_collections
       ids = activation_key_params[:host_collection_ids]
@@ -166,7 +166,7 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id/add_subscriptions", N_("Attach a subscription")
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :subscription_id, :number, :desc => N_("Subscription identifier"), :required => false
     param :quantity, :number, :desc => N_("Quantity of this subscription to add"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
@@ -184,7 +184,7 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id/remove_subscriptions", N_("Unattach a subscription")
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :subscription_id, String, :desc => N_("Subscription ID"), :required => false
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => false do
       param :id, String, :desc => N_("Subscription Pool uuid"), :required => false
@@ -200,7 +200,7 @@ module Katello
     end
 
     api :PUT, "/activation_keys/:id/content_override", N_("Override content for activation_key")
-    param :id, :identifier, :desc => N_("ID of the activation key"), :required => true
+    param :id, :number, :desc => N_("ID of the activation key"), :required => true
     param :content_override, Hash, :desc => N_("Content override parameters"), :deprecated => true do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
       param :value, String, :desc => N_("Override to a boolean value or 'default'"), :required => true

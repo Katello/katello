@@ -23,7 +23,7 @@ module Katello
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
     api :GET, "/content_views", N_("List content views")
     param :organization_id, :number, :desc => N_("organization identifier")
-    param :environment_id, :identifier, :desc => N_("environment identifier")
+    param :environment_id, :number, :desc => N_("environment identifier")
     param :nondefault, :bool, :desc => N_("Filter out default content views")
     param :noncomposite, :bool, :desc => N_("Filter out composite content views")
     param :composite, :bool, :desc => N_("Filter only composite content views")
@@ -74,7 +74,7 @@ module Katello
     end
 
     api :POST, "/content_views/:id/publish", N_("Publish a content view")
-    param :id, :identifier, :desc => N_("Content view identifier"), :required => true
+    param :id, :number, :desc => N_("Content view identifier"), :required => true
     param :description, String, :desc => N_("Description for the new published content view version")
     param :force_yum_metadata_regeneration, :bool, :desc => N_("Force yum metadata regeneration on the repositories " \
                                                            "in the content view version")
@@ -92,7 +92,7 @@ module Katello
 
     api :GET, "/content_views/:id/available_puppet_modules",
         N_("Get puppet modules that are available to be added to the content view")
-    param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
+    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     param :name, String, :desc => N_("module name to restrict modules for"), :required => false
     def available_puppet_modules
       current_cv_puppet_modules = @view.content_view_puppet_modules.where("uuid is NOT NULL")
@@ -124,7 +124,7 @@ module Katello
 
     api :GET, "/content_views/:id/available_puppet_module_names",
         N_("Get puppet modules names that are available to be added to the content view")
-    param :id, :identifier, :desc => N_("content view numeric identifier"), :required => true
+    param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     def available_puppet_module_names
       current_names = @view.content_view_puppet_modules.where("name is NOT NULL").pluck(:name)
 
@@ -189,7 +189,7 @@ module Katello
     end
 
     api :POST, "/content_views/:id/copy", N_("Make copy of a content view")
-    param :id, :identifier, :desc => N_("Content view numeric identifier"), :required => true
+    param :id, :number, :desc => N_("Content view numeric identifier"), :required => true
     param :name, String, :required => true, :desc => N_("New content view name")
     def copy
       new_content_view = @view.copy(params[:content_view][:name])

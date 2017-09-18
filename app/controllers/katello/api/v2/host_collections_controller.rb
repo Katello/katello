@@ -18,7 +18,7 @@ module Katello
     end
 
     api :GET, "/host_collections/:id", N_("Show a host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+    param :id, :number, :desc => N_("Id of the host collection"), :required => true
     def show
       respond
     end
@@ -30,7 +30,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier"), :required => true
     param :name, String, :desc => N_("host collection name to filter by")
     param :activation_key_id, :identifier, :desc => N_("activation key identifier")
-    param :host_id, :identifier, :desc => N_("Filter products by host id")
+    param :host_id, :number, :desc => N_("Filter products by host id")
     param :available_for, String, :required => false,
           :desc => N_("Interpret specified object to return only Host Collections that can be associated with specified object. The value 'host' is supported.")
     def index
@@ -72,7 +72,7 @@ module Katello
     end
 
     api :PUT, "/host_collections/:id", N_("Update a host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+    param :id, :number, :desc => N_("Id of the host collection"), :required => true
     param :name, String, :required => false, :desc => N_("Host Collection name")
     param_group :host_collection
     def update
@@ -81,7 +81,7 @@ module Katello
     end
 
     api :PUT, "/host_collections/:id/add_hosts", N_("Add host to the host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+    param :id, :number, :desc => N_("Id of the host collection"), :required => true
     param :host_ids, Array, :desc => N_("Array of host ids")
     def add_hosts
       host_ids = params[:host_ids].map(&:to_i)
@@ -116,7 +116,7 @@ module Katello
     end
 
     api :PUT, "/host_collections/:id/remove_hosts", N_("Remove hosts from the host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+    param :id, :number, :desc => N_("Id of the host collection"), :required => true
     param :host_ids, Array, :desc => N_("Array of host ids")
     def remove_hosts
       host_ids = params[:host_ids].map(&:to_i)
@@ -150,14 +150,14 @@ module Katello
     end
 
     api :DELETE, "/host_collections/:id", N_("Destroy a host collection")
-    param :id, :identifier, :desc => N_("Id of the host collection"), :required => true
+    param :id, :number, :desc => N_("Id of the host collection"), :required => true
     def destroy
       @host_collection.destroy
       respond_for_destroy
     end
 
     api :POST, "/host_collections/:id/copy", N_("Make copy of a host collection")
-    param :id, :identifier, :desc => N_("ID of the host collection"), :required => true
+    param :id, :number, :desc => N_("ID of the host collection"), :required => true
     param :name, String, :required => true, :desc => N_("New host collection name")
     def copy
       new_host_collection                           = HostCollection.new

@@ -5,8 +5,8 @@ module Katello
 
     api :GET, "/errata", N_("List errata")
     param :organization_id, :number, :desc => N_("organization identifier")
-    param :content_view_version_id, :identifier, :desc => N_("content view version identifier")
-    param :content_view_filter_id, :identifier, :desc => N_("content view filter identifier")
+    param :content_view_version_id, :number, :desc => N_("content view version identifier")
+    param :content_view_filter_id, :number, :desc => N_("content view filter identifier")
     param :repository_id, :number, :desc => N_("repository identifier")
     param :environment_id, :number, :desc => N_("environment identifier")
     param :cve, String, :desc => N_("CVE identifier")
