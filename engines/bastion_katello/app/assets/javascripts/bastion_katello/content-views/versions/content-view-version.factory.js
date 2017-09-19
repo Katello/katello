@@ -11,7 +11,7 @@
 angular.module('Bastion.content-views.versions').factory('ContentViewVersion',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/katello/api/v2/content_view_versions/:id/:action',
+        return BastionResource('katello/api/v2/content_view_versions/:id/:action',
             {id: '@id'},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}},

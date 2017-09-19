@@ -40,7 +40,7 @@ describe('Factory: SyncPlan', function() {
     });
 
     it('provides a way to get a list of syncPlans', function() {
-        $httpBackend.expectGET('/katello/api/v2/organizations/ACME/sync_plans?full_result=true').respond(syncPlans);
+        $httpBackend.expectGET('katello/api/v2/organizations/ACME/sync_plans?full_result=true').respond(syncPlans);
 
         SyncPlan.queryUnpaged(function(syncPlans) {
             expect(syncPlans.records.length).toBe(2);
@@ -51,7 +51,7 @@ describe('Factory: SyncPlan', function() {
         var updatedSyncPlan = syncPlans.records[0];
 
         updatedSyncPlan.name = 'NewSyncPlanName';
-        $httpBackend.expectPUT('/katello/api/v2/organizations/ACME/sync_plans/1').respond(updatedSyncPlan);
+        $httpBackend.expectPUT('katello/api/v2/organizations/ACME/sync_plans/1').respond(updatedSyncPlan);
 
         SyncPlan.update({ id: 1 }, function(syncPlan) {
             expect(syncPlan).toBeDefined();
@@ -60,12 +60,12 @@ describe('Factory: SyncPlan', function() {
     });
 
     it('provides a way to add product(s) to a syncPlan', function() {
-        $httpBackend.expectPUT('/katello/api/v2/organizations/ACME/sync_plans/1/add_products').respond(products);
+        $httpBackend.expectPUT('katello/api/v2/organizations/ACME/sync_plans/1/add_products').respond(products);
         SyncPlan.addProducts({id: 1});
     });
 
     it('provides a way to remove product(s) from a syncPlan', function() {
-        $httpBackend.expectPUT('/katello/api/v2/organizations/ACME/sync_plans/1/remove_products').respond(products);
+        $httpBackend.expectPUT('katello/api/v2/organizations/ACME/sync_plans/1/remove_products').respond(products);
         SyncPlan.removeProducts({id: 1});
     });
 });

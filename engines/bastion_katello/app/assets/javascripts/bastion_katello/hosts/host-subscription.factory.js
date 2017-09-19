@@ -10,7 +10,7 @@
 angular.module('Bastion.hosts').factory('HostSubscription',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/hosts/:id/subscriptions/:action/', {id: '@id'}, {
+        return BastionResource('api/v2/hosts/:id/subscriptions/:action/', {id: '@id'}, {
             events: {method: 'GET', params: {action: 'events'}},
             autoAttach: {method: 'PUT', params: {action: 'auto_attach'}},
             removeSubscriptions: {method: 'put', isArray: false, params: {action: 'remove_subscriptions'}},

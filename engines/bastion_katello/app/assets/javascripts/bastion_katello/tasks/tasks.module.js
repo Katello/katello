@@ -28,19 +28,19 @@ angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvid
         templateUrl: 'tasks/views/tasks.html'
     })
     .state('tasks.index', {
-        url: '/katello_tasks',
+        url: 'katello_tasks',
         permission: 'view_tasks',
         templateUrl: 'tasks/views/tasks-index.html'
     })
     .state('tasks.details', {
-        url: '/katello_tasks/:taskId',
+        url: 'katello_tasks/:taskId',
         permission: 'view_tasks',
         collapsed: true,
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details-standalone.html'
     })
     .state('task', {
-        url: '/katello_tasks/single/:taskId',
+        url: 'katello_tasks/single/:taskId',
         controller: 'TaskDetailsController',
         permission: 'view_tasks',
         templateUrl: 'tasks/views/task-details-standalone.html'

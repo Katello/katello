@@ -10,7 +10,7 @@
 angular.module('Bastion.hosts').factory('HostPackage',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/hosts/:id/packages/:action', {id: '@id'}, {
+        return BastionResource('api/v2/hosts/:id/packages/:action', {id: '@id'}, {
             get: {method: 'GET', isArray: false},
             remove: {method: 'PUT', params: {action: 'remove'}},
             install: {method: 'PUT', params: {action: 'install'}},

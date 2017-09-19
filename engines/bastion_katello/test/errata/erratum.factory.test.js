@@ -18,7 +18,7 @@ describe('Factory: Erratum', function() {
                 'hosts_applicable': applicable_systems
             };
 
-        $httpBackend.expectGET('/api/v2/errata/1').respond(erratum);
+        $httpBackend.expectGET('api/v2/errata/1').respond(erratum);
 
         Erratum.applicableContentHosts({id: 1}, function (result) {
             expect(result.results).toEqual(applicable_systems);

@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.repository-sets').factory('RepositorySet',
     ['BastionResource', function (BastionResource) {
-        return BastionResource('/katello/api/v2/repository_sets/:id/:action', {id: '@id'}, {
+        return BastionResource('katello/api/v2/repository_sets/:id/:action', {id: '@id'}, {
         });
 
     }]

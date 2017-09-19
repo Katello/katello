@@ -88,7 +88,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
             success = function (data) {
                 deferred.resolve(data);
-                $window.location = "/foreman_tasks/tasks/" + data.id;
+                $window.location = foreman_url("/foreman_tasks/tasks/" + data.id);
             };
 
             error = function (response) {

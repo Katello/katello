@@ -10,7 +10,7 @@
 angular.module('Bastion.hosts').factory('HostErratum',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/api/v2/hosts/:id/errata/:errata_id/:action', {id: '@id'}, {
+        return BastionResource('api/v2/hosts/:id/errata/:errata_id/:action', {id: '@id'}, {
             get: {method: 'GET', isArray: false, transformResponse: function (data) {
                 data = angular.fromJson(data);
                 angular.forEach(data.results, function (errata) {

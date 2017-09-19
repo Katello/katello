@@ -10,7 +10,7 @@
      */
     function File(BastionResource) {
 
-        return BastionResource('/katello/api/v2/files/:id',
+        return BastionResource('katello/api/v2/files/:id',
             {'id': '@id'},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}

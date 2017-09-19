@@ -21,7 +21,7 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
         });
 
         $scope.gpgKey.$promise.then(function () {
-            $scope.uploadURL = '/katello/api/v2/gpg_keys/' + $scope.gpgKey.id + '/content';
+            $scope.uploadURL = 'katello/api/v2/gpg_keys/' + $scope.gpgKey.id + '/content';
         });
 
         $scope.uploadContent = function (content) {
