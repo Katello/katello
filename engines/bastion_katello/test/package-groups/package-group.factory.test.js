@@ -26,7 +26,7 @@ describe('Factory: PackageGroup', function () {
     });
 
     it('provides a way to get a list of repositorys', function () {
-        $httpBackend.expectGET('/katello/api/v2/package_groups').respond(packageGroups);
+        $httpBackend.expectGET('katello/api/v2/package_groups').respond(packageGroups);
 
         PackageGroup.queryPaged(function (packageGroups) {
             expect(packageGroups.records.length).toBe(1);

@@ -29,7 +29,7 @@ describe('Factory: Rule', function() {
     });
 
     it('provides a way to get a collection of rules', function() {
-        $httpBackend.expectGET('/katello/api/v2/content_view_filters/1/rules?full_result=true')
+        $httpBackend.expectGET('katello/api/v2/content_view_filters/1/rules?full_result=true')
                     .respond(rules);
 
         Rule.queryUnpaged({filterId: 1}, function (response) {
@@ -43,7 +43,7 @@ describe('Factory: Rule', function() {
     });
 
     it('provides a way to get a single filter rule', function() {
-        $httpBackend.expectGET('/katello/api/v2/content_view_filters/1/rules/1')
+        $httpBackend.expectGET('katello/api/v2/content_view_filters/1/rules/1')
                     .respond(rules.results[0]);
 
         Rule.get({filterId: 1, ruleId: 1}, function (rule) {
@@ -54,7 +54,7 @@ describe('Factory: Rule', function() {
     it('provides a way to create a filter rule', function() {
         var rule = {id: 1, name: 'Rule'};
 
-        $httpBackend.expectPOST('/katello/api/v2/content_view_filters/1/rules/1')
+        $httpBackend.expectPOST('katello/api/v2/content_view_filters/1/rules/1')
                     .respond(rule);
 
         Rule.save({ruleId: 1, filterId: 1}, rule, function (rule) {
@@ -63,7 +63,7 @@ describe('Factory: Rule', function() {
     });
 
     it('provides a way to update a filter rule', function() {
-        $httpBackend.expectPUT('/katello/api/v2/content_view_filters/1/rules/1')
+        $httpBackend.expectPUT('katello/api/v2/content_view_filters/1/rules/1')
                     .respond(rules.results[0]);
 
         Rule.update({filterId: 1, ruleId: 1}, {id: 1, name: 'New Rule Name'}, function (rule) {

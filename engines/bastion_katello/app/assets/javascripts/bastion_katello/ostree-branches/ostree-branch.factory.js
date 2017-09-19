@@ -9,7 +9,7 @@
      *   Provides a BastionResource for interacting with Ostree Branches
      */
     function OstreeBranch(BastionResource) {
-        return BastionResource('/katello/api/v2/ostree_branches/:id',
+        return BastionResource('katello/api/v2/ostree_branches/:id',
             {'id': '@id'},
             {
                 autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
