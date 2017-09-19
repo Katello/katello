@@ -15,17 +15,17 @@ describe('Factory: CapsuleContent', function () {
     });
 
     it('provides a way to get synchronization status', function () {
-        $httpBackend.expectGET('/katello/api/capsules/1/content/sync').respond({});
+        $httpBackend.expectGET('katello/api/capsules/1/content/sync').respond({});
         CapsuleContent.syncStatus({ id: 1 });
     });
 
     it('provides a way to start synchronization', function () {
-        $httpBackend.expectPOST('/katello/api/capsules/1/content/sync').respond({});
+        $httpBackend.expectPOST('katello/api/capsules/1/content/sync').respond({});
         CapsuleContent.sync({ id: 1 });
     });
 
     it('provides a way to cancel synchronization', function () {
-        $httpBackend.expectDELETE('/katello/api/capsules/1/content/sync').respond({});
+        $httpBackend.expectDELETE('katello/api/capsules/1/content/sync').respond({});
         CapsuleContent.cancelSync({ id: 1 });
     });
 });

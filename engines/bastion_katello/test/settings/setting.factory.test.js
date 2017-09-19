@@ -24,7 +24,7 @@ describe('Factory: Setting', function () {
     });
 
     it('provides a way to get a list of settings', function () {
-        $httpBackend.expectGET('/api/v2/settings').respond(setting);
+        $httpBackend.expectGET('api/v2/settings').respond(setting);
 
         Setting.queryPaged(function (setting) {
             expect(setting.results.length).toBeGreaterThan(0);

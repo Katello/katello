@@ -24,10 +24,10 @@ angular.module('Bastion.tasks').factory('Task',
         var bulkSearchRunning = false, searchIdGenerator = 0,
             searchParamsById = {}, callbackById = {}, pollCount = 0, maxPollInterval = 10000;
 
-        var resource = BastionResource('/katello/api/v2/tasks/:id/:action',
+        var resource = BastionResource('katello/api/v2/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization}, {});
 
-        var foremanTasksResource = BastionResource('/foreman_tasks/api/tasks/:id/:action',
+        var foremanTasksResource = BastionResource('foreman_tasks/api/tasks/:id/:action',
             {},
             {
                 bulkSearch: {method: 'POST', isArray: true, params: { action: 'bulk_search'}}

@@ -26,7 +26,7 @@ describe('Factory: OstreeBranch', function () {
     });
 
     it('provides a way to get a list of repositories', function () {
-        $httpBackend.expectGET('/katello/api/v2/ostree_branches').respond(ostreeBranches);
+        $httpBackend.expectGET('katello/api/v2/ostree_branches').respond(ostreeBranches);
 
         OstreeBranch.queryPaged(function (ostreeBranches) {
             expect(ostreeBranches.records.length).toBe(1);

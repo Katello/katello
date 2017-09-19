@@ -106,7 +106,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             formData.search = selectedHosts.included.search;
             formData.customize = customize;
 
-            $http.post('/katello/remote_execution', formData, {
+            $http.post('katello/remote_execution', formData, {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'
             }});
         };
