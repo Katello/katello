@@ -33,7 +33,7 @@ describe('Factory: ContentView', function() {
     });
 
     it('provides a way to get a collection of content views', function() {
-        $httpBackend.expectGET('/katello/api/v2/content_views?organization_id=ACME')
+        $httpBackend.expectGET('katello/api/v2/content_views?organization_id=ACME')
                     .respond(contentViews);
 
         ContentView.queryPaged(function (response) {
@@ -47,7 +47,7 @@ describe('Factory: ContentView', function() {
     });
 
     it('provides a way to get a single content view', function() {
-        $httpBackend.expectGET('/katello/api/v2/content_views/1?organization_id=ACME')
+        $httpBackend.expectGET('katello/api/v2/content_views/1?organization_id=ACME')
                     .respond(contentViews.results[0]);
 
         ContentView.get({id: 1}, function (contentView) {
@@ -59,7 +59,7 @@ describe('Factory: ContentView', function() {
     it('provides a way to create a content view', function() {
         var contentView = {id: 1, name: 'Content View'};
 
-        $httpBackend.expectPOST('/katello/api/v2/content_views/1?organization_id=ACME')
+        $httpBackend.expectPOST('katello/api/v2/content_views/1?organization_id=ACME')
                     .respond(contentView);
 
         ContentView.save(contentView, function (contentView) {
@@ -71,7 +71,7 @@ describe('Factory: ContentView', function() {
     it('provides a way to copy a content view', function() {
         var contentView = {id: 1, name: 'New Content View'};
 
-        $httpBackend.expectPOST('/katello/api/v2/content_views/1/copy?organization_id=ACME')
+        $httpBackend.expectPOST('katello/api/v2/content_views/1/copy?organization_id=ACME')
             .respond(contentView);
 
         ContentView.copy(contentView, function (contentView) {
@@ -81,7 +81,7 @@ describe('Factory: ContentView', function() {
     });
 
     it('provides a way to update a content view', function() {
-        $httpBackend.expectPUT('/katello/api/v2/content_views/1?organization_id=ACME')
+        $httpBackend.expectPUT('katello/api/v2/content_views/1?organization_id=ACME')
                     .respond(contentViews.results[0]);
 
         ContentView.update({id: 1, name: 'NewCVName'}, function (contentView) {;

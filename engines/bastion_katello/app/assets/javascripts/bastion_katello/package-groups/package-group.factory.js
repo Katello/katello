@@ -9,7 +9,7 @@
      *   Provides a BastionResource for interacting with Package Groups
      */
     function PackageGroup(BastionResource) {
-        return BastionResource('/katello/api/v2/package_groups/:id',
+        return BastionResource('katello/api/v2/package_groups/:id',
             {'id': '@id'},
             {
               autocomplete: {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}

@@ -24,7 +24,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         $scope.progress = {uploading: false};
 
         $scope.repository.$promise.then(function () {
-            $scope.uploadURL = '/katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
+            $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
         });
 
         $scope.gpgKeys = function () {

@@ -10,7 +10,7 @@
 angular.module('Bastion.capsules').factory('Capsule',
     ['BastionResource', function (BastionResource) {
 
-        return BastionResource('/katello/api/capsules/:id/:action', {id: '@id'}, {
+        return BastionResource('katello/api/capsules/:id/:action', {id: '@id'}, {
         });
 
     }]

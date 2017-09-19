@@ -23,13 +23,13 @@ describe('Factory: Host', function() {
     it("provides a way to update the host's host collections", function() {
         var host = hosts.results[0];
 
-        $httpBackend.expectPUT('/api/v2/hosts/1/host_collections').respond(host);
+        $httpBackend.expectPUT('api/v2/hosts/1/host_collections').respond(host);
 
         Host.updateHostCollections({id: 1}, {"host_collection_ids": [1,2]});
     });
 
     it("provides a way to get the host index via a post", function() {
-        $httpBackend.expectPOST('/api/v2/hosts/post_index').respond({});
+        $httpBackend.expectPOST('api/v2/hosts/post_index').respond({});
         Host.postIndex();
     });
 });

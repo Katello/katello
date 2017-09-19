@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.settings').factory('Setting',
     ['BastionResource', function (BastionResource) {
-        var resource = BastionResource('/api/v2/settings/');
+        var resource = BastionResource('api/v2/settings/');
         return resource;
     }]
 );

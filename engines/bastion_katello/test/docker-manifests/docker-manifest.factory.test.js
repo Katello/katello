@@ -26,7 +26,7 @@ describe('Factory: DockerManifest', function () {
     });
 
     it('provides a way to get a list of repositories', function () {
-        $httpBackend.expectGET('/katello/api/v2/docker_manifests').respond(dockerManifests);
+        $httpBackend.expectGET('katello/api/v2/docker_manifests').respond(dockerManifests);
 
         DockerManifest.queryPaged(function (dockerManifests) {
             expect(dockerManifests.records.length).toBe(1);
