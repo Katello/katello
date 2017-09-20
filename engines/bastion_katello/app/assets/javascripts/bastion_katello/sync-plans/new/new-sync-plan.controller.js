@@ -18,6 +18,7 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
 
             $scope.syncPlan = new SyncPlan();
             $scope.syncPlan.interval = $scope.intervals[0].id;
+            $scope.syncPlan.startDate = new Date();
 
             function success(syncPlan) {
                 $scope.working = false;
