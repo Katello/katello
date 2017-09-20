@@ -96,8 +96,11 @@ module Katello
 
       scoped_search_results(query, sub_total, total, page, per_page)
     rescue ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid => error
-      Rails.logger.error("Invalid search: #{error.message}")
-      message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
+      message = error.message
+      if error.class == ActiveRecord::StatementInvalid
+        Rails.logger.error("Invalid search: #{error.message}")
+        message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
+      end
       scoped_search_results([], sub_total, total, page, per_page, message)
     end
 
