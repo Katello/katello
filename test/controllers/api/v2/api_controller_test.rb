@@ -128,22 +128,34 @@ module Katello
       assert_equal types.sort, results[:results].map { |i| i['errata_type'] }.sort
     end
 
-    def test_scoped_search_error
+    def test_scoped_search_not_supported_error
       @controller.stubs(:params).returns({})
+      error_message = 'invalid query'
+      @controller.stubs(:scoped_search_total).raises(ScopedSearch::QueryNotSupported.new(error_message))
+
+      results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
+
+      assert_equal [], results[:results]
+      assert_nil results[:subtotal]
+      assert_nil results[:total]
+      assert_nil results[:page]
+      assert_nil results[:per_page]
+      assert_equal error_message, results[:error]
+    end
+
+    def test_scoped_search_statement_invalid_error
+      @controller.stubs(:params).returns({})
+      @controller.stubs(:scoped_search_total).raises(ActiveRecord::StatementInvalid.new('invalid statement'))
       error_message = 'Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.'
 
-      [ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid].each do |error_class|
-        @controller.stubs(:scoped_search_total).raises(error_class.new('invalid search'))
+      results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
 
-        results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
-
-        assert_equal [], results[:results]
-        assert_nil results[:subtotal]
-        assert_nil results[:total]
-        assert_nil results[:page]
-        assert_nil results[:per_page]
-        assert_equal error_message, results[:error]
-      end
+      assert_equal [], results[:results]
+      assert_nil results[:subtotal]
+      assert_nil results[:total]
+      assert_nil results[:page]
+      assert_nil results[:per_page]
+      assert_equal error_message, results[:error]
     end
   end
 end
