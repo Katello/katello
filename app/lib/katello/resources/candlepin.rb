@@ -50,6 +50,14 @@ module Katello
         self.consumer_key = cfg[:oauth_key]
         self.ca_cert_file = cfg[:ca_cert_file]
 
+        class << self
+          def process_response(response)
+            debug_level = response.code >= 400 ? :error : :debug
+            logger.send(debug_level, "Candlepin request #{response.headers[:x_candlepin_request_uuid]} returned with code #{response.code}")
+            super
+          end
+        end
+
         def self.logger
           ::Foreman::Logging.logger('katello/cp_rest')
         end
@@ -65,9 +73,14 @@ module Katello
             cp_oauth_header = User.cp_oauth_header
           end
 
-          {'accept' => 'application/json',
-           'accept-language' => I18n.locale,
-           'content-type' => 'application/json'}.merge(cp_oauth_header)
+          headers = {'accept' => 'application/json',
+                     'accept-language' => I18n.locale,
+                     'content-type' => 'application/json'}
+
+          request_id = ::Logging.mdc['request']
+          headers['X-Correlation-ID'] = request_id.split('-')[0] if request_id
+
+          headers.merge!(cp_oauth_header)
         end
 
         def self.name_to_key(a_name)
