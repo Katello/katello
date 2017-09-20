@@ -95,8 +95,12 @@ module Katello
       query = (total.zero? || sub_total.zero?) ? [] : query
 
       scoped_search_results(query, sub_total, total, page, per_page)
-    rescue ScopedSearch::QueryNotSupported => error
-      return scoped_search_results([], sub_total, total, page, per_page, error.message)
+    rescue ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid => error
+      message = error.message
+      if error.class == ActiveRecord::StatementInvalid
+        message = _('The query cannot be handled by the database. Please revise it and try again.')
+      end
+      scoped_search_results([], sub_total, total, page, per_page, message)
     end
 
     protected
