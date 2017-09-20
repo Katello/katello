@@ -62,7 +62,7 @@ module Katello
 
     def attached_content_view_ids
       composite_content_view.content_view_components.map do |cvc|
-        next if cvc.id == self.id
+        next if cvc == self
         if cvc.content_view_version
           cvc.content_view_version.content_view_id
         else
