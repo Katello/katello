@@ -8,13 +8,14 @@
  * @requires translate
  * @requires ActivationKey
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the list host collections details action pane.
  */
 angular.module('Bastion.activation-keys').controller('ActivationKeyHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'ActivationKey', 'Nutupane',
-    function ($scope, $q, $location, translate, ActivationKey, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'ActivationKey', 'Nutupane', 'Notification',
+    function ($scope, $q, $location, translate, ActivationKey, Nutupane, Notification) {
         var hostCollectionsPane, params;
 
         params = {
