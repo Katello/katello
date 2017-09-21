@@ -3,10 +3,10 @@ module Katello
     isolate_namespace Katello
 
     initializer 'katello.selective_params_parser', :before => :build_middleware_stack do |app|
-      require 'katello/params_parser_wrapper'
-      app.middleware.swap(
-        ActionDispatch::ParamsParser,
-        Katello::ParamsParserWrapper,
+      require 'katello/prevent_json_parsing'
+      app.middleware.insert_after(
+        Rack::MethodOverride,
+        Katello::PreventJsonParsing,
         ->(env) { env['PATH_INFO'] =~ /consumers/ && env['PATH_INFO'] =~ /profile|packages/ }
       )
     end
