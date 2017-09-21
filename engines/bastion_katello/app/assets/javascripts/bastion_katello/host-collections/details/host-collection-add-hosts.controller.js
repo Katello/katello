@@ -9,13 +9,14 @@
  * @requires CurrentOrganization
  * @requires Host
  * @requires HostCollection
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for the host collection add content hosts pane.
  */
 angular.module('Bastion.host-collections').controller('HostCollectionAddHostsController',
-    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection',
-    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection) {
+    ['$scope', '$state', '$location', 'translate', 'Nutupane', 'CurrentOrganization', 'Host', 'HostCollection', 'Notification',
+    function ($scope, $state, $location, translate, Nutupane, CurrentOrganization, Host, HostCollection, Notification) {
         var contentNutupane, params, nutupaneParams;
 
         params = {

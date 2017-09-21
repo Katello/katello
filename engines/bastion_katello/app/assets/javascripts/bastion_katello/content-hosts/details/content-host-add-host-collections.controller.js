@@ -10,13 +10,14 @@
  * @requires Host
  * @requires CurrentOrganization
  * @requires Nutupane
+ * @requires Notification
  *
  * @description
  *   Provides the functionality for adding host collections to a content host.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostAddHostCollectionsController',
-    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'CurrentOrganization', 'Nutupane',
-    function ($scope, $q, $location, translate, HostCollection, Host, CurrentOrganization, Nutupane) {
+    ['$scope', '$q', '$location', 'translate', 'HostCollection', 'Host', 'CurrentOrganization', 'Nutupane', 'Notification',
+    function ($scope, $q, $location, translate, HostCollection, Host, CurrentOrganization, Nutupane, Notification) {
         var params, nutupane;
 
         params = {
