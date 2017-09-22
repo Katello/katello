@@ -36,21 +36,14 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
         });
 
         $scope.getHostIds = function() {
-            return $scope.selected;
+            return {
+                included: {
+                    search: 'host_collection_id = %s'.replace('%s', $scope.$stateParams.hostCollectionId)
+                }
+            };
         };
 
-        $scope.host = Host.get({search: "host_collection_id = " + $scope.$stateParams.hostCollectionId}, function (response) {
-            $scope.selected = {
-                included: {
-                    ids: _.map(response.results, 'id')
-                },
-                excluded: {
-                    ids: []
-                }};
-        ContentHostsModalHelper.resolveFunc = $scope.getHostIds;}, function (response) {
-            $scope.panel.loading = false;
-            ApiErrorHandler.handleGETRequestErrors(response, $scope);
-        });
+        ContentHostsModalHelper.resolveFunc = $scope.getHostIds;
 
         $scope.refreshHostCollection = function () {
             $scope.hostCollection.$get().then(function (hostCollection) {
