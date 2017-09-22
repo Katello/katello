@@ -15,7 +15,7 @@ module Actions
           plan_self(id: product.id, subscription_id: subscription_id)
         end
 
-        def finalize
+        def run
           product = ::Katello::Product.find_by!(:id => input[:id])
           product.import_subscription(input[:subscription_id])
         end
