@@ -10,13 +10,14 @@
  * @requires CurrentOrganization
  * @requires MenuExpander
  * @requires ApiErrorHandler
+ * @requires deleteHostOnUnregister
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler',
-    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister',
+    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister) {
         $scope.menuExpander = MenuExpander;
 
         $scope.panel = {
@@ -25,7 +26,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         };
 
         $scope.host = Host.get({id: $scope.$stateParams.hostId}, function (host) {
-            host.unregisterDelete = !host.hasSubscription(); //default to delete if no subscription
+            host.unregisterDelete = !host.hasSubscription() || deleteHostOnUnregister;
+            host.deleteHostOnUnregister = deleteHostOnUnregister;
             $scope.panel.loading = false;
         }, function (response) {
             $scope.panel.loading = false;
