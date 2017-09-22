@@ -8,7 +8,11 @@ if Location.exists? &&
     Setting[:default_location_subscribed_hosts].blank? ||
     Setting[:default_location_puppet_content].blank?
   # Create a new location to be used as the Katello Default.
-  default_location = Location.where(:name => ENV['SEED_LOCATION']).first_or_create
+  if ENV['SEED_LOCATION'].blank?
+    default_location = Location.first
+  else
+    default_location = Location.where(:name => ENV['SEED_LOCATION']).first_or_create
+  end
   if Setting[:default_location_subscribed_hosts].empty?
     Setting[:default_location_subscribed_hosts] = default_location.title
   end
