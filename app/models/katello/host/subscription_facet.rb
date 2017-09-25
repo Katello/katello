@@ -108,6 +108,18 @@ module Katello
         end
       end
 
+      def content_view
+        self.host.content_facet.try(:content_view) || self.organization.default_content_view
+      end
+
+      def lifecycle_environment
+        self.host.content_facet.try(:lifecycle_environment) || self.organization.library
+      end
+
+      def organization
+        self.host.organization
+      end
+
       def update_subscription_status(status_override = nil)
         status = host.get_status(::Katello::SubscriptionStatus)
         if status_override
@@ -170,6 +182,10 @@ module Katello
         end
 
         name.downcase
+      end
+
+      def products
+        Katello::Product.joins(:subscriptions => {:pools => :subscription_facets}).where("#{Katello::Host::SubscriptionFacet.table_name}.id" => self.id).enabled.uniq
       end
 
       def remove_subscriptions(pools_with_quantities)

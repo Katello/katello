@@ -134,8 +134,8 @@ module Katello
 
     def test_repositories_index_without_product
       Organization.stubs(:current).returns(@organization)
-      @organization.products.stubs(:enabled).returns([@product])
-      Product.any_instance.stubs(available_content: [OpenStruct.new(content: @content)])
+      @organization.stubs(:enabled_product_content).returns([OpenStruct.new(content: @content, product_id: @product.id)])
+      #Product.any_instance.stubs(available_content: [OpenStruct.new(content: @content)])
       get :index
       assert_response :success
     end

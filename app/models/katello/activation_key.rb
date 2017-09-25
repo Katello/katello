@@ -20,6 +20,8 @@ module Katello
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
 
+    alias_method :lifecycle_environment, :environment
+
     before_validation :set_default_content_view, :unless => :persisted?
 
     validates_lengths_from_database
@@ -90,39 +92,7 @@ module Katello
     end
 
     def products
-      all_products = []
-
-      self.pools.each do |pool|
-        if pool.subscription
-          all_products << pool.subscription.products
-        else
-          Rails.logger.error("Pool #{pool.id} is missing its subscription id.")
-        end
-      end
-      all_products.uniq.flatten
-    end
-
-    def all_products
-      organization.products.enabled.uniq
-    end
-
-    def available_content(content_access_mode_all = false, content_access_mode_env = false)
-      if content_access_mode_env
-        return [] unless environment_id && content_view_id
-        version = ContentViewVersion.in_environment(environment_id).where(:content_view_id => content_view_id).first
-        content_view_version_id = version.id
-      end
-
-      if content_access_mode_all
-        content = all_products.flat_map do |product|
-          product.available_content(content_view_version_id)
-        end
-      else
-        content = products.flat_map do |product|
-          product.available_content(content_view_version_id)
-        end
-      end
-      content.uniq
+      Katello::Product.joins(:subscriptions => {:pools => :activation_keys}).where("#{Katello::ActivationKey.table_name}.id" => self.id).enabled.uniq
     end
 
     def valid_content_override_label?(content_label)

@@ -172,11 +172,16 @@ module Katello
     def product_content
       content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
       content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
-      content = @host.subscription_facet.candlepin_consumer.available_product_content(content_access_mode_all, content_access_mode_env)
-      overrides = @host.subscription_facet.candlepin_consumer.content_overrides
-      results = content.map { |product_content| Katello::ProductContentPresenter.new(product_content, overrides) }
 
-      respond_for_index(:collection => full_result_response(results))
+      content_finder = ProductContentFinder.new(
+          :consumable => @host.subscription_facet,
+          :match_subscription => !content_access_mode_all,
+          :match_environment => content_access_mode_env
+      )
+
+      content = content_finder.presenter_with_overrides(@host.subscription_facet.candlepin_consumer.content_overrides)
+
+      respond_for_index(:collection => full_result_response(content))
     end
 
     api :GET, "/hosts/:host_id/subscriptions/available_release_versions", N_("Show releases available for the content host")

@@ -136,7 +136,14 @@ module Katello
     def product_content
       content_access_mode_all = ::Foreman::Cast.to_bool(params[:content_access_mode_all])
       content_access_mode_env = ::Foreman::Cast.to_bool(params[:content_access_mode_env])
-      content = @activation_key.available_content(content_access_mode_all, content_access_mode_env)
+
+      content_finder = ProductContentFinder.new(
+          :match_subscription => !content_access_mode_all,
+          :match_environment => content_access_mode_env,
+          :consumable => @activation_key
+      )
+
+      content = content_finder.presenter_with_overrides(@activation_key.content_overrides)
       response = {
         :results => content,
         :total => content.size,

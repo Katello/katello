@@ -18,7 +18,7 @@ module Katello
     def index
       collection = {}
       if @product.nil?
-        collection[:results] = available_repository_sets
+        collection[:results] = @organization.enabled_product_content
       else
         collection[:results] = @product.displayable_product_contents
       end
@@ -107,15 +107,6 @@ module Katello
 
     def substitutions
       params.slice(:basearch, :releasever)
-    end
-
-    def available_repository_sets
-      repository_sets = @organization.products.enabled.uniq.flat_map do |product|
-        product.available_content
-      end
-      repository_sets.uniq.sort_by do |repository_set|
-        repository_set.content.name.downcase
-      end
     end
   end
 end
