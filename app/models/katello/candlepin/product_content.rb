@@ -2,7 +2,7 @@ module Katello
   class Candlepin::ProductContent
     include ForemanTasks::Triggers
 
-    attr_accessor :content, :enabled, :product
+    attr_accessor :content, :enabled, :product, :product_id
 
     def initialize(params = {}, product_id = nil)
       params = params.with_indifferent_access
@@ -28,19 +28,6 @@ module Katello
 
     def repositories
       @repos ||= self.product.repos(self.product.organization.library).where(:content_id => self.content.id)
-    end
-
-    def legacy_content_override(activation_key)
-      override = activation_key.content_overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
-      override.nil? ? 'default' : override.value
-    end
-
-    def content_overrides(activation_key)
-      activation_key.content_overrides.select { |pc| pc.content_label == content.label }
-    end
-
-    def enabled_content_override(activation_key)
-      activation_key.content_overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
     end
 
     def content_type

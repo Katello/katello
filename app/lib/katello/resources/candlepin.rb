@@ -399,6 +399,10 @@ module Katello
             self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
           end
 
+          def product_content(organization_name)
+            Product.all(organization_name, [:id, :productContent])
+          end
+
           def destroy_imports(organization_name, wait_until_complete = false)
             response_json = self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
             response = JSON.parse(response_json).with_indifferent_access
@@ -654,8 +658,8 @@ module Katello
 
       class Product < CandlepinResource
         class << self
-          def all(owner_label)
-            JSON.parse(Candlepin::CandlepinResource.get(path(owner_label), self.default_headers).body)
+          def all(owner_label, included = [])
+            JSON.parse(Candlepin::CandlepinResource.get(path(owner_label) + "?#{included_list(included)}", self.default_headers).body)
           end
 
           def find_for_stacking_id(owner_key, stacking_id)
