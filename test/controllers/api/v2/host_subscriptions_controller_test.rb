@@ -85,7 +85,7 @@ module Katello
         assert_equal @host, host
         assert_equal 1, pools_with_quantities.count
         assert_equal @pool, pools_with_quantities[0].pool
-        assert_equal ["1"], pools_with_quantities[0].quantities
+        assert_equal [1], pools_with_quantities[0].quantities
       end
 
       post :add_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 1}]
@@ -108,7 +108,7 @@ module Katello
         assert_equal @host, host
         assert_equal 1, pools_with_quantities.count
         assert_equal @pool, pools_with_quantities[0].pool
-        assert_equal ["3"], pools_with_quantities[0].quantities
+        assert_equal [3], pools_with_quantities[0].quantities
       end
       post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
 
