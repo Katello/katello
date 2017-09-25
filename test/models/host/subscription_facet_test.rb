@@ -290,15 +290,5 @@ module Katello
       assert host.valid_content_override_label?('some-label')
       refute host.valid_content_override_label?('some-label1')
     end
-
-    def test_not_all_available_product_content
-      subscription_facet.candlepin_consumer.expects(:products).returns([]).at_least_once
-      subscription_facet.candlepin_consumer.available_product_content(false, false)
-    end
-
-    def test_all_available_product_content
-      subscription_facet.candlepin_consumer.expects(:all_products).returns([]).at_least_once
-      subscription_facet.candlepin_consumer.available_product_content(true, false)
-    end
   end
 end

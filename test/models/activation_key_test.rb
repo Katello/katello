@@ -3,14 +3,14 @@ require 'katello_test_helper'
 module Katello
   class ActivationKeyTest < ActiveSupport::TestCase
     def setup
-      @dev_key = ActivationKey.find(katello_activation_keys(:dev_key).id)
-      @dev_staging_view_key = ActivationKey.find(katello_activation_keys(:library_dev_staging_view_key).id)
-      @dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
-      @lib_view = ContentView.find(katello_content_views(:library_view).id)
+      @dev_key = katello_activation_keys(:dev_key)
+      @dev_staging_view_key = katello_activation_keys(:library_dev_staging_view_key)
+      @dev_view = katello_content_views(:library_dev_view)
+      @lib_view = katello_content_views(:library_view)
     end
 
     test "can have content view" do
-      @dev_key = ActivationKey.find(katello_activation_keys(:dev_key).id)
+      @dev_key = katello_activation_keys(:dev_key)
       @dev_key.content_view = @dev_view
       assert @dev_key.save!
       assert_not_nil @dev_key.content_view
@@ -33,13 +33,13 @@ module Katello
     end
 
     test "same name can be used across organizations" do
-      org = Organization.find(taxonomies(:organization2))
-      key = ActivationKey.find(katello_activation_keys(:simple_key).id)
+      org = taxonomies(:organization2)
+      key = katello_activation_keys(:simple_key)
       assert ActivationKey.new(:name => key.name, :organization => org).valid?
     end
 
     test "renamed key can be used again" do
-      key1 = ActivationKey.find(katello_activation_keys(:simple_key).id)
+      key1 = katello_activation_keys(:simple_key)
       org = key1.organization
       original_name = key1.name
       key1.name = "new name"
@@ -58,7 +58,7 @@ module Katello
     end
 
     test "unlimited hosts requires no max hosts" do
-      key1 = ActivationKey.find(katello_activation_keys(:simple_key).id)
+      key1 = katello_activation_keys(:simple_key)
       org = key1.organization
       new_key = ActivationKey.new(:name => "JarJar", :organization => org)
       new_key.unlimited_hosts = false
@@ -134,16 +134,6 @@ module Katello
 
       @dev_key.stubs(:get_key_pools).returns(cp_pools)
       assert_empty @dev_key.products
-    end
-
-    def test_not_all_available_content
-      @dev_key.expects(:products).returns([]).at_least_once
-      @dev_key.available_content(false, false)
-    end
-
-    def test_all_available_content
-      @dev_key.expects(:all_products).returns([]).at_least_once
-      @dev_key.available_content(true, false)
     end
 
     def test_available_subscriptions

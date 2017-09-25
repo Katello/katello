@@ -13,17 +13,17 @@ child @collection[:results] => :results do
   end
 
   node :override do |pc|
-    pc.legacy_content_override(@activation_key)
+    pc.legacy_content_override
   end
 
   node :overrides do |pc|
-    pc.content_overrides(@activation_key).map do |override|
+    pc.content_overrides.map do |override|
       {:name => override.name, :value => override.computed_value}
     end
   end
 
   node :enabled_content_override do |pc|
-    override = pc.enabled_content_override(@activation_key)
+    override = pc.enabled_content_override
     override.computed_value if override
   end
 

@@ -1,11 +1,11 @@
 module Katello
-  class ProductContentPresenter
+  class ProductContentPresenter < SimpleDelegator
     attr_accessor :product_content, :overrides
-    delegate :content, :enabled, :product, :to => :product_content
 
     def initialize(product_content, overrides)
       @product_content = product_content
       @overrides = overrides
+      super(@product_content)
     end
 
     def override
@@ -19,6 +19,11 @@ module Katello
 
     def content_overrides
       overrides.select { |pc| pc.content_label == content.label }
+    end
+
+    def legacy_content_override
+      override = @overrides.find { |pc| pc.content_label == content.label && pc.name == "enabled" }
+      override.nil? ? 'default' : override.value
     end
   end
 end
