@@ -205,7 +205,8 @@ module Katello
     end
 
     def test_product_content_access_modes
-      ActivationKey.any_instance.expects(:all_products).once.returns([])
+      ProductContentFinder.any_instance.expects(:product_content).once.returns([])
+
       mode_all = true
       mode_env = false
       get(:product_content, :id => @activation_key.id,

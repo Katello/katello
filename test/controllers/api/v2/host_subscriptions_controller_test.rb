@@ -154,9 +154,10 @@ module Katello
   class Api::V2::HostSubscriptionsProductContentTest < Api::V2::HostSubscriptionsControllerBase
     def setup
       super
-      ::Katello::Candlepin::Consumer.any_instance.stubs(:available_product_content).returns(
-          [Candlepin::ProductContent.new(:content => {:label => 'some-content'})])
+      pc = [Candlepin::ProductContent.new(:content => {:label => 'some-content'})]
+      ::Katello::Candlepin::Consumer.any_instance.stubs(:available_product_content).returns(pc)
       Katello::Candlepin::Consumer.any_instance.stubs(:content_overrides).returns([])
+      ProductContentFinder.any_instance.stubs(:product_content).returns(pc)
     end
 
     def test_product_content_protected
