@@ -5,7 +5,6 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires $window
  * @requires $uibModal
  * @requires translate
  * @requires Nutupane
@@ -21,8 +20,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsController',
-    ['$scope', '$q', '$state', '$location', '$window', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'Notification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer',
-    function ($scope, $q, $state, $location, $window, $uibModal, translate, Nutupane, Host, HostBulkAction, Notification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer) {
+    ['$scope', '$q', '$state', '$location', '$uibModal', 'translate', 'Nutupane', 'Host', 'HostBulkAction', 'Notification', 'CurrentOrganization', 'ContentHostsHelper', 'ContentHostsModalHelper', '$httpParamSerializer',
+    function ($scope, $q, $state, $location, $uibModal, translate, Nutupane, Host, HostBulkAction, Notification, CurrentOrganization, ContentHostsHelper, ContentHostsModalHelper, $httpParamSerializer) {
         var nutupane, params, query;
 
         if ($location.search().search) {
@@ -88,7 +87,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
 
             success = function (data) {
                 deferred.resolve(data);
-                $window.location = foreman_url("/foreman_tasks/tasks/" + data.id);
+                $location.path("/foreman_tasks/tasks/" + data.id);
             };
 
             error = function (response) {
