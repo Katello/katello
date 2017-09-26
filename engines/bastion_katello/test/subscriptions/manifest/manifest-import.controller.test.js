@@ -89,7 +89,6 @@ describe('Controller: ManifestImportController', function() {
 
     it('should provide a method to save cdnUrl in a provider', function() {
         var promise;
-        $httpBackend.expectPUT('/api/v2/organizations/ACME/');
         promise = $scope.saveCdnUrl($scope.organization);
         promise.then(function() {
             expect(Notification.setErrorMessage).not.toHaveBeenCalled();
@@ -98,7 +97,6 @@ describe('Controller: ManifestImportController', function() {
     });
 
     it('should provide a method to delete a manifest', function() {
-        $httpBackend.expectPOST('/api/v2/organizations/ACME/subscriptions/delete_manifest');
         spyOn(Subscription, 'deleteManifest').and.callThrough();
         $scope.deleteManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
@@ -108,7 +106,6 @@ describe('Controller: ManifestImportController', function() {
     });
 
     it('should provide a method to refresh a manifest', function() {
-        $httpBackend.expectPOST('/api/v2/organizations/ACME/subscriptions/refresh_manifest');
         spyOn(Subscription, 'refreshManifest').and.callThrough();
         $scope.refreshManifest($scope.organization);
         $q.all([$scope.organization.$promise]).then(function () {
