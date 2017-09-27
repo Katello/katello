@@ -261,6 +261,10 @@ module Katello
       errata
     end
 
+    def file_units
+      FileUnit.in_repositories(archived_repos).uniq
+    end
+
     def ostree_branches
       OstreeBranch.in_repositories(archived_repos).uniq
     end

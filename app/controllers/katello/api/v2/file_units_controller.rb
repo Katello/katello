@@ -1,6 +1,9 @@
 module Katello
   class Api::V2::FileUnitsController < Api::V2::ApiController
-    apipie_concern_subst(:a_resource => N_("a file"), :resource => "files")
+    resource_description do
+      name 'Files'
+    end
+    apipie_concern_subst(:a_resource => N_("a file"), :resource_id => "files")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     def default_sort
