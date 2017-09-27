@@ -45,8 +45,12 @@ module Katello
         accepts_nested_attributes_for(
           :content_facet,
           self.nested_attributes_options[:content_facet].merge(
-            :reject_if => proc { |attributes| attributes['content_view_id'].blank? && attributes['lifecycle_environment_id'].blank? })
+            :reject_if => :content_facet_ignore_update?)
         )
+
+        def content_facet_ignore_update?(attributes)
+          self.content_facet.blank? && attributes.blank?
+        end
       end
 
       module ClassMethods

@@ -14,6 +14,7 @@ module Katello
       FactoryGirl.create(:host, :with_content, :content_view => view,
                                      :lifecycle_environment => library)
     end
+    let(:proxy) { FactoryGirl.create(:smart_proxy, :url => 'http://fakepath.com/foo') }
   end
 
   class ContentFacetHostExtensionsTest < ContentFacetHostExtensionsBaseTest
@@ -31,6 +32,30 @@ module Katello
       refute_nil host.content_facet.uuid # not reset to nil
       assert_equal library.id, host.content_facet.lifecycle_environment_id # unchanged
       assert_equal view2.id, host.content_facet.content_view_id # changed
+    end
+
+    def test_other_content_facet_update
+      host.update_attributes!(:content_facet_attributes => { :content_source_id => proxy.id })
+      host.reload.content_facet.reload
+      refute_nil host.content_facet.uuid # not reset to nil
+      assert_equal proxy.id, host.content_facet.content_source_id # changed
+    end
+
+    def test_content_facet_gets_ignored_on_new
+      assert_nil empty_host.content_facet
+      empty_host.content_facet_attributes = { :content_source_id => proxy.id }
+      refute empty_host.valid?
+
+      empty_host.reload
+      assert_nil empty_host.content_facet
+
+      empty_host.update_attributes!(:content_facet_attributes => {})
+      empty_host.reload
+      assert_nil empty_host.content_facet
+
+      empty_host.update_attributes!(:content_facet_attributes => { :lifecycle_environment_id => library.id, :content_view_id => view.id })
+      empty_host.reload.content_facet.reload
+      refute_nil empty_host.content_facet # not reset to nil
     end
   end
 end
