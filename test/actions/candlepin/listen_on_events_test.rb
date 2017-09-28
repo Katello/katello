@@ -7,6 +7,8 @@ class Actions::Candlepin::ListenOnCandlepinEventsTest < ActiveSupport::TestCase
   describe 'run' do
     let(:action_class) { ::Actions::Candlepin::ListenOnCandlepinEvents }
     let(:planned_action) do
+      action_class.any_instance.expects(:singleton_lock!)
+      action_class.any_instance.expects(:holds_singleton_lock?).returns(true)
       create_and_plan_action action_class
     end
 

@@ -28,6 +28,8 @@ module Actions
     end
 
     class ListenOnCandlepinEvents < Actions::Base
+      include ::Dynflow::Action::Singleton
+
       Connected = Algebrick.atom
 
       Reconnect = Algebrick.type do
@@ -44,21 +46,12 @@ module Actions
 
       Close = Algebrick.atom
 
-      class RunOnceCoordinatorLock < Dynflow::Coordinator::LockByWorld
-        def initialize(world)
-          super
-          @data[:id] = 'listen-on-candlepin-events'
-        end
-      end
-
       class << self
         attr_reader :triggered_action
 
         def ensure_running(world = ForemanTasks.dynflow.world)
-          world.coordinator.acquire(RunOnceCoordinatorLock.new(world)) do
-            unless ForemanTasks::Task::DynflowTask.for_action(self).running.any?
-              @triggered_action = ForemanTasks.trigger(self)
-            end
+          unless self.singleton_locked?(world)
+            @triggered_action = ForemanTasks.trigger self
           end
         rescue Dynflow::Coordinator::LockError
           return false
@@ -67,9 +60,6 @@ module Actions
 
       def plan
         # Make sure we don't have two concurrent listening services competing
-        if already_running?
-          fail "Action #{self.class.name} is already active"
-        end
         plan_self
       end
 
