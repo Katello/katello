@@ -2,6 +2,8 @@ module Actions
   module Katello
     module EventQueue
       class Monitor < Actions::Base
+        include ::Dynflow::Action::Singleton
+
         Event = Algebrick.type do
           fields! event_type: String, object_id: Integer, created_at: DateTime
         end
@@ -13,23 +15,20 @@ module Actions
         Ready = Algebrick.atom
         Close = Algebrick.atom
 
-        cattr_accessor :triggered_action
+        class << self
+          attr_reader :triggered_action
 
-        def self.ensure_running(world = ForemanTasks.dynflow.world)
-          world.coordinator.acquire(RunOnceCoordinatorLock.new(world)) do
-            unless ForemanTasks::Task::DynflowTask.for_action(self).running.any?
-              self.triggered_action = ForemanTasks.trigger(self)
+          def ensure_running(world = ForemanTasks.dynflow.world)
+            unless self.singleton_locked?(world)
+              @triggered_action = ForemanTasks.trigger self
             end
+          rescue Dynflow::Coordinator::LockError
+            return false
           end
-        rescue Dynflow::Coordinator::LockError
-          return false
         end
 
         def plan
           # Make sure we don't have two concurrent listening services competing
-          if already_running?
-            fail "Action #{self.class.name} is already active"
-          end
           plan_self
         end
 
