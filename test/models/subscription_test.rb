@@ -40,5 +40,13 @@ module Katello
       assert @basic.virt_who?
       refute @other.virt_who?
     end
+
+    def test_redhat?
+      assert @basic.redhat?
+
+      Katello::Product.create!(:name => "custom_#{rand(999)}", :cp_id => @basic.product_id,
+                               :organization => @basic.organization, :provider => @basic.organization.anonymous_provider)
+      refute @basic.redhat?
+    end
   end
 end

@@ -22,7 +22,10 @@ module Katello
     end
 
     def redhat?
-      self.products.any? { |product| product.redhat? }
+      # for custom subscriptions, there is no separate marketing and engineering product
+      #   so query our Products table and check there
+      product = Katello::Product.where(:cp_id => self.product_id, :organization => self.organization).first
+      product.nil? || product.redhat?
     end
 
     def active?
