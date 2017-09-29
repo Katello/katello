@@ -81,14 +81,16 @@ module Katello
       assert results["errors"]["base"].include?(error_message)
     end
 
-    def test_max_host_validator
+    def test_max_host_validator_success
       put :update, :id => @host_collection.id, :organization_id => @organization.id,
                    :max_hosts => 2, :unlimited_hosts => false, :host_ids => [@host.id, @host_two.id]
 
       assert_response :success
+    end
 
+    def test_max_host_validator_error
       put :update, :id => @host_collection.id, :organization_id => @organization.id,
-                   :max_hosts => 1
+                   :max_hosts => 1, :unlimited_hosts => false, :host_ids => [@host.id, @host_two.id]
 
       results = JSON.parse(response.body)
       error_message = "may not be less than the number of hosts associated with the host collection."
