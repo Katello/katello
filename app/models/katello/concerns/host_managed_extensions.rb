@@ -75,7 +75,7 @@ module Katello
 
       def import_package_profile_in_bulk(simple_packages)
         nvras = simple_packages.map { |sp| sp.nvra }
-        found = InstalledPackage.where(:nvra => nvras).select(:id, :nvra)
+        found = InstalledPackage.where(:nvra => nvras).select(:id, :nvra).to_a
         found_nvras = found.map(&:nvra)
         new_packages = simple_packages.select { |sp| !found_nvras.include?(sp.nvra) }
 

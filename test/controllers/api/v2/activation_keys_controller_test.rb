@@ -104,7 +104,7 @@ module Katello
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, activation_key_params|
         assert_equal activation_key.id, @activation_key.id
         assert_equal activation_key_params[:name], 'New Name'
-        assert_equal activation_key_params[:max_hosts], "2"
+        assert_equal activation_key_params[:max_hosts].to_s, "2"
         assert_equal activation_key_params[:unlimited_hosts], false
       end
 

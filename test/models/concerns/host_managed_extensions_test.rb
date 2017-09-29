@@ -131,6 +131,7 @@ module Katello
       package_json = {:name => "foo", :version => "1", :release => "1.el7", :arch => "x86_64"}
       @foreman_host.import_package_profile([::Katello::Pulp::SimplePackage.new(package_json)])
       @nvra = 'foo-1-1.el7.x86_64'
+      @foreman_host.reload
     end
 
     def test_installed_packages
@@ -153,6 +154,7 @@ module Katello
       assert_equal 1, @foreman_host.installed_packages.count
       assert_equal 'betterfoo', @foreman_host.installed_packages.first.name
 
+      @foreman_host.reload
       packages << ::Katello::Pulp::SimplePackage.new(:name => "alphabeta", :version => "1", :release => "2", :arch => "x86_64")
       @foreman_host.import_package_profile(packages)
       assert_equal 2, @foreman_host.installed_packages.count

@@ -99,7 +99,7 @@ module Katello
       end
     end
 
-    def test_update_latest
+    def test_update_latest_false
       component = create_component
       assert component.latest?
       assert_nil component.content_view_version
@@ -113,7 +113,13 @@ module Katello
       component = component.reload
       assert_equal computed_version, component.content_view_version_id
       refute component.latest?
+    end
 
+    def test_update_latest_true
+      component = create_component
+      computed_version = component.latest_version.id
+
+      component.update_attributes!(:latest => true, :content_view_version_id => nil)
       put :update, :composite_content_view_id => @composite.id, :id => component.id,
                    :latest => true
       assert_response :success
@@ -122,6 +128,11 @@ module Katello
       assert_nil component.content_view_version
       assert component.latest?
       assert computed_version, component.latest_version.id
+    end
+
+    def test_update_latest_conflict
+      component = create_component
+      computed_version = component.latest_version.id
 
       put :update, :composite_content_view_id => @composite.id, :id => component.id,
                    :content_view_version_id => computed_version, :latest => true

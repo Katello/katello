@@ -88,7 +88,7 @@ module Katello
         assert_equal ["1"], pools_with_quantities[0].quantities
       end
 
-      post :add_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 1}]
+      post :add_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => "1"}]
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
@@ -106,11 +106,11 @@ module Katello
     def test_remove_subscriptions
       assert_sync_task(::Actions::Katello::Host::RemoveSubscriptions) do |host, pools_with_quantities|
         assert_equal @host, host
-        assert_equal 1, pools_with_quantities.count
+        assert_equal "1", pools_with_quantities.count.to_s
         assert_equal @pool, pools_with_quantities[0].pool
         assert_equal ["3"], pools_with_quantities[0].quantities
       end
-      post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
+      post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => '3'}]
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
@@ -128,7 +128,7 @@ module Katello
     def test_create
       facts = { 'network.hostname' => @host.name}
       installed_products = [{
-        'product_id' => 1,
+        'product_id' => '1',
         'product_name' => 'name'
       }]
       expected_consumer_params = {
