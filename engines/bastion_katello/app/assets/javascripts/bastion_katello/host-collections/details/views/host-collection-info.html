@@ -7,13 +7,13 @@
     <dl class="dl-horizontal dl-horizontal-left">
       <dt translate>Name</dt>
       <dd bst-edit-text="hostCollection.name"
-          readonly="denied('edit_host_collection', hostCollection)"
+          readonly="denied('edit_host_collections', hostCollection)"
           on-save="save(hostCollection)">
       </dd>
 
       <dt translate>Description</dt>
         <dd bst-edit-textarea="hostCollection.description"
-            readonly="denied('edit_host_collection', hostCollection)"
+            readonly="denied('edit_host_collections', hostCollection)"
             on-save="save(hostCollection)">
         </dd>
 
@@ -29,7 +29,7 @@
 
       <dt translate>Content Host Limit</dt>
       <dd bst-edit-custom="hostCollection.max_hosts"
-          readonly="denied('edit_host_collection', hostCollection)"
+          readonly="denied('edit_host_collections', hostCollection)"
           formatter="unlimitedFilter"
           formatter-options="hostCollection.unlimited_hosts"
           on-save="save(hostCollection)">
