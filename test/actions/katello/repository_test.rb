@@ -262,11 +262,22 @@ module ::Actions::Katello::Repository
       assert_action_planed_with(action, pulp_action_class,
                                 pulp_id: repository.pulp_id, task_id: nil, source_url: nil, options: {})
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
+      assert_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
       assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
       assert_action_planed_with action, ::Actions::Katello::Repository::ErrataMail do |repo, _task_id, contents_changed|
         contents_changed.must_be_kind_of Dynflow::ExecutionPlan::OutputReference
         repo.id.must_equal repository.id
       end
+    end
+
+    it 'skips applicability if non-yum' do
+      action = create_action action_class
+      docker_repository.url = 'http://foo.com/foo'
+      action.stubs(:action_subject).with(docker_repository)
+      plan_action action, docker_repository
+
+      refute_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
+      refute_action_planed action, ::Actions::Katello::Repository::ImportApplicability
     end
 
     it 'passes the task id to pulp sync action when provided' do
