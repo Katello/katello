@@ -119,7 +119,7 @@ KT.hosts.getSelectedEnvironment = function () {
 
 KT.hosts.onKatelloHostEditLoad = function(){
     var prefxies = ['host', 'hostgroup'],
-        attributes = ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id'];
+        attributes = ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'architecture_id'];
 
     $.each(prefxies, function(index, prefix) {
         $.each(attributes, function(attrIndex, attribute) {
@@ -127,6 +127,10 @@ KT.hosts.onKatelloHostEditLoad = function(){
                 KT.hosts.toggle_installation_medium();
             });
         });
+    });
+
+    $('body').on('change', '#content_source_id', function () {
+        KT.hosts.toggle_installation_medium();
     });
 };
 
@@ -136,13 +140,13 @@ KT.hosts.toggle_installation_medium = function() {
     if ($('#hostgroup_parent_id').length > 0) {
       lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
       content_view_id = KT.hosts.getSelectedContentView();
-      content_source_id = $('#hostgroup_content_source_id').val();
+      content_source_id = $('#content_source_id').val();
       architecture_id = $('#hostgroup_architecture_id').val();
       operatingsystem_id = $('#hostgroup_operatingsystem_id').val();
     } else {
       lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
       content_view_id = KT.hosts.getSelectedContentView();
-      content_source_id = $('#host_content_source_id').val();
+      content_source_id = $('#content_source_id').val();
       architecture_id = $('#host_architecture_id').val();
       operatingsystem_id = $('#host_operatingsystem_id').val();
     }
