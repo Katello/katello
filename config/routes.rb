@@ -28,4 +28,8 @@ Katello::Engine.routes.draw do
       match '/remote_execution' => 'remote_execution#create', :via => [:post]
     end
   end
+
+  if Setting[:katello_experimental_ui]
+    match '/redhat_repositories' => 'react#index', :via => [:get]
+  end
 end
