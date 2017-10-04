@@ -765,7 +765,7 @@ module Katello
       SETTINGS[:katello][:post_sync_url] = "http://foo.com/foo?token=#{token}"
       Repository.stubs(:where).returns([@repository])
 
-      assert_async_task ::Actions::Katello::Repository::Sync do |repo, task_id|
+      assert_async_task ::Actions::Katello::Repository::ScheduledSync do |repo, task_id|
         repo.id == @repository.id && task_id == '1234'
       end
 
