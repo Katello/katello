@@ -234,7 +234,7 @@
 
       <dl class="dl-horizontal dl-horizontal-left">
         <dt translate>Registered</dt>
-        <dd>{{ host.created | date:'short' }}</dd>
+        <dd>{{ host.created_at | date:'short' }}</dd>
 
         <dt translate> Registered By</dt>
         <dd>
@@ -247,6 +247,9 @@
                   translate-plural="Activation Keys">
               Activation Key
             </span>
+
+        <dt translate>Registered To</dt>
+        <dd>{{ host.subscription_facet_attributes.registered_through }}</dd>
 
           <ul ng-show="host.subscription_facet_attributes.activation_keys.length > 0">
             <li ng-repeat="activation_key in host.subscription_facet_attributes.activation_keys">
