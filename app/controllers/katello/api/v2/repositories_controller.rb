@@ -290,7 +290,7 @@ module Katello
       Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
 
       unless repo.dynflow_handled_last_sync?(task_id)
-        async_task(::Actions::Katello::Repository::Sync, repo, task_id)
+        async_task(::Actions::Katello::Repository::ScheduledSync, repo, task_id)
       end
       render :json => {}
     end
