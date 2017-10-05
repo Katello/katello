@@ -66,7 +66,7 @@
             </a>
           </td>
           <td bst-table-cell>{{ filter.description }}</td>
-          <td bst-table-cell>{{ filter.updated_at | date:"short" }}</td>
+          <td bst-table-cell><short-date-time date="filter.updated_at" /></td>
           <td bst-table-cell>
             {{ filter.type | filterContentType }}
             <span ng-if="filter.type === 'erratum' && filter.rules[0].types">{{ '- Date and Type' | translate }}</span>

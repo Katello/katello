@@ -17,5 +17,6 @@ angular.module('Bastion.environments', [
     'Bastion.ostree-branches',
     'Bastion.puppet-modules',
     'Bastion.repositories',
-    'Bastion.content-views'
+    'Bastion.content-views',
+    'Bastion.dates'
 ]);

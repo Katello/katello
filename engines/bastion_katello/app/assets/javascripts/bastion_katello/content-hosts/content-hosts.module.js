@@ -19,5 +19,6 @@ angular.module('Bastion.content-hosts', [
     'Bastion.hosts',
     'Bastion.errata',
     'Bastion.host-collections',
-    'Bastion.repository-sets'
+    'Bastion.repository-sets',
+    'Bastion.dates'
 ]);

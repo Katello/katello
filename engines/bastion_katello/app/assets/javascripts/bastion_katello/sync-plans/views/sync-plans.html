@@ -43,10 +43,10 @@
             </a>
           </td>
           <td bst-table-cell>{{ syncPlan.description }}</td>
-          <td bst-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+          <td bst-table-cell><long-date-time date="syncPlan.sync_date" /></td>
           <td bst-table-cell>{{ syncPlan.enabled }}</td>
           <td bst-table-cell>{{ syncPlan.interval | translate | capitalize }}</td>
-          <td bst-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
+          <td bst-table-cell><long-date-time date="syncPlan.next_sync" /></td>
         </tr>
       </tbody>
     </table>

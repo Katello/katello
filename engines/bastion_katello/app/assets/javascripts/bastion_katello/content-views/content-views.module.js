@@ -13,5 +13,6 @@ angular.module('Bastion.content-views', [
     'Bastion.utils',
     'Bastion.content-views.versions',
     'Bastion.components',
-    'Bastion.packages'
+    'Bastion.packages',
+    'Bastion.dates'
 ]);

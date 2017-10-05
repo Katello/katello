@@ -101,7 +101,7 @@
             <span translate>{{ errata.hosts_applicable_count || 0 }} Applicable, </span>
             <span translate>{{ errata.hosts_available_count || 0 }} Installable</span>
           </td>
-          <td bst-table-cell>{{ errata.updated | date:'shortDate'}}</td>
+          <td bst-table-cell><short-date-time date="errata.updated" /></td>
         </tr>
       </tbody>
     </table>

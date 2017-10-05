@@ -87,7 +87,7 @@
                   </span>
                   <span ng-hide="repository.last_sync == null">
                     <a href="/foreman_tasks/tasks/{{repository.last_sync.id}}">{{ repository.last_sync.result | capitalize}}</a>
-                    ({{ repository.last_sync.ended_at | date:"short" }})
+                    <short-date-time date="repository.last_sync.ended_at" />
                   </span>
                 </span>
               <span ng-hide="repository.url" translate>N/A</span>

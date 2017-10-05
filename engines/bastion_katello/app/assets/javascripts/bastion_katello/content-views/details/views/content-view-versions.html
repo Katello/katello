@@ -41,7 +41,7 @@
 
             <span ng-show="hideProgress(version)">
               {{ historyText(version) }}
-              ({{ version.last_event.created_at | date:'short' }})
+              (<short-date-time date="version.last_event.created_at" />)
             </span>
           </td>
           <td bst-table-cell>
