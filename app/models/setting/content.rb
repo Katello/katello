@@ -12,7 +12,6 @@ class Setting::Content < Setting
 
     self.transaction do
       [
-        self.set('katello_experimental_ui', N_("Whether or not to show the experimental UI"), false, N_('Show experimental UI')),
         self.set('katello_default_provision', N_("Default provisioning template for Operating Systems created from synced content"),
                  'Katello Kickstart Default', N_('Default synced OS provisioning template')),
         self.set('katello_default_finish', N_("Default finish template for new Operating Systems created from synced content"),
