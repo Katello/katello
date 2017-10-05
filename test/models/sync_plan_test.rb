@@ -71,6 +71,17 @@ module Katello
       @plan.next_sync.must_equal(Time.new(2012, 1, 18, 9, 26, 0, "+00:00"))
     end
 
+    def test_next_run_weekly_week_prior_time_after_now
+      @plan.interval = 'weekly'
+      @plan.sync_date = '2012-11-10 09:26:00 UTC'
+
+      Time.stubs(:now).returns(Time.new(2012, 11, 17, 9, 20, 0, "+00:00"))
+      @plan.next_sync.must_equal(Time.new(2012, 11, 17, 9, 26, 0, "+00:00"))
+
+      Time.stubs(:now).returns(Time.new(2012, 11, 17, 9, 30, 0, "+00:00"))
+      @plan.next_sync.must_equal(Time.new(2012, 11, 24, 9, 26, 0, "+00:00"))
+    end
+
     def test_update
       @plan.save!
       p = SyncPlan.find_by_name('Norman Rockwell')

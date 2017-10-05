@@ -66,6 +66,10 @@ module Katello
       self.sync_date.strftime('%Z')
     end
 
+    def sync_time
+      self.sync_date.utc.strftime('%H%M%S%N')
+    end
+
     def next_sync_date
       return nil unless self.enabled
       now = Time.current
@@ -77,6 +81,7 @@ module Katello
         seconds = self.sync_date.sec - now.sec
 
         next_sync = nil
+        now_time = now.utc.strftime('%H%M%S%N')
 
         case self.interval
         when HOURLY
@@ -85,15 +90,13 @@ module Katello
           end
           next_sync = now.advance(:minutes => minutes, :seconds => seconds)
         when DAILY
-          sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
-          now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
-          if sync_time < now_time
+          if self.sync_time < now_time
             hours += 24
           end
           next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
         when WEEKLY
           days = self.sync_date.wday - now.wday
-          days += 7 if days <= 0
+          days += 7 if days < 0 || (days == 0 && self.sync_time <= now_time)
           next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
                                  :sec => self.sync_date.sec).advance(:days => days)
         end
