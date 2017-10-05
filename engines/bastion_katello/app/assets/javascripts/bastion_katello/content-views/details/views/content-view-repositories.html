@@ -74,7 +74,7 @@
             Not Synced
           </span>
           <span ng-show="repository.url">
-            {{ repository.last_sync.ended_at | date:"short" }}
+            <short-date-time date="repository.last_sync.ended_at" />
           </span>
           <span ng-hide="repository.url" translate>N/A</span>
         </td>

@@ -11,7 +11,7 @@
           <i ng-class="status.status == 'FAILURE' ? 'fa fa-warning' : 'fa fa-check'" />
           {{ status.statusMessage }}
         </td>
-        <td>{{ status.created | date:"short" }}</td>
+        <td><short-date-time date="status.created" /></td>
     </tr>
   </tbody>
 </table>

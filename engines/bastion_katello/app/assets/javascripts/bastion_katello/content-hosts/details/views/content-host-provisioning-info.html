@@ -25,7 +25,7 @@
       <dd>{{ host.puppet_environment_name }}</dd>
 
       <dt translate>Last Puppet Report</dt>
-      <dd>{{ host.last_report | date:'short' }}</dd>
+      <dd><short-date-time date="host.last_report" /></dd>
 
       <dt translate>Model</dt>
       <dd>{{ host.model_name }}</dd>

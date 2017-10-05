@@ -87,13 +87,14 @@
       <span ng-include="'products/details/partials/sync-status.html'"></span>
 
       <dt translate>Last Sync</dt>
-      <dd translate>
-        {{ product.last_sync_words }} Ago ({{ product.sync_status.finish_time | date:'medium' }} Local Time)
+      <dd>
+        <relative-date date="product.last_sync" />
+        (<long-date-time date="product.last_sync" /> <translate>Local Time</translate>)
       </dd>
 
       <dt translate>Next Sync</dt>
-      <dd ng-show="product.sync_plan.next_sync" translate>
-        {{ product.sync_plan.next_sync | date:'medium' }} (Server Time)
+      <dd ng-show="product.sync_plan.next_sync">
+        <long-date-time date="product.sync_plan.next_sync" /> (<translate>Server Time</translate>)
       </dd>
       <dd ng-hide="product.sync_plan.next_sync" translate>
         Synced manually, no interval set.

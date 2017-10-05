@@ -248,13 +248,14 @@
       <dd ng-show="repository.last_sync == null" translate>
         Not Synced
       </dd>
-      <dd ng-hide="repository.last_sync == null || repository.last_sync.ended_at == null" translate>
-        {{ repository.last_sync_words }} Ago ({{ repository.last_sync.ended_at | date:'medium' }} Local Time)
+      <dd ng-hide="repository.last_sync == null || repository.last_sync.ended_at == null">
+        <relative-date date="repository.last_sync.ended_at" />
+        (<short-date-time date="repository.last_sync.ended_at" /> <translate>Local Time</translate>)
       </dd>
 
       <dt translate>Next Sync</dt>
-      <dd ng-show="repository.product.sync_plan.next_sync" translate>
-        {{ repository.product.sync_plan.next_sync | date:'medium' }} (Server Time)
+      <dd ng-show="repository.product.sync_plan.next_sync">
+        <long-date-time date="repository.product.sync_plan.next_sync" /> (<translate>Server Time</translate>)
       </dd>
       <dd ng-hide="repository.product.sync_plan.next_sync" translate>
         Synced manually, no interval set.

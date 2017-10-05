@@ -68,10 +68,10 @@
             <tr bst-table-row ng-repeat="syncPlan in table.rows" class="clickable-row"
                 ng-click="selectSyncPlan(syncPlan)" ng-class="{'selected-row': syncPlan === selectedSyncPlan }">
               <td bst-table-cell>{{ syncPlan.name }}</td>
-              <td bst-table-cell>{{ syncPlan.sync_date | date:'medium' }}</td>
+              <td bst-table-cell><long-date-time date="syncPlan.sync_date" /></td>
               <td bst-table-cell>{{ syncPlan.enabled }}</td>
               <td bst-table-cell>{{ syncPlan.interval | translate | capitalize }}</td>
-              <td bst-table-cell>{{ syncPlan.next_sync | date:'medium' }}</td>
+              <td bst-table-cell><long-date-time date="syncPlan.next_sync" /></td>
             </tr>
           </tbody>
         </table>

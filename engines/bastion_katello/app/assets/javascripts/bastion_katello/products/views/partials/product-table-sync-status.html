@@ -1,6 +1,7 @@
-<div class="list-unstyled" ng-show="product.last_sync_words">
-  <div translate>
-    Last synced {{ product.last_sync_words }} ago.
+<div class="list-unstyled" ng-show="product.last_sync">
+  <div>
+    <span translate>Last synced </span>
+    <relative-date date="product.last_sync" />.
   </div>
   <div ng-show="mostImportantSyncState(product) == 'pending'"
         translate
@@ -23,4 +24,4 @@
         1 successfully synced repository.
   </div>
 </div>
-<span ng-hide="product.last_sync_words" translate>Never synced</span>
+<span ng-hide="product.last_sync" translate>Never synced</span>

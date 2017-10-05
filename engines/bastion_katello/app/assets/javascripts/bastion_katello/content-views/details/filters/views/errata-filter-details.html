@@ -48,10 +48,10 @@
           {{ errata.type }}
         </td>
         <td bst-table-cell>
-          {{ errata.issued | date:'M/d/yy' }}
+          <date date="errata.issued" />
         </td>
         <td bst-table-cell>
-          {{ errata.updated | date:'M/d/yy' }}
+          <date date="errata.updated" />
         </td>
         <td bst-table-cell>{{ errata.title }}</td>
       </tr>

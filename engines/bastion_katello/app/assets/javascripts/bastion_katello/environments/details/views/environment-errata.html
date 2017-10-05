@@ -50,7 +50,8 @@
           <span ng-show="errata.severity">- {{ errata.severity | errataSeverity}}</span>
         </td>
         <td bst-table-cell class="number-cell">{{ errata.hosts_available_count || 0 }}</td>
-        <td bst-table-cell>{{ errata.updated | date:'shortDate'}}</td>
+
+        <td bst-table-cell><date date="errata.updated" /></td>
       </tr>
     </tbody>
   </table>

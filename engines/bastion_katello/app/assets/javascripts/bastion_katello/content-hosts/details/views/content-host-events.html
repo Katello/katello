@@ -20,7 +20,7 @@
             <td bst-table-cell>{{ event.type }}</td>
             <td bst-table-cell>{{ event.target }}</td>
             <td bst-table-cell>{{ event.messageText }}</td>
-            <td bst-table-cell>{{ event.timestamp | date:"short" }}</td>
+            <td bst-table-cell><short-date-time date="event.timestamp" /></td>
           </tr>
         </tbody>
       </table>

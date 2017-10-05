@@ -12,5 +12,6 @@ angular.module('Bastion.errata', [
     'Bastion.common',
     'Bastion.i18n',
     'Bastion.components.formatters',
-    'Bastion.tasks'
+    'Bastion.tasks',
+    'Bastion.dates'
 ]);

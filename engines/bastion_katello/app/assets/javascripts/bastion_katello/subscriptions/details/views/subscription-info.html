@@ -8,7 +8,7 @@
 
       <dt translate>Description</dt>
       <dd>{{ subscription.description }}</dd>
-      
+
       <dt>
         <span translate>Virt-Who Usage Required</span>
         <i class="pf pficon-info"
@@ -26,10 +26,10 @@
       <dd>{{ subscription | subscriptionConsumedFilter }}</dd>
 
       <dt translate>Starts</dt>
-      <dd>{{ subscription.start_date | date:"short" }}</dd>
+      <dd><short-date-time date="subscription.start_date" /></dd>
 
       <dt translate>Ends</dt>
-      <dd>{{ subscription.end_date | date:"short" }}</dd>
+      <dd><short-date-time date="subscription.end_date" /></dd>
 
       <dt translate>Product ID</dt>
       <dd>{{ subscription.product_id }}</dd>

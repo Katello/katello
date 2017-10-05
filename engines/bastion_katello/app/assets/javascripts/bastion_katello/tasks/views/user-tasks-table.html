@@ -22,7 +22,7 @@
               {{ task.humanized.input | taskInputShort | taskInputCompile }}
             </a>
           </td>
-          <td bst-table-cell>{{ task.started_at | date:"short" }}</td>
+          <td bst-table-cell><short-date-time date="task.started_at" /></td>
         </tr>
       </tbody>
     </table>
