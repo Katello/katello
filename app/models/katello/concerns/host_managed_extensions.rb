@@ -25,6 +25,8 @@ module Katello
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
+
+        validates_with Validators::KickstartRepositoryValidator
       end
 
       def validate_media_with_capsule?

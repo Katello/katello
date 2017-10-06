@@ -12,6 +12,7 @@ module Katello
         belongs_to :lifecycle_environment, :inverse_of => :hostgroups, :class_name => "::Katello::KTEnvironment"
 
         validates_with Katello::Validators::ContentViewEnvironmentValidator
+        validates_with Katello::Validators::KickstartRepositoryValidator
 
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view
