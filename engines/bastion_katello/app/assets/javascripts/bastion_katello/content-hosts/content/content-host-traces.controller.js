@@ -17,8 +17,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
     ['$scope', '$timeout', '$window', 'translate', 'HostTraces', 'Nutupane', 'BastionConfig',
     function ($scope, $timeout, $window, translate, HostTraces, Nutupane, BastionConfig) {
         var tracesNutupane, params = {
-            'sort_by': 'updated',
-            'sort_order': 'DESC',
             'paged': true
         };
 
