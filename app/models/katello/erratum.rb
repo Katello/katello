@@ -52,13 +52,11 @@ module Katello
       # which is calculated elsewhere.
 
       self.joins(:content_facets).
-        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts)
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.pluck(:id))
     end
 
     def self.applicable_to_hosts_dashboard(hosts)
-      ids = hosts.to_sql.sub(/SELECT.*FROM/, "SELECT #{::Host.connection.quote_table_name('hosts')}.#{::Host.connection.quote_column_name('id')} FROM")
-      self.joins(:content_facets).
-        where("#{Katello::Host::ContentFacet.table_name}.host_id IN (#{ids})").
+      applicable_to_hosts(hosts).
         select("DISTINCT ON (#{self.table_name}.updated, #{self.table_name}.id) #{self.table_name}.*").
         order("#{self.table_name}.updated desc").limit(6)
     end
