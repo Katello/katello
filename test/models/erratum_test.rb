@@ -58,7 +58,7 @@ module Katello
     end
 
     def test_applicable_to_hosts
-      errata = Erratum.applicable_to_hosts([@host, @host_without_errata])
+      errata = Erratum.applicable_to_hosts(::Host.where(id: [@host, @host_without_errata].map(&:id)))
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
@@ -84,7 +84,7 @@ module Katello
     end
 
     def test_not_applicable_to_hosts
-      assert_empty Erratum.applicable_to_hosts([@host_without_errata])
+      assert_empty Erratum.applicable_to_hosts(::Host.where(id: [@host_without_errata].map(&:id)))
     end
 
     def test_update_from_json
