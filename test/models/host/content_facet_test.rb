@@ -123,7 +123,7 @@ module Katello
       content_facet.bound_repositories = [Katello::Repository.find(katello_repositories(:rhel_6_x86_64_library_view_1).id)]
       content_facet.save!
 
-      content_facet_dev = katello_content_facets(:two)
+      content_facet_dev = katello_content_facets(:content_facet_two)
       content_facet_dev.bound_repositories = [Katello::Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)]
       content_facet_dev.save!
 

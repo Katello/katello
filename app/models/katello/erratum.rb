@@ -108,7 +108,8 @@ module Katello
           #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
 
       if hosts
-        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet))
+        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet)
+                                .select("#{Katello::Host::ContentFacet.table_name}.id"))
       else
         query = query.joins(:content_facet_errata)
       end
