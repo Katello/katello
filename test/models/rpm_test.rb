@@ -69,8 +69,8 @@ module Katello
   class ApplicablityTest < RpmTestBase
     def setup
       super
-      @host_one = katello_content_facets(:one).host
-      @host_two = katello_content_facets(:two).host
+      @host_one = katello_content_facets(:content_facet_one).host
+      @host_two = katello_content_facets(:content_facet_two).host
     end
 
     def test_applicable_to_hosts

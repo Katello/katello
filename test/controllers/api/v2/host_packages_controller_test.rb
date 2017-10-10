@@ -20,7 +20,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
 
       @host = hosts(:one)
-      @content_facet = katello_content_facets(:one)
+      @content_facet = katello_content_facets(:content_facet_one)
       @host.content_facet = @content_facet
 
       setup_foreman_routes
