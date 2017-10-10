@@ -102,17 +102,21 @@ module Katello
           :models     => @hosts.pluck(:id) - already_added_host_ids,
           :authorized => @editable_hosts.pluck(:id) - already_added_host_ids
       )
+      status = :ok
 
       already_added_host_ids.each do |host_id|
         messages[:error] << _("Host with ID %s already exists in the host collection.") % host_id
+        status = :unprocessable_entity
       end
 
       unfound_host_ids.each do |host_id|
         messages[:error] << _("Host with ID %s not found.") % host_id
+        status = :not_found
       end
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages }
+                       :resource => { 'displayMessages' => messages },
+                       status: status
     end
 
     api :PUT, "/host_collections/:id/remove_hosts", N_("Remove hosts from the host collection")
@@ -136,17 +140,21 @@ module Katello
           :models     => @hosts.pluck(:id) - already_removed_host_ids,
           :authorized => @editable_hosts.pluck(:id) - already_removed_host_ids
       )
+      status = :ok
 
       already_removed_host_ids.each do |host_id|
         messages[:error] << _("Host with ID %s does not exist in the host collection.") % host_id
+        status = :unprocessable_entity
       end
 
       unfound_host_ids.each do |host_id|
         messages[:error] << _("Host with ID %s not found.") % host_id
+        status = :not_found
       end
 
       respond_for_show :template => 'bulk_action', :resource_name => 'common',
-                       :resource => { 'displayMessages' => messages }
+                       :resource => { 'displayMessages' => messages },
+                       status: status
     end
 
     api :DELETE, "/host_collections/:id", N_("Destroy a host collection")
