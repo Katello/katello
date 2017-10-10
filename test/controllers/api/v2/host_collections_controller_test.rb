@@ -156,7 +156,7 @@ module Katello
       assert results['displayMessages']['error'].one?, 'Expected only one error message'
       assert results['displayMessages']['success'].none?, 'Expected no success messages'
 
-      assert_response :success
+      assert_response :unprocessable_entity
       assert_template 'katello/api/v2/common/bulk_action'
     end
 
@@ -170,7 +170,7 @@ module Katello
       assert results['displayMessages']['error'].one?, 'Expected only one error message'
       assert results['displayMessages']['success'].none?, 'Expected no success messages'
 
-      assert_response :success
+      assert_response :not_found
       assert_template 'katello/api/v2/common/bulk_action'
     end
 
@@ -198,7 +198,7 @@ module Katello
       assert results['displayMessages']['error'].one?, 'Expected only one error message'
       assert results['displayMessages']['success'].none?, 'Expected no success messages'
 
-      assert_response :success
+      assert_response :unprocessable_entity
       assert_template 'katello/api/v2/common/bulk_action'
     end
 
@@ -212,7 +212,7 @@ module Katello
       assert results['displayMessages']['error'].one?, 'Expected only one error message'
       assert results['displayMessages']['success'].none?, 'Expected no success messages'
 
-      assert_response :success
+      assert_response :not_found
       assert_template 'katello/api/v2/common/bulk_action'
     end
   end
