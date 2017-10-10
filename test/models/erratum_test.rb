@@ -8,7 +8,7 @@ module Katello
       @bugfix = katello_errata(:bugfix)
       @enhancement = katello_errata(:enhancement)
       @host = hosts(:one)
-      @host_without_errata = @host.clone
+      @host_without_errata = hosts(:two)
       @host_without_errata.content_facet.applicable_errata = []
     end
   end
@@ -170,6 +170,7 @@ module Katello
 
     def test_installable_for_hosts
       errata = Erratum.installable_for_hosts([@host, @host_without_errata])
+
       assert_includes errata, @security
       assert_includes errata, @bugfix
       refute_includes errata, @enhancement
