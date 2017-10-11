@@ -561,7 +561,7 @@ module Katello
 
     def test_units_for_removal_docker
       ['one', 'two', 'three'].each do |str|
-        @redis.docker_manifests.create!(:name => str) do |manifest|
+        @redis.docker_manifests.create!(:digest => str) do |manifest|
           manifest.uuid = str
         end
       end

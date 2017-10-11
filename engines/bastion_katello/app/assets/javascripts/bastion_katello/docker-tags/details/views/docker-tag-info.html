@@ -24,11 +24,11 @@
     <div ng-if="!_.isEmpty(tag.manifest_schema1)">
       <h5 translate>Schema Version 1</h5>
       <dl class="dl-horizontal dl-horizontal-left">
-        <dt translate>Name</dt>
-        <dd>
-          {{ tag.manifest_schema1.name }}
-        </dd>
 
+        <dt translate>Manifest Type</dt>
+        <dd>
+          {{ getManifestType(tag.manifest_schema1) }}
+        </dd>
         <dt translate>Digest</dt>
         <dd>
           {{ tag.manifest_schema1.digest }}
@@ -38,11 +38,10 @@
     <div ng-if="!_.isEmpty(tag.manifest_schema2)">
       <h5 translate>Schema Version 2</h5>
       <dl class="dl-horizontal dl-horizontal-left">
-        <dt translate>Name</dt>
+        <dt translate>Manifest Type</dt>
         <dd>
-          {{ tag.manifest_schema2.name }}
+          {{ getManifestType(tag.manifest_schema2) }}
         </dd>
-
         <dt translate>Digest</dt>
         <dd>
           {{ tag.manifest_schema2.digest }}

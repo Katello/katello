@@ -2,7 +2,7 @@ module Katello
   class DockerTag < Katello::Model
     include Concerns::PulpDatabaseUnit
     include ScopedSearchExtensions
-    belongs_to :docker_manifest, :inverse_of => :docker_tags, :class_name => "Katello::DockerManifest"
+    belongs_to :docker_taggable, :polymorphic => true, :inverse_of => :docker_tags
     belongs_to :repository, :inverse_of => :docker_tags, :class_name => "Katello::Repository"
 
     has_one :schema1_meta_tag, :class_name => "Katello::DockerMetaTag", :foreign_key => "schema1_id",
@@ -25,6 +25,22 @@ module Katello
       associated_meta_tag.id
     end
 
+    def docker_manifest
+      docker_taggable
+    end
+
+    def docker_manifest_id
+      docker_taggable_id
+    end
+
+    def docker_manifest_list
+      docker_taggable
+    end
+
+    def docker_manifest_list_id
+      docker_taggable_id
+    end
+
     def self.grouped
       grouped_fields = "#{table_name}.name, #{Repository.table_name}.name, #{Product.table_name}.name"
       ids = uniq.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repository => :product)
@@ -32,7 +48,8 @@ module Katello
     end
 
     def update_from_json(json)
-      self.docker_manifest_id ||= ::Katello::DockerManifest.find_by(:digest => json['manifest_digest']).try(:id)
+      taggable_class = json['manifest_type'] == "list" ? ::Katello::DockerManifestList : ::Katello::DockerManifest
+      self.docker_taggable ||= taggable_class.find_by(:digest => json['manifest_digest'])
       self.repository_id ||= ::Katello::Repository.find_by(:pulp_id => json['repo_id']).try(:id)
       self.name = json['name']
       self.save!
@@ -55,10 +72,6 @@ module Katello
     # docker tag only has one repo
     def repositories
       [repository]
-    end
-
-    def full_name
-      "#{docker_manifest.name}:#{name}"
     end
 
     def related_tags

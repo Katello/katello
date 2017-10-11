@@ -8,7 +8,7 @@
   <span data-block="no-search-results-message" translate>
     Your search returned zero Content View.
   </span>
-  
+
   <div data-block="table">
     <table class="table table-striped table-bordered" bst-table="table">
       <thead>
@@ -64,6 +64,9 @@
             </div>
             <div translate ng-if="version.docker_manifest_count && version.docker_manifest_count > 0">
               {{ version.docker_manifest_count }} Docker Manifests
+            </div>
+            <div translate ng-if="version.docker_manifest_list_count && version.docker_manifest_list_count > 0">
+              {{ version.docker_manifest_list_count }} Docker Manifest Lists
             </div>
             <div translate ng-if="version.docker_tag_count && version.docker_tag_count > 0">
               {{ version.docker_tag_count }} Docker Tags

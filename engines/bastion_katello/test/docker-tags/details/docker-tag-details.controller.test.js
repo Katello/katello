@@ -2,7 +2,8 @@ describe('Controller: DockerTagDetailsController', function() {
     var $scope,
         DockerTag,
         Nutupane,
-        dockerTag;
+        dockerTag,
+        translate;
 
     beforeEach(module('Bastion.docker-tags', 'Bastion.test-mocks', 'Bastion.common'));
 
@@ -19,6 +20,9 @@ describe('Controller: DockerTagDetailsController', function() {
         DockerTag = $injector.get('MockResource').$new();
         spyOn(DockerTag, 'get').and.callThrough();
         dockerTag = DockerTag.get({id: 1});
+        translate = function(message) {
+            return message;
+        };
     }));
 
     beforeEach(inject(function($controller, $rootScope, $location, MockResource, translateMock, $injector) {
@@ -32,6 +36,7 @@ describe('Controller: DockerTagDetailsController', function() {
 
         $controller('DockerTagDetailsController', {
             $scope: $scope,
+            translate: translate,
             $location: $location,
             Nutupane: Nutupane,
             DockerTag: DockerTag,

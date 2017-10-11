@@ -13,6 +13,7 @@ attributes :file_count
 attributes :package_group_count
 attributes :puppet_module_count
 attributes :docker_manifest_count
+attributes :docker_manifest_list_count
 attributes :docker_tag_count
 attributes :ostree_branch_count
 

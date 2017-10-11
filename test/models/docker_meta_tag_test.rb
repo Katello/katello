@@ -8,8 +8,7 @@ module Katello
 
     def setup
       @repo = Repository.find(katello_repositories(:busybox).id)
-      @manifest = create(:docker_manifest)
-      @tag_schema2 = create(:docker_tag, :repository => @repo, :name => "latest")
+      @tag_schema2 = create(:docker_tag, :with_manifest_list, :repository => @repo, :name => "latest")
       @tag_schema1 = create(:docker_tag, :schema1, :repository => @repo, :name => "latest")
 
       @repo.library_instances_inverse.each do |repo|

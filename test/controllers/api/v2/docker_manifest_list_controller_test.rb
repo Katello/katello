@@ -1,10 +1,10 @@
 require "katello_test_helper"
 
 module Katello
-  class Api::V2::DockerManifestsControllerTest < ActionController::TestCase
+  class Api::V2::DockerManifestListsControllerTest < ActionController::TestCase
     def models
       @repo = Repository.find(katello_repositories(:redis).id)
-      @manifest = @repo.docker_manifests.create!(:digest => "abc123", :uuid => "123xyz")
+      @manifest_list = @repo.docker_manifest_lists.create!(:digest => "aeeeeeebc123", :uuid => "123xyz")
     end
 
     def setup
@@ -15,32 +15,32 @@ module Katello
     def test_index
       get :index
       assert_response :success
-      assert_template "katello/api/v2/docker_manifests/index"
+      assert_template "katello/api/v2/docker_manifest_lists/index"
     end
 
     def test_index_with_repository
       get :index, :repository_id => @repo.id
       assert_response :success
-      assert_template "katello/api/v2/docker_manifests/index"
+      assert_template "katello/api/v2/docker_manifest_lists/index"
     end
 
     def test_index_with_organization
       get :index, :organization_id => @repo.organization.id
       assert_response :success
-      assert_template "katello/api/v2/docker_manifests/index"
+      assert_template "katello/api/v2/docker_manifest_lists/index"
     end
 
     def test_index_with_content_view_version
       get :index, :content_view_version_id => ContentViewVersion.last
       assert_response :success
-      assert_template "katello/api/v2/docker_manifests/index"
+      assert_template "katello/api/v2/docker_manifest_lists/index"
     end
 
     def test_show
-      get :show, :repository_id => @repo.id, :id => @manifest.uuid
+      get :show, :repository_id => @repo.id, :id => @manifest_list.uuid
 
       assert_response :success
-      assert_template "katello/api/v2/docker_manifests/show"
+      assert_template "katello/api/v2/docker_manifest_lists/show"
     end
   end
 end

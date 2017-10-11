@@ -41,22 +41,23 @@
 
       <thead>
         <tr bst-table-head row-select>
-          <th bst-table-column><span translate>Manifest Name</span></th>
           <th bst-table-column><span translate>Tags</span></th>
           <th bst-table-column><span translate>Schema Version</span></th>
           <th bst-table-column><span translate>Digest</span></th>
+          <th bst-table-column><span translate>Manifest Lists</span></th>
         </tr>
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="item in table.rows" row-select="item">
+        <tr bst-table-row ng-repeat="item in table.rows"
+            row-select="item" ng-init="updateSelectable(item)">
           <td bst-table-cell>
-            {{ item.name }}
-          </td>
-          <td bst-table-cell>
-            <span ng-repeat="tag in tagsForManifest(item) ">
+            <div ng-if="item.manifest_lists.length > 0" translate>
+              Part of a manifest list
+            </div>
+            <span ng-if="item.manifest_lists.length === 0" ng-repeat="tag in tagsForManifest(item) ">
               <a ui-sref="docker-tag.info({tagId: tag.id})">
-                {{ tag.name }}
+                <span class="registry-image-tag">{{ tag.name }}</span>
               </a>
             </span>
           </td>
@@ -65,6 +66,11 @@
           </td>
           <td bst-table-cell>
             {{ item.digest }}
+          </td>
+          <td bst-table-cell>
+            <span ng-if="item.manifest_lists.length > 0" ng-repeat="ml in item.manifest_lists ">
+              {{ml.digest}}
+            </span>
           </td>
         </tr>
       </tbody>
