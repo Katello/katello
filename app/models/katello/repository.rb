@@ -60,6 +60,9 @@ module Katello
     has_many :repository_docker_manifests, :class_name => "Katello::RepositoryDockerManifest", :dependent => :delete_all
     has_many :docker_manifests, :through => :repository_docker_manifests
 
+    has_many :repository_docker_manifest_lists, :class_name => "Katello::RepositoryDockerManifestList", :dependent => :delete_all
+    has_many :docker_manifest_lists, :through => :repository_docker_manifest_lists
+
     has_many :docker_tags, :dependent => :destroy, :class_name => "Katello::DockerTag"
 
     has_many :docker_meta_tags, :dependent => :destroy, :class_name => "Katello::DockerMetaTag"
@@ -707,14 +710,15 @@ module Katello
     end
 
     def remove_docker_content(manifests)
-      self.docker_tags.where(:docker_manifest_id => manifests.map(&:id)).destroy_all
-      DockerMetaTag.cleanup_tags
-      self.docker_manifests -= manifests
-
-      # destroy any orphan docker manifests
-      manifests.each do |manifest|
-        manifest.destroy if manifest.repositories.empty?
+      destroyable_manifests = manifests.select do |manifest|
+        manifest.repositories.empty? || manifest.docker_manifest_lists.empty?
       end
+      # destroy any orphan docker manifests
+      destroyable_manifests.each do |manifest|
+        self.docker_manifests.delete(manifest)
+        manifest.destroy
+      end
+      DockerMetaTag.cleanup_tags
     end
 
     def update_ostree_upstream_sync_policy

@@ -18,7 +18,7 @@ module Katello
 
     def test_import_from_json
       @tag.repository_id = nil
-      @tag.docker_manifest_id = nil
+      @tag.docker_taggable = nil
       @tag.name = nil
       @tag.save!
 
@@ -48,10 +48,6 @@ module Katello
 
     def test_related_tags
       assert_equal 3, @tag.related_tags.count
-    end
-
-    def test_full_name
-      assert_equal "#{@tag.docker_manifest.name}:#{@tag.name}", @tag.full_name
     end
   end
 end

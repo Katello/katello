@@ -22,6 +22,9 @@
 //= require "bastion_katello/docker-manifests/docker-manifests.module.js"
 //= require_tree "./docker-manifests"
 
+//= require "bastion_katello/docker-manifest-lists/docker-manifest-lists.module.js"
+//= require_tree "./docker-manifest-lists"
+
 //= require "bastion_katello/docker-tags/docker-tags.module.js"
 //= require_tree "./docker-tags"
 

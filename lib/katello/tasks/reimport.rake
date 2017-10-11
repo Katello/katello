@@ -25,6 +25,7 @@ namespace :katello do
               Katello::Subscription,
               Katello::Pool,
               Katello::DockerManifest,
+              Katello::DockerManifestList,
               Katello::DockerTag,
               Katello::ContentViewPuppetEnvironment]
 

@@ -242,6 +242,15 @@
           </td>
         </tr>
         <tr ng-show="repository.content_type === 'docker'">
+          <td translate>Docker Manifest Lists</td>
+          <td class="align-center">
+            <a ui-sref="product.repository.manage-content.docker-manifest-lists({productId: product.id, repositoryId: repository.id})">
+              {{ repository.content_counts.docker_manifest_list || 0 }}
+            </a>
+          </td>
+        </tr>
+
+        <tr ng-show="repository.content_type === 'docker'">
           <td translate>Docker Tags</td>
           <td class="align-center">
             <a ui-sref="product.repository.manage-content.docker-manifests({productId: product.id, repositoryId: repository.id})">

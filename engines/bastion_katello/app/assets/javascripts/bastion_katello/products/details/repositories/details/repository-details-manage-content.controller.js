@@ -12,15 +12,16 @@
  * @requires PackageGroup
  * @requires PuppetModule
  * @requires DockerManifest
+ * @requires DockerManifestList
  * @requires OstreeBranch
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'OstreeBranch', 'File',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, OstreeBranch, File) {
-        var currentState, contentTypes;
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'OstreeBranch', 'File',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, OstreeBranch, File) {
+        var contentTypes;
 
         function success(response, selected) {
             var message;
@@ -46,18 +47,19 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             $scope.product = repository.product;
         });
 
-        currentState = $state.current.name.split('.').pop();
+        $scope.currentState = $state.current.name.split('.').pop();
 
         contentTypes = {
             'packages': { type: Package },
             'package-groups': { type: PackageGroup },
             'puppet-modules': { type: PuppetModule },
             'docker-manifests': { type: DockerManifest },
+            'docker-manifest-lists': { type: DockerManifestList },
             'ostree-branches': { type: OstreeBranch },
             'files': {type: File}
         };
 
-        $scope.contentNutupane = new Nutupane(contentTypes[currentState].type, {
+        $scope.contentNutupane = new Nutupane(contentTypes[$scope.currentState].type, {
             'repository_id': $scope.$stateParams.repositoryId
         });
         $scope.table = $scope.contentNutupane.table;
@@ -87,5 +89,11 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             });
         };
 
+        $scope.updateSelectable = function(item) {
+            if ($scope.currentState === "docker-manifests" && !_.isEmpty(item.manifest_lists)) {
+                item.unselectable = true;
+            }
+            return item;
+        };
     }]
 );

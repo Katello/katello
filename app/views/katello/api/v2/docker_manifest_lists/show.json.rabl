@@ -7,6 +7,6 @@ child :docker_tags => :tags do
   attributes :repository_id, :name
 end
 
-child :docker_manifest_lists => :manifest_lists do
+child :docker_manifests => :manifests do
   attributes :id, :digest, :schema_version, :manifest_type
 end

@@ -38,7 +38,7 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
         permission: 'view_products',
         templateUrl: 'docker-tags/details/views/docker-tag-info.html',
         ncyBreadcrumb: {
-            label: "{{ tag.full_name }}",
+            label: "{{ tag.name }}",
             parent: 'docker-tag'
         }
     })

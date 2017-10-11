@@ -3,6 +3,7 @@
  * @name  Bastion.docker-tags.controller:DockerTagDetailsController
  *
  * @requires $scope
+ * @requires translate
  * @requires $location
  * @requires DockerTag
  * @requires CurrentOrganization
@@ -12,8 +13,8 @@
  *   Provides the functionality for the docker tags details action pane.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
-    ['$scope', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'ApiErrorHandler',
-    function ($scope, $location, Nutupane, DockerTag, CurrentOrganization, ApiErrorHandler) {
+    ['$scope', 'translate', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'ApiErrorHandler',
+    function ($scope, translate, $location, Nutupane, DockerTag, CurrentOrganization, ApiErrorHandler) {
         $scope.panel = {
             error: false,
             loading: true
@@ -52,5 +53,14 @@ angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
                 nutupane.refresh();
             }
         });
+
+        $scope.getManifestType = function (schema) {
+            if (schema['manifest_type'] === 'image') {
+                return translate("Image");
+            }
+            return translate("List");
+
+        };
+
     }
 ]);

@@ -1,28 +1,30 @@
 module Katello
-  class DockerManifest < Katello::Model
+  class DockerManifestList < Katello::Model
     include Concerns::PulpDatabaseUnit
+
     has_many :docker_tags, :as => :docker_taggable, :class_name => "Katello::DockerTag", :dependent => :destroy
-    has_many :repository_docker_manifests, :dependent => :destroy, :inverse_of => :docker_manifest
-    has_many :repositories, :through => :repository_docker_manifests, :inverse_of => :docker_manifests
+    has_many :repository_docker_manifest_lists, :dependent => :destroy, :inverse_of => :docker_manifest_list
+    has_many :repositories, :through => :repository_docker_manifest_lists, :inverse_of => :docker_manifest_lists
 
     has_many :docker_manifest_list_manifests, :class_name => "Katello::DockerManifestListManifest",
-             :dependent => :delete_all, :inverse_of => :docker_manifest
-    has_many :docker_manifest_lists, :through => :docker_manifest_list_manifests, :inverse_of => :docker_manifests
+             :dependent => :delete_all, :inverse_of => :docker_manifest_list
+    has_many :docker_manifests, :through => :docker_manifest_list_manifests, :inverse_of => :docker_manifest_lists
 
-    CONTENT_TYPE = Pulp::DockerManifest::CONTENT_TYPE
+    CONTENT_TYPE = Pulp::DockerManifestList::CONTENT_TYPE
+
     scoped_search :relation => :docker_tags, :on => :name, :rename => :tag, :complete_value => true
     scoped_search :on => :digest, :rename => :digest, :complete_value => true, :only_explicit => true
     scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => true, :only_explicit => true
-    scoped_search :relation => :docker_manifest_lists, :on => :digest, :rename => :manifest_list_digest, :complete_value => true, :only_explicit => true
 
     def self.repository_association_class
-      RepositoryDockerManifest
+      RepositoryDockerManifestList
     end
 
     def update_from_json(json)
       update_attributes(:schema_version => json[:schema_version],
                         :digest => json[:digest],
-                        :downloaded => json[:downloaded]
+                        :downloaded => json[:downloaded],
+                        :docker_manifests => ::Katello::DockerManifest.where(:digest => json[:manifests])
                        )
     end
 
@@ -31,7 +33,7 @@ module Katello
     end
 
     def manifest_type
-      "image"
+      "list"
     end
   end
 end

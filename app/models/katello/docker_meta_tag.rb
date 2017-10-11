@@ -46,7 +46,7 @@ module Katello
       end
     end
 
-    delegate_to_tags :full_name, :docker_manifest
+    delegate_to_tags :docker_manifest
     delegate_to_tags :product, :environment, :content_view_version
 
     def repositories
@@ -71,11 +71,11 @@ module Katello
     end
 
     def schema1_manifest
-      schema1.try(:docker_manifest)
+      schema1.try(:docker_taggable)
     end
 
     def schema2_manifest
-      schema2.try(:docker_manifest)
+      schema2.try(:docker_taggable)
     end
 
     def self.with_uuid(ids)

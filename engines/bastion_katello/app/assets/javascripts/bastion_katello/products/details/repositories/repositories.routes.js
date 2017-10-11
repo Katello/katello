@@ -108,6 +108,15 @@
                 parent: 'product.repository.info'
             }
         })
+        .state('product.repository.manage-content.docker-manifest-lists', {
+            url: '/content/docker_manifest_lists',
+            permission: 'view_products',
+            templateUrl: 'products/details/repositories/details/views/repository-manage-docker-manifest-lists.html',
+            ncyBreadcrumb: {
+                label: "{{'Docker Manifest Lists' | translate }}",
+                parent: 'product.repository.info'
+            }
+        })
         .state('product.repository.manage-content.files', {
             url: '/content/files',
             permission: 'view_products',

@@ -172,7 +172,7 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       uuids.each do |str|
-        docker_repo.docker_manifests.create!(:name => str) do |manifest|
+        docker_repo.docker_manifests.create!(:digest => str) do |manifest|
           manifest.uuid = str
         end
       end

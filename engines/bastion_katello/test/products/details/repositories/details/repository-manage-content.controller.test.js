@@ -1,5 +1,5 @@
 describe('Controller: RepositoryManageContentController', function() {
-    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerManifest, OstreeBranch;
+    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerManifestList,  DockerManifest, OstreeBranch;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -42,6 +42,7 @@ describe('Controller: RepositoryManageContentController', function() {
             Package: Package,
             PackageGroup: PackageGroup,
             DockerManifest: DockerManifest,
+            DockerManifestList: DockerManifestList,
             OstreeBranch: OstreeBranch,
         });
     }));
@@ -72,4 +73,20 @@ describe('Controller: RepositoryManageContentController', function() {
         expect(tags[0].id).toBe(1);
     });
 
+    it('updates selectability appropriately', function() {
+        var manifest;
+        manifest = {manifest_lists: [1]};
+        $scope.currentState = "docker-manifests";
+        $scope.updateSelectable(manifest);
+        expect(manifest.unselectable).toBe(true);
+
+        manifest = {manifest_lists: []};
+        $scope.updateSelectable(manifest);
+        expect(manifest.unselectable).not.toBe(true);
+
+        $scope.currentState = "packages";
+        manifest = {manifest_lists: [1]};
+        $scope.updateSelectable(manifest);
+        expect(manifest.unselectable).not.toBe(true);
+    });
 });

@@ -237,11 +237,16 @@ module Katello
       ostree_branches.count
     end
 
-    def docker_manifest_count
-      manifest_counts = repositories.archived.docker_type.map do |repo|
-        repo.docker_manifests.count
+    def docker_manifest_list_count
+      repositories.archived.docker_type.inject(0) do |sum, repo|
+        sum + repo.docker_manifest_lists.count
       end
-      manifest_counts.sum
+    end
+
+    def docker_manifest_count
+      repositories.archived.docker_type.inject(0) do |sum, repo|
+        sum + repo.docker_manifests.count
+      end
     end
 
     def docker_tags
@@ -271,6 +276,10 @@ module Katello
 
     def docker_manifests
       DockerManifest.in_repositories(archived_repos).uniq
+    end
+
+    def docker_manifest_lists
+      DockerManifestList.in_repositories(archived_repos).uniq
     end
 
     def package_groups
