@@ -43,6 +43,10 @@ module Actions
           delete_tmp_files(input[:tmp_files])
         end
 
+        def rescue_strategy
+          Dynflow::Action::Rescue::Skip
+        end
+
         private
 
         def tmp_dir
