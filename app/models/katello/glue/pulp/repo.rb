@@ -489,29 +489,6 @@ module Katello
         ]
       end
 
-      def sync_start
-        status = self.sync_status
-        retval = nil
-        if status.nil? || status['progress']['start_time'].nil?
-          retval = nil
-        else
-          retval = status['progress']['start_time']
-          # retval = date.strftime("%H:%M:%S %Y-%m-%d")
-        end
-        retval
-      end
-
-      def sync_finish
-        status = self.sync_status
-        retval = nil
-        if status.nil? || status['progress']['finish_time'].nil?
-          retval = nil
-        else
-          retval = status['progress']['finish_time']
-        end
-        retval
-      end
-
       def sync_status
         self._get_most_recent_sync_status if @sync_status.nil?
       end
@@ -639,6 +616,10 @@ module Katello
 
       def ostree?
         self.content_type == Repository::OSTREE_TYPE
+      end
+
+      def published?
+        distributors.map { |dist| dist['last_publish'] }.compact.any?
       end
 
       def capsule_download_policy(capsule)
