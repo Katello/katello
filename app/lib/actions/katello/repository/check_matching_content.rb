@@ -19,7 +19,7 @@ module Actions
           package_groups = package_groups_match?(source_repo, target_repo)
           distributions = distributions_match?(source_repo, target_repo)
 
-          output[:matching_content] = rpms && errata && package_groups && distributions
+          output[:matching_content] = rpms && errata && package_groups && distributions && target_repo.published?
         end
 
         def rpms_match?(source_repo, target_repo)

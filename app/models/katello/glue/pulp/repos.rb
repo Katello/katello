@@ -179,26 +179,6 @@ module Katello
         self.sync_status[:state]
       end
 
-      def sync_start
-        start_times = []
-        repos(library).each do |r|
-          start = r.sync_start
-          start_times << start unless start.nil?
-        end
-        start_times.sort!
-        start_times.last
-      end
-
-      def sync_finish
-        finish_times = []
-        repos(library).each do |r|
-          finish = r.sync_finish
-          finish_times << finish unless finish.nil?
-        end
-        finish_times.sort!
-        finish_times.last
-      end
-
       def sync_size
         self.repos(library).inject(0) do |sum, v|
           sum + v.sync_status.progress.total_size
