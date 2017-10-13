@@ -72,5 +72,18 @@ module Katello
       dmt.schema2 = nil
       assert_equal @tag_schema1.docker_manifest, dmt.docker_manifest
     end
+
+    def test_delete_docker_meta_tag
+      DockerMetaTag.import_meta_tags([@repo])
+      assert_equal 1, DockerMetaTag.where(:schema1 => @tag_schema1.id).count
+      assert_equal 1, DockerMetaTag.where(:schema2 => @tag_schema2.id).count
+      dmt = DockerMetaTag.first
+      dmt.schema1.destroy
+      assert_equal 0, DockerMetaTag.where(:schema1 => @tag_schema1.id).count
+      dmt.schema2.destroy
+      assert_equal 0, DockerMetaTag.where(:schema2 => @tag_schema2.id).count
+
+      assert_equal 0, DockerMetaTag.where(:id => dmt.id).count
+    end
   end
 end
