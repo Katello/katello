@@ -163,7 +163,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_certs
-    unless ENV['mode'] == 'all'
+    unless ['all', 'new_episodes'].include?(ENV['mode'])
       Cert::Certs.stubs(:ca_cert).returns("file")
       Cert::Certs.stubs(:ssl_client_cert).returns("ssl_client_cert")
       Cert::Certs.stubs(:ssl_client_key).returns("ssl_client_key")

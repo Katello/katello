@@ -17,10 +17,7 @@ module Katello
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the
       # things that system.set_pulp_consumer did before.
-      VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method, :body_json]) do
-        ForemanTasks.sync_task(::Actions::Candlepin::Owner::Create,
-                               name: org.name, label: org.label)
-      end
+      ForemanTasks.sync_task(::Actions::Candlepin::Owner::Create, name: org.name, label: org.label)
     end
 
     def set_owner(org)

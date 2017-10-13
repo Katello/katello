@@ -38,16 +38,6 @@ module Katello
         self.sync_status[:state]
       end
 
-      def sync_finish
-        finish_times = []
-        self.products.each do |r|
-          finish = r.sync_finish
-          finish_times << finish unless finish.nil?
-        end
-        finish_times.sort!
-        finish_times.last
-      end
-
       def sync_size
         self.products.inject(0) { |sum, v| sum + v.sync_status.progress.total_size }
       end
