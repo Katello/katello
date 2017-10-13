@@ -362,6 +362,19 @@ fedora_17_unpublished_2:
   url:                  "http://www.pleaseack.com"
   download_policy: on_demand
 
+srpm_repo:
+  name:                 Source rpm repo
+  pulp_id:              source_rpm
+  content_id:           38493849
+  content_type:         yum
+  label:                source_rpm
+  relative_path:        'ACME_Corporation/library/LibraryView/source_rpm'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
+  download_policy: on_demand
+
+
 iso:
   name:                 ISO REpo
   pulp_id:              8iso

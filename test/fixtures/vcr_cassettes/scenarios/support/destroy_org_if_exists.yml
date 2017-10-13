@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://ham.john.example.com:8443/candlepin/owners/scenario_test
+    uri: https://dev.example.com:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -12,11 +12,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.4p230
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.2.5p319
       Authorization:
-      - OAuth oauth_consumer_key="LwBmud4UwazmdJJMg9um3NyW7phVeWmt", oauth_nonce="5gGvFTPge5kRy7jyFqlUUDx2eXIEvr3xWTmffHwqE",
-        oauth_signature="hP1a9w3UEMg05eAjT8eo7KgGT%2BE%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1505325055", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="h31ZPICfAuwkiCBpmvGQuoUG7Wj7OrgKaFY9lvLfrg",
+        oauth_signature="kzMYeiBxh3rRKVgvyjSLQ5U5aos%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1509376944", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -27,22 +27,22 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 90d0489c-91e0-405f-a20d-f042470072f9
+      - 54a058f5-693a-43ec-8136-1dbb1e213777
       X-Version:
-      - 2.1.3-1
-      - 2.1.3-1
+      - 2.0.35-1
+      - 2.0.35-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 13 Sep 2017 17:50:55 GMT
+      - Mon, 30 Oct 2017 15:22:24 GMT
     body:
       encoding: UTF-8
       base64_string: |
         eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIHNjZW5h
         cmlvX3Rlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJlcXVlc3RVdWlkIjoi
-        OTBkMDQ4OWMtOTFlMC00MDVmLWEyMGQtZjA0MjQ3MDA3MmY5In0=
+        NTRhMDU4ZjUtNjkzYS00M2VjLTgxMzYtMWRiYjFlMjEzNzc3In0=
     http_version: 
-  recorded_at: Wed, 13 Sep 2017 17:50:55 GMT
+  recorded_at: Mon, 30 Oct 2017 15:22:24 GMT
 recorded_with: VCR 3.0.3

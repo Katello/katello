@@ -101,6 +101,10 @@ module Katello
         end
       end
 
+      def srpm_count
+        pulp_repo_facts['content_unit_counts']['srpm']
+      end
+
       def uri
         uri = URI.parse(SETTINGS[:katello][:pulp][:url])
         "https://#{uri.host}/pulp/repos/#{relative_path}"
@@ -732,6 +736,7 @@ module Katello
     def index_yum_content(full_index = false)
       if self.environment_id.nil? || self.content_view.default?
         Katello::Rpm.import_for_repository(self, full_index)
+        Katello::Srpm.import_for_repository(self, full_index)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
         self.import_distribution_data

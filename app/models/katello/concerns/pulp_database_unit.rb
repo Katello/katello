@@ -24,6 +24,10 @@ module Katello
         repository_association_class.name.demodulize.pluralize.underscore
       end
 
+      def immutable_unit_types
+        [Katello::Rpm, Katello::Srpm]
+      end
+
       def with_identifiers(ids)
         ids = [ids] unless ids.is_a?(Array)
         ids.map!(&:to_s)
@@ -74,7 +78,7 @@ module Katello
         # Rpms cannot change in Pulp so we do not index them if they are already present
         # in our database. Errata and Package Groups can change in Pulp, so we index
         # all of them in the repository on each sync.
-        if self == Katello::Rpm && !force
+        if immutable_unit_types.include?(self) && !force
           ids_to_import = ids - repository.rpms.map(&:uuid)
         else
           ids_to_import = ids

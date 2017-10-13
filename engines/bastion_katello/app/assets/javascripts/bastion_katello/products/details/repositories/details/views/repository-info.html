@@ -209,6 +209,14 @@
             </a>
           </td>
         </tr>
+
+        <tr ng-show="repository.content_type === 'yum'">
+          <td translate>Source RPMs</td>
+          <td class="align-center">
+            {{ repository.content_counts.srpm || 0 }}
+          </td>
+        </tr>
+
         <tr ng-show="repository.content_type === 'yum'">
           <td translate>Errata</td>
           <td class="align-center">
