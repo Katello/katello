@@ -21,6 +21,7 @@ namespace :katello do
               Katello::PackageGroup,
               Katello::PuppetModule,
               Katello::Rpm,
+              Katello::Srpm,
               Katello::FileUnit,
               Katello::Subscription,
               Katello::Pool,

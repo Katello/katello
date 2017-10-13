@@ -14,12 +14,19 @@ module Actions
           source_repo = ::Katello::Repository.find(input[:source_repo_id])
           target_repo = ::Katello::Repository.find(input[:target_repo_id])
 
+          srpms_match = srpms_match?(source_repo, target_repo)
           rpms = rpms_match?(source_repo, target_repo)
           errata = errata_match?(source_repo, target_repo)
           package_groups = package_groups_match?(source_repo, target_repo)
           distributions = distributions_match?(source_repo, target_repo)
 
-          output[:matching_content] = rpms && errata && package_groups && distributions && target_repo.published?
+          output[:matching_content] = srpms_match && rpms && errata && package_groups && distributions && target_repo.published?
+        end
+
+        def srpms_match?(source_repo, target_repo)
+          source_repo_ids = source_repo.srpm_ids.sort
+          target_repo_ids = target_repo.srpm_ids.sort
+          source_repo_ids == target_repo_ids
         end
 
         def rpms_match?(source_repo, target_repo)

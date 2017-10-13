@@ -93,6 +93,11 @@
             </a>
           </div>
           <div>
+            <span translate ng-show="repository.content_counts.srpm > 0">
+              {{ repository.content_counts.srpm }} Source RPMs
+            </span>
+          </div>
+          <div>
             <a ui-sref="errata({repositoryId: repository.id})"
                ng-show="repository.content_type == 'yum'"
                translate>

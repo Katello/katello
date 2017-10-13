@@ -229,6 +229,10 @@ module Katello
       Rpm.in_repositories(archived_repos).uniq
     end
 
+    def srpm_count
+      Katello::Srpm.in_repositories(self.repositories.archived).count
+    end
+
     def puppet_module_count
       puppet_modules.count
     end

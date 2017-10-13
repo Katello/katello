@@ -55,6 +55,9 @@
             <div translate ng-if="version.package_count && version.package_count > 0">
               {{ version.package_count }} Packages
             </div>
+            <div translate ng-if="version.srpm_count && version.srpm_count > 0">
+              {{ version.srpm_count }} Source RPMs
+            </div>
             <div  ng-if="version.errata_counts.total && version.errata_counts.total > 0">
               <span translate>{{ version.errata_counts.total }} Errata</span>
               (<span errata-counts="version.errata_counts"></span>)

@@ -19,6 +19,9 @@
             </a>
           </div>
           <div>
+            {{ repository.content_counts.srpm }} Source RPMs
+          </div>
+          <div>
             <a ui-sref="errata({repositoryId: repository.id})" translate>
               {{ repository.content_counts.erratum }} Errata
             </a>

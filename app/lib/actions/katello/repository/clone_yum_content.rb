@@ -20,6 +20,8 @@ module Actions
           end
 
           sequence do
+            plan_copy(Pulp::Repository::CopySrpm, source_repo, target_repo)
+
             if filters.empty? || copy_clauses
               plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
               process_errata_and_groups = true
