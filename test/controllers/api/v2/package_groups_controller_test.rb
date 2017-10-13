@@ -106,7 +106,7 @@ module Katello
       parameters = { :repository_id => @repo.id, :name => 'My_Group', :description => "My Group", :mandatory_package_names => ["katello-agent"]}
       assert_sync_task(::Actions::Katello::Repository::UploadPackageGroup) do |repository, params|
         repository.must_equal @repo
-        params[:repository_id].must_equal @repo.id.to_s
+        params[:repository_id].must_equal @repo.id
         params[:name].must_equal parameters[:name]
         params[:description].must_equal parameters[:description]
         params[:mandatory_package_names].must_equal parameters[:mandatory_package_names]

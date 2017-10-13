@@ -288,7 +288,7 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
         assert_equal pool, pools_with_quantities[0].pool
-        assert_equal ["1"], pools_with_quantities[0].quantities
+        assert_equal [1], pools_with_quantities[0].quantities
       end
       put :add_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
       assert_response :success
@@ -302,7 +302,7 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
         assert_equal pool, pools_with_quantities[0].pool
-        assert_equal ["1"], pools_with_quantities[0].quantities
+        assert_equal [1], pools_with_quantities[0].quantities
       end
       put :remove_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
       assert_response :success

@@ -501,9 +501,9 @@ module Katello
 
       env_ids = [ak.environment.id.to_s]
 
-      ::Katello::Host::ContentFacet.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == ak.content_view.id && args[:lifecycle_environment_id] == env_ids
-      end
+      ::Katello::Host::ContentFacet.expects(:where)
+        .with(content_view_id: ak.content_view, lifecycle_environment_id: env_ids.map(&:to_i))
+        .at_least_once.returns([])
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         put :remove, :id => ak.content_view.id,
