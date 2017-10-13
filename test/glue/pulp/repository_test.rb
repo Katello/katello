@@ -3,6 +3,7 @@ require 'support/pulp/task_support'
 
 module Katello
   class GluePulpRepoTestBase < ActiveSupport::TestCase
+    include VCR::TestCase
     include TaskSupport
     include Dynflow::Testing
     include Support::CapsuleSupport
@@ -12,9 +13,9 @@ module Katello
       backend_stubs
 
       FactoryGirl.create(:smart_proxy, :default_smart_proxy)
-      @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
-      @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
-      @fedora_17_library_library_view = Repository.find(FIXTURES['katello_repositories']['fedora_17_library_library_view']['id'])
+      @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
+      @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
+      @fedora_17_library_library_view = katello_repositories(:fedora_17_library_library_view)
       @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
       @cvpe_one = katello_content_view_puppet_environments(:archive_view_puppet_environment)
       @fedora_17_x86_64.relative_path = 'test_path/'
@@ -24,10 +25,6 @@ module Katello
     def backend_stubs
       Product.any_instance.stubs(:certificate).returns(nil)
       Product.any_instance.stubs(:key).returns(nil)
-    end
-
-    def teardown
-      VCR.eject_cassette
     end
 
     def self.delete_repo(repo)
@@ -276,7 +273,6 @@ module Katello
     def setup
       super
       @fedora_17_x86_64 = @fedora_17_x86_64
-      VCR.insert_cassette('pulp/repository/create')
     end
 
     def test_create_pulp_repo
@@ -288,7 +284,6 @@ module Katello
   class GluePulpRepoTest < GluePulpRepoTestBase
     def setup
       super
-      VCR.insert_cassette('pulp/repository/repository')
       self.create_repo(@fedora_17_x86_64)
       @fedora_17_x86_64 = @fedora_17_x86_64
       @fedora_17_x86_64.relative_path = 'test_path/'
@@ -296,8 +291,6 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-    ensure
-      VCR.eject_cassette
     end
 
     def test_delete_orphaned_content
@@ -366,7 +359,6 @@ module Katello
 
     def setup
       super
-      VCR.insert_cassette('pulp/repository/puppet')
       @p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
       @p_forge.relative_path = RepositorySupport::PULP_TMP_DIR
       @p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
@@ -379,8 +371,6 @@ module Katello
 
     def teardown
       delete_repo(@p_forge)
-    ensure
-      VCR.eject_cassette
     end
 
     def test_generate_distributors
@@ -391,7 +381,6 @@ module Katello
   class GluePulpRepoContentsTest < GluePulpRepoTestBase
     def setup
       super
-      VCR.insert_cassette('pulp/repository/contents')
 
       @fedora_17_x86_64.create_pulp_repo
       task_list = @fedora_17_x86_64.sync
@@ -400,8 +389,6 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-    ensure
-      VCR.eject_cassette
     end
 
     def test_sync_status
@@ -418,14 +405,6 @@ module Katello
 
     def test_synced?
       assert @fedora_17_x86_64.synced?
-    end
-
-    def test_sync_finish
-      refute_nil @fedora_17_x86_64.sync_finish
-    end
-
-    def test_sync_start
-      refute_nil @fedora_17_x86_64.sync_start
     end
 
     def test_import_distribution_data
@@ -469,7 +448,6 @@ module Katello
   class GluePulpRepoOperationsTest < GluePulpRepoTestBase
     def setup
       super
-      VCR.insert_cassette('pulp/repository/operations')
 
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
 
@@ -480,8 +458,10 @@ module Katello
 
     def teardown
       delete_repo(@fedora_17_x86_64)
-    ensure
-      VCR.eject_cassette
+    end
+
+    def test_published
+      assert @fedora_17_x86_64.published?
     end
 
     def test_create_clone

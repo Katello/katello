@@ -3,13 +3,10 @@ require 'support/candlepin/owner_support'
 
 module Katello
   class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
+    include VCR::TestCase
+
     def setup
       User.current = User.find(FIXTURES['users']['admin']['id'])
-      VCR.insert_cassette('glue_candlepin_owner', :match_requests_on => [:path, :params, :method, :body_json])
-    end
-
-    def teardown
-      VCR.eject_cassette
     end
   end
 
