@@ -11,6 +11,7 @@ module Katello
     has_one :schema2_meta_tag, :class_name => "Katello::DockerMetaTag", :foreign_key => "schema2_id",
                                :inverse_of => :schema2, :dependent => :nullify
 
+    before_destroy :cleanup_meta_tags
     scoped_search :on => :name, :complete_value => true, :rename => :tag
     scoped_search :relation => :docker_manifest, :on => :name, :rename => :manifest,
       :complete_value => true, :only_explicit => false
@@ -72,6 +73,16 @@ module Katello
 
     def self.completer_scope_options
       {"#{Katello::Repository.table_name}" => lambda { |repo_class| repo_class.docker_type } }
+    end
+
+    def cleanup_meta_tags
+      if schema1_meta_tag && schema1_meta_tag.schema2.blank?
+        schema1_meta_tag.destroy
+      end
+
+      if schema2_meta_tag && schema2_meta_tag.schema1.blank?
+        schema2_meta_tag.destroy
+      end
     end
   end
 end
