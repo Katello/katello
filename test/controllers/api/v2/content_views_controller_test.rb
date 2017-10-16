@@ -499,10 +499,10 @@ module Katello
                        alternate_env_read_permission, bad_cv_read_permission]
                      ]
 
-      env_ids = [ak.environment.id.to_s]
+      env_ids = [ak.environment.id.to_i]
 
       ::Katello::Host::ContentFacet.expects(:where).at_least_once.returns([]).with do |args|
-        args[:content_view_id].id == ak.content_view.id && args[:lifecycle_environment_id] == env_ids
+        args[:content_view_id].id == ak.content_view.id && args[:lifecycle_environment_id].map(&:to_i) == env_ids
       end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
