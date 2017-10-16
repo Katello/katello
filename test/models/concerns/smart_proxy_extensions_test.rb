@@ -26,6 +26,7 @@ module Katello
     end
 
     def test_destroy_with_content_facet
+      @proxy.save!
       host = FactoryGirl.create(:host, :with_content, :content_view => @view,
                                           :lifecycle_environment => @library)
 

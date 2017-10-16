@@ -181,7 +181,7 @@ module Katello
       users(:restricted).update_attribute(:locations, [@host1.location, @host2.location].uniq)
     end
 
-    def test_permissions
+    def test_bulk_add_host_collections_permissions
       good_perms = [@update_permission]
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
@@ -191,28 +191,50 @@ module Katello
                                          :organization_id => @org.id,
                                          :host_collection_ids => [@host_collection1.id, @host_collection2.id]
       end
+    end
 
+    def test_bulk_remove_host_collections_permissions
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
       assert_protected_action(:bulk_remove_host_collections, good_perms, bad_perms) do
         put :bulk_remove_host_collections,  :included => {:ids => @host_ids},
                                             :organization_id => @org.id,
                                             :host_collection_ids => [@host_collection1.id, @host_collection2.id]
       end
+    end
 
+    def test_install_content_permissions
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
       assert_protected_action(:install_content, good_perms, bad_perms) do
-        put :install_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-            :content_type => 'package', :content => ['foo']
+        put :install_content, :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo']
       end
+    end
 
+    def test_update_content_permissions
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
       assert_protected_action(:update_content, good_perms, bad_perms) do
         put :update_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-            :content_type => 'package', :content => ['foo']
+            :content_type => "package", :content => ['foo']
       end
+    end
 
+    def test_remove_content_permissions
+      good_perms = [@update_permission]
+      bad_perms = [@view_permission, @destroy_permission]
+      allow_restricted_user_to_see_host
       assert_protected_action(:remove_content, good_perms, bad_perms) do
         put :remove_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
             :content_type => 'package', :content => ['foo']
       end
+    end
 
+    def test_destroy_hosts_permissions
+      allow_restricted_user_to_see_host
       good_perms = [@destroy_permission]
       bad_perms = [@view_permission, @update_permission]
 
@@ -288,7 +310,7 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
         assert_equal pool, pools_with_quantities[0].pool
-        assert_equal ["1"], pools_with_quantities[0].quantities
+        assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
       put :add_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
       assert_response :success
@@ -302,7 +324,7 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
         assert_equal pool, pools_with_quantities[0].pool
-        assert_equal ["1"], pools_with_quantities[0].quantities
+        assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
       put :remove_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
       assert_response :success

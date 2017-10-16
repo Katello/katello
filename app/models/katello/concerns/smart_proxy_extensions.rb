@@ -40,7 +40,7 @@ module Katello
                  :source     => :lifecycle_environment
 
         has_many :content_facets, :class_name => "::Katello::Host::ContentFacet", :foreign_key => :content_source_id,
-                                  :inverse_of => :content_source
+                                  :inverse_of => :content_source, :dependent => :nullify
 
         has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_source_id,
                               :inverse_of => :content_source
