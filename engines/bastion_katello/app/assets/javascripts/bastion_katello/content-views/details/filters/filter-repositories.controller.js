@@ -46,6 +46,10 @@ angular.module('Bastion.content-views').controller('FilterRepositoriesController
             }
 
             $scope.table.rows = displayedRepositories;
+            $scope.table.numSelected = displayedRepositories.length;
+            $scope.table.resource = {
+                subtotal: displayedRepositories.length
+            };
             $scope.showRepos = filterRepositories.length !== 0;
         };
 
