@@ -137,6 +137,8 @@ angular.module('Bastion.products').controller('DiscoveryController',
             };
 
             Organization.repoDiscover(params, function (task) {
+                // Hide pagination
+                $scope.table.resource['per_page'] = false;
                 $scope.taskSearchId = Task.registerSearch({ 'type': 'task', 'task_id': task.id }, $scope.updateTask);
             });
         };

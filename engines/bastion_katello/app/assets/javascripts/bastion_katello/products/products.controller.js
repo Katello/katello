@@ -95,6 +95,14 @@ angular.module('Bastion.products').controller('ProductsController',
             ProductBulkAction.syncProducts(getBulkParams(), success, bulkError);
         };
 
+        $scope.goToDiscoveries = function () {
+            nutupane.table.rows = [];
+            nutupane.table.resource.results = [];
+            nutupane.table.resource.total = 0;
+            nutupane.table.resource.subtotal = 0;
+            $state.go("product-discovery.scan");
+        };
+
         $scope.openSyncPlanModal = function () {
             nutupane.invalidate();
             $uibModal.open({
