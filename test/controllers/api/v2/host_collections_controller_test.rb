@@ -9,6 +9,8 @@ module Katello
       @host_two = hosts(:two)
       @host_collection = katello_host_collections(:simple_host_collection)
       @organization = get_organization
+      @host.update_attribute :organization_id, @organization.id
+      @host_two.update_attribute :organization_id, @organization.id
 
       HostCollection.stubs('any_readable?').with(@organization).returns(true)
       stub_find_organization(@organization)

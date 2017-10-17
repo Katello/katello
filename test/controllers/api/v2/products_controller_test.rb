@@ -62,7 +62,7 @@ module Katello
       allowed_perms = [@read_permission, @sync_plan_permission]
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, :organization_id => @organization.id
       end
     end
@@ -100,7 +100,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@read_permission, @update_permission, @delete_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
         post :create, :product => {:name => "foo"}, :organization_id => @organization.id
       end
     end

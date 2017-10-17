@@ -45,7 +45,7 @@ module Katello
       allowed_perms = [@read_permission]
       denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, :organization_id => @organization.id
       end
     end
@@ -79,7 +79,7 @@ module Katello
       allowed_perms = [@import_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
-      assert_protected_action(:upload, allowed_perms, denied_perms) do
+      assert_protected_action(:upload, allowed_perms, denied_perms, [@organization]) do
         post :upload, :organization_id => @organization.id
       end
     end
@@ -96,7 +96,7 @@ module Katello
       allowed_perms = [@import_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @read_permission]
 
-      assert_protected_action(:refresh_manifest, allowed_perms, denied_perms) do
+      assert_protected_action(:refresh_manifest, allowed_perms, denied_perms, [@organization]) do
         put :refresh_manifest, :organization_id => @organization.id
       end
     end
@@ -113,7 +113,7 @@ module Katello
       allowed_perms = [@delete_permission]
       denied_perms = [@attach_permission, @unattach_permission, @import_permission, @read_permission]
 
-      assert_protected_action(:delete_manifest, allowed_perms, denied_perms) do
+      assert_protected_action(:delete_manifest, allowed_perms, denied_perms, [@organization]) do
         post :delete_manifest, :organization_id => @organization.id
       end
     end
@@ -128,7 +128,7 @@ module Katello
       allowed_perms = [@read_permission]
       denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]
 
-      assert_protected_action(:manifest_history, allowed_perms, denied_perms) do
+      assert_protected_action(:manifest_history, allowed_perms, denied_perms, [@organization]) do
         get :manifest_history, :organization_id => @organization.id
       end
     end

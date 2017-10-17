@@ -58,7 +58,7 @@ module Katello
       allowed_perms = [@create_permission]
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:create, allowed_perms, denied_perms) do
+      assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
         post :create,
           :organization_id => @organization.id,
           :environment => {
@@ -92,7 +92,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         put :update,
           :organization_id => @organization.id,
           :id => @staging.id,
@@ -129,7 +129,7 @@ module Katello
       allowed_perms = [@destroy_permission]
       denied_perms = [@view_permission, @update_permission, @create_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, :organization_id => @organization.id,
                          :id => @staging.id
       end
@@ -147,7 +147,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@destroy_permission, @update_permission, @create_permission]
 
-      assert_protected_action(:paths, allowed_perms, denied_perms) do
+      assert_protected_action(:paths, allowed_perms, denied_perms, [@organization]) do
         get :paths, :organization_id => @organization.id
       end
     end
