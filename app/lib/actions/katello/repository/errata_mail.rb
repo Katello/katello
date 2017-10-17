@@ -17,7 +17,7 @@ module Actions
           errata = ::Katello::Erratum.where(:id => repo.repository_errata.where('katello_repository_errata.updated_at > ?', input[:last_updated].to_datetime).pluck(:erratum_id))
 
           begin
-            MailNotification[:sync_errata].deliver_now(:users => users, :repo => repo, :errata => errata) unless (users.blank? || errata.blank?)
+            MailNotification[:sync_errata].deliver(:users => users, :repo => repo, :errata => errata) unless (users.blank? || errata.blank?)
           rescue => e
             message = _('Unable to send errata e-mail notification: %{error}' % {:error => e})
             Rails.logger.error(message)
