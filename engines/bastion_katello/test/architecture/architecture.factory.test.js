@@ -26,7 +26,7 @@ describe('Factory: Architecture', function() {
     });
 
     it('provides a way to get a list of architectures', function() {
-         $httpBackend.expectGET('/api/v2/architectures?full_result=true').respond(architecture);
+         $httpBackend.expectGET('api/v2/architectures?full_result=true').respond(architecture);
 
          Architecture.queryUnpaged(function(architecture) {
              expect(architecture.records.length).toBe(1);
