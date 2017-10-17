@@ -15,7 +15,7 @@ module Katello
       capsule = mock
       capsule.expects(:url => "http://" + hostname + ":8000")
       @container.stubs(:capsule).returns(capsule)
-      Repository.expects(:where).with(:pulp_id => @container.repository_name).returns(counter)
+      Repository.expects(:where).with(:container_repository_name => @container.repository_name).returns(counter)
       url = @container.repository_pull_url
       assert_equal "#{hostname}:6000/#{@container.repository_name}:#{@container.tag}", url
     end
@@ -29,7 +29,7 @@ module Katello
       capsule.expects(:url => "http://" + hostname + ":8000")
       default_capsule.expects(:capsule).returns(capsule)
       @container.stubs(:capsule).returns
-      Repository.expects(:where).with(:pulp_id => @container.repository_name).returns(counter)
+      Repository.expects(:where).with(:container_repository_name => @container.repository_name).returns(counter)
       url = @container.repository_pull_url
       assert_equal "#{hostname}:6000/#{@container.repository_name}:#{@container.tag}", url
     end
