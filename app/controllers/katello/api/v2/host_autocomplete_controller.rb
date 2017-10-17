@@ -1,6 +1,5 @@
 module Katello
   class Api::V2::HostAutocompleteController < ::Api::V2::BaseController
-    include ::Api::TaxonomyScope
     include ::Foreman::Controller::AutoCompleteSearch
 
     before_action :find_optional_nested_object

@@ -25,6 +25,8 @@ module Katello
 
     before_action :check_content_type, :except => :async_hypervisors_update
 
+    skip_before_action :set_taxonomy, :only => [:rhsm_index, :consumer_activate, :consumer_create]
+
     def repackage_message
       yield
     ensure

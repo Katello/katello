@@ -47,7 +47,7 @@ module Katello
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
-      assert_protected_action(:index, allowed_perms, denied_perms) do
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
         get :index, :organization_id => @organization.id
       end
     end
@@ -119,7 +119,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:update, allowed_perms, denied_perms) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, :id => @activation_key.id, :organization_id => @organization.id,
             :activation_key => {:name => 'New Name'}
       end
@@ -153,7 +153,7 @@ module Katello
       allowed_perms = [@destroy_permission]
       denied_perms = [@view_permission, @create_permission, @update_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
       end
     end
@@ -269,7 +269,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:add_subscriptions, allowed_perms, denied_perms) do
+      assert_protected_action(:add_subscriptions, allowed_perms, denied_perms, [@organization]) do
         post(:add_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
       end
     end
@@ -278,7 +278,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:remove_subscriptions, allowed_perms, denied_perms) do
+      assert_protected_action(:remove_subscriptions, allowed_perms, denied_perms, [@organization]) do
         post(:remove_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
       end
     end
