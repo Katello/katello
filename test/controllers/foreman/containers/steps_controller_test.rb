@@ -33,16 +33,16 @@ module Containers
     end
 
     def test_create_image_with_katello
-      repo = OpenStruct.new(:id => 100, :pulp_id => "repo_pulp_id")
+      repo = OpenStruct.new(:id => 100, :container_repository_name => "repo_pulp_id")
       ::Katello::Repository.expects(:where).with(:id => repo.id.to_s).returns([repo])
 
       tag = OpenStruct.new(:id => 200, :name => "tag_name")
-      ::Katello::DockerTag.expects(:where).with(:id => tag.id.to_s).returns([tag])
+      ::Katello::DockerMetaTag.expects(:where).with(:id => tag.id.to_s).returns([tag])
 
       capsule_id = 300
       image = OpenStruct.new(:id => 1000)
 
-      @state.expects(:build_image).with(:repository_name => repo.pulp_id,
+      @state.expects(:build_image).with(:repository_name => repo.container_repository_name,
                                         :tag => tag.name,
                                         :capsule_id => capsule_id.to_s,
                                         :katello => true,
