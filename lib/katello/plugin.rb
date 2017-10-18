@@ -245,16 +245,18 @@ Foreman::Plugin.register :katello do
                   'bastion/bastion/index_ie should have a permission that grants access'
                 ])
 
-  add_controller_action_scope(HostsController, :index) do |base_scope|
-    base_scope
-      .preload(:content_view, :lifecycle_environment, :subscription_facet)
-      .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
-  end
+  in_to_prepare do
+    add_controller_action_scope(HostsController, :index) do |base_scope|
+      base_scope
+        .preload(:content_view, :lifecycle_environment, :subscription_facet)
+        .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
+    end
 
-  add_controller_action_scope(Api::V2::HostsController, :index) do |base_scope|
-    base_scope
-      .preload(:content_view, :lifecycle_environment, :subscription_facet)
-      .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
+    add_controller_action_scope(Api::V2::HostsController, :index) do |base_scope|
+      base_scope
+        .preload(:content_view, :lifecycle_environment, :subscription_facet)
+        .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
+    end
   end
 
   register_info_provider Katello::Host::InfoProvider
