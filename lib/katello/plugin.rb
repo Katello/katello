@@ -6,14 +6,6 @@ Foreman::Plugin.register :katello do
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
     menu :top_menu,
-         :environments,
-         :caption => N_('Lifecycle Environments'),
-         :url => '/lifecycle_environments',
-         :url_hash => {:controller => 'katello/api/v2/environments',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
-    menu :top_menu,
          :red_hat_subscriptions,
          :caption => N_('Red Hat Subscriptions'),
          :url => '/subscriptions',
@@ -21,16 +13,7 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
-    menu :top_menu,
-         :activation_keys,
-         :caption => N_('Activation Keys'),
-         :url => '/activation_keys',
-         :url_hash => {:controller => 'katello/api/v2/activation_keys',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
 
-    divider :top_menu, :parent => :content_menu
     menu :top_menu,
          :redhat_provider,
          :caption => N_('Red Hat Repositories'),
@@ -57,15 +40,6 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
-    divider :top_menu, :parent => :content_menu
-    menu :top_menu,
-         :sync_status,
-         :caption => N_('Sync Status'),
-         :url_hash => {:controller => 'katello/sync_management',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
-
     menu :top_menu,
          :sync_plans,
          :caption => N_('Sync Plans'),
@@ -75,7 +49,25 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
-    divider :top_menu, :parent => :content_menu
+    menu :top_menu,
+         :sync_status,
+         :caption => N_('Sync Status'),
+         :url_hash => {:controller => 'katello/sync_management',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    divider :top_menu, :caption => N_('Lifecycle'), :parent => :content_menu
+
+    menu :top_menu,
+         :environments,
+         :caption => N_('Lifecycle Environments'),
+         :url => '/lifecycle_environments',
+         :url_hash => {:controller => 'katello/api/v2/environments',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
     menu :top_menu,
          :content_views,
          :caption => N_('Content Views'),
@@ -85,39 +77,31 @@ Foreman::Plugin.register :katello do
          :engine => Katello::Engine,
          :turbolinks => false
 
-    divider :top_menu, :parent => :content_menu
     menu :top_menu,
-         :errata,
-         :caption => N_('Errata'),
-         :url => '/errata',
-         :url_hash => {:controller => 'katello/api/v2/errata',
+         :activation_keys,
+         :caption => N_('Activation Keys'),
+         :url => '/activation_keys',
+         :url_hash => {:controller => 'katello/api/v2/activation_keys',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
 
-    menu :top_menu,
-         :packages,
-         :caption => N_('Packages'),
-         :url => '/packages',
-         :url_hash => {:controller => 'katello/api/v2/packages',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
-
-    menu :top_menu,
-         :puppet_modules,
-         :caption => N_('Puppet Modules'),
-         :url => '/puppet_modules',
-         :url_hash => {:controller => 'katello/api/v2/puppet_modules',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    divider :top_menu, :caption => N_('Content Types'), :parent => :content_menu
 
     menu :top_menu,
          :docker_tags,
          :caption => N_('Docker Tags'),
          :url => '/docker_tags',
          :url_hash => {:controller => 'katello/api/v2/docker_tags',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    menu :top_menu,
+         :errata,
+         :caption => N_('Errata'),
+         :url => '/errata',
+         :url_hash => {:controller => 'katello/api/v2/errata',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
@@ -139,6 +123,24 @@ Foreman::Plugin.register :katello do
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
+
+    menu :top_menu,
+         :packages,
+         :caption => N_('Packages'),
+         :url => '/packages',
+         :url_hash => {:controller => 'katello/api/v2/packages',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
+
+    menu :top_menu,
+         :puppet_modules,
+         :caption => N_('Puppet Modules'),
+         :url => '/puppet_modules',
+         :url_hash => {:controller => 'katello/api/v2/puppet_modules',
+                       :action => 'index'},
+         :engine => Katello::Engine,
+         :turbolinks => false
   end
 
   menu :top_menu,
@@ -149,7 +151,7 @@ Foreman::Plugin.register :katello do
                      :action => 'index'},
        :engine => Katello::Engine,
        :parent => :hosts_menu,
-       :after => :hosts,
+       :after => :newhost,
        :turbolinks => false
 
   menu :top_menu,
@@ -245,18 +247,16 @@ Foreman::Plugin.register :katello do
                   'bastion/bastion/index_ie should have a permission that grants access'
                 ])
 
-  in_to_prepare do
-    add_controller_action_scope(HostsController, :index) do |base_scope|
-      base_scope
-        .preload(:content_view, :lifecycle_environment, :subscription_facet)
-        .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
-    end
+  add_controller_action_scope(HostsController, :index) do |base_scope|
+    base_scope
+      .preload(:content_view, :lifecycle_environment, :subscription_facet)
+      .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
+  end
 
-    add_controller_action_scope(Api::V2::HostsController, :index) do |base_scope|
-      base_scope
-        .preload(:content_view, :lifecycle_environment, :subscription_facet)
-        .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
-    end
+  add_controller_action_scope(Api::V2::HostsController, :index) do |base_scope|
+    base_scope
+      .preload(:content_view, :lifecycle_environment, :subscription_facet)
+      .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
   end
 
   register_info_provider Katello::Host::InfoProvider
