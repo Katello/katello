@@ -7,6 +7,7 @@ class AddErrataCounts < ActiveRecord::Migration
     add_column :katello_content_facets, :applicable_rpm_count, :integer, :null => false, :default => 0
     add_column :katello_content_facets, :upgradable_rpm_count, :integer, :null => false, :default => 0
 
+    Katello::Host::ContentFacet.reset_column_information
     Katello::Host::ContentFacet.find_each do |content_facet|
       content_facet.update_applicability_counts
     end
