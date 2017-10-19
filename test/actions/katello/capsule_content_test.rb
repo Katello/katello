@@ -137,6 +137,7 @@ module ::Actions::Katello::CapsuleContent
                          path: repository.relative_path,
                          with_importer: true,
                          docker_upstream_name: repository.container_repository_name,
+                         :repo_registry_id => nil,
                          capsule_id: capsule_content.capsule.id
                         )
       end
