@@ -26,10 +26,11 @@
         $scope.hasErrata = function (version) {
             var found = false;
 
-            found = _.find(version['errata_counts'], function (counts) {
-                return counts !== 0;
-            });
-
+            if (version['errata_counts'] &&
+                version['errata_counts'].total &&
+                version['errata_counts'].total !== 0) {
+                return true;
+            }
             return found;
         };
 
