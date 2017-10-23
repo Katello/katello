@@ -36,6 +36,15 @@ module Katello
       refute Location.default_location_ids.present?
     end
 
+    test "with nothing" do
+      Setting[:default_location_puppet_content] = nil
+      Setting[:default_location_subscribed_hosts] = nil
+      Location.delete_all
+
+      seed
+      assert_empty Location.all
+    end
+
     test "create a default location on seed on a fresh install" do
       with_env('SEED_LOCATION' => 'seed_test') do
         seed

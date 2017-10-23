@@ -4,9 +4,7 @@
 # !!! PLEASE KEEP THIS SCRIPT IDEMPOTENT !!!
 #
 
-if Location.exists? &&
-    Setting[:default_location_subscribed_hosts].blank? ||
-    Setting[:default_location_puppet_content].blank?
+if Location.exists? || ENV['SEED_LOCATION'].present?
   # Create a new location to be used as the Katello Default.
   if ENV['SEED_LOCATION'].blank?
     default_location = Location.first
