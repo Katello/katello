@@ -19,12 +19,12 @@ module Katello
       refute @basic.recently_expired?
     end
 
-    def test_with_subscribable_content
+    def test_subscribable
       fedora = katello_products(:fedora)
-      assert_includes Subscription.with_subscribable_content, @other
+      assert_includes Subscription.subscribable, @other
 
       @other.products.delete(fedora)
-      refute_includes Subscription.with_subscribable_content, @other
+      assert_includes Subscription.subscribable, @other
     end
 
     def test_virt_who_scope

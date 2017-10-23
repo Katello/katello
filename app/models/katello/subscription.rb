@@ -12,9 +12,10 @@ module Katello
 
     scope :in_organization, ->(org) { where(:organization => org) }
 
-    def self.with_subscribable_content
-      joins(:products).
-        where("#{Katello::Product.table_name}.id" => Product.with_subscribable_content)
+    def self.subscribable
+      joins("LEFT OUTER JOIN #{Katello::SubscriptionProduct.table_name} subprod ON #{self.table_name}.id = subprod.subscription_id")
+        .where("subprod.product_id" => Product.subscribable << nil)
+        .group("#{self.table_name}.id")
     end
 
     def self.using_virt_who
