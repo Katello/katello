@@ -55,10 +55,10 @@ module Katello
     scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
 
-    def self.with_subscribable_content
-      joins(:repositories).uniq.
-        where("#{Katello::Repository.table_name}.content_type IN (?)",
-              Repository::SUBSCRIBABLE_TYPES)
+    def self.subscribable
+      joins("LEFT OUTER JOIN #{Katello::Repository.table_name} repo ON repo.product_id = #{self.table_name}.id")
+        .where("repo.content_type IN (?) OR repo IS NULL", Repository::SUBSCRIBABLE_TYPES)
+        .group("#{self.table_name}.id, repo.product_id")
     end
 
     def self.enabled
