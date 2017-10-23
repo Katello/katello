@@ -146,7 +146,7 @@ module Katello
       @dev_key.stubs(:get_pools).returns(cp_pools)
       @dev_key.pools = []
 
-      assert_equal [pool_one], @dev_key.available_subscriptions
+      assert_equal [pool_one, pool_two], @dev_key.available_subscriptions
     end
   end
 end

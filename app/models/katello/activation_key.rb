@@ -88,7 +88,7 @@ module Katello
       added_pools = self.pools.pluck(:cp_id)
       available_pools = all_pools - added_pools
       Pool.where(:cp_id => available_pools,
-                 :subscription_id => Subscription.with_subscribable_content)
+                 :subscription_id => Subscription.subscribable)
     end
 
     def products

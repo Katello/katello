@@ -119,6 +119,30 @@ module Katello
       assert @redhat_product.used_by_another_org?
     end
 
+    def test_subscribable_with_puppet_repo
+      puppet_repo = katello_repositories(:p_forge)
+      product = katello_products(:fedora)
+      Repository.any_instance.stubs(:exist_for_environment?).returns(true)
+      product.repositories = [puppet_repo]
+
+      refute_includes Product.subscribable, product
+    end
+
+    def test_subscribable_without_repos
+      product = katello_products(:fedora)
+      product.repositories = []
+
+      assert_includes Product.subscribable, product
+    end
+
+    def test_subscribable_puppet_and_yum_repos
+      product = katello_products(:fedora)
+      Repository.any_instance.stubs(:exist_for_environment?).returns(true)
+      product.repositories << katello_repositories(:p_forge)
+
+      assert_includes Product.subscribable, product
+    end
+
     def test_available_content
       product = katello_products(:fedora)
       fedora = katello_repositories(:fedora_17_x86_64)
