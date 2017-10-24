@@ -165,7 +165,7 @@ module Katello
     end
 
     it "test_rhsm_index_protected" do
-      assert_protected_action(:rhsm_index, :view_lifecycle_environments) do
+      assert_protected_action(:rhsm_index, :view_lifecycle_environments, [], [@organization]) do
         get :rhsm_index, :organization_id => @organization.label
       end
     end
