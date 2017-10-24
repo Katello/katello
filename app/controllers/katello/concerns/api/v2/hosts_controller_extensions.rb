@@ -4,9 +4,19 @@ module Katello
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
 
-      included do
-        alias_method_chain :action_permission, :katello
+      module Overrides
+        def action_permission
+          case params[:action]
+          when 'host_collections'
+            'edit'
+          else
+            super
+          end
+        end
+      end
 
+      included do
+        prepend Overrides
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
           process_response(:object => @host)
@@ -19,17 +29,6 @@ module Katello
           @host.host_collection_ids = params[:host_collection_ids]
           @host.save!
           render(:locals => { :resource => @host }, :template => 'katello/api/v2/hosts/show', :status => 200)
-        end
-      end
-
-      private
-
-      def action_permission_with_katello
-        case params[:action]
-        when 'host_collections'
-          'edit'
-        else
-          action_permission_without_katello
         end
       end
     end

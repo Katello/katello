@@ -5,9 +5,21 @@ module Katello
       include Katello::KatelloUrlsHelper
       include ForemanTasks::Concerns::ActionSubject
 
+      module Overrides
+        def validate_media
+          (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && super
+        end
+
+        def smart_proxy_ids
+          ids = super
+          ids << content_source_id
+          ids.uniq.compact
+        end
+      end
+
+      #rubocop:disable Style/MixinUsage https://github.com/bbatsov/rubocop/issues/4885
       included do
-        alias_method_chain :validate_media?, :capsule
-        alias_method_chain :smart_proxy_ids, :katello
+        prepend Overrides
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :destroy
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
@@ -27,22 +39,12 @@ module Katello
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
       end
 
-      def validate_media_with_capsule?
-        (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && validate_media_without_capsule?
-      end
-
       def rhsm_organization_label
         self.organization.label
       end
 
       def self.available_locks
         [:update]
-      end
-
-      def smart_proxy_ids_with_katello
-        ids = smart_proxy_ids_without_katello
-        ids << content_source_id
-        ids.uniq.compact
       end
 
       def correct_puppet_environment
