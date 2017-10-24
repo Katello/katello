@@ -3,11 +3,25 @@ module Katello
     module SmartProxiesControllerExtensions
       extend ActiveSupport::Concern
 
+      module Overrides
+        def show
+          @task_search_url = main_app.foreman_tasks_tasks_path(:search => "resource_id = #{@smart_proxy.id} AND resource_type = #{@smart_proxy.class}")
+          render 'foreman/smart_proxies/show', :layout => 'katello/layouts/foreman_with_bastion'
+        end
+
+        def action_permission
+          if params[:action] == 'pulp_status' || params[:action] == 'pulp_storage'
+            :view
+          else
+            super
+          end
+        end
+      end
+
       included do
+        prepend Overrides
         append_view_path('app/views/foreman')
         before_action :find_resource_and_status, :only => [:pulp_storage, :pulp_status]
-        alias_method_chain :action_permission, :katello
-        alias_method_chain :show, :content
 
         def pulp_storage
           pulp_connection = @proxy_status[:pulp] || @proxy_status[:pulpnode]
@@ -42,24 +56,11 @@ module Katello
         end
       end
 
-      def show_with_content
-        @task_search_url = main_app.foreman_tasks_tasks_path(:search => "resource_id = #{@smart_proxy.id} AND resource_type = #{@smart_proxy.class}")
-        render 'foreman/smart_proxies/show', :layout => 'katello/layouts/foreman_with_bastion'
-      end
-
       private
 
       def find_resource_and_status
         find_resource
         find_status
-      end
-
-      def action_permission_with_katello
-        if params[:action] == 'pulp_status' || params[:action] == 'pulp_storage'
-          :view
-        else
-          action_permission_without_katello
-        end
       end
     end
   end

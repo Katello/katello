@@ -4,6 +4,14 @@ module Katello
     module SmartProxyExtensions
       extend ActiveSupport::Concern
 
+      module Overrides
+        def refresh
+          errors = super
+          update_puppet_path
+          errors
+        end
+      end
+
       PULP_FEATURE = "Pulp".freeze
       PULP_NODE_FEATURE = "Pulp Node".freeze
 
@@ -14,7 +22,7 @@ module Katello
         include ForemanTasks::Concerns::ActionSubject
         include LazyAccessor
 
-        alias_method_chain :refresh, :puppet_path
+        prepend Overrides
 
         before_create :associate_organizations
         before_create :associate_default_locations
@@ -75,12 +83,6 @@ module Katello
         end
         self.update_attribute(:puppet_path, path || '') if persisted?
         path
-      end
-
-      def refresh_with_puppet_path
-        errors = refresh_without_puppet_path
-        update_puppet_path
-        errors
       end
 
       def pulp_node

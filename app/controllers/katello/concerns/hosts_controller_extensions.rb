@@ -4,8 +4,19 @@ module Katello
       extend ActiveSupport::Concern
       include ForemanTasks::Triggers
 
+      module Overrides
+        def action_permission
+          case params[:action]
+          when 'content_hosts'
+            'view'
+          else
+            super
+          end
+        end
+      end
+
       included do
-        alias_method_chain :action_permission, :katello
+        prepend Overrides
 
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
@@ -44,17 +55,6 @@ module Katello
                  'Registered', 'Last Checkin'])
             end
           end
-        end
-      end
-
-      private
-
-      def action_permission_with_katello
-        case params[:action]
-        when 'content_hosts'
-          'view'
-        else
-          action_permission_without_katello
         end
       end
     end

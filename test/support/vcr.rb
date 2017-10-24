@@ -17,6 +17,15 @@ module VCR
   module TestCase
     extend ActiveSupport::Concern
 
+    module Overrides
+      def run
+        VCR.insert_cassette(cassette_name, :match_requests_on => vcr_matches)
+        to_ret = super
+        VCR.eject_cassette
+        to_ret
+      end
+    end
+
     def vcr_matches
       [:method, :path, :params, :body_json]
     end
@@ -28,15 +37,8 @@ module VCR
       "#{class_path}/#{self_class}/#{test_name}"
     end
 
-    def run_with_vcr
-      VCR.insert_cassette(cassette_name, :match_requests_on => vcr_matches)
-      to_ret = run_without_vcr
-      VCR.eject_cassette
-      to_ret
-    end
-
     included do
-      alias_method_chain :run, :vcr
+      prepend Overrides
     end
   end
 end

@@ -3,16 +3,17 @@ module Katello
     module HostsAndHostgroupsHelperExtensions
       extend ActiveSupport::Concern
 
-      included do
-        alias_method_chain :puppet_environment_field, :katello
+      module Overrides
+        def puppet_environment_field(form, environments_choice, select_options = {}, html_options = {})
+          html_options.merge!(
+            :label => _("Puppet Environment"),
+            'data-content_puppet_match' => (@host || @hostgroup).new_record? || (@host || @hostgroup).content_and_puppet_match?,
+            :help_inline => link_to(_("Reset Puppet Environment"), '#', :id => 'reset_puppet_environment'))
+          super(form, environments_choice, select_options, html_options)
+        end
       end
-
-      def puppet_environment_field_with_katello(form, environments_choice, select_options = {}, html_options = {})
-        html_options.merge!(
-          :label => _("Puppet Environment"),
-          'data-content_puppet_match' => (@host || @hostgroup).new_record? || (@host || @hostgroup).content_and_puppet_match?,
-          :help_inline => link_to(_("Reset Puppet Environment"), '#', :id => 'reset_puppet_environment'))
-        puppet_environment_field_without_katello(form, environments_choice, select_options, html_options)
+      included do
+        prepend Overrides
       end
     end
   end

@@ -3,16 +3,18 @@ module Katello
     module DockerContainerWizardStateImageExtensions
       extend ActiveSupport::Concern
 
+      module Overrides
+        def image_exists
+          return true if katello?
+          super
+        end
+      end
+
       included do
-        alias_method_chain :image_exists, :katello
+        prepend Overrides
 
         serialize :katello_content, Hash
         validate :katello_content_completed, :if => :katello?
-      end
-
-      def image_exists_with_katello
-        return true if katello?
-        image_exists_without_katello
       end
 
       def katello_content_completed

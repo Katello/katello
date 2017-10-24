@@ -3,9 +3,29 @@ module Katello
     module RedhatExtensions
       extend ActiveSupport::Concern
 
+      module Overrides
+        def medium_uri(host, url = nil)
+          kickstart_repo = host.try(:content_facet).try(:kickstart_repository) || host.try(:kickstart_repository)
+
+          if host.try(:content_source) && kickstart_repo.present?
+            return URI.parse(kickstart_repo.full_path(host.content_source))
+          else
+            super(host, url)
+          end
+        end
+
+        # overwrite foreman method in operatingsystem.rb
+        def boot_files_uri(medium, architecture, host = nil)
+          return super(medium, architecture, host) unless host.try(:content_source)
+          family_class = self.family.constantize
+          family_class::PXEFILES.values.collect do |img|
+            "#{medium_uri(host)}/#{pxedir}/#{img}"
+          end
+        end
+      end
+
       included do
-        alias_method_chain :medium_uri, :content_uri
-        alias_method_chain :boot_files_uri, :content
+        prepend Overrides
       end
 
       module ClassMethods
@@ -45,16 +65,6 @@ module Katello
         end
       end
 
-      def medium_uri_with_content_uri(host, url = nil)
-        kickstart_repo = host.try(:content_facet).try(:kickstart_repository) || host.try(:kickstart_repository)
-
-        if host.try(:content_source) && kickstart_repo.present?
-          return URI.parse(kickstart_repo.full_path(host.content_source))
-        else
-          medium_uri_without_content_uri(host, url)
-        end
-      end
-
       def kickstart_repos(host)
         distros = distribution_repositories(host)
         if distros && host.content_source
@@ -77,15 +87,6 @@ module Katello
                     :distribution_bootable => true)
         else
           []
-        end
-      end
-
-      # overwrite foreman method in operatingsystem.rb
-      def boot_files_uri_with_content(medium, architecture, host = nil)
-        return boot_files_uri_without_content(medium, architecture, host) unless host.try(:content_source)
-        family_class = self.family.constantize
-        family_class::PXEFILES.values.collect do |img|
-          "#{medium_uri(host)}/#{pxedir}/#{img}"
         end
       end
     end

@@ -3,12 +3,14 @@ module Katello
     module DockerContainerWizardStateExtensions
       extend ActiveSupport::Concern
 
-      included do
-        alias_method_chain :container_attributes, :katello
+      module Overrides
+        def container_attributes
+          super.merge(:capsule_id => self.image.capsule_id)
+        end
       end
 
-      def container_attributes_with_katello
-        container_attributes_without_katello.merge(:capsule_id => self.image.capsule_id)
+      included do
+        prepend Overrides
       end
     end
   end
