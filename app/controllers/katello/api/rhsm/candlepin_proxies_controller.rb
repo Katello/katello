@@ -25,7 +25,8 @@ module Katello
 
     before_action :check_content_type, :except => :async_hypervisors_update
 
-    skip_before_action :set_taxonomy, :only => [:rhsm_index, :consumer_activate, :consumer_create]
+    prepend_before_action :convert_owner_to_organization_id, :except => [:hypervisors_update, :async_hypervisors_update], :if => lambda { params.key?(:owner) }
+    prepend_before_action :convert_organization_label_to_id, :only => [:rhsm_index, :consumer_activate, :consumer_create], :if => lambda { params.key?(:organization_id) }
 
     def repackage_message
       yield
@@ -99,8 +100,7 @@ module Katello
 
     #api :GET, "/owners/:organization_id/environments", N_("List environments for RHSM")
     def rhsm_index
-      organization = find_organization
-      @all_environments = get_content_view_environments(params[:name], organization).collect do |env|
+      @all_environments = get_content_view_environments(params[:name], Organization.current).collect do |env|
         {
           :id => env.cp_id,
           :name => env.label,
@@ -235,6 +235,7 @@ module Katello
       # Activation keys are userless by definition so use the internal generic user
       # Set it before calling find_activation_keys to allow communication with candlepin
       User.current = User.anonymous_admin
+      additional_set_taxonomy
       activation_keys = find_activation_keys
       host = Katello::Host::SubscriptionFacet.find_or_create_host(activation_keys.first.organization, rhsm_params)
 
@@ -283,6 +284,15 @@ module Katello
 
     private
 
+    # in case set taxonomy from core was skipped since the User.current was nil at that moment (typically AK was used instead of username/password)
+    # we need to set proper context, unfortunately params[:organization_id] is already overridden again by set_organization_id so we need to
+    # set correct parameter value and then reset it back
+    def additional_set_taxonomy
+      params[:organization_id], original = find_organization(:owner).id, params[:organization_id] if params[:owner].present?
+      set_taxonomy
+      params[:organization_id] = original if params[:owner].present?
+    end
+
     def disable_strong_params
       params.permit!
     end
@@ -312,7 +322,7 @@ module Katello
       if params.key?(:environment_id)
         environment = get_content_view_environment("cp_id", params[:environment_id])
       elsif params.key?(:organization_id) && !params.key?(:environment_id)
-        organization = find_organization
+        organization = Organization.current
         environment = organization.library.content_view_environment
       elsif User.current.default_organization.present?
         environment = User.current.default_organization.library.content_view_environment
@@ -333,30 +343,39 @@ module Katello
       deny_access unless @organization
     end
 
-    def find_organization
+    def find_organization(key = :organization_id)
       organization = nil
 
-      if params.key?(:organization_id)
-        organization = Organization.find_by(:label => params[:organization_id])
+      if params.key?(key)
+        organization = Organization.find_by(:label => params[key])
       end
 
       if organization.nil?
         message = _("Couldn't find Organization '%s'.")
-        fail HttpErrors::NotFound, message % params[:organization_id]
+        fail HttpErrors::NotFound, message % params[key]
       end
 
       if User.current && !User.consumer? && !User.current.allowed_organizations.include?(organization)
         message = _("User '%{user}' does not belong to Organization '%{organization}'.")
-        fail HttpErrors::NotFound, message % {:user => current_user.login, :organization => params[:organization_id]}
+        fail HttpErrors::NotFound, message % {:user => current_user.login, :organization => params[key]}
       end
 
       organization
     end
 
+    def convert_organization_label_to_id
+      params[:organization_id] = find_organization.id
+    end
+
+    def convert_owner_to_organization_id
+      params[:organization_id] = find_organization(:owner).id
+    end
+
     def find_activation_keys
-      organization = find_organization
+      organization = Organization.current
 
       if (ak_names = params[:activation_keys])
+        fail HttpErrors::NotFound, _("Organization not found") if organization.nil?
         ak_names        = ak_names.split(",")
         activation_keys = ak_names.map do |ak_name|
           activation_key = organization.activation_keys.find_by(:name => ak_name)
@@ -460,14 +479,12 @@ module Katello
       when "rhsm_proxy_consumer_deletionrecord_delete_path"
         User.consumer? || Organization.deletable?
       when "rhsm_proxy_owner_pools_path"
-        find_organization
         if params[:consumer]
           User.consumer? && current_user.uuid == params[:consumer]
         else
           User.consumer? || ::User.current.can?(:view_organizations, self)
         end
       when "rhsm_proxy_owner_servicelevels_path"
-        find_organization
         (User.consumer? || ::User.current.can?(:view_organizations, self))
       when "rhsm_proxy_consumer_certificates_path", "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
            "rhsm_proxy_consumer_entitlements_path", "rhsm_proxy_consumer_entitlements_post_path",
