@@ -5,12 +5,24 @@ module Katello
 
       included do
         after_initialize :set_default_overrides, :if => :new_record?
+        after_save :reset_settings
         before_destroy :deletable?
       end
 
       def set_default_overrides
         self.ignore_types << ::ProvisioningTemplate.name
         self.ignore_types << ::Hostgroup.name
+      end
+
+      def reset_settings
+        if self.title_changed?
+          if ::Setting[:default_location_subscribed_hosts] == self.title_was
+            ::Setting[:default_location_subscribed_hosts] = self.title
+          end
+          if ::Setting[:default_location_puppet_content] == self.title_was
+            ::Setting[:default_location_puppet_content] = self.title
+          end
+        end
       end
 
       def deletable?
@@ -43,15 +55,28 @@ module Katello
       end
 
       module ClassMethods
+        def default_puppet_content_location
+          ::Location.unscoped.find_by_title(::Setting[:default_location_puppet_content]) if ::Setting[:default_location_puppet_content].present?
+        end
+
+        def default_puppet_content_location!
+          location = default_puppet_content_location
+          fail _("Setting 'default_location_puppet_content' is not set to a valid location.") if location.nil?
+          location
+        end
+
+        def default_host_subscribe_location
+          ::Location.unscoped.find_by_title(::Setting[:default_location_subscribed_hosts]) if ::Setting[:default_location_subscribed_hosts].present?
+        end
+
+        def default_host_subscribe_location!
+          location = default_host_subscribe_location
+          fail _("Setting 'default_location_subscribed_hosts' is not set to a valid location.") if location.nil?
+          location
+        end
+
         def default_location_ids
-          ids = []
-          if ::Setting[:default_location_puppet_content].present?
-            ids << ::Location.find_by_title(::Setting[:default_location_puppet_content]).id
-          end
-          if ::Setting[:default_location_subscribed_hosts].present?
-            ids << ::Location.find_by_title(::Setting[:default_location_subscribed_hosts]).id
-          end
-          ids.uniq
+          [default_host_subscribe_location, default_puppet_content_location].compact.map(&:id).uniq
         end
       end
     end
