@@ -15,23 +15,15 @@ module Katello
             :exception => true,
             :info => true,
             :debug => true
+          },
+          :cert_auth => {
+            :ssl_client_cert => ::Cert::Certs.ssl_client_cert,
+            :ssl_client_key => ::Cert::Certs.ssl_client_key
           }
         }
 
         if (ca_cert = SETTINGS[:katello][:pulp][:ca_cert_file])
           runcible_params[:ca_cert_file] = ca_cert
-        end
-
-        if Setting[:use_pulp_oauth]
-          runcible_params[:oauth] = {
-            :oauth_secret => SETTINGS[:katello][:pulp][:oauth_secret],
-            :oauth_key => SETTINGS[:katello][:pulp][:oauth_key]
-          }
-        else
-          runcible_params[:cert_auth] = {
-            :ssl_client_cert => ::Cert::Certs.ssl_client_cert,
-            :ssl_client_key => ::Cert::Certs.ssl_client_key
-          }
         end
 
         Runcible::Instance.new(runcible_params)
