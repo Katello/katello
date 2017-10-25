@@ -4,7 +4,7 @@ module Actions
   describe Katello::Provider::Update do
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Provider::Update }
     let(:repository_update_class) { ::Actions::Katello::Repository::Update }

@@ -25,9 +25,9 @@ module Katello
         @fourth_product = Product.create!(:name => "prod4", :label => "prod4", :cp_id => '32683', :provider => @provider, :organization => @organization)
         @environment = create_environment(:name => @env_name, :organization => @organization, :label => @env_name, :prior => @organization.library)
         @organization.reload
-        FactoryGirl.create(:katello_repository, product: @first_product, environment: @environment,
+        FactoryBot.create(:katello_repository, product: @first_product, environment: @environment,
                                                 content_view_version_id: @environment.content_view_versions.first.id)
-        FactoryGirl.create(:katello_repository, product: @third_product, environment: @environment,
+        FactoryBot.create(:katello_repository, product: @third_product, environment: @environment,
                                                 content_view_version_id: @environment.content_view_versions.first.id)
       end
 
@@ -76,20 +76,20 @@ module Katello
           @prior_env = create_environment(:name => @environment.name + '-prior', :label => @environment.name + '-prior',
                                           :prior => @environment.id, :organization => @organization)
 
-          FactoryGirl.create(:katello_repository, environment: @prior_env, product: @first_product,
+          FactoryBot.create(:katello_repository, environment: @prior_env, product: @first_product,
                                                   content_view_version_id: @prior_env.content_view_versions.first.id)
-          FactoryGirl.create(:katello_repository, environment: @prior_env, product: @second_product,
+          FactoryBot.create(:katello_repository, environment: @prior_env, product: @second_product,
                                                   content_view_version_id: @prior_env.content_view_versions.first.id)
-          FactoryGirl.create(:katello_repository, environment: @prior_env, product: @third_product,
+          FactoryBot.create(:katello_repository, environment: @prior_env, product: @third_product,
                                                   content_view_version_id: @prior_env.content_view_versions.first.id)
 
-          FactoryGirl.create(:katello_repository, environment: @organization.library, product: @first_product,
+          FactoryBot.create(:katello_repository, environment: @organization.library, product: @first_product,
                                                   content_view_version_id: @organization.library.content_view_versions.first.id)
-          FactoryGirl.create(:katello_repository, environment: @organization.library, product: @second_product,
+          FactoryBot.create(:katello_repository, environment: @organization.library, product: @second_product,
                                                   content_view_version_id: @organization.library.content_view_versions.first.id)
-          FactoryGirl.create(:katello_repository, environment: @organization.library, product: @third_product,
+          FactoryBot.create(:katello_repository, environment: @organization.library, product: @third_product,
                                                   content_view_version_id: @organization.library.content_view_versions.first.id)
-          FactoryGirl.create(:katello_repository, environment: @organization.library, product: @fourth_product,
+          FactoryBot.create(:katello_repository, environment: @organization.library, product: @fourth_product,
                                                   content_view_version_id: @organization.library.content_view_versions.first.id)
         end
 

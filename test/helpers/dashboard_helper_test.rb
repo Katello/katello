@@ -8,7 +8,7 @@ class DashboardHelperTest < ActiveSupport::TestCase
   def setup
     User.current = User.anonymous_api_admin
     @library = katello_environments(:library)
-    @host =  FactoryGirl.build(:host, :with_content, :with_subscription,
+    @host =  FactoryBot.build(:host, :with_content, :with_subscription,
                                :content_view => katello_content_views(:library_dev_view),
                                :lifecycle_environment => katello_environments(:library), :id => 101)
     @host.organization = taxonomies(:organization1)

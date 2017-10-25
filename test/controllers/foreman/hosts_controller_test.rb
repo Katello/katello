@@ -27,9 +27,9 @@ class HostsControllerTest < ActionController::TestCase
   context 'csv' do
     setup do
       models
-      @host = FactoryGirl.create(:host, :with_content, :lifecycle_environment => @library,
+      @host = FactoryBot.create(:host, :with_content, :lifecycle_environment => @library,
                                         :content_view => @library_dev_staging_view)
-      @host2 = FactoryGirl.create(:host, :with_content, :organization_id => @host.organization_id,
+      @host2 = FactoryBot.create(:host, :with_content, :organization_id => @host.organization_id,
                                        :content_view => @library_dev_staging_view,
                                        :lifecycle_environment =>  @library)
     end

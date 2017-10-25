@@ -4,7 +4,7 @@ module ::Actions::Katello::RepositorySet
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before do
       disable_lazy_accessors

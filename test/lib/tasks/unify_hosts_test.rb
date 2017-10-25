@@ -21,11 +21,11 @@ module Katello
 
     def setup_two_hosts
       mac = '52:54:00:bc:d3:72'
-      @host1 = FactoryGirl.create(:host)
+      @host1 = FactoryBot.create(:host)
       @host1.update_attributes!(:name => 'foobar.example.com')
       @host1.primary_interface.update_attributes!(:mac => mac)
 
-      @host2 = FactoryGirl.create(:host, :with_content, :with_subscription, :name => 'foobar', :content_view => @content_view, :lifecycle_environment => @environment)
+      @host2 = FactoryBot.create(:host, :with_content, :with_subscription, :name => 'foobar', :content_view => @content_view, :lifecycle_environment => @environment)
       @host2.update_attributes!(:name => 'foobar')
       @host2.primary_interface.update_attributes!(:mac => mac)
     end
@@ -56,7 +56,7 @@ module Katello
 
     def test_unify_two_compute_resource
       ENV['HOSTS'] = 'foobar.example.com,foobar'
-      @host2.compute_resource = FactoryGirl.create(:compute_resource, :ec2)
+      @host2.compute_resource = FactoryBot.create(:compute_resource, :ec2)
       @host2.uuid = SecureRandom.uuid
       @host2.save!
       Rake.application.invoke_task('katello:unify_hosts')

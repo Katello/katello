@@ -4,7 +4,7 @@ module Actions
   describe Katello::Repository::CheckMatchingContent do
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::CheckMatchingContent }
     let(:yum_repo) { katello_repositories(:fedora_17_x86_64) }

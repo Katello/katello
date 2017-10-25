@@ -10,7 +10,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   def models
     @content_view = katello_content_views(:acme_default)
     @environment = katello_environments(:library)
-    @host = FactoryGirl.create(:host)
+    @host = FactoryBot.create(:host)
   end
 
   def host_index_and_show(host)
@@ -35,19 +35,19 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_content_and_subscriptions
-    host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                               :lifecycle_environment => @environment)
     host_index_and_show(host)
   end
 
   def test_with_content
-    host = FactoryGirl.create(:host, :with_content, :content_view => @content_view,
+    host = FactoryBot.create(:host, :with_content, :content_view => @content_view,
                               :lifecycle_environment => @environment)
     host_index_and_show(host)
   end
 
   def test_with_subscriptions
-    host = FactoryGirl.create(:host, :with_subscription)
+    host = FactoryBot.create(:host, :with_subscription)
     host_index_and_show(host)
   end
 
@@ -59,7 +59,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Katello::Candlepin::Consumer.any_instance.stubs(:virtual_guests).returns([])
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
-    host = FactoryGirl.create(:host, :with_subscription)
+    host = FactoryBot.create(:host, :with_subscription)
     host.subscription_facet.update_attributes!(:autoheal => true)
 
     put :update, :id => host.id, :subscription_facet_attributes => {:autoheal => false}
@@ -70,8 +70,8 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
   end
 
   def test_with_smartproxy
-    smart_proxy = FactoryGirl.create(:smart_proxy, :features => [FactoryGirl.create(:feature, name: 'Pulp')])
-    host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+    smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
+    host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                               :lifecycle_environment => @environment, :content_source => smart_proxy)
     host_show(host, smart_proxy)
   end

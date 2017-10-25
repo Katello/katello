@@ -5,7 +5,7 @@ module ::Actions::Katello::ContentViewVersion
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before do
       set_user

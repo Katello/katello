@@ -8,7 +8,7 @@ module Katello
     let(:environment) { katello_environments(:library) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
-      FactoryGirl.create(:host, :with_content, :content_view => view,
+      FactoryBot.create(:host, :with_content, :content_view => view,
                                      :lifecycle_environment => library)
     end
     let(:content_facet) { host.content_facet }
@@ -52,7 +52,7 @@ module Katello
     end
 
     def test_errata_searchable
-      other_host = FactoryGirl.create(:host)
+      other_host = FactoryBot.create(:host)
       errata = katello_errata(:security)
       found = ::Host.search_for("applicable_errata = #{errata.errata_id}")
 
@@ -61,7 +61,7 @@ module Katello
     end
 
     def test_installable_errata_searchable
-      other_host = FactoryGirl.create(:host)
+      other_host = FactoryBot.create(:host)
       errata = katello_errata(:security)
       found = ::Host.search_for("installable_errata = #{errata.errata_id}")
 

@@ -10,7 +10,7 @@ module ::Actions::Pulp::Repository
     let(:action_class) { ::Actions::Pulp::Repository::Refresh }
 
     def setup
-      FactoryGirl.create(:smart_proxy, :default_smart_proxy)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
 
       ping = {}
       [:pulp, :pulp_auth, :candlepin, :candlepin_auth, :foreman_tasks].each do |service|

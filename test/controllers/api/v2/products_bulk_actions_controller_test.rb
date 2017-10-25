@@ -27,7 +27,7 @@ module Katello
     end
 
     def create_docker_repo
-      FactoryGirl.create(:katello_repository, :docker, :product_id => @products.first.id, :environment => @organization.library,
+      FactoryBot.create(:katello_repository, :docker, :product_id => @products.first.id, :environment => @organization.library,
                          :content_view_version => @organization.default_content_view.versions.first, :url => 'http://foo.com/foo',
                          :docker_upstream_name => 'foobar', :unprotected => true)
     end
@@ -78,7 +78,7 @@ module Katello
 
     def test_sync_with_validate_contents
       create_docker_repo
-      FactoryGirl.create(:katello_repository, :content_type => 'yum', :product_id => @products.first.id, :environment => @organization.library,
+      FactoryBot.create(:katello_repository, :content_type => 'yum', :product_id => @products.first.id, :environment => @organization.library,
                          :content_view_version => @organization.default_content_view.versions.first, :download_policy => 'on_demand')
 
       assert_async_task(::Actions::BulkAction) do |action_class, repos|

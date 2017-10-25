@@ -1,4 +1,4 @@
-FactoryGirl.modify do
+FactoryBot.modify do
   factory :host do
     transient do
       content_view nil

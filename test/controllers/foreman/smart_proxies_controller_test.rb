@@ -2,7 +2,7 @@ require 'katello_test_helper'
 
 class SmartProxiesControllerTest < ActionController::TestCase
   def models
-    @smart_proxy = FactoryGirl.create(:smart_proxy, :features => [FactoryGirl.create(:feature, name: 'Pulp')])
+    @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
   end
 
   def proxy_storage_response

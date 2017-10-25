@@ -18,8 +18,8 @@ module Katello
       @view_2 = katello_content_views(:acme_default)
       @library = katello_environments(:library)
 
-      @host1 = FactoryGirl.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
-      @host2 = FactoryGirl.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
+      @host1 = FactoryBot.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
+      @host2 = FactoryBot.create(:host, :with_content, :organization => @view.organization, :content_view => @view, :lifecycle_environment => @library)
       @host_ids = [@host1.id, @host2.id]
 
       @org = @view.organization

@@ -4,11 +4,11 @@ module Katello::Host
   class RecalculateErrataStatusTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :all do
       User.current = users(:admin)
-      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => katello_content_views(:library_dev_view),
+      @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => katello_content_views(:library_dev_view),
                                  :lifecycle_environment => katello_environments(:library))
     end
 

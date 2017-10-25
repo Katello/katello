@@ -5,21 +5,21 @@ module Katello
     def setup
       @user = User.current = User.find(users('admin').id)
 
-      FactoryGirl.create(:mail_notification,
+      FactoryBot.create(:mail_notification,
                          :name => 'host_errata_advisory',
                          :description => 'A summary of available and applicable errata for your hosts',
                          :mailer => 'Katello::ErrataMailer',
                          :method => 'host_errata',
                          :subscription_type => 'report')
 
-      FactoryGirl.create(:mail_notification,
+      FactoryBot.create(:mail_notification,
                          :name => 'sync_errata',
                          :description => 'A summary of new errata after a repository is synchronized',
                          :mailer => 'Katello::ErrataMailer',
                          :method => 'sync_errata',
                          :subscription_type => 'alert')
 
-      FactoryGirl.create(:mail_notification,
+      FactoryBot.create(:mail_notification,
                          :name => 'promote_errata',
                          :description => 'A post-promotion summary of hosts with installable errata',
                          :mailer => 'Katello::ErrataMailer',

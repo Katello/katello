@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :puppet_module, :class => Katello::PuppetModule do
     name "trystero"
     author "tpynchon"

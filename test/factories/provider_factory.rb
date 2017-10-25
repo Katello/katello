@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_provider, :class => Katello::Provider do
     sequence(:name) { |n| "Adobe #{n}" }
     provider_type "Custom"

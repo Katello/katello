@@ -5,7 +5,7 @@ module Katello
     def setup
       User.current = User.find(users(:admin).id)
 
-      @rule = FactoryGirl.build(:katello_content_view_erratum_filter_rule, :errata_id => '1')
+      @rule = FactoryBot.build(:katello_content_view_erratum_filter_rule, :errata_id => '1')
 
       @start_date = "2013-01-01"
       @end_date = "2013-01-31"
@@ -41,7 +41,7 @@ module Katello
     def test_with_duplicate_errata_id
       @rule.save!
 
-      rule2 = FactoryGirl.build(:katello_content_view_erratum_filter_rule)
+      rule2 = FactoryBot.build(:katello_content_view_erratum_filter_rule)
       rule2.errata_id = @rule.errata_id
       rule2.filter = @rule.filter
 

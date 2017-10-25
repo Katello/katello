@@ -5,7 +5,7 @@ require 'katello_test_helper'
 module Katello
   class ContainerExtensionsTest < ActiveSupport::TestCase
     def setup
-      @container = FactoryGirl.create(:container)
+      @container = FactoryBot.create(:container)
       Setting['pulp_docker_registry_port'] = 6000
     end
 

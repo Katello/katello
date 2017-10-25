@@ -4,7 +4,7 @@ module Katello::Host
   class RepublishRepositoriesTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :all do
       User.current = users(:admin)

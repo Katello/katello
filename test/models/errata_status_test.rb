@@ -7,7 +7,7 @@ module Katello
     let(:repo) { katello_repositories(:rhel_6_x86_64) }
 
     let(:host) do
-      FactoryGirl.create(:host, :with_content, :content_view => katello_content_views(:library_dev_view),
+      FactoryBot.create(:host, :with_content, :content_view => katello_content_views(:library_dev_view),
                          :lifecycle_environment => katello_environments(:library))
     end
 
@@ -42,7 +42,7 @@ module Katello
     end
 
     def test_no_content_facet
-      assert_equal Katello::ErrataStatus::UNKNOWN, FactoryGirl.build(:host).get_status(Katello::ErrataStatus).to_status
+      assert_equal Katello::ErrataStatus::UNKNOWN, FactoryBot.build(:host).get_status(Katello::ErrataStatus).to_status
     end
 
     def test_to_global

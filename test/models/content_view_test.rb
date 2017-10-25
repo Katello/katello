@@ -15,18 +15,18 @@ module Katello
     end
 
     def test_create
-      assert ContentView.create(FactoryGirl.attributes_for(:katello_content_view))
+      assert ContentView.create(FactoryBot.attributes_for(:katello_content_view))
     end
 
     def test_label
-      content_view = FactoryGirl.build(:katello_content_view)
+      content_view = FactoryBot.build(:katello_content_view)
       content_view.label = ""
       assert content_view.save
       assert content_view.label.present?
     end
 
     def test_create_with_name
-      content_view = FactoryGirl.build(:katello_content_view)
+      content_view = FactoryBot.build(:katello_content_view)
       content_view.name = ('a' * 256)
       refute content_view.valid?
       assert_equal 1, content_view.errors.size
@@ -36,14 +36,14 @@ module Katello
     end
 
     def test_bad_name
-      content_view = FactoryGirl.build(:katello_content_view, :name => "")
+      content_view = FactoryBot.build(:katello_content_view, :name => "")
       assert content_view.invalid?
       refute content_view.save
       assert content_view.errors.include?(:name)
     end
 
     def test_duplicate_name
-      attrs = FactoryGirl.attributes_for(:katello_content_view,
+      attrs = FactoryBot.attributes_for(:katello_content_view,
                                          :name => @library_dev_view.name
                                         )
       assert_raises(ActiveRecord::RecordInvalid) do
@@ -55,7 +55,7 @@ module Katello
     end
 
     def test_bad_label
-      content_view = FactoryGirl.build(:katello_content_view)
+      content_view = FactoryBot.build(:katello_content_view)
       content_view.label = "Bad Label"
 
       assert content_view.invalid?
@@ -268,7 +268,7 @@ module Katello
       @dev.hosts.destroy_all
       assert @library_dev_view.check_remove_from_environment!(@dev)
 
-      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @library_dev_view,
+      @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @library_dev_view,
                                  :lifecycle_environment => @dev)
 
       assert_raises RuntimeError do

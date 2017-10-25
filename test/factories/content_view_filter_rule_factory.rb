@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_content_view_package_filter_rule,
           :class => Katello::ContentViewPackageFilterRule do
     sequence(:name) { |n| "package #{n}" }

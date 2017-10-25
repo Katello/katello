@@ -8,7 +8,7 @@ module Katello
     tests Katello::Api::V2::HostSubscriptionsController
 
     def models
-      @host = FactoryGirl.create(:host, :with_subscription)
+      @host = FactoryBot.create(:host, :with_subscription)
       users(:restricted).update_attribute(:organizations, [@host.organization])
       users(:restricted).update_attribute(:locations, [@host.location])
       @pool = katello_pools(:pool_one)
@@ -47,7 +47,7 @@ module Katello
     end
 
     def test_index_bad_system
-      @host = FactoryGirl.create(:host)
+      @host = FactoryBot.create(:host)
 
       get :index, :host_id => @host.id
 

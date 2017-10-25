@@ -7,7 +7,7 @@ module Containers
       setup_foreman_routes
 
       login_user(User.find(users(:admin).id))
-      @compute_resource = FactoryGirl.create(:docker_stuff)
+      @compute_resource = FactoryBot.create(:docker_stuff)
       @state = DockerContainerWizardState.create!
 
       @state.preliminary = DockerContainerWizardStates::Preliminary.create do |prelim|

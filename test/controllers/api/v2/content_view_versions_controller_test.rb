@@ -249,7 +249,7 @@ module Katello
     end
 
     def test_promote_without_environment
-      content_view_version = FactoryGirl.create(:katello_content_view_version)
+      content_view_version = FactoryBot.create(:katello_content_view_version)
       post :promote, :id => content_view_version.id
       assert_response 400
     end

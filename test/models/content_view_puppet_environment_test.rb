@@ -5,10 +5,10 @@ module Katello
     def setup
       User.current = User.find(users(:admin).id)
 
-      @library = FactoryGirl.build(:katello_environment, :library => true)
-      @content_view_version = FactoryGirl.build(:katello_content_view_version)
+      @library = FactoryBot.build(:katello_environment, :library => true)
+      @content_view_version = FactoryBot.build(:katello_content_view_version)
 
-      @puppet_env = FactoryGirl.build(:katello_content_view_puppet_environment,
+      @puppet_env = FactoryBot.build(:katello_content_view_puppet_environment,
                                       :library_content_view_puppet_environment,
                                       :environment => @library,
                                       :content_view_version => @content_view_version)

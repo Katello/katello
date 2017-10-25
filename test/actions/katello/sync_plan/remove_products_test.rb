@@ -3,11 +3,11 @@ require 'katello_test_helper'
 describe ::Actions::Katello::SyncPlan::RemoveProducts do
   include Dynflow::Testing
   include Support::Actions::Fixtures
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
 
   before :all do
     @product = katello_products(:fedora)
-    @sync_plan = FactoryGirl.build(
+    @sync_plan = FactoryBot.build(
       'katello_sync_plan',
       :products => [@product],
       :interval => 'daily',

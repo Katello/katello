@@ -4,7 +4,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
     include Support::CapsuleSupport
 
     let(:puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }

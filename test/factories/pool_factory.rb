@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_pool, :class => Katello::Pool do
     active true
     end_date Date.today + 1.year

@@ -4,13 +4,13 @@ module Katello
   describe ::Actions::Katello::Product do
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :all do
-      @org = FactoryGirl.build('katello_organization')
-      @provider = FactoryGirl.build('katello_fedora_hosted_provider', organization: @org)
-      @product = FactoryGirl.build('katello_product', provider: @provider, cp_id: 1234)
-      @repository = FactoryGirl.build('katello_repository', product: @product, content_id: 'foobar')
+      @org = FactoryBot.build('katello_organization')
+      @provider = FactoryBot.build('katello_fedora_hosted_provider', organization: @org)
+      @product = FactoryBot.build('katello_product', provider: @provider, cp_id: 1234)
+      @repository = FactoryBot.build('katello_repository', product: @product, content_id: 'foobar')
     end
 
     describe 'Content Destroy' do
@@ -33,7 +33,7 @@ module Katello
       end
 
       it 'does not remove content if other content exists in different product' do
-        repo2 = FactoryGirl.build('katello_repository', product: @product)
+        repo2 = FactoryBot.build('katello_repository', product: @product)
         @repository.stubs(:other_repos_with_same_product_and_content).returns([])
         @repository.stubs(:other_repos_with_same_content).returns([repo2])
 
@@ -45,7 +45,7 @@ module Katello
       end
 
       it 'does not destroy or remove content if other content exists in same product' do
-        repo2 = FactoryGirl.build('katello_repository', product: @product)
+        repo2 = FactoryBot.build('katello_repository', product: @product)
         @repository.stubs(:other_repos_with_same_product_and_content).returns([repo2])
         @repository.stubs(:other_repos_with_same_content).returns([repo2])
 
@@ -64,7 +64,7 @@ module ::Actions::Katello::Product
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
   end

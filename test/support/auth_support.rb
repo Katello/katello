@@ -3,7 +3,7 @@ module Katello
     # permissions => Array of hashes in the following format
     #   [{:name => :view_lifecycle_environment, :search => 'name=Dev', :resource_type => 'Katello::KTEnvironment'}, ..]
     def create_role_with_permissions(permissions)
-      role = FactoryGirl.create(:role)
+      role = FactoryBot.create(:role)
       permissions.each do |perm|
         ensure_permission_exist(perm)
         begin
@@ -21,7 +21,7 @@ module Katello
       perm = Permission.find_by :name => hash[:name]
       return if perm
       resource_type = hash.key?(:resource_type) ? hash[:resource_type] : resource_type_from_name(hash[:name])
-      FactoryGirl.create(:permission, :name => hash[:name], :resource_type => resource_type)
+      FactoryBot.create(:permission, :name => hash[:name], :resource_type => resource_type)
     end
 
     def resource_type_from_name(name)

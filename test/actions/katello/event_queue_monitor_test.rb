@@ -23,7 +23,7 @@ class Actions::Katello::EventQueueMonitorTest < ActiveSupport::TestCase
     end
 
     it 'should process events' do
-      host = FactoryGirl.create(:host)
+      host = FactoryBot.create(:host)
       action_class.any_instance.stubs(:suspend).yields(nil)
       ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host.id)
       event = Katello::EventQueue.next_event

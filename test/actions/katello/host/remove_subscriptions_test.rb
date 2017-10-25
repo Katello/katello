@@ -4,11 +4,11 @@ module Katello::Host
   class RemoveSubscriptionsTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :all do
       User.current = users(:admin)
-      @host = FactoryGirl.create(:host, :with_subscription)
+      @host = FactoryBot.create(:host, :with_subscription)
       @pool = katello_pools(:pool_one)
     end
 

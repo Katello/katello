@@ -11,10 +11,10 @@ module Katello
     let(:dev) { katello_environments(:dev) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
-      FactoryGirl.create(:host, :with_content, :content_view => view,
+      FactoryBot.create(:host, :with_content, :content_view => view,
                                      :lifecycle_environment => library)
     end
-    let(:proxy) { FactoryGirl.create(:smart_proxy, :url => 'http://fakepath.com/foo') }
+    let(:proxy) { FactoryBot.create(:smart_proxy, :url => 'http://fakepath.com/foo') }
   end
 
   class ContentFacetHostExtensionsTest < ContentFacetHostExtensionsBaseTest

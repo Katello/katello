@@ -4,7 +4,7 @@ module Katello
   class ContentViewDockerFilterRuleTest < ActiveSupport::TestCase
     def setup
       User.current = User.find(users(:admin).id)
-      @rule = FactoryGirl.build(:katello_content_view_docker_filter_rule)
+      @rule = FactoryBot.build(:katello_content_view_docker_filter_rule)
     end
 
     def test_create
@@ -21,7 +21,7 @@ module Katello
 
     def test_with_duplicate_name
       @rule.save!
-      attrs = FactoryGirl.attributes_for(:katello_content_view_docker_filter_rule,
+      attrs = FactoryBot.attributes_for(:katello_content_view_docker_filter_rule,
                                          :name => @rule.name)
 
       rule_item = ContentViewDockerFilterRule.create(attrs)

@@ -11,7 +11,7 @@ module Katello
     let(:basic_subscription) { katello_subscriptions(:basic_subscription) }
     let(:host_one) { hosts(:one) }
     let(:host) do
-      FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+      FactoryBot.create(:host, :with_content, :with_subscription, :content_view => view,
                                      :lifecycle_environment => library, :organization => org)
     end
     let(:subscription_facet) { host.subscription_facet }
@@ -113,14 +113,14 @@ module Katello
     end
 
     def test_find_or_create_host_with_org
-      created_host = FactoryGirl.create(:host, :organization_id => org.id)
+      created_host = FactoryBot.create(:host, :organization_id => org.id)
       host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => created_host.name})
 
       assert_equal created_host, host
     end
 
     def test_find_or_create_host_no_org
-      no_org_host = FactoryGirl.create(:host, :organization_id => nil)
+      no_org_host = FactoryBot.create(:host, :organization_id => nil)
       host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => no_org_host.name})
 
       assert_equal org, host.organization
@@ -198,7 +198,7 @@ module Katello
     end
 
     def test_duplicate_usernames
-      host2 = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+      host2 = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => view,
                                      :lifecycle_environment => library, :organization => org)
       user = User.first
       host.subscription_facet.update_attributes!(:user_id => user.id)
@@ -208,7 +208,7 @@ module Katello
     end
 
     def test_propose_existing_hostname_fqdn_exists
-      host = FactoryGirl.create(:host)
+      host = FactoryBot.create(:host)
       host.update_attributes!(:name => 'foo.bar.com')
 
       facts = {'network.hostname' => 'foo'}
@@ -234,7 +234,7 @@ module Katello
     def test_search_hypervisor_host
       subscription_facet.hypervisor = "true"
       subscription_facet.save!
-      guest_host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+      guest_host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => view,
                                       :lifecycle_environment => library, :organization => org)
       Resources::Candlepin::Consumer.expects(:virtual_guests).returns([{'uuid' => guest_host.subscription_facet.uuid}])
       #subscription_facet.candlepin_consumer.expects(:virtual_guests).returns(guest_host)
@@ -266,7 +266,7 @@ module Katello
     end
 
     def test_update_guests_for_hypervisor
-      guest_host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+      guest_host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => view,
                                       :lifecycle_environment => library, :organization => org)
       subscription_facet.hypervisor = true
       Resources::Candlepin::Consumer.expects(:virtual_guests).returns([{'uuid' => guest_host.subscription_facet.uuid}])
@@ -276,7 +276,7 @@ module Katello
     end
 
     def test_update_guests_for_guest
-      virt_host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
+      virt_host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => view,
                                       :lifecycle_environment => library, :organization => org)
       subscription_facet.hypervisor = false
       subscription_facet.candlepin_consumer.expects(:virtual_host).returns(virt_host)

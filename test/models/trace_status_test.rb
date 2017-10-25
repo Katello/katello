@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class TraceStatusTest < ActiveSupport::TestCase
     let(:host) do
-      FactoryGirl.create(:host, :with_content, :content_view => katello_content_views(:library_dev_view),
+      FactoryBot.create(:host, :with_content, :content_view => katello_content_views(:library_dev_view),
                          :lifecycle_environment => katello_environments(:library))
     end
 
@@ -33,7 +33,7 @@ module Katello
     end
 
     def test_no_content_facet
-      assert_equal Katello::TraceStatus::UP_TO_DATE, FactoryGirl.build(:host).get_status(Katello::TraceStatus).to_status
+      assert_equal Katello::TraceStatus::UP_TO_DATE, FactoryBot.build(:host).get_status(Katello::TraceStatus).to_status
     end
 
     def test_to_global
