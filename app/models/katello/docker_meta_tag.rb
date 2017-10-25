@@ -28,6 +28,10 @@ module Katello
       [self.repository]
     end
 
+    def related_tags
+      self.class.where(:repository_id => repository.group, :name => name)
+    end
+
     def self.in_repositories(repos, grouped = false)
       if grouped
         search_in_tags(DockerTag.in_repositories(repos).grouped)
@@ -47,6 +51,10 @@ module Katello
 
     def schema2_manifest
       schema2.try(:docker_manifest)
+    end
+
+    def self.with_uuid(ids)
+      self.with_identifiers(ids)
     end
 
     def self.with_identifiers(ids)
