@@ -26,6 +26,14 @@ module Katello
 
     delegate :relative_path, :environment, :content_view_version, :product, :to => :repository
 
+    def associated_meta_tag
+      schema1_meta_tag || schema2_meta_tag
+    end
+
+    def associated_meta_tag_identifier
+      associated_meta_tag.id
+    end
+
     def self.grouped
       grouped_fields = "#{table_name}.name, #{Repository.table_name}.name, #{Product.table_name}.name"
       ids = uniq.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repository => :product)

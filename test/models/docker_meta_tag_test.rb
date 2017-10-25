@@ -100,5 +100,17 @@ module Katello
 
       assert_equal 0, DockerMetaTag.where(:id => dmt.id).count
     end
+
+    def test_docker_tag_associated_meta_tag
+      DockerMetaTag.import_meta_tags([@repo])
+      dmt = DockerMetaTag.first
+      assert_equal dmt, dmt.schema1.associated_meta_tag
+      assert_equal dmt.schema1.schema1_meta_tag, dmt.schema1.associated_meta_tag
+      assert_equal dmt.id, dmt.schema1.associated_meta_tag_identifier
+
+      assert_equal dmt, dmt.schema2.associated_meta_tag
+      assert_equal dmt.schema2.schema2_meta_tag, dmt.schema2.associated_meta_tag
+      assert_equal dmt.id, dmt.schema2.associated_meta_tag_identifier
+    end
   end
 end
