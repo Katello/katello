@@ -4,7 +4,7 @@ module Katello
   class SyncPlanTest < ActiveSupport::TestCase
     def setup
       @organization = get_organization
-      @plan = SyncPlan.new(:name => 'Norman Rockwell', :organization => @organization, :sync_date => DateTime.now, :interval => 'daily')
+      @plan = SyncPlan.new(:name => 'Norman Rockwell', :organization => @organization, :sync_date => Time.now, :interval => 'daily')
     end
 
     def test_invalid_intervals
@@ -102,7 +102,7 @@ module Katello
 
     def test_schedule_format
       @plan.interval = 'weekly'
-      @plan.sync_date = DateTime.now + 3.days
+      @plan.sync_date = Time.now + 3.days
 
       schedule = @plan.schedule_format
       refute_nil schedule
@@ -112,7 +112,7 @@ module Katello
 
     def test_schedule_format_past_weekly
       @plan.interval = 'weekly'
-      @plan.sync_date = DateTime.now - 3.days
+      @plan.sync_date = Time.now - 3.days
 
       schedule = @plan.schedule_format
       refute_nil schedule
@@ -122,7 +122,7 @@ module Katello
 
     def test_schedule_format_past_daily
       @plan.interval = 'daily'
-      @plan.sync_date = DateTime.now - 3.days
+      @plan.sync_date = Time.now - 3.days
 
       schedule = @plan.schedule_format
       refute_nil schedule
@@ -132,7 +132,7 @@ module Katello
 
     def test_schedule_format_disabled
       @plan.interval = 'daily'
-      @plan.sync_date = DateTime.now - 3.days
+      @plan.sync_date = Time.now - 3.days
       @plan.enabled = false
 
       schedule = @plan.schedule_format

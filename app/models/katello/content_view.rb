@@ -165,7 +165,7 @@ module Katello
 
     def promoted?
       # if the view exists in more than 1 environment, it has been promoted
-      self.environments.length > 1 ? true : false
+      self.environments.many?
     end
 
     #NOTE: this function will most likely become obsolete once we drop api v1

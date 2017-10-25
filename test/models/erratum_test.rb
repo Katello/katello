@@ -89,7 +89,7 @@ module Katello
 
     def test_update_from_json
       errata = katello_errata(:security)
-      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'reboot_suggested' => true)
+      json = errata.attributes.merge('description' => 'an update', 'updated' => Time.now, 'reboot_suggested' => true)
       errata.update_from_json(json)
       errata = Erratum.find(errata.id)
       assert_equal errata.description, json['description']
@@ -118,7 +118,7 @@ module Katello
         "fortune.  Omitted, all the voyage of their life is bound in shallows and in miseries. "\
         "On such a full sea are we now afloat. And we must take the current when it serves, or "\
         "lose our ventures. - William Shakespeare"
-      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'title' => title)
+      json = errata.attributes.merge('description' => 'an update', 'updated' => Time.now, 'title' => title)
       errata.update_from_json(json)
       assert_equal Erratum.find(errata.id).title.size, 255
     end
@@ -129,7 +129,7 @@ module Katello
       errata = katello_errata(:security)
 
       pkg_count = errata.packages.count
-      json = errata.attributes.merge('description' => 'an update', 'updated' => DateTime.now, 'pkglist' => [{'packages' => pkg_list}])
+      json = errata.attributes.merge('description' => 'an update', 'updated' => Time.now, 'pkglist' => [{'packages' => pkg_list}])
       errata.update_from_json(json)
 
       assert_equal errata.reload.packages.count, pkg_count + 1

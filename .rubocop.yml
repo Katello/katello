@@ -46,6 +46,9 @@ IfUnlessModifier:
 RescueModifier:
   Enabled: false
 
+RescueWithoutErrorClass:
+  Enabled: false
+
 WhileUntilModifier:
   Enabled: false
 
@@ -104,7 +107,7 @@ Style/StringLiterals:
 Style/WordArray:
   Enabled: false # don't force usage of %w()
 
-Style/FileName:
+Naming/FileName:
   Exclude: ['script/**', 'db/seeds.d/**'] # scripts are hyphened case
 
 Rails/ScopeArgs:
@@ -124,4 +127,17 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Rails/HttpPositionalArguments:
+  Enabled: false
+
+Gemspec/OrderedDependencies:
+  Enabled: false
+
+Style/CommentedKeyword:
+  Enabled: false
+
+# we use booleans as symbols for scoped search
+Lint/BooleanSymbol:
+  Enabled: false
+
+Lint/UriEscapeUnescape:
   Enabled: false

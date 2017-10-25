@@ -133,7 +133,7 @@ class ActionController::TestCase
 
   alias_method :login_user, :set_user
 
-  # rubocop:disable Style/AccessorMethodName
+  # rubocop:disable Naming/AccessorMethodName
   def set_organization(org)
     session[:current_organization_id] = org.id
   end
@@ -264,7 +264,7 @@ def stub_lazy_accessors(model, stubs)
     model_class = model.class
   end
   return unless model_class.ancestors.include?(Katello::LazyAccessor)
-  stubs.keys.each do |attr|
+  stubs.each_key do |attr|
     unless model_class.lazy_attributes.include?(attr)
       fail "#{attr} is not a lazy attribute for #{model_class}, expected one of #{model_class.lazy_attributes}"
     end

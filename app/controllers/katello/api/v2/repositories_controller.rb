@@ -195,7 +195,7 @@ module Katello
         :source_url => params[:source_url]
       }
 
-      if params[:source_url].present? && params[:source_url] !~ /\A#{URI.regexp}\z/
+      if params[:source_url].present? && params[:source_url] !~ /\A#{URI::DEFAULT_PARSER.make_regexp}\z/
         fail HttpErrors::BadRequest, _("source URL is malformed")
       end
 

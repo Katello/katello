@@ -4,7 +4,7 @@ module Katello
       def disks(storage)
         mount_points = {}
         disks = []
-        storage.each do |_name, values|
+        storage.each_value do |values|
           mount = values['mounted']
           mount_points[mount].nil? ? mount_points[mount] = [values['path']] : mount_points[mount] << values['path']
           values['header'] = "#{mount_points[mount].to_sentence} (on #{values['filesystem']})"

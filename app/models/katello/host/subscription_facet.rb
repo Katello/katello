@@ -140,19 +140,17 @@ module Katello
       def self.update_facts(host, rhsm_facts)
         return if host.build? || rhsm_facts.nil?
         rhsm_facts[:_type] = RhsmFactName::FACT_TYPE
-        rhsm_facts[:_timestamp] = DateTime.now.to_s
+        rhsm_facts[:_timestamp] = Time.now.to_s
         host.import_facts(rhsm_facts)
       end
 
       def self.find_or_create_host(organization, rhsm_params)
         host = find_host(rhsm_params[:facts], organization)
-        unless host
-          host = Katello::Host::SubscriptionFacet.new_host_from_facts(
-            rhsm_params[:facts],
-            organization,
-            Location.unscoped.find_by_title(::Setting[:default_location_subscribed_hosts])
-          )
-        end
+        host ||= Katello::Host::SubscriptionFacet.new_host_from_facts(
+          rhsm_params[:facts],
+          organization,
+          Location.unscoped.find_by_title(::Setting[:default_location_subscribed_hosts])
+        )
         host.organization = organization unless host.organization
         host
       end

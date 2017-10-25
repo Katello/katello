@@ -61,7 +61,7 @@ module Katello
         @tasks[:running1] = FactoryGirl.create(:dynflow_task, :running)
         @tasks[:running2] = FactoryGirl.create(:dynflow_task, :running)
 
-        @tasks.values.each do |task|
+        @tasks.each_value do |task|
           ForemanTasks::Lock.link!(capsule_content.capsule, task.id)
         end
 

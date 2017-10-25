@@ -37,7 +37,7 @@ module Katello
       end
     end
 
-    # rubocop:disable Style/AccessorMethodName:
+    # rubocop:disable Naming/AccessorMethodName:
     def get_interfaces
       mac_keys = facts.keys.select { |f| f =~ /net\.interface\..*\.mac_address/ }
       names = mac_keys.map do |key|

@@ -17,10 +17,10 @@ module Katello
           :updated => Katello::TraceStatus::UP_TO_DATE
         }.freeze
 
-        has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id'
+        has_one :errata_status_object, :class_name => 'Katello::ErrataStatus', :foreign_key => 'host_id', :dependent => :destroy
         scoped_search :on => :status, :relation => :errata_status_object, :rename => :errata_status,
                      :complete_value => ERRATA_STATUS_MAP
-        has_one :trace_status_object, :class_name => 'Katello::TraceStatus', :foreign_key => 'host_id'
+        has_one :trace_status_object, :class_name => 'Katello::TraceStatus', :foreign_key => 'host_id', :dependent => :destroy
         scoped_search :on => :status, :relation => :trace_status_object, :rename => :trace_status,
                      :complete_value => TRACE_STATUS_MAP
 

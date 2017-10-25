@@ -1,6 +1,6 @@
 require 'katello_test_helper'
 
-# rubocop:disable Style/AccessorMethodName
+# rubocop:disable Naming/AccessorMethodName
 module Katello
   module CandlepinOwnerSupport
     @organization = nil

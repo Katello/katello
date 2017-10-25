@@ -29,7 +29,7 @@ module Katello
       login_user(User.find(users(:admin).id))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
-      Repository.any_instance.stubs(:last_sync).returns(DateTime.now.to_s)
+      Repository.any_instance.stubs(:last_sync).returns(Time.now.to_s)
       models
       permissions
     end

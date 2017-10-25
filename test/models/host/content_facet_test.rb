@@ -360,7 +360,7 @@ module Katello
     def test_errata_status_search
       status = host.get_status(Katello::ErrataStatus)
       status.status = Katello::ErrataStatus::NEEDED_ERRATA
-      status.reported_at = DateTime.now
+      status.reported_at = Time.now
       status.save!
 
       assert_includes ::Host::Managed.search_for("errata_status = errata_needed"), content_facet.host
@@ -369,7 +369,7 @@ module Katello
     def test_trace_status_search
       status = host.get_status(Katello::TraceStatus)
       status.status = Katello::TraceStatus::REQUIRE_PROCESS_RESTART
-      status.reported_at = DateTime.now
+      status.reported_at = Time.now
       status.save!
 
       assert_includes ::Host::Managed.search_for("trace_status = process_restart_needed"), content_facet.host

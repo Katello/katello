@@ -5,7 +5,7 @@ module Support
     end
 
     def proxy_with_pulp(proxy_resource = nil)
-      proxy_resource = :four unless proxy_resource
+      proxy_resource ||= :four
       smart_proxies(proxy_resource).tap do |proxy|
         unless proxy.features.include?(pulp_feature)
           proxy.features << pulp_feature
