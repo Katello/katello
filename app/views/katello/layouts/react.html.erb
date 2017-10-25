@@ -1,0 +1,14 @@
+<% content_for(:stylesheets) do %>
+    <%= stylesheet_link_tag *webpack_asset_paths('katello', :extension => 'css'), "data-turbolinks-track" => true %>
+<% end %>
+
+<% content_for(:javascripts) do %>
+    <%= javascript_include_tag *webpack_asset_paths('katello', :extension => 'js'), "data-turbolinks-track" => true, 'defer' => 'defer' %>
+<% end %>
+
+<% content_for(:content) do %>
+    <%= notifications %>
+    <div id="reactRoot"></div>
+<% end %>
+
+<%= render file: "layouts/base" %>

@@ -28,4 +28,7 @@ Katello::Engine.routes.draw do
       match '/remote_execution' => 'remote_execution#create', :via => [:post]
     end
   end
+
+  match '/xui' => 'react#index', :via => [:get]
+  match '/xui/*page' => 'react#index', :via => [:get]
 end
