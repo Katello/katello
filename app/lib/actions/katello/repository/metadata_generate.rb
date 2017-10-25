@@ -37,7 +37,7 @@ module Actions
               [Runcible::Models::YumDistributor]
             end
           when ::Katello::Repository::PUPPET_TYPE
-            if repository.is_a?(::Katello::ContentViewPuppetEnvironment) && !repository.puppet_environment.nil?
+            if repository.is_a?(::Katello::ContentViewPuppetEnvironment) && !repository.puppet_environment.nil? && SmartProxy.default_capsule.present?
               [Runcible::Models::PuppetDistributor, Runcible::Models::PuppetInstallDistributor]
             else
               [Runcible::Models::PuppetDistributor]

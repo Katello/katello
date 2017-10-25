@@ -465,7 +465,7 @@ module ::Actions::Katello::Repository
       clone.expects(:copy_library_instance_attributes)
       clone.expects(:yum?).returns(false)
       clone.expects(:save!)
-      ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
+      ::SmartProxy.any_instance.stubs(:default_capsule).returns(proxy)
 
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
@@ -503,7 +503,7 @@ module ::Actions::Katello::Repository
       clone.expects(:copy_library_instance_attributes)
       clone.expects(:yum?).returns(false)
       clone.expects(:save!)
-      ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
+      ::SmartProxy.any_instance.stubs(:default_capsule).returns(proxy)
 
       plan_action(action, source_repo, env)
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)

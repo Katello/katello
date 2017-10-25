@@ -252,8 +252,8 @@ module Katello
         config.merge(importer_connection_options(capsule))
       end
 
-      def importer_connection_options(capsule = SmartProxy.default_capsule!)
-        if !capsule.default_capsule?
+      def importer_connection_options(capsule = false)
+        if capsule && !capsule.default_capsule?
           ueber_cert = ::Cert::Certs.ueber_cert(organization)
           importer_options = {
             :ssl_client_cert => ueber_cert[:cert],
@@ -283,7 +283,7 @@ module Katello
         end
         unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
           importer_options.merge!(:ssl_validation => verify_ssl_on_sync?)
-          if capsule.default_capsule?
+          if capsule && capsule.default_capsule?
             importer_options.merge!(:basic_auth_username => upstream_username,
                                     :basic_auth_password => upstream_password)
           end

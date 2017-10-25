@@ -71,7 +71,6 @@ module Actions
                 if skip_metadata_check
                   plan_action(Katello::Repository::MetadataGenerate,
                               repo,
-                              capsule_id: capsule_content.capsule.id,
                               force: true)
                 end
                 if repo.is_a?(::Katello::Repository) &&

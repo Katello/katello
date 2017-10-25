@@ -60,6 +60,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     let(:source_puppet_env) { katello_content_view_puppet_environments(:archive_view_puppet_environment) }
 
     it 'plans with existing puppet environment' do
+      ::SmartProxy.expects(:default_capsule).twice.returns(true)
       ::Katello::Repository.expects(:needs_distributor_updates).returns([{}])
       plan_action action, puppet_env.content_view_version, :environment => dev
 
@@ -106,6 +107,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     end
 
     it 'plans repository refresh when distributor config changes' do
+      ::SmartProxy.expects(:default_capsule).twice.returns(true)
       ::Katello::Repository.expects(:needs_distributor_updates).returns([{}])
       plan_action action, puppet_env.content_view_version, :environment => dev
 

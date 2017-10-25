@@ -4,14 +4,12 @@ module Actions
       class Create < Actions::EntryAction
         def plan(puppet_environment, clone = false)
           internal_capsule = SmartProxy.default_capsule
-          fail _("Content View %s  cannot be published without an internal capsule." % puppet_environment.name) unless internal_capsule
+          puppet_path = internal_capsule.present? ? puppet_environment.generate_puppet_path(internal_capsule) : nil
 
           User.as_anonymous_admin { puppet_environment.save! }
 
           action_subject(puppet_environment)
           plan_self
-
-          puppet_path = puppet_environment.generate_puppet_path(internal_capsule)
 
           sequence do
             plan_action(Pulp::Repository::Create,
@@ -23,7 +21,7 @@ module Actions
 
             # when creating a clone, the following actions are handled by the
             # publish/promote process
-            unless clone
+            if !clone && puppet_path
               plan_action(Katello::Repository::MetadataGenerate, puppet_environment) if puppet_environment.environment
             end
           end

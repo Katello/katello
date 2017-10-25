@@ -25,9 +25,10 @@ module Actions
           :matching_content => nil)
     end
 
-    it 'plans with a content view puppet env' do
+    it 'plans with a content view puppet env with a default_capsule' do
       action = create_action(action_class)
       content_view_puppet_env.puppet_environment = ::Environment.create(:name => 'foobar')
+      SmartProxy.stubs(:default_capsule).returns(smart_proxies(:one))
 
       plan_action(action, content_view_puppet_env)
 
@@ -37,6 +38,21 @@ module Actions
           :override_config => {},
           :dependency => nil,
           :matching_content => nil)
+
+      assert_action_planed_with(action, pulp_publish_class, :pulp_id => content_view_puppet_env.pulp_id,
+          :distributor_type_id => Runcible::Models::PuppetDistributor.type_id,
+          :source_pulp_id => nil,
+          :override_config => {},
+          :dependency => nil,
+          :matching_content => nil)
+    end
+
+    it 'plans with a content view puppet env without a default_capsule' do
+      action = create_action(action_class)
+      content_view_puppet_env.puppet_environment = ::Environment.create(:name => 'foobar')
+      SmartProxy.stubs(:default_capsule).returns(smart_proxies(:one))
+
+      plan_action(action, content_view_puppet_env)
 
       assert_action_planed_with(action, pulp_publish_class, :pulp_id => content_view_puppet_env.pulp_id,
           :distributor_type_id => Runcible::Models::PuppetDistributor.type_id,

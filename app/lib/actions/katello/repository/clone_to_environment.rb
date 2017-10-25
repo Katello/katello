@@ -16,7 +16,7 @@ module Actions
               clone.copy_library_instance_attributes
               clone.save!
 
-              if ::Katello::Repository.needs_distributor_updates([clone], ::Katello::CapsuleContent.new(::SmartProxy.default_capsule)).first
+              if ::SmartProxy.default_capsule.present? && ::Katello::Repository.needs_distributor_updates([clone], ::Katello::CapsuleContent.new(::SmartProxy.default_capsule)).first
                 plan_action(Pulp::Repository::Refresh, clone)
               end
             end
