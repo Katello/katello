@@ -38,7 +38,8 @@ module Katello
       'katello/api/v2/ping/index',
       'katello/api/v2/ping/server_status',
       'katello/api/v2/root/rhsm_resource_list',
-      'katello/api/v2/repositories/sync_complete'
+      'katello/api/v2/repositories/sync_complete',
+      'katello/react/index'
     ].freeze
 
     check_routes(Katello::Engine.routes, KATELLO_SUB_MAN_AUTH + KATELLO_NON_AUTH)

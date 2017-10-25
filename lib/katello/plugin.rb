@@ -165,6 +165,15 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
+  menu :labs_menu,
+       :experimental_ui,
+       :url => '/xui',
+       :url_hash => {:controller => 'katello/react',
+                     :action => 'index'},
+       :caption => N_('Content Experimental UI'),
+       :parent => :lab_features_menu,
+       :turbolinks => false
+
   allowed_template_helpers :subscription_manager_configuration_url
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
