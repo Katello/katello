@@ -3,11 +3,11 @@ require 'katello_test_helper'
 describe ::Actions::Katello::SyncPlan::Destroy do
   include Dynflow::Testing
   include Support::Actions::Fixtures
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
 
   before :all do
-    @product = FactoryGirl.build('katello_product', provider: @provider, cp_id: 1234)
-    @sync_plan = FactoryGirl.build('katello_sync_plan', :products => [@product])
+    @product = FactoryBot.build('katello_product', provider: @provider, cp_id: 1234)
+    @sync_plan = FactoryBot.build('katello_sync_plan', :products => [@product])
   end
 
   let(:action_class) { ::Actions::Katello::SyncPlan::Destroy }

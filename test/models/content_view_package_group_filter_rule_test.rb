@@ -4,7 +4,7 @@ module Katello
   class ContentViewPackageGroupFilterRuleTest < ActiveSupport::TestCase
     def setup
       User.current = User.find(users(:admin).id)
-      @rule = FactoryGirl.build(:katello_content_view_package_group_filter_rule)
+      @rule = FactoryBot.build(:katello_content_view_package_group_filter_rule)
     end
 
     def test_create
@@ -21,7 +21,7 @@ module Katello
 
     def test_with_duplicate_uuid
       @rule.save!
-      attrs = FactoryGirl.attributes_for(:katello_content_view_package_group_filter_rule,
+      attrs = FactoryBot.attributes_for(:katello_content_view_package_group_filter_rule,
                                          :uuid => @rule.uuid)
 
       attrs[:filter] = @rule.filter

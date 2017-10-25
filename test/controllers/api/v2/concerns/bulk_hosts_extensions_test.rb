@@ -15,9 +15,9 @@ module Katello
 
   class Api::V2::BulkHostsExtensionsTest < ActiveSupport::TestCase
     def models
-      @host1 = FactoryGirl.create(:host)
-      @host2 = FactoryGirl.create(:host)
-      @host3 = FactoryGirl.create(:host)
+      @host1 = FactoryBot.create(:host)
+      @host2 = FactoryBot.create(:host)
+      @host3 = FactoryBot.create(:host)
       @organization = get_organization
     end
 

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_organization, :class => "Organization" do
     type "Organization"
     sequence(:name) { |n| "Organization#{n}" }

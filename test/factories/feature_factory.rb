@@ -1,4 +1,4 @@
-FactoryGirl.modify do
+FactoryBot.modify do
   factory :feature do
     factory :pulp do
       name 'Pulp'

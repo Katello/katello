@@ -5,7 +5,7 @@ module ::Actions::Katello::Organization
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
 

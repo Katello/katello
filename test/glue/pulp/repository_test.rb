@@ -12,7 +12,7 @@ module Katello
       set_user
       backend_stubs
 
-      FactoryGirl.create(:smart_proxy, :default_smart_proxy)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
       @fedora_17_library_library_view = katello_repositories(:fedora_17_library_library_view)
@@ -184,7 +184,7 @@ module Katello
 
     def test_importer_upstream_username_passwd_with_capsule
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      proxy = FactoryGirl.build(:bmc_smart_proxy)
+      proxy = FactoryBot.build(:bmc_smart_proxy)
       repo = katello_repositories(:fedora_17_x86_64)
       username = "justin"
       password = "super-secret"
@@ -213,7 +213,7 @@ module Katello
 
     def test_importer_ostree_capsule
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      capsule = FactoryGirl.build(:bmc_smart_proxy)
+      capsule = FactoryBot.build(:bmc_smart_proxy)
       depth = 100
       ostree_repo = katello_repositories(:ostree)
       ostree_repo.expects(:compute_ostree_upstream_sync_depth).never

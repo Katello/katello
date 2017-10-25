@@ -12,7 +12,7 @@ module Katello
       @view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library_view = ContentView.find(katello_content_views(:library_view).id)
 
-      @foreman_host = FactoryGirl.create(:host)
+      @foreman_host = FactoryBot.create(:host)
       @foreman_host.puppetclasses = []
       @foreman_host.save!
 
@@ -28,7 +28,7 @@ module Katello
     end
 
     def test_full_text_search
-      other_host = FactoryGirl.create(:host)
+      other_host = FactoryBot.create(:host)
       found = ::Host.search_for(@foreman_host.name)
 
       assert_includes found, @foreman_host
@@ -36,7 +36,7 @@ module Katello
     end
 
     def test_smart_proxy_ids_with_katello
-      content_source = FactoryGirl.create(:smart_proxy,
+      content_source = FactoryBot.create(:smart_proxy,
                                           :features => [Feature.where(:name => "Pulp Node").first_or_create])
       Support::HostSupport.attach_content_facet(@foreman_host, @view, @library)
       @foreman_host.content_facet.content_source = content_source
@@ -68,14 +68,14 @@ module Katello
     end
 
     def test_update_with_cv_env
-      host = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
+      host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.content_view = @library_view
       host.content_facet.lifecycle_environment = @library
       assert host.content_facet.save!
     end
 
     def test_update_with_invalid_cv_env_combo
-      host = FactoryGirl.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
+      host = FactoryBot.create(:host, :with_content, :content_view => @library_view, :lifecycle_environment => @library)
       host.content_facet.content_view = @library_view
       host.content_facet.lifecycle_environment = @dev
       assert_raises(ActiveRecord::RecordInvalid) do
@@ -100,7 +100,7 @@ module Katello
       @dev_cvpe.puppet_environment = @dev_puppet_env
       @dev_cvpe.save!
 
-      @foreman_host = FactoryGirl.create(:host, :with_content, :content_view => @library_dev_staging_view,
+      @foreman_host = FactoryBot.create(:host, :with_content, :content_view => @library_dev_staging_view,
                                      :lifecycle_environment => @library, :organization => @library.organization, :environment => @library_puppet_env)
     end
 

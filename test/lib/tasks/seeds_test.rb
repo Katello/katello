@@ -15,7 +15,7 @@ module Katello
 
     def seed
       # Authorisation is disabled usually when run from a rake db:* task
-      User.current = FactoryGirl.build(:user, :admin => true,
+      User.current = FactoryBot.build(:user, :admin => true,
                                        :organizations => [], :locations => [])
       load File.expand_path("#{Rails.root}/db/seeds.rb", __FILE__)
     end

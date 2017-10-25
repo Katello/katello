@@ -5,7 +5,7 @@ module ::Actions::Foreman::Environment
     include Dynflow::Testing
     include Support::Actions::Fixtures
     include Support::Actions::RemoteAction
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
 
@@ -21,7 +21,7 @@ module ::Actions::Foreman::Environment
     end
 
     it 'fails to destroy when there are hosts' do
-      FactoryGirl.create(:host, :environment => @production)
+      FactoryBot.create(:host, :environment => @production)
       assert @production.hosts.count > 0
 
       @production.hostgroups = []

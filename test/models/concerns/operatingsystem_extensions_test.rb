@@ -11,7 +11,7 @@ module Katello
 
     def test_assign_template
       template = templates(:mystring2)
-      ptable = FactoryGirl.create(:ptable)
+      ptable = FactoryBot.create(:ptable)
 
       Setting.create(:name => 'katello_default_provision', :description => 'default template',
                      :category => 'Setting::Content', :settings_type => 'string',
@@ -31,7 +31,7 @@ module Katello
 
     def test_assign_template_for_atomic
       template = templates(:mystring2)
-      ptable = FactoryGirl.create(:ptable)
+      ptable = FactoryBot.create(:ptable)
       Setting.create(:name => 'katello_default_atomic_provision', :description => 'atomic default template',
                      :category => 'Setting::Content', :settings_type => 'string',
                      :default => template.name)

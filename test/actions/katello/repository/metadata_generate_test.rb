@@ -4,7 +4,7 @@ module Actions
   describe Katello::Repository::MetadataGenerate do
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::MetadataGenerate }
     let(:pulp_publish_class) { ::Actions::Pulp::Repository::DistributorPublish }

@@ -737,7 +737,7 @@ module Katello
   class RepositoryApplicabilityTest < RepositoryTestBase
     def setup
       super
-      @lib_host = FactoryGirl.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
+      @lib_host = FactoryBot.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
                                      :lifecycle_environment =>  @fedora_17_x86_64.environment)
 
       @lib_host.content_facet.bound_repositories << @fedora_17_x86_64
@@ -745,7 +745,7 @@ module Katello
 
       @view_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)
 
-      @view_host = FactoryGirl.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
+      @view_host = FactoryBot.create(:host, :with_content, :content_view => @fedora_17_x86_64.content_view,
                                      :lifecycle_environment =>  @fedora_17_x86_64.environment)
       @view_host.content_facet.bound_repositories = [@view_repo]
       @view_host.content_facet.save!

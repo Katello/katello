@@ -25,15 +25,15 @@ module Katello
       @man3.docker_tags = [@tag3]
       @man3.save!
 
-      @content_view = FactoryGirl.build(:katello_content_view, :organization => organization)
+      @content_view = FactoryBot.build(:katello_content_view, :organization => organization)
       @content_view.save!
       @content_view.repositories << @repo
     end
 
     def test_include_names
-      @filter = FactoryGirl.create(:katello_content_view_docker_filter, :content_view => @content_view)
-      rule1 = FactoryGirl.create(:katello_content_view_docker_filter_rule, :filter => @filter, :name => @tag1.name)
-      rule2 = FactoryGirl.create(:katello_content_view_docker_filter_rule, :filter => @filter, :name => @tag2.name)
+      @filter = FactoryBot.create(:katello_content_view_docker_filter, :content_view => @content_view)
+      rule1 = FactoryBot.create(:katello_content_view_docker_filter_rule, :filter => @filter, :name => @tag1.name)
+      rule2 = FactoryBot.create(:katello_content_view_docker_filter_rule, :filter => @filter, :name => @tag2.name)
 
       clause_gen = setup_whitelist_filter([rule1, rule2])
       expected = {"$or" => [{"name" => {"$in" => [@tag1.name, @tag2.name]}}]}

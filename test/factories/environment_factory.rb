@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_k_t_environment, :aliases => [:katello_environment], :class => Katello::KTEnvironment do
     sequence(:name) { |n| "Environment#{n}" }
     sequence(:label) { |n| "environment#{n}" }
@@ -23,7 +23,7 @@ FactoryGirl.define do
     trait :with_library do
       after(:build) do |env|
         unless env.library || env.prior
-          library = FactoryGirl.build(:library, :organization => env.organization)
+          library = FactoryBot.build(:library, :organization => env.organization)
           env.priors = [library]
         end
       end

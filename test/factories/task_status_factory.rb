@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_task_status, :class => Katello::TaskStatus do
     association :organization, :factory => :katello_organization
     association :user, :factory => :katello_user

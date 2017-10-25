@@ -14,7 +14,7 @@ module Katello
       @content_view = katello_content_views(:acme_default)
       @environment = katello_environments(:library)
 
-      @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+      @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                  :lifecycle_environment => @environment, :organization => @content_view.organization)
     end
 

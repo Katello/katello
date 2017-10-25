@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_content_view_puppet_environment, :class => Katello::ContentViewPuppetEnvironment do
     sequence(:name) { |n| "Content View Puppet Environment #{n}" }
     sequence(:pulp_id) { |n| "pulp-#{n}" }

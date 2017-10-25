@@ -7,7 +7,7 @@ module Katello
     def setup
       User.current = User.first
       @validator = Validators::ContentViewFilterVersionValidator.new({})
-      @filter = FactoryGirl.create(:katello_content_view_package_filter)
+      @filter = FactoryBot.create(:katello_content_view_package_filter)
     end
 
     test "fails if version and min_version provided" do

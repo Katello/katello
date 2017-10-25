@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_content_view, :class => Katello::ContentView do
     sequence(:name) { |n| "Database#{n}" }
     description "This content view is for database content"

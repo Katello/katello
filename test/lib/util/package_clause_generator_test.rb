@@ -20,15 +20,15 @@ module Katello
         rpm.save!
       end
 
-      @content_view = FactoryGirl.build(:katello_content_view, :organization => organization)
+      @content_view = FactoryBot.build(:katello_content_view, :organization => organization)
       @content_view.save!
       @content_view.repositories << @repo
     end
 
     def test_package_names
-      @filter = FactoryGirl.create(:katello_content_view_package_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "#{@rpm.name[0..1]}*")
-      goo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => @rpm2.name)
+      @filter = FactoryBot.create(:katello_content_view_package_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => "#{@rpm.name[0..1]}*")
+      goo_rule = FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter, :name => @rpm2.name)
 
       combined = [{"filename" => {"$in" => [@rpm.filename, @rpm2.filename]}}]
 
@@ -45,10 +45,10 @@ module Katello
     end
 
     def test_package_versions
-      @filter = FactoryGirl.create(:katello_content_view_package_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter,
+      @filter = FactoryBot.create(:katello_content_view_package_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter,
                                     :name => @rpm2.name, :version => @rpm2.version)
-      goo_rule = FactoryGirl.create(:katello_content_view_package_filter_rule, :filter => @filter,
+      goo_rule = FactoryBot.create(:katello_content_view_package_filter_rule, :filter => @filter,
                                     :name => "#{@rpm.name[0..1]}*", :min_version => "0.9", :max_version => "1.1")
 
       combined = [{"filename" => {"$in" => [@rpm.filename, @rpm2.filename]}}]
@@ -80,10 +80,10 @@ module Katello
     end
 
     def test_package_group_names
-      @filter = FactoryGirl.create(:katello_content_view_package_group_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_package_group_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_package_group_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_package_group_filter_rule,
                                     :filter => @filter, :name => "foo*")
-      goo_rule = FactoryGirl.create(:katello_content_view_package_group_filter_rule,
+      goo_rule = FactoryBot.create(:katello_content_view_package_group_filter_rule,
                                     :filter => @filter, :name => "goo*")
 
       expected_ids = @filter.package_group_rules.map(&:uuid)
@@ -107,10 +107,10 @@ module Katello
     end
 
     def test_errata_ids
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :errata_id => "Foo1")
-      goo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      goo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :errata_id => "Foo2")
 
       expected_errata = [{"id" => {"$in" => ["Foo1", "Foo2"]}}]
@@ -121,8 +121,8 @@ module Katello
       from = Date.today.to_s
       to = Date.today.to_s
 
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :start_date => from, :end_date => to,
                                     :types => ["bugfix", "enhancement", "security"])
 
@@ -136,8 +136,8 @@ module Katello
       from = Date.today.to_s
       to = Date.today.to_s
 
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :date_type => ContentViewErratumFilterRule::ISSUED,
                                     :filter => @filter, :start_date => from, :end_date => to,
                                     :types => ["security", "bugfix"])
@@ -152,8 +152,8 @@ module Katello
       from = Date.today.to_s
       to = Date.today.to_s
 
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :date_type => ContentViewErratumFilterRule::UPDATED,
                                     :filter => @filter, :start_date => from, :end_date => to,
                                     :types => ["enhancement"])
@@ -166,8 +166,8 @@ module Katello
     end
 
     def test_errata_types
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :types => [:bugfix, :security])
 
       expected = [{"type" => {"$in" => [:bugfix, :security]}}]
@@ -178,8 +178,8 @@ module Katello
       from = Date.today
       to = Date.today
 
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
+      @filter = FactoryBot.create(:katello_content_view_erratum_filter, :content_view => @content_view)
+      foo_rule = FactoryBot.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :start_date => from.to_s, :date_type => "issued",
                                     :end_date => to.to_s, :types => [:enhancement, :security])
 

@@ -12,7 +12,7 @@ module Katello
     end
 
     def test_pool_states
-      pools = [FactoryGirl.build(:katello_pool, :active), FactoryGirl.build(:katello_pool, :expiring_soon)]
+      pools = [FactoryBot.build(:katello_pool, :active), FactoryBot.build(:katello_pool, :expiring_soon)]
       @basic.stubs(:pools).returns(pools)
       assert @basic.active?
       assert @basic.expiring_soon?

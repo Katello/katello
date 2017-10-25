@@ -5,7 +5,7 @@ module ::Actions::Katello::ActivationKey
     include Dynflow::Testing
     include Support::Actions::RemoteAction
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
     let(:activation_key) { katello_activation_keys(:simple_key) }

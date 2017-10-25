@@ -8,7 +8,7 @@ module ::Actions::Katello::Repository
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
     let(:repository) { katello_repositories(:rhel_6_x86_64) }
@@ -29,7 +29,7 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::Create }
 
     before do
-      FactoryGirl.create(:smart_proxy, :default_smart_proxy)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       repository.expects(:save!)
       action.expects(:action_subject).with(repository)
       action.execution_plan.stub_planned_action(::Actions::Katello::Product::ContentCreate) do |content_create|
@@ -54,7 +54,7 @@ module ::Actions::Katello::Repository
     end
 
     it 'plans product repos update when sync plan present' do
-      repository.product.sync_plan = FactoryGirl.build('katello_sync_plan',
+      repository.product.sync_plan = FactoryBot.build('katello_sync_plan',
                                                        :products => [repository.product])
 
       plan_action action, repository
@@ -62,7 +62,7 @@ module ::Actions::Katello::Repository
     end
 
     it 'does not plan product repos update when clone flag is present' do
-      repository.product.sync_plan = FactoryGirl.build('katello_sync_plan',
+      repository.product.sync_plan = FactoryBot.build('katello_sync_plan',
                                                        :products => [repository.product])
 
       plan_action action, repository, true
@@ -465,7 +465,7 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::ImportApplicability }
 
     it 'runs' do
-      host =  FactoryGirl.build(:host, :id => 343)
+      host =  FactoryBot.build(:host, :id => 343)
       ::Katello::Repository.any_instance.stubs(:hosts_with_applicability).returns([host])
       Katello::EventQueue.expects(:push_event).with(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host.id)
 

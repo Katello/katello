@@ -3,7 +3,7 @@ require 'katello_test_helper'
 module Katello
   class SubscriptionStatusTest < ActiveSupport::TestCase
     let(:host) do
-      FactoryGirl.build(:host, :with_subscription, :organization => get_organization)
+      FactoryBot.build(:host, :with_subscription, :organization => get_organization)
     end
 
     let(:status) { host.get_status(Katello::SubscriptionStatus) }
@@ -37,7 +37,7 @@ module Katello
     end
 
     def test_no_subscription_facet
-      assert_equal Katello::SubscriptionStatus::UNKNOWN, FactoryGirl.build(:host).get_status(Katello::SubscriptionStatus).to_status
+      assert_equal Katello::SubscriptionStatus::UNKNOWN, FactoryBot.build(:host).get_status(Katello::SubscriptionStatus).to_status
     end
 
     def test_to_global

@@ -4,16 +4,16 @@ module Katello::Host
   class HypervisorsUpdateTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :each do
       User.current = users(:admin)
-      @organization = FactoryGirl.build(:katello_organization)
+      @organization = FactoryBot.build(:katello_organization)
       @content_view = katello_content_views(:library_dev_view)
       @content_view_environment = katello_content_view_environments(:library_dev_view_library)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
 
-      @host = FactoryGirl.create(:host, :with_subscription, :content_view => @content_view,
+      @host = FactoryBot.create(:host, :with_subscription, :content_view => @content_view,
                                 :lifecycle_environment => @content_view_environment, :organization => @organization)
 
       old_name = @host.name

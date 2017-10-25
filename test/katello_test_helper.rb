@@ -2,7 +2,7 @@ require 'simplecov'
 require 'simplecov-rcov'
 
 require 'test_helper'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require "webmock/minitest"
 require "mocha/setup"
 require 'set'
@@ -40,8 +40,8 @@ require "#{Katello::Engine.root}/test/support/actions/pulp_task"
 require "#{Katello::Engine.root}/test/support/actions/remote_action"
 require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 
-FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
-FactoryGirl.find_definitions
+FactoryBot.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
+FactoryBot.find_definitions
 
 module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to
@@ -144,7 +144,7 @@ class ActionController::TestCase
 end
 
 class ActiveSupport::TestCase
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
   include FixtureTestCase
   include ForemanTasks::TestHelpers::WithInThreadExecutor
 

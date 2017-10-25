@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_repository, :class => Katello::Repository do
     sequence(:name) { |n| "Repo #{n}" }
     sequence(:label) { |n| "repo_#{n}" }

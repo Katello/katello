@@ -7,7 +7,7 @@ module Katello
     def setup
       @validator = Validators::HostgroupKickstartRepositoryValidator.new({})
       @os = ::Redhat.create_operating_system('RedHat', '9', '0')
-      content_source = FactoryGirl.create(:smart_proxy)
+      content_source = FactoryBot.create(:smart_proxy)
       library_environment = katello_environments(:library)
       content_source.lifecycle_environments = [library_environment]
 
@@ -34,7 +34,7 @@ module Katello
     end
 
     test 'it invalidates on content source and environment mismatch' do
-      @hostgroup.expects(:content_source).twice.returns(FactoryGirl.create(:smart_proxy))
+      @hostgroup.expects(:content_source).twice.returns(FactoryBot.create(:smart_proxy))
 
       @validator.validate(@hostgroup)
 

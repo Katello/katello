@@ -40,7 +40,7 @@ module Katello
 
     def test_destroy_library
       User.current = User.find(users(:admin).id)
-      org = FactoryGirl.create(:katello_organization)
+      org = FactoryBot.create(:katello_organization)
       org.create_library
       org.save!
       env = org.library

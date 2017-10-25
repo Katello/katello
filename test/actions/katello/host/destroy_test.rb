@@ -4,13 +4,13 @@ module Katello::Host
   class DestroyTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :all do
       User.current = users(:admin)
       @content_view = katello_content_views(:library_dev_view)
       @library = katello_environments(:library)
-      @host = FactoryGirl.build(:host, :with_content, :with_subscription, :content_view => @content_view,
+      @host = FactoryBot.build(:host, :with_content, :with_subscription, :content_view => @content_view,
                                  :lifecycle_environment => @library)
     end
 

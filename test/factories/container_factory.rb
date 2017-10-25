@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :container do
     sequence(:name) { |n| "katello_container_#{n}" }
     association :compute_resource, :factory => :docker_stuff

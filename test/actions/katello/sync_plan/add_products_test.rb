@@ -4,11 +4,11 @@ describe ::Actions::Katello::SyncPlan::AddProducts do
   include Dynflow::Testing
   include Support::Actions::Fixtures
   include Support::Actions::RemoteAction
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
 
   before :all do
     @product = katello_products(:fedora)
-    @sync_plan = FactoryGirl.build(
+    @sync_plan = FactoryBot.build(
       'katello_sync_plan',
       :products => [],
       :interval => 'daily',

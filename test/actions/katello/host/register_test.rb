@@ -4,7 +4,7 @@ module Katello::Host
   class RegisterTest < ActiveSupport::TestCase
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     before :all do
       User.current = users(:admin)
@@ -69,7 +69,7 @@ module Katello::Host
       end
 
       it 'plans with existing host' do
-        @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)

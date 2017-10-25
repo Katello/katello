@@ -5,7 +5,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::HostCollectionsControllerTest < ActionController::TestCase
     def models
-      @host = FactoryGirl.create(:host)
+      @host = FactoryBot.create(:host)
       @host_two = hosts(:two)
       @host_collection = katello_host_collections(:simple_host_collection)
       @organization = get_organization

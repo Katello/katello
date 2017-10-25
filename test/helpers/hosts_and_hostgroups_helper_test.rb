@@ -12,12 +12,12 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     User.current = User.anonymous_api_admin
 
     @library = katello_environments(:library)
-    @host =  FactoryGirl.build(:host, :with_content, :with_subscription,
+    @host =  FactoryBot.build(:host, :with_content, :with_subscription,
                                :content_view => katello_content_views(:library_dev_view),
                                :lifecycle_environment => katello_environments(:library), :id => 343)
     @host.organization = taxonomies(:organization1)
-    @group = FactoryGirl.build(:hostgroup)
-    @smart_proxy = FactoryGirl.create(:smart_proxy, :features => [FactoryGirl.create(:feature, name: 'Pulp')])
+    @group = FactoryBot.build(:hostgroup)
+    @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
   end
 
   def test_accessible_lifecycle_environments
@@ -26,7 +26,7 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
   end
 
   def test_accessible_lifecycle_environments_limited
-    User.current = FactoryGirl.create(:user)
+    User.current = FactoryBot.create(:user)
     envs = accessible_lifecycle_environments(@library.organization, @host)
     assert_equal([@host.content_facet.lifecycle_environment], envs)
   end
@@ -46,8 +46,8 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
   end
 
   def test_accessible_content_proxies_no_perms
-    User.current = FactoryGirl.create(:user)
-    FactoryGirl.create(:smart_proxy, :features => [FactoryGirl.create(:feature, name: 'Pulp')])
+    User.current = FactoryBot.create(:user)
+    FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
     @host.content_facet.content_source = @smart_proxy
 
     assert_equal [@smart_proxy], accessible_content_proxies(@host)
@@ -58,7 +58,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryOptionsTest < HostsAndHostGroup
   def setup
     @repo_with_distro = katello_repositories(:fedora_17_x86_64)
     @os = ::Redhat.create_operating_system('RedHat', '9', '0')
-    @content_source = FactoryGirl.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
+    @content_source = FactoryBot.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment
@@ -176,7 +176,7 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
   def setup
     @repo_with_distro = katello_repositories(:fedora_17_x86_64)
     @os = ::Redhat.create_operating_system('RedHat', '9', '0')
-    @content_source = FactoryGirl.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
+    @content_source = FactoryBot.create(:smart_proxy, :name => "foobar", :url => "http://capsule.com/")
     @arch = architectures(:x86_64)
     @cv = @repo_with_distro.content_view
     @env = @repo_with_distro.environment

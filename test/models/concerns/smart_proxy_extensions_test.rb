@@ -7,7 +7,7 @@ module Katello
     def setup
       @library = katello_environments(:library)
       @view = katello_content_views(:library_dev_view)
-      @proxy = FactoryGirl.build(:smart_proxy, :url => 'http://fakepath.com/foo')
+      @proxy = FactoryBot.build(:smart_proxy, :url => 'http://fakepath.com/foo')
       ::SmartProxy.any_instance.stubs(:associate_features)
     end
 
@@ -27,7 +27,7 @@ module Katello
 
     def test_destroy_with_content_facet
       @proxy.save!
-      host = FactoryGirl.create(:host, :with_content, :content_view => @view,
+      host = FactoryBot.create(:host, :with_content, :content_view => @view,
                                           :lifecycle_environment => @library)
 
       host.content_facet.content_source = @proxy

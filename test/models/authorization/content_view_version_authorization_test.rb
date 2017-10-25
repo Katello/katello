@@ -28,7 +28,7 @@ module Katello
       super
       @library = katello_environments(:library)
       @view =  katello_content_views(:library_dev_view)
-      @host = FactoryGirl.create(:host, :with_content, :content_view => @view, :lifecycle_environment => @library)
+      @host = FactoryBot.create(:host, :with_content, :content_view => @view, :lifecycle_environment => @library)
     end
 
     def test_admin

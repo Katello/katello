@@ -17,21 +17,21 @@ module Katello
     def test_composite_view
       skip "skip until composite content views are supported"
       # filter should not get created for a composite content view
-      content_view = FactoryGirl.create(:katello_content_view, :composite)
-      filter = FactoryGirl.build(:katello_content_view_filter, :content_view_id => content_view.id)
+      content_view = FactoryBot.create(:katello_content_view, :composite)
+      filter = FactoryBot.build(:katello_content_view_filter, :content_view_id => content_view.id)
       assert_nil ContentViewFilter.find_by_id(filter.id)
       refute ContentViewFilter.exists?(filter.id)
     end
 
     def test_bad_name
-      filter = FactoryGirl.build(:katello_content_view_filter, :name => "")
+      filter = FactoryBot.build(:katello_content_view_filter, :name => "")
       assert filter.invalid?
       assert filter.errors.include?(:name)
     end
 
     def test_duplicate_name
       @filter.save!
-      attrs = FactoryGirl.attributes_for(:katello_content_view_filter,
+      attrs = FactoryBot.attributes_for(:katello_content_view_filter,
                                          :name => @filter.name,
                                          :content_view_id => @filter.content_view_id
                                         )

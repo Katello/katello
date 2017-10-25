@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :katello_product, :class => Katello::Product do
     sequence(:name) { |n| "Product #{n}" }
     sequence(:label) { |n| "product_#{n}" }
