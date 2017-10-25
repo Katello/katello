@@ -3,6 +3,7 @@
 require "katello_test_helper"
 
 module Katello
+  #rubocop:disable Metrics/BlockLength
   describe Api::Rhsm::CandlepinProxiesController do
     include Katello::AuthorizationSupportMethods
     include Support::ForemanTasks::Task
@@ -17,6 +18,9 @@ module Katello
       @organization = get_organization
       @host = FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                  :lifecycle_environment => @environment, :organization => @content_view.organization)
+      location = taxonomies(:location1)
+      Setting[:default_location_puppet_content] = location.title
+      Setting[:default_location_subscribed_hosts] = location.title
     end
 
     describe "register with activation key should fail" do

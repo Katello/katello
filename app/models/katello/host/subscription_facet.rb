@@ -149,7 +149,7 @@ module Katello
         host ||= Katello::Host::SubscriptionFacet.new_host_from_facts(
           rhsm_params[:facts],
           organization,
-          Location.unscoped.find_by_title(::Setting[:default_location_subscribed_hosts])
+          Location.default_host_subscribe_location!
         )
         host.organization = organization unless host.organization
         host
