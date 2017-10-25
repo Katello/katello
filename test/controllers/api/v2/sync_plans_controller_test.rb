@@ -94,7 +94,7 @@ module Katello
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
-      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
         put :update, :id => @sync_plan.id, :organization_id => @organization.id,
             :sync_plan => {:description => 'new description.'}
       end
