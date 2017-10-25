@@ -47,8 +47,7 @@ module Actions
         end
 
         def create_host_for_hypervisor(name, organization, location = nil)
-          location ||= Location.unscoped.find_by_title(
-            Setting[:default_location_subscribed_hosts])
+          location ||= Location.default_host_subscribe_location!
           host = ::Host::Managed.new(:name => name, :organization => organization,
                                      :location => location, :managed => false, :enabled => false)
           host.save!
