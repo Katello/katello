@@ -12,7 +12,7 @@ module Katello
       end
 
       def self.scrub(params, &block_to_match)
-        params.keys.each do |key|
+        params.each_key do |key|
           if params[key].is_a?(Hash)
             scrub(params[key], &block_to_match)
           elsif block_to_match.call(key, params[key])

@@ -21,6 +21,7 @@ module Katello
       @content.destroy
     end
 
+    # rubocop:disable Lint/DuplicateMethods
     def product
       @product ||= Product.find(@product_id) if @product_id
       @product

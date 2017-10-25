@@ -42,7 +42,7 @@ module Katello
       :katello_subscription_facet_pools => Katello::SubscriptionFacetPool
     }.freeze
 
-    # rubocop:disable Style/AccessorMethodName
+    # rubocop:disable Naming/AccessorMethodName
     def self.set_fixture_classes(test_class)
       FIXTURE_CLASSES.each { |k, v| test_class.set_fixture_class(k => v) }
     end

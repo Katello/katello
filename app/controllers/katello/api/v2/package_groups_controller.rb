@@ -54,7 +54,7 @@ module Katello
       render :json => {:status => "success"}
     end
 
-    def available_for_content_view_filter(filter, collection)
+    def available_for_content_view_filter(filter, _collection)
       collection_ids = []
       current_ids = filter.package_group_rules.map(&:uuid)
       filter.applicable_repos.each do |repo|

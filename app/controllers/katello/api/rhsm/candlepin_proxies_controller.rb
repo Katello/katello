@@ -270,7 +270,7 @@ module Katello
     end
 
     def serials
-      @host.subscription_facet.last_checkin = DateTime.now
+      @host.subscription_facet.last_checkin = Time.now
       @host.subscription_facet.save!
       render :json => Katello::Resources::Candlepin::Consumer.serials(@host.subscription_facet.uuid)
     end

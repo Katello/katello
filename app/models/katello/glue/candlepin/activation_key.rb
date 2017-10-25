@@ -1,4 +1,4 @@
-# rubocop:disable Style/AccessorMethodName
+# rubocop:disable Naming/AccessorMethodName
 module Katello
   module Glue::Candlepin::ActivationKey
     def self.included(base)

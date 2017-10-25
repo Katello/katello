@@ -5,7 +5,7 @@ module Actions
         include ::Dynflow::Action::Singleton
 
         Event = Algebrick.type do
-          fields! event_type: String, object_id: Integer, created_at: DateTime
+          fields! event_type: String, object_id: Integer, created_at: Time
         end
 
         Fatal = Algebrick.type do

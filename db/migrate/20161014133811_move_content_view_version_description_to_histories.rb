@@ -22,13 +22,11 @@ class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration
   def up
     FakeContentViewVersion.find_each do |version|
       publish_history = version.history.publish.successful.first
-      unless publish_history
-        publish_history = CVHistory.create!(action: CVHistory.actions[:publish],
+      publish_history ||= CVHistory.create!(action: CVHistory.actions[:publish],
                                             katello_content_view_version_id: version.id,
                                             status: 'successful',
                                             user: ''
                                            )
-      end
 
       publish_history.update_attributes!(notes: version[:description])
     end

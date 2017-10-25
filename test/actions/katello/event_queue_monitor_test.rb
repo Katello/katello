@@ -32,7 +32,7 @@ class Actions::Katello::EventQueueMonitorTest < ActiveSupport::TestCase
       Katello::Events::ImportHostApplicability.any_instance.expects(:run).once
 
       action = run_action planned_action
-      action.run(action_class::Event[event.event_type, event.object_id, event.created_at.to_datetime])
+      action.run(action_class::Event[event.event_type, event.object_id, event.created_at.to_time])
     end
   end
 end

@@ -115,11 +115,11 @@ module Katello
         pool_attributes[:pool_type] = pool_json["type"] if pool_json.key?("type")
 
         if pool_attributes.key?(:multi_entitlement)
-          pool_attributes[:multi_entitlement] = pool_attributes[:multi_entitlement] == "yes" ? true : false
+          pool_attributes[:multi_entitlement] = pool_attributes[:multi_entitlement] == "yes"
         end
 
         if pool_attributes.key?(:virtual)
-          pool_attributes[:virt_only] = pool_attributes["virtual"] == 'true' ? true : false
+          pool_attributes[:virt_only] = pool_attributes["virtual"] == 'true'
         end
         pool_attributes[:host_id] = pool_attributes["requiresHost"] if pool_attributes.key?("requiresHost")
 

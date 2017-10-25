@@ -18,7 +18,7 @@ module Katello
         has_many :activation_keys, :through => :subscription_facet
         has_many :pools, :through => :subscription_facet
         has_many :subscriptions, :through => :pools
-        has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id'
+        has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :hypervisor_host, :through => :subscription_facet
 
         scoped_search :on => :status, :relation => :subscription_status_object, :rename => :subscription_status,

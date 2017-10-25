@@ -4,7 +4,7 @@ module Katello
       Katello::RhsmFactName
     end
 
-    def normalize(facts)
+    def normalize(_facts)
       facts = super
       facts = change_separator(facts)
       add_compose_facts(facts)
@@ -12,7 +12,7 @@ module Katello
 
     def add_compose_facts(facts)
       additional_keys = []
-      facts.keys.each do |fact_name|
+      facts.each_key do |fact_name|
         parts = fact_name.split(RhsmFactName::SEPARATOR)
         additional_keys += parts[0..-2].reduce([]) { |memo, part| memo << [memo.last, part].compact.join(RhsmFactName::SEPARATOR) }
       end

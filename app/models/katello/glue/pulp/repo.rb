@@ -648,7 +648,7 @@ module Katello
         return false if last_sync.nil?
         return true if last_publish.nil?
 
-        DateTime.parse(last_sync) >= DateTime.parse(last_publish)
+        Time.parse(last_sync) >= Time.parse(last_publish)
       end
 
       def last_sync_task

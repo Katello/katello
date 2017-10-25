@@ -50,7 +50,7 @@ module Katello
     end
 
     def test_search_last_checkin
-      subscription_facet.last_checkin = DateTime.now - 1.hour
+      subscription_facet.last_checkin = Time.now - 1.hour
       subscription_facet.save!
 
       assert_includes ::Host.search_for('last_checkin > "3 hours ago"'), host
@@ -62,7 +62,7 @@ module Katello
     end
 
     def test_update_from_consumer_attributes
-      params = { :lastCheckin => DateTime.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => "7Server" }
+      params = { :lastCheckin => Time.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => "7Server" }
       subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
 
       assert_equal subscription_facet.last_checkin, params[:lastCheckin]
@@ -72,7 +72,7 @@ module Katello
     end
 
     def test_update_from_consumer_attributes_release_version
-      params = { :lastCheckin => DateTime.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => {'releaseVer' => "7Server" }}
+      params = { :lastCheckin => Time.now, :autoheal => true, :serviceLevel => "Premium", :releaseVer => {'releaseVer' => "7Server" }}
       subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
 
       assert_equal '7Server', subscription_facet.release_version
@@ -129,7 +129,7 @@ module Katello
     def test_subscription_status
       status = Katello::SubscriptionStatus.new(:host => host)
       status.status = Katello::SubscriptionStatus::INVALID
-      status.reported_at = DateTime.now
+      status.reported_at = Time.now
       status.save!
 
       assert_includes ::Host::Managed.search_for("subscription_status = invalid"), host

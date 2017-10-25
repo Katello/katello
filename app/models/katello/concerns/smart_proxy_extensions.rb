@@ -1,3 +1,4 @@
+# rubocop:disable Style/MixinUsage
 module Katello
   module Concerns
     module SmartProxyExtensions
@@ -43,7 +44,7 @@ module Katello
                                   :inverse_of => :content_source, :dependent => :nullify
 
         has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_source_id,
-                              :inverse_of => :content_source
+                              :inverse_of => :content_source, :dependent => :nullify
 
         validates :download_policy, inclusion: {
           :in => DOWNLOAD_POLICIES,

@@ -61,7 +61,7 @@ module Actions
         def find_or_build_puppet_env(version, environment, puppet_modules_present)
           puppet_env = ::Katello::ContentViewPuppetEnvironment.in_content_view(version.content_view).
               in_environment(environment).readonly(false).first
-          puppet_env = version.content_view.build_puppet_env(:environment => environment) unless puppet_env
+          puppet_env ||= version.content_view.build_puppet_env(:environment => environment)
 
           if puppet_env.puppet_environment.nil? && puppet_modules_present
             puppet_env.puppet_environment = ::Katello::Foreman.build_puppet_environment(version.content_view.organization,
@@ -72,7 +72,7 @@ module Actions
 
         def find_or_build_puppet_archive(new_version)
           puppet_env = new_version.archive_puppet_environment
-          puppet_env = new_version.content_view.build_puppet_env(:version => new_version) unless puppet_env
+          puppet_env ||= new_version.content_view.build_puppet_env(:version => new_version)
           puppet_env
         end
       end

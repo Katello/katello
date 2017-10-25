@@ -1,12 +1,12 @@
 namespace :katello do
-  desc <<-END_DESC
+  desc <<-DESCRIPTION
   Report on hypervisors without VDC subscriptions and guests consuming virtual entitlements.  Returns non-negative exit code if any issue is found.
   Options:
     CSV - Output in csv format.  Example:  CSV=true
     LIMIT - only execute on a specified number of hosts (useful when re-running with different options).  Example:  LIMIT=500
     IGNORE - ignore one or more pools, separated via a pipe character '|'.
       Example:  IGNORE="Red Hat Enterprise Linux Server with Smart Management, Standard (Physical or Virtual Nodes)|Some Other Pool"
-END_DESC
+DESCRIPTION
   task :virt_who_report => ["environment", "check_ping"] do
     class ProblemItem
       attr_accessor :host, :hypervisor, :message

@@ -34,7 +34,7 @@ module Actions
           messages = []
           tasks.each do |pulp_task|
             if pulp_task[:result] && pulp_task[:result][:details]
-              pulp_task[:result][:details].each do |_content_type, result|
+              pulp_task[:result][:details].each_value do |result|
                 unless result[:succeeded]
                   messages << result[:details][:message]
                 end
