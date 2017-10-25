@@ -18,9 +18,6 @@ module Katello
           # pulp - without oauth
           stub_request(:get, "#{SETTINGS[:katello][:pulp][:url]}/services/status/") # gotta have that trailing slash
 
-          # pulp - with oauth
-          Katello.pulp_server.resources.user.stubs(:retrieve_all).returns([])
-
           Ping.expects(:pulp_without_auth).returns(nil)
 
           subject.must_be_instance_of(String)

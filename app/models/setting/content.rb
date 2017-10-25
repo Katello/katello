@@ -58,8 +58,6 @@ class Setting::Content < Setting
                  "/etc/pki/katello/certs/pulp-client.crt", N_('Pulp client cert')),
         self.set('remote_execution_by_default', N_("If set to true, use the remote execution over katello-agent for remote actions"),
                  false, N_('Use remote execution by default')),
-        self.set('use_pulp_oauth', N_("use oauth authentication for pulp instead of the default cert based authentication"),
-                 false, N_('Use Pulp OAuth authentication')),
         self.set('unregister_delete_host', N_("When unregistering a host via subscription-manager, also delete the host record. Managed resources linked to host " \
                                               "such as virtual machines and DNS records may also be deleted."),
                  false, N_('Delete Host upon unregister')),
