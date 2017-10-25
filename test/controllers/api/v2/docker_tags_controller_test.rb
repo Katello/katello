@@ -49,5 +49,13 @@ module Katello
       assert_template "katello/api/v2/docker_tags/show"
       assert_template :layout => 'katello/api/v2/layouts/resource'
     end
+
+    def test_show_related_tags
+      get :show, :repository_id => @repo.id, :id => @meta_tag.id
+
+      related_tag = JSON.parse(response.body)['related_tags'].first
+      refute_nil related_tag['id']
+      assert_equal 'wat', related_tag['name']
+    end
   end
 end

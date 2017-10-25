@@ -33,19 +33,24 @@ angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
         });
 
         $scope.tag.$promise.then(function () {
+            var ids = _.map($scope.tag.related_tags, 'id');
             var params = {
                 'organization_id': CurrentOrganization,
                 'search': $location.search().search || "",
                 'sort_by': 'name',
                 'sort_order': 'ASC',
                 'paged': false,
-                'ids[]': _.map($scope.tag['related_tags'], 'uuid')
+                'ids[]': ids
             };
-            var nutupane = new Nutupane(DockerTag, params);
+            var nutupane = new Nutupane(DockerTag, params, null, {disableAutoLoad: true});
+
             $scope.controllerName = 'katello_docker_tags';
             $scope.table = nutupane.table;
             $scope.panel.loading = false;
-            nutupane.refresh();
+
+            if (!_.isEmpty(ids)) {
+                nutupane.refresh();
+            }
         });
     }
 ]);
