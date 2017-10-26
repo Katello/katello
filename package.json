@@ -1,0 +1,47 @@
+{
+  "name": "katello",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest webpack",
+    "test:watch": "jest webpack --watchAll",
+    "test:current": "jest webpack --watch",
+    "format":
+      "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js' '*.{js,json}'",
+    "build": "npm run format && npm run lint",
+    "lint": "eslint --fix webpack/index.js || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katello/katello.git"
+  },
+  "bugs": {
+    "url": "http://projects.theforeman.org/projects/katello/issues"
+  },
+  "devDependencies": {
+    "babel-jest": "^21.2.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
+    "enzyme-to-json": "^3.1.2",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jest": "^21.2.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "jest": "^21.2.1",
+    "prettier": "^1.7.4",
+    "react-test-renderer": "^16.0.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-router-dom": "^4.2.2"
+  },
+  "jest": {
+    "setupFiles": ["raf/polyfill"]
+  }
+}
