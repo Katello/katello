@@ -12,15 +12,6 @@ module Katello
                                :inverse_of => :schema2, :dependent => :nullify
 
     before_destroy :cleanup_meta_tags
-    scoped_search :on => :name, :complete_value => true, :rename => :tag
-    scoped_search :relation => :docker_manifest, :on => :name, :rename => :manifest,
-      :complete_value => true, :only_explicit => false
-    scoped_search :relation => :docker_manifest, :on => :digest, :rename => :digest,
-      :complete_value => false, :only_explicit => true
-    scoped_search :relation => :docker_manifest, :on => :schema_version, :rename => :schema_version,
-      :complete_value => false, :only_explicit => true
-    scoped_search :relation => :repository, :on => :name, :rename => :repository,
-      :complete_value => true, :only_explicit => true
 
     scope :in_repositories, ->(repos) { where(:repository_id => repos) }
 

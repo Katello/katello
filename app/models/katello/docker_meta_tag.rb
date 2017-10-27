@@ -9,6 +9,31 @@ module Katello
     belongs_to :schema2, :class_name => "Katello::DockerTag",
                           :inverse_of => :schema2_meta_tag
 
+    scoped_search :on => :name, :complete_value => true, :rename => :tag
+    scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => { "1" => "1", "2" => "2"},
+                  :only_explicit => true, :ext_method => :find_by_schema_version, :operators => ["="]
+    scoped_search :relation => :repository, :on => :name, :rename => :repository,
+      :complete_value => true, :only_explicit => true
+
+    def self.find_by_schema_version(_key, operator, value)
+      conditions = ""
+      if operator == '='
+        if ["1", "2"].include?(value)
+          column = if value == "1"
+                     "schema1_id"
+                   else
+                     "schema2_id"
+                   end
+          docker_meta_tag_arel_table = ::Katello::DockerMetaTag.arel_table
+          conditions = docker_meta_tag_arel_table[column].not_eq(nil).to_sql
+        else
+          #failure condition. No such value so must return 0
+          conditions = "1=0"
+        end
+      end
+      { :conditions => conditions }
+    end
+
     def self.delegate_to_tags(*names)
       names.each do |name|
         define_method(name) do
