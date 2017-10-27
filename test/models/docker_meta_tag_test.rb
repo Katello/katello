@@ -112,5 +112,18 @@ module Katello
       assert_equal dmt.schema2.schema2_meta_tag, dmt.schema2.associated_meta_tag
       assert_equal dmt.id, dmt.schema2.associated_meta_tag_identifier
     end
+
+    def test_search_meta_tag
+      DockerMetaTag.import_meta_tags([@repo])
+      dmt = DockerMetaTag.first
+      assert_includes DockerMetaTag.search_for("schema_version = 2"), dmt
+      assert_includes DockerMetaTag.search_for("schema_version = 1"), dmt
+      refute_includes DockerMetaTag.search_for("schema_version = 3"), dmt
+
+      assert_includes DockerMetaTag.search_for("tag = #{dmt.name}"), dmt
+      refute_includes DockerMetaTag.search_for("tag = #{dmt.name}00009s"), dmt
+
+      assert_includes DockerMetaTag.search_for("repository = #{dmt.repository.name}"), dmt
+    end
   end
 end
