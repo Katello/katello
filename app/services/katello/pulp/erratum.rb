@@ -1,7 +1,7 @@
 module Katello
   module Pulp
     class Erratum < PulpContentUnit
-      PULP_SELECT_FIELDS = %w(id).freeze
+      PULP_SELECT_FIELDS = %w(errata_id).freeze
       CONTENT_TYPE = "erratum".freeze
 
       def self.unit_handler
