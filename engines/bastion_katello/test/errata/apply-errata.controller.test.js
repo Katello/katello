@@ -36,17 +36,10 @@ describe('Controller: ApplyErrataController', function() {
         CurrentOrganization = 'foo';
 
         IncrementalUpdate = {
-            canApply: function () {},
             getContentHostIds: function () {},
             getErrataIds: function () {},
-            getBulkContentHosts: function () {},
-            getIncrementalUpdates: function () {
-                return {
-                    then: function(cb){
-                        cb($scope.updates)
-                    }
-                }
-            }
+            getBulkContentHosts: function () {return {}},
+            getIncrementalUpdates: function () {}
         };
 
         Notification = {
@@ -84,7 +77,6 @@ describe('Controller: ApplyErrataController', function() {
         };
 
         beforeEach(function () {
-            spyOn(IncrementalUpdate, 'canApply').and.returnValue(true);
             spyOn(IncrementalUpdate,'getBulkContentHosts').and.returnValue(bulkContentHosts);
             spyOn(IncrementalUpdate, 'getErrataIds').and.returnValue([10]);
 
@@ -92,7 +84,6 @@ describe('Controller: ApplyErrataController', function() {
         });
 
         afterEach(function () {
-            expect(IncrementalUpdate.canApply).toHaveBeenCalled();
             expect(IncrementalUpdate.getErrataIds).toHaveBeenCalled();
             expect(IncrementalUpdate.getBulkContentHosts).toHaveBeenCalled();
         });
