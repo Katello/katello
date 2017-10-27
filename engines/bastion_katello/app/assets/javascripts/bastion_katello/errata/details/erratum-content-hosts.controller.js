@@ -80,6 +80,9 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
 
         $scope.goToNextStep = function () {
             IncrementalUpdate.setBulkContentHosts(nutupane.getAllSelectedResults());
+            if ($scope.errata) {
+                IncrementalUpdate.setErrataIds([$scope.errata['errata_id']]);
+            }
 
             if ($scope.errata && $scope.errata.id) {
                 $scope.transitionTo('erratum.apply', {errataId: $scope.errata.id});

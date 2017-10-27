@@ -129,17 +129,6 @@
             searchId = Task.registerSearch(taskSearchParams, taskSearchComplete);
             return deferred.promise;
         };
-
-        /**
-         * Determines whether or not errata can be applied.
-         *
-         * For now, simply checks if the parameters exist.
-         *
-         * @returns boolean
-         */
-        this.canApply = function () {
-            return this.errataIds.length > 0 && this.contentHostIds.length > 0;
-        };
     }
 
     angular.module('Bastion.errata').service('IncrementalUpdate', IncrementalUpdate);
