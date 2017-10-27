@@ -28,17 +28,8 @@ module Katello
       param :ids, Array, :desc => N_("ids to filter content by")
       param_group :search, ::Katello::Api::V2::ApiController
       def index
-        sort_options = []
-        options = {}
-        if default_sort.is_a?(Array)
-          sort_options = default_sort
-        elsif default_sort.is_a?(Proc)
-          options[:custom_sort] = default_sort
-        else
-          fail "Unsupported default_sort type"
-        end
-
-        respond(:collection => scoped_search(index_relation, sort_options[0], sort_options[1], options))
+        sort_by, sort_order, options = sort_options
+        respond(:collection => scoped_search(index_relation, sort_by, sort_order, options))
       end
 
       api :GET, "/:resource_id/:id", N_("Show :a_resource")
@@ -49,7 +40,7 @@ module Katello
         respond :resource => @resource
       end
 
-      api :GET, "/compare/", N_("List :resource_id")
+      api :GET, "/:resource_id/compare/", N_("List :resource_id")
       param :content_view_version_ids, Array, :desc => N_("content view versions to compare")
       param :repository_id, :number, :desc => N_("Library repository id to restrict comparisons to")
       def compare
@@ -65,7 +56,8 @@ module Katello
         repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
         repos = repos.where(:library_instance_id => @repo.id) if @repo
 
-        collection = scoped_search(filter_by_repos(repos, collection).uniq, default_sort[0], default_sort[1])
+        sort_by, sort_order, options = sort_options
+        collection = scoped_search(filter_by_repos(repos, collection).uniq, sort_by, sort_order, options)
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
         respond_for_index(:collection => collection)
       end
