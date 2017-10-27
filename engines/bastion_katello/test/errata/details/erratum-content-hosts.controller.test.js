@@ -47,7 +47,8 @@ describe('Controller: ErratumContentHostsController', function() {
         IncrementalUpdate = {
             getIncrementalUpdates: function () {},
             getErrataIds: function () {},
-            setBulkContentHosts: function () {}
+            setBulkContentHosts: function () {},
+            setErrataIds: function () {}
         };
 
         Environment = MockResource.$new();

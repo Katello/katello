@@ -78,12 +78,4 @@ describe('Service: IncrementalUpdate', function() {
         expect(Task.registerSearch).toHaveBeenCalled();
         expect(Task.unregisterSearch).toHaveBeenCalled();
     });
-
-    it("determines whether or not errata can be applied", function () {
-        expect(IncrementalUpdate.canApply()).toBe(false);
-        IncrementalUpdate.errataIds = [1];
-        expect(IncrementalUpdate.canApply()).toBe(false);
-        IncrementalUpdate.contentHostIds = [1];
-        expect(IncrementalUpdate.canApply()).toBe(true);
-    });
 });
