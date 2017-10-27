@@ -102,6 +102,20 @@ module Katello
       end
     end
 
+    def test_compare
+      @lib_repo = katello_repositories(:rhel_6_x86_64)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+
+      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      assert_response :success
+      assert_template "katello/api/v2/package_groups/compare"
+
+      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
+                    :repository_id => @lib_repo.id
+      assert_response :success
+      assert_template "katello/api/v2/package_groups/compare"
+    end
+
     def test_create_and_delete
       parameters = { :repository_id => @repo.id, :name => 'My_Group', :description => "My Group", :mandatory_package_names => ["katello-agent"]}
       assert_sync_task(::Actions::Katello::Repository::UploadPackageGroup) do |repository, params|

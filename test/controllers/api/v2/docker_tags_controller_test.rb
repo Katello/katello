@@ -64,5 +64,19 @@ module Katello
       refute_nil related_tag['id']
       assert_equal 'wat', related_tag['name']
     end
+
+    def test_compare
+      @lib_repo = katello_repositories(:rhel_6_x86_64)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+
+      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      assert_response :success
+      assert_template "katello/api/v2/docker_tags/compare"
+
+      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
+                    :repository_id => @lib_repo.id
+      assert_response :success
+      assert_template "katello/api/v2/docker_tags/compare"
+    end
   end
 end
