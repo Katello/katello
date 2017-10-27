@@ -16,11 +16,6 @@ module Katello
       end
     end
 
-    def test_search_version
-      tags = DockerTag.search_for("schema_version = 2")
-      assert_includes tags, @tag
-    end
-
     def test_import_from_json
       @tag.repository_id = nil
       @tag.docker_manifest_id = nil
