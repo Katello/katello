@@ -28,7 +28,7 @@ module Actions
         def run
           User.as_anonymous_admin do
             host = ::Host.find(input[:host_id])
-            unless input[:consumer_params][:facts].blank?
+            if input[:consumer_params].try(:[], :facts)
               ::Katello::Host::SubscriptionFacet.update_facts(host, input[:consumer_params][:facts])
             end
           end
@@ -40,7 +40,7 @@ module Actions
               host = ::Host.find(input[:host_id])
               host.subscription_facet.update_from_consumer_attributes(input[:consumer_params])
               host.subscription_facet.save!
-              input[:consumer_params][:facts] = 'TRIMMED' unless input[:consumer_params][:facts].blank?
+              input[:consumer_params][:facts] = 'TRIMMED' if input[:consumer_params].try(:[], :facts)
             end
           end
         end
