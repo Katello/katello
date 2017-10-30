@@ -122,20 +122,6 @@ module Katello
         end
       end
 
-      def self.orphaned_consumer_ids
-        #returns consumer ids in candlepin with no matching katello entry
-        orphaned_ids = []
-        User.as_anonymous_admin do
-          cp_consumers = Organization.all.collect { |org| ::Katello::Resources::Candlepin::Consumer.get('owner' => org.label) }
-          cp_consumers.flatten!
-          cp_consumers.reject! { |consumer| consumer['type']['label'] == 'uebercert' }
-          cp_consumer_ids = cp_consumers.map { |consumer| consumer["uuid"] }
-          katello_consumer_ids = ::Katello::Host::SubscriptionFacet.pluck(:uuid)
-          orphaned_ids = cp_consumer_ids - katello_consumer_ids
-        end
-        orphaned_ids
-      end
-
       def self.distribution_to_puppet_os(name)
         return ::Operatingsystem::REDHAT_ATOMIC_HOST_OS if name == ::Operatingsystem::REDHAT_ATOMIC_HOST_DISTRO_NAME
 

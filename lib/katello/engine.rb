@@ -40,7 +40,8 @@ module Katello
           :url => 'https://localhost:8443/candlepin',
           :oauth_key => 'katello',
           :oauth_secret => 'katello',
-          :ca_cert_file => nil
+          :ca_cert_file => nil,
+          :bulk_load_size => 1000
         }
       }
 
