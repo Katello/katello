@@ -59,20 +59,6 @@ module Katello
 
         assert_equal nil, Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
-
-      def test_orphaned_consumer_ids
-        org = get_organization
-        Organization.stubs(:all).returns([org])
-
-        orphaned_uuid = 'annie'
-        consumer = {'type' => {'label' => nil}, 'uuid' => orphaned_uuid}
-        ueber_consumer = {'type' => {'label' => 'uebercert'}, 'uuid' => 'my_ueber_cert'}
-
-        ::Katello::Resources::Candlepin::Consumer.expects(:get).with('owner' => org.label).returns([consumer, ueber_consumer])
-        orphaned = Katello::Candlepin::Consumer.orphaned_consumer_ids
-
-        assert_equal [orphaned_uuid], orphaned
-      end
     end
   end
 end
