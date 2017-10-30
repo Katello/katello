@@ -1,42 +1,73 @@
 namespace :katello do
   desc "Cleans backend objects (hosts) that are missing in one or more backend systems.  Run with COMMIT=true to commit changes."
   task :clean_backend_objects => ["environment", "check_ping"] do
-    def cleanup_hosts
-      Host.includes(:content_facet, :subscription_facet).find_each do |host|
-        if test_candlepin(host) || test_pulp(host)
-          print "Host #{host.id} #{host.name} #{host.subscription_facet.try(:uuid)} is partially missing.  Un-registering\n"
-          execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
-        end
+    class BackendCleaner
+      def initialize
+        @candlepin_uuids = []
+        @pulp_uuids = []
+        @katello_candlepin_uuids = []
+        @katello_pulp_uuids = []
+      end
+
+      def populate!
+        @candlepin_uuids = Katello::Resources::Candlepin::Consumer.all_uuids
+        @katello_candlepin_uuids = Katello::Host::SubscriptionFacet.pluck(:uuid).compact
+
+        @pulp_uuids = ::Katello.pulp_server.extensions.consumer.retrieve_all.map { |consumer| consumer['id'] }
+        @katello_pulp_uuids = Katello::Host::ContentFacet.pluck(:uuid).compact
+      end
+
+      def hosts_with_no_subscriptions
+        ::Host.where(:id => Katello::Host::SubscriptionFacet.where(:uuid => @katello_candlepin_uuids - @candlepin_uuids).select(:host_id))
+      end
+
+      def hosts_with_no_content
+        ::Host.where(:id => Katello::Host::ContentFacet.where(:uuid => @katello_pulp_uuids - @pulp_uuids).select(:host_id))
+      end
+
+      def hosts_with_nil_facets
+        nil_sub = Katello::Host::SubscriptionFacet.where(:uuid => nil).select(:host_id).to_sql
+        ::Host.where(" id in (#{nil_sub})")
+      end
+
+      def cp_orphaned_host_uuids
+        @candlepin_uuids - @katello_candlepin_uuids
+      end
+
+      def pulp_orphaned_host_uuids
+        @pulp_uuids - @katello_pulp_uuids
       end
     end
 
-    def test_pulp(host)
-      if host.content_facet.try(:uuid)
-        test_method { Katello.pulp_server.extensions.consumer.retrieve(host.content_facet.uuid) }
-      else
-        false
+    def cleanup_hosts(cleaner)
+      cleaner.hosts_with_nil_facets.each do |host|
+        print "Host #{host.id} #{host.name} is partially missing subscription information.  Un-registering\n"
+        execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
+      end
+
+      cleaner.hosts_with_no_subscriptions.each do |host|
+        print "Host #{host.id} #{host.name} #{host.subscription_facet.try(:uuid)} is partially missing subscription information.  Un-registering\n"
+        execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
+      end
+
+      cleaner.hosts_with_no_content.each do |host|
+        print "Host #{host.id} #{host.name} #{host.content_facet.try(:uuid)} is partially missing content information.  Un-registering\n"
+        execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
       end
     end
 
-    def test_candlepin(host)
-      if host.subscription_facet && host.subscription_facet.uuid
-        test_method { ::Katello::Resources::Candlepin::Consumer.get(host.subscription_facet.uuid) }
-      elsif host.subscription_facet
-        true
-      else
-        false
+    def clean_backend_orphans(cleaner)
+      cp_uuids = cleaner.cp_orphaned_host_uuids
+      print "#{cp_uuids.count} orphaned consumer id(s) found in candlepin.\n"
+      cp_uuids.each do |consumer_id|
+        execute("exception when destroying candlepin consumer #{consumer_id}") { Katello::Resources::Candlepin::Consumer.destroy(consumer_id) }
       end
-    end
 
-    def test_method
-      yield
-      false
-    rescue RestClient::ResourceNotFound
-      true
-    rescue RestClient::Gone
-      true
-    rescue RestClient::Conflict
-      true
+      pulp_uuids = cleaner.pulp_orphaned_host_uuids
+      print "#{pulp_uuids.count} orphaned consumer id(s) found in pulp.\n"
+      pulp_uuids.each do |consumer_id|
+        execute("exception when destroying pulp consumer #{consumer_id}") { Katello.pulp_server.extensions.consumer.delete(consumer_id) }
+      end
     end
 
     # rubocop:disable HandleExceptions
@@ -50,21 +81,16 @@ namespace :katello do
       print e.inspect
     end
 
-    def clean_backend_orphans
-      consumer_ids = Katello::Candlepin::Consumer.orphaned_consumer_ids
-      print "#{consumer_ids.count} orphaned consumer id(s) found.\n"
-      consumer_ids.each do |consumer_id|
-        execute("exception when destroying candlepin consumer #{consumer_id}") { Katello::Resources::Candlepin::Consumer.destroy(consumer_id) }
-        execute("exception when destroying pulp consumer #{consumer_id}") { Katello.pulp_server.extensions.consumer.delete(consumer_id) }
-      end
-    end
-
     unless ENV['COMMIT'] == 'true'
       print "The following changes will not actually be performed.  Rerun with COMMIT=true to apply the changes\n"
     end
 
+    SETTINGS[:katello][:candlepin][:bulk_load_size] = 15_000
     User.current = User.anonymous_admin
-    cleanup_hosts
-    clean_backend_orphans
+    cleaner = BackendCleaner.new
+    cleaner.populate!
+
+    cleanup_hosts(cleaner)
+    clean_backend_orphans(cleaner)
   end
 end

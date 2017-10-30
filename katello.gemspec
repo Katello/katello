@@ -35,7 +35,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "apipie-rails", ">= 0.5.4"
 
   # Pulp
-  gem.add_dependency "runcible", ">= 2.1.0", "< 3.0.0"
+  gem.add_dependency "runcible", ">= 2.5.0", "< 3.0.0"
   gem.add_dependency "anemone"
 
   # UI

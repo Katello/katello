@@ -25,10 +25,9 @@ module Katello
       ENV['COMMIT'] = 'true'
 
       @host.subscription_facet.update_attributes!(:uuid => nil)
-
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns([])
-
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host)
+      mock_cp
+      mock_pulp
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host).at_least_once
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -37,9 +36,8 @@ module Katello
       clear_hosts(@host.id)
       ENV['COMMIT'] = 'true'
 
-      ::Katello::Resources::Candlepin::Consumer.expects(:get).with(@host.subscription_facet.uuid).raises(RestClient::Gone)
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns([])
-
+      mock_cp
+      mock_pulp([{"id" => @host.content_facet.uuid}])
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host)
 
       Rake.application.invoke_task('katello:clean_backend_objects')
@@ -49,55 +47,73 @@ module Katello
       clear_hosts(@host.id)
       ENV['COMMIT'] = 'true'
 
-      ::Katello::Resources::Candlepin::Consumer.expects(:get).with(@host.subscription_facet.uuid).returns({})
-      Runcible::Extensions::Consumer.any_instance.expects(:retrieve).with(@host.content_facet.uuid).raises(RestClient::ResourceNotFound)
-
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns([])
+      mock_cp([@host.subscription_facet.uuid])
+      mock_pulp
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host)
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
-    def test_missing_cp_consumer
+    def test_deletes_nothing_if_ids_present
+      clear_hosts(@host.id)
+      ENV['COMMIT'] = 'true'
+
+      mock_cp([@host.subscription_facet.uuid])
+      mock_pulp([{"id" => @host.content_facet.uuid}])
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host).never
+      Rake.application.invoke_task('katello:clean_backend_objects')
+    end
+
+    def test_no_commit_only_preview
       clear_hosts(@host.id)
       ENV['COMMIT'] = nil
 
-      ::Katello::Resources::Candlepin::Consumer.expects(:get).with(@host.subscription_facet.uuid).raises(RestClient::Gone)
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns([])
-
+      mock_cp
+      mock_pulp([{"id" => @host.content_facet.uuid}])
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host).never
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
-    def test_orphaned
+    def test_orphaned_no_commit
       clear_hosts
       ENV['COMMIT'] = nil
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns(['orphaned'])
+      mock_cp_uuid = 'cp-cool-id'
+      mock_pulp_uuid = 'pulp-cool-id'
+      mock_cp([mock_cp_uuid])
+      mock_pulp([{"id" => mock_pulp_uuid}])
+
       Katello::Resources::Candlepin::Consumer.expects(:destroy).never
       Katello.pulp_server.extensions.consumer.expects(:delete).never
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
-    def test_orphaned_commit
+    def test_orphaned_with_commit
+      clear_hosts(@host.id)
       ENV['COMMIT'] = 'true'
-      clear_hosts
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns(['orphaned'])
-      Katello::Resources::Candlepin::Consumer.expects(:destroy).with('orphaned')
-      Runcible::Extensions::Consumer.any_instance.expects(:delete).with('orphaned')
 
+      mock_cp_uuid = 'cp-cool-id'
+      mock_pulp_uuid = 'pulp-cool-id'
+
+      mock_cp([mock_cp_uuid, @host.subscription_facet.uuid])
+      mock_pulp([{"id" => mock_pulp_uuid}, {"id" => @host.content_facet.uuid}])
+
+      Katello::Resources::Candlepin::Consumer.expects(:destroy).with(mock_cp_uuid)
+      Katello.pulp_server.extensions.consumer.expects(:delete).with(mock_pulp_uuid)
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, any_parameters).never
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
-    def test_orphaned_404_pulp_commit
-      ENV['COMMIT'] = 'true'
-      clear_hosts
-      Katello::Candlepin::Consumer.expects(:orphaned_consumer_ids).returns(['orphaned'])
-      Katello::Resources::Candlepin::Consumer.expects(:destroy).with('orphaned')
-      Runcible::Extensions::Consumer.any_instance.expects(:delete).with('orphaned').raises(RestClient::ResourceNotFound)
+    def mock_cp(value = [])
+      Katello::Resources::Candlepin::Consumer.expects(:all_uuids).returns(value)
+    end
 
-      Rake.application.invoke_task('katello:clean_backend_objects')
+    def mock_pulp(value = [])
+      content = mock(:retrieve_all => value)
+      extensions = stub(:consumer => content)
+      pulp_server = stub(:extensions => extensions)
+      Katello.stubs(:pulp_server).returns(pulp_server)
     end
   end
 end
