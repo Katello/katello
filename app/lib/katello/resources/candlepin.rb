@@ -90,6 +90,21 @@ module Katello
         def self.included_list(included)
           included.map { |value| "include=#{value}" }.join('&')
         end
+
+        def self.fetch_paged(page_size = -1)
+          if page_size == -1
+            page_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
+          end
+          page = 0
+          content = []
+          loop do
+            page += 1
+            data = yield("per_page=#{page_size}&page=#{page}")
+            content.concat(data)
+            break if data.size < page_size
+          end
+          content
+        end
       end
 
       class CandlepinPing < CandlepinResource
@@ -112,12 +127,23 @@ module Katello
             "/candlepin/consumers/#{id}"
           end
 
+          def all_uuids
+            cp_consumers = Organization.all.map do |org|
+              ::Katello::Resources::Candlepin::Consumer.get('owner' => org.label, :include_only => [:uuid])
+            end
+            cp_consumers.flatten!
+            cp_consumers.map { |consumer| consumer["uuid"] }
+          end
+
           def get(params)
             if params.is_a?(String)
               JSON.parse(super(path(params), self.default_headers).body).with_indifferent_access
             else
-              response = super(path + hash_to_query(params), self.default_headers).body
-              JSON.parse(response)
+              includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
+              fetch_paged do |page_add|
+                response = super(path + hash_to_query(params) + includes + "&#{page_add}", self.default_headers).body
+                JSON.parse(response)
+              end
             end
           end
 
