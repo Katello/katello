@@ -44,8 +44,7 @@ module Katello
 
     def test_duplicate_name
       attrs = FactoryBot.attributes_for(:katello_content_view,
-                                         :name => @library_dev_view.name
-                                        )
+                                         :name => @library_dev_view.name)
       assert_raises(ActiveRecord::RecordInvalid) do
         ContentView.create!(attrs)
       end
