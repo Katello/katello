@@ -57,6 +57,16 @@ module Katello
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
 
+      if params[:order]
+        (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
+      end
+
+      sort_attr = (params[:sort_by] || default_sort_by).to_s.downcase
+
+      if sort_attr.present? && !resource.column_names.include?(sort_attr)
+        fail ScopedSearch::QueryNotSupported, _("the field (%s) in the order statement is not valid field for search") % sort_attr
+      end
+
       total = scoped_search_total(query, group)
 
       unless empty_search_query?
@@ -67,13 +77,7 @@ module Katello
       query = query.select(group).group(group) if group
       sub_total = total.zero? ? 0 : scoped_search_total(query, group)
 
-      if params[:order]
-        (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
-      end
-
-      sort_attr = params[:sort_by] || default_sort_by
-
-      if sort_attr
+      if sort_attr.present?
         sort_order = (params[:sort_order] || default_sort_order).to_s.downcase
         sort_order = default_sort_order unless ['desc', 'asc'].include?(sort_order)
         query = query.order(sort_attr => sort_order.to_sym)
