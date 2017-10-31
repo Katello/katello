@@ -33,8 +33,7 @@ module Katello
       @filter.save!
       attrs = FactoryBot.attributes_for(:katello_content_view_filter,
                                          :name => @filter.name,
-                                         :content_view_id => @filter.content_view_id
-                                        )
+                                         :content_view_id => @filter.content_view_id)
       assert_raises(ActiveRecord::RecordInvalid) do
         ContentViewFilter.create!(attrs)
       end

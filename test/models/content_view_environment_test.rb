@@ -16,7 +16,7 @@ module Katello
       library = katello_environments(:library)
       view = katello_content_views(:library_dev_view)
       host = FactoryBot.create(:host, :with_content, :content_view => view,
-                                       :lifecycle_environment =>  library)
+                                       :lifecycle_environment => library)
       cve = Katello::ContentViewEnvironment.where(:environment_id => library, :content_view_id => view).first
 
       assert_includes cve.hosts, host
