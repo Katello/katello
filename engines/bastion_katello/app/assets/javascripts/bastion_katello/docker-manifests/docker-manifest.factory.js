@@ -10,7 +10,10 @@
      */
     function DockerManifest(BastionResource) {
         return BastionResource('katello/api/v2/docker_manifests/:id',
-            {'id': '@id'}
+            {'id': '@id'},
+            {
+                'autocomplete': {method: 'GET', isArray: true, params: {id: 'auto_complete_search'}}
+            }
         );
     }
 
