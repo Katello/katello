@@ -113,6 +113,25 @@ module Katello
       assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHSA-1999-1231"].sort.reverse, results.map(&:errata_id)
     end
 
+    def test_scoped_search_invalid_column
+      bad_column = "booo"
+      params = {:order => "#{bad_column} DESC"}
+      @controller.stubs(:params).returns(params)
+
+      query = Erratum.all
+      options = {resource_class: Katello::Erratum}
+
+      # It should raise an error identifying the sort column
+      results = @controller.scoped_search(query, "errata_id", "desc", options)
+      refute results[:error].blank?
+      assert_includes results[:error], bad_column
+      assert_equal [], results[:results]
+      assert_nil results[:subtotal]
+      assert_nil results[:total]
+      assert_nil results[:page]
+      assert_nil results[:per_page]
+    end
+
     def test_scoped_search_group
       types = Katello::Erratum.pluck(:errata_type).uniq
       4.times do
