@@ -9,9 +9,9 @@ module Katello
 
         def destroy
           sync_task(::Actions::Katello::Host::Destroy, @host)
-          process_success(:success_redirect => hosts_path)
+          process_success
         rescue StandardError => ex
-          process_error(:object => @host, :error_msg => ex.message)
+          process_error(:object => @host, :error_msg => ex.message, :redirect => saved_redirect_url_or(send("#{controller_name}_url")))
         end
 
         def submit_multiple_destroy
