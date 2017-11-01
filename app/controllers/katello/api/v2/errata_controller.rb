@@ -49,6 +49,30 @@ module Katello
       collection
     end
 
+    api :GET, "/content_view_versions/:id/available_errata", N_("List errata that can be added to the Content View Version via an Incremental Update")
+    param :id, :number, :desc => N_("Content View Version identifier"), :required => true
+    param :repository_id, :number, :desc => N_("repository identifier")
+    param :cve, String, :desc => N_("CVE identifier")
+    param :errata_restrict_applicable, :bool, :desc => N_("show only errata with one or more applicable hosts")
+    param_group :search, ::Katello::Api::V2::ApiController
+    def available_errata
+      version = ContentViewVersion.find(params[:id])
+      collection = version.available_errata
+      if @repo
+        collection = collection.joins(:repository_errata => :repository).where(:katello_repositories => { :id => @repo })
+      end
+      if params[:cve]
+        collection = collection.joins(:cves).where(:katello_erratum_cves => { :cve_id => params[:cve] })
+      end
+      if ::Foreman::Cast.to_bool(params[:errata_restrict_applicable])
+        hosts = ::Host::Managed.authorized("view_hosts")
+        collection = collection.applicable_to_hosts(hosts)
+      end
+      sort_by, sort_order, options = sort_options
+      collection = scoped_search(collection, sort_by, sort_order, options)
+      respond_for_index(:collection => collection)
+    end
+
     private
 
     def filter_by_cve(cve, collection)

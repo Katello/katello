@@ -151,6 +151,10 @@ module Katello
       self.repositories.non_archived
     end
 
+    def library_repos
+      archived_repos.includes(:library_instance).map(&:library_instance)
+    end
+
     def products(env = nil)
       if env
         repos(env).map(&:product).uniq(&:id)
@@ -259,6 +263,14 @@ module Katello
       errata = Erratum.in_repositories(archived_repos).uniq
       errata = errata.of_type(errata_type) if errata_type
       errata
+    end
+
+    def library_errata
+      Erratum.in_repositories(library_repos).uniq
+    end
+
+    def available_errata
+      library_errata.where.not(:id => errata)
     end
 
     def file_units
