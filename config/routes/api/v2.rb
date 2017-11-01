@@ -106,6 +106,7 @@ Katello::Engine.routes.draw do
             post :promote
             post :export
             put :republish_repositories
+            get :available_errata, :controller => :errata
           end
           collection do
             get :auto_complete_search

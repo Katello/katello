@@ -6,6 +6,7 @@ module Katello
       ::Katello::Product.any_instance.stubs(:as_json).returns([])
       @test_repo = Repository.find(katello_repositories(:rhel_6_x86_64).id)
       @errata_filter = katello_content_view_filters(:populated_erratum_filter)
+      @content_view_version = ContentViewVersion.first
     end
 
     def permissions
@@ -44,8 +45,6 @@ module Katello
     end
 
     def test_index_with_content_view_version
-      @content_view_version = ContentViewVersion.first
-
       get :index, :content_view_version_id => @content_view_version.id
 
       assert_response :success
@@ -96,6 +95,7 @@ module Katello
       cve = katello_erratum_cves(:cve)
 
       get :index, :cve => cve.cve_id
+
       assert_response :success
       assert_template "katello/api/v2/errata/index"
     end
@@ -108,6 +108,7 @@ module Katello
 
     def test_show
       errata = @test_repo.errata.first
+
       get :show, :repository_id => @test_repo.id, :id => errata.errata_id
 
       assert_response :success
@@ -116,6 +117,7 @@ module Katello
 
     def test_show_errata_not_found
       get :show, :repository_id => @test_repo.id, :id => "not a real errata id"
+
       assert_response 404
     end
 
@@ -139,6 +141,48 @@ module Katello
 
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
         get :show, :repository_id => @test_repo.id, :id => errata.errata_id
+      end
+    end
+
+    def test_available_errata
+      get :available_errata, :id => @content_view_version.id
+
+      assert_response :success
+      assert_template "katello/api/v2/errata/available_errata"
+    end
+
+    def test_available_errata_with_repository_id
+      get :available_errata, :id => @content_view_version.id, :repository_id => @test_repo.id
+
+      assert_response :success
+      assert_template "katello/api/v2/errata/available_errata"
+    end
+
+    def test_available_errata_with_cve
+      cve = katello_erratum_cves(:cve)
+
+      get :available_errata, :id => @content_view_version.id, :cve => cve.cve_id
+
+      assert_response :success
+      assert_template "katello/api/v2/errata/available_errata"
+    end
+
+    def test_available_errata_with_applicable
+      get :available_errata, :id => @content_view_version.id, :errata_restrict_applicable => true
+
+      assert_response :success
+      assert_template "katello/api/v2/errata/available_errata"
+    end
+
+    def test_available_errata_protected
+      cv_auth_permissions = [:view_content_views]
+      cv_unauth_permissions = [
+        :create_content_views, :edit_content_views, :destroy_content_views, :publish_content_views,
+        :promote_or_remove_content_views, :export_content_views
+      ]
+      all_unauth_permissions = @auth_permissions + @unauth_permissions + cv_unauth_permissions
+      assert_protected_action(:available_errata, cv_auth_permissions, all_unauth_permissions) do
+        get :available_errata, :id => @content_view_version.id
       end
     end
   end

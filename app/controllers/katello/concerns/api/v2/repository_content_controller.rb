@@ -104,6 +104,16 @@ module Katello
         %w(id desc)
       end
 
+      def sort_options
+        if default_sort.is_a?(Array)
+          return [default_sort[0], default_sort[1], {}]
+        elsif default_sort.is_a?(Proc)
+          return [nil, nil, { :custom_sort => default_sort }]
+        else
+          fail "Unsupported default_sort type"
+        end
+      end
+
       def filter_by_content_view_filter(filter, collection)
         ids = filter.send("#{singular_resource_name}_rules").pluck(:uuid)
         filter_by_ids(ids, collection)
