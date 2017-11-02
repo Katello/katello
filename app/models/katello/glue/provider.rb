@@ -53,24 +53,6 @@ module Katello
         sync_times.last
       end
 
-      def owner_regenerate_upstream_certificates(upstream)
-        if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
-          Rails.logger.error "Upstream identity certificate not available"
-          fail _("Upstream identity certificate not available")
-        end
-
-        # Default to Red Hat
-        url = upstream['apiUrl'] || 'https://subscription.rhn.redhat.com/subscription/consumers/'
-
-        # TODO: wait until ca_path is supported
-        #       https://github.com/L2G/rest-client-fork/pull/8
-        #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
-        ca_file = nil
-
-        Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}/certificates", upstream['idCert']['cert'],
-                                                      upstream['idCert']['key'], ca_file, {})
-      end
-
       def owner_upstream_update(upstream, _options)
         if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
           Rails.logger.error "Upstream identity certificate not available"

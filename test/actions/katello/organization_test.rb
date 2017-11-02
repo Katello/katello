@@ -102,16 +102,10 @@ module ::Actions::Katello::Organization
       plan_action(action, acme_org)
 
       found = assert_action_planned_with(action,
-                                         ::Actions::Candlepin::Owner::UpstreamRegenerateCertificates,
-                                         organization_id: acme_org.id,
-                                         upstream: upstream
-                                        )
-      found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::UpstreamUpdate,
                                  organization_id: acme_org.id,
-                                 upstream: upstream,
-                                 dependency: found.first.output
-                                        )
+                                 upstream: upstream)
+
       found = assert_action_planned_with(action,
                                  ::Actions::Candlepin::Owner::UpstreamExport,
                                  organization_id: acme_org.id,
