@@ -40,10 +40,24 @@ angular.module('Bastion.content-hosts').controller('ContentHostTracesController'
             }
         });
 
-        $scope.selectedTraceHelpers = function () {
-            var traceHelpers = [], selected = $scope.table.getSelected();
-            angular.forEach(selected, function (value) {
-                traceHelpers.push(value.helper);
+        $scope.selectedTraceHelpers = function() {
+            var traceHelpers = [],
+                selected = $scope.table.getSelected();
+
+            var reboot = selected.some(function(value) {
+                return value.app_type === "static";
+            });
+
+            if (reboot) {
+                return ["reboot"];
+            }
+
+            selected.forEach(function(value) {
+                if (value.app_type !== "session") {
+                    if (traceHelpers.indexOf(value.helper) === -1) {
+                        traceHelpers.push(value.helper);
+                    }
+                }
             });
             return traceHelpers;
         };
