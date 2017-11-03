@@ -2,6 +2,7 @@ import Welcome from '../../scenes/Welcome';
 import Dashboard from '../../scenes/Dashboard';
 import Repos from '../../scenes/Repos';
 
+// eslint-disable-next-line import/prefer-default-export
 export const links = [
   {
     text: 'Welcome',
