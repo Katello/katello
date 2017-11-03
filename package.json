@@ -5,9 +5,9 @@
     "test": "jest webpack",
     "test:watch": "jest webpack --watchAll",
     "test:current": "jest webpack --watch",
-    "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js' '*.{js,json}'",
+    "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js'",
     "build": "npm run format && npm run lint",
-    "lint": "eslint --fix webpack/index.js || exit 0"
+    "lint": "eslint --fix webpack/ || exit 0"
   },
   "repository": {
     "type": "git",
