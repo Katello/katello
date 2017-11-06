@@ -3,7 +3,6 @@
  * @name  Bastion.docker-tags.controller:DockerTagDetailsController
  *
  * @requires $scope
- * @requires translate
  * @requires $location
  * @requires DockerTag
  * @requires CurrentOrganization
@@ -13,14 +12,12 @@
  *   Provides the functionality for the docker tags details action pane.
  */
 angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
-    ['$scope', 'translate', '$location', 'Nutupane', 'DockerTag', 'CurrentOrganization', 'ApiErrorHandler',
-    function ($scope, translate, $location, Nutupane, DockerTag, CurrentOrganization, ApiErrorHandler) {
+    ['$scope', '$location', 'DockerTag', 'CurrentOrganization', 'ApiErrorHandler',
+    function ($scope, $location, DockerTag, CurrentOrganization, ApiErrorHandler) {
         $scope.panel = {
             error: false,
             loading: true
         };
-
-        $scope.table = {};
 
         if ($scope.tag) {
             $scope.panel.loading = false;
@@ -32,35 +29,5 @@ angular.module('Bastion.docker-tags').controller('DockerTagDetailsController',
             $scope.panel.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
-
-        $scope.tag.$promise.then(function () {
-            var ids = _.map($scope.tag.related_tags, 'id');
-            var params = {
-                'organization_id': CurrentOrganization,
-                'search': $location.search().search || "",
-                'sort_by': 'name',
-                'sort_order': 'ASC',
-                'paged': false,
-                'ids[]': ids
-            };
-            var nutupane = new Nutupane(DockerTag, params, null, {disableAutoLoad: true});
-
-            $scope.controllerName = 'katello_docker_tags';
-            $scope.table = nutupane.table;
-            $scope.panel.loading = false;
-
-            if (!_.isEmpty(ids)) {
-                nutupane.refresh();
-            }
-        });
-
-        $scope.getManifestType = function (schema) {
-            if (schema['manifest_type'] === 'image') {
-                return translate("Image");
-            }
-            return translate("List");
-
-        };
-
     }
 ]);
