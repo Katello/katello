@@ -1,27 +1,17 @@
 describe('Controller: DockerTagDetailsController', function() {
     var $scope,
         DockerTag,
-        Nutupane,
         dockerTag;
 
     beforeEach(module('Bastion.docker-tags', 'Bastion.test-mocks', 'Bastion.common'));
 
     beforeEach(inject(function(MockResource, $injector) {
-        Nutupane = function() {
-            this.table = {
-                showColumns: function() {}
-            };
-            this.get = function() {};
-            this.setParams = function (params) {};
-            this.getParams = function (params) { return {}; };
-            this.refresh = function () {};
-        };
         DockerTag = $injector.get('MockResource').$new();
         spyOn(DockerTag, 'get').and.callThrough();
         dockerTag = DockerTag.get({id: 1});
     }));
 
-    beforeEach(inject(function($controller, $rootScope, $location, MockResource, translateMock, $injector) {
+    beforeEach(inject(function($controller, $rootScope, $location, MockResource, $injector) {
         var ApiErrorHandler = $injector.get('ApiErrorHandler');
 
         $scope = $rootScope.$new();
@@ -33,7 +23,6 @@ describe('Controller: DockerTagDetailsController', function() {
         $controller('DockerTagDetailsController', {
             $scope: $scope,
             $location: $location,
-            Nutupane: Nutupane,
             DockerTag: DockerTag,
             CurrentOrganization: 'CurrentOrganization',
             ApiErrorHandler: ApiErrorHandler
