@@ -46,6 +46,7 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
         url: '/environments',
         permission: 'view_environments',
         templateUrl: 'docker-tags/details/views/docker-tag-environments.html',
+        controller: 'DockerTagEnvironmentsController',
         ncyBreadcrumb: {
             label: "{{ 'Lifecycle Environments' | translate }}",
             parent: 'docker-tag.info'
