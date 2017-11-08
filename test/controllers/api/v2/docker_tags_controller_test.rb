@@ -14,6 +14,13 @@ module Katello
       models
     end
 
+    def test_autocomplete_name
+      response = get :auto_complete_name, :repoids => [@repo.id], :term => @tag.name
+
+      assert_response :success
+      assert_includes JSON.parse(response.body), @tag.name
+    end
+
     def test_index
       get :index, :repository_id => @repo.id
       assert_response :success
