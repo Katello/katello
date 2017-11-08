@@ -9,7 +9,7 @@ module Katello
       page_size = Katello::Concerns::FilteredAutoCompleteSearch::PAGE_SIZE
       tags = Katello::DockerMetaTag.in_repositories(@repositories)
       col = "#{Katello::DockerMetaTag.table_name}.name"
-      tags = tags.where("#{Katello::DockerTag.table_name}.name ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
+      tags = tags.where("#{col} ILIKE ?", "#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
       render :json => tags.pluck(col)
     end
 
