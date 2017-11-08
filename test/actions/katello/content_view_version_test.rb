@@ -59,8 +59,8 @@ module ::Actions::Katello::ContentViewVersion
       katello_content_view_versions(:library_view_version_2)
     end
 
-    let(:library_repo) do
-      katello_repositories(:fedora_17_x86_64_library_view_2)
+    let(:library_repos) do
+      [katello_repositories(:rhel_6_x86_64_dev_archive), katello_repositories(:fedora_17_x86_64_library_view_2)]
     end
 
     it 'plans' do
@@ -70,7 +70,7 @@ module ::Actions::Katello::ContentViewVersion
       action.stubs(:task).returns(task)
       plan_action(action, content_view_version, false, nil, 0)
       # verify everything bubbles through to the export action as we expect
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, [library_repo],
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, library_repos,
                                 false, nil, 0, "-published_library_view-v2.0")
     end
 
@@ -81,7 +81,7 @@ module ::Actions::Katello::ContentViewVersion
       action.stubs(:task).returns(task)
       # the date should not be converted to an iso8601 when fed to Repository::Export.
       plan_action(action, content_view_version, false, '1841-01-01', 0)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, [library_repo],
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, library_repos,
                                 false, '1841-01-01', 0, "-published_library_view-v2.0")
     end
   end

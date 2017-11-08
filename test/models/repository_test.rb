@@ -168,6 +168,16 @@ module Katello
       end
     end
 
+    def test_archived_instance
+      archived_repo = katello_repositories(:fedora_17_x86_64_dev_archive)
+      env_repo = katello_repositories(:fedora_17_x86_64_dev)
+
+      assert_equal archived_repo, env_repo.archived_instance
+      assert_equal archived_repo, archived_repo.archived_instance
+
+      assert_equal @fedora_17_x86_64, @fedora_17_x86_64.archived_instance
+    end
+
     def test_content_type
       @repo.content_type = "puppet"
       @repo.download_policy = nil

@@ -139,6 +139,7 @@ module Katello
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
     scope :subscribable, -> { where(content_type: SUBSCRIBABLE_TYPES) }
+    scope :in_published_environments, -> { in_content_views(Katello::ContentView.non_default).where.not(:environment_id => nil) }
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
@@ -493,6 +494,14 @@ module Katello
       search.in_content_views([view])
     end
 
+    def archived_instance
+      if self.environment_id.nil? || self.library_instance_id.nil?
+        self
+      else
+        self.content_view_version.archived_repos.where(:library_instance_id => self.library_instance_id).first
+      end
+    end
+
     def url?
       url.present?
     end
@@ -518,7 +527,7 @@ module Katello
     end
 
     def exist_for_environment?(environment, content_view, attribute = nil)
-      if environment.present?
+      if environment.present? && content_view.in_environment?(environment)
         repos = content_view.version(environment).repos(environment)
 
         repos.any? do |repo|
