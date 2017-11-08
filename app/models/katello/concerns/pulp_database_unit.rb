@@ -65,6 +65,8 @@ module Katello
           results = content_unit_class.fetch_all(&process_block).flatten
           update_repository_associations(results) if index_repository_association
         end
+
+        self.import_additional_content if self.respond_to?(:import_additional_content)
       end
 
       def import_for_repository(repository, force = false)
@@ -78,15 +80,20 @@ module Katello
           ids_to_import = ids
         end
         self.import_all(ids_to_import, :index_repository_association => false) if repository.content_view.default? || force
-        self.sync_repository_associations(repository, ids) if self.manage_repository_association
+        self.sync_repository_associations(repository, :uuids => ids) if self.manage_repository_association
       end
 
       def unit_id_field
         "#{self.name.demodulize.underscore}_id"
       end
 
-      def sync_repository_associations(repository, unit_uuids, additive = false)
-        associated_ids = with_uuid(unit_uuids).pluck(:id)
+      def sync_repository_associations(repository, options = {})
+        additive = options.fetch(:additive, false)
+        associated_ids = options.fetch(:ids, nil)
+        uuids = options.fetch(:uuids) if associated_ids.nil?
+
+        associated_ids = with_uuid(uuids).pluck(:id) if uuids
+
         table_name = self.repository_association_class.table_name
         attribute_name = unit_id_field
 
@@ -132,7 +139,7 @@ module Katello
           end
 
           repo_unit_id.each do |repo_pulp_id, unit_uuids|
-            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), unit_uuids, additive)
+            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), :uuids => unit_uuids, :additive => additive)
           end
         end
       end

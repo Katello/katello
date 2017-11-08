@@ -140,7 +140,7 @@ module Katello
     end
 
     def test_index_with_content_view_id_and_environment_id
-      ids = @fedora_dev.content_view_version.repositories.pluck(:id)
+      ids = @fedora_dev.content_view_version.repositories.where(:environment_id => @fedora_dev.environment_id).pluck(:id)
 
       response =  get :index, :content_view_id => @fedora_dev.content_view_version.content_view_id, :environment_id => @fedora_dev.environment_id,
                   :organization_id => @organization.id
@@ -162,7 +162,7 @@ module Katello
 
     def test_index_with_content_view_version_id_and_environment
       repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
-      ids = repo.content_view_version.repository_ids
+      ids = repo.content_view_version.repositories.where(:environment_id => repo.environment.id).map(&:id)
 
       response =  get :index, :content_view_version_id => repo.content_view_version.id,
                   :environment_id => repo.environment_id,

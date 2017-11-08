@@ -729,12 +729,31 @@ module Katello
       end
     end
 
-    def index_content(full_index = false)
-      if self.yum?
+    def index_yum_content(full_index = false)
+      if self.environment_id.nil? || self.content_view.default?
         Katello::Rpm.import_for_repository(self, full_index)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
         self.import_distribution_data
+      else
+        base_repo = self.archived_instance
+        Rpm.sync_repository_associations(self, :ids => base_repo.rpm_ids)
+        Erratum.sync_repository_associations(self, :ids => base_repo.erratum_ids)
+        PackageGroup.sync_repository_associations(self, :ids => base_repo.package_group_ids)
+        self.update_attributes!(
+          :distribution_version => base_repo.distribution_version,
+          :distribution_arch => base_repo.distribution_arch,
+          :distribution_family => base_repo.distribution_family,
+          :distribution_variant => base_repo.distribution_variant,
+          :distribution_uuid => base_repo.distribution_uuid,
+          :distribution_bootable => base_repo.distribution_bootable
+        )
+      end
+    end
+
+    def index_content(full_index = false)
+      if self.yum?
+        index_yum_content(full_index)
       elsif self.docker?
         Katello::DockerManifest.import_for_repository(self)
         Katello::DockerManifestList.import_for_repository(self)
