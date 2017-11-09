@@ -33,6 +33,32 @@ module Katello
       assert_includes clauses["_id"]["$in"], schema2.uuid
     end
 
+    def test_repo_clause_with_manifest_lists
+      repo = Repository.find(katello_repositories(:busybox).id)
+      schema2 = create(:docker_tag, :with_uuid, :with_manifest_list, :repository => repo, :name => "latest")
+      schema1 = create(:docker_tag, :with_uuid, :with_manifest_list, :schema1, :repository => repo, :name => "latest")
+
+      repo.docker_tags << schema2
+      repo.docker_tags << schema1
+      repo.docker_manifest_lists << schema1.docker_manifest_list
+      repo.docker_manifest_lists << schema2.docker_manifest_list
+
+      repo.save!
+      DockerMetaTag.import_meta_tags([repo])
+
+      @rule.name = "latest"
+      @rule.save!
+
+      filter = FactoryBot.build(:katello_content_view_docker_filter, :docker_rules => [@rule])
+      clauses = filter.generate_clauses(repo)
+      refute_empty clauses
+      refute_empty clauses["_id"]
+      refute_empty clauses["_id"]["$in"]
+      assert_equal 2, clauses["_id"]["$in"].size
+      assert_includes clauses["_id"]["$in"], schema1.uuid
+      assert_includes clauses["_id"]["$in"], schema2.uuid
+    end
+
     # rubocop:disable MethodLength
     def test_repo_intersection_clause
       #create repo1 with tag goo

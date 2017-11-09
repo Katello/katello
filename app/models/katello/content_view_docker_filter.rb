@@ -23,20 +23,24 @@ module Katello
 
     protected
 
-    def query_manifests(repo, rule)
+    def fetch_tag_uuids(repo, rule, manifest_klass = DockerManifest)
       query_name = rule.name.tr("*", "%")
       tags_query = ::Katello::DockerTag.where(:repository => repo).
-                                        where(:docker_taggable_type => DockerManifest.name).
+                                        where(:docker_taggable_type => manifest_klass.name).
                                         where("name ilike ?", query_name).
                                         select(:docker_taggable_id)
 
-      query = DockerManifest.in_repositories(repo).where("id in (#{tags_query.to_sql})")
+      query = manifest_klass.in_repositories(repo).where("id in (#{tags_query.to_sql})")
       names = query.all.collect do |manifest|
         manifest.docker_tags.where(:repository => repo).all.collect do |tag|
           tag.uuid
         end
       end
       names.flatten.uniq
+    end
+
+    def query_manifests(repo, rule)
+      (fetch_tag_uuids(repo, rule, DockerManifest) + fetch_tag_uuids(repo, rule, DockerManifestList)).flatten.uniq
     end
   end
 end
