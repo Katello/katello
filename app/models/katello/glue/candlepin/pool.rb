@@ -9,7 +9,7 @@ module Katello
         lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
         lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
-        lazy_accessor :pool_derived, :owner, :source_pool_id, :host_id, :virt_limit, :arch, :description,
+        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description,
           :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type,
           :initializer => :pool_facts
 
@@ -49,8 +49,6 @@ module Katello
         pool_attributes.each do |attr|
           json[attr["name"]] = attr["value"]
           case attr["name"]
-          when 'requires_host'
-            json["host_id"] = attr['value']
           when 'virt_limit'
             json["virt_limit"] = attr['value'].to_i
           when 'support_type'
@@ -120,7 +118,11 @@ module Katello
         if pool_attributes.key?(:virtual)
           pool_attributes[:virt_only] = pool_attributes["virtual"] == 'true' ? true : false
         end
-        pool_attributes[:host_id] = pool_attributes["requiresHost"] if pool_attributes.key?("requiresHost")
+
+        if pool_attributes.key?("requires_host")
+          pool_attributes[:hypervisor_id] = ::Katello::Host::SubscriptionFacet.find_by(:uuid => pool_attributes["requires_host"])
+                                                                              .try(:host_id)
+        end
 
         if pool_attributes.key?(:unmapped_guests_only) && pool_attributes[:unmapped_guests_only] == 'true'
           pool_attributes[:unmapped_guest] = true
@@ -164,7 +166,7 @@ module Katello
       end
 
       def hypervisor
-        ::Katello::Host::SubscriptionFacet.find_by(:uuid => host_id).try(:host) if host_id
+        ::Host.find_by(id: self.hypervisor_id) if self.hypervisor_id
       end
     end
   end
