@@ -75,7 +75,9 @@ module FixtureTestCase
 
     Katello::FixturesSupport.set_fixture_classes(self)
 
-    self.fixture_path = "#{Katello::Engine.root}/test/fixtures/all_fixtures/"
+    # Fixtures are copied into a separate path to combine with Foreman fixtures. This directory
+    # is kept out of version control.
+    self.fixture_path = "#{Rails.root}/tmp/combined_fixtures/"
     FileUtils.rm_rf(self.fixture_path) if File.directory?(self.fixture_path)
     Dir.mkdir(self.fixture_path)
     FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
@@ -193,6 +195,8 @@ class ActiveSupport::TestCase
     organization = Organization.find(taxonomies(org.to_sym).id)
     organization.stubs(:label_not_changed).returns(true)
     organization.setup_label_from_name
+    location = Location.where(name: "Location 1").first
+    organization.locations << location
     organization.save!
     User.current = saved_user
     organization

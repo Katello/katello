@@ -2,7 +2,7 @@
 <div ng-if="subscription.virt_only === false">
   {{ 'Physical' | translate }}
 </div>
-<div ng-if="subscription.virt_only === true && !subscription.host">
+<div ng-if="subscription.virt_only === true && !subscription.hypervisor">
   <div ng-if="subscription.unmapped_guest !== true">
     {{ 'Virtual' | translate }}
   </div>
@@ -10,9 +10,9 @@
     {{ 'Temporary' | translate }}
   </div>
 </div>
-<div ng-if="subscription.virt_only === true && subscription.host">
+<div ng-if="subscription.virt_only === true && subscription.hypervisor">
   <span translate> Guests of </span>
-  <a ui-sref="content-hosts.details.info({hostId: subscription.host.id })">
-    {{ subscription.host.name }}
+  <a ui-sref="content-host.info({hostId: subscription.hypervisor.id })">
+    {{ subscription.hypervisor.name }}
   </a>
 </div>

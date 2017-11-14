@@ -35,9 +35,11 @@ module Katello
 
       test 'renaming location should update settings' do
         loc = Location.first
+        org = Organization.first
         Setting[:default_location_subscribed_hosts] = loc.title
         Setting[:default_location_puppet_content] = loc.title
 
+        loc.organizations << org
         loc.update_attributes!(:name => 'foo_bar')
         assert_equal 'foo_bar', Setting[:default_location_subscribed_hosts]
         assert_equal 'foo_bar', Setting[:default_location_puppet_content]
