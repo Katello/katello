@@ -13,6 +13,7 @@ pool_one:
   multi_entitlement: true
   consumed: 1
   virt_who: true
+  hypervisor_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
 
 pool_two:
   cp_id: "xyz123"

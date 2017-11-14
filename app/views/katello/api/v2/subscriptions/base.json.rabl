@@ -16,3 +16,10 @@ attributes :name => :product_name
 attributes :unmapped_guest
 attributes :virt_only
 attributes :virt_who
+
+node :hypervisor, :if => lambda { |sub| sub && sub.respond_to?(:hypervisor) && sub.hypervisor_id } do |subscription|
+  {
+    id: subscription.hypervisor.id,
+    name: subscription.hypervisor.name
+  }
+end

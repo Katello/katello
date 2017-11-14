@@ -56,6 +56,10 @@ module Katello
       assert_equal @pool_one.hosts, [@host_one]
     end
 
+    def test_hypervisors
+      assert_equal @pool_one.hypervisor, @host_one
+    end
+
     def test_search_consumed
       subscriptions = Pool.search_for("consumed = \"#{@pool_one.consumed}\"")
       assert_includes subscriptions, @pool_one
