@@ -40,7 +40,7 @@ describe('Directive: subscriptionType', function() {
     });
 
     it("subscription type Guest when host", function() {
-        $scope.subscription = {virt_only: true, host: {id: 123, name: "hypervisor"}};
+        $scope.subscription = {virt_only: true, hypervisor: {id: 123, name: "hypervisor"}};
         element = '<div subscription-type="subscription"></div>';
         element = $compile(element)($scope);
         $scope.$digest();
