@@ -1,6 +1,7 @@
 module Katello
   class Api::V2::GpgKeysController < Api::V2::ApiController
     include Katello::Concerns::FilteredAutoCompleteSearch
+    before_action :deprecated
     before_action :authorize
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
     before_action :find_gpg_key, :only => [:show, :update, :destroy, :content, :set_content]
@@ -102,6 +103,10 @@ module Katello
 
     def gpg_key_params
       params.permit(:name, :content)
+    end
+
+    def deprecated
+      ::Foreman::Deprecation.api_deprecation_warning("it will be removed in Katello 4.0, Please see /api/v2/content_credentials")
     end
   end
 end

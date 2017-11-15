@@ -22,7 +22,34 @@
       <select id="gpg_key_id"
               name="gpg_key_id"
               ng-model="product.gpg_key_id"
-              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+              ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'gpg_key' }">
+        <option value=""></option>
+      </select>
+    </div>
+
+    <div bst-form-group label="{{ 'SSL CA Cert' | translate }}">
+      <select id="ssl_ca_cert_id"
+              name="ssl_ca_cert_id"
+              ng-model="product.ssl_ca_cert_id"
+              ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'cert' }">
+        <option value=""></option>
+      </select>
+    </div>
+
+    <div bst-form-group label="{{ 'SSL Client Cert' | translate }}">
+      <select id="ssl_client_cert_id"
+              name="ssl_client_cert_id"
+              ng-model="product.ssl_client_cert_id"
+              ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'cert' }">
+        <option value=""></option>
+      </select>
+    </div>
+
+    <div bst-form-group label="{{ 'SSL Client Key' | translate }}">
+      <select id="ssl_client_key_id"
+              name="ssl_client_key_id"
+              ng-model="product.ssl_client_key_id"
+              ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'cert' }">
         <option value=""></option>
       </select>
     </div>

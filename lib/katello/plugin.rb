@@ -32,10 +32,10 @@ Foreman::Plugin.register :katello do
          :turbolinks => false
 
     menu :top_menu,
-         :gpg_keys,
-         :caption => N_('GPG Keys'),
-         :url => '/gpg_keys',
-         :url_hash => {:controller => 'katello/api/v2/gpg_keys',
+         :content_credentials,
+         :caption => N_('Content Credentials'),
+         :url => '/content_credentials',
+         :url_hash => {:controller => 'katello/api/v2/content_credentials',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false

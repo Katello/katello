@@ -1,35 +1,35 @@
 /**
  * @ngdoc object
- * @name  Bastion.gpgKeys.controller:GPGKeyDetailsInfoController
+ * @name  Bastion.contentCredentials.controller:ContentCredentialDetailsInfoController
  *
  * @requires $scope
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires translate
  * @requires Notification
  *
  * @description
- *   Provides the functionality for the gpgKey details action pane.
+ *   Provides the functionality for the contentCredential details action pane.
  */
-angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
-    ['$scope', 'GPGKey', 'translate', 'Notification', function ($scope, GPGKey, translate, Notification) {
+angular.module('Bastion.content-credentials').controller('ContentCredentialDetailsInfoController',
+    ['$scope', 'ContentCredential', 'translate', 'Notification', function ($scope, ContentCredential, translate, Notification) {
 
         $scope.panel = $scope.panel || {loading: false};
         $scope.progress = {uploading: false};
 
-        $scope.gpgKey = $scope.gpgKey || GPGKey.get({id: $scope.$stateParams.gpgKeyId}, function () {
+        $scope.contentCredential = $scope.contentCredential || ContentCredential.get({id: $scope.$stateParams.contentCredentialId}, function () {
             $scope.panel.loading = false;
         });
 
-        $scope.gpgKey.$promise.then(function () {
-            $scope.uploadURL = 'katello/api/v2/gpg_keys/' + $scope.gpgKey.id + '/content';
+        $scope.contentCredential.$promise.then(function () {
+            $scope.uploadURL = 'katello/api/v2/content_credentials/' + $scope.contentCredential.id + '/content';
         });
 
         $scope.uploadContent = function (content) {
             if (content && (content !== "Please wait...")) {
                 if (content.status === 'success') {
-                    Notification.setSuccessMessage(translate('GPG Key successfully uploaded'));
+                    Notification.setSuccessMessage(translate('Content Credential successfully uploaded'));
                     $scope.uploadStatus = 'success';
-                    $scope.gpgKey.$get();
+                    $scope.contentCredential.$get();
                 } else {
                     Notification.setErrorMessage(content.displayMessage);
                     $scope.uploadStatus = 'error';

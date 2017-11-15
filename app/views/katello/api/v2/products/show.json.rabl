@@ -21,6 +21,18 @@ node(:gpg_key, :unless => lambda { |product| product.gpg_key.nil? }) do |product
   {:id => product.gpg_key.id, :name => product.gpg_key.name}
 end
 
+node(:ssl_ca_cert, :unless => lambda { |product| product.ssl_ca_cert.nil? }) do |product|
+  {:id => product.ssl_ca_cert.id, :name => product.ssl_ca_cert.name}
+end
+
+node(:ssl_client_cert, :unless => lambda { |product| product.ssl_client_cert.nil? }) do |product|
+  {:id => product.ssl_client_cert.id, :name => product.ssl_client_cert.name}
+end
+
+node(:ssl_client_key, :unless => lambda { |product| product.ssl_client_key.nil? }) do |product|
+  {:id => product.ssl_client_key.id, :name => product.ssl_client_key.name}
+end
+
 child :provider do
   attribute :name
 end

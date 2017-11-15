@@ -209,7 +209,7 @@
         <select id="gpg_key_id"
                 name="gpg_key_id"
                 ng-model="repository.gpg_key_id"
-                ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+                ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'gpg_key' }">
           <option value=""></option>
         </select>
       </div>

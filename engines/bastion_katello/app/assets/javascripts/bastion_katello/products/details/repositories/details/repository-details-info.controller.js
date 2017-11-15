@@ -6,7 +6,7 @@
  * @requires $q
  * @requires translate
  * @requires Notification
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires CurrentOrganization
  * @requires Checksum
  * @requires DownloadPolicy
@@ -17,8 +17,8 @@
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'GPGKey', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
-    function ($scope, $q, translate, Notification, GPGKey, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
+    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
         $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
@@ -27,11 +27,11 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
         });
 
-        $scope.gpgKeys = function () {
+        $scope.contentCredentials = function () {
             var deferred = $q.defer();
 
-            GPGKey.queryUnpaged(function (gpgKeys) {
-                var results = gpgKeys.results;
+            ContentCredential.queryUnpaged(function (contentCredentials) {
+                var results = contentCredentials.results;
 
                 results.unshift({id: null});
                 deferred.resolve(results);

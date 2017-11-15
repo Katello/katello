@@ -7,7 +7,7 @@
  * @requires translate
  * @requires Product
  * @requires SyncPlan
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires MenuExpander
  * @requires Notification
  *
@@ -15,8 +15,8 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$state', '$q', 'translate', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander', 'Notification',
-    function ($scope, $state, $q, translate, Product, SyncPlan, GPGKey, MenuExpander, Notification) {
+    ['$scope', '$state', '$q', 'translate', 'Product', 'SyncPlan', 'ContentCredential', 'MenuExpander', 'Notification',
+    function ($scope, $state, $q, translate, Product, SyncPlan, ContentCredential, MenuExpander, Notification) {
         $scope.menuExpander = MenuExpander;
         $scope.page = $scope.page || {loading: false};
 
@@ -27,10 +27,37 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.queryUnpaged(function (gpgKeys) {
-                var results = gpgKeys.results;
+            ContentCredential.queryUnpaged(function (contentCredentials) {
+                var results = contentCredentials.results;
 
+                results = results.filter(function(obj) {
+                    if (obj.content_type === "gpg_key") {
+                        return true;
+                    }
+                    return false;
+                });
                 results.unshift({id: null});
+
+                deferred.resolve(results);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.Certs = function () {
+            var deferred = $q.defer();
+
+            ContentCredential.queryUnpaged(function (contentCredentials) {
+                var results = contentCredentials.results;
+
+                results = results.filter(function(obj) {
+                    if (obj.content_type === "cert") {
+                        return true;
+                    }
+                    return false;
+                });
+                results.unshift({id: null});
+
                 deferred.resolve(results);
             });
 

@@ -10,7 +10,7 @@ angular.module('Bastion.products', [
     'ui.router',
     'Bastion',
     'Bastion.components',
-    'Bastion.gpg-keys',
+    'Bastion.content-credentials',
     'Bastion.architectures',
     'Bastion.i18n',
     'Bastion.sync-plans',
