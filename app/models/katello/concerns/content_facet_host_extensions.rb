@@ -49,7 +49,7 @@ module Katello
         )
 
         def content_facet_ignore_update?(attributes)
-          self.content_facet.blank? && attributes.blank?
+          self.content_facet.blank? && attributes.values.all?(&:blank?)
         end
       end
 

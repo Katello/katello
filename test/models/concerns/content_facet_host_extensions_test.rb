@@ -49,11 +49,11 @@ module Katello
       empty_host.reload
       assert_nil empty_host.content_facet
 
-      empty_host.update_attributes!(:content_facet_attributes => {})
+      empty_host.update_attributes(:content_facet_attributes => {})
       empty_host.reload
       assert_nil empty_host.content_facet
 
-      empty_host.update_attributes!(:content_facet_attributes => { :lifecycle_environment_id => library.id, :content_view_id => view.id })
+      empty_host.update_attributes(:content_facet_attributes => { :lifecycle_environment_id => library.id, :content_view_id => view.id })
       empty_host.reload.content_facet.reload
       refute_nil empty_host.content_facet # not reset to nil
     end
