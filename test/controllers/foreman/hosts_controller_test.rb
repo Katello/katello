@@ -18,10 +18,21 @@ class HostsControllerTest < ActionController::TestCase
     permissions
   end
 
-  def test_puppet_environment_for_content_view
+  test 'puppet environment for content_view' do
     get :puppet_environment_for_content_view, :content_view_id => @library_dev_staging_view.id, :lifecycle_environment_id => @library.id
 
     assert_response :success
+  end
+
+  test 'empty content facet parameters are removed' do
+    post :create, { :host => {
+      :name => 'test_content',
+      :content_facet_attributes => {
+        :lifecycle_environment_id => "",
+        :content_source_id => ""
+      }
+    } }, set_session_user
+    assert_empty assigns('host').content_facet
   end
 
   context 'csv' do
