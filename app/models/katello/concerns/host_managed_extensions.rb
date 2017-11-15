@@ -65,13 +65,7 @@ module Katello
       end
 
       def import_package_profile(simple_packages)
-        if Setting[:bulk_query_installed_packages]
-          #this method is slow if the clean_installed_packages rake task has not been run, but faster if it has
-          found = import_package_profile_in_bulk(simple_packages)
-        else
-          found = import_package_profile_individually(simple_packages)
-        end
-
+        found = import_package_profile_in_bulk(simple_packages)
         sync_package_associations(found.map(&:id))
       end
 
@@ -84,21 +78,6 @@ module Katello
         new_packages.each do |simple_package|
           ::Katello::Util::Support.active_record_retry do
             found << InstalledPackage.where(:nvra => simple_package.nvra, :name => simple_package.name).first_or_create!
-          end
-        end
-        found
-      end
-
-      def import_package_profile_individually(simple_packages)
-        found = []
-        simple_packages.each do |simple_package|
-          ::Katello::Util::Support.active_record_retry do
-            #use limit(1)[0] here to avoid a sort by id
-            pkg = InstalledPackage.where(:nvra => simple_package.nvra, :name => simple_package.name).limit(1)[0]
-            if pkg.nil?
-              pkg = InstalledPackage.create!(:nvra => simple_package.nvra, :name => simple_package.name)
-            end
-            found << pkg
           end
         end
         found
