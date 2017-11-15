@@ -22,7 +22,7 @@ module Katello
     end
 
     def associated_meta_tag_identifier
-      associated_meta_tag.id
+      associated_meta_tag.try(:id)
     end
 
     def docker_manifest
@@ -49,14 +49,15 @@ module Katello
 
     def update_from_json(json)
       taggable_class = json['manifest_type'] == "list" ? ::Katello::DockerManifestList : ::Katello::DockerManifest
-      self.docker_taggable ||= taggable_class.find_by(:digest => json['manifest_digest'])
-      self.repository_id ||= ::Katello::Repository.find_by(:pulp_id => json['repo_id']).try(:id)
+      self.docker_taggable = taggable_class.find_by(:digest => json['manifest_digest'])
+      self.repository_id = ::Katello::Repository.find_by(:pulp_id => json['repo_id']).try(:id)
       self.name = json['name']
       self.save!
     end
 
     def self.import_all(uuids = nil, options = {})
       super
+      ::Katello::DockerTag.where(:repository_id => nil).destroy_all
       if uuids
         repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.uuid" => uuids).uniq
         ::Katello::DockerMetaTag.import_meta_tags(repos)
