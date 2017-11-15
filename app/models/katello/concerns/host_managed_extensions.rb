@@ -6,7 +6,7 @@ module Katello
       include ForemanTasks::Concerns::ActionSubject
 
       module Overrides
-        def validate_media
+        def validate_media?
           (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && super
         end
 
