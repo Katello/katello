@@ -502,6 +502,10 @@ module Katello
       end
     end
 
+    def requires_yum_clone_distributor?
+      self.yum? && self.environment_id && !self.in_default_view?
+    end
+
     def url?
       url.present?
     end

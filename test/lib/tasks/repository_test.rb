@@ -31,7 +31,7 @@ module Katello
     end
 
     def test_regenerate_repo_metadata
-      ForemanTasks.expects(:async_task).with(::Actions::BulkAction, Actions::Katello::Repository::MetadataGenerate,
+      ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::BulkMetadataGenerate,
                                              Katello::Repository.all.sort).returns(ForemanTasks::Task.new)
 
       Rake.application.invoke_task('katello:regenerate_repo_metadata')
@@ -41,7 +41,7 @@ module Katello
       ENV['LIFECYCLE_ENVIRONMENT'] = @library_repo.environment.name
 
       expected_repos = Katello::Repository.joins(:environment).where('katello_environments.name' => @library_repo.environment.name)
-      ForemanTasks.expects(:async_task).with(::Actions::BulkAction, Actions::Katello::Repository::MetadataGenerate,
+      ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::BulkMetadataGenerate,
                                              expected_repos.sort).returns(ForemanTasks::Task.new)
 
       Rake.application.invoke_task('katello:regenerate_repo_metadata')
@@ -49,7 +49,7 @@ module Katello
 
     def test_regenerate_repo_metadata_cv
       ENV['CONTENT_VIEW'] = @cv_repo.content_view.name
-      ForemanTasks.expects(:async_task).with(::Actions::BulkAction, Actions::Katello::Repository::MetadataGenerate,
+      ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::BulkMetadataGenerate,
                                              [@cv_repo]).returns(ForemanTasks::Task.new)
 
       Rake.application.invoke_task('katello:regenerate_repo_metadata')

@@ -7,6 +7,10 @@ module Actions
           source_repository = options.fetch(:source_repository, nil)
           force = options.fetch(:force, false)
 
+          if source_repository.nil? && repository.yum? && repository.requires_yum_clone_distributor?
+            source_repository = repository.archived_instance
+          end
+
           distributors(repository, source_repository).each do |distributor|
             plan_action(Pulp::Repository::DistributorPublish,
                         :pulp_id => repository.pulp_id,
