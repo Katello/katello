@@ -13,7 +13,7 @@ BASTION_MODULES.push(
     'Bastion.puppet-modules',
     'Bastion.ostree-branches',
     'Bastion.environments',
-    'Bastion.gpg-keys',
+    'Bastion.content-credentials',
     'Bastion.hosts',
     'Bastion.capsules',
     'Bastion.organizations',

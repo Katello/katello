@@ -7,6 +7,9 @@ module Katello
     before_action :find_product, :only => [:update, :destroy, :sync]
     before_action :find_organization_from_product, :only => [:update]
     before_action :authorize_gpg_key, :only => [:update, :create]
+    before_action :authorize_ssl_ca_cert, :only => [:update, :create]
+    before_action :authorize_ssl_client_cert, :only => [:update, :create]
+    before_action :authorize_ssl_client_key, :only => [:update, :create]
 
     resource_description do
       api_version "v2"
@@ -15,6 +18,9 @@ module Katello
     def_param_group :product do
       param :description, String, :desc => N_("Product description")
       param :gpg_key_id, :number, :desc => N_("Identifier of the GPG key")
+      param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert")
+      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
+      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
       param :sync_plan_id, :number, :desc => N_("Plan numeric identifier"), :allow_nil => true
     end
 
@@ -145,12 +151,36 @@ module Katello
       end
     end
 
+    def authorize_ssl_ca_cert
+      ssl_ca_cert_id = product_params[:ssl_ca_cert_id]
+      if ssl_ca_cert_id
+        ssl_ca_cert = GpgKey.readable.where(:id => ssl_ca_cert_id, :organization_id => @organization).first
+        fail HttpErrors::NotFound, _("Couldn't find ssl ca cert '%s'") % ssl_ca_cert_id if ssl_ca_cert.nil?
+      end
+    end
+
+    def authorize_ssl_client_cert
+      ssl_client_cert_id = product_params[:ssl_client_cert_id]
+      if ssl_client_cert_id
+        ssl_client_cert = GpgKey.readable.where(:id => ssl_client_cert_id, :organization_id => @organization).first
+        fail HttpErrors::NotFound, _("Couldn't find ssl client cert '%s'") % ssl_client_cert_id if ssl_client_cert.nil?
+      end
+    end
+
+    def authorize_ssl_client_key
+      ssl_client_key_id = product_params[:ssl_client_key_id]
+      if ssl_client_key_id
+        ssl_client_key = GpgKey.readable.where(:id => ssl_client_key_id, :organization_id => @organization).first
+        fail HttpErrors::NotFound, _("Couldn't find ssl client key '%s'") % ssl_client_key_id if ssl_client_key.nil?
+      end
+    end
+
     def product_params
       # only allow sync plan id to be updated if the product is a Red Hat product
       if @product && @product.redhat?
         params.require(:product).permit(:sync_plan_id)
       else
-        params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
+        params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :sync_plan_id)
       end
     end
   end

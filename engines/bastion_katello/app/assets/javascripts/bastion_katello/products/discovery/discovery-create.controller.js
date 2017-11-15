@@ -8,7 +8,7 @@
  * @requires CurrentOrganization
  * @requires Product
  * @requires Repository
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires FormUtils
  * @requires DiscoveryRepositories
  * @requires translate
@@ -18,8 +18,8 @@
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryCreateController',
-    ['$scope', '$q', 'Notification', 'CurrentOrganization', 'Product', 'Repository', 'GPGKey', 'FormUtils', 'DiscoveryRepositories', 'translate', 'ApiErrorHandler',
-    function ($scope, $q, Notification, CurrentOrganization, Product, Repository, GPGKey, FormUtils, DiscoveryRepositories, translate, ApiErrorHandler) {
+    ['$scope', '$q', 'Notification', 'CurrentOrganization', 'Product', 'Repository', 'ContentCredential', 'FormUtils', 'DiscoveryRepositories', 'translate', 'ApiErrorHandler',
+    function ($scope, $q, Notification, CurrentOrganization, Product, Repository, ContentCredential, FormUtils, DiscoveryRepositories, translate, ApiErrorHandler) {
 
         $scope.table = {
             rows: DiscoveryRepositories.getRows(),
@@ -170,11 +170,11 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
             return fieldsEnabled;
         };
 
-        $scope.gpgKeys = [];
-        GPGKey.queryUnpaged(function (gpgKeys) {
-            $scope.gpgKeys = gpgKeys.results;
+        $scope.contentCredentials = [];
+        ContentCredential.queryUnpaged(function (contentCredentials) {
+            $scope.contentCredentials = contentCredentials.results;
         }, function (response) {
-            $scope.gpgKeys = [];
+            $scope.contentCredentials = [];
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 

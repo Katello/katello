@@ -5,7 +5,7 @@
  * @requires $scope
  * @requires Repository
  * @requires Product
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires FormUtils
  * @requires translate
  * @requires Notification
@@ -20,8 +20,8 @@
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'GPGKey', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
-    function ($scope, Repository, Product, GPGKey, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
+    ['$scope', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
+    function ($scope, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
 
         function success() {
             Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -84,8 +84,8 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             }
         });
 
-        GPGKey.queryUnpaged(function (gpgKeys) {
-            $scope.gpgKeys = gpgKeys.results;
+        ContentCredential.queryUnpaged(function (contentCredentials) {
+            $scope.contentCredentials = contentCredentials.results;
         });
 
         Architecture.queryUnpaged(function (architecture) {

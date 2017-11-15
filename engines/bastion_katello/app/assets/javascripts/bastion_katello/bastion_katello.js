@@ -76,8 +76,8 @@
 //= require "bastion_katello/tasks/tasks.module.js"
 //= require_tree "./tasks"
 
-//= require "bastion_katello/gpg-keys/gpg-keys.module.js"
-//= require_tree "./gpg-keys"
+//= require "bastion_katello/content-credentials/content-credentials.module.js"
+//= require_tree "./content-credentials"
 
 //= require "bastion_katello/tasks/tasks.module.js"
 //= require_tree "./tasks"

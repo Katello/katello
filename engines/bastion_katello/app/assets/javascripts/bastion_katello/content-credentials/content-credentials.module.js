@@ -1,11 +1,11 @@
 /**
  * @ngdoc module
- * @name  Bastion.gpg-keys
+ * @name  Bastion.content-credentials
  *
  * @description
- *   Module for GPG key related functionality.
+ *   Module for Content Credential related functionality.
  */
-angular.module('Bastion.gpg-keys', [
+angular.module('Bastion.content-credentials', [
     'ngResource',
     'ui.router',
     'Bastion',

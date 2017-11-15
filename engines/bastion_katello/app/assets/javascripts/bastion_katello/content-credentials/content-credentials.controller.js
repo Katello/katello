@@ -1,21 +1,21 @@
 /**
  * @ngdoc object
- * @name  Bastion.gpg-keys.controller:GPGKeysController
+ * @name  Bastion.content-credentials.controller:ContentCredentialsController
  *
  * @requires $scope
  * @requires $location
  * @requires Nutupane
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires CurrentOrganization
  *
  * @description
- *   Provides the functionality specific to GPGKeys for use with the Nutupane UI pattern.
+ *   Provides the functionality specific to ContentCredentials for use with the Nutupane UI pattern.
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
  */
-angular.module('Bastion.gpg-keys').controller('GPGKeysController',
-    ['$scope', '$location', 'Nutupane', 'GPGKey', 'CurrentOrganization',
-    function ($scope, $location, Nutupane, GPGKey, CurrentOrganization) {
+angular.module('Bastion.content-credentials').controller('ContentCredentialsController',
+    ['$scope', '$location', 'Nutupane', 'ContentCredential', 'CurrentOrganization',
+    function ($scope, $location, Nutupane, ContentCredential, CurrentOrganization) {
         var params = {
             'organization_id': CurrentOrganization,
             'search': $location.search().search || "",
@@ -24,8 +24,8 @@ angular.module('Bastion.gpg-keys').controller('GPGKeysController',
             'paged': true
         };
 
-        var nutupane = new Nutupane(GPGKey, params);
-        $scope.controllerName = 'katello_gpg_keys';
+        var nutupane = new Nutupane(ContentCredential, params);
+        $scope.controllerName = 'katello_content_credentials';
         $scope.table = nutupane.table;
         $scope.panel = {loading: false};
         $scope.removeRow = nutupane.removeRow;

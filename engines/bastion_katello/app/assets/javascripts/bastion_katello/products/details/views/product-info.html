@@ -22,6 +22,30 @@
           on-save="save(product)">
       </dd>
 
+      <dt translate>SSL CA Cert</dt>
+      <dd bst-edit-select="product.ssl_ca_cert.name"
+          readonly="product.redhat || denied('edit_products', product)"
+          selector="product.ssl_ca_cert_id"
+          options="Certs()"
+          on-save="save(product)">
+      </dd>
+
+      <dt translate>SSL Client Cert</dt>
+      <dd bst-edit-select="product.ssl_client_cert.name"
+          readonly="product.redhat || denied('edit_products', product)"
+          selector="product.ssl_client_cert_id"
+          options="Certs()"
+          on-save="save(product)">
+      </dd>
+
+      <dt translate>SSL Client Key</dt>
+      <dd bst-edit-select="product.ssl_client_key.name"
+          readonly="product.redhat || denied('edit_products', product)"
+          selector="product.ssl_client_key_id"
+          options="Certs()"
+          on-save="save(product)">
+      </dd>
+
       <dt translate>Description</dt>
       <dd bst-edit-textarea="product.description"
           on-save="save(product)"

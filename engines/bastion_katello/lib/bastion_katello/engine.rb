@@ -18,6 +18,7 @@ module BastionKatello
         :stylesheet => 'bastion_katello/bastion_katello',
         :pages => %w(
           activation_keys
+          content_credentials
           content_hosts
           content_views
           debs
@@ -26,7 +27,6 @@ module BastionKatello
           ostree_branches
           errata
           packages
-          gpg_keys
           lifecycle_environments
           products
           puppet_modules

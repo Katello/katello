@@ -6,7 +6,7 @@
  * @requires $q
  * @requires $uibModal
  * @requires Product
- * @requires GPGKey
+ * @requires ContentCredential
  * @requires SyncPlan
  * @requires FormUtils
  *
@@ -17,12 +17,12 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', '$uibModal', 'Product', 'GPGKey', 'SyncPlan', 'FormUtils', 'Notification',
-    function ($scope, $q, $uibModal, Product, GPGKey, SyncPlan, FormUtils, Notification) {
+    ['$scope', '$q', '$uibModal', 'Product', 'ContentCredential', 'SyncPlan', 'FormUtils', 'Notification',
+    function ($scope, $q, $uibModal, Product, ContentCredential, SyncPlan, FormUtils, Notification) {
 
-        function fetchGpgKeys() {
-            return GPGKey.queryUnpaged(function (gpgKeys) {
-                $scope.gpgKeys = gpgKeys.results;
+        function fetchContentCredentials() {
+            return ContentCredential.queryUnpaged(function (contentCredentials) {
+                $scope.contentCredentials = contentCredentials.results;
             });
         }
 
@@ -61,7 +61,7 @@ angular.module('Bastion.products').controller('ProductFormController',
             product.$save(success, error);
         };
 
-        $q.all([fetchSyncPlans().$promise, fetchGpgKeys().$promise]).finally(function () {
+        $q.all([fetchSyncPlans().$promise, fetchContentCredentials().$promise]).finally(function () {
             $scope.page.loading = false;
         });
 
