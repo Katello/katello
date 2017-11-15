@@ -11,7 +11,7 @@ namespace :katello do
         begin
           if repo.needs_metadata_publish?
             Rails.logger.error("Repository metadata for #{repo.name} (#{repo.id}) is out of date, regenerating.")
-            needing_publish << repo
+            needing_publish << repo.id
           end
         rescue => e
           puts "Failed to check repository #{repo.id}: #{e}"
@@ -19,7 +19,7 @@ namespace :katello do
       end
     end
     if needing_publish.any?
-      ForemanTasks.async_task(::Actions::BulkAction, ::Actions::Katello::Repository::MetadataGenerate, needing_publish)
+      ForemanTasks.async_task(::Actions::Katello::Repository::BulkMetadataGenerate, Katello::Repository.where(:id => needing_publish))
     end
   end
 
@@ -29,7 +29,7 @@ namespace :katello do
     repos = lookup_repositories
 
     if repos.any?
-      task = ForemanTasks.async_task(::Actions::BulkAction, Actions::Katello::Repository::MetadataGenerate, repos.all.sort)
+      task = ForemanTasks.async_task(Actions::Katello::Repository::BulkMetadataGenerate, repos.all.sort)
       puts "Regenerating #{repos.count} repositories.  You can monitor these on task id #{task.id}\n"
     else
       puts "No repositories found for regeneration."

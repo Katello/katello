@@ -35,8 +35,8 @@ module Actions
         end
 
         def package_groups_match?(source_repo, target_repo)
-          source_repo_ids = source_repo.package_group_ids.sort
-          target_repo_ids = target_repo.package_group_ids.sort
+          source_repo_ids = source_repo.package_groups.order(:name).pluck(:name)
+          target_repo_ids = target_repo.package_groups.order(:name).pluck(:name)
           source_repo_ids == target_repo_ids
         end
 
