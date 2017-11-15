@@ -5,6 +5,18 @@ module Katello
       include Katello::KatelloUrlsHelper
       include ForemanTasks::Concerns::ActionSubject
 
+      module Overrides
+        def validate_media?
+          (content_source_id.blank? || (content_facet && content_facet.kickstart_repository.blank?)) && super
+        end
+
+        def smart_proxy_ids
+          ids = super
+          ids << content_source_id
+          ids.uniq.compact
+        end
+      end
+
       included do
         alias_method_chain :validate_media?, :capsule
         alias_method_chain :smart_proxy_ids, :katello
