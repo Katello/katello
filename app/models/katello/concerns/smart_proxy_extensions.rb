@@ -1,3 +1,6 @@
+require 'proxy_api'
+require 'proxy_api/pulp'
+require 'proxy_api/pulp_node'
 module Katello
   module Concerns
     module SmartProxyExtensions
