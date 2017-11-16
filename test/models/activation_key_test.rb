@@ -7,6 +7,7 @@ module Katello
       @dev_staging_view_key = katello_activation_keys(:library_dev_staging_view_key)
       @dev_view = katello_content_views(:library_dev_view)
       @lib_view = katello_content_views(:library_view)
+      @pool_one = katello_pools(:pool_one)
     end
 
     test "can have content view" do
@@ -105,6 +106,16 @@ module Katello
     def test_search_description
       activation_keys = ActivationKey.search_for("description = \"#{@dev_staging_view_key.description}\"")
       assert_includes activation_keys, @dev_staging_view_key
+    end
+
+    def test_search_subscription_id
+      activation_keys = ActivationKey.search_for("subscription_id = \"#{@pool_one.id}\"")
+      assert_includes activation_keys, @dev_key
+    end
+
+    def test_search_subscription_name
+      activation_keys = ActivationKey.search_for("subscription_name = \"#{@pool_one.subscription.name}\"")
+      assert_includes activation_keys, @dev_key
     end
 
     def test_valid_content_override_label?
