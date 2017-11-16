@@ -145,8 +145,9 @@ module Katello
     end
 
     def self.find_by_subscription_id(_key, operator, value)
-      conditions = sanitize_sql_for_conditions(["#{Katello::Subscription.table_name}.id #{operator} ?", value_to_sql(operator, value)])
-      activation_keys = ::Katello::ActivationKey.joins(pools: :subscription).where(conditions)
+      # What we refer to as "subscriptions" is really Pools, so we search based on Pool id.
+      conditions = sanitize_sql_for_conditions(["#{Katello::Pool.table_name}.id #{operator} ?", value_to_sql(operator, value)])
+      activation_keys = ::Katello::ActivationKey.joins(:pools).where(conditions)
       return_activation_keys_by_id(activation_keys.pluck(:id))
     end
 
