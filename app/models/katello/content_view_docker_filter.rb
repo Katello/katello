@@ -18,20 +18,25 @@ module Katello
         manifest_tags.concat(query_manifests(repo, rule))
       end
 
-      { "name" => { "$in" => manifest_tags } } unless manifest_tags.empty?
+      { "_id" => { "$in" => manifest_tags } } unless manifest_tags.empty?
     end
 
     protected
 
     def query_manifests(repo, rule)
       query_name = rule.name.tr("*", "%")
-      query = DockerManifest.joins(:docker_tags).in_repositories(repo).where("#{DockerTag.table_name}.name ilike ?", query_name).uniq
+      tags_query = ::Katello::DockerTag.where(:repository => repo).
+                                        where(:docker_taggable_type => DockerManifest.name).
+                                        where("name ilike ?", query_name).
+                                        select(:docker_taggable_id)
+
+      query = DockerManifest.in_repositories(repo).where("id in (#{tags_query.to_sql})")
       names = query.all.collect do |manifest|
-        manifest.docker_tags.all.collect do |tag|
-          tag.name
+        manifest.docker_tags.where(:repository => repo).all.collect do |tag|
+          tag.uuid
         end
       end
-      names.flatten
+      names.flatten.uniq
     end
   end
 end

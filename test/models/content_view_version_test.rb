@@ -90,6 +90,7 @@ module Katello
         manifest_count += repo.docker_manifests.count
         tag_count += repo.docker_tags.count
       end
+      DockerMetaTag.import_meta_tags(cvv.repositories.archived.docker_type)
 
       assert cvv.repositories.archived.docker_type.count > 0
       assert_equal manifest_count, cvv.docker_manifest_count
