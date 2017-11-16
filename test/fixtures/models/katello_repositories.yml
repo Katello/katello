@@ -401,7 +401,7 @@ redis:
 
 busybox:
   name:                 busybox
-  pulp_id:              "Default_Organization-Test-busybox"
+  pulp_id:              "Default_Organization-Test-busybox-library"
   content_id:           1
   content_type:         docker
   label:                busybox
@@ -411,6 +411,23 @@ busybox:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   unprotected:           <%= true %>
+  url:                  'http://docker.io'
+  docker_upstream_name: 'busybox'
+
+busybox2:
+  name:                 busybox
+  pulp_id:              "Default_Organization-Test-busybox2-library"
+  content_id:           1
+  content_type:         docker
+  label:                busybox
+  relative_path:        'ACME_Corporation/library/busybox'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  unprotected:           <%= true %>
+  url:                  'http://docker.io'
+  docker_upstream_name: 'busybox'
 
 busybox_view1:
   name:                 busybox

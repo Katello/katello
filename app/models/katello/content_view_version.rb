@@ -253,15 +253,8 @@ module Katello
       end
     end
 
-    def docker_tags
-      archived_repos.docker_type.flat_map(&:docker_tags)
-    end
-
     def docker_tag_count
-      tag_counts = repositories.archived.docker_type.map do |repo|
-        repo.docker_tags.count
-      end
-      tag_counts.sum
+      ::Katello::DockerMetaTag.where(:repository_id => repositories.archived.docker_type).count
     end
 
     def errata(errata_type = nil)

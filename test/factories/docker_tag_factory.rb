@@ -13,6 +13,10 @@ FactoryBot.define do
     name "latest"
   end
 
+  trait :with_uuid do
+    uuid { SecureRandom.hex }
+  end
+
   trait :with_manifest_list do
     association :docker_taggable, :factory => :docker_manifest_list
   end
