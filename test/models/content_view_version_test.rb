@@ -202,6 +202,13 @@ module Katello
       @cvv.composite_content_views = []
       @cvv.save!
 
+      @cvv.composites << @composite_version
+      assert_raises RuntimeError do
+        @cvv.validate_destroyable!
+      end
+
+      @cvv.composites = []
+
       # no failure when version not in composite
       assert_nothing_raised do
         @cvv.validate_destroyable!

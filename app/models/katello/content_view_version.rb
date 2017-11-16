@@ -115,6 +115,10 @@ module Katello
       composite_content_views.any?
     end
 
+    def published_in_composite?
+      content_view_version_composites.any?
+    end
+
     def in_environment?
       environments.any?
     end
@@ -317,6 +321,14 @@ module Katello
         if in_composite?
           fail _("Cannot delete version while it is in use by composite content views: %s") %
                    composite_content_views.map(&:name).join(",")
+        end
+
+        if published_in_composite?
+          list = composites.map do |version|
+            "#{version.content_view.name} Version #{version.version}"
+          end
+          fail _("Cannot delete version while it is in use by composite content views: %s") %
+                   list.join(",")
         end
       end
       true
