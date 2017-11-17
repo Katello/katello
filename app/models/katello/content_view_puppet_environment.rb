@@ -38,6 +38,10 @@ module Katello
       false
     end
 
+    def mirror_on_sync?
+      true
+    end
+
     def node_syncable?
       environment
     end
