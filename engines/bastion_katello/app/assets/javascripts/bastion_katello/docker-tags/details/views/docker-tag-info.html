@@ -21,13 +21,13 @@
 
   <div data-block="right-column">
     <h4 translate>Docker Manifest</h4>
-    <div ng-if="!_.isEmpty(tag.manifest_schema1)">
+    <div ng-if="tag.manifest_schema1">
       <h5 translate>Schema Version 1</h5>
       <dl class="dl-horizontal dl-horizontal-left">
 
         <dt translate>Manifest Type</dt>
         <dd>
-          {{ getManifestType(tag.manifest_schema1) }}
+          {{ tag.manifest_schema1.manifest_type_display }}
         </dd>
         <dt translate>Digest</dt>
         <dd>
@@ -35,12 +35,12 @@
         </dd>
       </dl>
     </div>
-    <div ng-if="!_.isEmpty(tag.manifest_schema2)">
+    <div ng-if="tag.manifest_schema2">
       <h5 translate>Schema Version 2</h5>
       <dl class="dl-horizontal dl-horizontal-left">
         <dt translate>Manifest Type</dt>
         <dd>
-          {{ getManifestType(tag.manifest_schema2) }}
+          {{ tag.manifest_schema2.manifest_type_display }}
         </dd>
         <dt translate>Digest</dt>
         <dd>
