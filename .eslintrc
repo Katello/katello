@@ -7,11 +7,24 @@
     "airbnb",
     "plugin:jest/recommended"
   ],
+  "globals": {
+    "__": true
+  },
   "plugins": [
     "jest",
     "react"
   ],
   "rules": {
-    "react/jsx-filename-extension": "off"
+    "react/jsx-filename-extension": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        // Allow importing devDependencies like @storybook
+        "devDependencies": true
+      }
+    ],
+    // Import rules off for now due to HoundCI issue
+    "import/no-unresolved": "off",
+    "import/extensions": "off"
   }
 }

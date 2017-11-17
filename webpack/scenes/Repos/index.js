@@ -6,35 +6,22 @@ import { ListView } from 'patternfly-react';
 
 import LoadingSpinner from '../../components/LoadingSpinner/index';
 import { loadRedHatRepositories } from '../../actions/RedHatRepositories/index';
-import { loadRedHatRepositorySets } from '../../actions/RedHatRepositorySets/index';
 import MultiSelect from '../../components/MultiSelect/index';
-import SearchInput from '../../components/SearchInput/index';
 import RedHatRepository from '../../components/RedHatRepository/index';
-import RedHatRepositorySet from '../../components/RedHatRepositorySet/index';
-
-const loadData = (props) => {
-  props.loadRedHatRepositories();
-  props.loadRedHatRepositorySets();
-};
+import SearchInput from '../../components/SearchInput/index';
 
 class RedHatRepositoriesPage extends Component {
-  static defaultProps = {
-    redHatRepositoriesResponse: {},
-    redHatRepositorySetsResponse: {}
-  };
+  componentDidMount() {
+    this.loadData();
+  }
 
-  static propTypes = {
-    // loadRedHatRepositories: PropTypes.func.isRequired,
-    // loadRedHatRepositorySets: PropTypes.func.isRequired,
-    redHatRepositoriesResponse: PropTypes.object,
-    redHatRepositorySetsResponse: PropTypes.object
-  };
-
-  // componentWillMount() {
-  //   loadData(this.props);
-  // }
+  loadData() {
+    this.props.loadRedHatRepositories();
+  }
 
   render() {
+    const { rhRepos, rhRepoSetsResponse } = this.props;
+
     const options = [
       { value: 'rpm', label: __('RPM') },
       { value: 'source-rpm', label: __('Source RPM') },
@@ -42,33 +29,21 @@ class RedHatRepositoriesPage extends Component {
       { value: 'kickstarter', label: __('Kickstarter') },
       { value: 'ostree', label: __('OSTree') },
       { value: 'beta', label: __('Beta') },
-      { value: 'other', label: __('Other') }
+      { value: 'other', label: __('Other') },
     ];
 
     let enabledRedHatRepositories = [];
-    let availableRedHatRepositories = [];
+    const availableRedHatRepositories = [];
 
-    if (this.props.redHatRepositoriesResponse.results) {
-      enabledRedHatRepositories = (
-        this.props.redHatRepositoriesResponse.results.map(redHatRepository =>
-          <RedHatRepository key={redHatRepository.id} redHatRepository={redHatRepository} />
-        )
-      );
-    }
-
-    if (this.props.redHatRepositorySetsResponse.results) {
-      availableRedHatRepositories = (
-        this.props.redHatRepositorySetsResponse.results.map(redHatRepositorySet =>
-          <RedHatRepositorySet key={redHatRepositorySet.id} redHatRepositorySet={redHatRepositorySet} />
-        )
-      );
+    if (rhRepos.results) {
+      enabledRedHatRepositories = rhRepos.results.map(redHatRepository => (
+        <RedHatRepository key={redHatRepository.id} redHatRepository={redHatRepository} />
+      ));
     }
 
     return (
       <Grid bsClass="container-fluid">
-        <h1>
-          {__('Red Hat Repositories')}
-        </h1>
+        <h1>{__('Red Hat Repositories')}</h1>
 
         <Row className="toolbar-pf">
           <Col sm={12}>
@@ -85,31 +60,21 @@ class RedHatRepositoriesPage extends Component {
         </Row>
 
         <Row>
-          <Col sm={12}>
-            {/* <SearchFilter></SearchFilter>*/}
-          </Col>
+          <Col sm={12}>{/* <SearchFilter></SearchFilter> */}</Col>
         </Row>
 
         <Row>
           <Col sm={6}>
-            <h2>
-              {__('Available Repositories')}
-            </h2>
-            <LoadingSpinner isLoading={this.props.redHatRepositorySetsResponse.isLoading}>
-              <ListView>
-                {availableRedHatRepositories}
-              </ListView>
+            <h2>{__('Available Repositories')}</h2>
+            <LoadingSpinner isLoading={rhRepoSetsResponse.isLoading}>
+              <ListView>{availableRedHatRepositories}</ListView>
             </LoadingSpinner>
           </Col>
 
           <Col sm={6}>
-            <h2>
-              {__('Enabled Repositories')}
-            </h2>
-            <LoadingSpinner isLoading={this.props.redHatRepositoriesResponse.isLoading}>
-              <ListView>
-                {enabledRedHatRepositories}
-              </ListView>
+            <h2>{__('Enabled Repositories')}</h2>
+            <LoadingSpinner isLoading={rhRepos.isLoading}>
+              <ListView>{enabledRedHatRepositories}</ListView>
             </LoadingSpinner>
           </Col>
         </Row>
@@ -118,17 +83,25 @@ class RedHatRepositoriesPage extends Component {
   }
 }
 
-// const mapStateToProps = (state) => {
-//   const props = {
-//     redHatRepositoriesResponse: state.redHatRepositories,
-//     redHatRepositorySetsResponse: state.redHatRepositorySets
-//   };
-//   return props;
-// };
-//
-// export default connect(mapStateToProps, {
-//   loadRedHatRepositories,
-//   loadRedHatRepositorySets
-// })(RedHatRepositoriesPage);
+RedHatRepositoriesPage.defaultProps = {
+  rhRepos: {},
+  rhRepoSetsResponse: {},
+};
 
-export default RedHatRepositoriesPage;
+RedHatRepositoriesPage.propTypes = {
+  loadRedHatRepositories: PropTypes.func.isRequired,
+  rhRepos: PropTypes.shape({}),
+  rhRepoSetsResponse: PropTypes.shape({}),
+};
+
+const mapStateToProps = (state) => {
+  const props = {
+    rhRepos: state.redHatRepositories,
+    rhRepoSetsResponse: state.redHatRepositorySets,
+  };
+  return props;
+};
+
+export default connect(mapStateToProps, {
+  loadRedHatRepositories,
+})(RedHatRepositoriesPage);
