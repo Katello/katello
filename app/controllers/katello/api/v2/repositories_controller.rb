@@ -35,6 +35,7 @@ module Katello
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
       param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories.")
       param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided.")
+      param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing.")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -148,6 +149,7 @@ module Katello
       repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected, :gpg_key, :checksum_type, :download_policy).map { |k, v| [k.to_sym, v] }])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
+      repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
       repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       repository.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       repository.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
@@ -416,7 +418,7 @@ module Katello
 
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
-              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy
+              :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy
              ]
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?

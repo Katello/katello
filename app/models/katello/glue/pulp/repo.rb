@@ -163,7 +163,7 @@ module Katello
         when Repository::YUM_TYPE
           Runcible::Models::YumImporter.new(yum_importer_values(capsule))
         when Repository::FILE_TYPE
-          Runcible::Models::IsoImporter.new(importer_ssl_options(capsule).merge(:feed => importer_feed_url(capsule)))
+          Runcible::Models::IsoImporter.new(importer_connection_options(capsule).merge(:feed => importer_feed_url(capsule)))
         when Repository::PUPPET_TYPE
           Runcible::Models::PuppetImporter.new(puppet_importer_values(capsule))
         when Repository::DOCKER_TYPE
@@ -171,9 +171,9 @@ module Katello
           options[:upstream_name] = capsule.default_capsule? ? self.docker_upstream_name : self.container_repository_name
           options[:feed] = docker_feed_url(capsule)
           options[:enable_v1] = false
-          Runcible::Models::DockerImporter.new(importer_ssl_options(capsule).merge(options))
+          Runcible::Models::DockerImporter.new(importer_connection_options(capsule).merge(options))
         when Repository::OSTREE_TYPE
-          options = importer_ssl_options(capsule)
+          options = importer_connection_options(capsule)
           options[:depth] = capsule.default_capsule? ? compute_ostree_upstream_sync_depth : ostree_capsule_sync_depth
           options[:feed] = self.importer_feed_url(capsule)
           Runcible::Models::OstreeImporter.new(options)
@@ -211,7 +211,11 @@ module Katello
           :download_policy => new_download_policy,
           :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
         }
-        config.merge(importer_ssl_options(capsule))
+        config.merge(importer_connection_options(capsule))
+      end
+
+      def proxy_host_value
+        self.ignore_global_proxy ? "" : nil
       end
 
       def puppet_importer_values(capsule)
@@ -219,10 +223,10 @@ module Katello
           :feed => self.importer_feed_url(capsule),
           :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
         }
-        config.merge(importer_ssl_options(capsule))
+        config.merge(importer_connection_options(capsule))
       end
 
-      def importer_ssl_options(capsule = SmartProxy.default_capsule!)
+      def importer_connection_options(capsule = SmartProxy.default_capsule!)
         if !capsule.default_capsule?
           ueber_cert = ::Cert::Certs.ueber_cert(organization)
           importer_options = {
@@ -234,13 +238,15 @@ module Katello
           importer_options = {
             :ssl_client_cert => self.product.certificate,
             :ssl_client_key => self.product.key,
-            :ssl_ca_cert => Katello::Repository.feed_ca_cert(url)
+            :ssl_ca_cert => Katello::Repository.feed_ca_cert(url),
+            :proxy_host => self.proxy_host_value
           }
         else
           importer_options = {
             :ssl_client_cert => nil,
             :ssl_client_key => nil,
-            :ssl_ca_cert => nil
+            :ssl_ca_cert => nil,
+            :proxy_host => self.proxy_host_value
           }
         end
         unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
@@ -394,7 +400,7 @@ module Katello
 
       def pulp_update_needed?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
-                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth)
+                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy)
         changeable_attributes << "name" if docker?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
       end

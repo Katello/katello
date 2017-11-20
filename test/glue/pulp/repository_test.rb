@@ -110,11 +110,11 @@ module Katello
       assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
     end
 
-    def test_importer_ssl_options
+    def test_importer_connection_options
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
       proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      assert @fedora_17_x86_64.importer_ssl_options(proxy).key?(:ssl_validation)
-      refute @cvpe_one.importer_ssl_options(proxy).key?(:ssl_validation)
+      assert @fedora_17_x86_64.importer_connection_options(proxy).key?(:ssl_validation)
+      refute @cvpe_one.importer_connection_options(proxy).key?(:ssl_validation)
     end
 
     def test_relative_path

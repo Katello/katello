@@ -61,6 +61,7 @@ module Actions
                        Runcible::Models::IsoImporter.new
                      end
           importer.feed            = input[:feed]
+          importer.proxy_host      = input[:proxy_host]
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
@@ -75,6 +76,7 @@ module Actions
         def ostree_importer
           importer = Runcible::Models::OstreeImporter.new
           importer.feed            = input[:feed]
+          importer.proxy_host      = input[:proxy_host]
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
@@ -88,6 +90,7 @@ module Actions
         def puppet_importer
           importer = Runcible::Models::PuppetImporter.new
           importer.feed            = input[:feed]
+          importer.proxy_host      = input[:proxy_host]
           importer.ssl_ca_cert     = input[:ssl_ca_cert]
           importer.ssl_client_cert = input[:ssl_client_cert]
           importer.ssl_client_key  = input[:ssl_client_key]
@@ -100,6 +103,7 @@ module Actions
 
         def docker_importer
           importer = Runcible::Models::DockerImporter.new
+          importer.proxy_host      = input[:proxy_host]
           importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
           importer.feed            = input[:feed]
           importer.enable_v1       = false

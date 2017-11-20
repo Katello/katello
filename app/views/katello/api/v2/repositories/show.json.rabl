@@ -20,6 +20,7 @@ attributes :promoted? => :promoted
 attributes :ostree_branch_names => :ostree_branches
 attributes :upstream_username
 attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :compute_ostree_upstream_sync_depth => :computed_ostree_upstream_sync_depth
+attributes :ignore_global_proxy
 
 if @resource.is_a?(Katello::Repository)
   if @resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant
