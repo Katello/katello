@@ -85,7 +85,7 @@
             on-save="save(repository)">
         </dd>
       </span>
-        <span ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
+      <span ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
         <dt translate>Mirror on Sync</dt>
         <dd bst-edit-checkbox="repository.mirror_on_sync"
             formatter="booleanToYesNo"
@@ -93,6 +93,15 @@
             readonly="denied('edit_products', product)">
         </dd>
       </span>
+      <span>
+        <dt translate>Ignore Global HTTP Proxy</dt>
+        <dd bst-edit-checkbox="repository.ignore_global_proxy"
+            formatter="booleanToYesNo"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
+
       <dt translate>Publish via HTTPS</dt>
       <dd translate>Yes</dd>
 

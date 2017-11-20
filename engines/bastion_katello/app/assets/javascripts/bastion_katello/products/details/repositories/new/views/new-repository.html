@@ -144,6 +144,17 @@
           Selecting this option will result in contents that are no longer part of the upstream repository being removed during synchronization.
         </p>
       </div>
+
+      <div class="checkbox">
+        <label>
+          <input id="ignore_global_proxy" name="ignore_global_proxy" ng-model="repository.ignore_global_proxy" type="checkbox"/>
+          <span translate>Ignore Global Http Proxy</span>
+        </label>
+
+        <p class="help-block" translate>
+          Selecting this option will result in the globally configured http proxy from not being used.
+        </p>
+      </div>
     </div>
 
     <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">

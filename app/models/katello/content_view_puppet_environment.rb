@@ -88,6 +88,10 @@ module Katello
       end
     end
 
+    def ignore_global_proxy
+      false
+    end
+
     def set_pulp_id
       if self.environment
         label = "#{self.content_view.label}-#{self.environment.label}-puppet-#{SecureRandom.uuid}"

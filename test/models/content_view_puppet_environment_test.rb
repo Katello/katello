@@ -58,7 +58,7 @@ module Katello
       assert_equal true, @puppet_env.mirror_on_sync?
       capsule = OpenStruct.new(:default_capsule? => true)
       @puppet_env.expects(:mirror_on_sync?).returns(true)
-      @puppet_env.expects(:importer_ssl_options).returns({}).at_least_once
+      @puppet_env.expects(:importer_connection_options).returns({}).at_least_once
 
       assert_equal true, @puppet_env.generate_importer(capsule).remove_missing
       other_capsule = OpenStruct.new(:default_capsule? => false)

@@ -12,7 +12,7 @@ module Actions
 
           create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            certs = repository.importer_ssl_options
+            certs = repository.importer_connection_options
             create_action = plan_action(create_action,
                                         content_type: repository.content_type,
                                         pulp_id: repository.pulp_id,
@@ -33,7 +33,8 @@ module Actions
                                         ssl_validation: certs[:ssl_validation],
                                         upstream_username: repository.upstream_username,
                                         upstream_password: repository.upstream_password,
-                                        repo_registry_id: repository.container_repository_name)
+                                        repo_registry_id: repository.container_repository_name,
+                                        proxy_host: repository.proxy_host_value)
 
             return if create_action.error
 

@@ -156,6 +156,7 @@ module Katello
     scoped_search :on => :distribution_variant, :complete_value => true
     scoped_search :on => :distribution_bootable, :complete_value => true
     scoped_search :on => :distribution_uuid, :complete_value => true
+    scoped_search :on => :ignore_global_proxy, :complete_value => true
 
     def organization
       if self.environment
