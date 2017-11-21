@@ -398,6 +398,7 @@ module ::Actions::Katello::Repository
       action.expects(:find_or_build_environment_clone).returns(clone)
       clone.expects(:new_record?).returns(false)
       clone.expects(:copy_library_instance_attributes)
+      clone.expects(:yum?).returns(false)
       clone.expects(:save!)
       ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
 
@@ -435,6 +436,7 @@ module ::Actions::Katello::Repository
       action.expects(:find_or_build_environment_clone).returns(clone)
       clone.expects(:new_record?).returns(false)
       clone.expects(:copy_library_instance_attributes)
+      clone.expects(:yum?).returns(false)
       clone.expects(:save!)
       ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
 

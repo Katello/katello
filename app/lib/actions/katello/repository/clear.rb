@@ -7,6 +7,7 @@ module Actions
            Pulp::Repository::RemoveErrata,
            Pulp::Repository::RemovePackageGroup,
            Pulp::Repository::RemoveDistribution,
+           Pulp::Repository::RemoveYumMetadataFile,
            Pulp::Repository::RemoveFile,
            Pulp::Repository::RemovePuppetModule,
            Pulp::Repository::RemoveDockerManifest].each do |action_class|
