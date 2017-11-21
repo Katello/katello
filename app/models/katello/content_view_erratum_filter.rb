@@ -16,40 +16,56 @@ module Katello
 
       if filter_by_id?
         errata_ids = erratum_rules.map(&:errata_id)
-        return { "id" => { "$in" => errata_ids } } unless errata_ids.empty?
-
+        errata_in(errata_ids) unless errata_ids.empty?
       else # filtering by date/type
-        rule_clauses = []
-        start_date = erratum_rules.first.start_date
-        end_date = erratum_rules.first.end_date
-        types = erratum_rules.first.types
-
-        unless start_date.blank? && end_date.blank?
-          date_range = {}
-          date_range["$gte"] = start_date.to_time.utc.as_json unless start_date.blank?
-          date_range["$lte"] = end_date.to_time.utc.as_json unless end_date.blank?
-          rule_clauses << { erratum_rules.first.pulp_date_type => date_range }
-        end
-        unless types.blank?
-          # {"type": {"$in": ["security", "enhancement", "bugfix"]}
-          rule_clauses << { "type" => { "$in" => types } }
-        end
-
-        # Currently, an errata filter that specifies a date/type, will only have
-        # single rule; therefore, we can return from here.
-        case rule_clauses.size
-        when 0
-          return
-        when 1
-          return rule_clauses.first
-        else
-          return { '$and' => rule_clauses }
-        end
+        clauses = []
+        clauses << errata_from
+        clauses << errata_to
+        clauses << types_clause
+        clauses.compact.inject(&:and)
       end
+    end
+
+    private
+
+    def erratum_arel
+      ::Katello::Erratum.arel_table
+    end
+
+    def types_clause
+      types = erratum_rules.first.types
+      return if types.blank?
+      errata_types_in(types)
     end
 
     def filter_by_id?
       !erratum_rules.blank? && !erratum_rules.first.errata_id.blank?
+    end
+
+    def errata_types_in(types)
+      erratum_arel[:errata_type].in(types)
+    end
+
+    def errata_in(ids)
+      erratum_arel[:errata_id].in(ids)
+    end
+
+    def errata_from
+      start_date = erratum_rules.first.start_date
+      return if start_date.blank?
+      date_type = erratum_rules.first.pulp_date_type.to_sym
+
+      # "katello_errata"."issued" >= '2017-11-23'
+      erratum_arel[date_type].gteq(start_date)
+    end
+
+    def errata_to
+      end_date = erratum_rules.first.end_date
+      return if end_date.blank?
+      date_type = erratum_rules.first.pulp_date_type.to_sym
+
+      # "katello_errata"."issued" <= '2017-11-23'
+      erratum_arel[date_type].lteq(end_date)
     end
   end
 end
