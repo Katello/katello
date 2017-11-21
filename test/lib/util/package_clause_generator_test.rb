@@ -23,6 +23,8 @@ module Katello
       @content_view = FactoryGirl.build(:katello_content_view, :organization => organization)
       @content_view.save!
       @content_view.repositories << @repo
+      @from = Date.today - 5
+      @to = Date.today
     end
 
     def test_package_names
@@ -113,100 +115,98 @@ module Katello
       goo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
                                     :filter => @filter, :errata_id => "Foo2")
 
-      expected_errata = [{"id" => {"$in" => ["Foo1", "Foo2"]}}]
+      expected_errata = [erratum_arel[:errata_id].in(["Foo1", "Foo2"])]
       assert_errata_rules([foo_rule, goo_rule], expected_errata)
     end
 
     def test_errata_dates_default
-      from = Date.today.to_s
-      to = Date.today.to_s
+      types = ["bugfix", "enhancement", "security"]
 
       @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
-                                    :filter => @filter, :start_date => from, :end_date => to,
-                                    :types => ["bugfix", "enhancement", "security"])
+                                    :filter => @filter, :start_date => @from.to_s, :end_date => @to.to_s,
+                                    :types => types)
 
-      expected = [{"$and" => [{"updated" => {"$gte" => from.to_time.utc.as_json,
-                                             "$lte" => to.to_time.utc.as_json}},
-                              {"type" => { "$in" => ["bugfix", "enhancement", "security"]}}]}]
+      types_query = erratum_arel[:errata_type].in(types)
+      date_query = erratum_arel[:updated].gteq(@from).and(erratum_arel[:updated].lteq(@to))
+
+      expected = [date_query.and(types_query)]
       assert_errata_rules([foo_rule], expected)
     end
 
     def test_errata_dates_issued
-      from = Date.today.to_s
-      to = Date.today.to_s
+      types = ["bugfix", "security"]
 
       @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
                                     :date_type => ContentViewErratumFilterRule::ISSUED,
-                                    :filter => @filter, :start_date => from, :end_date => to,
-                                    :types => ["security", "bugfix"])
+                                    :filter => @filter, :start_date => @from.to_s, :end_date => @to.to_s,
+                                    :types => types)
 
-      expected = [{"$and" => [{"issued" => {"$gte" => from.to_time.utc.as_json,
-                                            "$lte" => to.to_time.utc.as_json}},
-                              {"type" => {"$in" => ["security", "bugfix"]}}]}]
+      types_query = erratum_arel[:errata_type].in(types)
+      date_query = erratum_arel[:issued].gteq(@from).and(erratum_arel[:issued].lteq(@to))
+
+      expected = [date_query.and(types_query)]
       assert_errata_rules([foo_rule], expected)
     end
 
     def test_errata_dates_updated
-      from = Date.today.to_s
-      to = Date.today.to_s
+      types = ["security"]
 
       @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
                                     :date_type => ContentViewErratumFilterRule::UPDATED,
-                                    :filter => @filter, :start_date => from, :end_date => to,
-                                    :types => ["enhancement"])
+                                    :filter => @filter, :start_date => @from.to_s, :end_date => @to.to_s,
+                                    :types => types)
 
-      expected = [{"$and" => [{"updated" => {"$gte" => from.to_time.utc.as_json,
-                                             "$lte" => to.to_time.utc.as_json}},
-                              {"type" => { "$in" => ["enhancement"]}}]}]
+      types_query = erratum_arel[:errata_type].in(types)
+      date_query = erratum_arel[:updated].gteq(@from).and(erratum_arel[:updated].lteq(@to))
 
+      expected = [date_query.and(types_query)]
       assert_errata_rules([foo_rule], expected)
     end
 
     def test_errata_types
-      @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
-      foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
-                                    :filter => @filter, :types => [:bugfix, :security])
-
-      expected = [{"type" => {"$in" => [:bugfix, :security]}}]
-      assert_errata_rules([foo_rule], expected)
-    end
-
-    def test_errata_both
-      from = Date.today
-      to = Date.today
+      types = ["security", "bugfix"]
 
       @filter = FactoryGirl.create(:katello_content_view_erratum_filter, :content_view => @content_view)
       foo_rule = FactoryGirl.create(:katello_content_view_erratum_filter_rule,
-                                    :filter => @filter, :start_date => from.to_s, :date_type => "issued",
-                                    :end_date => to.to_s, :types => [:enhancement, :security])
+                                    :filter => @filter,
+                                    :types => types)
 
-      expected = [{"$and" => [{"issued" => {"$gte" => from.to_s.to_time.utc.as_json,
-                                            "$lte" => to.to_s.to_time.utc.as_json}},
-                              {"type" => {"$in" => [:enhancement, :security]}}]}]
+      types_query = erratum_arel[:errata_type].in(types)
+      expected = [types_query]
       assert_errata_rules([foo_rule], expected)
     end
 
-    def assert_errata_rules(rules, expected_errata)
+    private
+
+    def assert_errata_rules(rules, expected_errata_clauses)
       returned_packages = {'filenames' => {"$in" => ["foo", "bar"]}}
 
       clause_gen = setup_whitelist_filter(rules) do |gen|
         gen.expects(:package_clauses_for_errata).once.
-                    with(expected_errata).returns(returned_packages)
+                    returns(returned_packages).with do |clauses|
+                      clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
+                    end
       end
       assert_equal returned_packages, clause_gen.copy_clause
       assert_nil clause_gen.remove_clause
 
       clause_gen = setup_blacklist_filter(rules) do |gen|
         gen.expects(:package_clauses_for_errata).once.
-                    with(expected_errata).returns(returned_packages)
+                    returns(returned_packages).with do |clauses|
+                      clauses.map(&:to_sql).must_equal(expected_errata_clauses.map(&:to_sql))
+                    end
       end
       expected = {"$and" => [INCLUDE_ALL_PACKAGES, {"$nor" => [returned_packages]}]}
 
       assert_equal expected, clause_gen.copy_clause
       assert_equal returned_packages, clause_gen.remove_clause
+    end
+
+    def erratum_arel
+      ::Katello::Erratum.arel_table
     end
 
     def array_to_struct(items)
