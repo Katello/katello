@@ -215,7 +215,7 @@ module Katello
     param :content_overrides, Array, :desc => N_("Array of Content override parameters") do
       param :content_label, String, :desc => N_("Label of the content"), :required => true
       param :value, String, :desc => N_("Override value. Provide a boolean value if name is 'enabled'"), :required => false
-      param :name, String, :desc => N_("Override key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
+      param :name, String, :desc => N_("Override parameter key or name. Note if name is not provided the default name will be 'enabled'"), :required => false
       param :remove, :bool, :desc => N_("Set true to remove an override and reset it to 'default'"), :required => false
     end
     def content_override
