@@ -134,10 +134,14 @@ module Katello
     end
 
     def self.list_filenames_by_clauses(repo, clauses)
-      errata = Katello.pulp_server.extensions.errata.search(Katello::Erratum::CONTENT_TYPE, :filters => clauses)
+      query_clauses = clauses.map do |clause|
+        "(#{clause.to_sql})"
+      end
+      statement = query_clauses.join(" OR ")
+
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
-          where("#{RepositoryErratum.table_name}.repository_id" => repo.id,
-                "#{Erratum.table_name}.uuid" => errata.map { |e| e['_id'] }).pluck(:filename)
+          where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
+          where(statement).pluck(:filename)
     end
 
     private
