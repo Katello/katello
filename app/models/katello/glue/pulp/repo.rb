@@ -129,6 +129,10 @@ module Katello
           ostree_branches.count != pulp_counts['ostree'].to_i
       end
 
+      def empty_in_pulp?
+        pulp_repo_facts[:content_unit_counts].values.all? { |value| value == 0 }
+      end
+
       def create_pulp_repo
         #if we are in library, no need for an distributor, but need to sync
         if self.environment.try(:library?)
