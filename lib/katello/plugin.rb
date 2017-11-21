@@ -272,4 +272,14 @@ Foreman::Plugin.register :katello do
 
   Katello::PermissionCreator.new(self).define
   add_all_permissions_to_default_roles
+
+  role 'Register hosts', [
+    :view_hostgroups, :view_activation_keys, :view_hosts,
+    :create_hosts, :edit_hosts, :destroy_hosts,
+    :view_content_views, :view_gpg_keys, :view_subscriptions,
+    :attach_subscriptions, :view_host_collections,
+    :view_organizations, :view_lifecycle_environments, :view_products,
+    :view_locations, :view_domains, :view_architectures,
+    :view_operatingsystems
+  ]
 end
