@@ -1,4 +1,4 @@
-class FixViewerRole < ActiveRecord::Migration
+class FixViewerRole < ActiveRecord::Migration[4.2]
   class Role < ApplicationRecord
     has_many :filters
   end

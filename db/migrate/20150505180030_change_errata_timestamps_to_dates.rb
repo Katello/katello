@@ -1,4 +1,4 @@
-class ChangeErrataTimestampsToDates < ActiveRecord::Migration
+class ChangeErrataTimestampsToDates < ActiveRecord::Migration[4.2]
   def up
     change_column(:katello_errata, :issued, :date)
     change_column(:katello_errata, :updated, :date)

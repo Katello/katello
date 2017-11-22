@@ -1,4 +1,4 @@
-class AddVersionOstreeBranches < ActiveRecord::Migration
+class AddVersionOstreeBranches < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_ostree_branches if ActiveRecord::Base.connection.table_exists? "katello_ostree_branches"
 

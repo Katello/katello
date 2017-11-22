@@ -1,4 +1,4 @@
-class UpdatePromoteErrataEmailDescription < ActiveRecord::Migration
+class UpdatePromoteErrataEmailDescription < ActiveRecord::Migration[4.2]
   def up
     notification = MailNotification.find_by(:name => :katello_promote_errata)
 

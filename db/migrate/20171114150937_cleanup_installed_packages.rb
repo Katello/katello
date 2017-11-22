@@ -1,4 +1,4 @@
-class CleanupInstalledPackages < ActiveRecord::Migration
+class CleanupInstalledPackages < ActiveRecord::Migration[4.2]
   def up
     create_table "katello_installed_packages_new", force: :cascade do |t|
       t.string "name", limit: 255, null: false

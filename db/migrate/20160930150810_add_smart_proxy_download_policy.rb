@@ -1,4 +1,4 @@
-class AddSmartProxyDownloadPolicy < ActiveRecord::Migration
+class AddSmartProxyDownloadPolicy < ActiveRecord::Migration[4.2]
   def up
     #set default to on_demand, but update existing proxies to inherit
     add_column :smart_proxies, :download_policy, :string, :null => true

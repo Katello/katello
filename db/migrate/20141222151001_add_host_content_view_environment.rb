@@ -1,4 +1,4 @@
-class AddHostContentViewEnvironment < ActiveRecord::Migration
+class AddHostContentViewEnvironment < ActiveRecord::Migration[4.2]
   def up
     add_column :hosts, :content_view_id, :integer, :null => true
     add_column :hosts, :lifecycle_environment_id, :integer, :null => true

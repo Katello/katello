@@ -1,4 +1,4 @@
-class CreateKatelloProductContent < ActiveRecord::Migration
+class CreateKatelloProductContent < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_product_contents do |t|
       t.integer :product_id, :required => true

@@ -1,4 +1,4 @@
-class AddOrganizationFields < ActiveRecord::Migration
+class AddOrganizationFields < ActiveRecord::Migration[4.2]
   def change
     add_column :taxonomies, :description, :text unless column_exists?(:taxonomies, :description)
     add_column :taxonomies, :label, :string, :limit => 255

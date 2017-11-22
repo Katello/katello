@@ -1,4 +1,4 @@
-class RemoveProviderDiscovery < ActiveRecord::Migration
+class RemoveProviderDiscovery < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key "katello_providers", :name => "providers_discovery_task_id_fk"
     remove_column :katello_providers, :discovery_url

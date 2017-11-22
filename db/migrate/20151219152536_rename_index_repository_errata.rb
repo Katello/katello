@@ -1,4 +1,4 @@
-class RenameIndexRepositoryErrata < ActiveRecord::Migration
+class RenameIndexRepositoryErrata < ActiveRecord::Migration[4.2]
   def change
     original_name = 'index_katello_repository_errata_on_erratum_id_and_repository_id'
     shorter_name = 'index_katello_repository_errata_on_erratum_id_and_repo_id'

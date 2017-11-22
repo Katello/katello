@@ -1,4 +1,4 @@
-class AddAnonymousProvidersToOrgs < ActiveRecord::Migration
+class AddAnonymousProvidersToOrgs < ActiveRecord::Migration[4.2]
   def up
     Organization.all.each do |org|
       if org.anonymous_provider.nil?

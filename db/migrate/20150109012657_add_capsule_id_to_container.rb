@@ -1,4 +1,4 @@
-class AddCapsuleIdToContainer < ActiveRecord::Migration
+class AddCapsuleIdToContainer < ActiveRecord::Migration[4.2]
   def up
     add_column :containers, :capsule_id, :integer
     add_foreign_key :containers, :smart_proxies, :column => "capsule_id"

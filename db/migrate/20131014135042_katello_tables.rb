@@ -1,4 +1,4 @@
-class KatelloTables < ActiveRecord::Migration
+class KatelloTables < ActiveRecord::Migration[4.2]
 
   def self.up
 

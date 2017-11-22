@@ -1,4 +1,4 @@
-class RemoveChangeset < ActiveRecord::Migration
+class RemoveChangeset < ActiveRecord::Migration[4.2]
   def up
     drop_table "katello_changeset_content_views"
     drop_table "katello_changeset_users"

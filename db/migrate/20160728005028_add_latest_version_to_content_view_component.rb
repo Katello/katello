@@ -1,4 +1,4 @@
-class AddLatestVersionToContentViewComponent < ActiveRecord::Migration
+class AddLatestVersionToContentViewComponent < ActiveRecord::Migration[4.2]
   def change
     rename_column :katello_content_view_components, :content_view_id, :composite_content_view_id
     change_column_null :katello_content_view_components, :content_view_version_id, :integer, true

@@ -1,4 +1,4 @@
-class AddDockerV2Schema < ActiveRecord::Migration
+class AddDockerV2Schema < ActiveRecord::Migration[4.2]
   def up
     create_table :katello_docker_manifests do |t|
       t.string :name, :limit => 255

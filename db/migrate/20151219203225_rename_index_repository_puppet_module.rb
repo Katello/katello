@@ -1,4 +1,4 @@
-class RenameIndexRepositoryPuppetModule < ActiveRecord::Migration
+class RenameIndexRepositoryPuppetModule < ActiveRecord::Migration[4.2]
   def change
     original_name = 'index_katello_repository_puppet_module_on_module_id_and_repo_id'
     shorter_name = 'index_katello_repo_puppet_module_on_module_id_and_repo_id'

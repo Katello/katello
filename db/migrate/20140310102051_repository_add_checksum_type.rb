@@ -1,4 +1,4 @@
-class RepositoryAddChecksumType < ActiveRecord::Migration
+class RepositoryAddChecksumType < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_repositories, :checksum_type, :string, :null => true,
       :limit => 255

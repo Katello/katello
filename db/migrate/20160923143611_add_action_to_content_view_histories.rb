@@ -1,4 +1,4 @@
-class AddActionToContentViewHistories < ActiveRecord::Migration
+class AddActionToContentViewHistories < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_content_view_histories, :action, :integer, default: 0
 

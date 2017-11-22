@@ -1,4 +1,4 @@
-class CreateCapsuleLifecycleEnvironments < ActiveRecord::Migration
+class CreateCapsuleLifecycleEnvironments < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_capsule_lifecycle_environments do |t|
       t.references :capsule

@@ -1,4 +1,4 @@
-class AddUserToKatelloSubscriptionFacets < ActiveRecord::Migration
+class AddUserToKatelloSubscriptionFacets < ActiveRecord::Migration[4.2]
   def change
     add_column :katello_subscription_facets, :user_id, :integer
     add_index :katello_subscription_facets, [:user_id], :unique => true

@@ -1,4 +1,4 @@
-class FillInContentViewComponents < ActiveRecord::Migration
+class FillInContentViewComponents < ActiveRecord::Migration[4.2]
   class FakeContentView < ApplicationRecord
     self.table_name = 'katello_content_views'
 

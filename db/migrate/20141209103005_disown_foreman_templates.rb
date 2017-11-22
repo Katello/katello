@@ -1,4 +1,4 @@
-class DisownForemanTemplates < ActiveRecord::Migration
+class DisownForemanTemplates < ActiveRecord::Migration[4.2]
   class FakeConfigTemplate < ApplicationRecord
     if ActiveRecord::Base.connection.table_exists?('config_templates')
       self.table_name = 'config_templates'

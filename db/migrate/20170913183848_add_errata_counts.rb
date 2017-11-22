@@ -1,4 +1,4 @@
-class AddErrataCounts < ActiveRecord::Migration
+class AddErrataCounts < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_content_facets, :installable_security_errata_count, :integer, :null => false, :default => 0
     add_column :katello_content_facets, :installable_enhancement_errata_count, :integer, :null => false, :default => 0

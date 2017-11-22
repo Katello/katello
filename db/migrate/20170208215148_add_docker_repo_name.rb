@@ -1,4 +1,4 @@
-class AddDockerRepoName < ActiveRecord::Migration
+class AddDockerRepoName < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_repositories, :container_repository_name, :string
 

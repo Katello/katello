@@ -1,4 +1,4 @@
-class PackageFilterAddOriginalPackages < ActiveRecord::Migration
+class PackageFilterAddOriginalPackages < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_content_view_filters, :original_packages, :boolean, :default => false, :null => false
   end

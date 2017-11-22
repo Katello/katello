@@ -1,4 +1,4 @@
-class AddNextVersionToKatelloContentViews < ActiveRecord::Migration
+class AddNextVersionToKatelloContentViews < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_content_views, :next_version, :int, :null => false, :default => 1
 

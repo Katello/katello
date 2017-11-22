@@ -1,4 +1,4 @@
-class CreateContentViewPackageFilterRules < ActiveRecord::Migration
+class CreateContentViewPackageFilterRules < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_content_view_package_filter_rules do |t|
       t.references :content_view_filter

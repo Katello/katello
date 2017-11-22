@@ -1,4 +1,4 @@
-class CreateKatelloContent < ActiveRecord::Migration
+class CreateKatelloContent < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_contents do |t|
       t.string :cp_content_id, :index => true, :unique => true

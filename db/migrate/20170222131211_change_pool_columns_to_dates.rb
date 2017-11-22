@@ -1,4 +1,4 @@
-class ChangePoolColumnsToDates < ActiveRecord::Migration
+class ChangePoolColumnsToDates < ActiveRecord::Migration[4.2]
   def up
     unless connection.adapter_name.downcase.include?('sqlite')
       change_column(:katello_pools, :start_date, 'timestamp USING CAST(start_date AS timestamp without time zone)')

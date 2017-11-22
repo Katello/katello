@@ -1,4 +1,4 @@
-class RemoveUserNotices < ActiveRecord::Migration
+class RemoveUserNotices < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_user_notices
   end

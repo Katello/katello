@@ -1,4 +1,4 @@
-class AddEventQueue < ActiveRecord::Migration
+class AddEventQueue < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_events, :force => true do |t|
       t.integer :object_id, :null => false

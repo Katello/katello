@@ -1,4 +1,4 @@
-class AddPulpProxyToHost < ActiveRecord::Migration
+class AddPulpProxyToHost < ActiveRecord::Migration[4.2]
   def change
     add_column :hosts,      :content_source_id, :integer
     add_column :hostgroups, :content_source_id, :integer

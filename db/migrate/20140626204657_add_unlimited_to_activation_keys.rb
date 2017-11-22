@@ -1,4 +1,4 @@
-class AddUnlimitedToActivationKeys < ActiveRecord::Migration
+class AddUnlimitedToActivationKeys < ActiveRecord::Migration[4.2]
   class ::Katello::ActivationKeys < ApplicationRecord
   end
 

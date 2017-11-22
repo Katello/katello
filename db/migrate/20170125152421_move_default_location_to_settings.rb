@@ -1,4 +1,4 @@
-class MoveDefaultLocationToSettings < ActiveRecord::Migration
+class MoveDefaultLocationToSettings < ActiveRecord::Migration[4.2]
   DEFAULT_LOCATION_SETTINGS = ['default_location_subscribed_hosts',
                                'default_location_puppet_content'].freeze
   def up

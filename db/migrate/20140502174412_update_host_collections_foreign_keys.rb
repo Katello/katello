@@ -1,4 +1,4 @@
-class UpdateHostCollectionsForeignKeys < ActiveRecord::Migration
+class UpdateHostCollectionsForeignKeys < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key "katello_key_host_collections", :name => "key_system_groups_activation_key_id_fk"
     remove_foreign_key "katello_key_host_collections", :name => "key_system_groups_system_group_id_fk"

@@ -1,4 +1,4 @@
-class MoveContentSourceIdToContentFacets < ActiveRecord::Migration
+class MoveContentSourceIdToContentFacets < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_content_facets, :content_source_id, :integer
     add_index :katello_content_facets, :content_source_id

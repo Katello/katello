@@ -1,4 +1,4 @@
-class MigrateContentHosts < ActiveRecord::Migration
+class MigrateContentHosts < ActiveRecord::Migration[4.2]
   HYPERVISOR_CLASS = 'Katello::Hypervisor'.freeze
 
   class Location < ApplicationRecord

@@ -1,4 +1,4 @@
-class AssignContentHostToSmartProxies < ActiveRecord::Migration
+class AssignContentHostToSmartProxies < ActiveRecord::Migration[4.2]
   def up
     SmartProxy.reset_column_information
 

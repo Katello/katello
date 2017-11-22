@@ -1,4 +1,4 @@
-class RemoveSearchFavorites < ActiveRecord::Migration
+class RemoveSearchFavorites < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_search_favorites
   end

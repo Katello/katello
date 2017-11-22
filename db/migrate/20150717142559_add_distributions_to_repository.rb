@@ -1,4 +1,4 @@
-class AddDistributionsToRepository < ActiveRecord::Migration
+class AddDistributionsToRepository < ActiveRecord::Migration[4.2]
   def change
     add_column :katello_repositories, :distribution_version, :string, :limit => 255
     add_column :katello_repositories, :distribution_arch, :string, :limit => 255

@@ -1,4 +1,4 @@
-class AddUsersFields < ActiveRecord::Migration
+class AddUsersFields < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :helptips_enabled, :boolean, :default => true
     add_column :users, :hidden, :boolean, :default => false, :null => false

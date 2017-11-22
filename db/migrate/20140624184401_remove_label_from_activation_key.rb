@@ -1,4 +1,4 @@
-class RemoveLabelFromActivationKey < ActiveRecord::Migration
+class RemoveLabelFromActivationKey < ActiveRecord::Migration[4.2]
   def up
     remove_column :katello_activation_keys, :label
   end

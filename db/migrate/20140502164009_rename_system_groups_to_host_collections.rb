@@ -1,4 +1,4 @@
-class RenameSystemGroupsToHostCollections < ActiveRecord::Migration
+class RenameSystemGroupsToHostCollections < ActiveRecord::Migration[4.2]
   def change
     rename_index :katello_key_system_groups, "index_key_system_groups_on_activation_key_id", "index_key_host_collections_on_activation_key_id"
     rename_index :katello_key_system_groups, "index_key_system_groups_on_system_group_id", "index_key_host_collections_on_host_collection_id"

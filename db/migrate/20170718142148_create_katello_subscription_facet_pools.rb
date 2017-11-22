@@ -1,4 +1,4 @@
-class CreateKatelloSubscriptionFacetPools < ActiveRecord::Migration
+class CreateKatelloSubscriptionFacetPools < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_subscription_facet_pools do |t|
       t.column :subscription_facet_id, :integer, required: true

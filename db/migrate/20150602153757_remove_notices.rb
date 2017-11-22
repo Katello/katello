@@ -1,4 +1,4 @@
-class RemoveNotices < ActiveRecord::Migration
+class RemoveNotices < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_notices
   end
