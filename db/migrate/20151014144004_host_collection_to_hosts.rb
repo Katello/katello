@@ -1,4 +1,4 @@
-class HostCollectionToHosts < ActiveRecord::Migration
+class HostCollectionToHosts < ActiveRecord::Migration[4.2]
   class Host < ApplicationRecord
     self.table_name = "hosts"
   end

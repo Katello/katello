@@ -1,4 +1,4 @@
-class AddMissingForeignKeys < ActiveRecord::Migration
+class AddMissingForeignKeys < ActiveRecord::Migration[4.2]
   def up
     add_foreign_key(:katello_capsule_lifecycle_environments, :smart_proxies,
                     :name => 'katello_capsule_lifecycle_environments_capsule_fk', :column => 'capsule_id')

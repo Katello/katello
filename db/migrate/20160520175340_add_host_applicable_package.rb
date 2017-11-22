@@ -1,4 +1,4 @@
-class AddHostApplicablePackage < ActiveRecord::Migration
+class AddHostApplicablePackage < ActiveRecord::Migration[4.2]
   def change
     create_table "katello_content_facet_applicable_rpms" do |t|
       t.references 'content_facet', :null => false

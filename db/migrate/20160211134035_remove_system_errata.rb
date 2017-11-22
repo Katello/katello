@@ -1,4 +1,4 @@
-class RemoveSystemErrata < ActiveRecord::Migration
+class RemoveSystemErrata < ActiveRecord::Migration[4.2]
   def up
     drop_table "katello_system_errata"
   end

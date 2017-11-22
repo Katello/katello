@@ -1,4 +1,4 @@
-class AddForeignKeysForOrganizations < ActiveRecord::Migration
+class AddForeignKeysForOrganizations < ActiveRecord::Migration[4.2]
   def up
     add_foreign_key(:katello_task_statuses, :taxonomies,
                     :name => 'katello_task_statuses_organization_fk', :column => 'organization_id')

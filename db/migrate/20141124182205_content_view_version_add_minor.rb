@@ -1,4 +1,4 @@
-class ContentViewVersionAddMinor < ActiveRecord::Migration
+class ContentViewVersionAddMinor < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_content_view_versions, :minor, :integer, :null => false, :default => 0
     rename_column :katello_content_view_versions, :version, :major

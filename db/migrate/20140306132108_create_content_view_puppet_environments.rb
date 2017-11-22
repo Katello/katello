@@ -1,4 +1,4 @@
-class CreateContentViewPuppetEnvironments < ActiveRecord::Migration
+class CreateContentViewPuppetEnvironments < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_content_view_puppet_environments do |t|
       t.references :content_view_version

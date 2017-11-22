@@ -1,4 +1,4 @@
-class CreateDockerMetaTag < ActiveRecord::Migration
+class CreateDockerMetaTag < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_docker_meta_tags do |t|
       t.integer  "schema1_id"

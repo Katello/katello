@@ -1,4 +1,4 @@
-class RemoveSearchHistories < ActiveRecord::Migration
+class RemoveSearchHistories < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_search_histories
   end

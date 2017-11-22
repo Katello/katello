@@ -1,4 +1,4 @@
-class AddOstreeBranches < ActiveRecord::Migration
+class AddOstreeBranches < ActiveRecord::Migration[4.2]
   def up
     create_table :katello_ostree_branches do |t|
       t.string :name, :null => false, :limit => 255

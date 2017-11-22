@@ -1,4 +1,4 @@
-class RemoveKatelloFromNotificationName < ActiveRecord::Migration
+class RemoveKatelloFromNotificationName < ActiveRecord::Migration[4.2]
   class FakeMailNotification < ApplicationRecord
     self.table_name = 'mail_notifications'
   end

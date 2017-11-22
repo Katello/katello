@@ -1,4 +1,4 @@
-class AddErrata < ActiveRecord::Migration
+class AddErrata < ActiveRecord::Migration[4.2]
   # rubocop:disable MethodLength
   def up
     create_table "katello_errata" do |t|

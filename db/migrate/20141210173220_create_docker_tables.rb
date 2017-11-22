@@ -1,4 +1,4 @@
-class CreateDockerTables < ActiveRecord::Migration
+class CreateDockerTables < ActiveRecord::Migration[4.2]
   def up
     create_table :katello_docker_images do |t|
       t.string :image_id, :limit => 255

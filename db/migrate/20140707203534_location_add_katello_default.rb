@@ -1,4 +1,4 @@
-class LocationAddKatelloDefault < ActiveRecord::Migration
+class LocationAddKatelloDefault < ActiveRecord::Migration[4.2]
   def up
     add_column :taxonomies, :katello_default, :boolean, :null => false, :default => false
   end

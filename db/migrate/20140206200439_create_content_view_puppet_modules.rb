@@ -1,4 +1,4 @@
-class CreateContentViewPuppetModules < ActiveRecord::Migration
+class CreateContentViewPuppetModules < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_content_view_puppet_modules do |t|
       t.references :content_view

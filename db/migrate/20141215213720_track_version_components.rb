@@ -1,4 +1,4 @@
-class TrackVersionComponents < ActiveRecord::Migration
+class TrackVersionComponents < ActiveRecord::Migration[4.2]
   def change
     create_table "katello_content_view_version_components" do |t|
       t.integer :component_version_id, :null => false

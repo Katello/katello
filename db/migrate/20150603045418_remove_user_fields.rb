@@ -1,4 +1,4 @@
-class RemoveUserFields < ActiveRecord::Migration
+class RemoveUserFields < ActiveRecord::Migration[4.2]
   def up
     remove_column :users, :helptips_enabled
     remove_column :users, :page_size

@@ -1,4 +1,4 @@
-class AddSrpm < ActiveRecord::Migration
+class AddSrpm < ActiveRecord::Migration[4.2]
   def up
     create_table "katello_srpms" do |t|
       t.string "uuid", :null => false, :limit => 255

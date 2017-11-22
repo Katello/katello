@@ -1,4 +1,4 @@
-class CreatePackageGroups < ActiveRecord::Migration
+class CreatePackageGroups < ActiveRecord::Migration[4.2]
   def change
     create_table "katello_package_groups" do |t|
       t.string "name", :limit => 255

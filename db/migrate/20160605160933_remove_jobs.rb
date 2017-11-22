@@ -1,4 +1,4 @@
-class RemoveJobs < ActiveRecord::Migration
+class RemoveJobs < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_job_tasks
     drop_table :katello_jobs

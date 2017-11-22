@@ -1,4 +1,4 @@
-class RemoveDistributors < ActiveRecord::Migration
+class RemoveDistributors < ActiveRecord::Migration[4.2]
   class Katello::Distributor < ApplicationRecord
     self.table_name = 'katello_distributors'
   end

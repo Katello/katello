@@ -1,4 +1,4 @@
-class AddCpIdToKatelloActivationKeys < ActiveRecord::Migration
+class AddCpIdToKatelloActivationKeys < ActiveRecord::Migration[4.2]
   def change
     add_column :katello_activation_keys, :cp_id, :string, :limit => 255
     add_column :katello_activation_keys, :label, :string, :limit => 255

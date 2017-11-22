@@ -1,4 +1,4 @@
-class AddUnlimitedToHostCollection < ActiveRecord::Migration
+class AddUnlimitedToHostCollection < ActiveRecord::Migration[4.2]
   class ::Katello::HostCollections < ApplicationRecord
   end
 

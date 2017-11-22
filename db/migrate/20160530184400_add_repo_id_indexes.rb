@@ -1,4 +1,4 @@
-class AddRepoIdIndexes < ActiveRecord::Migration
+class AddRepoIdIndexes < ActiveRecord::Migration[4.2]
   def change
     add_index :katello_repository_docker_manifests, :repository_id
     add_index :katello_repository_errata, :repository_id

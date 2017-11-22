@@ -1,4 +1,4 @@
-class DropMarketingEngineeringProducts < ActiveRecord::Migration
+class DropMarketingEngineeringProducts < ActiveRecord::Migration[4.2]
   class Katello::MarketingProduct < ApplicationRecord
     self.table_name = "katello_products"
   end

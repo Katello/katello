@@ -1,4 +1,4 @@
-class RemoveDockerManifestName < ActiveRecord::Migration
+class RemoveDockerManifestName < ActiveRecord::Migration[4.2]
   def up
     remove_column :katello_docker_manifests, :name
   end

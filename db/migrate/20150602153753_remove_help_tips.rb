@@ -1,4 +1,4 @@
-class RemoveHelpTips < ActiveRecord::Migration
+class RemoveHelpTips < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_help_tips
   end

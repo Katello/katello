@@ -1,4 +1,4 @@
-class AddDownloadPolicyToKatelloRepositories < ActiveRecord::Migration
+class AddDownloadPolicyToKatelloRepositories < ActiveRecord::Migration[4.2]
   class DownloadPolicyRepository < ApplicationRecord
     self.table_name = "katello_repositories"
   end

@@ -1,4 +1,4 @@
-class AddVirtWhoToKatelloPools < ActiveRecord::Migration
+class AddVirtWhoToKatelloPools < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_pools, :virt_who, :boolean, :default => false, :null => false
   end

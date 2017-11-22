@@ -1,4 +1,4 @@
-class AddSubscriptionFacet < ActiveRecord::Migration
+class AddSubscriptionFacet < ActiveRecord::Migration[4.2]
   def change
     create_table "katello_subscription_facets" do |t|
       t.references 'host', :null => false

@@ -1,4 +1,4 @@
-class AddTagRepositoryIdIndex < ActiveRecord::Migration
+class AddTagRepositoryIdIndex < ActiveRecord::Migration[4.2]
   def up
     add_index :docker_tags, [:tag, :katello_repository_id],
               :name => :katello_docker_tag_repository_id, :unique => true

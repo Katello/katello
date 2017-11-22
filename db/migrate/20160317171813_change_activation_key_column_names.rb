@@ -1,4 +1,4 @@
-class ChangeActivationKeyColumnNames < ActiveRecord::Migration
+class ChangeActivationKeyColumnNames < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :katello_activation_keys, :max_content_hosts, :max_hosts
     rename_column :katello_activation_keys, :unlimited_content_hosts, :unlimited_hosts

@@ -1,4 +1,4 @@
-class CreateContentViewHistory < ActiveRecord::Migration
+class CreateContentViewHistory < ActiveRecord::Migration[4.2]
   def up
     create_table 'katello_content_view_histories' do |t|
       t.references :katello_content_view_version, :null => false

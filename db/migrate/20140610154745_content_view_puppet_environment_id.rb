@@ -1,4 +1,4 @@
-class ContentViewPuppetEnvironmentId < ActiveRecord::Migration
+class ContentViewPuppetEnvironmentId < ActiveRecord::Migration[4.2]
   class ::Environment < ApplicationRecord
     def self.find_by_katello_id(org, env, content_view)
       katello_id = Environment.construct_katello_id(org, env, content_view)

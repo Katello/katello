@@ -1,4 +1,4 @@
-class AddSystemRepository < ActiveRecord::Migration
+class AddSystemRepository < ActiveRecord::Migration[4.2]
   def up
     create_table "katello_system_repositories" do |t|
       t.references :system, :null => false

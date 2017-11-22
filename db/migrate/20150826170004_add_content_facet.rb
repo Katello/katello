@@ -1,4 +1,4 @@
-class AddContentFacet < ActiveRecord::Migration
+class AddContentFacet < ActiveRecord::Migration[4.2]
   # rubocop:disable MethodLength
   def change
     create_table "katello_content_facets" do |t|

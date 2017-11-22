@@ -1,4 +1,4 @@
-class RemoveDuplicateViewFilters < ActiveRecord::Migration
+class RemoveDuplicateViewFilters < ActiveRecord::Migration[4.2]
   class Role < ApplicationRecord
   end
 

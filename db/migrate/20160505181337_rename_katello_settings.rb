@@ -1,4 +1,4 @@
-class RenameKatelloSettings < ActiveRecord::Migration
+class RenameKatelloSettings < ActiveRecord::Migration[4.2]
   def up
     Setting.where(category: 'Setting::Katello').update_all(:category => 'Setting::Content')
   end

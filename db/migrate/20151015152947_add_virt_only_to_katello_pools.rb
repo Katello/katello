@@ -1,4 +1,4 @@
-class AddVirtOnlyToKatelloPools < ActiveRecord::Migration
+class AddVirtOnlyToKatelloPools < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_pools, :virt_only, :boolean, :default => false, :null => false
     add_column :katello_pools, :unmapped_guest, :boolean, :default => false, :null => false

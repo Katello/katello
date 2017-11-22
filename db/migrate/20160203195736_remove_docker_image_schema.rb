@@ -1,4 +1,4 @@
-class RemoveDockerImageSchema < ActiveRecord::Migration
+class RemoveDockerImageSchema < ActiveRecord::Migration[4.2]
   def up
     if foreign_key_exists?(:katello_docker_tags, :name => "katello_docker_tags_docker_image_id_fk")
       remove_foreign_key :katello_docker_tags, :name => "katello_docker_tags_docker_image_id_fk"

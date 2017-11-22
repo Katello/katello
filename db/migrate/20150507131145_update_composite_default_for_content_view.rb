@@ -1,4 +1,4 @@
-class UpdateCompositeDefaultForContentView < ActiveRecord::Migration
+class UpdateCompositeDefaultForContentView < ActiveRecord::Migration[4.2]
   class Katello::ContentView
   end
 

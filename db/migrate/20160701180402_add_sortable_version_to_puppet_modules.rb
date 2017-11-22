@@ -1,4 +1,4 @@
-class AddSortableVersionToPuppetModules < ActiveRecord::Migration
+class AddSortableVersionToPuppetModules < ActiveRecord::Migration[4.2]
   class PuppetModule < ApplicationRecord
     self.table_name = "katello_puppet_modules"
   end

@@ -1,4 +1,4 @@
-class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration
+class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration[4.2]
   class FakeContentViewVersion < ApplicationRecord
     self.table_name = 'katello_content_view_versions'
     has_many :history, :class_name => "CVHistory", :inverse_of => :content_view_version,

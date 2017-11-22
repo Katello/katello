@@ -1,4 +1,4 @@
-class AddDockerManifestList < ActiveRecord::Migration
+class AddDockerManifestList < ActiveRecord::Migration[4.2]
   def up
     create_table :katello_docker_manifest_lists do |t|
       t.integer :schema_version

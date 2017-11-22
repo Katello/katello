@@ -1,4 +1,4 @@
-class AddHostIdToSystem < ActiveRecord::Migration
+class AddHostIdToSystem < ActiveRecord::Migration[4.2]
   def up
     add_column :katello_systems, :host_id, :integer
     add_index :katello_systems, :host_id

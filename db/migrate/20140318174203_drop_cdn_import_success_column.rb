@@ -1,4 +1,4 @@
-class DropCdnImportSuccessColumn < ActiveRecord::Migration
+class DropCdnImportSuccessColumn < ActiveRecord::Migration[4.2]
   def up
     remove_column :katello_products, :cdn_import_success
   end

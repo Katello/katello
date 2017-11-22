@@ -1,4 +1,4 @@
-class DropKatelloKeyPoolsTable < ActiveRecord::Migration
+class DropKatelloKeyPoolsTable < ActiveRecord::Migration[4.2]
   def up
     drop_table :katello_key_pools
   end

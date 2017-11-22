@@ -1,4 +1,4 @@
-class CreateContentViewForeignKeys < ActiveRecord::Migration
+class CreateContentViewForeignKeys < ActiveRecord::Migration[4.2]
   def up
     add_foreign_key :katello_content_view_environments, :katello_content_view_versions,
       :name => "katello_content_view_environments_version_fk", :column => 'content_view_version_id'

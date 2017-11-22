@@ -1,4 +1,4 @@
-class FixInvalidInterfaces < ActiveRecord::Migration
+class FixInvalidInterfaces < ActiveRecord::Migration[4.2]
   class FakeNic < ApplicationRecord
     self.table_name = 'nics'
 

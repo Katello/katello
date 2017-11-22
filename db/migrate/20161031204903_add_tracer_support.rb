@@ -1,4 +1,4 @@
-class AddTracerSupport < ActiveRecord::Migration
+class AddTracerSupport < ActiveRecord::Migration[4.2]
   def change
     create_table :katello_host_tracers do |t|
       t.references 'host', :null => false, :index => true
