@@ -2,7 +2,6 @@ module Katello
   module Concerns
     module SubscriptionFacetHostExtensions
       extend ActiveSupport::Concern
-      include ForemanTasks::Concerns::ActionTriggering
 
       included do
         SUBSCRIPTION_STATUS_MAP = {
@@ -12,6 +11,8 @@ module Katello
           :unknown => Katello::SubscriptionStatus::UNKNOWN,
           :unsubscribed_hypervisor => Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR
         }.freeze
+
+        prepend ForemanTasks::Concerns::ActionTriggering
 
         accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
 
