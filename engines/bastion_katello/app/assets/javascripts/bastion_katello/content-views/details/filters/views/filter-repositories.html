@@ -94,7 +94,7 @@
             </td>
             <td bst-table-cell>
               <div ng-if="repository.content_counts.rpm && repository.content_counts.rpm > 0">
-                <a ui-sref="products.repository.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})"
+                <a ui-sref="product.repository.manage-content.packages({productId: repository.product.id, repositoryId: repository.id})"
                    ng-show="repository.content_type == 'yum'"
                    translate>
                   {{ repository.content_counts.rpm }} Packages
