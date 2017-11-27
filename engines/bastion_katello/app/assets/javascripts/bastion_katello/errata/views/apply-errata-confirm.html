@@ -16,12 +16,23 @@
   <h3 ng-show="errata" translate>Apply {{ errata.errata_id }}</h3>
 
   <section ng-hide="updates.length > 0">
-    <p translate ng-show="errata">
-      Apply {{ errata.errata_id }} to {{ contentHostIds.length  }} Content Host(s)?
-    </p>
-    <p translate ng-hide="errata">
-      Apply {{ errataIds.length }} Errata to {{ contentHostIds.length }} Content Host(s)?
-    </p>
+    <div ng-show="errata">
+      <p translate ng-show="contentHostIds.length === 0">
+        Apply {{ errata.errata_id }} to all Content Host(s)?
+      </p>
+      <p translate ng-hide="contentHostIds.length === 0">
+        Apply {{ errata.errata_id }} to {{ contentHostIds.length  }} Content Host(s)?
+      </p>
+    </div>
+
+    <div ng-hide="errata">
+      <p translate ng-show="contentHostIds.length === 0">
+        Apply {{ errataIds.length }} Errata to all Content Host(s)?
+      </p>
+      <p translate ng-hide="contentHostIds.length === 0">
+        Apply {{ errataIds.length }} Errata to {{ contentHostIds.length }} Content Host(s)?
+      </p>
+    </div>
   </section>
 
   <section ng-show="updates.length > 0">
