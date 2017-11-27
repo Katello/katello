@@ -15,7 +15,7 @@
 angular.module('Bastion.errata').controller('ErratumContentHostsController',
     ['$scope', 'Nutupane', 'Host', 'IncrementalUpdate', 'Environment', 'CurrentOrganization',
     function ($scope, Nutupane, Host, IncrementalUpdate, Environment, CurrentOrganization) {
-        var nutupane, params, nutupaneParams = {
+        var nutupane, params, searchString, nutupaneParams = {
             'overrideAutoLoad': true
         };
 
@@ -27,9 +27,8 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
         };
 
         nutupane = new Nutupane(Host, params, 'postIndex', nutupaneParams);
-        $scope.controllerName = 'hosts';
-        nutupane.masterOnly = true;
         nutupane.enableSelectAllResults();
+        $scope.controllerName = 'hosts';
 
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;
@@ -43,9 +42,12 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             }
 
             if (term === "" || angular.isUndefined(term)) {
-                return addition;
+                searchString = addition;
+            } else {
+                searchString = term + ' and ' + addition;
             }
-            return term + ' and ' + addition;
+
+            return searchString;
         };
 
         Environment.queryUnpaged(function (response) {
@@ -58,7 +60,7 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
 
         $scope.errataSearchString = function(installable) {
             var searchTerm = installable ? 'installable_errata' : 'applicable_errata',
-                searchStatements, errataIds;
+                searchStatements, errataIds, hostSearchString;
 
             if ($scope.errata) {
                 errataIds = [$scope.errata['errata_id']];
@@ -69,7 +71,10 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             searchStatements = _.map(errataIds, function(errataId) {
                 return searchTerm + ' = "' + errataId + '"';
             });
-            return searchStatements.join(" or ");
+
+            hostSearchString = searchStatements.join(" or ");
+
+            return hostSearchString;
         };
         nutupane.load();
 
@@ -79,7 +84,8 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
         };
 
         $scope.goToNextStep = function () {
-            IncrementalUpdate.setBulkContentHosts(nutupane.getAllSelectedResults());
+            var bulkContentHosts = nutupane.getAllSelectedResults();
+
             if ($scope.errata) {
                 IncrementalUpdate.setErrataIds([$scope.errata['errata_id']]);
             }
@@ -89,6 +95,14 @@ angular.module('Bastion.errata').controller('ErratumContentHostsController',
             } else {
                 $scope.transitionTo('apply-errata.confirm');
             }
+
+            if ($scope.table.allResultsSelected) {
+                bulkContentHosts.included.search = searchString;
+            } else {
+                bulkContentHosts.included.search = null;
+            }
+
+            IncrementalUpdate.setBulkContentHosts(bulkContentHosts);
         };
 
         $scope.incrementalUpdates = IncrementalUpdate.getIncrementalUpdates();
