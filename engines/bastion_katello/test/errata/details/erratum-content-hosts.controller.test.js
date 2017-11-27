@@ -20,7 +20,12 @@ describe('Controller: ErratumContentHostsController', function() {
             };
             this.enableSelectAllResults = function () {};
             this.getAllSelectedResults = function () {
-                return {include: [1, 2, 3]};
+                return {
+                    included: {
+                        ids: [1, 2, 3],
+                        search: ""
+                    }
+                };
             };
             this.setParams = function (params) {
                 this.table.params = params;
@@ -105,7 +110,7 @@ describe('Controller: ErratumContentHostsController', function() {
 
     describe("provides a way to go to the next apply step", function () {
         beforeEach(function () {
-            spyOn($scope.nutupane, 'getAllSelectedResults');
+            spyOn($scope.nutupane, 'getAllSelectedResults').and.callThrough();
             spyOn($scope, 'transitionTo');
         });
 

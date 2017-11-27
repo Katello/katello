@@ -8,7 +8,7 @@
      *   Provides a helper service for Incremental Updates.
      *
      */
-    function IncrementalUpdate($q, Task, CurrentOrganization) {
+    function IncrementalUpdate($q, $httpParamSerializer, Task, CurrentOrganization) {
         var getIdsFromBulk;
 
         getIdsFromBulk = function (bulkResource) {
@@ -66,6 +66,7 @@
          * Allows setting the Bulk Content Hosts.
          *
          * @param {Object} bulkContentHosts the bulk selection of the content hosts.
+         * @param {Array} errataIds the errata IDs to add to the bulk search
          *
          * @returns {Boolean}
          */
@@ -133,6 +134,6 @@
 
     angular.module('Bastion.errata').service('IncrementalUpdate', IncrementalUpdate);
 
-    IncrementalUpdate.$inject = ['$q', 'Task', 'CurrentOrganization'];
+    IncrementalUpdate.$inject = ['$q', '$httpParamSerializer', 'Task', 'CurrentOrganization'];
 
 })();
