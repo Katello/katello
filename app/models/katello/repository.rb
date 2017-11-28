@@ -132,7 +132,7 @@ module Katello
 
     scope :has_url, -> { where('url IS NOT NULL') }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
-
+    scope :in_non_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => false) }
     scope :yum_type, -> { where(:content_type => YUM_TYPE) }
     scope :file_type, -> { where(:content_type => FILE_TYPE) }
     scope :puppet_type, -> { where(:content_type => PUPPET_TYPE) }
@@ -678,6 +678,52 @@ module Katello
 
     def docker_meta_tag_count
       DockerMetaTag.in_repositories(self.id).count
+    end
+
+    # a master repository actually has content (rpms, errata, etc) in the pulp repository.  For these repositories, we can use the YumDistributor
+    # to generate metadata and can index the content from pulp, or for the case of content view archives without filters, can also use the YumCloneDistributor
+    #
+    def master?
+      !self.yum? || # non-yum repos
+          self.in_default_view? || # default content view repos
+          (self.archive? && !self.content_view.composite) || # non-composite content view archive repos
+          (self.content_view.composite? && self.component_source_repositories.count > 1) # composite archive repo with more than 1 source repository
+    end
+
+    # a link repository has no content in the pulp repository and serves as a shell.  It will always be empty.  Only the YumCloneDistributor can be used
+    # to publish yum metadata, and it cannot be indexed from pulp, but must have its indexed associations copied from another repository (its target).
+    def link?
+      !master?
+    end
+
+    # A link (empty repo) points to a target (a repository that actually has units in pulp).  Target repos are always archive repos of a content view version (a repo with no environment)
+    # But for composite view versions, an archive repo, usually won't be a master (but might be if multple components contain the same repo)
+    def target_repository
+      fail _("This is not a linked repository") if master?
+      return nil if self.archived_instance.nil?
+
+      #this is an environment repo, and the archived_instance is a master (not always true with composite)
+      if self.environment_id? && self.archived_instance.master?
+        self.archived_instance
+      elsif self.environment_id #this is an environment repo, but a composite who's archived_instance isn't a master
+        self.archived_instance.target_repository || self.archived_instance #to archived_instance if nil
+      else #must be a composite archive repo, with only one component repo
+        self.component_source_repositories.first
+      end
+    end
+
+    def component_source_repositories
+      #find other copies of this repositories, in the CV version's components, that are in the 'archive'
+      Katello::Repository.where(:content_view_version_id => self.content_view_version.components, :environment_id => nil,
+                                :library_instance_id => self.library_instance_id)
+    end
+
+    def self.linked_repositories
+      to_return = []
+      Katello::Repository.yum_type.in_non_default_view.find_each do |repo|
+        to_return << repo if repo.link?
+      end
+      to_return
     end
 
     protected

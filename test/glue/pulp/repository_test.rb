@@ -63,6 +63,22 @@ module Katello
       @new_error_task = {'finish_time' => '2017-06-20T14:52:17Z', 'error' => 'bad_error' }
     end
 
+    def test_index_linked_repo
+      archive = @fedora_17_x86_64_dev.archived_instance
+
+      archive.rpms = [katello_rpms(:one)]
+      archive.errata = [katello_errata(:security)]
+      archive.package_groups = [katello_package_groups(:server_pg)]
+      archive.distribution_variant = 'varied variant'
+      archive.save
+      @fedora_17_x86_64_dev.index_linked_repo
+
+      assert_equal archive.rpms, @fedora_17_x86_64_dev.rpms
+      assert_equal archive.errata, @fedora_17_x86_64_dev.errata
+      assert_equal archive.package_groups, @fedora_17_x86_64_dev.package_groups
+      assert_equal archive.distribution_variant, @fedora_17_x86_64_dev.distribution_variant
+    end
+
     def test_needs_metadata_publish_true
       @fedora_17_x86_64.stubs(:last_publish_task).returns(@old_task)
       @fedora_17_x86_64.stubs(:last_sync_task).returns(@new_task)

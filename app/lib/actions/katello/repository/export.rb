@@ -39,6 +39,7 @@ module Actions
           export_directory = File.join(EXPORT_OUTPUT_BASEDIR, group_id)
 
           sequence do
+            copy_units(repos)
             plan_action(Pulp::RepositoryGroup::Create, :id => group_id,
                                                        :pulp_ids => repo_pulp_ids)
             plan_action(Pulp::RepositoryGroup::Export, :id => group_id,
@@ -62,6 +63,20 @@ module Actions
 
         def humanized_name
           _("Export")
+        end
+
+        def copy_units(repos)
+          concurrence do
+            repos.each do |repo|
+              sequence do
+                if repo.link?
+                  plan_action(Katello::Repository::Clear, repo)
+                  plan_action(Katello::Repository::CloneYumContent, repo.target_repository, repo, [], false,
+                              :generate_metadata => false, :index_content => false)
+                end
+              end
+            end
+          end
         end
 
         def rescue_strategy

@@ -30,13 +30,6 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             loading: true
         };
 
-        $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function () {
-            $scope.panel.loading = false;
-        }, function (response) {
-            $scope.panel.loading = false;
-            ApiErrorHandler.handleGETRequestErrors(response, $scope);
-        });
-
         $scope.taskTypes = {
             publish: "Actions::Katello::ContentView::Publish",
             promotion: "Actions::Katello::ContentView::Promote",
@@ -55,6 +48,15 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
 
         $scope.save = function (contentView) {
             return contentView.$update($scope.saveSuccess, $scope.saveError);
+        };
+
+        $scope.fetchContentView = function () {
+            $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function () {
+                $scope.panel.loading = false;
+            }, function (response) {
+                $scope.panel.loading = false;
+                ApiErrorHandler.handleGETRequestErrors(response, $scope);
+            });
         };
 
         $scope.getAvailableVersions = function (paramContentView) {
@@ -78,5 +80,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             }
             return latest.concat(paramContentView.versions.reverse());
         };
+
+        $scope.fetchContentView();
     }]
 );

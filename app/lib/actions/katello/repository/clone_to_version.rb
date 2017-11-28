@@ -15,10 +15,16 @@ module Actions
           sequence do
             plan_action(Repository::Create, new_repository, true, false)
 
-            repositories.each do |repository|
+            if new_repository.link?
+              fail "Cannot clone metadata if more than one repository" if repositories.count > 1
+              plan_action(Repository::CloneYumMetadata, repositories[0], new_repository,
+                                                            :force_yum_metadata_regeneration => true)
+            else
               if new_repository.yum?
-                plan_action(Repository::CloneYumContent, repository, new_repository, filters, !incremental,
-                            :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
+                repositories.each do |repository|
+                  plan_action(Repository::CloneYumContent, repository, new_repository, filters, !incremental,
+                              :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
+                end
               elsif new_repository.docker?
                 plan_action(Repository::CloneDockerContent, repository, new_repository, filters)
               elsif new_repository.ostree?

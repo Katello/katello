@@ -226,6 +226,7 @@ module Katello
 
       assert composite.update_attributes(component_ids: [v1.id, v2.id])
       assert_equal 0, composite.errors.count # docker and yum repos
+      refute_empty composite.duplicate_repositories_to_publish
     end
 
     def test_puppet_module_conflicts

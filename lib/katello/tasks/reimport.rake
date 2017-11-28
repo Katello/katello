@@ -41,5 +41,8 @@ namespace :katello do
     Katello::ActivationKey.all.each do |ack_key|
       ack_key.import_pools
     end
+
+    print "Importing Linked Repositories"
+    Katello::Repository.linked_repositories.each(&:index_content)
   end
 end

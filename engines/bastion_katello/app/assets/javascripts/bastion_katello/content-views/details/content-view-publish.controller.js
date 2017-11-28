@@ -40,5 +40,8 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
             ContentView.publish(data, success, failure);
         };
 
+        //Refetch the content view so that the contentView is updated for latest components
+        $scope.fetchContentView();
+
     }]
 );
