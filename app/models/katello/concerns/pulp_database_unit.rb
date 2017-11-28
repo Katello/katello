@@ -69,8 +69,6 @@ module Katello
           results = content_unit_class.fetch_all(&process_block).flatten
           update_repository_associations(results) if index_repository_association
         end
-
-        self.import_additional_content if self.respond_to?(:import_additional_content)
       end
 
       def import_for_repository(repository, force = false)
@@ -89,6 +87,18 @@ module Katello
 
       def unit_id_field
         "#{self.name.demodulize.underscore}_id"
+      end
+
+      def copy_repository_associations(source_repo, dest_repo)
+        delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
+                       #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
+        ActiveRecord::Base.connection.execute(delete_query)
+
+        insert_query = "insert into #{repository_association_class.table_name} (repository_id, #{unit_id_field})
+                        select #{dest_repo.id} as repository_id, #{unit_id_field} from #{repository_association_class.table_name}
+                        where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
+                        from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
+        ActiveRecord::Base.connection.execute(insert_query)
       end
 
       def sync_repository_associations(repository, options = {})

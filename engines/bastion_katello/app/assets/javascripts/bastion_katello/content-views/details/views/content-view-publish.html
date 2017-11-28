@@ -13,8 +13,19 @@
 
 <div class="row">
   <div class="col-sm-5">
-    <form name="versionForm" role="form" novalidate>
+    <div bst-alert="info" ng-show="contentView.duplicate_repositories_to_publish.length > 0">
+      You have selected more than one component Content View Version with the same repository resulting in slower publishing:
+      <ul>
+        <li ng-repeat="repository in contentView.duplicate_repositories_to_publish">
+          {{ repository.name }}
+          <ul>
+            <li ng-repeat="content_view in repository.components" >{{ content_view.content_view_name }} {{ content_view.content_view_version}}</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
 
+    <form name="versionForm" role="form" novalidate>
       <div bst-form-group label="{{ 'Version' | translate }}">
         <span>{{ contentView['next_version'] }}</span>
       </div>

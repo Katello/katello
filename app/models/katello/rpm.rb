@@ -95,11 +95,5 @@ module Katello
       self.joins(:content_facets).
         where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
     end
-
-    def self.import_additional_content
-      Katello::Repository.in_published_environments.yum_type.find_each do |repo|
-        repo.index_content
-      end
-    end
   end
 end

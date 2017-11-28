@@ -502,6 +502,21 @@ module ::Actions::Katello::Repository
                                 :id => "8")
     end
 
+    it 'plans with unit copy if needed' do
+      # required for export pre-run validation to succeed
+      Setting['pulp_export_destination'] = '/tmp'
+
+      action.stubs(:action_subject)
+      repository.stubs(:link?).returns(true)
+      repository.stubs(:target_repository).returns(custom_repository)
+
+      plan_action(action, [repository], false, nil, 0, "8")
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Clear,
+                                repository)
+      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneYumContent, custom_repository, repository, [], false,
+                                    :generate_metadata => false, :index_content => false)
+    end
+
     it 'plans without export destination' do
       action.stubs(:action_subject)
 

@@ -4,12 +4,10 @@ module Actions
       class MetadataGenerate < Actions::Base
         def plan(repository, options = {})
           dependency = options.fetch(:dependency, nil)
-          source_repository = options.fetch(:source_repository, nil)
           force = options.fetch(:force, false)
+          source_repository = options.fetch(:source_repository, nil)
 
-          if source_repository.nil? && repository.yum? && repository.requires_yum_clone_distributor?
-            source_repository = repository.archived_instance
-          end
+          source_repository ||= repository.target_repository if repository.link?
 
           distributors(repository, source_repository).each do |distributor|
             plan_action(Pulp::Repository::DistributorPublish,

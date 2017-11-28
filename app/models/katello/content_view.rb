@@ -284,10 +284,18 @@ module Katello
       # is the library instance id, and the value is an array
       # of the repositories for that instance.
       repositories_to_publish.inject({}) do |result, repo|
-        result[repo.library_instance_id] ||= []
-        result[repo.library_instance_id] << repo
+        result[repo.library_instance] ||= []
+        result[repo.library_instance] << repo
         result
       end
+    end
+
+    def duplicate_repositories_to_publish
+      repositories_to_publish_by_library_instance.select { |_key, val| val.count > 1 }.keys
+    end
+
+    def components_with_repo(library_instance)
+      components.select { |component| component.repositories.where(:library_instance => library_instance).any? }
     end
 
     def publish_repositories

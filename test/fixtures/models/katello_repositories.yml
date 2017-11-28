@@ -282,7 +282,7 @@ dev_p_forge:
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
 
 rhel_6_x86_64_library_view_1:
-  name:                 RHEL 6 x86_64
+  name:                 RHEL 6 x86_64 library view 1
   pulp_id:              8_view1
   content_id:           1
   major:                6
@@ -293,6 +293,22 @@ rhel_6_x86_64_library_view_1:
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
+  download_policy: on_demand
+
+rhel_6_x86_64_library_view_1_archive:
+  name:                 RHEL 6 x86_64 library view 1 archive
+  pulp_id:              8_view1_archive
+  content_id:           1
+  major:                6
+  minor:                6Server
+  content_type:         yum
+  label:                rhel_6_x86_64_label
+  relative_path:        'ACME_Corporation/library/rhel_6_label'
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
   download_policy: on_demand
 
@@ -371,7 +387,7 @@ srpm_repo:
   relative_path:        'ACME_Corporation/library/LibraryView/source_rpm'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   download_policy: on_demand
 
 
@@ -482,6 +498,23 @@ rhel_6_x86_64_composite_view_version_1:
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
   product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
+  download_policy: on_demand
+
+
+rhel_6_x86_64_composite_view_version_1_archive:
+  name:                 RHEL 6 x86_64
+  pulp_id:              8_composite_version1_archive
+  content_id:           69
+  major:                6
+  minor:                6Server
+  content_type:         yum
+  label:                rhel_6_x86_64_label_composite_view_version_1
+  relative_path:        'ACME_Corporation/library/composite/rhel_6_label'
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
   download_policy: on_demand
 

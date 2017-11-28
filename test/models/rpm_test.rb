@@ -64,6 +64,18 @@ module Katello
     def test_build_nvre
       assert_equal "#{@rpm_one.name}-#{@rpm_one.version}-#{@rpm_one.release}.#{@rpm_one.arch}", @rpm_one.build_nvra
     end
+
+    def test_copy_repository_associations
+      repo_one = @repo
+      repo_two = katello_repositories(:fedora_17_x86_64_dev)
+
+      repo_one.rpms = [@rpm_one]
+      repo_two.rpms = [@rpm_two]
+
+      Katello::Rpm.copy_repository_associations(repo_one, repo_two)
+
+      assert_equal [@rpm_one], repo_two.reload.rpms
+    end
   end
 
   class ApplicablityTest < RpmTestBase

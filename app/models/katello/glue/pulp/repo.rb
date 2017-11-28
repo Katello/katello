@@ -744,17 +744,22 @@ module Katello
     end
 
     def index_yum_content(full_index = false)
-      if self.environment_id.nil? || self.content_view.default?
+      if self.master?
         Katello::Rpm.import_for_repository(self, full_index)
         Katello::Srpm.import_for_repository(self, full_index)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
         self.import_distribution_data
       else
-        base_repo = self.archived_instance
-        Rpm.sync_repository_associations(self, :ids => base_repo.rpm_ids)
-        Erratum.sync_repository_associations(self, :ids => base_repo.erratum_ids)
-        PackageGroup.sync_repository_associations(self, :ids => base_repo.package_group_ids)
+        index_linked_repo
+      end
+    end
+
+    def index_linked_repo
+      if (base_repo = self.target_repository)
+        Rpm.copy_repository_associations(base_repo, self)
+        Erratum.copy_repository_associations(base_repo, self)
+        PackageGroup.copy_repository_associations(base_repo, self)
         self.update_attributes!(
           :distribution_version => base_repo.distribution_version,
           :distribution_arch => base_repo.distribution_arch,
@@ -763,6 +768,8 @@ module Katello
           :distribution_uuid => base_repo.distribution_uuid,
           :distribution_bootable => base_repo.distribution_bootable
         )
+      else
+        Rails.logger.error("Cannot index #{self.id}, no target repository found.")
       end
     end
 
