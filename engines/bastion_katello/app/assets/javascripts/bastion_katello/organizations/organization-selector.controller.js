@@ -13,7 +13,8 @@
 
         $scope.selectedOrganization = {};
 
-        Organization.queryUnpaged(function (response) {
+        // TODO: per_page hack necessary because of http://projects.theforeman.org/issues/21800
+        Organization.queryUnpaged({'per_page': 99999999999}, function (response) {
             $scope.organizations = response.results;
         });
 
