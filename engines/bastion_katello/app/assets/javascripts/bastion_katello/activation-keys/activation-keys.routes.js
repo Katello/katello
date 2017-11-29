@@ -1,6 +1,6 @@
 angular.module('Bastion.activation-keys').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('activation-keys', {
-        url: '/activation_keys?search',
+        url: '/activation_keys',
         permission: 'view_activation_keys',
         template: '<div ui-view></div>',
         views: {
