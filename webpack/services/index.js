@@ -5,7 +5,7 @@ export function getTypeIcon(type) {
   let className = '';
 
   switch (type) {
-    case 'rpm':
+    case 'yum':
       className = 'pficon-bundle';
       break;
     case 'source_rpm':
