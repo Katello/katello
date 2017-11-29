@@ -60,7 +60,7 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
         }
     })
     .state('subscription.content-hosts', {
-        url: '/content-hosts?search',
+        url: '/content-hosts',
         permission: 'view_subscriptions',
         controller: 'SubscriptionContentHostsController',
         templateUrl: 'subscriptions/details/views/subscription-content-hosts.html',
