@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { FormGroup, ControlLabel } from 'react-bootstrap';
-import BootstrapSelect from '../../react-bootstrap-select/index';
+import BootstrapSelect from '../react-bootstrap-select';
 
 function MultiSelect(props) {
   const options = props.options.map(option => (

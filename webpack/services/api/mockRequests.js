@@ -1,7 +1,7 @@
-const API_REQUESTS = [
+export default [
   {
     path: '/organizations/:id/repository_sets',
-    name: 'REPOSITORY_SETS',
+    searchRegex: /\/organizations\/\d+\/repository_sets/,
     response: {
       total: 5,
       subtotal: 5,
@@ -77,7 +77,7 @@ const API_REQUESTS = [
   },
   {
     path: '/organizations/:id/repository_sets?enabled=true',
-    name: 'ORG_REPOSITORY_SETS',
+    searchRegex: /\/organizations\/\d+\/repository_sets\?enabled=true/,
     response: {
       total: 5,
       subtotal: 5,
@@ -112,7 +112,7 @@ const API_REQUESTS = [
   },
   {
     path: '/products/:product_id/repository_sets/:content_id/available_repositories',
-    name: 'PRODUCT_REPOSITORY_SETS',
+    searchRegex: /\/products\/\d+\/repository_sets\/\d+\/available_repositories/,
     response: {
       total: 6,
       subtotal: 6,
@@ -207,10 +207,3 @@ const API_REQUESTS = [
     },
   },
 ];
-
-// eslint-disable-next-line import/prefer-default-export
-export function getApiRequest(apiName) {
-  const api = API_REQUESTS.find(({ name }) => apiName === name);
-
-  return api || false;
-}
