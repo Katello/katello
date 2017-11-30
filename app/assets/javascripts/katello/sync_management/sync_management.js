@@ -62,6 +62,9 @@ $(document).ready(function() {
 KT.content_actions = (function(){
     var syncing = [],
     updater,
+    getOrg = function() {
+        return $('#organization_id').val();
+    },
     addSyncing = function(repo_ids){
         if (repo_ids.length === 0){
             return;
@@ -95,7 +98,7 @@ KT.content_actions = (function(){
 
             $.ajax({
               type: 'DELETE',
-              url: foreman_url('/katello/sync_management/' + repo_id),
+              url: foreman_url('/katello/sync_management/' + repo_id + '?organization_id=' + getOrg()),
               dataType: 'json',
               success: function(data) {
               },
@@ -111,7 +114,7 @@ KT.content_actions = (function(){
         }
         var url = foreman_url('/katello/sync_management/sync_status');
         updater = $.PeriodicalUpdater(url, {
-              data: function(){return {repoids:getSyncing()}},
+              data: function(){return {repoids:getSyncing(), organization_id:getOrg()}},
               method: 'get',
               type: 'json',
               global: false

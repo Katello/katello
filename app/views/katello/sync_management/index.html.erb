@@ -13,6 +13,10 @@
     KT.permissions = { "syncable" : <%= any_syncable? %> };
 <% end %>
 
+<% if Organization.current -%>
+    <%= hidden_field_tag :organization_id, Organization.current.id%>
+<% end %>
+
 <div class="grid_4">
   <h2>
     <%= _("Sync Status") %>
