@@ -11,7 +11,9 @@ module Actions
            Pulp::Repository::RemoveFile,
            Pulp::Repository::RemovePuppetModule,
            Pulp::Repository::RemoveDockerManifest,
-           Pulp::Repository::RemoveDockerManifestList].each do |action_class|
+           Pulp::Repository::RemoveDockerManifestList,
+           Pulp::Repository::RemoveDockerTag,
+           Pulp::Repository::RemoveDockerBlob].each do |action_class|
             plan_action(action_class, pulp_id: repo.pulp_id)
           end
         end
