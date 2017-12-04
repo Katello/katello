@@ -20,7 +20,7 @@ class AddDockerManifestList < ActiveRecord::Migration
       t.timestamps
     end
 
-    remove_foreign_key :katello_docker_tags, :docker_manifest
+    remove_foreign_key :katello_docker_tags, :column => :docker_manifest_id
     rename_column :katello_docker_tags, :docker_manifest_id, :docker_taggable_id
     add_column :katello_docker_tags, :docker_taggable_type, :string, :limit => 255, :default => "Katello::DockerManifest"
 

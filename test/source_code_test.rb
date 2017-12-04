@@ -100,6 +100,7 @@ class SourceCodeTest < ActiveSupport::TestCase
       DOC
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
+              %r{foreman/.*},
               %r{script/check-gettext\.rb},
               %r{engines/bastion_katello/node_modules},
               %r{test/source_code_test\.rb}).
