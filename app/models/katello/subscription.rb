@@ -13,8 +13,9 @@ module Katello
     scope :in_organization, ->(org) { where(:organization => org) }
 
     def self.subscribable
+      product_ids = Product.subscribable.pluck(:id) + [nil]
       joins("LEFT OUTER JOIN #{Katello::SubscriptionProduct.table_name} subprod ON #{self.table_name}.id = subprod.subscription_id")
-        .where("subprod.product_id" => Product.subscribable << nil)
+        .where("subprod.product_id" => product_ids)
         .group("#{self.table_name}.id")
     end
 
