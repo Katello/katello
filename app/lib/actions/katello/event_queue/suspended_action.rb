@@ -7,7 +7,7 @@ module Actions
         end
 
         def notify_queue_item(event_type, object_id, created_at)
-          @suspended_action << Monitor::Event[event_type, object_id, created_at.to_datetime]
+          @suspended_action << Monitor::Event[event_type, object_id, created_at]
         end
 
         def notify_ready
