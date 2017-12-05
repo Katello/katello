@@ -46,20 +46,20 @@ module Katello
 
       def find_repository
         ::Katello::Repository.where(product_id: product.id,
-                                    content_id: content.id,
+                                    content_id: content.cp_content_id,
                                     environment_id: product.organization.library.id,
                                     minor: minor,
                                     arch: arch).first
       end
 
       def build_repository
-        certificate_and_key = get_certificate_and_key(product, @content.modifiedProductIds)
+        certificate_and_key = get_certificate_and_key(product, @content.modified_product_ids)
 
         repository = Repository.new(
           :environment => product.organization.library,
           :product => product,
           :cp_label => content.label,
-          :content_id => content.id,
+          :content_id => content.cp_content_id,
           :arch => arch,
           :major => major,
           :minor => minor,
@@ -109,7 +109,7 @@ module Katello
       end
 
       def path
-        substitutions.inject(content.contentUrl) do |url, (key, value)|
+        substitutions.inject(content.content_url) do |url, (key, value)|
           url.gsub("$#{key}", value)
         end
       end
@@ -143,7 +143,7 @@ module Katello
       end
 
       def content_type
-        kickstart? ? 'yum' : content.type
+        kickstart? ? 'yum' : content.content_type
       end
 
       def katello_content_type
@@ -159,11 +159,11 @@ module Katello
       end
 
       def file?
-        content.type.downcase == 'file'
+        content.content_type.downcase == 'file'
       end
 
       def kickstart?
-        content.type.downcase == 'kickstart'
+        content.content_type.downcase == 'kickstart'
       end
 
       def download_policy
@@ -186,7 +186,7 @@ module Katello
 
       def registry
         validate!
-        @registries ||= product.cdn_resource.get_docker_registries(content.contentUrl)
+        @registries ||= product.cdn_resource.get_docker_registries(content.content_url)
         @registry_repo ||= registries.detect do |reg|
           reg['name'] == @container_registry_name
         end
@@ -200,13 +200,13 @@ module Katello
 
       def build_repository
         unless registry
-          Rails.logger.error("Docker registry with pulp_id #{container_registry_name} was not found at #{content.contentUrl}")
+          Rails.logger.error("Docker registry with pulp_id #{container_registry_name} was not found at #{content.content_url}")
           fail _("Docker repository not found")
         end
         ::Katello::Repository.new(:environment => product.organization.library,
                                  :product => product,
                                  :cp_label => content.label,
-                                 :content_id => content.id,
+                                 :content_id => content.cp_content_id,
                                  :relative_path => relative_path,
                                  :name => name,
                                  :docker_upstream_name => registry["name"],
@@ -245,7 +245,7 @@ module Katello
       end
 
       def relative_path
-        ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, content.contentUrl)
+        ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, content.content_url)
       end
     end
   end

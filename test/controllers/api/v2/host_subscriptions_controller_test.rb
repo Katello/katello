@@ -23,6 +23,7 @@ module Katello
     end
 
     def backend_stubs
+      Katello::Content.any_instance.stubs(:modified_product_ids).returns([])
       Katello::Pool.any_instance.stubs(:pool_facts).returns({})
       Katello::Candlepin::Consumer.any_instance.stubs(:entitlements).returns(@entitlements)
     end
@@ -154,7 +155,8 @@ module Katello
   class Api::V2::HostSubscriptionsProductContentTest < Api::V2::HostSubscriptionsControllerBase
     def setup
       super
-      pc = [Candlepin::ProductContent.new(:content => {:label => 'some-content'})]
+      content = FactoryBot.build(:katello_content, label: 'some-content')
+      pc = [FactoryBot.build(:katello_product_content, content: content)]
       ::Katello::Candlepin::Consumer.any_instance.stubs(:available_product_content).returns(pc)
       Katello::Candlepin::Consumer.any_instance.stubs(:content_overrides).returns([])
       ProductContentFinder.any_instance.stubs(:product_content).returns(pc)

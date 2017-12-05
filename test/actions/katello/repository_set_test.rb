@@ -22,11 +22,12 @@ module ::Actions::Katello::RepositorySet
     let(:action) { create_action action_class }
     let(:product) { katello_products(:redhat) }
     let(:content) do
-      ::Katello::Candlepin::Content.new(id: 'content-123',
-                                        name: 'Content 123',
-                                        type: 'yum',
-                                        label: 'content-123',
-                                        contentUrl: content_url)
+      FactoryBot.build(:katello_content,
+                       cp_content_id: 'content-123',
+                       name: 'Content 123',
+                       content_type: 'yum',
+                       label: 'content-123',
+                       content_url: content_url)
     end
     let(:substitutions) { { basearch: 'x86_64', releasever: '6Server' } }
     let(:expected_relative_path) { "Empty_Organization/library_label/product/x86_64/6Server" }
@@ -34,7 +35,7 @@ module ::Actions::Katello::RepositorySet
     def repository_already_enabled!
       as_admin do
         katello_repositories(:rhel_6_x86_64).
-            update_attributes!(:relative_path => "#{expected_relative_path}", :content_id => content.id,
+            update_attributes!(:relative_path => "#{expected_relative_path}", :content_id => content.cp_content_id,
                               :arch => 'x86_64', :minor => '6Server')
       end
     end
@@ -47,7 +48,7 @@ module ::Actions::Katello::RepositorySet
       action.expects(:action_subject).with do |repository|
         repository.relative_path.must_equal expected_relative_path
       end
-      content.expects(:modifiedProductIds).returns([])
+      content.expects(:modified_product_ids).returns([])
       plan_action action, product, content, substitutions
       assert_action_planed action, ::Actions::Katello::Repository::Create
     end
@@ -93,10 +94,10 @@ module ::Actions::Katello::RepositorySet
     end
 
     it 'plans' do
-      plan_action action, product, content.id
+      plan_action action, product, content.cp_content_id
       assert_run_phase action do
         action.input[:product_id].must_equal product.id
-        action.input[:content_id].must_equal content.id
+        action.input[:content_id].must_equal content.cp_content_id
       end
     end
 

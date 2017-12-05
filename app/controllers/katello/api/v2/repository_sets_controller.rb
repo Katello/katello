@@ -40,7 +40,7 @@ module Katello
     param :id, :number, :required => true, :desc => N_("ID of the repository set")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     def available_repositories
-      scan_cdn = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, @product_content.content.id)
+      scan_cdn = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, @product_content.content.cp_content_id)
       repos = scan_cdn.output[:results]
 
       repos = repos.select do |repo|

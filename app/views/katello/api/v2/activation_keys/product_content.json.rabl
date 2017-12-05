@@ -8,8 +8,7 @@ child @collection[:results] => :results do
   end
 
   child :content => :content do
-    attributes :id, :name, :label
-    attribute :contentUrl => :content_url
+    attributes :id, :name, :label, :vendor, :content_type, :content_url, :gpg_url, :modified_product_ids
   end
 
   node :override do |pc|

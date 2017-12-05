@@ -43,6 +43,15 @@ module Actions
           repository = ::Katello::Repository.find(input[:repository_id])
           repository.content_id = input[:content_id]
           repository.save!
+
+          content = ::Katello::Content.create!(name: repository.name,
+                                               cp_content_id: repository.content_id,
+                                               content_type: repository.content_type,
+                                               label: repository.custom_content_label,
+                                               content_url: content_url(repository),
+                                               vendor: ::Katello::Provider::CUSTOM)
+
+          ::Katello::ProductContent.create!(product: repository.product, content: content)
         end
 
         private

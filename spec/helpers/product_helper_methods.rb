@@ -23,7 +23,6 @@ module Katello
       @provider = org.redhat_provider unless custom
       @provider ||= Provider.create!(:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM)
       product_attributes = ProductTestData::SIMPLE_PRODUCT.merge(:name => 'product' + suffix, :provider => @provider)
-      product_attributes[:productContent] = []
       @p = Product.create!(product_attributes)
 
       repo = Repository.new(:environment => env, :product => @p, :name => "FOOREPO" + suffix,

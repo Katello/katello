@@ -135,6 +135,18 @@ module Katello
       assert_includes Product.subscribable, product
     end
 
+    def test_find_product_content_by_id
+      (1..2).each do |x|
+        content = FactoryBot.create(:katello_content, cp_content_id: "content-#{x}")
+        FactoryBot.create(:katello_product_content, content: content, product: @redhat_product)
+      end
+
+      expected = 'content-2'
+      found_content = @redhat_product.product_content_by_id(expected)
+
+      assert_equal expected, found_content.content.cp_content_id
+    end
+
     def test_subscribable_puppet_and_yum_repos
       product = katello_products(:fedora)
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
@@ -147,14 +159,18 @@ module Katello
       product = katello_products(:fedora)
       fedora = katello_repositories(:fedora_17_x86_64)
       puppet = katello_repositories(:p_forge)
+
+      content = FactoryBot.create(:katello_content, cp_content_id: fedora.content_id)
+      fedora_content = FactoryBot.create(:katello_product_content, content: content, product: product)
+
       puppet.update_attributes(content_id: 2)
+
+      content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id)
+      FactoryBot.create(:katello_product_content, content: content, product: product)
+
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
       product.repositories = [fedora, puppet]
 
-      fedora_content = OpenStruct.new(content: OpenStruct.new(id: fedora.content_id))
-      puppet_content = OpenStruct.new(content: OpenStruct.new(id: puppet.content_id))
-
-      product.stubs(:productContent).returns([fedora_content, puppet_content])
       assert_equal [fedora_content], product.available_content
     end
   end

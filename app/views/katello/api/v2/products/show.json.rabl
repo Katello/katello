@@ -3,9 +3,13 @@ object @resource
 
 extends "katello/api/v2/products/base"
 
-attributes :productContent => :product_content
+child(:product_contents => :product_content) do
+  extends "katello/api/v2/products/product_content"
+end
 
-attributes :available_content => :available_content
+child(:available_content => :available_content) do
+  extends "katello/api/v2/products/product_content"
+end
 
 attributes :redhat? => :redhat
 

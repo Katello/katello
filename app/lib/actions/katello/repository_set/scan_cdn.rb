@@ -17,9 +17,7 @@ module Actions
         end
 
         def plan(product, content_id)
-          prod_content = product.product_content_by_id(content_id).content
-
-          plan_self(product_id:  product.id, content_id: prod_content.id)
+          plan_self(product_id: product.id, content_id: content_id)
         end
 
         def run
@@ -29,12 +27,12 @@ module Actions
         private
 
         def fetch_results
-          if content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
+          if content.content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
             prepare_results_docker_content
           else
             substitutor = cdn_var_substitutor
             return [] unless substitutor
-            substitutor.substitute_vars(content.contentUrl).map do |path_with_substitutions|
+            substitutor.substitute_vars(content.content_url).map do |path_with_substitutions|
               prepare_result(path_with_substitutions.substitutions, path_with_substitutions.path)
             end
           end
@@ -46,7 +44,7 @@ module Actions
         end
 
         def prepare_results_docker_content
-          registries = product.cdn_resource.get_docker_registries(content.contentUrl)
+          registries = product.cdn_resource.get_docker_registries(content.content_url)
           registries.map do |registry|
             mapper = ::Katello::Candlepin::Content::DockerRepositoryMapper.new(product,
                                                                 content,

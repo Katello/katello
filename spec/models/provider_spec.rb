@@ -2,7 +2,6 @@ require 'katello_test_helper'
 require 'helpers/product_test_data'
 
 module Katello
-  #rubocop:disable Metrics/BlockLength
   describe Provider do
     include OrchestrationHelper
 
@@ -35,8 +34,6 @@ module Katello
 
     describe "import_product_from_cp creates product with correct attributes" do
       before(:each) do
-        Candlepin::ProductContent.stubs(:create)
-        Candlepin::ProductContent.stubs(:new)
         Resources::Candlepin::Product.stubs(:create).returns(:id => "product_id")
         @provider = Provider.new(
                                    :name => 'test_provider',
@@ -46,97 +43,11 @@ module Katello
         )
         @provider.save!
 
-        @product = Product.create!(:cp_id => "product_id", :label => "prod", :name => "prod", :productContent => [], :provider => @provider, :organization => @organization)
+        @product = Product.create!(:cp_id => "product_id", :label => "prod", :name => "prod", :provider => @provider, :organization => @organization)
       end
 
       specify { @product.wont_be_nil }
       specify { @product.provider.must_equal(@provider) }
-    end
-
-    describe "products refresh(katello)" do
-      def product_content(name)
-        Candlepin::ProductContent.new(
-          "content" => {
-            "name" => name,
-            "id" => name.hash.to_s,
-            "type" => "yum",
-            "label" => name,
-            "vendor" => "redhat",
-            "contentUrl" => "/released-extra/#{name}/$releasever/os/rpms",
-            "gpgUrl" => "/some/gpg/url/",
-            "updated" => "2011-01-04T18:47:47.219+0000",
-            "created" => "2011-01-04T18:47:47.219+0000"},
-          "enabled" => true,
-          "flexEntitlement" => 0,
-          "physicalEntitlement" => 0
-        )
-      end
-
-      def create_product_with_content(product_name, releases)
-        product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash, :organization => @organization)
-
-        product.productContent = [product_content(product_name)]
-        product.productContent.each do |product_content|
-          releases.each do |release|
-            version = Resources::CDN::Utils.parse_version(release)
-            repo_name = "#{product_content.content.name} #{release}"
-            repo_label = repo_name.gsub(/[^-\w]/, "_")
-            repo = Repository.new(:environment => product.organization.library,
-                                  :product => product,
-                                  :cp_label => product_content.content.label,
-                                  :name => repo_name,
-                                  :label => repo_label,
-                                  :pulp_id => product.repo_id(repo_name),
-                                  :major => version[:major],
-                                  :minor => version[:minor],
-                                  :relative_path => '/foo',
-                                  :content_id => 'asdfasdf',
-                                  :content_view_version => product.organization.library.default_content_view_version,
-                                  :url => 'http://localhost')
-            repo.stubs(:create_pulp_repo).returns({})
-            repo.save!
-          end
-        end
-        product
-      end
-
-      def set_upstream_releases(product, releases)
-        Thread.current[:cdn_var_substitutor_cache] ||= {}
-        cache = Thread.current[:cdn_var_substitutor_cache]
-        product.productContent.each do |product_content|
-          prefix_with_vars = product_content.content.contentUrl[/^.*\$[^\/]+/]
-          cache[prefix_with_vars] = {}
-          releases.each do |release|
-            prefix_without_vars = prefix_with_vars.sub("$releasever", release)
-            cache[prefix_with_vars][{"releasever" => release}] = prefix_without_vars
-          end
-        end
-      end
-
-      before do
-        disable_org_orchestration
-        disable_product_orchestration
-        disable_cdn
-        @organization = Organization.create!(:name => "org10026", :label => "org10026_key")
-        @provider = @organization.redhat_provider
-
-        @product_without_change = create_product_with_content("product-without-change", ["1.0", "1.1"])
-        set_upstream_releases(@product_without_change, ["1.0", "1.1"])
-
-        @product_with_change = create_product_with_content("product-with-change", ["1.0"])
-        set_upstream_releases(@product_with_change, ["1.0", "1.1"])
-
-        @product_without_change.productContent.each { |pc| pc.product = @product_without_change }
-        @product_with_change.productContent.each { |pc| pc.product = @product_with_change }
-
-        engineering = stub
-        engineering.stubs(:engineering).returns([@product_without_change, @product_with_change])
-        @provider.stubs(:products).returns(engineering)
-      end
-
-      after do
-        Thread.current[:cdn_var_substitutor_cache] = nil
-      end
     end
 
     describe "sync provider" do
@@ -145,8 +56,8 @@ module Katello
           p.organization = @organization
         end
 
-        @product1 = Product.create!(:cp_id => "product1_id", :label => "prod1", :name => "product1", :productContent => [], :provider => @provider, :organization => @organization)
-        @product2 = Product.create!(:cp_id => "product2_id", :label => "prod2", :name => "product2", :productContent => [], :provider => @provider, :organization => @organization)
+        @product1 = Product.create!(:cp_id => "product1_id", :label => "prod1", :name => "product1", :provider => @provider, :organization => @organization)
+        @product2 = Product.create!(:cp_id => "product2_id", :label => "prod2", :name => "product2", :provider => @provider, :organization => @organization)
       end
 
       it "should create sync for all it's products" do

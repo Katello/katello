@@ -1,19 +1,13 @@
 module Katello
   module Glue::Candlepin::Product
-    PRODUCT_ATTRS = %w(name attributes.name attributes.value
-                       productContent.content.contentUrl
-                       productContent.content.label
-                       productContent.content.modifiedProductIds
-                       productContent.content.type
-                       productContent.content.id
-                       productContent.content.name).freeze
+    PRODUCT_ATTRS = %w(name attributes.name attributes.value).freeze
 
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
 
       base.class_eval do
-        lazy_accessor :productContent, :multiplier, :href, :attrs,
+        lazy_accessor :multiplier, :href, :attrs,
           :initializer => (lambda do |_s|
             convert_from_cp_fields(
               Resources::Candlepin::Product.get(self.organization.label, cp_id, PRODUCT_ATTRS)[0]
@@ -46,14 +40,42 @@ module Katello
 
       product = Product.new(attrs, &block)
       product.save!
-      product.productContent_will_change!
-      product.productContent = product.build_product_content(product_content_attrs)
-      product.save!
+      import_product_content(product, product_content_attrs)
     rescue => e
       [Rails.logger, import_logger].each do |logger|
         logger.error "Failed to create product #{attrs['name']}: #{e}" if logger
       end
       raise e
+    end
+
+    def self.import_product_content(product, content_attrs)
+      content_attrs.each do |attrs|
+        params = attrs.with_indifferent_access
+        pc = params[:content]
+
+        content_attrs = {
+          cp_content_id: pc[:id],
+          name: pc[:name],
+          label: pc[:label],
+          content_type: pc[:type],
+          vendor: pc[:vendor],
+          gpg_url: pc[:gpgUrl],
+          content_url: pc[:contentUrl]
+        }
+
+        # current product has this content - update it
+        # otherwise create a reference to existing content OR new content altogether
+        if (existing = product.product_content_by_id(pc[:id]))
+          existing.content.update_attributes!(content_attrs)
+        else
+          content = ::Katello::Content.find_by_cp_content_id(pc[:id])
+          content ||= ::Katello::Content.create!(content_attrs)
+
+          ::Katello::ProductContent.create!(enabled: params[:enabled],
+                                            product_id: product.id,
+                                            content: content)
+        end
+      end
     end
 
     module InstanceMethods
@@ -65,8 +87,6 @@ module Katello
             attribs.delete(attributes_key)
           end
 
-          @productContent = [] unless attribs.key?(:productContent)
-
           # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
           attribs = attribs.reject do |k, _v|
             !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
@@ -76,16 +96,8 @@ module Katello
         super
       end
 
-      def displayable_product_contents
-        self.productContent.select(&:displayable?)
-      end
-
       def orphaned?
         self.provider.redhat_provider? && self.certificate.nil?
-      end
-
-      def build_product_content(attrs)
-        @productContent = attrs.collect { |pc| Katello::Candlepin::ProductContent.new pc }
       end
 
       def support_level
@@ -119,7 +131,6 @@ module Katello
 
       def convert_from_cp_fields(cp_json)
         ar_safe_json = cp_json.key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-        ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Katello::Candlepin::ProductContent.new(pc, self.id) }
         ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.key?(:attrs)
         ar_safe_json[:attrs] ||= []
         ar_safe_json.except('id')
@@ -137,14 +148,6 @@ module Katello
         self.productContent << content
       end
 
-      def product_content_by_id(content_id)
-        self.productContent.find { |pc| pc.content.id == content_id }
-      end
-
-      def product_content_by_name(content_name)
-        self.productContent.find { |pc| pc.content.name == content_name }
-      end
-
       def import_subscription(subscription_id)
         sub = nil
         ::Katello::Util::Support.active_record_retry do
@@ -153,28 +156,6 @@ module Katello
         sub.import_data
         pools = ::Katello::Resources::Candlepin::Product.pools(self.organization.label, self.cp_id)
         pools.each { |pool_json| ::Katello::Pool.import_pool(pool_json['id']) }
-      end
-
-      protected
-
-      def added_content
-        old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map { |pc| pc.content.label }
-        new_content_ids = productContent_change[1].map { |pc| pc.content.label }
-
-        added_content_ids = new_content_ids - old_content_ids
-
-        added_content = productContent_change[1].select { |pc| added_content_ids.include?(pc.content.label) }
-        added_content
-      end
-
-      def deleted_content
-        old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map { |pc| pc.content.label }
-        new_content_ids = productContent_change[1].map { |pc| pc.content.label }
-
-        deleted_content_ids = old_content_ids - new_content_ids
-
-        deleted_content = productContent_change[0].select { |pc| deleted_content_ids.include?(pc.content.label) }
-        deleted_content
       end
     end
   end

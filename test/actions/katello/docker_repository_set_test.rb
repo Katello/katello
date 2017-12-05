@@ -30,11 +30,12 @@ module ::Actions::Katello::DockerRepositorySet
     let(:product) { katello_products(:redhat) }
 
     let(:content) do
-      ::Katello::Candlepin::Content.new(id: 'docker-content-123',
-                                        name: 'Docker Content 123',
-                                        type: 'containerimage',
-                                        label: 'content-123',
-                                        contentUrl: content_url)
+      FactoryBot.build(:katello_content,
+                       cp_content_id: 'docker-content-123',
+                       name: 'Docker Content 123',
+                       content_type: 'containerimage',
+                       label: 'content-123',
+                       content_url: content_url)
     end
 
     let(:registry_name) do
@@ -79,10 +80,10 @@ module ::Actions::Katello::DockerRepositorySet
     end
 
     it 'plans' do
-      plan_action action, product, content.id
+      plan_action action, product, content.cp_content_id
       assert_run_phase action do
         action.input[:product_id].must_equal product.id
-        action.input[:content_id].must_equal content.id
+        action.input[:content_id].must_equal content.cp_content_id
       end
     end
 

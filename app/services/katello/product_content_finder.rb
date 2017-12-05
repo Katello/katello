@@ -25,7 +25,7 @@ module Katello
       considered_products = match_subscription ? consumable.products : consumable.organization.products.enabled.uniq
 
       repositories = Katello::Repository.where(:product_id => considered_products).subscribable
-      repositories = repositories.where(:content_view_version_id => version .id) if version
+      repositories = repositories.where(:content_view_version_id => version.id) if version
 
       consumable.organization.enabled_product_content_for(repositories)
     end

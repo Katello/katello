@@ -4,6 +4,7 @@ module Katello
     helper ReactjsHelper
     before_action :find_rh_provider, :only => [:redhat_provider, :redhat_provider_tab]
     before_action :search_filter, :only => [:auto_complete_search]
+    around_action :skip_bullet, :only => :redhat_provider_tab if defined?(Bullet)
 
     respond_to :html, :js
 
@@ -48,6 +49,16 @@ module Katello
 
     def title
       _('Repositories')
+    end
+
+    private
+
+    # temporarily disable this override when introducing changes to the page so that bullet can audit them
+    def skip_bullet
+      Bullet.enable = false
+      yield
+    ensure
+      Bullet.enable = true
     end
   end
 end

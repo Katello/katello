@@ -198,6 +198,16 @@ module Katello
       self.content_view_version.content_view
     end
 
+    def self.undisplayable_types
+      ret = [::Katello::Repository::CANDLEPIN_DOCKER_TYPE]
+
+      unless ::Katello::RepositoryTypeManager.enabled?(Repository::OSTREE_TYPE)
+        ret << ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
+      end
+
+      ret
+    end
+
     def self.in_organization(org)
       where("#{Repository.table_name}.environment_id" => org.kt_environments.pluck("#{KTEnvironment.table_name}.id"))
     end

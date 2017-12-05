@@ -22,7 +22,7 @@ module Actions
         private
 
         def repository_mapper(product, content, substitutions, registry_name)
-          if content.type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
+          if content.content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
             ::Katello::Candlepin::Content::DockerRepositoryMapper.new(product,
                                                                 content,
                                                                 registry_name)

@@ -38,38 +38,6 @@ module Katello
         self.owner_details['contentAccessMode']
       end
 
-      def enabled_product_content_for(repositories)
-        return [] if repositories.blank?
-        content_ids = repositories.pluck(:content_id)
-
-        filtered_product_content do |pc|
-          content_ids.include?(pc.content.id) && pc.product.enabled?
-        end
-      end
-
-      def enabled_product_content
-        filtered_product_content do |pc|
-          pc.product.enabled? && pc.product.redhat?
-        end
-      end
-
-      def filtered_product_content
-        cp_products = Katello::Resources::Candlepin::Product.all(self.label, ['id', 'productContent.enabled', 'productContent.content.name', 'productContent.content.id',
-                                                                              'productContent.content.type', 'productContent.content.contentUrl', 'productContent.content.label'])
-        to_return = []
-
-        cp_products.each do |product_hash|
-          product = ::Katello::Product.find_by(:organization_id => self.id, :cp_id => product_hash['id'])
-          if product
-            product_hash['productContent'].each do |pc_hash|
-              pc = Katello::Candlepin::ProductContent.new(pc_hash, product.id)
-              to_return << pc if !block_given? || yield(pc)
-            end
-          end
-        end
-        to_return.sort_by { |pc| pc.content.name.downcase }
-      end
-
       def pools(consumer_uuid = nil)
         if consumer_uuid
           Resources::Candlepin::Owner.pools self.label, :consumer => consumer_uuid
