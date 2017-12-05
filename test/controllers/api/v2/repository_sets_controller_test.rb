@@ -24,19 +24,21 @@ module Katello
       models
       permissions
 
-      @content = OpenStruct.new(name: 'content-123', id: 'content-123', 'displayable?': true)
-
-      Product.any_instance.stubs(productContent: [OpenStruct.new(content: @content)])
+      @content = FactoryBot.create(:katello_content,
+                                  name: 'content-123',
+                                  cp_content_id: 'content-123')
+      @content_id = @content.cp_content_id
+      FactoryBot.create(:katello_product_content, content: @content, product: @product)
     end
 
     def test_available_repositories
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn do |product, content_id|
         product.must_equal @product
-        content_id.must_equal @content.id
+        content_id.must_equal @content_id
       end
       task.expects(:output).at_least_once.returns(results: [])
 
-      get :available_repositories, product_id: @product.id, id: @content.id
+      get :available_repositories, product_id: @product.id, id: @content_id
       assert_response :success
     end
 
@@ -45,20 +47,20 @@ module Katello
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @import_permission]
 
       assert_protected_action(:available_repositories, allowed_perms, denied_perms) do
-        get :available_repositories, :product_id => @product.id, :id => @content.id
+        get :available_repositories, :product_id => @product.id, :id => @content_id
       end
     end
 
     def test_repository_enable
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.id.must_equal @content.id
+        content.cp_content_id.must_equal @content_id
         substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
       put :enable,
           product_id: @product.id,
-          id: @content.id,
+          id: @content_id,
           basearch: 'x86_64', releasever: '6Server'
       assert_response :success
     end
@@ -66,13 +68,13 @@ module Katello
     def test_repository_enable_docker
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.id.must_equal @content.id
+        content.cp_content_id.must_equal @content_id
         substitutions.must_be_empty
       end
 
       put :enable,
           product_id: @product.id,
-          id: @content.id
+          id: @content_id
       assert_response :success
     end
 
@@ -83,7 +85,7 @@ module Katello
       assert_protected_action(:enable, allowed_perms, denied_perms) do
         put :enable,
             product_id: @product.id,
-            id: @content.id,
+            id: @content_id,
             basearch: 'x86_64', releasever: '6Server'
       end
     end
@@ -91,13 +93,13 @@ module Katello
     def test_repository_disable
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.id.must_equal @content.id
+        content.cp_content_id.must_equal @content_id
         substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
       put :disable,
           product_id: @product.id,
-          id: @content.id,
+          id: @content_id,
           basearch: 'x86_64', releasever: '6Server'
       assert_response :success
     end
@@ -105,13 +107,13 @@ module Katello
     def test_repository_disable_docker
       assert_sync_task ::Actions::Katello::RepositorySet::DisableRepository do |product, content, substitutions|
         product.must_equal @product
-        content.id.must_equal @content.id
+        content.cp_content_id.must_equal @content_id
         substitutions.must_be_empty
       end
 
       put :disable,
           product_id: @product.id,
-          id: @content.id
+          id: @content_id
       assert_response :success
     end
 
@@ -122,7 +124,7 @@ module Katello
       assert_protected_action(:disable, allowed_perms, denied_perms) do
         put :disable,
             product_id: @product.id,
-            id: @content.id,
+            id: @content_id,
             basearch: 'x86_64', releasever: '6Server'
       end
     end
@@ -134,8 +136,8 @@ module Katello
 
     def test_repositories_index_without_product
       Organization.stubs(:current).returns(@organization)
+      @content.stubs(:modified_product_ids).returns([])
       @organization.stubs(:enabled_product_content).returns([OpenStruct.new(content: @content, product_id: @product.id)])
-      #Product.any_instance.stubs(available_content: [OpenStruct.new(content: @content)])
       get :index
       assert_response :success
     end

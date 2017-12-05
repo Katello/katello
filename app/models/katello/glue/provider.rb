@@ -123,9 +123,24 @@ module Katello
         ::Foreman::Logging.logger('katello/manifest_import_logger')
       end
 
+      def update_product_content_from_cp(katello_and_cp_ids)
+        katello_and_cp_ids.each do |id_pair|
+          attrs = Resources::Candlepin::Product.get(self.organization.label, id_pair.second, %w(productContent)).first
+          product_content_attrs = attrs.delete(:productContent) || []
+          product = ::Katello::Product.find(id_pair.first)
+          Glue::Candlepin::Product.import_product_content(product, product_content_attrs)
+        end
+      end
+
       # TODO: break up method
       def import_products_from_cp # rubocop:disable MethodLength
-        product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
+        db_and_cp_ids = self.organization.providers.redhat.first.products.pluck(:id, :cp_id)
+
+        # this method only imports products which are not already in Katello
+        # no need for a full import on them - just update the product content
+        update_product_content_from_cp(db_and_cp_ids)
+
+        product_in_katello_ids = db_and_cp_ids.map(&:second)
         products_in_candlepin_ids = []
 
         marketing_to_engineering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|

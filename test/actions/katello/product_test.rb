@@ -11,6 +11,9 @@ module Katello
       @provider = FactoryBot.build('katello_fedora_hosted_provider', organization: @org)
       @product = FactoryBot.build('katello_product', provider: @provider, cp_id: 1234)
       @repository = FactoryBot.build('katello_repository', product: @product, content_id: 'foobar')
+      @content = FactoryBot.build(:katello_content)
+      @product_content = FactoryBot.build(:katello_product_content, product: @product, content: @content)
+      @product.stubs(:product_content_by_id).returns(@product_content)
     end
 
     describe 'Content Destroy' do
@@ -21,6 +24,8 @@ module Katello
       it 'plans' do
         @repository.stubs(:other_repos_with_same_product_and_content).returns([])
         @repository.stubs(:other_repos_with_same_content).returns([])
+
+        Katello::Content.expects(:find).returns(@content)
 
         action = create_action action_class
         action.stubs(:action_subject).with(@repository)
@@ -140,7 +145,7 @@ module ::Actions::Katello::Product
         subject.must_equal(product)
       end
       product.expects(:published_content_view_versions).returns([])
-      product.expects(:productContent).returns({})
+      product.expects(:product_contents).returns([])
       default_view_repos = product.repositories.in_default_view.map(&:id)
 
       action.expects(:plan_self)

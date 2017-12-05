@@ -10,6 +10,12 @@ FactoryBot.define do
       provider_type "Custom"
     end
 
+    trait :redhat do
+      name "RedHatProvider"
+      description "Serving Red Hat Content To You"
+      provider_type "Red Hat"
+    end
+
     factory :katello_fedora_hosted_provider, :traits => [:fedora_hosted]
   end
 end

@@ -43,7 +43,6 @@ module Katello
                                :label => "Zanzibar#{rand 10**6}",
                                :name => ProductTestData::PRODUCT_NAME,
                                :id => ProductTestData::PRODUCT_ID,
-                               :productContent => [],
                                :provider => @provider,
                                :organization => @organization
         )
@@ -99,7 +98,6 @@ module Katello
 
         Product.new(:name => @p.name, :label => @p.name,
                     :id => @p.cp_id,
-                    :productContent => @p.productContent,
                     :provider => @p.provider
                    ).wont_be :valid?
       end

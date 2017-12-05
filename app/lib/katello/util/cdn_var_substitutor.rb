@@ -22,7 +22,7 @@ module Katello
       end
 
       def validate_substitutions(content, substitutions)
-        path_with_subs = PathWithSubstitutions.new(content.contentUrl, substitutions)
+        path_with_subs = PathWithSubstitutions.new(content.content_url, substitutions)
         real_path = path_with_subs.apply_substitutions
         unused_substitutions = path_with_subs.unused_substitutions
         needed_substitutions = PathWithSubstitutions.new(real_path, {}).substitutions_needed
@@ -30,7 +30,7 @@ module Katello
         if unused_substitutions.any?
           fail Errors::CdnSubstitutionError, _("%{unused_substitutes} cannot be specified for %{content_name}"\
                  " as that information is not substitutable in %{content_url} ") %
-              { unaccepted_substitutions: unused_substitutions, content_name: content.name, content_url: content.contentUrl }
+              { unaccepted_substitutions: unused_substitutions, content_name: content.name, content_url: content.content_url }
         end
 
         if needed_substitutions.any?

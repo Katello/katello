@@ -20,7 +20,7 @@ module Actions
           # Candlepin::Product::ContentRemove is called with Katello::Repository::Destroy, so we only want to run ContentRemove
           # on repos that are not being destroyed with Katello::Repository::Destroy.
           content_ids = product.repositories.in_default_view.map(&:content_id)
-          remaining_product_content = product.productContent.select { |content| !content_ids.include? content.content.id }
+          remaining_product_content = product.product_contents.select { |content| !content_ids.include?(content.content.cp_content_id) }
 
           sequence do
             unless organization_destroy
@@ -43,7 +43,7 @@ module Actions
                   plan_action(Candlepin::Product::ContentRemove,
                               owner: product.organization.label,
                               product_id: product.cp_id,
-                              content_id: pc.content.id)
+                              content_id: pc.content.cp_content_id)
                 end
                 plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id, :owner => product.organization.label)
               end

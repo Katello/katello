@@ -13,6 +13,8 @@ module Katello
     belongs_to :provider, :inverse_of => :products
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products
+    has_many :product_contents, :foreign_key => 'product_id', :class_name => "Katello::ProductContent", :dependent => :destroy
+    has_many :displayable_product_contents, -> { displayable }, :foreign_key => 'product_id', :class_name => "Katello::ProductContent", :dependent => :destroy
     has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_exception
 
     has_many :subscription_products, :class_name => "Katello::SubscriptionProduct", :dependent => :destroy
@@ -54,6 +56,7 @@ module Katello
     scope :syncable_content, -> { uniq.where(Katello::Repository.arel_table[:url].not_eq(nil)).joins(:repositories) }
     scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
+    scope :with_contents, -> { includes(:product_contents) }
 
     def self.subscribable
       joins("LEFT OUTER JOIN #{Katello::Repository.table_name} repo ON repo.product_id = #{self.table_name}.id")
@@ -125,8 +128,7 @@ module Katello
       options = {} if options.nil?
 
       hash = super(options.merge(:except => [:cp_id, :id]))
-      hash = hash.merge(:productContent => self.productContent,
-                        :multiplier => self.multiplier,
+      hash = hash.merge(:multiplier => self.multiplier,
                         :attributes => self.attrs,
                         :id => self.cp_id,
                         :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
@@ -212,9 +214,13 @@ module Katello
       repositories.any?(&:url?)
     end
 
+    def product_content_by_id(content_id)
+      product_contents.joins(:content).where("#{Katello::Content.table_name}.cp_content_id = ?", content_id).first
+    end
+
     def available_content(content_view_version_id = nil)
-      self.productContent.select do |content|
-        repos = self.repositories.subscribable.where(content_id: content.content.id)
+      product_contents.select do |product_content|
+        repos = self.repositories.subscribable.where(content_id: product_content.content.cp_content_id)
         repos.exists? && (content_view_version_id.nil? || repos.where(content_view_version_id: content_view_version_id.to_i).count > 0)
       end
     end

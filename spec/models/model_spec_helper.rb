@@ -74,7 +74,6 @@ HEREKEY
     end
 
     def disable_product_orchestration
-      Resources::Candlepin::Product.stubs(:get).returns([{:productContent => []}]) #return a fresh hash, as add_repo modified it
       Resources::Candlepin::Product.stubs(:add_content).returns(true)
       Resources::Candlepin::Product.stubs(:delete_content).returns(true)
       Resources::Candlepin::Product.stubs(:create).returns(:id => '1')

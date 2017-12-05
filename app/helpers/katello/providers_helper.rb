@@ -20,11 +20,8 @@ module Katello
       tabs = {}.with_indifferent_access
       redhat_repo_tabs.each { |tab| tabs[tab[:id]] = tab }
 
-      product_content = provider.organization.filtered_product_content
-
-      provider.products.each do |product|
-        selected_contents = product_content.select { |pc| pc.product_id == product.id }.select(&:displayable?)
-        selected_contents.each do |prod_content|
+      provider.products.includes(:displayable_product_contents).each do |product|
+        product.displayable_product_contents.each do |prod_content|
           name = prod_content.content.name
           if prod_content.content_type == ::Katello::Repository::CANDLEPIN_OSTREE_TYPE
             key = :ostree

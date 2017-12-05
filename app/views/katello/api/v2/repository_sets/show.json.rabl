@@ -3,8 +3,20 @@ object @resource
 @resource ||= @object
 
 glue :content do
-  extends 'katello/api/v2/common/identifier'
-  attributes :type, :updated, :vendor, :gpgUrl, :contentUrl, :label
+  node do |content|
+    {
+      id: content.cp_content_id,
+      name: content.name,
+      label: content.label,
+      vendor: content.vendor,
+      type: content.content_type,
+      gpgUrl: content.gpg_url,
+      contentUrl: content.content_url,
+      modified_product_ids: content.modified_product_ids
+    }
+  end
+
+  attributes :name, :vendor, :label
 end
 attribute :enabled
 
