@@ -20,6 +20,8 @@ module Katello
 
       included do
         prepend Overrides
+        helper 'bastion/layout'
+
         append_view_path('app/views/foreman')
         before_action :find_resource_and_status, :only => [:pulp_storage, :pulp_status]
 
