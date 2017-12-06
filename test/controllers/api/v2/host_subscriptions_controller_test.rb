@@ -40,6 +40,10 @@ module Katello
   end
 
   class Api::V2::HostSubscriptionsControllerTest < Api::V2::HostSubscriptionsControllerBase
+    include FactImporterIsolation
+
+    allow_transactions_for_any_importer
+
     def test_index
       get :index, :host_id => @host.id
 
