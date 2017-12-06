@@ -2,6 +2,9 @@ require 'katello_test_helper'
 
 module Katello
   class RhsmFactImporterTest < ActiveSupport::TestCase
+    include FactImporterIsolation
+    allow_transactions_for_any_importer
+
     def setup
       @facts = {
         'net.interface.eth0.mac_address' => '00:00:00:00:00:12',

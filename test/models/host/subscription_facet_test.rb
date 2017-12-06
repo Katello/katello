@@ -18,6 +18,9 @@ module Katello
   end
 
   class SubscriptionFacetTest < SubscriptionFacetBase
+    include FactImporterIsolation
+    allow_transactions_for_any_importer
+
     def test_sanitize_name
       assert_equal 'foo-bar', Host::SubscriptionFacet.sanitize_name('foo_bar')
       assert_equal 'foobar', Host::SubscriptionFacet.sanitize_name('foobar.')
