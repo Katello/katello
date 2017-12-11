@@ -22,11 +22,11 @@
         <tr>
           <td>
             <% if host_collection.security_updates? %>
-              <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-danger">&nbsp;</i></a>
+              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center"><i class="label label-danger">&nbsp;</i></a>
             <% elsif host_collection.bugzilla_updates? || host_collection.enhancement_updates? %>
-              <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-warning">&nbsp;</i></a>
+              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center"><i class="label label-warning">&nbsp;</i></a>
             <% else %>
-              <a href="/host_collections/<%= host_collection.id %>/actions" style="text-align: center"><i class="label label-success">&nbsp;</i></a>
+              <a href="/host_collections/<%= host_collection.id %>" style="text-align: center"><i class="label label-success">&nbsp;</i></a>
             <% end %>
           </td>
           <td class='ellipsis'><%= host_collection.name %></td>
