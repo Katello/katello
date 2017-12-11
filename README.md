@@ -4,11 +4,11 @@
 [![Code Climate](https://codeclimate.com/github/Katello/katello/badges/gpa.svg)](https://codeclimate.com/github/Katello/katello)
 [![Dependency Status](https://gemnasium.com/Katello/katello.svg)](https://gemnasium.com/Katello/katello)
 
-Full documentation is at http://www.katello.org
+Full documentation is at https://www.theforeman.org/plugins/katello/
 
 ## About
 
-[Katello](http://www.katello.org) is a systems life cycle management
+[Katello](https://www.theforeman.org/plugins/katello/) is a systems life cycle management
 plugin to [Foreman](http://www.theforeman.org). Katello allows you to manage
 thousands of machines with one click. Katello can pull content
 from remote repositories into isolated environments, and make subscriptions
@@ -65,7 +65,7 @@ That's rather unfortunate. But don't worry! We can help. Just file a bug
 
 ## Contributing
 
-See the [developer documentation](http://www.katello.org/developers/index.html).
+See the [developer documentation](https://www.theforeman.org/plugins/katello/developers).
 
 ## Annotated Pulp and Candlepin Workflows and test Scenarios
 
@@ -73,7 +73,7 @@ See the [annotation docs](./test/scenarios/README.md) for more information.
 
 ## Contact & Resources
 
- * [Katello.org](http://katello.org)
+ * [theforeman.org](https://theforeman.org/plugins/katello)
  * [Foreman User Mailing List](https://groups.google.com/forum/?fromgroups#!forum/foreman-users)
  * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
  * [IRC Freenode](http://freenode.net/using_the_network.shtml): #theforeman-dev
@@ -81,4 +81,4 @@ See the [annotation docs](./test/scenarios/README.md) for more information.
 ## Documentation
 
 Most of our documentation (both for users and developers) can be found at
-[Katello.org](http://www.katello.org).
+[theforeman.org](https://www.theforeman.org/plugins/katello).
