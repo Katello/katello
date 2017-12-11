@@ -145,7 +145,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/hosts/bulk/subscriptions/remove_subscriptions", N_("Remove subscriptions from one or more hosts")
+    api :PUT, "/hosts/bulk/remove_subscriptions", N_("Remove subscriptions from one or more hosts")
     param_group :bulk_params
     param :subscriptions, Array, :desc => N_("Array of subscriptions to remove") do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
@@ -162,7 +162,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/hosts/bulk/subscriptions/add_subscriptions", N_("Add subscriptions to one or more hosts")
+    api :PUT, "/hosts/bulk/add_subscriptions", N_("Add subscriptions to one or more hosts")
     param_group :bulk_params
     param :subscriptions, Array, :desc => N_("Array of subscriptions to add"), :required => true do
       param :id, String, :desc => N_("Subscription Pool id"), :required => true
@@ -177,7 +177,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/hosts/bulk/subscriptions/auto_attach", N_("Trigger an auto-attach of subscriptions on one or more hosts")
+    api :PUT, "/hosts/bulk/auto_attach", N_("Trigger an auto-attach of subscriptions on one or more hosts")
     param_group :bulk_params
     def auto_attach
       task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::AutoAttachSubscriptions, @hosts)
