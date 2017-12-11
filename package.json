@@ -2,6 +2,8 @@
   "name": "katello",
   "version": "1.0.0",
   "scripts": {
+    "storybook": "start-storybook -p 6007",
+    "storybook:deploy": "storybook-to-ghpages",
     "test": "jest webpack",
     "test:watch": "jest webpack --watchAll",
     "test:current": "jest webpack --watch",
@@ -17,6 +19,8 @@
     "url": "http://projects.theforeman.org/projects/katello/issues"
   },
   "devDependencies": {
+    "@storybook/react": "^3.2.17",
+    "@storybook/storybook-deployer": "^2.0.0",
     "babel-jest": "^21.2.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
