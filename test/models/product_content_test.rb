@@ -38,6 +38,16 @@ module Katello
       assert_equal @product_content.repositories.first, repo
     end
 
+    def test_enabled
+      assert_includes Katello::ProductContent.all, @product_content
+      refute_includes Katello::ProductContent.enabled(@product.organization), @product_content
+
+      FactoryBot.create(:katello_repository, :product => @product, :content_id => @content_id, :environment_id => @product.organization.library.id,
+        :content_view_version_id => @product.organization.default_content_view.versions.first.id)
+
+      assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
+    end
+
     def test_displayable
       @content.update_attributes(content_type: ::Katello::Repository::CANDLEPIN_DOCKER_TYPE)
       refute ProductContent.displayable.include?(@product_content)
@@ -51,6 +61,18 @@ module Katello
 
       @content.update_attributes(content_type: 'arbitrary type')
       assert ProductContent.displayable.include?(@product_content)
+    end
+
+    def test_search_name
+      assert_includes Katello::ProductContent.search_for("name = #{@content.name}"), @product_content
+    end
+
+    def test_search_label
+      assert_includes Katello::ProductContent.search_for("label = #{@content.label}"), @product_content
+    end
+
+    def test_search_product_name
+      assert_includes Katello::ProductContent.search_for("product_name = \"#{@product.name}\""), @product_content
     end
   end
 end

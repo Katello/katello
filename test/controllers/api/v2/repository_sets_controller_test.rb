@@ -31,6 +31,18 @@ module Katello
       FactoryBot.create(:katello_product_content, content: @content, product: @product)
     end
 
+    def test_index_product
+      get :index, :product_id => @product.id
+
+      assert_response :success
+    end
+
+    def test_index_enabled
+      get :index, :organization_id => @organization.id, :enabled => true
+
+      assert_response :success
+    end
+
     def test_available_repositories
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn do |product, content_id|
         product.must_equal @product
@@ -131,14 +143,6 @@ module Katello
 
     def test_repositories_index_with_product
       get :index, product_id: @product.id
-      assert_response :success
-    end
-
-    def test_repositories_index_without_product
-      Organization.stubs(:current).returns(@organization)
-      @content.stubs(:modified_product_ids).returns([])
-      @organization.stubs(:enabled_product_content).returns([OpenStruct.new(content: @content, product_id: @product.id)])
-      get :index
       assert_response :success
     end
   end

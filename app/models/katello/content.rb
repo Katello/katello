@@ -1,7 +1,6 @@
 module Katello
   class Content < Katello::Model
-    include Glue::Candlepin::ProductContent if SETTINGS[:katello][:use_cp]
-
+    include Katello::Glue::Candlepin::Content
     has_many :product_contents, :class_name => 'Katello::ProductContent', :dependent => :destroy
     has_many :products, :through => :product_contents
 

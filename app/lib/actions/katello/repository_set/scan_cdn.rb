@@ -46,7 +46,7 @@ module Actions
         def prepare_results_docker_content
           registries = product.cdn_resource.get_docker_registries(content.content_url)
           registries.map do |registry|
-            mapper = ::Katello::Candlepin::Content::DockerRepositoryMapper.new(product,
+            mapper = ::Katello::Candlepin::DockerRepositoryMapper.new(product,
                                                                 content,
                                                                 registry['name'])
             mapper.registries = registries
@@ -96,9 +96,9 @@ module Actions
         end
 
         def repository_mapper(substitutions)
-          ::Katello::Candlepin::Content::RepositoryMapper.new(product,
-                                                              content,
-                                                              substitutions)
+          ::Katello::Candlepin::RepositoryMapper.new(product,
+                                                     content,
+                                                     substitutions)
         end
 
         def cdn_url

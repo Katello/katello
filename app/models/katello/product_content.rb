@@ -15,8 +15,17 @@ module Katello
       .order("LOWER(#{content_table_name}.name) ASC")
     }
 
+    scoped_search :on => :name, :relation => :content
+    scoped_search :on => :content_type, :relation => :content
+    scoped_search :on => :label, :relation => :content
+    scoped_search :on => :name, :relation => :product, :rename => :product_name
+
     def self.content_table_name
       Katello::Content.table_name
+    end
+
+    def self.enabled(organization)
+      joins(:content).where("#{self.content_table_name}.cp_content_id" => Katello::Repository.in_organization(organization).select(:content_id))
     end
 
     # used by Katello::Api::V2::RepositorySetsController#index

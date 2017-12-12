@@ -6,7 +6,7 @@ module Actions
 
         def plan(repository)
           sequence do
-            if repository.content.nil?
+            if repository.content_id.nil?
               content_create = plan_action(Candlepin::Product::ContentCreate,
                                            owner:       repository.product.organization.label,
                                            name:        repository.name,

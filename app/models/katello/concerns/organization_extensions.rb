@@ -139,9 +139,7 @@ module Katello
         end
 
         def enabled_product_content
-          filtered_product_content do |pc|
-            pc.product.enabled? && pc.product.redhat?
-          end
+          Katello::ProductContent.where(:product_id => self.products.enabled.redhat)
         end
 
         def filtered_product_content
