@@ -14,19 +14,11 @@ module Katello
     api :GET, "/products/:product_id/repository_sets", N_("List repository sets for a product.")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
+    param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
     param_group :search, Api::V2::ApiController
     def index
-      collection = {}
-      if @product.nil?
-        collection[:results] = @organization.enabled_product_content
-      else
-        collection[:results] = @product.displayable_product_contents
-      end
-      # filter on name if it is provided
-      collection[:results] = collection[:results].select { |pc| pc.content.name == params[:name] } if params[:name]
-      collection[:subtotal] = collection[:results].size
-      collection[:total] = collection[:subtotal]
-      respond_for_index :collection => collection
+      respond(:collection => scoped_search(index_relation, nil, nil, :custom_sort => default_sort,
+                                           :resource_class => Katello::ProductContent))
     end
 
     api :GET, "/products/:product_id/repository_sets/:id", N_("Get info about a repository set")
@@ -82,6 +74,22 @@ module Katello
     end
 
     private
+
+    def default_sort
+      lambda { |relation| relation.joins(:content).order("name asc") }
+    end
+
+    def index_relation
+      if @product.nil?
+        relation = @organization.enabled_product_content
+      else
+        relation = @product.displayable_product_contents
+      end
+
+      relation = relation.enabled(@organization) if ::Foreman::Cast.to_bool(params[:enabled])
+      relation = relation.joins(:content).where(:name => params[:name]) if params[:name].present?
+      relation
+    end
 
     def find_product_content
       @product_content = @product.product_content_by_id(params[:id])

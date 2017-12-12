@@ -23,14 +23,14 @@ module Actions
 
         def repository_mapper(product, content, substitutions, registry_name)
           if content.content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
-            ::Katello::Candlepin::Content::DockerRepositoryMapper.new(product,
-                                                                content,
-                                                                registry_name)
+            ::Katello::Candlepin::DockerRepositoryMapper.new(product,
+                                                             content,
+                                                             registry_name)
 
           else
-            ::Katello::Candlepin::Content::RepositoryMapper.new(product,
-                                                                content,
-                                                                substitutions)
+            ::Katello::Candlepin::RepositoryMapper.new(product,
+                                                       content,
+                                                       substitutions)
           end
         end
       end

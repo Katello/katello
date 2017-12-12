@@ -1,40 +1,5 @@
 module Katello
-  class Candlepin::Content
-    attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl, :modifiedProductIds
-
-    def initialize(params = {})
-      load_attributes(params)
-    end
-
-    def self.find(owner_key, id)
-      found = Resources::Candlepin::Content.get(owner_key, id)
-      Candlepin::Content.new(found)
-    end
-
-    def create
-      created = Resources::Candlepin::Content.create self
-      load_attributes(created)
-
-      self
-    end
-
-    def destroy
-      Resources::Candlepin::Content.destroy(@id)
-    end
-
-    def update(params = {})
-      return self if params.empty?
-
-      updated = Resources::Candlepin::Content.update(params.merge(:id => @id))
-      load_attributes(updated)
-
-      self
-    end
-
-    def load_attributes(params)
-      params.each_pair { |k, v| instance_variable_set("@#{k}", v) unless v.nil? }
-    end
-
+  module Candlepin
     class RepositoryMapper
       attr_reader :product, :content, :substitutions
 
@@ -53,7 +18,7 @@ module Katello
       end
 
       def build_repository
-        certificate_and_key = get_certificate_and_key(product, @content.modified_product_ids)
+        certificate_and_key = get_certificate_and_key(product, @content.modified_product_ids(product.organization))
 
         repository = Repository.new(
           :environment => product.organization.library,
@@ -172,80 +137,6 @@ module Katello
         else
           ""
         end
-      end
-    end
-
-    class DockerRepositoryMapper
-      attr_reader :product, :content
-      attr_accessor :container_registry_name, :registries, :registry_repo
-      def initialize(product, content, container_registry_name = nil)
-        @product = product
-        @content = content
-        @container_registry_name = container_registry_name
-      end
-
-      def registry
-        validate!
-        @registries ||= product.cdn_resource.get_docker_registries(content.content_url)
-        @registry_repo ||= registries.detect do |reg|
-          reg['name'] == @container_registry_name
-        end
-      end
-
-      def find_repository
-        ::Katello::Repository.where(product_id: product.id,
-                                    environment_id: product.organization.library.id,
-                                    docker_upstream_name: container_registry_name).first
-      end
-
-      def build_repository
-        unless registry
-          Rails.logger.error("Docker registry with pulp_id #{container_registry_name} was not found at #{content.content_url}")
-          fail _("Docker repository not found")
-        end
-        ::Katello::Repository.new(:environment => product.organization.library,
-                                 :product => product,
-                                 :cp_label => content.label,
-                                 :content_id => content.cp_content_id,
-                                 :relative_path => relative_path,
-                                 :name => name,
-                                 :docker_upstream_name => registry["name"],
-                                 :label => label,
-                                 :url => feed_url,
-                                 :feed_ca => ::Katello::Repository.feed_ca_cert(feed_url),
-                                 :feed_cert => product.certificate,
-                                 :feed_key => product.key,
-                                 :content_type => ::Katello::Repository::DOCKER_TYPE,
-                                 :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                 :unprotected => true,
-                                 :content_view_version => product.organization.library.default_content_view_version)
-      end
-
-      def validate!
-        fail _("Registry name cannot be blank") if @container_registry_name.blank?
-      end
-
-      def name
-        "#{content.name} - (#{registry['name']})"
-      end
-
-      def feed_url
-        cdn_uri = URI.parse(product.provider.repository_url)
-        docker_repo_uri =  URI.parse(registry["url"])
-        docker_repo_uri =  URI.parse("#{cdn_uri.scheme}://#{registry['url']}") unless docker_repo_uri.host
-        "#{docker_repo_uri.scheme}://#{docker_repo_uri.host}:#{docker_repo_uri.port}"
-      end
-
-      def label
-        ::Katello::Util::Model.labelize(name)
-      end
-
-      def katello_content_type
-        ::Katello::Repository::DOCKER_TYPE
-      end
-
-      def relative_path
-        ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, content.content_url)
       end
     end
   end

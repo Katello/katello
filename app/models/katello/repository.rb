@@ -10,7 +10,7 @@ module Katello
     before_validation :update_ostree_upstream_sync_policy
 
     include ForemanTasks::Concerns::ActionSubject
-    include Glue::Candlepin::Content if (SETTINGS[:katello][:use_cp] && SETTINGS[:katello][:use_pulp])
+    include Glue::Candlepin::Repository
     include Glue::Pulp::Repo if SETTINGS[:katello][:use_pulp]
 
     include Glue if (SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp])

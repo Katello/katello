@@ -11,8 +11,7 @@ glue :content do
       vendor: content.vendor,
       type: content.content_type,
       gpgUrl: content.gpg_url,
-      contentUrl: content.content_url,
-      modified_product_ids: content.modified_product_ids
+      contentUrl: content.content_url
     }
   end
 
@@ -27,5 +26,6 @@ if @resource.product
 end
 
 child @resource.repositories => :repositories do
-  attributes :id, :name
+  attributes :id, :name, :arch
+  attributes :minor => :releasever
 end
