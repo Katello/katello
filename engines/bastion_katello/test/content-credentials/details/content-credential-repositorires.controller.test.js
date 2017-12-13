@@ -1,39 +1,39 @@
-describe('Controller: GPGKeyProductsController', function() {
+describe('Controller: ContentCredentialRepositoriesController', function() {
     var $scope;
 
     beforeEach(module(
-        'Bastion.gpg-keys',
+        'Bastion.content-credentials',
         'Bastion.test-mocks'
     ));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            GPGKey = $injector.get('MockResource').$new(),
+            ContentCredential = $injector.get('MockResource').$new(),
             Nutupane;
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
-            gpgKeyId: 1
+            contentCredentialId: 1
         };
 
         Nutupane = function() {
             this.table = {};
         };
 
-        $controller('GPGKeyProductsController', {
+        $controller('ContentCredentialRepositoriesController', {
             $scope: $scope,
             Nutupane: Nutupane,
-            GPGKey: GPGKey
+            ContentCredential: ContentCredential
         });
 
     }));
 
-    it('retrieves and puts a gpg key on the scope', function() {
-        expect($scope.gpgKey).toBeDefined();
+    it('retrieves and puts a content credential on the scope', function() {
+        expect($scope.contentCredential).toBeDefined();
     });
 
-    it("sets up the gpg key products nutupane table", function() {
+    it("sets up the content credential products nutupane table", function() {
         expect($scope.table).toBeDefined();
     });
 });

@@ -1,19 +1,19 @@
-describe('Controller: GPGKeyDetailsController', function() {
+describe('Controller: ContentCredentialDetailsController', function() {
     var $scope, translate, Notification;
 
     beforeEach(module(
-        'Bastion.gpg-keys',
+        'Bastion.content-credentials',
         'Bastion.test-mocks'
     ));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            GPGKey = $injector.get('MockResource').$new();
+            ContentCredential = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
-            gpgKeyId: 1
+            contentCredentialId: 1
         };
 
         translate = function(message) {
@@ -30,9 +30,9 @@ describe('Controller: GPGKeyDetailsController', function() {
             replaceRow: function() {}
         };
 
-        $controller('GPGKeyDetailsController', {
+        $controller('ContentCredentialDetailsController', {
             $scope: $scope,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             $q: $q,
             translate: translate,
             Notification: Notification
@@ -40,37 +40,37 @@ describe('Controller: GPGKeyDetailsController', function() {
 
     }));
 
-    it('retrieves and puts a gpg key on the scope', function() {
-        expect($scope.gpgKey).toBeDefined();
+    it('retrieves and puts a content credential on the scope', function() {
+        expect($scope.contentCredential).toBeDefined();
     });
 
-    it('should save the gpg key and return a promise', function() {
-        var promise = $scope.save($scope.gpgKey);
+    it('should save the content credential and return a promise', function() {
+        var promise = $scope.save($scope.contentCredential);
 
         expect(promise.then).toBeDefined();
     });
 
-    it('should save the gpg key successfully', function() {
+    it('should save the content credential successfully', function() {
         spyOn(Notification, 'setSuccessMessage');
 
-        $scope.save($scope.gpgKey);
+        $scope.save($scope.contentCredential);
 
         expect(Notification.setSuccessMessage).toHaveBeenCalled();
     });
 
-    it('should fail to save the gpg key', function() {
+    it('should fail to save the content credential', function() {
         spyOn(Notification, 'setErrorMessage');
 
-        $scope.gpgKey.failed = true;
-        $scope.save($scope.gpgKey);
+        $scope.contentCredential.failed = true;
+        $scope.save($scope.contentCredential);
 
         expect(Notification.setErrorMessage).toHaveBeenCalled();
     });
 
-    it('should provide a way to remove a gpg key', function() {
+    it('should provide a way to remove a content credential', function() {
         spyOn($scope, 'transitionTo');
-        $scope.removeGPGKey($scope.gpgKey);
-        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-keys');
+        $scope.removeContentCredential($scope.contentCredential);
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-credentials');
     });
 
 });

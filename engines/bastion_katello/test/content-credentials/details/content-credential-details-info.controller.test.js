@@ -1,18 +1,18 @@
-describe('Controller: GPGKeyDetailsInfoController', function() {
+describe('Controller: ContentCredentialDetailsInfoController', function() {
     var $scope, translate, Notification;
 
     beforeEach(module(
-        'Bastion.gpg-keys',
+        'Bastion.content-credentials',
         'Bastion.test-mocks'
     ));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            GPGKey = $injector.get('MockResource').$new();
+            ContentCredential = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {
-            gpgKeyId: 1
+            contentCredentialId: 1
         };
         translate = function(message) {
             return message;
@@ -23,39 +23,39 @@ describe('Controller: GPGKeyDetailsInfoController', function() {
             setErrorMessage: function () {}
         };
 
-        $controller('GPGKeyDetailsInfoController', {
+        $controller('ContentCredentialDetailsInfoController', {
             $scope: $scope,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             translate: translate,
             Notification: Notification
         });
 
     }));
 
-    it('retrieves and puts a gpg key on the scope', function() {
-        expect($scope.gpgKey).toBeDefined();
+    it('retrieves and puts a content credential on the scope', function() {
+        expect($scope.contentCredential).toBeDefined();
     });
 
-    it('should save a new gpg key resource on upload', function() {
+    it('should save a new content credential resource on upload', function() {
         spyOn(Notification, 'setSuccessMessage');
 
-        spyOn($scope.gpgKey, '$get');
+        spyOn($scope.contentCredential, '$get');
         $scope.uploadContent({"status": "success"});
 
         expect(Notification.setSuccessMessage).toHaveBeenCalled();
 
         expect($scope.uploadStatus).toBe('success');
-        expect($scope.gpgKey.$get).toHaveBeenCalled();
+        expect($scope.contentCredential.$get).toHaveBeenCalled();
     });
 
-    it('should error on a new gpg key resource on upload', function() {
+    it('should error on a new content credential resource on upload', function() {
         spyOn(Notification, 'setErrorMessage');
 
-        spyOn($scope.gpgKey, '$get');
+        spyOn($scope.contentCredential, '$get');
         $scope.uploadContent({"errors": "....", "displayMessage":"......"});
 
         expect(Notification.setErrorMessage).toHaveBeenCalled();
-        expect($scope.gpgKey.$get).not.toHaveBeenCalled();
+        expect($scope.contentCredential.$get).not.toHaveBeenCalled();
     });
 
     it('should handle a 413 error', function() {
@@ -70,11 +70,11 @@ describe('Controller: GPGKeyDetailsInfoController', function() {
             </body></html>';
 
         spyOn(Notification, 'setErrorMessage');
-        spyOn($scope.gpgKey, '$get');
+        spyOn($scope.contentCredential, '$get');
         $scope.uploadError(error, text);
 
         expect(Notification.setErrorMessage).toHaveBeenCalledWith('Error during upload: File too large.');
         expect($scope.uploadStatus).toBe('error');
-        expect($scope.gpgKey.$get).not.toHaveBeenCalled();
+        expect($scope.contentCredential.$get).not.toHaveBeenCalled();
     });
 });
