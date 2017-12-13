@@ -9,7 +9,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            GPGKey = $injector.get('MockResource').$new(),
+            ContentCredential = $injector.get('MockResource').$new(),
             Repository = $injector.get('MockResource').$new();
 
         repository = new Repository();
@@ -44,17 +44,17 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             translate: translate,
             Notification: Notification,
             Repository: Repository,
-            GPGKey: GPGKey
+            ContentCredential: ContentCredential
         });
     }));
 
-    it('provides a method to retrieve available gpg keys', function() {
-        var promise = $scope.gpgKeys();
+    it('provides a method to retrieve available content credentials', function() {
+        var promise = $scope.contentCredentials();
 
         expect(promise.then).toBeDefined();
-        promise.then(function(gpgKeys) {
-            expect(gpgKeys).toBeDefined();
-            expect(gpgKeys).toContain({id: null});
+        promise.then(function(contentCredentials) {
+            expect(contentCredentials).toBeDefined();
+            expect(contentCredentials).toContain({id: null});
         });
 
         $scope.$apply();

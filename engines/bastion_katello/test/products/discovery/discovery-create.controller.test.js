@@ -12,7 +12,7 @@ describe('Controller: DiscoveryCreateController', function() {
             $q = $injector.get('$q'),
             Provider = $injector.get('MockResource').$new(),
             Repository = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new(),
+            ContentCredential = $injector.get('MockResource').$new(),
             translate;
 
         translate = function (message) {
@@ -32,7 +32,7 @@ describe('Controller: DiscoveryCreateController', function() {
             CurrentOrganization: 'ACME',
             Product: Product,
             Repository: Repository,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             FormUtils: FormUtils,
             translate: translate
         });
@@ -55,7 +55,7 @@ describe('Controller: DiscoveryCreateController', function() {
     });
 
     it('should set gpgkeys', function(){
-        expect($scope.gpgKeys).toBeDefined();
+        expect($scope.contentCredentials).toBeDefined();
     });
 
     it('should fetch a label whenever the name changes', function() {

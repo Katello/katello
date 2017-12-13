@@ -15,7 +15,7 @@ describe('Controller: ProductFormController', function() {
             $q = $injector.get('$q'),
             Product = $injector.get('MockResource').$new(),
             Provider = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new();
+            ContentCredential = $injector.get('MockResource').$new();
 
         SyncPlan = $injector.get('MockResource').$new();
 
@@ -51,7 +51,7 @@ describe('Controller: ProductFormController', function() {
             $uibModal: $uibModal,
             Product: Product,
             Provider: Provider,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             SyncPlan: SyncPlan,
             FormUtils: FormUtils,
             Notification: Notification

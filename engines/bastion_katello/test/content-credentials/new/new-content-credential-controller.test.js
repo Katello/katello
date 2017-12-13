@@ -1,15 +1,15 @@
-describe('Controller: NewGPGKeyController', function() {
+describe('Controller: NewContentCredentialController', function() {
     var $scope, translate, Notification;
 
     beforeEach(module(
-        'Bastion.gpg-keys',
+        'Bastion.content-credentials',
         'Bastion.test-mocks'
     ));
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            GPGKey = $injector.get('MockResource').$new(),
+            ContentCredential = $injector.get('MockResource').$new(),
             CurrentOrganization = "Foo";
 
         $scope = $injector.get('$rootScope').$new();
@@ -20,20 +20,20 @@ describe('Controller: NewGPGKeyController', function() {
             closeItem: function() {}
         };
 
-        $controller('NewGPGKeyController', {
+        $controller('NewContentCredentialController', {
             $scope: $scope,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             CurrentOrganization:CurrentOrganization,
             Notification: Notification
         });
 
     }));
 
-    it('should attach a  gpg key resource on to the scope', function() {
-        expect($scope.gpgKey).toBeDefined();
+    it('should attach a content credential resource on to the scope', function() {
+        expect($scope.contentCredential).toBeDefined();
     });
 
-    it('should save a new gpg key resource', function() {
+    it('should save a new content credential resource', function() {
         spyOn($scope, 'transitionTo');
         spyOn(Notification, "setSuccessMessage");
         $scope.uploadContent({"status": "success"});
@@ -41,10 +41,10 @@ describe('Controller: NewGPGKeyController', function() {
         expect(Notification.setSuccessMessage).toHaveBeenCalled();
         expect($scope.uploadStatus).toBe('success');
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('gpg-key.info', jasmine.any(Object));
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-credential.info', jasmine.any(Object));
     });
 
-    it('should error on a new gpg key resource', function() {
+    it('should error on a new content credential resource', function() {
         spyOn($scope, 'transitionTo');
         spyOn(Notification, "setSuccessMessage");
         spyOn(Notification, 'setErrorMessage');

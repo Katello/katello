@@ -14,7 +14,7 @@ describe('Controller: NewRepositoryController', function() {
             Repository = $injector.get('MockResource').$new(),
             Product = $injector.get('MockResource').$new(),
             Setting = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new(),
+            ContentCredential = $injector.get('MockResource').$new(),
             Architecture = $injector.get('MockResource').$new();
 
         DownloadPolicy = $injector.get('DownloadPolicy');
@@ -42,7 +42,7 @@ describe('Controller: NewRepositoryController', function() {
             $http: $http,
             Repository: Repository,
             Product: Product,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             Architecture: Architecture,
             Notification: Notification,
             Setting: Setting
@@ -58,8 +58,8 @@ describe('Controller: NewRepositoryController', function() {
         expect($scope.repositoryTypesTestData["creatable"]).toBeDefined();
     });
 
-    it('should fetch available GPG Keys', function() {
-        expect($scope.gpgKeys).toBeDefined();
+    it('should fetch available Content Credentials', function() {
+        expect($scope.contentCredentials).toBeDefined();
     });
 
     it('should fetch available Architectures', function() {

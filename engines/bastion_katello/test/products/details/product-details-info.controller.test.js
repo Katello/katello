@@ -1,5 +1,5 @@
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope, translate, Notification, Product, GPGKey, MenuExpander;
+    var $scope, translate, Notification, Product, ContentCredential, MenuExpander;
 
     beforeEach(module(
         'Bastion.products',
@@ -10,7 +10,7 @@ describe('Controller: ProductDetailsInfoController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
             SyncPlan = $injector.get('MockResource').$new();
-            GPGKey = $injector.get('MockResource').$new();
+            ContentCredential = $injector.get('MockResource').$new();
 
         Product = $injector.get('MockResource').$new();
 
@@ -35,7 +35,7 @@ describe('Controller: ProductDetailsInfoController', function() {
             Notification: Notification,
             Product: Product,
             SyncPlan: SyncPlan,
-            GPGKey: GPGKey,
+            ContentCredential: ContentCredential,
             MenuExpander: MenuExpander
         });
     }));
@@ -44,7 +44,7 @@ describe('Controller: ProductDetailsInfoController', function() {
         expect($scope.menuExpander).toBe(MenuExpander);
     });
 
-    it('provides a method to retrieve available gpg keys', function() {
+    it('provides a method to retrieve available content credential', function() {
         var promise = $scope.gpgKeys(),
             promiseCalled = false;
 
