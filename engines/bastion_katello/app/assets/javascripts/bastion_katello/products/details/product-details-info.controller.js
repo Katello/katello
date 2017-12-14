@@ -44,7 +44,7 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             return deferred.promise;
         };
 
-        $scope.Certs = function () {
+        $scope.certs = function () {
             var deferred = $q.defer();
 
             ContentCredential.queryUnpaged(function (contentCredentials) {

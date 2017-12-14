@@ -32,7 +32,7 @@ module Katello
     param :content_type, String, :desc => N_("type of content"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
+      respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
     end
 
     def index_relation

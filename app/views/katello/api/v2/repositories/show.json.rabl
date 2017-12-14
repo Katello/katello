@@ -14,6 +14,9 @@ extends 'katello/api/v2/repositories/base'
 
 attributes :major, :minor
 attributes :gpg_key_id
+attributes :ssl_ca_cert_id
+attributes :ssl_client_cert_id
+attributes :ssl_client_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id
 attributes :product_type
 attributes :promoted? => :promoted
@@ -39,9 +42,20 @@ node :permissions do |repo|
   }
 end
 
-child :gpg_key do |_gpg|
-  attribute :name
-  attribute :id
+node(:gpg_key, :unless => lambda { |repository| repository.gpg_key.nil? }) do |repository|
+  {:id => repository.gpg_key.id, :name => repository.gpg_key.name}
+end
+
+node(:ssl_ca_cert, :unless => lambda { |repository| repository.ssl_ca_cert.nil? }) do |repository|
+  {:id => repository.ssl_ca_cert.id, :name => repository.ssl_ca_cert.name}
+end
+
+node(:ssl_client_cert, :unless => lambda { |repository| repository.ssl_client_cert.nil? }) do |repository|
+  {:id => repository.ssl_client_cert.id, :name => repository.ssl_client_cert.name}
+end
+
+node(:ssl_client_key, :unless => lambda { |repository| repository.ssl_client_key.nil? }) do |repository|
+  {:id => repository.ssl_client_key.id, :name => repository.ssl_client_key.name}
 end
 
 node :upstream_password_exists do |repo|

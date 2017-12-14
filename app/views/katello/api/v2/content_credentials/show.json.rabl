@@ -8,7 +8,7 @@ attributes :name
 attributes :content_type
 attributes :content
 
-child :products => :products do
+child :products => :gpg_key_products do
   attributes :id, :cp_id, :name
   node :repository_count do |product|
     product.repositories.count
@@ -19,9 +19,10 @@ child :products => :products do
   end
 end
 
-child :repositories => :repositories do
+child :repositories => :gpg_key_repos do
   attribute :id
   attribute :name
+  attribute :content_type
 
   child :product do |_product|
     attributes :id, :cp_id, :name
@@ -39,6 +40,16 @@ child :ssl_ca_products => :ssl_ca_products do
   end
 end
 
+child :ssl_ca_repos => :ssl_ca_repos do
+  attribute :id
+  attribute :name
+  attribute :content_type
+
+  child :product do |_product|
+    attributes :id, :cp_id, :name
+  end
+end
+
 child :ssl_client_products => :ssl_client_products do
   attributes :id, :cp_id, :name
   node :repository_count do |product|
@@ -50,6 +61,16 @@ child :ssl_client_products => :ssl_client_products do
   end
 end
 
+child :ssl_client_repos => :ssl_client_repos do
+  attribute :id
+  attribute :name
+  attribute :content_type
+
+  child :product do |_product|
+    attributes :id, :cp_id, :name
+  end
+end
+
 child :ssl_key_products => :ssl_key_products do
   attributes :id, :cp_id, :name
   node :repository_count do |product|
@@ -58,6 +79,16 @@ child :ssl_key_products => :ssl_key_products do
   child :provider => :provider do
     attribute :name
     attribute :id
+  end
+end
+
+child :ssl_key_repos => :ssl_key_repos do
+  attribute :id
+  attribute :name
+  attribute :content_type
+
+  child :product do |_product|
+    attributes :id, :cp_id, :name
   end
 end
 

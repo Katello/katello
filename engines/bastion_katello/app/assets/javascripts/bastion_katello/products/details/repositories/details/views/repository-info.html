@@ -169,7 +169,28 @@
         <dd bst-edit-select="repository.gpg_key.name"
             readonly="product.redhat ||denied('edit_products', product)"
             selector="repository.gpg_key_id"
-            options="contentCredentials()"
+            options="gpgKeys()"
+            on-save="save(repository)">
+        </dd>
+        <dt translate>SSL CA Cert</dt>
+        <dd bst-edit-select="repository.ssl_ca_cert.name"
+            readonly="product.redhat ||denied('edit_products', product)"
+            selector="repository.ssl_ca_cert_id"
+            options="certs()"
+            on-save="save(repository)">
+        </dd>
+        <dt translate>SSL Client Cert</dt>
+        <dd bst-edit-select="repository.ssl_client_cert.name"
+            readonly="product.redhat ||denied('edit_products', product)"
+            selector="repository.ssl_client_cert_id"
+            options="certs()"
+            on-save="save(repository)">
+        </dd>
+        <dt translate>SSL Client Key</dt>
+        <dd bst-edit-select="repository.ssl_client_key.name"
+            readonly="product.redhat ||denied('edit_products', product)"
+            selector="repository.ssl_client_key_id"
+            options="certs()"
             on-save="save(repository)">
         </dd>
       </span>

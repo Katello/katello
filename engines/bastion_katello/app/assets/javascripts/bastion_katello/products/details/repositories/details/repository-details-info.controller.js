@@ -27,11 +27,38 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             $scope.uploadURL = 'katello/api/v2/repositories/' + $scope.repository.id + '/upload_content';
         });
 
-        $scope.contentCredentials = function () {
+        $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
             ContentCredential.queryUnpaged(function (contentCredentials) {
                 var results = contentCredentials.results;
+
+                results = results.filter(function(obj) {
+                    if (obj.content_type === "gpg_key") {
+                        return true;
+                    }
+                    return false;
+                });
+
+                results.unshift({id: null});
+                deferred.resolve(results);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.certs = function () {
+            var deferred = $q.defer();
+
+            ContentCredential.queryUnpaged(function (contentCredentials) {
+                var results = contentCredentials.results;
+
+                results = results.filter(function(obj) {
+                    if (obj.content_type === "cert") {
+                        return true;
+                    }
+                    return false;
+                });
 
                 results.unshift({id: null});
                 deferred.resolve(results);
