@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import EnabledRepository from './EnabledRepository';
 
-const EnabledRepositories = ({ repositorySets }) =>
+const EnabledRepositoriesList = ({ repositorySets }) =>
   repositorySets.map(({ type, repositories }) =>
     repositories.map(repo => <EnabledRepository key={repo.id} type={type} {...repo} />));
 
-EnabledRepositories.propTypes = {
+EnabledRepositoriesList.propTypes = {
   repositorySets: PropTypes.arrayOf(PropTypes.shape({
     repositories: PropTypes.arrayOf(PropTypes.object).isRequired,
     type: PropTypes.string.isRequired,
@@ -20,4 +20,4 @@ EnabledRepositories.propTypes = {
   })),
 };
 
-export default EnabledRepositories;
+export default EnabledRepositoriesList;

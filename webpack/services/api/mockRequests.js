@@ -1,7 +1,7 @@
 export default [
   {
     path: '/organizations/:id/repository_sets',
-    searchRegex: /\/organizations\/\d+\/repository_sets/,
+    searchRegex: /\/organizations\/\d+\/repository_sets$/,
     response: {
       total: 5,
       subtotal: 5,
@@ -16,6 +16,10 @@ export default [
       results: [
         {
           repositories: [],
+          product: {
+            name: 'Red hat Enterprise Linux Server 7',
+            id: 5,
+          },
           type: 'file',
           vendor: 'Red Hat',
           gpgUrl: 'http://',
@@ -27,6 +31,10 @@ export default [
         {
           repositories: [],
           type: 'yum',
+          product: {
+            name: 'Red hat Enterprise Linux Server 7',
+            id: 5,
+          },
           vendor: 'Red Hat',
           gpgUrl: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release',
           contentUrl: '/content/dist/rhel/server/6/6Server//sat-tools/6.1/source/SRPMS',
@@ -37,6 +45,10 @@ export default [
         {
           repositories: [],
           type: 'yum',
+          product: {
+            name: 'Red hat Enterprise Linux Server 7',
+            id: 5,
+          },
           vendor: 'Red Hat',
           gpgUrl:
             'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta,file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release',
@@ -48,6 +60,10 @@ export default [
         {
           repositories: [],
           type: 'yum',
+          product: {
+            name: 'Red hat Enterprise Linux Server 7',
+            id: 5,
+          },
           vendor: 'Red Hat',
           gpgUrl: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release',
           contentUrl: '/content/dist/rhel/server/6///rhev-agent/3/os',
@@ -64,6 +80,10 @@ export default [
               arch: 'x86_64',
             },
           ],
+          product: {
+            name: 'Red hat Enterprise Linux Server 7',
+            id: 5,
+          },
           type: 'kickstart',
           vendor: 'Red Hat',
           gpgUrl: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release',
@@ -76,8 +96,8 @@ export default [
     },
   },
   {
-    path: '/organizations/:id/repository_sets?enabled=true',
-    searchRegex: /\/organizations\/\d+\/repository_sets\?enabled=true/,
+    path: '/repository_sets?organization_id=:id',
+    searchRegex: /\/organizations\/\d+\/repository_sets/,
     response: {
       total: 5,
       subtotal: 5,
@@ -99,6 +119,10 @@ export default [
               arch: 'x86_64',
             },
           ],
+          product: {
+            name: 'Red hat Enterprise Linux Server 7',
+            id: 5,
+          },
           type: 'kickstart',
           vendor: 'Red Hat',
           gpgUrl: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release',
