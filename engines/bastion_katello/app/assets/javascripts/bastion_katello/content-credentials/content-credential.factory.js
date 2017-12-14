@@ -34,7 +34,7 @@ angular.module('Bastion.content-credentials').factory('ContentCredential',
                             }
                         }
 
-                        collectProducts(allProducts, contentCredential.products, "GPG Key");
+                        collectProducts(allProducts, contentCredential.gpg_key_products, "GPG Key");
                         collectProducts(allProducts, contentCredential.ssl_ca_products, "SSL CA Cert");
                         collectProducts(allProducts, contentCredential.ssl_client_products, "SSL Client Cert");
                         collectProducts(allProducts, contentCredential.ssl_key_products, "SSL Client Key");
@@ -49,10 +49,30 @@ angular.module('Bastion.content-credentials').factory('ContentCredential',
                 repositories: {method: 'GET', transformResponse:
                     function (data) {
                         var contentCredential = angular.fromJson(data);
+                        var allRepos = {};
+                        allRepos.length = 0;
+                        allRepos.repositories = {};
+
+                        function collectRepos(allR, thisR, usedAs) {
+                            var key;
+                            for (key in thisR) {
+                                if (thisR.hasOwnProperty(key)) {
+                                    thisR[key]["used_as"] = usedAs;
+                                    allR.repositories[allR.length] = thisR[key];
+                                    allR.length++;
+                                }
+                            }
+                        }
+
+                        collectRepos(allRepos, contentCredential.gpg_key_repos, "GPG Key");
+                        collectRepos(allRepos, contentCredential.ssl_ca_repos, "SSL CA Cert");
+                        collectRepos(allRepos, contentCredential.ssl_client_repos, "SSL Client Cert");
+                        collectRepos(allRepos, contentCredential.ssl_key_repos, "SSL Client Key");
+
                         return {
-                            total: contentCredential.repositories.length,
-                            subtotal: contentCredential.repositories.length,
-                            results: contentCredential.repositories
+                            total: allRepos.length,
+                            subtotal: allRepos.length,
+                            results: allRepos.repositories
                         };
                     }
                 }

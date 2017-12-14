@@ -48,8 +48,20 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         });
     }));
 
-    it('provides a method to retrieve available content credentials', function() {
-        var promise = $scope.contentCredentials();
+    it('provides a method to retrieve available certs', function() {
+        var promise = $scope.certs();
+
+        expect(promise.then).toBeDefined();
+        promise.then(function(contentCredentials) {
+            expect(contentCredentials).toBeDefined();
+            expect(contentCredentials).toContain({id: null});
+        });
+
+        $scope.$apply();
+    });
+
+    it('provides a method to retrieve available gpgKeys', function() {
+        var promise = $scope.gpgKeys();
 
         expect(promise.then).toBeDefined();
         promise.then(function(contentCredentials) {

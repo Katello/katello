@@ -37,6 +37,9 @@ module Katello
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
     belongs_to :product, :inverse_of => :repositories
     belongs_to :gpg_key, :inverse_of => :repositories
+    belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_repos
+    belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_repos
+    belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_repos
     belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
     has_many :library_instances_inverse, # TODO: what is the proper name?
              :class_name  => 'Katello::Repository',

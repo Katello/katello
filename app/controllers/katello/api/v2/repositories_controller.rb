@@ -11,7 +11,10 @@ module Katello
                                               :import_uploads, :gpg_key_content]
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
-    before_action :find_gpg_key, :only => [:create, :update]
+    before_action :only => [:create, :update] { find_content_credential "gpg_key" }
+    before_action :only => [:create, :update] { find_content_credential "ssl_ca_cert" }
+    before_action :only => [:create, :update] { find_content_credential "ssl_client_cert" }
+    before_action :only => [:create, :update] { find_content_credential "ssl_client_key" }
     before_action :error_on_rh_product, :only => [:create]
     before_action :error_on_rh_repo, :only => [:destroy]
 
@@ -24,6 +27,9 @@ module Katello
       param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
+      param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert")
+      param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
+      param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
       param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'deb', 'puppet', 'docker', or 'ostree')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.")
@@ -145,16 +151,22 @@ module Katello
         fail HttpErrors::UnprocessableEntity, msg
       end
 
-      gpg_key = @product.gpg_key
-      unless repo_params[:gpg_key_id].blank?
-        gpg_key = @gpg_key
-      end
+      gpg_key = get_content_credential(repo_params, "gpg_key")
+      ssl_ca_cert = get_content_credential(repo_params, "ssl_ca_cert")
+      ssl_client_cert = get_content_credential(repo_params, "ssl_client_cert")
+      ssl_client_key = get_content_credential(repo_params, "ssl_client_key")
+
       repo_params[:label] = labelize_params(repo_params)
       repo_params[:arch] = repo_params[:arch] || 'noarch'
       repo_params[:url] = nil if repo_params[:url].blank?
       repo_params[:unprotected] = repo_params.key?(:unprotected) ? repo_params[:unprotected] : true
       repo_params[:gpg_key] = gpg_key
-      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected, :gpg_key, :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
+      repo_params[:ssl_ca_cert] = ssl_ca_cert
+      repo_params[:ssl_client_cert] = ssl_client_cert
+      repo_params[:ssl_client_key] = ssl_client_key
+      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected,
+                                                            :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
+                                                            :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
       repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
@@ -256,6 +268,9 @@ module Katello
     param :name, String, :desc => N_("New name for the repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
+    param :ssl_ca_cert_id, :number, :desc => N_("Idenifier of the SSL CA Cert")
+    param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
+    param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
     param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
     param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
     param :url, String, :desc => N_("the feed url of the original repository ")
@@ -424,10 +439,16 @@ module Katello
       @repository = Repository.find(params[:id])
     end
 
-    def find_gpg_key
-      if params[:gpg_key_id]
-        @gpg_key = GpgKey.readable.where(:id => params[:gpg_key_id], :organization_id => @organization).first
-        fail HttpErrors::NotFound, _("Couldn't find gpg key '%s'") % params[:gpg_key_id] if @gpg_key.nil?
+    def find_content_credential(content_type)
+      credential_id = "#{content_type}_id".to_sym
+      credential_var = "@#{content_type}"
+
+      if params[credential_id]
+        credential_value = GpgKey.readable.where(:id => params[credential_id], :organization_id => @organization).first
+        instance_variable_set(credential_var, credential_value)
+        if instance_variable_get(credential_var).nil?
+          fail HttpErrors::NotFound, _("Couldn't find %{content_type} with id '%{id}'") % { :content_type => content_type, :id => params[credential_id] }
+        end
       end
     end
 
@@ -438,9 +459,19 @@ module Katello
              ]
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
-        keys += [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
+        keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
       end
       params.require(:repository).permit(*keys).to_h
+    end
+
+    def get_content_credential(repo_params, content_type)
+      credential_value = @product.send(content_type)
+
+      unless repo_params["#{content_type}_id".to_sym].blank?
+        credential_value = instance_variable_get("@#{content_type}")
+      end
+
+      credential_value
     end
 
     def error_on_rh_product

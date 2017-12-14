@@ -12,6 +12,12 @@ module Katello
                                    :inverse_of => :ssl_client_cert, :dependent => :nullify
     has_many :ssl_key_products, :class_name => "Katello::Product", :foreign_key => "ssl_client_key_id",
                                 :inverse_of => :ssl_client_key, :dependent => :nullify
+    has_many :ssl_ca_repos, :class_name => "Katello::Repository", :foreign_key => "ssl_ca_cert_id",
+                            :inverse_of => :ssl_ca_cert, :dependent => :nullify
+    has_many :ssl_client_repos, :class_name => "Katello::Repository", :foreign_key => "ssl_client_cert_id",
+                                :inverse_of => :ssl_client_cert, :dependent => :nullify
+    has_many :ssl_key_repos, :class_name => "Katello::Repository", :foreign_key => "ssl_client_key_id",
+                             :inverse_of => :ssl_client_key, :dependent => :nullify
     belongs_to :organization, :inverse_of => :gpg_keys
 
     validates_lengths_from_database

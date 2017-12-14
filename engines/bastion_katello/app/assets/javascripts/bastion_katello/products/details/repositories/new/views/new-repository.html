@@ -213,6 +213,33 @@
           <option value=""></option>
         </select>
       </div>
+
+      <div bst-form-group label="{{ 'SSL CA Cert' | translate }}" ng-show="repository.content_type === 'yum'">
+        <select id="ssl_ca_cert_id"
+                name="ssl_ca_cert_id"
+                ng-model="repository.ssl_ca_cert_id"
+                ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'cert' }">
+          <option value=""></option>
+        </select>
+      </div>
+
+      <div bst-form-group label="{{ 'SSL Client Cert' | translate }}" ng-show="repository.content_type === 'yum'">
+        <select id="ssl_client_cert_id"
+                name="ssl_client_cert_id"
+                ng-model="repository.ssl_client_cert_id"
+                ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'cert' }">
+          <option value=""></option>
+        </select>
+      </div>
+
+      <div bst-form-group label="{{ 'SSL Client Key' | translate }}" ng-show="repository.content_type === 'yum'">
+        <select id="ssl_client_key_id"
+                name="ssl_client_key_id"
+                ng-model="repository.ssl_client_key_id"
+                ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials | filter: { 'content_type': 'cert' }">
+          <option value=""></option>
+        </select>
+      </div>
     </div>
 
     <div bst-form-buttons ng-show="repository.content_type !== undefined"
