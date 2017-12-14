@@ -9,17 +9,20 @@ const initialState = { isLoading: true };
 export default (state = initialState, action) => {
   switch (action.type) {
     case ENABLED_REPOSITORIES_REQUEST:
-      return Object.assign(state, { isLoading: true });
+      return { ...state, ...{ isLoading: true } };
 
     case ENABLED_REPOSITORIES_SUCCESS:
-      return Object.assign(state, {
-        results: action.response.results,
-        isLoading: false,
-        success: true,
-      });
+      return {
+        ...state,
+        ...{
+          results: action.response.results,
+          isLoading: false,
+          success: true,
+        },
+      };
 
     case ENABLED_REPOSITORIES_FAILURE:
-      return Object.assign({ results: action.result, isLoading: false, success: false }, state);
+      return { ...state, ...{ results: action.result, isLoading: false, success: false } };
 
     default:
       return state;

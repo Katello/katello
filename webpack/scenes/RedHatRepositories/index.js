@@ -6,8 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
-import { ListView } from 'patternfly-react';
-import Loader from 'foremanReact/components/common/Loader';
+import { ListView, Spinner } from 'patternfly-react';
 
 import { loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
@@ -50,24 +49,21 @@ class RedHatRepositoriesPage extends Component {
         <Row>
           <Col sm={6}>
             <h2>{__('Available Repositories')}</h2>
-            <Loader status={repositorySetsResponse.isLoading ? 'PENDING' : 'RESOLVED'}>
-              {[
-                <ListView key="sets_list">
-                  <RepositorySetsList repositorySets={repositorySetsResponse.results} />
-                </ListView>,
-              ]}
-            </Loader>
+
+            <Spinner loading={repositorySetsResponse.isLoading}>
+              <ListView>
+                <RepositorySetsList repositorySets={repositorySetsResponse.results} />
+              </ListView>
+            </Spinner>
           </Col>
 
           <Col sm={6}>
             <h2>{__('Enabled Repositories')}</h2>
-            <Loader status={enabledRepositoriesResponse.isLoading ? 'PENDING' : 'RESOLVED'}>
-              {[
-                <ListView key="enabled_list">
-                  <EnabledRepositoriesList repositorySets={enabledRepositoriesResponse.results} />
-                </ListView>,
-              ]}
-            </Loader>
+            <Spinner loading={enabledRepositoriesResponse.isLoading}>
+              <ListView>
+                <EnabledRepositoriesList repositorySets={enabledRepositoriesResponse.results} />
+              </ListView>
+            </Spinner>
           </Col>
         </Row>
       </Grid>
