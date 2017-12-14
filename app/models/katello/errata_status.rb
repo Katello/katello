@@ -19,7 +19,7 @@ module Katello
       when UP_TO_DATE
         N_("All errata applied")
       when UNKNOWN
-        N_("Could not calculate errata status, ensure host is registered and katello-agent is installed")
+        N_("Could not calculate errata status, ensure host is registered and the katello-host-tools package is installed")
       else
         N_("Unknown errata status")
       end
