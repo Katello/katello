@@ -5,39 +5,43 @@ import axios from 'axios';
 import { ListView, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { connect } from 'react-redux';
 
-import { getTypeIcon } from '../../../services/index';
-import { setRepositoryDisabled } from '../../../redux/actions/RedHatRepositories/enabled';
+import { setRepositoryEnabled } from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 
-class EnabledRepository extends Component {
+class RepositorySetRepository extends Component {
   constructor(props) {
     super(props);
 
     this.state = { loading: false };
-    this.setDisabled = () => {
+
+    this.setEnabled = (response) => {
+      this.setState({ loading: false });
+
+      const { data: { output: { id, name, content_type } } } = response;
       const {
-        productId, contentId, arch, releasever, name, type,
+        productId, contentId, arch, releasever,
       } = this.props;
 
-      const disabledRepo = {
-        contentId,
+      const enabledRepo = {
         productId,
+        contentId,
+        id,
         name,
-        type,
+        type: content_type,
         arch,
         releasever,
       };
 
-      this.props.setRepositoryDisabled(disabledRepo);
+      this.props.setRepositoryEnabled(enabledRepo);
     };
 
-    this.disableRepository = () => {
+    this.enableRepository = () => {
       this.setState({ loading: true });
 
       const {
         productId, contentId, arch, releasever,
       } = this.props;
 
-      const url = `/katello/api/v2/products/${productId}/repository_sets/${contentId}/disable`;
+      const url = `/katello/api/v2/products/${productId}/repository_sets/${contentId}/enable`;
 
       const data = {
         id: contentId,
@@ -48,7 +52,7 @@ class EnabledRepository extends Component {
 
       axios
         .put(url, { data })
-        .then(this.setDisabled)
+        .then(this.setEnabled)
         .catch(() => {
           this.setState({ loading: false });
           // TODO: Add error component
@@ -57,57 +61,47 @@ class EnabledRepository extends Component {
   }
 
   render() {
-    const {
-      arch, name, id, type, releasever,
-    } = this.props;
+    const { enabled, arch, releasever } = this.props;
+
+    if (enabled) return null;
 
     return (
       <ListView.Item
-        key={id}
+        heading={`${arch} ${releasever}`}
         actions={
           <Spinner loading={this.state.loading} inline>
             <OverlayTrigger
-              overlay={<Tooltip id="disable">Disable</Tooltip>}
+              overlay={<Tooltip id="enable">Enable</Tooltip>}
               placement="bottom"
               trigger={['hover', 'focus']}
               rootClose={false}
             >
               <button
-                onClick={this.disableRepository}
+                onClick={this.enableRepository}
                 style={{
                   backgroundColor: 'initial',
                   border: 'none',
                   color: '#0388ce',
                 }}
               >
-                <i className={cx('fa-2x', 'fa fa-minus-circle')} />
+                <i className={cx('fa-2x', 'fa fa-plus-circle')} />
               </button>
             </OverlayTrigger>
           </Spinner>
         }
-        leftContent={<ListView.Icon name={getTypeIcon(type)} />}
-        additionalInfo={[
-          <ListView.InfoItem key="1">
-            <strong>{type.toUpperCase()}</strong>
-          </ListView.InfoItem>,
-        ]}
-        heading={__(name)}
-        description={`${arch} ${releasever}`}
         stacked
       />
     );
   }
 }
 
-EnabledRepository.propTypes = {
-  id: PropTypes.number.isRequired,
+RepositorySetRepository.propTypes = {
   contentId: PropTypes.string.isRequired,
   productId: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
   arch: PropTypes.string.isRequired,
   releasever: PropTypes.string.isRequired,
-  setRepositoryDisabled: PropTypes.func.isRequired,
+  enabled: PropTypes.bool.isRequired,
+  setRepositoryEnabled: PropTypes.func.isRequired,
 };
 
-export default connect(null, { setRepositoryDisabled })(EnabledRepository);
+export default connect(null, { setRepositoryEnabled })(RepositorySetRepository);

@@ -11,6 +11,9 @@ export function getTypeIcon(type) {
     case 'source_rpm':
       className = 'fa fa-code';
       break;
+    case 'file':
+      className = 'fa fa-file';
+      break;
     case 'debug':
       className = 'fa fa-bug';
       break;

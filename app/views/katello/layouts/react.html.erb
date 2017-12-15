@@ -9,6 +9,7 @@
 <% content_for(:content) do %>
     <%= notifications %>
     <div id="reactRoot"></div>
+    <div id="organization-id" data-id="<%= Organization.current.id if Organization.current %>" ></div>
 <% end %>
 
 <%= render file: "layouts/base" %>

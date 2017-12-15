@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { ListView } from 'patternfly-react';
 
 import { getTypeIcon } from '../../../services/index';
+import RepositorySetRepositories from './RepositorySetRepositories';
 
 const RepositorySet = ({
-  type, id, name, label,
+  type, id, name, label, product,
 }) => (
   <ListView.Item
     id={id}
@@ -20,7 +21,7 @@ const RepositorySet = ({
     ]}
     stacked
   >
-    TODO: Add associated repository list here
+    <RepositorySetRepositories contentId={id} productId={product.id} />
   </ListView.Item>
 );
 
@@ -29,10 +30,13 @@ RepositorySet.propTypes = {
   type: PropTypes.string.isRequired, // 'kickstart'
   name: PropTypes.string.isRequired, // 'Red Hat Enterprise Linux 6 Server (Kickstart)'
   label: PropTypes.string.isRequired, // 'rhel-6-server-kickstart'
+  product: PropTypes.shape({
+    name: PropTypes.string.isRequired, // 'Red hat Enterprise Linux Server 7'
+    id: PropTypes.instanceOf.isRequired, // 5
+  }).isRequired,
   // vendor: PropTypes.string.isRequired, // 'Red Hat'
   // gpgUrl: PropTypes.string.isRequired, // 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release'
   // contentUrl: PropTypes.string.isRequired, // '/content/dist/rhel/server/6///kickstart'
-  // repositories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default RepositorySet;
