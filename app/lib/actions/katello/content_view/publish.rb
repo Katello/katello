@@ -11,13 +11,13 @@ module Actions
           content_view.check_ready_to_publish!
           version = content_view.create_new_version
           library = content_view.organization.library
-
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
                                                           :status => ::Katello::ContentViewHistory::IN_PROGRESS,
                                                           :action => ::Katello::ContentViewHistory.actions[:publish],
                                                           :task => self.task,
-                                                          :notes => description
+                                                          :notes => description,
+                                                          :triggered_by => options[:triggered_by]
                                                          )
 
           sequence do
@@ -47,6 +47,7 @@ module Actions
             plan_action(Katello::Foreman::ContentUpdate, library, content_view)
             plan_action(ContentView::ErrataMail, content_view, library)
             plan_self(history_id: history.id, content_view_id: content_view.id,
+                      content_view_version_id: version.id,
                       environment_id: library.id, user_id: ::User.current.id)
           end
         end
@@ -57,9 +58,40 @@ module Actions
 
         def run
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
+          view = ::Katello::ContentView.find(input[:content_view_id])
+          version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
+          output[:content_view_id] = view.id
+          output[:content_view_version_id] = version.id
+          unless view.composite?
+            output[:composite_version_auto_published] = []
+            output[:composite_view_publish_failed] = []
+            output[:composite_auto_publish_task_id] = []
+
+            # Iterate through the list of composites
+            # this component belongs to
+            view.component_composites.each do |cv_component|
+              if cv_component.latest? && cv_component.composite_content_view.auto_publish?
+                description = _("Auto Publish - Triggered by '%{component}'") %
+                                { :component => version.name }
+                begin
+                  task = ForemanTasks.async_task(::Actions::Katello::ContentView::Publish,
+                                          cv_component.composite_content_view,
+                                          description,
+                                          :triggered_by => version)
+                  output[:composite_auto_publish_task_id] << task.id
+                  output[:composite_version_auto_published] << task.input[:content_view_version_id]
+                rescue StandardError
+                  ::Katello::UINotifications::ContentView::AutoPublishFailure.deliver!(
+                                              cv_component.composite_content_view)
+                  output[:composite_view_publish_failed] << cv_component.composite_content_view.id
+                end
+              end
+            end
+          end
+
           if ::Katello::CapsuleContent.sync_needed?(environment)
             ForemanTasks.async_task(ContentView::CapsuleGenerateAndSync,
-                                    ::Katello::ContentView.find(input[:content_view_id]),
+                                    view,
                                     environment)
           end
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to

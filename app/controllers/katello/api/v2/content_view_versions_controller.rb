@@ -20,6 +20,7 @@ module Katello
     param :version, String, :desc => N_("Filter versions by version number"), :required => false
     param :composite_version_id, :number, :desc => N_("Filter versions that are components in the specified composite version"), :required => false
     param :organization_id, :number, :desc => N_("Organization identifier")
+    param :triggered_by_id, :number, :desc => N_("Filter composite versions whose publish was triggered by the specified component version"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       options = {
@@ -32,6 +33,7 @@ module Katello
     def index_relation
       version_number = params.permit(:version)[:version]
       versions = ContentViewVersion.readable
+      versions = versions.triggered_by(params[:triggered_by_id]) if params[:triggered_by_id]
       versions = versions.with_organization_id(params[:organization_id]) if params[:organization_id]
       versions = versions.where(:content_view_id => @view.id) if @view
       versions = versions.for_version(version_number) if version_number

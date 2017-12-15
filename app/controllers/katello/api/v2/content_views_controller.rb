@@ -18,6 +18,7 @@ module Katello
       param :description, String, :desc => N_("Description for the content view")
       param :repository_ids, Array, :desc => N_("List of repository ids")
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
+      param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
     end
 
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
@@ -209,7 +210,7 @@ module Katello
     def view_params
       attrs = [:name, :description, :force_puppet_environment, {:repository_ids => []}, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
-      attrs.push(:component_ids, :repository_ids) # For deep_munge; Remove for Rails 5
+      attrs.push(:component_ids, :repository_ids, :auto_publish) # For deep_munge; Remove for Rails 5
       params.require(:content_view).permit(*attrs).to_h
     end
 
