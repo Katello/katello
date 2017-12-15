@@ -4,7 +4,13 @@ import {
   ENABLED_REPOSITORIES_REQUEST,
   ENABLED_REPOSITORIES_SUCCESS,
   ENABLED_REPOSITORIES_FAILURE,
+  REPOSITORY_DISABLED,
 } from '../../consts';
+
+export const setRepositoryDisabled = repository => ({
+  type: REPOSITORY_DISABLED,
+  repository,
+});
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadEnabledRepos = () => (dispatch) => {

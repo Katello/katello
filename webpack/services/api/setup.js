@@ -1,10 +1,17 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import mockRequests from './mockRequests';
+import fixtures from './fixtures';
 
 const mock = new MockAdapter(axios, { delayResponse: 800 });
 
-mockRequests.forEach((request) => {
-  mock.onGet(request.searchRegex).reply(200, request.response);
+fixtures.forEach((request) => {
+  if (request.type === 'PUT') {
+    mock.onPut(request.searchRegex).reply(request.response);
+  } else {
+    mock.onGet(request.searchRegex).reply(request.response);
+  }
 });
+
+// Pass unmatched requests to the network
+mock.onAny().passThrough();

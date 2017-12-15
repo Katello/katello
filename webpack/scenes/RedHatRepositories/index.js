@@ -11,8 +11,8 @@ import { ListView, Spinner } from 'patternfly-react';
 import { loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
 import MultiSelect from './components/MultiSelect';
-import RepositorySetsList from './components/RepositorySetsList';
-import EnabledRepositoriesList from './components/EnabledRepositoriesList';
+import RepositorySet from './components/RepositorySet';
+import EnabledRepository from './components/EnabledRepository';
 import SearchInput from '../../components/SearchInput/index';
 
 class RedHatRepositoriesPage extends Component {
@@ -26,8 +26,7 @@ class RedHatRepositoriesPage extends Component {
   }
 
   render() {
-    const { enabledRepositoriesResponse, repositorySetsResponse } = this.props;
-
+    const { enabledRepositories, repositorySets } = this.props;
     return (
       <Grid bsClass="container-fluid">
         <h1>{__('Red Hat Repositories')}</h1>
@@ -50,18 +49,20 @@ class RedHatRepositoriesPage extends Component {
           <Col sm={6}>
             <h2>{__('Available Repositories')}</h2>
 
-            <Spinner loading={repositorySetsResponse.isLoading}>
+            <Spinner loading={repositorySets.loading}>
               <ListView>
-                <RepositorySetsList repositorySets={repositorySetsResponse.results} />
+                {repositorySets.results.map(set => <RepositorySet key={set.id} {...set} />)}
               </ListView>
             </Spinner>
           </Col>
 
           <Col sm={6}>
             <h2>{__('Enabled Repositories')}</h2>
-            <Spinner loading={enabledRepositoriesResponse.isLoading}>
+            <Spinner loading={enabledRepositories.loading}>
               <ListView>
-                <EnabledRepositoriesList repositorySets={enabledRepositoriesResponse.results} />
+                {enabledRepositories.repositories.map(repo => (
+                  <EnabledRepository key={repo.id} {...repo} />
+                ))}
               </ListView>
             </Spinner>
           </Col>
@@ -74,17 +75,14 @@ class RedHatRepositoriesPage extends Component {
 RedHatRepositoriesPage.propTypes = {
   loadEnabledRepos: PropTypes.func.isRequired,
   loadRepositorySets: PropTypes.func.isRequired,
-  enabledRepositoriesResponse: PropTypes.shape({}).isRequired,
-  repositorySetsResponse: PropTypes.shape({}).isRequired,
+  enabledRepositories: PropTypes.shape({}).isRequired,
+  repositorySets: PropTypes.shape({}).isRequired,
 };
 
-const mapStateToProps = ({ katello: { redHatRepositories: { enabled, sets } } }) => {
-  const props = {
-    enabledRepositoriesResponse: enabled,
-    repositorySetsResponse: sets,
-  };
-  return props;
-};
+const mapStateToProps = ({ katello: { redHatRepositories: { enabled, sets } } }) => ({
+  enabledRepositories: enabled,
+  repositorySets: sets,
+});
 
 export default connect(mapStateToProps, {
   loadEnabledRepos,
