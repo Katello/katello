@@ -70,6 +70,22 @@
         <p class="help-block" translate>A composite view contains other content views.</p>
       </div>
 
+      <div bst-form-group>
+        <div class="checkbox">
+          <label for="auto_publish">
+            <input id="auto_publish"
+                   name="auto_publish"
+                   ng-model="contentView.auto_publish"
+                   type="checkbox"
+                   tabindex="5"
+                   ng-disabled="!contentView.composite"
+                   ng-checked="contentView.composite && 0"/>
+            <span translate>Auto Publish</span>
+          </label>
+        </div>
+        <p class="help-block" translate>Applicable only for composite views. Auto publish composite view when a new version of a component content view is created. Also note auto publish will only happen when the component is marked "latest".</p>
+      </div>
+
       <div bst-form-buttons
            on-cancel="transitionTo('content-views')"
            on-save="save(contentView)"

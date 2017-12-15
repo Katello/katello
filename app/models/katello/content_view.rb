@@ -53,6 +53,7 @@ module Katello
     validates :organization_id, :presence => true
     validate :check_non_composite_components
     validate :check_puppet_conflicts
+    validate :check_non_composite_auto_publish
     validates :composite, :inclusion => [true, false]
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -417,6 +418,12 @@ module Katello
     def check_non_composite_components
       if !composite? && components.present?
         errors.add(:base, _("Cannot add component versions to a non-composite content view"))
+      end
+    end
+
+    def check_non_composite_auto_publish
+      if !composite? && auto_publish
+        errors.add(:base, _("Cannot set auto publish to a non-composite content view"))
       end
     end
 

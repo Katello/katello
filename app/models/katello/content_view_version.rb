@@ -15,6 +15,10 @@ module Katello
 
     has_many :history, :class_name => "Katello::ContentViewHistory", :inverse_of => :content_view_version,
                        :dependent => :destroy, :foreign_key => :katello_content_view_version_id
+
+    has_many :triggered_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
+             :inverse_of => :triggered_by, :foreign_key => :triggered_by_id
+
     has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
     has_many :content_view_puppet_environments, :class_name => "Katello::ContentViewPuppetEnvironment",
                                                 :dependent => :destroy
@@ -41,6 +45,11 @@ module Katello
     scope :non_default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false) }
     scope :with_organization_id, ->(organization_id) do
       joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => organization_id)
+    end
+
+    scope :triggered_by, ->(content_view_version_id) do
+      sql = Katello::ContentViewHistory.where(:triggered_by_id => content_view_version_id).select(:katello_content_view_version_id).to_sql
+      where("#{Katello::ContentViewVersion.table_name}.id in (#{sql})")
     end
 
     scoped_search :on => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER

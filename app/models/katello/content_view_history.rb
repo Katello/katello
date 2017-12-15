@@ -5,6 +5,9 @@ module Katello
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_histories,
                              :foreign_key => :katello_environment_id
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion", :foreign_key => :katello_content_view_version_id, :inverse_of => :history
+
+    belongs_to :triggered_by, :class_name => "Katello::ContentViewVersion", :inverse_of => :triggered_histories
+
     belongs_to :task, :class_name => "ForemanTasks::Task::DynflowTask", :foreign_key => :task_id
 
     IN_PROGRESS = 'in progress'.freeze
