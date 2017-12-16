@@ -3,8 +3,8 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
     before_action :authorize
     before_action :find_organization, :only => [:create, :index, :auto_complete_search]
-    before_action :find_gpg_key, :only => [:show, :update, :destroy, :content]
-    skip_before_action :check_content_type, :only => [:create, :content]
+    before_action :find_gpg_key, :only => [:show, :update, :destroy, :content, :set_content]
+    skip_before_action :check_content_type, :only => [:create, :content, :set_content]
 
     def_param_group :gpg_key do
       param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the gpg key")
@@ -71,10 +71,16 @@ module Katello
       respond_for_destroy
     end
 
+    api :GET, "/gpg_keys/:id/content", N_("Return the content of a gpg key, used directly by yum")
+    param :id, :number, :required => true
+    def content
+      render(:plain => @gpg_key.content, :layout => false)
+    end
+
     api :POST, "/gpg_keys/:id/content", N_("Upload gpg key contents")
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     param :content, File, :desc => N_("file contents"), :required => true
-    def content
+    def set_content
       filepath = params.try(:[], :content).try(:path)
 
       if filepath

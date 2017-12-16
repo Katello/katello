@@ -145,7 +145,7 @@ module Katello
     def gpg_key_permissions
       @plugin.permission :view_gpg_keys,
                          {
-                           'katello/api/v2/gpg_keys' => [:index, :show, :auto_complete_search]
+                           'katello/api/v2/gpg_keys' => [:index, :show, :content, :auto_complete_search]
                          },
                          :resource_type => 'Katello::GpgKey'
       @plugin.permission :create_gpg_keys,
@@ -155,7 +155,7 @@ module Katello
                          :resource_type => 'Katello::GpgKey'
       @plugin.permission :edit_gpg_keys,
                          {
-                           'katello/api/v2/gpg_keys' => [:update, :content]
+                           'katello/api/v2/gpg_keys' => [:update, :set_content]
                          },
                          :resource_type => 'Katello::GpgKey'
       @plugin.permission :destroy_gpg_keys,
