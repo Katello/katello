@@ -42,12 +42,18 @@ module Katello
     end
 
     def test_content
+      get :content, :id => @gpg_key.id
+      assert_response :success
+      assert_equal @response.body, @gpg_key.content
+    end
+
+    def test_set_content
       @request.env["CONTENT_TYPE"] = "multipart/form"
       content = "abc123"
       temp_content_file = Tempfile.new(content)
       temp_content_file.write(content)
       temp_content_file.rewind
-      post :content, :id => @gpg_key.id, :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
+      post :set_content, :id => @gpg_key.id, :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
       assert_response :success, @response.body
       assert_equal content, @gpg_key.reload.content
     end
