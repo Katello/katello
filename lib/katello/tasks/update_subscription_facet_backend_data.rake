@@ -7,9 +7,10 @@ namespace :katello do
 
     def report_errors
       if @errors.any?
+        path = "/var/log/foreman/"
+        path = "/tmp/" unless File.writable?(path)
         filename = "subscription_facet_upgrade-#{Time.now.to_i}.log"
-        path = "/var/log/foreman/#{filename}"
-        path = "/tmp/#{filename}" unless File.writable?(path)
+        path = File.join(path, filename)
 
         file = File.open(path, 'w')
         @errors.each { |error| file.write(error) }
@@ -36,7 +37,7 @@ namespace :katello do
       end
     end
 
-    Katello::Host::SubscriptionFacet.find_each do |subscription_facet|
+    Katello::Host::SubscriptionFacet.where.not(:uuid => nil).find_each do |subscription_facet|
       begin
         candlepin_attrs = subscription_facet.candlepin_consumer.consumer_attributes
         subscription_facet.import_database_attributes(candlepin_attrs)
