@@ -81,6 +81,28 @@ module ::Actions::Katello::Repository
     end
   end
 
+  class UpdateTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::Update }
+    let(:pulp_action_class) { ::Actions::Pulp::Repository::Refresh }
+    let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
+    let(:repository) { katello_repositories(:fedora_17_unpublished) }
+
+    def setup
+      content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id)
+      Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id)
+      super
+    end
+
+    it 'plans' do
+      action = create_action action_class
+      action.stubs(:action_subject).with(repository)
+
+      plan_action action, repository, :unprotected => true
+      assert_action_planed_with action, pulp_action_class, repository
+      assert_action_planed action, candlepin_action_class
+    end
+  end
+
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
