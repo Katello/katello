@@ -11,23 +11,23 @@ module Actions
 
           if update_content?(repository)
             content_url = ::Katello::Glue::Pulp::Repos.custom_content_path(repository.product, repository.label)
+            katello_content_id = repository.product.product_content_by_id(repository.content_id).content_id
+            content = ::Katello::Content.find(katello_content_id)
 
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :owner => repository.organization.label,
                         :content_id => repository.content_id,
-                        :name => repository.content.name,
+                        :name => content.name,
                         :content_url => content_url,
                         :gpg_key_url => repository.yum_gpg_key_url,
-                        :label => repository.content.label,
+                        :label => content.label,
                         :type => repository.content_type,
                         :arches => repository.arch == "noarch" ? nil : repository.arch)
 
-            katello_content_id = repository.product.product_content_by_id(repository.content_id).content_id
-            content = ::Katello::Content.find(katello_content_id)
-            content.update_attributes!(name: repository.content.name,
+            content.update_attributes!(name: content.name,
                                        content_url: content_url,
                                        content_type: repository.content_type,
-                                       label: repository.content.label,
+                                       label: content.label,
                                        gpg_url: repository.yum_gpg_key_url)
 
           end
