@@ -17,7 +17,6 @@ module Katello
         end
       end
 
-      #rubocop:disable Style/MixinUsage https://github.com/bbatsov/rubocop/issues/4885
       included do
         prepend Overrides
 
