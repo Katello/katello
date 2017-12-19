@@ -86,9 +86,7 @@ module Katello
     def fetch_content_view(host, options = {})
       selected_host_group = options.fetch(:selected_host_group, nil)
       return content_view(selected_host_group) if selected_host_group.present?
-
-      selected_content_view = content_view(host)
-      selected_content_view if selected_content_view.present?
+      content_view(host)
     end
 
     def accessible_lifecycle_environments(org, host)
