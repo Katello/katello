@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rest-client"
 
   gem.add_dependency "rabl"
-  gem.add_dependency "foreman-tasks", "~> 0.8"
+  gem.add_dependency "foreman-tasks", "~> 0.11"
   gem.add_dependency "dynflow", "~> 0.8.31"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
 
