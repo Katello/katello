@@ -42,6 +42,14 @@ module Katello
       true
     end
 
+    def link?
+      false
+    end
+
+    def master
+      true
+    end
+
     def node_syncable?
       environment
     end
