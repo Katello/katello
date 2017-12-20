@@ -1,5 +1,5 @@
 module Katello
-  class Api::V2::RepositoriesController < Api::V2::ApiController
+  class Api::V2::RepositoriesController < Api::V2::ApiController # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
@@ -138,7 +138,7 @@ module Katello
 
     api :POST, "/repositories", N_("Create a custom repository")
     param_group :repo
-    def create # rubocop:disable Metrics/MethodLength
+    def create # rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
       repo_params = repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")

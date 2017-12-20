@@ -22,6 +22,7 @@ namespace :katello do
               Katello::PuppetModule,
               Katello::Rpm,
               Katello::Srpm,
+              Katello::Deb,
               Katello::FileUnit,
               Katello::Subscription,
               Katello::Pool,
