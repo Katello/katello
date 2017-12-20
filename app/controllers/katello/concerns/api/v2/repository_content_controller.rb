@@ -196,6 +196,8 @@ module Katello
         case resource_class.to_s
         when "Katello::Erratum"
           _("Erratum")
+        when "Katello::Deb"
+          _("Deb Package")
         when "Katello::Rpm"
           _("Package")
         when "Katello::PackageGroup"

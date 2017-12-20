@@ -1,5 +1,8 @@
 module Katello
   class Api::V2::DebsController < Api::V2::ApiController
+    resource_description do
+      name 'Deb Packages'
+    end
     apipie_concern_subst(:a_resource => N_("a deb"), :resource => "debs")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
