@@ -15,6 +15,16 @@ module Actions
           repository = mapper.build_repository
           plan_action(Repository::Create, repository, false, true)
           action_subject(repository)
+          plan_self
+        end
+
+        def run
+          repo = ::Katello::Repository.find(input[:repository][:id])
+          output[:repository] = {
+            :name => repo.name,
+            :id => repo.id,
+            :content_type => repo.content_type
+          }
         end
 
         private
