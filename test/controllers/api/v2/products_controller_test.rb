@@ -30,14 +30,14 @@ module Katello
     end
 
     def test_index
-      get :index, :organization_id => @organization.id
+      get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/products/index'
     end
 
     def test_index_name
-      get :index, :organization_id => @organization.id, :name => @product.name
+      get :index, params: { :organization_id => @organization.id, :name => @product.name }
 
       assert_response :success
       assert_template 'api/v2/products/index'
@@ -46,8 +46,7 @@ module Katello
     def test_index_available_for
       sync_plan = SyncPlan.first
       @product.update_attribute(:sync_plan_id, sync_plan.id)
-      get :index, :organization_id => @organization.id, :available_for => 'sync_plan',
-        :sync_plan_id => sync_plan.id
+      get :index, params: { :organization_id => @organization.id, :available_for => 'sync_plan', :sync_plan_id => sync_plan.id }
 
       ids = JSON.parse(response.body)['results'].map { |prod| prod['id'] }
 
@@ -62,7 +61,7 @@ module Katello
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, :organization_id => @organization.id
+        get :index, params: { :organization_id => @organization.id }
       end
     end
 
@@ -78,7 +77,7 @@ module Katello
         prod.provider = @provider
       end
 
-      post :create, :product => product_params, :organization_id => @organization.id
+      post :create, params: { :product => product_params, :organization_id => @organization.id }
 
       assert_response :success
       assert_template layout: 'katello/api/v2/layouts/resource'
@@ -100,7 +99,7 @@ module Katello
       denied_perms = [@read_permission, @update_permission, @delete_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
-        post :create, :product => {:name => "foo"}, :organization_id => @organization.id
+        post :create, params: { :product => {:name => "foo"}, :organization_id => @organization.id }
       end
     end
 
@@ -109,13 +108,13 @@ module Katello
         :name => 'fedora product',
         :description => 'this is my cool new product.'
       }
-      post :create, :product => product_params, :organization_id => 'asdfdsafds'
+      post :create, params: { :product => product_params, :organization_id => 'asdfdsafds' }
 
       assert_response 404
     end
 
     def test_show
-      get :show, :id => @product.id
+      get :show, params: { :id => @product.id }
 
       assert_response :success
       assert_template 'api/v2/products/show'
@@ -126,7 +125,7 @@ module Katello
       denied_perms = [@update_permission, @create_permission, @delete_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :id => @product.id
+        get :show, params: { :id => @product.id }
       end
     end
 
@@ -137,7 +136,7 @@ module Katello
         product_params.key?(:name).must_equal true
         product_params[:name].must_equal params[:name]
       end
-      put :update, :id => @product.id, :product => params
+      put :update, params: { :id => @product.id, :product => params }
 
       assert_response :success
       assert_template layout: 'katello/api/v2/layouts/resource'
@@ -150,7 +149,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Product::Update) do |product, _product_params|
         product.id.must_equal @product.id
       end
-      put :update, :id => @product.id, :product => params
+      put :update, params: { :id => @product.id, :product => params }
 
       assert_response :success
       assert_template layout: 'katello/api/v2/layouts/resource'
@@ -162,7 +161,7 @@ module Katello
       denied_perms = [@read_permission, @delete_permission, @create_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :id => @product.id, :product => {:name => 'New Name'}
+        put :update, params: { :id => @product.id, :product => {:name => 'New Name'} }
       end
     end
 
@@ -171,7 +170,7 @@ module Katello
         prod.id.must_equal @product.id
       end
 
-      delete :destroy, :id => @product.id
+      delete :destroy, params: { :id => @product.id }
 
       assert_response :success
     end
@@ -181,7 +180,7 @@ module Katello
       denied_perms = [@create_permission, @read_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :id => @product.id
+        delete :destroy, params: { :id => @product.id }
       end
     end
 
@@ -189,13 +188,13 @@ module Katello
       assert_async_task(::Actions::BulkAction) do |action_class, _repos|
         action_class.must_equal ::Actions::Katello::Repository::Sync
       end
-      post :sync, :id => @product.id
+      post :sync, params: { :id => @product.id }
       assert_response :success
     end
 
     def test_sync_bad_product
       product = Product.find(katello_products(:empty_product).id)
-      post :sync, :id => product.id
+      post :sync, params: { :id => product.id }
       assert_response 422
     end
 
@@ -205,7 +204,7 @@ module Katello
 
       assert_async_task(::Actions::BulkAction)
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        post :sync, :id => @product.id
+        post :sync, params: { :id => @product.id }
       end
     end
   end

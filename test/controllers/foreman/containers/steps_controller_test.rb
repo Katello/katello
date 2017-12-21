@@ -19,8 +19,7 @@ module Containers
     end
 
     def test_show_image_loads_katello
-      get :show, :wizard_state_id => @state.id,
-                 :id => :image
+      get :show, params: { :wizard_state_id => @state.id, :id => :image }
       assert @state.image.katello?
       # Only match the container.js part - as the response.body will contain
       # something like "digest+container.js" on Sprockets 3.x, even on the
@@ -54,12 +53,7 @@ module Containers
                                           :tag_id => 200
                                         }).returns(image)
 
-      put :update, :wizard_state_id => @state.id,
-                   :id => :image,
-                   :katello => true,
-                   :repository => {:id => repo.id},
-                   :tag => {:id => tag.id},
-                   :capsule => {:id => capsule_id}
+      put :update, params: { :wizard_state_id => @state.id, :id => :image, :katello => true, :repository => {:id => repo.id}, :tag => {:id => tag.id}, :capsule => {:id => capsule_id} }
 
       docker_image = @controller.instance_eval do
         @docker_container_wizard_states_image

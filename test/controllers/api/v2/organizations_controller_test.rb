@@ -49,7 +49,7 @@ module Katello
     end
 
     def test_show
-      results = JSON.parse(get(:show, :id => @organization.id).body)
+      results = JSON.parse(get(:show, params: { :id => @organization.id }).body)
       assert_response :success
 
       assert_equal results['name'], @organization.name
@@ -61,7 +61,7 @@ module Katello
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms, [@organization]) do
-        get :show, :id => @organization.id
+        get :show, params: { :id => @organization.id }
       end
     end
 
@@ -75,17 +75,17 @@ module Katello
         org.name.must_equal name
         org.stubs(:reload)
       end
-      post(:create, :organization => {"name" => name})
+      post(:create, params: { :organization => {"name" => name} })
       assert_response :success
     end
 
     def test_create_with_exception
-      post(:create, :organization => { name: "test_cli_org", description: "desc", smart_proxy_ids: ["2"], domain_ids: ["1"], subnet_ids: ["1", "2"]})
+      post(:create, params: { :organization => { name: "test_cli_org", description: "desc", smart_proxy_ids: ["2"], domain_ids: ["1"], subnet_ids: ["1", "2"]} })
       assert_match Regexp.new("Couldn't find"), response.body
     end
 
     def test_create_duplicate_name
-      post(:create, :organization => {"name" => @organization.name})
+      post(:create, params: { :organization => {"name" => @organization.name} })
       assert_response :unprocessable_entity
     end
 
@@ -93,7 +93,7 @@ module Katello
       assert_async_task ::Actions::Katello::Organization::Destroy do |org|
         org.id.must_equal @organization.id
       end
-      delete(:destroy, :id => @organization.id)
+      delete(:destroy, params: { :id => @organization.id })
 
       assert_response :success
     end
@@ -103,7 +103,7 @@ module Katello
       denied_perms = [@create_permission, @read_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
-        delete :destroy, :id => @organization.id
+        delete :destroy, params: { :id => @organization.id }
       end
     end
 
@@ -119,13 +119,13 @@ module Katello
         params[:redhat_repository_url] == url
       end
 
-      put(:update, :id => @organization.id, :redhat_repository_url => url)
+      put(:update, params: { :id => @organization.id, :redhat_repository_url => url })
       assert_response :success
     end
 
     def test_update_description
       new_description = "this is a new exciting description"
-      put :update, :id => @organization.id, :organization => { :description => new_description }
+      put :update, params: { :id => @organization.id, :organization => { :description => new_description } }
 
       @organization.reload
       assert_response :success
@@ -137,7 +137,7 @@ module Katello
       denied_perms = [@create_permission, @read_permission, @delete_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
-        put :update, :id => @organization.id, :organization => {:name => 'NewName'}
+        put :update, params: { :id => @organization.id, :organization => {:name => 'NewName'} }
       end
     end
 
@@ -146,7 +146,7 @@ module Katello
         organization.id == @organization.id
       end
 
-      post :autoattach_subscriptions, :id => @organization.id
+      post :autoattach_subscriptions, params: { :id => @organization.id }
 
       assert_response :success
     end
@@ -154,12 +154,12 @@ module Katello
     def test_autoattach_subscriptions_protected
       allowed_perms = [@update_permission]
       assert_protected_action(:autoattach_subscriptions, allowed_perms, [], [@organization]) do
-        post :autoattach_subscriptions, :id => @organization.id
+        post :autoattach_subscriptions, params: { :id => @organization.id }
       end
     end
 
     def test_releases
-      results = JSON.parse(get(:releases, :id => @organization.id).body)
+      results = JSON.parse(get(:releases, params: { :id => @organization.id }).body)
 
       assert_response :success
       assert_template "katello/api/v2/common/releases"
@@ -172,7 +172,7 @@ module Katello
       denied_perms = [@create_permission, @delete_permission, @update_permission]
 
       assert_protected_action(:releases, allowed_perms, denied_perms, [@organization]) do
-        get :releases, :id => @organization.id
+        get :releases, params: { :id => @organization.id }
       end
     end
   end

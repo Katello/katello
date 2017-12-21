@@ -30,7 +30,7 @@ module Katello
     end
 
     def test_index
-      get :index, :composite_content_view_id => @composite.id
+      get :index, params: { :composite_content_view_id => @composite.id }
 
       assert_response :success
       assert_template 'api/v2/content_view_components/index'
@@ -41,15 +41,14 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :composite_content_view_id => @composite.id
+        get :index, params: { :composite_content_view_id => @composite.id }
       end
     end
 
     def test_add_components_with_content_view
       @content_view = katello_content_views(:library_dev_view)
       @content_view_version = katello_content_view_versions(:library_dev_view_version)
-      put :add_components, :composite_content_view_id => @composite.id,
-                           :components => [{:content_view_id => @content_view.id, :latest => true}]
+      put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
 
       assert_response :success
 
@@ -62,8 +61,7 @@ module Katello
 
     def test_add_components_with_content_view_version
       @content_view_version = katello_content_view_versions(:library_dev_view_version)
-      put :add_components, :composite_content_view_id => @composite.id,
-                           :components => [{:content_view_version_id => @content_view_version.id, :latest => false}]
+      put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_version_id => @content_view_version.id, :latest => false}] }
       assert_response :success
       assert_template :layout => 'katello/api/v2/layouts/collection'
       assert_template "katello/api/v2/content_view_components/index"
@@ -77,14 +75,13 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        put :add_components, :composite_content_view_id => @composite.id,
-                             :components => [{:content_view_id => @content_view.id, :latest => true}]
+        put :add_components, params: { :composite_content_view_id => @composite.id, :components => [{:content_view_id => @content_view.id, :latest => true}] }
       end
     end
 
     def test_show
       component = create_component
-      get :show, :composite_content_view_id => @composite.id, :id => component.id
+      get :show, params: { :composite_content_view_id => @composite.id, :id => component.id }
       assert_response :success
       assert_template 'api/v2/content_view_components/show'
     end
@@ -95,7 +92,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :composite_content_view_id => @composite.id, :id => component.id
+        get :show, params: { :composite_content_view_id => @composite.id, :id => component.id }
       end
     end
 
@@ -105,8 +102,7 @@ module Katello
       assert_nil component.content_view_version
 
       computed_version = component.latest_version.id
-      put :update, :composite_content_view_id => @composite.id, :id => component.id,
-                   :content_view_version_id => computed_version, :latest => false
+      put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => computed_version, :latest => false }
 
       assert_response :success
       assert_template 'api/v2/common/update'
@@ -120,8 +116,7 @@ module Katello
       computed_version = component.latest_version.id
 
       component.update_attributes!(:latest => true, :content_view_version_id => nil)
-      put :update, :composite_content_view_id => @composite.id, :id => component.id,
-                   :latest => true
+      put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :latest => true }
       assert_response :success
       assert_template 'api/v2/common/update'
       component = component.reload
@@ -134,8 +129,7 @@ module Katello
       component = create_component
       computed_version = component.latest_version.id
 
-      put :update, :composite_content_view_id => @composite.id, :id => component.id,
-                   :content_view_version_id => computed_version, :latest => true
+      put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => computed_version, :latest => true }
       assert_response 422
     end
 
@@ -145,14 +139,13 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :composite_content_view_id => @composite.id, :id => component.id,
-             :content_view_version_id => component.latest_version.id, :latest => false
+        put :update, params: { :composite_content_view_id => @composite.id, :id => component.id, :content_view_version_id => component.latest_version.id, :latest => false }
       end
     end
 
     def test_remove_components
       component = create_component
-      put :remove_components, :composite_content_view_id => @composite.id, :component_ids => [component.id]
+      put :remove_components, params: { :composite_content_view_id => @composite.id, :component_ids => [component.id] }
 
       assert_response :success
       assert_nil ContentViewComponent.find_by_id(component.id)
@@ -164,7 +157,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        put :remove_components, :composite_content_view_id => @composite.id, :component_ids => [component.id]
+        put :remove_components, params: { :composite_content_view_id => @composite.id, :component_ids => [component.id] }
       end
     end
   end

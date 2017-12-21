@@ -40,9 +40,7 @@ module Katello
 
     def test_add_host_collection
       assert_equal 1, @host1.host_collections.count # system initially has simple_host_collection
-      put :bulk_add_host_collections, :included => {:ids => @host_ids},
-                                      :organization_id => @org.id,
-                                      :host_collection_ids => [@host_collection1.id, @host_collection2.id]
+      put :bulk_add_host_collections, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :host_collection_ids => [@host_collection1.id, @host_collection2.id] }
 
       assert_response :success
       assert_equal 2, @host1.host_collections.count
@@ -50,9 +48,7 @@ module Katello
 
     def test_remove_host_collection
       assert_equal 1, @host1.host_collections.count # system initially has simple_host_collection
-      put :bulk_remove_host_collections, :included => {:ids => @host_ids},
-                                         :organization_id => @org.id,
-                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]
+      put :bulk_remove_host_collections, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :host_collection_ids => [@host_collection1.id, @host_collection2.id] }
 
       assert_response :success
       assert_equal 0, @host1.host_collections.count
@@ -61,8 +57,7 @@ module Katello
     def test_install_package
       BulkActions.any_instance.expects(:install_packages).once.returns({})
 
-      put :install_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :content_type => 'package', :content => ['foo']
+      put :install_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
 
       assert_response :success
     end
@@ -70,8 +65,7 @@ module Katello
     def test_update_package
       BulkActions.any_instance.expects(:update_packages).once.returns({})
 
-      put :update_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :content_type => 'package', :content => ['foo']
+      put :update_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
 
       assert_response :success
     end
@@ -79,8 +73,7 @@ module Katello
     def test_remove_package
       BulkActions.any_instance.expects(:uninstall_packages).once.returns({})
 
-      put :remove_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :content_type => 'package', :content => ['foo']
+      put :remove_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
 
       assert_response :success
     end
@@ -88,8 +81,7 @@ module Katello
     def test_install_package_group
       BulkActions.any_instance.expects(:install_package_groups).once.returns({})
 
-      put :install_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :content_type => 'package_group', :content => ['foo group']
+      put :install_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package_group', :content => ['foo group'] }
 
       assert_response :success
     end
@@ -97,8 +89,7 @@ module Katello
     def test_update_package_group
       BulkActions.any_instance.expects(:update_package_groups).once.returns({})
 
-      put :update_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :content_type => 'package_group', :content => ['foo group']
+      put :update_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package_group', :content => ['foo group'] }
 
       assert_response :success
     end
@@ -106,8 +97,7 @@ module Katello
     def test_remove_package_group
       BulkActions.any_instance.expects(:uninstall_package_groups).once.returns({})
 
-      put :remove_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :content_type => 'package_group', :content => ['foo group']
+      put :remove_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package_group', :content => ['foo group'] }
 
       assert_response :success
     end
@@ -118,8 +108,7 @@ module Katello
       @controller.expects(:async_task).with(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall,
                                             [@host1], [errata.uuid]).returns({})
 
-      put :install_content, :included => {:ids => [@host1.id]}, :organization_id => @org.id,
-          :content_type => 'errata', :content => [errata.errata_id]
+      put :install_content, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :content_type => 'errata', :content => [errata.errata_id] }
 
       assert_response :success
     end
@@ -131,7 +120,7 @@ module Katello
         assert_includes hosts, @host2
       end
 
-      put :destroy_hosts, :included => {:ids => @host_ids}, :organization_id => @org.id
+      put :destroy_hosts, params: { :included => {:ids => @host_ids}, :organization_id => @org.id }
       assert_response :success
     end
 
@@ -144,8 +133,7 @@ module Katello
         assert_equal @library.id, library_id
       end
 
-      put :environment_content_view, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :environment_id => @library.id, :content_view_id => @view_2.id
+      put :environment_content_view, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :environment_id => @library.id, :content_view_id => @view_2.id }
 
       assert_response :success
     end
@@ -159,8 +147,7 @@ module Katello
         assert_equal release_version, release_version_param
       end
 
-      put :release_version, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :release_version => release_version
+      put :release_version, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :release_version => release_version }
 
       assert_response :success
     end
@@ -171,8 +158,7 @@ module Katello
       allow_restricted_user_to_see_host
 
       assert_protected_action(:release_version, good_perms, bad_perms) do
-        put :release_version, :included => {:ids => @host_ids}, :organization_id => @org.id,
-          :release_version => "7.2"
+        put :release_version, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :release_version => "7.2" }
       end
     end
 
@@ -187,9 +173,7 @@ module Katello
       allow_restricted_user_to_see_host
 
       assert_protected_action(:bulk_add_host_collections, good_perms, bad_perms) do
-        put :bulk_add_host_collections,  :included => {:ids => @host_ids},
-                                         :organization_id => @org.id,
-                                         :host_collection_ids => [@host_collection1.id, @host_collection2.id]
+        put :bulk_add_host_collections, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :host_collection_ids => [@host_collection1.id, @host_collection2.id] }
       end
     end
 
@@ -198,9 +182,7 @@ module Katello
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
       assert_protected_action(:bulk_remove_host_collections, good_perms, bad_perms) do
-        put :bulk_remove_host_collections,  :included => {:ids => @host_ids},
-                                            :organization_id => @org.id,
-                                            :host_collection_ids => [@host_collection1.id, @host_collection2.id]
+        put :bulk_remove_host_collections, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :host_collection_ids => [@host_collection1.id, @host_collection2.id] }
       end
     end
 
@@ -209,7 +191,7 @@ module Katello
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
       assert_protected_action(:install_content, good_perms, bad_perms) do
-        put :install_content, :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo']
+        put :install_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
       end
     end
 
@@ -218,8 +200,7 @@ module Katello
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
       assert_protected_action(:update_content, good_perms, bad_perms) do
-        put :update_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-            :content_type => "package", :content => ['foo']
+        put :update_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => "package", :content => ['foo'] }
       end
     end
 
@@ -228,8 +209,7 @@ module Katello
       bad_perms = [@view_permission, @destroy_permission]
       allow_restricted_user_to_see_host
       assert_protected_action(:remove_content, good_perms, bad_perms) do
-        put :remove_content, :included => {:ids => @host_ids}, :organization_id => @org.id,
-            :content_type => 'package', :content => ['foo']
+        put :remove_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
       end
     end
 
@@ -239,7 +219,7 @@ module Katello
       bad_perms = [@view_permission, @update_permission]
 
       assert_protected_action(:destroy_hosts, good_perms, bad_perms) do
-        put :destroy_hosts, :included => {:ids => @host_ids}, :organization_id => @org.id
+        put :destroy_hosts, params: { :included => {:ids => @host_ids}, :organization_id => @org.id }
       end
     end
 
@@ -249,8 +229,7 @@ module Katello
       allow_restricted_user_to_see_host
 
       assert_protected_action(:environment_content_view, good_perms, bad_perms) do
-        put :environment_content_view, :included => {:ids => @host_ids}, :organization_id => @org.id,
-            :environment_id => @library.id, :content_view_id => @view.id
+        put :environment_content_view, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :environment_id => @library.id, :content_view_id => @view.id }
       end
     end
 
@@ -271,7 +250,7 @@ module Katello
       @missing_erratum = unavailable.first
 
       assert @missing_erratum
-      post :available_incremental_updates, :included => {:ids => [@host1.id]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.errata_id]
+      post :available_incremental_updates, params: { :included => {:ids => [@host1.id]}, :organization_id => @org.id, :errata_ids => [@missing_erratum.errata_id] }
       assert_response :success
     end
 
@@ -283,22 +262,19 @@ module Katello
       pool = katello_pools(:pool_one)
 
       assert_protected_action(:content_overrides, good_perms, bad_perms) do
-        put :content_overrides, :included => {:ids => @host_ids},
-            :content_overrides => [{:content_label => 'some-content', :value => 1}]
+        put :content_overrides, params: { :included => {:ids => @host_ids}, :content_overrides => [{:content_label => 'some-content', :value => 1}] }
       end
 
       assert_protected_action(:add_subscriptions, good_perms, bad_perms) do
-        put :add_subscriptions, :included => {:ids => @host_ids},
-            :subscriptions => [{:id => pool.id, :quantity => 1}]
+        put :add_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       end
 
       assert_protected_action(:remove_subscriptions, good_perms, bad_perms) do
-        put :remove_subscriptions, :included => {:ids => @host_ids},
-            :subscriptions => [{:id => pool.id, :quantity => 1}]
+        put :remove_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       end
 
       assert_protected_action(:auto_attach, good_perms, bad_perms) do
-        put :auto_attach, :included => {:ids => @host_ids}
+        put :auto_attach, params: { :included => {:ids => @host_ids} }
       end
     end
 
@@ -312,7 +288,7 @@ module Katello
         assert_equal pool, pools_with_quantities[0].pool
         assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
-      put :add_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
+      put :add_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       assert_response :success
     end
 
@@ -326,7 +302,7 @@ module Katello
         assert_equal pool, pools_with_quantities[0].pool
         assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
-      put :remove_subscriptions, :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}]
+      put :remove_subscriptions, params: { :included => {:ids => @host_ids}, :subscriptions => [{:id => pool.id, :quantity => 1}] }
       assert_response :success
     end
 
@@ -336,7 +312,7 @@ module Katello
         assert_includes hosts, @host1
         assert_includes hosts, @host2
       end
-      put :auto_attach, :included => {:ids => @host_ids}
+      put :auto_attach, params: { :included => {:ids => @host_ids} }
       assert_response :success
     end
 
@@ -354,7 +330,7 @@ module Katello
         assert_equal expected_content_labels, content_overrides.map(&:content_label)
         assert_equal expected_values, content_overrides.map(&:value)
       end
-      put :content_overrides, :included => {:ids => @host_ids}, :content_overrides => expected_content_overrides
+      put :content_overrides, params: { :included => {:ids => @host_ids}, :content_overrides => expected_content_overrides }
       assert_response :success
     end
   end

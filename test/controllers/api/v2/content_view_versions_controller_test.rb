@@ -46,7 +46,7 @@ module Katello
 
     def test_index_with_content_view
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      get :index, :content_view_id => @library_dev_staging_view.id
+      get :index, params: { :content_view_id => @library_dev_staging_view.id }
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
     end
@@ -54,7 +54,7 @@ module Katello
     def test_index_with_content_view_in_environment
       expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
 
-      results = JSON.parse(get(:index, :content_view_id => @library_view.id, :environment_id => @library.id).body)
+      results = JSON.parse(get(:index, params: { :content_view_id => @library_view.id, :environment_id => @library.id }).body)
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
 
@@ -68,7 +68,7 @@ module Katello
       @composite_version.components = [component]
       @composite_version.save!
 
-      results = JSON.parse(get(:index, :composite_version_id => @composite_version.id).body)
+      results = JSON.parse(get(:index, params: { :composite_version_id => @composite_version.id }).body)
 
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
@@ -78,7 +78,7 @@ module Katello
 
     def test_index_with_content_view_by_version
       expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
-      results = JSON.parse(get(:index, :content_view_id => @library_view.id, :version => 2).body)
+      results = JSON.parse(get(:index, params: { :content_view_id => @library_view.id, :version => 2 }).body)
 
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
@@ -92,7 +92,7 @@ module Katello
       cvv = katello_content_view_versions(:library_default_version)
       cvv_org2 = katello_content_view_versions(:candlepin_library_dev_cv_version)
 
-      results = JSON.parse(get(:index, organization_id: cvv.organization.id).body)
+      results = JSON.parse(get(:index, params: { organization_id: cvv.organization.id }).body)
 
       assert_response :success
       assert_template 'api/v2/content_view_versions/index'
@@ -107,13 +107,13 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_id => @library_dev_staging_view.id
+        get :index, params: { :content_view_id => @library_dev_staging_view.id }
       end
     end
 
     def test_show
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
-      get :show, :id => @library_dev_staging_view.versions.first.id
+      get :show, params: { :id => @library_dev_staging_view.versions.first.id }
       assert_response :success
       assert_template 'api/v2/content_view_versions/show'
     end
@@ -122,19 +122,19 @@ module Katello
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::Export,
                                             version, false, nil, nil).returns({})
-      post :export, :id => version.id
+      post :export, params: { :id => version.id }
       assert_response :success
     end
 
     def test_export_bad_date
       version = @library_dev_staging_view.versions.first
-      post :export, :id => version.id, :since => "a really bad date"
+      post :export, params: { :id => version.id, :since => "a really bad date" }
       assert_response 400
     end
 
     def test_export_size_sans_iso_param
       version = @library_dev_staging_view.versions.first
-      post :export, :id => version.id, :iso_mb_size => 5
+      post :export, params: { :id => version.id, :iso_mb_size => 5 }
       assert_response 400
     end
 
@@ -145,7 +145,7 @@ module Katello
       version = @library_dev_staging_view.versions.first
 
       assert_protected_action(:export, allowed_perms, denied_perms) do
-        post :export, :id => version.id
+        post :export, params: { :id => version.id }
       end
     end
 
@@ -154,14 +154,14 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_id => @library_dev_staging_view.id
+        get :index, params: { :content_view_id => @library_dev_staging_view.id }
       end
     end
 
     def test_republish_repositories
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentViewVersion::RepublishRepositories, version).returns({})
-      put :republish_repositories, :id => version.id
+      put :republish_repositories, params: { :id => version.id }
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'
@@ -170,7 +170,7 @@ module Katello
     def test_promote
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@dev], false, 'trystero', :force_yum_metadata_regeneration => nil).returns({})
-      post :promote, :id => version.id, :environment_ids => [@dev.id], :description => 'trystero'
+      post :promote, params: { :id => version.id, :environment_ids => [@dev.id], :description => 'trystero' }
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'
@@ -182,7 +182,7 @@ module Katello
         assert_equal version, cv_version
         assert_equal [@beta, @dev].map(&:id).sort, environments.map(&:id).sort
       end
-      post :promote, :id => version.id, :environment_ids => [@beta.id, @dev.id]
+      post :promote, params: { :id => version.id, :environment_ids => [@beta.id, @dev.id] }
 
       assert_response :success
       assert_template 'katello/api/v2/common/async'
@@ -192,7 +192,7 @@ module Katello
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil,
                                             :force_yum_metadata_regeneration => nil).raises(::Katello::HttpErrors::BadRequest)
-      post :promote, :id => version.id, :environment_ids => [@beta.id]
+      post :promote, params: { :id => version.id, :environment_ids => [@beta.id] }
 
       assert_response 500
     end
@@ -201,7 +201,7 @@ module Katello
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], true, nil,
                                             :force_yum_metadata_regeneration => nil).returns({})
-      post :promote, :id => version.id, :environment_ids => [@beta.id], :force => 1
+      post :promote, params: { :id => version.id, :environment_ids => [@beta.id], :force => 1 }
 
       assert_response :success
     end
@@ -210,7 +210,7 @@ module Katello
       version = @library_dev_staging_view.versions.first
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil,
                                             :force_yum_metadata_regeneration => nil).returns({})
-      post :promote, :id => version.id, :environment_ids => [@beta.id], :force => 0
+      post :promote, params: { :id => version.id, :environment_ids => [@beta.id], :force => 0 }
 
       assert_response :success
     end
@@ -232,25 +232,25 @@ module Katello
                       [@env_promote_permission, diff_view_promote_permission]
                      ]
       assert_protected_action(:promote, allowed_perms, denied_perms) do
-        post :promote, :id => @library_dev_staging_view.versions.first.id, :environment_id => @dev.id
+        post :promote, params: { :id => @library_dev_staging_view.versions.first.id, :environment_id => @dev.id }
       end
     end
 
     def test_promote_default
       view = ContentView.find(katello_content_views(:acme_default).id)
-      post :promote, :id => view.versions.first.id, :environment_id => @dev.id
+      post :promote, params: { :id => view.versions.first.id, :environment_id => @dev.id }
       assert_response 400
     end
 
     def test_promote_out_of_sequence
       view = ContentView.find(katello_content_views(:acme_default).id)
-      post :promote, :id => view.versions.first.id, :environment_id => @dev.id
+      post :promote, params: { :id => view.versions.first.id, :environment_id => @dev.id }
       assert_response 400
     end
 
     def test_promote_without_environment
       content_view_version = FactoryBot.create(:katello_content_view_version)
-      post :promote, :id => content_view_version.id
+      post :promote, params: { :id => content_view_version.id }
       assert_response 400
     end
 
@@ -261,8 +261,7 @@ module Katello
                                             [{:content_view_version => version, :environments => [@beta]}], [],
                                             {'errata_ids' => [errata_id]}, true, [], nil).returns({})
 
-      put :incremental_update, :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}],
-                               :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true
+      put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true }
 
       assert_response :success
     end
@@ -274,9 +273,7 @@ module Katello
                                             [{:content_view_version => version, :environments => []}], [],
                                             {'errata_ids' => [errata_id]}, true, [], nil).returns({})
 
-      put :incremental_update, :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => []}],
-                               :update_hosts => {:included => {:search => ''}},
-                               :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true
+      put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => []}], :update_hosts => {:included => {:search => ''}}, :add_content => {:errata_ids => [errata_id]}, :resolve_dependencies => true }
 
       assert_response :success
     end
@@ -294,8 +291,7 @@ module Katello
                        publish_permission, view_promote_permission, environment_promote_permission]
 
       assert_protected_action(:incremental_update, allowed_perms, denied_perms) do
-        put :incremental_update, :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}],
-                                 :add_content => {:errata_ids => [errata_id], :resolve_dependencies => true}
+        put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id], :resolve_dependencies => true} }
       end
     end
 
@@ -308,7 +304,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @update_permission, @cv_promote_permission, diff_view_destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        post :destroy, :id => @library_dev_staging_view.versions.first.id
+        post :destroy, params: { :id => @library_dev_staging_view.versions.first.id }
       end
     end
   end

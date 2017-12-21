@@ -32,13 +32,13 @@ module Katello
     end
 
     def test_index_product
-      get :index, :product_id => @product.id
+      get :index, params: { :product_id => @product.id }
 
       assert_response :success
     end
 
     def test_index_enabled
-      get :index, :organization_id => @organization.id, :enabled => true
+      get :index, params: { :organization_id => @organization.id, :enabled => true }
 
       assert_response :success
     end
@@ -50,7 +50,7 @@ module Katello
       end
       task.expects(:output).at_least_once.returns(results: [])
 
-      get :available_repositories, product_id: @product.id, id: @content_id
+      get :available_repositories, params: { product_id: @product.id, id: @content_id }
       assert_response :success
     end
 
@@ -59,7 +59,7 @@ module Katello
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @import_permission]
 
       assert_protected_action(:available_repositories, allowed_perms, denied_perms) do
-        get :available_repositories, :product_id => @product.id, :id => @content_id
+        get :available_repositories, params: { :product_id => @product.id, :id => @content_id }
       end
     end
 
@@ -70,10 +70,7 @@ module Katello
         substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
-      put :enable,
-          product_id: @product.id,
-          id: @content_id,
-          basearch: 'x86_64', releasever: '6Server'
+      put :enable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
       assert_response :success
     end
 
@@ -84,9 +81,7 @@ module Katello
         substitutions.must_be_empty
       end
 
-      put :enable,
-          product_id: @product.id,
-          id: @content_id
+      put :enable, params: { product_id: @product.id, id: @content_id }
       assert_response :success
     end
 
@@ -95,10 +90,7 @@ module Katello
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @view_permission]
 
       assert_protected_action(:enable, allowed_perms, denied_perms) do
-        put :enable,
-            product_id: @product.id,
-            id: @content_id,
-            basearch: 'x86_64', releasever: '6Server'
+        put :enable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
       end
     end
 
@@ -109,10 +101,7 @@ module Katello
         substitutions.must_equal('basearch' => 'x86_64', 'releasever' => '6Server')
       end
 
-      put :disable,
-          product_id: @product.id,
-          id: @content_id,
-          basearch: 'x86_64', releasever: '6Server'
+      put :disable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
       assert_response :success
     end
 
@@ -123,9 +112,7 @@ module Katello
         substitutions.must_be_empty
       end
 
-      put :disable,
-          product_id: @product.id,
-          id: @content_id
+      put :disable, params: { product_id: @product.id, id: @content_id }
       assert_response :success
     end
 
@@ -134,15 +121,12 @@ module Katello
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @view_permission]
 
       assert_protected_action(:disable, allowed_perms, denied_perms) do
-        put :disable,
-            product_id: @product.id,
-            id: @content_id,
-            basearch: 'x86_64', releasever: '6Server'
+        put :disable, params: { product_id: @product.id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
       end
     end
 
     def test_repositories_index_with_product
-      get :index, product_id: @product.id
+      get :index, params: { product_id: @product.id }
       assert_response :success
     end
   end

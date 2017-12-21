@@ -33,7 +33,7 @@ module Katello
     end
 
     def test_index
-      results = JSON.parse(get(:index, :organization_id => @organization.id).body)
+      results = JSON.parse(get(:index, params: { :organization_id => @organization.id }).body)
 
       assert_response :success
       assert_template 'api/v2/activation_keys/index'
@@ -48,19 +48,19 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, :organization_id => @organization.id
+        get :index, params: { :organization_id => @organization.id }
       end
     end
 
     def test_index_filter_by_content_view
-      results = JSON.parse(get(:index, :organization_id => @organization.id, :content_view_id => @acme_view.id).body)
+      results = JSON.parse(get(:index, params: { :organization_id => @organization.id, :content_view_id => @acme_view.id }).body)
 
       assert_response :success
       assert_equal results["results"].size, 4
     end
 
     def test_show
-      results = JSON.parse(get(:show, :id => @activation_key.id).body)
+      results = JSON.parse(get(:show, params: { :id => @activation_key.id }).body)
 
       assert_equal results['name'], 'Simple Activation Key'
 
@@ -73,7 +73,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :id => @activation_key.id
+        get :show, params: { :id => @activation_key.id }
       end
     end
 
@@ -82,8 +82,7 @@ module Katello
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :environment => { :id => @library.id }, :content_view => { :id => @view.id },
-             :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'}
+        post :create, params: { :environment => { :id => @library.id }, :content_view => { :id => @view.id }, :activation_key => {:name => 'Key A2', :description => 'Key A2, Key to the World'} }
       end
     end
 
@@ -93,8 +92,7 @@ module Katello
         activation_key.max_hosts.must_be_nil
       end
 
-      post :create, :organization_id => @organization.id,
-                    :activation_key => {:name => 'Unlimited Key', :unlimited_hosts => true}
+      post :create, params: { :organization_id => @organization.id, :activation_key => {:name => 'Unlimited Key', :unlimited_hosts => true} }
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
@@ -108,8 +106,7 @@ module Katello
         assert_equal activation_key_params[:unlimited_hosts], false
       end
 
-      put :update, :id => @activation_key.id, :organization_id => @organization.id,
-         :activation_key => {:name => 'New Name', :max_hosts => 2}
+      put :update, params: { :id => @activation_key.id, :organization_id => @organization.id, :activation_key => {:name => 'New Name', :max_hosts => 2} }
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
@@ -120,8 +117,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
-        put :update, :id => @activation_key.id, :organization_id => @organization.id,
-            :activation_key => {:name => 'New Name'}
+        put :update, params: { :id => @activation_key.id, :organization_id => @organization.id, :activation_key => {:name => 'New Name'} }
       end
     end
 
@@ -130,8 +126,7 @@ module Katello
       subscription_facet2 = Host::SubscriptionFacet.find(katello_subscription_facets(:two).id)
       @activation_key.subscription_facet_ids = [subscription_facet1.id, subscription_facet2.id]
 
-      results = JSON.parse(put(:update, :id => @activation_key.id, :organization_id => @organization.id,
-                               :activation_key => {:max_hosts => 1}).body)
+      results = JSON.parse(put(:update, params: { :id => @activation_key.id, :organization_id => @organization.id, :activation_key => {:max_hosts => 1} }).body)
 
       assert_response 422
       assert_includes results['errors']['max_hosts'][0], 'cannot be lower than current usage count'
@@ -139,7 +134,7 @@ module Katello
 
     def test_destroy
       assert_sync_task(::Actions::Katello::ActivationKey::Destroy, @activation_key)
-      delete :destroy, :id => @activation_key.id
+      delete :destroy, params: { :id => @activation_key.id }
 
       assert_response :success
       assert_template 'api/v2/common/async'
@@ -154,7 +149,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
-        delete :destroy, :organization_id => @organization.id, :id => @activation_key.id
+        delete :destroy, params: { :organization_id => @organization.id, :id => @activation_key.id }
       end
     end
 
@@ -173,7 +168,7 @@ module Katello
         assert_equal activation_key_params[:auto_attach], @activation_key.auto_attach
       end
 
-      post :copy, :id => @activation_key.id, :organization_id => @organization.id, :new_name => 'New Name'
+      post :copy, params: { :id => @activation_key.id, :organization_id => @organization.id, :new_name => 'New Name' }
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
@@ -184,7 +179,7 @@ module Katello
       denied_perms = [@view_permission, @destroy_permission, @update_permission]
 
       assert_protected_action(:copy, allowed_perms, denied_perms) do
-        post(:copy, :id => @activation_key.id, :new_name => "new name")
+        post(:copy, params: { :id => @activation_key.id, :new_name => "new name" })
       end
     end
 
@@ -193,12 +188,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:product_content, allowed_perms, denied_perms) do
-        get(:product_content, :id => @activation_key.id)
+        get(:product_content, params: { :id => @activation_key.id })
       end
     end
 
     def test_product_content
-      get :product_content, :id => @activation_key.id, :organization_id => @organization.id
+      get :product_content, params: { :id => @activation_key.id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/activation_keys/product_content'
@@ -209,8 +204,7 @@ module Katello
 
       mode_all = true
       mode_env = false
-      get(:product_content, :id => @activation_key.id,
-          :content_access_mode_all => mode_all, :content_access_mode_env => mode_env)
+      get(:product_content, params: { :id => @activation_key.id, :content_access_mode_all => mode_all, :content_access_mode_env => mode_env })
       assert_response :success
       assert_template 'api/v2/activation_keys/product_content'
     end
@@ -220,16 +214,15 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:content_override, allowed_perms, denied_perms) do
-        put(:content_override, :id => @activation_key.id, :content_label => 'some-content',
-            :name => 'enabled', :value => 1)
+        put(:content_override, params: { :id => @activation_key.id, :content_label => 'some-content', :name => 'enabled', :value => 1 })
       end
     end
 
     def test_content_override
       ActivationKey.any_instance.expects(:set_content_overrides).returns(true)
 
-      put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content',
-                                                                              :value => 1})
+      put(:content_override, params: { :id => @activation_key.id, :content_override => {:content_label => 'some-content',
+                                                                                        :value => 1} })
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
@@ -253,14 +246,14 @@ module Katello
           params.map(&:value) == expected_values
       end
 
-      put(:content_override, :id => @activation_key.id, :content_overrides => overrides)
+      put(:content_override, params: { :id => @activation_key.id, :content_overrides => overrides })
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
 
     def test_content_override_empty
-      put(:content_override, :id => @activation_key.id, :content_override => {:content_label => 'some-content'})
+      put(:content_override, params: { :id => @activation_key.id, :content_override => {:content_label => 'some-content'} })
 
       assert_response 400
     end
@@ -270,7 +263,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:add_subscriptions, allowed_perms, denied_perms, [@organization]) do
-        post(:add_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
+        post(:add_subscriptions, params: { :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123 })
       end
     end
 
@@ -279,14 +272,14 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:remove_subscriptions, allowed_perms, denied_perms, [@organization]) do
-        post(:remove_subscriptions, :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123)
+        post(:remove_subscriptions, params: { :organization_id => @organization.id, :id => @activation_key.id, :subscription_id => 123 })
       end
     end
 
     def test_remove_host_collections
       ActivationKey.any_instance.stubs(:save!)
       ActivationKey.any_instance.expects(:host_collection_ids=).with([])
-      put(:remove_host_collections, organization_id: @organization.id, id: @activation_key.id, host_collection_ids: [])
+      put(:remove_host_collections, params: { organization_id: @organization.id, id: @activation_key.id, host_collection_ids: [] })
     end
   end
 end

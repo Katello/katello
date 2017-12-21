@@ -25,17 +25,17 @@ module Katello
 
     describe "register with activation key should fail" do
       it "without specifying owner (organization)" do
-        post('consumer_activate', :activation_keys => 'non_existent_key')
+        post('consumer_activate', params: { :activation_keys => 'non_existent_key' })
         assert_response 404
       end
 
       it "with unknown organization" do
-        post('consumer_activate', :owner => 'not_an_organization', :activation_keys => 'non_existent_key')
+        post('consumer_activate', params: { :owner => 'not_an_organization', :activation_keys => 'non_existent_key' })
         assert_response 404
       end
 
       it "with known organization and no activation_keys" do
-        post('consumer_activate', :owner => @organization.label, :activation_keys => '')
+        post('consumer_activate', params: { :owner => @organization.label, :activation_keys => '' })
         assert_response 400
       end
     end
@@ -52,8 +52,7 @@ module Katello
         ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
         assert_sync_task(::Actions::Katello::Host::Register, @host, {'facts' => @facts}, nil, [@activation_key])
 
-        post(:consumer_activate, :organization_id => @activation_key.organization.label,
-             :activation_keys => @activation_key.name, :facts => @facts)
+        post(:consumer_activate, params: { :organization_id => @activation_key.organization.label, :activation_keys => @activation_key.name, :facts => @facts })
 
         assert_response :success
       end
@@ -71,8 +70,7 @@ module Katello
         ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
         assert_sync_task(::Actions::Katello::Host::Register, @host, {'facts' => @facts }, @content_view_environment)
 
-        post(:consumer_create, :organization_id => @content_view_environment.content_view.organization.label,
-             :environment_id => @content_view_environment.cp_id, :facts => @facts)
+        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
         assert_response :success
       end
@@ -101,7 +99,7 @@ module Katello
 
       it "should bind all" do
         Host::ContentFacet.any_instance.expects(:update_repositories_by_paths).with(["/pulp/repos/foo", "/pulp/repos/bar"])
-        put :enabled_repos, :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos
+        put :enabled_repos, params: { :id => @host.subscription_facet.uuid, :enabled_repos => enabled_repos }
         assert_equal 200, response.status
       end
 
@@ -109,7 +107,7 @@ module Katello
         facts = {'rhsm_fact' => 'rhsm_value'}
         assert_async_task(::Actions::Katello::Host::Update)
 
-        put :facts, :id => @host.subscription_facet.uuid, :facts => facts
+        put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
         assert_equal 200, response.status
       end
     end
@@ -118,7 +116,7 @@ module Katello
       it "should prevent update facts for unauthorized user" do
         login_user(setup_user_with_permissions(:view_hosts, User.find(users(:restricted).id)))
         facts = {'rhsm_fact' => 'rhsm_value'}
-        put :facts, :id => @host.subscription_facet.uuid, :facts => facts
+        put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
         assert_response 403
       end
 
@@ -128,7 +126,7 @@ module Katello
         stub_cp_consumer_with_uuid(uuid)
         facts = {'rhsm_fact' => 'rhsm_value'}
         assert_async_task(::Actions::Katello::Host::Update)
-        put :facts, :id => @host.subscription_facet.uuid, :facts => facts
+        put :facts, params: { :id => @host.subscription_facet.uuid, :facts => facts }
         assert_response 200
       end
     end
@@ -136,7 +134,7 @@ module Katello
     describe "list owners" do
       it 'should return organizations admin user is assigned to' do
         User.current = User.find(users(:admin).id)
-        get :list_owners, :login => User.current.login
+        get :list_owners, params: { :login => User.current.login }
 
         assert_empty((JSON.parse(response.body).collect { |org| org['displayName'] } - Organization.pluck(:name)))
       end
@@ -144,12 +142,12 @@ module Katello
       it 'should return organizations user is assigned to' do
         setup_current_user_with_permissions(:my_organizations)
 
-        get :list_owners, :login => User.current.login
+        get :list_owners, params: { :login => User.current.login }
         assert_equal JSON.parse(response.body).first['displayName'], taxonomies(:empty_organization).name
       end
 
       it "should protect list owners with authentication" do
-        get :list_owners, :login => User.current.login
+        get :list_owners, params: { :login => User.current.login }
         assert_response 200
       end
 
@@ -157,34 +155,34 @@ module Katello
         User.current = nil
         session[:user] = nil
         set_basic_auth('100', '100')
-        get :list_owners, :login => 100
+        get :list_owners, params: { :login => 100 }
         assert_response 401
       end
     end
 
     it "test_list_owners_protected" do
       assert_protected_action(:list_owners, :my_organizations) do
-        get :list_owners, :login => User.current.login
+        get :list_owners, params: { :login => User.current.login }
       end
     end
 
     it "test_rhsm_index_protected" do
       assert_protected_action(:rhsm_index, :view_lifecycle_environments, [], [@organization]) do
-        get :rhsm_index, :organization_id => @organization.label
+        get :rhsm_index, params: { :organization_id => @organization.label }
       end
     end
 
     it "test_consumer_create_protected" do
       assert_protected_action(:consumer_create, [[:create_hosts,
                                                   :view_lifecycle_environments, :view_content_views]]) do
-        post :consumer_create, :environment_id => @organization.library.content_view_environments.first.cp_id
+        post :consumer_create, params: { :environment_id => @organization.library.content_view_environments.first.cp_id }
       end
     end
 
     it "test_upload_tracer_profile_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:upload_tracer_profile, :edit_hosts) do
-        put :upload_tracer_profile, :id => @host.subscription_facet.uuid
+        put :upload_tracer_profile, params: { :id => @host.subscription_facet.uuid }
       end
     end
 
@@ -194,13 +192,13 @@ module Katello
       Candlepin::Consumer.expects(:new).with(@host.subscription_facet.uuid, @host.organization.label).returns(consumer_stub)
       Resources::Candlepin::Consumer.expects(:get).with(@host.subscription_facet.uuid)
 
-      post :regenerate_identity_certificates, :id => @host.subscription_facet.uuid
+      post :regenerate_identity_certificates, params: { :id => @host.subscription_facet.uuid }
     end
 
     it "test_regenerate_identity_certificates_protected" do
       Resources::Candlepin::Consumer.stubs(:get)
       assert_protected_action(:regenerate_identity_certificates, :edit_hosts) do
-        post :regenerate_identity_certificates, :id => @host.subscription_facet.uuid
+        post :regenerate_identity_certificates, params: { :id => @host.subscription_facet.uuid }
       end
     end
 
@@ -266,7 +264,7 @@ module Katello
         uuid = @host.subscription_facet.uuid
         User.stubs(:consumer?).returns(true)
         stub_cp_consumer_with_uuid(uuid)
-        get :available_releases, :id => @host.subscription_facet.uuid
+        get :available_releases, params: { :id => @host.subscription_facet.uuid }
         assert_response 200
       end
 
@@ -277,7 +275,7 @@ module Katello
         stub_cp_consumer_with_uuid(uuid)
         # Getting the available releases for a different consumer
         # should not be allowed.
-        get :available_releases, :id => @host.subscription_facet.uuid
+        get :available_releases, params: { :id => @host.subscription_facet.uuid }
         assert_response 403
       end
     end
@@ -292,7 +290,7 @@ module Katello
         Setting[:unregister_delete_host] = false
 
         assert_sync_task(::Actions::Katello::Host::Unregister, @host)
-        delete :consumer_destroy, :id => @host.subscription_facet.uuid
+        delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
 
         assert_response 204
       end
@@ -301,7 +299,7 @@ module Katello
         Setting[:unregister_delete_host] = true
 
         assert_sync_task(::Actions::Katello::Host::Destroy, @host)
-        delete :consumer_destroy, :id => @host.subscription_facet.uuid
+        delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
 
         assert_response 204
       end
@@ -314,14 +312,14 @@ module Katello
 
       it "can be accessed by user" do
         User.current = setup_user_with_permissions(:create_hosts, User.find(users(:restricted).id))
-        get :consumer_show, :id => @host.subscription_facet.uuid
+        get :consumer_show, params: { :id => @host.subscription_facet.uuid }
         assert_response 200
       end
 
       it "can be accessed by client" do
         uuid = @host.subscription_facet.uuid
         stub_cp_consumer_with_uuid(uuid)
-        get :consumer_show, :id => uuid
+        get :consumer_show, params: { :id => uuid }
         assert_response 200
       end
     end
@@ -336,7 +334,7 @@ module Katello
         assert_nil @host.subscription_facet.last_checkin
         stub_cp_consumer_with_uuid(uuid)
 
-        get :serials, :id => uuid
+        get :serials, params: { :id => uuid }
         assert_response 200
         refute_nil @host.subscription_facet.reload.last_checkin
       end

@@ -26,7 +26,7 @@ module Katello
     end
 
     def test_index
-      get :index, :organization_id => @organization.id
+      get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/gpg_keys/index'
@@ -37,12 +37,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, :organization_id => @organization.id
+        get :index, params: { :organization_id => @organization.id }
       end
     end
 
     def test_content
-      get :content, :id => @gpg_key.id
+      get :content, params: { :id => @gpg_key.id }
       assert_response :success
       assert_equal @response.body, @gpg_key.content
     end
@@ -53,7 +53,7 @@ module Katello
       temp_content_file = Tempfile.new(content)
       temp_content_file.write(content)
       temp_content_file.rewind
-      post :set_content, :id => @gpg_key.id, :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
+      post :set_content, params: { :id => @gpg_key.id, :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain") }
       assert_response :success, @response.body
       assert_equal content, @gpg_key.reload.content
     end

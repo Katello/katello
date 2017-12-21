@@ -12,7 +12,7 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
   end
 
   def test_create
-    post :create, :hostgroup => {:name => 'New Hostgroup'}
+    post :create, params: { :hostgroup => {:name => 'New Hostgroup'} }
 
     assert_response :success
     assert_template 'api/v2/hostgroups/create'
@@ -20,7 +20,7 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
   end
 
   def test_update
-    put :update, :id => @hostgroup.id, :hostgroup => {:name => 'New Name'}
+    put :update, params: { :id => @hostgroup.id, :hostgroup => {:name => 'New Name'} }
 
     assert_response :success
     assert_template 'api/v2/hostgroups/update'

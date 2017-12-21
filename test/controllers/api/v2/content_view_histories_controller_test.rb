@@ -20,7 +20,7 @@ module Katello
     end
 
     def test_index
-      get :index, :content_view_id => @library_dev_staging_view
+      get :index, params: { :content_view_id => @library_dev_staging_view }
 
       assert_response :success
       assert_template 'katello/api/v2/content_view_histories/index'
@@ -31,7 +31,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_id => @library_dev_staging_view.id
+        get :index, params: { :content_view_id => @library_dev_staging_view.id }
       end
     end
   end

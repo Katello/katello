@@ -20,7 +20,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
-    get :show, :id => host.id
+    get :show, params: { :id => host.id }
     assert_response :success
   end
 
@@ -28,7 +28,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
-    get :show, :id => host.id
+    get :show, params: { :id => host.id }
     response = ActiveSupport::JSON.decode(@response.body)
     assert_equal smart_proxy.id, response["content_facet_attributes"]["content_source_id"]
     assert_response :success
@@ -62,7 +62,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     host = FactoryBot.create(:host, :with_subscription)
     host.subscription_facet.update_attributes!(:autoheal => true)
 
-    put :update, :id => host.id, :subscription_facet_attributes => {:autoheal => false}
+    put :update, params: { :id => host.id, :subscription_facet_attributes => {:autoheal => false} }
 
     assert_response :success
 
@@ -81,7 +81,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     attrs = @host.clone.attributes.merge("name" => "contenthost", "content_facet_attributes" => cf_attrs).compact!
 
     assert_difference('Host.unscoped.count') do
-      post :create, attrs
+      post :create, params: attrs
       assert_response :success
     end
   end
@@ -93,7 +93,7 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
                }
     attrs = @host.clone.attributes.merge("name" => "contenthost1", "content_facet_attributes" => cf_attrs).compact!
 
-    post :create, attrs
+    post :create, params: attrs
     assert_response :success # the uuid is simply filtered out which allows the host to be still saved
     refute Katello::Host::ContentFacet.where(:uuid => cf_attrs[:uuid]).exists?
   end

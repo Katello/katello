@@ -35,7 +35,7 @@ module Katello
     end
 
     def test_index
-      get :index, :organization_id => @organization.id
+      get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/index'
@@ -46,25 +46,23 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, :organization_id => @organization.id
+        get :index, params: { :organization_id => @organization.id }
       end
     end
 
     def test_create
-      post :create, :organization_id => @organization.id,
-                    :sync_plan => {:name => 'Hourly Sync Plan',
-                                   :sync_date => '2014-01-09 17:46:00',
-                                   :interval => 'hourly',
-                                   :description => 'This is my cool new product.'}
+      post :create, params: { :organization_id => @organization.id, :sync_plan => {:name => 'Hourly Sync Plan',
+                                                                                   :sync_date => '2014-01-09 17:46:00',
+                                                                                   :interval => 'hourly',
+                                                                                   :description => 'This is my cool new product.'} }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
     end
 
     def test_create_fail
-      post :create, :organization_id => @organization.id,
-                    :sync_plan => {:sync_date => '2014-01-09 17:46:00',
-                                   :description => 'This is my cool new sync plan.'}
+      post :create, params: { :organization_id => @organization.id, :sync_plan => {:sync_date => '2014-01-09 17:46:00',
+                                                                                   :description => 'This is my cool new sync plan.'} }
 
       assert_response :unprocessable_entity
     end
@@ -74,16 +72,14 @@ module Katello
       denied_perms = [@view_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
-        post :create, :organization_id => @organization.id,
-                      :sync_plan => {:name => 'Hourly Sync Plan',
-                                     :sync_date => '2014-01-09 17:46:00',
-                                     :interval => 'hourly'}
+        post :create, params: { :organization_id => @organization.id, :sync_plan => {:name => 'Hourly Sync Plan',
+                                                                                     :sync_date => '2014-01-09 17:46:00',
+                                                                                     :interval => 'hourly'} }
       end
     end
 
     def test_update
-      put :update, :id => @sync_plan.id, :organization_id => @organization.id,
-          :sync_plan => {:name => 'New Name'}
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => {:name => 'New Name'} }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -95,8 +91,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
-        put :update, :id => @sync_plan.id, :organization_id => @organization.id,
-            :sync_plan => {:description => 'new description.'}
+        put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => {:description => 'new description.'} }
       end
     end
 
@@ -105,7 +100,7 @@ module Katello
         sync_plan.id.must_equal @sync_plan.id
       end
 
-      delete :destroy, :organization_id => @organization.id, :id => @sync_plan.id
+      delete :destroy, params: { :organization_id => @organization.id, :id => @sync_plan.id }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -116,7 +111,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
-        delete :destroy, :organization_id => @organization.id, :id => @sync_plan.id
+        delete :destroy, params: { :organization_id => @organization.id, :id => @sync_plan.id }
       end
     end
 
@@ -124,8 +119,7 @@ module Katello
       product_ids = @products.collect { |p| p.id.to_s }
       ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::AddProducts, @sync_plan, product_ids)
 
-      put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => product_ids
+      put :add_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => product_ids }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -136,8 +130,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:add_products, allowed_perms, denied_perms, [@organization]) do
-        put :add_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => @products.collect { |p| p.id }
+        put :add_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => @products.collect { |p| p.id } }
       end
     end
 
@@ -145,8 +138,7 @@ module Katello
       product_ids = @products.collect { |p| p.id.to_s }
       ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::RemoveProducts, @sync_plan, product_ids)
 
-      put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,
-          :product_ids => product_ids
+      put :remove_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => product_ids }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
@@ -157,8 +149,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:remove_products, allowed_perms, denied_perms, [@organization]) do
-        put :remove_products, :id => @sync_plan.id, :organization_id => @organization.id,
-            :product_ids => @products.collect { |p| p.id }
+        put :remove_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => @products.collect { |p| p.id } }
       end
     end
 
@@ -171,7 +162,7 @@ module Katello
         assert_equal repo_ids, ids
       end
 
-      put :sync, :id => @sync_plan.id, :organization_id => @organization.id
+      put :sync, params: { :id => @sync_plan.id, :organization_id => @organization.id }
 
       assert_response :success
     end
@@ -181,7 +172,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:sync, allowed_perms, denied_perms, [@organization]) do
-        put :sync, :id => @sync_plan.id, :organization_id => @organization.id
+        put :sync, params: { :id => @sync_plan.id, :organization_id => @organization.id }
       end
     end
   end

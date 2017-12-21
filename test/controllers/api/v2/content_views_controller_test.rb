@@ -38,21 +38,21 @@ module Katello
     end
 
     def test_index
-      get :index, :organization_id => @organization.id
+      get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/content_views/index'
     end
 
     def test_index_in_environment
-      get :index, :organization_id => @organization.id, :environment_id => @dev.id
+      get :index, params: { :organization_id => @organization.id, :environment_id => @dev.id }
 
       assert_response :success
       assert_template 'api/v2/content_views/index'
     end
 
     def test_index_with_composite_filter
-      get :index, :organization_id => @organization.id, :composite => true
+      get :index, params: { :organization_id => @organization.id, :composite => true }
 
       assert_response :success
       assert_template 'api/v2/content_views/index'
@@ -73,13 +73,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, :organization_id => @organization.id
+        get :index, params: { :organization_id => @organization.id }
       end
     end
 
     def test_create
-      post :create, :name => "My View", :label => "My_View", :description => "Cool",
-        :organization_id => @organization.id
+      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool", :organization_id => @organization.id }
 
       assert_response :success
       assert_template :layout => 'katello/api/v2/layouts/resource'
@@ -87,7 +86,7 @@ module Katello
     end
 
     def test_create_fail_without_organization_id
-      post :create, :name => "My View", :label => "My_View", :description => "Cool"
+      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool" }
 
       assert_response :not_found
     end
@@ -97,20 +96,19 @@ module Katello
       denied_perms = [@view_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
-        post :create, :name => "Test", :organization_id => @organization.id
+        post :create, params: { :name => "Test", :organization_id => @organization.id }
       end
     end
 
     def test_create_with_non_json_request
       @request.env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
-      post :create, :name => "My View", :description => "Cool",
-        :organization_id => @organization.id
+      post :create, params: { :name => "My View", :description => "Cool", :organization_id => @organization.id }
 
       assert_response 415
     end
 
     def test_show
-      get :show, :id => @library_dev_staging_view.id
+      get :show, params: { :id => @library_dev_staging_view.id }
 
       assert_response :success
       assert_template 'api/v2/content_views/show'
@@ -121,7 +119,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :id => @library_dev_staging_view.id
+        get :show, params: { :id => @library_dev_staging_view.id }
       end
     end
 
@@ -131,7 +129,7 @@ module Katello
         content_view_params.key?(:name).must_equal true
         content_view_params[:name].must_equal params[:name]
       end
-      put :update, :id => @library_dev_staging_view.id, :content_view => params
+      put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
       assert_response :success
       assert_template layout: 'katello/api/v2/layouts/resource'
@@ -146,7 +144,7 @@ module Katello
         content_view_params.key?(:repository_ids).must_equal true
         content_view_params[:repository_ids].must_equal params[:repository_ids]
       end
-      put :update, :id => @library_dev_staging_view.id, :content_view => params
+      put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
       assert_response :success
       assert_template layout: 'katello/api/v2/layouts/resource'
@@ -162,7 +160,7 @@ module Katello
         content_view_params.key?(:component_ids).must_equal true
         content_view_params[:component_ids].must_equal params[:component_ids]
       end
-      put :update, :id => composite.id, :content_view => params
+      put :update, params: { :id => composite.id, :content_view => params }
 
       assert_response :success
       assert_template layout: 'katello/api/v2/layouts/resource'
@@ -174,12 +172,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, :destroy_content_views]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :id => @library_dev_staging_view.id, :name => "new name"
+        put :update, params: { :id => @library_dev_staging_view.id, :name => "new name" }
       end
     end
 
     def test_available_puppet_modules
-      get :available_puppet_modules, :id => @library_dev_staging_view.id
+      get :available_puppet_modules, params: { :id => @library_dev_staging_view.id }
 
       assert_response :success
       assert_template 'katello/api/v2/content_views/puppet_modules'
@@ -191,7 +189,7 @@ module Katello
       create(:puppet_module, :version => "1.3.0")
       PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
 
-      get :available_puppet_modules, :id => @library_dev_staging_view.id, :name => "trystero"
+      get :available_puppet_modules, params: { :id => @library_dev_staging_view.id, :name => "trystero" }
 
       results = JSON.parse(response.body)['results']
       assert_equal '1.12.0', results.first['version']
@@ -202,7 +200,7 @@ module Katello
       create(:puppet_module, :version => "1.3.0")
       PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
 
-      get :available_puppet_modules, :id => @library_dev_staging_view.id, :name => "trystero"
+      get :available_puppet_modules, params: { :id => @library_dev_staging_view.id, :name => "trystero" }
       results = JSON.parse(response.body)['results']
 
       assert_equal '1.3.0', results.first['version']
@@ -219,7 +217,7 @@ module Katello
       cv_puppet_module.uuid = puppet_module2.uuid
       cv_puppet_module.save
       PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
-      get :available_puppet_modules, :id => content_view.id, :name => 'm1'
+      get :available_puppet_modules, params: { :id => content_view.id, :name => 'm1' }
       results = JSON.parse(response.body)['results']
       assert_equal '1.2.0', results.first['version']
       assert_equal 2, results.count
@@ -231,12 +229,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:available_puppet_modules, allowed_perms, denied_perms) do
-        get :available_puppet_modules, :id => @library_dev_staging_view.id
+        get :available_puppet_modules, params: { :id => @library_dev_staging_view.id }
       end
     end
 
     def test_available_puppet_module_names
-      get :available_puppet_module_names, :id => @library_dev_staging_view.id
+      get :available_puppet_module_names, params: { :id => @library_dev_staging_view.id }
 
       assert_response :success
       assert_template 'katello/api/v2/content_views/../puppet_modules/names'
@@ -247,14 +245,14 @@ module Katello
       denied_perms = [@create_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:available_puppet_module_names, allowed_perms, denied_perms) do
-        get :available_puppet_module_names, :id => @library_dev_staging_view.id
+        get :available_puppet_module_names, params: { :id => @library_dev_staging_view.id }
       end
     end
 
     def test_publish_default_view
       view = ContentView.find(katello_content_views(:acme_default).id)
       version_count = view.versions.count
-      post :publish, :id => view.id
+      post :publish, params: { :id => view.id }
       assert_response 400
       assert_equal version_count, view.versions.reload.count
     end
@@ -263,7 +261,7 @@ module Katello
       view = ContentView.create!(:name => "Cat",
                                  :organization => @organization
                                 )
-      delete :destroy, :id => view.id
+      delete :destroy, params: { :id => view.id }
       assert_response :success
     end
 
@@ -275,12 +273,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @update_permission, diff_view_destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :id => @library_dev_staging_view.id
+        delete :destroy, params: { :id => @library_dev_staging_view.id }
       end
     end
 
     def test_copy
-      post :copy, :id => @library_dev_staging_view.id, :name => "My New View"
+      post :copy, params: { :id => @library_dev_staging_view.id, :name => "My New View" }
 
       assert_response :success
       assert_template "katello/api/v2/content_views/copy"
@@ -291,13 +289,13 @@ module Katello
       denied_perms = [@view_permission, @update_permission, :destroy_content_views]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :copy, :id => @library_dev_staging_view.id, :name => "Test"
+        post :copy, params: { :id => @library_dev_staging_view.id, :name => "Test" }
       end
     end
 
     def test_remove_from_environment
       refute @library_dev_view.environments.include?(@staging)
-      delete :remove_from_environment, id: @library_dev_view.id, environment_id: @staging.id
+      delete :remove_from_environment, params: { id: @library_dev_view.id, environment_id: @staging.id }
       assert_response 400
     end
 
@@ -326,7 +324,7 @@ module Katello
                      ]
 
       assert_protected_action(:remove_from_environment, allowed_perms, denied_perms) do
-        delete :remove_from_environment, :id => @library_dev_staging_view.id, :environment_id => @dev.id
+        delete :remove_from_environment, params: { :id => @library_dev_staging_view.id, :environment_id => @dev.id }
       end
     end
 
@@ -372,7 +370,7 @@ module Katello
       end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
-        put :remove, :id => @library_dev_staging_view.id, :environment_ids => env_ids
+        put :remove, params: { :id => @library_dev_staging_view.id, :environment_ids => env_ids }
       end
     end
 
@@ -392,9 +390,8 @@ module Katello
                      ]
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
-        put :remove, :id => @library_dev_staging_view.id,
-                     :content_view_version_ids => [@library_dev_staging_view.version(@dev).id,
-                                                   @library_dev_staging_view.version(@staging).id]
+        put :remove, params: { :id => @library_dev_staging_view.id, :content_view_version_ids => [@library_dev_staging_view.version(@dev).id,
+                                                                                                  @library_dev_staging_view.version(@staging).id] }
       end
     end
 
@@ -452,10 +449,7 @@ module Katello
       assert_protected_action(:remove, allowed_perms, denied_perms) do
         User.current.update_attribute(:organizations, [host.organization])
         User.current.update_attribute(:locations, [host.location])
-        put :remove, :id => content_view.id,
-                     :environment_ids => env_ids,
-                     :system_content_view_id => alternate_cv.id,
-                     :system_environment_id => alternate_env.id
+        put :remove, params: { :id => content_view.id, :environment_ids => env_ids, :system_content_view_id => alternate_cv.id, :system_environment_id => alternate_env.id }
       end
     end
 
@@ -506,10 +500,7 @@ module Katello
       end
 
       assert_protected_action(:remove, allowed_perms, denied_perms) do
-        put :remove, :id => ak.content_view.id,
-                     :environment_ids => [ak.environment.id],
-                     :key_content_view_id => alternate_cv.id,
-                     :key_environment_id => alternate_env.id
+        put :remove, params: { :id => ak.content_view.id, :environment_ids => [ak.environment.id], :key_content_view_id => alternate_cv.id, :key_environment_id => alternate_env.id }
       end
     end
   end

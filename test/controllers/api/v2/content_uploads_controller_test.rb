@@ -27,7 +27,7 @@ module Katello
 
     def test_create_upload_request
       mock_pulp_server(:create_upload_request => [])
-      post :create, :repository_id => @repo.id
+      post :create, params: { :repository_id => @repo.id }
 
       assert_response :success
     end
@@ -37,13 +37,13 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :repository_id => @repo.id
+        post :create, params: { :repository_id => @repo.id }
       end
     end
 
     def test_update
       mock_pulp_server(:upload_bits => true)
-      put :update, :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
+      put :update, params: { :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id }
 
       assert_response :success
     end
@@ -53,13 +53,13 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id
+        put :update, params: { :id => "1", :offset => "0", :content => "/tmp/my_file.rpm", :repository_id => @repo.id }
       end
     end
 
     def test_delete_request
       mock_pulp_server(:delete_upload_request => true)
-      delete :destroy, :id => "1", :repository_id => @repo.id
+      delete :destroy, params: { :id => "1", :repository_id => @repo.id }
 
       assert_response :success
     end
@@ -69,7 +69,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :id => "1", :repository_id => @repo.id
+        delete :destroy, params: { :id => "1", :repository_id => @repo.id }
       end
     end
 

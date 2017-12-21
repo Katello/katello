@@ -28,7 +28,7 @@ module Katello
     end
 
     def test_index
-      get :index, :host_id => @host.id
+      get :index, params: { :host_id => @host.id }
 
       assert_response :success
     end
@@ -38,13 +38,13 @@ module Katello
         host.id == @host.id && packages == %w(foo)
       end
 
-      put :install, :host_id => @host.id, :packages => %w(foo)
+      put :install, params: { :host_id => @host.id, :packages => %w(foo) }
 
       assert_response :success
     end
 
     def test_install_bad_package
-      put :install, :host_id => @host.id, :packages => ["foo343434*"]
+      put :install, params: { :host_id => @host.id, :packages => ["foo343434*"] }
 
       assert_response 400
     end
@@ -54,7 +54,7 @@ module Katello
         host.id == @host.id && groups == %w(blah)
       end
 
-      put :install, :host_id => @host.id, :groups => %w(blah)
+      put :install, params: { :host_id => @host.id, :groups => %w(blah) }
 
       assert_response :success
     end
@@ -64,13 +64,13 @@ module Katello
         host.id == @host.id && packages == %w(foo bar)
       end
 
-      put :upgrade, :host_id => @host.id, :packages => %w(foo bar)
+      put :upgrade, params: { :host_id => @host.id, :packages => %w(foo bar) }
 
       assert_response :success
     end
 
     def test_upgrade_group_fail
-      put :upgrade, :host_id => @host.id, :groups => %w(foo bar)
+      put :upgrade, params: { :host_id => @host.id, :groups => %w(foo bar) }
 
       assert_response 400
     end
@@ -80,7 +80,7 @@ module Katello
         host.id == @host.id && packages == []
       end
 
-      put :upgrade_all, :host_id => @host.id
+      put :upgrade_all, params: { :host_id => @host.id }
 
       assert_response :success
     end
@@ -90,7 +90,7 @@ module Katello
         host.id == @host.id && packages == %w(foo)
       end
 
-      put :remove, :host_id => @host.id, :packages => %w(foo)
+      put :remove, params: { :host_id => @host.id, :packages => %w(foo) }
 
       assert_response :success
     end
@@ -100,7 +100,7 @@ module Katello
         host.id == @host.id && groups == %w(blah)
       end
 
-      put :remove, :host_id => @host.id, :groups => %w(blah)
+      put :remove, params: { :host_id => @host.id, :groups => %w(blah) }
 
       assert_response :success
     end
@@ -118,7 +118,7 @@ module Katello
           @host.update_attribute(:location, taxonomies(:location1))
         end
 
-        get :index, :host_id => @host.id
+        get :index, params: { :host_id => @host.id }
       end
     end
 
@@ -133,19 +133,19 @@ module Katello
       @host.update_attribute(:location, taxonomies(:location1))
 
       assert_protected_action(:install, good_perms, bad_perms) do
-        put :install, :host_id => @host.id, :packages => ["foo*"]
+        put :install, params: { :host_id => @host.id, :packages => ["foo*"] }
       end
 
       assert_protected_action(:upgrade, good_perms, bad_perms) do
-        put :upgrade, :host_id => @host.id, :packages => ["foo*"]
+        put :upgrade, params: { :host_id => @host.id, :packages => ["foo*"] }
       end
 
       assert_protected_action(:upgrade_all, good_perms, bad_perms) do
-        put :upgrade_all, :host_id => @host.id, :packages => ["foo*"]
+        put :upgrade_all, params: { :host_id => @host.id, :packages => ["foo*"] }
       end
 
       assert_protected_action(:remove, good_perms, bad_perms) do
-        put :remove, :host_id => @host.id, :packages => ["foo*"]
+        put :remove, params: { :host_id => @host.id, :packages => ["foo*"] }
       end
     end
   end

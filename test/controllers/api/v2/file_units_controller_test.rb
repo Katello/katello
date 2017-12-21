@@ -34,7 +34,7 @@ module Katello
     end
 
     def test_index_with_repo_id
-      get :index, :repository_id => @repo.id
+      get :index, params: { :repository_id => @repo.id }
 
       assert_response :success
       assert_template "katello/api/v2/file_units/index"
@@ -47,7 +47,7 @@ module Katello
     end
 
     def test_show
-      get :show, :id => @file.id
+      get :show, params: { :id => @file.id }
 
       assert_response :success
       assert_template "katello/api/v2/file_units/show"
@@ -55,7 +55,7 @@ module Katello
 
     def test_show_protected
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
-        get :show, :id => @file.id
+        get :show, params: { :id => @file.id }
       end
     end
 
@@ -63,12 +63,11 @@ module Katello
       @lib_repo = katello_repositories(:rhel_6_x86_64)
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id] }
       assert_response :success
       assert_template "katello/api/v2/file_units/compare"
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
-                    :repository_id => @lib_repo.id
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/file_units/compare"
     end
