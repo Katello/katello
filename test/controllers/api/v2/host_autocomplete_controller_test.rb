@@ -24,7 +24,7 @@ module Katello
     end
 
     def test_install_package
-      get :auto_complete_search, :search => "name "
+      get :auto_complete_search, params: { :search => "name " }
 
       assert_response :success
     end
@@ -34,7 +34,7 @@ module Katello
       bad_perms = [@update_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:auto_complete_search, good_perms, bad_perms) do
-        get :auto_complete_search, :search => "name "
+        get :auto_complete_search, params: { :search => "name " }
       end
     end
   end

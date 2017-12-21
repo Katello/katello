@@ -19,19 +19,19 @@ class HostsControllerTest < ActionController::TestCase
   end
 
   test 'puppet environment for content_view' do
-    get :puppet_environment_for_content_view, :content_view_id => @library_dev_staging_view.id, :lifecycle_environment_id => @library.id
+    get :puppet_environment_for_content_view, params: { :content_view_id => @library_dev_staging_view.id, :lifecycle_environment_id => @library.id }
 
     assert_response :success
   end
 
   test 'empty content facet parameters are removed' do
-    post :create, { :host => {
+    post :create, params: { :host => {
       :name => 'test_content',
       :content_facet_attributes => {
         :lifecycle_environment_id => "",
         :content_source_id => ""
       }
-    } }, set_session_user
+    } }, session: set_session_user
     assert_empty assigns('host').content_facet
   end
 
@@ -46,8 +46,7 @@ class HostsControllerTest < ActionController::TestCase
     end
 
     def test_csv_export
-      get :content_hosts, :format => 'csv',
-                          :organization_id => @host.organization_id
+      get :content_hosts, params: { :format => 'csv', :organization_id => @host.organization_id }
       assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]
       assert_equal "no-cache", response.headers["Cache-Control"]
       assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"", response.headers["Content-Disposition"]
@@ -61,9 +60,7 @@ Content View,Registered,Last Checkin\n",
     end
 
     def test_csv_export_search
-      get :content_hosts, :format => 'csv',
-                          :organization_id => @host.organization_id,
-                          :search => "name = #{@host.name}"
+      get :content_hosts, params: { :format => 'csv', :organization_id => @host.organization_id, :search => "name = #{@host.name}" }
       buf = response.stream.instance_variable_get(:@buf)
       assert_equal 2, buf.count
     end

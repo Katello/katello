@@ -15,14 +15,14 @@ module Katello
     end
 
     def test_autocomplete_name
-      response = get :auto_complete_name, :repoids => [@repo.id], :term => @tag.name
+      response = get :auto_complete_name, params: { :repoids => [@repo.id], :term => @tag.name }
 
       assert_response :success
       assert_includes JSON.parse(response.body), @tag.name
     end
 
     def test_index
-      get :index, :repository_id => @repo.id
+      get :index, params: { :repository_id => @repo.id }
       assert_response :success
       assert_template "katello/api/v2/docker_tags/index"
 
@@ -30,7 +30,7 @@ module Katello
       assert_response :success
       assert_template "katello/api/v2/docker_tags/index"
 
-      get :index, :organization_id => @repo.organization.id
+      get :index, params: { :organization_id => @repo.organization.id }
       assert_response :success
       assert_template "katello/api/v2/docker_tags/index"
     end
@@ -39,8 +39,7 @@ module Katello
       organization = @repo.organization
       repos_stub = stub(:in_organization => [@repo])
       Repository.expects(:readable).returns(repos_stub)
-      get :index, :organization_id => organization.id,
-        :grouped => true
+      get :index, params: { :organization_id => organization.id, :grouped => true }
 
       assert_response :success
       assert_template 'api/v2/docker_tags/index'
@@ -50,7 +49,7 @@ module Katello
     end
 
     def test_show
-      get :show, :repository_id => @repo.id, :id => @meta_tag.id
+      get :show, params: { :repository_id => @repo.id, :id => @meta_tag.id }
 
       assert_response :success
       assert_template "katello/api/v2/docker_tags/show"
@@ -58,7 +57,7 @@ module Katello
     end
 
     def test_show_related_tags
-      get :show, :repository_id => @repo.id, :id => @meta_tag.id
+      get :show, params: { :repository_id => @repo.id, :id => @meta_tag.id }
 
       related_tag = JSON.parse(response.body)['related_tags'].first
       refute_nil related_tag['id']
@@ -69,12 +68,11 @@ module Katello
       @lib_repo = katello_repositories(:rhel_6_x86_64)
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id] }
       assert_response :success
       assert_template "katello/api/v2/docker_tags/compare"
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
-                    :repository_id => @lib_repo.id
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/docker_tags/compare"
     end

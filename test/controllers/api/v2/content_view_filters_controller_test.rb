@@ -35,7 +35,7 @@ module Katello
     end
 
     def test_index_with_content_view
-      get :index, :content_view_id => @content_view.id
+      get :index, params: { :content_view_id => @content_view.id }
 
       body = JSON.parse(response.body)
       filter_count = ContentViewFilter.where(:content_view_id => @content_view.id).count
@@ -47,14 +47,14 @@ module Katello
     end
 
     def test_index_with_search
-      get :index, :search => "name = #{@filter.name}"
+      get :index, params: { :search => "name = #{@filter.name}" }
 
       assert_response :success
       assert_template 'api/v2/content_view_filters/index'
     end
 
     def test_index_with_name
-      response = get :index, :name => @filter.name
+      response = get :index, params: { :name => @filter.name }
       results = JSON.parse(response.body)
       assert_equal @filter.id, results['results'][0]['id']
     end
@@ -64,7 +64,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_id => @content_view.id
+        get :index, params: { :content_view_id => @content_view.id }
       end
     end
 
@@ -72,7 +72,7 @@ module Katello
       @content_view = katello_content_views(:library_dev_view)
       assert_empty @content_view.filters
 
-      post :create, :content_view_id => @content_view.id, :name => "My Filter", :type => "rpm"
+      post :create, params: { :content_view_id => @content_view.id, :name => "My Filter", :type => "rpm" }
 
       assert_response :success
       assert_template :layout => 'katello/api/v2/layouts/resource'
@@ -85,12 +85,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :name => "Test", :content_view_id => @content_view.id
+        post :create, params: { :name => "Test", :content_view_id => @content_view.id }
       end
     end
 
     def test_show
-      get :show, :content_view_id => @filter.content_view_id, :id => @filter.id
+      get :show, params: { :content_view_id => @filter.content_view_id, :id => @filter.id }
 
       assert_response :success
       assert_template 'api/v2/content_view_filters/show'
@@ -101,12 +101,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :content_view_id => @filter.content_view_id, :id => @filter.id
+        get :show, params: { :content_view_id => @filter.content_view_id, :id => @filter.id }
       end
     end
 
     def test_update_name
-      put :update, :content_view_id => @filter.content_view_id, :id => @filter, :name => "New Filter Name"
+      put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter, :name => "New Filter Name" }
       assert_response :success
       assert_template 'api/v2/common/update'
       assert_equal @filter.reload.name, "New Filter Name"
@@ -117,8 +117,7 @@ module Katello
       assert_includes @content_view.repositories.map(&:id), repository.id
       refute_includes @filter.repositories(true).map(&:id), repository.id
 
-      put :update, :content_view_id => @filter.content_view_id, :id => @filter,
-          :repository_ids => [repository.id]
+      put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter, :repository_ids => [repository.id] }
 
       assert_response :success
       assert_includes @filter.repositories(true).map(&:id), repository.id
@@ -129,12 +128,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name"
+        put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name" }
       end
     end
 
     def test_destroy
-      delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
+      delete :destroy, params: { :content_view_id => @filter.content_view_id, :id => @filter.id }
 
       results = JSON.parse(response.body)
       refute results.blank?
@@ -149,7 +148,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
+        delete :destroy, params: { :content_view_id => @filter.content_view_id, :id => @filter.id }
       end
     end
   end

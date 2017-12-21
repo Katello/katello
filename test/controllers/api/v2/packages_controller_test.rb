@@ -29,12 +29,12 @@ module Katello
     end
 
     def test_index
-      get :index, :repository_id => @repo.id
+      get :index, params: { :repository_id => @repo.id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
 
-      get :index, :content_view_version_id => @version.id
+      get :index, params: { :content_view_version_id => @version.id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
@@ -44,7 +44,7 @@ module Katello
       environment = KTEnvironment.first
       KTEnvironment.expects(:readable).returns(stub(:find_by => environment))
 
-      get :index, :environment_id => environment.id
+      get :index, params: { :environment_id => environment.id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/index"
@@ -57,7 +57,7 @@ module Katello
     end
 
     def test_index_with_applicability
-      response = get :index, :host_id => @host.id
+      response = get :index, params: { :host_id => @host.id }
 
       assert_response :success
 
@@ -66,7 +66,7 @@ module Katello
     end
 
     def test_index_with_upgradability
-      response = get :index, :host_id => @host.id, :packages_restrict_upgradable => true
+      response = get :index, params: { :host_id => @host.id, :packages_restrict_upgradable => true }
 
       assert_response :success
       ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
@@ -75,39 +75,39 @@ module Katello
 
     def test_index_protected
       assert_protected_action(:index, @read_permission, @unauth_permissions) do
-        get :index, :repository_id => @repo.id
+        get :index, params: { :repository_id => @repo.id }
       end
     end
 
     def test_autocomplete_name
-      response = get :auto_complete_name, :repoids => [@repo.id], :term => @rpm.name[0]
+      response = get :auto_complete_name, params: { :repoids => [@repo.id], :term => @rpm.name[0] }
 
       assert_response :success
       assert_includes JSON.parse(response.body), @rpm.name
     end
 
     def test_show
-      get :show, :id => @rpm.id
+      get :show, params: { :id => @rpm.id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/show"
     end
 
     def test_show_uuid
-      get :show, :id => @rpm.uuid
+      get :show, params: { :id => @rpm.uuid }
 
       assert_response :success
       assert_template "katello/api/v2/packages/show"
     end
 
     def test_show_package_not_found
-      get :show, :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f"
+      get :show, params: { :repository_id => @repo.id, :id => "3805853f-5cae-4a4a-8549-0ec86410f58f" }
       assert_response 404
     end
 
     def test_show_protected
       assert_protected_action(:show, @read_permission, @unauth_permissions) do
-        get :show, :repository_id => @repo.id, :id => @rpm.uuid
+        get :show, params: { :repository_id => @repo.id, :id => @rpm.uuid }
       end
     end
 
@@ -115,12 +115,11 @@ module Katello
       @lib_repo = katello_repositories(:rhel_6_x86_64)
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id] }
       assert_response :success
       assert_template "katello/api/v2/packages/compare"
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
-                    :repository_id => @lib_repo.id
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/packages/compare"
     end

@@ -13,7 +13,7 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
   end
 
   def test_update
-    put :update, :name => 'foobar', :download_policy => 'immediate', :id => @smart_proxy.id
+    put :update, params: { :name => 'foobar', :download_policy => 'immediate', :id => @smart_proxy.id }
     assert_response :success
   end
 end

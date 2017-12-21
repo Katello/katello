@@ -45,7 +45,7 @@ module Katello
     end
 
     def test_index
-      get :index, :organization_id => @organization.id
+      get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -69,7 +69,7 @@ module Katello
     end
 
     def test_creatable_repository_types
-      get :repository_types, :creatable => "true"
+      get :repository_types, params: { :creatable => "true" }
 
       assert_response :success
       body = JSON.parse(response.body)
@@ -90,7 +90,7 @@ module Katello
     def test_index_with_product_id
       ids = Repository.where(:product_id => @product.id, :library_instance_id => nil).pluck(:id)
 
-      response = get :index, :product_id => @product.id
+      response = get :index, params: { :product_id => @product.id }
       response_ids = JSON.parse(response.body)['results'].map { |repo| repo['id'] }
 
       assert_response :success
@@ -101,7 +101,7 @@ module Katello
     def test_index_with_environment_id
       ids = @environment.repositories.pluck(:id)
 
-      response = get :index, :environment_id => @environment.id, :organization_id => @organization.id
+      response = get :index, params: { :environment_id => @environment.id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -111,7 +111,7 @@ module Katello
     def test_index_with_content_view_id
       ids = @view.repositories.pluck(:id)
 
-      response = get :index, :content_view_id => @view.id, :organization_id => @organization.id
+      response = get :index, params: { :content_view_id => @view.id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -122,7 +122,7 @@ module Katello
       version = @view.content_view_versions.first
       ids = version.repository_ids
 
-      response = get :index, :content_view_version_id => version.id, :organization_id => @organization.id
+      response = get :index, params: { :content_view_version_id => version.id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -132,7 +132,7 @@ module Katello
     def test_index_available_for_content_view
       ids = @view.organization.default_content_view.versions.first.repositories.pluck(:id) - @view.repositories.pluck(:id)
 
-      response = get :index, :content_view_id => @view.id, :available_for => :content_view, :organization_id => @organization.id
+      response = get :index, params: { :content_view_id => @view.id, :available_for => :content_view, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -142,8 +142,7 @@ module Katello
     def test_index_with_content_view_id_and_environment_id
       ids = @fedora_dev.content_view_version.repositories.where(:environment_id => @fedora_dev.environment_id).pluck(:id)
 
-      response =  get :index, :content_view_id => @fedora_dev.content_view_version.content_view_id, :environment_id => @fedora_dev.environment_id,
-                  :organization_id => @organization.id
+      response = get :index, params: { :content_view_id => @fedora_dev.content_view_version.content_view_id, :environment_id => @fedora_dev.environment_id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -153,7 +152,7 @@ module Katello
     def test_index_with_erratum_id
       ids = @errata.repositories.in_content_views([@organization.default_content_view]).pluck(:id)
 
-      response = get :index, :erratum_id => @errata.uuid, :organization_id => @organization.id
+      response = get :index, params: { :erratum_id => @errata.uuid, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -164,9 +163,7 @@ module Katello
       repo = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
       ids = repo.content_view_version.repositories.where(:environment_id => repo.environment.id).map(&:id)
 
-      response =  get :index, :content_view_version_id => repo.content_view_version.id,
-                  :environment_id => repo.environment_id,
-                  :organization_id => @organization.id
+      response = get :index, params: { :content_view_version_id => repo.content_view_version.id, :environment_id => repo.environment_id, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -175,7 +172,7 @@ module Katello
 
     def test_index_with_content_view_version_id_and_library
       ids = @view.versions.first.repositories.pluck(:library_instance_id).reject(&:blank?).uniq
-      response = get :index, :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true
+      response = get :index, params: { :content_view_version_id => @view.versions.first.id, :organization_id => @organization.id, :library => true }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -185,7 +182,7 @@ module Katello
     def test_index_with_library
       ids = @organization.default_content_view.versions.first.repositories.pluck(:id)
 
-      response = get :index, :library => true, :organization_id => @organization.id
+      response = get :index, params: { :library => true, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -199,7 +196,7 @@ module Katello
       )
       ids = ids.pluck(:id)
 
-      get :index, :content_type => 'yum', :organization_id => @organization.id
+      get :index, params: { :content_type => 'yum', :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -209,7 +206,7 @@ module Katello
     def test_index_with_name
       ids = Repository.where(:name => katello_repositories(:fedora_17_x86_64).name, :library_instance_id => nil).pluck(:id)
 
-      response = get :index, :name => katello_repositories(:fedora_17_x86_64).name, :organization_id => @organization.id
+      response = get :index, params: { :name => katello_repositories(:fedora_17_x86_64).name, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
@@ -221,7 +218,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
-        get :index, :organization_id => @organization.id
+        get :index, params: { :organization_id => @organization.id }
       end
     end
 
@@ -243,10 +240,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://www.google.com',
-                    :content_type => 'yum'
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -269,11 +263,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-           :product_id => @product.id,
-           :url => 'http://www.google.com',
-           :content_type => 'yum',
-           :arch => 'x86_64'
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :arch => 'x86_64' }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -297,10 +287,7 @@ module Katello
 
       Product.stubs(:find).returns(product)
 
-      post :create, :name => 'Fedora Repository',
-                      :product_id => @product.id,
-                      :url => '',
-                      :content_type => 'yum'
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum' }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -325,10 +312,7 @@ module Katello
 
       Product.stubs(:find).returns(product)
 
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://www.google.com',
-                    :content_type => 'yum'
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -353,11 +337,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => '',
-                    :content_type => 'yum',
-                    :checksum_type => 'sha256'
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum', :checksum_type => 'sha256' }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -382,11 +362,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => '',
-                    :content_type => 'yum',
-                    :download_policy => 'on_demand'
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum', :download_policy => 'on_demand' }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -410,11 +386,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://www.google.com',
-                    :content_type => 'yum',
-                    :unprotected => false
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -440,12 +412,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://www.google.com',
-                    :content_type => 'yum',
-                    :unprotected => false,
-                    :mirror_on_sync => mirror_on_sync
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false, :mirror_on_sync => mirror_on_sync }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -471,12 +438,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://www.google.com',
-                    :content_type => 'yum',
-                    :unprotected => false,
-                    :verify_ssl_on_sync => verify_ssl_on_sync
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false, :verify_ssl_on_sync => verify_ssl_on_sync }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -504,13 +466,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://www.google.com',
-                    :content_type => 'yum',
-                    :unprotected => false,
-                    :upstream_username => upstream_username,
-                    :upstream_password => upstream_password
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false, :upstream_username => upstream_username, :upstream_password => upstream_password }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -532,11 +488,7 @@ module Katello
       product.expects(:redhat?).returns(false)
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://hub.registry.com',
-                    :content_type => 'docker',
-                    :docker_upstream_name => "busybox"
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'docker', :docker_upstream_name => "busybox" }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -566,19 +518,14 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, :name => 'Fedora Repository',
-                    :product_id => @product.id,
-                    :url => 'http://hub.registry.com',
-                    :content_type => 'ostree',
-                    :ostree_upstream_sync_policy => sync_policy,
-                    :ostree_upstream_sync_depth => sync_depth
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'ostree', :ostree_upstream_sync_policy => sync_policy, :ostree_upstream_sync_depth => sync_depth }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
 
     def test_create_without_label_or_name
-      post :create, :product_id => @product.id
+      post :create, params: { :product_id => @product.id }
       #should raise an error along the lines of invalid content type provided
       assert_response 422
     end
@@ -588,12 +535,12 @@ module Katello
       denied_perms = [@read_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :product_id => @product.id
+        post :create, params: { :product_id => @product.id }
       end
     end
 
     def test_show
-      get :show, :id => @repository.id
+      get :show, params: { :id => @repository.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
@@ -604,7 +551,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :id => @repository.id
+        get :show, params: { :id => @repository.id }
       end
     end
 
@@ -614,7 +561,7 @@ module Katello
         repo.must_equal @repository
         attributes.to_hash.must_equal('gpg_key_id' => key.id.to_s)
       end
-      put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id.to_s}
+      put :update, params: { :id => @repository.id, :repository => {:gpg_key_id => key.id.to_s} }
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
@@ -624,7 +571,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :id => @repository.id
+        put :update, params: { :id => @repository.id }
       end
     end
 
@@ -633,12 +580,12 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
         attributes[:docker_upstream_name].must_equal "helloworld"
       end
-      put :update, :id => repo.id, :docker_upstream_name => "helloworld"
+      put :update, params: { :id => repo.id, :docker_upstream_name => "helloworld" }
     end
 
     def test_update_false_download_policy
       expected_message = "must be one of the following: %s" % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
-      response = put :update, :id => @repository.id, :download_policy => 'false'
+      response = put :update, params: { :id => @repository.id, :download_policy => 'false' }
       body = JSON.parse(response.body)
 
       assert_response 422
@@ -653,7 +600,7 @@ module Katello
         attributes[:ostree_upstream_sync_policy].must_equal sync_policy
         attributes[:ostree_upstream_sync_depth].must_equal sync_depth
       end
-      put :update, :id => repo.id, :ostree_upstream_sync_depth => sync_depth, :ostree_upstream_sync_policy => sync_policy
+      put :update, params: { :id => repo.id, :ostree_upstream_sync_depth => sync_depth, :ostree_upstream_sync_policy => sync_policy }
     end
 
     def test_remove_content
@@ -661,7 +608,7 @@ module Katello
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
                                            @repository, [@rpm], sync_capsule: true).once.returns(::ForemanTasks::Task.new)
 
-      put :remove_content, :id => @repository.id, :ids => [@rpm.uuid]
+      put :remove_content, params: { :id => @repository.id, :ids => [@rpm.uuid] }
 
       assert_response :success
     end
@@ -671,7 +618,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:remove_content, allowed_perms, denied_perms) do
-        put :remove_content, :id => @repository.id, :uuids => ['foo', 'bar']
+        put :remove_content, params: { :id => @repository.id, :uuids => ['foo', 'bar'] }
       end
     end
 
@@ -680,7 +627,7 @@ module Katello
         repo.id == @repository.id
       end
 
-      delete :destroy, :id => @repository.id
+      delete :destroy, params: { :id => @repository.id }
 
       assert_response :success
     end
@@ -690,7 +637,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :id => @repository.id
+        delete :destroy, params: { :id => @repository.id }
       end
     end
 
@@ -699,7 +646,7 @@ module Katello
         repo.id == @repository.id && options == {:force => true}
       end
 
-      put :republish, :id => @repository.id
+      put :republish, params: { :id => @repository.id }
       assert_response :success
     end
 
@@ -708,7 +655,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:republish, allowed_perms, denied_perms) do
-        put :republish, :id => @repository.id
+        put :republish, params: { :id => @repository.id }
       end
     end
 
@@ -717,7 +664,7 @@ module Katello
         repo.id == @repository.id
       end
 
-      post :sync, :id => @repository.id
+      post :sync, params: { :id => @repository.id }
       assert_response :success
     end
 
@@ -727,7 +674,7 @@ module Katello
         pulp_task_id.must_equal(nil)
         options[:source_url].must_equal('file:///tmp/')
       end
-      post :sync, :id => @repository.id, :source_url => 'file:///tmp/'
+      post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/' }
       assert_response :success
     end
 
@@ -738,24 +685,24 @@ module Katello
         options[:source_url].must_equal('file:///tmp/')
         options[:incremental].must_equal true
       end
-      post :sync, :id => @repository.id, :source_url => 'file:///tmp/', :incremental => true
+      post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/', :incremental => true }
       assert_response :success
     end
 
     def test_sync_with_bad_url_override
-      post :sync, :id => @repository.id, :source_url => 'file:|||tmp/'
+      post :sync, params: { :id => @repository.id, :source_url => 'file:|||tmp/' }
       assert_response 400
     end
 
     def test_sync_no_feed_urls
       repo = katello_repositories(:feedless_fedora_17_x86_64)
-      post :sync, :id => repo.id
+      post :sync, params: { :id => repo.id }
       assert_response 400
     end
 
     def test_sync_no_feed_urls_with_override
       repo = katello_repositories(:feedless_fedora_17_x86_64)
-      post :sync, :id => repo.id, :source_url => 'http://www.wikipedia.org'
+      post :sync, params: { :id => repo.id, :source_url => 'http://www.wikipedia.org' }
       assert_response :success
     end
 
@@ -769,17 +716,14 @@ module Katello
         repo.id == @repository.id && task_id == '1234'
       end
 
-      post(:sync_complete,
-           :token => token,
-           :payload => {:repo_id => @repository.pulp_id},
-           :call_report => {:task_id => '1234'})
+      post(:sync_complete, params: { :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {:task_id => '1234'} })
       assert_response :success
     end
 
     def test_sync_complete_bad_token
       token = 'super_secret'
       SETTINGS[:katello][:post_sync_url] = "http://foo.com/foo?token=attacker_key"
-      post :sync_complete, :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {}
+      post :sync_complete, params: { :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {} }
 
       assert_response 403
     end
@@ -789,7 +733,7 @@ module Katello
       denied_perms = [@create_permission, @read_permission, @destroy_permission, @update_permission]
 
       assert_protected_action(:sync, allowed_perms, denied_perms) do
-        post :sync, :id => @repository.id
+        post :sync, params: { :id => @repository.id }
       end
     end
 
@@ -803,7 +747,7 @@ module Katello
       end
 
       # array
-      post :upload_content, :id => @repository.id, :content => [puppet_module]
+      post :upload_content, params: { :id => @repository.id, :content => [puppet_module] }
       assert_response :success
 
       assert_sync_task ::Actions::Katello::Repository::UploadFiles do |repo, files|
@@ -812,7 +756,7 @@ module Katello
       end
 
       # single file
-      post :upload_content, :id => @repository.id, :content => puppet_module
+      post :upload_content, params: { :id => @repository.id, :content => puppet_module }
       assert_response :success
     end
 
@@ -821,7 +765,7 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:upload_content, allowed_perms, denied_perms) do
-        post :upload_content, :id => @repository.id
+        post :upload_content, params: { :id => @repository.id }
       end
     end
 
@@ -833,8 +777,7 @@ module Katello
               sync_capsule: false)
         .returns(build_task_stub)
 
-      put(:import_uploads, :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] },
-          :publish_repository => 'false', sync_capsule: 'false')
+      put(:import_uploads, params: { :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] }, :publish_repository => 'false', sync_capsule: 'false' })
 
       assert_response :success
     end
@@ -847,8 +790,7 @@ module Katello
               sync_capsule: false)
         .returns(build_task_stub)
 
-      put(:import_uploads, :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] },
-          :publish_repository => 'false', sync_capsule: 'false')
+      put(:import_uploads, params: { :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] }, :publish_repository => 'false', sync_capsule: 'false' })
 
       assert_response :success
     end
@@ -863,7 +805,7 @@ module Katello
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
-      put :import_uploads, id: @repository.id, uploads: uploads
+      put :import_uploads, params: { id: @repository.id, uploads: uploads }
 
       assert_response :success
     end
@@ -879,7 +821,7 @@ module Katello
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
-      put :import_uploads, id: file_repo, uploads: uploads
+      put :import_uploads, params: { id: file_repo, uploads: uploads }
 
       assert_response :success
     end
@@ -889,35 +831,35 @@ module Katello
       denied_perms = [@read_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:import_uploads, allowed_perms, denied_perms) do
-        put :import_uploads, :id => @repository.id, :upload_ids => [1]
+        put :import_uploads, params: { :id => @repository.id, :upload_ids => [1] }
       end
     end
 
     def test_export
       Setting['pulp_export_destination'] = '/tmp'
-      post :export, :id => @repository.id
+      post :export, params: { :id => @repository.id }
       assert_response :success
     end
 
     def test_export_with_bad_date
-      post :export, :id => @repository.id, :since => 'November 32, 1970'
+      post :export, params: { :id => @repository.id, :since => 'November 32, 1970' }
       assert_response 400
     end
 
     def test_export_wrong_type
-      post :export, :id => @puppet_repo.id
+      post :export, params: { :id => @puppet_repo.id }
       assert_response 400
     end
 
     def test_export_with_date
       Setting['pulp_export_destination'] = '/tmp'
-      post :export, :id => @repository.id, :since => 'November 30, 1970'
+      post :export, params: { :id => @repository.id, :since => 'November 30, 1970' }
       assert_response :success
     end
 
     def test_export_with_8601_date
       Setting['pulp_export_destination'] = '/tmp'
-      post :export, :id => @repository.id, :since => '2010-01-01T00:00:00'
+      post :export, params: { :id => @repository.id, :since => '2010-01-01T00:00:00' }
       assert_response :success
     end
 
@@ -927,13 +869,13 @@ module Katello
                       @destroy_permission, @update_permission]
 
       assert_protected_action(:export, allowed_perms, denied_perms) do
-        post :export, :id => @repository.id
+        post :export, params: { :id => @repository.id }
       end
     end
 
     def test_gpg_key_content
       logout_user
-      get :gpg_key_content, :id => @repository.id
+      get :gpg_key_content, params: { :id => @repository.id }
 
       assert_response :success
       assert_equal @repository.gpg_key.content, response.body
@@ -942,7 +884,7 @@ module Katello
     def test_no_gpg_key_content
       @repository.gpg_key = nil
       @repository.save
-      get :gpg_key_content, :id => @repository.id
+      get :gpg_key_content, params: { :id => @repository.id }
 
       assert_response 404
     end

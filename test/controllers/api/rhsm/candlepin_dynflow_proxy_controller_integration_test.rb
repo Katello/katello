@@ -18,7 +18,7 @@ module Katello
       Api::Rhsm::CandlepinDynflowProxyController.any_instance.expects(:async_task).returns(nil)
       Resources::Candlepin::Consumer.expects(:get).returns({})
 
-      put "/rhsm/consumers/#{@host.subscription_facet.uuid}/packages", {}.to_json, 'CONTENT_TYPE' => 'application/json'
+      put "/rhsm/consumers/#{@host.subscription_facet.uuid}/packages", params: {}.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
 
       assert_response :success
     end

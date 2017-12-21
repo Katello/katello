@@ -31,7 +31,7 @@ module Katello
         action_class.must_equal ::Actions::Katello::Repository::Destroy
       end
 
-      put :destroy_repositories, :ids => @repositories.collect(&:id), :organization_id => @organization.id
+      put :destroy_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
 
       assert_response :success
     end
@@ -41,7 +41,7 @@ module Katello
       denied_perms = [@sync_permission, @read_permission, @create_permission, @update_permission]
 
       assert_protected_action(:destroy_repositories, allowed_perms, denied_perms, [@organization]) do
-        put :destroy_repositories, :ids => @repositories.collect(&:id), :organization_id => @organization.id
+        put :destroy_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
       end
     end
 
@@ -51,7 +51,7 @@ module Katello
         repos.map(&:id).sort.must_equal @repositories.map(&:id).sort
       end
 
-      post :sync_repositories, :ids => @repositories.collect(&:id), :organization_id => @organization.id
+      post :sync_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
 
       assert_response :success
     end
@@ -64,7 +64,7 @@ module Katello
         repos.map(&:id).must_equal [repo_with_feed.id]
       end
 
-      post :sync_repositories, :ids => [repo_with_feed, repo_with_no_feed].collect(&:id), :organization_id => @organization.id
+      post :sync_repositories, params: { :ids => [repo_with_feed, repo_with_no_feed].collect(&:id), :organization_id => @organization.id }
 
       assert_response :success
     end
@@ -74,7 +74,7 @@ module Katello
       denied_perms = [@destroy_permission, @read_permission, @create_permission, @update_permission]
 
       assert_protected_action(:sync_repositories, allowed_perms, denied_perms, [@organization]) do
-        post :sync_repositories, :ids => @repositories.collect(&:id), :organization_id => @organization.id
+        post :sync_repositories, params: { :ids => @repositories.collect(&:id), :organization_id => @organization.id }
       end
     end
   end

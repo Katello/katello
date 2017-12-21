@@ -28,14 +28,14 @@ module Katello
     end
 
     def test_index
-      get :index, :host_id => @host_dev.id
+      get :index, params: { :host_id => @host_dev.id }
 
       assert_response :success
       assert_template 'api/v2/host_errata/index'
     end
 
     def test_index_without_content_facet
-      get :index, :host_id => @host_without_content_facet.id
+      get :index, params: { :host_id => @host_without_content_facet.id }
 
       assert_response :success
       assert_template 'api/v2/host_errata/index'
@@ -44,8 +44,7 @@ module Katello
     def test_index_other_env
       @default_content_view = katello_content_views(:acme_default)
       @library = katello_environments(:library)
-      get :index, :host_id => @host_dev.id, :content_view_id => @default_content_view.id,
-          :environment_id => @library.id
+      get :index, params: { :host_id => @host_dev.id, :content_view_id => @default_content_view.id, :environment_id => @library.id }
 
       assert_response :success
       assert_template 'api/v2/host_errata/index'
@@ -56,7 +55,7 @@ module Katello
         host.id == @host.id && errata == %w(RHSA-1999-1231)
       end
 
-      put :apply, :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231)
+      put :apply, params: { :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231) }
 
       assert_response :success
     end
@@ -66,13 +65,13 @@ module Katello
         hosts == [@host] && use_queue == false
       end
 
-      put :applicability, :host_id => @host.id
+      put :applicability, params: { :host_id => @host.id }
 
       assert_response :success
     end
 
     def test_apply_unknown_errata
-      put :apply, :host_id => @host.id, :errata_ids => %w(non-existant-errata)
+      put :apply, params: { :host_id => @host.id, :errata_ids => %w(non-existant-errata) }
       assert_response 404
     end
 
@@ -88,7 +87,7 @@ module Katello
           user.organizations = [@host.organization]
           user.locations = [@host.location]
         end
-        put :apply, :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231)
+        put :apply, params: { :host_id => @host.id, :errata_ids => %w(RHSA-1999-1231) }
       end
     end
   end

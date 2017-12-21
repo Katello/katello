@@ -35,12 +35,12 @@ class SmartProxiesControllerTest < ActionController::TestCase
   end
 
   def test_smart_proxy_pulp_storage
-    get :pulp_storage, :id => @smart_proxy.id
+    get :pulp_storage, params: { :id => @smart_proxy.id }
     assert_response :success
   end
 
   def test_smart_proxy_pulp_status
-    get :pulp_status, :id => @smart_proxy.id
+    get :pulp_status, params: { :id => @smart_proxy.id }
     assert_response :success
   end
 end

@@ -45,7 +45,7 @@ module Katello
     allow_transactions_for_any_importer
 
     def test_index
-      get :index, :host_id => @host.id
+      get :index, params: { :host_id => @host.id }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
@@ -54,7 +54,7 @@ module Katello
     def test_index_bad_system
       @host = FactoryBot.create(:host)
 
-      get :index, :host_id => @host.id
+      get :index, params: { :host_id => @host.id }
 
       assert_response 400
     end
@@ -64,13 +64,13 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :host_id => @host.id
+        get :index, params: { :host_id => @host.id }
       end
     end
 
     def test_auto_attach
       assert_sync_task(::Actions::Katello::Host::AutoAttachSubscriptions, @host)
-      put :auto_attach, :host_id => @host.id
+      put :auto_attach, params: { :host_id => @host.id }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
@@ -81,7 +81,7 @@ module Katello
       denied_perms = [@create_permission, @view_permission, @destroy_permission]
 
       assert_protected_action(:auto_attach, allowed_perms, denied_perms) do
-        put :auto_attach, :host_id => @host.id
+        put :auto_attach, params: { :host_id => @host.id }
       end
     end
 
@@ -93,7 +93,7 @@ module Katello
         assert_equal [1], pools_with_quantities[0].quantities.map(&:to_i)
       end
 
-      post :add_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => "1"}]
+      post :add_subscriptions, params: { :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => "1"}] }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
@@ -104,7 +104,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:add_subscriptions, allowed_perms, denied_perms) do
-        post :add_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 1}]
+        post :add_subscriptions, params: { :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 1}] }
       end
     end
 
@@ -115,7 +115,7 @@ module Katello
         assert_equal @pool, pools_with_quantities[0].pool
         assert_equal [3], pools_with_quantities[0].quantities.map(&:to_i)
       end
-      post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => '3'}]
+      post :remove_subscriptions, params: { :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => '3'}] }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/index'
@@ -126,7 +126,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:remove_subscriptions, allowed_perms, denied_perms) do
-        post :remove_subscriptions, :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}]
+        post :remove_subscriptions, params: { :host_id => @host.id, :subscriptions => [{:id => @pool.id, :quantity => 3}] }
       end
     end
 
@@ -149,8 +149,7 @@ module Katello
 
       ::Katello::Host::SubscriptionFacet.expects(:find_or_create_host).returns(@host)
       assert_sync_task(::Actions::Katello::Host::Register, @host, expected_consumer_params, content_view_environment)
-      post(:create, :lifecycle_environment_id => content_view_environment.environment_id,
-           :content_view_id => content_view_environment.content_view_id, :facts => facts, :installed_products => installed_products)
+      post(:create, params: { :lifecycle_environment_id => content_view_environment.environment_id, :content_view_id => content_view_environment.content_view_id, :facts => facts, :installed_products => installed_products })
 
       assert_response :success
     end
@@ -171,12 +170,12 @@ module Katello
       denied_perms = [@update_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:product_content, allowed_perms, denied_perms) do
-        get(:product_content, :host_id => @host.id)
+        get(:product_content, params: { :host_id => @host.id })
       end
     end
 
     def test_product_content
-      result = get(:product_content, :host_id => @host.id)
+      result = get(:product_content, params: { :host_id => @host.id })
       content = JSON.parse(result.body)['results'][0]['content']
 
       assert_equal('some-content', content['label'])
@@ -187,8 +186,7 @@ module Katello
     def test_product_content_access_mode_all
       mode_all = true
       mode_env = false
-      result = get(:product_content, :host_id => @host.id, :content_access_mode_all => mode_all,
-                   :content_view_version_env => mode_env)
+      result = get(:product_content, params: { :host_id => @host.id, :content_access_mode_all => mode_all, :content_view_version_env => mode_env })
       content = JSON.parse(result.body)['results'][0]['content']
 
       assert_equal('some-content', content['label'])
@@ -201,8 +199,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:content_override, allowed_perms, denied_perms) do
-        put(:content_override, :host_id => @host.id, :content_label => 'some-content',
-            :value => 1)
+        put(:content_override, params: { :host_id => @host.id, :content_label => 'some-content', :value => 1 })
       end
     end
 
@@ -217,7 +214,7 @@ module Katello
         assert_equal false, prune_invalid
       end
 
-      put :content_override, :host_id => @host.id, :content_label => content_label, :value => value
+      put :content_override, params: { :host_id => @host.id, :content_label => content_label, :value => value }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/content_override'
@@ -233,7 +230,7 @@ module Katello
         assert_equal false, prune_invalid
       end
 
-      put :content_override, :host_id => @host.id, :content_overrides => content_overrides
+      put :content_override, params: { :host_id => @host.id, :content_overrides => content_overrides }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/content_override'
@@ -249,7 +246,7 @@ module Katello
         assert_equal value, overrides.first.value
       end
 
-      put :content_override, :host_id => @host.id, :content_label => 'some-content', :value => 'yes'
+      put :content_override, params: { :host_id => @host.id, :content_label => 'some-content', :value => 'yes' }
 
       assert_response :success
     end
@@ -266,21 +263,21 @@ module Katello
         assert_equal false, prune_invalid
       end
 
-      put :content_override, :host_id => @host.id, :content_label => content_label, :value => value
+      put :content_override, params: { :host_id => @host.id, :content_label => content_label, :value => value }
 
       assert_response :success
       assert_template 'api/v2/host_subscriptions/content_override'
     end
 
     def test_available_release_versions
-      get :available_release_versions, :host_id => @host.id
+      get :available_release_versions, params: { :host_id => @host.id }
 
       assert_response :success
     end
 
     def test_destroy
       assert_sync_task(::Actions::Katello::Host::Unregister, @host)
-      delete :destroy, :host_id => @host.id
+      delete :destroy, params: { :host_id => @host.id }
 
       assert_response :success
     end

@@ -41,7 +41,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
       @controller.expects(:format_sync_progress).returns({})
-      get :sync_status, :repoids => [@repository.id]
+      get :sync_status, params: { :repoids => [@repository.id] }
 
       assert_response :success
     end
@@ -51,7 +51,7 @@ module Katello
       denied_perms = []
 
       assert_protected_action(:sync_status, allowed_perms, denied_perms) do
-        get :sync_status, :repoids => [@repository.id]
+        get :sync_status, params: { :repoids => [@repository.id] }
       end
     end
 
@@ -60,7 +60,7 @@ module Katello
       @request.env['CONTENT_TYPE'] = 'application/json'
       @controller.expects(:sync_repos).returns({})
 
-      post :sync, :repoids => [@repository.id]
+      post :sync, params: { :repoids => [@repository.id] }
 
       assert_response :success
     end
@@ -71,7 +71,7 @@ module Katello
       @controller.expects(:latest_task).returns(:state => 'running')
       @controller.expects(:format_sync_progress).returns('formatted-progress')
 
-      post :sync, :repoids => [@repository.id]
+      post :sync, params: { :repoids => [@repository.id] }
 
       assert_response :success
       assert_equal %([\"formatted-progress\"]), @response.body
@@ -82,13 +82,13 @@ module Katello
       denied_perms = []
 
       assert_protected_action(:sync, allowed_perms, denied_perms) do
-        post :sync, :repoids => [@repository.id]
+        post :sync, params: { :repoids => [@repository.id] }
       end
     end
 
     def test_destroy
       Repository.any_instance.expects(:cancel_dynflow_sync)
-      delete :destroy, :id => @repository.id
+      delete :destroy, params: { :id => @repository.id }
 
       assert_response :success
     end
@@ -98,7 +98,7 @@ module Katello
       denied_perms = []
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :id => @repository.id
+        delete :destroy, params: { :id => @repository.id }
       end
     end
   end

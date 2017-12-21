@@ -25,7 +25,7 @@ module Katello
     end
 
     def test_index
-      get :index, :content_view_id => @content_view.id
+      get :index, params: { :content_view_id => @content_view.id }
 
       assert_response :success
       assert_template 'api/v2/content_view_puppet_modules/index'
@@ -36,7 +36,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_id => @content_view.id
+        get :index, params: { :content_view_id => @content_view.id }
       end
     end
 
@@ -44,7 +44,7 @@ module Katello
       @content_view = katello_content_views(:library_dev_view)
       assert_empty @content_view.puppet_modules
 
-      post :create, :content_view_id => @content_view.id, :name => "abrt", :author => "johndoe"
+      post :create, params: { :content_view_id => @content_view.id, :name => "abrt", :author => "johndoe" }
 
       assert_response :success
 
@@ -59,7 +59,7 @@ module Katello
       @content_view = katello_content_views(:library_dev_view)
       assert_empty @content_view.puppet_modules
 
-      post :create, content_view_id: @content_view.id, id: @puppet_module.id
+      post :create, params: { content_view_id: @content_view.id, id: @puppet_module.id }
 
       assert_response :success
 
@@ -74,12 +74,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :name => "Test", :content_view_id => @content_view.id
+        post :create, params: { :name => "Test", :content_view_id => @content_view.id }
       end
     end
 
     def test_show
-      get :show, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
+      get :show, params: { :content_view_id => @content_view.id, :id => @cv_puppet_module.id }
 
       assert_response :success
       assert_template 'api/v2/content_view_puppet_modules/show'
@@ -90,12 +90,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
+        get :show, params: { :content_view_id => @content_view.id, :id => @cv_puppet_module.id }
       end
     end
 
     def test_update_name
-      put :update, :content_view_id => @content_view.id, :id => @cv_puppet_module.id, :name => "dhcp"
+      put :update, params: { :content_view_id => @content_view.id, :id => @cv_puppet_module.id, :name => "dhcp" }
 
       assert_response :success
       assert_template 'api/v2/common/update'
@@ -107,12 +107,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :content_view_id => @content_view.id, :id => @cv_puppet_module.id, :name => "myNewFavoriteModule"
+        put :update, params: { :content_view_id => @content_view.id, :id => @cv_puppet_module.id, :name => "myNewFavoriteModule" }
       end
     end
 
     def test_destroy
-      delete :destroy, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
+      delete :destroy, params: { :content_view_id => @content_view.id, :id => @cv_puppet_module.id }
 
       assert_response :success
       assert_nil ContentViewPuppetModule.find_by_id(@cv_puppet_module.id)
@@ -123,7 +123,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :content_view_id => @content_view.id, :id => @cv_puppet_module.id
+        delete :destroy, params: { :content_view_id => @content_view.id, :id => @cv_puppet_module.id }
       end
     end
   end

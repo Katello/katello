@@ -28,14 +28,14 @@ module Katello
     end
 
     def test_index_by_env
-      get :index, :environment_id => @library.id
+      get :index, params: { :environment_id => @library.id }
 
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
     end
 
     def test_index_by_repo
-      get :index, :repository_id => @repo.id
+      get :index, params: { :repository_id => @repo.id }
 
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
@@ -44,7 +44,7 @@ module Katello
     def test_index_with_environment_id
       environment = KTEnvironment.first
 
-      get :index, :environment_id => environment.id
+      get :index, params: { :environment_id => environment.id }
 
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
@@ -54,8 +54,7 @@ module Katello
       dev_puppet_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
       ContentViewPuppetEnvironment.stubs(:archived).returns([dev_puppet_env])
 
-      get :index, :environment_id => dev_puppet_env.environment_id,
-          :content_view_version_id => dev_puppet_env.content_view_version.id
+      get :index, params: { :environment_id => dev_puppet_env.environment_id, :content_view_version_id => dev_puppet_env.content_view_version.id }
 
       assert_response :success
       results_puppet_module = JSON.parse(response.body)['results'].first
@@ -69,13 +68,13 @@ module Katello
 
     def test_index_protected
       assert_protected_action(:index, @read_permission, @unauth_permissions) do
-        get :index, :repository_id => @repo.id
+        get :index, params: { :repository_id => @repo.id }
       end
     end
 
     def test_show
       Katello::Pulp::PuppetModule.any_instance.stubs(:backend_data).returns({})
-      get :show, :repository_id => @repo.id, :id => @puppet_module.id
+      get :show, params: { :repository_id => @repo.id, :id => @puppet_module.id }
 
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/show"
@@ -83,17 +82,17 @@ module Katello
 
     def test_show_protected
       assert_protected_action(:show, @read_permission, @unauth_permissions) do
-        get :show, :repository_id => @repo.id, :id => @puppet_module.id
+        get :show, params: { :repository_id => @repo.id, :id => @puppet_module.id }
       end
     end
 
     def test_show_module_not_in_repo
-      get :show, :repository_id => @repo.id, :id => "abc-123"
+      get :show, params: { :repository_id => @repo.id, :id => "abc-123" }
       assert_response 404
     end
 
     def test_show_module_not_found
-      get :show, :repository_id => @repo.id, :id => "abc-123"
+      get :show, params: { :repository_id => @repo.id, :id => "abc-123" }
       assert_response 404
     end
 
@@ -101,12 +100,11 @@ module Katello
       @lib_repo = katello_repositories(:rhel_6_x86_64)
       @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id]
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id] }
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/compare"
 
-      get :compare, :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id],
-                    :repository_id => @lib_repo.id
+      get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/compare"
     end

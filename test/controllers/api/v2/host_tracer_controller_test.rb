@@ -15,7 +15,7 @@ module Katello
     end
 
     def test_index
-      results = JSON.parse(get(:index, :host_id => @host.id).body)
+      results = JSON.parse(get(:index, params: { :host_id => @host.id }).body)
 
       assert_response :success
       assert_includes results['results'].collect { |item| item['id'] }, @host.host_traces.first.id

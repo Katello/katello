@@ -22,7 +22,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     end
     create_task.returns(build_task_stub)
 
-    put :create, :commit => "Submit", :organization => { :name => name }
+    put :create, params: { :commit => "Submit", :organization => { :name => name } }
 
     org = Organization.find_by(:name => name)
     assert org

@@ -23,7 +23,7 @@ module Katello
     end
 
     def test_index
-      get :index, :content_view_filter_id => @filter.id
+      get :index, params: { :content_view_filter_id => @filter.id }
 
       assert_response :success
       assert_template 'api/v2/content_view_filter_rules/index'
@@ -34,12 +34,12 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_filter_id => @filter.id
+        get :index, params: { :content_view_filter_id => @filter.id }
       end
     end
 
     def test_create
-      post :create, :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0"
+      post :create, params: { :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0" }
 
       assert_response :success
 
@@ -50,8 +50,7 @@ module Katello
     end
 
     def test_create_with_name_array
-      post :create, content_view_filter_id: @filter.id, name: %w(testpkg testpkg2),
-        version: '10.0'
+      post :create, params: { content_view_filter_id: @filter.id, name: %w(testpkg testpkg2), version: '10.0' }
 
       assert_response :success
 
@@ -66,12 +65,12 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0"
+        post :create, params: { :content_view_filter_id => @filter.id, :name => "testpkg", :version => "10.0" }
       end
     end
 
     def test_show
-      get :show, :content_view_filter_id => @filter.id, :id => @rule.id
+      get :show, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
 
       assert_response :success
       assert_template 'api/v2/content_view_filter_rules/show'
@@ -82,7 +81,7 @@ module Katello
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :content_view_filter_id => @filter.id, :id => @rule.id
+        get :show, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
       end
     end
 
@@ -90,7 +89,7 @@ module Katello
       refute_equal @rule.name, "testpkg"
       refute_equal @rule.version, "10.0"
 
-      put :update, :content_view_filter_id => @filter.id, :id => @rule.id, :name => "testpkg", :version => "10.0"
+      put :update, params: { :content_view_filter_id => @filter.id, :id => @rule.id, :name => "testpkg", :version => "10.0" }
 
       assert_response :success
       assert_equal @rule.reload.name, "testpkg"
@@ -102,7 +101,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :content_view_filter_id => @filter.id, :id => @rule.id, :name => "new name"
+        put :update, params: { :content_view_filter_id => @filter.id, :id => @rule.id, :name => "new name" }
       end
     end
 
@@ -110,8 +109,7 @@ module Katello
       refute_equal @rule.name, "testpkg"
       refute_equal @rule.version, "10.0"
 
-      put :update, content_view_filter_id: @filter.id, id: @rule.id,
-        name: %w(testpkg), version: '10.0'
+      put :update, params: { content_view_filter_id: @filter.id, id: @rule.id, name: %w(testpkg), version: '10.0' }
 
       assert_response :success
       assert_equal @rule.reload.name, "testpkg"
@@ -119,7 +117,7 @@ module Katello
     end
 
     def test_destroy
-      delete :destroy, :content_view_filter_id => @filter.id, :id => @rule.id
+      delete :destroy, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
 
       results = JSON.parse(response.body)
       refute results.blank?
@@ -134,7 +132,7 @@ module Katello
       denied_perms = [@view_permission, @create_permission, @destroy_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :content_view_filter_id => @filter.id, :id => @rule.id
+        delete :destroy, params: { :content_view_filter_id => @filter.id, :id => @rule.id }
       end
     end
   end
