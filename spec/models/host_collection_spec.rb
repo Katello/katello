@@ -68,8 +68,8 @@ module Katello
         grp = HostCollection.create!(:name => "TestHostCollection", :organization => @org, :unlimited_hosts => true)
         grp.hosts << @host
         grp.save!
-        HostCollection.find(grp).host_ids.size.must_equal(1)
-        HostCollection.find(grp).hosts.must_include(@host)
+        HostCollection.find(grp.id).host_ids.size.must_equal(1)
+        HostCollection.find(grp.id).hosts.must_include(@host)
       end
 
       it "should call allow ids to be removed" do
@@ -77,7 +77,7 @@ module Katello
         grp.hosts << @host
         grp.hosts = grp.hosts - [@host]
         grp.save!
-        HostCollection.find(grp).host_ids.size.must_equal(0)
+        HostCollection.find(grp.id).host_ids.size.must_equal(0)
       end
     end
 
