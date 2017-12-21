@@ -9,12 +9,12 @@ module Katello
     TYPES = [SECURITY, BUGZILLA, ENHANCEMENT].freeze
     CONTENT_TYPE = Pulp::Erratum::CONTENT_TYPE
 
-    has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
     has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
+    has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
     has_many :content_facets_applicable, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
 
-    has_many :repositories, :through => :repository_errata, :class_name => "Katello::Repository"
     has_many :repository_errata, :class_name => "Katello::RepositoryErratum", :dependent => :destroy, :inverse_of => :erratum
+    has_many :repositories, :through => :repository_errata, :class_name => "Katello::Repository"
 
     has_many :bugzillas, :class_name => "Katello::ErratumBugzilla", :dependent => :destroy, :inverse_of => :erratum
     has_many :cves, :class_name => "Katello::ErratumCve", :dependent => :destroy, :inverse_of => :erratum
