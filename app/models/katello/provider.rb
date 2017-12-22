@@ -47,7 +47,7 @@ module Katello
     def prevent_redhat_deletion
       if !being_deleted? && redhat_provider?
         Rails.logger.error _("Red Hat provider can not be deleted")
-        false
+        throw :abort
       else
         # organization that is being deleted via background destroyer can delete rh provider
         true
