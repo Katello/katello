@@ -4,6 +4,7 @@ fedora_gpg_key:
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+  content_type: "gpg_key"
 
 unassigned_gpg_key:
   name:         Unassigned GPG Key
@@ -11,3 +12,12 @@ unassigned_gpg_key:
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+  content_type: "gpg_key"
+
+fedora_cert:
+  name:         Fedora Cert
+  content:      Awesome SSL certificate
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_type: "cert"

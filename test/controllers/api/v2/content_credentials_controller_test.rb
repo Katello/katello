@@ -2,19 +2,20 @@ require "katello_test_helper"
 require 'tempfile'
 
 module Katello
-  class Api::V2::GpgKeysControllerTest < ActionController::TestCase
+  class Api::V2::ContentCredentialsControllerTest < ActionController::TestCase
     def models
       @organization = get_organization
       @product = Product.find(katello_products(:fedora).id)
       @gpg_key = GpgKey.find(katello_gpg_keys(:fedora_gpg_key).id)
+      @cert = GpgKey.find(katello_gpg_keys(:fedora_cert).id)
     end
 
     def permissions
       @resource_type = "Katello::GpgKey"
-      @view_permission = :view_gpg_keys
-      @create_permission = :create_gpg_keys
-      @update_permission = :edit_gpg_keys
-      @destroy_permission = :destroy_gpg_keys
+      @view_permission = :view_content_credentials
+      @create_permission = :create_content_credentials
+      @update_permission = :edit_content_credentials
+      @destroy_permission = :destroy_content_credentials
     end
 
     def setup
@@ -29,7 +30,7 @@ module Katello
       get :index, params: { :organization_id => @organization.id }
 
       assert_response :success
-      assert_template 'api/v2/gpg_keys/index'
+      assert_template 'api/v2/content_credentials/index'
     end
 
     def test_index_protected
@@ -53,9 +54,20 @@ module Katello
       temp_content_file = Tempfile.new(content)
       temp_content_file.write(content)
       temp_content_file.rewind
-      post :set_content, params: { :id => @gpg_key.id, :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain") }
+      post :set_content, params: { :id => @gpg_key.id, :content_type => "gpg_key", :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain") }
       assert_response :success, @response.body
       assert_equal content, @gpg_key.reload.content
+    end
+
+    def test_cert_content
+      @request.env["CONTENT_TYPE"] = "multipart/form"
+      content = "my awesome cert"
+      temp_content_file = Tempfile.new(content)
+      temp_content_file.write(content)
+      temp_content_file.rewind
+      post :set_content, params: { :id => @cert.id, :content_type => "cert", :content => Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain") }
+      assert_response :success, @response.body
+      assert_equal content, @cert.reload.content
     end
   end
 end
