@@ -7,8 +7,8 @@ module Katello
       belongs_to :user, :inverse_of => :subscription_facets, :class_name => "::User"
       belongs_to :hypervisor_host, :class_name => "::Host::Managed", :foreign_key => "hypervisor_host_id"
 
-      has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "Katello::ActivationKey"
       has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy, :inverse_of => :subscription_facet
+      has_many :activation_keys, :through => :subscription_facet_activation_keys, :class_name => "Katello::ActivationKey"
 
       has_many :pools, :through => :subscription_facet_pools, :class_name => "Katello::Pool"
       has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :destroy, :inverse_of => :subscription_facet

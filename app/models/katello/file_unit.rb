@@ -6,8 +6,8 @@ module Katello
 
     CONTENT_TYPE = Pulp::FileUnit::CONTENT_TYPE
 
-    has_many :repositories, :through => :repository_files, :class_name => "Katello::Repository"
     has_many :repository_files, :class_name => "Katello::RepositoryFile", :dependent => :destroy, :inverse_of => :file, :foreign_key => :file_id
+    has_many :repositories, :through => :repository_files, :class_name => "Katello::Repository"
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :path, :complete_value => true

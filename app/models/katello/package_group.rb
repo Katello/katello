@@ -4,8 +4,8 @@ module Katello
 
     CONTENT_TYPE = "package_group".freeze
 
-    has_many :repositories, :through => :repository_package_groups, :class_name => "Katello::Repository"
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy, :inverse_of => :package_group
+    has_many :repositories, :through => :repository_package_groups, :class_name => "Katello::Repository"
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :uuid, :rename => :id, :complete_value => true
