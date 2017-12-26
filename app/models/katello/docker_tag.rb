@@ -43,7 +43,7 @@ module Katello
 
     def self.grouped
       grouped_fields = "#{table_name}.name, #{Repository.table_name}.name, #{Product.table_name}.name"
-      ids = uniq.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repository => :product)
+      ids = distinct.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repository => :product)
       where(:id => ids)
     end
 
@@ -60,7 +60,7 @@ module Katello
       super
       ::Katello::DockerTag.where(:repository_id => nil).destroy_all
       if uuids
-        repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.uuid" => uuids).uniq
+        repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.uuid" => uuids).distinct
         ::Katello::DockerMetaTag.import_meta_tags(repos)
       else
         ::Katello::DockerMetaTag.import_meta_tags(::Katello::Repository.docker_type)

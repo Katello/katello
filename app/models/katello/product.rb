@@ -53,7 +53,7 @@ module Katello
       where(:organization_id => organizations)
     end
 
-    scope :syncable_content, -> { uniq.where(Katello::Repository.arel_table[:url].not_eq(nil)).joins(:repositories) }
+    scope :syncable_content, -> { distinct.where(Katello::Repository.arel_table[:url].not_eq(nil)).joins(:repositories) }
     scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
     scope :with_contents, -> { includes(:product_contents) }
@@ -66,7 +66,7 @@ module Katello
 
     def self.enabled
       self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)",
-                 Product.redhat.joins(:repositories).uniq.pluck(:id), Product.custom.pluck(:id))
+                 Product.redhat.joins(:repositories).distinct.pluck(:id), Product.custom.pluck(:id))
     end
 
     before_create :assign_unique_label
