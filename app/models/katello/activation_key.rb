@@ -14,9 +14,9 @@ module Katello
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :host_collections, :through => :key_host_collections
 
+    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
     has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
     has_many :subscriptions, :through => :pools
-    has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
 

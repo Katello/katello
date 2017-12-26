@@ -3,11 +3,11 @@ module Katello
     include Katello::Authorization::Pool
     belongs_to :subscription, :inverse_of => :pools, :class_name => "Katello::Subscription"
 
-    has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
+    has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
 
-    has_many :subscription_facets, :through => :subscription_facet_pools
     has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :destroy
+    has_many :subscription_facets, :through => :subscription_facet_pools
 
     scope :in_organization, ->(org_id) { joins(:subscription).where("#{Katello::Subscription.table_name}.organization_id = ?", org_id) }
     scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }

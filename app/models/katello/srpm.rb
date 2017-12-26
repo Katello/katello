@@ -4,8 +4,8 @@ module Katello
 
     CONTENT_TYPE = Pulp::Rpm::CONTENT_TYPE
 
-    has_many :repositories, :through => :repository_srpms, :class_name => "Katello::Repository"
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :destroy, :inverse_of => :srpm
+    has_many :repositories, :through => :repository_srpms, :class_name => "Katello::Repository"
 
     before_save lambda { |rpm| rpm.summary = rpm.summary.truncate(255) unless rpm.summary.blank? }
 

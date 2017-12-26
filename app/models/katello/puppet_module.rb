@@ -7,16 +7,16 @@ module Katello
 
     CONTENT_TYPE = Pulp::PuppetModule::CONTENT_TYPE
 
-    has_many :repositories, :through => :repository_puppet_modules, :class_name => "Katello::Repository"
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy, :inverse_of => :puppet_module
+    has_many :repositories, :through => :repository_puppet_modules, :class_name => "Katello::Repository"
 
-    has_many :content_view_puppet_environments,
-             :through => :content_view_puppet_environment_puppet_modules,
-             :class_name => "Katello::ContentViewPuppetEnvironment"
     has_many :content_view_puppet_environment_puppet_modules,
              :class_name => "Katello::ContentViewPuppetEnvironmentPuppetModule",
              :dependent => :destroy,
              :inverse_of => :puppet_module
+    has_many :content_view_puppet_environments,
+             :through => :content_view_puppet_environment_puppet_modules,
+             :class_name => "Katello::ContentViewPuppetEnvironment"
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :author, :complete_value => true
