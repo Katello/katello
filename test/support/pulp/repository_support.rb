@@ -26,7 +26,7 @@ module Katello
     end
 
     def self.create_repo(repo_id)
-      @repo = Repository.find(repo_id)
+      @repo = Repository.find_by_id(repo_id)
       @repo.relative_path = @repo.puppet? ? PULP_TMP_DIR : 'test_path'
       @repo.url = @repo.puppet? ? @puppet_repo_url : @repo_url
 

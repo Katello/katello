@@ -87,7 +87,7 @@ module Katello
       @repo = Repository.find(@repo.id)
       @filter.repositories << @repo
       @filter.save!
-      view = ContentView.find(view)
+      view = ContentView.find(view.id)
       view.repositories.delete(@repo)
       view.save!
       assert_empty view.filters.first.repositories

@@ -38,7 +38,7 @@ module Katello
       FileUnit.create!(:uuid => uuid)
       json = @file_one.attributes.merge('checksum' => '1234515')
       @file_one.update_from_json(json.with_indifferent_access)
-      @file_one = FileUnit.find(@file_one)
+      @file_one = FileUnit.find(@file_one.id)
 
       assert_equal @file_one.name, json['name']
     end
@@ -47,7 +47,7 @@ module Katello
       last_updated = @file_one.updated_at
       json = @file_one.attributes
       @file_one.update_from_json(json)
-      assert_equal FileUnit.find(@file_one).updated_at, last_updated
+      assert_equal FileUnit.find(@file_one.id).updated_at, last_updated
     end
 
     def test_with_identifiers

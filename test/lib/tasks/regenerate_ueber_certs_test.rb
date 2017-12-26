@@ -24,9 +24,9 @@ module Katello
     end
 
     def test_regenerate_ueber_certs_one_org
-      before = Organization.find(@org).debug_cert
+      before = Organization.find(@org.id).debug_cert
       Rake::Task["katello:regenerate_ueber_certs"].invoke("#{@org.label}")
-      after = Organization.find(@org).debug_cert
+      after = Organization.find(@org.id).debug_cert
       refute before == after
     end
   end
