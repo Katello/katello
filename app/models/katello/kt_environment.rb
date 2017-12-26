@@ -80,7 +80,7 @@ module Katello
     end
 
     def default_content_view
-      self.default_content_view_version.try(:content_view, nil)
+      self.default_content_view_version.try(:content_view)
     end
 
     def default_content_view_version
