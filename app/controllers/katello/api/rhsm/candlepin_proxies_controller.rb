@@ -51,7 +51,7 @@ module Katello
       if request_from_katello_cli?
         render :json => { :errors => [e.http_body] }, :status => e.http_code
       else
-        render :text => e.http_body, :status => e.http_code
+        render :plain => e.http_body, :status => e.http_code
       end
     end
 
@@ -225,7 +225,7 @@ module Katello
           sync_task(::Actions::Katello::Host::Unregister, @host)
         end
       end
-      render :text => _("Deleted consumer '%s'") % params[:id], :status => 204
+      render :plain => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
 
     # used for registering with activation keys
