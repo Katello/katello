@@ -7,7 +7,7 @@ module Katello
     api :GET, "/content_views/:id/history", N_("Show a content view's history")
     param :id, :number, :desc => N_("content view numeric identifier"), :required => true
     def index
-      respond_for_index :collection => scoped_search(index_relation.uniq, :katello_content_view_version_id, :asc, :resource_class => ContentViewHistory)
+      respond_for_index :collection => scoped_search(index_relation, :katello_content_view_version_id, :asc, :resource_class => ContentViewHistory)
     end
 
     def index_relation

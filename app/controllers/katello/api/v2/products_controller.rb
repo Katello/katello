@@ -36,7 +36,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       options = {:includes => [:sync_plan, :provider]}
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc, options))
+      respond(:collection => scoped_search(index_relation, :name, :asc, options))
     end
 
     def index_relation

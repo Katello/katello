@@ -115,12 +115,12 @@ module Katello
     def test_update_repositories
       repository = Repository.find(katello_repositories(:fedora_17_x86_64).id)
       assert_includes @content_view.repositories.map(&:id), repository.id
-      refute_includes @filter.repositories(true).map(&:id), repository.id
+      refute_includes @filter.repositories.reload.map(&:id), repository.id
 
       put :update, params: { :content_view_id => @filter.content_view_id, :id => @filter, :repository_ids => [repository.id] }
 
       assert_response :success
-      assert_includes @filter.repositories(true).map(&:id), repository.id
+      assert_includes @filter.repositories.reload.map(&:id), repository.id
     end
 
     def test_update_protected

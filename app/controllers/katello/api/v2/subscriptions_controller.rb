@@ -30,7 +30,7 @@ module Katello
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
       collection = scoped_search(
-        index_relation.uniq, :cp_id, :asc, resource_class: Pool, includes: [:subscription])
+        index_relation, :cp_id, :asc, resource_class: Pool, includes: [:subscription])
       if params[:activation_key_id]
         key_pools = @activation_key.get_key_pools
         collection[:results] = collection[:results].map do |pool|

@@ -52,7 +52,7 @@ module Katello
                 else
                   self.bound_repositories.pluck(:id)
                 end
-        self.applicable_errata.in_repositories(repos).uniq
+        self.applicable_errata.in_repositories(repos).distinct
       end
 
       def installable_rpms(env = nil, content_view = nil)
