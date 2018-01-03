@@ -662,6 +662,7 @@ module Katello
       end
     end
 
+    # deleteable? is already taken by the authorization mixin
     def destroyable?
       if self.environment.try(:library?) && self.content_view.default?
         if self.environment.organization.being_deleted?
@@ -680,11 +681,7 @@ module Katello
     end
 
     def assert_deletable
-      if destroyable?
-        true
-      else
-        throw :abort
-      end
+      throw :abort unless destroyable?
     end
 
     def hosts_with_applicability
