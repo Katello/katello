@@ -82,14 +82,6 @@ module Katello
       respond_for_index(:collection => subscriptions, :template => 'index')
     end
 
-    api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", N_("Unattach a subscription"), :deprecated => true
-    param :id, String, :desc => N_("Subscription ID"), :required => false
-    param :activation_key_id, String, :desc => N_("activation key ID")
-    def destroy
-      @activation_key.unsubscribe(params[:id])
-      respond_for_index(:collection => scoped_search(import_subscriptions.uniq, :cp_id, :asc, :resource_class => Pool), :template => "index")
-    end
-
     api :POST, "/organizations/:organization_id/subscriptions/upload", N_("Upload a subscription manifest")
     param :organization_id, :number, :desc => N_("Organization id"), :required => true
     param :content, File, :desc => N_("Subscription manifest file"), :required => true
@@ -169,16 +161,6 @@ module Katello
 
     def default_sort
       %w(id desc)
-    end
-
-    def import_subscriptions
-      subscriptions = if @activation_key
-                        index_activation_key
-                      else
-                        index_organization
-                      end
-      cp_ids = subscriptions.collect { |x| x["id"] }
-      index_relation.where("cp_id not in (?)", cp_ids)
     end
 
     def index_activation_key

@@ -154,7 +154,7 @@ module Katello
       repo_params[:url] = nil if repo_params[:url].blank?
       repo_params[:unprotected] = repo_params.key?(:unprotected) ? repo_params[:unprotected] : true
       repo_params[:gpg_key] = gpg_key
-      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected, :gpg_key, :checksum_type, :download_policy).map { |k, v| [k.to_sym, v] }])
+      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected, :gpg_key, :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
       repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)

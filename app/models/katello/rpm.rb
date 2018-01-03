@@ -88,12 +88,12 @@ module Katello
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_rpm.repository_id")
 
       query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
-      query.uniq
+      query
     end
 
     def self.applicable_to_hosts(hosts)
       self.joins(:content_facets).
-        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts)
     end
   end
 end

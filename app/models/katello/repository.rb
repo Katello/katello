@@ -662,7 +662,7 @@ module Katello
       end
     end
 
-    def assert_deletable
+    def destroyable?
       if self.environment.try(:library?) && self.content_view.default?
         if self.environment.organization.being_deleted?
           return true
@@ -674,8 +674,16 @@ module Katello
           errors.add(:base, _("Repository cannot be deleted since it has already been included in a published Content View. " \
                               "Please delete all Content View versions containing this repository before attempting to delete it."))
 
-          throw :abort
+          return false
         end
+      end
+    end
+
+    def assert_deletable
+      if destroyable?
+        true
+      else
+        throw :abort
       end
     end
 

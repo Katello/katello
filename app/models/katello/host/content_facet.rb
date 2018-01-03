@@ -148,7 +148,7 @@ module Katello
       def self.with_non_installable_errata(errata)
         subquery = Katello::Erratum.select("#{Katello::Erratum.table_name}.id").ids_installable_for_hosts
         .where("#{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::Host::ContentFacet.table_name}.id").to_sql
-        self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})").uniq
+        self.joins(:applicable_errata).where("#{Katello::Erratum.table_name}.id" => errata).where("#{Katello::Erratum.table_name}.id NOT IN (#{subquery})")
       end
 
       def self.with_applicable_errata(errata)
