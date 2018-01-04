@@ -226,8 +226,8 @@ module Katello
     end
 
     def self.in_content_views(views)
-      joins(:content_view_version)
-        .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
+      Repository.where(:id => self.joins(:content_view_version)
+        .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id)))
     end
 
     def self.feed_ca_cert(url)
