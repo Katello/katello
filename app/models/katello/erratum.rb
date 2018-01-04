@@ -56,8 +56,7 @@ module Katello
     end
 
     def self.applicable_to_hosts_dashboard(hosts)
-      applicable_to_hosts(hosts).
-        select("DISTINCT ON (#{self.table_name}.updated, #{self.table_name}.id) #{self.table_name}.*").
+      Erratum.where(:id => applicable_to_hosts(hosts)).
         order("#{self.table_name}.updated desc").limit(6)
     end
 
