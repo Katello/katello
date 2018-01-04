@@ -3,9 +3,9 @@ kind: provision
 name: Katello Atomic Kickstart default
 %>
 
-lang <%= @host.params['lang'] || 'en_US.UTF-8' %>
-keyboard <%= @host.params['keyboard'] || 'us' %>
-timezone --utc <%= @host.params['time-zone'] || 'UTC' %>
+lang <%= host_param('lang') || 'en_US.UTF-8' %>
+keyboard <%= host_param('keyboard') || 'us' %>
+timezone --utc <%= host_param('time-zone') || 'UTC' %>
 
 <% subnet = @host.subnet -%>
 <% if subnet.respond_to?(:dhcp_boot_mode?) -%>
