@@ -1,4 +1,4 @@
-<% if @host.params['kt_activation_keys'] %>
+<% if host_param('kt_activation_keys') %>
   # add subscription manager
  <% if @host.operatingsystem.atomic? %>
   curl -s <%= subscription_manager_configuration_url(@host, false) %> | IS_ATOMIC=true bash
@@ -8,7 +8,7 @@
  <% end %>
 
   echo "Registering the System"
-  subscription-manager register --org="<%= @host.rhsm_organization_label %>" --name="<%= @host.name %>" --activationkey="<%= @host.params['kt_activation_keys'] %>"
+  subscription-manager register --org="<%= @host.rhsm_organization_label %>" --name="<%= @host.name %>" --activationkey="<%= host_param('kt_activation_keys') %>"
 
   <% unless @host.operatingsystem.atomic? %>
     echo "Installing Katello Agent"

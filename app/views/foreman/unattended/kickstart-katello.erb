@@ -16,8 +16,8 @@ oses:
   os_major = @host.operatingsystem.major.to_i
   # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
-  puppet_enabled = pm_set || @host.params['force-puppet']
-  salt_enabled = @host.params['salt_master'] ? true : false
+  puppet_enabled = pm_set || host_param('force-puppet')
+  salt_enabled = host_param('salt_master') ? true : false
   chef_enabled = @host.respond_to?(:chef_proxy) && @host.chef_proxy
   section_end = (rhel_compatible && os_major <= 5) ? '' : '%end'
 %>
@@ -40,7 +40,7 @@ network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{sub
 rootpw --iscrypted <%= root_pass %>
 firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
 authconfig --useshadow --passalgo=<%= @host.operatingsystem.password_hash || 'sha256' %> --kickstart
-timezone --utc <%= @host.params['time-zone'] || 'UTC' %>
+timezone --utc <%= host_param('time-zone') || 'UTC' %>
 
 <% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
 # Bootloader exception for Fedora 16:
@@ -100,12 +100,12 @@ exec < /dev/tty3 > /dev/tty3
 
 #update local time
 echo "updating system time"
-/usr/sbin/ntpdate -sub <%= @host.params['ntp-server'] || '0.fedora.pool.ntp.org' %>
+/usr/sbin/ntpdate -sub <%= host_param('ntp-server') || '0.fedora.pool.ntp.org' %>
 /usr/sbin/hwclock --systohc
 
 <%= snippet "subscription_manager_registration" %>
 
-<% if @host.info['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
+<% if host_param('realm') && @host.realm && @host.realm.realm_type == 'FreeIPA' -%>
 <%= snippet "freeipa_register" %>
 <% end -%>
 
