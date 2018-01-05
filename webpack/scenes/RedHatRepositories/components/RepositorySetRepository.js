@@ -6,6 +6,7 @@ import { ListView, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { connect } from 'react-redux';
 
 import { setRepositoryEnabled } from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
+import '../index.scss';
 
 class RepositorySetRepository extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class RepositorySetRepository extends Component {
     return (
       <ListView.Item
         heading={`${arch} ${releasever}`}
+        className="list-item-with-divider"
         actions={
           <Spinner loading={this.state.loading} inline>
             <OverlayTrigger

@@ -24,7 +24,7 @@ class RepositorySetRepositories extends Component {
 
     return (
       <Spinner loading={data.loading}>
-        <div>{data.repositories.length ? repos : <div>No repositories found.</div>}</div>
+        {data.repositories.length ? repos : <div>No repositories found.</div>}
       </Spinner>
     );
   }
