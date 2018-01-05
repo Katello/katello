@@ -23,7 +23,7 @@ module Katello
     param :interval, SyncPlan::TYPES, :desc => N_("filter by interval")
     param_group :search, Api::V2::ApiController
     def index
-      respond_for_index(:collection => scoped_search(index_relation.uniq, :name, :asc))
+      respond_for_index(:collection => scoped_search(index_relation.distinct, :name, :asc))
     end
 
     def index_relation

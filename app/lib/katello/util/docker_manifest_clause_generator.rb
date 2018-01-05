@@ -11,7 +11,7 @@ module Katello
 
       def collect_clauses(repo, filters)
         [ContentViewDockerFilter].collect do |filter_class|
-          content_type_filters = filters.where(:type => filter_class)
+          content_type_filters = filters.where(:type => filter_class.to_s)
           make_manifest_clauses(repo, content_type_filters) unless content_type_filters.empty?
         end
       end

@@ -26,7 +26,7 @@ module Katello
     end
 
     def self.total_for_repositories(repos)
-      self.in_repositories(repos).uniq.count
+      self.in_repositories(repos).count
     end
 
     def nvrea

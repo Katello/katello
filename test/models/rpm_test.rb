@@ -35,6 +35,14 @@ module Katello
       assert_include rpms, @rpm_two
     end
 
+    def test_in_repositories_uniqness
+      repo2 = katello_repositories(:rhel_7_x86_64)
+      @repo.rpms = [@rpm_one, @rpm_two]
+      repo2.rpms = [@rpm_one, @rpm_two]
+
+      assert_equal Rpm.in_repositories([@repo, repo2]).to_a.sort, [@rpm_one, @rpm_two].sort
+    end
+
     def test_update_from_json
       uuid = 'foo'
       Rpm.create!(:uuid => uuid)

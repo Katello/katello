@@ -58,7 +58,7 @@ module Katello
                                               :dependent => :destroy, :inverse_of => :lifecycle_environment
 
     # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
-    before_destroy :deletable?, :prepend => true
+    before_destroy :assert_deletable, :prepend => true
 
     scope(:not_in_capsule,
       lambda do |capsule|
@@ -138,6 +138,10 @@ module Katello
     #is the environment currently being promoted to
     def promoting_to?
       self.promoting.exists?
+    end
+
+    def assert_deletable
+      throw :abort unless deletable?
     end
 
     def deletable?

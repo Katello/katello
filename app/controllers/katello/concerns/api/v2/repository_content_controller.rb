@@ -57,7 +57,7 @@ module Katello
         repos = repos.where(:library_instance_id => @repo.id) if @repo
 
         sort_by, sort_order, options = sort_options
-        collection = scoped_search(filter_by_repos(repos, collection).uniq, sort_by, sort_order, options)
+        collection = scoped_search(filter_by_repos(repos, collection).distinct, sort_by, sort_order, options)
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
         respond_for_index(:collection => collection)
       end

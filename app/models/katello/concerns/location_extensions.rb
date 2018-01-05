@@ -6,7 +6,7 @@ module Katello
       included do
         after_initialize :set_default_overrides, :if => :new_record?
         after_save :reset_settings
-        before_destroy :deletable?
+        before_destroy :assert_deletable
       end
 
       def set_default_overrides
@@ -23,6 +23,10 @@ module Katello
             ::Setting[:default_location_puppet_content] = self.title
           end
         end
+      end
+
+      def assert_deletable
+        throw :abort unless deletable?
       end
 
       def deletable?

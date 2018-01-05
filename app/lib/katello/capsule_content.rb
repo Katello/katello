@@ -33,7 +33,7 @@ module Katello
     end
 
     def remove_lifecycle_environment(environment)
-      @capsule.lifecycle_environments.find(environment)
+      @capsule.lifecycle_environments.find(environment.id)
       unless @capsule.lifecycle_environments.destroy(environment)
         fail _("Could not remove the lifecycle environment from the capsule")
       end
