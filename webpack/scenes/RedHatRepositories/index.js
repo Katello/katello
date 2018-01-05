@@ -15,6 +15,8 @@ import RepositorySet from './components/RepositorySet';
 import EnabledRepository from './components/EnabledRepository';
 import SearchInput from '../../components/SearchInput/index';
 
+import './index.scss';
+
 class RedHatRepositoriesPage extends Component {
   componentDidMount() {
     this.loadData();
@@ -56,10 +58,11 @@ class RedHatRepositoriesPage extends Component {
             </Spinner>
           </Col>
 
-          <Col sm={6}>
+          <Col sm={6} className="background-container-gray">
             <h2>{__('Enabled Repositories')}</h2>
             <Spinner loading={enabledRepositories.loading}>
               <ListView>
+                {enabledRepositories.repositories.length ? null : <p>No repositories enabled.</p>}
                 {enabledRepositories.repositories.map(repo => (
                   <EnabledRepository key={repo.id} {...repo} />
                 ))}
