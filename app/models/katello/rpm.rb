@@ -54,7 +54,7 @@ module Katello
     end
 
     def self.total_for_repositories(repos)
-      self.in_repositories(repos).uniq.count
+      self.in_repositories(repos).count
     end
 
     def nvrea
@@ -88,12 +88,12 @@ module Katello
         where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_rpm.repository_id")
 
       query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
-      query.uniq
+      query.distinct
     end
 
     def self.applicable_to_hosts(hosts)
       self.joins(:content_facets).
-        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).uniq
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts).distinct
     end
   end
 end

@@ -36,7 +36,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       options = {:includes => [:sync_plan, :provider]}
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc, options))
+      respond(:collection => scoped_search(index_relation.distinct, :name, :asc, options))
     end
 
     def index_relation
@@ -71,7 +71,7 @@ module Katello
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
 
-      product = Product.new(product_params)
+      product = Product.new(product_params.to_h)
 
       sync_task(::Actions::Katello::Product::Create, product, @organization)
       respond(:resource => product)
@@ -89,7 +89,7 @@ module Katello
     param_group :product
     param :name, String, :desc => N_("Product name")
     def update
-      sync_task(::Actions::Katello::Product::Update, @product, product_params)
+      sync_task(::Actions::Katello::Product::Update, @product, product_params.to_h)
 
       respond(:resource => @product.reload)
     end

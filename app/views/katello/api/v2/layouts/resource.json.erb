@@ -1,4 +1,4 @@
-<% if object_name %>
+<% if try(:object_name) %>
   {<%= object_name %>: <%= yield %>}
 <% else %>
   <%= yield %>
