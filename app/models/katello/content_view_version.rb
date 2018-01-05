@@ -266,7 +266,7 @@ module Katello
     end
 
     def debs
-      Katello::Deb.in_repositories(self.repositories.archived).uniq
+      Katello::Deb.in_repositories(self.repositories.archived)
     end
 
     def deb_count
@@ -274,13 +274,13 @@ module Katello
     end
 
     def errata(errata_type = nil)
-      errata = Erratum.in_repositories(archived_repos).uniq
+      errata = Erratum.in_repositories(archived_repos)
       errata = errata.of_type(errata_type) if errata_type
       errata
     end
 
     def library_errata
-      Erratum.in_repositories(library_repos).uniq
+      Erratum.in_repositories(library_repos)
     end
 
     def available_errata
@@ -288,23 +288,23 @@ module Katello
     end
 
     def file_units
-      FileUnit.in_repositories(archived_repos).uniq
+      FileUnit.in_repositories(archived_repos)
     end
 
     def ostree_branches
-      OstreeBranch.in_repositories(archived_repos).uniq
+      OstreeBranch.in_repositories(archived_repos)
     end
 
     def docker_manifests
-      DockerManifest.in_repositories(archived_repos).uniq
+      DockerManifest.in_repositories(archived_repos)
     end
 
     def docker_manifest_lists
-      DockerManifestList.in_repositories(archived_repos).uniq
+      DockerManifestList.in_repositories(archived_repos)
     end
 
     def package_groups
-      PackageGroup.in_repositories(archived_repos).uniq
+      PackageGroup.in_repositories(archived_repos)
     end
 
     def package_group_count

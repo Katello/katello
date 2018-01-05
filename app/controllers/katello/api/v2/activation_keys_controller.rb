@@ -24,7 +24,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       activation_key_includes = [:content_view, :environment, :host_collections, :organization]
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc, :includes => activation_key_includes))
+      respond(:collection => scoped_search(index_relation, :name, :asc, :includes => activation_key_includes))
     end
 
     api :POST, "/activation_keys", N_("Create an activation key")

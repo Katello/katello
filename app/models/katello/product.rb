@@ -73,7 +73,7 @@ module Katello
 
     def initialize(attrs = nil)
       unless attrs.nil?
-        attrs = attrs.with_indifferent_access
+        attrs = attrs.with_indifferent_access if attrs.respond_to?(:with_indifferent_access)
 
         #rename "id" to "cp_id" (activerecord and candlepin variable name conflict)
         if attrs.key?(:id)

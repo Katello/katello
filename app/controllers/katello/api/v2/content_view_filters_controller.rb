@@ -14,7 +14,7 @@ module Katello
     param :name, String, :desc => N_("filter content view filters by name")
     param :types, Array, :desc => N_("types of filters")
     def index
-      respond(:collection => scoped_search(index_relation.uniq, :name, :asc))
+      respond(:collection => scoped_search(index_relation, :name, :asc))
     end
 
     def index_relation

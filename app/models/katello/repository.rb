@@ -226,8 +226,8 @@ module Katello
     end
 
     def self.in_content_views(views)
-      joins(:content_view_version)
-        .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
+      Repository.where(:id => self.joins(:content_view_version)
+        .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id)))
     end
 
     def self.feed_ca_cert(url)
@@ -662,7 +662,8 @@ module Katello
       end
     end
 
-    def assert_deletable
+    # deleteable? is already taken by the authorization mixin
+    def destroyable?
       if self.environment.try(:library?) && self.content_view.default?
         if self.environment.organization.being_deleted?
           return true
@@ -677,6 +678,10 @@ module Katello
           return false
         end
       end
+    end
+
+    def assert_deletable
+      throw :abort unless destroyable?
     end
 
     def hosts_with_applicability

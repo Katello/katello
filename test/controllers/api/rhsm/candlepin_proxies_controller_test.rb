@@ -213,7 +213,7 @@ module Katello
           assert_equal params, 'owner' => @organization.label, 'env' => nil
         end
 
-        post(:hypervisors_update, :owner => @organization.label, :env => 'dev/dev')
+        post(:hypervisors_update, :params => {:owner => @organization.label, :env => 'dev/dev'})
         assert_response 200
       end
     end
@@ -227,7 +227,7 @@ module Katello
           assert_equal options, :task_id => 'foo'
         end
 
-        post(:async_hypervisors_update, :owner => @organization.label, :env => 'dev/dev')
+        post(:async_hypervisors_update, :params => {:owner => @organization.label, :env => 'dev/dev'})
         assert_response 200
       end
     end
@@ -253,7 +253,7 @@ module Katello
         assert_sync_task(::Actions::Katello::Host::Hypervisors) do |params|
           assert_equal params, 'owner' => @host.organization.label, 'env' => nil
         end
-        post(:hypervisors_update, :owner => 'owner', :env => 'dev/dev')
+        post(:hypervisors_update, :params => {:owner => 'owner', :env => 'dev/dev'})
         assert_response 200
       end
     end

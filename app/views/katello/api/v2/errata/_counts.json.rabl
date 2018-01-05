@@ -1,3 +1,4 @@
+
 totals = @object.relation.group(:errata_type).count.with_indifferent_access
 
 node :security do |_presenter|

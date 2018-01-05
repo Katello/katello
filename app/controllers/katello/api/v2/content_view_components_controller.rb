@@ -32,6 +32,7 @@ module Katello
     end
     def add_components
       components = params.require(:components).map do |component|
+        component = component.permit([:latest, :content_view_version_id, :content_view_id])
         options = {}
         options[:latest] = ::Foreman::Cast.to_bool(component[:latest]) if component.key?(:latest)
         options.merge(component.slice(:content_view_version_id, :content_view_id))
