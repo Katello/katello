@@ -329,6 +329,10 @@ module Katello
       components.map(&:archived_repos).flatten
     end
 
+    def component_repository_ids
+      component_repositories.map(&:id)
+    end
+
     def repos_in_product(env, product)
       version = version(env)
       if version

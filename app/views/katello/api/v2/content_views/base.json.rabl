@@ -2,8 +2,7 @@ extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 
 attributes :composite
-attributes :repository_ids
-attributes :component_ids
+attributes :content_view_version_ids => :component_ids
 attributes :default
 attributes :force_puppet_environment
 attributes :version_count
@@ -32,10 +31,12 @@ if @object.composite?
   child :component_repositories => :repositories do
     attributes :id, :name, :label, :content_type
   end
+  attributes :component_repository_ids => :repository_ids
 else
   child :repositories => :repositories do
     attributes :id, :name, :label, :content_type
   end
+  attributes :repository_ids
 end
 
 child :puppet_modules => :puppet_modules do
