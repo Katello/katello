@@ -86,7 +86,7 @@
           <tr>
             <td>Content Hosts</td>
             <td>
-              <a ui-sref="content-hosts({search: searchQuery(subscription)})" translate>
+              <a ng-href="/content_hosts?search={{searchQuery(subscription)}}">
                 {{ subscription.host_count }}
               </a>
             </td>
@@ -94,7 +94,7 @@
           <tr>
             <td>Activation Keys</td>
             <td>
-              <a ui-sref="activation-keys({search: searchQuery(subscription)})" translate>
+              <a ng-href="/activation_keys?search={{searchQuery(subscription)}}">
                 {{ subscription.activation_keys.length }}
               </a>
             </td>
