@@ -52,7 +52,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
 
             $scope.isAdding = true;
             ActivationKey.addSubscriptions({id: $scope.activationKey.id, 'subscriptions': selected}, function () {
-                Notification.setErrorMessage(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
+                Notification.setSuccessMessage(translate("Successfully added %s subscriptions.").replace('%s', selected.length));
                 $scope.isAdding = false;
                 $scope.contentNutupane.refresh();
             }, function (response) {
