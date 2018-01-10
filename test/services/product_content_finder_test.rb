@@ -10,7 +10,8 @@ module Katello
       @repo2 = katello_repositories(:rhel_7_x86_64)
       @repo2_cv = katello_repositories(:rhel_6_x86_64_composite_view_version_1)
 
-      [@repo1, @repo2].each do |repo|
+      #@repo1's content is already in fixtures
+      [@repo2].each do |repo|
         content = FactoryBot.create(:katello_content,
                                     name: repo.name,
                                     label: repo.label,
