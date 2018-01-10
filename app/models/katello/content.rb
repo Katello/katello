@@ -6,5 +6,21 @@ module Katello
 
     validates :label, :uniqueness => true
     validates :cp_content_id, :uniqueness => true
+
+    def self.import_all
+      Organization.all.each do |org|
+        org.products.each do |product|
+          begin
+            product_json = Katello::Resources::Candlepin::Product.get(org.label,
+                                                                  product.cp_id,
+                                                                  %w(productContent)).first
+            product_content_attrs = product_json['productContent']
+            Katello::Glue::Candlepin::Product.import_product_content(product, product_content_attrs)
+          rescue RestClient::NotFound
+            Rails.logger.warn _("Product with ID %s not found in Candlepin. Skipping content import for it.") % product.cp_id
+          end
+        end
+      end
+    end
   end
 end
