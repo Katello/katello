@@ -160,9 +160,7 @@ module Katello
       fedora = katello_repositories(:fedora_17_x86_64)
       puppet = katello_repositories(:p_forge)
 
-      content = FactoryBot.create(:katello_content, cp_content_id: fedora.content_id)
-      fedora_content = FactoryBot.create(:katello_product_content, content: content, product: product)
-
+      fedora_content = product.product_contents.to_a
       puppet.update_attributes(content_id: 2)
 
       content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id)
@@ -171,7 +169,7 @@ module Katello
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
       product.repositories = [fedora, puppet]
 
-      assert_equal [fedora_content], product.available_content
+      assert_equal fedora_content, product.available_content
     end
   end
 end

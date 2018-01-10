@@ -2,6 +2,7 @@ module Katello
   module FixturesSupport
     FIXTURE_CLASSES = {
       :katello_activation_keys => Katello::ActivationKey,
+      :katello_contents => Katello::Content,
       :katello_content_views => Katello::ContentView,
       :katello_content_view_environments => Katello::ContentViewEnvironment,
       :katello_content_view_filters => Katello::ContentViewFilter,
@@ -20,6 +21,7 @@ module Katello
       :katello_repository_package_groups => Katello::RepositoryPackageGroup,
       :katello_pools => Katello::Pool,
       :katello_products => Katello::Product,
+      :katello_product_contents => Katello::ProductContent,
       :katello_providers => Katello::Provider,
       :katello_puppet_modules => Katello::PuppetModule,
       :katello_repository_puppet_modules => Katello::RepositoryPuppetModule,

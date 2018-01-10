@@ -51,7 +51,8 @@ module Actions
                                                content_url: content_url(repository),
                                                vendor: ::Katello::Provider::CUSTOM)
 
-          ::Katello::ProductContent.create!(product: repository.product, content: content)
+          #custom product content is always enabled by default
+          ::Katello::ProductContent.create!(product: repository.product, content: content, enabled: true)
         end
 
         private

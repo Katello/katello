@@ -7,16 +7,20 @@ module Katello
     include Support::ForemanTasks::Task
 
     def models
-      ActivationKey.any_instance.stubs(:valid_content_override_label?).returns(true)
-      ActivationKey.any_instance.stubs(:content_overrides).returns([])
-      ActivationKey.any_instance.stubs(:products).returns([])
-      ActivationKey.any_instance.stubs(:all_products).returns([])
-
       @organization = get_organization
       @activation_key = ActivationKey.find(katello_activation_keys(:simple_key).id)
       @view = katello_content_views(:library_view)
       @acme_view = katello_content_views(:acme_default)
       @library = @organization.library
+      @product = katello_products(:fedora)
+
+      ActivationKey.any_instance.stubs(:valid_content_override_label?).returns(true)
+      ActivationKey.any_instance.stubs(:content_overrides).returns([])
+      ActivationKey.any_instance.stubs(:products).returns([@product])
+      ActivationKey.any_instance.stubs(:all_products).returns([@product])
+
+      #@content = FactoryBot.create(:katello_content, cp_content_id: @content_id)
+      #@product_content = FactoryBot.create(:katello_product_content, content: @content, product: @product)
     end
 
     def permissions
@@ -193,8 +197,9 @@ module Katello
     end
 
     def test_product_content
-      get :product_content, params: { :id => @activation_key.id, :organization_id => @organization.id }
+      response = get :product_content, params: { :id => @activation_key.id, :organization_id => @organization.id }
 
+      refute_empty JSON.parse(response.body)['results']
       assert_response :success
       assert_template 'api/v2/activation_keys/product_content'
     end
