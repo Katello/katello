@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "dynflow", "~> 0.8.31"
   gem.add_dependency "foreman_docker", ">= 0.2.0"
 
-  gem.add_dependency "qpid_messaging", '< 1.0.0'
+  gem.add_dependency "qpid_messaging"
   gem.add_dependency "gettext_i18n_rails"
   gem.add_dependency "apipie-rails", ">= 0.5.4"
 
