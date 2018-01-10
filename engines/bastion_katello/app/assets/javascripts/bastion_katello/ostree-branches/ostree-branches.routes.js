@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.ostree-branches').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('ostree-branches', {
-        url: '/ostree_branches?repositoryId',
+        url: '/ostree_branches',
         permission: ['view_products', 'view_content_views'],
         views: {
             '@': {
