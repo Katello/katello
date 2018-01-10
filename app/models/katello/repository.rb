@@ -36,6 +36,8 @@ module Katello
     OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM = "custom".freeze
     OSTREE_UPSTREAM_SYNC_POLICIES = [OSTREE_UPSTREAM_SYNC_POLICY_LATEST, OSTREE_UPSTREAM_SYNC_POLICY_ALL, OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM].freeze
 
+    define_model_callbacks :sync, :only => :after
+
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
     belongs_to :product, :inverse_of => :repositories
     belongs_to :gpg_key, :inverse_of => :repositories
@@ -687,6 +689,17 @@ module Katello
         end
       end
       return true
+    end
+
+    def sync_hook
+      run_callbacks :sync do
+        logger.debug "custom hook after_sync on #{name} will be executed if defined."
+        true
+      end
+    end
+
+    def rabl_path
+      "katello/api/v2/#{self.class.to_s.demodulize.tableize}/show"
     end
 
     def assert_deletable
