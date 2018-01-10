@@ -67,6 +67,7 @@ module Katello
         # otherwise create a reference to existing content OR new content altogether
         if (existing = product.product_content_by_id(pc[:id]))
           existing.content.update_attributes!(content_attrs)
+          existing.update_attributes(enabled: params['enabled'])
         else
           content = ::Katello::Content.find_by_cp_content_id(pc[:id])
           content ||= ::Katello::Content.create!(content_attrs)

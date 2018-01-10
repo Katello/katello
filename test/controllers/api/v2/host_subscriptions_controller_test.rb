@@ -23,7 +23,6 @@ module Katello
     end
 
     def backend_stubs
-      Katello::Content.any_instance.stubs(:modified_product_ids).returns([])
       Katello::Pool.any_instance.stubs(:pool_facts).returns({})
       Katello::Candlepin::Consumer.any_instance.stubs(:entitlements).returns(@entitlements)
     end
