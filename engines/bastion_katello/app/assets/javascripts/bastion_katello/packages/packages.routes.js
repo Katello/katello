@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.packages').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('packages', {
-        url: '/packages?repositoryId',
+        url: '/packages',
         permission: ['view_products', 'view_content_views'],
         views: {
             '@': {
