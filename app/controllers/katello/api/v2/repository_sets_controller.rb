@@ -2,10 +2,12 @@ module Katello
   class Api::V2::RepositorySetsController < Api::V2::ApiController
     respond_to :json
 
-    before_action :find_product, :except => [:index]
-    before_action :find_optional_product, :only => [:index]
+    include Katello::Concerns::FilteredAutoCompleteSearch
+
+    before_action :find_product, :except => [:index, :auto_complete_search]
+    before_action :find_optional_product, :only => [:index, :auto_complete_search]
     before_action :custom_product?
-    before_action :find_product_content, :except => [:index]
+    before_action :find_product_content, :except => [:index, :auto_complete_search]
 
     resource_description do
       api_version "v2"
@@ -73,7 +75,11 @@ module Katello
       respond_for_async :resource => task
     end
 
-    private
+    protected
+
+    def resource_class
+      Katello::Content
+    end
 
     def default_sort
       lambda { |relation| relation.joins(:content).order("name asc") }

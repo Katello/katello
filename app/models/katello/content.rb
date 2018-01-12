@@ -7,6 +7,11 @@ module Katello
     validates :label, :uniqueness => true
     validates :cp_content_id, :uniqueness => true
 
+    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :content_type, :complete_value => true
+    scoped_search :on => :label, :complete_value => true
+    scoped_search :relation => :products, :on => :name, :rename => :product_name, :complete_value => true
+
     def self.import_all
       Organization.all.each do |org|
         org.products.each do |product|

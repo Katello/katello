@@ -37,6 +37,12 @@ module Katello
       assert_response :success
     end
 
+    def test_auto_complete
+      get :auto_complete_search, params: { :organization_id => @product.organization.id, :search => 'name =' }
+
+      assert_response :success
+    end
+
     def test_index_enabled
       get :index, params: { :organization_id => @organization.id, :enabled => true }
 

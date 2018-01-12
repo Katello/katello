@@ -301,7 +301,7 @@ module Katello
       @plugin.permission :view_subscriptions,
                          {
                            'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history, :auto_complete_search],
-                           'katello/api/v2/repository_sets' => [:index, :show, :available_repositories]
+                           'katello/api/v2/repository_sets' => [:index, :show, :available_repositories, :auto_complete_search]
                          },
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :attach_subscriptions,
