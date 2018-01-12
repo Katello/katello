@@ -243,6 +243,7 @@ Katello::Engine.routes.draw do
             get :auto_complete_search
           end
           api_resources :repository_sets, :only => [:index, :show] do
+            get :auto_complete_search, :on => :collection
             member do
               get :available_repositories
               put :enable
@@ -269,6 +270,7 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :repository_sets, :only => [:index, :show] do
+          get :auto_complete_search, :on => :collection
           member do
             put :enable
             put :disable
