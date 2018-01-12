@@ -70,8 +70,13 @@ module ::Actions::Katello::ContentViewVersion
       action.stubs(:task).returns(task)
       plan_action(action, content_view_version, false, nil, 0)
       # verify everything bubbles through to the export action as we expect
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, library_repos,
-                                false, nil, 0, "-published_library_view-v2.0")
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export) do |repos, export_to_iso, since, iso_size, group_id|
+        assert_equal library_repos.sort, repos.sort
+        refute export_to_iso
+        assert_nil since
+        assert_equal 0, iso_size
+        assert_equal '-published_library_view-v2.0', group_id
+      end
     end
 
     it 'plans with date' do
@@ -81,8 +86,13 @@ module ::Actions::Katello::ContentViewVersion
       action.stubs(:task).returns(task)
       # the date should not be converted to an iso8601 when fed to Repository::Export.
       plan_action(action, content_view_version, false, '1841-01-01', 0)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Export, library_repos,
-                                false, '1841-01-01', 0, "-published_library_view-v2.0")
+      assert_action_planed_with(action, ::Actions::Katello::Repository::Export) do |repos, export_to_iso, since, iso_size, group_id|
+        assert_equal library_repos.sort, repos.sort
+        refute export_to_iso
+        assert_equal '1841-01-01', since
+        assert_equal 0, iso_size
+        assert_equal '-published_library_view-v2.0', group_id
+      end
     end
   end
 end
