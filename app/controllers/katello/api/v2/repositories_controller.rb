@@ -2,6 +2,11 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
 
+    CONTENT_CREDENTIAL_GPG_KEY_TYPE = "gpg_key".freeze
+    CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE = "ssl_ca_cert".freeze
+    CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE = "ssl_client_cert".freeze
+    CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE = "ssl_client_key".freeze
+
     before_action :find_optional_organization, :only => [:index, :auto_complete_search]
     before_action :find_product, :only => [:index, :auto_complete_search]
     before_action :find_product_for_create, :only => [:create]
@@ -11,10 +16,10 @@ module Katello
                                               :import_uploads, :gpg_key_content]
     before_action :find_content, :only => :remove_content
     before_action :find_organization_from_repo, :only => [:update]
-    before_action :only => [:create, :update] { find_content_credential "gpg_key" }
-    before_action :only => [:create, :update] { find_content_credential "ssl_ca_cert" }
-    before_action :only => [:create, :update] { find_content_credential "ssl_client_cert" }
-    before_action :only => [:create, :update] { find_content_credential "ssl_client_key" }
+    before_action :only => [:create, :update] { find_content_credential CONTENT_CREDENTIAL_GPG_KEY_TYPE }
+    before_action :only => [:create, :update] { find_content_credential CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE }
+    before_action :only => [:create, :update] { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE }
+    before_action :only => [:create, :update] { find_content_credential CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE }
     before_action :error_on_rh_product, :only => [:create]
     before_action :error_on_rh_repo, :only => [:destroy]
 
@@ -144,17 +149,17 @@ module Katello
 
     api :POST, "/repositories", N_("Create a custom repository")
     param_group :repo
-    def create # rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
+    def create
       repo_params = repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
       end
 
-      gpg_key = get_content_credential(repo_params, "gpg_key")
-      ssl_ca_cert = get_content_credential(repo_params, "ssl_ca_cert")
-      ssl_client_cert = get_content_credential(repo_params, "ssl_client_cert")
-      ssl_client_key = get_content_credential(repo_params, "ssl_client_key")
+      gpg_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_GPG_KEY_TYPE)
+      ssl_ca_cert = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE)
+      ssl_client_cert = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE)
+      ssl_client_key = get_content_credential(repo_params, CONTENT_CREDENTIAL_SSL_CLIENT_KEY_TYPE)
 
       repo_params[:label] = labelize_params(repo_params)
       repo_params[:arch] = repo_params[:arch] || 'noarch'
@@ -164,24 +169,8 @@ module Katello
       repo_params[:ssl_ca_cert] = ssl_ca_cert
       repo_params[:ssl_client_cert] = ssl_client_cert
       repo_params[:ssl_client_key] = ssl_client_key
-      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected,
-                                                            :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
-                                                            :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
-      repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
-      repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
-      repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
-      repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
-      repository.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
-      repository.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
-      if repository.ostree?
-        repository.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
-        repository.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
-      end
-      if repository.deb?
-        repository.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
-        repository.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
-        repository.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
-      end
+
+      repository = construct_repo_from_params(repo_params)
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
       respond_for_show(:resource => repository)
@@ -472,6 +461,29 @@ module Katello
       end
 
       credential_value
+    end
+
+    def construct_repo_from_params(repo_params)
+      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected,
+                                                            :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
+                                                            :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
+      repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
+      repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
+      repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
+      repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
+      repository.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
+      repository.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
+      if repository.ostree?
+        repository.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
+        repository.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
+      end
+      if repository.deb?
+        repository.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
+        repository.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
+        repository.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
+      end
+
+      repository
     end
 
     def error_on_rh_product

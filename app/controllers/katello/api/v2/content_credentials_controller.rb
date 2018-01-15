@@ -13,7 +13,7 @@ module Katello
     def_param_group :content_credential do
       param :name, :identifier, :action_aware => true, :required => true, :desc => N_("identifier of the content credential")
       param :content_type, String, :action_aware => true, :required => true, :desc => N_("type of content")
-      param :content, String, :action_aware => true, :required => true, :desc => N_("public key block in DER encoding / certificate content")
+      param :content, String, :action_aware => true, :required => true, :desc => N_("public key block in DER encoding or certificate content")
     end
 
     resource_description do
@@ -38,6 +38,7 @@ module Katello
     def index_relation
       query = GpgKey.readable.where(:organization_id => @organization.id)
       query = query.where(:name => params[:name]) if params[:name]
+      query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query
     end
 
