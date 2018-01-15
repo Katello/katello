@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import axios from 'axios';
-import { ListView, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { ListView, Spinner, OverlayTrigger, Tooltip, Icon } from 'patternfly-react';
 import { connect } from 'react-redux';
 
 import { setRepositoryEnabled } from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import '../index.scss';
+import api from '../../../services/api';
 
 class RepositorySetRepository extends Component {
   constructor(props) {
@@ -17,7 +17,8 @@ class RepositorySetRepository extends Component {
     this.setEnabled = (response) => {
       this.setState({ loading: false });
 
-      const { data: { output: { id, name, content_type } } } = response;
+      const { data: { output: { repository: { id, name, content_type: type } } } } = response;
+
       const {
         productId, contentId, arch, releasever,
       } = this.props;
@@ -27,7 +28,7 @@ class RepositorySetRepository extends Component {
         contentId,
         id,
         name,
-        type: content_type,
+        type,
         arch,
         releasever,
       };
@@ -42,34 +43,47 @@ class RepositorySetRepository extends Component {
         productId, contentId, arch, releasever,
       } = this.props;
 
-      const url = `/katello/api/v2/products/${productId}/repository_sets/${contentId}/enable`;
+      const url = `/products/${productId}/repository_sets/${contentId}/enable`;
 
       const data = {
         id: contentId,
         product_id: productId,
         basearch: arch,
-        releasever,
+        releasever: releasever || undefined,
       };
 
-      axios
-        .put(url, { data })
+      api
+        .put(url, data)
         .then(this.setEnabled)
-        .catch(() => {
-          this.setState({ loading: false });
-          // TODO: Add error component
+        .catch(({ response: { data: error } }) => {
+          this.setState({ loading: false, error });
         });
     };
   }
 
   render() {
-    const { enabled, arch, releasever } = this.props;
-
-    if (enabled) return null;
+    const { arch, releasever } = this.props;
 
     return (
       <ListView.Item
         heading={`${arch} ${releasever}`}
         className="list-item-with-divider"
+        leftContent={
+          this.state.error ? (
+            <div className="list-error-danger">
+              <Icon name="times-circle-o" />
+            </div>
+          ) : null
+        }
+        additionalInfo={
+          this.state.error
+            ? [
+              <ListView.InfoItem key="error" stacked className="list-error-danger">
+                {this.state.error.displayMessage}
+              </ListView.InfoItem>,
+              ]
+            : null
+        }
         actions={
           <Spinner loading={this.state.loading} inline>
             <OverlayTrigger
@@ -101,9 +115,12 @@ RepositorySetRepository.propTypes = {
   contentId: PropTypes.string.isRequired,
   productId: PropTypes.number.isRequired,
   arch: PropTypes.string.isRequired,
-  releasever: PropTypes.string.isRequired,
-  enabled: PropTypes.bool.isRequired,
+  releasever: PropTypes.string,
   setRepositoryEnabled: PropTypes.func.isRequired,
+};
+
+RepositorySetRepository.defaultProps = {
+  releasever: '',
 };
 
 export default connect(null, { setRepositoryEnabled })(RepositorySetRepository);

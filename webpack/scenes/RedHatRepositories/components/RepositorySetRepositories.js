@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Spinner } from 'patternfly-react';
+import { Alert, Spinner } from 'patternfly-react';
 
 import loadRepositorySetRepos from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import RepositorySetRepository from './RepositorySetRepository';
@@ -18,13 +18,21 @@ class RepositorySetRepositories extends Component {
   render() {
     const { data } = this.props;
 
-    const repos = data.repositories.map(repo => (
-      <RepositorySetRepository key={repo.arch + repo.releasever} {...repo} />
-    ));
+    if (data.error) {
+      return (
+        <Alert type="danger">
+          <span>{data.error.displayMessage}</span>
+        </Alert>
+      );
+    }
+
+    const repos = data.repositories
+      .filter(({ enabled }) => !enabled)
+      .map(repo => <RepositorySetRepository key={repo.arch + repo.releasever} {...repo} />);
 
     return (
       <Spinner loading={data.loading}>
-        {data.repositories.length ? repos : <div>No repositories found.</div>}
+        {repos.length ? repos : <div>{__('No repositories available.')}</div>}
       </Spinner>
     );
   }

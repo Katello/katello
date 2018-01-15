@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api, { orgId } from '../../../services/api';
 
 import {
   ENABLED_REPOSITORIES_REQUEST,
@@ -16,8 +16,8 @@ export const setRepositoryDisabled = repository => ({
 export const loadEnabledRepos = () => (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST });
 
-  axios
-    .get('/organizations/1/repository_sets?enabled=true')
+  api
+    .get(`/repository_sets/?organization_id=${orgId}&enabled=true`)
     .then(({ data }) => {
       dispatch({
         type: ENABLED_REPOSITORIES_SUCCESS,

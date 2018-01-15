@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../../../services/api';
 
 import {
   REPOSITORY_SET_REPOSITORIES_REQUEST,
@@ -18,7 +18,7 @@ export function normalizeContentSetRepositories(repos, contentId, productId) {
     productId,
     arch: repo.substitutions.basearch,
     releasever: repo.substitutions.releasever,
-    enabled: false,
+    enabled: repo.enabled,
   }));
 }
 
@@ -28,7 +28,7 @@ const loadRepositorySetRepos = (contentId, productId) => (dispatch) => {
     contentId,
   });
 
-  axios
+  api
     .get(`/products/${productId}/repository_sets/${contentId}/available_repositories`)
     .then(({ data }) => {
       dispatch({
@@ -38,11 +38,11 @@ const loadRepositorySetRepos = (contentId, productId) => (dispatch) => {
         results: data.results,
       });
     })
-    .catch((result) => {
+    .catch(({ response: { data: error } }) => {
       dispatch({
         type: REPOSITORY_SET_REPOSITORIES_FAILURE,
         contentId,
-        result,
+        error,
       });
     });
 };

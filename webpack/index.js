@@ -6,8 +6,9 @@
 import componentRegistry from 'foremanReact/components/componentRegistry';
 import { mount } from 'foremanReact/common/MountingService';
 import ExperimentalUi from './containers/Application/index';
-import './redux/reducers';
-import './services/api/setup'; // API Setup
+import './redux';
+// Not currently mocking anything
+// import './services/api/setupMocks';
 
 componentRegistry.register({
   name: 'xui_katello',

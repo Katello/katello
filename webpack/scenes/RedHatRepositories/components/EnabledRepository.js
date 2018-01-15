@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import axios from 'axios';
 import { ListView, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { connect } from 'react-redux';
 
 import { getTypeIcon } from '../../../services/index';
 import { setRepositoryDisabled } from '../../../redux/actions/RedHatRepositories/enabled';
+import api from '../../../services/api';
 
 class EnabledRepository extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class EnabledRepository extends Component {
         productId, contentId, arch, releasever,
       } = this.props;
 
-      const url = `/katello/api/v2/products/${productId}/repository_sets/${contentId}/disable`;
+      const url = `/products/${productId}/repository_sets/${contentId}/disable`;
 
       const data = {
         id: contentId,
@@ -46,8 +46,8 @@ class EnabledRepository extends Component {
         releasever,
       };
 
-      axios
-        .put(url, { data })
+      api
+        .put(url, data)
         .then(this.setDisabled)
         .catch(() => {
           this.setState({ loading: false });
@@ -92,7 +92,7 @@ class EnabledRepository extends Component {
           </ListView.InfoItem>,
         ]}
         heading={__(name)}
-        description={`${arch} ${releasever}`}
+        description={`${arch} ${releasever || ''}`}
         stacked
       />
     );
@@ -106,8 +106,12 @@ EnabledRepository.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   arch: PropTypes.string.isRequired,
-  releasever: PropTypes.string.isRequired,
+  releasever: PropTypes.string,
   setRepositoryDisabled: PropTypes.func.isRequired,
+};
+
+EnabledRepository.defaultProps = {
+  releasever: '',
 };
 
 export default connect(null, { setRepositoryDisabled })(EnabledRepository);

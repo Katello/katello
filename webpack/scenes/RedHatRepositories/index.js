@@ -52,15 +52,23 @@ class RedHatRepositoriesPage extends Component {
             <h2>{__('Available Repositories')}</h2>
 
             <Spinner loading={repositorySets.loading}>
-              <ListView>
-                {repositorySets.results.map(set => <RepositorySet key={set.id} {...set} />)}
-              </ListView>
+              {repositorySets.results.length ? (
+                <ListView>
+                  {repositorySets.results.map(set => <RepositorySet key={set.id} {...set} />)}
+                </ListView>
+              ) : (
+                <p>
+                  No Red Hat products currently exist, please import a manifest{' '}
+                  <a href="/subscriptions/manifest/import">here</a> to receive Red Hat content. No
+                  repository sets available.
+                </p>
+              )}
             </Spinner>
           </Col>
 
           <Col sm={6} className="background-container-gray">
             <h2>{__('Enabled Repositories')}</h2>
-            <Spinner loading={enabledRepositories.loading}>
+            <Spinner loading={enabledRepositories.loading} className="small-spacer">
               <ListView>
                 {enabledRepositories.repositories.length ? null : <p>No repositories enabled.</p>}
                 {enabledRepositories.repositories.map(repo => (

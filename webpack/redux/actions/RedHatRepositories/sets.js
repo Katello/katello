@@ -1,5 +1,4 @@
-import axios from 'axios';
-
+import api, { orgId } from '../../../services/api';
 import {
   REPOSITORY_SETS_REQUEST,
   REPOSITORY_SETS_SUCCESS,
@@ -7,11 +6,13 @@ import {
 } from '../../consts';
 
 // eslint-disable-next-line import/prefer-default-export
-export const loadRepositorySets = () => (dispatch) => {
+export const loadRepositorySets = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: REPOSITORY_SETS_REQUEST });
 
-  axios
-    .get('/organizations/1/repository_sets')
+  const params = { ...{ organization_id: orgId }, ...extendedParams };
+
+  api
+    .get('/repository_sets', {}, params)
     .then(({ data }) => {
       dispatch({
         type: REPOSITORY_SETS_SUCCESS,
