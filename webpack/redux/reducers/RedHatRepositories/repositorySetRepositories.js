@@ -46,8 +46,17 @@ export default (state = initialState, action) => {
       existingRepositorySet = state[action.repository.contentId];
 
       if (existingRepositorySet) {
-        index = existingRepositorySet.repositories.findIndex(({ arch, releasever }) =>
-          arch === action.repository.arch && releasever === action.repository.releasever);
+        index = existingRepositorySet.repositories.findIndex(({ arch, releasever }) => {
+          if (arch !== action.repository.arch) {
+            return false;
+          }
+
+          if (releasever) {
+            return releasever === action.repository.releasever;
+          }
+
+          return true;
+        });
 
         if (index >= 0) {
           return state.setIn([action.repository.contentId, 'repositories', index, 'enabled'], true);
@@ -60,9 +69,17 @@ export default (state = initialState, action) => {
       existingRepositorySet = state[action.repository.contentId];
 
       if (existingRepositorySet) {
-        index = existingRepositorySet.repositories.findIndex(repo =>
-          repo.arch === action.repository.arch &&
-            repo.releasever === action.repository.releasever);
+        index = existingRepositorySet.repositories.findIndex((repo) => {
+          if (repo.arch !== action.repository.arch) {
+            return false;
+          }
+
+          if (repo.releasever) {
+            return repo.releasever === action.repository.releasever;
+          }
+
+          return true;
+        });
 
         if (index >= 0) {
           return state.setIn(
