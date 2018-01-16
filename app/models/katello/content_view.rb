@@ -80,6 +80,10 @@ module Katello
       hosts.count
     end
 
+    def component_ids
+      components.map(&:id)
+    end
+
     def components
       content_view_components.map(&:latest_version).compact.freeze
     end
