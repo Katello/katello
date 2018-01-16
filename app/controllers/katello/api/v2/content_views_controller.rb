@@ -173,7 +173,7 @@ module Katello
                              :system_environment_id,
                              :key_content_view_id,
                              :key_environment_id
-                            ).reject { |_k, v| v.nil? }
+                            ).reject { |_k, v| v.nil? }.to_unsafe_h
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
 
