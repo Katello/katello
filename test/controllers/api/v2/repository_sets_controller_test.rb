@@ -43,6 +43,12 @@ module Katello
       assert_response :success
     end
 
+    def test_index_org_id
+      get :index, params: { :organization_id => @organization.id}
+
+      assert_response :success
+    end
+
     def test_available_repositories
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn do |product, content_id|
         product.must_equal @product

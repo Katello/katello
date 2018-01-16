@@ -76,12 +76,12 @@ module Katello
     private
 
     def default_sort
-      lambda { |relation| relation.joins(:content).order("name asc") }
+      lambda { |relation| relation.joins(:content).order("#{Katello::Content.table_name}.name asc") }
     end
 
     def index_relation
       if @product.nil?
-        relation = @organization.enabled_product_content
+        relation = @organization.product_contents
       else
         relation = @product.displayable_product_contents
       end
