@@ -417,7 +417,7 @@ module Katello
     end
 
     def rhsm_params
-      params.slice(:name, :type, :facts, :installedProducts, :autoheal, :releaseVer, :serviceLevel, :uuid, :capabilities, :guestIds, :lastCheckin)
+      params.slice(:name, :type, :facts, :installedProducts, :autoheal, :releaseVer, :serviceLevel, :uuid, :capabilities, :guestIds, :lastCheckin).to_h
     end
 
     def logger
