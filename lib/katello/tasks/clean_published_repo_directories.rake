@@ -17,7 +17,7 @@ namespace :katello do
     delete = []
     master_directory.each do |directory|
       repo_name = directory.split('/').last
-      (current_cv_directories.include?(repo_name) && yum_distributor_directory.exclude?(repo_name)) ? republish << repo_name : delete << directory
+      (current_cv_directories.include?(repo_name) && yum_distributor_directory.exclude?("#{OLD_DIRECTORY}/yum_distributor/#{repo_name}")) ? republish << repo_name : delete << directory
     end
 
     if republish.empty?
@@ -26,7 +26,7 @@ namespace :katello do
       republish.each do |directory|
         puts "#{directory} is being published to #{OLD_DIRECTORY}/yum_distributor/#{directory}"
         ForemanTasks.sync_task(::Actions::Katello::Repository::MetadataGenerate, Katello::Repository.where(pulp_id: "#{directory}").first)
-        delete << directory
+        delete << "#{OLD_DIRECTORY}/#{directory}"
       end
       puts "All relevant repositories have been republished."
     else
@@ -37,13 +37,13 @@ namespace :katello do
       else
         puts "It will take approximately #{min_time / 60} to #{max_time / 60} hours to finish republishing all relevant repositories"
       end
-      puts "The republishing these repositories will not actually be performed. Rerun with COMMIT=true to republish these repositories."
+      puts "The republishing of these repositories will not actually be performed. Rerun with COMMIT=true to republish these repositories."
     end
 
     if delete.empty?
       puts "There are no directories to delete."
     else
-      open('/tmp/delete_repository_directories.sh', 'w') { |f| f << "rm -rf #{delete.join " \\\n "}" }
+      open('/tmp/delete_repository_directories.sh', 'w') { |f| f << "rm -rf #{delete.join " \\\n "}\n" }
       puts "To clean up the directories, please run the following as root:\n#bash /tmp/delete_repository_directories.sh"
     end
 
