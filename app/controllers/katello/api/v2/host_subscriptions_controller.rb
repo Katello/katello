@@ -74,13 +74,13 @@ module Katello
       host = Katello::Host::SubscriptionFacet.find_or_create_host(@content_view_environment.environment.organization, rhsm_params)
       sync_task(::Actions::Katello::Host::Register, host, rhsm_params, @content_view_environment)
       host.reload
-      ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts].to_unsafe_h) unless rhsm_params[:facts].blank?
+      ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
       respond_for_show(:resource => host, :template => '../../../api/v2/hosts/show')
     end
 
     def params_to_rhsm_params
-      rhsm_params = params.slice(:facts, :uuid, :name)
+      rhsm_params = params.slice(:facts, :uuid, :name).to_unsafe_h
       rhsm_params[:releaseVer] = params['release_version'] if params['release_version']
       rhsm_params[:serviceLevel] = params['service_level'] if params['service_level']
       rhsm_params[:guestIds] = params['hypervisor_guest_uuids'] if params[:hypervisor_guest_uuids]

@@ -173,7 +173,7 @@ module Katello
                              :system_environment_id,
                              :key_content_view_id,
                              :key_environment_id
-                            ).reject { |_k, v| v.nil? }
+                            ).reject { |_k, v| v.nil? }.to_unsafe_h
       options[:content_view_versions] = versions
       options[:content_view_environments] = cv_envs
 
@@ -210,7 +210,7 @@ module Katello
       attrs = [:name, :description, :force_puppet_environment, {:repository_ids => []}, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
       attrs.push(:component_ids, :repository_ids) # For deep_munge; Remove for Rails 5
-      params.require(:content_view).permit(*attrs)
+      params.require(:content_view).permit(*attrs).to_h
     end
 
     def find_environment

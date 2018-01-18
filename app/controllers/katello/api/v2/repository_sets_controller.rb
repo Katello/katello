@@ -114,7 +114,7 @@ module Katello
     end
 
     def substitutions
-      params.slice(:basearch, :releasever)
+      params.permit(:basearch, :releasever).to_h
     end
   end
 end
