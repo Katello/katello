@@ -129,7 +129,7 @@ module Katello
       task = User.as(login) do
         params['owner'] = @organization.label #override owner label if
         params['env'] = nil #hypervisors don't need an environment
-        sync_task(::Actions::Katello::Host::Hypervisors, params.except(:controller, :action, :format))
+        sync_task(::Actions::Katello::Host::Hypervisors, params.except(:controller, :action, :format).to_h)
       end
       render :json => task.output[:results]
     end
@@ -417,7 +417,7 @@ module Katello
     end
 
     def rhsm_params
-      params.slice(:name, :type, :facts, :installedProducts, :autoheal, :releaseVer, :serviceLevel, :uuid, :capabilities, :guestIds, :lastCheckin)
+      params.slice(:name, :type, :facts, :installedProducts, :autoheal, :releaseVer, :serviceLevel, :uuid, :capabilities, :guestIds, :lastCheckin).to_h
     end
 
     def logger

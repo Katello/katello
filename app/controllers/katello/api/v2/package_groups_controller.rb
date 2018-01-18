@@ -38,7 +38,8 @@ module Katello
       params[:user_visible] = ::Foreman::Cast.to_bool(params[:user_visible])
       params[:user_visible] ||= true
 
-      sync_task(::Actions::Katello::Repository::UploadPackageGroup, @repo, params)
+      create_params = params.slice(:name, :description, :user_visible, :mandatory_package_names, :optional_package_names, :conditional_package_names, :default_package_names).to_unsafe_h
+      sync_task(::Actions::Katello::Repository::UploadPackageGroup, @repo, create_params)
       render :json => {:status => "success"}
     end
 

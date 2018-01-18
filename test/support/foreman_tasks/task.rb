@@ -30,11 +30,17 @@ module Support
                     lambda { |*args|  args == args_expected }
                   end
 
+        valid_args = lambda do |*args|
+          msg = "ActionController::Parameters were sent to an action. Please convert to a Hash"
+          fail(msg) if args.any? { |a| a.class == ActionController::Parameters }
+          true
+        end
+
         method = async ? :async_task : :sync_task
         task_stub = build_task_stub
         @controller.
             expects(method).
-            with { |action_class, *args| expected_action_class == action_class && block.call(*args) }.
+            with { |action_class, *args| expected_action_class == action_class && block.call(*args) && valid_args.call(*args) }.
             returns(task_stub)
         return task_stub
       end

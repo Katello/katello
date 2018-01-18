@@ -320,7 +320,7 @@ module Katello
                                                           # For deep_munge; Remove for Rails 5
                                                           :host_collection_ids,
                                                           :content_overrides => [],
-                                                          :host_collection_ids => [])
+                                                          :host_collection_ids => []).to_h
 
       key_params[:environment_id] = params[:environment][:id] if params[:environment].try(:[], :id)
       key_params[:content_view_id] = params[:content_view][:id] if params[:content_view].try(:[], :id)

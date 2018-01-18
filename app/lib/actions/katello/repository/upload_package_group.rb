@@ -5,7 +5,6 @@ module Actions
         def plan(repository, params)
           action_subject(repository)
           unit_key = {"repo_id": repository.pulp_id, "id": params[:name].parameterize.underscore}
-          params = params.slice(:name, :description, :user_visible, :mandatory_package_names, :optional_package_names, :conditional_package_names, :default_package_names)
 
           sequence do
             upload_request = plan_action(Pulp::Repository::CreateUploadRequest)
