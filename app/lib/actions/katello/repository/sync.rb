@@ -15,6 +15,7 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
+        # rubocop:disable MethodLength
         def plan(repo, pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
@@ -40,6 +41,7 @@ module Actions
             contents_changed = skip_metadata_check || output[:contents_changed]
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed, :full_index => skip_metadata_check)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
+            plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
             plan_action(Katello::Repository::CorrectChecksum, repo)
             concurrence do
               plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents
