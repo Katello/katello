@@ -368,7 +368,9 @@ module Katello
         fail HttpErrors::BadRequest, _('No upload param specified. Either uploads or upload_ids (deprecated) is required.')
       end
 
-      uploads = params['uploads'] || []
+      uploads = (params[:uploads] || []).map do |upload|
+        upload.permit(:id, :size, :checksum, :name).to_h
+      end
 
       if params.key?(:upload_ids)
         ::Foreman::Deprecation.api_deprecation_warning("The parameter upload_ids will be removed in Katello 3.3. Please update to use the uploads parameter.")
@@ -438,7 +440,7 @@ module Katello
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
       end
-      params.require(:repository).permit(*keys)
+      params.require(:repository).permit(*keys).to_h
     end
 
     def error_on_rh_product
