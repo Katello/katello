@@ -18,6 +18,7 @@ module Actions
           ["'#{input['smart_proxy']['name']}'"] + super
         end
 
+        # rubocop:disable MethodLength
         def plan(smart_proxy, options = {})
           action_subject(smart_proxy)
           capsule_content = ::Katello::CapsuleContent.new(smart_proxy)
@@ -72,6 +73,13 @@ module Actions
                               repo,
                               capsule_id: capsule_content.capsule.id,
                               force: true)
+                end
+                if repo.is_a?(::Katello::Repository) &&
+                   repo.distribution_bootable? &&
+                   repo.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+                  plan_action(Katello::Repository::FetchPxeFiles,
+                              id: repo.id,
+                              capsule_id: capsule_content.capsule.id)
                 end
               end
             end
