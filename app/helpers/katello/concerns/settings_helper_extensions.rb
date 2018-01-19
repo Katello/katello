@@ -4,6 +4,7 @@ module Katello
       extend ActiveSupport::Concern
 
       module Overrides
+        # rubocop:disable MethodLength
         def value(setting)
           return super(setting) unless [
             'default_download_policy',
@@ -12,6 +13,8 @@ module Katello
             'katello_default_provision',
             'katello_default_ptable',
             'katello_default_PXELinux',
+            'katello_default_PXEGrub',
+            'katello_default_PXEGrub2',
             'katello_default_user_data',
             'katello_default_kexec',
             'katello_default_atomic_provision'
@@ -30,6 +33,10 @@ module Katello
             edit_select(setting, :value, :select_values => Hash[Template.all.where(:type => "Ptable").map { |tmp| [tmp[:name], tmp[:name]] }].to_json)
           when "katello_default_PXELinux"
             edit_select(setting, :value, :select_values => katello_template_setting_values("PXELinux"))
+          when "katello_default_PXEGrub"
+            edit_select(setting, :value, :select_values => katello_template_setting_values("PXEGrub"))
+          when "katello_default_PXEGrub2"
+            edit_select(setting, :value, :select_values => katello_template_setting_values("PXEGrub2"))
           when "katello_default_user_data"
             edit_select(setting, :value, :select_values => katello_template_setting_values("user_data"))
           when "katello_default_kexec"
