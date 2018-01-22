@@ -60,7 +60,7 @@ module Katello
     end
 
     def self.group_by_repoid(puppet_modules)
-      puppet_modules.flatten.each_with_object({}) do |puppet_module, result|
+      puppet_modules.each_with_object({}) do |puppet_module, result|
         repo = puppet_module.repositories.first
 
         if repo
