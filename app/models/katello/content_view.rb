@@ -523,7 +523,7 @@ module Katello
         end
       end
 
-      puppet_modules = PuppetModule.where(:uuid => uuids) if uuids.present?
+      puppet_modules = PuppetModule.where(:uuid => uuids).to_a if uuids.present?
 
       if names_and_authors.present?
         names_and_authors.each do |name_and_author|
@@ -537,7 +537,7 @@ module Katello
       end
 
       # In order to minimize the number of copy requests, organize the data by repoid.
-      PuppetModule.group_by_repoid(puppet_modules)
+      PuppetModule.group_by_repoid(puppet_modules.flatten)
     end
 
     def check_ready_to_publish!
