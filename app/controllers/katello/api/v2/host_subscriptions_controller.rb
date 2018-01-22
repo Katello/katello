@@ -88,7 +88,7 @@ module Katello
       rhsm_params[:facts] ||= {}
       rhsm_params[:facts]['network.hostname'] ||= rhsm_params[:name]
 
-      if params['installed_products']
+      if params['installed_products'] #convert api installed_product to candlepin params
         rhsm_params[:installedProducts] = params['installed_products'].map do |product|
           product_params = { :productId => product['product_id'], :productName => product['product_name'] }
           product_params[:arch] = product['arch'] if product['arch']

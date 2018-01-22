@@ -38,6 +38,7 @@ module Actions
         if subscription_facet && sub_status
           @logger.debug "re-indexing content host #{subscription_facet.host.name}"
           subscription_facet.update_subscription_status(sub_status)
+          subscription_facet.update_compliance_reasons(message_handler.consumer_reasons)
         elsif subscription_facet.nil?
           @logger.debug "skip re-indexing of non-existent content host #{uuid}"
         elsif sub_status.nil?

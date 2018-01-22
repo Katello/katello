@@ -1,25 +1,21 @@
-child :subscription_facet => :subscription_facet_attributes do |facet|
+child :subscription_facet => :subscription_facet_attributes do |_facet|
   extends 'katello/api/v2/subscription_facet/base'
-  consumer = Katello::Candlepin::Consumer.new(facet.uuid, facet.host.organization.label)
 
-  node :compliance_reasons do
-    consumer.compliance_reasons
+  node :compliance_reasons do |sub_facet|
+    sub_facet.compliance_reasons.pluck(:reason)
   end
 
-  node :virtual_host do |_subscription_facet|
-    if (host = consumer.virtual_host)
-      {:name => host.name, :id => host.id}
-    end
+  child :hypervisor_host => :virtual_host do
+    attributes :id, :name
   end
 
-  node :virtual_guests do |_subscription_facet|
-    consumer.virtual_guests.map do |guest|
-      {:name => guest.name, :id => guest.id}
-    end
+  child :virtual_guests => :virtual_guests do
+    attributes :id, :name
   end
 
-  node :installed_products do
-    consumer.installed_products
+  child :installed_products => :installed_products do
+    attributes :name => :productName, :cp_product_id => :productId
+    attributes :arch, :version
   end
 
   child :activation_keys => :activation_keys do

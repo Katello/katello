@@ -82,6 +82,31 @@ module Katello
       assert_equal '7Server', subscription_facet.release_version
     end
 
+    def test_update_installed_products
+      assert_empty subscription_facet.installed_products
+      subscription_facet.update_installed_products([{
+                                                     :arch => 'x86_64',
+                                                     :version => '77.7',
+                                                     :productName => 'super great enterprise os/2',
+                                                     :productId => '108' }])
+      refute_empty subscription_facet.installed_products
+    end
+
+    def test_update_compliance_reasons
+      reason_one = {'message' => 'b', 'attributes' => {'name' => 'a'}}
+      reason_two = {'message' => 'd', 'attributes' => {'name' => 'c'}}
+      assert_empty subscription_facet.compliance_reasons.pluck(:reason)
+
+      subscription_facet.update_compliance_reasons([reason_one])
+      assert_equal ['a: b'], subscription_facet.compliance_reasons.pluck(:reason)
+
+      subscription_facet.update_compliance_reasons([reason_one, reason_two])
+      assert_equal ['a: b', 'c: d'].sort, subscription_facet.compliance_reasons.pluck(:reason).sort
+
+      subscription_facet.update_compliance_reasons([reason_two])
+      assert_equal ['c: d'], subscription_facet.compliance_reasons.pluck(:reason)
+    end
+
     def test_candlepin_environment_id
       assert_equal subscription_facet.candlepin_environment_id, ContentViewEnvironment.where(:content_view_id => view, :environment_id => library).first.cp_id
     end
