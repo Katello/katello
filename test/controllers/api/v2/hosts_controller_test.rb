@@ -17,19 +17,14 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
 
-    Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
-    Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
-
     get :show, params: { :id => host.id }
     assert_response :success
   end
 
   def host_show(host, smart_proxy)
-    Katello::Candlepin::Consumer.any_instance.stubs(:compliance_reasons).returns([])
-    Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
-
     get :show, params: { :id => host.id }
     response = ActiveSupport::JSON.decode(@response.body)
+
     assert_equal smart_proxy.id, response["content_facet_attributes"]["content_source_id"]
     assert_response :success
   end

@@ -64,7 +64,7 @@ module Actions
           User.as_anonymous_admin do
             host = ::Host.find(input[:host_id])
             host.subscription_facet.update_from_consumer_attributes(host.subscription_facet.candlepin_consumer.
-                consumer_attributes.except(:installedProducts, :guestIds, :facts))
+                consumer_attributes.except(:guestIds, :facts))
             host.subscription_facet.save!
             host.subscription_facet.update_subscription_status
             host.content_facet.update_errata_status
@@ -114,7 +114,7 @@ module Actions
         def plan_subscription_facet(host, activation_keys, consumer_params)
           subscription_facet = host.subscription_facet || ::Katello::Host::SubscriptionFacet.new(:host => host)
           subscription_facet.last_checkin = Time.now
-          subscription_facet.update_from_consumer_attributes(consumer_params.except(:installedProducts, :guestIds, :facts))
+          subscription_facet.update_from_consumer_attributes(consumer_params.except(:guestIds, :facts))
           subscription_facet.save!
           subscription_facet.activation_keys = activation_keys
           subscription_facet

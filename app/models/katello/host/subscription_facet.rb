@@ -12,15 +12,20 @@ module Katello
 
       has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :destroy, :inverse_of => :subscription_facet
       has_many :pools, :through => :subscription_facet_pools, :class_name => "Katello::Pool"
+
+      has_many :subscription_facet_installed_products, :class_name => "Katello::SubscriptionFacetInstalledProduct", :dependent => :destroy, :inverse_of => :subscription_facet
+      has_many :installed_products, :through => :subscription_facet_installed_products, :class_name => "Katello::InstalledProduct"
+
+      has_many :compliance_reasons, :class_name => "Katello::ComplianceReason", :dependent => :destroy, :inverse_of => :subscription_facet
+
       validates :host, :presence => true, :allow_blank => false
 
       DEFAULT_TYPE = 'system'.freeze
 
-      attr_accessor :installed_products, :facts, :hypervisor_guest_uuids
+      attr_accessor :facts
 
       def update_from_consumer_attributes(consumer_params)
         import_database_attributes(consumer_params)
-        self.installed_products = consumer_params['installedProducts'] unless consumer_params['installedProducts'].blank?
         self.hypervisor_guest_uuids = consumer_params['guestIds'] unless consumer_params['hypervisor_guest_uuids'].blank?
         self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
       end
@@ -33,12 +38,37 @@ module Katello
         self.service_level = consumer_params['serviceLevel'] unless consumer_params['serviceLevel'].nil?
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
+        self.update_installed_products(consumer_params['installedProducts']) if consumer_params.key?('installedProducts')
 
         unless consumer_params['releaseVer'].blank?
           release = consumer_params['releaseVer']
           release = release['releaseVer'] if release.is_a?(Hash)
           self.release_version = release
         end
+      end
+
+      def update_installed_products(consumer_installed_product_list)
+        self.installed_products = consumer_installed_product_list.map do |consumer_installed_product|
+          InstalledProduct.find_or_create_from_consumer(consumer_installed_product)
+        end
+      end
+
+      def update_compliance_reasons(reasons)
+        reasons = Katello::Candlepin::Consumer.friendly_compliance_reasons(reasons)
+
+        existing = self.compliance_reasons.pluck(:reason)
+        to_delete = existing - reasons
+        to_create = reasons - existing
+        self.compliance_reasons.where(:reason => to_delete).destroy_all if to_delete.any?
+        to_create.each { |reason| self.compliance_reasons.create(:reason => reason) }
+      end
+
+      def virtual_guests
+        ::Host.joins(:subscription_facet).where("#{self.class.table_name}.hypervisor_host_id" => self.host_id)
+      end
+
+      def virtual_guest_uuids
+        virtual_guests.pluck("#{Katello::Host::SubscriptionFacet.table_name}.uuid")
       end
 
       def update_hypervisor(consumer_params = candlepin_consumer.consumer_attributes)
@@ -82,21 +112,11 @@ module Katello
           :autoheal => autoheal,
           :serviceLevel => service_level,
           :releaseVer => release_version,
-          :environment => {:id => self.candlepin_environment_id}
+          :environment => {:id => self.candlepin_environment_id},
+          :installedProducts => self.installed_products.map(&:consumer_attributes),
+          :guestIds => virtual_guest_uuids
         }
         attrs[:facts] = facts if facts
-        attrs[:guestIds] = hypervisor_guest_uuids if hypervisor_guest_uuids
-        if installed_products
-          attrs[:installedProducts] = installed_products.collect do |installed_product|
-            product = {
-              :productName => installed_product[:product_name],
-              :productId => installed_product[:product_id]
-            }
-            product[:arch] = installed_product[:arch] if installed_product[:arch]
-            product[:version] = installed_product[:version] if installed_product[:version]
-            product
-          end
-        end
         HashWithIndifferentAccess.new(attrs)
       end
 
@@ -212,8 +232,6 @@ module Katello
       end
 
       def backend_update_needed?
-        return true if self.installed_products || self.hypervisor_guest_uuids
-
         %w(release_version service_level autoheal).each do |method|
           return true if self.send("#{method}_changed?")
         end

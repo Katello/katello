@@ -39,12 +39,19 @@ module Katello
         end
       end
 
-      def consumer_uuid
+      def entity
         entity = self.new_entity || self.old_entity
         if entity
-          parsed = JSON.parse(entity)
-          parsed['consumer']['uuid']
+          JSON.parse(entity)
         end
+      end
+
+      def consumer_reasons
+        entity['status']['reasons']
+      end
+
+      def consumer_uuid
+        entity['consumer']['uuid'] if entity
       end
 
       def subscription_facet

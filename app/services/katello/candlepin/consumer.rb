@@ -117,7 +117,11 @@ module Katello
       end
 
       def compliance_reasons
-        Resources::Candlepin::Consumer.compliance(uuid)['reasons'].map do |reason|
+        self.class.friendly_compliance_reasons(Resources::Candlepin::Consumer.compliance(uuid)['reasons'])
+      end
+
+      def self.friendly_compliance_reasons(candlepin_reasons)
+        candlepin_reasons.map do |reason|
           "#{reason['attributes']['name']}: #{reason['message']}"
         end
       end
