@@ -2,8 +2,6 @@ module Katello
   module Authorization::Repository
     extend ActiveSupport::Concern
 
-    include Authorizable
-
     delegate :editable?, to: :product
 
     def deletable?
