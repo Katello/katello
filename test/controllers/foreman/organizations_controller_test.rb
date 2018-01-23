@@ -26,7 +26,7 @@ class OrganizationsControllerTest < ActionController::TestCase
 
     org = Organization.find_by(:name => name)
     assert org
-    assert_redirected_to edit_organization_path(:id => org.to_param)
+    assert_redirected_to step2_organization_path(:id => org.to_param)
     assert_equal session[:organization_id], org.id
   end
 end

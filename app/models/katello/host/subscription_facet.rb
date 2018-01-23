@@ -202,7 +202,7 @@ module Katello
 
       def self.find_host(facts, organization)
         host_name = propose_existing_hostname(facts)
-        hosts = ::Host.where(:name => host_name)
+        hosts = ::Host.unscoped.where(:name => host_name)
 
         return nil if hosts.empty? #no host exists
         if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
