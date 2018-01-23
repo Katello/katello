@@ -45,5 +45,19 @@ module Actions
                                 :source_repository => archive_repo,
                                 :matching_content => nil)
     end
+
+    it 'plans to clone the metadata if unprotected changed' do
+      action = create_action(action_class)
+      environment_repo.update_attributes!(:unprotected => !environment_repo.unprotected)
+      plan_action(action, archive_repo, environment_repo)
+
+      refute_action_planed(action, Katello::Repository::CheckMatchingContent)
+
+      assert_action_planed_with(action, Katello::Repository::IndexContent, :id => environment_repo.id)
+
+      assert_action_planed_with(action, Katello::Repository::MetadataGenerate, environment_repo,
+                                :source_repository => archive_repo,
+                                :matching_content => nil)
+    end
   end
 end
