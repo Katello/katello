@@ -2,6 +2,7 @@ require 'time'
 
 module Katello
   class SyncPlan < Katello::Model
+    audited :associations => [:products]
     include Glue
     include Katello::Authorization::SyncPlan
     include ForemanTasks::Concerns::ActionSubject

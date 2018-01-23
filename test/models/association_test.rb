@@ -75,17 +75,19 @@ module Katello
           conditioned = association.options.key? :conditions
           describe "has_(many|one): #{association.name.inspect} #{'with conditions' if conditioned}" do
             it("#{conditioned ? 'has' : 'has not'} :dependent option") do
-              assert(association.options.key?(:dependent) != conditioned,
-                     if conditioned
-                       'conditioned association is not responsible for :dependent objects'
-                     else
-                       'without the :dependent option this will lead to FK errors'
-                     end + source_code_location(model, association))
+              unless association.class_name.start_with?('Audited::Audit')
+                assert(association.options.key?(:dependent) != conditioned,
+                       if conditioned
+                         'conditioned association is not responsible for :dependent objects'
+                       else
+                         'without the :dependent option this will lead to FK errors'
+                       end + source_code_location(model, association))
+              end
             end
 
             it('is using correct foreign_key') do
               class_name = association.class_name
-              unless %w(:: Katello User Organization Docker).any? { |word| class_name.start_with?(word) }
+              unless %w(:: Katello User Organization Docker Audited::Audit).any? { |word| class_name.start_with?(word) }
                 class_name = "Katello::" + association.class_name
               end
               other_model = class_name.constantize

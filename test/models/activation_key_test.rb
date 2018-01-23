@@ -78,6 +78,24 @@ module Katello
       assert @dev_key.pools.count > 0
     end
 
+    test "audit creation on activation key" do
+      org = Organization.find(taxonomies(:organization2).id)
+      new_key = ActivationKey.new(:name => "ActKeyAudit", :organization => org)
+      assert_difference 'new_key.audits.count' do
+        new_key.save!
+      end
+    end
+
+    test "audit creation on activation key deletion" do
+      org = Organization.find(taxonomies(:organization2).id)
+      new_key_to_delete = ActivationKey.new(:name => "ActKeyToDelete", :organization => org)
+      new_key_to_delete.save!
+
+      assert_difference 'Audit.count' do
+        new_key_to_delete.destroy
+      end
+    end
+
     def test_search_name
       activation_keys = ActivationKey.search_for("name = \"#{@dev_staging_view_key.name}\"")
       assert_includes activation_keys, @dev_staging_view_key

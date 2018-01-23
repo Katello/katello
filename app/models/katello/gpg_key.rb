@@ -1,5 +1,7 @@
 module Katello
   class GpgKey < Katello::Model
+    audited :associations => [:products]
+
     include Katello::Authorization::GpgKey
     MAX_CONTENT_LINE_LENGTH = 65
 
@@ -52,6 +54,10 @@ module Katello
 
     def self.humanize_class_name(_name = nil)
       _("GPG Keys")
+    end
+
+    def to_label
+      "content credential (#{content_type} - #{name})"
     end
   end
 end
