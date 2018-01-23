@@ -10,6 +10,7 @@ module Katello
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:basic_subscription) { katello_subscriptions(:basic_subscription) }
     let(:host_one) { hosts(:one) }
+    let(:host_without_org) { hosts(:without_organization) }
     let(:host) do
       FactoryGirl.create(:host, :with_content, :with_subscription, :content_view => view,
                                      :lifecycle_environment => library, :organization => org)
@@ -108,6 +109,9 @@ module Katello
       org2 = taxonomies(:organization2)
       assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name}, host.organization)
       assert_equal host, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, host.organization)
+      Organization.current = org # simulate user setting default org
+      assert_equal host_without_org, Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host_without_org.name.upcase}, org)
+      Organization.current = nil
       assert_nil Host::SubscriptionFacet.find_host({'network.hostname' => "the hostest with the mostest"}, host.organization)
       assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, org2) }
     end
