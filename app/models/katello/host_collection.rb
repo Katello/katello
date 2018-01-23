@@ -1,5 +1,6 @@
 module Katello
   class HostCollection < Katello::Model
+    audited
     include Katello::Authorization::HostCollection
 
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy

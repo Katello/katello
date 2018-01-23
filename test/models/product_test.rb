@@ -171,5 +171,13 @@ module Katello
 
       assert_equal fedora_content, product.available_content
     end
+
+    def test_audit_on_product_update
+      new_product = katello_products(:fedora)
+      new_product.name = 'Audit this product'
+      assert_difference 'new_product.audits.count' do
+        new_product.save!
+      end
+    end
   end
 end

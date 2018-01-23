@@ -1,5 +1,6 @@
 module Katello
   class ActivationKey < Katello::Model
+    audited :except => [:cp_id]
     include Glue::Candlepin::ActivationKey if SETTINGS[:katello][:use_cp]
     include Glue if SETTINGS[:katello][:use_cp]
     include Katello::Authorization::ActivationKey

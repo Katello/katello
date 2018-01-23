@@ -5,6 +5,7 @@ module Katello
     def setup
       @organization = get_organization
       @plan = SyncPlan.new(:name => 'Norman Rockwell', :organization => @organization, :sync_date => Time.now, :interval => 'daily')
+      @plan_to_audit = SyncPlan.new(:name => 'Test Prod Sync', :organization => @organization, :sync_date => Time.now, :interval => 'daily')
     end
 
     def test_invalid_intervals
@@ -160,6 +161,20 @@ module Katello
       @plan.products << product
       refute(@plan.valid?, "Plan must be invalid")
       assert(@plan.errors.full_messages.include?("Can not add product #{product.name} because it is disabled."), "Validation should give proper error message")
+    end
+
+    def test_audit_creation_on_new_sync_plan
+      assert_difference '@plan_to_audit.audits.count' do
+        @plan_to_audit.save!
+      end
+    end
+
+    def test_product_associated_audits
+      product = katello_products(:redhat)
+      @plan_to_audit.products << product
+      assert_difference '@plan_to_audit.audits.count' do
+        @plan_to_audit.save!
+      end
     end
   end
 end

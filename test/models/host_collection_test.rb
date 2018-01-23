@@ -17,5 +17,15 @@ module Katello
       assert_equal HostCollection.search_for("host = \"#{@host_one.name}\""), [@simple_collection]
       assert_equal HostCollection.search_for("host = \"#{@host_two.name}\""), []
     end
+
+    def test_audit_on_host_collection_creation
+      new_host_collection = HostCollection.new(
+        :name => "Test Audit Host Collection ",
+        :description => 'check audit records',
+        :organization_id => Organization.first.id)
+      assert_difference 'new_host_collection.audits.count' do
+        new_host_collection.save!
+      end
+    end
   end
 end

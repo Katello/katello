@@ -8,8 +8,10 @@ module Actions
 
         def run
           organization = ::Organization.find(input[:organization_id])
-          User.as_anonymous_admin do
-            organization.redhat_provider.import_products_from_cp
+          ::Katello::Product.without_auditing do
+            User.as_anonymous_admin do
+              organization.redhat_provider.import_products_from_cp
+            end
           end
         end
       end
