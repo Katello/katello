@@ -39,20 +39,23 @@ module Katello
       @repo.content_type = 'docker'
       @repo.download_policy = nil
       @repo.docker_upstream_name = ""
+      @repo.url = nil
+      assert @repo.valid?
       @repo.url = ""
       refute @repo.valid?
       @repo.url = "http://registry.com"
       refute @repo.valid?
       @repo.docker_upstream_name = "justin"
       assert @repo.valid?
-      @repo.url = ""
-      refute @repo.valid?
+      @repo.url = nil
+      @repo.docker_upstream_name = ""
+      assert @repo.valid?
       @repo.url = "htp://boo.com"
       #bad url
       refute @repo.valid?
       @repo.url = nil
       @repo.docker_upstream_name = nil
-      refute @repo.valid?
+      assert @repo.valid?
     end
 
     def test_docker_repository_in_content_view
