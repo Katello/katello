@@ -68,18 +68,7 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
         };
 
         $scope.save = function (rule, filter) {
-            var params;
-
-            // Remove any hours from the dates
-            if (rule['start_date']) {
-                rule['start_date'].setHours(0, 0, 0, 0);
-            }
-
-            if (rule['end_date']) {
-                rule['end_date'].setHours(0, 0, 0, 0);
-            }
-
-            params = {filterId: filter.id, ruleId: rule.id};
+            var params = {filterId: filter.id, ruleId: rule.id};
             rule.$update(params, success, failure);
             $scope.filter.rules[0] = rule;
         };
