@@ -48,8 +48,7 @@
         <input id="url"
                name="url"
                ng-model="repository.url"
-               type="text"
-               ng-required="repository.content_type === 'docker'"/>
+               type="text"/>
         <p class="help-block" ng-show="repository.content_type === 'docker'" translate>
           URL of the registry you want to sync. Example: https://registry-1.docker.io/
         </p>
@@ -107,8 +106,7 @@
         <input id="docker_upstream_name"
                name="docker_upstream_name"
                ng-model="repository.docker_upstream_name"
-               type="text"
-               ng-required="repository.content_type === 'docker'"/>
+               type="text"/>
         <p class="help-block" translate>
           Name of the upstream repository you want to sync. Example: 'busybox' or 'fedora/ssh'.
         </p>
