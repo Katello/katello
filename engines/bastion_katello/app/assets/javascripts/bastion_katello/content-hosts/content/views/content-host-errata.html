@@ -31,6 +31,14 @@
     </p>
   </div>
 
+  <form id="errataActionForm" method="post" action="/katello/remote_execution">
+    <input type="hidden" name="remote_action" value="errata_install"/>
+    <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
+    <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
+    <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
+    <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
+  </form>
+
   <div data-extend-template="layouts/partials/table.html">
     <span data-block="search-filter" bst-feature-flag="remote_actions">
       <label class="sr-only" translate>
@@ -43,14 +51,6 @@
               ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'">
       </select>
     </span>
-
-    <form id="errataActionForm" method="post" action="/katello/remote_execution">
-      <input type="hidden" name="remote_action" value="errata_install"/>
-      <input type="hidden" name="name" ng-value="errataActionFormValues.errata"/>
-      <input type="hidden" name="host_ids" ng-value="errataActionFormValues.hostIds"/>
-      <input type="hidden" name="customize" ng-value="errataActionFormValues.customize"/>
-      <input type="hidden" name="authenticity_token" ng-value="errataActionFormValues.authenticityToken"/>
-    </form>
 
     <span data-block="list-actions" ng-hide="contentHost.readonly">
       <div bst-modal="applySelected()" model="host">
