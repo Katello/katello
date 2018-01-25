@@ -362,7 +362,8 @@ module Katello
       param 'id', String, :required => true
       param 'size', String
       param 'checksum', String
-      param 'name', String, :desc => N_("Needs to only be set for file repositories")
+      param 'name', String, :desc => N_("Needs to only be set for file repositories or docker tags")
+      param 'digest', String, :desc => N_("Needs to only be set for docker tags")
     end
     def import_uploads
       generate_metadata = ::Foreman::Cast.to_bool(params.fetch(:publish_repository, true))
@@ -373,7 +374,7 @@ module Katello
       end
 
       uploads = (params[:uploads] || []).map do |upload|
-        upload.permit(:id, :size, :checksum, :name).to_h
+        upload.permit(:id, :size, :checksum, :name, :digest).to_h
       end
 
       if params.key?(:upload_ids)
@@ -383,16 +384,18 @@ module Katello
 
       upload_ids = uploads.map { |upload| upload['id'] }
       unit_keys = uploads.map do |upload|
-        if @repository.file?
+        if @repository.file? || @repository.docker?
           upload.except('id')
         else
           upload.except('id').except('name')
         end
       end
 
+      unit_type_id = unit_keys[0] && unit_keys[0].include?('digest') ? 'docker_tag' : @repository.unit_type_id
+
       begin
         task = send(async ? :async_task : :sync_task, ::Actions::Katello::Repository::ImportUpload,
-                    @repository, upload_ids, :unit_keys => unit_keys,
+                    @repository, upload_ids, :unit_type_id => unit_type_id, :unit_keys => unit_keys,
                     :generate_metadata => generate_metadata, :sync_capsule => sync_capsule)
         respond_for_async(resource: task)
       rescue => e

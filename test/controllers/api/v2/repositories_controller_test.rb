@@ -17,6 +17,7 @@ module Katello
       @content_view_version = katello_content_view_versions(:library_view_version_1)
       @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
       @puppet_repo = katello_repositories(:p_forge)
+      @docker_repo = katello_repositories(:busybox)
     end
 
     def permissions
@@ -887,7 +888,8 @@ module Katello
     def test_import_upload_ids
       uploads = [{'id' => '1'}]
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads.map { |u| u['id'] },
+        .with(::Actions::Katello::Repository::ImportUpload, @repository,
+              uploads.map { |u| u['id'] }, unit_type_id: 'rpm',
               unit_keys: uploads.map { |u| u.except('id') }, generate_metadata: false,
               sync_capsule: false)
         .returns(build_task_stub)
@@ -900,7 +902,8 @@ module Katello
     def test_two_import_upload_ids
       uploads = [{'id' => '1'}, {'id' => '2'}]
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads.map { |u| u['id'] },
+        .with(::Actions::Katello::Repository::ImportUpload, @repository,
+              uploads.map { |u| u['id'] }, unit_type_id: 'rpm',
               unit_keys: uploads.map { |u| u.except('id') }, generate_metadata: false,
               sync_capsule: false)
         .returns(build_task_stub)
@@ -916,7 +919,8 @@ module Katello
       # this is yum repo. So unit keys should except name
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, @repository,
-              uploads.map { |u| u['id'] }, unit_keys: uploads.map { |u| u.except('id').except('name') },
+              uploads.map { |u| u['id'] }, unit_type_id: 'rpm',
+              unit_keys: uploads.map { |u| u.except('id').except('name') },
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
@@ -932,11 +936,44 @@ module Katello
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
       @controller.expects(:sync_task)
         .with(::Actions::Katello::Repository::ImportUpload, file_repo,
-              uploads.map { |u| u['id'] }, unit_keys: uploads.map { |u| u.except('id') },
+              uploads.map { |u| u['id'] }, unit_type_id: 'iso',
+              unit_keys: uploads.map { |u| u.except('id') },
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
       put :import_uploads, params: { id: file_repo, uploads: uploads }
+
+      assert_response :success
+    end
+
+    def test_import_uploads_docker_manifest
+      # make sure name does not get ignored for docker repos
+      # this is docker repo. So unit keys should accept name
+      uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+      @controller.expects(:sync_task)
+        .with(::Actions::Katello::Repository::ImportUpload, @docker_repo,
+              uploads.map { |u| u['id'] }, unit_type_id: 'docker_manifest',
+              unit_keys: uploads.map { |u| u.except('id') },
+              generate_metadata: true, sync_capsule: true)
+        .returns(build_task_stub)
+
+      put :import_uploads, params: { id: @docker_repo.id, uploads: uploads }
+
+      assert_response :success
+    end
+
+    def test_import_uploads_docker_tag
+      uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test', 'digest' => 'sha256:1234'}]
+      # make sure name is not ignored for docker repos
+      # this is docker repo so unit keys should acccept name
+      @controller.expects(:sync_task)
+        .with(::Actions::Katello::Repository::ImportUpload, @docker_repo,
+              uploads.map { |u| u['id'] }, unit_type_id: 'docker_tag',
+              unit_keys: uploads.map { |u| u.except('id') },
+              generate_metadata: true, sync_capsule: true)
+        .returns(build_task_stub)
+
+      put :import_uploads, params: { id: @docker_repo.id, uploads: uploads }
 
       assert_response :success
     end
