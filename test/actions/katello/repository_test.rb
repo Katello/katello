@@ -253,6 +253,48 @@ module ::Actions::Katello::Repository
     end
   end
 
+  class UploadDockerTest < TestBase
+    let(:action_class) { ::Actions::Katello::Repository::ImportUpload }
+
+    it 'plans' do
+      action.expects(:action_subject).with(docker_repository)
+
+      uploads = [{'id' => 1, 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+
+      plan_action action, docker_repository,
+              uploads.map { |u| u['id'] }, unit_type_id: 'docker_manifest',
+              unit_keys: uploads.map { |u| u.except('id') },
+              generate_metadata: true, sync_capsule: true
+
+      assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
+                                 pulp_id: docker_repository.pulp_id,
+                                 unit_type_id: 'docker_manifest',
+                                 unit_key: {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'},
+                                 upload_id: 1, unit_metadata: nil
+                                )
+    end
+
+    it 'plans' do
+      action.expects(:action_subject).with(docker_repository)
+
+      uploads = [{'id' => 1, 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+
+      unit_keys = uploads.map { |u| u.except('id') }
+
+      plan_action action, docker_repository,
+              uploads.map { |u| u['id'] }, unit_type_id: 'docker_tag',
+              unit_keys: unit_keys,
+              generate_metadata: true, sync_capsule: true
+
+      assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
+                                 pulp_id: docker_repository.pulp_id,
+                                 unit_type_id: 'docker_tag',
+                                 unit_key: {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'},
+                                 upload_id: 1, unit_metadata: unit_keys[0]
+                                )
+    end
+  end
+
   class FinishUploadTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::FinishUpload }
 

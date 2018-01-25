@@ -17,6 +17,8 @@ module Actions
             ::Katello::PuppetModule.import_for_repository(repo)
           elsif repo.docker?
             ::Katello::DockerManifest.import_for_repository(repo)
+            ::Katello::DockerTag.import_for_repository(repo)
+            ::Katello::DockerManifestList.import_for_repository(repo)
           elsif repo.file?
             ::Katello::FileUnit.import_for_repository(repo)
           elsif repo.deb?

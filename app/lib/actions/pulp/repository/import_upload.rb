@@ -11,11 +11,11 @@ module Actions
         end
 
         def invoke_external_task
-          pulp_resources.content.import_into_repo(input[:pulp_id],
+          output[:pulp_tasks] = [pulp_resources.content.import_into_repo(input[:pulp_id],
                                                    input[:unit_type_id],
                                                    input[:upload_id],
                                                    input[:unit_key],
-                                                   unit_metadata: input[:unit_metadata] || {})
+                                                   unit_metadata: input[:unit_metadata] || {})]
         end
       end
     end
