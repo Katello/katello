@@ -170,9 +170,11 @@ module Actions
         end
 
         def iso_distributor
-          Runcible::Models::IsoDistributor.new(true, true).tap do |dist|
-            dist.auto_publish = true
-          end
+          options = { auto_publish: true }
+          Runcible::Models::IsoDistributor.new(input[:path],
+                                               input[:unprotected] || true,
+                                               true,
+                                               options)
         end
 
         def puppet_distributor
