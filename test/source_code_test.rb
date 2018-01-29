@@ -21,7 +21,7 @@ class SourceCodeTest < ActiveSupport::TestCase
     # @param [Array<Regexp>] ignores
     def initialize(pattern, *ignores)
       @pattern = pattern || fail
-      root     = File.expand_path File.join(File.dirname(__FILE__), '..')
+      root     = File.expand_path File.join(File.dirname(__FILE__), '../katello')
       @files   = Dir.glob("#{root}/#{pattern}").select { |path| ignores.all? { |i| path !~ i } }
       self.assertions = 0
     end
