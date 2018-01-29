@@ -184,7 +184,7 @@
       </div>
     </div>
 
-    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet' || repository.content_type === 'deb'">
+    <div ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet' || repository.content_type === 'deb' || repository.content_type === 'file'">
       <h4 ng-show="repository.content_type !== undefined" translate> Published Repository Information </h4>
 
       <div bst-form-group label="{{ 'Checksum' | translate }}" ng-show="repository.content_type === 'yum'">

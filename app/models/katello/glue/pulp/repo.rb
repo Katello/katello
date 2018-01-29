@@ -288,8 +288,7 @@ module Katello
           distributors = [yum_dist, export_dist]
           distributors << clone_dist if capsule.default_capsule?
         when Repository::FILE_TYPE
-          dist = Runcible::Models::IsoDistributor.new(true, true)
-          dist.auto_publish = true
+          dist = Runcible::Models::IsoDistributor.new(self.relative_path, self.unprotected, true, auto_publish: true)
           distributors = [dist]
         when Repository::PUPPET_TYPE
           capsule ||= SmartProxy.default_capsule!
@@ -765,7 +764,7 @@ module Katello
       if docker?
         "#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}/#{container_repository_name}"
       elsif file?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{pulp_id}/"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/isos/#{relative_path}/"
       elsif puppet?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/puppet/#{pulp_id}/"
       elsif ostree?
