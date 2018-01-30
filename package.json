@@ -1,0 +1,69 @@
+{
+  "name": "katello",
+  "version": "1.0.0",
+  "scripts": {
+    "storybook": "start-storybook -p 6007",
+    "storybook:deploy": "storybook-to-ghpages",
+    "test": "jest webpack",
+    "test:watch": "jest webpack --watchAll",
+    "test:current": "jest webpack --watch",
+    "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js'",
+    "build": "npm run format && npm run lint",
+    "lint": "eslint --fix webpack/ || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katello/katello.git"
+  },
+  "bugs": {
+    "url": "http://projects.theforeman.org/projects/katello/issues"
+  },
+  "devDependencies": {
+    "@storybook/react": "^3.2.17",
+    "@storybook/storybook-deployer": "^2.0.0",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "enzyme-to-json": "^3.1.2",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jest": "^21.2.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "jest": "^21.2.1",
+    "prettier": "^1.7.4",
+    "react-test-renderer": "^16.0.0",
+    "redux-mock-store": "^1.3.0"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "axios-mock-adapter": "^1.10.0",
+    "bootstrap-select": "^1.12.2",
+    "classnames": "^2.2.5",
+    "patternfly": "^3.31.2",
+    "patternfly-react": "^0.22.1",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-bootstrap": "^0.31.5",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "seamless-immutable": "^7.1.2"
+  },
+  "jest": {
+    "setupFiles": [
+      "raf/polyfill",
+      "./webpack/test_setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/foreman/"
+    ]
+  }
+}
