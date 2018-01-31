@@ -68,6 +68,10 @@ yum
 dhclient
 ntp
 wget
+<% if host_param('kt_activation_keys') -%>
+<% # if you want to use subscription manager you need to install it now, in %post it would rely on upstream mirror -%>
+subscription-manager
+<% end -%>
 @Core
 <%= section_end -%>
 
