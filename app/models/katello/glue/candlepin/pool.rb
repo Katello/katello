@@ -91,6 +91,7 @@ module Katello
         subscription
       end
 
+      # rubocop:disable MethodLength
       def import_data(index_hosts = true)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
@@ -136,6 +137,7 @@ module Katello
         self.create_activation_key_associations
         self.import_hosts if index_hosts
       end
+      # rubocop:enable MethodLength
 
       def import_hosts
         entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
