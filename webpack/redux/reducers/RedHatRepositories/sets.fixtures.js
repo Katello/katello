@@ -106,6 +106,7 @@ export const requestSuccessResponse = Immutable({
 export const successState = Immutable({
   loading: false,
   results: requestSuccessResponse.results,
+  searchIsActive: false,
 });
 
 export const errorState = Immutable({

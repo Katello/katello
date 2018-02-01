@@ -17,6 +17,7 @@ export const loadRepositorySets = (extendedParams = {}) => (dispatch) => {
       dispatch({
         type: REPOSITORY_SETS_SUCCESS,
         response: data,
+        search: extendedParams.search,
       });
     })
     .catch((result) => {

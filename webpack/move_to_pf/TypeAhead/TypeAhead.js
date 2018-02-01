@@ -50,6 +50,7 @@ class TypeAhead extends Component {
           highlightedIndex,
           selectedItem,
           selectItem,
+          openMenu,
         }) => {
           const shouldShowItems = isOpen && items.length > 0;
           const autoCompleteItemsProps = {
@@ -86,6 +87,7 @@ class TypeAhead extends Component {
                         break;
                     }
                   }}
+                  onInputFocus={openMenu}
                   passedProps={getInputProps()}
                 />
                 <InputGroup.Button>

@@ -30,6 +30,7 @@ class TypeAheadInput extends Component {
         inputRef={(ref) => {
           this.ref = ref;
         }}
+        onFocus={this.props.onInputFocus}
         type="text"
         {...this.props.passedProps}
       />
@@ -40,6 +41,7 @@ class TypeAheadInput extends Component {
 TypeAheadInput.propTypes = {
   passedProps: PropTypes.shape({}).isRequired,
   onKeyPress: PropTypes.func.isRequired,
+  onInputFocus: PropTypes.func.isRequired,
 };
 
 export default TypeAheadInput;
