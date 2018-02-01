@@ -17,6 +17,7 @@ export default (state = initialState, action) => {
       return Immutable({
         results: action.response.results,
         loading: false,
+        searchIsActive: !!action.search,
       });
 
     case REPOSITORY_SETS_FAILURE:
