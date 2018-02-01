@@ -48,47 +48,6 @@ module Katello
       require_dependency File.expand_path('../../../app/models/setting/content.rb', __FILE__) if (Setting.table_exists? rescue(false))
     end
 
-    initializer 'katello.configure_assets', :group => :all do
-      def find_assets(args = {})
-        type = args.fetch(:type, nil)
-        vendor = args.fetch(:vendor, false)
-
-        if vendor
-          asset_dir = "#{Katello::Engine.root}/vendor/assets/#{type}/"
-        else
-          asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
-        end
-
-        asset_paths = Dir[File.join(asset_dir, '**', '*')].reject { |file| File.directory?(file) }
-        asset_paths.each { |file| file.slice!(asset_dir) }
-
-        asset_paths
-      end
-
-      javascripts = find_assets(:type => 'javascripts')
-      images = find_assets(:type => 'images')
-      vendor_images = find_assets(:type => 'images', :vendor => true)
-
-      precompile = [
-        'katello/katello.css',
-        'katello/containers/container.css',
-        'bastion_katello/bastion_katello.css',
-        'bastion_katello/bastion_katello.js',
-        /bastion_katello\S+.(?:svg|eot|woff|ttf)$/
-      ]
-
-      precompile.concat(javascripts)
-      precompile.concat(images)
-      precompile.concat(vendor_images)
-
-      SETTINGS[:katello] = {} unless SETTINGS.key?(:katello)
-      SETTINGS[:katello][:assets] = {:precompile => precompile}
-    end
-
-    initializer 'katello.assets.precompile', :after => 'katello.configure_assets' do |app|
-      app.config.assets.precompile += SETTINGS[:katello][:assets][:precompile]
-    end
-
     initializer "katello.apipie" do
       Apipie.configuration.checksum_path += ['/katello/api/']
       require 'katello/apipie/validators'

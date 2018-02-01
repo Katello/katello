@@ -1,7 +1,8 @@
 require 'katello/permission_creator'
 
+# rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.16'
+  requires_foreman '>= 1.17'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
@@ -291,4 +292,38 @@ Foreman::Plugin.register :katello do
     :view_locations, :view_domains, :view_architectures,
     :view_operatingsystems
   ]
+
+  def find_katello_assets(args = {})
+    type = args.fetch(:type, nil)
+    vendor = args.fetch(:vendor, false)
+
+    if vendor
+      asset_dir = "#{Katello::Engine.root}/vendor/assets/#{type}/"
+    else
+      asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
+    end
+
+    asset_paths = Dir[File.join(asset_dir, '**', '*')].reject { |file| File.directory?(file) }
+    asset_paths.each { |file| file.slice!(asset_dir) }
+
+    asset_paths
+  end
+
+  javascripts = find_katello_assets(:type => 'javascripts')
+  images = find_katello_assets(:type => 'images')
+  vendor_images = find_katello_assets(:type => 'images', :vendor => true)
+
+  precompile = [
+    'katello/katello.css',
+    'katello/containers/container.css',
+    'bastion_katello/bastion_katello.css',
+    'bastion_katello/bastion_katello.js',
+    /bastion_katello\S+.(?:svg|eot|woff|ttf)$/
+  ]
+
+  precompile.concat(javascripts)
+  precompile.concat(images)
+  precompile.concat(vendor_images)
+
+  precompile_assets(precompile)
 end
