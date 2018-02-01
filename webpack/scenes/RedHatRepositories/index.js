@@ -6,16 +6,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
-import { ListView, Spinner } from 'patternfly-react';
+import { Spinner } from 'patternfly-react';
 
 import { loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
 import MultiSelect from './components/MultiSelect';
-import RepositorySet from './components/RepositorySet';
-import EnabledRepository from './components/EnabledRepository';
-import SearchInput from '../../components/SearchInput/index';
-
-import './index.scss';
+import Search from './components/Search';
+import { getSetsComponent, getEnabledComponent } from './helpers';
 
 class RedHatRepositoriesPage extends Component {
   componentDidMount() {
@@ -29,6 +26,7 @@ class RedHatRepositoriesPage extends Component {
 
   render() {
     const { enabledRepositories, repositorySets } = this.props;
+
     return (
       <Grid bsClass="container-fluid">
         <h1>{__('Red Hat Repositories')}</h1>
@@ -37,7 +35,7 @@ class RedHatRepositoriesPage extends Component {
           <Col sm={12}>
             <Form className="toolbar-pf-actions">
               <FormGroup className="toolbar-pf-filter">
-                <SearchInput />
+                <Search />
               </FormGroup>
 
               <FormGroup className="toolbar-pf-filter">
@@ -50,23 +48,13 @@ class RedHatRepositoriesPage extends Component {
         <Row>
           <Col sm={6}>
             <h2>{__('Available Repositories')}</h2>
-
-            <Spinner loading={repositorySets.loading}>
-              <ListView>
-                {repositorySets.results.map(set => <RepositorySet key={set.id} {...set} />)}
-              </ListView>
-            </Spinner>
+            <Spinner loading={repositorySets.loading}>{getSetsComponent(repositorySets)}</Spinner>
           </Col>
 
           <Col sm={6} className="background-container-gray">
             <h2>{__('Enabled Repositories')}</h2>
-            <Spinner loading={enabledRepositories.loading}>
-              <ListView>
-                {enabledRepositories.repositories.length ? null : <p>No repositories enabled.</p>}
-                {enabledRepositories.repositories.map(repo => (
-                  <EnabledRepository key={repo.id} {...repo} />
-                ))}
-              </ListView>
+            <Spinner loading={enabledRepositories.loading} className="small-spacer">
+              {getEnabledComponent(enabledRepositories)}
             </Spinner>
           </Col>
         </Row>

@@ -12,16 +12,18 @@ export const setRepositoryDisabled = repository => ({
   repository,
 });
 
-// eslint-disable-next-line import/prefer-default-export
-export const loadEnabledRepos = () => (dispatch) => {
+export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST });
 
-  axios
-    .get('/organizations/1/repository_sets?enabled=true')
+  const params = { ...{ organization_id: orgId, enabled: 'true' }, ...extendedParams };
+
+  api
+    .get('/repository_sets', {}, params)
     .then(({ data }) => {
       dispatch({
         type: ENABLED_REPOSITORIES_SUCCESS,
         response: data,
+        search: extendedParams.search,
       });
     })
     .catch((result) => {
