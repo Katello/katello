@@ -21,7 +21,7 @@ const flattenRepositorySets = sets =>
         productId,
         ...repo,
       })))
-    .reduce((a, b) => a.concat(b));
+    .reduce((a, b) => a.concat(b), []);
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -49,6 +49,7 @@ export default (state = initialState, action) => {
       return Immutable({
         repositories: flattenRepositorySets(action.response.results),
         loading: false,
+        searchIsActive: !!action.search,
       });
 
     case ENABLED_REPOSITORIES_FAILURE:
