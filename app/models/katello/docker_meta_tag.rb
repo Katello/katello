@@ -13,7 +13,28 @@ module Katello
     scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => { "1" => "1", "2" => "2"},
                   :only_explicit => true, :ext_method => :find_by_schema_version, :operators => ["="]
     scoped_search :relation => :repository, :on => :name, :rename => :repository,
-      :complete_value => true, :only_explicit => true
+                  :complete_value => true, :only_explicit => true
+    scoped_search :relation => :repository, :on => :container_repository_name, :rename => :image,
+                  :complete_value => true, :only_explicit => true
+    scoped_search :on => :digest, :rename => :digest, :complete_value => false,
+                  :only_explicit => true, :ext_method => :find_by_digest, :operators => ["="]
+
+    def self.meta_tags_by_digest_query(operator, digest, manifest_klass)
+      search = "digest #{operator} ?"
+      query = DockerMetaTag.search_in_tags(DockerTag.where(:docker_taggable_type => manifest_klass.name,
+                                                           :docker_taggable_id => manifest_klass.where(search, digest))).select(:id).to_sql
+      "#{DockerMetaTag.table_name}.id in (#{query})"
+    end
+
+    def self.find_by_digest(_key, operator, value)
+      if operator == '='
+        conditions = meta_tags_by_digest_query(operator, value, DockerManifest) + " OR " + meta_tags_by_digest_query(operator, value, DockerManifestList)
+      else
+        #failure condition. No such value so must return 0
+        conditions = "1=0"
+      end
+      { :conditions => conditions }
+    end
 
     def self.find_by_schema_version(_key, operator, value)
       conditions = ""

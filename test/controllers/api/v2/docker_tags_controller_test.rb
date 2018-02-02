@@ -48,6 +48,28 @@ module Katello
       assert_equal ['wat'], results
     end
 
+    def test_index_equal_digest
+      organization = @repo.organization
+      get :index, params: { :organization_id => organization.id, :search => "digest=abc123" }
+
+      assert_response :success
+      assert_template 'api/v2/docker_tags/index'
+
+      results = JSON.parse(response.body)["results"].map { |tag| tag["name"] }
+      assert_equal ['wat'], results
+    end
+
+    def test_index_no_match_digest
+      organization = @repo.organization
+      get :index, params: { :organization_id => organization.id, :search => "digest=xyz" }
+
+      assert_response :success
+      assert_template 'api/v2/docker_tags/index'
+
+      results = JSON.parse(response.body)["results"].map { |tag| tag["name"] }
+      assert_equal [], results
+    end
+
     def test_show
       get :show, params: { :repository_id => @repo.id, :id => @meta_tag.id }
 
