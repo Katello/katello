@@ -1,0 +1,45 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { FormControl } from 'patternfly-react';
+
+class TypeAheadInput extends Component {
+  constructor(props) {
+    super(props);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.ref) {
+      this.ref.addEventListener('keydown', this.handleKeyPress);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.ref) {
+      this.ref.removeEventListener('keydown', this.handleKeyPress);
+    }
+  }
+
+  handleKeyPress(e) {
+    this.props.onKeyPress(e);
+  }
+
+  render() {
+    return (
+      <FormControl
+        inputRef={(ref) => {
+          this.ref = ref;
+        }}
+        type="text"
+        {...this.props.passedProps}
+      />
+    );
+  }
+}
+
+TypeAheadInput.propTypes = {
+  passedProps: PropTypes.shape({}).isRequired,
+  onKeyPress: PropTypes.func.isRequired,
+};
+
+export default TypeAheadInput;
