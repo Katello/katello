@@ -1,4 +1,5 @@
 import api, { orgId } from '../../../services/api';
+import { normalizeRepositorySets } from './helpers';
 
 import {
   ENABLED_REPOSITORIES_REQUEST,
@@ -22,7 +23,7 @@ export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
     .then(({ data }) => {
       dispatch({
         type: ENABLED_REPOSITORIES_SUCCESS,
-        response: data,
+        response: normalizeRepositorySets(data),
         search: extendedParams.search,
       });
     })

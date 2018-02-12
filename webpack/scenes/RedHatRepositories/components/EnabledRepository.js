@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { ListView, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { connect } from 'react-redux';
 
-import { getTypeIcon } from '../../../services/index';
+import RepositoryTypeIcon from './RepositoryTypeIcon';
 import { setRepositoryDisabled } from '../../../redux/actions/RedHatRepositories/enabled';
 import api from '../../../services/api';
 
@@ -54,6 +54,8 @@ class EnabledRepository extends Component {
           // TODO: Add error component
         });
     };
+
+    this.disableTooltipId = `disable-${props.id}`;
   }
 
   render() {
@@ -67,7 +69,7 @@ class EnabledRepository extends Component {
         actions={
           <Spinner loading={this.state.loading} inline>
             <OverlayTrigger
-              overlay={<Tooltip id="disable">Disable</Tooltip>}
+              overlay={<Tooltip id={this.disableTooltipId}>{__('Disable')}</Tooltip>}
               placement="bottom"
               trigger={['hover', 'focus']}
               rootClose={false}
@@ -85,12 +87,7 @@ class EnabledRepository extends Component {
             </OverlayTrigger>
           </Spinner>
         }
-        leftContent={<ListView.Icon name={getTypeIcon(type)} />}
-        additionalInfo={[
-          <ListView.InfoItem key="1">
-            <strong>{type.toUpperCase()}</strong>
-          </ListView.InfoItem>,
-        ]}
+        leftContent={<RepositoryTypeIcon id={id} type={type} />}
         heading={__(name)}
         description={`${arch} ${releasever || ''}`}
         stacked
@@ -101,7 +98,7 @@ class EnabledRepository extends Component {
 
 EnabledRepository.propTypes = {
   id: PropTypes.number.isRequired,
-  contentId: PropTypes.string.isRequired,
+  contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,

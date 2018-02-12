@@ -26,6 +26,9 @@ export function getTypeIcon(type) {
     case 'kickstart':
       className = 'fa fa-futbol-o';
       break;
+    case 'containerimage':
+      className = 'fa fa-cube';
+      break;
     default:
       className = 'fa fa-question';
       break;

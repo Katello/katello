@@ -40,7 +40,7 @@ class RepositorySetRepositories extends Component {
 
 RepositorySetRepositories.propTypes = {
   loadRepositorySetRepos: PropTypes.func.isRequired,
-  contentId: PropTypes.string.isRequired,
+  contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
   data: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
