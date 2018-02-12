@@ -112,7 +112,7 @@ class RepositorySetRepository extends Component {
 }
 
 RepositorySetRepository.propTypes = {
-  contentId: PropTypes.string.isRequired,
+  contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
   arch: PropTypes.string.isRequired,
   releasever: PropTypes.string,

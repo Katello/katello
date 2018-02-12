@@ -28,7 +28,7 @@ class RedHatRepositoriesPage extends Component {
     const { enabledRepositories, repositorySets } = this.props;
 
     return (
-      <Grid bsClass="container-fluid">
+      <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
         <h1>{__('Red Hat Repositories')}</h1>
 
         <Row className="toolbar-pf">

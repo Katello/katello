@@ -24,7 +24,9 @@ export const getSetsComponent = ({ results, searchIsActive }) => {
       </p>
     );
   }
-  return <ListView>{results.map(set => <RepositorySet key={set.id} {...set} />)}</ListView>;
+  return (
+    <ListView>{results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}</ListView>
+  );
 };
 
 getSetsComponent.propTypes = {
