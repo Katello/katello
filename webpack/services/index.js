@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import { reduce, snakeCase } from 'lodash';
 
 // eslint-disable-next-line import/prefer-default-export
 export function getTypeIcon(type) {
@@ -32,3 +33,14 @@ export function getTypeIcon(type) {
   }
   return classnames('fa-2x', className);
 }
+
+export const propsToSnakeCase = ob =>
+  reduce(
+    ob,
+    (snakeOb, val, key) => {
+      // eslint-disable-next-line no-param-reassign
+      snakeOb[snakeCase(key)] = val;
+      return snakeOb;
+    },
+    {},
+  );

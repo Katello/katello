@@ -24,42 +24,52 @@ const flattenRepositorySets = sets =>
     .reduce((a, b) => a.concat(b), []);
 
 export default (state = initialState, action) => {
-  switch (action.type) {
-    case REPOSITORY_ENABLED:
-      return state.set('repositories', state.repositories.concat([action.repository]));
-
-    case REPOSITORY_DISABLED:
-      return state.set(
-        'repositories',
-        state.repositories.filter((repo) => {
-          const isMatch =
-            action.repository.arch === repo.arch &&
-            action.repository.contentId === repo.contentId &&
-            action.repository.productId === repo.productId &&
-            action.repository.releasever === repo.releasever;
-
-          return !isMatch;
-        }),
-      );
-
-    case ENABLED_REPOSITORIES_REQUEST:
-      return state.set(['loading'], true);
-
-    case ENABLED_REPOSITORIES_SUCCESS:
-      return Immutable({
-        repositories: flattenRepositorySets(action.response.results),
-        loading: false,
-        searchIsActive: !!action.search,
-      });
-
-    case ENABLED_REPOSITORIES_FAILURE:
-      return Immutable({
-        repositories: [],
-        loading: false,
-        error: action.error,
-      });
-
-    default:
-      return state;
+  if (action.type === REPOSITORY_ENABLED) {
+    return state.set('repositories', state.repositories.concat([action.repository]));
   }
+
+  if (action.type === REPOSITORY_DISABLED) {
+    return state.set(
+      'repositories',
+      state.repositories.filter((repo) => {
+        const isMatch =
+          action.repository.arch === repo.arch &&
+          action.repository.contentId === repo.contentId &&
+          action.repository.productId === repo.productId &&
+          action.repository.releasever === repo.releasever;
+
+        return !isMatch;
+      }),
+    );
+  }
+
+  if (action.type === ENABLED_REPOSITORIES_REQUEST) {
+    return state.set(['loading'], true);
+  }
+
+  if (action.type === ENABLED_REPOSITORIES_SUCCESS) {
+    const {
+      page, per_page: perPage, subtotal, total, results,
+    } = action.response;
+
+    return Immutable({
+      repositories: flattenRepositorySets(results),
+      loading: false,
+      searchIsActive: !!action.search,
+      page,
+      perPage,
+      subtotal,
+      total,
+    });
+  }
+
+  if (action.type === ENABLED_REPOSITORIES_FAILURE) {
+    return Immutable({
+      repositories: [],
+      loading: false,
+      error: action.error,
+    });
+  }
+
+  return state;
 };

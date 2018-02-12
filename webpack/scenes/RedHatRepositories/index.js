@@ -13,6 +13,7 @@ import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets'
 import MultiSelect from './components/MultiSelect';
 import Search from './components/Search';
 import { getSetsComponent, getEnabledComponent } from './helpers';
+import PaginationRow from '../../components/PaginationRow/index';
 
 class RedHatRepositoriesPage extends Component {
   componentDidMount() {
@@ -48,11 +49,18 @@ class RedHatRepositoriesPage extends Component {
         <Row>
           <Col sm={6}>
             <h2>{__('Available Repositories')}</h2>
+            {repositorySets.perPage && (
+              <PaginationRow config={repositorySets} onChange={this.props.loadRepositorySets} />
+            )}
+
             <Spinner loading={repositorySets.loading}>{getSetsComponent(repositorySets)}</Spinner>
           </Col>
 
           <Col sm={6} className="background-container-gray">
             <h2>{__('Enabled Repositories')}</h2>
+            {enabledRepositories.perPage && (
+              <PaginationRow config={enabledRepositories} onChange={this.props.loadEnabledRepos} />
+            )}
             <Spinner loading={enabledRepositories.loading} className="small-spacer">
               {getEnabledComponent(enabledRepositories)}
             </Spinner>

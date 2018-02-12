@@ -6,27 +6,35 @@ import {
   REPOSITORY_SETS_FAILURE,
 } from '../../consts';
 
-const initialState = Immutable({ loading: true, results: [] });
+const initialState = Immutable({ loading: true, results: [], page: 1 });
 
 export default (state = initialState, action) => {
-  switch (action.type) {
-    case REPOSITORY_SETS_REQUEST:
-      return state.set('loading', true);
-
-    case REPOSITORY_SETS_SUCCESS:
-      return Immutable({
-        results: action.response.results,
-        loading: false,
-        searchIsActive: !!action.search,
-      });
-
-    case REPOSITORY_SETS_FAILURE:
-      return Immutable({
-        error: action.error,
-        loading: false,
-      });
-
-    default:
-      return state;
+  if (action.type === REPOSITORY_SETS_REQUEST) {
+    return state.set('loading', true);
   }
+
+  if (action.type === REPOSITORY_SETS_SUCCESS) {
+    const {
+      page, per_page: perPage, subtotal, total, results,
+    } = action.response;
+
+    return Immutable({
+      results,
+      page,
+      perPage,
+      subtotal,
+      total,
+      loading: false,
+      searchIsActive: !!action.search,
+    });
+  }
+
+  if (action.type === REPOSITORY_SETS_FAILURE) {
+    return Immutable({
+      error: action.error,
+      loading: false,
+    });
+  }
+
+  return state;
 };

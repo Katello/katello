@@ -1,11 +1,11 @@
 import api, { orgId } from '../../../services/api';
-
 import {
   ENABLED_REPOSITORIES_REQUEST,
   ENABLED_REPOSITORIES_SUCCESS,
   ENABLED_REPOSITORIES_FAILURE,
   REPOSITORY_DISABLED,
 } from '../../consts';
+import { propsToSnakeCase } from '../../../services/index';
 
 export const setRepositoryDisabled = repository => ({
   type: REPOSITORY_DISABLED,
@@ -15,7 +15,10 @@ export const setRepositoryDisabled = repository => ({
 export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST });
 
-  const params = { ...{ organization_id: orgId, enabled: 'true' }, ...extendedParams };
+  const params = {
+    ...{ organization_id: orgId, enabled: 'true' },
+    ...propsToSnakeCase(extendedParams),
+  };
 
   api
     .get('/repository_sets', {}, params)
