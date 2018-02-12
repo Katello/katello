@@ -15,6 +15,8 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
+        # rubocop:disable MethodLength
+        # rubocop:disable CyclomaticComplexity
         def plan(repo, pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
@@ -34,6 +36,9 @@ module Actions
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
           sequence do
+            # clear yum metadata if validate_contents is on (to avoid metadata corruption issues)
+            plan_action(Pulp::Repository::RemoveYumMetadataFile, :pulp_id => repo.pulp_id) if validate_contents
+
             sync_args = {:pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
             output = plan_action(Pulp::Repository::Sync, sync_args).output
 
