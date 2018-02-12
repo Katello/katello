@@ -19,13 +19,9 @@ module Katello
     skip_before_action :check_content_type, :only => [:upload_content]
 
     def_param_group :repo do
-      param :name, String, :required => true
-      param :label, String, :required => false
-      param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'deb', 'puppet', 'docker', or 'ostree')")
       param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
@@ -39,6 +35,12 @@ module Katello
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing.")
+    end
+
+    def_param_group :repo_create do
+      param :label, String, :required => false
+      param :product_id, :number, :required => true, :desc => N_("Product the repository belongs to")
+      param :content_type, RepositoryTypeManager.creatable_repository_types.keys, :required => true, :desc => N_("type of repo (either 'yum', 'deb', 'puppet', 'docker', or 'ostree')")
     end
 
     api :GET, "/repositories", N_("List of enabled repositories")
@@ -137,6 +139,8 @@ module Katello
     end
 
     api :POST, "/repositories", N_("Create a custom repository")
+    param :name, String, :required => true
+    param_group :repo_create
     param_group :repo
     def create # rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
       repo_params = repository_params
@@ -253,20 +257,9 @@ module Katello
     end
 
     api :PUT, "/repositories/:id", N_("Update a repository")
-    param :name, String, :desc => N_("New name for the repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
-    param :gpg_key_id, :number, :desc => N_("ID of a gpg key that will be assigned to this repository")
-    param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-    param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.'")
-    param :url, String, :desc => N_("the feed url of the original repository ")
-    param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
-    param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
-    param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
-    param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA.")
-    param :upstream_username, String, :desc => N_("Username of the upstream repository user for authentication")
-    param :upstream_password, String, :desc => N_("Password of the upstream repository user for authentication")
-    param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories.")
-    param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided.")
+    param :name, String, :required => false
+    param_group :repo
     def update
       repo_params = repository_params
       sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
