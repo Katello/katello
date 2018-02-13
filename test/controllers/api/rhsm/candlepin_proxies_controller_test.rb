@@ -50,11 +50,21 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:get)
 
         ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
-        assert_sync_task(::Actions::Katello::Host::Register, @host, {'facts' => @facts}, nil, [@activation_key])
+        ::Katello::RegistrationManager.expects(:register_host).with(@host, {'facts' => @facts}, nil, [@activation_key])
 
         post(:consumer_activate, params: { :organization_id => @activation_key.organization.label, :activation_keys => @activation_key.name, :facts => @facts })
 
         assert_response :success
+      end
+
+      it "should not register with dead services" do
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
+        ::Katello::RegistrationManager.expects(:register_host).never
+
+        post(:consumer_activate, params: { :organization_id => @activation_key.organization.label,
+                                           :activation_keys => @activation_key.name, :facts => @facts })
+
+        assert_response 500
       end
     end
 
@@ -68,11 +78,21 @@ module Katello
         Resources::Candlepin::Consumer.stubs(:get)
 
         ::Katello::Host::SubscriptionFacet.expects(:new_host_from_facts).returns(@host)
-        assert_sync_task(::Actions::Katello::Host::Register, @host, {'facts' => @facts }, @content_view_environment)
+        ::Katello::RegistrationManager.expects(:register_host).with(@host, {'facts' => @facts }, @content_view_environment)
 
         post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label, :environment_id => @content_view_environment.cp_id, :facts => @facts })
 
         assert_response :success
+      end
+
+      it "should not register" do
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
+        ::Katello::RegistrationManager.expects(:register_host).never
+
+        post(:consumer_create, params: { :organization_id => @content_view_environment.content_view.organization.label,
+                                         :environment_id => @content_view_environment.cp_id, :facts => @facts })
+
+        assert_response 500
       end
     end
 
@@ -289,7 +309,7 @@ module Katello
       it "should unregister" do
         Setting[:unregister_delete_host] = false
 
-        assert_sync_task(::Actions::Katello::Host::Unregister, @host)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true)
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
 
         assert_response 204
@@ -298,10 +318,19 @@ module Katello
       it "should destroy the host if setting is set" do
         Setting[:unregister_delete_host] = true
 
-        assert_sync_task(::Actions::Katello::Host::Destroy, @host)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => false)
         delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
 
         assert_response 204
+      end
+
+      it "should error if backend services are down" do
+        ::Katello::RegistrationManager.expects(:check_registration_services).returns(false)
+
+        ::Katello::RegistrationManager.expects(:unregister_host).never
+        delete :consumer_destroy, params: { :id => @host.subscription_facet.uuid }
+
+        assert_response 500
       end
     end
 

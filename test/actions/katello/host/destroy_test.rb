@@ -16,28 +16,12 @@ module Katello::Host
 
     describe 'Host Destroy' do
       let(:action_class) { ::Actions::Katello::Host::Destroy }
-      let(:candlepin_destroy_class) { ::Actions::Candlepin::Consumer::Destroy }
-      let(:pulp_destroy_class) { ::Actions::Pulp::Consumer::Destroy }
 
       it 'plans with default values' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
-        @host.expects(:destroy).returns(true)
-        @host.content_facet.expects(:destroy!)
-        @host.subscription_facet.expects(:destroy!)
 
-        plan_action action, @host
-
-        assert_action_planed_with action, candlepin_destroy_class, :uuid => @host.subscription_facet.uuid
-        assert_action_planed_with action, pulp_destroy_class, :uuid => @host.content_facet.uuid
-      end
-
-      it 'ignores candlepin GONE' do
-        action = create_action action_class
-        action.stubs(:action_subject).with(@host)
-        @host.expects(:destroy).returns(true)
-        @host.content_facet.expects(:destroy!)
-        @host.subscription_facet.expects(:destroy!)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, {})
 
         plan_action action, @host
       end
@@ -45,30 +29,19 @@ module Katello::Host
       it 'plans with unregistering true' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
-        @host.content_facet.expects(:destroy!).never
-        @host.subscription_facet.expects(:destroy!)
 
-        subscription_uuid = @host.subscription_facet.uuid
-        content_uuid = @host.content_facet.uuid
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true)
+
         plan_action action, @host, :unregistering => true
-
-        assert_action_planed_with action, candlepin_destroy_class, :uuid => subscription_uuid
-        assert_action_planed_with action, pulp_destroy_class, :uuid => content_uuid
-
-        @host.reload
-        assert_nil @host.content_facet.uuid
       end
 
       it 'plans with organization_destroy true' do
-        uuid = @host.content_facet.uuid
-        @host.content_facet.expects(:destroy!)
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        plan_action action, @host, :organization_destroy => true
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :organization_destroy => true)
 
-        refute_action_planned action, candlepin_destroy_class
-        assert_action_planed_with action, pulp_destroy_class, :uuid => uuid
+        plan_action action, @host, :organization_destroy => true
       end
     end
   end
