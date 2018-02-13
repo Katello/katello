@@ -99,10 +99,11 @@ class SourceCodeTest < ActiveSupport::TestCase
           #              {:var1 => var1, :var2 => var2}
       DOC
       SourceCode.
-          new('**/*.{rb,js,scss,haml}',
+          new('**/*.{rb}',
               %r{foreman/.*},
               %r{script/check-gettext\.rb},
               %r{engines/bastion_katello/node_modules},
+              %r{node_modules/},
               %r{test/source_code_test\.rb}).
           check_lines doc do |line|
         line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
