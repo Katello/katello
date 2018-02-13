@@ -27,7 +27,9 @@ module Katello
       @host.subscription_facet.update_attributes!(:uuid => nil)
       mock_cp
       mock_pulp
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host).at_least_once
+      # this host will end up on the nil facets list and the no subscription
+      # facet list. This is OK.
+      Katello::RegistrationManager.expects(:unregister_host).with(@host).twice
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -38,7 +40,7 @@ module Katello
 
       mock_cp
       mock_pulp([{"id" => @host.content_facet.uuid}])
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host)
+      Katello::RegistrationManager.expects(:unregister_host).with(@host)
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -49,7 +51,7 @@ module Katello
 
       mock_cp([@host.subscription_facet.uuid])
       mock_pulp
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host)
+      Katello::RegistrationManager.expects(:unregister_host).with(@host)
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -60,7 +62,7 @@ module Katello
 
       mock_cp([@host.subscription_facet.uuid])
       mock_pulp([{"id" => @host.content_facet.uuid}])
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host).never
+      Katello::RegistrationManager.expects(:unregister).never
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 
@@ -70,7 +72,7 @@ module Katello
 
       mock_cp
       mock_pulp([{"id" => @host.content_facet.uuid}])
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, @host).never
+      Katello::RegistrationManager.expects(:unregister).never
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -101,7 +103,7 @@ module Katello
 
       Katello::Resources::Candlepin::Consumer.expects(:destroy).with(mock_cp_uuid)
       Katello.pulp_server.extensions.consumer.expects(:delete).with(mock_pulp_uuid)
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Host::Unregister, any_parameters).never
+      Katello::RegistrationManager.expects(:unregister).never
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
 

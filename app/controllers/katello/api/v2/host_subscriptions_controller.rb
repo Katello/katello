@@ -4,6 +4,7 @@ module Katello
     before_action :find_host, :except => :create
     before_action :check_subscriptions, :only => [:add_subscriptions, :remove_subscriptions]
     before_action :find_content_view_environment, :only => :create
+    before_action :check_registration_services, :only => [:destroy, :create]
 
     def_param_group :subscription_facet_attributes do
       param :release_version, String, :desc => N_("Release version for this Host to use (7Server, 7.1, etc)")
@@ -47,7 +48,7 @@ module Katello
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def destroy
-      sync_task(::Actions::Katello::Host::Unregister, @host)
+      Katello::RegistrationManager.unregister_host(@host)
       @host.reload
       respond_for_destroy(:resource => @host)
     end
@@ -72,7 +73,7 @@ module Katello
       rhsm_params = params_to_rhsm_params
 
       host = Katello::Host::SubscriptionFacet.find_or_create_host(@content_view_environment.environment.organization, rhsm_params)
-      sync_task(::Actions::Katello::Host::Register, host, rhsm_params, @content_view_environment)
+      Katello::RegistrationManager.register_host(host, rhsm_params, @content_view_environment)
       host.reload
       ::Katello::Host::SubscriptionFacet.update_facts(host, rhsm_params[:facts]) unless rhsm_params[:facts].blank?
 
@@ -201,6 +202,10 @@ module Katello
 
     def check_subscriptions
       fail HttpErrors::BadRequest, _("subscriptions not specified") if params[:subscriptions].blank?
+    end
+
+    def check_registration_services
+      fail "Unable to register system, not all services available" unless Katello::RegistrationManager.check_registration_services
     end
 
     def find_host
