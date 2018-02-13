@@ -17,6 +17,8 @@ module Katello
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
                                                :enabled_repos, :available_releases]
 
+    before_action :check_registration_services, :only => [:consumer_create, :consumer_destroy, :consumer_activate]
+
     before_action :add_candlepin_version_header
 
     before_action :proxy_request_path, :proxy_request_body
@@ -207,7 +209,7 @@ module Katello
       content_view_environment = find_content_view_environment
       host = Katello::Host::SubscriptionFacet.find_or_create_host(content_view_environment.environment.organization, rhsm_params)
 
-      sync_task(::Actions::Katello::Host::Register, host, rhsm_params, content_view_environment)
+      Katello::RegistrationManager.register_host(host, rhsm_params, content_view_environment)
       host.reload
 
       update_host_registered_through(host, request.headers)
@@ -219,11 +221,7 @@ module Katello
     #param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def consumer_destroy
       User.as_anonymous_admin do
-        if Setting['unregister_delete_host']
-          sync_task(::Actions::Katello::Host::Destroy, @host)
-        else
-          sync_task(::Actions::Katello::Host::Unregister, @host)
-        end
+        Katello::RegistrationManager.unregister_host(@host, :unregistering => !Setting['unregister_delete_host'])
       end
       render :plain => _("Deleted consumer '%s'") % params[:id], :status => 204
     end
@@ -239,7 +237,7 @@ module Katello
       activation_keys = find_activation_keys
       host = Katello::Host::SubscriptionFacet.find_or_create_host(activation_keys.first.organization, rhsm_params)
 
-      sync_task(::Actions::Katello::Host::Register, host, rhsm_params, nil, activation_keys)
+      Katello::RegistrationManager.register_host(host, rhsm_params, nil, activation_keys)
 
       update_host_registered_through(host, request.headers)
       host.reload
@@ -463,6 +461,10 @@ module Katello
     def update_host_registered_through(host, headers)
       parent_host = get_parent_host(headers)
       host.subscription_facet.update_attribute(:registered_through, parent_host)
+    end
+
+    def check_registration_services
+      fail "Unable to register system, not all services available" unless Katello::RegistrationManager.check_registration_services
     end
 
     # rubocop:disable MethodLength

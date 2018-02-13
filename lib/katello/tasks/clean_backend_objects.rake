@@ -42,17 +42,17 @@ namespace :katello do
     def cleanup_hosts(cleaner)
       cleaner.hosts_with_nil_facets.each do |host|
         print "Host #{host.id} #{host.name} is partially missing subscription information.  Un-registering\n"
-        execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
+        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host) }
       end
 
       cleaner.hosts_with_no_subscriptions.each do |host|
         print "Host #{host.id} #{host.name} #{host.subscription_facet.try(:uuid)} is partially missing subscription information.  Un-registering\n"
-        execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
+        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host) }
       end
 
       cleaner.hosts_with_no_content.each do |host|
         print "Host #{host.id} #{host.name} #{host.content_facet.try(:uuid)} is partially missing content information.  Un-registering\n"
-        execute("Failed to delete host") { ForemanTasks.sync_task(::Actions::Katello::Host::Unregister, host) }
+        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host) }
       end
     end
 
