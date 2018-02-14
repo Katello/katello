@@ -59,6 +59,7 @@ export const successState = Immutable({
       arch: 'x86_64',
     },
   ],
+  searchIsActive: false,
 });
 
 export const errorState = Immutable({
