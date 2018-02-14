@@ -52,4 +52,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rubocop-checkstyle_formatter"
   gem.add_development_dependency "simplecov"
   gem.add_development_dependency "simplecov-rcov"
+  gem.add_development_dependency "psych"
 end
