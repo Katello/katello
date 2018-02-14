@@ -87,14 +87,14 @@ module Katello
 
     def index_relation
       if @product.nil?
-        relation = @organization.product_contents
+        relation = @organization.product_contents.displayable
       else
         relation = @product.displayable_product_contents
       end
 
       relation = relation.enabled(@organization) if ::Foreman::Cast.to_bool(params[:enabled])
       relation = relation.joins(:content).where(:name => params[:name]) if params[:name].present?
-      relation
+      relation.redhat
     end
 
     def find_product_content
