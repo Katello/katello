@@ -48,6 +48,11 @@ module Katello
       assert_includes Katello::ProductContent.enabled(@product.organization), @product_content
     end
 
+    def test_redhat
+      refute Katello::ProductContent.redhat.include?(katello_product_contents(:fedora_17_x86_64_content))
+      assert_includes Katello::ProductContent.redhat, @product_content
+    end
+
     def test_displayable
       @content.update_attributes(content_type: ::Katello::Repository::CANDLEPIN_DOCKER_TYPE)
       refute ProductContent.displayable.include?(@product_content)

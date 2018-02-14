@@ -43,8 +43,14 @@ module Katello
       assert_response :success
     end
 
-    def test_index_enabled
+    def test_index_org_enabled
       get :index, params: { :organization_id => @organization.id, :enabled => true }
+
+      assert_response :success
+    end
+
+    def test_index_org
+      get :index, params: { :organization_id => @organization.id}
 
       assert_response :success
     end

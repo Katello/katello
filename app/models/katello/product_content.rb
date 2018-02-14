@@ -15,6 +15,10 @@ module Katello
       .order("LOWER(#{content_table_name}.name) ASC")
     }
 
+    scope :redhat, -> {
+      where(:product_id => Product.redhat.select(:id))
+    }
+
     scoped_search :on => :name, :relation => :content
     scoped_search :on => :content_type, :relation => :content
     scoped_search :on => :label, :relation => :content
