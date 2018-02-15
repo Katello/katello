@@ -321,7 +321,7 @@ module Katello
                          :resource_type => 'Katello::Product'
     end
 
-    def subscription_permissions
+    def subscription_permissions # rubocop:disable Metrics/MethodLength
       @plugin.permission :view_subscriptions,
                          {
                            'katello/api/v2/subscriptions' => [:index, :show, :available, :manifest_history, :auto_complete_search],
@@ -349,6 +349,11 @@ module Katello
       @plugin.permission :delete_manifest,
                          {
                            'katello/api/v2/subscriptions' => [:delete_manifest]
+                         },
+                         :resource_type => 'Katello::Subscription'
+      @plugin.permission :manage_subscription_allocations,
+                         {
+                           'katello/api/v2/upstream_subscriptions' => [:index]
                          },
                          :resource_type => 'Katello::Subscription'
     end
