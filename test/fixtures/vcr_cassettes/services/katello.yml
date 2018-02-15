@@ -1,0 +1,95 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://dev.example.com:8443/candlepin/consumers/fake-uuid-from-katello/guests
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      Authorization:
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - a61ebc57-affc-4393-b05e-62746a292947
+      X-Version:
+      - 2.1.12-1
+      - 2.1.12-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 23 Feb 2018 17:38:57 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IkNvbnN1bWVyIHdpdGggaWQgZmFrZS11dWlk
+        LWZyb20ta2F0ZWxsbyBjb3VsZCBub3QgYmUgZm91bmQuIiwicmVxdWVzdFV1
+        aWQiOiJhNjFlYmM1Ny1hZmZjLTQzOTMtYjA1ZS02Mjc0NmEyOTI5NDcifQ==
+    http_version: 
+  recorded_at: Fri, 23 Feb 2018 17:38:57 GMT
+- request:
+    method: get
+    uri: https://dev.example.com:8443/candlepin/consumers/fake-uuid-from-katello/host
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      Authorization:
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - ea0be6bb-c358-4943-803c-5c1dc49b94f0
+      X-Version:
+      - 2.1.12-1
+      - 2.1.12-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 23 Feb 2018 17:38:57 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IkNvbnN1bWVyIHdpdGggaWQgZmFrZS11dWlk
+        LWZyb20ta2F0ZWxsbyBjb3VsZCBub3QgYmUgZm91bmQuIiwicmVxdWVzdFV1
+        aWQiOiJlYTBiZTZiYi1jMzU4LTQ5NDMtODAzYy01YzFkYzQ5Yjk0ZjAifQ==
+    http_version: 
+  recorded_at: Fri, 23 Feb 2018 17:38:58 GMT
+recorded_with: VCR 3.0.3

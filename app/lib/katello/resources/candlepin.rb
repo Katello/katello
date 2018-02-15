@@ -1,4 +1,5 @@
 require 'katello/util/data'
+require 'katello/util/http_proxy'
 
 module Katello
   module Resources
@@ -108,6 +109,81 @@ module Katello
         end
       end
 
+      class UpstreamCandlepinResource < CandlepinResource
+        extend ::Katello::Util::HttpProxy
+
+        self.prefix = '/subscription'
+
+        class << self
+          attr_accessor :organization
+
+          def resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
+            RestClient.proxy = self.proxy_uri
+            RestClient::Resource.new(url,
+                                     :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
+                                     :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
+                                     :ssl_ca_file => ca_file,
+                                     :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE,
+                                     :open_timeout => Setting[:manifest_refresh_timeout],
+                                     :timeout => Setting[:manifest_refresh_timeout],
+                                     **options
+                                    )
+          end
+
+          def rest_client(_http_type = nil, method = :get, path = self.path)
+            # No oauth upstream
+            self.consumer_secret = nil
+            self.consumer_key = nil
+
+            resource(self.site + path, client_cert, client_key, nil, http_method: method)
+          end
+
+          def client_cert
+            upstream_id_cert['cert']
+          end
+
+          def client_key
+            upstream_id_cert['key']
+          end
+
+          def upstream_api_uri
+            URI.parse(upstream_consumer['apiUrl'])
+          end
+
+          def site
+            "#{upstream_api_uri.scheme}://#{upstream_api_uri.host}"
+          end
+
+          def upstream_id_cert
+            unless upstream_consumer && upstream_consumer['idCert'] && upstream_consumer['idCert']['cert'] && upstream_consumer['idCert']['key']
+              Rails.logger.error "Upstream identity certificate not available"
+              fail _("Upstream identity certificate not available")
+            end
+            upstream_consumer['idCert']
+          end
+
+          def upstream_owner_id
+            JSON.parse(Katello::Resources::Candlepin::UpstreamConsumer.resource.get.body)['owner']['key']
+          rescue RestClient::Exception => e
+            Rails.logger.error "Unable to find upstream owner for consumer"
+            raise e
+          end
+
+          def upstream_consumer_id
+            upstream_consumer['uuid']
+          end
+
+          def upstream_consumer
+            @organization ||= Organization.current
+            fail _("Current organization not set.") unless @organization
+            @upstream_consumer = @organization.owner_details['upstreamConsumer']
+            fail _("Current organization has no manifest imported.") unless @upstream_consumer
+
+            @upstream_consumer
+          end
+        end # class << self
+      end # UpstreamCandlepinResource
+
       class CandlepinPing < CandlepinResource
         class << self
           def ping
@@ -122,257 +198,6 @@ module Katello
         end
       end
 
-      class Consumer < CandlepinResource
-        class << self
-          def path(id = nil)
-            "/candlepin/consumers/#{id}"
-          end
-
-          def all_uuids
-            cp_consumers = Organization.all.map do |org|
-              ::Katello::Resources::Candlepin::Consumer.get('owner' => org.label, :include_only => [:uuid])
-            end
-            cp_consumers.flatten!
-            cp_consumers.map { |consumer| consumer["uuid"] }
-          end
-
-          def get(params)
-            if params.is_a?(String)
-              JSON.parse(super(path(params), self.default_headers).body).with_indifferent_access
-            else
-              includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
-              fetch_paged do |page_add|
-                response = super(path + hash_to_query(params) + includes + "&#{page_add}", self.default_headers).body
-                JSON.parse(response)
-              end
-            end
-          end
-
-          def create(env_id, parameters, activation_key_cp_ids)
-            parameters['installedProducts'] ||= [] #if installed products is nil, candlepin won't attach custom products
-            url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
-            url += "?activation_keys=" + activation_key_cp_ids.join(",") if activation_key_cp_ids.length > 0
-
-            response = self.post(url, parameters.to_json, self.default_headers).body
-            JSON.parse(response).with_indifferent_access
-          end
-
-          def async_hypervisors(owner, raw_json)
-            url = "/candlepin/hypervisors/#{owner}"
-            headers = self.default_headers
-            headers['content-type'] = 'text/plain'
-            response = self.post(url, raw_json, headers)
-            JSON.parse(response).with_indifferent_access
-          end
-
-          def register_hypervisors(params)
-            url = "/candlepin/hypervisors"
-            url << "?owner=#{params[:owner]}&env=#{params[:env]}"
-            attrs = params.except(:owner, :env)
-            response = self.post(url, attrs.to_json, self.default_headers).body
-            JSON.parse(response).with_indifferent_access
-          end
-
-          def update(uuid, params)
-            if params.empty?
-              true
-            else
-              self.put(path(uuid), params.to_json, self.default_headers).body
-            end
-            # consumer update doesn't return any data atm
-            # JSON.parse(response).with_indifferent_access
-          end
-
-          def destroy(uuid)
-            self.delete(path(uuid), User.cp_oauth_header).code.to_i
-          end
-
-          def serials(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'certificates/serials'))
-            JSON.parse(response.body)
-          end
-
-          def checkin(uuid, checkin_date)
-            checkin_date ||= Time.now
-            self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
-          end
-
-          def available_pools(owner_label, uuid, listall = false)
-            url = Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}&add_future=true"
-            response = Candlepin::CandlepinResource.get(url, self.default_headers).body
-            JSON.parse(response)
-          end
-
-          def regenerate_identity_certificates(uuid)
-            response = self.post(path(uuid), {}, self.default_headers).body
-            JSON.parse(response).with_indifferent_access
-          end
-
-          def export(uuid)
-            # Export is a zip file
-            headers = self.default_headers
-            headers['accept'] = 'application/zip'
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), headers)
-            response
-          end
-
-          def entitlements(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          end
-
-          def refresh_entitlements(uuid)
-            self.post(join_path(path(uuid), 'entitlements'), "", self.default_headers).body
-          end
-
-          def consume_entitlement(uuid, pool, quantity = nil)
-            uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
-            uri += "&quantity=#{quantity}" if quantity && quantity > 0
-            response = self.post(uri, "", self.default_headers).body
-            response.blank? ? [] : JSON.parse(response)
-          end
-
-          def remove_entitlement(uuid, ent_id)
-            uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
-            self.delete(uri, self.default_headers).code.to_i
-          end
-
-          def remove_entitlements(uuid)
-            uri = join_path(path(uuid), 'entitlements')
-            self.delete(uri, self.default_headers).code.to_i
-          end
-
-          def remove_certificate(uuid, serial_id)
-            uri = join_path(path(uuid), 'certificates') + "/#{serial_id}"
-            self.delete(uri, self.default_headers).code.to_i
-          end
-
-          def virtual_guests(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          rescue
-            return []
-          end
-
-          def virtual_host(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'host'), self.default_headers).body
-            if response.present?
-              JSON.parse(response).with_indifferent_access
-            else
-              return nil
-            end
-          rescue
-            return nil
-          end
-
-          def compliance(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers(uuid)).body
-            if response.present?
-              json = JSON.parse(response).with_indifferent_access
-              if json['reasons']
-                json['reasons'].sort! { |x, y| x['attributes']['name'] <=> y['attributes']['name'] }
-              else
-                json['reasons'] = []
-              end
-              json
-            else
-              return nil
-            end
-          end
-
-          def events(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
-            if response.present?
-              ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-            else
-              return []
-            end
-          end
-
-          def content_overrides(id)
-            result = Candlepin::CandlepinResource.get(join_path(path(id), 'content_overrides'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
-          end
-
-          # expected params
-          # id : UUID of the consumer
-          # content_overrides => Array of entitlement hashes objects
-          def update_content_overrides(id, content_overrides)
-            attrs_to_delete = []
-            attrs_to_update = []
-            content_overrides.each do |content_override|
-              if content_override[:value]
-                attrs_to_update << content_override
-              else
-                attrs_to_delete << content_override
-              end
-            end
-
-            if attrs_to_update.present?
-              result = Candlepin::CandlepinResource.put(join_path(path(id), 'content_overrides'),
-                                                        attrs_to_update.to_json, self.default_headers)
-            end
-            if attrs_to_delete.present?
-              client = Candlepin::CandlepinResource.rest_client(Net::HTTP::Delete, :delete,
-                                                                join_path(path(id), 'content_overrides'))
-              client.options[:payload] = attrs_to_delete.to_json
-              result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
-            end
-            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
-          end
-        end
-      end
-
-      class UpstreamConsumer < HttpResource
-        def self.logger
-          ::Foreman::Logging.logger('katello/cp_rest')
-        end
-
-        def self.resource(url, client_cert, client_key, ca_file)
-          if SETTINGS[:katello][:cdn_proxy] && SETTINGS[:katello][:cdn_proxy][:host]
-            proxy_config = SETTINGS[:katello][:cdn_proxy]
-            uri = URI('')
-
-            uri.scheme = URI.parse(proxy_config[:host]).scheme
-            uri.host = URI.parse(proxy_config[:host]).host
-            uri.port = proxy_config[:port].try(:to_s)
-            uri.user = proxy_config[:user].try(:to_s)
-            uri.password = proxy_config[:password].try(:to_s)
-
-            RestClient.proxy = uri.to_s
-          end
-
-          RestClient::Resource.new(url,
-                                   :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
-                                   :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
-                                   :ssl_ca_file => ca_file,
-                                   :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE,
-                                   :open_timeout => Setting[:manifest_refresh_timeout],
-                                   :timeout => Setting[:manifest_refresh_timeout]
-                                  )
-        end
-
-        def self.export(url, client_cert, client_key, ca_file)
-          logger.debug "Sending GET request to upstream Candlepin: #{url}"
-          return resource(url, client_cert, client_key, ca_file).get
-        rescue => e
-          raise e
-        ensure
-          RestClient.proxy = ""
-        end
-
-        def self.update(url, client_cert, client_key, ca_file, attributes)
-          logger.debug "Sending POST request to upstream Candlepin: #{url} #{attributes.to_json}"
-
-          return resource(url, client_cert, client_key, ca_file).put(attributes.to_json,
-                                                                     'accept' => 'application/json',
-                                                                     'accept-language' => I18n.locale,
-                                                                     'content-type' => 'application/json')
-        ensure
-          RestClient.proxy = ""
-        end
-      end
-
       class OwnerInfo < CandlepinResource
         class << self
           def find(key)
@@ -382,133 +207,6 @@ module Katello
 
           def path(id = nil)
             "/candlepin/owners/#{id}/info"
-          end
-        end
-      end
-
-      class Owner < CandlepinResource
-        class << self
-          # Set the contentPrefix at creation time so that the client will get
-          # content only for the org it has been subscribed to
-          def create(key, description)
-            attrs = {:key => key, :displayName => description, :contentPrefix => "/#{key}/$env"}
-            owner_json = self.post(path, attrs.to_json, self.default_headers).body
-            JSON.parse(owner_json).with_indifferent_access
-          end
-
-          # create the first user for owner
-          def create_user(_key, username, password)
-            # create user with superadmin flag (no role, permissions etc)
-            CPUser.create(:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true)
-          end
-
-          def destroy(key)
-            self.delete(path(key), User.cp_oauth_header).code.to_i
-          end
-
-          def find(key)
-            owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
-            JSON.parse(owner_json).with_indifferent_access
-          end
-
-          def update(key, attrs)
-            owner = find(key)
-            owner.merge!(attrs)
-            self.put(path(key), JSON.generate(owner), self.default_headers).body
-          end
-
-          def import(organization_name, path_to_file, options)
-            path = join_path(path(organization_name), 'imports')
-            if options[:force] || SETTINGS[:katello].key?(:force_manifest_import)
-              path += "?force=#{SETTINGS[:katello][:force_manifest_import]}"
-            end
-
-            self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
-          end
-
-          def product_content(organization_name)
-            Product.all(organization_name, [:id, :productContent])
-          end
-
-          def destroy_imports(organization_name, wait_until_complete = false)
-            response_json = self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
-            response = JSON.parse(response_json).with_indifferent_access
-            if wait_until_complete && response['state'] == 'CREATED'
-              while !response['state'].nil? && response['state'] != 'FINISHED' && response['state'] != 'ERROR'
-                path = join_path('candlepin', response['statusPath'][1..-1])
-                response_json = self.get(path, self.default_headers)
-                response = JSON.parse(response_json).with_indifferent_access
-              end
-            end
-
-            response
-          end
-
-          def imports(organization_name)
-            imports_json = self.get(join_path(path(organization_name), 'imports'), self.default_headers)
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(imports_json)
-          end
-
-          def pools(owner_label, filter = {})
-            filter[:add_future] ||= true
-            params = hash_to_query(filter)
-            if owner_label
-              # hash_to_query escapes the ":!" to "%3A%21" which candlepin rejects
-              params += '&attribute=unmapped_guests_only:!true'
-              json_str = self.get(join_path(path(owner_label), 'pools') + params, self.default_headers).body
-            else
-              json_str = self.get(join_path('candlepin', 'pools') + params, self.default_headers).body
-            end
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
-          end
-
-          def statistics(key)
-            json_str = self.get(join_path(path(key), 'statistics'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(json_str)
-          end
-
-          def generate_ueber_cert(key)
-            ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}.to_json, self.default_headers).body
-            JSON.parse(ueber_cert_json).with_indifferent_access
-          end
-
-          def get_ueber_cert(key)
-            ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
-            JSON.parse(ueber_cert_json).with_indifferent_access
-          end
-
-          def get_ueber_cert_pkcs12(key, name = nil, password = nil)
-            certs = get_ueber_cert(key)
-            c = OpenSSL::X509::Certificate.new certs["cert"]
-            p = OpenSSL::PKey::RSA.new certs["key"]
-            OpenSSL::PKCS12.create(password, name, p, c, nil, "PBE-SHA1-3DES", "PBE-SHA1-3DES")
-          end
-
-          def events(key)
-            response = self.get(join_path(path(key), 'events'), self.default_headers).body
-            ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
-          end
-
-          def service_levels(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'servicelevels'), self.default_headers).body
-            if response.empty?
-              return []
-            else
-              JSON.parse(response)
-            end
-          end
-
-          def auto_attach(key)
-            response = self.post(join_path(path(key), 'entitlements'), "", self.default_headers).body
-            if response.empty?
-              return nil
-            else
-              JSON.parse(response)
-            end
-          end
-
-          def path(id = nil)
-            "/candlepin/owners/#{id}"
           end
         end
       end
@@ -560,43 +258,6 @@ module Katello
 
           def path(id = nil)
             "/candlepin/users/#{id}"
-          end
-        end
-      end
-
-      class Pool < CandlepinResource
-        class << self
-          def find(pool_id)
-            pool_json = self.get(path(pool_id), self.default_headers).body
-            fail ArgumentError, "pool id cannot contain ?" if pool_id["?"]
-            JSON.parse(pool_json).with_indifferent_access
-          end
-
-          def get_for_owner(owner_key, include_temporary_guests = false)
-            url = "/candlepin/owners/#{owner_key}/pools?add_future=true"
-            url += "&attribute=unmapped_guests_only:!true" if include_temporary_guests
-            pools_json = self.get(url, self.default_headers).body
-            JSON.parse(pools_json)
-          end
-
-          def destroy(id)
-            fail ArgumentError, "pool id has to be specified" unless id
-            self.delete(path(id), self.default_headers).code.to_i
-          end
-
-          def entitlements(pool_id, included = [])
-            entitlement_json = self.get("#{path(pool_id)}/entitlements?#{included_list(included)}", self.default_headers).body
-            JSON.parse(entitlement_json)
-          end
-
-          def path(id = nil, owner_label = nil)
-            if owner_label && id
-              "/candlepin/owners/#{owner_label}/pools/#{id}"
-            elsif owner_label
-              "/candlepin/owners/#{owner_label}/pools/"
-            else
-              "/candlepin/pools/#{id}"
-            end
           end
         end
       end
@@ -909,3 +570,5 @@ module Katello
     end
   end
 end
+
+Dir["#{File.dirname(__FILE__)}/candlepin/*.rb"].each { |f| require f }
