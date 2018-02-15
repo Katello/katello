@@ -50,7 +50,9 @@ class BootstrapSelect extends React.Component {
   }
 
   render() {
-    return <FormControl {...this.props} componentClass="select" />;
+    // TODO: these classes are required because foreman assumes that all selects should use select2 and jquery multiselect
+    // TODO: see also http://projects.theforeman.org/issues/21952
+    return <FormControl {...this.props} componentClass="select" className="without_select2 without_jquery_multiselect"/>;
   }
 }
 
