@@ -229,6 +229,15 @@ module Katello
       refute_empty composite.duplicate_repositories_to_publish
     end
 
+    def test_repo_conflicts_non_composite
+      view = ContentView.new
+      view.repositories << katello_repositories(:fedora_17_x86_64)
+      view.repositories << katello_repositories(:rhel_6_x86_64)
+
+      assert view.repositories.to_a.all? { |repo| repo.library_instance? } #should all be library instances
+      assert_empty view.duplicate_repositories_to_publish
+    end
+
     def test_puppet_module_conflicts
       composite = ContentView.find(katello_content_views(:composite_view).id)
       view1 = create(:katello_content_view)
