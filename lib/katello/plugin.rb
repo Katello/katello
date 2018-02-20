@@ -200,7 +200,7 @@ Foreman::Plugin.register :katello do
        :parent => :lab_features_menu,
        :turbolinks => false
 
-  allowed_template_helpers :subscription_manager_configuration_url
+  allowed_template_helpers :subscription_manager_configuration_url, :repository_url
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
   end
