@@ -48,16 +48,19 @@ module Katello
       end
 
       def subscription_facet
+        return nil if self.consumer_uuid.nil?
         ::Katello::Host::SubscriptionFacet.where(uuid: self.consumer_uuid).first
       end
 
       def create_pool_on_host
+        return if self.subscription_facet.nil?
         pool = self.pool_by_reference_id
         ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
                                                pool_id: pool.id).first_or_create
       end
 
       def remove_pool_from_host
+        return if self.subscription_facet.nil?
         pool = self.pool_by_reference_id
         ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
                                                pool_id: pool.id).destroy_all

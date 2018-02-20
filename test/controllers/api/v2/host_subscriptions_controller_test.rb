@@ -294,7 +294,8 @@ module Katello
     end
 
     def test_destroy
-      ::Katello::RegistrationManager.expects(:unregister_host).with(@host)
+      ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true)
+
       delete :destroy, params: { :host_id => @host.id }
 
       assert_response :success
