@@ -48,7 +48,7 @@ module Katello
     api :DELETE, "/hosts/:host_id/subscriptions/", N_("Unregister the host as a subscription consumer")
     param :host_id, Integer, :desc => N_("Id of the host"), :required => true
     def destroy
-      Katello::RegistrationManager.unregister_host(@host)
+      Katello::RegistrationManager.unregister_host(@host, :unregistering => true)
       @host.reload
       respond_for_destroy(:resource => @host)
     end

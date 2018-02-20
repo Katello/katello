@@ -24,6 +24,76 @@ module Katello::Host
 
         assert_action_planed_with action, Actions::Katello::Host::GenerateApplicability, [@host]
       end
+
+      it 'runs' do
+        profile = [{:name => "foo", :version => "1", :release => "3"}]
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        ::Host.expects(:find_by).returns(@host)
+        mock_consumer = mock
+        mock_consumer.expects(:upload_package_profile)
+        ::Katello::Pulp::Consumer.expects(:new).returns(mock_consumer)
+        @host.expects(:import_package_profile).with(any_parameters)
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
+
+      it 'runs and no raised exception when pulp 404s' do
+        profile = [{:name => "foo", :version => "1", :release => "3"}]
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        ::Host.expects(:find_by).returns(@host)
+        mock_consumer = mock
+        mock_consumer.expects(:upload_package_profile).raises(RestClient::ResourceNotFound)
+        ::Katello::Pulp::Consumer.expects(:new).returns(mock_consumer)
+        @host.expects(:import_package_profile).with(any_parameters).never
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
+
+      it 'runs and no raised exception if host not found' do
+        profile = [{:name => "foo", :version => "1", :release => "3"}]
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        ::Host.expects(:find_by).returns(nil)
+        ::Katello::Pulp::Consumer.expects(:new).never
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
+
+      it 'runs and no raised exception if host sub facet not found' do
+        profile = [{:name => "foo", :version => "1", :release => "3"}]
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        ::Host.expects(:find_by).returns(@host)
+        @host.expects(:content_facet).returns(nil)
+        ::Katello::Pulp::Consumer.expects(:new).never
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
+
+      it 'runs and no raised exception if host not found via FK error' do
+        profile = [{:name => "foo", :version => "1", :release => "3"}]
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        ::Host.expects(:find_by).returns(@host)
+        mock_consumer = mock
+        mock_consumer.expects(:upload_package_profile)
+        ::Katello::Pulp::Consumer.expects(:new).returns(mock_consumer)
+        @host.expects(:import_package_profile).with(any_parameters).raises(ActiveRecord::InvalidForeignKey)
+
+        plan_action action, @host, profile.to_json
+        run_action action
+      end
     end
   end
 end
