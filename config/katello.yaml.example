@@ -1,4 +1,14 @@
 :katello:
+  #if this block is not define, all types are enabled
+  #types are defined in lib/katello/repository_types/*.rb
+  :content_types:
+    :yum: true
+    :file: true
+    :deb: true
+    :puppet: true
+    :docker: true
+    :ostree: true
+
   :use_cp: true # set to true/false if you want to override default
   :use_pulp: true # set to true/false if you want to override default
 

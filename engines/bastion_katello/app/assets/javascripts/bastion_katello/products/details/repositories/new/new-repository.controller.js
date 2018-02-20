@@ -15,13 +15,14 @@
  * @requires DownloadPolicy
  * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
+ * @requires RepositoryTypesService
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
-    function ($scope, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
+    ['$scope', 'Repository', 'Product', 'ContentCredential', 'FormUtils', 'translate', 'Notification', 'ApiErrorHandler', 'BastionConfig', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture', 'RepositoryTypesService',
+    function ($scope, Repository, Product, ContentCredential, FormUtils, translate, Notification, ApiErrorHandler, BastionConfig, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture, RepositoryTypesService) {
 
         function success() {
             Notification.setSuccessMessage(translate('Repository %s successfully created.').replace('%s', $scope.repository.name));
@@ -69,9 +70,8 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
 
-        Repository.repositoryTypes({'creatable': true}, function (data) {
-            $scope.repositoryTypes = data;
-        });
+        $scope.repositoryTypes = RepositoryTypesService.creatable();
+        $scope.repositoryTypes = _.sortBy($scope.repositoryTypes, 'name');
 
         $scope.checksums = Checksum.checksums;
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;

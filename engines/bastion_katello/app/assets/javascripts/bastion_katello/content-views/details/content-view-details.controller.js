@@ -13,8 +13,8 @@
  *   Provides the functionality specific to the Content View Details page.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', '$q', 'ContentView', 'translate', 'ApiErrorHandler', 'Notification',
-    function ($scope, $q, ContentView, translate, ApiErrorHandler, Notification) {
+    ['$scope', '$q', 'ContentView', 'translate', 'ApiErrorHandler', 'Notification', 'RepositoryTypesService',
+    function ($scope, $q, ContentView, translate, ApiErrorHandler, Notification, RepositoryTypesService) {
         $scope.saveSuccess = function () {
             Notification.setSuccessMessage(translate('Content View updated.'));
         };
@@ -29,6 +29,8 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
             error: false,
             loading: true
         };
+
+        $scope.repositoryTypeEnabled = RepositoryTypesService.repositoryTypeEnabled;
 
         $scope.taskTypes = {
             publish: "Actions::Katello::ContentView::Publish",

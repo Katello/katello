@@ -4,7 +4,8 @@ describe('Controller: NewRepositoryController', function() {
         Notification,
         DownloadPolicy,
         OstreeUpstreamSyncPolicy,
-        $httpBackend;
+        $httpBackend,
+        RepositoryTypesService;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
 
@@ -28,9 +29,9 @@ describe('Controller: NewRepositoryController', function() {
         $scope.$stateParams = {productId: 1};
         $scope.repositoryForm = $injector.get('MockForm');
 
-        Repository.repositoryTypes = function (data, func) {
-            $scope.repositoryTypesTestData = data;
-            $scope.repositoryTypesTestCalled = true;
+        RepositoryTypesService = {};
+        RepositoryTypesService.creatable = function () {
+            return [{name: 'yum', name: 'puppet'}]
         };
 
         Setting.get = function (data, succ, err) {
@@ -45,7 +46,8 @@ describe('Controller: NewRepositoryController', function() {
             ContentCredential: ContentCredential,
             Architecture: Architecture,
             Notification: Notification,
-            Setting: Setting
+            Setting: Setting,
+            RepositoryTypesService: RepositoryTypesService
         });
     }));
 
@@ -53,10 +55,6 @@ describe('Controller: NewRepositoryController', function() {
         expect($scope.repository).toBeDefined();
     });
 
-    it('should define a set of repository types', function() {
-        expect($scope.repositoryTypesTestCalled).toBe(true);
-        expect($scope.repositoryTypesTestData["creatable"]).toBeDefined();
-    });
 
     it('should fetch available Content Credentials', function() {
         expect($scope.contentCredentials).toBeDefined();
