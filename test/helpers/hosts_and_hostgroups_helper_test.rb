@@ -187,9 +187,10 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     @hostgroup.content_source = @content_source
 
     @host = ::Host.new(:architecture => @arch, :operatingsystem => @os,
-                      :content_facet_attributes => {:lifecycle_environment_id => @env.id,
-                                                    :content_view_id => @cv.id,
-                                                    :content_source_id => @content_source.id})
+                       :content_facet_attributes => {:lifecycle_environment_id => @env.id,
+                                                     :content_view_id => @cv.id,
+                                                     :content_source_id => @content_source.id}
+                      )
   end
 
   test "must return host or host group kickstart id" do

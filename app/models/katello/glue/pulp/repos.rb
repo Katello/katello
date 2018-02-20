@@ -7,9 +7,9 @@ module Katello
     end
 
     def self.repo_path_from_content_path(environment, content_path)
-      content_path = content_path.sub(/^\//, "")
-      path_prefix = [environment.organization.label, environment.label].join("/")
-      "#{path_prefix}/#{content_path}"
+      path = content_path.sub(%r|^/|, '')
+      path_prefix = [environment.organization.label, environment.label].join('/')
+      "#{path_prefix}/#{path}"
     end
 
     # repo path for custom product repos (RH repo paths are derived from
