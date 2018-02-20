@@ -7,7 +7,8 @@ module Katello
 
       # Plugin constructor
       def register(id, &block)
-        if find(id).blank?
+        configured = SETTINGS[:katello][:content_types].nil? || SETTINGS[:katello][:content_types].with_indifferent_access[id]
+        if find(id).blank? && configured
           repository_type = ::Katello::RepositoryType.new(id)
           repository_type.instance_eval(&block) if block_given?
           repository_types[id.to_s] = repository_type

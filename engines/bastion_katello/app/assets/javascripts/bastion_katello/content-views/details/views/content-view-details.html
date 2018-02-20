@@ -61,7 +61,9 @@
 
       <li uib-dropdown
           ng-class="{active: stateIncludes('content-view.repositories.yum') || stateIncludes('content-view.yum.filters')}"
-          ng-hide="contentView.composite">
+          ng-hide="contentView.composite"
+          ng-show="repositoryTypeEnabled('yum')">
+
         <a uib-dropdown-toggle>
           <span translate>Yum Content</span>
           <i class="fa fa-chevron-down"></i>
@@ -81,21 +83,24 @@
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.deb')}"
-          ng-hide="contentView.composite">
+          ng-hide="contentView.composite"
+          ng-show="repositoryTypeEnabled('deb')">
         <a ui-sref="content-view.repositories.deb.list" translate>
           Apt Repositories
         </a>
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.file')}"
-          ng-hide="contentView.composite">
+          ng-hide="contentView.composite"
+          ng-show="repositoryTypeEnabled('file')">
         <a ui-sref="content-view.repositories.file.list" translate>
           File Repositories
         </a>
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.puppet-modules')}"
-          ng-hide="contentView.composite">
+          ng-hide="contentView.composite"
+          ng-show="repositoryTypeEnabled('puppet')">
         <a ui-sref="content-view.puppet-modules.list" translate>
           Puppet Modules
         </a>
@@ -103,7 +108,8 @@
 
       <li uib-dropdown
           ng-class="{active: stateIncludes('content-view.repositories.docker') || stateIncludes('content-view.docker.filters')}"
-          ng-hide="contentView.composite">
+          ng-hide="contentView.composite"
+          ng-show="repositoryTypeEnabled('docker')">
         <a uib-dropdown-toggle>
           <span translate>Docker Content</span>
           <i class="fa fa-chevron-down"></i>
@@ -123,7 +129,8 @@
       </li>
 
       <li ng-class="{active: stateIncludes('content-view.repositories.ostree')}"
-          ng-hide="contentView.composite">
+          ng-hide="contentView.composite"
+          ng-show="repositoryTypeEnabled('ostree')">
         <a ui-sref="content-view.repositories.ostree.list" translate>
           OSTree Content
         </a>

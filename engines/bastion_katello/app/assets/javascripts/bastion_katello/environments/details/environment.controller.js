@@ -8,7 +8,7 @@
      * @description
      *   Enter a description!
      */
-    function EnvironmentController($scope, Environment, translate, ContentService, ApiErrorHandler, Notification) {
+    function EnvironmentController($scope, Environment, translate, ContentService, ApiErrorHandler, Notification, RepositoryTypesService) {
 
         $scope.contentTypes = ContentService.contentTypes;
         $scope.panel = {
@@ -16,6 +16,7 @@
             loading: true
         };
 
+        $scope.repositoryTypeEnabled = RepositoryTypesService.repositoryTypeEnabled;
         $scope.environment = Environment.get({id: $scope.$stateParams.environmentId}, function () {
             $scope.panel.loading = false;
         }, function (response) {
@@ -67,6 +68,6 @@
         .module('Bastion.environments')
         .controller('EnvironmentController', EnvironmentController);
 
-    EnvironmentController.$inject = ['$scope', 'Environment', 'translate', 'ContentService', 'ApiErrorHandler'];
+    EnvironmentController.$inject = ['$scope', 'Environment', 'translate', 'ContentService', 'ApiErrorHandler', 'Notification', 'RepositoryTypesService'];
 
 })();

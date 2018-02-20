@@ -1,4 +1,5 @@
 require 'katello/permission_creator'
+require 'katello/repository_types.rb'
 
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
@@ -89,68 +90,82 @@ Foreman::Plugin.register :katello do
 
     divider :top_menu, :caption => N_('Content Types'), :parent => :content_menu
 
-    menu :top_menu,
-         :debs,
-         :caption => N_('Deb Packages'),
-         :url => '/debs',
-         :url_hash => {:controller => 'katello/api/v2/debs',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DEB_TYPE)
+      menu :top_menu,
+           :debs,
+           :caption => N_('Deb Packages'),
+           :url => '/debs',
+           :url_hash => {:controller => 'katello/api/v2/debs',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
-    menu :top_menu,
-         :docker_tags,
-         :caption => N_('Docker Tags'),
-         :url => '/docker_tags',
-         :url_hash => {:controller => 'katello/api/v2/docker_tags',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DOCKER_TYPE)
+      menu :top_menu,
+           :docker_tags,
+           :caption => N_('Docker Tags'),
+           :url => '/docker_tags',
+           :url_hash => {:controller => 'katello/api/v2/docker_tags',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
-    menu :top_menu,
-         :errata,
-         :caption => N_('Errata'),
-         :url => '/errata',
-         :url_hash => {:controller => 'katello/api/v2/errata',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE)
+      menu :top_menu,
+           :errata,
+           :caption => N_('Errata'),
+           :url => '/errata',
+           :url_hash => {:controller => 'katello/api/v2/errata',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
-    menu :top_menu,
-         :files,
-         :caption => N_('Files'),
-         :url => '/files',
-         :url_hash => {:controller => 'katello/api/v2/file_units',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::FILE_TYPE)
+      menu :top_menu,
+           :files,
+           :caption => N_('Files'),
+           :url => '/files',
+           :url_hash => {:controller => 'katello/api/v2/file_units',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
-    menu :top_menu,
-         :ostree_branches,
-         :caption => N_('OSTree Branches'),
-         :url => '/ostree_branches',
-         :url_hash => {:controller => 'katello/api/v2/ostree_branches',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::OSTREE_TYPE)
+      menu :top_menu,
+           :ostree_branches,
+           :caption => N_('OSTree Branches'),
+           :url => '/ostree_branches',
+           :url_hash => {:controller => 'katello/api/v2/ostree_branches',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
-    menu :top_menu,
-         :packages,
-         :caption => N_('Packages'),
-         :url => '/packages',
-         :url_hash => {:controller => 'katello/api/v2/packages',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE)
+      menu :top_menu,
+           :packages,
+           :caption => N_('Packages'),
+           :url => '/packages',
+           :url_hash => {:controller => 'katello/api/v2/packages',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
 
-    menu :top_menu,
-         :puppet_modules,
-         :caption => N_('Puppet Modules'),
-         :url => '/puppet_modules',
-         :url_hash => {:controller => 'katello/api/v2/puppet_modules',
-                       :action => 'index'},
-         :engine => Katello::Engine,
-         :turbolinks => false
+    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::PUPPET_TYPE)
+      menu :top_menu,
+           :puppet_modules,
+           :caption => N_('Puppet Modules'),
+           :url => '/puppet_modules',
+           :url_hash => {:controller => 'katello/api/v2/puppet_modules',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+    end
   end
 
   menu :top_menu,

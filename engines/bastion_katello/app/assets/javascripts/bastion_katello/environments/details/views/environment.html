@@ -20,7 +20,8 @@
         </a>
       </li>
 
-      <li ng-repeat="type in contentTypes" ng-class="{active: isState('environment.' + type.state)}">
+      <li ng-repeat="type in contentTypes" ng-class="{active: isState('environment.' + type.state)}"
+          ng-show="type.repositoryType == undefined || repositoryTypeEnabled(type.repositoryType)">
         <a ng-href="{{ $state.href('environment.' + type.state, {environmentId: environment.id}) }}">
           <span translate>{{ type.display }}</span>
         </a>

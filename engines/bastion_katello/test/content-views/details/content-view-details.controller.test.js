@@ -5,12 +5,14 @@ describe('Controller: ContentViewDetailsController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            translate = $injector.get('translateMock');
+            translate = $injector.get('translateMock'),
+            RepositoryTypesService = {};
 
         newContentView = {id: 7};
         ContentView = $injector.get('MockResource').$new();
         ContentView.copy = function(params, success){success(newContentView)};
 
+        RepositoryTypesService.repositoryTypeEnabled = function(){};
         ContentViewVersion = $injector.get('MockResource').$new();
         AggregateTask = {newAggregate: function(){}};
 
@@ -30,12 +32,17 @@ describe('Controller: ContentViewDetailsController', function() {
             ContentViewVersion: ContentViewVersion,
             AggregateTask: AggregateTask,
             translate: translate,
-            Notification: Notification
+            Notification: Notification,
+            RepositoryTypesService: RepositoryTypesService
         });
     }));
 
     it("retrieves and puts the content view on the scope", function() {
         expect($scope.contentView).toBeDefined();
+    });
+
+    it("stores repositoryTypeEnabled on the scope", function() {
+        expect($scope.repositoryTypeEnabled).toBeDefined();
     });
 
     it('provides a method to save a product', function() {
