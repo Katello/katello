@@ -57,6 +57,17 @@ module Katello
                                                     pool_id: @pool.id).count == 0
     end
 
+    def test_create_pool_on_nonexistant_host
+      @message_handler.expects(:subscription_facet).returns(nil).at_least_once
+      @message_handler.expects(:reference_id).returns(@pool.cp_id).never
+
+      @message_handler.create_pool_on_host
+      ::Katello::SubscriptionFacetPool.expects(:where).never
+
+      @message_handler.remove_pool_from_host
+      ::Katello::SubscriptionFacetPool.expects(:where).never
+    end
+
     def test_import_pool
       pool = ::Katello::Pool.first
       ::Katello::Pool.expects(:import_pool).with(pool.id, true).returns(true).once

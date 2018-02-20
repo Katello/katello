@@ -21,27 +21,44 @@ module Katello::Host
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, {})
+        ::Host.expects(:find).returns(@host)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => false, :organization_destroy => false)
 
         plan_action action, @host
+        run_action action
+      end
+
+      it 'plans and host has since been deleted' do
+        action = create_action action_class
+        action.stubs(:action_subject).with(@host)
+
+        ::Host.expects(:find).raises(ActiveRecord::RecordNotFound)
+        ::Katello::RegistrationManager.expects(:unregister_host).never
+
+        plan_action action, @host
+        run_action action
       end
 
       it 'plans with unregistering true' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true)
+        ::Host.expects(:find).returns(@host)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true, :organization_destroy => false)
 
         plan_action action, @host, :unregistering => true
+        run_action action
       end
 
       it 'plans with organization_destroy true' do
         action = create_action action_class
         action.stubs(:action_subject).with(@host)
 
-        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :organization_destroy => true)
+        ::Host.expects(:find).returns(@host)
+        ::Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => false, :organization_destroy => true)
 
         plan_action action, @host, :organization_destroy => true
+        run_action action
       end
     end
   end

@@ -19,7 +19,7 @@ module Katello
         prepend Overrides
 
         def destroy
-          sync_task(::Actions::Katello::Host::Destroy, @host)
+          Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
           process_success
         rescue StandardError => ex
           process_error(:object => @host, :error_msg => ex.message, :redirect => saved_redirect_url_or(send("#{controller_name}_url")))

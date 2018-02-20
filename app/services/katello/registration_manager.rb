@@ -3,6 +3,10 @@ module Katello
     class << self
       private :new
 
+      # options:
+      #  * organization_destroy: destroy some data associated with host, but
+      #    leave items alone that will be removed later as part of org destroy
+      #  * unregistering: unregister the host but don't destroy it
       def unregister_host(host, options = {})
         organization_destroy = options.fetch(:organization_destroy, false)
         unregistering = options.fetch(:unregistering, false)
@@ -23,9 +27,7 @@ module Katello
           remove_host_artifacts(host, false)
         else
           host.content_facet.try(:destroy!)
-          unless host.destroy
-            fail host.errors.full_messages.join('; ')
-          end
+          destroy_host_record(host.id)
         end
       end
 
@@ -76,13 +78,20 @@ module Katello
 
       private
 
+      def destroy_host_record(host_id)
+        host = ::Host.find(host_id)
+        host.destroy
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.warn("Attempted to destroy host %s but host is already gone." % host_id)
+      end
+
       def get_uuid(params)
         params.key?(:uuid) ? params[:uuid] : SecureRandom.uuid
       end
 
       def remove_partially_registered_new_host(host)
         host.content_facet.try(:destroy!)
-        host.destroy!
+        destroy_host_record(host.id)
       end
 
       def create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)

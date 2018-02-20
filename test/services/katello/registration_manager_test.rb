@@ -91,6 +91,7 @@ module Katello
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
 
+        ::Host.expects(:find).returns(@host)
         ::Katello::Resources::Candlepin::Consumer.expects(:destroy)
         ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
 
@@ -142,7 +143,8 @@ module Katello
       def test_registration_dead_candlepin
         new_host = ::Host::Managed.new(:name => 'foobar', :managed => false, :organization => @library.organization)
 
-        new_host.expects(:destroy!)
+        ::Host.expects(:find).returns(new_host)
+        new_host.expects(:destroy)
         ::Katello::Resources::Candlepin::Consumer.expects(:create).with(@content_view_environment.cp_id, rhsm_params, []).raises("uhoh!")
         ::Runcible::Extensions::Consumer.any_instance.expects(:create).with('fake-uuid', :display_name => 'foobar').never
 
