@@ -14,9 +14,9 @@ module Katello
         validates_with Katello::Validators::ContentViewEnvironmentValidator
         validates_with Katello::Validators::HostgroupKickstartRepositoryValidator
 
-        scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source
-        scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view
-        scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment
+        scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source, :only_explicit => true
+        scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
+        scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment, :only_explicit => true
       end
 
       def content_view
