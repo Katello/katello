@@ -27,19 +27,31 @@ module Katello
                       :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
 
         def self.ensure_sync_notification
+          results = {:existing => [], :deleted => []}
           resource = Katello.pulp_server.resources.event_notifier
           url = SETTINGS[:katello][:post_sync_url]
           type = Runcible::Resources::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
           notifs = resource.list
 
-          #delete any similar tasks with the wrong url (in case it changed)
-          notifs.select { |n| n['event_types'] == [type] && n['notifier_config']['url'] != url }.each do |e|
-            resource.delete(e['id'])
+          # delete any similar tasks with the wrong url (in case it changed)
+          notifs.select { |n| n['event_types'] == [type] }.each do |e|
+            if e['notifier_config']['url'] != url
+              resource.delete(e['id'])
+              results[:deleted] << e
+            else
+              results[:existing] << e
+            end
           end
 
           #only create a notifier if one doesn't exist with the correct url
           exists = notifs.select { |n| n['event_types'] == [type] && n['notifier_config']['url'] == url }
-          resource.create(Runcible::Resources::EventNotifier::NotifierTypes::REST_API, {:url => url}, [type]) if exists.empty?
+
+          if exists.empty?
+            resource.create(Runcible::Resources::EventNotifier::NotifierTypes::REST_API, {:url => url}, [type])
+            results[:created] = url
+          end
+
+          results
         end
 
         def self.delete_orphaned_content

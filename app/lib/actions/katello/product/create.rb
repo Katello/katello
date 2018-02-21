@@ -27,6 +27,7 @@ module Actions
             action_subject product, :cp_id => product.cp_id
 
             plan_self
+            plan_action ::Actions::Pulp::Repository::EnsureSyncNotification
             plan_action Katello::Product::ReindexSubscriptions, product, subscription_id
           end
         end
@@ -34,8 +35,6 @@ module Actions
         def run
           product = ::Katello::Product.find(input[:product][:id])
           product.update_attributes!(:cp_id => input[:cp_id])
-
-          ::Katello::Repository.ensure_sync_notification
         end
 
         def humanized_name
