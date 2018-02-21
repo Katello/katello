@@ -281,6 +281,8 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
 
+      ::Katello::Repository.expects(:ensure_sync_notification)
+
       assert_action_planed_with(action, pulp_action_class,
                                 pulp_id: repository.pulp_id, task_id: nil, source_url: nil, options: {})
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent

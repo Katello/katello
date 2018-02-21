@@ -20,6 +20,8 @@ module Actions
         def plan(repo, pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
+          ::Katello::Repository.ensure_sync_notification
+
           source_url = options.fetch(:source_url, nil)
           incremental = options.fetch(:incremental, false)
           validate_contents = options.fetch(:validate_contents, false)
