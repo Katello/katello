@@ -32,6 +32,7 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo, :dependency => import_products.output)
               end
             end
+            plan_self
           end
         end
 
@@ -41,6 +42,13 @@ module Actions
 
         def humanized_name
           _("Refresh Manifest")
+        end
+
+        def finalize
+          organization = ::Organization.find(input[:organization][:id])
+          organization.update_attributes!(
+            :manifest_refreshed_at => Time.now,
+            :audit_comment => _('Manifest refreshed'))
         end
       end
     end
