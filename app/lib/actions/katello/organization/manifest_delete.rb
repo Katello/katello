@@ -15,11 +15,19 @@ module Actions
                 plan_action(Katello::Repository::RefreshRepository, repo)
               end
             end
+            plan_self
           end
         end
 
         def humanized_name
           _("Delete Manifest")
+        end
+
+        def finalize
+          organization = ::Organization.find(input[:organization][:id])
+          organization.update_attributes!(
+            :manifest_refreshed_at => Time.now,
+            :audit_comment => _('Manifest deleted'))
         end
       end
     end

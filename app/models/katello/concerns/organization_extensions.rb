@@ -34,6 +34,8 @@ module Katello
 
         attr_accessor :statistics
 
+        audited :only => [:manifest_refreshed_at]
+
         scope :having_name_or_label, ->(name_or_label) { where("name = :id or label = :id", :id => name_or_label) }
         scoped_search :on => :label, :complete_value => :true
 

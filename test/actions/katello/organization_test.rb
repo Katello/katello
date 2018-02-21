@@ -130,6 +130,23 @@ module ::Actions::Katello::Organization
                                  dependency: found.first.output
                                 )
     end
+
+    it 'plans & create audit record for organization with comment manifest refreshed' do
+      acme_org = get_organization(:empty_organization)
+      rhel7 = katello_repositories(:rhel_7_x86_64)
+      acme_org.stubs(:owner_details).returns({})
+      acme_org.products.stubs(:redhat).returns([rhel7.product])
+      action.stubs(:rand).returns('1234')
+
+      action.stubs(:link!)
+      action.stubs(:lock!)
+      action.stubs(:exclusive_lock!)
+
+      plan_action(action, acme_org)
+      assert_difference 'Audit.count', 1 do
+        finalize_action(action)
+      end
+    end
   end
 
   class ManifestImportTest < TestBase
@@ -156,6 +173,20 @@ module ::Actions::Katello::Organization
                                  rhel7
                                 )
     end
+
+    it 'plans & create audit record for organization with comment manifest imported' do
+      acme_org = get_organization(:empty_organization)
+      rhel7 = katello_repositories(:rhel_7_x86_64)
+      acme_org.products.stubs(:redhat).returns([rhel7.product])
+
+      action.stubs(:link!)
+      action.stubs(:lock!)
+      action.stubs(:exclusive_lock!)
+      plan_action(action, acme_org, '/tmp/1234.zip', false)
+      assert_difference 'Audit.count', 1 do
+        finalize_action(action)
+      end
+    end
   end
 
   class ManifestDeleteTest < TestBase
@@ -175,6 +206,20 @@ module ::Actions::Katello::Organization
                                  ::Actions::Katello::Repository::RefreshRepository,
                                  rhel7
                                 )
+    end
+
+    it 'creates audit record for organization after manifest deletion' do
+      acme_org = get_organization(:empty_organization)
+      rhel7 = katello_repositories(:rhel_7_x86_64)
+      acme_org.products.stubs(:redhat).returns([rhel7.product])
+
+      action.stubs(:link!)
+      action.stubs(:lock!)
+      action.stubs(:exclusive_lock!)
+      plan_action(action, acme_org)
+      assert_difference 'Audit.count', 1 do
+        finalize_action(action)
+      end
     end
   end
 end
