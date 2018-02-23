@@ -46,7 +46,7 @@ module Katello
         url = cfg[:url]
         uri = URI.parse(url)
         self.prefix = uri.path
-        self.site = "#{uri.scheme}://#{uri.host}"
+        self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
         self.consumer_secret = cfg[:oauth_secret]
         self.consumer_key = cfg[:oauth_key]
         self.ca_cert_file = cfg[:ca_cert_file]
