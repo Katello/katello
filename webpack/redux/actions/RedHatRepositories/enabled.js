@@ -1,5 +1,5 @@
 import api, { orgId } from '../../../services/api';
-import { normalizeRepositorySets } from './helpers';
+import { normalizeRepositorySets, repoTypeFilterToSearchQuery, joinSearchQueries } from './helpers';
 
 import {
   ENABLED_REPOSITORIES_REQUEST,
@@ -7,6 +7,7 @@ import {
   ENABLED_REPOSITORIES_FAILURE,
   REPOSITORY_DISABLED,
 } from '../../consts';
+import { propsToSnakeCase } from '../../../services/index';
 
 export const setRepositoryDisabled = repository => ({
   type: REPOSITORY_DISABLED,
@@ -14,17 +15,28 @@ export const setRepositoryDisabled = repository => ({
 });
 
 export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
-  dispatch({ type: ENABLED_REPOSITORIES_REQUEST });
+  dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams });
 
-  const params = { ...{ organization_id: orgId, enabled: 'true' }, ...extendedParams };
+  const searchParams = extendedParams.search || {};
+  const search = joinSearchQueries([
+    'redhat = true',
+    repoTypeFilterToSearchQuery(searchParams.filters || []),
+    searchParams.query,
+  ]);
+
+  const params = {
+    ...{ organization_id: orgId, enabled: 'true' },
+    ...propsToSnakeCase(extendedParams),
+    search,
+  };
 
   api
-    .get('/repository_sets', {}, params)
+    .get('/repositories', {}, params)
     .then(({ data }) => {
       dispatch({
         type: ENABLED_REPOSITORIES_SUCCESS,
         response: normalizeRepositorySets(data),
-        search: extendedParams.search,
+        search: searchParams,
       });
     })
     .catch((result) => {

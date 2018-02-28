@@ -3,20 +3,22 @@ import Immutable from 'seamless-immutable';
 export const initialState = Immutable({
   loading: true,
   results: [],
+  pagination: {},
 });
 
 export const loadingState = Immutable({
   loading: true,
   results: [],
+  pagination: {},
 });
 
 export const requestSuccessResponse = Immutable({
-  total: 5,
-  subtotal: 5,
-  page: null,
-  per_page: null,
+  total: 15,
+  subtotal: 10,
+  page: 1,
+  per_page: 5,
   error: null,
-  search: null,
+  search: 'name ~ Server',
   sort: {
     by: null,
     order: null,
@@ -107,6 +109,12 @@ export const successState = Immutable({
   loading: false,
   results: requestSuccessResponse.results,
   searchIsActive: false,
+  search: undefined,
+  pagination: {
+    page: 1,
+    perPage: 5,
+  },
+  itemCount: 10,
 });
 
 export const errorState = Immutable({

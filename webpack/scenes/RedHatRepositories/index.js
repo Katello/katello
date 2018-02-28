@@ -5,13 +5,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 import { Spinner } from 'patternfly-react';
 
 import { loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
-import MultiSelect from './components/MultiSelect';
-import Search from './components/Search';
+import SearchBar from './components/SearchBar';
 import { getSetsComponent, getEnabledComponent } from './helpers';
 
 class RedHatRepositoriesPage extends Component {
@@ -33,28 +32,36 @@ class RedHatRepositoriesPage extends Component {
 
         <Row className="toolbar-pf">
           <Col sm={12}>
-            <Form className="toolbar-pf-actions">
-              <FormGroup className="toolbar-pf-filter">
-                <Search />
-              </FormGroup>
-
-              <FormGroup className="toolbar-pf-filter">
-                <MultiSelect />
-              </FormGroup>
-            </Form>
+            <SearchBar />
           </Col>
         </Row>
 
         <Row>
           <Col sm={6}>
             <h2>{__('Available Repositories')}</h2>
-            <Spinner loading={repositorySets.loading}>{getSetsComponent(repositorySets)}</Spinner>
+            <Spinner loading={repositorySets.loading}>
+              {getSetsComponent(
+                repositorySets,
+                (pagination) => {
+                  this.props.loadRepositorySets({
+                    ...pagination,
+                  });
+                },
+              )}
+            </Spinner>
           </Col>
 
           <Col sm={6} className="background-container-gray">
             <h2>{__('Enabled Repositories')}</h2>
             <Spinner loading={enabledRepositories.loading} className="small-spacer">
-              {getEnabledComponent(enabledRepositories)}
+              {getEnabledComponent(
+                enabledRepositories,
+                (pagination) => {
+                  this.props.loadEnabledRepos({
+                    ...pagination,
+                  });
+                },
+              )}
             </Spinner>
           </Col>
         </Row>

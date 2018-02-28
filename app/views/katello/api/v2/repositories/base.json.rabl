@@ -2,9 +2,10 @@ object @resource
 
 extends 'katello/api/v2/common/identifier'
 
-attributes :content_type, :url, :relative_path, :arch
+attributes :content_type, :url, :relative_path, :arch, :content_id
 attributes :pulp_id => :backend_identifier
 attributes :cp_label => :content_label
+attributes :major, :minor
 
 child :product do |_product|
   attributes :id, :cp_id, :name
