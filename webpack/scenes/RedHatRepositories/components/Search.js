@@ -1,14 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { DropdownButton, MenuItem } from 'patternfly-react';
 import PropTypes from 'prop-types';
 
 import '../index.scss';
 import TypeAhead from '../../../move_to_pf/TypeAhead/TypeAhead';
 import { stringIncludes } from '../helpers';
-import { loadEnabledRepos } from '../../../redux/actions/RedHatRepositories/enabled';
-import { loadRepositorySets } from '../../../redux/actions/RedHatRepositories/sets';
 import api from '../../../services/api';
 
 class Search extends Component {
@@ -60,15 +57,12 @@ class Search extends Component {
   }
 
   onSearch(search) {
-    const searchList = this.state.searchList.key;
+    this.props.onSearch(search);
+  }
 
-    if (['both', 'available'].includes(searchList)) {
-      this.props.loadRepositorySets({ search });
-    }
-
-    if (['both', 'enabled'].includes(searchList)) {
-      this.props.loadEnabledRepos({ search });
-    }
+  onSelectSearchList(searchList) {
+    this.setState({ searchList });
+    this.props.onSelectSearchList(searchList.key);
   }
 
   getAutoCompleteEndpointParams(search) {
@@ -97,9 +91,9 @@ class Search extends Component {
             .map(({ key, title, ...rest }) => (
               <MenuItem
                 key={key}
-                onClick={() => {
-                  this.setState({ searchList: { key, title, ...rest } });
-                }}
+                onClick={() =>
+                  this.onSelectSearchList({ key, title, ...rest })
+                }
               >
                 {title}
               </MenuItem>
@@ -116,11 +110,8 @@ class Search extends Component {
 }
 
 Search.propTypes = {
-  loadEnabledRepos: PropTypes.func.isRequired,
-  loadRepositorySets: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  onSelectSearchList: PropTypes.func.isRequired,
 };
 
-export default connect(null, {
-  loadEnabledRepos,
-  loadRepositorySets,
-})(Search);
+export default Search;

@@ -166,6 +166,7 @@ module Katello
     scoped_search :on => :distribution_bootable, :complete_value => true
     scoped_search :on => :distribution_uuid, :complete_value => true
     scoped_search :on => :ignore_global_proxy, :complete_value => true
+    scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
 
     def organization
       if self.environment
@@ -741,6 +742,19 @@ module Katello
         to_return << repo if repo.link?
       end
       to_return
+    end
+
+    def self.search_by_redhat(_key, operator, value)
+      value = value == 'true'
+      value = !value if operator == '<>'
+
+      product_ids = Katello::Product.redhat.pluck(:id)
+      if product_ids.empty?
+        {:conditions => "1=0"}
+      else
+        operator = value ? 'IN' : 'NOT IN'
+        {:conditions => "#{Katello::Repository.table_name}.product_id #{operator} (#{product_ids.join(',')})"}
+      end
     end
 
     protected

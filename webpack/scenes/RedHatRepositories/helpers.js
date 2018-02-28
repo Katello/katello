@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ListView } from 'patternfly-react';
 
+import PaginationRow from '../../components/PaginationRow/index';
 import RepositorySet from './components/RepositorySet';
 import EnabledRepository from './components/EnabledRepository';
 
@@ -11,7 +11,14 @@ export const stringIncludes = (string, includes) => {
   return a.includes(b);
 };
 
-export const getSetsComponent = ({ results, searchIsActive }) => {
+export const getSetsComponent = (repoSetsState, onPaginationChange) => {
+  const {
+    results,
+    searchIsActive,
+    pagination,
+    itemCount,
+  } = repoSetsState;
+
   if (results.length === 0) {
     if (searchIsActive) {
       return <p>No repository sets match your search criteria.</p>;
@@ -25,19 +32,26 @@ export const getSetsComponent = ({ results, searchIsActive }) => {
     );
   }
   return (
-    <ListView>{results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}</ListView>
+    <ListView>
+      {results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}
+      <PaginationRow
+        viewType="list"
+        itemCount={itemCount}
+        pagination={pagination}
+        onChange={onPaginationChange}
+      />
+    </ListView>
   );
 };
 
-getSetsComponent.propTypes = {
-  results: PropTypes.arrayOf({}).isRequired,
-  searchIsActive: PropTypes.bool,
-};
-getSetsComponent.defaultProps = {
-  searchIsActive: false,
-};
+export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
+  const {
+    repositories,
+    searchIsActive,
+    pagination,
+    itemCount,
+  } = enabledReposState;
 
-export const getEnabledComponent = ({ repositories, searchIsActive }) => {
   if (repositories.length === 0) {
     if (searchIsActive) {
       return <p>No enabled repositories match your search criteria.</p>;
@@ -46,14 +60,14 @@ export const getEnabledComponent = ({ repositories, searchIsActive }) => {
   }
 
   return (
-    <ListView>{repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}</ListView>
+    <ListView>
+      {repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}
+      <PaginationRow
+        viewType="list"
+        itemCount={itemCount}
+        pagination={pagination}
+        onChange={onPaginationChange}
+      />
+    </ListView>
   );
-};
-
-getEnabledComponent.propTypes = {
-  repositories: PropTypes.arrayOf({}).isRequired,
-  searchIsActive: PropTypes.bool,
-};
-getEnabledComponent.defaultProps = {
-  searchIsActive: false,
 };

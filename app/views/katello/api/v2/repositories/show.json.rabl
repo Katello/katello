@@ -12,12 +12,11 @@ attributes :url,
            :relative_path
 extends 'katello/api/v2/repositories/base'
 
-attributes :major, :minor
 attributes :gpg_key_id
 attributes :ssl_ca_cert_id
 attributes :ssl_client_cert_id
 attributes :ssl_client_key_id
-attributes :content_id, :content_view_version_id, :library_instance_id
+attributes :content_view_version_id, :library_instance_id
 attributes :product_type
 attributes :promoted? => :promoted
 attributes :ostree_branch_names => :ostree_branches

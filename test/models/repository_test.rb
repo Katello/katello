@@ -483,6 +483,17 @@ module Katello
       assert_includes repos, @fedora_17_x86_64
       refute_includes repos, @puppet_forge
     end
+
+    def test_search_redhat
+      rhel_6 = katello_repositories(:rhel_6_x86_64)
+      rhel_7 = katello_repositories(:rhel_7_x86_64)
+
+      repos = Repository.search_for("redhat = true")
+      assert_includes repos, rhel_6
+      assert_includes repos, rhel_7
+      refute_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
   end
 
   class RepositoryInstanceTest < RepositoryTestBase

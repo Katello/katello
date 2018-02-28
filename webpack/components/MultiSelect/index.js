@@ -5,7 +5,9 @@ import { FormGroup, ControlLabel } from 'react-bootstrap';
 import BootstrapSelect from '../../move_to_pf/react-bootstrap-select';
 
 function MultiSelect(props) {
-  const options = props.options.map(option => (
+  const { options, onChange, ...otherProps } = props;
+
+  const optionComponents = options.map(option => (
     <option key={`option-${option.value}`} value={option.value}>
       {option.label}
     </option>
@@ -14,13 +16,20 @@ function MultiSelect(props) {
   return (
     <FormGroup controlId="formControlsSelectMultiple">
       <ControlLabel srOnly>{__('Select Value')}</ControlLabel>
-      <BootstrapSelect multiple>{options}</BootstrapSelect>
+      <BootstrapSelect {...otherProps} multiple onChange={evt => onChange(evt)}>
+        {optionComponents}
+      </BootstrapSelect>
     </FormGroup>
   );
 }
 
+MultiSelect.defaultProps = {
+  onChange: () => {},
+};
+
 MultiSelect.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onChange: PropTypes.func,
 };
 
 export default MultiSelect;
