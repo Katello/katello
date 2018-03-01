@@ -22,7 +22,11 @@ oses:
   section_end = (rhel_compatible && os_major <= 5) ? '' : '%end'
 %>
 install
+<% if host_param('kickstart_liveimg') %>
+liveimg --url=<%= host_param('kickstart_liveimg') %>
+<% else %>
 <%= @mediapath %>
+<% end %>
 lang en_US.UTF-8
 selinux --enforcing
 keyboard us
