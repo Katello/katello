@@ -1,6 +1,7 @@
 import Welcome from '../../scenes/Welcome';
-import Dashboard from '../../scenes/Dashboard';
 import Repos from '../../scenes/RedHatRepositories';
+import Subscriptions from '../../scenes/Subscriptions';
+
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
@@ -10,13 +11,13 @@ export const links = [
     component: Welcome,
   },
   {
-    text: 'Dashboard',
-    path: 'xui/dashboard',
-    component: Dashboard,
-  },
-  {
     text: 'RH Repos',
     path: 'xui/repos',
     component: Repos,
+  },
+  {
+    text: 'RH Subscriptions',
+    path: 'xui/subscriptions',
+    component: Subscriptions,
   },
 ];
