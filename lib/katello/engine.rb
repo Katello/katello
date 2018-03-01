@@ -11,7 +11,7 @@ module Katello
       )
     end
 
-    initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
+    initializer 'katello.mount_engine', :before => :sooner_routes_load, :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
 
@@ -100,7 +100,7 @@ module Katello
       app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
     end
 
-    initializer "katello.paths" do |app|
+    initializer "katello.paths", :before => :sooner_routes_load do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/rhsm.rb"
       app.routes_reloader.paths.unshift("#{Katello::Engine.root}/config/routes/overrides.rb")
