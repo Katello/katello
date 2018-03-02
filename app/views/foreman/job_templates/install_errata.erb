@@ -15,5 +15,10 @@ foreign_input_sets:
   exclude: action,package
 %>
 
-<% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
-<%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
+<% if @host.operatingsystem.family == 'Suse' -%>
+    <% advisories = input(:errata).split(',').join(' ') %>
+    <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
+<% else %>
+    <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
+    <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>
+<% end %>
