@@ -133,6 +133,7 @@ module Katello
     validate :ensure_docker_repo_unprotected, :if => :docker?
     validate :ensure_has_url_for_ostree, :if => :ostree?
     validate :ensure_ostree_repo_protected, :if => :ostree?
+    validate :ensure_compatible_download_policy, :if => :yum?
 
     before_validation :set_pulp_id
     before_validation :set_container_repository_name, :if => :docker?
@@ -767,6 +768,13 @@ module Katello
       # is currently being used for the name, it will be downcased for this content type.
       if self.content_type == Repository::DOCKER_TYPE
         self.pulp_id = self.pulp_id.downcase
+      end
+    end
+
+    def ensure_compatible_download_policy
+      if library_instance? && !url.blank? && URI(url).scheme == 'file' &&
+          [::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND, ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND].include?(download_policy)
+        errors.add(:download_policy, N_("Cannot sync file:// repositories with On Demand or Background Download Policies"))
       end
     end
 
