@@ -132,6 +132,22 @@ module Katello
       assert @repo.errors.include?(:download_policy)
     end
 
+    def test_compatible_download_policy
+      @repo.content_type = 'yum'
+      @repo.download_policy = 'on_demand'
+      @repo.url = 'http://some.website/'
+      assert @repo.valid?
+
+      @repo.url = 'file://my.hard.drive/'
+      refute @repo.valid?
+
+      @repo.download_policy = 'background'
+      refute @repo.valid?
+
+      @repo.download_policy = 'immediate'
+      assert @repo.valid?
+    end
+
     def test_unique_repository_label_per_product_and_environment
       @repo.save
       @repo2 = build(:katello_repository,

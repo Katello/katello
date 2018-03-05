@@ -20,6 +20,7 @@ module Katello
       @cvpe_one = katello_content_view_puppet_environments(:archive_view_puppet_environment)
       @fedora_17_x86_64.relative_path = 'test_path/'
       @fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
+      @fedora_17_x86_64.download_policy = 'immediate'
     end
 
     def backend_stubs
