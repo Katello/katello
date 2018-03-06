@@ -136,6 +136,8 @@ module Katello
           'CentOS'
         elsif name =~ /fedora/
           'Fedora'
+        elsif name =~ /sles/ || name =~ /suse.*enterprise.*/
+          'SLES'
         end
       end
     end
