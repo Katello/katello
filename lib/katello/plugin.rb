@@ -223,6 +223,7 @@ Foreman::Plugin.register :katello do
   logger :cp_proxy, :enabled => true
   logger :action, :enabled => true
   logger :manifest_import_logger, :enabled => true
+  logger :registry_proxy, :enabled => true
 
   widget 'errata_widget', :name => 'Latest Errata', :sizey => 1, :sizex => 6
   widget 'content_views_widget', :name => 'Content Views', :sizey => 1, :sizex => 6
