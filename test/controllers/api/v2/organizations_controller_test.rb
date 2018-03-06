@@ -89,6 +89,95 @@ module Katello
       assert_response :unprocessable_entity
     end
 
+    def test_create_with_auto_label
+      Organization.any_instance.stubs(:redhat_repository_url)
+      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+      name = "Organization With Label"
+      assert_sync_task ::Actions::Katello::Organization::Create do |org|
+        org.name.must_equal name
+        assert org.valid?
+        org.label.wont_be_empty
+        org.stubs(:reload)
+      end
+      post :create, params: { :organization => {:name => name} }
+      assert_response :success
+    end
+
+    def test_create_identical_name_and_label
+      Organization.any_instance.stubs(:redhat_repository_url)
+      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+      name = "organization_with_name_and_label_identical"
+      assert_sync_task ::Actions::Katello::Organization::Create do |org|
+        org.name.must_equal name
+        org.label.must_equal name
+        assert org.valid?
+        org.stubs(:reload)
+      end
+      post :create, params: { :organization => {:name => name, :label => name} }
+      assert_response :success
+    end
+
+    def test_create_with_name_and_label
+      Organization.any_instance.stubs(:redhat_repository_url)
+      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+
+      name = "Organization With Label"
+      label = "org_with_label"
+      assert_sync_task ::Actions::Katello::Organization::Create do |org|
+        org.name.must_equal name
+        org.label.must_equal label
+        assert org.valid?
+        org.stubs(:reload)
+      end
+      post :create, params: { :organization => {:name => name, :label => label} }
+      assert_response :success
+    end
+
+    def test_create_with_name_label_description
+      Organization.any_instance.stubs(:redhat_repository_url)
+      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+
+      name = "Organization With Name Label Description"
+      label = "organization_with_name_label_description"
+      description = "Organization Description"
+      assert_sync_task ::Actions::Katello::Organization::Create do |org|
+        org.name.must_equal name
+        org.label.must_equal label
+        org.description.must_equal description
+        assert org.valid?
+        org.stubs(:reload)
+      end
+      post :create, params: { :organization => {:name => name, :label => label, :description => description} }
+      assert_response :success
+    end
+
+    def test_create_with_name_description_auto_label
+      Organization.any_instance.stubs(:redhat_repository_url)
+      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+      name = "Organization With Name Description Auto Label"
+      description = "Organization Description"
+      assert_sync_task ::Actions::Katello::Organization::Create do |org|
+        org.name.must_equal name
+        org.description.must_equal description
+        assert org.valid?
+        org.label.wont_be_empty
+        org.stubs(:reload)
+      end
+      post :create, params: { :organization => {:name => name, :description => description} }
+      assert_response :success
+    end
+
+    def test_controller_path
+      get :show, params: { :id => @organization.id }
+      assert_response :success
+      assert_equal "/katello/api/organizations/#{@organization.id}", @request.fullpath
+    end
+
     def test_delete
       assert_async_task ::Actions::Katello::Organization::Destroy do |org|
         org.id.must_equal @organization.id
