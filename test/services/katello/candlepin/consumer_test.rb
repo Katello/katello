@@ -57,6 +57,8 @@ module Katello
         assert_equal 'CentOS', Candlepin::Consumer.distribution_to_puppet_os('CentOS')
         assert_equal 'CentOS', Candlepin::Consumer.distribution_to_puppet_os('centosGood')
 
+        assert_equal 'SLES', Candlepin::Consumer.distribution_to_puppet_os('SLES')
+        assert_equal 'SLES', Candlepin::Consumer.distribution_to_puppet_os('SUSE Linux Enterprise Server')
         assert_equal nil, Candlepin::Consumer.distribution_to_puppet_os('RedHot')
       end
     end
