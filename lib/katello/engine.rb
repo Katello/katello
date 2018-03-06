@@ -103,6 +103,7 @@ module Katello
     initializer "katello.paths", :before => :sooner_routes_load do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/rhsm.rb"
+      app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/registry.rb"
       app.routes_reloader.paths.unshift("#{Katello::Engine.root}/config/routes/overrides.rb")
     end
 

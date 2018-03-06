@@ -174,6 +174,7 @@ module Katello
     scoped_search :on => :distribution_uuid, :complete_value => true
     scoped_search :on => :ignore_global_proxy, :complete_value => true
     scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
+    scoped_search :on => :container_repository_name, :complete_value => true
 
     def organization
       if self.environment
