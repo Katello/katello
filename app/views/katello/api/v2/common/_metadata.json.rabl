@@ -12,3 +12,13 @@ node(:sort) do
     :order => params[:sort_order]
   }
 end
+
+if User.current && ::ColumnRegistry::Manager.resources.include?(resource_class.name)
+  node(:table_configuration) do
+    {
+      :resource => resource_class.name,
+      :columns => ::UserColumn.collate(resource_class.name,
+                   User.current.user_columns.resource(resource_class.name).first.try(:columns))
+    }
+  end
+end

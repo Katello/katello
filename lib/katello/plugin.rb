@@ -230,6 +230,32 @@ Foreman::Plugin.register :katello do
   widget 'subscription_status_widget', :name => 'Subscription Status', :sizey => 1, :sizex => 6
   widget 'host_collection_widget', :name => 'Host Collections', :sizey => 1, :sizex => 6
 
+  column_resource ::Katello::Pool.name do |resource|
+    resource.column 'name', :description => N_("Name"),
+                            :path => "name",
+                            :default_enabled => true
+
+    resource.column 'account', :description => N_("Account"),
+                               :path => "account_number",
+                               :default_enabled => true
+
+    resource.column 'contract', :description => N_("Contract"),
+                                :path => "contract_number",
+                                :default_enabled => true
+
+    resource.column 'start_date', :description => N_("Start Date"),
+                                  :path => "start_date",
+                                  :default_enabled => true
+
+    resource.column 'end_date', :description => N_("End Date"),
+                                :path => "end_date",
+                                :default_enabled => true
+
+    resource.column 'entitlements', :description => N_("Entitlements"),
+                                    :path => "consumed",
+                                    :default_enabled => true
+  end
+
   extend_page("smart_proxies/show") do |context|
     context.add_pagelet :main_tabs,
       :name => _("Content"),
