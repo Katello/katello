@@ -82,7 +82,7 @@ module Katello
     end
 
     def default_sort
-      lambda { |relation| relation.joins(:content).order("#{Katello::Content.table_name}.name asc") }
+      lambda { |relation| relation.order("#{Katello::Content.table_name}.name asc") }
     end
 
     def index_relation
@@ -93,7 +93,7 @@ module Katello
       end
 
       relation = relation.enabled(@organization) if ::Foreman::Cast.to_bool(params[:enabled])
-      relation = relation.joins(:content).where(:name => params[:name]) if params[:name].present?
+      relation = relation.where(Katello::Content.table_name => {:name => params[:name]}) if params[:name].present?
       relation.redhat
     end
 

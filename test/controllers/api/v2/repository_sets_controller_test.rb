@@ -34,6 +34,18 @@ module Katello
     def test_index_product
       get :index, params: { :product_id => @product.id }
 
+      body = JSON.parse(response.body)
+
+      assert_empty body['error']
+      assert_response :success
+    end
+
+    def test_index_name
+      get :index, params: { :product_id => @product.id, :name => 'foo' }
+
+      body = JSON.parse(response.body)
+
+      assert_empty body['error']
       assert_response :success
     end
 
@@ -46,18 +58,27 @@ module Katello
     def test_index_org_enabled
       get :index, params: { :organization_id => @organization.id, :enabled => true }
 
+      body = JSON.parse(response.body)
+
+      assert_empty body['error']
       assert_response :success
     end
 
     def test_index_org
       get :index, params: { :organization_id => @organization.id}
 
+      body = JSON.parse(response.body)
+
+      assert_empty body['error']
       assert_response :success
     end
 
     def test_index_org_id
       get :index, params: { :organization_id => @organization.id}
 
+      body = JSON.parse(response.body)
+
+      assert_empty body['error']
       assert_response :success
     end
 
