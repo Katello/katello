@@ -102,7 +102,9 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
             formData.authenticityToken = $window.AUTH_TOKEN.replace(/&quot;/g, '');
             formData.remoteAction = 'errata_install';
             formData.errata = errataIds.join(',');
-            formData.hostIds = selectedHosts.included.ids.join(',');
+            if (selectedHosts.included.ids) {
+                formData.hostIds = selectedHosts.included.ids.join(',');
+            }
             formData.search = selectedHosts.included.search;
             formData.customize = customize;
 
