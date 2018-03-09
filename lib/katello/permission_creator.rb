@@ -13,6 +13,7 @@ module Katello
       host_collections_permissions
       lifecycle_environment_permissions
       product_permissions
+      #repository_permissions
       subscription_permissions
       sync_plan_permissions
       user_permissions
@@ -294,6 +295,11 @@ module Katello
                            'katello/api/v2/organizations' => [:repo_discover, :cancel_repo_discover]
                          },
                          :resource_type => 'Katello::Product'
+      @plugin.permission :edit_products,
+                         {
+                           'katello/api/v2/repositories' => [:update, :remove_content, :import_uploads, :upload_content, :republish]
+                         },
+                         :resource_type => 'Katello::Repository'
       @plugin.permission :destroy_products,
                          {
                            'katello/api/v2/products' => [:destroy],
@@ -319,6 +325,42 @@ module Katello
                            'katello/api/v2/repositories' => [:export]
                          },
                          :resource_type => 'Katello::Product'
+    end
+
+    def repository_permissions # rubocop:disable Metrics/MethodLength
+      @plugin.permission :create_repositories,
+                         {
+                           'katello/api/v2/repositories' => [:create]
+                         },
+                         :resource_type => 'Katello::Repository'
+      @plugin.permission :edit_repositories,
+                         {
+                           'katello/api/v2/repositories' => [:update, :remove_content, :import_uploads, :upload_content, :republish]
+                         },
+                         :resource_type => 'Katello::Repository'
+
+      @plugin.permission :destroy_repositories,
+                         {
+                           'katello/api/v2/repositories' => [:destroy],
+                           'katello/api/v2/repositories_bulk_actions' => [:destroy_repositories]
+                         },
+                         :resource_type => 'Katello::Repository'
+      @plugin.permission :view_repositories,
+                         {
+                           'katello/api/v2/repositories' => [:index, :show]
+                         },
+                         :resource_type => 'Katello::Repository'
+      @plugin.permission :sync_repositories,
+                         {
+                           'katello/api/v2/repositories' => [:sync],
+                           'katello/api/v2/repositories_bulk_actions' => [:sync_repositories]
+                         },
+                         :resource_type => 'Katello::Repository'
+      @plugin.permission :export_repositories,
+                         {
+                           'katello/api/v2/repositories' => [:export]
+                         },
+                         :resource_type => 'Katello::Repository'
     end
 
     def subscription_permissions

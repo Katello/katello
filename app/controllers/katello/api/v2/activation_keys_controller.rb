@@ -6,11 +6,11 @@ module Katello
     before_action :find_environment, :only => [:index, :create, :update]
     before_action :find_optional_organization, :only => [:index, :create, :show]
     before_action :find_content_view, :only => [:index]
-    before_action :find_activation_key, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
+    before_action :authorize
+    before_action :find_resource, :only => [:show, :update, :destroy, :available_releases, :copy, :product_content,
                                                   :available_host_collections, :add_host_collections, :remove_host_collections,
                                                   :content_override, :add_subscriptions, :remove_subscriptions,
                                                   :subscriptions]
-    before_action :authorize
 
     wrap_parameters :include => (ActivationKey.attribute_names + %w(host_collection_ids service_level auto_attach content_view_environment))
 
@@ -250,12 +250,6 @@ module Katello
       activation_keys
     end
 
-    def find_activation_key
-      @activation_key = ActivationKey.find(params[:id])
-      fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
-      @activation_key
-    end
-
     private
 
     def subscription_index
@@ -336,6 +330,23 @@ module Katello
       end
 
       key_params
+    end
+
+    def parent_scope
+      {}
+    end
+
+    def action_permission
+      case params[:action]
+      when 'copy'
+        'create'
+      when 'product_content'
+        'view'
+      when 'content_override', 'add_subscriptions', 'remove_subscriptions', 'add_host_collections', 'remove_host_collections'
+        'edit'
+      else
+        super
+      end
     end
   end
 end
