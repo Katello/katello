@@ -53,6 +53,7 @@ module Katello
         host.content_facet = populate_content_facet(host, content_view_environment, host_uuid)
         host.subscription_facet = populate_subscription_facet(host, activation_keys, consumer_params, host_uuid)
         host.save! # the host has content and subscription facets at this point
+        create_initial_subscription_status(host)
 
         User.as_anonymous_admin do
           begin
@@ -92,6 +93,10 @@ module Katello
       def remove_partially_registered_new_host(host)
         host.content_facet.try(:destroy!)
         destroy_host_record(host.id)
+      end
+
+      def create_initial_subscription_status(host)
+        ::Katello::SubscriptionStatus.create!(:host => host, :status => ::Katello::SubscriptionStatus::UNKNOWN)
       end
 
       def create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)
