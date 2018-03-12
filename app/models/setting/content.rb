@@ -76,7 +76,9 @@ class Setting::Content < Setting
         self.set('default_location_puppet_content',
                  N_('Default Location where new Puppet content will be put upon Content View publish'),
                  nil, N_('Default Location Puppet content'), nil,
-                 :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] })
+                 :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }),
+        self.set('expire_soon_days', N_('The number of days remaining in a subscription before you will be reminded about renewing it.'),
+                 120, N_('Expire soon days'))
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true

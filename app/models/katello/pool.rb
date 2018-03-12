@@ -36,7 +36,6 @@ module Katello
 
     validates_lengths_from_database
 
-    DAYS_EXPIRING_SOON = 120
     DAYS_RECENTLY_EXPIRED = 30
 
     def active?
@@ -44,7 +43,7 @@ module Katello
     end
 
     def expiring_soon?
-      (end_date.to_date - Date.today) <= DAYS_EXPIRING_SOON
+      (end_date.to_date - Date.today) <= Setting[:expire_soon_days]
     end
 
     def recently_expired?
