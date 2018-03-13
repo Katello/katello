@@ -13,11 +13,11 @@ class Setting::Content < Setting
     self.transaction do
       [
         self.set('katello_default_provision', N_("Default provisioning template for Operating Systems created from synced content"),
-                 'Katello Kickstart Default', N_('Default synced OS provisioning template')),
+                 'Kickstart default', N_('Default synced OS provisioning template')),
         self.set('katello_default_finish', N_("Default finish template for new Operating Systems created from synced content"),
-                 'Katello Kickstart Default Finish', N_('Default synced OS finish template')),
+                 'Kickstart default finish', N_('Default synced OS finish template')),
         self.set('katello_default_user_data', N_("Default user data for new Operating Systems created from synced content"),
-                 'Katello Kickstart Default User Data', N_('Default synced OS user-data')),
+                 'Kickstart default user data', N_('Default synced OS user-data')),
         self.set('katello_default_PXELinux', N_("Default PXELinux template for new Operating Systems created from synced content"),
                  'Kickstart default PXELinux', N_('Default synced OS PXELinux template')),
         self.set('katello_default_PXEGrub', N_("Default PXEGrub template for new Operating Systems created from synced content"),
@@ -31,7 +31,7 @@ class Setting::Content < Setting
         self.set('katello_default_kexec', N_("Default kexec template for new Operating Systems created from synced content"),
                  'Discovery Red Hat kexec', N_('Default synced OS kexec template')),
         self.set('katello_default_atomic_provision', N_("Default provisioning template for new Atomic Operating Systems created from synced content"),
-                 'Katello Atomic Kickstart Default', N_('Default synced OS Atomic template')),
+                 'Atomic Kickstart default', N_('Default synced OS Atomic template')),
         self.set('manifest_refresh_timeout', N_('Timeout when refreshing a manifest (in seconds)'), 60 * 20, N_("Manifest refresh timeout")),
         self.set('content_action_accept_timeout', N_("Time in seconds to wait for a Host to pickup a remote action"),
                  20, N_('Accept action timeout')),
