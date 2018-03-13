@@ -58,12 +58,36 @@ module Katello
       assert_response :success
     end
 
+    def test_create
+      Katello::Resources::Candlepin::UpstreamConsumer.stubs(:bind_entitlements).returns({})
+      pool_in = {id: '3', quantity: 6}
+      params = { pools: [pool_in], organization_id: @organization.id }
+
+      assert_async_task ::Actions::Katello::UpstreamSubscriptions::BindEntitlements do |pools|
+        assert_equal(pools, [{'pool' => pool_in[:id], 'quantity' => pool_in[:quantity]}])
+      end
+
+      post :create, params: params
+
+      assert_response :success
+    end
+
     def test_destroy_protected
       allowed_perms = [permission]
       denied_perms = []
 
       assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
         delete :destroy, params: { pool_ids: [], organization_id: @organization.id }
+      end
+    end
+
+    def test_create_protected
+      allowed_perms = [permission]
+      denied_perms = []
+
+      assert_protected_action(:create, allowed_perms, denied_perms, [@organization]) do
+        post :create, params: { pools: [{"id" => "1234abcd", "quantity" => 3}],
+                                organization_id: @organization.id }
       end
     end
   end

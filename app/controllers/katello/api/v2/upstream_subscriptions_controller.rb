@@ -34,10 +34,29 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :POST, "/organizations/:organization_id/upstream_subscriptions",
+      N_("Add subscriptions consumed by a manifest from Red Hat Subscription Management")
+    param :pools, Array, desc: N_("Array of pools to add"), required: true do
+      param :id, String, desc: N_("Pool ID"), required: true
+      param :quantity, :number, desc: N_("Quantity of entitlements to bind"), required: true
+    end
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    def create
+      task = async_task(::Actions::Katello::UpstreamSubscriptions::BindEntitlements,
+                        bind_entitlements_params)
+      respond_for_async resource: task
+    end
+
     private
 
     def upstream_pool_params
       params.permit(:page, :per_page, :order, :sort_by)
+    end
+
+    def bind_entitlements_params
+      params.permit(pools: [:id, :quantity])[:pools].map do |pool|
+        { "pool" => pool[:id], "quantity" => pool[:quantity] } if pool
+      end
     end
   end
 end

@@ -35,6 +35,10 @@ module Katello
             RestClient.proxy = ""
           end
 
+          def bind_entitlement(**pool)
+            JSON.parse(self['entitlements'].post(nil, params: pool))
+          end
+
           delegate :[], to: :json_resource
         end
       end
