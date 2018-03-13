@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 import RepositoryTypeIcon from '../RepositoryTypeIcon';
@@ -12,7 +12,7 @@ describe('RepositoryTypeIcon component', () => {
 
   describe('rendering', () => {
     test('it should get rendered correctly', () => {
-      const component = shallow(<RepositoryTypeIcon {...getBaseProps()} />);
+      const component = mount(<RepositoryTypeIcon {...getBaseProps()} />);
 
       expect(toJson(component)).toMatchSnapshot();
     });
@@ -20,7 +20,7 @@ describe('RepositoryTypeIcon component', () => {
     test('it should get rendered correctly when type is provided', () => {
       const props = getBaseProps();
       props.type = 'yum';
-      const component = shallow(<RepositoryTypeIcon {...props} />);
+      const component = mount(<RepositoryTypeIcon {...props} />);
 
       expect(toJson(component)).toMatchSnapshot();
     });

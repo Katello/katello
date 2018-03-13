@@ -1,37 +1,44 @@
-import classnames from 'classnames';
-
 // eslint-disable-next-line import/prefer-default-export
 export function getTypeIcon(type) {
-  let className = '';
+  const typeIcon = { name: '', type: '' };
 
   switch (type) {
     case 'yum':
-      className = 'pficon-bundle';
+      typeIcon.name = 'bundle';
+      typeIcon.type = 'pf';
       break;
     case 'source_rpm':
-      className = 'fa fa-code';
+      typeIcon.name = 'code';
+      typeIcon.type = 'fa';
       break;
     case 'file':
-      className = 'fa fa-file';
+      typeIcon.name = 'file';
+      typeIcon.type = 'fa';
       break;
     case 'debug':
-      className = 'fa fa-bug';
+      typeIcon.name = 'bug';
+      typeIcon.type = 'fa';
       break;
     case 'iso':
-      className = 'fa fa-file-image-o';
+      typeIcon.name = 'file-image-o';
+      typeIcon.type = 'fa';
       break;
     case 'beta':
-      className = 'fa fa-bold';
+      typeIcon.name = 'bold';
+      typeIcon.type = 'fa';
       break;
     case 'kickstart':
-      className = 'fa fa-futbol-o';
+      typeIcon.name = 'futbol-o';
+      typeIcon.type = 'fa';
       break;
     case 'containerimage':
-      className = 'fa fa-cube';
+      typeIcon.name = 'cube';
+      typeIcon.type = 'fa';
       break;
     default:
-      className = 'fa fa-question';
+      typeIcon.name = 'question';
+      typeIcon.type = 'fa';
       break;
   }
-  return classnames('fa-2x', className);
+  return typeIcon;
 }

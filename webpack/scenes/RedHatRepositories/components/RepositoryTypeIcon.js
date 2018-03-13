@@ -12,6 +12,8 @@ export default class RepositoryTypeIcon extends React.Component {
   }
 
   render() {
+    const typeIcon = getTypeIcon(this.props.type);
+
     return (
       <OverlayTrigger
         overlay={<Tooltip id={this.tooltipId}>{this.props.type}</Tooltip>}
@@ -19,7 +21,7 @@ export default class RepositoryTypeIcon extends React.Component {
         trigger={['hover', 'focus']}
         rootClose={false}
       >
-        <ListView.Icon name={getTypeIcon(this.props.type)} />
+        <ListView.Icon name={typeIcon.name} size="sm" type={typeIcon.type} />
       </OverlayTrigger>
     );
   }
