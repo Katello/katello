@@ -372,7 +372,7 @@ module Katello
 
           def product_certificate(id, owner)
             included = %w(certificate product.id providedProducts.id
-                          derivedProvidedProducts.id)
+                          derivedProvidedProducts.id startDate)
             subscriptions_json = Candlepin::CandlepinResource.get(
               "/candlepin/owners/#{owner}/subscriptions?#{included_list(included)}",
               self.default_headers
@@ -380,7 +380,7 @@ module Katello
             subscriptions = JSON.parse(subscriptions_json)
 
             product_subscription = subscriptions.find do |sub|
-              sub['certificate'] &&
+              sub['certificate'] && Time.parse(sub['startDate']) < Time.now &&
               (sub["product"]["id"] == id ||
                 sub["providedProducts"].any? { |provided| provided["id"] == id } ||
                 sub["derivedProvidedProducts"].any? { |provided| provided["id"] == id })
