@@ -64,19 +64,6 @@ module Katello
     end
   end
 
-  class ProvisioningTemplatesTest < SeedsTest
-    test "Make sure provisioning templates exist" do
-      seed
-      assert ProvisioningTemplate.unscoped.where(:default => true).exists?
-      template_names = ["Katello Kickstart Default", "Katello Kickstart Default User Data", "Katello Kickstart Default Finish", "subscription_manager_registration", "Katello Atomic Kickstart Default"]
-
-      ProvisioningTemplate.unscoped.where(:default => true, :vendor => "Katello").each do |template|
-        assert template_names.include?(template.name)
-        refute_empty template.organizations
-      end
-    end
-  end
-
   class PulpProxyTest < SeedsTest
     test "Make sure Pulp Proxy features exist" do
       seed
