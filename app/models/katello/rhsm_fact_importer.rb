@@ -4,24 +4,9 @@ module Katello
       Katello::RhsmFactName
     end
 
-    def normalize(_facts)
-      facts = super
+    def normalize(facts)
       facts = change_separator(facts)
-      add_compose_facts(facts)
-    end
-
-    def add_compose_facts(facts)
-      additional_keys = []
-      facts.each_key do |fact_name|
-        parts = fact_name.split(RhsmFactName::SEPARATOR)
-        additional_keys += parts[0..-2].reduce([]) { |memo, part| memo << [memo.last, part].compact.join(RhsmFactName::SEPARATOR) }
-      end
-
-      # add the facts hierarchy to facts hash
-      additional_keys.uniq.each do |key|
-        facts[key] = nil
-      end
-      facts
+      super(facts)
     end
 
     def change_separator(facts)
