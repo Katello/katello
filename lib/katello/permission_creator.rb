@@ -340,8 +340,6 @@ module Katello
                          :resource_type => 'Katello::Subscription'
       @plugin.permission :import_manifest,
                          {
-                           'katello/products' => [:available_repositories, :toggle_repository],
-                           'katello/providers' => [:redhat_provider, :redhat_provider_tab],
                            'katello/api/v2/subscriptions' => [:upload, :refresh_manifest],
                            'katello/api/v2/repository_sets' => [:enable, :disable]
                          },

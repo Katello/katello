@@ -10,24 +10,13 @@ Katello::Engine.routes.draw do
       end
     end
 
-    resources :products, :only => [] do
-      member do
-        get :available_repositories
-        put :toggle_repository
-      end
-    end
-
-    resources :providers, :only => [] do
-      collection do
-        get :redhat_provider
-        get :redhat_provider_tab
-      end
-    end
-
     if Katello.with_remote_execution?
       match '/remote_execution' => 'remote_execution#create', :via => [:post]
     end
   end
+
+  get '/katello/providers/redhat_provider', to: redirect('/redhat_repositories')
+  match '/redhat_repositories' => 'react#index', :via => [:get]
 
   match '/xui' => 'react#index', :via => [:get]
   match '/xui/*page' => 'react#index', :via => [:get]
