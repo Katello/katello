@@ -33,13 +33,13 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
   }
   return (
     <ListView>
-      {results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}
       <PaginationRow
         viewType="list"
         itemCount={itemCount}
         pagination={pagination}
         onChange={onPaginationChange}
       />
+      {results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}
     </ListView>
   );
 };
@@ -61,13 +61,13 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
 
   return (
     <ListView>
-      {repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}
       <PaginationRow
         viewType="list"
         itemCount={itemCount}
         pagination={pagination}
         onChange={onPaginationChange}
       />
+      {repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}
     </ListView>
   );
 };

@@ -1,7 +1,10 @@
 @import '~patternfly/dist/sass/patternfly/_color-variables';
 
-.background-container-gray {
-  background-color: $color-pf-black-200;
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .list-item-with-divider:not(:last-child) {
@@ -17,11 +20,58 @@
 }
 
 #redhatRepositoriesPage {
-  .list-view-pf-description {
+  .list-group-item-header .list-view-pf-description,
+  .enabled-repositories-container .list-view-pf-description {
     width: 100%;
 
     .list-group-item-heading {
       white-space: pre-wrap;
     }
+  }
+
+  .list-view-pf-view {
+    background-color: inherit;
+  }
+
+  .available-repositories-container {
+    background-color: $color-pf-white;
+    border-right: $color-pf-black-300 2px solid;
+  }
+
+  .content-view-pf-pagination {
+    background-color: $color-pf-white;
+    margin-bottom: 20px;
+  }
+
+  .toolbar-pf-filter {
+    margin-bottom: 7px;
+  }
+
+  @media (min-width: 1280px) {
+    .toolbar-pf-filter {
+      width: 50%;
+
+      .input-group {
+        width: 400px;
+      }
+    }
+  }
+
+  .enabled-repositories-container {
+    background-color: $color-pf-black-200;
+
+    .pficon.list-view-pf-icon-sm {
+      border-color: $color-pf-green-300;
+    }
+  }
+
+  //TODO: for some reason these are missing in our patternfly version
+  .pagination-pf-pagesize.btn-group {
+    display: flex;
+    float: none;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 5px;
+    width: auto;
   }
 }
