@@ -36,8 +36,8 @@ class RedHatRepositoriesPage extends Component {
           </Col>
         </Row>
 
-        <Row>
-          <Col sm={6}>
+        <Row className="row-eq-height">
+          <Col sm={6} className="available-repositories-container">
             <h2>{__('Available Repositories')}</h2>
             <Spinner loading={repositorySets.loading}>
               {getSetsComponent(
@@ -51,7 +51,7 @@ class RedHatRepositoriesPage extends Component {
             </Spinner>
           </Col>
 
-          <Col sm={6} className="background-container-gray">
+          <Col sm={6} className="enabled-repositories-container">
             <h2>{__('Enabled Repositories')}</h2>
             <Spinner loading={enabledRepositories.loading} className="small-spacer">
               {getEnabledComponent(
