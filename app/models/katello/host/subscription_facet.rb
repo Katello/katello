@@ -185,10 +185,20 @@ module Katello
         end
       end
 
-      def self.propose_existing_hostname(facts)
+      def self.propose_custom_fact(facts)
         setting_fact = Setting[:register_hostname_fact]
-        if !setting_fact.blank? && !facts[setting_fact].blank? && ::Host.where(:name => setting_fact.downcase).any?
-          name = facts[setting_fact]
+        only_use_custom_fact = Setting[:register_hostname_fact_strict_match]
+
+        if !setting_fact.blank? && !facts[setting_fact].blank?
+          if only_use_custom_fact || ::Host.where(:name => setting_fact.downcase).any?
+            facts[setting_fact]
+          end
+        end
+      end
+
+      def self.propose_existing_hostname(facts)
+        if propose_custom_fact(facts)
+          name = propose_custom_fact(facts)
         elsif ::Host.where(:name => facts['network.hostname'].downcase).any?
           name = facts['network.hostname']
         elsif !facts['network.fqdn'].blank? && ::Host.where(:name => facts['network.fqdn'].downcase).any?
