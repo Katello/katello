@@ -187,5 +187,11 @@ module Katello
       @host = resource_finder(::Host::Managed.authorized(permission, ::Host::Managed), id)
       fail HttpErrors::BadRequest, _("Host has not been registered with subscription-manager") if @host.subscription_facet.nil?
     end
+
+    def check_disconnected
+      msg = "You are currently operating in disconnected mode where access to Red Hat Subcription Management " \
+            "is prohibited. If you would like to change this, please update the content setting 'Disconnected mode'."
+      fail HttpErrors::BadRequest, _(msg) if Setting[:content_disconnected]
+    end
   end
 end

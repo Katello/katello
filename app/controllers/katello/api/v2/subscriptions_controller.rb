@@ -7,6 +7,7 @@ module Katello
     before_action :find_optional_organization, :only => [:index, :available, :show]
     before_action :find_organization, :only => [:upload, :delete_manifest,
                                                 :refresh_manifest, :manifest_history]
+    before_action :check_disconnected, only: [:refresh_manifest]
     before_action :find_provider
     before_action :deprecated, :only => [:create, :destroy]
 

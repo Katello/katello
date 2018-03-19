@@ -7,15 +7,16 @@
  * @requires translate
  * @requires CurrentOrganization
  * @requires Organization
- * @requires Subscription
  * @requires Task
+ * @requires Subscription
+ * @requires contentDisconnected
  *
  * @description
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestImportController',
-    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Organization', 'Task', 'Subscription', 'Notification',
-    function ($scope, $q, translate, CurrentOrganization, Organization, Task, Subscription, Notification) {
+    ['$scope', '$q', 'translate', 'CurrentOrganization', 'Organization', 'Task', 'Subscription', 'Notification', 'contentDisconnected',
+    function ($scope, $q, translate, CurrentOrganization, Organization, Task, Subscription, Notification, contentDisconnected) {
 
         function buildManifestLink(upstream) {
             var url = upstream.webUrl,
@@ -248,5 +249,13 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 $scope.showHistoryMoreLink = $scope.isTruncated($scope.statuses, results);
             });
         });
+
+        $scope.manifestRefreshDisabled = function () {
+          return $scope.isTaskPending() ||
+                 !$scope.upstream ||
+                 !$scope.upstream.idCert ||
+                 !$scope.upstream.idCert.cert ||
+                 contentDisconnected
+        }
     }]
 );
