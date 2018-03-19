@@ -38,5 +38,11 @@ module Katello
         get :index, params: { :organization_id => @organization.id }
       end
     end
+
+    def test_index_disconnected
+      Setting["content_disconnected"] = true
+      get :index, params: { organization_id: @organization.id }
+      assert_response :bad_request
+    end
   end
 end

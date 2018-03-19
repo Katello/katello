@@ -101,6 +101,12 @@ module Katello
       end
     end
 
+    def test_refresh_disconnected
+      Setting["content_disconnected"] = true
+      put :refresh_manifest, params: { :organization_id => @organization.id }
+      assert_response :bad_request
+    end
+
     def test_delete_manifest
       assert_async_task(::Actions::Katello::Organization::ManifestDelete) do |org|
         assert_equal @organization, org

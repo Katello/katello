@@ -3,6 +3,7 @@ require 'katello/resources/candlepin'
 module Katello
   class Api::V2::UpstreamSubscriptionsController < Api::V2::ApiController
     before_action :find_organization
+    before_action :check_disconnected
 
     resource_description do
       description "Red Hat subscriptions management platform."

@@ -43,7 +43,7 @@
          <span bst-modal="deleteManifest()" template-url="subscriptions/manifest/views/manifest-delete-modal.html"></span>
           <span translate>Delete Manifest</span>
       </button>
-      <button type="button" class="btn btn-default" ng-disabled="isTaskPending() || upstream.idCert == undefined || upstream.idCert.cert == undefined"
+      <button type="button" class="btn btn-default" ng-disabled="manifestRefreshDisabled()"
         ng-click="refreshManifest()">
           <span translate>Refresh Manifest</span>
       </button>
