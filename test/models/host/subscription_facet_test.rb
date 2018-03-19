@@ -225,6 +225,13 @@ module Katello
 
       facts = {'network.hostname' => 'foo', 'network.hostname-override' => 'baz.com'}
       assert_equal 'foo', Host::SubscriptionFacet.propose_existing_hostname(facts)
+
+      facts = {'network.hostname' => 'foo.bar.com', 'foo.override' => 'does_not_exist'}
+      Setting[:register_hostname_fact] = 'foo.override'
+      assert_equal 'foo.bar.com', Host::SubscriptionFacet.propose_existing_hostname(facts)
+
+      Setting[:register_hostname_fact_strict_match] = true
+      assert_equal 'does_not_exist', Host::SubscriptionFacet.propose_existing_hostname(facts)
     end
 
     def test_search_hypervisor
