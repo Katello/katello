@@ -877,4 +877,34 @@ module Katello
       assert_includes @fedora_17_x86_64.hosts_with_applicability, @view_host
     end
   end
+
+  class RepositoryAuditTest < RepositoryTestBase
+    def setup
+      super
+      User.current = @admin
+      @repo = build(:katello_repository, :fedora_17_el6,
+                    :environment => @library,
+                    :product => katello_products(:fedora),
+                    :content_view_version => @library.default_content_view_version
+                   )
+    end
+
+    def test_audit_on_repo_creation
+      assert_difference 'Audit.count' do
+        @repo.save!
+      end
+      recent_audit = @repo.audits.last
+      assert_equal 'create', recent_audit.action
+    end
+
+    def test_audit_on_repo_destroy
+      @repo.save!
+      assert_difference 'Audit.count' do
+        @repo.destroy
+      end
+      recent_audit = Audit.last
+      assert_equal 'Katello::Repository', recent_audit.auditable_type
+      assert_equal 'destroy', recent_audit.action
+    end
+  end
 end

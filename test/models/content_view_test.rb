@@ -479,5 +479,25 @@ module Katello
 
       assert @library_view.publish_puppet_environment?
     end
+
+    def test_audit_on_content_view_creation
+      content_view = FactoryBot.build(:katello_content_view, :name => "CV_Audit")
+      assert_difference 'Audit.count' do
+        content_view.save!
+      end
+      recent_audit = content_view.audits.last
+      assert_equal 'create', recent_audit.action
+    end
+
+    def test_audit_on_content_view_destroy
+      content_view = FactoryBot.build(:katello_content_view)
+      content_view.save!
+      assert_difference 'Audit.count' do
+        content_view.destroy
+      end
+      recent_audit = Audit.last
+      assert_equal 'Katello::ContentView', recent_audit.auditable_type
+      assert_equal 'destroy', recent_audit.action
+    end
   end
 end

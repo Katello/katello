@@ -176,5 +176,22 @@ module Katello
 
       assert_equal [pool_one, pool_two], @dev_key.available_subscriptions
     end
+
+    context 'host_collection' do
+      setup do
+        @host_collection = katello_host_collections(:simple_host_collection)
+        @sample_key = katello_activation_keys(:dev_key)
+        @sample_key.host_collection_ids = [@host_collection.id]
+        @sample_key.save!
+      end
+
+      test 'should audit when a host_collection is added to a activation_key' do
+        recent_audit = @sample_key.audits.last
+        audited_changes = recent_audit.audited_changes[:host_collections]
+        assert audited_changes, 'No audits found for activation_keys'
+        assert_empty audited_changes.first
+        assert_equal @host_collection.name, audited_changes.last
+      end
+    end
   end
 end

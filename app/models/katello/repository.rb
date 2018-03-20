@@ -1,6 +1,7 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
+    audited
     #pulp uses pulp id to sync with 'yum_distributor' on the end
     PULP_ID_MAX_LENGTH = 220
 
@@ -39,8 +40,8 @@ module Katello
     define_model_callbacks :sync, :only => :after
 
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
-    belongs_to :product, :inverse_of => :repositories
-    belongs_to :gpg_key, :inverse_of => :repositories
+    belongs_to :product, :inverse_of => :repositories, :class_name => "Katello::Product"
+    belongs_to :gpg_key, :inverse_of => :repositories, :class_name => "Katello::GpgKey"
     belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_repos
     belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_repos
     belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_repos

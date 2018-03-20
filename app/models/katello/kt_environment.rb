@@ -1,5 +1,7 @@
 module Katello
   class KTEnvironment < Katello::Model
+    audited
+    has_associated_audits
     include ForemanTasks::Concerns::ActionSubject
     include Authorization::LifecycleEnvironment
 

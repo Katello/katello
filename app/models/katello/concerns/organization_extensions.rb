@@ -4,6 +4,7 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
+        audited :only => [:manifest_refreshed_at]
         ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor).freeze
 
         include ForemanTasks::Concerns::ActionSubject
@@ -35,14 +36,16 @@ module Katello
 
         attr_accessor :statistics
 
-        audited :only => [:manifest_refreshed_at]
-
         scope :having_name_or_label, ->(name_or_label) { where("name = :id or label = :id", :id => name_or_label) }
         scoped_search :on => :label, :complete_value => :true
 
         after_create :associate_default_capsule
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
         validates :label, :uniqueness => true
+
+        # intentionally placed this callback here after all associations
+        # so that it will execute after :dependent => :destroy
+        before_destroy :destroy_taxable_taxonomies
 
         def default_content_view
           ContentView.default.where(:organization_id => self.id).first

@@ -1,5 +1,6 @@
 module Katello
   class ContentViewComponent < Katello::Model
+    audited :associated_with => :composite_content_view
     belongs_to :composite_content_view, :class_name => "Katello::ContentView",
                               :inverse_of => :content_view_components
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
