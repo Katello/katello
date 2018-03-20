@@ -4,7 +4,7 @@ module Katello
     include ForemanTasks::Concerns::ActionSubject
 
     define_model_callbacks :promote, :only => [:before, :after]
-
+    audited :associations => [:repositories, :environments]
     before_destroy :validate_destroyable!
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
@@ -26,7 +26,8 @@ module Katello
                                                 :dependent => :destroy
     has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
-    has_many :content_view_components, :inverse_of => :content_view_version, :dependent => :destroy
+    has_many :content_view_components, :class_name => "Katello::ContentViewComponent",
+             :inverse_of => :content_view_version, :dependent => :destroy
     has_many :composite_content_views, :through => :content_view_components, :source => :composite_content_view
 
     has_many :content_view_version_components, :inverse_of => :composite_version, :dependent => :destroy, :foreign_key => :composite_version_id,

@@ -2,7 +2,7 @@ module Katello
   class OstreeBranch < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    has_many :repository_ostree_branches, :dependent => :destroy
+    has_many :repository_ostree_branches, :dependent => :destroy, :class_name => 'Katello::RepositoryOstreeBranch'
     has_many :repositories, :through => :repository_ostree_branches, :inverse_of => :ostree_branches
 
     scoped_search :on => :name, :complete_value => true

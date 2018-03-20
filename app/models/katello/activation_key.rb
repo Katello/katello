@@ -1,6 +1,6 @@
 module Katello
   class ActivationKey < Katello::Model
-    audited :except => [:cp_id]
+    audited :except => [:cp_id], :associations => [:host_collections]
     include Glue::Candlepin::ActivationKey if SETTINGS[:katello][:use_cp]
     include Glue if SETTINGS[:katello][:use_cp]
     include Katello::Authorization::ActivationKey
@@ -10,7 +10,7 @@ module Katello
     belongs_to :organization, :inverse_of => :activation_keys
     belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
     belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
-    belongs_to :content_view, :inverse_of => :activation_keys
+    belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :activation_keys
 
     has_many :key_host_collections, :class_name => "Katello::KeyHostCollection", :dependent => :destroy
     has_many :host_collections, :through => :key_host_collections
@@ -18,6 +18,7 @@ module Katello
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :activation_key
     has_many :pools, :through => :pool_activation_keys, :class_name => "Katello::Pool"
     has_many :subscriptions, :through => :pools
+
     has_many :subscription_facet_activation_keys, :class_name => "Katello::SubscriptionFacetActivationKey", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_activation_keys
 

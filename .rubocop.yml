@@ -88,6 +88,11 @@ MethodCalledOnDoEndBlock:
 SingleLineBlockParams:
   Enabled: false
 
+Metrics/ClassLength:
+  Exclude:
+    - 'test/models/content_view_test.rb'
+    - 'test/controllers/api/v2/repositories_controller_test.rb'
+
 Style/Next:
   Enabled: false # don't enforce next in loops over if/unless
 
