@@ -65,20 +65,6 @@ module Katello
       end
     end
 
-    def test_create
-      Organization.any_instance.stubs(:redhat_repository_url)
-      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-
-      name = "Michaelangelo"
-      assert_sync_task ::Actions::Katello::Organization::Create do |org|
-        org.name.must_equal name
-        org.stubs(:reload)
-      end
-      post(:create, params: { :organization => {"name" => name} })
-      assert_response :success
-    end
-
     def test_create_with_exception
       post(:create, params: { :organization => { name: "test_cli_org", description: "desc", smart_proxy_ids: ["2"], domain_ids: ["1"], subnet_ids: ["1", "2"]} })
       assert_match Regexp.new("Couldn't find"), response.body
@@ -87,89 +73,6 @@ module Katello
     def test_create_duplicate_name
       post(:create, params: { :organization => {"name" => @organization.name} })
       assert_response :unprocessable_entity
-    end
-
-    def test_create_with_auto_label
-      Organization.any_instance.stubs(:redhat_repository_url)
-      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-      name = "Organization With Label"
-      assert_sync_task ::Actions::Katello::Organization::Create do |org|
-        org.name.must_equal name
-        assert org.valid?
-        org.label.wont_be_empty
-        org.stubs(:reload)
-      end
-      post :create, params: { :organization => {:name => name} }
-      assert_response :success
-    end
-
-    def test_create_identical_name_and_label
-      Organization.any_instance.stubs(:redhat_repository_url)
-      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-      name = "organization_with_name_and_label_identical"
-      assert_sync_task ::Actions::Katello::Organization::Create do |org|
-        org.name.must_equal name
-        org.label.must_equal name
-        assert org.valid?
-        org.stubs(:reload)
-      end
-      post :create, params: { :organization => {:name => name, :label => name} }
-      assert_response :success
-    end
-
-    def test_create_with_name_and_label
-      Organization.any_instance.stubs(:redhat_repository_url)
-      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-
-      name = "Organization With Label"
-      label = "org_with_label"
-      assert_sync_task ::Actions::Katello::Organization::Create do |org|
-        org.name.must_equal name
-        org.label.must_equal label
-        assert org.valid?
-        org.stubs(:reload)
-      end
-      post :create, params: { :organization => {:name => name, :label => label} }
-      assert_response :success
-    end
-
-    def test_create_with_name_label_description
-      Organization.any_instance.stubs(:redhat_repository_url)
-      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-
-      name = "Organization With Name Label Description"
-      label = "organization_with_name_label_description"
-      description = "Organization Description"
-      assert_sync_task ::Actions::Katello::Organization::Create do |org|
-        org.name.must_equal name
-        org.label.must_equal label
-        org.description.must_equal description
-        assert org.valid?
-        org.stubs(:reload)
-      end
-      post :create, params: { :organization => {:name => name, :label => label, :description => description} }
-      assert_response :success
-    end
-
-    def test_create_with_name_description_auto_label
-      Organization.any_instance.stubs(:redhat_repository_url)
-      Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
-      Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
-      name = "Organization With Name Description Auto Label"
-      description = "Organization Description"
-      assert_sync_task ::Actions::Katello::Organization::Create do |org|
-        org.name.must_equal name
-        org.description.must_equal description
-        assert org.valid?
-        org.label.wont_be_empty
-        org.stubs(:reload)
-      end
-      post :create, params: { :organization => {:name => name, :description => description} }
-      assert_response :success
     end
 
     def test_controller_path
@@ -262,6 +165,90 @@ module Katello
 
       assert_protected_action(:releases, allowed_perms, denied_perms, [@organization]) do
         get :releases, params: { :id => @organization.id }
+      end
+    end
+
+    context "create_organization" do
+      setup do
+        Organization.any_instance.stubs(:redhat_repository_url)
+        Organization.any_instance.stubs(:default_content_view).returns(OpenStruct.new(id: 1))
+        Organization.any_instance.stubs(:library).returns(OpenStruct.new(id: 10))
+      end
+
+      def test_create
+        name = "Michaelangelo"
+        assert_sync_task ::Actions::Katello::Organization::Create do |org|
+          org.name.must_equal name
+          org.stubs(:reload)
+        end
+        post(:create, params: { :organization => {"name" => name} })
+        assert_response :success
+      end
+
+      def test_create_with_auto_label
+        name = "Organization With Label"
+        assert_sync_task ::Actions::Katello::Organization::Create do |org|
+          org.name.must_equal name
+          assert org.valid?
+          assert_equal org.label, name.gsub(' ', '_')
+          org.stubs(:reload)
+        end
+        post :create, params: { :organization => {:name => name} }
+        assert_response :success
+      end
+
+      def test_create_identical_name_and_label
+        name = "organization_with_name_and_label_identical"
+        assert_sync_task ::Actions::Katello::Organization::Create do |org|
+          org.name.must_equal name
+          org.label.must_equal name
+          assert org.valid?
+          org.stubs(:reload)
+        end
+        post :create, params: { :organization => {:name => name, :label => name} }
+        assert_response :success
+      end
+
+      def test_create_with_name_and_label
+        name = "Organization With Label"
+        label = "org_with_label"
+        assert_sync_task ::Actions::Katello::Organization::Create do |org|
+          org.name.must_equal name
+          org.label.must_equal label
+          assert org.valid?
+          org.stubs(:reload)
+        end
+        post :create, params: { :organization => {:name => name, :label => label} }
+        assert_response :success
+      end
+
+      def test_create_with_name_description_auto_label
+        name = "Organization With Name Description Auto Label"
+        description = "Organization Description"
+        assert_sync_task ::Actions::Katello::Organization::Create do |org|
+          org.name.must_equal name
+          org.description.must_equal description
+          assert org.valid?
+          assert_equal org.label, name.gsub(' ', '_')
+          org.stubs(:reload)
+        end
+        post :create, params: { :organization => {:name => name, :description => description} }
+        assert_response :success
+      end
+
+      def test_create_with_name_label_description
+        name = "Organization With Name Label Description"
+        label = "organization_with_name_label_description"
+        description = "Organization Description"
+        assert_sync_task ::Actions::Katello::Organization::Create do |org|
+          org.name.must_equal name
+          org.label.must_equal label
+          org.description.must_equal description
+          assert org.valid?
+          org.stubs(:reload)
+        end
+        post :create, params: { :organization => {:name => name, :label => label, :description => description} }
+        assert_response :success
       end
     end
   end
