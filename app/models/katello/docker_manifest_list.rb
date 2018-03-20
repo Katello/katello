@@ -3,7 +3,8 @@ module Katello
     include Concerns::PulpDatabaseUnit
 
     has_many :docker_tags, :as => :docker_taggable, :class_name => "Katello::DockerTag", :dependent => :destroy
-    has_many :repository_docker_manifest_lists, :dependent => :destroy, :inverse_of => :docker_manifest_list
+    has_many :repository_docker_manifest_lists, :class_name => "Katello::RepositoryDockerManifestList",
+             :dependent => :destroy, :inverse_of => :docker_manifest_list
     has_many :repositories, :through => :repository_docker_manifest_lists, :inverse_of => :docker_manifest_lists
 
     has_many :docker_manifest_list_manifests, :class_name => "Katello::DockerManifestListManifest",

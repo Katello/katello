@@ -4,6 +4,8 @@ module Katello
       extend ActiveSupport::Concern
 
       included do
+        audited :associations => [:pools]
+
         SUBSCRIPTION_STATUS_MAP = {
           :valid => Katello::SubscriptionStatus::VALID,
           :partial => Katello::SubscriptionStatus::PARTIAL,

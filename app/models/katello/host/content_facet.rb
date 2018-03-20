@@ -1,6 +1,7 @@
 module Katello
   module Host
     class ContentFacet < Katello::Model
+      audited :associated_with => :lifecycle_environment
       self.table_name = 'katello_content_facets'
       include Facets::Base
 

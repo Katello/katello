@@ -1,5 +1,6 @@
 module Katello
   class ContentViewPuppetModule < Katello::Model
+    audited :associated_with => :content_view
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
 
     validates_lengths_from_database
