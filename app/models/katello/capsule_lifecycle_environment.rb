@@ -1,5 +1,7 @@
 module Katello
   class CapsuleLifecycleEnvironment < Katello::Model
+    audited :associated_with => :capsule
+
     validates_lengths_from_database
     validates :lifecycle_environment_id,
               :uniqueness => { :scope => :capsule_id,

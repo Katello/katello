@@ -1,5 +1,6 @@
 module Katello
   class ContentViewFilter < Katello::Model
+    audited :associations => [:repositories]
     DOCKER = 'docker'.freeze
     RPM = Rpm::CONTENT_TYPE
     PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE

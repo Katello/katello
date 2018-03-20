@@ -1,6 +1,8 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class ContentView < Katello::Model
+    audited :associations => [:repositories, :environments]
+    has_associated_audits
     include Ext::LabelFromName
     include Katello::Authorization::ContentView
     include ForemanTasks::Concerns::ActionSubject
@@ -27,7 +29,8 @@ module Katello
     has_many :component_composites, :class_name => "Katello::ContentViewComponent",
              :dependent => :destroy, :inverse_of => :content_view, :foreign_key => :content_view_id
 
-    has_many :content_view_repositories, :dependent => :destroy, :inverse_of => :content_view
+    has_many :content_view_repositories, :class_name => 'Katello::ContentViewRepository',
+             :dependent => :destroy, :inverse_of => :content_view
     has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
                             :after_remove => :remove_repository
 

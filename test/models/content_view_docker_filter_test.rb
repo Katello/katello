@@ -126,5 +126,15 @@ module Katello
       # it should be nil
       assert_nil filter.generate_clauses(repo2)
     end
+
+    def test_audit_on_filter_creation
+      filter = FactoryBot.build(:katello_content_view_docker_filter)
+      assert_difference 'Audit.count' do
+        filter.save!
+      end
+      recent_audit = Audit.last
+      assert_equal 'Katello::ContentViewFilter', recent_audit.auditable_type
+      assert_equal 'create', recent_audit.action
+    end
   end
 end

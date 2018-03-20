@@ -1,7 +1,6 @@
 module Katello
   class ContentViewDockerFilterRule < Katello::Model
     include ::Katello::Concerns::ContentViewFilterRuleCommon
-
     belongs_to :filter,
                :class_name => "Katello::ContentViewDockerFilter",
                :inverse_of => :docker_rules,

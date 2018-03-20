@@ -1,7 +1,7 @@
 module Katello
   class HostCollectionHosts < Katello::Model
     belongs_to :host, :inverse_of => :host_collection_hosts, :class_name => 'Host::Managed'
-    belongs_to :host_collection, :inverse_of => :host_collection_hosts
+    belongs_to :host_collection, :inverse_of => :host_collection_hosts, :class_name => "Katello::HostCollection"
 
     validate :validate_max_hosts_not_exceeded
 

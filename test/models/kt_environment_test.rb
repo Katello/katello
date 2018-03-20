@@ -82,5 +82,25 @@ module Katello
       # this an ActiveModel::Errors object; not a Hash
       assert env.errors.include?(:label)
     end
+
+    def test_audit_on_env_creation
+      env = nil
+      assert_difference 'Audit.count' do
+        env = KTEnvironment.create(
+          :organization => @acme_corporation,
+          :name => "AuditEnv", :prior => @library)
+      end
+      recent_audit = env.audits.last
+      assert_equal 'create', recent_audit.action
+    end
+
+    def test_audit_on_env_destroy
+      env = KTEnvironment.create(:organization => @acme_corporation,
+        :name => "AuditEnv", :prior => @library)
+      env.destroy
+      recent_audit = Audit.last
+      assert_equal 'Katello::KTEnvironment', recent_audit.auditable_type
+      assert_equal 'destroy', recent_audit.action
+    end
   end
 end
