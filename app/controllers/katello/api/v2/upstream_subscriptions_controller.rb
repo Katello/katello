@@ -2,7 +2,6 @@ require 'katello/resources/candlepin'
 
 module Katello
   class Api::V2::UpstreamSubscriptionsController < Api::V2::ApiController
-    before_action :find_organization
     before_action :check_disconnected
 
     resource_description do
@@ -17,12 +16,11 @@ module Katello
       param :sort_by, String, :desc => N_("The field to sort the data by. Defaults to the created date.")
     end
 
-    api :GET, "/organizations/:organization_id/upstream_subscriptions",
+    api :GET, "/upstream_subscriptions",
       N_("List available subscriptions from Red Hat Subscription Management")
-    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param_group :cp_search
     def index
-      pools = UpstreamPool.fetch_pools(@organization, upstream_pool_params)
+      pools = UpstreamPool.fetch_pools(upstream_pool_params.to_h)
       collection = scoped_search_results(
         pools, pools.count, nil, params[:page], params[:per_page], nil)
       respond(collection: collection)
@@ -31,7 +29,7 @@ module Katello
     private
 
     def upstream_pool_params
-      params.permit(:page, :per_page, :order, :sort_by, :organization_id)
+      params.permit(:page, :per_page, :order, :sort_by)
     end
   end
 end
