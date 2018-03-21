@@ -11,7 +11,7 @@ module Katello
       UpstreamPool::CP_POOL.expects(:get)
         .with(params: UpstreamPool.cp_request_params)
         .returns("[]")
-      assert UpstreamPool.fetch_pools(@organization, params).first.nil?
+      assert UpstreamPool.fetch_pools(params).first.nil?
     end
   end
 end

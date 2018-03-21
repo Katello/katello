@@ -5,12 +5,9 @@ module Katello
     CP_POOL = Resources::Candlepin::UpstreamPool
 
     class << self
-      def fetch_pools(organization, params)
-        CP_POOL.organization = organization
+      def fetch_pools(params)
         pools = JSON.parse(CP_POOL.get(params: cp_request_params.deep_merge(params)))
         pools.map { |pool| self.new(map_attributes(pool)) }
-      ensure
-        CP_POOL.organization = nil
       end
 
       def map_attributes(pool)

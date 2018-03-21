@@ -6,7 +6,7 @@ module Katello
     module Candlepin
       class UpstreamCandlepinResourceTest < ActiveSupport::TestCase
         def test_upstream_consumer_nil_current_organization
-          UpstreamCandlepinResource.organization = nil
+          Organization.stubs(:current).returns(nil)
           UpstreamCandlepinResource.upstream_consumer
           flunk("Failed to raise exception when current organization is nil.")
         rescue RuntimeError => e

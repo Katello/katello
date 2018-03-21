@@ -115,8 +115,6 @@ module Katello
         self.prefix = '/subscription'
 
         class << self
-          attr_accessor :organization
-
           def resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
             RestClient.proxy = self.proxy_uri
             RestClient::Resource.new(url,
@@ -174,12 +172,11 @@ module Katello
           end
 
           def upstream_consumer
-            @organization ||= Organization.current
-            fail _("Current organization not set.") unless @organization
-            @upstream_consumer = @organization.owner_details['upstreamConsumer']
-            fail _("Current organization has no manifest imported.") unless @upstream_consumer
+            fail _("Current organization not set.") unless Organization.current
+            upstream_consumer = Organization.current.owner_details['upstreamConsumer']
+            fail _("Current organization has no manifest imported.") unless upstream_consumer
 
-            @upstream_consumer
+            upstream_consumer
           end
         end # class << self
       end # UpstreamCandlepinResource
