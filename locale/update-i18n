@@ -1,0 +1,22 @@
+#!/bin/bash
+
+FOREMAN_DIR="../../foreman"
+BASTION_DIR="../engines/bastion_katello"
+
+#this actuall pulls the strings from transifex for both directions
+make -C locale tx-update
+
+#Extract the main strings
+pushd $FOREMAN_DIR
+bundle exec rake plugin:gettext[katello]
+popd
+
+# Now extract the bastion files
+pushd $BASTION_DIR
+bundle exec grunt i18n:extract
+bundle exec grunt i18n:compile
+popd
+
+# This step creates the mo files and does the commit
+make -C locale mo-files
+
