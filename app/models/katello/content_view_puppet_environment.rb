@@ -54,6 +54,18 @@ module Katello
       environment
     end
 
+    def ssl_client_cert
+      false
+    end
+
+    def ssl_client_key
+      false
+    end
+
+    def ssl_ca_cert
+      false
+    end
+
     def organization
       if self.environment
         self.environment.organization
