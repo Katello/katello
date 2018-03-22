@@ -133,7 +133,7 @@ module Katello
     end
     def add_subscriptions
       pools_with_quantities = params.require(:subscriptions).map do |sub_params|
-        PoolWithQuantities.new(Pool.with_identifier(sub_params['id']), sub_params['quantity'])
+        PoolWithQuantities.new(Pool.with_identifier(sub_params['id']), sub_params['quantity'].to_i)
       end
 
       sync_task(::Actions::Katello::Host::AttachSubscriptions, @host, pools_with_quantities)
