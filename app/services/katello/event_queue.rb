@@ -3,16 +3,21 @@ module Katello
     @event_types = {}
 
     def self.clear_events(event_type, object_id, on_or_earlier_than)
-      Katello::Event.where(:in_progress => true, :object_id => object_id, :event_type => event_type).where('created_at <= ?', on_or_earlier_than).destroy_all
+      Katello::Event.where(:in_progress => true, :object_id => object_id, :event_type => event_type).where('created_at <= ?', on_or_earlier_than).delete_all
     end
 
     def self.next_event
-      first = Katello::Event.where(:in_progress => false).order(:created_at => 'asc').limit(1)
-      events = Katello::Event.where(:in_progress => false, :object_id => first.pluck(:object_id),
-                                    :event_type => first.pluck(:event_type)).order(:created_at => 'asc')
-      last = events.last
-      events.update_all(:in_progress => true)
+      first = Katello::Event.where(:in_progress => false).order(:created_at => 'asc').first
+      return if first.nil?
+      last = ::Katello::Event.where(:in_progress => false, :object_id => first.object_id,
+                                    :event_type => first.event_type).order(:created_at => 'desc').first
+      mark_in_progress(first)
       last
+    end
+
+    def self.mark_in_progress(event)
+      ::Katello::Event.where(:in_progress => false, :object_id => event.object_id, :event_type => event.event_type).
+                       update_all(:in_progress => true)
     end
 
     def self.reset_in_progress

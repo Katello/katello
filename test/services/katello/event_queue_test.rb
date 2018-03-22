@@ -28,7 +28,7 @@ module Katello
       EventQueue.clear_events(@type, 1, event.created_at)
 
       assert_equal [event], Event.all
-      EventQueue.next_event
+      EventQueue.mark_in_progress(event)
       EventQueue.clear_events(@type, 1, event.created_at)
 
       assert_empty Event.all
@@ -46,16 +46,23 @@ module Katello
       EventQueue.register_event('foo', Object)
 
       event = EventQueue.push_event(@type, 1)
-      event.update_attributes(:created_at => event.created_at + 5.minutes)
       event2 = EventQueue.push_event('foo', 1)
       event3 = EventQueue.push_event(@type, 1)
-      event3.update_attributes(:created_at => event.created_at - 5.minutes)
 
       next_event = EventQueue.next_event
-      assert_equal event, next_event
+      assert_equal event3, next_event
       assert event.reload.in_progress
       assert event3.reload.in_progress
       refute event2.reload.in_progress
+    end
+
+    def test_next_event_nil
+      EventQueue.register_event('foo', Object)
+      Event.destroy_all
+      assert_nil EventQueue.next_event
+
+      EventQueue.push_event('foo', 1)
+      refute_nil EventQueue.next_event
     end
   end
 end
