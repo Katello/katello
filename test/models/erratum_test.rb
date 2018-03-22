@@ -90,7 +90,7 @@ module Katello
     def test_update_from_json
       errata = katello_errata(:security)
       json = errata.attributes.merge('description' => 'an update', 'updated' => Time.now, 'reboot_suggested' => true)
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
       errata = Erratum.find(errata.id)
       assert_equal errata.description, json['description']
       assert errata.reboot_suggested
@@ -100,7 +100,7 @@ module Katello
       errata = katello_errata(:security)
       last_updated = errata.updated_at
       json = errata.attributes
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
       assert_equal Erratum.find(errata.id).updated_at, last_updated
     end
 
@@ -108,7 +108,7 @@ module Katello
       errata = katello_errata(:singletonissue)
       issued_at = errata.issued
       json = errata.attributes
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
       assert_equal Erratum.find(errata.id).updated, issued_at
     end
 
@@ -119,18 +119,18 @@ module Katello
         "On such a full sea are we now afloat. And we must take the current when it serves, or "\
         "lose our ventures. - William Shakespeare"
       json = errata.attributes.merge('description' => 'an update', 'updated' => Time.now, 'title' => title)
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
       assert_equal Erratum.find(errata.id).title.size, 255
     end
 
-    def test_update_from_json_duplicate_packages #Issue 9312
+    def test_update_from_json_duplicate_packages
       pkg = {:name => 'foo', :version => 3, :arch => 'x86_64', :epoch => 0, :release => '.el3', :filename => 'blahblah.rpm'}.with_indifferent_access
       pkg_list = [pkg, pkg]
       errata = katello_errata(:security)
 
       pkg_count = errata.packages.count
       json = errata.attributes.merge('description' => 'an update', 'updated' => Time.now, 'pkglist' => [{'packages' => pkg_list}])
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
 
       assert_equal errata.reload.packages.count, pkg_count + 1
     end
@@ -142,13 +142,26 @@ module Katello
       pkg_count = errata.packages.count
 
       json = errata.attributes.merge('pkglist' => [{'packages' => [pkg]}])
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
       assert_equal errata.reload.packages.count, pkg_count + 1
 
       json = errata.attributes.merge('pkglist' => [{'packages' => [pkg, pkg2]}])
-      errata.update_from_json(json)
+      errata.update_from_json(json.as_json)
 
       assert_equal errata.reload.packages.count, pkg_count + 2
+    end
+
+    def test_update_from_json_epoch_dates
+      now = Time.now
+      epoch = now.to_i.to_s
+
+      errata = katello_errata(:security)
+      json = errata.attributes.merge('issued' => epoch, 'updated' => epoch)
+      errata.update_from_json(json.as_json)
+      errata = Erratum.find(errata.id)
+
+      assert_equal errata.issued.to_date, now.to_date
+      assert_equal errata.updated.to_date, now.to_date
     end
   end
 
