@@ -118,6 +118,10 @@ module Katello
       keys = %w(title id severity issued type description reboot_suggested solution updated summary)
       custom_json = json.slice(*keys)
 
+      # handle SUSE epoch dates
+      custom_json["issued"] = convert_date_if_epoch(custom_json["issued"])
+      custom_json["updated"] = convert_date_if_epoch(custom_json["updated"]) unless custom_json["updated"].blank?
+
       if self.updated.blank? || (custom_json['updated'].to_datetime != self.updated.to_datetime)
         custom_json['errata_id'] = custom_json.delete('id')
         custom_json['errata_type'] = custom_json.delete('type')
@@ -144,6 +148,14 @@ module Katello
     end
 
     private
+
+    def convert_date_if_epoch(date)
+      date.to_i.to_s == date ? epoch_to_date(date) : date
+    end
+
+    def epoch_to_date(epoch)
+      Time.at(epoch.to_i).to_s
+    end
 
     def run_until(needed_function, action_function)
       needed = needed_function.call
