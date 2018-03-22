@@ -197,18 +197,6 @@ module Katello
         assert_response :success
       end
 
-      def test_create_identical_name_and_label
-        name = "organization_with_name_and_label_identical"
-        assert_sync_task ::Actions::Katello::Organization::Create do |org|
-          org.name.must_equal name
-          org.label.must_equal name
-          assert org.valid?
-          org.stubs(:reload)
-        end
-        post :create, params: { :organization => {:name => name, :label => name} }
-        assert_response :success
-      end
-
       def test_create_with_name_and_label
         name = "Organization With Label"
         label = "org_with_label"
