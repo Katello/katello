@@ -25,7 +25,7 @@ angular.module('Bastion.content-views').controller('ContentViewPuppetModulesCont
         $scope.versionText = function (module) {
             var version;
             if (module['computed_version']) {
-                if (module['uuid']) {
+                if (module.uuid) {
                     version = translate("Currently %s").replace('%s', module['computed_version']);
                 } else {
                     version = translate("Latest (Currently %s)").replace('%s', module['computed_version']);
