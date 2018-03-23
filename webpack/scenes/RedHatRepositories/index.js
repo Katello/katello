@@ -45,6 +45,7 @@ class RedHatRepositoriesPage extends Component {
                 (pagination) => {
                   this.props.loadRepositorySets({
                     ...pagination,
+                    search: repositorySets.search,
                   });
                 },
               )}
@@ -59,6 +60,7 @@ class RedHatRepositoriesPage extends Component {
                 (pagination) => {
                   this.props.loadEnabledRepos({
                     ...pagination,
+                    search: enabledRepositories.search,
                   });
                 },
               )}
