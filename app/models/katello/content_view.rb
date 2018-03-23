@@ -554,6 +554,23 @@ module Katello
       fail _("User must be logged in.") if ::User.current.nil?
       fail _("Cannot publish default content view") if default?
       check_composite_action_allowed!(organization.library)
+      check_docker_repository_names!([organization.library])
+      true
+    end
+
+    def check_docker_repository_names!(environments)
+      environments.each do |environment|
+        repositories = []
+        publish_repositories do |all_repositories|
+          repositories += all_repositories.keep_if { |repository| repository.content_type == Katello::Repository::DOCKER_TYPE }
+        end
+        next if repositories.empty?
+
+        error_messages = ::Katello::Validators::EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, repositories)
+        unless error_messages.empty?
+          fail _("Content View publish to environment %{name} will result in invalid container image name of member repositories") % {name: environment.name}
+        end
+      end
       true
     end
 
@@ -664,6 +681,10 @@ module Katello
 
     def related_resources
       self.organization
+    end
+
+    class Jail < ::Safemode::Jail
+      allow :name, :label
     end
   end
 end

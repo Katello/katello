@@ -160,7 +160,7 @@ module ::Actions::Katello::Repository
 
   class RemoveContentTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::RemoveContent }
-    let(:capsule_generate_action_class) { ::Actions::Katello::Repository::CapsuleGenerateAndSync }
+    let(:capsule_generate_action_class) { ::Actions::Katello::Repository::CapsuleSync }
 
     it 'plans' do
       to_remove = custom_repository.rpms
@@ -511,10 +511,10 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class CapsuleGenerateAndSyncTest < TestBase
+  class CapsuleSyncTest < TestBase
     include Support::CapsuleSupport
 
-    let(:action_class) { ::Actions::Katello::Repository::CapsuleGenerateAndSync }
+    let(:action_class) { ::Actions::Katello::Repository::CapsuleSync }
 
     it 'plans' do
       capsule_content_1 = new_capsule_content(:three)

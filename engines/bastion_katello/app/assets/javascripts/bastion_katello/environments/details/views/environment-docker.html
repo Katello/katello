@@ -23,9 +23,13 @@
 
     <tbody>
       <tr bst-table-row ng-repeat="dockerTag in table.rows">
-        <td bst-table-cell>{{ dockerTag.name }}</td>
-        <td bst-table-cell>{{ dockerTag.product.name }}</td>
-        <td bst-table-cell>{{ dockerTag.repository.name }}</td>
+        <td bst-table-cell>
+          <a ng-href="/docker_tags/{{ dockerTag.id }}">{{ dockerTag.name }}</a>
+        </td>
+        <td bst-table-cell>
+          <a ng-href="/products/{{ dockerTag.product.id }}/repositories/{{ dockerTag.repository.id }}">{{ dockerTag.product.name }}</a>
+        </td>
+        <td bst-table-cell>{{ dockerTag.repository.full_path }}</td>
       </tr>
     </tbody>
   </table>

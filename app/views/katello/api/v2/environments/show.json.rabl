@@ -4,6 +4,7 @@ extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 
 attributes :library
+attributes :registry_name_pattern
 
 node :prior do |env|
   if env.prior

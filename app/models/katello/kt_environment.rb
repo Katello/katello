@@ -54,6 +54,8 @@ module Katello
     validates_with Validators::PriorValidator
     validates_with Validators::PathDescendentsValidator
 
+    validates_with Katello::Validators::EnvironmentDockerRepositoriesValidator
+
     has_many :capsule_lifecycle_environments, :foreign_key => :lifecycle_environment_id,
                                               :dependent => :destroy, :inverse_of => :lifecycle_environment
 
@@ -253,6 +255,10 @@ module Katello
 
     def self.permission_name
       'lifecycle_environments'
+    end
+
+    class Jail < ::Safemode::Jail
+      allow :name, :label
     end
   end
 end

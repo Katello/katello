@@ -81,6 +81,32 @@ module Katello
       assert_response :unprocessable_entity
     end
 
+    def test_create_with_pattern
+      Organization.any_instance.stubs(:save!).returns(@organization)
+      post :create, params: { :organization_id => @organization.id, :environment => {
+        :name => 'dev env',
+        :label => 'dev_env',
+        :description => 'This environment is for development.',
+        :prior => @library.id,
+        :registry_name_pattern => '<%= repository.label %>'
+      } }
+
+      assert_response :success
+    end
+
+    def test_create_with_pattern_spaces
+      Organization.any_instance.stubs(:save!).returns(@organization)
+      post :create, params: { :organization_id => @organization.id, :environment => {
+        :name => 'dev env',
+        :label => 'dev_env',
+        :description => 'This environment is for development.',
+        :prior => @library.id,
+        :registry_name_pattern => '<%= repository.label %> <%= lifecycle_environment.label %>'
+      } }
+
+      assert_response :success
+    end
+
     def test_create_fail
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create, params: { :organization_id => @organization.id, :environment => {
@@ -123,6 +149,57 @@ module Katello
       assert_equal new_description, @staging.description
       # note: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
+    end
+
+    def test_update_pattern_async
+      original_label = @staging.label
+
+      assert_async_task(::Actions::Katello::Environment::PublishRepositories, @staging,
+                        content_type: Katello::Repository::DOCKER_TYPE)
+      put :update, params: {
+        :organization_id => @organization.id, :id => @staging.id,
+        :environment => {
+          :new_name => 'New Name',
+          :label => 'New Label',
+          :registry_name_pattern => '<%= repository.label %>'
+        }
+      }
+
+      assert_response :success
+      assert_equal 'New Name', @staging.reload.name
+      # note: label is not editable; therefore, confirm that it is unchanged
+      assert_equal original_label, @staging.label
+    end
+
+    def test_update_pattern_sync
+      original_label = @staging.label
+
+      assert_sync_task(::Actions::Katello::Environment::PublishRepositories, @staging,
+                        content_type: Katello::Repository::DOCKER_TYPE)
+      put :update, params: {
+        :organization_id => @organization.id, :id => @staging.id,
+        :async => false,
+        :environment => {
+          :new_name => 'New Name',
+          :label => 'New Label',
+          :registry_name_pattern => '<%= repository.label %>'
+        }
+      }
+
+      assert_response :success
+      assert_equal 'New Name', @staging.reload.name
+      # note: label is not editable; therefore, confirm that it is unchanged
+      assert_equal original_label, @staging.label
+    end
+
+    def test_update_pattern_spaces
+      put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
+        :new_name => 'New Name',
+        :label => 'New Label',
+        :registry_name_pattern => '<%= repository.label %> <%= organization.label %>'
+      } }
+
+      assert_response :success
     end
 
     def test_update_protected

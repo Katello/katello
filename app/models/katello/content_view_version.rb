@@ -323,6 +323,7 @@ module Katello
     def check_ready_to_promote!(to_env)
       fail _("Default content view versions cannot be promoted") if default?
       content_view.check_composite_action_allowed!(to_env)
+      content_view.check_docker_repository_names!(to_env)
     end
 
     def validate_destroyable!(skip_environment_check = false)
@@ -356,6 +357,10 @@ module Katello
 
     def related_resources
       [self.content_view]
+    end
+
+    class Jail < ::Safemode::Jail
+      allow :name, :label, :version
     end
   end
 end
