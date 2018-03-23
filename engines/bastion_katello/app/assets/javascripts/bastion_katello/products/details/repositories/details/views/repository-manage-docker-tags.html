@@ -1,0 +1,47 @@
+<span page-title ng-model="repository">{{ 'View Docker Tags for Repository:' | translate }} {{ repository.name }}</span>
+
+<div data-block="messages">
+    <div bst-alert="success" ng-hide="generationTaskId === undefined">
+        <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
+        <p translate>
+            Docker metadata generation has been initiated in the background.  Click
+            <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
+        </p>
+    </div>
+</div>
+
+<div data-extend-template="layouts/partials/table.html">
+
+    <div data-block="table">
+        <table class="table table-striped table-bordered" >
+
+            <thead>
+            <tr bst-table-head>
+                <th bst-table-column="name">{{ "Name" | translate }}</th>
+                <th bst-table-column="schema_version">{{ "Available Schema Versions" | translate }}</th>
+                <th bst-table-column="product">{{ "Product Name" | translate }}</th>
+                <th bst-table-column="repository">{{ "Repository Name" | translate }}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr bst-table-row ng-repeat="tag in table.rows">
+                <td bst-table-cell>
+                    <a ui-sref="docker-tag.info({tagId: tag.id})">
+                        {{ tag.name }}
+                    </a>
+                </td>
+                <td bst-table-cell>
+                    {{ availableSchemaVersions(tag) }}
+                </td>
+                <td bst-table-cell>
+                    {{ tag.product.name }}
+                </td>
+                <td bst-table-cell>
+                    {{ tag.repository.name }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
