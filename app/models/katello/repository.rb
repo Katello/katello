@@ -20,6 +20,8 @@ module Katello
     include Ext::LabelFromName
     include Katello::Engine.routes.url_helpers
 
+    include ERB::Util
+
     DEB_TYPE = 'deb'.freeze
     YUM_TYPE = 'yum'.freeze
     FILE_TYPE = 'file'.freeze
@@ -106,10 +108,10 @@ module Katello
     validates :product_id, :presence => true
     validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
-    validates :docker_upstream_name, :allow_blank => true, :if => :docker?, :length => { :maximum => 255 }, :format => {
-      :with => /\A([a-z0-9]+[a-z0-9\-\_\.]*)+(\/[a-z0-9]+[a-z0-9\-\_\.]*)?\z/,
-      :message => _("must be a valid docker name")
-    }
+
+    validates_with Validators::ContainerImageNameValidator, :attributes => :docker_upstream_name, :allow_blank => true, :if => :docker?
+    validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
+    validates :container_repository_name, :uniqueness => true, :if => :docker?
 
     validates :ostree_upstream_sync_policy, :inclusion => {:in => OSTREE_UPSTREAM_SYNC_POLICIES, :allow_blank => true}, :if => :ostree?
     validates :ostree_upstream_sync_depth, :presence => true, :numericality => { :only_integer => true },
@@ -197,16 +199,7 @@ module Katello
     end
 
     def set_container_repository_name
-      return if container_repository_name
-      if content_view.default?
-        items = [organization.label, product.label, label]
-      elsif environment
-        items = [organization.label, environment.label, content_view.label, product.label, label]
-      else
-        items = [organization.label, content_view.label, content_view_version.version, product.label, label]
-      end
-      # docker repo names need to be in lower case
-      self.container_repository_name = items.compact.join("-").gsub(/[^-\w]|_{3,}/, "_").gsub(/-_|^_+|_+$/, "").downcase
+      self.container_repository_name = Repository.safe_render_container_name(self)
     end
 
     def content_view
@@ -474,6 +467,7 @@ module Katello
                      :content_id => self.content_id,
                      :content_view_version => to_version,
                      :content_type => self.content_type,
+                     :docker_upstream_name => self.docker_upstream_name,
                      :download_policy => download_policy,
                      :unprotected => self.unprotected) do |clone|
         clone.checksum_type = self.checksum_type
@@ -773,6 +767,31 @@ module Katello
       end
     end
 
+    def self.safe_render_container_name(repository, pattern = nil)
+      if pattern || (repository.environment && !repository.environment.registry_name_pattern.empty?)
+        pattern ||= repository.environment.registry_name_pattern
+        allowed_methods = {}
+        allowed_vars = {}
+        scope_variables = {repository: repository, organization: repository.organization, product: repository.product,
+                           lifecycle_environment: repository.environment, content_view: repository.content_view_version.content_view}
+        box = Safemode::Box.new(repository, allowed_methods)
+        erb = ERB.new(pattern)
+        pattern = box.eval(erb.src, allowed_vars, scope_variables)
+        return Repository.clean_container_name(pattern)
+      elsif repository.content_view.default?
+        items = [repository.organization.label, repository.product.label, repository.label]
+      elsif repository.environment
+        items = [repository.organization.label, repository.environment.label, repository.content_view.label, repository.product.label, repository.label]
+      else
+        items = [repository.organization.label, repository.content_view.label, repository.content_view_version.version, repository.product.label, repository.label]
+      end
+      Repository.clean_container_name(items.compact.join("-"))
+    end
+
+    def self.clean_container_name(name)
+      name.gsub(/[^-\/\w]/, "_").gsub(/_{3,}/, "_").gsub(/-_|^_+|_+$/, "").downcase.strip
+    end
+
     protected
 
     def removable_unit_association
@@ -809,10 +828,9 @@ module Katello
     end
 
     def ensure_valid_docker_attributes
-      if library_instance? && (url.blank? != docker_upstream_name.blank?)
-        field = url.blank? ? :url : :docker_upstream_name
-        errors.add(field, N_("cannot be blank. Either provide all or no sync information."))
-        errors.add(:base, N_("Repository URL or Upstream Name is empty. Both are required for syncing from the upstream."))
+      if library_instance? && (!url.blank? && docker_upstream_name.blank?)
+        errors.add(:docker_upstream_name, N_("cannot be blank when Repository URL is provided."))
+        errors.add(:base, N_("Upstream Name cannot be blank when Repository URL is provided."))
       end
     end
 
@@ -879,6 +897,10 @@ module Katello
       elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
       end
+    end
+
+    class Jail < ::Safemode::Jail
+      allow :name, :label, :docker_upstream_name, :url
     end
   end
 end

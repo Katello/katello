@@ -38,7 +38,7 @@ module Actions
                                      :clauses => {:association => {'unit_id' => {'$in' => uuids}}
             })
             plan_self
-            plan_action(CapsuleGenerateAndSync, repository) if sync_capsule
+            plan_action(CapsuleSync, repository) if sync_capsule
           end
         end
 

@@ -86,6 +86,7 @@ module Katello
                   thisisareallylongbutstillvalidname
                   soisthis/thisisareallylongbutstillvalidname
                   single/slash
+                  multiple/slash/es abc/def/valid
                   )
       valid << 'a' * 255
       valid.each do |name|
@@ -97,7 +98,6 @@ module Katello
                     $ymbols $tuff.th@t.m!ght.h@ve.w%!rd.r#g#x.m*anings()
                     /startingslash trailingslash/
                     abcd/.-_
-                    multiple/slash/es abc/def/invalid
                     )
       invalid << 'a' * 256
       invalid.each do |name|
@@ -464,6 +464,22 @@ module Katello
       repo.container_repository_name = nil
       repo.set_container_repository_name
       assert_equal 'empty_organization-puppet_product-test', repo.container_repository_name
+    end
+
+    def test_container_repository_name_pattern
+      repo = katello_repositories(:busybox)
+
+      labels = [
+        ['test', '<%= repository.label %>', 'test'],
+        ['test', '<%= organization.label %> <%= repository.label %>', 'empty_organization_test'],
+        ['test', ' <%= organization.label %>   <%= repository.label %> ', 'empty_organization_test']
+      ]
+
+      labels.each do |label, pattern, result|
+        repo.label = label
+        rendered = Repository.safe_render_container_name(repo, pattern)
+        assert_equal rendered, result
+      end
     end
   end
 

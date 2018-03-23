@@ -63,7 +63,7 @@ module Actions
         end
 
         def run
-          ForemanTasks.async_task(Repository::CapsuleGenerateAndSync, ::Katello::Repository.find(input[:id]))
+          ForemanTasks.async_task(Repository::CapsuleSync, ::Katello::Repository.find(input[:id]))
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 

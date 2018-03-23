@@ -45,7 +45,7 @@ module Actions
         def run
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
           if ::Katello::CapsuleContent.sync_needed?(environment)
-            ForemanTasks.async_task(ContentView::CapsuleGenerateAndSync,
+            ForemanTasks.async_task(ContentView::CapsuleSync,
                                     ::Katello::ContentView.find(input[:content_view_id]),
                                     environment)
           end

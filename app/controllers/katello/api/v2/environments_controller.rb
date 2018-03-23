@@ -74,6 +74,7 @@ module Katello
     param :name, String, :desc => N_("name of the environment"), :required => true
     param :label, String, :desc => N_("label of the environment"), :required => false
     param :description, String, :desc => N_("description of the environment")
+    param :registry_name_pattern, String, :desc => N_("pattern for container image names")
     param :prior_id, Integer, :required => true, :desc => <<-DESC
       ID of an environment that is prior to the new environment in the chain. It has to be
       either the ID of Library or the ID of an environment at the end of a chain.
@@ -93,12 +94,24 @@ module Katello
     param :organization_id, :number, :desc => N_("name of the organization")
     param :new_name, String, :desc => N_("new name to be given to the environment")
     param :description, String, :desc => N_("description of the environment")
+    param :registry_name_pattern, String, :desc => N_("pattern for container image names")
+    param :async, :bool, desc: N_("Do not wait for the update action to finish. Default: true")
     def update
-      fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
+      async = ::Foreman::Cast.to_bool(params.fetch(:async, true))
       update_params = environment_params
+      fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library? && update_params.empty?
       update_params[:name] = params[:environment][:new_name] if params[:environment][:new_name]
       @environment.update_attributes!(update_params)
-      respond
+      if update_params[:registry_name_pattern]
+        task = send(async ? :async_task : :sync_task, ::Actions::Katello::Environment::PublishRepositories,
+                    @environment, content_type: Katello::Repository::DOCKER_TYPE)
+      end
+
+      if params.include?(:async) && async && task
+        respond_for_async(resource: task)
+      else
+        respond
+      end
     end
 
     api :DELETE, "/environments/:id", N_("Destroy an environment")
@@ -156,7 +169,11 @@ module Katello
     end
 
     def environment_params
-      attrs = [:name, :description]
+      if @environment && @environment.library?
+        attrs = [:registry_name_pattern]
+      else
+        attrs = [:name, :description, :registry_name_pattern]
+      end
       attrs << :label if params[:action] == "create"
       parms = params.require(:environment).permit(*attrs)
       parms

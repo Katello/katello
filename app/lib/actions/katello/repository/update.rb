@@ -3,6 +3,7 @@ module Actions
     module Repository
       class Update < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
+        # rubocop:disable MethodLength
         def plan(repository, repo_params)
           action_subject repository
           repository = repository.reload
@@ -37,10 +38,12 @@ module Actions
           end
 
           if SETTINGS[:katello][:use_pulp] && (repository.previous_changes.key?('unprotected') ||
-              repository.previous_changes.key?('checksum_type'))
+              repository.previous_changes.key?('checksum_type') ||
+              repository.previous_changes.key?('container_repository_name'))
             plan_self(:repository_id => repository.id)
           end
         end
+        # rubocop:enable MethodLength
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
