@@ -32,10 +32,9 @@ module Katello
           end
 
           def update_notifications(subject)
-            return if blueprint.notifications.empty?
-            blueprint.notifications.
-              where(subject: subject).
-              update_attributes(expired_at: blueprint.expired_at)
+            notifs = blueprint.notifications
+            notifs.where(subject: subject).update_all(expired_at: blueprint.expired_at)
+            notifs
           end
 
           def blueprint
