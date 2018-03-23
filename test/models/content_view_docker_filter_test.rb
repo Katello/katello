@@ -60,9 +60,13 @@ module Katello
     end
 
     # rubocop:disable MethodLength
+    # rubocop:disable Metrics/AbcSize
     def test_repo_intersection_clause
       #create repo1 with tag goo
       repo1 = Repository.find(katello_repositories(:busybox).id)
+      repo1.stubs(:container_repository_name).returns('repo1')
+      repo1.stubs(:set_container_repository_name).returns('repo1')
+      repo1.save!
       schema1_repo1 = create(:docker_tag, :with_uuid, :repository => repo1, :name => "latest")
       schema2_repo1 = create(:docker_tag, :with_uuid, :schema1, :repository => repo1, :name => "latest")
 
@@ -86,6 +90,9 @@ module Katello
       # same manifests
       # but different tagW as in No goo
       repo2 = Repository.find(katello_repositories(:busybox2).id)
+      repo2.stubs(:container_repository_name).returns('repo2')
+      repo2.stubs(:set_container_repository_name).returns('repo2')
+      repo2.save!
       schema1_repo2 = create(:docker_tag, :with_uuid, :repository => repo1, :name => "latest")
       schema2_repo2 = create(:docker_tag, :with_uuid, :schema1, :repository => repo1, :name => "latest")
 

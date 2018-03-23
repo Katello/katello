@@ -1,3 +1,5 @@
+<span page-title ng-model="environment">{{ 'Lifecycle Environment:' | translate }} {{ environment.name }}</span>
+
 <div data-extend-template="layouts/two-column-details.html">
   <div data-block="left-column">
     <h4 translate>Basic Information</h4>
@@ -11,6 +13,12 @@
 
       <dt translate>Label</dt>
       <dd>{{ environment.label }}</dd>
+
+      <dt translate>Registry Name Pattern</dt>
+      <dd bst-edit-textarea="environment.registry_name_pattern"
+          on-save="save(environment)"
+          readonly="denied('edit_lifecycle_environments', environment)">
+      </dd>
 
       <dt translate>Description</dt>
       <dd bst-edit-textarea="environment.description"

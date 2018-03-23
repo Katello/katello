@@ -1,6 +1,7 @@
 require 'katello_test_helper'
 
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class ContentViewTest < ActiveSupport::TestCase
     def setup
       User.current         = users(:admin)
@@ -13,6 +14,55 @@ module Katello
       @no_environment_view = katello_content_views(:no_environment_view)
       @puppet_module       = katello_puppet_modules(:abrt)
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def test_docker_promote
+      org = @organization
+      product = create(:katello_product, provider: org.anonymous_provider,
+                       organization: org, name: 'Registry', label: 'registry')
+      repo = create(:docker_repository, product: product,
+                    content_view_version: org.default_content_view.versions.first,
+                    name: 'image/one', label: 'image_one', docker_upstream_name: 'image/one')
+
+      cv1 = create(:katello_content_view, organization: org,
+                   name: 'CV1', label: 'cv1')
+      cv1.repositories << repo
+      cv1.save!
+      cvv1repo1 = build(:docker_repository, product: product,
+                        content_view_version: org.default_content_view.versions.first,
+                        library_instance_id: repo.id)
+      cvv1 = create(:katello_content_view_version, :content_view => cv1, :repositories => [cvv1repo1])
+
+      env1 = create(:katello_environment, name: 'Env 1', label: 'env1', organization: org,
+                    priors: [org.library])
+      cvv1repo1.environment = env1
+      cvv1repo1.save!
+      create(:katello_content_view_environment,
+             name: "#{env1.label}/#{cv1.label}", label: "#{env1.label}/#{cv1.label}",
+             environment: env1, content_view: cv1, content_view_version: cvv1)
+
+      cv2 = create(:katello_content_view, organization: org,
+                   name: 'CV2', label: 'cv2')
+      cv2.repositories << repo
+      cv2.save!
+      cvv2repo1 = build(:docker_repository, product: product,
+                        content_view_version: org.default_content_view.versions.first,
+                        library_instance_id: repo.id)
+      cvv2 = create(:katello_content_view_version, :content_view => cv2, :repositories => [cvv2repo1])
+      create(:katello_content_view_environment,
+             name: "#{env1.label}/#{cv2.label}", label: "#{env1.label}/#{cv2.label}",
+             environment: env1, content_view: cv2, content_view_version: cvv2)
+      cvv2repo1.environment = env1
+
+      assert cv2.check_docker_repository_names!([env1])
+
+      env1.update_attributes(registry_name_pattern: 'abcdef')
+      assert cvv1repo1.save!
+      assert_raises(ActiveRecord::RecordInvalid) do
+        cvv2repo1.save!
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
 
     def test_create
       assert ContentView.create(FactoryBot.attributes_for(:katello_content_view))
@@ -280,15 +330,24 @@ module Katello
       product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
 
       repo = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first)
+      repo.stubs(:container_repository_name).returns('repo')
+      repo.stubs(:set_container_repository_name).returns('repo')
+      repo.save!
 
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo
-      repo1 = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+      repo1 = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+      repo1.stubs(:container_repository_name).returns('repo1')
+      repo1.stubs(:set_container_repository_name).returns('repo1')
+      repo1.save!
       version1 = create(:katello_content_view_version, :content_view => view1, :repositories => [repo1])
 
       view2 = create(:katello_content_view, organization: @organization)
       view2.repositories << repo
-      repo2 = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+      repo2 = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+      repo2.stubs(:container_repository_name).returns('repo2')
+      repo2.stubs(:set_container_repository_name).returns('repo2')
+      repo2.save!
       version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2])
 
       composite.update_attributes(component_ids: [version1.id, version2.id])
@@ -296,6 +355,34 @@ module Katello
       refute composite.valid?
       assert composite.errors.include?(:base)
       assert composite.errors.full_messages.first =~ /^Container Image repo '#{repo.name}' is present in multiple/
+    end
+
+    def test_docker_repo_container_names
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
+
+      repo1_lib = create(:docker_repository, label: 'repo1', product: product, content_view_version: @organization.default_content_view.versions.first)
+      view1 = create(:katello_content_view, organization: @organization)
+      view1.repositories << repo1_lib
+      repo1_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo1_lib.id)
+      version1 = create(:katello_content_view_version, :content_view => view1, :repositories => [repo1_cv])
+
+      repo2_lib = create(:docker_repository, label: 'repo2', product: product, content_view_version: @organization.default_content_view.versions.first)
+      view2 = create(:katello_content_view, organization: @organization)
+      view2.repositories << repo2_lib
+      repo2_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo2_lib.id)
+      version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2_cv])
+
+      composite.update_attributes(component_ids: [version1.id])
+      assert composite.valid?
+      @dev.registry_name_pattern = "abcdef"
+      assert composite.check_docker_repository_names!([@dev])
+
+      composite.update_attributes(component_ids: [version1.id, version2.id])
+      assert composite.valid?
+      assert_raises(RuntimeError) do
+        composite.check_docker_repository_names!([@dev])
+      end
     end
 
     def test_puppet_repos
@@ -480,4 +567,5 @@ module Katello
       assert @library_view.publish_puppet_environment?
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
