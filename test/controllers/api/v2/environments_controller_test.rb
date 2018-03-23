@@ -39,6 +39,64 @@ module Katello
       assert_response :success
     end
 
+    def test_create_with_name
+      Organization.any_instance.stubs(:save!).returns(@organization)
+      env_name = 'dev env'
+      assert_difference('KTEnvironment.count') do
+        post :create, params: { :organization_id => @organization.id, :environment => {
+          :name => env_name,
+          :prior => @library.id
+        } }
+      end
+      assert_response :success
+      response = JSON.parse(@response.body)
+      assert response.key?('name')
+      assert_equal response['name'], env_name
+    end
+
+    def test_create_with_description
+      description = 'Environment Description.'
+      assert_difference('KTEnvironment.count') do
+        post :create, params: { :organization_id => @organization.id, :environment => {
+          :name => 'DEV',
+          :description => description,
+          :prior => @library.id
+        } }
+      end
+      assert_response :success
+      response = JSON.parse(@response.body)
+      assert response.key?('description')
+      assert_equal response['description'], description
+    end
+
+    def test_update_description
+      new_description = 'New environment description.'
+      put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
+        :description => new_description
+      } }
+      assert_response :success
+      response = JSON.parse(@response.body)
+      assert response.key?('description')
+      assert_equal response['description'], new_description
+    end
+
+    def test_create_with_invalid_name
+      assert_difference('KTEnvironment.count', 0) do
+        post :create, params: { :organization_id => @organization.id, :environment => {
+          :name => '',
+          :prior => @library.id
+        } }
+      end
+      assert_response :unprocessable_entity
+    end
+
+    def test_update_with_invalid_name
+      put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
+        :name => ''
+      } }
+      assert_response :unprocessable_entity
+    end
+
     def test_create_fail
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create, params: { :organization_id => @organization.id, :environment => {
