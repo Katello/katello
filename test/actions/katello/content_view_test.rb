@@ -269,10 +269,10 @@ module ::Actions::Katello::ContentView
     end
   end
 
-  class CapsuleGenerateAndSyncTest < TestBase
+  class CapsuleSyncTest < TestBase
     include Support::CapsuleSupport
 
-    let(:action_class) { ::Actions::Katello::ContentView::CapsuleGenerateAndSync }
+    let(:action_class) { ::Actions::Katello::ContentView::CapsuleSync }
     let(:content_view) do
       katello_content_views(:library_dev_view)
     end

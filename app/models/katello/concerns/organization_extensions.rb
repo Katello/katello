@@ -194,6 +194,10 @@ module Katello
           end
           users.pluck(:id)
         end
+
+        class Jail < ::Safemode::Jail
+          allow :name, :label
+        end
       end
     end
   end

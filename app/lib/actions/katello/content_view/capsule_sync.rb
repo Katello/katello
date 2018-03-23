@@ -1,7 +1,7 @@
 module Actions
   module Katello
     module ContentView
-      class CapsuleGenerateAndSync < Actions::Base
+      class CapsuleSync < Actions::Base
         def humanized_name
           _("Sync Content View on Smart Proxy(ies)")
         end

@@ -90,7 +90,7 @@ module Actions
           end
 
           if ::Katello::CapsuleContent.sync_needed?(environment)
-            ForemanTasks.async_task(ContentView::CapsuleGenerateAndSync,
+            ForemanTasks.async_task(ContentView::CapsuleSync,
                                     view,
                                     environment)
           end
