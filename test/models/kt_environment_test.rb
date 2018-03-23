@@ -16,6 +16,10 @@ module Katello
   end
 
   class KTEnvironmentTest < KTEnvironmentTestBase
+    should allow_values(*valid_name_list).for(:name)
+    should_not allow_values(*invalid_name_list).for(:name)
+    should allow_value(RFauxFactory.gen_utf8).for(:description)
+
     def test_create_and_validate_default_content_view
       env = KTEnvironment.create(:organization => @acme_corporation, :name => "SomeEnv", :prior => @library)
       assert_nil env.default_content_view
