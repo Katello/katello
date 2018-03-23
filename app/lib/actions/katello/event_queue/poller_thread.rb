@@ -26,15 +26,17 @@ module Actions
           @thread.kill if @thread
           @thread = Thread.new do
             loop do
-              begin
-                until (event = ::Katello::EventQueue.next_event).nil?
-                  suspended_action.notify_queue_item(event.event_type, event.object_id, event.created_at) if event
-                end
+              Rails.application.executor.wrap do
+                begin
+                  until (event = ::Katello::EventQueue.next_event).nil?
+                    suspended_action.notify_queue_item(event.event_type, event.object_id, event.created_at) if event
+                  end
 
-                sleep SLEEP_INTERVAL
-              rescue => e
-                suspended_action.notify_fatal(e)
-                raise e
+                  sleep SLEEP_INTERVAL
+                rescue => e
+                  suspended_action.notify_fatal(e)
+                  raise e
+                end
               end
             end
           end
