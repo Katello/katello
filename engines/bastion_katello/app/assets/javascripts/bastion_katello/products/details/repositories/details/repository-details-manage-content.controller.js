@@ -13,6 +13,7 @@
  * @requires PuppetModule
  * @requires DockerManifest
  * @requires DockerManifestList
+ * @requires DockerTag
  * @requires OstreeBranch
  * @requires File
  * @requires Deb
@@ -21,8 +22,8 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'OstreeBranch', 'File', 'Deb',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, OstreeBranch, File, Deb) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb) {
         var contentTypes;
 
         function success(response, selected) {
@@ -57,6 +58,7 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'puppet-modules': { type: PuppetModule },
             'docker-manifests': { type: DockerManifest },
             'docker-manifest-lists': { type: DockerManifestList },
+            'docker-tags': {type: DockerTag},
             'ostree-branches': { type: OstreeBranch },
             'files': { type: File },
             'debs': { type: Deb }
@@ -97,6 +99,17 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
                 item.unselectable = true;
             }
             return item;
+        };
+        $scope.availableSchemaVersions = function (tag) {
+            var versions = [];
+            if (tag.manifest_schema1) {
+                versions.push(1);
+            }
+
+            if (tag.manifest_schema2) {
+                versions.push(2);
+            }
+            return versions.join(", ");
         };
     }]
 );
