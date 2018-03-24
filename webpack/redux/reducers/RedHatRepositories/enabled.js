@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
     return state.set(['loading'], true);
   } else if (action.type === ENABLED_REPOSITORIES_SUCCESS) {
     const {
-      page, per_page, subtotal, results,
+      page, per_page, subtotal, results, // eslint-disable-line camelcase
     } = action.response;
 
     return Immutable({
