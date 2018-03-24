@@ -1,0 +1,15 @@
+//TODO: for some reason these are missing in our patternfly version
+html .pagination-pf-pagesize.btn-group {
+  display: flex;
+  float: none;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 5px;
+  width: auto;
+}
+
+// necessary because of !important table margin css from foreman
+// https://github.com/theforeman/foreman/blob/develop/app/assets/stylesheets/base.scss#L242
+.table + .table-view-pf-pagination {
+  margin-top: -6px !important;
+}

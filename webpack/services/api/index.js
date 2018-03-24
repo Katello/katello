@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Immutable from 'seamless-immutable';
 
 const getcsrfToken = () => {
   const token = document.querySelector('meta[name="csrf-token"]');
@@ -9,6 +10,16 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['X-CSRF-Token'] = getcsrfToken();
 
 const addBaseApiPath = url => `/katello/api/v2${url}`;
+
+export const initialApiState = Immutable({
+  loading: true,
+  pagination: {
+    total: 0,
+    page: 0,
+    perPage: 20,
+  },
+  results: [],
+});
 
 export default {
   get(url, headers = {}, params = {}) {

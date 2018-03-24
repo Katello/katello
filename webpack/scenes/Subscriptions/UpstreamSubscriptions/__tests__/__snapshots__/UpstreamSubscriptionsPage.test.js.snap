@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`upstream subscriptions page should render 1`] = `
+<Grid
+  bsClass="container-fluid"
+  componentClass="div"
+  fluid={false}
+>
+  <h1>
+    Add Subscriptions
+  </h1>
+  <Row
+    bsClass="row"
+    componentClass="div"
+  >
+    <Col
+      bsClass="col"
+      componentClass="div"
+      sm={12}
+    >
+      <Spinner
+        className="small-spacer"
+        inline={false}
+        inverse={false}
+        loading={false}
+        size="md"
+      >
+        <Table
+          columns={
+            Array [
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "Subscription Name",
+                },
+                "property": "id",
+              },
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "Contract",
+                },
+                "property": "contract_number",
+              },
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "Start Date",
+                },
+                "property": "start_date",
+              },
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "End Date",
+                },
+                "property": "end_date",
+              },
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "Available Entitlements",
+                },
+                "property": "quantity",
+              },
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "Quantity to Allocate",
+                },
+                "property": "consumed",
+              },
+            ]
+          }
+          emptyState={
+            Object {
+              "action": Object {
+                "title": "New Subscription Allocation",
+                "url": "http://redhat.com",
+              },
+              "description": "Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to an on-premise subscription management application such as Red Hat Satellite.",
+              "docUrl": "http://redhat.com",
+              "documentation": Object {
+                "title": "Learn more about Subscription Allocations",
+                "url": "http://redhat.com",
+              },
+              "header": "There are no Subscription Allocations to display",
+            }
+          }
+          rows={
+            Array [
+              Object {
+                "consumed": 100,
+                "contract_number": "11480900",
+                "end_date": "2018-09-15T03:59:59+0000",
+                "pool_id": "8a99f9815e718933015e85b19e1e11d7",
+                "product_id": "RH00284",
+                "product_name": "Red Hat Enterprise Linux for Power, LE, Premium (IFL, up to 4 LPARs)",
+                "quantity": 200,
+                "start_date": "2017-09-15T04:00:00+0000",
+                "subscription_id": "4753270",
+              },
+              Object {
+                "consumed": 125,
+                "contract_number": "11480898",
+                "end_date": "2018-09-15T03:59:59+0000",
+                "pool_id": "8a99f9815e718933015e85b1bfd211db",
+                "product_id": "RH00447",
+                "product_name": "Red Hat Enterprise Linux Server for ATOM with Smart Management, Hyperscale, Standard (5 Physical Nodes)",
+                "quantity": 250,
+                "start_date": "2017-09-15T04:00:00+0000",
+                "subscription_id": "4753271",
+              },
+            ]
+          }
+        />
+        <PaginationRow
+          className=""
+          dropdownButtonId="pagination-row-dropdown"
+          itemCount={2}
+          messages={
+            Object {
+              "currentPage": "Current Page",
+              "firstPage": "First Page",
+              "lastPage": "Last Page",
+              "nextPage": "Next Page",
+              "of": "of",
+              "perPage": "per page",
+              "previousPage": "Previous Page",
+            }
+          }
+          onChange={[Function]}
+          onPageSet={[Function]}
+          onPerPageSelect={[Function]}
+          pagination={
+            Object {
+              "page": 1,
+              "perPage": 20,
+              "subtotal": 2,
+              "total": 2,
+            }
+          }
+          viewType="table"
+        />
+      </Spinner>
+    </Col>
+  </Row>
+  <Row
+    bsClass="row"
+    componentClass="div"
+  >
+    <Col
+      bsClass="col"
+      componentClass="div"
+      sm={12}
+    >
+      <Button
+        active={false}
+        block={false}
+        bsClass="btn"
+        bsStyle="primary"
+        disabled={false}
+      >
+        Submit
+      </Button>
+      <LinkContainer
+        activeClassName="active"
+        exact={false}
+        replace={false}
+        strict={false}
+        to="/xui/subscriptions"
+      >
+        <Button
+          active={false}
+          block={false}
+          bsClass="btn"
+          bsStyle="default"
+          disabled={false}
+        >
+          Cancel
+        </Button>
+      </LinkContainer>
+    </Col>
+  </Row>
+</Grid>
+`;

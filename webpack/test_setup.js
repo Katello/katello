@@ -6,4 +6,4 @@ import Adapter from 'enzyme-adapter-react-16';
 configure({ adapter: new Adapter() });
 
 // Mocking translation function
-const __ = text => text; // eslint-disable-line
+global.__ = text => text; // eslint-disable-line
