@@ -1,10 +1,10 @@
-<span page-title ng-model="repository">{{ 'Manage Docker Manifests for Repository:' | translate }} {{ repository.name }}</span>
+<span page-title ng-model="repository">{{ 'Manage Container Image Manifests for Repository:' | translate }} {{ repository.name }}</span>
 
 <div data-block="messages">
   <div bst-alert="success" ng-hide="generationTaskId === undefined">
     <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
     <p translate>
-      Docker metadata generation has been initiated in the background.  Click
+      Container Image metadata generation has been initiated in the background.  Click
       <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
     </p>
   </div>
@@ -16,14 +16,14 @@
       <div data-block="modal-header"
            translate
            translate-n="table.numSelected"
-           translate-plural="Remove {{ table.numSelected  }} Docker Manifests?">
-        Remove {{ table.numSelected  }} Docker Manifest?
+           translate-plural="Remove {{ table.numSelected  }} Container Image manifests?">
+        Remove {{ table.numSelected  }} Container Image manifest?
       </div>
       <div data-block="modal-body"
            translate
            translate-n="table.numSelected"
-           translate-plural="Are you sure you want to remove the {{ table.numSelected }} Docker manifests selected?">
-        Are you sure you want to remove the {{ table.numSelected }} Docker manifest selected?
+           translate-plural="Are you sure you want to remove the {{ table.numSelected }} Container Image manifests selected?">
+        Are you sure you want to remove the {{ table.numSelected }} Container Image manifest selected?
       </div>
     </div>
 
@@ -32,7 +32,7 @@
             ng-hide="denied('edit_products')"
             ng-disabled="table.working || table.numSelected === 0">
       <i class="fa fa-trash-o" ng-hide="table.working"></i>
-      <span translate>Remove Docker Manifests</span>
+      <span translate>Remove Container Image Manifests</span>
     </button>
   </div>
 

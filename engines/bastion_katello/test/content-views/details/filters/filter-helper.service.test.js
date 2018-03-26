@@ -15,7 +15,7 @@ describe('Service: FilterHelper', function() {
         expect(FilterHelper.contentType('rpm')).toBe('RPM');
         expect(FilterHelper.contentType('erratum')).toBe('Errata');
         expect(FilterHelper.contentType('package_group')).toBe('Package Groups');
-        expect(FilterHelper.contentType('docker')).toBe('Docker Tags');
+        expect(FilterHelper.contentType('docker')).toBe('Container Image Tags');
     });
 
 });
