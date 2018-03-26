@@ -345,7 +345,8 @@ module Katello
       organization = nil
 
       if params.key?(key)
-        organization = Organization.find_by(:label => params[key])
+        label = params[key].is_a?(ActionController::Parameters) ? params[key]['key'] : params[key]
+        organization = Organization.find_by(:label => label)
       end
 
       if organization.nil?
