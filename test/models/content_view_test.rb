@@ -276,7 +276,7 @@ module Katello
 
       refute composite.valid?
       assert composite.errors.include?(:base)
-      assert composite.errors.full_messages.first =~ /^Docker repo '#{repo.name}' is present in multiple/
+      assert composite.errors.full_messages.first =~ /^Container Image repo '#{repo.name}' is present in multiple/
     end
 
     def test_puppet_repos

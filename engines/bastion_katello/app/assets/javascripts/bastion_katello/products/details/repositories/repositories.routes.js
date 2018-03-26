@@ -104,7 +104,7 @@
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-docker-manifests.html',
             ncyBreadcrumb: {
-                label: "{{'Docker Manifests' | translate }}",
+                label: "{{'Container Image Manifests' | translate }}",
                 parent: 'product.repository.info'
             }
         })
@@ -122,7 +122,7 @@
             permission: 'view_products',
             templateUrl: 'products/details/repositories/details/views/repository-manage-docker-manifest-lists.html',
             ncyBreadcrumb: {
-                label: "{{'Docker Manifest Lists' | translate }}",
+                label: "{{'Container Image Manifest Lists' | translate }}",
                 parent: 'product.repository.info'
             }
         })

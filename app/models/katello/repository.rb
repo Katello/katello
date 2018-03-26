@@ -805,7 +805,7 @@ module Katello
 
     def ensure_docker_repo_unprotected
       unless unprotected
-        errors.add(:base, N_("Docker Repositories are not protected at this time. " \
+        errors.add(:base, N_("Container Image Repositories are not protected at this time. " \
                              "They need to be published via http to be available to containers."))
       end
     end

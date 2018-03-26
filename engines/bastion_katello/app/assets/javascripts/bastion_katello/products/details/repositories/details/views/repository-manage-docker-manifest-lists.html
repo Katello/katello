@@ -1,10 +1,10 @@
-<span page-title ng-model="repository">{{ 'View Docker Manifest Lists for Repository:' | translate }} {{ repository.name }}</span>
+<span page-title ng-model="repository">{{ 'View Container Image Manifest Lists for Repository:' | translate }} {{ repository.name }}</span>
 
 <div data-block="messages">
   <div bst-alert="success" ng-hide="generationTaskId === undefined">
     <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
     <p translate>
-      Docker metadata generation has been initiated in the background.  Click
+      Container Image metadata generation has been initiated in the background.  Click
       <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
     </p>
   </div>
