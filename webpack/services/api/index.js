@@ -9,8 +9,6 @@ const getcsrfToken = () => {
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['X-CSRF-Token'] = getcsrfToken();
 
-const addBaseApiPath = url => `/katello/api/v2${url}`;
-
 export const initialApiState = Immutable({
   loading: true,
   pagination: {
@@ -21,34 +19,57 @@ export const initialApiState = Immutable({
   results: [],
 });
 
-export default {
+class Api {
+  constructor() {
+    this.baseApiPath = '/katello/api/v2';
+  }
+
+  getApiUrl(url) {
+    return this.baseApiPath + url;
+  }
+
   get(url, headers = {}, params = {}) {
-    return axios.get(addBaseApiPath(url), {
+    return axios.get(this.getApiUrl(url), {
       headers,
       params,
     });
-  },
+  }
+
   put(url, data = {}, headers = {}) {
-    return axios.put(addBaseApiPath(url), data, {
+    return axios.put(this.getApiUrl(url), data, {
       headers,
     });
-  },
+  }
+
   post(url, data = {}, headers = {}) {
-    return axios.post(addBaseApiPath(url), data, {
+    return axios.post(this.getApiUrl(url), data, {
       headers,
     });
-  },
+  }
+
   delete(url, headers = {}) {
-    return axios.delete(addBaseApiPath(url), {
+    return axios.delete(this.getApiUrl(url), {
       headers,
     });
-  },
+  }
+
   patch(url, data = {}, headers = {}) {
-    return axios.patch(addBaseApiPath(url), data, {
+    return axios.patch(this.getApiUrl(url), data, {
       headers,
     });
-  },
-};
+  }
+}
+
+export default new Api();
+
+class ForemanTasksApi extends Api {
+  constructor() {
+    super();
+    this.baseApiPath = '/foreman_tasks/api';
+  }
+}
+
+export const foremanTasksApi = new ForemanTasksApi();
 
 // eslint-disable-next-line import/prefer-default-export
 const orgNode = document.getElementById('organization-id');

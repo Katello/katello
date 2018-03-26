@@ -5,16 +5,32 @@ import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button, Spinner } from 'patternfly-react';
 import Table from '../../move_to_foreman/components/common/table';
 import PaginationRow from '../../components/PaginationRow/index';
+import ManageManifestModal from './Manifest/';
 import { columns } from './SubscriptionsTableSchema';
 import Search from '../../components/Search/index';
 import { orgId } from '../../services/api';
+import { BLOCKING_FOREMAN_TASK_TYPES, MANIFEST_TASKS_BULK_SEARCH_ID } from './SubscriptionConstants';
 
 class SubscriptionsPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      manifestModalOpen: false,
+    };
+  }
+
   componentDidMount() {
     this.loadData();
   }
 
   loadData() {
+    this.props.pollBulkSearch({
+      search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
+      type: 'all',
+      active_only: true,
+      action_types: BLOCKING_FOREMAN_TASK_TYPES,
+    }, 10000);
     this.props.loadSubscriptions();
   }
 
@@ -64,6 +80,9 @@ class SubscriptionsPage extends Component {
   }
 
   render() {
+    const { tasks } = this.props;
+    const taskInProgress = tasks.length > 0;
+
     const onSearch = (search) => {
       this.props.loadSubscriptions({ search });
     };
@@ -75,6 +94,14 @@ class SubscriptionsPage extends Component {
         search,
       },
     });
+
+    const showManageManifestModal = () => {
+      this.setState({ manifestModalOpen: true });
+    };
+
+    const onModalClose = () => {
+      this.setState({ manifestModalOpen: false });
+    };
 
     return (
       <Grid bsClass="container-fluid">
@@ -97,11 +124,7 @@ class SubscriptionsPage extends Component {
                         </Button>
                       </LinkContainer>
 
-                      <Button>
-                        {__('Refresh')}
-                      </Button>
-
-                      <Button>
+                      <Button disabled={taskInProgress}onClick={showManageManifestModal}>
                         {__('Manage Manifest')}
                       </Button>
 
@@ -109,7 +132,7 @@ class SubscriptionsPage extends Component {
                         {__('Export CSV')}
                       </Button>
 
-                      <Button>
+                      <Button disabled={taskInProgress}>
                         {__('Delete')}
                       </Button>
                     </FormGroup>
@@ -117,6 +140,8 @@ class SubscriptionsPage extends Component {
                 </Form>
               </Col>
             </Row>
+
+            <ManageManifestModal showModal={this.state.manifestModalOpen} onClose={onModalClose} />
 
             { this.renderSubscriptionTable() }
           </Col>
@@ -129,6 +154,12 @@ class SubscriptionsPage extends Component {
 SubscriptionsPage.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   subscriptions: PropTypes.shape({}).isRequired,
+  pollBulkSearch: PropTypes.func.isRequired,
+  tasks: PropTypes.arrayOf(PropTypes.shape({})),
+};
+
+SubscriptionsPage.defaultProps = {
+  tasks: [],
 };
 
 export default SubscriptionsPage;

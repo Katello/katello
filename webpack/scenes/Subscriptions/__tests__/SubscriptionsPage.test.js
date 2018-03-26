@@ -6,10 +6,13 @@ import { successState } from './subscriptions.fixtures';
 import { loadSubscriptions } from '../SubscriptionActions';
 
 describe('subscriptions page', () => {
+  const pollBulkSearch = () => {};
+
   it('should render', async () => {
     const page = shallow(<SubscriptionsPage
       subscriptions={successState}
       loadSubscriptions={loadSubscriptions}
+      pollBulkSearch={pollBulkSearch}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

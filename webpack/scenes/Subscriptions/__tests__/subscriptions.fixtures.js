@@ -18,6 +18,7 @@ export const loadingState = Immutable({
     perPage: 20,
   },
   itemCount: 0,
+  tasks: [],
 });
 
 export const requestSuccessResponse = Immutable({

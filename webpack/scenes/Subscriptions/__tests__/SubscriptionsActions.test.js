@@ -16,7 +16,7 @@ afterEach(() => {
 
 describe('subscription actions', () => {
   it(
-    'creates STATISTICS_DATA_REQUEST and then fails with 422',
+    'creates SUBSCRIPTIONS_REQUEST and then fails with 422',
     () => {
       mockRequest({
         url: '/katello/api/v2/subscriptions',
