@@ -251,11 +251,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         });
 
         $scope.manifestRefreshDisabled = function () {
-          return $scope.isTaskPending() ||
+            return $scope.isTaskPending() ||
                  !$scope.upstream ||
                  !$scope.upstream.idCert ||
                  !$scope.upstream.idCert.cert ||
-                 contentDisconnected
-        }
+                 contentDisconnected;
+        };
     }]
 );
