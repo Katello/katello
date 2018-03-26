@@ -434,7 +434,7 @@ module Katello
 
     def check_docker_conflicts
       duplicate_docker_repos.each do |repo|
-        msg = _("Docker repo '%{repo}' is present in multiple component content views.") % {repo: repo.name}
+        msg = _("Container Image repo '%{repo}' is present in multiple component content views.") % {repo: repo.name}
         errors.add(:base, msg)
       end
     end

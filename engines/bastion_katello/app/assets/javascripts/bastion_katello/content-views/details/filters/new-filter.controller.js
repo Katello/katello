@@ -79,7 +79,7 @@ angular.module('Bastion.content-views').controller('NewFilterController',
         } else {
             $scope.filter.type = "docker";
             $scope.filterChoices = [
-                {id: 'docker', name: translate('Docker Tag')}
+                {id: 'docker', name: translate('Container Image Tag')}
             ];
         }
 

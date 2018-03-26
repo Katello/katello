@@ -105,7 +105,7 @@ Foreman::Plugin.register :katello do
     if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::DOCKER_TYPE)
       menu :top_menu,
            :docker_tags,
-           :caption => N_('Docker Tags'),
+           :caption => N_('Container Image Tags'),
            :url => '/docker_tags',
            :url_hash => {:controller => 'katello/api/v2/docker_tags',
                          :action => 'index'},

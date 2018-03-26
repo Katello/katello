@@ -19,7 +19,7 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
             }
         },
         ncyBreadcrumb: {
-            label: "{{ 'Docker Tags' | translate }}"
+            label: "{{ 'Container Image Tags' | translate }}"
         }
     })
     .state('docker-tag', {
@@ -29,7 +29,7 @@ angular.module('Bastion.docker-tags').config(['$stateProvider', function ($state
         controller: 'DockerTagDetailsController',
         templateUrl: 'docker-tags/details/views/docker-tag-details.html',
         ncyBreadcrumb: {
-            label: "{{ 'Docker Tags' | translate }}",
+            label: "{{ 'Container Image Tags' | translate }}",
             parent: 'docker-tags'
         }
     })

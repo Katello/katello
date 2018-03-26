@@ -52,7 +52,7 @@
             }, {
                 state: 'docker',
                 resource: 'DockerTag',
-                display: translate('Docker Tags'),
+                display: translate('Container Image Tags'),
                 repositoryType: 'docker'
             }, {
                 state: 'ostree',

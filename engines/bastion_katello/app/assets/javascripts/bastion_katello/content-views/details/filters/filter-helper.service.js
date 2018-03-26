@@ -14,7 +14,7 @@ angular.module('Bastion.content-views').service('FilterHelper',
             'rpm': translate('RPM'),
             'erratum': translate('Errata'),
             'package_group': translate('Package Groups'),
-            'docker': translate('Docker Tags')
+            'docker': translate('Container Image Tags')
         };
 
         this.contentType = function (type) {
