@@ -1,0 +1,320 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`manage manifest modal should render 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  bsClass="modal"
+  dialogComponentClass={[Function]}
+  enforceFocus={true}
+  keyboard={true}
+  manager={
+    ModalManager {
+      "add": [Function],
+      "containers": Array [],
+      "data": Array [],
+      "handleContainerOverflow": true,
+      "hideSiblingNodes": true,
+      "isTopModal": [Function],
+      "modals": Array [],
+      "remove": [Function],
+    }
+  }
+  onHide={[Function]}
+  renderBackdrop={[Function]}
+  restoreFocus={true}
+  show={true}
+>
+  <ModalHeader
+    bsClass="modal-header"
+    closeButton={false}
+    closeLabel="Close"
+  >
+    <button
+      aria-label="Close"
+      className="close"
+      onClick={[Function]}
+    >
+      <Icon
+        name="close"
+        type="pf"
+      />
+    </button>
+    <ModalTitle
+      bsClass="modal-title"
+      componentClass="h4"
+    >
+      Manage Manifest
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody
+    bsClass="modal-body"
+    componentClass="div"
+  >
+    <Uncontrolled(Tabs)
+      id="manifest-history-tabs"
+    >
+      <Tab
+        eventKey={1}
+        title="Manifest"
+      >
+        <Form
+          bsClass="form"
+          className="form-horizontal"
+          componentClass="form"
+          horizontal={false}
+          inline={false}
+        >
+          <h5>
+            Red Hat Provider Details
+          </h5>
+          <hr />
+          <FormGroup
+            bsClass="form-group"
+          >
+            <ControlLabel
+              bsClass="control-label"
+              className="col-sm-3"
+              htmlFor="cdnUrl"
+              srOnly={false}
+            >
+              Red Hat CDN URL
+            </ControlLabel>
+            <Col
+              bsClass="col"
+              componentClass="div"
+              sm={9}
+            >
+              <FormControl
+                bsClass="form-control"
+                componentClass="input"
+                id="cdnUrl"
+                onChange={[Function]}
+                type="text"
+                value="https://redhat.com"
+              />
+            </Col>
+          </FormGroup>
+          <br />
+          <h5>
+            Subscription Manifest
+          </h5>
+          <hr />
+          <FormGroup
+            bsClass="form-group"
+          >
+            <ControlLabel
+              bsClass="control-label"
+              className="col-sm-3 control-label"
+              htmlFor="usmaFile"
+              srOnly={false}
+            >
+              <OverlayTrigger
+                defaultOverlayShown={false}
+                overlay={
+                  <Tooltip
+                    bsClass="tooltip"
+                    id="usma-tooltip"
+                    placement="right"
+                  >
+                    Upstream Subscription Management Application
+                  </Tooltip>
+                }
+                placement="bottom"
+                rootClose={false}
+                trigger={
+                  Array [
+                    "hover",
+                    "focus",
+                  ]
+                }
+              >
+                <span>
+                  USMA
+                </span>
+              </OverlayTrigger>
+            </ControlLabel>
+            <Col
+              bsClass="col"
+              className="manifest-actions"
+              componentClass="div"
+              sm={9}
+            >
+              No Manifest Uploaded
+              <FormControl
+                accept=".zip"
+                bsClass="form-control"
+                componentClass="input"
+                id="usmaFile"
+                onChange={[Function]}
+                type="file"
+              />
+              <Button
+                active={false}
+                block={false}
+                bsClass="btn"
+                bsStyle="default"
+                disabled={false}
+                onClick={[Function]}
+              >
+                Refresh
+              </Button>
+              <Button
+                active={false}
+                block={false}
+                bsClass="btn"
+                bsStyle="default"
+                disabled={false}
+                onClick={[Function]}
+              >
+                Delete
+              </Button>
+            </Col>
+          </FormGroup>
+        </Form>
+      </Tab>
+      <Tab
+        eventKey={2}
+        title="Manifest History"
+      >
+        <Spinner
+          className="small-spacer"
+          inline={false}
+          inverse={false}
+          loading={false}
+          size="md"
+        >
+          <Table
+            columns={
+              Array [
+                Object {
+                  "cell": Object {
+                    "formatters": Array [
+                      [Function],
+                    ],
+                  },
+                  "header": Object {
+                    "formatters": Array [
+                      [Function],
+                    ],
+                    "label": "Status",
+                  },
+                  "property": "status",
+                },
+                Object {
+                  "cell": Object {
+                    "formatters": Array [
+                      [Function],
+                    ],
+                  },
+                  "header": Object {
+                    "formatters": Array [
+                      [Function],
+                    ],
+                    "label": "Message",
+                  },
+                  "property": "statusMessage",
+                },
+                Object {
+                  "cell": Object {
+                    "formatters": Array [
+                      [Function],
+                    ],
+                  },
+                  "header": Object {
+                    "formatters": Array [
+                      [Function],
+                    ],
+                    "label": "Timestamp",
+                  },
+                  "property": "created",
+                },
+              ]
+            }
+            emptyState={
+              Object {
+                "description": "Import a Manifest using the manifest tab above.",
+                "documentation": Object {
+                  "title": "Learn more about adding Subscription Manifests",
+                  "url": "http://redhat.com",
+                },
+                "header": "There is no Manifest History to display.",
+              }
+            }
+            rows={
+              Array [
+                Object {
+                  "created": "2018-04-12T18:58:45+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-12T14:28:57+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-11T14:36:43+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-11T04:29:51+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-11T04:26:38+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-11T04:23:05+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-11T04:05:07+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-11T03:29:44+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-10T18:44:38+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+                Object {
+                  "created": "2018-04-10T18:40:17+0000",
+                  "status": "SUCCESS",
+                  "statusMessage": "Default_Organization file imported successfully.",
+                },
+              ]
+            }
+          />
+        </Spinner>
+      </Tab>
+    </Uncontrolled(Tabs)>
+  </ModalBody>
+  <ModalFooter
+    bsClass="modal-footer"
+    componentClass="div"
+  >
+    <Button
+      active={false}
+      block={false}
+      bsClass="btn"
+      bsStyle="primary"
+      disabled={false}
+      onClick={[Function]}
+    >
+      Close
+    </Button>
+  </ModalFooter>
+</Modal>
+`;

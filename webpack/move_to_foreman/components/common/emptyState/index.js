@@ -25,9 +25,11 @@ const EmptyState = (props) => {
         {customDocumentation || <span dangerouslySetInnerHTML={{ __html: defaultDocumantion }} />}
       </PfEmptyState.Help>
       <PfEmptyState.Action>
-        <Button href={action.url} bsStyle="primary" bsSize="large">
-          {action.title}
-        </Button>
+        {action && (
+          <Button href={action.url} bsStyle="primary" bsSize="large">
+            {action.title}
+          </Button>
+        )}
       </PfEmptyState.Action>
       {secondayActions && (
         <PfEmptyState.Action secondary>

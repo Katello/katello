@@ -73,15 +73,7 @@ exports[`subscriptions page should render 1`] = `
                   bsClass="btn"
                   bsStyle="default"
                   disabled={false}
-                >
-                  Refresh
-                </Button>
-                <Button
-                  active={false}
-                  block={false}
-                  bsClass="btn"
-                  bsStyle="default"
-                  disabled={false}
+                  onClick={[Function]}
                 >
                   Manage Manifest
                 </Button>
@@ -108,6 +100,10 @@ exports[`subscriptions page should render 1`] = `
           </Form>
         </Col>
       </Row>
+      <Connect(ManageManifestModal)
+        onClose={[Function]}
+        showModal={false}
+      />
       <Spinner
         className="small-spacer"
         inline={false}
@@ -212,9 +208,23 @@ exports[`subscriptions page should render 1`] = `
                   "formatters": Array [
                     [Function],
                   ],
-                  "label": "Entitlements",
+                  "label": "Consumed",
                 },
                 "property": "consumed",
+              },
+              Object {
+                "cell": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                },
+                "header": Object {
+                  "formatters": Array [
+                    [Function],
+                  ],
+                  "label": "Entitlements",
+                },
+                "property": "entitlements",
               },
             ]
           }

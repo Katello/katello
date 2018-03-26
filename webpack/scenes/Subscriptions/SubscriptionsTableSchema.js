@@ -82,6 +82,16 @@ export const columns = [
   {
     property: 'consumed',
     header: {
+      label: __('Consumed'),
+      formatters: [headerFormat],
+    },
+    cell: {
+      formatters: [cellFormat],
+    },
+  },
+  {
+    property: 'entitlements',
+    header: {
       label: __('Entitlements'),
       formatters: [headerFormat],
     },
