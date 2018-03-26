@@ -321,7 +321,7 @@ module Katello
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
     def upload_content
-      fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Docker content.") if @repository.docker?
+      fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
 
       filepaths = Array.wrap(params[:content]).compact.collect do |content|
         {path: content.path, filename: content.original_filename}

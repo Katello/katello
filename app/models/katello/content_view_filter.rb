@@ -6,7 +6,7 @@ module Katello
     ERRATA          = Erratum::CONTENT_TYPE
     DEB             = Deb::CONTENT_TYPE
     CONTENT_TYPES   = [RPM, PACKAGE_GROUP, ERRATA, DOCKER, DEB].freeze
-    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Docker') => DOCKER, _('deb Packages') => DEB }.freeze
+    CONTENT_OPTIONS = { _('Packages') => RPM, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA, _('Container Images') => DOCKER, _('deb Packages') => DEB }.freeze
 
     belongs_to :content_view,
                :class_name => "Katello::ContentView",

@@ -205,9 +205,9 @@ module Katello
         when "Katello::PuppetModule"
           _("Puppet Module")
         when "Katello::DockerManifest"
-          _("Docker Manifest")
+          _("Container Image Manifest")
         when "Katello::DockerMetaTag"
-          _("Docker Tag")
+          _("Container Image Tag")
         when "Katello::OstreeBranch"
           _("OSTree Branch")
         when "Katello::FileUnit"
