@@ -33,7 +33,7 @@ angular.module('Bastion.packages').config(['$stateProvider', function ($statePro
         permission: ['view_products', 'view_content_views'],
         templateUrl: 'packages/details/views/package-info.html',
         ncyBreadcrumb: {
-            label: "{{ package.nvra }}",
+            label: "{{ package.nvrea }}",
             parent: 'packages'
         }
     })
