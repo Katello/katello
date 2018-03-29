@@ -16,8 +16,9 @@ module Katello
       param :sort_by, String, :desc => N_("The field to sort the data by. Defaults to the created date.")
     end
 
-    api :GET, "/upstream_subscriptions",
+    api :GET, "/organizations/:organization_id/upstream_subscriptions",
       N_("List available subscriptions from Red Hat Subscription Management")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param_group :cp_search
     def index
       pools = UpstreamPool.fetch_pools(upstream_pool_params.to_h)

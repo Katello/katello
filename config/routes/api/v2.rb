@@ -291,8 +291,6 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :upstream_subscriptions, only: :index
-
         ##############################
         ##############################
 
@@ -319,6 +317,7 @@ Katello::Engine.routes.draw do
               put :refresh_manifest
             end
           end
+          api_resources :upstream_subscriptions, only: :index
         end
 
         api_resources :host_collections

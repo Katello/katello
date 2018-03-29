@@ -22,7 +22,7 @@ module Katello
     end
 
     def test_index
-      params = { page: '3', per_page: '7' }
+      params = { page: '3', per_page: '7', organization_id: @organization.id }
       Api::V2::UpstreamSubscriptionsController.any_instance.stubs(:upstream_pool_params).returns(params)
       UpstreamPool.expects(:fetch_pools).with(params).returns([{}])
       get :index, params: params
@@ -34,8 +34,8 @@ module Katello
       allowed_perms = [permission]
       denied_perms = []
 
-      assert_protected_action(:index, allowed_perms, denied_perms, []) do
-        get :index, params: { }
+      assert_protected_action(:index, allowed_perms, denied_perms, [@organization]) do
+        get :index, params: { organization_id: @organization.id }
       end
     end
 
