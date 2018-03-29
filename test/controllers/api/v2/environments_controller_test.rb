@@ -29,14 +29,24 @@ module Katello
 
     def test_create
       Organization.any_instance.stubs(:save!).returns(@organization)
+      name = 'dev env'
+      label = 'dev_env'
+      description = 'This environment is for development.'
       post :create, params: { :organization_id => @organization.id, :environment => {
-        :name => 'dev env',
-        :label => 'dev_env',
-        :description => 'This environment is for development.',
+        :name => name,
+        :label => label,
+        :description => description,
         :prior => @library.id
       } }
 
       assert_response :success
+      response = JSON.parse(@response.body)
+      assert response.key?('name')
+      assert_equal response['name'], name
+      assert response.key?('label')
+      assert_equal response['label'], label
+      assert response.key?('description')
+      assert_equal response['description'], description
     end
 
     def test_create_with_name
@@ -52,32 +62,6 @@ module Katello
       response = JSON.parse(@response.body)
       assert response.key?('name')
       assert_equal response['name'], env_name
-    end
-
-    def test_create_with_description
-      description = 'Environment Description.'
-      assert_difference('KTEnvironment.count') do
-        post :create, params: { :organization_id => @organization.id, :environment => {
-          :name => 'DEV',
-          :description => description,
-          :prior => @library.id
-        } }
-      end
-      assert_response :success
-      response = JSON.parse(@response.body)
-      assert response.key?('description')
-      assert_equal response['description'], description
-    end
-
-    def test_update_description
-      new_description = 'New environment description.'
-      put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
-        :description => new_description
-      } }
-      assert_response :success
-      response = JSON.parse(@response.body)
-      assert response.key?('description')
-      assert_equal response['description'], new_description
     end
 
     def test_create_with_invalid_name
@@ -124,15 +108,19 @@ module Katello
 
     def test_update
       original_label = @staging.label
-
+      new_name = 'New Name'
+      new_description = 'New environment description.'
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
-        :new_name => 'New Name',
-        :label => 'New Label'
+        :new_name => new_name,
+        :label => 'New Label',
+        :description => new_description
       } }
 
       assert_response :success
       assert_template 'api/v2/common/update'
-      assert_equal 'New Name', @staging.reload.name
+      @staging.reload
+      assert_equal new_name, @staging.name
+      assert_equal new_description, @staging.description
       # note: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
