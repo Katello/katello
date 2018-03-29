@@ -12,6 +12,11 @@ module Katello
             JSON.parse(pools_json)
           end
 
+          def create(owner_key, attrs)
+            pool = self.post("/candlepin/owners/#{owner_key}/pools", attrs.to_json, self.default_headers).body
+            pool
+          end
+
           def find(pool_id)
             pool_json = self.get(path(pool_id), self.default_headers).body
             fail ArgumentError, "pool id cannot contain ?" if pool_id["?"]

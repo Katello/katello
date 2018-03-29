@@ -157,19 +157,18 @@ module Katello
 
     def test_products
       pool_one = katello_pools(:pool_one)
-      pool_one.subscription_id = nil
-      pool_one.save!
       cp_pools = [{'id' => pool_one.cp_id}]
 
       @dev_key.stubs(:get_key_pools).returns(cp_pools)
-      assert_empty @dev_key.products
+
+      assert_equal pool_one.products, @dev_key.products
     end
 
     def test_available_subscriptions
       pool_one = katello_pools(:pool_one)
       pool_two = katello_pools(:pool_two)
       fedora = katello_products(:fedora)
-      pool_two.subscription.products.delete(fedora) # pool two no longer contains sub content
+      pool_two.products.delete(fedora) # pool two no longer contains sub content
       cp_pools = [{'id' => 'abc123'}, {'id' => 'xyz123'}]
 
       @dev_key.stubs(:get_pools).returns(cp_pools)

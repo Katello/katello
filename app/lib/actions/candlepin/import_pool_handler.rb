@@ -15,15 +15,15 @@ module Actions
 
         case message_handler.subject
         when /entitlement\.created/
-          message_handler.import_pool_by_reference_id
+          message_handler.import_pool
           message_handler.create_pool_on_host
         when /entitlement\.deleted/
-          message_handler.import_pool_by_reference_id
+          message_handler.import_pool
           message_handler.remove_pool_from_host
         when /pool\.created/
-          message_handler.import_pool_by_entity_id
+          message_handler.import_pool
         when /pool\.deleted/
-          message_handler.import_pool_by_entity_id
+          message_handler.import_pool
         when /compliance\.created/
           reindex_consumer(message_handler)
         end

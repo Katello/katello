@@ -17,18 +17,16 @@ module Actions
                         :multiplier => 1,
                         :attributes => [{:name => "arch", :value => "ALL"}])
 
-            sub_create = plan_action(::Actions::Candlepin::Product::CreateUnlimitedSubscription,
+            plan_action(::Actions::Candlepin::Product::CreateUnlimitedSubscription,
                         :owner_key => organization.label,
                         :product_id => product.cp_id,
                         :start_time => subscription_start)
-
-            subscription_id = sub_create.output[:response][:id]
 
             action_subject product, :cp_id => product.cp_id
 
             plan_self
             plan_action ::Actions::Pulp::Repository::EnsureSyncNotification
-            plan_action Katello::Product::ReindexSubscriptions, product, subscription_id
+            plan_action Katello::Product::ReindexSubscriptions, product
           end
         end
 

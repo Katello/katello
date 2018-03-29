@@ -1,78 +1,125 @@
 require 'katello_test_helper'
 
 module Katello
-  class MessageHandlerTest < ActiveSupport::TestCase
+  class MessageHandlerTestBase < ActiveSupport::TestCase
+    def load_handler(event_name)
+      json = File.read("#{Katello::Engine.root}/test/fixtures/candlepin_messages/#{event_name}.json")
+      event = Actions::Candlepin::ListenOnCandlepinEvents::Event.new(
+                            message_id: "foo",
+                            subject: event_name,
+                            content: json)
+      ::Katello::Candlepin::MessageHandler.new(event)
+    end
+
     def setup
-      @entitlement_created = File.read("#{Katello::Engine.root}/test/fixtures/files/entitlement_created.txt")
-      @entitlement_created_json = JSON.parse(@entitlement_created)
-      raw_message = Actions::Candlepin::ListenOnCandlepinEvents::Event.new(
-                      message_id: "foo",
-                      subject: "foo",
-                      content: @entitlement_created)
-      @message_handler = ::Katello::Candlepin::MessageHandler.new(raw_message)
       @pool = katello_pools(:pool_one)
-    end
 
-    def test_content
-      @message_handler.content == @entitlement_created
-    end
+      #from json files
+      @consumer_uuid = 'e930c61b-8dcb-4bca-8282-a8248185f9af'
+      @pool_id = '4028f95162acf5c20162b043b1c606ca'
 
-    def test_reference_id
-      @message_handler.reference_id == @entitlement_created_json['referenceId']
-    end
+      @pool = katello_pools(:pool_one)
+      @pool.update_attributes!(:cp_id => @pool_id)
 
-    def test_entity_id
-      @message_handler.entity_id == @entitlement_created_json['entityId']
+      @facet = katello_subscription_facets(:one)
+      @facet.update_attributes!(:uuid => @consumer_uuid)
     end
+  end
 
-    def test_new_entity
-      @message_handler.new_entity == @entitlement_created_json['newEntity']
-    end
-
-    def test_old_entity
-      @message_handler.old_entity == @entitlement_created_json['oldEntity']
+  class ComplianceCreatedTest < MessageHandlerTestBase
+    def setup
+      super
+      @handler = load_handler('compliance.created')
     end
 
     def test_consumer_uuid
-      consumer_uuid = JSON.parse(@entitlement_created_json['newEntity'])['consumer']['uuid']
-      assert @message_handler.consumer_uuid == consumer_uuid
+      assert_equal @consumer_uuid, @handler.consumer_uuid
+    end
+
+    def test_reasons
+      assert_equal 1, @handler.consumer_reasons.count
+      assert_equal 'Red Hat Enterprise Linux Server', @handler.consumer_reasons[0]['productName']
+    end
+
+    def test_status
+      assert_equal 'invalid', @handler.sub_status
     end
 
     def test_subscription_facet
-      consumer_uuid = JSON.parse(@entitlement_created_json['newEntity'])['consumer']['uuid']
-      sub_facet = ::Katello::Host::SubscriptionFacet.create(uuid: consumer_uuid)
-      @message_handler.subscription_facet == sub_facet
+      assert_equal @facet, @handler.subscription_facet
+    end
+  end
+
+  class EntitlementCreated < MessageHandlerTestBase
+    def setup
+      super
+      @handler = load_handler('entitlement.created')
+    end
+
+    def test_pool_id
+      assert_equal @pool_id, @handler.pool_id
+    end
+
+    def test_consumer_uuid
+      assert_equal @consumer_uuid, @handler.consumer_uuid
     end
 
     def test_create_pool_on_host
-      @message_handler.expects(:subscription_facet).returns(::Katello::Host::SubscriptionFacet.first).at_least_once
-      @message_handler.expects(:reference_id).returns(@pool.cp_id).at_least_once
+      @facet.pools = []
 
-      @message_handler.create_pool_on_host
-      assert ::Katello::SubscriptionFacetPool.where(subscription_facet_id: @message_handler.subscription_facet.id,
-                                                    pool_id: @pool.id).count > 0
+      @handler.create_pool_on_host
+      refute_empty @facet.pools.where(:cp_id => @pool_id)
+    end
+  end
 
-      @message_handler.remove_pool_from_host
-      assert ::Katello::SubscriptionFacetPool.where(subscription_facet_id: @message_handler.subscription_facet.id,
-                                                    pool_id: @pool.id).count == 0
+  class EntitlementDeleted < MessageHandlerTestBase
+    def setup
+      super
+      @handler = load_handler('entitlement.deleted')
     end
 
-    def test_create_pool_on_nonexistant_host
-      @message_handler.expects(:subscription_facet).returns(nil).at_least_once
-      @message_handler.expects(:reference_id).returns(@pool.cp_id).never
+    def test_consumer_uuid
+      assert_equal @consumer_uuid, @handler.consumer_uuid
+    end
 
-      @message_handler.create_pool_on_host
-      ::Katello::SubscriptionFacetPool.expects(:where).never
+    def test_pool_id
+      assert_equal @pool_id, @handler.pool_id
+    end
 
-      @message_handler.remove_pool_from_host
-      ::Katello::SubscriptionFacetPool.expects(:where).never
+    def test_remove_pool_from_host
+      @facet.pools = [@pool]
+      @handler.remove_pool_from_host
+      assert_empty @facet.pools.where(:cp_id => @pool_id)
+    end
+  end
+
+  class PoolCreated < MessageHandlerTestBase
+    def setup
+      super
+      @handler = load_handler('pool.created')
+    end
+
+    def test_pool_id
+      assert_equal @pool_id, @handler.pool_id
     end
 
     def test_import_pool
-      pool = ::Katello::Pool.first
-      ::Katello::Pool.expects(:import_pool).with(pool.id, true).returns(true).once
+      Katello::Event.delete_all
 
-      @message_handler.import_pool(pool.id)
+      @handler.import_pool
+
+      assert_equal @pool.id, Katello::Event.first.object_id
+    end
+  end
+
+  class PoolDeleted < MessageHandlerTestBase
+    def setup
+      super
+      @handler = load_handler('pool.deleted')
+    end
+
+    def test_pool_id
+      assert_equal @pool_id, @handler.pool_id
     end
   end
 end

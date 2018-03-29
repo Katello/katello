@@ -1,27 +1,23 @@
 basic_subscription:
   name: "basic subscription"
-  product_id: "RH111"
-  cp_id: "1234309403950305ff"
+  cp_id: "RH111"
   support_level: "all hands on deck"
   sockets: 2
   cores: 2
-  stacking_id: "stack123"
   instance_multiplier: 1
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 other_subscription:
   name: "other subscription"
-  product_id: "RH234"
-  cp_id: "38498392849ff"
+  cp_id: "RH234"
   support_level: "all hands on deck"
   sockets: 3
   cores: 4
-  stacking_id: "stack8473"
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 custom_subscription:
   name: "custom subscription"
-  product_id: "empty_product"
+  cp_id: "empty_product"
   support_level: "all hands on deck"
   sockets: 3
   cores: 4

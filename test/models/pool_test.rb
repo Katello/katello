@@ -121,7 +121,7 @@ module Katello
     end
 
     def test_search_product_id
-      subscriptions = Pool.search_for("product_id = \"#{@pool_one.subscription.product_id}\"")
+      subscriptions = Pool.search_for("product_id = \"#{@pool_one.subscription.cp_id}\"")
       assert_includes subscriptions, @pool_one
     end
 
@@ -141,7 +141,7 @@ module Katello
     end
 
     def test_search_stacking_id
-      subscriptions = Pool.search_for("stacking_id = \"#{@pool_one.subscription.stacking_id}\"")
+      subscriptions = Pool.search_for("stacking_id = \"#{@pool_one.stacking_id}\"")
       assert_includes subscriptions, @pool_one
     end
 

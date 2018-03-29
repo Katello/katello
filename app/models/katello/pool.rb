@@ -3,13 +3,18 @@ module Katello
     include Katello::Authorization::Pool
     belongs_to :subscription, :inverse_of => :pools, :class_name => "Katello::Subscription"
 
+    has_many :pool_products, :class_name => "Katello::PoolProduct", :dependent => :destroy, :inverse_of => :pool
+    has_many :products, :through => :pool_products, :class_name => "Katello::Product"
+
     has_many :pool_activation_keys, :class_name => "Katello::PoolActivationKey", :dependent => :destroy, :inverse_of => :pool
     has_many :activation_keys, :through => :pool_activation_keys, :class_name => "Katello::ActivationKey"
 
     has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_pools
 
-    scope :in_organization, ->(org_id) { joins(:subscription).where("#{Katello::Subscription.table_name}.organization_id = ?", org_id) }
+    belongs_to :organization, :class_name => "Organization", :inverse_of => :pools
+
+    scope :in_organization, ->(org_id) { where(:organization_id => org_id) }
     scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }
 
     include Glue::Candlepin::Pool
@@ -29,8 +34,9 @@ module Katello
     scoped_search :on => :support_level, :relation => :subscription, :complete_value => true
     scoped_search :on => :sockets, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
     scoped_search :on => :cores, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
-    scoped_search :on => :product_id, :relation => :subscription, :complete_value => true, :only_explicit => true
-    scoped_search :on => :stacking_id, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
+    scoped_search :on => :cp_id, :relation => :subscription, :complete_value => true, :only_explicit => true, :rename => :product_id
+
+    scoped_search :on => :stacking_id, :complete_value => true, :only_explicit => true
     scoped_search :on => :instance_multiplier, :relation => :subscription, :complete_value => true, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
     scoped_search :on => :pool_type, :complete_value => true, :rename => :type
 
@@ -57,10 +63,6 @@ module Katello
 
     def type
       self.pool_type
-    end
-
-    def products
-      self.subscription.products if self.subscription
     end
 
     def upstream?

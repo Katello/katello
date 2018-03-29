@@ -22,9 +22,9 @@ module Katello
     belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_products
     has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_exception
 
-    has_many :subscription_products, :class_name => "Katello::SubscriptionProduct", :dependent => :destroy
-    has_many :subscriptions, :through => :subscription_products
-    has_many :pools, :through => :subscriptions
+    has_many :pool_products, :class_name => "Katello::PoolProduct", :dependent => :destroy
+    has_many :pools, :through => :pool_products
+    has_many :subscriptions, :through => :pools, :dependent => :destroy
 
     validates_lengths_from_database :except => [:label]
     validates :provider_id, :presence => true
@@ -152,7 +152,7 @@ module Katello
     end
 
     def custom?
-      provider.custom_provider?
+      !redhat?
     end
 
     def published_content_views

@@ -17,7 +17,14 @@ module Katello
       # TODO: this tests should move to actions tests once we
       # have more actions in Dynflow. For now just peform the
       # things that system.set_pulp_consumer did before.
+      destroy_organization(org) if owner_exists?(org.label)
       ForemanTasks.sync_task(::Actions::Candlepin::Owner::Create, name: org.name, label: org.label)
+    end
+
+    def self.owner_exists?(label)
+      Katello::Resources::Candlepin::Owner.find(label)
+    rescue RestClient::ResourceNotFound
+      false
     end
 
     def set_owner(org)
@@ -42,15 +49,11 @@ module Katello
       path = "/candlepin/owners/#{owner_label}/imports?force=SIGNATURE_CONFLICT&force=MANIFEST_SAME"
       client = ::Katello::Resources::Candlepin::CandlepinResource.rest_client(Net::HTTP::Post, :post, path)
       body = {:import => File.new(path_to_file, 'rb')}
-      VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method]) do
-        client.post body, {:accept => :json}.merge(User.cp_oauth_header)
-      end
+      client.post body, {:accept => :json}.merge(User.cp_oauth_header)
     end
 
-    def self.destroy_organization(organization, cassette = 'support/candlepin/organization')
-      VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-        Resources::Candlepin::Owner.destroy(organization.label)
-      end
+    def self.destroy_organization(organization)
+      Resources::Candlepin::Owner.destroy(organization.label)
     rescue RestClient::ResourceNotFound => e
       puts e
     end
