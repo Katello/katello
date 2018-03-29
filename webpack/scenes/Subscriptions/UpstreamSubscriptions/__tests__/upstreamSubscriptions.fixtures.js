@@ -6,8 +6,8 @@ export const initialState = Immutable({
   pagination: {
     page: 0,
     perPage: 20,
-    total: 0,
   },
+  itemCount: 0,
 });
 
 export const loadingState = Immutable({
@@ -16,8 +16,8 @@ export const loadingState = Immutable({
   pagination: {
     page: 0,
     perPage: 20,
-    total: 0,
   },
+  itemCount: 0,
 });
 
 export const requestSuccessResponse = Immutable({
@@ -89,9 +89,8 @@ export const successState = Immutable({
   pagination: {
     page: 1,
     perPage: 20,
-    total: 2,
-    subtotal: 2,
   },
+  itemCount: 2,
 });
 
 export const errorState = Immutable({
@@ -100,8 +99,8 @@ export const errorState = Immutable({
   pagination: {
     page: 0,
     perPage: 20,
-    total: 0,
   },
+  itemCount: 0,
   results: [],
 });
 

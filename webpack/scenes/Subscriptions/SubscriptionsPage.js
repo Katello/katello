@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Grid, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button, Spinner } from 'patternfly-react';
 import Table from '../../move_to_foreman/components/common/table';
 import PaginationRow from '../../components/PaginationRow/index';
 import { columns } from './SubscriptionsTableSchema';
+import Search from '../../components/Search/index';
+import { orgId } from '../../services/api';
 
 class SubscriptionsPage extends Component {
   componentDidMount() {
@@ -16,14 +18,8 @@ class SubscriptionsPage extends Component {
     this.props.loadSubscriptions();
   }
 
-  render() {
+  renderSubscriptionTable() {
     const { subscriptions } = this.props;
-
-    const onPaginationChange = (pagination) => {
-      this.props.loadSubscriptions({
-        ...pagination,
-      });
-    };
 
     const emptyStateData = () => ({
       header: __('There are no Subscriptions to display'),
@@ -38,6 +34,48 @@ class SubscriptionsPage extends Component {
       },
     });
 
+    const onPaginationChange = (pagination) => {
+      this.props.loadSubscriptions({
+        ...pagination,
+      });
+    };
+
+    let bodyMessage;
+    if (subscriptions.results.length === 0 && subscriptions.searchIsActive) {
+      bodyMessage = __('No subscriptions match your search criteria.');
+    }
+
+    return (
+      <Spinner loading={subscriptions.loading} className="small-spacer">
+        <Table
+          rows={subscriptions.results}
+          columns={columns}
+          emptyState={emptyStateData()}
+          bodyMessage={bodyMessage}
+        />
+        <PaginationRow
+          viewType="table"
+          itemCount={subscriptions.itemCount}
+          pagination={subscriptions.pagination}
+          onChange={onPaginationChange}
+        />
+      </Spinner>
+    );
+  }
+
+  render() {
+    const onSearch = (search) => {
+      this.props.loadSubscriptions({ search });
+    };
+
+    const getAutoCompleteParams = search => ({
+      endpoint: '/subscriptions/auto_complete_search',
+      params: {
+        organization_id: orgId,
+        search,
+      },
+    });
+
     return (
       <Grid bsClass="container-fluid">
         <Row>
@@ -48,8 +86,7 @@ class SubscriptionsPage extends Component {
               <Col sm={12}>
                 <Form className="toolbar-pf-actions">
                   <FormGroup className="toolbar-pf-filter">
-                    <ControlLabel srOnly>{__('Search')}</ControlLabel>
-                    <FormControl type="text" placeholder={__('Filter')} />
+                    <Search onSearch={onSearch} getAutoCompleteParams={getAutoCompleteParams} />
                   </FormGroup>
 
                   <div className="toolbar-pf-action-right">
@@ -81,19 +118,7 @@ class SubscriptionsPage extends Component {
               </Col>
             </Row>
 
-            <Spinner loading={subscriptions.loading} className="small-spacer">
-              <Table
-                rows={subscriptions.results}
-                columns={columns}
-                emptyState={emptyStateData()}
-              />
-              <PaginationRow
-                viewType="table"
-                itemCount={subscriptions.pagination.total}
-                pagination={subscriptions.pagination}
-                onChange={onPaginationChange}
-              />
-            </Spinner>
+            { this.renderSubscriptionTable() }
           </Col>
         </Row>
       </Grid>

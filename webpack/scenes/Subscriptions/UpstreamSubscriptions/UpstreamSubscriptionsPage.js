@@ -54,7 +54,7 @@ class UpstreamSubscriptionsPage extends Component {
               />
               <PaginationRow
                 viewType="table"
-                itemCount={upstreamSubscriptions.pagination.total}
+                itemCount={upstreamSubscriptions.itemCount}
                 pagination={upstreamSubscriptions.pagination}
                 onChange={onPaginationChange}
               />
