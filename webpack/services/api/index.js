@@ -14,10 +14,10 @@ const addBaseApiPath = url => `/katello/api/v2${url}`;
 export const initialApiState = Immutable({
   loading: true,
   pagination: {
-    total: 0,
     page: 0,
     perPage: 20,
   },
+  itemCount: 0,
   results: [],
 });
 

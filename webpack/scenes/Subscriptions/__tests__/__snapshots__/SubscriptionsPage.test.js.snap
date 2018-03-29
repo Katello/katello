@@ -39,17 +39,9 @@ exports[`subscriptions page should render 1`] = `
               bsClass="form-group"
               className="toolbar-pf-filter"
             >
-              <ControlLabel
-                bsClass="control-label"
-                srOnly={true}
-              >
-                Search
-              </ControlLabel>
-              <FormControl
-                bsClass="form-control"
-                componentClass="input"
-                placeholder="Filter"
-                type="text"
+              <Search
+                getAutoCompleteParams={[Function]}
+                onSearch={[Function]}
               />
             </FormGroup>
             <div
@@ -319,8 +311,6 @@ exports[`subscriptions page should render 1`] = `
             Object {
               "page": 1,
               "perPage": 2,
-              "subtotal": 81,
-              "total": 81,
             }
           }
           viewType="table"

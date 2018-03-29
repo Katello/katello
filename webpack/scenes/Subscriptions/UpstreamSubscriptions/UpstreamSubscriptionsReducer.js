@@ -15,7 +15,7 @@ export default (state = initialState, action) => {
 
     case UPSTREAM_SUBSCRIPTIONS_SUCCESS: {
       const {
-        page, per_page, subtotal, total, results, // eslint-disable-line camelcase
+        page, per_page, subtotal, results, // eslint-disable-line camelcase
 
       } = action.response;
 
@@ -28,9 +28,8 @@ export default (state = initialState, action) => {
           page: Number(page),
           // eslint-disable-next-line camelcase
           perPage: Number(per_page || state.pagination.perPage),
-          subtotal: Number(subtotal),
-          total: Number(total),
         },
+        itemCount: Number(subtotal),
       });
     }
 

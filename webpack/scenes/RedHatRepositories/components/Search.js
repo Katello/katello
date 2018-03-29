@@ -4,11 +4,10 @@ import { DropdownButton, MenuItem } from 'patternfly-react';
 import PropTypes from 'prop-types';
 
 import '../index.scss';
-import TypeAhead from '../../../move_to_pf/TypeAhead/TypeAhead';
-import { stringIncludes } from '../helpers';
-import api from '../../../services/api';
+import Search from '../../../components/Search/index';
+import { orgId } from '../../../services/api';
 
-class Search extends Component {
+class RepositorySearch extends Component {
   constructor(props) {
     super(props);
     this.dropDownItems = [
@@ -28,32 +27,9 @@ class Search extends Component {
         title: 'Both',
       },
     ];
-    this.state = { items: [], searchList: this.dropDownItems[0] };
-    this.onInputUpdate = this.onInputUpdate.bind(this);
+    this.state = { searchList: this.dropDownItems[0] };
     this.onSearch = this.onSearch.bind(this);
-    this.getAutoCompleteEndpointParams = this.getAutoCompleteEndpointParams.bind(this);
-  }
-
-  componentDidMount() {
-    this.onInputUpdate();
-  }
-
-  onInputUpdate(searchTerm = '') {
-    const items = this.state.items.filter(({ text }) => stringIncludes(text, searchTerm));
-
-    if (items.length !== this.state.items.length) {
-      this.setState({ items });
-    }
-
-    const autoCompleteParams = this.getAutoCompleteEndpointParams(searchTerm);
-
-    api.get(...autoCompleteParams).then(({ data }) => {
-      this.setState({
-        items: data.filter(({ error }) => !error).map(({ label }) => ({
-          text: label.trim(),
-        })),
-      });
-    });
+    this.getAutoCompleteParams = this.getAutoCompleteParams.bind(this);
   }
 
   onSearch(search) {
@@ -65,11 +41,9 @@ class Search extends Component {
     this.props.onSelectSearchList(searchList.key);
   }
 
-  getAutoCompleteEndpointParams(search) {
-    const endpoint = '/repository_sets/auto_complete_search';
-
+  getAutoCompleteParams(search) {
     const params = {
-      organization_id: 1,
+      organization_id: orgId,
       search,
     };
 
@@ -77,9 +51,10 @@ class Search extends Component {
       params.enabled = true;
     }
 
-    const headers = {};
-
-    return [endpoint, headers, params];
+    return {
+      endpoint: '/repository_sets/auto_complete_search',
+      params,
+    };
   }
 
   render() {
@@ -99,19 +74,18 @@ class Search extends Component {
               </MenuItem>
             ))}
         </DropdownButton>
-        <TypeAhead
-          items={this.state.items}
-          onInputUpdate={this.onInputUpdate}
+        <Search
           onSearch={this.onSearch}
+          getAutoCompleteParams={this.getAutoCompleteParams}
         />
       </div>
     );
   }
 }
 
-Search.propTypes = {
+RepositorySearch.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onSelectSearchList: PropTypes.func.isRequired,
 };
 
-export default Search;
+export default RepositorySearch;
