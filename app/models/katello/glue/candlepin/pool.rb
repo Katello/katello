@@ -13,12 +13,14 @@ module Katello
           :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id,
           :initializer => :pool_facts
 
-        lazy_accessor :name, :support_level, :org, :sockets, :cores, :stacking_id, :instance_multiplier,
+        lazy_accessor :name, :support_level, :org, :sockets, :cores, :instance_multiplier,
           :initializer => :subscription_facts
 
         lazy_accessor :active, :initializer => lambda { |_s| self.pool_facts["activeSubscription"] }
 
         lazy_accessor :available, :initializer => lambda { |_s| self.quantity_available }
+
+        lazy_accessor :backend_data, :initializer => lambda { |_s| self.class.candlepin_data(self.cp_id) }
       end
     end
 
@@ -67,7 +69,7 @@ module Katello
         json["upstream_entitlement_id"] = json["upstreamEntitlementId"]
 
         if self.subscription
-          subscription.backend_data["product"]["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
+          subscription.backend_data["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
         end
         json
       end
@@ -79,16 +81,12 @@ module Katello
         providers.any?
       end
 
-      def backend_data
-        self.class.candlepin_data(self.cp_id)
-      end
-
       def stacking_subscription(org_label, stacking_id)
         org = Organization.find_by(:label => org_label)
         subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :product_id => stacking_id)
         if subscription.nil?
           found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
-          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :product_id => found_product['id']) if found_product
+          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => found_product['id']) if found_product
         end
         subscription
       end
@@ -97,6 +95,8 @@ module Katello
       def import_data(index_hosts = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
+
+        self.organization ||= Organization.find_by(:label => pool_json['owner']['key'])
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
 
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
@@ -104,7 +104,7 @@ module Katello
         if pool_json["sourceStackId"]
           subscription = stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
         else
-          subscription = ::Katello::Subscription.find_by(:cp_id => pool_json["subscriptionId"])
+          subscription = ::Katello::Subscription.find_by(:cp_id => pool_json["productId"])
         end
 
         pool_attributes[:subscription_id] = subscription.id if subscription
@@ -137,11 +137,28 @@ module Katello
           pool_attributes[:virt_who] = false
         end
 
+        pool_attributes['stack_id'] = pool_json['stackId']
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update_attributes(pool_attributes.except!(*exceptions))
         self.save!
         self.create_activation_key_associations
+        self.create_product_associations
         self.import_hosts if index_hosts
+      end
+
+      def create_product_associations
+        products = self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]
+        cp_product_ids = products.map { |product| product["productId"] }
+        cp_product_ids << self.subscription.cp_id if self.subscription
+
+        cp_product_ids.each do |cp_id|
+          product = ::Katello::Product.where(:cp_id => cp_id, :organization_id => self.organization.id)
+          if product.any?
+            ::Katello::Util::Support.active_record_retry do
+              ::Katello::PoolProduct.where(:pool_id => self.id, :product_id => product.first.id).first_or_create
+            end
+          end
+        end
       end
 
       def import_hosts

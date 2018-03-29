@@ -16,42 +16,33 @@ module Katello
         JSON.parse(@message.content)
       end
 
-      def reference_id
-        self.content['referenceId']
-      end
-
-      def entity_id
-        self.content['entityId']
-      end
-
-      def new_entity
-        self.content['newEntity']
-      end
-
-      def old_entity
-        self.content['oldEntity']
+      def event_data
+        data = content['eventData']
+        data ? JSON.parse(data) : {}
       end
 
       def sub_status
-        if self.new_entity
-          parsed = JSON.parse(self.new_entity)
-          parsed['status']['status']
-        end
-      end
-
-      def entity
-        entity = self.new_entity || self.old_entity
-        if entity
-          JSON.parse(entity)
-        end
+        event_data['status']
       end
 
       def consumer_reasons
-        entity['status']['reasons']
+        event_data['reasons']
       end
 
       def consumer_uuid
-        entity['consumer']['uuid'] if entity
+        content['consumerUuid']
+      end
+
+      def pool_id
+        if subject == 'pool.created' || subject == 'pool.deleted'
+          content['entityId']
+        elsif subject == 'entitlement.created' ||  subject == 'entitlement.deleted'
+          content['referenceId']
+        end
+      end
+
+      def pool
+        Katello::Pool.find_by(:cp_id => pool_id)
       end
 
       def subscription_facet
@@ -61,37 +52,22 @@ module Katello
 
       def create_pool_on_host
         return if self.subscription_facet.nil?
-        pool = self.pool_by_reference_id
         ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
                                                pool_id: pool.id).first_or_create
       end
 
       def remove_pool_from_host
-        return if self.subscription_facet.nil?
-        pool = self.pool_by_reference_id
+        return if self.subscription_facet.nil? || pool.nil?
         ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
                                                pool_id: pool.id).destroy_all
       end
 
-      def import_pool(pool_id, index_hosts = true)
-        pool = ::Katello::Pool.find_by(:cp_id => pool_id)
+      def import_pool(index_hosts = true)
         if pool
           ::Katello::EventQueue.push_event(::Katello::Events::ImportPool::EVENT_TYPE, pool.id)
         else
           ::Katello::Pool.import_pool(pool_id, index_hosts)
         end
-      end
-
-      def pool_by_reference_id
-        ::Katello::Pool.where(:cp_id => self.reference_id).first
-      end
-
-      def import_pool_by_reference_id
-        self.import_pool(self.reference_id, false)
-      end
-
-      def import_pool_by_entity_id
-        self.import_pool(self.entity_id, false)
       end
     end
   end

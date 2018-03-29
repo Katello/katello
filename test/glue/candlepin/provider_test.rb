@@ -4,6 +4,7 @@ require 'support/candlepin/owner_support'
 module Katello
   class GlueCandlepinProviderTest < ActiveSupport::TestCase
     include VCR::TestCase
+    include Dynflow::Testing
 
     # manifests used by these tests were created from an ordinary manifest with a number of subscriptions
     # and pared down using the below script to keep this test fast and not load unnecessary data
@@ -15,12 +16,17 @@ module Katello
       CandlepinOwnerSupport.import_manifest(@org.label, manifest_path)
       @provider = FactoryBot.create(:katello_provider, :redhat, organization: @org)
       @provider.import_products_from_cp
+
       @product = @org.products.find { |p| p.name == 'Red Hat Container Images' }
       @product_contents = @product.product_contents
     end
 
     def teardown
       CandlepinOwnerSupport.destroy_organization(@org)
+    end
+
+    def vcr_matches
+      [:method, :path, :params]
     end
 
     def test_import_products

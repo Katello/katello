@@ -74,16 +74,16 @@ module Katello
             # End it 100 years from now
             end_date ||= start_date + 10_950.days
 
-            subscription = {
+            pool = {
               'startDate' => start_date,
               'endDate'   => end_date,
               'quantity'  =>  -1,
               'accountNumber' => '',
-              'product' => { 'id' => product_id },
+              'productId' => product_id,
               'providedProducts' => [],
               'contractNumber' => ''
             }
-            JSON.parse(Candlepin::Subscription.create_for_owner(owner_key, subscription))
+            JSON.parse(Candlepin::Pool.create(owner_key, pool))
           end
 
           def pools(owner_key, product_id)

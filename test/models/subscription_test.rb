@@ -23,7 +23,7 @@ module Katello
       fedora = katello_products(:fedora)
       assert_includes Subscription.subscribable, @other
 
-      @other.products.delete(fedora)
+      @other.pools.first.products.delete(fedora)
       assert_includes Subscription.subscribable, @other
     end
 
@@ -44,7 +44,7 @@ module Katello
     def test_redhat?
       assert @basic.redhat?
 
-      Katello::Product.create!(:name => "custom_#{rand(999)}", :cp_id => @basic.product_id,
+      Katello::Product.create!(:name => "custom_#{rand(999)}", :cp_id => @basic.cp_id,
                                :organization => @basic.organization, :provider => @basic.organization.anonymous_provider)
       refute @basic.redhat?
     end

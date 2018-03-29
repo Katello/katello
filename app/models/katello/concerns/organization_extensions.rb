@@ -27,6 +27,7 @@ module Katello
         has_many :content_view_environments, :through => :content_views
         has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
         has_many :subscriptions, :class_name => "Katello::Subscription", :dependent => :destroy, :inverse_of => :organization
+        has_many :pools, :class_name => "Katello::Pool", :dependent => :destroy, :inverse_of => :organization
         has_many :product_contents, :through => :products
 
         #older association

@@ -122,7 +122,8 @@ module Katello
 
       def self.friendly_compliance_reasons(candlepin_reasons)
         candlepin_reasons.map do |reason|
-          "#{reason['attributes']['name']}: #{reason['message']}"
+          product_name = reason['productName'] || reason['attributes']['name']
+          "#{product_name}: #{reason['message']}"
         end
       end
 

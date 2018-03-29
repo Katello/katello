@@ -3,8 +3,6 @@ module Katello
     include Glue::Candlepin::CandlepinObject
     include Glue::Candlepin::Subscription
     include Katello::Authorization::Subscription
-    has_many :subscription_products, :class_name => "Katello::SubscriptionProduct", :dependent => :destroy, :inverse_of => :subscription
-    has_many :products, :through => :subscription_products, :class_name => "Katello::Product"
 
     has_many :pools, :class_name => "Katello::Pool", :inverse_of => :subscription, :dependent => :destroy
 
@@ -14,8 +12,8 @@ module Katello
 
     def self.subscribable
       product_ids = Product.subscribable.pluck(:id) + [nil]
-      joins("LEFT OUTER JOIN #{Katello::SubscriptionProduct.table_name} subprod ON #{self.table_name}.id = subprod.subscription_id")
-        .where("subprod.product_id" => product_ids)
+      joins(:pools).joins("LEFT OUTER JOIN #{Katello::PoolProduct.table_name} pool_prod ON #{Pool.table_name}.id = pool_prod.pool_id")
+        .where("pool_prod.product_id" => product_ids)
         .group("#{self.table_name}.id")
     end
 
@@ -28,7 +26,7 @@ module Katello
     def redhat?
       # for custom subscriptions, there is no separate marketing and engineering product
       #   so query our Products table and check there
-      product = Katello::Product.where(:cp_id => self.product_id, :organization => self.organization).first
+      product = Katello::Product.where(:cp_id => self.cp_id, :organization => self.organization).first
       product.nil? || product.redhat?
     end
 

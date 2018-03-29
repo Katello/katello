@@ -149,10 +149,11 @@ module Katello
         self.productContent << content
       end
 
-      def import_subscription(subscription_id)
+      def import_custom_subscription
+        fail _("Cannot import a custom subscription from a redhat product.") if self.redhat?
         sub = nil
         ::Katello::Util::Support.active_record_retry do
-          sub = ::Katello::Subscription.where(:cp_id => subscription_id).first_or_create
+          sub = ::Katello::Subscription.where(:cp_id => self.cp_id, :organization_id => self.organization.id).first_or_create
         end
         sub.import_data
         pools = ::Katello::Resources::Candlepin::Product.pools(self.organization.label, self.cp_id)

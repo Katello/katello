@@ -10,14 +10,15 @@ module Katello
       end
 
       def get_candlepin_ids(organization)
-        self.get_for_owner(organization).map { |subscription| subscription["id"] }
+        self.get_for_owner(organization.label).map { |subscription| subscription["id"] }
       end
 
       def import_candlepin_ids(organization)
         candlepin_ids = self.get_candlepin_ids(organization)
         candlepin_ids.each do |cp_id|
-          self.where(:cp_id => cp_id).first_or_create unless cp_id.nil?
+          self.where(:cp_id => cp_id, :organization_id => organization.id).first_or_create unless cp_id.nil?
         end
+        candlepin_ids
       end
 
       def with_identifier(ids)
@@ -35,11 +36,10 @@ module Katello
         organizations = organization ? [organization] : Organization.all
 
         organizations.each do |org|
-          import_candlepin_ids(org.label)
-          candlepin_ids = get_candlepin_ids(org.label)
+          candlepin_ids = import_candlepin_ids(org)
 
-          objects = self.in_organization(org) + self.where(:cp_id => candlepin_ids)
-          objects.uniq.each do |item|
+          objects = self.in_organization(org)
+          objects.each do |item|
             if candlepin_ids.include?(item.cp_id)
               item.import_data
               item.import_managed_associations if item.respond_to?(:import_managed_associations)
