@@ -159,6 +159,7 @@ module Katello
 
     def test_copy
       ActivationKey.any_instance.expects(:reload)
+      @activation_key.stubs(:cp_id).returns("22222")
       @activation_key.stubs(:service_level).returns("Premium")
       @activation_key.stubs(:release_version).returns("6Server")
       @activation_key.stubs(:auto_attach).returns(false)
@@ -171,9 +172,15 @@ module Katello
         assert_equal activation_key_params[:release_version], @activation_key.release_version
         assert_equal activation_key_params[:auto_attach], @activation_key.auto_attach
       end
+      content_overrides = [::Katello::ContentOverride.new("foo", :enabled => 1), ::Katello::ContentOverride.new("bar", :enabled => nil)]
+      @activation_key.expects(:content_overrides).returns(content_overrides)
 
-      post :copy, params: { :id => @activation_key.id, :organization_id => @organization.id, :new_name => 'New Name' }
+      ::Katello::Resources::Candlepin::ActivationKey.expects(:update_content_overrides).with do |id, hash|
+        id.wont_equal(@activation_key.cp_id)
+        hash.must_equal(content_overrides.map(&:to_entitlement_hash))
+      end
 
+      post :copy, params: { :id => @activation_key.id, :organization_id => @organization.id, :new_name => "NewAK" }
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
     end
