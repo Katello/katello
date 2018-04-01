@@ -94,12 +94,10 @@ module Katello
                   :release_version => @activation_key.release_version,
                   :auto_attach     => @activation_key.auto_attach
                )
-      @activation_key.content_overrides.each do |content|
-        @new_activation_key.set_content_override(content['contentLabel'], content[:name], content[:value])
-      end
       @activation_key.pools.each do |pool|
         @new_activation_key.subscribe(pool[:id])
       end
+      @new_activation_key.set_content_overrides(@activation_key.content_overrides)
       respond_for_show(:resource => @new_activation_key)
     end
 
