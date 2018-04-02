@@ -417,6 +417,34 @@ module Katello
 
       assert_equal 'empty_organization-published_library_view-1_0-puppet_product-busybox', repo.container_repository_name
     end
+
+    def test_set_container_repository_name_special_chars
+      repo = katello_repositories(:busybox)
+
+      #name should not end in underscore
+      repo.label = "test_"
+      repo.set_container_repository_name
+      assert_equal 'empty_organization-puppet_product-test', repo.container_repository_name
+
+      #replace more than 2 consecutive underscores.
+      repo.label = 'te___st'
+      repo.container_repository_name = nil
+      repo.set_container_repository_name
+      assert_equal 'empty_organization-puppet_product-te_st', repo.container_repository_name
+
+      #replace more than 2 consecutive underscores with a single underscore iff it is not in the start or end of name.
+      # Note that -_ is not allowed in the name either.
+      repo.label = '_____tep______st_____'
+      repo.container_repository_name = nil
+      repo.set_container_repository_name
+      assert_equal 'empty_organization-puppet_producttep_st', repo.container_repository_name
+
+      #'-_' is not allowed in the name.
+      repo.label = '-______test____'
+      repo.container_repository_name = nil
+      repo.set_container_repository_name
+      assert_equal 'empty_organization-puppet_product-test', repo.container_repository_name
+    end
   end
 
   class RepositorySearchTest < RepositoryTestBase

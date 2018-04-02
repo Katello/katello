@@ -201,7 +201,7 @@ module Katello
         items = [organization.label, content_view.label, content_view_version.version, product.label, label]
       end
       # docker repo names need to be in lower case
-      self.container_repository_name = items.compact.join("-").gsub(/[^-\w]/, "_").downcase
+      self.container_repository_name = items.compact.join("-").gsub(/[^-\w]|_{3,}/, "_").gsub(/-_|^_+|_+$/, "").downcase
     end
 
     def content_view

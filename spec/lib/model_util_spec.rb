@@ -9,6 +9,8 @@ module Katello
     describe "labelize tests" do
       specify { Util::Model.labelize("sweet home alabama").must_equal "sweet_home_alabama" }
       specify { Util::Model.labelize("sweet-home+alabama").must_equal "sweet-home_alabama" }
+      specify { Util::Model.labelize("sweet home+@#@#alabama").must_equal "sweet_home_alabama" }
+      specify { Util::Model.labelize("<t>sweet home alabama</t>").must_equal "_t_sweet_home_alabama_t_" }
       specify { Util::Model.labelize("sweet home 谷歌地球").wont_match(/sweet*/) }
       specify { Util::Model.labelize("sweet home 谷歌地球").must_match(/^[a-zA-Z0-9\-_]+$/) }
       specify { Util::Model.labelize('a' * 129).length.must_be(:<=, 128) }
