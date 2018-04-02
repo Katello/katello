@@ -23,7 +23,7 @@ module Katello
     def index
       pools = UpstreamPool.fetch_pools(upstream_pool_params.to_h)
       collection = scoped_search_results(
-        pools, pools.count, nil, params[:page], params[:per_page], nil)
+        pools[:pools], pools[:pools].count, pools[:total], params[:page], params[:per_page], nil)
       respond(collection: collection)
     end
 
