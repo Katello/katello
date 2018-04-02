@@ -18,6 +18,8 @@ module Katello
       N_("List available subscriptions from Red Hat Subscription Management")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param_group :cp_search
+    param :pool_ids, Array, desc: N_("List of pool ids to fetch")
+    param :quantities_only, :bool, desc: N_("Only returns id and quantity fields")
     def index
       pools = UpstreamPool.fetch_pools(upstream_pool_params.to_h)
       collection = scoped_search_results(
@@ -50,7 +52,7 @@ module Katello
     private
 
     def upstream_pool_params
-      params.permit(:page, :per_page, :order, :sort_by)
+      params.permit(:page, :per_page, :order, :sort_by, :quantities_only, pool_ids: [])
     end
 
     def bind_entitlements_params
