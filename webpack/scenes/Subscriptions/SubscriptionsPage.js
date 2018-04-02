@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { Button, Spinner } from 'patternfly-react';
-import Table from 'foremanReact/components/common/table';
+import Table from '../../move_to_foreman/components/common/table';
 import PaginationRow from '../../components/PaginationRow/index';
 import { columns } from './SubscriptionsTableSchema';
 
