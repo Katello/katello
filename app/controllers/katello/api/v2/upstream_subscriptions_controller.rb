@@ -1,5 +1,3 @@
-require 'katello/resources/candlepin'
-
 module Katello
   class Api::V2::UpstreamSubscriptionsController < Api::V2::ApiController
     before_action :check_disconnected
@@ -25,6 +23,15 @@ module Katello
       collection = scoped_search_results(
         pools, pools.count, nil, params[:page], params[:per_page], nil)
       respond(collection: collection)
+    end
+
+    api :DELETE, "/organizations/:organization_id/upstream_subscriptions",
+      N_("Remove one or more subscriptions from an upstream subscription allocation")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    param :pool_ids, Array, desc: N_("Array of local pool IDs. Only pools originating upstream (non-custom) are accepted."), required: true
+    def destroy
+      task = async_task(::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements, params[:pool_ids])
+      respond_for_async :resource => task
     end
 
     private

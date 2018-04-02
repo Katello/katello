@@ -10,7 +10,7 @@ module Katello
         lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
         lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description,
-          :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type,
+          :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id,
           :initializer => :pool_facts
 
         lazy_accessor :name, :support_level, :org, :sockets, :cores, :stacking_id, :instance_multiplier,
@@ -63,6 +63,8 @@ module Katello
         end
 
         json["product_id"] = json["productId"] if json["productId"]
+
+        json["upstream_entitlement_id"] = json["upstreamEntitlementId"]
 
         if self.subscription
           subscription.backend_data["product"]["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }

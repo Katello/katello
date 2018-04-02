@@ -4,6 +4,8 @@ require "katello_test_helper"
 
 module Katello
   class Api::V2::UpstreamSubscriptionsControllerTest < ActionController::TestCase
+    include Support::ForemanTasks::Task
+
     def models
       @organization = get_organization
     end
@@ -43,6 +45,26 @@ module Katello
       Setting["content_disconnected"] = true
       get :index, params: { organization_id: @organization.id }
       assert_response :bad_request
+    end
+
+    def test_destroy
+      params = { pool_ids: %w(1 2 3), organization_id: @organization.id }
+      assert_async_task ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do |entitlement_ids|
+        entitlement_ids.must_equal %w(1 2 3)
+      end
+
+      delete :destroy, params: params
+
+      assert_response :success
+    end
+
+    def test_destroy_protected
+      allowed_perms = [permission]
+      denied_perms = []
+
+      assert_protected_action(:destroy, allowed_perms, denied_perms, [@organization]) do
+        delete :destroy, params: { pool_ids: [], organization_id: @organization.id }
+      end
     end
   end
 end

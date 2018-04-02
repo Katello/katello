@@ -191,6 +191,10 @@ class ActiveSupport::TestCase
     User.current = user
   end
 
+  def set_organization(org)
+    Organization.current = org
+  end
+
   def get_organization(org = nil)
     saved_user = User.current
     User.current = User.unscoped.find(users(:admin).id)

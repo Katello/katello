@@ -128,6 +128,11 @@ module Katello
                                     )
           end
 
+          def json_resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
+            options.deep_merge!(headers: self.default_headers)
+            resource(url, client_cert, client_key, ca_file, options)
+          end
+
           def rest_client(_http_type = nil, method = :get, path = self.path)
             # No oauth upstream
             self.consumer_secret = nil

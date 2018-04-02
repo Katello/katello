@@ -317,7 +317,11 @@ Katello::Engine.routes.draw do
               put :refresh_manifest
             end
           end
-          api_resources :upstream_subscriptions, only: :index
+          api_resources :upstream_subscriptions, only: :index do
+            collection do
+              delete :destroy
+            end
+          end
         end
 
         api_resources :host_collections

@@ -214,6 +214,12 @@ module Katello
             super(id)
           end
 
+          def remove_entitlement(entitlement_id)
+            fail ArgumentError, "No entitlement ID given to remove." if entitlement_id.blank?
+
+            self["entitlements/#{entitlement_id}"].delete
+          end
+
           def export(url, client_cert, client_key, ca_file)
             logger.debug "Sending GET request to upstream Candlepin: #{url}"
             return resource(url, client_cert, client_key, ca_file).get
@@ -233,6 +239,8 @@ module Katello
           ensure
             RestClient.proxy = ""
           end
+
+          delegate :[], to: :json_resource
         end
       end
     end # Candlepin
