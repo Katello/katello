@@ -94,7 +94,7 @@ module Katello
       end
 
       # rubocop:disable MethodLength
-      def import_data(index_hosts = true)
+      def import_data(index_hosts = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
         product_attributes = pool_json["productAttributes"] + pool_json["attributes"]
@@ -147,14 +147,25 @@ module Katello
       def import_hosts
         entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
         uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
-        sub_facets = Katello::Host::SubscriptionFacet.where(:uuid => uuids)
-        sub_facet_ids = sub_facets.pluck(:id)
-        sub_facet_ids.each do |sub_facet_id|
-          Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => sub_facet_id).first_or_create
+
+        sub_facet_ids_from_cp = Katello::Host::SubscriptionFacet.where(:uuid => uuids).select(:id).pluck(:id)
+        sub_facet_ids_from_pool_table = Katello::SubscriptionFacetPool.where(:pool_id => self.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
+        entries_to_add = sub_facet_ids_from_cp - sub_facet_ids_from_pool_table
+        unless entries_to_add.empty?
+          ActiveRecord::Base.transaction do
+            entries_to_add.each do |sub_facet_id|
+              query = "INSERT INTO #{Katello::SubscriptionFacetPool.table_name} (pool_id, subscription_facet_id) VALUES (#{self.id}, #{sub_facet_id})"
+              ActiveRecord::Base.connection.execute(query)
+            end
+          end
         end
-        existing_associations = Katello::SubscriptionFacetPool.where(:pool_id => self.id)
-        correct_associations = Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => sub_facet_ids)
-        (existing_associations - correct_associations).map(&:destroy)
+
+        entries_to_remove = sub_facet_ids_from_pool_table - sub_facet_ids_from_cp
+        Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => entries_to_remove).delete_all
+      end
+
+      def import_managed_associations
+        import_hosts
       end
 
       def hosts
