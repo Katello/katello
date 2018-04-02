@@ -24,7 +24,7 @@ module Katello
     def test_index
       params = { page: '3', per_page: '7', organization_id: @organization.id }
       Api::V2::UpstreamSubscriptionsController.any_instance.stubs(:upstream_pool_params).returns(params)
-      UpstreamPool.expects(:fetch_pools).with(params).returns([{}])
+      UpstreamPool.expects(:fetch_pools).with(params).returns(pools: [{}], total: nil)
       get :index, params: params
 
       assert_response :success

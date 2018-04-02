@@ -1,12 +1,20 @@
-require 'katello/resources/candlepin'
-
 module Katello
   class UpstreamPool < OpenStruct
     CP_POOL = Resources::Candlepin::UpstreamPool
 
     class << self
       def fetch_pools(params)
-        pools = JSON.parse(CP_POOL.get(params: cp_request_params.deep_merge(params)))
+        response = CP_POOL.get(params: cp_request_params.deep_merge(params))
+
+        pools = response_to_pools(response)
+        {
+          pools: pools,
+          total: response.headers[total_count_header] || pools.count
+        }
+      end
+
+      def response_to_pools(response)
+        pools = JSON.parse(response)
         pools.map { |pool| self.new(map_attributes(pool)) }
       end
 
@@ -36,6 +44,10 @@ module Katello
                     'productName',
                     'productId',
                     'subscriptionId'] }
+      end
+
+      def total_count_header
+        Katello::Resources::Candlepin::TOTAL_COUNT_HEADER
       end
     end
   end

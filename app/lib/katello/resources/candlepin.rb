@@ -6,6 +6,8 @@ module Katello
     require 'rest_client'
 
     module Candlepin
+      TOTAL_COUNT_HEADER = :x_total_count # as parsed by rest_client
+
       class Proxy
         def self.logger
           ::Foreman::Logging.logger('katello/cp_proxy')
