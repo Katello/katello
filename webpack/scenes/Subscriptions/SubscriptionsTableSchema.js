@@ -1,7 +1,7 @@
 import React from 'react';
-import helpers from 'foremanReact/common/helpers';
-import { headerFormat, cellFormat } from 'foremanReact/components/common/table';
 import { Icon } from 'patternfly-react';
+import helpers from '../../move_to_foreman/common/helpers';
+import { headerFormat, cellFormat } from '../../move_to_foreman/components/common/table';
 
 export const columns = [
   {
