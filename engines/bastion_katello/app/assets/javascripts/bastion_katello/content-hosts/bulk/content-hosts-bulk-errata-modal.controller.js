@@ -6,6 +6,7 @@
  * @requires $http
  * @requires $location
  * @requires $window
+ * @requires $timeout
  * @requires $uibModalInstance
  * @requires HostBulkAction
  * @requires HostCollection
@@ -20,8 +21,8 @@
  *   A controller for providing bulk action functionality to the content hosts page.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalController',
-    ['$scope', '$http', '$location', '$window', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds',
-    function ($scope, $http, $location, $window, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds) {
+    ['$scope', '$http', '$location', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'HostCollection', 'Nutupane', 'CurrentOrganization', 'Erratum', 'Notification', 'BastionConfig', 'hostIds',
+    function ($scope, $http, $location, $window, $timeout, $uibModalInstance, HostBulkAction, HostCollection, Nutupane, CurrentOrganization, Erratum, Notification, BastionConfig, hostIds) {
         var nutupane;
 
         function installParams() {
@@ -46,6 +47,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         $scope.initialLoad = true;
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+
+        $scope.errataActionFormValues = {
+            authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
+            search: hostIds.included.search
+        };
+
+        if (hostIds.included.ids) {
+            $scope.errataActionFormValues.hostIds = hostIds.included.ids.join(',');
+        }
 
         $scope.fetchErrata = function () {
             var params = hostIds;
@@ -95,22 +105,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         };
 
         $scope.installErrataViaRemoteExecution = function(customize) {
-            var formData = {},
-                errataIds = _.map($scope.table.getSelected(), 'errata_id'),
-                selectedHosts = hostIds;
+            var errataIds = _.map($scope.table.getSelected(), 'errata_id');
 
-            formData.authenticityToken = $window.AUTH_TOKEN.replace(/&quot;/g, '');
-            formData.remoteAction = 'errata_install';
-            formData.errata = errataIds.join(',');
-            if (selectedHosts.included.ids) {
-                formData.hostIds = selectedHosts.included.ids.join(',');
-            }
-            formData.search = selectedHosts.included.search;
-            formData.customize = customize;
+            $scope.errataActionFormValues.remoteAction = 'errata_install';
+            $scope.errataActionFormValues.errata = errataIds.join(',');
+            $scope.errataActionFormValues.customize = customize;
 
-            $http.post('katello/remote_execution', formData, {
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'
-            }});
+            $timeout(function () {
+                angular.element('#errataActionForm').submit();
+            }, 0);
         };
 
         $scope.ok = function () {
