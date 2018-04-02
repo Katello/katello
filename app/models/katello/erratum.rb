@@ -82,7 +82,7 @@ module Katello
     def hosts_available(org_id = nil)
       self.hosts_applicable(org_id).joins("INNER JOIN #{Katello::RepositoryErratum.table_name} on \
         #{Katello::RepositoryErratum.table_name}.erratum_id = #{self.id}").joins(:content_facet_repositories).
-        where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id").uniq
+        where("#{Katello::ContentFacetRepository.table_name}.repository_id = #{Katello::RepositoryErratum.table_name}.repository_id")
     end
 
     def self.installable_for_hosts(hosts = nil)
