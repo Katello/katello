@@ -42,6 +42,7 @@ module Katello
           objects.uniq.each do |item|
             if candlepin_ids.include?(item.cp_id)
               item.import_data
+              item.import_managed_associations if item.respond_to?(:import_managed_associations)
             else
               item.destroy
             end
