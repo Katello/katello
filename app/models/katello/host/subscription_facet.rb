@@ -30,7 +30,8 @@ module Katello
         self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
       end
 
-      def import_database_attributes(consumer_params)
+      def import_database_attributes(consumer_params = candlepin_consumer.consumer_attributes)
+        update_subscription_status(consumer_params[:entitlementStatus]) unless consumer_params[:entitlementStatus].blank?
         update_hypervisor(consumer_params)
         update_guests(consumer_params)
 
