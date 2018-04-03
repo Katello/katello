@@ -28,7 +28,7 @@ module Actions
         def finalize
           ::Katello::Pool.where(:cp_id => input[:pool_ids]).map { |pool| pool.import_data(false) }
           host = ::Host.find_by(:id => input[:host_id])
-          host.subscription_facet.update_subscription_status
+          host.subscription_facet.import_database_attributes
         end
 
         def rescue_strategy
