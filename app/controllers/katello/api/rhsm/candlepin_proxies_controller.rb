@@ -1,4 +1,5 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::Rhsm::CandlepinProxiesController < Api::V2::ApiController
     include Katello::Authentication::ClientAuthentication
 
