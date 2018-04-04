@@ -26,3 +26,15 @@ pool_two:
   start_date: "2011-10-11T04:00:00.000+0000"
   end_date: "2022-01-01T04:59:59.000+0000"
   consumed: 10
+
+custom_pool:
+  cp_id: "xyz1234"
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  subscription_id: <%= ActiveRecord::FixtureSet.identify(:custom_subscription) %> 
+  account_number: "84390203"
+  contract_number: "38943940"
+  quantity: 100
+  start_date: "2011-10-11T04:00:00.000+0000"
+  end_date: "2022-01-01T04:59:59.000+0000"
+  consumed: 10
