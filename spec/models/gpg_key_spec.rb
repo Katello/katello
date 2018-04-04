@@ -54,11 +54,6 @@ module Katello
         gpg_key = GpgKey.new(:name => "Gpg Key 1", :content => content, :organization => @organization)
         gpg_key.wont_be :valid?
       end
-
-      it "should be unsuccessful with a key longer than #{GpgKey::MAX_CONTENT_LENGTH} characters" do
-        gpg_key = GpgKey.new(:name => "Gpg Key 8", :content => ("abc123" * GpgKey::MAX_CONTENT_LENGTH), :organization => @organization)
-        gpg_key.wont_be :valid?
-      end
     end
   end
 end

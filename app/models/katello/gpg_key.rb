@@ -1,7 +1,6 @@
 module Katello
   class GpgKey < Katello::Model
     include Katello::Authorization::GpgKey
-    MAX_CONTENT_LENGTH = 100_000
     MAX_CONTENT_LINE_LENGTH = 65
 
     GPG_KEY_TYPE = 'gpg_key'.freeze
@@ -28,7 +27,7 @@ module Katello
                                                         :message => N_("has already been taken")}
     validates :content_type, :presence => true, :inclusion => { :in => [GPG_KEY_TYPE, CERT_TYPE],
                                                                 :message => N_("must be %{gpg_key} or %{cert}") % { :gpg_key => GPG_KEY_TYPE, :cert => CERT_TYPE} }
-    validates :content, :presence => true, :length => {:maximum => MAX_CONTENT_LENGTH}
+    validates :content, :presence => true
     validates :organization, :presence => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::ContentValidator, :attributes => :content
