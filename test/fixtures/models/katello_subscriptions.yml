@@ -18,3 +18,11 @@ other_subscription:
   cores: 4
   stacking_id: "stack8473"
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+
+custom_subscription:
+  name: "custom subscription"
+  product_id: "empty_product"
+  support_level: "all hands on deck"
+  sockets: 3
+  cores: 4
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
