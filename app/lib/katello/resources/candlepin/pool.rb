@@ -1,18 +1,6 @@
 module Katello
   module Resources
     module Candlepin
-      module PoolResource
-        def path(id = nil, owner_label = nil)
-          if owner_label && id
-            "#{prefix}/owners/#{owner_label}/pools/#{id}"
-          elsif owner_label
-            "#{prefix}/owners/#{owner_label}/pools/"
-          else
-            "#{prefix}/pools/#{id}"
-          end
-        end
-      end
-
       class Pool < CandlepinResource
         extend PoolResource
 
@@ -41,19 +29,6 @@ module Katello
           end
         end
       end
-
-      class UpstreamPool < UpstreamCandlepinResource
-        extend PoolResource
-
-        class << self
-          def path(id = nil, owner_label = nil)
-            super(id, owner_label || upstream_owner_id)
-          end
-
-          delegate :[], to: :resource
-          delegate :get, to: :resource
-        end
-      end
-    end # Candlepin
-  end # Resources
-end # Katello
+    end
+  end
+end

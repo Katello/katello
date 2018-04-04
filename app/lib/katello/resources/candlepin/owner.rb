@@ -1,12 +1,6 @@
 module Katello
   module Resources
     module Candlepin
-      module OwnerResource
-        def path(id = nil)
-          "#{self.prefix}/owners/#{id}"
-        end
-      end
-
       class Owner < CandlepinResource
         extend OwnerResource
 
@@ -131,16 +125,6 @@ module Katello
           end
         end
       end
-
-      class UpstreamOwner < UpstreamCandlepinResource
-        extend OwnerResource
-
-        class << self
-          def path(id = upstream_owner_id)
-            super(id)
-          end
-        end
-      end
-    end # Candlepin
-  end # Resources
-end # Katello
+    end
+  end
+end
