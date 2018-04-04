@@ -1,0 +1,36 @@
+module Katello
+  module Resources
+    module Candlepin
+      class Content < CandlepinResource
+        class << self
+          def create(owner_label, attrs)
+            JSON.parse(self.post(path(owner_label), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+          end
+
+          def get(owner_label, id)
+            content_json = super(path(owner_label, id), self.default_headers).body
+            JSON.parse(content_json).with_indifferent_access
+          end
+
+          def all(owner_label)
+            content_json = Candlepin::CandlepinResource.get(path(owner_label), self.default_headers).body
+            JSON.parse(content_json)
+          end
+
+          def destroy(owner_label, id)
+            fail ArgumentError, "content id has to be specified" unless id
+            self.delete(path(owner_label, id), self.default_headers).code.to_i
+          end
+
+          def update(owner_label, attrs)
+            JSON.parse(self.put(path(owner_label, attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+          end
+
+          def path(owner_label, id = nil)
+            "/candlepin/owners/#{owner_label}/content/#{id}"
+          end
+        end
+      end
+    end
+  end
+end
