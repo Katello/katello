@@ -14,7 +14,7 @@
 angular.module('Bastion.content-views').controller('ContentViewCompositeAvailableContentViewsController',
     ['$scope', 'Nutupane', 'CurrentOrganization', 'ContentView', 'ContentViewComponent',
         function ($scope, Nutupane, CurrentOrganization, ContentView, ContentViewComponent) {
-            var nutupane, params;
+            var nutupane, params, nutupaneParams;
 
             params = {
                 'full_result': true,
@@ -23,10 +23,13 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                 'organization_id': CurrentOrganization
             };
 
-            nutupane = new Nutupane(ContentView, params);
+            nutupaneParams = {
+                'disableAutoLoad': true
+            };
+
+            nutupane = new Nutupane(ContentView, params,undefined,nutupaneParams);
             $scope.controllerName = 'katello_content_views';
             nutupane.masterOnly = true;
-            nutupane.table.initialLoad = false;
             $scope.table = nutupane.table;
 
             $scope.contentView.$promise.then(function (contentView) {
@@ -41,7 +44,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                 params['without[]'] = filterIds;
 
                 nutupane.setParams(params);
-                nutupane.load(true);
+                nutupane.refresh();
             });
 
             $scope.addContentViews = function () {
