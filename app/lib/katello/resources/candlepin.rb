@@ -77,7 +77,6 @@ module Katello
 
         class << self
           def resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
-            RestClient.proxy = self.proxy_uri
             RestClient::Resource.new(url,
                                      :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
                                      :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
@@ -85,6 +84,7 @@ module Katello
                                      :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE,
                                      :open_timeout => Setting[:manifest_refresh_timeout],
                                      :timeout => Setting[:manifest_refresh_timeout],
+                                     :proxy => self.proxy_uri,
                                      **options
                                     )
           end
