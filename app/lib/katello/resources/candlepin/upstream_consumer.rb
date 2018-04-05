@@ -20,8 +20,6 @@ module Katello
             return resource(url, client_cert, client_key, ca_file).get
           rescue RestClient::Exception => e
             raise e
-          ensure
-            RestClient.proxy = ""
           end
 
           def update(url, client_cert, client_key, ca_file, attributes)
@@ -31,8 +29,6 @@ module Katello
                                                                        'accept' => 'application/json',
                                                                        'accept-language' => I18n.locale,
                                                                        'content-type' => 'application/json')
-          ensure
-            RestClient.proxy = ""
           end
 
           delegate :[], to: :json_resource
