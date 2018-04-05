@@ -15,9 +15,7 @@ module Actions
         # @param repo
         # @param pulp_sync_task_id in case the sync was triggered outside
         #   of Katello and we just need to finish the rest of the orchestration
-        # rubocop:disable MethodLength
-        # rubocop:disable CyclomaticComplexity
-        def plan(repo, pulp_sync_task_id = nil, options = {})
+        def plan(repo, pulp_sync_task_id = nil, options = {}) # rubocop:disable MethodLength
           action_subject(repo)
 
           source_url = options.fetch(:source_url, nil)
