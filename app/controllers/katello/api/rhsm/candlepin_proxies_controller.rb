@@ -10,13 +10,13 @@ module Katello
     around_action :repackage_message
     before_action :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
                                         :regenerate_identity_certificates, :facts,
-                                        :available_releases, :serials, :upload_tracer_profile]
+                                        :available_releases, :serials, :upload_tracer_profile, :deb_package_profile]
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
     before_action :authorize_client_or_user, :only => [:consumer_show, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
     before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update]
     before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
-                                               :enabled_repos, :available_releases]
+                                               :enabled_repos, :available_releases, :deb_package_profile]
 
     before_action :check_registration_services, :only => [:consumer_create, :consumer_destroy, :consumer_activate]
 
@@ -185,7 +185,8 @@ module Katello
     end
     param :id, String, :desc => N_("UUID of the system"), :required => true
     def enabled_repos
-      repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+      fail(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos") if params['enabled_repos'].blank?
+      repos_params = params['enabled_repos']
       repos_params = repos_params['repos'] || []
 
       result = nil
@@ -194,6 +195,25 @@ module Katello
       end
 
       respond_for_show :resource => result
+    end
+
+    api :PUT, "/systems/:id/deb_package_profile", N_("Update installed deb packages")
+    param :deb_package_profile, Hash, :required => true do
+      param :deb_packages, Array, :required => true do
+        param :name, String, :required => true
+        param :architecture, String, :required => true
+        param :version, String, :required => true
+      end
+    end
+    param :id, String, :desc => N_("UUID of the system"), :required => true
+    def deb_package_profile
+      fail(HttpErrors::BadRequest, _("Expected attribute is missing:") + " deb_package_profile") if params['deb_package_profile'].blank?
+      deb_package_profile = params['deb_package_profile']
+      deb_packages = deb_package_profile['deb_packages'] || []
+      User.as_anonymous_admin do
+        task = async_task(::Actions::Katello::Host::UpdateDebPackageProfile, @host, deb_packages)
+        render :json => task
+      end
     end
 
     #api :POST, "/environments/:environment_id/consumers", N_("Register a consumer in environment")

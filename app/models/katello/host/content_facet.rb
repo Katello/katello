@@ -29,10 +29,26 @@ module Katello
       validates_with Validators::ContentViewEnvironmentValidator
 
       def update_repositories_by_paths(paths)
-        paths = paths.map { |path| path.gsub('/pulp/repos/', '') }
-        repos = Repository.where(:relative_path => paths)
+        apt_paths = []
+        yum_paths = []
+        paths = paths.reject do |path|
+          if path.starts_with? '/pulp/deb/'
+            apt_paths << path.gsub('/pulp/deb/', '')
+            true
+          elsif path.starts_with? '/pulp/repos/'
+            yum_paths << path.gsub('/pulp/repos/', '')
+            true
+          else
+            false
+          end
+        end
+        apt_repos = Repository.joins(:root).where(RootRepository.table_name => {:content_type => Repository::DEB_TYPE}, :relative_path => apt_paths)
+        apt_missing = apt_paths - apt_repos.pluck(:relative_path)
+        yum_repos = Repository.joins(:root).where(RootRepository.table_name => {:content_type => Repository::YUM_TYPE}, :relative_path => yum_paths)
+        yum_missing = yum_paths - yum_repos.pluck(:relative_path)
+        repos = apt_repos + yum_repos
 
-        missing = paths - repos.pluck(:relative_path)
+        missing = paths + apt_missing + yum_missing
         missing.each do |repo_path|
           Rails.logger.warn("System #{self.host.name} (#{self.host.id}) requested binding to unknown repo #{repo_path}")
         end

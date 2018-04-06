@@ -9,7 +9,8 @@ module Katello
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
       FactoryBot.create(:host, :with_content, :content_view => view,
-                                     :lifecycle_environment => library)
+                        :lifecycle_environment => library,
+                        :operatingsystem => FactoryBot.create(:operatingsystem, :release_name => ''))
     end
     let(:content_facet) { host.content_facet }
   end

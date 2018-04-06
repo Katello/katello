@@ -39,6 +39,8 @@ module Katello
         has_many :host_available_module_streams, :class_name => "::Katello::HostAvailableModuleStream", :foreign_key => :host_id, :dependent => :delete_all
         has_many :available_module_streams, :class_name => "::Katello::AvailableModuleStream", :through => :host_available_module_streams
 
+        has_many :host_installed_debs, :class_name => "::Katello::HostInstalledDeb", :foreign_key => :host_id, :dependent => :delete_all
+        has_many :installed_debs, :class_name => "::Katello::InstalledDeb", :through => :host_installed_debs
         has_many :host_traces, :class_name => "::Katello::HostTracer", :foreign_key => :host_id, :dependent => :destroy
 
         has_many :host_collection_hosts, :class_name => "::Katello::HostCollectionHosts", :foreign_key => :host_id, :dependent => :destroy
@@ -55,6 +57,7 @@ module Katello
         scoped_search :relation => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
         scoped_search :relation => :available_module_streams, :on => :name, :complete_value => true, :rename => :available_module_stream_name, :only_explicit => true
         scoped_search :relation => :available_module_streams, :on => :stream, :complete_value => true, :rename => :available_module_stream_stream, :only_explicit => true
+        scoped_search :relation => :installed_debs, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true

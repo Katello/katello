@@ -123,6 +123,26 @@
           </li>
         </ul>
       </li>
+      <li uib-dropdown
+          ng-class="{active: stateIncludes('content-host.debs-actions') || stateIncludes('content-host.debs-installed') || stateIncludes('content-host.debs-upgradeable')}" >
+        <a uib-dropdown-toggle>
+          <span translate>Deb Packages</span>
+          <i class="fa fa-chevron-down"></i>
+        </a>
+        <ul uib-dropdown-menu>
+          <li>
+            <a ui-sref="content-host.debs.actions" translate>
+              Apt Actions
+            </a>
+          </li>
+          <li ng-class="{active: isState('content-host.debs-installed')}">
+            <a translate
+               ui-sref="content-host.debs.installed">
+              Installed
+            </a>
+          </li>
+        </ul>
+      </li>
       <li ng-class="{active: isState('content-host.errata.index')}">
         <a translate
            ui-sref="content-host.errata.index">
