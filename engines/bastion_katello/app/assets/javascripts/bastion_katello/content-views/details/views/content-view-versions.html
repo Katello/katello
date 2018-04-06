@@ -99,7 +99,15 @@
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="#">Promote</a></li>
+                <li>
+                  <a href="#"
+                     ng-click="$state.go('content-view.promotion', {contentViewId: contentView.id, versionId: version.id})"
+                     ng-hide="denied('promote_or_remove_content_views', contentView)"
+                     ng-disabled="taskInProgress(version) || taskFailed(version) || pendingVersionTask"
+                     translate>
+                     Promote
+                  </a>
+                </li>
                 <li>
                   <a href="#"
                      ng-click="regenerateRepositories(version)"
