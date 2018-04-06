@@ -54,6 +54,8 @@ module Actions
             profiles.each do |profile|
               payload = profile["profile"]
               case profile["content_type"]
+              when "deb"
+                UpdateDebPackageProfile.update(input[:host_id], payload)
               when "rpm"
                 UploadPackageProfile.upload(input[:host_id], payload)
               when "enabled_repos"

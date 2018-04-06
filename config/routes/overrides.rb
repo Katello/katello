@@ -96,6 +96,10 @@ Foreman::Application.routes.draw do
             get :auto_complete_search, :on => :collection
           end
 
+          resources :debs, :only => [:index], :controller => :host_debs do
+            get :auto_complete_search, :on => :collection
+          end
+
           resources :subscriptions, :only => [:index], :controller => :host_subscriptions do
             collection do
               put :auto_attach

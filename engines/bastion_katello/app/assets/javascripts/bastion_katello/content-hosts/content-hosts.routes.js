@@ -175,6 +175,32 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
         }
     });
 
+    $stateProvider.state('content-host.debs', {
+        controller: 'ContentHostDebsController',
+        abstract: true,
+        templateUrl: 'content-hosts/content/views/content-host-debs.html'
+    })
+    .state('content-host.debs.actions', {
+        url: '/debs/actions',
+        permission: 'edit_hosts',
+        controller: 'ContentHostDebsActionsController',
+        templateUrl: 'content-hosts/content/views/content-host-debs-actions.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Deb Package Actions' | translate }}",
+            parent: 'content-host.info'
+        }
+    })
+    .state('content-host.debs.installed', {
+        url: '/debs/installed',
+        permission: 'view_hosts',
+        controller: 'ContentHostDebsInstalledController',
+        templateUrl: 'content-hosts/content/views/content-host-debs-installed.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Installed Deb Packages' | translate }}",
+            parent: 'content-host.info'
+        }
+    });
+
     $stateProvider.state('content-host.packages', {
         controller: 'ContentHostPackagesController',
         abstract: true,
