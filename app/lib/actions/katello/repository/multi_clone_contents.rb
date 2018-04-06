@@ -21,6 +21,12 @@ module Actions
               extended_repo_mapping.each do |source_repos, dest_repo_map|
                 dest_repo_map[:matching_content] = check_matching_content(dest_repo_map[:dest_repo], source_repos)
 
+                if source_repos.first.deb?
+                  plan_action(Actions::Katello::Repository::CopyDebErratum,
+                              source_repo_id: source_repos.first.id,
+                              target_repo_id: dest_repo_map[:dest_repo].id)
+                end
+
                 if generate_metadata
                   metadata_generate(source_repos, dest_repo_map[:dest_repo], dest_repo_map[:filters], dest_repo_map[:matching_content])
                 end

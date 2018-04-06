@@ -27,9 +27,9 @@ module Katello
 
       response = @controller.scoped_search(@query, @default_sort[0], @default_sort[1], @options)
       refute_empty response[:results], "results"
-      assert_equal 6, response[:subtotal], "subtotal"
-      assert_equal 6, response[:total], "total"
-      assert_equal 6, response[:selectable], "selectable"
+      assert_equal 8, response[:subtotal], "subtotal"
+      assert_equal 8, response[:total], "total"
+      assert_equal 8, response[:selectable], "selectable"
       assert_equal 1, response[:page], "page"
       assert_equal Setting[:entries_per_page], response[:per_page], "per page"
       assert_nil response[:error], "error"
@@ -101,7 +101,7 @@ module Katello
       options = {resource_class: Katello::Erratum}
 
       results = @controller.scoped_search(query, "errata_id", "asc", options)[:results]
-      assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHEA-2019-002", "RHEA-2022-007", "RHSA-1999-1231"], results.map(&:errata_id)
+      assert_equal ["DEBIAN-1-1", "DEBIAN-2-1", "RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHEA-2019-002", "RHEA-2022-007", "RHSA-1999-1231"], results.map(&:errata_id)
     end
 
     def test_scoped_search_order_via_hammer_order
@@ -112,7 +112,7 @@ module Katello
       options = {resource_class: Katello::Erratum}
 
       results = @controller.scoped_search(query, "errata_id", "desc", options)[:results]
-      assert_equal ["RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHEA-2019-002", "RHEA-2022-007", "RHSA-1999-1231"].sort.reverse, results.map(&:errata_id)
+      assert_equal ["DEBIAN-1-1", "DEBIAN-2-1", "RHBA-2014-013", "RHEA-2014-111", "RHEA-2017-007", "RHEA-2019-002", "RHEA-2022-007", "RHSA-1999-1231"].sort.reverse, results.map(&:errata_id)
     end
 
     def test_scoped_search_invalid_column

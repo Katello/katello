@@ -288,6 +288,19 @@ module Katello
         self.fact_values.joins(:fact_name).where("#{::FactName.table_name}.type = '#{Katello::RhsmFactName}'")
       end
 
+      def debs_for_erratum(erratum_name, only_upgradeable: false)
+        erratum = Katello::Erratum.find_by errata_id: erratum_name
+        return nil if erratum.nil?
+        pkgs = erratum.deb_packages.where(release: self.operatingsystem.release_name).pluck(:name)
+
+        if only_upgradeable
+          installed = installed_debs.pluck(:name)
+          pkgs &= installed
+        end
+
+        pkgs.join(' ')
+      end
+
       def self.available_locks
         [:update]
       end
@@ -625,7 +638,7 @@ class ::Host::Managed::Jail < Safemode::Jail
         :installed_packages, :traces_helpers, :advisory_ids, :package_names_for_job_template,
         :filtered_entitlement_quantity_consumed, :bound_repositories,
         :single_content_view, :single_lifecycle_environment, :purpose_role, :purpose_usage, :release_version,
-        :purpose_role_status_label, :purpose_usage_status_label
+        :purpose_role_status_label, :purpose_usage_status_label, :debs_for_erratum
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

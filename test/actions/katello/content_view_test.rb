@@ -509,4 +509,22 @@ module ::Actions::Katello::ContentView
       assert_equal action.content_output(total_count), "with 3 Package(s), and 1 Errata"
     end
   end
+
+  class IncrementalUpdateTest < TestBase
+    let(:action_class) { ::Actions::Katello::ContentViewVersion::IncrementalUpdate }
+
+    it 'resolves debian errata' do
+      content = {
+        errata_ids: ['DEBIAN-2-1']
+      }
+      source_repo = katello_repositories(:debian_10_amd64)
+      extended_repo_mapping = {
+        [source_repo.id] => []
+      }
+
+      errata, debs = *action.resolve_deb_errata(content, extended_repo_mapping)
+      assert_equal errata.sort, ['DEBIAN-1-1', 'DEBIAN-2-1'], 'should find errata that are fixed as well'
+      assert_equal debs.sort, [katello_debs(:testpackage_2).id]
+    end
+  end
 end

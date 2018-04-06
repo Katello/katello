@@ -21,8 +21,10 @@ module Katello
     has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
     has_many :content_facets_applicable, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
     has_many :bugzillas, :class_name => "Katello::ErratumBugzilla", :dependent => :destroy, :inverse_of => :erratum
+    has_many :dbts_bugs, :class_name => "Katello::ErratumDbtsBug", :dependent => :destroy, :inverse_of => :erratum
     has_many :cves, :class_name => "Katello::ErratumCve", :dependent => :destroy, :inverse_of => :erratum
     has_many :packages, :class_name => "Katello::ErratumPackage", :dependent => :destroy, :inverse_of => :erratum
+    has_many :deb_packages, :class_name => "Katello::ErratumDebPackage", :dependent => :destroy, :inverse_of => :erratum
 
     scoped_search :on => :id, :rename => :db_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :errata_id, :complete_value => true, :only_explicit => true
@@ -37,8 +39,10 @@ module Katello
     scoped_search :on => :reboot_suggested, :complete_value => true
     scoped_search :relation => :cves, :on => :cve_id, :rename => :cve
     scoped_search :relation => :bugzillas, :on => :bug_id, :rename => :bug
+    scoped_search :relation => :dbts_bugs, :on => :bug_id, :rename => :bug
     scoped_search :relation => :packages, :on => :nvrea, :rename => :package, :complete_value => true, :only_explicit => true
     scoped_search :relation => :packages, :on => :name, :rename => :package_name, :complete_value => true, :only_explicit => true
+    scoped_search :relation => :deb_packages, :on => :name, :rename => :package_name, :complete_value => true, :only_explicit => true
 
     scoped_search :on => :modular,
                   :only_explicit => true,
@@ -180,6 +184,10 @@ module Katello
       Katello::ContentViewErratumFilterRule.where(errata_id: self.errata_id).eager_load(:filter).map(&:filter)
     end
 
+    def all_package_names
+      package_names + deb_packages.map { |pkg| pkg.name }
+    end
+
     apipie :class, desc: "A class representing #{model_name.human} object" do
       name 'Erratum'
       refs 'Erratum'
@@ -196,7 +204,7 @@ module Katello
       property :summary, String, desc: 'Returns the errata summary, the length can very, it is usually in range of 60 to 1000 characters. It can include empty line characters.'
     end
     class Jail < ::Safemode::Jail
-      allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested, :title, :summary
+      allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :all_package_names, :cves, :reboot_suggested, :title, :summary
     end
   end
 end

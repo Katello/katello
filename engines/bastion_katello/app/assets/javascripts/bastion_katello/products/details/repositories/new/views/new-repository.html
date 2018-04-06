@@ -152,7 +152,7 @@
                 <br />
                 <div class="alert alert-danger" ><strong>Warning. </strong>Are you sure you want to add a comma in this whitespace separated list of distributions?</div>
        </div>
-     
+
       </div>
 
       <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Components' | translate }}">
@@ -179,6 +179,33 @@
           Whitespace-separated list of processor architectures to sync (leave clear to sync all). Example: amd64 <a class="fa fa-question-circle" ng-show="repository.content_type === 'deb'"
                                                                         uib-popover-html="archPopover" popover-class="popover-large" popover-trigger="'outsideClick'" popover-append-to-body="true" popover-title="Architectures">
         </a>
+        </p>
+      </div>
+      <div ng-show="repository.content_type === 'deb'" bst-form-group label="{{ 'Errata URL' | translate }}">
+        <input id="deb_errata_url"
+               name="deb_errata_url"
+               ng-model="repository.deb_errata_url"
+               type="text"/>
+        <p class="help-block" translate>
+          URL to a deb errata service. Example: https://dep.atix.de/dep/api/v1/debian
+        </p>
+      </div>
+
+      <div bst-form-group label="{{ 'Upstream Sync Policy' | translate }}"  ng-if="repository.content_type === 'ostree'">
+        <select required
+                id="ostree_upstream_sync_policy"
+                name="ostree_upstream_sync_policy"
+                ng-model="repository.ostree_upstream_sync_policy"
+                ng-options="id as name for (id, name) in ostreeUpstreamSyncPolicies">
+        </select>
+
+        <input id="ostree_upstream_sync_depth"
+               name="ostree_upstream_sync_depth"
+               ng-model="repository.ostree_upstream_sync_depth"
+               type="number"
+               ng-disabled="repository.ostree_upstream_sync_policy !== 'custom'"/>
+        <p class="help-block" translate>
+          Choose one of the policy selections for downloading ostree content from upstream url during synchronization. Choose "Latest" for downloading the latest version of the upstream branch. Choose "All History" to download all available versions of the upstream repository (this may take a large amount of space). Choose "Custom Depth" and provide an number to indicate the number of prior versions of the upstream branch to download.
         </p>
         <div ng-hide="validateDebAttrList('deb_architectures')">
                 <br />

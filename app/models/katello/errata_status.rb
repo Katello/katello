@@ -62,7 +62,7 @@ module Katello
         NEEDED_SECURITY_ERRATA
       elsif errata.any?
         NEEDED_ERRATA
-      elsif host.installed_packages.empty? || host.content_facet.bound_repositories.empty?
+      elsif (host.installed_packages.empty? && host.installed_debs.empty?) || host.content_facet.bound_repositories.empty?
         UNKNOWN
       else
         UP_TO_DATE

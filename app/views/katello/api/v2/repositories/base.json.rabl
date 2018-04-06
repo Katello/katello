@@ -11,6 +11,7 @@ attributes :mirroring_policy
 glue(@object.root) do
   attributes :content_type, :url, :arch, :os_versions, :content_id, :generic_remote_options
   attributes :major, :minor
+  attributes :supports_errata? => :supports_errata
 
   child :product do |_product|
     attributes :id, :cp_id, :name

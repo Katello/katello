@@ -337,6 +337,9 @@ module Katello
           content_counts[content_type.content_type] = content_type&.model_class&.in_repositories(self)&.where(:content_type => content_type.content_type)&.count
         else
           content_counts[content_type.label] = content_type&.model_class&.in_repositories(self)&.count
+          if content_type&.model_class::CONTENT_TYPE == Deb::CONTENT_TYPE
+            content_counts['erratum'] = self.errata.count
+          end
         end
       end
 

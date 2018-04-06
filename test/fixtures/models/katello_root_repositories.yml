@@ -31,7 +31,7 @@ debian_10_amd64_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:debian_gpg_key) %>
   url:                  "http://myrepo.com"
   deb_releases:         buster
-  deb_components:       main,contrib
+  deb_components:       main contrib
   deb_architectures:    amd64
   download_policy:      immediate
   mirroring_policy:     "mirror_content_only"
@@ -45,7 +45,7 @@ debian_10_amd64_duplicate_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:debian_gpg_key) %>
   url:                  "http://myrepo.com"
   deb_releases:         buster
-  deb_components:       main,contrib
+  deb_components:       main contrib
   deb_architectures:    amd64
   download_policy:      immediate
   mirroring_policy:     "mirror_content_only"

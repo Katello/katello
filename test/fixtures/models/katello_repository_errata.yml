@@ -27,3 +27,11 @@ fedora_17_x86_64_trailing_whitespace:
     erratum_id: <%= ActiveRecord::FixtureSet.identify(:trailing_whitespace) %>
     repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
     erratum_pulp3_href: "fedora_17_x86_64_trailing_whitespace_href"
+
+debian_10_amd64_security_1:
+    erratum_id: <%= ActiveRecord::FixtureSet.identify(:deb_1) %>
+    repository_id: <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64) %>
+
+debian_10_amd64_security_2:
+    erratum_id: <%= ActiveRecord::FixtureSet.identify(:deb_2) %>
+    repository_id: <%= ActiveRecord::FixtureSet.identify(:debian_10_amd64) %>
