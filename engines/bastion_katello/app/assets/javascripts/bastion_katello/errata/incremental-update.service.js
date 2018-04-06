@@ -8,7 +8,7 @@
      *   Provides a helper service for Incremental Updates.
      *
      */
-    function IncrementalUpdate($q, $httpParamSerializer, Task, CurrentOrganization) {
+    function IncrementalUpdate($q, $httpParamSerializer, Task, CurrentOrganization, Erratum, Deb) {
         var getIdsFromBulk;
 
         getIdsFromBulk = function (bulkResource) {
@@ -42,6 +42,38 @@
          */
         this.getErrataIds = function () {
             return this.errataIds;
+        };
+
+        /**
+         * Return Deb packages mentioned in Errata
+         *
+         * @returns {Promise} future array of Deb Ids
+         */
+        this.getDebIds = function () {
+            return Promise.all(this.errataIds.map(function (erratumId) {
+                return Erratum.get({id: erratumId}).$promise.then(function (erratum) {
+                    return Promise.all(erratum.deb_packages.map(function (debPackage) {
+                        var searchString = 'name==' + debPackage.name + ' and version==' + debPackage.version;
+                        return Deb.get({
+                            'per_page': 1 << 32,
+                            'search': searchString,
+                            'organization_id': CurrentOrganization
+                        }).$promise.then(function (debs) {
+                            return debs.results.map(function (deb) {
+                                return deb.id;
+                            });
+                        });
+                    })).then(function (res) {
+                        return res.reduce(function (a, b) {
+                            return a.concat(b);
+                        }, []);
+                    });
+                });
+            })).then(function (res) {
+                return res.reduce(function (a, b) {
+                    return a.concat(b);
+                }, []);
+            });
         };
 
         /**
@@ -134,6 +166,6 @@
 
     angular.module('Bastion.errata').service('IncrementalUpdate', IncrementalUpdate);
 
-    IncrementalUpdate.$inject = ['$q', '$httpParamSerializer', 'Task', 'CurrentOrganization'];
+    IncrementalUpdate.$inject = ['$q', '$httpParamSerializer', 'Task', 'CurrentOrganization', 'Erratum', 'Deb'];
 
 })();

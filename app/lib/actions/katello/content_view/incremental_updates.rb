@@ -81,6 +81,7 @@ module Actions
               if added_units
                 total_count[:errata_count] = added_units[:erratum].try(:count)
                 total_count[:rpm_count] = added_units[:rpm].try(:count)
+                total_count[:deb_count] = added_units[:deb].try(:count)
                 total_count[:puppet_module_count] = added_units[:puppet_module].try(:count)
               end
             end
@@ -120,6 +121,10 @@ module Actions
           if total_count[:rpm_count] && total_count[:rpm_count] > 0
             rpm = _(" %{package_count} Package(s)" % {:package_count => total_count[:rpm_count]})
             content << rpm
+          end
+          if total_count[:deb_count] && total_count[:deb_count] > 0
+            deb = _(" %{deb_package_count} Package(s)" % {:deb_package_count => total_count[:deb_count]})
+            content << deb
           end
           if total_count[:puppet_module_count] && total_count[:puppet_module_count] > 0
             puppet_module = _(" %{puppet_module_count} Puppet Module(s)" %

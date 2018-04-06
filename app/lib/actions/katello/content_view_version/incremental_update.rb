@@ -83,7 +83,9 @@ module Actions
           copy_output = []
           sequence do
             solve_dependencies = new_version.content_view.solve_dependencies || dep_solve
-            copy_output += copy_deb_content(new_repo, solve_dependencies, content[:deb_ids])
+            copy_output += copy_deb_content(new_repo, solve_dependencies,
+                                            content[:deb_ids],
+                                            content[:errata_ids])
             copy_output += copy_yum_content(new_repo, solve_dependencies,
                                             content[:package_ids],
                                             content[:errata_ids])
@@ -187,7 +189,7 @@ module Actions
 
         def generate_description(version, content)
           humanized_lines = []
-          [::Katello::Erratum, ::Katello::Rpm, ::Katello::PuppetModule].each do |content_type|
+          [::Katello::Erratum, ::Katello::Rpm, ::Katello::Deb, ::Katello::PuppetModule].each do |content_type|
             unless content[content_type::CONTENT_TYPE].blank?
               humanized_lines << "#{HUMANIZED_TYPES[content_type::CONTENT_TYPE]}:"
               humanized_lines += content[content_type::CONTENT_TYPE].sort.map { |unit| "    #{unit}" }
@@ -237,9 +239,16 @@ module Actions
           plan_action(Katello::ContentView::Promote, new_version, environments, true)
         end
 
-        def copy_deb_content(new_repo, dep_solve, deb_ids)
+        def copy_deb_content(new_repo, dep_solve, deb_ids, erratum_ids)
           copy_outputs = []
           if new_repo.content_type == ::Katello::Repository::DEB_TYPE
+            unless erratum_ids.blank?
+              copy_outputs << plan_action(Katello::Repository::CopyDebErratum,
+                                          source_repo_id: new_repo.library_instance.id,
+                                          target_repo_id: new_repo.id,
+                                          erratum_ids: erratum_ids).output
+            end
+
             unless deb_ids.blank?
               copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
                                           ::Katello::Deb.with_identifiers(deb_ids),

@@ -11,6 +11,8 @@
  */
 angular.module('Bastion.errata').controller('ErratumController', ['$scope', 'Erratum', 'ApiErrorHandler',
     function ($scope, Erratum, ApiErrorHandler) {
+        $scope.encodeURIComponent = encodeURIComponent;
+
         $scope.panel = {
             error: false,
             loading: true

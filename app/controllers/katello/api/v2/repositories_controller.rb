@@ -52,6 +52,7 @@ module Katello
       param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
+      param :deb_errata_url, String, :desc => N_("URL to a deb errata service (use only on the security repositories)")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing"), :deprecated => true
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
       param :ansible_collection_requirements, String, :desc => N_("Contents of requirement yaml file to sync from URL")
@@ -465,7 +466,7 @@ module Katello
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy,
               :deb_releases, :deb_components, :deb_architectures, :description, :http_proxy_policy, :http_proxy_id,
-              {:ignorable_content => []}
+              {:ignorable_content => []}, :deb_errata_url
              ]
 
       keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
@@ -523,6 +524,7 @@ module Katello
         root.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
         root.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
         root.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
+        root.deb_errata_url = repo_params[:deb_errata_url] if repo_params[:deb_errata_url]
       end
 
       root
