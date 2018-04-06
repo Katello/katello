@@ -36,6 +36,9 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
 
         contentView = ContentView.queryUnpaged(function (response) {
             $scope.contentViews = response.results;
+            _.each($scope.contentViews, function(cv) {
+                cv.environment_ids = _.map(cv.environments, "id");
+            });
             $scope.contentViewFilter = _.find($scope.contentViews, {'default': true});
         });
 
@@ -47,10 +50,20 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
 
         $scope.filterPackages = function () {
             params['environment_id'] = $scope.environmentFilter;
-            params['content_view_version_id'] = $scope.contentViewFilter;
 
             if ($scope.contentViewFilter) {
-                params['content_view_version_id'] = _.map($scope.contentViewFilter.versions, 'id');
+                version = _.find($scope.contentViewFilter.versions, function(version) {
+                    // Find the version belonging to the environment specified by the enviroment filter
+                    env = _.find(version.environment_ids, function(env_id) {
+                        return env_id === $scope.environmentFilter;
+                    });
+
+                    return !angular.isUndefined(env);
+                });
+
+                if (!angular.isUndefined(version)) {
+                    params['content_view_version_id'] = version.id;
+                }
             }
 
             repositoriesNutupane.setParams = (params);
