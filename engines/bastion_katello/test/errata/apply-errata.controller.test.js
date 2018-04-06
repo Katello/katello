@@ -39,6 +39,11 @@ describe('Controller: ApplyErrataController', function() {
 
         IncrementalUpdate = {
             getContentHostIds: function () {},
+            getDebIds: function () {
+              return (new Promise(function(resolve,reject) {
+                resolve([]);
+              }));
+            },
             getErrataIds: function () {},
             getBulkContentHosts: function () {return {}},
             getIncrementalUpdates: function () {}
@@ -177,6 +182,7 @@ describe('Controller: ApplyErrataController', function() {
             beforeEach(function () {
                 expectedParams = {
                     'add_content': {
+                        'deb_ids': [],
                         'errata_ids': [10]
                     },
                     'content_view_version_environments': [{

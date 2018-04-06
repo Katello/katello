@@ -9,6 +9,7 @@ attributes :version_href, :remote_href, :publication_href
 glue(@object.root) do
   attributes :content_type, :url, :arch, :os_versions, :content_id
   attributes :major, :minor
+  attributes :supports_errata? => :supports_errata
 
   child :product do |_product|
     attributes :id, :cp_id, :name

@@ -104,7 +104,10 @@ angular.module('Bastion.errata').controller('ApplyErrataController',
                     $scope.applyingErrata = false;
                 };
 
-                ContentViewVersion.incrementalUpdate(params, transitionToTask, error);
+                IncrementalUpdate.getDebIds().then(function (debIds) {
+                    params['add_content']['deb_ids'] = debIds;
+                    ContentViewVersion.incrementalUpdate(params, transitionToTask, error);
+                });
             };
 
             applyErrata = function () {

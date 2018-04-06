@@ -18,6 +18,9 @@ foreign_input_sets:
 <% if @host.operatingsystem.family == 'Suse' -%>
     <% advisories = input(:errata).split(',').join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'install -n -t patch', :package => advisories) %>
+<% elsif @host.operatingsystem.family == 'Debian' -%>
+    <% advisories = input(:errata).split(',').map { |e| @host.debs_for_erratum(e) }.join(' ') %>
+    <%= render_template('Package Action - SSH Default', :action => 'update', :package => advisories) %>
 <% else %>
     <% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
     <%= render_template('Package Action - SSH Default', :action => 'update-minimal', :package => advisories) %>

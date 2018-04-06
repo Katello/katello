@@ -66,6 +66,7 @@ module Actions
               plan_action(Katello::Repository::CorrectChecksum, repo)
               concurrence do
                 plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents && repo.yum?
+                plan_action(Katello::Repository::SyncDebErrata, repo, validate_contents) if repo.deb? && repo.root.deb_errata_url.present?
                 plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check && repo.yum?
                 plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
                 plan_action(Actions::Katello::Applicability::Repository::Regenerate, :repo_ids => [repo.id]) if generate_applicability

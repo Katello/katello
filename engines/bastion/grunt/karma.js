@@ -60,6 +60,7 @@ module.exports = {
             'app/assets/javascripts/' + pluginName + '/**/*.js',
             'app/assets/javascripts/' + pluginName + '/**/*.html',
 
+            basePath + '../babel-polyfill/dist/polyfill.js',
             basePath + 'test/test-mocks.module.js',
             'test/**/*test.js'
         ],

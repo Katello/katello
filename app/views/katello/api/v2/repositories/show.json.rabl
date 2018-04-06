@@ -24,6 +24,7 @@ glue(@resource.root) do
   attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth
   attributes :compute_ostree_upstream_sync_depth => :computed_ostree_upstream_sync_depth
   attributes :deb_releases, :deb_components, :deb_architectures
+  attributes :deb_errata_url
   attributes :http_proxy_policy
   attributes :http_proxy_id
   attributes :http_proxy_name

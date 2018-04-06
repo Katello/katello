@@ -163,6 +163,11 @@ module Katello
         self.fact_values.joins(:fact_name).where("#{::FactName.table_name}.type = '#{Katello::RhsmFactName}'")
       end
 
+      def debs_for_erratum(erratum_name)
+        erratum = Katello::Erratum.find_by errata_id: erratum_name
+        erratum.deb_packages.where(release: self.operatingsystem.release_name).pluck(:name).join(' ')
+      end
+
       def self.available_locks
         [:update]
       end
@@ -387,7 +392,7 @@ end
 class ::Host::Managed::Jail < Safemode::Jail
   allow :content_source, :subscription_manager_configuration_url, :rhsm_organization_label,
         :host_collections, :comment, :pools, :hypervisor_host, :lifecycle_environment, :content_view,
-        :installed_packages
+        :installed_packages, :debs_for_erratum
 end
 
 class ActiveRecord::Associations::CollectionProxy::Jail < Safemode::Jail

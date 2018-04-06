@@ -38,6 +38,9 @@
       <li ng-repeat="package in erratum.packages">
         {{ package }}
       </li>
+      <li ng-repeat="deb_package in erratum.deb_packages">
+        {{ deb_package.name }} {{ deb_package.version }}
+      </li>
     </ul>
   </dd>
 
