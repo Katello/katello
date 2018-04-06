@@ -29,9 +29,6 @@ namespace :katello do
   task :reset_default_smart_proxy do
     User.current = User.anonymous_admin
     hostname = Socket.gethostname.chomp
-    Setting['ssl_ca_file'] = "/etc/pki/katello/certs/katello-default-ca.crt"
-    Setting['ssl_certificate'] = "/etc/pki/katello/certs/#{hostname}-foreman-client.crt"
-    Setting['ssl_priv_key'] = "/etc/pki/katello/private/#{hostname}-foreman-client.key"
     SmartProxy.where(name: hostname, url: "https://#{hostname}:9090").first_or_create!
   end
 
