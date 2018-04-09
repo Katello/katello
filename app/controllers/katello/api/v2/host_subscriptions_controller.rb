@@ -6,11 +6,22 @@ module Katello
     before_action :find_content_view_environment, :only => :create
     before_action :check_registration_services, :only => [:destroy, :create]
 
+    def_param_group :installed_products do
+      param :product_id, String, :desc => N_("Product id as listed from a host's installed products, \
+        this is not the same product id as the products api returns")
+      param :product_name, String, :desc => N_("Product name as listed from a host's installed products")
+      param :arch, String, :desc => N_("Product architecture")
+      param :version, String, :desc => N_("Product version")
+    end
+
     def_param_group :subscription_facet_attributes do
       param :release_version, String, :desc => N_("Release version for this Host to use (7Server, 7.1, etc)")
       param :autoheal, :bool, :desc => N_("Sets whether the Host will autoheal subscriptions upon checkin")
       param :service_level, Integer, :desc => N_("Service level to be used for autoheal.")
       param :hypervisor_guest_uuids, Array, :desc => N_("List of hypervisor guest uuids")
+      param :installed_products_attributes, Array, :desc => N_("List of products installed on the host") do
+        param_group :installed_products
+      end
     end
 
     resource_description do
@@ -59,11 +70,7 @@ module Katello
     param :facts, Hash, :desc => N_("Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)")
     param :hypervisor_guest_uuids, Array, :desc => N_("UUIDs of the virtual guests from the host's hypervisor")
     param :installed_products, Array, :desc => N_("List of products installed on the host") do
-      param :product_id, String, :desc => N_("Product id as listed from a host's installed products, \
-        this is not the same product id as the products api returns")
-      param :product_name, String, :desc => N_("Product name as listed from a host's installed products")
-      param :arch, String, :desc => N_("Product architecture")
-      param :version, String, :desc => N_("Product version")
+      param_group :installed_products, ::Katello::Api::V2::HostSubscriptionsController
     end
     param :release_version, String, :desc => N_("Release version of the content host")
     param :service_level, String, :desc => N_("A service level for auto-healing process, e.g. SELF-SUPPORT")

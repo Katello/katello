@@ -3,6 +3,9 @@ module Katello
     has_many :subscription_facet_installed_products, :class_name => "Katello::SubscriptionFacetInstalledProduct", :dependent => :destroy, :inverse_of => :installed_product
     has_many :subscription_facets, :through => :subscription_facet_installed_products, :class_name => "Katello::Host::SubscriptionFacet"
 
+    alias_attribute :product_id, :cp_product_id
+    alias_attribute :product_name, :name
+
     def self.find_or_create_from_consumer(consumer_attributes)
       attributes = {
         :arch => consumer_attributes['arch'],
