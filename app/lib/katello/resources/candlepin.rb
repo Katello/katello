@@ -76,6 +76,8 @@ module Katello
         self.prefix = '/subscription'
 
         class << self
+          delegate :[], to: :json_resource
+
           def resource(url = self.site + self.path, client_cert = self.client_cert, client_key = self.client_key, ca_file = nil, options = {})
             RestClient::Resource.new(url,
                                      :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),

@@ -27,10 +27,22 @@ module Katello
       respond(collection: collection)
     end
 
+    api :PUT, "/organizations/:organization_id/upstream_subscriptions",
+      N_("Update the quantity of one or more subscriptions on an upstream allocation")
+    param :organization_id, :number, :desc => N_("Organization ID"), :required => true
+    param :pools, Array, desc: N_("Array of Pools to be updated. Only pools originating upstream are accepted."), required: true do
+      param :id, String, desc: N_("ID of local pool to update"), required: true
+      param :quantity, Integer, desc: N_("Desired quantity of the pool"), required: true
+    end
+    def update
+      task = async_task(::Actions::Katello::UpstreamSubscriptions::UpdateEntitlements, update_params)
+      respond_for_async :resource => task
+    end
+
     api :DELETE, "/organizations/:organization_id/upstream_subscriptions",
       N_("Remove one or more subscriptions from an upstream subscription allocation")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
-    param :pool_ids, Array, desc: N_("Array of local pool IDs. Only pools originating upstream (non-custom) are accepted."), required: true
+    param :pool_ids, Array, desc: N_("Array of local pool IDs. Only pools originating upstream are accepted."), required: true
     def destroy
       task = async_task(::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements, params[:pool_ids])
       respond_for_async :resource => task
@@ -50,6 +62,10 @@ module Katello
     end
 
     private
+
+    def update_params
+      params.permit(pools: [:id, :quantity])[:pools].map(&:to_h)
+    end
 
     def upstream_pool_params
       params.permit(:page, :per_page, :order, :sort_by, :quantities_only, pool_ids: [])

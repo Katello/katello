@@ -9,7 +9,6 @@ module Katello
             super(id, owner_label || upstream_owner_id)
           end
 
-          delegate :[], to: :resource
           delegate :get, to: :resource
         end
       end
