@@ -4,10 +4,10 @@ module Katello
 
     class << self
       def fetch_pools(params)
-        quantities_only = ::Foreman::Cast.to_bool(params.delete("quantities_only"))
+        quantities_only = ::Foreman::Cast.to_bool(params.delete(:quantities_only))
         cp_params = request_params(
-          base_params: params,
-          extra_params: pool_id_params(params.delete("pool_ids")),
+          base_params: base_params(params),
+          extra_params: pool_id_params(params.delete(:pool_ids)),
           included_fields: included_field_params(quantities_only)
         )
 
@@ -18,6 +18,16 @@ module Katello
           pools: pools,
           total: response.headers[total_count_header] || pools.count
         }
+      end
+
+      def base_params(params)
+        attachable = ::Foreman::Cast.to_bool(params.delete(:attachable))
+        params[:consumer] = upstream_consumer_id if attachable
+        params
+      end
+
+      def upstream_consumer_id
+        CP_POOL.upstream_consumer_id
       end
 
       def response_to_pools(response)
