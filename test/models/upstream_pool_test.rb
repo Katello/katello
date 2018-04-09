@@ -19,9 +19,9 @@ module Katello
       }]
     end
 
-    def stub_fetch_pools(response, extra_params: [], included_fields: UpstreamPool.all_fields)
+    def stub_fetch_pools(response, base_params: {}, extra_params: [], included_fields: UpstreamPool.all_fields)
       Katello::UpstreamPool.expects(:request_params)
-                           .with(base_params: {},
+                           .with(base_params: base_params,
                                  extra_params: extra_params,
                                  included_fields: included_fields)
 
@@ -85,6 +85,17 @@ module Katello
       pools = UpstreamPool.fetch_pools(
         {pool_ids: ["pool_id"] }.with_indifferent_access
       )
+      assert_equal 1, pools[:total]
+    end
+
+    def test_fetch_pools_attachable
+      @response.expects(:to_str).returns(@raw_pool.to_json)
+      @response.expects(:headers).returns({})
+      stub_fetch_pools(@response, base_params: {consumer: :foo_id})
+      Resources::Candlepin::UpstreamPool.expects(:upstream_consumer_id).returns(:foo_id)
+
+      params = {attachable: true}
+      pools = UpstreamPool.fetch_pools(params)
       assert_equal 1, pools[:total]
     end
 
