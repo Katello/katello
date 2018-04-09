@@ -3,9 +3,13 @@ import * as types from '../SubscriptionConstants';
 import {
   initialState,
   loadingState,
+  loadingQuantitiesState,
   requestSuccessResponse,
+  quantitiesSuccessState,
+  quantitiesRequestSuccessResponse,
   successState,
   errorState,
+  quantitiesErrorState,
 } from './subscriptions.fixtures';
 import reducer from '../SubscriptionReducer';
 
@@ -32,5 +36,32 @@ describe('subscriptions reducer', () => {
       type: types.SUBSCRIPTIONS_FAILURE,
       error: 'Unable to process request.',
     })).toEqual(errorState);
+  });
+
+  it('should have error on UPDATE_QUANTITY_FAILURE', () => {
+    expect(reducer(initialState, {
+      type: types.UPDATE_QUANTITY_FAILURE,
+      error: 'Unable to process request.',
+    })).toEqual(errorState);
+  });
+
+  it('should flip quantitiesLoading on SUBSCRIPTIONS_QUANTITIES_REQUEST', () => {
+    expect(reducer(successState, {
+      type: types.SUBSCRIPTIONS_QUANTITIES_REQUEST,
+    })).toEqual(loadingQuantitiesState);
+  });
+
+  it('should flatten subscriptions response SUBSCRIPTIONS_QUANTITIES_SUCCESS', () => {
+    expect(reducer(loadingQuantitiesState, {
+      type: types.SUBSCRIPTIONS_QUANTITIES_SUCCESS,
+      response: quantitiesRequestSuccessResponse,
+    })).toEqual(quantitiesSuccessState);
+  });
+
+  it('should have error on SUBSCRIPTIONS_QUANTITIES_FAILURE', () => {
+    expect(reducer(successState, {
+      type: types.SUBSCRIPTIONS_QUANTITIES_FAILURE,
+      error: 'Unable to process request.',
+    })).toEqual(quantitiesErrorState);
   });
 });

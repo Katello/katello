@@ -8,29 +8,32 @@ const EmptyState = (props) => {
     header,
     description,
     customDocumentation,
-    documentationLabel = 'For more information please see',
-    documentationButton = 'Documentation',
+    documentationLabel = __('For more information please see'),
+    documentationButton = __('Documentation'),
     docUrl,
     action,
     secondayActions,
   } = props;
-  const defaultDocumantion = __(`${documentationLabel} <a href=${docUrl}>${documentationButton}</a>`);
+  const defaultDocumantion = `${documentationLabel} <a href=${docUrl}>${documentationButton}</a>`;
+  const showDocsLink = !!(docUrl || customDocumentation);
 
   return (
     <PfEmptyState>
       <PfEmptyState.Icon type="pf" name={icon} />
       <PfEmptyState.Title>{header}</PfEmptyState.Title>
       <PfEmptyState.Info>{description}</PfEmptyState.Info>
-      <PfEmptyState.Help>
-        {customDocumentation || <span dangerouslySetInnerHTML={{ __html: defaultDocumantion }} />}
-      </PfEmptyState.Help>
-      <PfEmptyState.Action>
-        {action && (
+      {showDocsLink && (
+        <PfEmptyState.Help>
+          {customDocumentation || <span dangerouslySetInnerHTML={{ __html: defaultDocumantion }} />}
+        </PfEmptyState.Help>
+      )}
+      {action && (
+        <PfEmptyState.Action>
           <Button href={action.url} bsStyle="primary" bsSize="large">
             {action.title}
           </Button>
-        )}
-      </PfEmptyState.Action>
+        </PfEmptyState.Action>
+      )}
       {secondayActions && (
         <PfEmptyState.Action secondary>
           {secondayActions.map(item => (

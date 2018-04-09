@@ -1,37 +1,10 @@
 import React from 'react';
 import { Icon } from 'patternfly-react';
 import helpers from '../../move_to_foreman/common/helpers';
-import {
-  selectionHeaderCellFormatter,
-  selectionCellFormatter,
-  headerFormat,
-  cellFormat,
-} from '../../move_to_foreman/components/common/table';
+import { headerFormat, cellFormat } from '../../move_to_foreman/components/common/table';
+import { entitlementsInlineEditFormatter } from './EntitlementsInlineEditFormatter';
 
-export const columns = [
-  {
-    property: 'select',
-    header: {
-      label: 'Select all rows',
-      props: {
-        index: 0,
-        rowSpan: 1,
-        colSpan: 1,
-      },
-      customFormatters: [selectionHeaderCellFormatter],
-    },
-    cell: {
-      props: {
-        index: 0,
-      },
-      formatters: [
-        (value, { rowData, rowIndex }) => selectionCellFormatter(
-          { rowData, rowIndex },
-          () => {},
-        ),
-      ],
-    },
-  },
+export const columns = inlineEditController => [
   {
     property: 'id',
     header: {
@@ -139,7 +112,7 @@ export const columns = [
     },
   },
   {
-    property: 'entitlements',
+    property: 'quantity',
     header: {
       label: __('Entitlements'),
       formatters: [headerFormat],
@@ -149,11 +122,7 @@ export const columns = [
     },
     cell: {
       formatters: [
-        (value, { rowData }) => (
-          <td>
-            {rowData.available === -1 ? __('Unlimited') : rowData.consumed }
-          </td>
-        ),
+        entitlementsInlineEditFormatter(inlineEditController),
       ],
     },
   },
