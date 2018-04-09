@@ -92,7 +92,8 @@ module Katello
       end
 
       def pulp_url
-        "#{url}/pulp/api/v2/"
+        uri = URI.parse(url)
+        "#{uri.scheme}://#{uri.host}/pulp/api/v2/"
       end
 
       def default_capsule?
