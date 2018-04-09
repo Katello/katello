@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { bindMethods, Alert, Button, Icon, Modal, ProgressBar, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 
-import Table from '../../../move_to_foreman/components/common/table';
+import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
 
 class ManageManifestModal extends Component {

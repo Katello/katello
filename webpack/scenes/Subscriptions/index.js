@@ -7,6 +7,7 @@ import * as taskActions from '../Tasks/TaskActions';
 import reducer from './SubscriptionReducer';
 
 import SubscriptionsPage from './SubscriptionsPage';
+import './Subscriptions.scss';
 
 // map state to props
 const mapStateToProps = state => ({

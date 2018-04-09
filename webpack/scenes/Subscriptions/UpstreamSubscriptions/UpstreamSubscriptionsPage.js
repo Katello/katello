@@ -4,11 +4,10 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { bindMethods, Button, Spinner } from 'patternfly-react';
-import Table from '../../../move_to_foreman/components/common/table';
+import { bindMethods, Button, Spinner, customHeaderFormattersDefinition } from 'patternfly-react';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';
-import PaginationRow from '../../../components/PaginationRow/index';
+import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './UpstreamSubscriptionsTableSchema';
 
 class UpstreamSubscriptionsPage extends Component {
@@ -216,6 +215,10 @@ class UpstreamSubscriptionsPage extends Component {
       },
     });
 
+    const tableColumns = columns(this);
+    const sortingColumns = {};
+    const rows = getSelectedUpstreamSubscriptions();
+
     return (
       <Grid bsClass="container-fluid">
         <h1>{__('Add Subscriptions')}</h1>
@@ -224,16 +227,25 @@ class UpstreamSubscriptionsPage extends Component {
           <Row>
             <Col sm={12}>
               <Table
-                rows={getSelectedUpstreamSubscriptions()}
-                columns={columns(this)}
+                rows={rows}
+                columns={tableColumns}
                 emptyState={emptyStateData()}
-                onSelectAllRows={this.onSelectAllRows}
-              />
-              <PaginationRow
-                viewType="table"
+                // TODO: should be replaced with custom formatters
+                components={{
+                  header: {
+                    cell: cellProps =>
+                      customHeaderFormattersDefinition({
+                        cellProps,
+                        columns: tableColumns,
+                        sortingColumns,
+                        rows,
+                        onSelectAllRows: this.onSelectAllRows,
+                      }),
+                  },
+                }}
                 itemCount={upstreamSubscriptions.itemCount}
                 pagination={upstreamSubscriptions.pagination}
-                onChange={onPaginationChange}
+                onPaginationChange={onPaginationChange}
               />
             </Col>
           </Row>
