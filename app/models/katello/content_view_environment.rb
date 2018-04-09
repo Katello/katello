@@ -8,11 +8,12 @@ module Katello
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_environments
     belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :content_view_environments
     belongs_to :content_view_version, :class_name => "Katello::ContentViewVersion",
-                                      :inverse_of => :content_view_environments
+               :inverse_of => :content_view_environments
 
     validates_lengths_from_database
     validates :environment_id, uniqueness: {scope: :content_view_id}, presence: true
     validates :content_view_id, presence: true
+    validates_with Validators::ContentViewEnvironmentOrgValidator
 
     before_save :generate_info
 
