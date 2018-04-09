@@ -10,6 +10,7 @@ module Katello
       @dev = KTEnvironment.find(katello_environments(:dev).id)
       @test = KTEnvironment.find(katello_environments(:test).id)
       @beta = KTEnvironment.find(katello_environments(:beta).id)
+      @candlepin_dev = KTEnvironment.find(katello_environments(:candlepin_dev).id)
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library_view = ContentView.find(katello_content_views(:library_view).id)
       @composite_version = ContentViewVersion.find(katello_content_view_versions(:composite_view_version_1).id)
@@ -252,6 +253,24 @@ module Katello
       content_view_version = FactoryBot.create(:katello_content_view_version)
       post :promote, params: { :id => content_view_version.id }
       assert_response 400
+    end
+
+    def test_promote_outside_org
+      version = @library_dev_staging_view.versions.first
+      post :promote, params: { :id => version.id, :environment_id => [@candlepin_dev.id], :force => 1, :description => 'test with param environment_id outside org' }
+      assert_response 422
+    end
+
+    def test_promote_outside_org_with_ids_param
+      version = @library_dev_staging_view.versions.first
+      post :promote, params: { :id => version.id, :environment_ids => [@candlepin_dev.id], :force => 1, :description => 'test with param environment_ids outside org' }
+      assert_response 422
+    end
+
+    def test_promote_multiple_outside_org
+      version = @library_dev_staging_view.versions.first
+      post :promote, params: { :id => version.id, :environment_ids => [@beta.id, @candlepin_dev.id], :force => 1, :description => 'test with multiple environment_ids outside org' }
+      assert_response 422
     end
 
     def test_incremental_update
