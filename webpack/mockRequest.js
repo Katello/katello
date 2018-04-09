@@ -10,6 +10,8 @@ const methods = {
   DELETE: 'onDelete',
 };
 
+const errorResponse = msg => ({ displayMessage: msg });
+
 export const mockRequest = ({
   method = 'GET',
   url,
@@ -17,5 +19,14 @@ export const mockRequest = ({
   status = 200,
   response = null,
 }) => mock[methods[method]](url, data).reply(status, response);
+
+export const mockErrorRequest = ({
+  status = 500,
+  ...options
+}) => mockRequest({
+  response: errorResponse(`Request failed with status code ${status}`),
+  status,
+  ...options,
+});
 
 export const mockReset = () => mock.reset();

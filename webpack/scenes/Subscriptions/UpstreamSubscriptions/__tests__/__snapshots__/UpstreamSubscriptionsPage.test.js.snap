@@ -154,6 +154,13 @@ exports[`upstream subscriptions page should render 1`] = `
               },
             ]
           }
+          components={
+            Object {
+              "header": Object {
+                "cell": [Function],
+              },
+            }
+          }
           emptyState={
             Object {
               "action": Object {
@@ -169,7 +176,14 @@ exports[`upstream subscriptions page should render 1`] = `
               "header": "There are no Subscription Allocations to display",
             }
           }
-          onSelectAllRows={[Function]}
+          itemCount={2}
+          onPaginationChange={[Function]}
+          pagination={
+            Object {
+              "page": 1,
+              "perPage": 20,
+            }
+          }
           rows={
             Array [
               Object {
@@ -198,32 +212,6 @@ exports[`upstream subscriptions page should render 1`] = `
               },
             ]
           }
-        />
-        <PaginationRow
-          className=""
-          dropdownButtonId="pagination-row-dropdown"
-          itemCount={2}
-          messages={
-            Object {
-              "currentPage": "Current Page",
-              "firstPage": "First Page",
-              "lastPage": "Last Page",
-              "nextPage": "Next Page",
-              "of": "of",
-              "perPage": "per page",
-              "previousPage": "Previous Page",
-            }
-          }
-          onChange={[Function]}
-          onPageSet={[Function]}
-          onPerPageSelect={[Function]}
-          pagination={
-            Object {
-              "page": 1,
-              "perPage": 20,
-            }
-          }
-          viewType="table"
         />
       </Col>
     </Row>
