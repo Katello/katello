@@ -320,6 +320,7 @@ Katello::Engine.routes.draw do
           api_resources :upstream_subscriptions, only: [:index, :create] do
             collection do
               delete :destroy
+              put :update
             end
           end
         end

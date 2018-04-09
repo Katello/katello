@@ -90,5 +90,26 @@ module Katello
                                 organization_id: @organization.id }
       end
     end
+
+    def test_update
+      pools = [{"id" => "12345", "quantity" => 5}]
+
+      assert_async_task ::Actions::Katello::UpstreamSubscriptions::UpdateEntitlements do |poolz|
+        poolz.must_equal pools
+      end
+
+      put :update, params: { organization_id: @organization.id, pools: pools }
+
+      assert_response :success
+    end
+
+    def test_update_protected
+      allowed_perms = [permission]
+      denied_perms = []
+
+      assert_protected_action(:update, allowed_perms, denied_perms, [@organization]) do
+        put :update, params: { organization_id: @organization.id, pools: [] }
+      end
+    end
   end
 end
