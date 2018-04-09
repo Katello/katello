@@ -55,13 +55,15 @@ class Api::V2::HostsControllerTest < ActionController::TestCase
     Katello::Candlepin::Consumer.any_instance.stubs(:installed_products).returns([])
 
     host = FactoryBot.create(:host, :with_subscription)
-    host.subscription_facet.update_attributes!(:autoheal => true)
+    host.subscription_facet.update_attributes!(:autoheal => true,
+                                               :installed_products_attributes => [{:product_name => 'foo', :version => '6', :product_id => '69'}])
 
     put :update, params: { :id => host.id, :subscription_facet_attributes => {:autoheal => false} }
 
     assert_response :success
 
     refute host.reload.subscription_facet.reload.autoheal
+    assert_equal 'foo', host.subscription_facet.installed_products.first.name
   end
 
   def test_with_smartproxy

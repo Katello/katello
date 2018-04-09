@@ -22,6 +22,8 @@ module Katello
 
       DEFAULT_TYPE = 'system'.freeze
 
+      accepts_nested_attributes_for :installed_products
+
       attr_accessor :facts
 
       def update_from_consumer_attributes(consumer_params)
