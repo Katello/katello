@@ -104,192 +104,19 @@ exports[`subscriptions page should render 1`] = `
         onClose={[Function]}
         showModal={false}
       />
-      <Spinner
-        className="small-spacer"
-        inline={false}
-        inverse={false}
-        loading={false}
-        size="md"
-      >
-        <Table
-          columns={
-            Array [
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "props": Object {
-                    "index": 0,
-                  },
-                },
-                "header": Object {
-                  "customFormatters": Array [
-                    [Function],
-                  ],
-                  "label": "Select all rows",
-                  "props": Object {
-                    "colSpan": 1,
-                    "index": 0,
-                    "rowSpan": 1,
-                  },
-                },
-                "property": "select",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "Name",
-                  "props": Object {
-                    "index": 1,
-                  },
-                },
-                "property": "id",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "SKU",
-                  "props": Object {
-                    "index": 2,
-                  },
-                },
-                "property": "product_id",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "Contract",
-                  "props": Object {
-                    "index": 3,
-                  },
-                },
-                "property": "contract_number",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "Start Date",
-                  "props": Object {
-                    "index": 4,
-                  },
-                },
-                "property": "start_date",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "End Date",
-                  "props": Object {
-                    "index": 5,
-                  },
-                },
-                "property": "end_date",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "Requires Virt-Who",
-                  "props": Object {
-                    "index": 6,
-                  },
-                },
-                "property": "virt_who",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "Consumed",
-                  "props": Object {
-                    "index": 7,
-                  },
-                },
-                "property": "consumed",
-              },
-              Object {
-                "cell": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                },
-                "header": Object {
-                  "formatters": Array [
-                    [Function],
-                  ],
-                  "label": "Entitlements",
-                  "props": Object {
-                    "index": 8,
-                  },
-                },
-                "property": "entitlements",
-              },
-            ]
-          }
-          emptyState={
-            Object {
-              "action": Object {
-                "title": "Add Subscriptions",
-                "url": "subscriptions/add",
-              },
-              "description": "Add Subscriptions to this Allocation to manage your Entitlements.",
-              "documentation": Object {
-                "title": "Learn more about adding Subscriptions to Allocations",
-                "url": "http://redhat.com",
-              },
-              "header": "There are no Subscriptions to display",
-            }
-          }
-          rows={
-            Array [
+      <SubscriptionsTable
+        loadSubscriptions={[Function]}
+        subscriptions={
+          Object {
+            "availableQuantities": Object {},
+            "itemCount": 81,
+            "loading": false,
+            "pagination": Object {
+              "page": 1,
+              "perPage": 2,
+            },
+            "quantitiesLoading": false,
+            "results": Array [
               Object {
                 "account_number": null,
                 "available": -2,
@@ -342,36 +169,13 @@ exports[`subscriptions page should render 1`] = `
                 "virt_only": false,
                 "virt_who": false,
               },
-            ]
+            ],
+            "search": undefined,
+            "searchIsActive": false,
           }
-        />
-        <PaginationRow
-          className=""
-          dropdownButtonId="pagination-row-dropdown"
-          itemCount={81}
-          messages={
-            Object {
-              "currentPage": "Current Page",
-              "firstPage": "First Page",
-              "lastPage": "Last Page",
-              "nextPage": "Next Page",
-              "of": "of",
-              "perPage": "per page",
-              "previousPage": "Previous Page",
-            }
-          }
-          onChange={[Function]}
-          onPageSet={[Function]}
-          onPerPageSelect={[Function]}
-          pagination={
-            Object {
-              "page": 1,
-              "perPage": 2,
-            }
-          }
-          viewType="table"
-        />
-      </Spinner>
+        }
+        updateQuantity={[Function]}
+      />
     </Col>
   </Row>
 </Grid>

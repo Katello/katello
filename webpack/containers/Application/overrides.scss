@@ -13,3 +13,10 @@ html .pagination-pf-pagesize.btn-group {
 .table + .table-view-pf-pagination {
   margin-top: -6px !important;
 }
+
+// override foreman's .editable styles, that are conflicting with the patternfly ones
+.pf-table-inline-edit {
+  .editable {
+    background: none;
+  }
+}
