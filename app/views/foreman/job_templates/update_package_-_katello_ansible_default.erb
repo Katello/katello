@@ -1,0 +1,16 @@
+<%#
+name: Update Package - Katello Ansible Default
+snippet: false
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Update package(s) %{package}
+template_inputs:
+- name: package
+  required: true
+  input_type: user
+  advanced: false
+provider_type: Ansible
+kind: job_template
+%>
+
+<%= render_template('Run Command - Ansible Default', :command => "yum update #{input('package')}") %>

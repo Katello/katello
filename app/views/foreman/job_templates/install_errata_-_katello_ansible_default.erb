@@ -1,0 +1,18 @@
+<%#
+name: Install Errata - Katello Ansible Default
+snippet: false
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Install errata %{errata}
+template_inputs:
+- name: errata
+  required: true
+  input_type: user
+  description: A comma separated list of errata to install
+  advanced: false
+provider_type: Ansible
+kind: job_template
+%>
+
+<% advisories = input(:errata).split(',').map { |e| "--advisory=#{e}" }.join(' ') %>
+<%= render_template('Run Command - Ansible Default', :command => "yum update-minimal #{advisories}") %>

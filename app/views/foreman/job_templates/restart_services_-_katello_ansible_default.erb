@@ -1,0 +1,20 @@
+<%#
+name: Restart Services - Katello Ansible Default
+snippet: false
+model: JobTemplate
+job_category: Katello via Ansible
+description_format: Restart Services
+template_inputs:
+- name: helper
+  required: true
+  input_type: user
+  description: A comma separated list of commands to run to restart services
+  advanced: false
+provider_type: Ansible
+kind: job_template
+%>
+
+<%= render_template(
+  'Run Command - Ansible Default',
+  :command => "#{input(:helper)},katello-tracer-upload".split(',').map {|split| "#{split}" }.join("\n")
+) %>
