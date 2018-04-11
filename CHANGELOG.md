@@ -1,6 +1,10 @@
-# 3.6.0 Imperial IPA (2018-03-23)
+# 3.6.0 Imperial IPA (2018-04-11)
 
 ## Features 
+
+### Content View Optimizations 
+
+Performance improvements across the board have brought up to a 50% improvement in Content View Publishes, 95% improvement in Promotions, and a 95% improvement in Composite Content View publishes.
 
 ### Content Views
  * ISO repositories not published to correct path ([#22446](http://projects.theforeman.org/issues/22446), [9c93fadc](http://github.com/katello/katello/commit/9c93fadc85b7fd58e033ba29623393fe9d606d65), [ef10bf44](http://github.com/katello/katello-installer/commit/ef10bf44def31dd8e74a0a9a17808822ba0f096e))
@@ -66,9 +70,9 @@
  * Specify "X-Correlation-ID" header for log correlation when making REST calls to Candlepin ([#20488](http://projects.theforeman.org/issues/20488), [24a58d78](http://github.com/katello/katello/commit/24a58d78b180e7456ec2c7e95466bab883ffb9c9))
  * CSV export on Content Host page ([#19954](http://projects.theforeman.org/issues/19954), [6362c738](http://github.com/katello/katello/commit/6362c738f721131630c8b0a317c4040e39e53b92))
  * Notification for low disk space on Pulp ([#19302](http://projects.theforeman.org/issues/19302), [eb45afa5](http://github.com/katello/katello/commit/eb45afa5d279cc8248e950a270d93ea69451b18a))
- * Notification for subscriptions expiring soon  ([#19314](http://projects.theforeman.org/issues/19314), [390b0967](http://github.com/katello//commit/390b09672a64cf88a84ef7b8411f771ef2ba948c))
+ * Notification for subscriptions expiring soon  ([#19314](http://projects.theforeman.org/issues/19314), [390b0967](http://github.com/katello/katello/commit/390b09672a64cf88a84ef7b8411f771ef2ba948c))
 
-## Bug Fixes
+## Bug Fixes 
 
 ### Tests
  * Rubocop can fail when there is ruby inside node_modules/ ([#22494](http://projects.theforeman.org/issues/22494), [76ecc59f](http://github.com/katello/katello/commit/76ecc59fa39e2c373c797bd6337b387a5c2d3822))
@@ -87,6 +91,7 @@
  * transient test failure ([#19351](http://projects.theforeman.org/issues/19351), [b3bc464b](http://github.com/katello/katello/commit/b3bc464b7a8ae2a15682a126f181e7edd1770134))
  * Tests relying on stubbing settings must be updated for external auth source seeding ([#19174](http://projects.theforeman.org/issues/19174), [e97a3d3c](http://github.com/katello/katello/commit/e97a3d3c7c1e0eecd45ab469cb87f5330d575219))
  * Ignore Javascript files in source code test for i18n ([#22576](http://projects.theforeman.org/issues/22576), [f5894f21](http://github.com/katello/katello/commit/f5894f21f15c8f755ea94aecfc3689e74095e9af))
+ * Resolving content_view_version_ids is broken ([#22824](http://projects.theforeman.org/issues/22824), [57a61889](http://github.com/katello/hammer-cli-katello/commit/57a61889426f04cf8cc6db85ec40133daaa8aa0c))
 
 ### Installer
  * [ RFE ] add mgmt-pub param to qpidd.conf ([#22465](http://projects.theforeman.org/issues/22465), [e1ce860f](http://github.com/katello//commit/e1ce860fc3f95dc62630e47bf59f10e84da6393c))
@@ -294,6 +299,7 @@
  * Update the help description for "--sync-date" option in hammer. ([#20613](http://projects.theforeman.org/issues/20613), [59ab7402](http://github.com/katello/hammer-cli-katello/commit/59ab74029d44befde9a0037591e3cffd493eb82f))
  * Hammer hostgroup not updating by title when katello plugin is installed ([#20433](http://projects.theforeman.org/issues/20433), [a137840f](http://github.com/katello/hammer-cli-katello/commit/a137840f12c48d759ee6edb1554cc6d905c7e7ac))
  * hammer --nondefault ignores the value passed to it and always filter out "Default Organization View" ([#19749](http://projects.theforeman.org/issues/19749), [3438db63](http://github.com/katello/katello/commit/3438db63119c7bc56c99adf359ccffcf84955582))
+ * Can't create a hostgroup, organization error ([#22517](http://projects.theforeman.org/issues/22517), [a0ce4454](http://github.com/katello/hammer-cli-katello/commit/a0ce44549a0c108ef629b2a9d248ca58316f9ba3))
 
 ### Performance
  * allow system registrations to happen without waiting on tasks to complete ([#21703](http://projects.theforeman.org/issues/21703), [cd11688a](http://github.com/katello/katello/commit/cd11688ac6acc70b18a87c112ad7604997de9b4c), [f113791d](http://github.com/katello/katello-installer/commit/f113791d295974c4530a99960fa35b017e26e9e0))
