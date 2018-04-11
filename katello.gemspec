@@ -13,7 +13,8 @@ Gem::Specification.new do |gem|
   gem.summary     = ""
   gem.description = "Content and Subscription Management plugin for Foreman"
 
-  gem.files = Dir["{app,vendor,lib,db,ca,config,locale}/**/*"] + ["LICENSE.txt", "README.md"]
+  gem.files = Dir["{app,webpack,vendor,lib,db,ca,config,locale}/**/*"] +
+    ['LICENSE.txt', 'README.md', 'package.json']
   gem.files += Dir["engines/bastion_katello/{app,vendor,lib,config}/**/*"]
   gem.files += Dir["engines/bastion_katello/{README.md}"]
   gem.files -= ["lib/katello/tasks/annotate_scenarios.rake"]
