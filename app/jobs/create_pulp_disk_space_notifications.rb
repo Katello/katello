@@ -6,4 +6,8 @@ class CreatePulpDiskSpaceNotifications < ApplicationJob
   def perform
     Katello::UINotifications::Pulp::ProxyDiskSpace.deliver!
   end
+
+  def humanized_name
+    _('Pulp disk space notification')
+  end
 end

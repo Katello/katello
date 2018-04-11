@@ -6,4 +6,8 @@ class SendExpireSoonNotifications < ApplicationJob
   def perform
     Katello::UINotifications::Subscriptions::ExpireSoon.deliver!
   end
+
+  def humanized_name
+    _('Subscription expiration notification')
+  end
 end
