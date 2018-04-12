@@ -391,6 +391,11 @@ module Katello
       end
     end
 
+    def test_products
+      refute_empty @library_view.products
+      refute_empty @library_view.products.redhat
+    end
+
     def test_add_repository_from_other_view
       view = @library_view
       bad_repo = Repository.find(katello_repositories(:fedora_17_x86_64_library_view_1).id)

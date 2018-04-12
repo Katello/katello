@@ -353,16 +353,6 @@ module Katello
       Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).distinct
     end
 
-    def version_products(env)
-      repos = repos(env)
-      Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).distinct
-    end
-
-    #list all products associated to this view across all versions
-    def all_version_products
-      Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => self.all_version_repos).distinct
-    end
-
     #get the library instances of all repos within this view
     def all_version_library_instances
       all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Katello::Repository.table_name}.id")
