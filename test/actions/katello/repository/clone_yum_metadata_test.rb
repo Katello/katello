@@ -4,7 +4,7 @@ module Actions
   describe Katello::Repository::CloneYumMetadata do
     include Dynflow::Testing
     include Support::Actions::Fixtures
-    include FactoryBot::Syntax::Methods
+    include FactoryGirl::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::CloneYumMetadata }
     let(:metadata_gen) { ::Actions::Katello::Repository::MetadataGenerate }
@@ -48,7 +48,7 @@ module Actions
 
     it 'plans to clone the metadata if unprotected changed' do
       action = create_action(action_class)
-      environment_repo.update_attributes!(:unprotected => !environment_repo.unprotected)
+      environment_repo.stubs(:previous_changes).returns(unprotected: [false, true])
       plan_action(action, archive_repo, environment_repo)
 
       refute_action_planed(action, Katello::Repository::CheckMatchingContent)

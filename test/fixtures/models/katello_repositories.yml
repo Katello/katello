@@ -168,6 +168,23 @@ rhel_6_x86_64_dev:
   url:                 'https://cdn.example.com/rhel/6/os'
   download_policy: on_demand
 
+rhel_6_x86_64_dev_archive:
+  name:                 RHEL 6 x86_64
+  pulp_id:              8_arch
+  content_id:           69
+  major:                6
+  minor:                6Server
+  content_type:         yum
+  label:                rhel_6_x86_64_label
+  relative_path:        'ACME_Corporation/library/rhel_6_label'
+  url:                 'https://cdn.example.com/rhel/6/os'
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
+  url:                 'https://cdn.example.com/rhel/6/os'
+  download_policy: on_demand
+
 fedora_17_no_arch:
   name:                 Fedora 17 no arch
   pulp_id:              1
