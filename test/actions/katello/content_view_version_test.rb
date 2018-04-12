@@ -59,8 +59,8 @@ module ::Actions::Katello::ContentViewVersion
       katello_content_view_versions(:library_view_version_2)
     end
 
-    let(:library_repo) do
-      katello_repositories(:fedora_17_x86_64_library_view_2)
+    let(:library_repos) do
+      [katello_repositories(:rhel_6_x86_64_dev_archive), katello_repositories(:fedora_17_x86_64_library_view_2)]
     end
 
     it 'plans' do

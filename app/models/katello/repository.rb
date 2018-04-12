@@ -515,7 +515,7 @@ module Katello
     end
 
     def exist_for_environment?(environment, content_view, attribute = nil)
-      if environment.present?
+      if environment.present? && content_view.in_environment?(environment)
         repos = content_view.version(environment).repos(environment)
 
         repos.any? do |repo|
