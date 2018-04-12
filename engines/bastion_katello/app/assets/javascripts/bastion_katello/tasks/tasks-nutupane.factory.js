@@ -14,8 +14,13 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
     ['Task', 'Nutupane', function (Task, Nutupane) {
         var TasksNutupane = function () {
             var self = this;
+            var nutupaneParams = {
+                'disableAutoLoad': true
+            };
 
-            Nutupane.call(self, Task, {});
+
+            Nutupane.call(self, Task, {}, undefined, nutupaneParams);
+            self.table.working = true;
 
             self.existingTasks = {};
 

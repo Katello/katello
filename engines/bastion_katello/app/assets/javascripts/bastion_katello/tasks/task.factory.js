@@ -19,15 +19,12 @@
  */
 
 angular.module('Bastion.tasks').factory('Task',
-    ['BastionResource', '$timeout', '$log', '$q', 'CurrentOrganization',
-    function (BastionResource, $timeout, $log, $q, CurrentOrganization) {
+    ['BastionResource', '$timeout', '$log', '$q',
+    function (BastionResource, $timeout, $log, $q) {
         var bulkSearchRunning = false, searchIdGenerator = 0,
             searchParamsById = {}, callbackById = {}, pollCount = 0, maxPollInterval = 10000;
 
-        var resource = BastionResource('katello/api/v2/tasks/:id/:action',
-            {id: '@id', 'organization_id': CurrentOrganization}, {});
-
-        var foremanTasksResource = BastionResource('foreman_tasks/api/tasks/:id/:action',
+        var resource = BastionResource('foreman_tasks/api/tasks/:id/:action',
             {},
             {
                 bulkSearch: {method: 'POST', isArray: true, params: { action: 'bulk_search'}}
@@ -65,7 +62,7 @@ angular.module('Bastion.tasks').factory('Task',
                 bulkSearchRunning = false;
                 return;
             }
-            foremanTasksResource.bulkSearch(bulkSearchParams(), function (response) {
+            resource.bulkSearch(bulkSearchParams(), function (response) {
                 try {
                     _.each(response, function (tasksSearch) {
                         var searchId = tasksSearch['search_params']['search_id'];
