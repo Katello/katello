@@ -28,11 +28,11 @@ describe('Factory: Task', function() {
     });
 
     it('provides a way to get a list of tasks', function() {
-        $httpBackend.expectGET('katello/api/v2/tasks?full_result=true&organization_id=ACME')
-                    .respond(tasks);
+        $httpBackend.expectPOST('foreman_tasks/api/tasks/bulk_search')
+                    .respond(tasks.records);
 
-        Task.queryUnpaged(function(tasks) {
-            expect(tasks.records.length).toBe(1);
+        Task.bulkSearch(function(tasks) {
+            expect(tasks.length).toBe(1);
         });
     });
 
