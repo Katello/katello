@@ -79,9 +79,12 @@ angular.module('Bastion.tasks').directive('tasksTable',
                     }
                 });
 
-                scope.$watch('all', function () {
-                    scope.tasksNutupane.registerSearch({ 'type': 'all',
-                                                         'active_only': scope.activeOnly });
+                scope.$watch('all', function (all) {
+                    if (all) {
+                        scope.tasksNutupane.registerSearch({ 'type': 'all',
+                                                            'active_only': scope.activeOnly });
+
+                    }
                 });
 
                 element.bind('$destroy', function () {
