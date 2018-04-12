@@ -4,12 +4,12 @@
   scheduled_pulp_job = pending_jobs.select do |job|
     delayed_plan = world.persistence.load_delayed_plan job.id
     next if delayed_plan.blank?
-    delayed_plan.to_hash[:serialized_args].first["job_class"] == 'CreatePulpDiskSpaceNotifications'
+    delayed_plan.to_hash[:serialized_args].first.try(:[], 'job_class') == 'CreatePulpDiskSpaceNotifications'
   end
   scheduled_subs_expiration_job = pending_jobs.select do |job|
     delayed_plan = world.persistence.load_delayed_plan job.id
     next if delayed_plan.blank?
-    delayed_plan.to_hash[:serialized_args].first["job_class"] == 'SendExpireSoonNotifications'
+    delayed_plan.to_hash[:serialized_args].first.try(:[], 'job_class') == 'SendExpireSoonNotifications'
   end
 
   # Only create notifications if there isn't a scheduled job
