@@ -13,7 +13,7 @@ module Actions
             ids.each do |pid|
               pool = ::Katello::Pool.find(pid)
 
-              fail("Provided pool with id #{pid} has no upstream entitlement") if pool.upstream_entitlement_id.nil?
+              fail _("Provided pool with id %s has no upstream entitlement" % pid) if pool.upstream_entitlement_id.nil?
 
               plan_action(::Actions::Katello::UpstreamSubscriptions::RemoveEntitlement, entitlement_id: pool.upstream_entitlement_id)
             end

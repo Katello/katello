@@ -39,12 +39,12 @@ describe ::Actions::Katello::UpstreamSubscriptions::RemoveEntitlements do
     error.message.must_match(/upstream/)
   end
 
-  it 'raises an error when given no entitlement ids' do
+  it 'raises an error when given no pool ids' do
     error = proc { plan_action(@action, []) }.must_raise RuntimeError
     error.message.must_match(/provided/)
   end
 
-  it 'raises an error when organization is set' do
+  it 'raises an error when no organization is set' do
     set_organization(nil)
     error = proc { plan_action(@action, [:foo]) }.must_raise RuntimeError
     error.message.must_match(/is not set/)
