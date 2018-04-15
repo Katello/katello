@@ -79,7 +79,7 @@ function ktSetParam(name, value) {
         if(! paramContainer) { // we create the param for kt_activation_keys
             $("div#parameters a[target~='#global_parameters_table']").click();
             paramContainer = $("div#parameters .fields").last();
-            paramContainer.find("input").val(name);
+            paramContainer.find("input[name*='name']").val(name);
         }
         paramContainer.find("textarea").val(value);
     } else if(paramContainer) {
