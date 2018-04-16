@@ -53,6 +53,6 @@ angular.module('Bastion.subscriptions').controller('SubscriptionDetailsControlle
             return "";
         };
 
-        $scope.virtWhoToolTip = translate("If the virt-who field is Yes then the subscription requires the use of virt-who. Learn how to configure and use this tool at the <a href=\"https://access.redhat.com/articles/subscription-management-satellite-6\">Subscription Management Home Page</a>.");
+        $scope.virtWhoToolTip = translate("If the virt-who field is Yes then the subscription requires the use of virt-who. Learn how to configure and use this tool at the <a href=\"https://access.redhat.com/articles/subscription-management-satellite-6\" target=\"_blank\">Subscription Management Home Page</a>.");
     }]
 );
