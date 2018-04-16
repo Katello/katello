@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
+import TooltipButton from 'react-bootstrap-tooltip-button';
 import ManageManifestModal from './Manifest/';
 import SubscriptionsTable from './SubscriptionsTable';
 import Search from '../../components/Search/index';
@@ -27,6 +28,22 @@ class SubscriptionsPage extends Component {
     this.loadData();
   }
 
+  getDisabledReason(deleteButton) {
+    const { tasks, subscriptions } = this.props;
+    const { disconnected } = subscriptions;
+    let disabledReason = null;
+
+    if (disconnected) {
+      disabledReason = __('This is disabled because disconnected mode is enabled.');
+    } else if (tasks.length > 0) {
+      disabledReason = __('This is disabled because a manifest related task is in progress.');
+    } else if (deleteButton && !disabledReason) {
+      disabledReason = __('This is disabled because no subscriptions are selected');
+    }
+
+    return disabledReason;
+  }
+
   loadData() {
     this.props.pollBulkSearch({
       search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
@@ -34,12 +51,15 @@ class SubscriptionsPage extends Component {
       active_only: true,
       action_types: BLOCKING_FOREMAN_TASK_TYPES,
     }, BULK_TASK_SEARCH_INTERVAL);
+
+    this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
   }
 
   render() {
-    const { tasks } = this.props;
-    const taskInProgress = tasks.length > 0;
+    const { tasks, subscriptions } = this.props;
+    const { disconnected } = subscriptions;
+    const disableManifestActions = tasks.length > 0 || disconnected;
 
     const onSearch = (search) => {
       this.props.loadSubscriptions({ search });
@@ -93,13 +113,18 @@ class SubscriptionsPage extends Component {
 
                   <div className="toolbar-pf-action-right">
                     <FormGroup>
-                      <LinkContainer to="subscriptions/add">
-                        <Button bsStyle="primary">
-                          {__('Add Subscriptions')}
-                        </Button>
+                      <LinkContainer to="subscriptions/add" disabled={disableManifestActions}>
+                        <TooltipButton
+                          tooltipId="add-subscriptions-button-tooltip"
+                          tooltipText={this.getDisabledReason()}
+                          tooltipPlacement="top"
+                          title={__('Add Subscriptions')}
+                          disabled={disableManifestActions}
+                          bsStyle="primary"
+                        />
                       </LinkContainer>
 
-                      <Button disabled={taskInProgress} onClick={showManageManifestModal}>
+                      <Button onClick={showManageManifestModal}>
                         {__('Manage Manifest')}
                       </Button>
 
@@ -107,22 +132,29 @@ class SubscriptionsPage extends Component {
                         {__('Export CSV')}
                       </Button>
 
-                      <Button
+                      <TooltipButton
                         bsStyle="danger"
                         onClick={showSubscriptionDeleteModal}
-                        disabled={taskInProgress || this.state.disableDeleteButton}
-                      >
-                        {__('Delete')}
-                      </Button>
+                        tooltipId="delete-subscriptions-button-tooltip"
+                        tooltipText={this.getDisabledReason(true)}
+                        tooltipPlacement="top"
+                        title={__('Delete')}
+                        disabled={disableManifestActions || this.state.disableDeleteButton}
+                      />
+
                     </FormGroup>
                   </div>
                 </Form>
               </Col>
             </Row>
+
             <ManageManifestModal
               showModal={this.state.manifestModalOpen}
+              disableManifestActions={disableManifestActions}
+              disabledReason={this.getDisabledReason()}
               onClose={onManageManifestModalClose}
             />
+
             <SubscriptionsTable
               loadSubscriptions={this.props.loadSubscriptions}
               updateQuantity={this.props.updateQuantity}
@@ -142,8 +174,9 @@ class SubscriptionsPage extends Component {
 SubscriptionsPage.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
-  subscriptions: PropTypes.shape({}).isRequired,
+  subscriptions: PropTypes.shape().isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
+  loadSetting: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
 };
