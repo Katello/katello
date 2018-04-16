@@ -63,6 +63,15 @@ class Api {
 
 export default new Api();
 
+class ForemanApi extends Api {
+  constructor() {
+    super();
+    this.baseApiPath = '/api/v2';
+  }
+}
+
+export const foremanApi = new ForemanApi();
+
 class ForemanTasksApi extends Api {
   constructor() {
     super();

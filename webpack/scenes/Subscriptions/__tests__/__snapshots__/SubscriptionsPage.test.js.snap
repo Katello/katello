@@ -57,15 +57,13 @@ exports[`subscriptions page should render 1`] = `
                   strict={false}
                   to="subscriptions/add"
                 >
-                  <Button
-                    active={false}
-                    block={false}
-                    bsClass="btn"
+                  <TooltipButton
                     bsStyle="primary"
-                    disabled={false}
-                  >
-                    Add Subscriptions
-                  </Button>
+                    title="Add Subscriptions"
+                    tooltipId="add-subscriptions-button-tooltip"
+                    tooltipPlacement="top"
+                    tooltipText={null}
+                  />
                 </LinkContainer>
                 <Button
                   active={false}
@@ -86,22 +84,22 @@ exports[`subscriptions page should render 1`] = `
                 >
                   Export CSV
                 </Button>
-                <Button
-                  active={false}
-                  block={false}
-                  bsClass="btn"
+                <TooltipButton
                   bsStyle="danger"
                   disabled={true}
                   onClick={[Function]}
-                >
-                  Delete
-                </Button>
+                  title="Delete"
+                  tooltipId="delete-subscriptions-button-tooltip"
+                  tooltipPlacement="top"
+                  tooltipText="This is disabled because no subscriptions are selected"
+                />
               </FormGroup>
             </div>
           </Form>
         </Col>
       </Row>
       <Connect(ManageManifestModal)
+        disabledReason={null}
         onClose={[Function]}
         showModal={false}
       />

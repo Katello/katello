@@ -51,6 +51,7 @@ export class Table extends React.Component {
 
   render() {
     const { columns, rows, emptyState, bodyMessage, children, itemCount, pagination, onPaginationChange, ...otherProps } = this.props;
+    let { sortingColumns } = this.props;
 
     let paginationComponent;
     if (itemCount && pagination) {
@@ -74,6 +75,8 @@ export class Table extends React.Component {
         <PfTable.Header />,
         <TableBody columns={columns} rows={rows} message={bodyMessage} rowKey="id" />,
       ];
+
+    sortingColumns = sortingColumns || {};
 
     return (
       <div>

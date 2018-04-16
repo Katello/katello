@@ -18,6 +18,7 @@ import {
   DELETE_SUBSCRIPTIONS_FAILURE,
   MANIFEST_TASKS_BULK_SEARCH_ID,
 } from './SubscriptionConstants';
+import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
 const initialState = Immutable({
   ...initialApiState,
@@ -43,7 +44,7 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_REQUEST:
     case UPDATE_QUANTITY_REQUEST:
     case DELETE_SUBSCRIPTIONS_REQUEST:
-      return state.set('loading', true).set('tasks', []);
+      return state.set('loading', true);
 
     case SUBSCRIPTIONS_SUCCESS: {
       const {
@@ -106,6 +107,14 @@ export default (state = initialState, action) => {
       }
 
       return state.set('tasks', tasks);
+    }
+
+    case GET_SETTING_SUCCESS: {
+      if (action.response.name === 'content_disconnected') {
+        return state.set('disconnected', action.response.value);
+      }
+
+      return state;
     }
 
     default:
