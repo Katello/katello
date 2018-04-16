@@ -14,7 +14,6 @@ export const initialState = Immutable({
 
 export const loadingState = Immutable({
   ...initialState,
-  tasks: [],
 });
 
 export const emptyState = Immutable({

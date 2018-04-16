@@ -150,26 +150,21 @@ exports[`manage manifest modal should render 1`] = `
                 onChange={[Function]}
                 type="file"
               />
-              <Button
-                active={false}
-                block={false}
-                bsClass="btn"
-                bsStyle="default"
+              <TooltipButton
                 disabled={false}
                 onClick={[Function]}
-              >
-                Refresh
-              </Button>
-              <Button
-                active={false}
-                block={false}
-                bsClass="btn"
-                bsStyle="default"
-                disabled={false}
+                title="Refresh"
+                tooltipId="refresh-manifest-button-tooltip"
+                tooltipPlacement="top"
+                tooltipText=""
+              />
+              <TooltipButton
                 onClick={[Function]}
-              >
-                Delete
-              </Button>
+                title="Delete"
+                tooltipId="delete-manifest-button-tooltip"
+                tooltipPlacement="top"
+                tooltipText="This is disabled because a manifest task is in progress."
+              />
             </Col>
           </FormGroup>
         </Form>
@@ -199,6 +194,9 @@ exports[`manage manifest modal should render 1`] = `
                       [Function],
                     ],
                     "label": "Status",
+                    "props": Object {
+                      "index": 0,
+                    },
                   },
                   "property": "status",
                 },
@@ -213,6 +211,9 @@ exports[`manage manifest modal should render 1`] = `
                       [Function],
                     ],
                     "label": "Message",
+                    "props": Object {
+                      "index": 1,
+                    },
                   },
                   "property": "statusMessage",
                 },
@@ -227,6 +228,9 @@ exports[`manage manifest modal should render 1`] = `
                       [Function],
                     ],
                     "label": "Timestamp",
+                    "props": Object {
+                      "index": 2,
+                    },
                   },
                   "property": "created",
                 },

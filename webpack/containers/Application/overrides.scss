@@ -20,3 +20,19 @@ html .pagination-pf-pagesize.btn-group {
     background: none;
   }
 }
+
+// needed to ensure correct spacing between buttons and the button
+// container
+.toolbar-pf .form-group {
+  .btn,
+  .btn-group,
+  .btn-container,
+  .tooltip-button-helper {
+    + .btn,
+    + .btn-group,
+    + .btn-container,
+    + .tooltip-button-helper {
+      margin-left: 5px;
+    }
+  }
+}
