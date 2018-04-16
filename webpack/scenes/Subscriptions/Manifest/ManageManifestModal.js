@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { bindMethods, Alert, Button, Icon, Modal, ProgressBar, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import TooltipButton from 'react-bootstrap-tooltip-button';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
 
@@ -58,9 +59,10 @@ class ManageManifestModal extends Component {
   }
 
   render() {
-    const { manifestHistory, organization, task } = this.props;
+    const {
+      manifestHistory, organization, disableManifestActions, disabledReason, task,
+    } = this.props;
 
-    const taskInProgress = task && task.pending;
 
     const emptyStateData = () => ({
       header: __('There is no Manifest History to display.'),
@@ -113,6 +115,7 @@ class ManageManifestModal extends Component {
       return alerts;
     };
 
+    const taskInProgress = task && task.pending;
     const getTaskProgress = () => Math.round(task.progress * 100);
 
     return (
@@ -174,12 +177,23 @@ class ManageManifestModal extends Component {
                       onChange={e => this.uploadManifest(e.target.files)}
                     />
 
-                    <Button disabled={taskInProgress} onClick={this.refreshManifest}>
-                      {__('Refresh')}
-                    </Button>
-                    <Button disabled={taskInProgress} onClick={this.deleteManifest}>
-                      {__('Delete')}
-                    </Button>
+                    <TooltipButton
+                      onClick={this.refreshManifest}
+                      tooltipId="refresh-manifest-button-tooltip"
+                      tooltipText={disabledReason}
+                      tooltipPlacement="top"
+                      title={__('Refresh')}
+                      disabled={taskInProgress || disableManifestActions}
+                    />
+
+                    <TooltipButton
+                      onClick={this.deleteManifest}
+                      tooltipId="delete-manifest-button-tooltip"
+                      tooltipText={__('This is disabled because a manifest task is in progress.')}
+                      tooltipPlacement="top"
+                      title={__('Delete')}
+                      disabled={taskInProgress}
+                    />
 
                     {taskInProgress ?
                       <ProgressBar
@@ -220,6 +234,8 @@ ManageManifestModal.propTypes = {
   deleteManifest: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
   organization: PropTypes.shape({}).isRequired,
+  disableManifestActions: PropTypes.bool,
+  disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
   saveOrganization: PropTypes.func.isRequired,
   task: PropTypes.shape({}),
@@ -229,6 +245,8 @@ ManageManifestModal.propTypes = {
 };
 
 ManageManifestModal.defaultProps = {
+  disableManifestActions: false,
+  disabledReason: '',
   onClose() {},
   task: {},
 };

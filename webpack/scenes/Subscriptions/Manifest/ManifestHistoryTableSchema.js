@@ -6,6 +6,9 @@ export const columns = [
     header: {
       label: __('Status'),
       formatters: [headerFormat],
+      props: {
+        index: 0,
+      },
     },
     cell: {
       formatters: [cellFormat],
@@ -16,6 +19,9 @@ export const columns = [
     header: {
       label: __('Message'),
       formatters: [headerFormat],
+      props: {
+        index: 1,
+      },
     },
     cell: {
       formatters: [cellFormat],
@@ -27,6 +33,9 @@ export const columns = [
     header: {
       label: __('Timestamp'),
       formatters: [headerFormat],
+      props: {
+        index: 2,
+      },
     },
     cell: {
       formatters: [cellFormat],
