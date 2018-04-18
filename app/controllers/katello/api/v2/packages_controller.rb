@@ -26,41 +26,42 @@ module Katello
     api :GET, "/content_views/:content_view_id/filters/:filter_id/:resource_id", N_("List :resource_id")
     api :GET, "/content_view_filters/:content_view_filter_id/:resource_id", N_("List :resource_id")
     api :GET, "/repositories/:repository_id/:resource_id", N_("List :resource_id")
-    param :organization_id, :number, :desc => N_("organization identifier")
-    param :content_view_version_id, :number, :desc => N_("content view version identifier")
-    param :content_view_filter_id, :number, :desc => N_("content view filter identifier")
-    param :repository_id, :number, :desc => N_("repository identifier")
-    param :environment_id, :number, :desc => N_("environment identifier")
-    param :ids, Array, :desc => N_("ids to filter content by")
-    param :host_id, :number, :desc => N_("host id to list applicable packages for")
-    param :packages_restrict_upgradable, :boolean, :desc => N_("Only show packages that are upgradable in the host(s) Content View.")
-    param :packages_restrict_applicable, :boolean, :desc => N_("Only show packages that are applicable to hosts (defaults to true if host_id is specified)")
+    param :organization_id, :number, :desc => N_("Organization identifier")
+    param :content_view_version_id, :number, :desc => N_("Content View Version identifier")
+    param :content_view_filter_id, :number, :desc => N_("Content View Filter identifier")
+    param :repository_id, :number, :desc => N_("Repository identifier")
+    param :environment_id, :number, :desc => N_("Environment identifier")
+    param :ids, Array, :desc => N_("Package identifiers to filter content by")
+    param :host_id, :number, :desc => N_("Host id to list applicable packages for")
+    param :packages_restrict_applicable, :boolean, :desc => N_("Return packages that are applicable to one or more hosts (defaults to true if host_id is specified)")
+    param :packages_restrict_upgradable, :boolean, :desc => N_("Return packages that are upgradable on one or more hosts")
+    param :available_for, String, :desc => N_("Return packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
       super
     end
 
+    def available_for_content_view_version(version)
+      version.available_packages
+    end
+
     def custom_index_relation(collection)
-      if ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
-        if @host
-          collection = collection.installable_for_hosts([@host])
-        else
-          hosts = ::Host::Managed.authorized("view_hosts")
-          hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
+      applicable = ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || @host
+      upgradable = ::Foreman::Cast.to_bool(params[:packages_restrict_upgradable])
+      if applicable || upgradable
+        hosts = @host ? [@host] : ::Host::Managed.authorized("view_hosts")
+        hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
+        if upgradable
           collection = collection.installable_for_hosts(hosts)
-        end
-      elsif ::Foreman::Cast.to_bool(params[:packages_restrict_applicable]) || @host
-        if @host
-          collection = collection.applicable_to_hosts([@host])
-        else
-          hosts = ::Host::Managed.authorized("view_hosts")
-          hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
+        elsif applicable
           collection = collection.applicable_to_hosts(hosts)
         end
       end
 
       collection
     end
+
+    private
 
     def find_host
       if params[:host_id]

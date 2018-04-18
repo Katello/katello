@@ -73,6 +73,7 @@ module Katello
                    'katello/api/v2/content_view_puppet_modules' => [:index, :show, :auto_complete_search],
                    'katello/api/v2/content_view_versions' => [:index, :show, :auto_complete_search],
                    'katello/api/v2/content_view_components' => [:index, :show],
+                   'katello/api/v2/packages' => [:index],
                    'katello/api/v2/package_groups' => [:index, :show, :auto_complete_search, :compare],
                    'katello/api/v2/errata' => [:index, :show, :auto_complete_search, :compare, :available_errata],
                    'katello/api/v2/puppet_modules' => [:index, :show, :auto_complete_search, :compare],

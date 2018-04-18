@@ -62,23 +62,17 @@ module Katello
         respond_for_index(:collection => collection)
       end
 
-      param :available_for, :string, :desc => N_("Show available to be added to content view filter")
+      param :available_for, :string, :desc => N_("Return content that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.")
       param :filterId, :integer, :desc => N_("Content View Filter id")
       def index_relation
-        collection = resource_class.all
-        repos = Repository.readable
-        repos = repos.where(:id => @repo) if @repo
-        repos = repos.where(:id => Repository.readable.in_organization(@organization)) if @organization
-        if @environment && (@environment.library? || resource_class != Katello::PuppetModule)
-          # if the environment is not library and this is for puppet modules,
-          # we can skip environment filter, as those would be associated to
-          # content view puppet environments and handled by the puppet modules
-          # controller.
-          repos = repos.where(:id => @environment.repositories)
+        if @version && params[:available_for] == "content_view_version" && self.respond_to?(:available_for_content_view_version)
+          collection = self.available_for_content_view_version(@version)
+        else
+          collection = resource_class.all
+          collection = filter_by_content_view_version(@version, collection) if @version
         end
 
         collection = filter_by_repos(repos, collection)
-        collection = filter_by_content_view_version(@version, collection) if @version
         collection = filter_by_ids(params[:ids], collection) if params[:ids]
         @filter = ContentViewFilter.find(params[:filterId]) if params[:filterId]
         if params[:available_for] == "content_view_filter" && self.respond_to?(:available_for_content_view_filter)
@@ -109,6 +103,20 @@ module Katello
       def filter_by_content_view_filter(filter, collection)
         ids = filter.send("#{singular_resource_name}_rules").pluck(:uuid)
         filter_by_ids(ids, collection)
+      end
+
+      def repos
+        repos = Repository.readable
+        repos = repos.where(:id => @repo) if @repo
+        repos = repos.where(:id => Repository.readable.in_organization(@organization)) if @organization
+        if @environment && (@environment.library? || resource_class != Katello::PuppetModule)
+          # if the environment is not library and this is for puppet modules,
+          # we can skip environment filter, as those would be associated to
+          # content view puppet environments and handled by the puppet modules
+          # controller.
+          repos = repos.where(:id => @environment.repositories)
+        end
+        repos
       end
 
       def filter_by_repos(repos, collection)
