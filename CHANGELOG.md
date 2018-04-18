@@ -1,5 +1,9 @@
 # 3.6.0 Imperial IPA (2018-04-11)
 
+## Warning
+
+A disclaimer, we are aware of a bug in 3.6 where you cannot delete an organization that has a host. Before deleting an organization manually delete any host attached to that organization. [Issue on Redmine](http://projects.theforeman.org/issues/23262)
+
 ## Features 
 
 ### Content View Optimizations 
