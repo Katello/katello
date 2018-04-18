@@ -12,13 +12,14 @@
  * @requires DownloadPolicy
  * @requires OstreeUpstreamSyncPolicy
  * @requires Architecture
+ * @requires YumContentUnits
  *
  * @description
  *   Provides the functionality for the repository details info page.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'OstreeUpstreamSyncPolicy', 'Architecture',
-    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, OstreeUpstreamSyncPolicy, Architecture) {
+    ['$scope', '$q', 'translate', 'Notification', 'ContentCredential', 'CurrentOrganization', 'Checksum', 'DownloadPolicy', 'YumContentUnits', 'OstreeUpstreamSyncPolicy', 'Architecture',
+    function ($scope, $q, translate, Notification, ContentCredential, CurrentOrganization, Checksum, DownloadPolicy, YumContentUnits, OstreeUpstreamSyncPolicy, Architecture) {
         $scope.organization = CurrentOrganization;
 
         $scope.progress = {uploading: false};
@@ -140,6 +141,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         $scope.checksums = Checksum.checksums;
         $scope.downloadPolicies = DownloadPolicy.downloadPolicies;
         $scope.ostreeUpstreamSyncPolicies = OstreeUpstreamSyncPolicy.syncPolicies;
+        $scope.ignorableYumContentUnits = YumContentUnits.units;
 
         $scope.checksumTypeDisplay = function (checksum) {
             return Checksum.checksumType(checksum);
@@ -147,14 +149,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
         $scope.downloadPolicyDisplay = function (downloadPolicy) {
             return DownloadPolicy.downloadPolicyName(downloadPolicy);
-        };
-
-        $scope.ostreeUpstreamSyncPolicyDisplay = function (repository) {
-            var policy = repository["ostree_upstream_sync_policy"];
-            if ( policy === "custom") {
-                return OstreeUpstreamSyncPolicy.syncPolicyName(policy, repository["ostree_upstream_sync_depth"]);
-            }
-            return OstreeUpstreamSyncPolicy.syncPolicyName(policy);
         };
 
         $scope.clearUpstreamPassword = function () {

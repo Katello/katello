@@ -37,7 +37,8 @@ module Actions
                                         upstream_username: repository.upstream_username,
                                         upstream_password: repository.upstream_password,
                                         repo_registry_id: repository.container_repository_name,
-                                        proxy_host: repository.proxy_host_value)
+                                        proxy_host: repository.proxy_host_value,
+                                        ignorable_content: repository.ignorable_content)
 
             return if create_action.error
 
