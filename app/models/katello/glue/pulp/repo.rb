@@ -227,6 +227,7 @@ module Katello
           :download_policy => new_download_policy,
           :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
         }
+        config[:type_skip_list] = ignorable_content if ignorable_content
         config.merge(importer_connection_options(capsule))
       end
 
@@ -296,6 +297,7 @@ module Katello
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
           yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
+          yum_dist_options[:skip] = ignorable_content if ignorable_content
           #check the instance variable, as we do not want to go to pulp
           yum_dist_options['checksum_type'] = self.checksum_type
           yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, self.unprotected, true,
@@ -442,7 +444,7 @@ module Katello
 
       def pulp_update_needed?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
-                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy)
+                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy ignorable_content)
         changeable_attributes << "name" if docker?
         changeable_attributes += %w(deb_releases deb_components deb_architectures) if deb?
         changeable_attributes.any? { |key| previous_changes.key?(key) }

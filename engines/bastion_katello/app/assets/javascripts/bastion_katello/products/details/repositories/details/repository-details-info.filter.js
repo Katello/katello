@@ -4,6 +4,7 @@
  *
  * @requires translate
  * @requires OstreeUpstreamSyncPolicy
+ * @requires YumContentUnits
  *
  * @description
  *   Provides the Ostree Upstream Sync policy filter functionality for the repository details info page.
@@ -25,5 +26,20 @@ angular.module('Bastion.components.formatters').filter('upstreamPasswordFilter',
             return "******";
         }
         return null;
+    };
+}]);
+
+angular.module('Bastion.components.formatters').filter('yumIgnorableContentFilter', ['YumContentUnits', function (YumContentUnits) {
+    return function (displayValue, repository) {
+        var names;
+        if (_.isEmpty(repository["ignorable_content"])) {
+            return null;
+        }
+
+        names = _.map(repository["ignorable_content"], function (key) {
+            return YumContentUnits.unitName(key);
+        });
+
+        return names.join(", ");
     };
 }]);

@@ -28,6 +28,7 @@ module Actions
           param :deb_releases
           param :deb_architectures
           param :deb_components
+          param :ignorable_content
         end
 
         def run
@@ -75,6 +76,7 @@ module Actions
           importer.remove_missing  = input[:mirror_on_sync] if input[:content_type] == ::Katello::Repository::YUM_TYPE
           importer.basic_auth_username = input[:upstream_username] if input[:upstream_username].present?
           importer.basic_auth_password = input[:upstream_password] if input[:upstream_password].present?
+          importer.type_skip_list = input[:ignorable_content] if input[:ignorable_content]
           importer
         end
 
@@ -157,6 +159,7 @@ module Actions
           yum_dist_options = { protected: true,
                                id: input[:pulp_id],
                                auto_publish: true }
+          yum_dist_options[:skip] = input[:ignorable_content] if input[:ignorable_content]
           yum_dist_options[:checksum_type] = input[:checksum_type] if input[:checksum_type]
           Runcible::Models::YumDistributor.new(input[:path],
                                                input[:unprotected] || false,

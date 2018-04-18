@@ -467,8 +467,7 @@ module Katello
       assert_template 'api/v2/repositories/show'
     end
 
-    def test_create_with_mirror_on_sync_true
-      mirror_on_sync = true
+    def run_test_individual_attribute(params)
       product = mock
       product.expects(:add_repo).with(
           :label => 'Fedora_Repository',
@@ -489,79 +488,43 @@ module Katello
       product.expects(:ssl_client_key).returns(nil)
       product.expects(:organization).returns(@organization)
       product.expects(:redhat?).returns(false)
-      @repository.expects(:mirror_on_sync=).with(mirror_on_sync)
+      yield product, @repository
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
-
       Product.stubs(:find).returns(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false, :mirror_on_sync => mirror_on_sync }
+      params = {:name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false}.merge(params)
+      post :create, params: params
       assert_response :success
       assert_template 'api/v2/repositories/show'
     end
 
+    def test_create_with_mirror_on_sync_true
+      mirror_on_sync = true
+      run_test_individual_attribute(:mirror_on_sync => mirror_on_sync) do |_, repo|
+        repo.expects(:mirror_on_sync=).with(mirror_on_sync)
+      end
+    end
+
+    def test_create_with_ignorable_content
+      ignorable_content = ["srpm", "erratum"]
+      run_test_individual_attribute(:ignorable_content => ignorable_content) do |_, repo|
+        repo.expects(:ignorable_content=).with(ignorable_content)
+      end
+    end
+
     def test_create_with_verify_ssl_on_sync_true
       verify_ssl_on_sync = true
-      product = mock
-      product.expects(:add_repo).with(
-          :label => 'Fedora_Repository',
-          :name => 'Fedora Repository',
-          :url => 'http://www.google.com',
-          :content_type => 'yum',
-          :arch => 'noarch',
-          :unprotected => false,
-          :gpg_key => nil,
-          :ssl_ca_cert => nil,
-          :ssl_client_cert => nil,
-          :ssl_client_key => nil
-      ).returns(@repository)
-
-      product.expects(:gpg_key).returns(nil)
-      product.expects(:ssl_ca_cert).returns(nil)
-      product.expects(:ssl_client_cert).returns(nil)
-      product.expects(:ssl_client_key).returns(nil)
-      product.expects(:organization).returns(@organization)
-      product.expects(:redhat?).returns(false)
-      @repository.expects(:verify_ssl_on_sync=).with(verify_ssl_on_sync)
-
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
-
-      Product.stubs(:find).returns(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false, :verify_ssl_on_sync => verify_ssl_on_sync }
-      assert_response :success
-      assert_template 'api/v2/repositories/show'
+      run_test_individual_attribute(:verify_ssl_on_sync => verify_ssl_on_sync) do |_, repo|
+        repo.expects(:verify_ssl_on_sync=).with(verify_ssl_on_sync)
+      end
     end
 
     def test_create_with_username_password
       upstream_username = "genius"
       upstream_password = "genius_password"
-      product = mock
-      product.expects(:add_repo).with(
-          :label => 'Fedora_Repository',
-          :name => 'Fedora Repository',
-          :url => 'http://www.google.com',
-          :content_type => 'yum',
-          :arch => 'noarch',
-          :unprotected => false,
-          :gpg_key => nil,
-          :ssl_ca_cert => nil,
-          :ssl_client_cert => nil,
-          :ssl_client_key => nil
-      ).returns(@repository)
-
-      product.expects(:gpg_key).returns(nil)
-      product.expects(:ssl_ca_cert).returns(nil)
-      product.expects(:ssl_client_cert).returns(nil)
-      product.expects(:ssl_client_key).returns(nil)
-      product.expects(:organization).returns(@organization)
-      product.expects(:redhat?).returns(false)
-      @repository.expects(:upstream_username=).with(upstream_username)
-      @repository.expects(:upstream_password=).with(upstream_password)
-
-      assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
-
-      Product.stubs(:find).returns(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false, :upstream_username => upstream_username, :upstream_password => upstream_password }
-      assert_response :success
-      assert_template 'api/v2/repositories/show'
+      run_test_individual_attribute(:upstream_username => upstream_username, :upstream_password => upstream_password) do |_, repo|
+        repo.expects(:upstream_username=).with(upstream_username)
+        repo.expects(:upstream_password=).with(upstream_password)
+      end
     end
 
     def test_create_with_protected_docker
@@ -717,6 +680,15 @@ module Katello
         attributes[:ostree_upstream_sync_depth].must_equal sync_depth
       end
       put :update, params: { :id => repo.id, :ostree_upstream_sync_depth => sync_depth, :ostree_upstream_sync_policy => sync_policy }
+    end
+
+    def test_update_with_ignorable_content
+      ignorable_content = ["rpm", "srpm"]
+      repo = katello_repositories(:fedora_17_unpublished)
+      assert_sync_task(::Actions::Katello::Repository::Update) do |_, attributes|
+        attributes[:ignorable_content].must_equal ignorable_content
+      end
+      put :update, params: { :id => repo.id, :ignorable_content => ignorable_content }
     end
 
     def test_remove_content
