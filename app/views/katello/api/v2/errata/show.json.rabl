@@ -9,6 +9,10 @@ child :cves => :cves do
   attributes :cve_id, :href
 end
 
+child :bugzillas => :bugs do
+  attributes :bug_id, :href
+end
+
 attributes :title => :name
 attributes :errata_type => :type
 
