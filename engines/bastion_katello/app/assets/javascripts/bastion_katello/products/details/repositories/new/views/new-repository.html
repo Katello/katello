@@ -113,6 +113,19 @@
 
       </div>
 
+      <div bst-form-group label="{{ 'Ignorable Content' | translate }}"  ng-show="repository.content_type === 'yum'">
+        <select id="ignorable_content"
+                name="ignorable_content"
+                multiple="true"
+                ng-model="repository.ignorable_content"
+                ng-options="id as name for (id, name) in ignorableYumContentUnits">
+        </select>
+
+        <h6 translate>
+          Select content units to ignore while synchronizing this repository.
+        </h6>
+      </div>
+
       <div class="checkbox">
         <label>
           <input id="verify_ssl_on_sync" name="verify_ssl_on_sync" ng-model="repository.verify_ssl_on_sync" type="checkbox"/>

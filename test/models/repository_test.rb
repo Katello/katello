@@ -354,6 +354,26 @@ module Katello
       version.components << katello_content_view_versions(:library_view_version_2)
       assert version_archive_repo.master?
     end
+
+    def test_yum_ignorable_content
+      @repo.url = "http://foo.com"
+      @repo.ignorable_content = nil
+      assert @repo.valid?
+      @repo.ignorable_content = ["srpm", "erratum"]
+      assert @repo.valid?
+      @repo.ignorable_content = ["boo"]
+      refute @repo.valid?
+      assert @repo.errors.include?(:ignorable_content)
+
+      @repo.ignorable_content = ["srpm"]
+      @repo.content_type = Repository::PUPPET_TYPE
+      @repo.download_policy = nil
+      refute @repo.valid?
+      assert @repo.errors.include?(:ignorable_content)
+
+      @repo.ignorable_content = nil
+      assert @repo.valid?
+    end
   end
 
   class RepositoryGeneratedIdsTest < RepositoryTestBase

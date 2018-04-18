@@ -4,6 +4,7 @@ describe('Controller: NewRepositoryController', function() {
         Notification,
         DownloadPolicy,
         OstreeUpstreamSyncPolicy,
+        YumContentUnits,
         $httpBackend,
         RepositoryTypesService;
 
@@ -20,6 +21,7 @@ describe('Controller: NewRepositoryController', function() {
 
         DownloadPolicy = $injector.get('DownloadPolicy');
         OstreeUpstreamSyncPolicy = $injector.get('OstreeUpstreamSyncPolicy');
+        YumContentUnits = $injector.get('YumContentUnits');
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         FormUtils = $injector.get('FormUtils');
@@ -105,4 +107,9 @@ describe('Controller: NewRepositoryController', function() {
     it ('should set ostree upstream sync policies', function() {
        expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
     });
+
+    it ('should set yum content units', function() {
+       expect($scope.ignorableYumContentUnits).toBe(YumContentUnits.units);
+    });
+
 });

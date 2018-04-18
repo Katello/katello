@@ -123,6 +123,23 @@
         </dd>
       </span>
 
+      <span ng-if="repository.content_type === 'yum'">
+        <dt translate>Ignorable Content</dt>
+        <dd bst-edit-custom="repository.ignorable_content"
+            readonly="denied('edit_products', product)"
+            on-save="save(repository)"
+            formatter="yumIgnorableContentFilter"
+            formatter-options="repository"
+            >
+            <select id="ignorable_content"
+                    name="ignorable_content"
+                    multiple="true"
+                    ng-model="repository.ignorable_content"
+                    ng-options="id as name for (id, name) in ignorableYumContentUnits">
+            </select>
+        </dd>
+      </span>
+
       <dt translate>Publish via HTTPS</dt>
       <dd translate>Yes</dd>
 
