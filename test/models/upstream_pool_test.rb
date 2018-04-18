@@ -54,6 +54,9 @@ module Katello
       @raw_pool.first.each_value do |value|
         assert_equal value, pool[value].to_sym
       end
+
+      assert_equal 1, pools[:total]
+      assert_equal 1, pools[:subtotal]
     end
 
     def test_fetch_pools_total

@@ -16,7 +16,8 @@ module Katello
 
         {
           pools: pools,
-          total: response.headers[total_count_header] || pools.count
+          total: response.headers[total_count_header] || pools.count,
+          subtotal: pools.count
         }
       end
 
