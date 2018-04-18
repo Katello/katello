@@ -1,5 +1,6 @@
 object @resource ||= @object
 
+attributes :pool_id => :id
 attributes :pool_id
 attributes :status
 attributes :quantity
