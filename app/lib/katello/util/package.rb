@@ -91,13 +91,18 @@ module Katello
 
           pack = pack.with_indifferent_access
           if latest_pack.nil? ||
-             (pack[:epoch] > latest_pack[:epoch]) ||
-             (pack[:epoch] == latest_pack[:epoch] && pack[:release] > latest_pack[:release]) ||
-             (pack[:epoch] == latest_pack[:epoch] && pack[:release] == latest_pack[:release] && pack[:version] > latest_pack[:version])
+             (pack[:epoch].to_i > latest_pack[:epoch].to_i) ||
+             (pack[:epoch].to_i == latest_pack[:epoch].to_i &&
+              pack[:version_sortable] > latest_pack[:version_sortable]) ||
+             (pack[:epoch].to_i == latest_pack[:epoch].to_i &&
+              pack[:version_sortable] == latest_pack[:version_sortable] &&
+              pack[:release_sortable] > latest_pack[:release_sortable])
             latest_pack = pack
             selected_packs = [pack]
 
-          elsif (pack[:epoch] == latest_pack[:epoch] && pack[:release] == latest_pack[:release] && pack[:version] == latest_pack[:version])
+          elsif (pack[:epoch].to_i == latest_pack[:epoch].to_i &&
+                 pack[:version_sortable] == latest_pack[:version_sortable] &&
+                 pack[:release_sortable] == latest_pack[:release_sortable])
             selected_packs << pack
           end
         end
