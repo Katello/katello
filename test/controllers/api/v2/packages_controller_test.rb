@@ -17,6 +17,7 @@ module Katello
       @destroy_permission = :destroy_products
       @sync_permission = :sync_products
 
+      @auth_permissions = [@read_permission]
       @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
     end
 
@@ -73,9 +74,29 @@ module Katello
       refute_includes ids, @rpm.id
     end
 
+    def test_index_with_available_for_content_view_version
+      response = get :index, params: { :content_view_version_id => @version.id, :available_for => "content_view_version" }
+
+      assert_response :success
+      ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
+      assert_includes ids, @rpm.id
+    end
+
     def test_index_protected
-      assert_protected_action(:index, @read_permission, @unauth_permissions) do
+      assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
         get :index, params: { :repository_id => @repo.id }
+      end
+    end
+
+    def test_index_with_available_for_content_view_version_protected
+      cv_auth_permissions = [:view_content_views]
+      cv_unauth_permissions = [
+        :create_content_views, :edit_content_views, :destroy_content_views, :publish_content_views,
+        :promote_or_remove_content_views, :export_content_views
+      ]
+      all_unauth_permissions = @unauth_permissions + cv_unauth_permissions
+      assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do
+        get :index, params: { :content_view_version_id => @version.id, :available_for => "content_view_version" }
       end
     end
 
@@ -106,7 +127,7 @@ module Katello
     end
 
     def test_show_protected
-      assert_protected_action(:show, @read_permission, @unauth_permissions) do
+      assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
         get :show, params: { :repository_id => @repo.id, :id => @rpm.uuid }
       end
     end
