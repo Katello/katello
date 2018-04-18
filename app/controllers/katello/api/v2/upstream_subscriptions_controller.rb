@@ -22,9 +22,12 @@ module Katello
     param :quantities_only, :bool, desc: N_("Only returns id and quantity fields")
     param :attachable, :bool, desc: N_("Return only subscriptions which can be attached to the upstream allocation")
     def index
-      pools = UpstreamPool.fetch_pools(upstream_pool_params.to_h)
+      index_params = upstream_pool_params
+      pools = UpstreamPool.fetch_pools(index_params)
+      page = index_params[:page] || 1
+
       collection = scoped_search_results(
-        pools[:pools], pools[:pools].count, pools[:total], params[:page], params[:per_page], nil)
+        pools[:pools], pools[:subtotal], pools[:total], page, index_params[:per_page], nil)
       respond(collection: collection)
     end
 
@@ -69,7 +72,16 @@ module Katello
     end
 
     def upstream_pool_params
-      params.permit(:page, :per_page, :order, :sort_by, :quantities_only, :attachable, pool_ids: [])
+      upstream_params = params.permit(:page, :per_page, :order, :sort_by, :quantities_only, :attachable, pool_ids: []).to_h
+
+      if params[:full_result]
+        upstream_params.delete(:per_page)
+        upstream_params.delete(:page)
+      elsif !params[:per_page]
+        upstream_params[:per_page] = Setting[:entries_per_page]
+      end
+
+      upstream_params
     end
 
     def bind_entitlements_params

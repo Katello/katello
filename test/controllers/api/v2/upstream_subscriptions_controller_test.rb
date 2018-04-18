@@ -25,8 +25,26 @@ module Katello
 
     def test_index
       params = { page: '3', per_page: '7', organization_id: @organization.id }
-      Api::V2::UpstreamSubscriptionsController.any_instance.stubs(:upstream_pool_params).returns(params)
-      UpstreamPool.expects(:fetch_pools).with(params).returns(pools: [{}], total: nil)
+      UpstreamPool.expects(:fetch_pools).with('page' => '3', 'per_page' => '7').returns(pools: [{}], total: nil)
+      get :index, params: params
+
+      assert_response :success
+    end
+
+    def test_index_full_result
+      params = {full_result: 'true', page: '3', per_page: '7', organization_id: @organization.id}
+      # omit page and per_page params for candlepin
+      UpstreamPool.expects(:fetch_pools).with({}).returns({})
+
+      get :index, params: params
+
+      assert_response :success
+    end
+
+    def test_index_no_per_page
+      params = {page: '3', organization_id: @organization.id }
+      UpstreamPool.expects(:fetch_pools).with('page' => '3', 'per_page' => Setting[:entries_per_page]).returns({})
+
       get :index, params: params
 
       assert_response :success
