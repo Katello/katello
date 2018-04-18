@@ -8,6 +8,7 @@ module Katello
     before_destroy :assert_deletable
     before_create :downcase_pulp_id
     before_validation :update_ostree_upstream_sync_policy
+    serialize :ignorable_content
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Repository
@@ -26,6 +27,7 @@ module Katello
     DOCKER_TYPE = 'docker'.freeze
     OSTREE_TYPE = 'ostree'.freeze
 
+    IGNORABLE_CONTENT_UNIT_TYPES = %w(rpm drpm srpm distribution erratum).freeze
     CHECKSUM_TYPES = %w(sha1 sha256).freeze
     SUBSCRIBABLE_TYPES = [YUM_TYPE, OSTREE_TYPE, DEB_TYPE].freeze
 
@@ -134,6 +136,7 @@ module Katello
     validate :ensure_has_url_for_ostree, :if => :ostree?
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
+    validate :ensure_valid_ignorable_content
 
     before_validation :set_pulp_id
     before_validation :set_container_repository_name, :if => :docker?
@@ -851,6 +854,17 @@ module Katello
     def ensure_no_ostree_upstream_sync_policy
       if !ostree? && ostree_upstream_sync_policy.present?
         errors.add(:ostree_upstream_sync_policy, N_("cannot be set for non-ostree repositories."))
+      end
+    end
+
+    def ensure_valid_ignorable_content
+      return if ignorable_content.blank?
+      if !yum?
+        errors.add(:ignorable_content, N_("Ignorable content can be only set for Yum repositories."))
+      elsif !ignorable_content.is_a?(Array)
+        errors.add(:ignorable_content, N_("Invalid value specified for ignorable content."))
+      elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
+        errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
       end
     end
   end

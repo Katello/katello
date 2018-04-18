@@ -1,5 +1,5 @@
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy;
+    var $scope, $state, translate, Notification, repository, DownloadPolicy, OstreeUpstreamSyncPolicy, YumContentUnits;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -15,6 +15,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         repository = new Repository();
         DownloadPolicy = $injector.get("DownloadPolicy");
         OstreeUpstreamSyncPolicy = $injector.get("OstreeUpstreamSyncPolicy");
+        YumContentUnits = $injector.get("YumContentUnits");
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
 
@@ -133,6 +134,10 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
     it ('should set ostree upstream sync policies', function() {
        expect($scope.ostreeUpstreamSyncPolicies).toBe(OstreeUpstreamSyncPolicy.syncPolicies);
+    });
+
+    it ('should set yum content units', function() {
+       expect($scope.ignorableYumContentUnits).toBe(YumContentUnits.units);
     });
 
     it('should set the upload status to success and refresh the repository if a file upload status is success', function() {

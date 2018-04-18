@@ -46,6 +46,7 @@ module Katello
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing.")
+      param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % Repository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
     end
 
     def_param_group :repo_create do
@@ -437,8 +438,9 @@ module Katello
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
-              :deb_releases, :deb_components, :deb_architectures
+              :deb_releases, :deb_components, :deb_architectures, {:ignorable_content => []}
              ]
+
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
@@ -466,6 +468,8 @@ module Katello
       repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
       repository.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
       repository.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
+      repository.ignorable_content = repo_params[:ignorable_content] if repository.yum? && repo_params.key?(:ignorable_content)
+
       if repository.ostree?
         repository.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
         repository.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
