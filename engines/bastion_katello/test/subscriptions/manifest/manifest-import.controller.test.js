@@ -62,7 +62,8 @@ describe('Controller: ManifestImportController', function() {
             Organization: Organization,
             Subscription: Subscription,
             Task: Task,
-            Notification: Notification
+            Notification: Notification,
+            contentDisconnected: true
         });
     }));
 

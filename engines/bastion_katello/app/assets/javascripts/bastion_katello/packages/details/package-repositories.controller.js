@@ -37,7 +37,7 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
         contentView = ContentView.queryUnpaged(function (response) {
             $scope.contentViews = response.results;
             _.each($scope.contentViews, function(cv) {
-                cv.environment_ids = _.map(cv.environments, "id");
+                cv['environment_ids'] = _.map(cv.environments, "id");
             });
             $scope.contentViewFilter = _.find($scope.contentViews, {'default': true});
         });
@@ -49,20 +49,21 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
         });
 
         $scope.filterPackages = function () {
+            var foundVersion, env;
             params['environment_id'] = $scope.environmentFilter;
 
             if ($scope.contentViewFilter) {
-                version = _.find($scope.contentViewFilter.versions, function(version) {
+                foundVersion = _.find($scope.contentViewFilter.versions, function(version) {
                     // Find the version belonging to the environment specified by the enviroment filter
-                    env = _.find(version.environment_ids, function(env_id) {
-                        return env_id === $scope.environmentFilter;
+                    env = _.find(version.environment_ids, function(envId) {
+                        return envId === $scope.environmentFilter;
                     });
 
                     return !angular.isUndefined(env);
                 });
 
-                if (!angular.isUndefined(version)) {
-                    params['content_view_version_id'] = version.id;
+                if (!angular.isUndefined(foundVersion)) {
+                    params['content_view_version_id'] = foundVersion.id;
                 }
             }
 
