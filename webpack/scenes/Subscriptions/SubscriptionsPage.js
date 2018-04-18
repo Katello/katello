@@ -124,7 +124,7 @@ class SubscriptionsPage extends Component {
                         </Button>
                       </LinkContainer>
 
-                      <Button disabled={taskInProgress}onClick={showManageManifestModal}>
+                      <Button disabled={taskInProgress} onClick={showManageManifestModal}>
                         {__('Manage Manifest')}
                       </Button>
 

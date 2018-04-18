@@ -1,4 +1,5 @@
 import Immutable from 'seamless-immutable';
+import { getTaskSuccessResponse } from '../../../Tasks/__tests__/task.fixtures';
 
 export const initialState = Immutable({
   loading: true,
@@ -19,6 +20,8 @@ export const loadingState = Immutable({
   },
   itemCount: 0,
 });
+
+export const taskSuccessResponse = getTaskSuccessResponse;
 
 export const requestSuccessResponse = Immutable({
   total: 2,
@@ -93,6 +96,15 @@ export const successState = Immutable({
   itemCount: 2,
 });
 
+export const initialSaveState = Immutable({
+  loading: true,
+});
+
+export const saveSuccessState = Immutable({
+  loading: false,
+  task: getTaskSuccessResponse,
+});
+
 export const errorState = Immutable({
   loading: false,
   error: 'Unable to process request.',
@@ -104,7 +116,12 @@ export const errorState = Immutable({
   results: [],
 });
 
-export const successActions = [
+export const saveErrorState = Immutable({
+  loading: false,
+  error: 'Unable to process request.',
+});
+
+export const getSuccessActions = [
   {
     type: 'UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
@@ -114,12 +131,32 @@ export const successActions = [
   },
 ];
 
-export const failureActions = [
+export const getFailureActions = [
   {
     type: 'UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
   {
     result: new Error('Request failed with status code 422'),
     type: 'UPSTREAM_SUBSCRIPTIONS_FAILURE',
+  },
+];
+
+export const saveSuccessActions = [
+  {
+    type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
+  },
+  {
+    response: getTaskSuccessResponse,
+    type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS',
+  },
+];
+
+export const saveFailureActions = [
+  {
+    type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
+  },
+  {
+    result: new Error('Request failed with status code 422'),
+    type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE',
   },
 ];

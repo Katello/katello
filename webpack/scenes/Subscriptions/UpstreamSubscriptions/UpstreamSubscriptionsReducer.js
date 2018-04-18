@@ -4,6 +4,9 @@ import {
   UPSTREAM_SUBSCRIPTIONS_REQUEST,
   UPSTREAM_SUBSCRIPTIONS_SUCCESS,
   UPSTREAM_SUBSCRIPTIONS_FAILURE,
+  SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST,
+  SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS,
+  SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE,
 } from './UpstreamSubscriptionsContstants';
 
 const initialState = initialApiState;
@@ -15,7 +18,7 @@ export default (state = initialState, action) => {
 
     case UPSTREAM_SUBSCRIPTIONS_SUCCESS: {
       const {
-        page, per_page, subtotal, results, // eslint-disable-line camelcase
+        page, per_page, total, results, // eslint-disable-line camelcase
 
       } = action.response;
 
@@ -29,7 +32,7 @@ export default (state = initialState, action) => {
           // eslint-disable-next-line camelcase
           perPage: Number(per_page || state.pagination.perPage),
         },
-        itemCount: Number(subtotal),
+        itemCount: Number(total),
       });
     }
 
@@ -38,6 +41,17 @@ export default (state = initialState, action) => {
         error: action.error,
         loading: false,
       });
+
+    case SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST:
+      return state.set('loading', true);
+
+    case SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS:
+      return state.set('task', action.response).set('loading', false);
+
+    case SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE: {
+      const error = action.result.response.data;
+      return state.set('error', error).set('loading', false);
+    }
 
     default:
       return state;
