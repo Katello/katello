@@ -1,9 +1,11 @@
 /* eslint-disable */
-import { Table as PfTable } from 'patternfly-react';
+import { Table as PfTable, customHeaderFormattersDefinition } from 'patternfly-react';
 import React from 'react';
 import EllipsisWithTooltip from 'react-ellipsis-with-tooltip';
 import EmptyState from '../emptyState';
 
+export const selectionCellFormatter = PfTable.selectionCellFormatter;
+export const selectionHeaderCellFormatter = PfTable.selectionHeaderCellFormatter;
 export const headerFormat = value => <PfTable.Heading>{value}</PfTable.Heading>;
 export const cellFormat = value => <PfTable.Cell>{value}</PfTable.Cell>;
 export const ellipsisFormat = value => (
@@ -11,6 +13,7 @@ export const ellipsisFormat = value => (
     <EllipsisWithTooltip>{value}</EllipsisWithTooltip>
   </PfTable.Cell>
 );
+
 export const TableBody = (props) => {
   const { columns, rows, message } = props;
 
@@ -33,12 +36,21 @@ export const TableBody = (props) => {
 }
 
 class Table extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.customHeaderFormatters = customHeaderFormattersDefinition;
+  }
+
   isEmpty() {
     return this.props.rows.length === 0 && this.props.bodyMessage === undefined;
   }
 
+
   render() {
     const { columns, rows, emptyState, bodyMessage } = this.props;
+    const sortingColumns = {};
+
     return this.isEmpty() ? (
       <EmptyState {...emptyState} />
     ) : (
@@ -48,6 +60,18 @@ class Table extends React.Component {
         bordered
         hover
         columns={columns}
+        components={{
+          header: {
+            cell: cellProps =>
+              this.customHeaderFormatters({
+                cellProps,
+                columns,
+                sortingColumns,
+                rows: rows,
+                onSelectAllRows: this.props.onSelectAllRows
+              })
+          }
+        }}
       >
         <PfTable.Header />
         <TableBody columns={columns} rows={rows} message={bodyMessage} />
