@@ -63,10 +63,6 @@ module Katello
       self.subscription.products if self.subscription
     end
 
-    def upstream?
-      subscription.present? && subscription.redhat?
-    end
-
     private
 
     def default_sort

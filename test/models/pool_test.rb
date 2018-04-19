@@ -7,18 +7,7 @@ module Katello
       @view = katello_content_views(:library_dev_view)
       @pool_one = katello_pools(:pool_one)
       @pool_two = katello_pools(:pool_two)
-      @custom_pool = katello_pools(:custom_pool)
       @host_one = hosts(:one)
-    end
-
-    def test_upstream
-      assert_equal true,  @pool_one.upstream?
-      assert_equal false, @custom_pool.upstream?
-    end
-
-    def test_upstream_nil_subscription
-      @pool_one.subscription = nil
-      assert_equal false, @pool_one.upstream?
     end
 
     def test_active
