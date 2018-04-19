@@ -5,7 +5,7 @@ module Katello
     include Katello::Concerns::FilteredAutoCompleteSearch
 
     before_action :find_product, :except => [:index, :auto_complete_search]
-    before_action :find_optional_product, :only => [:index, :auto_complete_search]
+    before_action :find_product_or_organization, :only => [:index, :auto_complete_search]
     before_action :custom_product?
     before_action :find_product_content, :except => [:index, :auto_complete_search]
 
@@ -102,15 +102,16 @@ module Katello
       fail HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
     end
 
-    def find_optional_product
-      @product = Product.find_by(:id => params[:product_id])
-      @organization = @product.organization unless @product.nil?
-      find_organization if @organization.nil?
-      @product
+    def find_product_or_organization
+      if params[:product_id]
+        find_product
+      else
+        @organization = find_organization
+      end
     end
 
     def find_product
-      @product = find_optional_product
+      @product = Product.find_by(:id => params[:product_id])
       fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
       @organization = @product.organization
     end
