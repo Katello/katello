@@ -238,4 +238,8 @@ module Katello
   def self.with_remote_execution?
     (RemoteExecutionFeature rescue false) ? true : false
   end
+
+  def self.with_ansible?
+    (ForemanAnsible rescue false) ? true : false
+  end
 end
