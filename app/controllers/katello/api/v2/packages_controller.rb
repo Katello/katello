@@ -35,6 +35,7 @@ module Katello
     param :host_id, :number, :desc => N_("Host id to list applicable packages for")
     param :packages_restrict_applicable, :boolean, :desc => N_("Return packages that are applicable to one or more hosts (defaults to true if host_id is specified)")
     param :packages_restrict_upgradable, :boolean, :desc => N_("Return packages that are upgradable on one or more hosts")
+    param :packages_restrict_latest, :boolean, :desc => N_("Return only the latest version of each package")
     param :available_for, String, :desc => N_("Return packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
@@ -57,7 +58,16 @@ module Katello
           collection = collection.applicable_to_hosts(hosts)
         end
       end
+      collection
+    end
 
+    def final_custom_index_relation(collection)
+      # :packages_restrict_latest is intended to filter the result set after all
+      # other constraints have been applied, including the scoped_search
+      # constraints.  If any constraints are applied after this, then a package
+      # will not be returned if its latest version does not match those
+      # constraints, even if an older version does match those constraints.
+      collection = Katello::Rpm.latest(collection) if ::Foreman::Cast.to_bool(params[:packages_restrict_latest])
       collection
     end
 
