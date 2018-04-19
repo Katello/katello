@@ -102,6 +102,18 @@ module Katello
       end
     end
 
+    def test_invalid_product_failure
+      fake_product_id = 1234
+      put :enable, params: { product_id: fake_product_id, id: @content_id, basearch: 'x86_64', releasever: '6Server' }
+
+      results = JSON.parse(response.body)
+
+      error_message = "Couldn't find product with id '#{fake_product_id}'"
+
+      assert_response :not_found
+      assert results["errors"].include? error_message
+    end
+
     def test_repository_enable
       assert_sync_task ::Actions::Katello::RepositorySet::EnableRepository do |product, content, substitutions|
         product.must_equal @product
