@@ -35,5 +35,9 @@ module Katello
 
       assert @proxy.destroy!
     end
+
+    def test_valid_fixture
+      assert smart_proxies(:one).valid?
+    end
   end
 end
