@@ -18,7 +18,7 @@
             placeholder="{{ 'Select Content View' | translate }}"
             ng-disabled="!contentViews || filteredCVs.length === 0"
             ng-model="contentViewFilter"
-            ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter:{environments: environmentFilter})"
+            ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter:{environment_ids: environmentFilter})"
             ng-change="filterBranches()">
     </select>
     <p class="help-block" translate ng-show="filteredCVs.length === 0">
