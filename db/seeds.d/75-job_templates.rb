@@ -1,7 +1,9 @@
 if Katello.with_remote_execution?
   User.as_anonymous_admin do
     JobTemplate.without_auditing do
-      Dir[File.join("#{Katello::Engine.root}/app/views/foreman/job_templates/**/*.erb")].each do |template|
+      template_files = Dir[File.join("#{Katello::Engine.root}/app/views/foreman/job_templates/**/*.erb")]
+      template_files.reject! { |file| file.end_with?('_ansible_default.erb') } unless Katello.with_ansible?
+      template_files.each do |template|
         sync = !Rails.env.test? && Setting[:remote_execution_sync_templates]
         # import! was renamed to import_raw! around 1.3.1
         if JobTemplate.respond_to?('import_raw!')
