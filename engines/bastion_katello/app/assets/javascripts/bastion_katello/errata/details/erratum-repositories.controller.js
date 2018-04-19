@@ -35,6 +35,9 @@ function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrg
 
     contentView = ContentView.queryUnpaged(function (response) {
         $scope.contentViews = response.results;
+        _.each($scope.contentViews, function(cv) {
+            cv['environment_ids'] = _.map(cv.environments, 'id');
+        });
         $scope.contentViewFilter = _.find($scope.contentViews, {'default': true});
     });
 
@@ -45,11 +48,24 @@ function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrg
     });
 
     $scope.filterErrata = function () {
+        var foundVersion, env;
         params['environment_id'] = $scope.environmentFilter;
-        params['content_view_version_id'] = $scope.contentViewFilter;
 
         if ($scope.contentViewFilter) {
-            params['content_view_version_id'] = _.map($scope.contentViewFilter.versions, 'id');
+            foundVersion = _.find($scope.contentViewFilter.versions, function(version) {
+                // Find the version belonging to the environment specified by the enviroment filter
+                env = _.find(version.environment_ids, function(envId) {
+                    return envId === $scope.environmentFilter;
+                });
+
+                return !angular.isUndefined(env);
+            });
+
+            if (!angular.isUndefined(foundVersion)) {
+                params['content_view_version_id'] = foundVersion.id;
+            } else {
+                delete params['content_view_version_id'];
+            }
         }
 
         repositoriesNutupane.setParams = (params);

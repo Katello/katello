@@ -64,6 +64,8 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
 
                 if (!angular.isUndefined(foundVersion)) {
                     params['content_view_version_id'] = foundVersion.id;
+                } else {
+                    delete params['content_view_version_id'];
                 }
             }
 
