@@ -10,3 +10,7 @@ attributes :consumed
 attributes :product_name
 attributes :product_id
 attributes :subscription_id
+
+if params[:pool_ids]
+  attributes :local_pool_ids
+end

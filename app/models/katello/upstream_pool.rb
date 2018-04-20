@@ -5,18 +5,25 @@ module Katello
     class << self
       def fetch_pools(params)
         quantities_only = ::Foreman::Cast.to_bool(params.delete(:quantities_only))
+        pool_id_map = upstream_pool_id_map(params.delete(:pool_ids))
+
         cp_params = request_params(
           base_params: base_params(params),
-          extra_params: pool_id_params(params.delete(:pool_ids)),
+          extra_params: pool_id_params(pool_id_map.keys),
           included_fields: included_field_params(quantities_only)
         )
 
-        response = CP_POOL.get(params: cp_params)
-        pools = response_to_pools(response)
+        upstream_response = CP_POOL.get(params: cp_params)
+        pools = response_to_pools(upstream_response, pool_id_map: pool_id_map)
+        total = upstream_response.headers[total_count_header] || pools.count
 
+        respond(pools, total)
+      end
+
+      def respond(pools, total)
         {
           pools: pools,
-          total: response.headers[total_count_header] || pools.count,
+          total: total,
           subtotal: pools.count
         }
       end
@@ -31,9 +38,15 @@ module Katello
         CP_POOL.upstream_consumer_id
       end
 
-      def response_to_pools(response)
+      def upstream_pool_id_map(local_pool_ids)
+        return {} unless local_pool_ids
+
+        Katello::Candlepin::PoolService.local_to_upstream_ids(local_pool_ids)
+      end
+
+      def response_to_pools(response, pool_id_map: {})
         pools = JSON.parse(response)
-        pools.map { |pool| self.new(map_attributes(pool)) }
+        pools.map { |pool| self.new(map_attributes(pool, pool_id_map: pool_id_map)) }
       end
 
       def kat_to_cp_map
@@ -51,11 +64,14 @@ module Katello
         }
       end
 
-      def map_attributes(pool)
+      def map_attributes(pool, pool_id_map: {})
         attributes = {}
         kat_to_cp_map.map do |kat, cp|
           attributes[kat] = pool[cp] if pool[cp]
         end
+
+        attributes[:local_pool_ids] = pool_id_map[attributes[:pool_id]]
+
         attributes
       end
 

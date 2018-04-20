@@ -4,7 +4,6 @@ module Katello
   class UpstreamPoolTest < ActiveSupport::TestCase
     def setup
       @organization = get_organization
-      @response = mock
       @raw_pool = [{
         'id' => :pool_id,
         'activeSubscription' => :active,
@@ -17,6 +16,7 @@ module Katello
         'productId' => :product_id,
         'subscriptionId' => :subscription_id
       }]
+      @response = stub(to_str: @raw_pool.to_json, headers: {})
     end
 
     def stub_fetch_pools(response, base_params: {}, extra_params: [], included_fields: UpstreamPool.all_fields)
@@ -44,8 +44,6 @@ module Katello
     end
 
     def test_fetch_pools
-      @response.expects(:to_str).returns(@raw_pool.to_json)
-      @response.expects(:headers).returns({})
       stub_fetch_pools(@response)
 
       pools = UpstreamPool.fetch_pools({})
@@ -59,20 +57,9 @@ module Katello
       assert_equal 1, pools[:subtotal]
     end
 
-    def test_fetch_pools_total
-      @response.expects(:to_str).returns("[{}]")
-      @response.expects(:headers).returns({})
-      stub_fetch_pools(@response)
-
-      pools = UpstreamPool.fetch_pools({})
-
-      assert_equal 1, pools[:total]
-    end
-
     def test_fetch_pools_total_with_header
-      @response.expects(:to_str).returns("[]")
-      @response.expects(:headers).returns(x_total_count: 4)
-      stub_fetch_pools(@response)
+      response = stub(to_str: '[]', headers: {x_total_count: 4})
+      stub_fetch_pools(response)
 
       pools = UpstreamPool.fetch_pools({})
 
@@ -80,45 +67,41 @@ module Katello
     end
 
     def test_fetch_pools_with_pool_ids
-      @response.expects(:to_str).returns(@raw_pool.to_json)
-      @response.expects(:headers).returns({})
-      pool_ids = [[:poolid, "pool_id"]]
-      stub_fetch_pools(@response, extra_params: pool_ids)
+      expected = :local_pool_id
+      pool_id_map = {'pool_id' => [expected]}
+      Katello::Candlepin::PoolService.expects(:local_to_upstream_ids).returns(pool_id_map)
+      stub_fetch_pools(@response, extra_params: [[:poolid, 'pool_id']])
 
-      pools = UpstreamPool.fetch_pools(
-        {pool_ids: ["pool_id"] }.with_indifferent_access
-      )
-      assert_equal 1, pools[:total]
+      pools = UpstreamPool.fetch_pools(pool_ids: [expected])
+
+      assert_equal [expected], pools[:pools].first.local_pool_ids
     end
 
     def test_fetch_pools_attachable
-      @response.expects(:to_str).returns(@raw_pool.to_json)
-      @response.expects(:headers).returns({})
       stub_fetch_pools(@response, base_params: {consumer: :foo_id})
       Resources::Candlepin::UpstreamPool.expects(:upstream_consumer_id).returns(:foo_id)
 
       params = {attachable: true}
       pools = UpstreamPool.fetch_pools(params)
+
       assert_equal 1, pools[:total]
     end
 
     def test_fetch_pools_quantities_only_true
-      @response.expects(:to_str).returns(@raw_pool.to_json)
-      @response.expects(:headers).returns({})
       stub_fetch_pools(@response, included_fields: ["id", "quantity"])
 
       params = {quantities_only: true}.with_indifferent_access
       pools = UpstreamPool.fetch_pools(params)
+
       assert_equal 1, pools[:total]
     end
 
     def test_fetch_pools_quantities_only_false
-      @response.expects(:to_str).returns(@raw_pool.to_json)
-      @response.expects(:headers).returns({})
       stub_fetch_pools(@response, included_fields: UpstreamPool.all_fields)
 
       params = {quantities_only: false}.with_indifferent_access
       pools = UpstreamPool.fetch_pools(params)
+
       assert_equal 1, pools[:total]
     end
   end

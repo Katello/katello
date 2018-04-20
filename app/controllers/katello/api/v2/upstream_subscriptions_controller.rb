@@ -18,7 +18,7 @@ module Katello
       N_("List available subscriptions from Red Hat Subscription Management")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param_group :cp_search
-    param :pool_ids, Array, desc: N_("List of pool ids to fetch")
+    param :pool_ids, Array, desc: N_("Return only the upstream pools which map to the given local pool IDs")
     param :quantities_only, :bool, desc: N_("Only returns id and quantity fields")
     param :attachable, :bool, desc: N_("Return only subscriptions which can be attached to the upstream allocation")
     def index
