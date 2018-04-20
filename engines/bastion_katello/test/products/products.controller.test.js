@@ -7,23 +7,38 @@ describe('Controller: ProductsController', function() {
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
-    beforeEach(function() {
-        Nutupane = function() {
+    beforeEach(function () {
+        Nutupane = function () {
             this.table = {
-                showColumns: function() {},
+                showColumns: function () {},
                 getSelected: function () {
                     return [{id: 1}, {id: 2}, {id: 3}];
-                }
+                },
+                rows: [{dummy: 1}, {dummy: 2}, {dummy: 3}],
+                resource: {
+                    results: [1,2,3],
+                    total: 3,
+                    subtotal: 3
+                },
+
+                numSelected: 0
             };
-            this.get = function() {};
+            this.get = function () {};
             this.invalidate = function () {};
+            this.refresh = function () {
+                var deferred = $q.defer();
+                return {
+                    $promise: deferred.promise,
+                    then : function () {}
+                }
+            }
         };
         ProductBulkAction = {
-            removeProducts: function() {
+            removeProducts: function () {
                 var deferred = $q.defer();
                 return {$promise: deferred.promise};
             },
-            syncProducts: function() {
+            syncProducts: function () {
                 var deferred = $q.defer();
                 return {$promise: deferred.promise};
             }
@@ -34,14 +49,14 @@ describe('Controller: ProductsController', function() {
             open: function () {
                 return {
                     closed: {
-                        then: function() {}
+                        then: function () {}
                     }
                 }
             }
         };
     });
 
-    beforeEach(inject(function(_Notification_, $controller, $rootScope, $location) {
+    beforeEach(inject(function (_Notification_, $controller, $rootScope, $location) {
         $scope = $rootScope.$new();
         Notification = _Notification_;
 
@@ -57,10 +72,10 @@ describe('Controller: ProductsController', function() {
         });
     }));
 
-    it('attaches the nutupane table to the scope', function() {
+    it('attaches the nutupane table to the scope', function () {
         expect($scope.table).toBeDefined();
     });
-    
+
     it('properly detects most important sync state error', function () {
         var product = {
             'sync_summary': {
@@ -91,7 +106,7 @@ describe('Controller: ProductsController', function() {
         expect($scope.mostImportantSyncState(product)).toBe('success');
     });
 
-    it("can remove multiple products", function() {
+    it("can remove multiple products", function () {
         spyOn(ProductBulkAction, 'removeProducts').and.callThrough();
 
         $scope.removeProducts();
@@ -100,7 +115,7 @@ describe('Controller: ProductsController', function() {
             jasmine.any(Function), jasmine.any(Function));
     });
 
-    it("can sync products", function() {
+    it("can sync products", function () {
         spyOn(ProductBulkAction, 'syncProducts').and.callThrough();
         $scope.syncProducts();
 
@@ -118,6 +133,18 @@ describe('Controller: ProductsController', function() {
 
         expect(result.templateUrl).toContain('products-bulk-sync-plan-modal.html');
         expect(result.controller).toBe('ProductsBulkSyncPlanModalController');
+    });
+
+    it("can disable repo discovery before refresh", function () {
+        expect($scope.disableRepoDiscovery).toBe(true);
+    });
+
+    it("can refresh table on repo discovery", function () {
+        $scope.goToDiscoveries();
+        expect($scope.table.rows).toEqual([]);
+        expect($scope.table.resource.total).toBe(0);
+        expect($scope.table.resource.subtotal).toBe(0);
+        expect($scope.table.resource.results).toEqual([]);
     });
 });
 
