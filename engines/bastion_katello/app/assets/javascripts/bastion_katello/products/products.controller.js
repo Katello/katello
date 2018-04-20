@@ -21,7 +21,7 @@
 angular.module('Bastion.products').controller('ProductsController',
     ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'Notification',
     function ($scope, $state, $sce, $location, $uibModal, translate, Nutupane, Product, ProductBulkAction, CurrentOrganization, Notification) {
-        var nutupane, taskUrl, taskLink, getBulkParams, bulkError, params;
+        var nutupane, nutupaneParams, taskUrl, taskLink, getBulkParams, bulkError, params;
 
         getBulkParams = function () {
             return {
@@ -47,10 +47,16 @@ angular.module('Bastion.products').controller('ProductsController',
             'paged': true
         };
 
-        nutupane = new Nutupane(Product, params);
+        nutupaneParams = {
+            'disableAutoLoad': true
+        };
+        $scope.disableRepoDiscovery = true;
+        nutupane = new Nutupane(Product, params, undefined, nutupaneParams);
         $scope.controllerName = 'katello_products';
         nutupane.masterOnly = true;
-
+        nutupane.refresh().then(function () {
+            $scope.disableRepoDiscovery = false;
+        });
         $scope.table = nutupane.table;
 
         $scope.$on('productDelete', function (event, taskId) {
