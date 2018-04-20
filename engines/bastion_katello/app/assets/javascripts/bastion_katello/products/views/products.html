@@ -17,7 +17,8 @@
     <button type="button" class="btn btn-default"
             ng-click="goToDiscoveries()"
             bst-feature-flag="custom_products"
-            ng-show="permitted('edit_products')">
+            ng-show="permitted('edit_products')"
+            ng-disabled = "disableRepoDiscovery">
       <span translate>Repo Discovery</span>
     </button>
 
