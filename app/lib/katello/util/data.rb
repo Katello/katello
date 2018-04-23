@@ -5,10 +5,8 @@ module Katello
         variable.map { |x| x.with_indifferent_access }
       end
 
-      def self.md5hash(string)
-        md5 = Digest::MD5.new
-        md5.update(string)
-        md5.hexdigest
+      def self.hexdigest(string)
+        defined?(ActiveSupport::Digest) ? ActiveSupport::Digest.hexdigest(string) : Digest::MD5.hexdigest(string)
       end
 
       def self.ostructize(obj, options = {})
