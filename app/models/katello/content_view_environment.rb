@@ -44,10 +44,10 @@ module Katello
 
       if content_view.default?
         self.label ||= environment.label
-        self.cp_id ||= Katello::Util::Data.md5hash(environment.organization.label)
+        self.cp_id ||= Katello::Util::Data.hexdigest(environment.organization.label)
       else
         self.label ||= [environment.label, content_view.label].join('/')
-        self.cp_id ||= Katello::Util::Data.md5hash([environment.id, content_view.id].join('-'))
+        self.cp_id ||= Katello::Util::Data.hexdigest([environment.id, content_view.id].join('-'))
       end
     end
   end
