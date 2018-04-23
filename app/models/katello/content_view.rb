@@ -53,6 +53,7 @@ module Katello
     validates :organization_id, :presence => true
     validate :check_non_composite_components
     validate :check_puppet_conflicts
+    validate :check_docker_conflicts
     validate :check_non_composite_auto_publish
     validates :composite, :inclusion => [true, false]
 
@@ -406,6 +407,10 @@ module Katello
       counts.select { |_k, v| v > 1 }.keys
     end
 
+    def duplicate_docker_repos
+      duplicate_repositories.where(:content_type => Katello::Repository::DOCKER_TYPE)
+    end
+
     def check_non_composite_components
       if !composite? && components.present?
         errors.add(:base, _("Cannot add component versions to a non-composite content view"))
@@ -423,6 +428,13 @@ module Katello
         versions = components.select { |v| v.puppet_modules.map(&:name).include?(name) }
         names = versions.map(&:name).join(", ")
         msg = _("Puppet module conflict: '%{mod}' is in %{versions}.") % {mod: name, versions: names}
+        errors.add(:base, msg)
+      end
+    end
+
+    def check_docker_conflicts
+      duplicate_docker_repos.each do |repo|
+        msg = _("Docker repo '%{repo}' is present in multiple component content views.") % {repo: repo.name}
         errors.add(:base, msg)
       end
     end
