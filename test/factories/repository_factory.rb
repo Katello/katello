@@ -26,10 +26,12 @@ FactoryBot.define do
 
     trait :docker do
       content_type "docker"
-      name "dockeruser/repo"
-      label "dockeruser_repo"
-      relative_path "empty_organization-fedora_label-dockeruser_repo"
+      docker_upstream_name "dockeruser/repo"
       download_policy ""
+      label "dockeruser_repo"
+      name "dockeruser/repo"
+      relative_path "empty_organization-fedora_label-dockeruser_repo"
+      unprotected true
     end
 
     trait :puppet do
