@@ -635,7 +635,7 @@ module Katello
       # for a default view, the same candlepin environment will be referenced
       # by the kt_environment and content_view_environment.
       value = self.default ? env.organization.label.to_s : [env.organization.label, env.label, self.label].join('-')
-      Katello::Util::Data.md5hash(value)
+      Katello::Util::Data.hexdigest(value)
     end
 
     def confirm_not_promoted
