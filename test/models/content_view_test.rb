@@ -256,6 +256,29 @@ module Katello
       end
     end
 
+    def test_docker_repo_conflicts
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
+
+      repo = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first)
+
+      view1 = create(:katello_content_view, organization: @organization)
+      view1.repositories << repo
+      repo1 = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+      version1 = create(:katello_content_view_version, :content_view => view1, :repositories => [repo1])
+
+      view2 = create(:katello_content_view, organization: @organization)
+      view2.repositories << repo
+      repo2 = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+      version2 = create(:katello_content_view_version, :content_view => view2, :repositories => [repo2])
+
+      composite.update_attributes(component_ids: [version1.id, version2.id])
+
+      refute composite.valid?
+      assert composite.errors.include?(:base)
+      assert composite.errors.full_messages.first =~ /^Docker repo '#{repo.name}' is present in multiple/
+    end
+
     def test_puppet_repos
       @p_forge = Repository.find(katello_repositories(:p_forge).id)
 
