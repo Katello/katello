@@ -11,6 +11,10 @@ describe('subscriptions table', () => {
       subscriptions={successState}
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
+      subscriptionDeleteModalOpen={false}
+      onSubscriptionDeleteModalClose={() => { }}
+      onDeleteSubscriptions={() => {}}
+      toggleDeleteButton={() => {}}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });
@@ -20,6 +24,10 @@ describe('subscriptions table', () => {
       subscriptions={emptyState}
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
+      subscriptionDeleteModalOpen={false}
+      onSubscriptionDeleteModalClose={() => { }}
+      onDeleteSubscriptions={() => {}}
+      toggleDeleteButton={() => {}}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });
@@ -29,6 +37,10 @@ describe('subscriptions table', () => {
       subscriptions={loadingState}
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
+      subscriptionDeleteModalOpen={false}
+      onSubscriptionDeleteModalClose={() => { }}
+      onDeleteSubscriptions={() => {}}
+      toggleDeleteButton={() => {}}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

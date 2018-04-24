@@ -49,7 +49,6 @@ export class Table extends React.Component {
     return this.props.rows.length === 0 && this.props.bodyMessage === undefined;
   }
 
-
   render() {
     const { columns, rows, emptyState, bodyMessage, children, itemCount, pagination, onPaginationChange, ...otherProps } = this.props;
 
@@ -84,6 +83,18 @@ export class Table extends React.Component {
           bordered
           hover
           columns={columns}
+          components={{
+            header: {
+              cell: cellProps =>
+                this.customHeaderFormatters({
+                  cellProps,
+                  columns,
+                  sortingColumns,
+                  rows: rows,
+                  onSelectAllRows: this.onSelectAllRows
+                })
+            }
+          }}
           {...otherProps}
         >
           {table}

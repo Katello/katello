@@ -18,6 +18,8 @@ class SubscriptionsPage extends Component {
     super(props);
     this.state = {
       manifestModalOpen: false,
+      subscriptionDeleteModalOpen: false,
+      disableDeleteButton: true,
     };
   }
 
@@ -55,8 +57,25 @@ class SubscriptionsPage extends Component {
       this.setState({ manifestModalOpen: true });
     };
 
-    const onModalClose = () => {
+    const onManageManifestModalClose = () => {
       this.setState({ manifestModalOpen: false });
+    };
+
+    const showSubscriptionDeleteModal = () => {
+      this.setState({ subscriptionDeleteModalOpen: true });
+    };
+
+    const onSubscriptionDeleteModalClose = () => {
+      this.setState({ subscriptionDeleteModalOpen: false });
+    };
+
+    const onDeleteSubscriptions = (selectedRows) => {
+      this.props.deleteSubscriptions(selectedRows);
+      onSubscriptionDeleteModalClose();
+    };
+
+    const toggleDeleteButton = (rowsSelected) => {
+      this.setState({ disableDeleteButton: !rowsSelected });
     };
 
     return (
@@ -88,7 +107,11 @@ class SubscriptionsPage extends Component {
                         {__('Export CSV')}
                       </Button>
 
-                      <Button disabled={taskInProgress}>
+                      <Button
+                        bsStyle="danger"
+                        onClick={showSubscriptionDeleteModal}
+                        disabled={taskInProgress || this.state.disableDeleteButton}
+                      >
                         {__('Delete')}
                       </Button>
                     </FormGroup>
@@ -96,11 +119,18 @@ class SubscriptionsPage extends Component {
                 </Form>
               </Col>
             </Row>
-            <ManageManifestModal showModal={this.state.manifestModalOpen} onClose={onModalClose} />
+            <ManageManifestModal
+              showModal={this.state.manifestModalOpen}
+              onClose={onManageManifestModalClose}
+            />
             <SubscriptionsTable
               loadSubscriptions={this.props.loadSubscriptions}
               updateQuantity={this.props.updateQuantity}
               subscriptions={this.props.subscriptions}
+              subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
+              onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
+              onDeleteSubscriptions={onDeleteSubscriptions}
+              toggleDeleteButton={toggleDeleteButton}
             />
           </Col>
         </Row>
@@ -115,6 +145,7 @@ SubscriptionsPage.propTypes = {
   subscriptions: PropTypes.shape({}).isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
+  deleteSubscriptions: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {

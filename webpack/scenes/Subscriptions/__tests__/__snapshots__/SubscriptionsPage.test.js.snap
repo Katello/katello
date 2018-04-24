@@ -90,8 +90,9 @@ exports[`subscriptions page should render 1`] = `
                   active={false}
                   block={false}
                   bsClass="btn"
-                  bsStyle="default"
-                  disabled={false}
+                  bsStyle="danger"
+                  disabled={true}
+                  onClick={[Function]}
                 >
                   Delete
                 </Button>
@@ -106,6 +107,9 @@ exports[`subscriptions page should render 1`] = `
       />
       <SubscriptionsTable
         loadSubscriptions={[Function]}
+        onDeleteSubscriptions={[Function]}
+        onSubscriptionDeleteModalClose={[Function]}
+        subscriptionDeleteModalOpen={false}
         subscriptions={
           Object {
             "availableQuantities": Object {},
@@ -174,6 +178,7 @@ exports[`subscriptions page should render 1`] = `
             "searchIsActive": false,
           }
         }
+        toggleDeleteButton={[Function]}
         updateQuantity={[Function]}
       />
     </Col>

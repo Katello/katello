@@ -14,6 +14,7 @@ describe('subscriptions page', () => {
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
       pollBulkSearch={pollBulkSearch}
+      deleteSubscriptions={() => {}}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

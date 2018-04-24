@@ -47,9 +47,10 @@ class Api {
     });
   }
 
-  delete(url, headers = {}) {
+  delete(url, headers = {}, data = {}) {
     return axios.delete(this.getApiUrl(url), {
       headers,
+      data,
     });
   }
 
