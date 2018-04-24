@@ -13,6 +13,9 @@ import {
   UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
   UPDATE_QUANTITY_FAILURE,
+  DELETE_SUBSCRIPTIONS_REQUEST,
+  DELETE_SUBSCRIPTIONS_SUCCESS,
+  DELETE_SUBSCRIPTIONS_FAILURE,
   MANIFEST_TASKS_BULK_SEARCH_ID,
 } from './SubscriptionConstants';
 
@@ -39,6 +42,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SUBSCRIPTIONS_REQUEST:
     case UPDATE_QUANTITY_REQUEST:
+    case DELETE_SUBSCRIPTIONS_REQUEST:
       return state.set('loading', true).set('tasks', []);
 
     case SUBSCRIPTIONS_SUCCESS: {
@@ -60,11 +64,15 @@ export default (state = initialState, action) => {
       });
     }
 
+    case DELETE_SUBSCRIPTIONS_SUCCESS:
+      return state.set('loading', false);
+
     case UPDATE_QUANTITY_SUCCESS:
       return state.set('loading', false);
 
     case SUBSCRIPTIONS_FAILURE:
     case UPDATE_QUANTITY_FAILURE:
+    case DELETE_SUBSCRIPTIONS_FAILURE:
       return state.merge({
         error: action.error,
         loading: false,

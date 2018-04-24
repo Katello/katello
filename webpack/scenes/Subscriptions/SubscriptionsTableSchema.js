@@ -1,10 +1,24 @@
 import React from 'react';
 import { Icon } from 'patternfly-react';
-import helpers from '../../move_to_foreman/common/helpers';
-import { headerFormat, cellFormat } from '../../move_to_foreman/components/common/table';
+import helpers, { selectionFormatter, selectionCellFormatter } from '../../move_to_foreman/common/helpers';
 import { entitlementsInlineEditFormatter } from './EntitlementsInlineEditFormatter';
+import { headerFormat, cellFormat } from '../../move_to_foreman/components/common/table';
 
-export const columns = inlineEditController => [
+export const columns = (inlineEditController, selectionController) => [
+  {
+    property: 'select',
+    header: {
+      label: __('Select all rows'),
+      props: {
+        index: 0,
+      },
+      formatters: [label => selectionFormatter(selectionController, label)],
+    },
+    cell: {
+      formatters: [(value, additionalData) =>
+        selectionCellFormatter(selectionController, value, additionalData)],
+    },
+  },
   {
     property: 'id',
     header: {
@@ -51,8 +65,7 @@ export const columns = inlineEditController => [
     cell: {
       formatters: [cellFormat],
     },
-  },
-  // TODO: use date formatter from tomas' PR
+  }, // TODO: use date formatter from tomas' PR
   {
     property: 'start_date',
     header: {
