@@ -84,6 +84,7 @@ class SubscriptionsTable extends Component {
       showUpdateConfirmDialog: false,
       showCancelConfirmDialog: false,
       showErrorDialog: false,
+      selectedRows: [],
     };
   }
 
@@ -180,6 +181,43 @@ class SubscriptionsTable extends Component {
       },
     };
 
+    const checkAllRowsSelected = () => this.state.rows.length === this.state.selectedRows.length;
+
+    const updateDeleteButton = () => {
+      this.props.toggleDeleteButton(this.state.selectedRows.length > 0);
+    };
+
+    const selectionController = {
+      allRowsSelected: () => checkAllRowsSelected(),
+      selectAllRows: () => {
+        if (checkAllRowsSelected()) {
+          this.setState(
+            { selectedRows: [] },
+            updateDeleteButton,
+          );
+        } else {
+          this.setState(
+            { selectedRows: this.state.rows.map(row => row.id) },
+            updateDeleteButton,
+          );
+        }
+      },
+      selectRow: ({ rowData }) => {
+        let { selectedRows } = this.state;
+        if (selectedRows.includes(rowData.id)) {
+          selectedRows = selectedRows.filter(e => e !== rowData.id);
+        } else {
+          selectedRows.push(rowData.id);
+        }
+
+        this.setState(
+          { selectedRows },
+          updateDeleteButton,
+        );
+      },
+      isSelected: ({ rowData }) => this.state.selectedRows.includes(rowData.id),
+    };
+
     const onPaginationChange = (pagination) => {
       this.props.loadSubscriptions({
         ...pagination,
@@ -191,7 +229,7 @@ class SubscriptionsTable extends Component {
       bodyMessage = __('No subscriptions match your search criteria.');
     }
 
-    const columnsDefinition = columns(inlineEditController);
+    const columnsDefinition = columns(inlineEditController, selectionController);
 
     return (
       <Spinner loading={subscriptions.loading} className="small-spacer">
@@ -259,6 +297,25 @@ class SubscriptionsTable extends Component {
           message={__('Some of your inputs contain errors. Please update them and save your changes again.')}
           onCancel={() => this.showErrorDialog(false)}
         />
+        <ConfirmDialog
+          show={this.props.subscriptionDeleteModalOpen}
+          title={__('Confirm Deletion')}
+          dangerouslySetInnerHTML={{
+            __html: sprintf(
+              __(`Are you sure you want to delete %(entitlementCount)s
+                  subscription(s)? This action will remove the subscription(s) and
+                  refresh your manifest. All systems using these subscription(s) will
+                  lose them and also may lose access to updates and Errata.`),
+              {
+                entitlementCount: `<b>${this.state.selectedRows.length}</b>`,
+              },
+            ),
+          }}
+
+          confirmLabel={__('Delete')}
+          onConfirm={() => this.props.onDeleteSubscriptions(this.state.selectedRows)}
+          onCancel={this.props.onSubscriptionDeleteModalClose}
+        />
       </Spinner>
     );
   }
@@ -270,6 +327,10 @@ SubscriptionsTable.propTypes = {
   subscriptions: PropTypes.shape({
     results: PropTypes.array,
   }).isRequired,
+  subscriptionDeleteModalOpen: PropTypes.bool.isRequired,
+  onDeleteSubscriptions: PropTypes.func.isRequired,
+  onSubscriptionDeleteModalClose: PropTypes.func.isRequired,
+  toggleDeleteButton: PropTypes.func.isRequired,
 };
 
 export default SubscriptionsTable;

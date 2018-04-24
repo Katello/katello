@@ -10,12 +10,17 @@ export const SUBSCRIPTIONS_QUANTITIES_REQUEST = 'SUBSCRIPTIONS_QUANTITIES_REQUES
 export const SUBSCRIPTIONS_QUANTITIES_SUCCESS = 'SUBSCRIPTIONS_QUANTITIES_SUCCESS';
 export const SUBSCRIPTIONS_QUANTITIES_FAILURE = 'SUBSCRIPTIONS_QUANTITIES_FAILURE';
 
+export const DELETE_SUBSCRIPTIONS_REQUEST = 'DELETE_SUBSCRIPTIONS_REQUEST';
+export const DELETE_SUBSCRIPTIONS_SUCCESS = 'DELETE_SUBSCRIPTIONS_SUCCESS';
+export const DELETE_SUBSCRIPTIONS_FAILURE = 'DELETE_SUBSCRIPTIONS_FAILURE';
+
 export const BLOCKING_FOREMAN_TASK_TYPES = [
   'Actions::Katello::Organization::ManifestImport',
   'Actions::Katello::Organization::ManifestRefresh',
   'Actions::Katello::Organization::ManifestDelete',
   'Actions::Katello::UpstreamSubscriptions::BindEntitlements',
   'Actions::Katello::UpstreamSubscriptions::UpdateEntitlement',
+  'Actions::Katello::UpstreamSubscriptions::RemoveEntitlements',
 ];
 
 export const MANIFEST_TASKS_BULK_SEARCH_ID = 'activeManifestTasksSearch';
