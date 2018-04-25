@@ -29,7 +29,6 @@ require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/capsule_support"
 require "#{Katello::Engine.root}/test/support/pulp/repository_support"
-require "#{Katello::Engine.root}/test/support/fixtures_support"
 
 require 'dynflow/testing'
 Mocha::Mock.send :include, Dynflow::Testing::Mimic
@@ -72,26 +71,19 @@ module FixtureTestCase
     self.use_instantiated_fixtures = false
     self.pre_loaded_fixtures = true
 
-    Katello::FixturesSupport.set_fixture_classes(self)
-
-    # Fixtures are copied into a separate path to combine with Foreman fixtures. This directory
-    # is kept out of version control.
-    self.fixture_path = "#{Rails.root}/tmp/combined_fixtures/"
-    FileUtils.rm_rf(self.fixture_path) if File.directory?(self.fixture_path)
-    Dir.mkdir(self.fixture_path)
-    FileUtils.cp(Dir.glob("#{Katello::Engine.root}/test/fixtures/models/*"), self.fixture_path)
-    FileUtils.cp(Dir.glob("#{Rails.root}/test/fixtures/*"), self.fixture_path)
-    fixtures(:all)
-    FIXTURES = load_fixtures(ActiveRecord::Base)
-
     load_permissions
     load_repository_types
     configure_vcr
 
     Setting::Content.load_defaults
 
+    FIXTURES = load_fixtures(ActiveRecord::Base)
     @@admin = ::User.unscoped.find(FIXTURES['users']['admin']['id'])
     User.current = @@admin
+  end
+
+  def katello_environments(name)
+    katello_k_t_environments(name)
   end
 end
 
