@@ -6,6 +6,7 @@ require 'factory_bot_rails'
 require "webmock/minitest"
 require "mocha/setup"
 require 'set'
+require 'robottelo/reporter/attributes'
 
 SimpleCov.formatters = [
   SimpleCov::Formatter::RcovFormatter,
@@ -96,6 +97,7 @@ module FixtureTestCase
 end
 
 class ActionController::TestCase
+  extend Robottelo::Reporter::TestAttributes
   include LocaleHelperMethods
   include ControllerSupport
   include ForemanTasks::TestHelpers::WithInThreadExecutor

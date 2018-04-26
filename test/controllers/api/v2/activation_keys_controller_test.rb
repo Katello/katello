@@ -36,6 +36,7 @@ module Katello
       permissions
     end
 
+    test_attributes :pid => 'aedba598-2e47-44a8-826c-4dc304ba00be'
     def test_index
       results = JSON.parse(get(:index, params: { :organization_id => @organization.id }).body)
 
@@ -90,18 +91,125 @@ module Katello
       end
     end
 
+    test_attributes :pid => '1d73b8cc-a754-4637-8bae-d9d2aaf89003'
     def test_create_unlimited
       ActivationKey.any_instance.expects(:reload)
       assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
         activation_key.max_hosts.must_be_nil
+        assert activation_key.unlimited_hosts
+        assert_valid activation_key
       end
 
       post :create, params: { :organization_id => @organization.id, :activation_key => {:name => 'Unlimited Key', :unlimited_hosts => true} }
 
       assert_response :success
       assert_template 'katello/api/v2/common/create'
+      response = JSON.parse(@response.body)
+      assert response.key?('unlimited_hosts')
+      assert response['unlimited_hosts']
     end
 
+    test_attributes :pid => '9bbba620-fd98-4139-a44b-af8ce330c7a4'
+    def test_create_limited_hosts
+      max_hosts = 100
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        refute activation_key.unlimited_hosts
+        assert_equal max_hosts, activation_key.max_hosts
+        assert_valid activation_key
+      end
+
+      post :create, params: {
+        :organization_id => @organization.id,
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => max_hosts}
+      }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+      response = JSON.parse(@response.body)
+      assert response.key?('unlimited_hosts')
+      assert response.key?('max_hosts')
+      refute response['unlimited_hosts']
+      assert_equal max_hosts, response['max_hosts']
+    end
+
+    test_attributes :pid => '749e0d28-640e-41e5-89d6-b92411ce73a3'
+    def test_create_with_name
+      key_name = 'key_with_name'
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        assert_equal key_name, activation_key.name
+        assert_valid activation_key
+      end
+
+      post :create, params: { :organization_id => @organization.id, :activation_key => {:name => key_name} }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+      response = JSON.parse(@response.body)
+      assert response.key?('name')
+      assert_equal key_name, response['name']
+    end
+
+    test_attributes :pid => '64d93726-6f96-4a2e-ab29-eb5bfa2ff8ff'
+    def test_create_with_description
+      key_description = 'key_with_description'
+      ActivationKey.any_instance.expects(:reload)
+      assert_sync_task(::Actions::Katello::ActivationKey::Create) do |activation_key|
+        assert_equal key_description, activation_key.description
+        assert_valid activation_key
+      end
+
+      post :create, params: {
+        :organization_id => @organization.id,
+        :activation_key => {:name => 'new key', :description => key_description}
+      }
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/create'
+      response = JSON.parse(@response.body)
+      assert response.key?('description')
+      assert_equal key_description, response['description']
+    end
+
+    test_attributes :pid => 'a9e756e1-886d-4f0d-b685-36ce4247517d'
+    def test_should_not_create_with_no_hosts_limit
+      post :create, params: {
+        :organization_id => @organization.id,
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false}
+      }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Max hosts cannot be nil', @response.body
+    end
+
+    test_attributes :pid => 'c018b177-2074-4f1a-a7e0-9f38d6c9a1a6'
+    def test_should_not_create_with_invalid_hosts_limit
+      post :create, params: {
+        :organization_id => @organization.id,
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => false, :max_hosts => 0}
+      }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
+    end
+
+    test_attributes :pid => '71b9b000-b978-4a95-b6f8-83c09ed39c01'
+    def test_should_not_create_unlimited_and_invalid_max_hosts
+      # BZ: 1156555
+      post :create, params: {
+        :organization_id => @organization.id,
+        :activation_key => {:name => 'limited Key', :unlimited_hosts => true, :max_hosts => 0}
+      }
+      assert_response :error
+    end
+
+    test_attributes :pid => '5f7051be-0320-4d37-9085-6904025ad909'
+    def test_should_not_create_with_invalid_name
+      post :create, params: { :organization_id => @organization.id, :activation_key => {:name => ''} }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Name must contain at least 1 character', @response.body
+    end
+
+    test_attributes :pid => '34ca8303-8135-4694-9cf7-b20f8b4b0a1e'
     def test_update
       assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, activation_key_params|
         assert_equal activation_key.id, @activation_key.id
@@ -114,6 +222,58 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/activation_keys/show'
+    end
+
+    test_attributes :pid => '0f857d2f-81ed-4b8b-b26e-34b4f294edbc'
+    def test_should_not_update_with_invalid_max_hosts
+      put :update, params: {
+        :id => @activation_key.id,
+        :organization_id => @organization.id,
+        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 }
+      }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
+    end
+
+    test_attributes :pid => 'da85a32c-942b-4ab8-a133-36b028208c4d'
+    def test_should_not_update_with_invalid_name
+      put :update, params: {
+        :id => @activation_key.id,
+        :organization_id => @organization.id,
+        :activation_key => { :unlimited_hosts => false, :max_hosts => 0 }
+      }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Max hosts cannot be less than one', @response.body
+    end
+
+    test_attributes :pid => '3bcff792-105a-4577-b7c2-5b0de4f79c77'
+    def test_should_not_update_existing_with_invalid_max_hosts
+      activation_key = ActivationKey.new(
+        :name => 'new key', :organization => @organization, :unlimited_hosts => false, :max_hosts => 1
+      )
+      assert activation_key.save
+      put :update, params: {
+        :id => activation_key.id,
+        :organization_id => @organization.id,
+        :activation_key => { :max_hosts => 'foo' }
+      }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Max hosts is not a number', @response.body
+    end
+
+    test_attributes :pid => 'ec225dad-2d27-4b37-989d-1ba2c7f74ac4'
+    def test_update_auto_attach
+      new_auto_attach = !@activation_key.auto_attach
+      assert_sync_task(::Actions::Katello::ActivationKey::Update) do |activation_key, activation_key_params|
+        assert_equal activation_key.id, @activation_key.id
+        assert_equal new_auto_attach, activation_key_params[:auto_attach]
+      end
+      put :update, params: {
+        :id => @activation_key.id,
+        :organization_id => @organization.id,
+        :activation_key => { :auto_attach => new_auto_attach }
+      }
+      assert_response :success
     end
 
     def test_update_protected
@@ -136,6 +296,7 @@ module Katello
       assert_includes results['errors']['max_hosts'][0], 'cannot be lower than current usage count'
     end
 
+    test_attributes :pid => 'aa28d8fb-e07d-45fa-b43a-fc90c706d633'
     def test_destroy
       assert_sync_task(::Actions::Katello::ActivationKey::Destroy, @activation_key)
       delete :destroy, params: { :id => @activation_key.id }
