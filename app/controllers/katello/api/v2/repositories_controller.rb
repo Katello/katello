@@ -250,6 +250,8 @@ module Katello
 
       fail HttpErrors::BadRequest, _("Repository content type must be 'yum' to export.") unless @repository.content_type == 'yum'
 
+      fail HttpErrors::BadRequest, _("On demand repositories cannot be exported.") if @repository.download_policy == ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+
       task = async_task(::Actions::Katello::Repository::Export, [@repository],
                         ::Foreman::Cast.to_bool(params[:export_to_iso]),
                         params[:since].try(:to_datetime),

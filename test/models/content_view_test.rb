@@ -171,6 +171,25 @@ module Katello
       assert_empty view.repositories
     end
 
+    def test_on_demand_repositories
+      product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
+      repo1 = create(:katello_repository,
+                     content_view_version: @organization.default_content_view.versions.first,
+                     download_policy: ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND,
+                     product: product)
+      view1 = create(:katello_content_view, organization: @organization)
+      view1.repositories << repo1
+      assert view1.on_demand_repositories.include?(repo1)
+
+      repo2 = create(:katello_repository,
+                     content_view_version: @organization.default_content_view.versions.first,
+                     download_policy: ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE,
+                     product: product)
+      view2 = create(:katello_content_view, organization: @organization)
+      view2.repositories << repo2
+      refute view2.on_demand_repositories.include?(repo2)
+    end
+
     def test_content_view_components
       assert_raises(ActiveRecord::RecordInvalid) do
         @library_dev_view.update_attributes!(:component_ids => [@library_view.versions.first.id])
