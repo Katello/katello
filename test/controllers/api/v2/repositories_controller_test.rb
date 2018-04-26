@@ -16,6 +16,7 @@ module Katello
       @environment = katello_environments(:dev)
       @content_view_version = katello_content_view_versions(:library_view_version_1)
       @fedora_dev = katello_repositories(:fedora_17_x86_64_dev)
+      @on_demand_repo = katello_repositories(:fedora_17_x86_64)
       @puppet_repo = katello_repositories(:p_forge)
       @docker_repo = katello_repositories(:busybox)
     end
@@ -972,6 +973,12 @@ module Katello
 
     def test_export_wrong_type
       post :export, params: { :id => @puppet_repo.id }
+      assert_response 400
+    end
+
+    def test_export_on_demand
+      Setting['pulp_export_destination'] = '/tmp'
+      post :export, params: { :id => @on_demand_repo.id }
       assert_response 400
     end
 

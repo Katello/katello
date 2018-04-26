@@ -618,6 +618,10 @@ module Katello
       content_view_versions.count
     end
 
+    def on_demand_repositories
+      repositories.where(download_policy: ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
+    end
+
     protected
 
     def remove_repository(repository)

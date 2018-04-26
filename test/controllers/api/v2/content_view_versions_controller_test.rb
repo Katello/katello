@@ -127,6 +127,13 @@ module Katello
       assert_response :success
     end
 
+    def test_export_fails_on_demand
+      ContentView.any_instance.stubs(:on_demand_repositories).returns([katello_repositories(:fedora_17_x86_64)])
+      version = @library_dev_staging_view.versions.first
+      post :export, params: { :id => version.id }
+      assert_response :bad_request
+    end
+
     def test_export_bad_date
       version = @library_dev_staging_view.versions.first
       post :export, params: { :id => version.id, :since => "a really bad date" }
