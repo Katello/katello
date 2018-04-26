@@ -10,6 +10,10 @@ module Katello
       @pool_one = katello_pools(:pool_one)
     end
 
+    should allow_values(*valid_name_list).for(:name)
+    should allow_values(*valid_name_list).for(:description)
+    should_not allow_values(-1, 0, 'foo').for(:max_hosts)
+
     test "can have content view" do
       @dev_key = katello_activation_keys(:dev_key)
       @dev_key.content_view = @dev_view
