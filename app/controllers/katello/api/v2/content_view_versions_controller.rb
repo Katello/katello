@@ -82,6 +82,10 @@ module Katello
         fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
       end
 
+      if (repos = @version.content_view.on_demand_repositories).any?
+        fail HttpErrors::BadRequest, _("This content view has on demand repositories that cannot be exported: %{repos}" % {repos: repos.pluck(:label).join(", ")})
+      end
+
       if params[:since].present?
         begin
           params[:since].to_datetime

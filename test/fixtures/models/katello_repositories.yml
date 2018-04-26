@@ -363,7 +363,7 @@ fedora_17_unpublished:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   url:                  "http://www.pleaseack.com"
-  download_policy: on_demand
+  download_policy:      immediate
 
 fedora_17_unpublished_2:
   name:                 Fedora 17 x86_64 2
