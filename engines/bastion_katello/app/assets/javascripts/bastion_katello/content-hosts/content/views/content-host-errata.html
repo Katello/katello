@@ -45,7 +45,7 @@
         Limit to environment
       </label>
       <select class="form-control"
-              placeholder="{{ 'Limit to Environment' | translate }}"
+              placeholder="{{ 'Limit to Lifecycle Environment' | translate }}"
               ng-model="selectedErrataOption"
               ng-change="refreshErrata(selectedErrataOption)"
               ng-options="option.label as option.name for option in errataOptions | orderBy: 'order'">
