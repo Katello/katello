@@ -20,25 +20,30 @@ module Actions
           end
 
           sequence do
-            plan_copy(Pulp::Repository::CopySrpm, source_repo, target_repo)
-
-            if filters.empty? || copy_clauses
-              plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
-              process_errata_and_groups = true
-            elsif options[:simple_clone]
-              plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo)
-              process_errata_and_groups = true
+            concurrence do
+              plan_copy(Pulp::Repository::CopySrpm, source_repo, target_repo)
+              if filters.empty? || copy_clauses
+                plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
+                process_errata_and_groups = true
+              elsif options[:simple_clone]
+                plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo)
+                process_errata_and_groups = true
+              end
             end
             if remove_clauses
               plan_remove(Pulp::Repository::RemoveRpm, target_repo, :unit => remove_clauses)
               process_errata_and_groups = true
             end
-            if process_errata_and_groups
-              plan_copy(Pulp::Repository::CopyErrata, source_repo, target_repo, nil)
-              plan_copy(Pulp::Repository::CopyPackageGroup, source_repo, target_repo, nil)
+            concurrence do
+              if process_errata_and_groups
+                plan_copy(Pulp::Repository::CopyErrata, source_repo, target_repo, nil)
+                plan_copy(Pulp::Repository::CopyPackageGroup, source_repo, target_repo, nil)
+              end
             end
-            plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
-            plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
+            concurrence do
+              plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
+              plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
+            end
 
             # Check for matching content before indexing happens, the content in pulp is
             # actually updated, but it is not reflected in the database yet.
@@ -52,12 +57,15 @@ module Actions
             plan_action(Katello::Repository::IndexContent, id: target_repo.id) if index_content
 
             if purge_empty_units
-              plan_action(Pulp::Repository::PurgeEmptyErrata, :pulp_id => target_repo.pulp_id)
-              plan_action(Pulp::Repository::PurgeEmptyPackageGroups, :pulp_id => target_repo.pulp_id)
-              plan_action(Katello::Repository::IndexErrata, target_repo)
-              plan_action(Katello::Repository::IndexPackageGroups, target_repo)
+              concurrence do
+                plan_action(Pulp::Repository::PurgeEmptyErrata, :pulp_id => target_repo.pulp_id)
+                plan_action(Pulp::Repository::PurgeEmptyPackageGroups, :pulp_id => target_repo.pulp_id)
+              end
+              concurrence do
+                plan_action(Katello::Repository::IndexErrata, target_repo)
+                plan_action(Katello::Repository::IndexPackageGroups, target_repo)
+              end
             end
-
             source_repository = filters.empty? ? source_repo : nil
 
             if generate_metadata
