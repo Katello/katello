@@ -47,7 +47,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
         };
 
         $scope.selectedErrataOption = 'current';
-        $scope.errataOptions = [{name: "Current Environment", label: 'current'}, {name: 'foo', label: 'bar'}];
+        $scope.errataOptions = [{name: "Current Lifecycle Environment", label: 'current'}, {name: 'foo', label: 'bar'}];
 
         $scope.table.initialLoad = false;
 
@@ -57,12 +57,12 @@ angular.module('Bastion.content-hosts').controller('ContentHostErrataController'
                 previousEnv;
 
             if (host.hasContent()) {
-                currentEnv = translate("Current Environment (%e/%cv)").replace("%e", host.content_facet_attributes.lifecycle_environment.name).replace("%cv", host.content_facet_attributes.content_view_name);
+                currentEnv = translate("Current Lifecycle Environment (%e/%cv)").replace("%e", host.content_facet_attributes.lifecycle_environment.name).replace("%cv", host.content_facet_attributes.content_view_name);
                 $scope.errataOptions = [{name: currentEnv, label: 'current', order: 3}];
 
                 if (!host['content_facet_attributes']['lifecycle_environment_library?']) {
                     Environment.get({id: host['content_facet_attributes'].lifecycle_environment.id}).$promise.then(function (env) {
-                        previousEnv = translate("Previous Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_facet_attributes.content_view_name);
+                        previousEnv = translate("Previous Lifecycle Environment (%e/%cv)").replace('%e', env.prior.name).replace("%cv", host.content_facet_attributes.content_view_name);
                         $scope.errataOptions.push({name: previousEnv,
                                                    label: 'prior', order: 2, 'content_view_id': host.content_facet_attributes.content_view_id, 'environment_id': env.prior.id});
 
