@@ -6,6 +6,7 @@ attributes :content_type, :url, :relative_path, :arch, :content_id
 attributes :pulp_id => :backend_identifier
 attributes :cp_label => :content_label
 attributes :major, :minor
+attributes :container_repository_name
 
 child :product do |_product|
   attributes :id, :cp_id, :name

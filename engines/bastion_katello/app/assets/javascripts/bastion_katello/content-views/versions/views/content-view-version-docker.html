@@ -5,6 +5,7 @@
         <th bst-table-column translate>Name</th>
         <th bst-table-column translate>Product</th>
         <th bst-table-column translate>Repository</th>
+        <th bst-table-column translate>Container Image Name</th>
         <th bst-table-column translate>Tags</th>
       </tr>
     </thead>
@@ -14,6 +15,7 @@
         <td bst-table-cell>{{ repository.name }}</td>
         <td bst-table-cell>{{ repository.product.name }}</td>
         <td bst-table-cell>{{ repository.relative_path }}</td>
+        <td bst-table-cell>{{ repository.container_repository_name }}</td>
         <td bst-table-cell class="number-cell">{{ repository.content_counts.docker_tag || 0}}</td>
       </tr>
     </tbody>
