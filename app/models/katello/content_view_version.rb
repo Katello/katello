@@ -3,6 +3,8 @@ module Katello
     include Authorization::ContentViewVersion
     include ForemanTasks::Concerns::ActionSubject
 
+    define_model_callbacks :promote, :only => [:before, :after]
+
     before_destroy :validate_destroyable!
 
     belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
@@ -346,6 +348,10 @@ module Katello
         end
       end
       true
+    end
+
+    def rabl_path
+      "katello/api/v2/#{self.class.to_s.demodulize.tableize}/show"
     end
 
     private
