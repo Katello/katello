@@ -97,7 +97,7 @@ module Katello
       @activation_key.pools.each do |pool|
         @new_activation_key.subscribe(pool[:id])
       end
-      @new_activation_key.set_content_overrides(@activation_key.content_overrides)
+      @new_activation_key.set_content_overrides(@activation_key.content_overrides) unless @activation_key.content_overrides.blank?
       respond_for_show(:resource => @new_activation_key)
     end
 

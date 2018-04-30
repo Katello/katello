@@ -88,7 +88,7 @@ module Katello
               client.options[:payload] = attrs_to_delete.to_json
               result = client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
             end
-            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result))
+            ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result || '{}'))
           end
 
           def path(id = nil)
