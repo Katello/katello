@@ -173,7 +173,7 @@ module Katello
         assert_equal activation_key_params[:auto_attach], @activation_key.auto_attach
       end
       content_overrides = [::Katello::ContentOverride.new("foo", :enabled => 1), ::Katello::ContentOverride.new("bar", :enabled => nil)]
-      @activation_key.expects(:content_overrides).returns(content_overrides)
+      @activation_key.expects(:content_overrides).at_least_once.returns(content_overrides)
 
       ::Katello::Resources::Candlepin::ActivationKey.expects(:update_content_overrides).with do |id, hash|
         id.wont_equal(@activation_key.cp_id)
