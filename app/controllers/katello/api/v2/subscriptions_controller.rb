@@ -31,7 +31,7 @@ module Katello
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
       collection = scoped_search(
-        index_relation.distinct, :cp_id, :asc, resource_class: Pool, includes: [:subscription])
+        index_relation.distinct, nil, nil, resource_class: Pool, includes: [:subscription], custom_sort: name_sort)
       if params[:activation_key_id]
         key_pools = @activation_key.get_key_pools
         collection[:results] = collection[:results].map do |pool|
@@ -39,6 +39,10 @@ module Katello
         end
       end
       respond(:collection => collection)
+    end
+
+    def name_sort
+      lambda { |relation| relation.order("katello_subscriptions.name ASC") }
     end
 
     def index_relation
