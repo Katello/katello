@@ -41,15 +41,31 @@ module Katello
       assert_equal proxy.id, host.content_facet.content_source_id # changed
     end
 
+    def test_content_facet_allows_individual_attribute_updates
+      assert host.update_attributes(
+        :content_facet_attributes => { content_view_id: view.id, lifecycle_environment_id: library.id })
+      refute_nil host.content_facet
+      assert host.update_attributes(:content_facet_attributes => { lifecycle_environment_id: dev.id})
+      assert_equal dev.id, host.content_facet.lifecycle_environment_id
+    end
+
     def test_content_facet_gets_ignored_on_new
       assert_nil empty_host.content_facet
       empty_host.content_facet_attributes = { :content_source_id => proxy.id }
-      refute empty_host.valid?
+      assert empty_host.valid?
 
       empty_host.reload
       assert_nil empty_host.content_facet
 
       empty_host.update_attributes(:content_facet_attributes => {})
+      empty_host.reload
+      assert_nil empty_host.content_facet
+
+      empty_host.update_attributes(:content_facet_attributes => { content_view_id: view.id })
+      empty_host.reload
+      assert_nil empty_host.content_facet
+
+      empty_host.update_attributes(:content_facet_attributes => { lifecycle_environment_id: library.id })
       empty_host.reload
       assert_nil empty_host.content_facet
 

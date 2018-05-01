@@ -49,7 +49,11 @@ module Katello
         )
 
         def content_facet_ignore_update?(attributes)
-          self.content_facet.blank? && attributes.values.all?(&:blank?)
+          self.content_facet.blank? && (
+            attributes.values.all?(&:blank?) ||
+            attributes['content_view_id'].blank? ||
+            attributes['lifecycle_environment_id'].blank?
+          )
         end
       end
 
