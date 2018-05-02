@@ -24,6 +24,10 @@ module Katello
             else
               foreman_settings_url(schema)
             end
+      content_path = content_path.sub(%r|^/|, '')
+      if @host.content_view && !@host.content_view.default?
+        content_path = [@host.content_view.label, content_path].join('/')
+      end
       path = ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(
         @host.lifecycle_environment, content_path)
       "#{url}/pulp/#{content_type}/#{path}"
