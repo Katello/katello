@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div data-extend-template="layouts/partials/table.html">
+    <div ng-show="showTable()" data-extend-template="layouts/partials/table.html">
       <div data-block="search">
         <input type="text" class="form-control" stop-event="click"
                placeholder="{{ 'Filter...' | translate }}"
@@ -105,6 +105,103 @@
         </table>
       </div>
     </div>
+
+    <div name="errataDetails" ng-show="showErrata">
+      <a ng-click="showErrata = false">
+        <i class="fa fa-double-angle-left"></i>
+        {{ "Back To Errata List" | translate }}
+      </a>
+
+      <h3>{{ 'Errata Details' | translate }}</h3>
+
+      <h3>{{ erratum.errata_id }} </h3>
+
+      <div class="details details-full">
+        <section>
+
+          <div class="detail">
+            <span class="info-label" translate>Type</span>
+            <span class="info-value">{{ erratum.type }}</span>
+          </div>
+          <div class="detail">
+            <span class="info-label" translate>Title</span>
+            <span class="info-value">{{ erratum.title }}</span>
+          </div>
+          <div class="detail">
+            <span class="info-label" translate>Issued</span>
+            <span class="info-value">{{ erratum.issued }}</span>
+          </div>
+          <div class="detail">
+            <span class="info-label" translate>Updated</span>
+            <span class="info-value">{{ erratum.updated }}</span>
+          </div>
+          <div class="detail">
+            <span class="info-label" translate>Reboot Suggested</span>
+            <span class="info-value">{{ erratum.reboot_suggested }}</span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Description</span>
+            <span class="info-value">
+        <p ng-repeat="paragraph in erratum.description.split('\n\n')">
+          {{ paragraph }}
+        </p>
+      </span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Solution</span>
+            <span class="info-value">
+        <p ng-repeat="paragraph in erratum.solution.split('\n\n')">
+          {{ paragraph }}
+        </p>
+      </span>
+          </div>
+
+          <div class="detail">
+            <span class="info-label" translate>Packages</span>
+            <span class="info-value">
+        <ul>
+          <li ng-repeat="package in erratum.packages">
+            {{ package }}
+          </li>
+        </ul>
+      </span>
+          </div>
+
+        </section>
+      </div>
+  </div>
+
+    <div name="errataHostsDetails" ng-show="showHosts">
+      <a ng-click="showHosts = false">
+        <i class="fa fa-double-angle-left"></i>
+        {{ "Back To Errata List" | translate }}
+      </a>
+
+      <h3 translate>Applicable hosts for {{ erratum.errata_id }} </h3>
+
+      <div class="details details-full">
+        <section>
+          <table class="table">
+            <thead>
+            <tr>
+              <th translate>
+                Name
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="host in erratum.applicable_hosts">
+              <td>{{ host.name }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+
   </div>
 
   <div data-block="modal-footer">

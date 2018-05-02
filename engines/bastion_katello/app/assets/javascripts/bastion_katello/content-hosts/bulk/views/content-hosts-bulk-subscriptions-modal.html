@@ -80,7 +80,7 @@
             <tr bst-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
               <td class="row-select"></td>
               <td colspan="8">
-                <a ui-sref="subscription.info({subscriptionId: subscription.id})" class="confined-text">
+                <a ng-click="ok();"  ui-sref="subscription.info({subscriptionId: subscription.id})" class="confined-text">
                   {{ name }}
                 </a>
               </td>
