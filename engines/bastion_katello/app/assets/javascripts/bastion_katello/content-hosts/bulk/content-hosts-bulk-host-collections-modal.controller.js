@@ -38,7 +38,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkHostCollecti
         nutupane.masterOnly = true;
 
         $scope.table = nutupane.table;
-
         $scope.confirmHostCollectionAction = function (action) {
             $scope.hostCollections.confirm = true;
             $scope.hostCollections.action = action;

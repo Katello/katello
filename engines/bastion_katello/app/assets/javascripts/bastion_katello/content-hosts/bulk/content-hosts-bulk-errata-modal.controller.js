@@ -40,7 +40,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         nutupane = new Nutupane(HostBulkAction, hostIds, 'installableErrata');
         $scope.controllerName = 'katello_errata';
         nutupane.masterOnly = true;
-
+        $scope.showErrata = false;
+        $scope.showHosts = false;
         $scope.table = nutupane.table;
         $scope.table.errataFilterTerm = "";
         $scope.table.initialLoad = false;
@@ -56,6 +57,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
         if (hostIds.included.ids) {
             $scope.errataActionFormValues.hostIds = hostIds.included.ids.join(',');
         }
+
+        $scope.showTable = function () {
+            return (!$scope.showErrata && !$scope.showHosts);
+        };
 
         $scope.fetchErrata = function () {
             var params = hostIds;
@@ -73,13 +78,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkErrataModalC
 
         $scope.transitionToErrata = function (erratum) {
             fetchErratum(erratum['errata_id']);
-            $scope.transitionTo('content-hosts.bulk-actions.errata.details', {errataId: erratum['errata_id']});
+            $scope.erratum = erratum;
+            $scope.showErrata = true;
         };
 
         $scope.transitionToErrataContentHosts = function (erratum) {
             $scope.erratum = erratum;
-            $scope.transitionTo('content-hosts.bulk-actions.errata.content-hosts', {errataId: erratum['errata_id']});
+            $scope.showHosts = true;
         };
+
 
         $scope.installErrata = function () {
             if ($scope.remoteExecutionByDefault) {
