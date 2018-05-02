@@ -80,7 +80,7 @@ module Katello
       product = Product.new(product_params.to_h)
 
       sync_task(::Actions::Katello::Product::Create, product, @organization)
-      respond(:resource => product)
+      respond_for_create(:resource => product)
     end
 
     api :GET, "/products/:id", N_("Show a product")

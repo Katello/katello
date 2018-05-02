@@ -78,7 +78,7 @@ module Katello
       @organization = Organization.new(resource_params)
       sync_task(::Actions::Katello::Organization::Create, @organization)
       @organization.reload
-      respond_for_show :resource => @organization
+      respond_for_create :resource => @organization
     rescue => e
       process_resource_error(message: e.message)
     end

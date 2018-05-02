@@ -57,7 +57,7 @@ module Katello
                                                                                    :description => 'This is my cool new product.'} }
 
       assert_response :success
-      assert_template 'api/v2/sync_plans/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_fail

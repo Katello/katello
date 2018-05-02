@@ -250,7 +250,7 @@ module Katello
       Product.stubs(:find).returns(product)
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_arch
@@ -279,7 +279,7 @@ module Katello
       Product.stubs(:find).returns(product)
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :arch => 'x86_64' }
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_empty_string_url
@@ -309,7 +309,7 @@ module Katello
 
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum' }
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_gpg_key
@@ -341,7 +341,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_cert
@@ -373,7 +373,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_checksum
@@ -404,7 +404,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum', :checksum_type => 'sha256' }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_download_policy
@@ -435,7 +435,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => '', :content_type => 'yum', :download_policy => 'on_demand' }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_protected_true
@@ -465,7 +465,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def run_test_individual_attribute(params)
@@ -495,7 +495,7 @@ module Katello
       params = {:name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum', :unprotected => false}.merge(params)
       post :create, params: params
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_mirror_on_sync_true
@@ -554,7 +554,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'docker', :docker_upstream_name => "busybox" }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_with_ostree
@@ -590,7 +590,7 @@ module Katello
       post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://hub.registry.com', :content_type => 'ostree', :ostree_upstream_sync_policy => sync_policy, :ostree_upstream_sync_depth => sync_depth }
 
       assert_response :success
-      assert_template 'api/v2/repositories/show'
+      assert_template 'api/v2/common/create'
     end
 
     def test_create_without_label_or_name

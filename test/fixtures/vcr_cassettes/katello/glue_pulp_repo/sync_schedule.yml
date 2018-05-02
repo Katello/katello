@@ -1,205 +1,6 @@
 ---
 http_interactions:
 - request:
-    method: post
-    uri: https://dev.example.com/pulp/api/v2/repositories/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
-        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
-        b3J0ZXJfY29uZmlnIjp7ImZlZWQiOiJmaWxlOi8vL3Zhci93d3cvdGVzdF9y
-        ZXBvcy96b28iLCJkb3dubG9hZF9wb2xpY3kiOm51bGwsInJlbW92ZV9taXNz
-        aW5nIjpudWxsLCJzc2xfY2xpZW50X2NlcnQiOiJmb28iLCJzc2xfY2xpZW50
-        X2tleSI6ImZvbyIsInNzbF9jYV9jZXJ0IjoiZm9vIiwic3NsX3ZhbGlkYXRp
-        b24iOm51bGwsInByb3h5X2hvc3QiOm51bGx9LCJub3RlcyI6eyJfcmVwby10
-        eXBlIjoicnBtLXJlcG8ifSwiZGlzdHJpYnV0b3JzIjpbeyJkaXN0cmlidXRv
-        cl90eXBlX2lkIjoieXVtX2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3JfY29u
-        ZmlnIjp7InJlbGF0aXZlX3VybCI6InRlc3RfcGF0aC8iLCJodHRwIjpmYWxz
-        ZSwiaHR0cHMiOnRydWUsInByb3RlY3RlZCI6dHJ1ZX0sImF1dG9fcHVibGlz
-        aCI6dHJ1ZSwiZGlzdHJpYnV0b3JfaWQiOiJGZWRvcmFfMTcifSx7ImRpc3Ry
-        aWJ1dG9yX3R5cGVfaWQiOiJleHBvcnRfZGlzdHJpYnV0b3IiLCJkaXN0cmli
-        dXRvcl9jb25maWciOnsiaHR0cCI6ZmFsc2UsImh0dHBzIjpmYWxzZSwicmVs
-        YXRpdmVfdXJsIjoidGVzdF9wYXRoLyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNl
-        LCJkaXN0cmlidXRvcl9pZCI6ImV4cG9ydF9kaXN0cmlidXRvciJ9LHsiZGlz
-        dHJpYnV0b3JfdHlwZV9pZCI6Inl1bV9jbG9uZV9kaXN0cmlidXRvciIsImRp
-        c3RyaWJ1dG9yX2NvbmZpZyI6eyJkZXN0aW5hdGlvbl9kaXN0cmlidXRvcl9p
-        ZCI6IkZlZG9yYV8xNyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNlLCJkaXN0cmli
-        dXRvcl9pZCI6IkZlZG9yYV8xN19jbG9uZSJ9XX0=
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '884'
-  response:
-    status:
-      code: 201
-      message: CREATED
-    headers:
-      Date:
-      - Tue, 06 Mar 2018 14:10:03 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '320'
-      Location:
-      - https://dev.example.com/pulp/api/v2/repositories/Fedora_17/
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
-        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
-        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
-        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
-        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
-        NWE5ZWExM2I0MThhOGE0OTcxMTdkNjhkIn0sICJpZCI6ICJGZWRvcmFfMTci
-        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
-        MTcvIn0=
-    http_version: 
-  recorded_at: Tue, 06 Mar 2018 14:10:03 GMT
-- request:
-    method: get
-    uri: https://dev.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Tue, 06 Mar 2018 14:10:03 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '2'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: 'W10=
-
-'
-    http_version: 
-  recorded_at: Tue, 06 Mar 2018 14:10:03 GMT
-- request:
-    method: post
-    uri: https://dev.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
-    body:
-      encoding: UTF-8
-      base64_string: 'eyJzY2hlZHVsZSI6IjIwMTMtMDgtMDFUMDA6MDA6MDAtMDQ6MDAvUDFEIn0=
-
-'
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '44'
-  response:
-    status:
-      code: 201
-      message: CREATED
-    headers:
-      Date:
-      - Tue, 06 Mar 2018 14:10:03 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '659'
-      Location:
-      - https://dev.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/5a9ea13b418a8a45f97fe9eb/
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJuZXh0X3J1biI6ICIyMDE4LTAzLTA2VDE0OjEwOjAzWiIsICJyZW1haW5p
-        bmdfcnVucyI6IG51bGwsICJsYXN0X3VwZGF0ZWQiOiAxNTIwMzQ1NDAzLjcx
-        OTcxMywgImZpcnN0X3J1biI6ICIyMDEzLTA4LTAxVDAwOjAwOjAwLTA0OjAw
-        IiwgInRvdGFsX3J1bl9jb3VudCI6IDAsICJzY2hlZHVsZSI6ICIyMDEzLTA4
-        LTAxVDAwOjAwOjAwLTA0OjAwL1AxRCIsICJrd2FyZ3MiOiB7Im92ZXJyaWRl
-        cyI6IHt9LCAic2NoZWR1bGVkX2NhbGxfaWQiOiAiNWE5ZWExM2I0MThhOGE0
-        NWY5N2ZlOWViIn0sICJhcmdzIjogWyJGZWRvcmFfMTciXSwgImVuYWJsZWQi
-        OiB0cnVlLCAibGFzdF9ydW5fYXQiOiBudWxsLCAidGFzayI6ICJwdWxwLnNl
-        cnZlci50YXNrcy5yZXBvc2l0b3J5LnN5bmNfd2l0aF9hdXRvX3B1Ymxpc2gi
-        LCAiZmFpbHVyZV90aHJlc2hvbGQiOiBudWxsLCAicmVzb3VyY2UiOiAicHVs
-        cDppbXBvcnRlcjpGZWRvcmFfMTc6eXVtX2ltcG9ydGVyIiwgIl9pZCI6ICI1
-        YTllYTEzYjQxOGE4YTQ1Zjk3ZmU5ZWIiLCAiY29uc2VjdXRpdmVfZmFpbHVy
-        ZXMiOiAwLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9G
-        ZWRvcmFfMTcvaW1wb3J0ZXJzL3l1bV9pbXBvcnRlci9zY2hlZHVsZXMvc3lu
-        Yy81YTllYTEzYjQxOGE4YTQ1Zjk3ZmU5ZWIvIn0=
-    http_version: 
-  recorded_at: Tue, 06 Mar 2018 14:10:03 GMT
-- request:
-    method: delete
-    uri: https://dev.example.com/pulp/api/v2/repositories/Fedora_17/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 202
-      message: ACCEPTED
-    headers:
-      Date:
-      - Tue, 06 Mar 2018 14:10:03 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Connection:
-      - close
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzL2ZlODM5YjBlLTRiYTUtNGJiNS1hYTc1LTNkM2E0YTYzYjU5Mi8iLCAi
-        dGFza19pZCI6ICJmZTgzOWIwZS00YmE1LTRiYjUtYWE3NS0zZDNhNGE2M2I1
-        OTIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Tue, 06 Mar 2018 14:10:03 GMT
-- request:
     method: get
     uri: https://dev.example.com/pulp/api/v2/tasks/fe839b0e-4ba5-4bb5-aa75-3d3a4a63b592/
     body:
@@ -27435,4 +27236,351 @@ http_interactions:
         ICJpZCI6ICI1YTllYTEzYmI0OTIzZTIyYzcxOGVmYjMifQ==
     http_version: 
   recorded_at: Tue, 06 Mar 2018 14:10:21 GMT
+- request:
+    method: post
+    uri: https://dev.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IkZlZG9yYV8xNyIsImRpc3BsYXlfbmFtZSI6IkZlZG9yYSAxNyB4
+        ODZfNjQiLCJpbXBvcnRlcl90eXBlX2lkIjoieXVtX2ltcG9ydGVyIiwiaW1w
+        b3J0ZXJfY29uZmlnIjp7ImZlZWQiOiJmaWxlOi8vL3Zhci93d3cvdGVzdF9y
+        ZXBvcy96b28iLCJkb3dubG9hZF9wb2xpY3kiOm51bGwsInJlbW92ZV9taXNz
+        aW5nIjpudWxsLCJzc2xfY2xpZW50X2NlcnQiOiJmb28iLCJzc2xfY2xpZW50
+        X2tleSI6ImZvbyIsInNzbF9jYV9jZXJ0IjoiZm9vIiwicHJveHlfaG9zdCI6
+        bnVsbCwic3NsX3ZhbGlkYXRpb24iOm51bGx9LCJub3RlcyI6eyJfcmVwby10
+        eXBlIjoicnBtLXJlcG8ifSwiZGlzdHJpYnV0b3JzIjpbeyJkaXN0cmlidXRv
+        cl90eXBlX2lkIjoieXVtX2Rpc3RyaWJ1dG9yIiwiZGlzdHJpYnV0b3JfY29u
+        ZmlnIjp7InJlbGF0aXZlX3VybCI6InRlc3RfcGF0aC8iLCJodHRwIjpmYWxz
+        ZSwiaHR0cHMiOnRydWUsInByb3RlY3RlZCI6dHJ1ZX0sImF1dG9fcHVibGlz
+        aCI6dHJ1ZSwiZGlzdHJpYnV0b3JfaWQiOiJGZWRvcmFfMTcifSx7ImRpc3Ry
+        aWJ1dG9yX3R5cGVfaWQiOiJleHBvcnRfZGlzdHJpYnV0b3IiLCJkaXN0cmli
+        dXRvcl9jb25maWciOnsiaHR0cCI6ZmFsc2UsImh0dHBzIjpmYWxzZSwicmVs
+        YXRpdmVfdXJsIjoidGVzdF9wYXRoLyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNl
+        LCJkaXN0cmlidXRvcl9pZCI6ImV4cG9ydF9kaXN0cmlidXRvciJ9LHsiZGlz
+        dHJpYnV0b3JfdHlwZV9pZCI6Inl1bV9jbG9uZV9kaXN0cmlidXRvciIsImRp
+        c3RyaWJ1dG9yX2NvbmZpZyI6eyJkZXN0aW5hdGlvbl9kaXN0cmlidXRvcl9p
+        ZCI6IkZlZG9yYV8xNyJ9LCJhdXRvX3B1Ymxpc2giOmZhbHNlLCJkaXN0cmli
+        dXRvcl9pZCI6IkZlZG9yYV8xN19jbG9uZSJ9XX0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '884'
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:07 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '320'
+      Location:
+      - "/pulp/api/v2/repositories/Fedora_17/"
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiRmVkb3JhIDE3
+        IHg4Nl82NCIsICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRk
+        ZWQiOiBudWxsLCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicnBtLXJlcG8i
+        fSwgImxhc3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9j
+        b3VudHMiOiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAi
+        NWFlOTg1MWY0MThhOGE3NTk4Yjc0Nzg3In0sICJpZCI6ICJGZWRvcmFfMTci
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9GZWRvcmFf
+        MTcvIn0=
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:07 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:07 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '2'
+      Etag:
+      - '"d751713988987e9331980363e24189ce"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: 'W10=
+
+'
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:08 GMT
+- request:
+    method: post
+    uri: https://dev.example.com/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/
+    body:
+      encoding: UTF-8
+      base64_string: 'eyJzY2hlZHVsZSI6IjIwMTMtMDgtMDFUMDA6MDA6MDAtMDQ6MDAvUDFEIn0=
+
+'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '44'
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '659'
+      Location:
+      - "/pulp/api/v2/repositories/Fedora_17/importers/yum_importer/schedules/sync/5ae98520418a8a7598b7478d/"
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJuZXh0X3J1biI6ICIyMDE4LTA1LTAyVDA5OjMwOjA4WiIsICJyZW1haW5p
+        bmdfcnVucyI6IG51bGwsICJsYXN0X3VwZGF0ZWQiOiAxNTI1MjUzNDA4LjAy
+        OTk3OCwgImZpcnN0X3J1biI6ICIyMDEzLTA4LTAxVDAwOjAwOjAwLTA0OjAw
+        IiwgInRvdGFsX3J1bl9jb3VudCI6IDAsICJzY2hlZHVsZSI6ICIyMDEzLTA4
+        LTAxVDAwOjAwOjAwLTA0OjAwL1AxRCIsICJrd2FyZ3MiOiB7Im92ZXJyaWRl
+        cyI6IHt9LCAic2NoZWR1bGVkX2NhbGxfaWQiOiAiNWFlOTg1MjA0MThhOGE3
+        NTk4Yjc0NzhkIn0sICJhcmdzIjogWyJGZWRvcmFfMTciXSwgImVuYWJsZWQi
+        OiB0cnVlLCAibGFzdF9ydW5fYXQiOiBudWxsLCAidGFzayI6ICJwdWxwLnNl
+        cnZlci50YXNrcy5yZXBvc2l0b3J5LnN5bmNfd2l0aF9hdXRvX3B1Ymxpc2gi
+        LCAiZmFpbHVyZV90aHJlc2hvbGQiOiBudWxsLCAicmVzb3VyY2UiOiAicHVs
+        cDppbXBvcnRlcjpGZWRvcmFfMTc6eXVtX2ltcG9ydGVyIiwgIl9pZCI6ICI1
+        YWU5ODUyMDQxOGE4YTc1OThiNzQ3OGQiLCAiY29uc2VjdXRpdmVfZmFpbHVy
+        ZXMiOiAwLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9G
+        ZWRvcmFfMTcvaW1wb3J0ZXJzL3l1bV9pbXBvcnRlci9zY2hlZHVsZXMvc3lu
+        Yy81YWU5ODUyMDQxOGE4YTc1OThiNzQ3OGQvIn0=
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:08 GMT
+- request:
+    method: delete
+    uri: https://dev.example.com/pulp/api/v2/repositories/Fedora_17/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2UwMjAyYmI1LTAwN2MtNDllOC1iODI5LWE1Y2NkNzdlMWE0ZC8iLCAi
+        dGFza19pZCI6ICJlMDIwMmJiNS0wMDdjLTQ5ZTgtYjgyOS1hNWNjZDc3ZTFh
+        NGQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:08 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/e0202bb5-007c-49e8-b829-a5ccd77e1a4d/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"755bec3fe181704878966347d4994fc2-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '542'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9lMDIwMmJiNS0wMDdjLTQ5ZTgtYjgyOS1hNWNjZDc3ZTFh
+        NGQvIiwgInRhc2tfaWQiOiAiZTAyMDJiYjUtMDA3Yy00OWU4LWI4MjktYTVj
+        Y2Q3N2UxYTRkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6IG51bGws
+        ICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJv
+        Z3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6ICIiLCAic3RhdGUiOiAid2Fp
+        dGluZyIsICJ3b3JrZXJfbmFtZSI6IG51bGwsICJyZXN1bHQiOiBudWxsLCAi
+        ZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVhZTk4NTIwY2MwOTBm
+        OTRiODJjM2FjYyJ9LCAiaWQiOiAiNWFlOTg1MjBjYzA5MGY5NGI4MmMzYWNj
+        In0=
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:08 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/e0202bb5-007c-49e8-b829-a5ccd77e1a4d/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"350e9c9b9d6717c17ad9d3fe9e30c145-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '646'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9lMDIwMmJiNS0wMDdjLTQ5ZTgtYjgyOS1hNWNjZDc3ZTFh
+        NGQvIiwgInRhc2tfaWQiOiAiZTAyMDJiYjUtMDA3Yy00OWU4LWI4MjktYTVj
+        Y2Q3N2UxYTRkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6IG51
+        bGwsICJfbnMiOiAidGFza19zdGF0dXMiLCAic3RhcnRfdGltZSI6ICIyMDE4
+        LTA1LTAyVDA5OjMwOjA4WiIsICJ0cmFjZWJhY2siOiBudWxsLCAic3Bhd25l
+        ZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVwb3J0Ijoge30sICJxdWV1ZSI6
+        ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMUBkZXYuZXhhbXBsZS5jb20u
+        ZHEyIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAicmVz
+        ZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTFAZGV2LmV4YW1wbGUuY29tIiwgInJl
+        c3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAi
+        NWFlOTg1MjBjYzA5MGY5NGI4MmMzYWNjIn0sICJpZCI6ICI1YWU5ODUyMGNj
+        MDkwZjk0YjgyYzNhY2MifQ==
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:08 GMT
+- request:
+    method: get
+    uri: https://dev.example.com/pulp/api/v2/tasks/e0202bb5-007c-49e8-b829-a5ccd77e1a4d/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 02 May 2018 09:30:08 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"9299cfcdc8869e731b0cfe517c6b406c-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '665'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9lMDIwMmJiNS0wMDdjLTQ5ZTgtYjgyOS1hNWNjZDc3ZTFh
+        NGQvIiwgInRhc2tfaWQiOiAiZTAyMDJiYjUtMDA3Yy00OWU4LWI4MjktYTVj
+        Y2Q3N2UxYTRkIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpGZWRvcmFf
+        MTciLCAicHVscDphY3Rpb246ZGVsZXRlIl0sICJmaW5pc2hfdGltZSI6ICIy
+        MDE4LTA1LTAyVDA5OjMwOjA4WiIsICJfbnMiOiAidGFza19zdGF0dXMiLCAi
+        c3RhcnRfdGltZSI6ICIyMDE4LTA1LTAyVDA5OjMwOjA4WiIsICJ0cmFjZWJh
+        Y2siOiBudWxsLCAic3Bhd25lZF90YXNrcyI6IFtdLCAicHJvZ3Jlc3NfcmVw
+        b3J0Ijoge30sICJxdWV1ZSI6ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXIt
+        MUBkZXYuZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjogImZpbmlzaGVkIiwg
+        Indvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0xQGRl
+        di5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxs
+        LCAiX2lkIjogeyIkb2lkIjogIjVhZTk4NTIwY2MwOTBmOTRiODJjM2FjYyJ9
+        LCAiaWQiOiAiNWFlOTg1MjBjYzA5MGY5NGI4MmMzYWNjIn0=
+    http_version: 
+  recorded_at: Wed, 02 May 2018 09:30:08 GMT
 recorded_with: VCR 3.0.3

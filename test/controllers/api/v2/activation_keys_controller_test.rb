@@ -182,7 +182,7 @@ module Katello
 
       post :copy, params: { :id => @activation_key.id, :organization_id => @organization.id, :new_name => "NewAK" }
       assert_response :success
-      assert_template 'api/v2/activation_keys/show'
+      assert_template 'api/v2/common/copy'
     end
 
     def test_copy_protected

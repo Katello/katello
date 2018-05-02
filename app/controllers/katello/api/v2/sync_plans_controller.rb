@@ -57,7 +57,7 @@ module Katello
       @sync_plan.organization = @organization
       @sync_plan.save!
 
-      respond_for_show(:resource => @sync_plan)
+      respond_for_create(:resource => @sync_plan)
     end
 
     api :PUT, "/organizations/:organization_id/sync_plans/:id", N_("Update a sync plan")

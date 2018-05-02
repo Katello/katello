@@ -49,7 +49,7 @@ module Katello
       if rules.many?
         respond_for_index(:collection => {:results => rules}, :template => 'index')
       else
-        respond resource: rules.first
+        respond_for_create resource: rules.first
       end
     end
 
