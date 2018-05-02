@@ -276,6 +276,8 @@ Foreman::Plugin.register :katello do
     allowed_template_helpers :errata
   end
 
+  fixture_directory "#{Katello::Engine.root}/test/fixtures/models/"
+
   tests_to_skip("AccessPermissionsTest" => [
                   'foreman_tasks/api/tasks/callback should have a permission that grants access',
                   'bastion/bastion/index should have a permission that grants access',
