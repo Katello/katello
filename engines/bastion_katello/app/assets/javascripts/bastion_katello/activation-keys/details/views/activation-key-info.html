@@ -100,11 +100,13 @@
       </dt>
       <dd bst-feature-flag="lifecycle_environments">
         <div bst-edit-select="activationKey.content_view.name"
-             readonly="denied('edit_activation_keys', activationKey)"
+             readonly="denied('edit_activation_keys', activationKey) || activationKey.environment === undefined || activationKey.environment === null"
              selector="activationKey.content_view.id"
              options="contentViews()"
              on-cancel="cancelContentViewUpdate()"
              on-save="saveContentView(activationKey)"
+             deletable="activationKey.content_view"
+             on-delete="resetEnvironment(activationKey)"
              edit-trigger="editContentView">
         </div>
 

@@ -30,10 +30,17 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
         });
 
         $scope.$watch('activationKey.environment', function (environment) {
-            if (environment && $scope.originalEnvironment) {
-                if (environment.id !== $scope.originalEnvironment.id) {
-                    $scope.editContentView = true;
+            if ($scope.originalEnvironment) {
+                if (environment) {
+                    if (environment.id !== $scope.originalEnvironment.id) {
+                        $scope.editContentView = true;
+                        $scope.disableEnvironmentSelection = true;
+                    }
+                } else {
                     $scope.disableEnvironmentSelection = true;
+                    $scope.editContentView = false;
+                    $scope.activationKey["environment_id"] = null;
+                    $scope.resetContentView($scope.activationKey);
                 }
             } else if (environment) {
                 $scope.editEnvironment = true;
@@ -57,8 +64,32 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyDetailsInfoCo
             $scope.editEnvironment = false;
             $scope.save(activationKey).then(function (actKey) {
                 $scope.originalEnvironment = actKey.environment;
+                $scope.resetEnvironmentPathSelector(activationKey);
             });
             $scope.disableEnvironmentSelection = false;
+        };
+
+        $scope.resetEnvironmentPathSelector = function (activationKey) {
+            // reset "selected" in the environment widget.
+            _.each($scope.environments, function (environmentPath) {
+                _.each(environmentPath, function (individualEnv) {
+                    if (activationKey["environment_id"] !== individualEnv.id) {
+                        delete individualEnv.selected;
+                    } else {
+                        individualEnv.selected = true;
+                    }
+                });
+            });
+        };
+
+        $scope.resetEnvironment = function (activationKey) {
+            delete activationKey.environment;
+        };
+
+        $scope.resetContentView = function (activationKey) {
+            activationKey["content_view_id"] = null;
+            activationKey["content_view"] = null;
+            $scope.saveContentView(activationKey);
         };
 
         $scope.releaseVersions = function () {
