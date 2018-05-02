@@ -44,7 +44,7 @@ module Katello
       end
       sync_task(::Actions::Katello::ActivationKey::Create, @activation_key)
       @activation_key.reload
-      respond(:resource => @activation_key)
+      respond_for_create(:resource => @activation_key)
     end
 
     api :PUT, "/activation_keys/:id", N_("Update an activation key")
@@ -98,7 +98,7 @@ module Katello
         @new_activation_key.subscribe(pool[:id])
       end
       @new_activation_key.set_content_overrides(@activation_key.content_overrides) unless @activation_key.content_overrides.blank?
-      respond_for_show(:resource => @new_activation_key)
+      respond_for_create(:resource => @new_activation_key)
     end
 
     api :GET, "/activation_keys/:id/host_collections/available", N_("List host collections the activation key does not belong to")

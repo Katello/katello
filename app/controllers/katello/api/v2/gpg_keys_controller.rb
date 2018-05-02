@@ -48,7 +48,7 @@ module Katello
       end
 
       gpg_key = @organization.gpg_keys.create!(gpg_key_params.merge(:content => content))
-      respond_for_show(:resource => gpg_key)
+      respond_for_create(:resource => gpg_key)
     end
 
     api :GET, "/gpg_keys/:id", N_("Show a gpg key")

@@ -56,7 +56,7 @@ module Katello
       end
 
       content_credential = @organization.gpg_keys.create!(content_credential_params.merge(:content => content))
-      respond_for_show(:resource => content_credential)
+      respond_for_create(:resource => content_credential)
     end
 
     api :GET, "/content_credentials/:id", N_("Show a content credential")

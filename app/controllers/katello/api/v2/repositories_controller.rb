@@ -178,7 +178,7 @@ module Katello
       repository = construct_repo_from_params(repo_params)
       sync_task(::Actions::Katello::Repository::Create, repository, false, true)
       repository = Repository.find(repository.id)
-      respond_for_show(:resource => repository)
+      respond_for_create(:resource => repository)
     end
 
     api :GET, "/repositories/repository_types", N_("Show the available repository types")
