@@ -18,7 +18,9 @@
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
     ['$scope', 'translate', 'Nutupane', 'ContentViewVersion', 'AggregateTask', 'ApiErrorHandler', 'Notification',
     function ($scope, translate, Nutupane, ContentViewVersion, AggregateTask, ApiErrorHandler, Notification) {
-        var nutupane;
+        var nutupane, nutupaneParams = {
+            'disableAutoLoad': true
+        };
 
         function pluralSafe(count, strings) {
             if (count === 1) {
@@ -224,7 +226,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
             loading: true
         };
 
-        nutupane = new Nutupane(ContentViewVersion, {'content_view_id': $scope.$stateParams.contentViewId});
+        nutupane = new Nutupane(ContentViewVersion, {'content_view_id': $scope.$stateParams.contentViewId}, undefined, nutupaneParams);
         $scope.controllerName = 'katello_content_views';
         nutupane.setSearchKey('contentViewVersionSearch');
         nutupane.masterOnly = true;

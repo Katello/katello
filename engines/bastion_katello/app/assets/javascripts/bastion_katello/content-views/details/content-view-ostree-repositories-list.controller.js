@@ -14,7 +14,9 @@
      *    Provides UI functionality list/remove ostree repositories from a content view
      */
     function ContentViewOstreeRepositoriesListController($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
-        var nutupane;
+        var nutupane, nutupaneParams = {
+            'disableAutoLoad': true
+        };
 
         ContentViewRepositoriesUtil($scope);
 
@@ -23,7 +25,7 @@
             'content_view_id': $scope.$stateParams.contentViewId,
             'content_type': 'ostree'
         },
-        'queryUnpaged');
+        'queryUnpaged', nutupaneParams);
         $scope.controllerName = 'katello_repositories';
 
         nutupane.masterOnly = true;
