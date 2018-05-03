@@ -14,7 +14,9 @@
      *    Provides UI functionality list/remove deb repositories from a content view
      */
     function ContentViewDebRepositoriesListController($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
-        var nutupane;
+        var nutupane, nutupaneParams = {
+            'disableAutoLoad': true
+        };
 
         ContentViewRepositoriesUtil($scope);
 
@@ -23,7 +25,7 @@
             'content_view_id': $scope.$stateParams.contentViewId,
             'content_type': 'deb'
         },
-        'queryUnpaged');
+        'queryUnpaged', nutupaneParams);
         $scope.controllerName = 'katello_repositories';
 
         nutupane.load();
