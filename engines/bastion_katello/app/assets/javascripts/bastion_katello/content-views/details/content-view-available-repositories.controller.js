@@ -17,7 +17,9 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
     ['$scope', 'Repository', 'Nutupane', 'CurrentOrganization', 'ContentViewRepositoriesUtil',
     function ($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
 
-        var nutupane;
+        var nutupane, nutupaneParams = {
+            'disableAutoLoad': true
+        };
 
         ContentViewRepositoriesUtil($scope);
 
@@ -28,7 +30,7 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
             'content_view_id': $scope.$stateParams.contentViewId,
             'available_for': 'content_view'
         },
-        'queryUnpaged');
+        'queryUnpaged', nutupaneParams);
         $scope.controllerName = 'katello_repositories';
 
         nutupane.load();
