@@ -151,14 +151,16 @@ module Katello
 
       def candlepin_consumer_destroy(host_uuid)
         ::Katello::Resources::Candlepin::Consumer.destroy(host_uuid)
+      rescue RestClient::ResourceNotFound
+        Rails.logger.warn(_("Attempted to destroy consumer %s from candlepin, but consumer does not exist in candlepin") % host_uuid)
       rescue RestClient::Gone
-        Rails.logger.error(_("Consumer %s has already been removed") % host_uuid)
+        Rails.logger.warn(_("Candlepin consumer %s has already been removed") % host_uuid)
       end
 
       def pulp_consumer_destory(host_uuid)
         ::Katello.pulp_server.extensions.consumer.delete(host_uuid)
       rescue RestClient::ResourceNotFound
-        Rails.logger.error(_("Pulp Consumer %s has already been removed") % host_uuid)
+        Rails.logger.warn(_("Pulp Consumer %s has already been removed") % host_uuid)
       end
 
       def populate_content_facet(host, content_view_environment, uuid)
