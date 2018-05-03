@@ -100,6 +100,19 @@ module Katello
         ::Katello::RegistrationManager.unregister_host(@host)
       end
 
+      def test_destroy_host_not_found
+        @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
+                                   :lifecycle_environment => @library, :organization => @content_view.organization)
+
+        ::Host.expects(:find).returns(@host)
+        ::Katello::Resources::Candlepin::Consumer.expects(:destroy).raises(RestClient::ResourceNotFound)
+        ::Runcible::Extensions::Consumer.any_instance.expects(:delete)
+
+        @host.expects(:destroy).returns(true)
+
+        ::Katello::RegistrationManager.unregister_host(@host)
+      end
+
       def test_destroy_host_organization_delete
         @host = FactoryBot.create(:host, :with_content, :with_subscription, :content_view => @content_view,
                                    :lifecycle_environment => @library, :organization => @content_view.organization)
