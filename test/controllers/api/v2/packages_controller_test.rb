@@ -75,7 +75,7 @@ module Katello
     end
 
     def test_index_with_available_for_content_view_version
-      response = get :index, params: { :content_view_version_id => @version.id, :available_for => "content_view_version" }
+      response = get :index, params: { :content_view_version_id => @version.id, :available_for => 'content_view_version' }
 
       assert_response :success
       ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
@@ -96,7 +96,7 @@ module Katello
       ]
       all_unauth_permissions = @unauth_permissions + cv_unauth_permissions
       assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do
-        get :index, params: { :content_view_version_id => @version.id, :available_for => "content_view_version" }
+        get :index, params: { :content_view_version_id => @version.id, :available_for => 'content_view_version' }
       end
     end
 

@@ -3,19 +3,29 @@ module Katello
     apipie_concern_subst(:a_resource => N_("an erratum"), :resource => "errata")
     include Katello::Concerns::Api::V2::RepositoryContentController
 
+    before_action :find_host, :only => [:index, :available_errata]
+    before_action :find_optional_organization, :only => :available_errata
+    before_action :find_environment, :only => :available_errata
+    before_action :find_filter, :only => :available_errata
+
     api :GET, "/errata", N_("List errata")
-    param :organization_id, :number, :desc => N_("organization identifier")
-    param :content_view_version_id, :number, :desc => N_("content view version identifier")
-    param :content_view_filter_id, :number, :desc => N_("content view filter identifier")
-    param :repository_id, :number, :desc => N_("repository identifier")
-    param :environment_id, :number, :desc => N_("environment identifier")
+    param :organization_id, :number, :desc => N_("Organization identifier")
+    param :content_view_version_id, :number, :desc => N_("Content View Version identifier")
+    param :content_view_filter_id, :number, :desc => N_("Content View Filter identifier")
+    param :repository_id, :number, :desc => N_("Repository identifier")
+    param :environment_id, :number, :desc => N_("Environment identifier")
     param :cve, String, :desc => N_("CVE identifier")
-    param :errata_restrict_applicable, :bool, :desc => N_("show only errata with one or more applicable hosts")
-    param :errata_restrict_installable, :bool, :desc => N_("show only errata with one or more installable hosts")
+    param :host_id, :number, :desc => N_("Host id to list applicable errata for")
+    param :errata_restrict_applicable, :bool, :desc => N_("Return errata that are applicable to one or more hosts (defaults to true if host_id is specified)")
+    param :errata_restrict_installable, :bool, :desc => N_("Return errata that are upgradable on one or more hosts")
+    param :available_for, String, :desc => N_("Return errata that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.")
     param_group :search, Api::V2::ApiController
     def index
-      params[:errata_restrict_applicable] = false if ::Foreman::Cast.to_bool(params[:errata_restrict_installable])
       super
+    end
+
+    def available_for_content_view_version(version)
+      version.available_errata
     end
 
     def available_for_content_view_filter(filter, collection)
@@ -37,43 +47,47 @@ module Katello
 
     def custom_index_relation(collection)
       collection = filter_by_cve(params[:cve], collection) if params[:cve]
-      hosts = ::Host::Managed.authorized("view_hosts")
-      hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
-      if ::Foreman::Cast.to_bool(params[:errata_restrict_applicable])
-        collection = collection.where(:id => Erratum.applicable_to_hosts(hosts))
-      end
-
-      if ::Foreman::Cast.to_bool(params[:errata_restrict_installable])
-        collection = collection.where(:id => Erratum.ids_installable_for_hosts(hosts))
+      applicable = ::Foreman::Cast.to_bool(params[:errata_restrict_applicable]) || @host
+      installable = ::Foreman::Cast.to_bool(params[:errata_restrict_installable])
+      if applicable || installable
+        hosts = @host ? [@host] : ::Host::Managed.authorized("view_hosts")
+        hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
+        if installable
+          collection = collection.where(:id => Erratum.ids_installable_for_hosts(hosts))
+        elsif applicable
+          collection = collection.applicable_to_hosts(hosts)
+        end
       end
       collection
     end
 
-    api :GET, "/content_view_versions/:id/available_errata", N_("List errata that can be added to the Content View Version via an Incremental Update")
+    api :GET, "/content_view_versions/:id/available_errata", N_("Return errata that can be added to the Content View Version via an Incremental Update"), :deprecated => true
     param :id, :number, :desc => N_("Content View Version identifier"), :required => true
-    param :repository_id, :number, :desc => N_("repository identifier")
+    param :organization_id, :number, :desc => N_("Organization identifier")
+    param :content_view_filter_id, :number, :desc => N_("Content View Filter identifier")
+    param :repository_id, :number, :desc => N_("Repository identifier")
+    param :environment_id, :number, :desc => N_("Environment identifier")
     param :cve, String, :desc => N_("CVE identifier")
-    param :errata_restrict_applicable, :bool, :desc => N_("show only errata with one or more applicable hosts")
-    param_group :search, ::Katello::Api::V2::ApiController
+    param :host_id, :number, :desc => N_("Host id to list applicable errata for")
+    param :errata_restrict_applicable, :bool, :desc => N_("Return errata that are applicable to one or more hosts (defaults to true if host_id is specified)")
+    param :errata_restrict_installable, :bool, :desc => N_("Return errata that are upgradable on one or more hosts")
+    param_group :search, Api::V2::ApiController
     def available_errata
-      version = ContentViewVersion.find(params[:id])
-      collection = version.available_errata
-      if @repo
-        collection = collection.joins(:repository_errata => :repository).where(:katello_repositories => { :id => @repo })
-      end
-      if params[:cve]
-        collection = collection.joins(:cves).where(:katello_erratum_cves => { :cve_id => params[:cve] })
-      end
-      if ::Foreman::Cast.to_bool(params[:errata_restrict_applicable])
-        hosts = ::Host::Managed.authorized("view_hosts")
-        collection = collection.applicable_to_hosts(hosts)
-      end
+      params[:content_view_version_id] = params[:id]
+      find_content_view_version
+      params[:available_for] = "content_view_version"
       sort_by, sort_order, options = sort_options
-      collection = scoped_search(collection, sort_by, sort_order, options)
-      respond_for_index(:collection => collection)
+      respond_for_index(:collection => scoped_search(index_relation, sort_by, sort_order, options))
     end
 
     private
+
+    def find_host
+      if params[:host_id]
+        @host = ::Host::Managed.authorized("view_hosts").find_by(:id => params[:host_id])
+        fail HttpErrors::NotFound, _('Could not find a host with id %s') % params[:host_id] unless @host
+      end
+    end
 
     def filter_by_cve(cve, collection)
       collection.joins(:cves).where('katello_erratum_cves.cve_id' => cve)

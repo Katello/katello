@@ -67,7 +67,16 @@ module Katello
       get :index, params: { :content_view_filter_id => package_group_filter }
     end
 
-    def test_index_available_errata_for_content_view_filter
+    def test_index_with_available_for_content_view_version
+      get :index, params: { :content_view_version_id => @content_view_version.id, :available_for => 'content_view_version' }
+      ids = JSON.parse(response.body)['results'].map { |item| item['errata_id'] }
+
+      assert_response :success
+      assert_template "katello/api/v2/errata/index"
+      assert ids.length > 0
+    end
+
+    def test_index_with_available_for_content_view_filter
       filtered_id = @errata_filter.erratum_rules.first["errata_id"]
 
       get :index, params: { :filterId => @errata_filter, :available_for => "content_view_filter" }
@@ -79,7 +88,7 @@ module Katello
       assert response_ids.length > 0
     end
 
-    def test_index_available_errata_for_content_view_filter_with_updated
+    def test_index_with_available_for_content_view_filter_with_updated
       filtered_id = @errata_filter.erratum_rules.first["errata_id"]
 
       get :index, params: { :filterId => @errata_filter, :available_for => "content_view_filter", :date_type => "updated" }
@@ -103,6 +112,18 @@ module Katello
     def test_index_protected
       assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
         get :index, params: { :repository_id => @test_repo.id }
+      end
+    end
+
+    def test_index_with_available_for_content_view_version_protected
+      cv_auth_permissions = [:view_content_views]
+      cv_unauth_permissions = [
+        :create_content_views, :edit_content_views, :destroy_content_views, :publish_content_views,
+        :promote_or_remove_content_views, :export_content_views
+      ]
+      all_unauth_permissions = @unauth_permissions + cv_unauth_permissions
+      assert_protected_action(:index, cv_auth_permissions, all_unauth_permissions) do
+        get :index, params: { :content_view_version_id => @content_view_version.id, :available_for => 'content_view_version' }
       end
     end
 
