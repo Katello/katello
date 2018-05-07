@@ -57,6 +57,7 @@ module Katello
     end
 
     def quantity_available
+      return -1 if self.quantity == -1
       return 0 unless self.quantity && self.consumed
       self.quantity - self.consumed
     end
