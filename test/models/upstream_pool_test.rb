@@ -104,5 +104,16 @@ module Katello
 
       assert_equal 1, pools[:total]
     end
+
+    def test_available
+      upstream_pool = Katello::UpstreamPool.new(quantity: -1, consumed: 23)
+      assert_equal(-1, upstream_pool.available)
+
+      upstream_pool = Katello::UpstreamPool.new(quantity: 20, consumed: 12)
+      assert_equal 8, upstream_pool.available
+
+      upstream_pool = Katello::UpstreamPool.new(quantity: 1, consumed: nil)
+      assert_equal 0, upstream_pool.available
+    end
   end
 end

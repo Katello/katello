@@ -102,5 +102,11 @@ module Katello
         Katello::Resources::Candlepin::TOTAL_COUNT_HEADER
       end
     end
+
+    def available
+      return -1 if self.quantity == -1
+      return 0 unless self.quantity && self.consumed
+      self.quantity - self.consumed
+    end
   end
 end

@@ -4,6 +4,7 @@ attributes :pool_id => :id
 attributes :pool_id
 attributes :status
 attributes :quantity
+attributes :available
 attributes :start_date
 attributes :end_date
 attributes :contract_number
