@@ -138,6 +138,7 @@ export const quantitiesRequestSuccessResponse = Immutable({
     {
       pool_id: '9a95f981519abf020151ab082c5e0313',
       quantity: 10000,
+      available: 100,
       start_date: '2016-12-15T05:00:00+0000',
       end_date: '2032-01-01T04:59:59+0000',
       contract_number: '10880011',
@@ -153,6 +154,7 @@ export const quantitiesRequestSuccessResponse = Immutable({
     {
       pool_id: '6b123381519abf020151ab082c5e4678',
       quantity: 400,
+      available: 40,
       start_date: '2016-12-15T05:00:00+0000',
       end_date: '2032-01-01T04:59:59+0000',
       contract_number: '10880011',
@@ -260,9 +262,9 @@ export const quantitiesSuccessState = Immutable({
   ...successState,
   quantitiesLoading: false,
   availableQuantities: {
-    4: 10000,
-    5: 10000,
-    6: 400,
+    4: 100,
+    5: 100,
+    6: 40,
   },
 });
 
