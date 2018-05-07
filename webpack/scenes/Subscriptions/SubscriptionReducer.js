@@ -27,9 +27,9 @@ const mapQuantities = (pools) => {
   pools.forEach(pool =>
     pool.local_pool_ids && pool.local_pool_ids.forEach((localId) => {
       if (quantityMap[localId]) {
-        quantityMap[localId] += pool.quantity;
+        quantityMap[localId] += pool.available;
       } else {
-        quantityMap[localId] = pool.quantity;
+        quantityMap[localId] = pool.available;
       }
     }));
   return quantityMap;
