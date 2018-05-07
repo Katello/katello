@@ -90,6 +90,11 @@ module Katello
       assert_equal @pool_one.quantity_available, 9
     end
 
+    def test_quantity_available_unlimited
+      pool = FactoryBot.build(:katello_pool, quantity: -1, consumed: 3)
+      assert_equal(-1, pool.quantity_available)
+    end
+
     def test_search_cores
       subscriptions = Pool.search_for("cores = \"#{@pool_one.subscription.cores}\"")
       assert_includes subscriptions, @pool_one
