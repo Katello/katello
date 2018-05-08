@@ -6,8 +6,10 @@ import { successState } from './subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity } from '../SubscriptionActions';
 import { loadSetting } from '../../../move_to_foreman/Settings/SettingsActions';
 
+jest.mock('../../../move_to_foreman/foreman_toast_notifications');
+
 describe('subscriptions page', () => {
-  const pollBulkSearch = () => {};
+  const noop = () => {};
 
   it('should render', async () => {
     const page = shallow(<SubscriptionsPage
@@ -15,7 +17,8 @@ describe('subscriptions page', () => {
       loadSetting={loadSetting}
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
-      pollBulkSearch={pollBulkSearch}
+      pollTaskUntilDone={noop}
+      pollBulkSearch={noop}
       deleteSubscriptions={() => {}}
     />);
     expect(toJson(page)).toMatchSnapshot();
