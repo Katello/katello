@@ -163,13 +163,6 @@ export const uploadManifestSuccessActions = [
     response: taskSuccessResponse,
     type: 'UPLOAD_MANIFEST_SUCCESS',
   },
-  {
-    type: 'GET_TASK_REQUEST',
-  },
-  {
-    response: taskSuccessResponse,
-    type: 'GET_TASK_SUCCESS',
-  },
 ];
 
 export const uploadManifestFailureActions = [
@@ -190,13 +183,6 @@ export const refreshManifestSuccessActions = [
     response: taskSuccessResponse,
     type: 'REFRESH_MANIFEST_SUCCESS',
   },
-  {
-    type: 'GET_TASK_REQUEST',
-  },
-  {
-    response: taskSuccessResponse,
-    type: 'GET_TASK_SUCCESS',
-  },
 ];
 
 export const refreshManifestFailureActions = [
@@ -216,13 +202,6 @@ export const deleteManifestSuccessActions = [
   {
     response: taskSuccessResponse,
     type: 'DELETE_MANIFEST_SUCCESS',
-  },
-  {
-    type: 'GET_TASK_REQUEST',
-  },
-  {
-    response: taskSuccessResponse,
-    type: 'GET_TASK_SUCCESS',
   },
 ];
 
