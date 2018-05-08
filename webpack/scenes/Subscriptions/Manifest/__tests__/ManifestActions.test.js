@@ -21,7 +21,6 @@ import { loadManifestHistory, uploadManifest, refreshManifest, deleteManifest } 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({ manifest: Immutable({}) });
 const mockApi = new MockAdapter(axios);
-const taskUrl = '/foreman_tasks/api/tasks/c6e7dd0b-1d40-4c75-b1e0-b193c4d0597f';
 
 beforeEach(() => {
   store.clearActions();
@@ -69,8 +68,7 @@ describe('manifest actions', () => {
     });
 
     it('and ends with success', () => {
-      mockApi.onPost(url).reply(200, taskSuccessResponse)
-        .onGet(taskUrl).reply(200, taskSuccessResponse);
+      mockApi.onPost(url).reply(200, taskSuccessResponse);
 
       return store.dispatch(uploadManifest())
         .then(() => expect(store.getActions()).toEqual(uploadManifestSuccessActions));
@@ -88,8 +86,7 @@ describe('manifest actions', () => {
     });
 
     it('and ends with success', () => {
-      mockApi.onPut(url).reply(200, taskSuccessResponse)
-        .onGet(taskUrl).reply(200, taskSuccessResponse);
+      mockApi.onPut(url).reply(200, taskSuccessResponse);
 
       return store.dispatch(refreshManifest())
         .then(() => expect(store.getActions()).toEqual(refreshManifestSuccessActions));
@@ -107,8 +104,7 @@ describe('manifest actions', () => {
     });
 
     it('and ends with success', () => {
-      mockApi.onPost(url).reply(200, taskSuccessResponse)
-        .onGet(taskUrl).reply(200, taskSuccessResponse);
+      mockApi.onPost(url).reply(200, taskSuccessResponse);
 
       return store.dispatch(deleteManifest())
         .then(() => expect(store.getActions()).toEqual(deleteManifestSuccessActions));

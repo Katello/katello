@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
+import { notify } from '../../move_to_foreman/foreman_toast_notifications';
+import helpers from '../../move_to_foreman/common/helpers';
+import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import SubscriptionsTable from './SubscriptionsTable';
 import Search from '../../components/Search/index';
@@ -14,6 +18,7 @@ import {
   BULK_TASK_SEARCH_INTERVAL,
 } from './SubscriptionConstants';
 
+
 class SubscriptionsPage extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +26,8 @@ class SubscriptionsPage extends Component {
       manifestModalOpen: false,
       subscriptionDeleteModalOpen: false,
       disableDeleteButton: true,
+      polledTask: null,
+      showTaskModal: false,
     };
   }
 
@@ -44,6 +51,16 @@ class SubscriptionsPage extends Component {
     return disabledReason;
   }
 
+  showTaskModal(show) {
+    if (this.state.showTaskModal !== show) {
+      this.setState({ showTaskModal: show });
+
+      if (show && this.state.manifestModalOpen) {
+        this.setState({ manifestModalOpen: false });
+      }
+    }
+  }
+
   loadData() {
     this.props.pollBulkSearch({
       search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
@@ -56,10 +73,57 @@ class SubscriptionsPage extends Component {
     this.props.loadSubscriptions();
   }
 
+  handleDoneTask(taskToPoll) {
+    const POLL_TASK_INTERVAL = 5000;
+
+    if (!this.state.polledTask) {
+      this.setState({ polledTask: taskToPoll });
+      this.props.pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL).then((task) => {
+        function getErrors() {
+          return (
+            <ul>
+              {
+                task.humanized.errors.map(error => <li key={error}> {error} </li>)
+              }
+            </ul>
+          );
+        }
+
+        const message = (
+          <span>
+            <span>{__(`Task ${task.humanized.action} completed with a result of ${task.result}`)} </span>
+            {task.errors ? getErrors() : ''}
+            <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
+              {__('Click here to go to the tasks page for the task.')}
+            </a>
+          </span>
+        );
+
+        notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: task.result });
+
+        this.props.loadSubscriptions();
+      });
+    }
+  }
+
   render() {
     const { tasks, subscriptions } = this.props;
     const { disconnected } = subscriptions;
-    const disableManifestActions = tasks.length > 0 || disconnected;
+    const taskInProgress = tasks.length > 0;
+    const disableManifestActions = taskInProgress || disconnected;
+
+    let task = null;
+
+    if (taskInProgress) {
+      [task] = tasks;
+      this.handleDoneTask(task);
+    }
+
+    if (task) {
+      this.showTaskModal(true);
+    } else {
+      this.showTaskModal(false);
+    }
 
     const onSearch = (search) => {
       this.props.loadSubscriptions({ search });
@@ -150,20 +214,28 @@ class SubscriptionsPage extends Component {
 
             <ManageManifestModal
               showModal={this.state.manifestModalOpen}
+              taskInProgress={taskInProgress}
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
               onClose={onManageManifestModalClose}
             />
 
-            <SubscriptionsTable
-              loadSubscriptions={this.props.loadSubscriptions}
-              updateQuantity={this.props.updateQuantity}
-              subscriptions={this.props.subscriptions}
-              subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
-              onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
-              onDeleteSubscriptions={onDeleteSubscriptions}
-              toggleDeleteButton={toggleDeleteButton}
-            />
+            <div id="subscriptions-table" className="modal-container">
+              <SubscriptionsTable
+                loadSubscriptions={this.props.loadSubscriptions}
+                updateQuantity={this.props.updateQuantity}
+                subscriptions={this.props.subscriptions}
+                subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
+                onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
+                onDeleteSubscriptions={onDeleteSubscriptions}
+                toggleDeleteButton={toggleDeleteButton}
+              />
+              <ModalProgressBar
+                show={this.state.showTaskModal}
+                container={document.getElementById('subscriptions-table')}
+                task={task}
+              />
+            </div>
           </Col>
         </Row>
       </Grid>
@@ -176,6 +248,7 @@ SubscriptionsPage.propTypes = {
   updateQuantity: PropTypes.func.isRequired,
   subscriptions: PropTypes.shape().isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
+  pollTaskUntilDone: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,

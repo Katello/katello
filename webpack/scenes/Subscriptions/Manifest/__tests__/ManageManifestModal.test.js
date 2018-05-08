@@ -18,6 +18,7 @@ describe('manage manifest modal', () => {
       loadOrganization={noop}
       saveOrganization={noop}
       manifestHistory={manifestHistorySuccessState}
+      taskInProgress={false}
       showModal
     />);
     expect(toJson(page)).toMatchSnapshot();
