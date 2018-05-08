@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { bindMethods, Alert, Button, Icon, Modal, ProgressBar, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
@@ -14,6 +14,7 @@ class ManageManifestModal extends Component {
 
     this.state = {
       showModal: props.showModal,
+      actionInProgress: props.taskInProgress,
       showDeleteManifestModalDialog: false,
     };
 
@@ -32,6 +33,7 @@ class ManageManifestModal extends Component {
 
   componentWillReceiveProps(props) {
     this.setState({ showModal: props.showModal });
+    this.setState({ actionInProgress: props.taskInProgress });
   }
 
   loadData() {
@@ -51,14 +53,17 @@ class ManageManifestModal extends Component {
     if (fileList.length > 0) {
       this.props.uploadManifest(fileList[0]).then(this.props.loadOrganization);
     }
+    this.setState({ actionInProgress: true });
   }
 
   refreshManifest() {
     this.props.refreshManifest();
+    this.setState({ actionInProgress: true });
   }
 
   deleteManifest() {
     this.props.deleteManifest().then(this.props.loadOrganization);
+    this.setState({ actionInProgress: true });
     this.showDeleteManifestModal(false);
   }
 
@@ -70,9 +75,10 @@ class ManageManifestModal extends Component {
 
   render() {
     const {
-      manifestHistory, organization, disableManifestActions, disabledReason, task,
+      manifestHistory, organization, disableManifestActions, disabledReason,
     } = this.props;
 
+    const { actionInProgress } = this.state;
 
     const emptyStateData = () => ({
       header: __('There is no Manifest History to display.'),
@@ -97,36 +103,6 @@ class ManageManifestModal extends Component {
 
       return name;
     };
-
-    const getAlerts = () => {
-      const alerts = [];
-      let type = 'success';
-      let messages = [];
-
-      if (task && !task.pending) {
-        if (task.humanized) {
-          messages = task.humanized.errors;
-          type = task.result;
-
-          if (task.result === 'success') {
-            messages = [task.humanized.action +
-            __(' Completed Successfully.')];
-          }
-        } else if (task && task.error) {
-          messages = task.error.errors;
-          type = 'error';
-        }
-      }
-
-      for (let i = 0; i < messages.length; i += 1) {
-        alerts.push(<Alert type={type} key={i}>{messages[i]}</Alert>);
-      }
-
-      return alerts;
-    };
-
-    const taskInProgress = task && task.pending;
-    const getTaskProgress = () => Math.round(task.progress * 100);
 
     return (
       <Modal show={this.state.showModal} onHide={this.hideModal}>
@@ -160,8 +136,6 @@ class ManageManifestModal extends Component {
                 <h5>{__('Subscription Manifest')}</h5>
                 <hr />
 
-                {getAlerts()}
-
                 <FormGroup>
                   <ControlLabel className="col-sm-3 control-label" htmlFor="usmaFile">
                     <OverlayTrigger
@@ -177,13 +151,15 @@ class ManageManifestModal extends Component {
                   </ControlLabel>
 
                   <Col sm={9} className="manifest-actions">
+                    <Spinner loading={actionInProgress} inline />
+
                     {getManifestName()}
 
                     <FormControl
                       id="usmaFile"
                       type="file"
                       accept=".zip"
-                      disabled={taskInProgress}
+                      disabled={actionInProgress}
                       onChange={e => this.uploadManifest(e.target.files)}
                     />
 
@@ -193,7 +169,7 @@ class ManageManifestModal extends Component {
                       tooltipText={disabledReason}
                       tooltipPlacement="top"
                       title={__('Refresh')}
-                      disabled={taskInProgress || disableManifestActions}
+                      disabled={actionInProgress || disableManifestActions}
                     />
 
                     <TooltipButton
@@ -202,7 +178,7 @@ class ManageManifestModal extends Component {
                       tooltipText={__('This is disabled because a manifest task is in progress.')}
                       tooltipPlacement="top"
                       title={__('Delete')}
-                      disabled={taskInProgress}
+                      disabled={actionInProgress}
                     />
 
                     <ConfirmDialog
@@ -216,13 +192,6 @@ class ManageManifestModal extends Component {
                       onConfirm={() => this.deleteManifest()}
                       onCancel={() => this.showDeleteManifestModal(false)}
                     />
-                    {taskInProgress ?
-                      <ProgressBar
-                        active
-                        now={getTaskProgress()}
-                        label={getTaskProgress() + __('% Complete')}
-                      />
-                    : ''}
                   </Col>
                 </FormGroup>
               </Form>
@@ -259,7 +228,7 @@ ManageManifestModal.propTypes = {
   disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
   saveOrganization: PropTypes.func.isRequired,
-  task: PropTypes.shape({}),
+  taskInProgress: PropTypes.bool.isRequired,
   manifestHistory: PropTypes.shape({}).isRequired,
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
@@ -269,7 +238,6 @@ ManageManifestModal.defaultProps = {
   disableManifestActions: false,
   disabledReason: '',
   onClose() {},
-  task: {},
 };
 
 export default ManageManifestModal;

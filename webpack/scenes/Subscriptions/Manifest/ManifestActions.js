@@ -1,6 +1,5 @@
 import api, { orgId } from '../../../services/api';
 import { propsToSnakeCase } from '../../../services/index';
-import { pollTaskUntilDone } from '../../Tasks/TaskActions';
 
 import {
   UPLOAD_MANIFEST_REQUEST,
@@ -17,8 +16,6 @@ import {
   MANIFEST_HISTORY_FAILURE,
 } from './ManifestConstants';
 
-const TASK_POLL_INTERVAL = 5000;
-
 export const uploadManifest = file => (dispatch) => {
   dispatch({ type: UPLOAD_MANIFEST_REQUEST });
 
@@ -31,14 +28,12 @@ export const uploadManifest = file => (dispatch) => {
 
   return api
     .post(`/organizations/${orgId}/subscriptions/upload`, formData, config)
-    .then(({ data }) => Promise.all([
+    .then(({ data }) => {
       dispatch({
         type: UPLOAD_MANIFEST_SUCCESS,
         response: data,
-      }),
-
-      dispatch(pollTaskUntilDone(data.id, {}, TASK_POLL_INTERVAL)),
-    ]))
+      });
+    })
     .catch((result) => {
       dispatch({
         type: UPLOAD_MANIFEST_FAILURE,
@@ -56,14 +51,12 @@ export const refreshManifest = (extendedParams = {}) => (dispatch) => {
 
   return api
     .put(`/organizations/${orgId}/subscriptions/refresh_manifest`, {}, params)
-    .then(({ data }) => Promise.all([
+    .then(({ data }) => {
       dispatch({
         type: REFRESH_MANIFEST_SUCCESS,
         response: data,
-      }),
-
-      dispatch(pollTaskUntilDone(data.id, {}, TASK_POLL_INTERVAL)),
-    ]))
+      });
+    })
     .catch((result) => {
       dispatch({
         type: REFRESH_MANIFEST_FAILURE,
@@ -81,14 +74,12 @@ export const deleteManifest = (extendedParams = {}) => (dispatch) => {
 
   return api
     .post(`/organizations/${orgId}/subscriptions/delete_manifest`, {}, params)
-    .then(({ data }) => Promise.all([
+    .then(({ data }) => {
       dispatch({
         type: DELETE_MANIFEST_SUCCESS,
         response: data,
-      }),
-
-      dispatch(pollTaskUntilDone(data.id, {}, TASK_POLL_INTERVAL)),
-    ]))
+      });
+    })
     .catch((result) => {
       dispatch({
         type: DELETE_MANIFEST_FAILURE,
