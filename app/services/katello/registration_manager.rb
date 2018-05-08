@@ -96,7 +96,7 @@ module Katello
       end
 
       def create_initial_subscription_status(host)
-        ::Katello::SubscriptionStatus.create!(:host => host, :status => ::Katello::SubscriptionStatus::UNKNOWN)
+        host.subscription_facet.update_subscription_status(::Katello::SubscriptionStatus::UNKNOWN)
       end
 
       def create_in_cp_and_pulp(host, content_view_environment, consumer_params, activation_keys)
