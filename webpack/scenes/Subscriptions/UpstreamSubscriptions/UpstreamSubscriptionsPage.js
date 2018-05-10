@@ -4,7 +4,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { bindMethods, Button, Spinner, customHeaderFormattersDefinition } from 'patternfly-react';
+import { bindMethods, Button, Spinner } from 'patternfly-react';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';
 import { Table } from '../../../move_to_foreman/components/common/table';
@@ -19,8 +19,6 @@ class UpstreamSubscriptionsPage extends Component {
     };
 
     bindMethods(this, [
-      'onSelectAllRows',
-      'onSelectRow',
       'onChange',
       'saveUpstreamSubscriptions',
     ]);
@@ -28,36 +26,6 @@ class UpstreamSubscriptionsPage extends Component {
 
   componentDidMount() {
     this.loadData();
-  }
-
-  onSelectAllRows(event) {
-    const { checked } = event.target;
-    const { upstreamSubscriptions } = this.props;
-
-    if (checked) {
-      this.setState({
-        selectedRows: [...upstreamSubscriptions.results],
-      });
-    } else {
-      this.setState({
-        selectedRows: [],
-      });
-    }
-  }
-
-  onSelectRow(event, row) {
-    const { selectedRows } = this.state;
-
-    if (this.poolInSelectedRows(row)) {
-      this.setState({
-        selectedRows: selectedRows.filter(e => e.id !== row.id),
-      });
-    } else {
-      selectedRows.push(row);
-      this.setState({
-        selectedRows,
-      });
-    }
   }
 
   onChange(value, rowData) {
@@ -184,13 +152,9 @@ class UpstreamSubscriptionsPage extends Component {
         let row = this.poolInSelectedRows(sub);
 
         if (row) {
-          row.selected = true;
+          row = { ...row, selected: true };
         } else {
-          const foundRow = _.find(
-            upstreamSubscriptions.results,
-            foundSub => sub.id === foundSub.id,
-          );
-
+          const foundRow = upstreamSubscriptions.results.find(foundSub => sub.id === foundSub.id);
           row = { ...foundRow, selected: false };
         }
 
@@ -215,8 +179,34 @@ class UpstreamSubscriptionsPage extends Component {
       },
     });
 
-    const tableColumns = columns(this);
-    const sortingColumns = {};
+    const checkAllRowsSelected = () =>
+      upstreamSubscriptions.results.length === this.state.selectedRows.length;
+
+    const selectionController = {
+      allRowsSelected: () => checkAllRowsSelected(),
+      selectAllRows: () => {
+        if (checkAllRowsSelected()) {
+          this.setState({ selectedRows: [] });
+        } else {
+          this.setState({ selectedRows: [...upstreamSubscriptions.results] });
+        }
+      },
+      selectRow: ({ rowData }) => {
+        let { selectedRows } = this.state;
+        if (selectedRows.find(r => r.id === rowData.id)) {
+          selectedRows = selectedRows.filter(e => e.id !== rowData.id);
+        } else {
+          selectedRows.push(rowData);
+        }
+
+        this.setState({ selectedRows });
+      },
+      isSelected: ({ rowData }) => (
+        this.state.selectedRows.find(r => r.id === rowData.id) !== undefined
+      ),
+    };
+
+    const tableColumns = columns(this, selectionController);
     const rows = getSelectedUpstreamSubscriptions();
 
     return (
@@ -230,19 +220,6 @@ class UpstreamSubscriptionsPage extends Component {
                 rows={rows}
                 columns={tableColumns}
                 emptyState={emptyStateData()}
-                // TODO: should be replaced with custom formatters
-                components={{
-                  header: {
-                    cell: cellProps =>
-                      customHeaderFormattersDefinition({
-                        cellProps,
-                        columns: tableColumns,
-                        sortingColumns,
-                        rows,
-                        onSelectAllRows: this.onSelectAllRows,
-                      }),
-                  },
-                }}
                 itemCount={upstreamSubscriptions.itemCount}
                 pagination={upstreamSubscriptions.pagination}
                 onPaginationChange={onPaginationChange}
