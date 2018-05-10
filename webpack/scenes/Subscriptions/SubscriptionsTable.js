@@ -286,8 +286,8 @@ class SubscriptionsTable extends Component {
         <ConfirmDialog
           show={this.state.showCancelConfirmDialog}
           title={__('Editing Entitlements')}
-          message={__('You have unsaved changes. Do you want to continue without saving your changes?')}
-          confirmLabel={__('Continue')}
+          message={__('You have unsaved changes. Do you want to exit without saving your changes?')}
+          confirmLabel={__('Exit')}
           onConfirm={() => this.cancelEdit()}
           onCancel={() => this.showCancelConfirm(false)}
         />

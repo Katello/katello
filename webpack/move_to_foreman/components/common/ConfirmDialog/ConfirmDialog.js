@@ -5,7 +5,7 @@ import Dialog from '../Dialog';
 
 const ConfirmDialog = (props) => {
   const {
-    onCancel, cancelLabel, onConfirm, confirmLabel, ...otherProps
+    onCancel, cancelLabel, onConfirm, confirmLabel, confirmStyle, ...otherProps
   } = props;
 
   const buttons = [
@@ -19,7 +19,7 @@ const ConfirmDialog = (props) => {
     </Button>,
     <Button
       key="confirm"
-      bsStyle="primary"
+      bsStyle={confirmStyle}
       onClick={onConfirm}
     >
       {confirmLabel}
@@ -35,6 +35,7 @@ ConfirmDialog.propTypes = {
   ...Button.propTypes,
   onConfirm: PropTypes.func.isRequired,
   confirmLabel: PropTypes.string,
+  confirmStyle: PropTypes.string,
 };
 
 ConfirmDialog.defaultProps = {
@@ -43,6 +44,7 @@ ConfirmDialog.defaultProps = {
   cancelLabel: __('Cancel'),
   dangerouslySetInnerHTML: undefined,
   message: undefined,
+  confirmStyle: 'primary',
 };
 
 export default ConfirmDialog;
