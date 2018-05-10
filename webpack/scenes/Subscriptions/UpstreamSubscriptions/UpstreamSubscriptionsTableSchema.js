@@ -1,35 +1,21 @@
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import helpers from '../../../move_to_foreman/common/helpers';
+import helpers, { selectionHeaderCellFormatter, selectionCellFormatter } from '../../../move_to_foreman/common/helpers';
 import {
   headerFormat,
   cellFormat,
-  selectionHeaderCellFormatter,
-  selectionCellFormatter,
 } from '../../../move_to_foreman/components/common/table';
 
-export const columns = controller => [
+export const columns = (controller, selectionController) => [
   {
     property: 'select',
     header: {
-      label: 'Select all rows',
-      props: {
-        index: 0,
-        rowSpan: 1,
-        colSpan: 1,
-      },
-      customFormatters: [selectionHeaderCellFormatter],
+      label: __('Select all rows'),
+      formatters: [label => selectionHeaderCellFormatter(selectionController, label)],
     },
     cell: {
-      props: {
-        index: 0,
-      },
-      formatters: [
-        (value, { rowData, rowIndex }) => selectionCellFormatter(
-          { rowData, rowIndex },
-          controller.onSelectRow,
-        ),
-      ],
+      formatters: [(value, additionalData) =>
+        selectionCellFormatter(selectionController, value, additionalData)],
     },
   },
   {
@@ -37,9 +23,6 @@ export const columns = controller => [
     header: {
       label: __('Subscription Name'),
       formatters: [headerFormat],
-      props: {
-        index: 1,
-      },
     },
     cell: {
       formatters: [
@@ -58,9 +41,6 @@ export const columns = controller => [
     header: {
       label: __('Contract'),
       formatters: [headerFormat],
-      props: {
-        index: 2,
-      },
     },
     cell: {
       formatters: [cellFormat],
@@ -72,9 +52,6 @@ export const columns = controller => [
     header: {
       label: __('Start Date'),
       formatters: [headerFormat],
-      props: {
-        index: 3,
-      },
     },
     cell: {
       formatters: [cellFormat],
@@ -85,9 +62,6 @@ export const columns = controller => [
     header: {
       label: __('End Date'),
       formatters: [headerFormat],
-      props: {
-        index: 4,
-      },
     },
     cell: {
       formatters: [cellFormat],
@@ -98,9 +72,6 @@ export const columns = controller => [
     header: {
       label: __('Available Entitlements'),
       formatters: [headerFormat],
-      props: {
-        index: 5,
-      },
     },
     cell: {
       formatters: [
@@ -117,9 +88,6 @@ export const columns = controller => [
     header: {
       label: __('Quantity to Allocate'),
       formatters: [headerFormat],
-      props: {
-        index: 6,
-      },
     },
     cell: {
       formatters: [
