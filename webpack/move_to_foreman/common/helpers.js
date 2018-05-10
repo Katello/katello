@@ -13,7 +13,7 @@ export const KEY_CODES = {
   ESCAPE_KEY: 27,
 };
 
-export const selectionFormatter = (selectionController, label) => (
+export const selectionHeaderCellFormatter = (selectionController, label) => (
   <Table.SelectionHeading aria-label={label}>
     <Table.Checkbox
       id="selectAll"
