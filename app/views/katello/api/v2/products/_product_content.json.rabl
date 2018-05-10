@@ -1,9 +1,9 @@
 attribute :enabled, :product_id
 
-glue :content do |_content|
-  attributes :name, :label, :vendor,
-             :cp_content_id => :id,
-             :content_type => :contentType,
-             :gpg_url => :gpgUrl,
-             :content_url => :contentUrl
+child :content do |_content|
+  attributes :name, :label, :vendor, :content_url, :gpg_url
+  attributes :cp_content_id => :id
+  attributes :content_type => :type
+  attributes :gpg_url => :gpgUrl
+  attributes :content_url => :contentUrl
 end
