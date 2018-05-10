@@ -5,6 +5,8 @@ import { bindMethods, Alert, Button, Icon, Modal, ProgressBar, Spinner, OverlayT
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
+import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
+import DeleteManifestModalText from './DeleteManifestModalText';
 
 class ManageManifestModal extends Component {
   constructor(props) {
@@ -12,6 +14,7 @@ class ManageManifestModal extends Component {
 
     this.state = {
       showModal: props.showModal,
+      showDeleteManifestModalDialog: false,
     };
 
     bindMethods(this, [
@@ -36,7 +39,7 @@ class ManageManifestModal extends Component {
   }
 
   hideModal() {
-    this.setState({ showModal: false });
+    this.setState({ showModal: false, showDeleteManifestModalDialog: false });
     this.props.onClose();
   }
 
@@ -56,6 +59,13 @@ class ManageManifestModal extends Component {
 
   deleteManifest() {
     this.props.deleteManifest().then(this.props.loadOrganization);
+    this.showDeleteManifestModal(false);
+  }
+
+  showDeleteManifestModal(show) {
+    this.setState({
+      showDeleteManifestModalDialog: show,
+    });
   }
 
   render() {
@@ -187,7 +197,7 @@ class ManageManifestModal extends Component {
                     />
 
                     <TooltipButton
-                      onClick={this.deleteManifest}
+                      onClick={() => this.showDeleteManifestModal(true)}
                       tooltipId="delete-manifest-button-tooltip"
                       tooltipText={__('This is disabled because a manifest task is in progress.')}
                       tooltipPlacement="top"
@@ -195,6 +205,17 @@ class ManageManifestModal extends Component {
                       disabled={taskInProgress}
                     />
 
+                    <ConfirmDialog
+                      show={this.state.showDeleteManifestModalDialog}
+                      title={__('Confirm delete manifest')}
+                      dangerouslySetInnerHTML={{
+                        __html: DeleteManifestModalText,
+                      }}
+                      confirmLabel={__('Delete')}
+                      confirmStyle="danger"
+                      onConfirm={() => this.deleteManifest()}
+                      onCancel={() => this.showDeleteManifestModal(false)}
+                    />
                     {taskInProgress ?
                       <ProgressBar
                         active

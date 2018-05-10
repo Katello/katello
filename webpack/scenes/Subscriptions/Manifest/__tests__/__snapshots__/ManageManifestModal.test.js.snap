@@ -165,6 +165,36 @@ exports[`manage manifest modal should render 1`] = `
                 tooltipPlacement="top"
                 tooltipText="This is disabled because a manifest task is in progress."
               />
+              <ConfirmDialog
+                active={false}
+                block={false}
+                bsClass="btn"
+                bsStyle="default"
+                cancelLabel="Cancel"
+                confirmLabel="Delete"
+                confirmStyle="danger"
+                dangerouslySetInnerHTML={
+                  Object {
+                    "__html": "<p>Are you sure you want to delete the manifest?</p>
+<p>Note: Deleting a subscription manifest is STRONGLY discouraged.
+                 Deleting a manifest will:</p>
+<ul class=\\"list-aligned\\">
+  <li>Delete all subscriptions that are attached to running hosts.</li>
+  <li>Delete all subscriptions attached to activation keys.</li>
+  <li>Disable Red Hat Insights.</li>
+  <li>Require you to upload the subscription-manifest and re-attach
+               subscriptions to hosts and activation keys.</li>
+</ul>
+<p>This action should only be taken in extreme circumstances or
+                  for debugging purposes.</p>",
+                  }
+                }
+                disabled={false}
+                onCancel={[Function]}
+                onConfirm={[Function]}
+                show={false}
+                title="Confirm delete manifest"
+              />
             </Col>
           </FormGroup>
         </Form>
