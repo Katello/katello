@@ -5,5 +5,9 @@ module Katello
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :nvra
+
+    def nvrea
+      nvra
+    end
   end
 end
