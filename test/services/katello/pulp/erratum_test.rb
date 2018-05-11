@@ -45,7 +45,7 @@ module Katello
         %w(title severity issued description solution updated summary).each do |attr|
           assert erratum.send(attr)
         end
-        assert_equal Erratum::SECURITY, erratum.errata_type
+        assert_includes Erratum::SECURITY, erratum.errata_type
 
         erratum.reload
         refute_empty erratum.packages
