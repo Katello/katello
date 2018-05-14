@@ -30,7 +30,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostRegisterControlle
             $scope.noCapsulesFound = _.isEmpty(data.results);
             $scope.selectedCapsule = _.isEmpty(defaultCapsule) ? data.results[0] : defaultCapsule[0];
         });
-
+        $scope.hideSwitcher = true;
 
         $scope.hostname = function (url) {
             if (url) {

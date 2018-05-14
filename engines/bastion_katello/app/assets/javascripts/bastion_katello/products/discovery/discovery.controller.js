@@ -32,7 +32,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             {id: "yum", name: "Yum Repositories"},
             {id: "docker", name: "Docker Images"}
         ];
-
+        $scope.hideSwitcher = true;
         if (!$scope.table) {
             $scope.table = {
                 rows: [],
