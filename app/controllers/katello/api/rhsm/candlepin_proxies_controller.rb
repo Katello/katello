@@ -492,9 +492,9 @@ module Katello
         (User.consumer? || ::User.current.can?(:view_organizations, self))
       when "rhsm_proxy_consumer_certificates_path", "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
            "rhsm_proxy_consumer_entitlements_path", "rhsm_proxy_consumer_entitlements_post_path",
-           "rhsm_proxy_consumer_entitlements_delete_path", "rhsm_proxy_consumer_certificates_put_path",
-           "rhsm_proxy_consumer_dryrun_path", "rhsm_proxy_consumer_owners_path",
-           "rhsm_proxy_consumer_compliance_path"
+           "rhsm_proxy_consumer_entitlements_delete_path", "rhsm_proxy_consumer_entitlements_pool_delete_path",
+           "rhsm_proxy_consumer_certificates_put_path", "rhsm_proxy_consumer_dryrun_path",
+           "rhsm_proxy_consumer_owners_path", "rhsm_proxy_consumer_compliance_path"
         User.consumer? && current_user.uuid == params[:id]
       when "rhsm_proxy_consumer_certificates_delete_path"
         User.consumer? && current_user.uuid == params[:consumer_id]
