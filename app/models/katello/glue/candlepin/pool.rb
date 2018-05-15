@@ -92,7 +92,7 @@ module Katello
       end
 
       # rubocop:disable MethodLength
-      def import_data(index_hosts = false)
+      def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
 
@@ -141,9 +141,9 @@ module Katello
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update_attributes(pool_attributes.except!(*exceptions))
         self.save!
-        self.create_activation_key_associations
+        self.create_activation_key_associations if index_hosts_and_activation_keys
         self.create_product_associations
-        self.import_hosts if index_hosts
+        self.import_hosts if index_hosts_and_activation_keys
       end
 
       def create_product_associations
@@ -183,6 +183,7 @@ module Katello
 
       def import_managed_associations
         import_hosts
+        create_activation_key_associations
       end
 
       def hosts

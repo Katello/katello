@@ -32,7 +32,7 @@ module Katello
         where("#{self.table_name}.id = (?) or #{self.table_name}.cp_id = (?)", id_integers, ids)
       end
 
-      def import_all(organization = nil)
+      def import_all(organization = nil, import_managed_associations = true)
         organizations = organization ? [organization] : Organization.all
 
         organizations.each do |org|
@@ -42,7 +42,7 @@ module Katello
           objects.each do |item|
             if candlepin_ids.include?(item.cp_id)
               item.import_data
-              item.import_managed_associations if item.respond_to?(:import_managed_associations)
+              item.import_managed_associations if import_managed_associations && item.respond_to?(:import_managed_associations)
             else
               item.destroy
             end
