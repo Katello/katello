@@ -144,7 +144,7 @@ module Katello
 
       def index_subscriptions(organization = nil)
         Katello::Subscription.import_all(organization)
-        Katello::Pool.import_all(organization)
+        Katello::Pool.import_all(organization, false)
       end
 
       def rules_source
