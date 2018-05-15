@@ -194,7 +194,6 @@ module Katello
 
     test_attributes :pid => '71b9b000-b978-4a95-b6f8-83c09ed39c01'
     def test_should_not_create_unlimited_and_invalid_max_hosts
-      # BZ: 1156555
       post :create, params: {
         :organization_id => @organization.id,
         :activation_key => {:name => 'limited Key', :unlimited_hosts => true, :max_hosts => 0}
