@@ -90,6 +90,24 @@ module Katello
       assert_equal @pool_one.quantity_available, 9
     end
 
+    def test_import_all_default
+      org = get_organization
+      Pool.expects(:import_candlepin_ids).with(org).returns([@pool_one.cp_id])
+      Pool.expects(:in_organization).with(org).returns([@pool_one])
+      @pool_one.expects(:import_data).once
+      @pool_one.expects(:import_managed_associations).once
+      Pool.import_all(org)
+    end
+
+    def test_import_all_no_managed_association
+      org = get_organization
+      Pool.expects(:import_candlepin_ids).with(org).returns([@pool_one.cp_id])
+      Pool.expects(:in_organization).with(org).returns([@pool_one])
+      @pool_one.expects(:import_data).once
+      @pool_one.expects(:import_managed_associations).never
+      Pool.import_all(org, false)
+    end
+
     def test_quantity_available_unlimited
       pool = FactoryBot.build(:katello_pool, quantity: -1, consumed: 3)
       assert_equal(-1, pool.quantity_available)
