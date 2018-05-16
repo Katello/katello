@@ -1,15 +1,22 @@
-(function () {
-    'use strict';
+/**
+ * @ngdoc controller
+ * @name  Bastion.content-views.versions.controller:ContentViewVersion
+ *
+ * @requires $scope
+ * @requires $state
+ * @requires $q
+ * @requires translate
+ * @requires ContentViewVersion
+ * @requires Notification
+ *
+ * @description
+ *   Handles fetching of a content view version based on the route ID and putting it
+ *   on the scope.
+ */
 
-    /**
-     * @ngdoc controller
-     * @name  Bastion.content-views.versions.controller:ContentViewVersion
-     *
-     * @description
-     *   Handles fetching of a content view version based on the route ID and putting it
-     *   on the scope.
-     */
-    function ContentViewVersionController($scope, ContentViewVersion) {
+angular.module('Bastion.content-views.versions').controller('ContentViewVersionController',
+    ['$scope', '$state', '$q', 'translate', 'ContentViewVersion', 'Notification',
+    function ($scope, $state, $q, translate, ContentViewVersion, Notification) {
 
         $scope.version = ContentViewVersion.get({id: $scope.$stateParams.versionId});
 
@@ -34,12 +41,19 @@
             return found;
         };
 
-    }
+        $scope.save = function (version) {
+            var deferred = $q.defer();
 
-    angular
-        .module('Bastion.content-views.versions')
-        .controller('ContentViewVersionController', ContentViewVersionController);
+            version.$update(function (response) {
+                deferred.resolve(response);
+                Notification.setSuccessMessage(translate('Content View version updated'));
 
-    ContentViewVersionController.$inject = ['$scope', 'ContentViewVersion'];
+            }, function (response) {
+                deferred.reject(response);
+                Notification.setErrorMessage(response.data.displayMessage);
+            });
 
-})();
+            return deferred.promise;
+        };
+    }]
+);

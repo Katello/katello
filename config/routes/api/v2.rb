@@ -109,7 +109,7 @@ Katello::Engine.routes.draw do
           end
         end
 
-        api_resources :content_view_versions, :except => [:create, :update] do
+        api_resources :content_view_versions, :except => [:create] do
           member do
             post :promote
             post :export

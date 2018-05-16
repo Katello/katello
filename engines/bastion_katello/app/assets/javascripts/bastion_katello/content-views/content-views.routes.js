@@ -63,6 +63,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
     .state('content-view.version.details', {
         url: '',
         permission: 'view_content_views',
+        controller: 'ContentViewVersionController',
         templateUrl: 'content-views/versions/views/content-view-version-details.html',
         ncyBreadcrumb: {
             label: '{{ version.name }}',
