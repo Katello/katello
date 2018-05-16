@@ -117,7 +117,7 @@ module Katello
       end
 
       def set_default_download_policy
-        self.download_policy ||= ::Setting[:default_proxy_download_policy]
+        self.download_policy ||= ::Setting[:default_proxy_download_policy] || ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
       end
 
       def associate_lifecycle_environments
