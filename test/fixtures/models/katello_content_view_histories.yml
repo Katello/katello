@@ -3,6 +3,17 @@ view_version_1_history_1:
   status: 'successful'
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+  notes: 'A nice content view version'
   katello_content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
+  katello_environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  action: 1
+
+view_version_2_history_1:
+  user: 'Admin'
+  status: 'successful'
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  notes: 'A nice content view version'
+  katello_content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
   katello_environment_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   action: 1

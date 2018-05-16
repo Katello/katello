@@ -333,5 +333,24 @@ module Katello
         post :destroy, params: { :id => @library_dev_staging_view.versions.first.id }
       end
     end
+
+    def test_update
+      new_description = 'New version description.'
+      put :update, params: { :id => @library_view.versions.first.id, :description => new_description }
+
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/show'
+      assert_equal @library_view.versions.first.history.publish.successful.first.notes, new_description
+    end
+
+    def test_update_protected
+      allowed_perms = [@update_permission]
+      denied_perms = [@view_permission, @create_permission, @destroy_permission]
+      new_description = 'New version description.'
+
+      assert_protected_action(:update, allowed_perms, denied_perms) do
+        put :update, params: { :id => @library_view.versions.first.id, :description => new_description }
+      end
+    end
   end
 end
