@@ -4,6 +4,8 @@ module Actions
       class ManifestRefresh < Actions::AbstractAsyncTask
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
+        include Helpers::Notifications
+
         def plan(organization)
           action_subject organization
           manifest_update = organization.products.redhat.any?
@@ -36,6 +38,19 @@ module Actions
           end
         end
 
+        def failure_notification(plan)
+          ::Katello::UINotifications::Subscriptions::ManifestRefreshError.deliver!(
+            :subject => subject_organization,
+            :task => get_foreman_task(plan)
+          )
+        end
+
+        def success_notification(_plan)
+          ::Katello::UINotifications::Subscriptions::ManifestRefreshSuccess.deliver!(
+            subject_organization
+          )
+        end
+
         def rescue_strategy
           Dynflow::Action::Rescue::Skip
         end
@@ -45,10 +60,9 @@ module Actions
         end
 
         def finalize
-          organization = ::Organization.find(input[:organization][:id])
-          organization.manifest_refreshed_at = Time.now
-          organization.audit_comment = _('Manifest refreshed')
-          organization.save(validate: false)
+          subject_organization.manifest_refreshed_at = Time.now
+          subject_organization.audit_comment = _('Manifest refreshed')
+          subject_organization.save(validate: false)
         end
       end
     end
