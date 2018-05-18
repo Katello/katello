@@ -358,6 +358,20 @@ module Katello
       true
     end
 
+    def before_promote_hooks
+      run_callbacks :sync do
+        logger.debug "custom hook before_promote on #{name} will be executed if defined."
+        true
+      end
+    end
+
+    def after_promote_hooks
+      run_callbacks :sync do
+        logger.debug "custom hook after_promote on #{name} will be executed if defined."
+        true
+      end
+    end
+
     def rabl_path
       "katello/api/v2/#{self.class.to_s.demodulize.tableize}/show"
     end
