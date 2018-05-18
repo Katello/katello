@@ -114,13 +114,14 @@ class RepositorySetRepository extends Component {
 RepositorySetRepository.propTypes = {
   contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
-  arch: PropTypes.string.isRequired,
+  arch: PropTypes.string,
   releasever: PropTypes.string,
   setRepositoryEnabled: PropTypes.func.isRequired,
 };
 
 RepositorySetRepository.defaultProps = {
   releasever: '',
+  arch: __('Unspecified'),
 };
 
 export default connect(null, { setRepositoryEnabled })(RepositorySetRepository);
