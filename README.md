@@ -74,9 +74,11 @@ See the [annotation docs](./test/scenarios/README.md) for more information.
 ## Contact & Resources
 
  * [theforeman.org](https://theforeman.org/plugins/katello)
- * [Foreman User Mailing List](https://groups.google.com/forum/?fromgroups#!forum/foreman-users)
- * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
- * [IRC Freenode](http://freenode.net/using_the_network.shtml): #theforeman-dev
+ * [Discourse Forum](https://theforeman.org/support.html#DiscourseForum)
+ * Archived mailing lists:
+    * [Foreman User Mailing List](https://groups.google.com/forum/?fromgroups#!forum/foreman-users)
+    * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
+ * [IRC Freenode](https://theforeman.org/support.html#IRClivechat): #theforeman-dev, #theforeman
 
 ## Documentation
 
