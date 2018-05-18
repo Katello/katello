@@ -379,7 +379,7 @@ module Katello
 
         assert_equal @controller.get_parent_host(host_and_capsule), "#{capsule}"
         assert_equal @controller.get_parent_host(just_capsule), "#{capsule}"
-        assert_includes [Facter.value(:fqdn), SETTINGS[:fqdn]], @controller.get_parent_host(nil_host)
+        assert_equal SETTINGS[:fqdn], @controller.get_parent_host(nil_host)
       end
     end
   end

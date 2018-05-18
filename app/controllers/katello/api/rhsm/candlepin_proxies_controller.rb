@@ -278,7 +278,7 @@ module Katello
     def get_parent_host(headers)
       hostnames = headers["HTTP_X_FORWARDED_SERVER"]
       host = hostnames.split(",")[0] if hostnames
-      host || Facter.value(:fqdn) || SETTINGS[:fqdn]
+      host || SETTINGS[:fqdn]
     end
 
     private
