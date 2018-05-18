@@ -63,6 +63,9 @@ module Katello
     end
     # rubocop:enable Metrics/MethodLength
 
+    should_not allow_values(*invalid_name_list).for(:name)
+    should_not allow_values(*invalid_name_list).for(:label)
+
     def test_create
       assert ContentView.create(FactoryBot.attributes_for(:katello_content_view))
     end
