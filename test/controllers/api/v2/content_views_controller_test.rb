@@ -124,10 +124,12 @@ module Katello
     end
 
     def test_update
-      params = { :name => "My View" }
+      params = { :name => "My View", :description => "New description" }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         content_view_params.key?(:name).must_equal true
         content_view_params[:name].must_equal params[:name]
+        content_view_params.key?(:description).must_equal true
+        content_view_params[:description].must_equal params[:description]
       end
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => params }
 
