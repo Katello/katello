@@ -12,10 +12,11 @@ module Katello
     has_many :content_facets, :through => :content_facet_applicable_rpms, :class_name => "Katello::Host::ContentFacet"
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :version, :complete_value => true
-    scoped_search :on => :release, :complete_value => true
+    scoped_search :on => :version, :complete_value => true, :ext_method => :scoped_search_version
+    scoped_search :on => :release, :complete_value => true, :ext_method => :scoped_search_release
     scoped_search :on => :arch, :complete_value => true
     scoped_search :on => :epoch, :complete_value => true
+    scoped_search :on => :evr, :ext_method => :scoped_search_evr
     scoped_search :on => :filename, :complete_value => true
     scoped_search :on => :sourcerpm, :complete_value => true
     scoped_search :on => :checksum
@@ -28,6 +29,147 @@ module Katello
 
     def self.repository_association_class
       RepositoryRpm
+    end
+
+    def self.scoped_search_version(_key, operator, value)
+      self.scoped_search_sortable('version', operator, value)
+    end
+
+    def self.scoped_search_release(_key, operator, value)
+      self.scoped_search_sortable('release', operator, value)
+    end
+
+    def self.scoped_search_sortable(column, operator, value)
+      if ['>', '>=', '<', '<='].include?(operator)
+        conditions = "#{self.table_name}.#{column}_sortable COLLATE \"C\" #{operator} ? COLLATE \"C\""
+        parameter = Util::Package.sortable_version(value)
+        return { :conditions => conditions, :parameter => [parameter] }
+      end
+
+      # Use the default behavior for all other operators.
+      # Unfortunately there is no way to call the default behavior from here, so
+      # we replicate the default behavior from sql_test() in
+      # https://github.com/wvanbergen/scoped_search/blob/master/lib/scoped_search/query_builder.rb
+      if ['LIKE', 'NOT LIKE'].include?(operator)
+        conditions = "#{self.table_name}.#{column} #{operator} ?"
+        parameter = (value !~ /^\%|\*/ && value !~ /\%|\*$/) ? "%#{value}%" : value.tr_s('%*', '%')
+        return { :conditions => conditions, :parameter => [parameter] }
+      elsif ['IN', 'NOT IN'].include?(operator)
+        conditions = "#{self.table_name}.#{column} #{operator} (#{value.split(',').collect { '?' }.join(',')})"
+        parameters = value.split(',').collect { |v| v.strip }
+        return { :conditions => conditions, :parameter => parameters }
+      else
+        conditions = "#{self.table_name}.#{column} #{operator} ?"
+        parameter = value
+        return { :conditions => conditions, :parameter => [parameter] }
+      end
+    end
+
+    def self.scoped_search_evr(_key, operator, value)
+      if ['=', '<>'].include?(operator)
+        return self.scoped_search_evr_equal(operator, value)
+      elsif ['IN', 'NOT IN'].include?(operator)
+        return self.scoped_search_evr_in(operator, value)
+      elsif ['LIKE', 'NOT LIKE'].include?(operator)
+        return self.scoped_search_evr_like(operator, value)
+      elsif ['>', '>=', '<', '<='].include?(operator)
+        return self.scoped_search_evr_compare(operator, value)
+      else
+        return {}
+      end
+    end
+
+    def self.scoped_search_evr_equal(operator, value)
+      joiner = (operator == '=' ? 'AND' : 'OR')
+      evr = Util::Package.parse_evr(value)
+      (e, v, r) = [evr[:epoch], evr[:version], evr[:release]]
+      e = e.to_i # nil or blank becomes 0
+      conditions = "CAST(#{self.table_name}.epoch AS INT) #{operator} ?"
+      parameters = [e]
+      unless v.nil? || v.blank?
+        conditions += " #{joiner} #{self.table_name}.version #{operator} ?"
+        parameters += [v]
+      end
+      unless r.nil? || r.blank?
+        conditions += " #{joiner} #{self.table_name}.release #{operator} ?"
+        parameters += [r]
+      end
+      return { :conditions => conditions, :parameter => parameters }
+    end
+
+    def self.scoped_search_evr_in(operator, value)
+      op = (operator == 'IN' ? '=' : '<>')
+      joiner1 = (operator == 'IN' ? 'AND' : 'OR')
+      joiner2 = (operator == 'IN' ? 'OR' : 'AND')
+      conditions = []
+      parameters = []
+      value.split(',').collect { |v| v.strip }.each do |val|
+        evr = Util::Package.parse_evr(val)
+        (e, v, r) = [evr[:epoch], evr[:version], evr[:release]]
+        e = e.to_i # nil or blank becomes 0
+        condition = "CAST(#{self.table_name}.epoch AS INT) #{op} ?"
+        parameters += [e]
+        unless v.nil? || v.blank?
+          condition += " #{joiner1} #{self.table_name}.version #{op} ?"
+          parameters += [v]
+        end
+        unless r.nil? || r.blank?
+          condition += " #{joiner1} #{self.table_name}.release #{op} ?"
+          parameters += [r]
+        end
+        conditions += ["(#{condition})"]
+      end
+      return { :conditions => conditions.join(" #{joiner2} "), :parameter => parameters }
+    end
+
+    def self.scoped_search_evr_like(operator, value)
+      val = (value !~ /^\%|\*/ && value !~ /\%|\*$/) ? "%#{value}%" : value.tr_s('%*', '%')
+      evr = Util::Package.parse_evr(val)
+      (e, v, r) = [evr[:epoch], evr[:version], evr[:release]]
+      conditions = []
+      parameters = []
+      unless e.nil? || e.blank?
+        conditions += ["CAST(#{self.table_name}.epoch AS VARCHAR(10)) #{operator} ?"]
+        parameters += [e]
+      end
+      unless v.nil? || v.blank?
+        conditions += ["#{self.table_name}.version #{operator} ?"]
+        parameters += [v]
+      end
+      unless r.nil? || r.blank?
+        conditions += ["#{self.table_name}.release #{operator} ?"]
+        parameters += [r]
+      end
+      return {} if conditions.empty?
+      joiner = (operator == 'LIKE' ? 'AND' : 'OR')
+      return { :conditions => conditions.join(" #{joiner} "), :parameter => parameters }
+    end
+
+    def self.scoped_search_evr_compare(operator, value)
+      evr = Util::Package.parse_evr(value)
+      (e, v, r) = [evr[:epoch], evr[:version], evr[:release]]
+      e = e.to_i # nil or blank becomes 0
+      conditions = ''
+      if v.nil? || v.blank?
+        conditions = "CAST(#{self.table_name}.epoch AS INT) #{operator} ?"
+        parameters = [e]
+      else
+        sv = Util::Package.sortable_version(v)
+        if r.nil? || r.blank?
+          conditions = "#{self.table_name}.version_sortable COLLATE \"C\" #{operator} ? COLLATE \"C\""
+          parameters = [sv]
+        else
+          conditions =
+            "#{self.table_name}.version_sortable COLLATE \"C\" #{operator[0]} ? COLLATE \"C\" OR " \
+            "(#{self.table_name}.version_sortable = ? AND " \
+             "#{self.table_name}.release_sortable COLLATE \"C\" #{operator} ? COLLATE \"C\")"
+          sv = Util::Package.sortable_version(v)
+          parameters = [sv, sv, Util::Package.sortable_version(r)]
+        end
+        conditions = "CAST(#{self.table_name}.epoch AS INT) #{operator[0]} ? OR (CAST(#{self.table_name}.epoch AS INT) = ? AND (#{conditions}))"
+        parameters = [e, e] + parameters
+      end
+      return { :conditions => conditions, :parameter => parameters }
     end
 
     def self.search_version_range(min = nil, max = nil)

@@ -3,12 +3,22 @@ module Katello
     module Package
       SUFFIX_RE = /\.(rpm)$/
       ARCH_RE = /\.([^.\-]*)$/
-      EPOCH_RE = /([0-9]+):/
-      NVRE_RE = /^(?:([0-9]+):)?(.*)-([^-]*)-([^-]*)$/
+      NVRE_RE = /^(.*)-(?:([0-9]+):)?([^-]*)-([^-]*)$/
+      EVR_RE = /^(?:([0-9]+):)?(.*?)(?:-([^-]*))?$/
       SUPPORTED_ARCHS = %w(noarch i386 i686 ppc64 s390x x86_64 ia64).freeze
 
+      # is able to take both nvre and nvrea and parse it correctly
+      def self.parse_nvrea_nvre(name)
+        package = self.parse_nvrea(name)
+        if package && SUPPORTED_ARCHS.include?(package[:arch])
+          return package
+        else
+          return self.parse_nvre(name)
+        end
+      end
+
       #parses package nvrea and stores it in a hash
-      #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
+      #name-epoch:ve.rs.ion-rel.e.ase.arch.rpm
       def self.parse_nvrea(name)
         name, suffix = extract_suffix(name)
         name, arch = extract_arch(name)
@@ -20,26 +30,24 @@ module Katello
       end
 
       #parses package nvre and stores it in a hash
-      #epoch:name-ve.rs.ion-rel.e.ase.rpm
+      #name-epoch:ve.rs.ion-rel.e.ase.rpm
       def self.parse_nvre(name)
         name, suffix = extract_suffix(name)
 
         if (match = NVRE_RE.match(name))
           {:suffix => suffix,
-           :epoch => match[1],
-           :name => match[2],
+           :name => match[1],
+           :epoch => match[2],
            :version => match[3],
            :release => match[4]}.delete_if { |_k, v| v.nil? }
         end
       end
 
-      # is able to take both nvre and nvrea and parse it correctly
-      def self.parse_nvrea_nvre(name)
-        package = self.parse_nvrea(name)
-        if package && SUPPORTED_ARCHS.include?(package[:arch])
-          return package
-        else
-          return self.parse_nvre(name)
+      def self.parse_evr(evr)
+        if (match = EVR_RE.match(evr))
+          {:epoch => match[1],
+           :version => match[2],
+           :release => match[3]}.delete_if { |_k, v| v.nil? }
         end
       end
 
