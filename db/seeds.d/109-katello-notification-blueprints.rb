@@ -18,6 +18,42 @@ blueprints = [
     name: 'subs_expire_soon',
     message: N_('%{expiring_subs} subscriptions in %{subject} are going to expire in less than %{days} days. Please renew them before they expire to guarantee your hosts will continue receiving content.'),
     level: 'warning'
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'manifest_import_success',
+    message: N_('Manifest in \'%{subject}\' imported.'),
+    level: 'info'
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'manifest_import_error',
+    message: N_('Importing manifest into \'%{subject}\' failed.'),
+    level: 'error'
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'manifest_refresh_success',
+    message: N_('Manifest in \'%{subject}\' refreshed.'),
+    level: 'info'
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'manifest_refresh_error',
+    message: N_('Manifest in \'%{subject}\' failed to refresh.'),
+    level: 'error'
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'manifest_delete_success',
+    message: N_('Manifest in \'%{subject}\' deleted.'),
+    level: 'info'
+  },
+  {
+    group: N_('Subscriptions'),
+    name: 'manifest_delete_error',
+    message: N_('Deleting manifest in \'%{subject}\' failed.'),
+    level: 'error'
   }
 ]
 
