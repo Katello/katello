@@ -7,6 +7,7 @@ module Katello
       @rpm_one = katello_rpms(:one)
       @rpm_two = katello_rpms(:two)
       @rpm_three = katello_rpms(:three)
+      @rpm_one_two = katello_rpms(:one_two)
 
       Rpm.any_instance.stubs(:backend_data).returns({})
     end
@@ -41,6 +42,40 @@ module Katello
       repo2.rpms = [@rpm_one, @rpm_two]
 
       assert_equal Rpm.in_repositories([@repo, repo2]).to_a.sort, [@rpm_one, @rpm_two].sort
+    end
+
+    def test_with_search
+      rpms = Rpm.in_repositories(@repo).search_for('version >= 1.0')
+      expected = [@rpm_one, @rpm_one_two, @rpm_three, @rpm_two]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('version > 1.0')
+      expected = [@rpm_three]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('version <= 99')
+      expected = [@rpm_one, @rpm_one_two, @rpm_three, @rpm_two]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('version < 99')
+      expected = [@rpm_one, @rpm_one_two, @rpm_two]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('release >= 2.el7')
+      expected = [@rpm_one_two, @rpm_three]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('release > 1.el7')
+      expected = [@rpm_one_two, @rpm_three]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('release <= 2.el7')
+      expected = [@rpm_one, @rpm_one_two, @rpm_two]
+      assert_equal expected, rpms.to_a.sort
+
+      rpms = Rpm.in_repositories(@repo).search_for('release < 2.el7')
+      expected = [@rpm_one, @rpm_two]
+      assert_equal expected, rpms.to_a.sort
     end
 
     def test_update_from_json
@@ -204,21 +239,25 @@ module Katello
 
     def test_min_version_filter
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0")
-      assert_equal ["abc123-4", "abc123-6"], results.map(&:uuid).sort
+      assert_equal ["abc123-2", "abc123-4", "abc123-6"], results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0", '')
-      assert_equal ["abc123-4", "abc123-6"], results.map(&:uuid).sort
+      assert_equal ["abc123-2", "abc123-4", "abc123-6"], results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1")
       expected = @all_ids - ["abc123-8"]
       assert_equal expected, results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0-1.0")
-      expected = ["abc123-4", "abc123-6"]
+      expected = ["abc123-2", "abc123-4", "abc123-6"]
       assert_equal expected, results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0-1el4")
       expected = ["abc123-1", "abc123-2", "abc123-4", "abc123-5", "abc123-6"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_version_range("0:")
+      expected = ["abc123-2"]
       assert_equal expected, results.map(&:uuid).sort
     end
 
@@ -231,6 +270,10 @@ module Katello
 
       results = Rpm.in_repositories(@repo).search_version_range(nil, "0:1.0.0")
       assert_equal ["abc123-8"], results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_version_range(nil, "1:")
+      expected = @all_ids - ["abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
     end
 
     def test_version_range_filter
@@ -241,13 +284,13 @@ module Katello
       assert_empty results
 
       results = Rpm.in_repositories(@repo).search_version_range("1.0.0-1", "1.0.0-1.2")
-      expected = ["abc123-1", "abc123-2", "abc123-5"]
+      expected = ["abc123-1", "abc123-5"]
       assert_equal expected, results.map(&:uuid).sort
     end
 
     def test_equal_filter
       results = Rpm.in_repositories(@repo).search_version_equal("1.0.0")
-      expected = @all_ids - ["abc123-4", "abc123-6", "abc123-8"]
+      expected = @all_ids - ["abc123-2", "abc123-4", "abc123-6", "abc123-8"]
       assert_equal expected, results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1:1.0.0")
@@ -255,12 +298,135 @@ module Katello
       assert_equal expected, results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1.0.0-1.0")
-      expected = ["abc123-1", "abc123-2"]
+      expected = ["abc123-1"]
       assert_equal expected, results.map(&:uuid).sort
 
       results = Rpm.in_repositories(@repo).search_version_equal("1:1.0.0-1.0")
       expected = ["abc123-2"]
       assert_equal expected, results.map(&:uuid).sort
+    end
+
+    def test_search_equal
+      results = Rpm.in_repositories(@repo).search_for("evr != 1.0.0")
+      expected = ["abc123-2", "abc123-4", "abc123-6", "abc123-8"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr = 1.0.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr = 1:1.0.0")
+      expected = ["abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr != 1:1.0.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr = 1.0.0-1.0")
+      expected = ["abc123-1"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr != 1.0.0-1.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr = 1:1.0.0-1.0")
+      expected = ["abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr != 1:1.0.0-1.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+    end
+
+    def test_search_in
+      results = Rpm.in_repositories(@repo).search_for("evr ^ (1.0.0-1el5,1:1.0.0-1.0)")
+      expected = ["abc123-2", "abc123-5"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr !^ (1.0.0-1el5,1:1.0.0-1.0)")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+    end
+
+    def test_search_compare_gt_lte
+      results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0")
+      expected = ["abc123-2", "abc123-4", "abc123-6"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr <= 1.0.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr > 1")
+      expected = @all_ids - ["abc123-8"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr <= 1")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0-1.0")
+      expected = ["abc123-2", "abc123-4", "abc123-6"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr <= 1.0.0-1.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr > 1.0.0-1el4")
+      expected = ["abc123-1", "abc123-2", "abc123-4", "abc123-5", "abc123-6"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr <= 1.0.0-1el4")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr > 0:")
+      expected = ["abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr <= 0:")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+    end
+
+    def test_search_compare_lt_gte
+      results = Rpm.in_repositories(@repo).search_for("evr < 1:1.0.0")
+      expected = @all_ids - ["abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr >= 1:1.0.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr < 0:1.0.0")
+      expected = ["abc123-8"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr >= 0:1.0.0")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr >= 1:")
+      expected = ["abc123-2"]
+      assert_equal expected, results.map(&:uuid).sort
+
+      results = Rpm.in_repositories(@repo).search_for("evr < 1:")
+      expected = @all_ids - expected
+      assert_equal expected, results.map(&:uuid).sort
+    end
+
+    def test_search_like
+      # Disabled until https://github.com/wvanbergen/scoped_search/pull/178 is merged
+      #results = Rpm.in_repositories(@repo).search_for("evr ~ :1.0.0-1")
+      #expected = ["abc123-1", "abc123-2", "abc123-5"]
+      #assert_equal expected, results.map(&:uuid).sort
+
+      #results = Rpm.in_repositories(@repo).search_for("evr !~ :1.0.0-1")
+      #expected = @all_ids - ["abc123-2"]
+      #assert_equal expected, results.map(&:uuid).sort
     end
   end
 end
