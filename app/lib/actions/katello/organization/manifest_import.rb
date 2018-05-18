@@ -4,6 +4,8 @@ module Actions
       class ManifestImport < Actions::AbstractAsyncTask
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
+        include Helpers::Notifications
+
         def plan(organization, path, force)
           action_subject organization
           manifest_update = organization.products.redhat.any?
@@ -24,13 +26,25 @@ module Actions
           end
         end
 
+        def failure_notification(plan)
+          ::Katello::UINotifications::Subscriptions::ManifestImportError.deliver!(
+            :subject => subject_organization,
+            :task => get_foreman_task(plan)
+          )
+        end
+
+        def success_notification(_plan)
+          ::Katello::UINotifications::Subscriptions::ManifestImportSuccess.deliver!(
+            subject_organization
+          )
+        end
+
         def humanized_name
           _("Import Manifest")
         end
 
         def finalize
-          organization = ::Organization.find(input[:organization][:id])
-          organization.update_attributes!(
+          subject_organization.update_attributes!(
             :manifest_refreshed_at => Time.now,
             :audit_comment => _('Manifest imported'))
         end
