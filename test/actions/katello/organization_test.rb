@@ -16,6 +16,23 @@ module ::Actions::Katello::Organization
     before do
       set_user
     end
+
+    def stub_action_locking!(action)
+      action.stubs(:link!)
+      action.stubs(:lock!)
+      action.stubs(:exclusive_lock!)
+    end
+
+    def except_notification(action, action_result)
+      action.stubs(:result).returns(action_result)
+
+      task = stub(:id => 1, :external_id => action.id)
+      ::ForemanTasks::Task::DynflowTask.stubs(:where).with(:external_id => action.id).returns([task])
+
+      yield(task)
+
+      action.send_notification(action)
+    end
   end
 
   class CreateTest < TestBase
@@ -138,13 +155,68 @@ module ::Actions::Katello::Organization
       acme_org.products.stubs(:redhat).returns([rhel7.product])
       action.stubs(:rand).returns('1234')
 
-      action.stubs(:link!)
-      action.stubs(:lock!)
-      action.stubs(:exclusive_lock!)
+      stub_action_locking!(action)
 
       plan_action(action, acme_org)
       assert_difference 'Audit.count', 1 do
         finalize_action(action)
+      end
+    end
+
+    describe 'notifications' do
+      let(:acme_org) do
+        org = get_organization(:empty_organization)
+        org.stubs(:owner_details).returns({})
+        org
+      end
+
+      it 'sends a success notification' do
+        action.stubs(:rand).returns('1234')
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :success) do |_task|
+          ::Katello::UINotifications::Subscriptions::ManifestRefreshSuccess.expects(:deliver!).with(acme_org)
+        end
+      end
+
+      it 'sends a failure notification when the task ends with warning' do
+        action.stubs(:rand).returns('1234')
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :warning) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestRefreshError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
+      end
+
+      it 'sends a failure notification when the task was cancelled' do
+        action.stubs(:rand).returns('1234')
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :cancelled) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestRefreshError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
+      end
+
+      it 'sends a failure notification when the task ends with error' do
+        action.stubs(:rand).returns('1234')
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :error) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestRefreshError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
       end
     end
   end
@@ -179,12 +251,60 @@ module ::Actions::Katello::Organization
       rhel7 = katello_repositories(:rhel_7_x86_64)
       acme_org.products.stubs(:redhat).returns([rhel7.product])
 
-      action.stubs(:link!)
-      action.stubs(:lock!)
-      action.stubs(:exclusive_lock!)
+      stub_action_locking!(action)
       plan_action(action, acme_org, '/tmp/1234.zip', false)
       assert_difference 'Audit.count', 1 do
         finalize_action(action)
+      end
+    end
+
+    describe 'notifications' do
+      let(:acme_org) { get_organization(:empty_organization) }
+      let(:manifest_path) { '/tmp/1234.zip' }
+
+      it 'sends a success notification' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org, manifest_path, false)
+
+        except_notification(action, :success) do |_task|
+          ::Katello::UINotifications::Subscriptions::ManifestImportSuccess.expects(:deliver!).with(acme_org)
+        end
+      end
+
+      it 'sends a failure notification when the task ends with warning' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org, manifest_path, false)
+
+        except_notification(action, :warning) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestImportError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
+      end
+
+      it 'sends a failure notification when the task was cancelled' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org, manifest_path, false)
+
+        except_notification(action, :cancelled) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestImportError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
+      end
+
+      it 'sends a failure notification when the task ends with error' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org, manifest_path, false)
+
+        except_notification(action, :error) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestImportError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
       end
     end
   end
@@ -213,12 +333,59 @@ module ::Actions::Katello::Organization
       rhel7 = katello_repositories(:rhel_7_x86_64)
       acme_org.products.stubs(:redhat).returns([rhel7.product])
 
-      action.stubs(:link!)
-      action.stubs(:lock!)
-      action.stubs(:exclusive_lock!)
+      stub_action_locking!(action)
       plan_action(action, acme_org)
       assert_difference 'Audit.count', 1 do
         finalize_action(action)
+      end
+    end
+
+    describe 'notifications' do
+      let(:acme_org) { get_organization(:empty_organization) }
+
+      it 'sends a success notification' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :success) do |_task|
+          ::Katello::UINotifications::Subscriptions::ManifestDeleteSuccess.expects(:deliver!).with(acme_org)
+        end
+      end
+
+      it 'sends a failure notification when the task ends with warning' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :warning) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestDeleteError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
+      end
+
+      it 'sends a failure notification when the task was cancelled' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :cancelled) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestDeleteError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
+      end
+
+      it 'sends a failure notification when the task ends with error' do
+        stub_action_locking!(action)
+        plan_action(action, acme_org)
+
+        except_notification(action, :error) do |task|
+          ::Katello::UINotifications::Subscriptions::ManifestDeleteError.expects(:deliver!).with(
+            :subject => acme_org,
+            :task => task
+          )
+        end
       end
     end
   end
