@@ -15,53 +15,55 @@ module Katello
       end
 
       def extract_epoch_version_release(evr)
-        match = case evr
-                when /\A(\d+):(.*)-(.*)\z/
-                  evr.match(/\A(?<epoch>\d+):(?<version>.*)-(?<release>.*)\z/)
-                when /\A(\d+):(.*)\z/
-                  evr.match(/\A(?<epoch>\d+):(?<version>.*)\z/)
-                when /\A(.*)-(.*)\z/
-                  evr.match(/\A(?<version>.*)-(?<release>.*)\z/)
-                else
-                  evr.match(/\A(?<version>.*)\z/)
-                end
-        self.version = Package.sortable_version(match[:version])
-        self.epoch = match[:epoch] rescue nil
-        self.release = (match[:release] rescue nil) ? Package.sortable_version(match[:release]) : nil
+        parsed = Package.parse_evr(evr)
+        self.epoch = parsed[:epoch].to_i # nil or blank becomes 0
+        v = parsed[:version]
+        self.version = (v.nil? || v.blank?) ? '' : Package.sortable_version(v)
+        r = parsed[:release]
+        self.release = (r.nil? || r.blank?) ? '' : Package.sortable_version(r)
       end
 
       def results
-        version_clause = "#{convert(:version_sortable)} #{operator} #{convert(':version')}"
-        version_clause = add_release_clause(version_clause) unless release.blank?
-        version_clause = add_epoch_clause(version_clause) unless epoch.blank?
+        if operator == EQUAL
+          conditions = epoch_clause(operator)
+          conditions += ' AND ' + version_clause(operator) unless version.blank?
+          conditions += ' AND ' + release_clause(operator) unless release.blank?
+        else
+          conditions = ''
+          unless version.blank?
+            unless release.blank?
+              conditions = " OR (#{version_clause('=')} AND #{release_clause(operator)})"
+            end
+            conditions = " OR (#{epoch_clause('=')} AND (#{version_clause(operator)}#{conditions}))"
+          end
+          conditions = "#{epoch_clause(operator)}#{conditions}"
+        end
 
-        self.relation.where(version_clause, :version => version, :release => release, :epoch => epoch)
+        self.relation.where(conditions, :version => version, :release => release, :epoch => epoch)
       end
 
-      def add_release_clause(version_clause)
-        clause = "(#{convert(:version_sortable)} = #{convert(':version')} AND #{convert(:release_sortable)} #{operator} #{convert(':release')})"
+      def epoch_clause(op)
+        "CAST(epoch AS INT) #{op} :epoch"
+      end
 
-        # if we're using EQUAL, match: version = X AND release = Y
-        # else if we're using something like greater than, we need:
-        #   (version > X) OR (version = X AND release > Y)
-        if operator == EQUAL
-          clause
+      def version_clause(op)
+        if op == '='
+          "version_sortable = :version"
         else
-          "#{version_clause} OR #{clause}"
+          "#{convert(:version_sortable)} #{op} #{convert(':version')}"
         end
       end
 
-      def add_epoch_clause(version_clause)
-        if operator == EQUAL
-          clause = "(epoch = :epoch AND (%s))"
+      def release_clause(op)
+        if op == '='
+          "release_sortable = :release"
         else
-          clause = "epoch #{operator} :epoch OR (epoch = :epoch AND (%s))"
+          "#{convert(:release_sortable)} #{op} #{convert(':release')}"
         end
-        clause % version_clause
       end
 
       def convert(name = '?')
-        "convert_to(#{name}, 'SQL_ASCII')"
+        "#{name} COLLATE \"C\""
       end
     end
   end
