@@ -42,7 +42,6 @@ module Katello
     def publish_content_view(name, org, repos)
       Katello.pulp_server.extensions.repository.stubs(:create).returns({})
       Repository.any_instance.stubs(:clone_contents).returns([])
-      ContentView.any_instance.stubs(:associate_yum_content).returns([])
       Repository.stubs(:trigger_contents_changed).returns([])
       cv = ContentView.create!(:organization => org, :name => name)
       cv.stubs(:repositories_to_publish).returns(repos)
