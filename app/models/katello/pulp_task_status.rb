@@ -21,31 +21,6 @@ module Katello
       self.result[:errors][0] if self.error? && self.result[:errors]
     end
 
-    def self.wait_for_tasks(async_tasks)
-      async_tasks = async_tasks.collect do |t|
-        unless t.nil?
-          PulpTaskStatus.using_pulp_task(t)
-        end
-      end
-
-      timeout_count = 0
-      attempts = 0
-      loop do
-        begin
-          break unless any_task_running(async_tasks)
-          timeout_count = 0
-          attempts += 1
-        rescue RestClient::RequestTimeout => e
-          timeout_count += 1
-          Rails.logger.error "Timeout in pulp occurred: #{timeout_count}"
-          raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
-          sleep 50 #if we got a timeout, lets backoff and let it catchup
-        end
-        sleep poll_wait_time(attempts)
-      end
-      async_tasks
-    end
-
     def self.using_pulp_task(pulp_status)
       if pulp_status.is_a? TaskStatus
         pulp_status
@@ -83,27 +58,6 @@ module Katello
       self.dump_state(pulp_task, task_status)
       task_status.after_refresh
       task_status
-    end
-
-    def self.any_task_running(async_tasks)
-      async_tasks.each do |t|
-        t.refresh
-        sleep 0.5 # do not overload backend engines
-        if !t.finished?
-          return true
-        elsif t.error?
-          fail t.as_json
-        end
-      end
-      return false
-    end
-
-    def self.poll_wait_time(attempts)
-      if attempts >= WAIT_TIMES.length * WAIT_TIME_STEP
-        WAIT_TIMES.last
-      else
-        WAIT_TIMES[(attempts.to_i / WAIT_TIME_STEP)]
-      end
     end
   end
 end
