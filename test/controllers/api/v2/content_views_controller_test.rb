@@ -161,6 +161,7 @@ module Katello
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         content_view_params.key?(:component_ids).must_equal true
         content_view_params[:component_ids].must_equal params[:component_ids]
+        content_view_params[:repository_ids].must_be_nil
       end
       put :update, params: { :id => composite.id, :content_view => params }
 
