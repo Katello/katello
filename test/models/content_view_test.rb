@@ -1,7 +1,6 @@
 require 'katello_test_helper'
 
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class ContentViewTest < ActiveSupport::TestCase
     def setup
       User.current         = users(:admin)
@@ -567,5 +566,4 @@ module Katello
       assert @library_view.publish_puppet_environment?
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
