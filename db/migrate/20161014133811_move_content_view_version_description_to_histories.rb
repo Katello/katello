@@ -25,7 +25,8 @@ class MoveContentViewVersionDescriptionToHistories < ActiveRecord::Migration[4.2
       publish_history ||= CVHistory.create!(action: CVHistory.actions[:publish],
                                             katello_content_view_version_id: version.id,
                                             status: 'successful',
-                                            user: ''
+                                            user: '',
+                                            created_at: version.created_at
                                            )
 
       publish_history.update_attributes!(notes: version[:description])
