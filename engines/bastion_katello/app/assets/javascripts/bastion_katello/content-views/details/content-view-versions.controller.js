@@ -149,7 +149,7 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
 
         $scope.historyText = function (version) {
             var taskTypes = $scope.taskTypes,
-                taskType = version['last_event'].task.label,
+                taskType = version['last_event'].task ? version['last_event'].task.label : taskTypes[version['last_event'].action],
                 message = "";
 
             if (taskType === taskTypes.deletion) {
