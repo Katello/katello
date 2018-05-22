@@ -26,8 +26,8 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
 
         $scope.actionText = function (history) {
             var message,
-                taskType = history.task.label,
-                taskTypes = $scope.taskTypes;
+                taskTypes = $scope.taskTypes,
+                taskType = history.task ? history.task.label : taskTypes[history.action];
 
             if (taskType === taskTypes.deletion) {
                 message = translate("Deleted from %s").replace('%s', history.environment.name);
