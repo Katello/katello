@@ -1,7 +1,6 @@
 require 'katello_test_helper'
 
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class ContentViewTest < ActiveSupport::TestCase
     def setup
       User.current         = users(:admin)
@@ -587,5 +586,4 @@ module Katello
       assert_equal 'destroy', recent_audit.action
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
