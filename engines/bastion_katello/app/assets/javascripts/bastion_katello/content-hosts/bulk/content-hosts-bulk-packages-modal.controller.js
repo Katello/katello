@@ -134,7 +134,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkPackagesModa
                 $scope.packageActionFormValues.remoteAction = 'package_' + action;
             }
 
-            $scope.packageActionFormValues.hostIds = selectedHosts.included.ids.join(',');
+            if (selectedHosts.included.ids) {
+                $scope.packageActionFormValues.hostIds = selectedHosts.included.ids.join(',');
+            }
+
             $scope.packageActionFormValues.search = selectedHosts.included.search;
 
             $timeout(function () {

@@ -15,8 +15,13 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
     ['$scope', 'translate', 'Rule', 'Notification', function ($scope, translate, Rule, Notification) {
 
         function convertRuleStringsToDates() {
-            $scope.rule['start_date'] = new Date($scope.rule['start_date']);
-            $scope.rule['end_date'] = new Date($scope.rule['end_date']);
+            if ($scope.rule['start_date']) {
+                $scope.rule['start_date'] = new Date($scope.rule['start_date']);
+            }
+
+            if ($scope.rule['end_date']) {
+                $scope.rule['end_date'] = new Date($scope.rule['end_date']);
+            }
         }
 
         function success() {
@@ -63,13 +68,7 @@ angular.module('Bastion.content-views').controller('DateTypeErrataFilterControll
         };
 
         $scope.save = function (rule, filter) {
-            var params;
-
-            // Remove any hours from the dates
-            rule['start_date'].setHours(0, 0, 0, 0);
-            rule['end_date'].setHours(0, 0, 0, 0);
-
-            params = {filterId: filter.id, ruleId: rule.id};
+            var params = {filterId: filter.id, ruleId: rule.id};
             rule.$update(params, success, failure);
             $scope.filter.rules[0] = rule;
         };

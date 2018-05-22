@@ -19,6 +19,8 @@ module Katello
         .group("#{self.table_name}.id")
     end
 
+    delegate :user_ids, :to => :organization
+
     def self.using_virt_who
       joins(:pools).where("#{Katello::Pool.table_name}.virt_who" => true)
     end

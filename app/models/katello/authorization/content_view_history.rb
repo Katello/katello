@@ -1,7 +1,6 @@
 module Katello
   module Authorization::ContentViewHistory
     extend ActiveSupport::Concern
-    include Authorizable
 
     module ClassMethods
       def readable
