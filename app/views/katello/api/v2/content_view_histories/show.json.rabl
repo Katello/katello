@@ -1,6 +1,6 @@
 object @resource
 
-attributes :user, :status, :description
+attributes :user, :status, :description, :action
 
 child :environment => :environment do |_h|
   attributes :id, :name
