@@ -40,7 +40,7 @@ module Katello
       repos = repos.select do |repo|
         if repo[:path].include?('kickstart')
           variants = ['Server', 'Client', 'ComputeNode', 'Workstation']
-          has_variant = variants.any? { |v| repo[:substitutions][:releasever].include?(v) }
+          has_variant = variants.any? { |v| repo[:substitutions][:releasever].try(:include?, v) }
           has_variant ? repo[:enabled] : true
         else
           true
