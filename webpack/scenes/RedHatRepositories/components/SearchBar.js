@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { Button } from 'patternfly-react';
 import { Form, FormGroup } from 'react-bootstrap';
 
 import { loadEnabledRepos } from '../../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../../redux/actions/RedHatRepositories/sets';
 
+import api from '../../../services/api';
 import Search from './Search';
 import MultiSelect from '../../../components/MultiSelect/index';
 
@@ -84,23 +86,32 @@ class SearchBar extends Component {
   }
 
   render() {
+    const { repoParams } = this.props;
+
     return (
       <Form className="toolbar-pf-actions">
         <FormGroup className="toolbar-pf-filter">
           <Search onSearch={this.onSearch} onSelectSearchList={this.onSelectSearchList} />
         </FormGroup>
 
-        <FormGroup className="toolbar-pf-filter">
-          <MultiSelect
-            value={this.state.filters}
-            options={filterOptions}
-            onChange={(e) => {
-              const values = [...e.target.options]
-                .filter(({ selected }) => selected)
-                .map(({ value }) => value);
-              this.onSelectFilterType(values);
-            }}
-          />
+        <MultiSelect
+          value={this.state.filters}
+          options={filterOptions}
+          onChange={(e) => {
+            const values = [...e.target.options]
+              .filter(({ selected }) => selected)
+              .map(({ value }) => value);
+            this.onSelectFilterType(values);
+          }}
+        />
+
+        <FormGroup>
+          <Button
+            className="export-csv-button"
+            onClick={() => { api.open('/repositories.csv', repoParams); }}
+          >
+            {__('Export Enabled as CSV')}
+          </Button>
         </FormGroup>
       </Form>
     );
@@ -110,6 +121,7 @@ class SearchBar extends Component {
 SearchBar.propTypes = {
   loadEnabledRepos: PropTypes.func.isRequired,
   loadRepositorySets: PropTypes.func.isRequired,
+  repoParams: PropTypes.shape({}).isRequired,
   enabledRepositories: PropTypes.shape({
     pagination: PropTypes.shape({
       perPage: PropTypes.number,

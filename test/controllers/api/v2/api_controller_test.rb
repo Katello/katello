@@ -176,5 +176,16 @@ module Katello
       assert_nil results[:per_page]
       assert_equal error_message, results[:error]
     end
+
+    def test_scoped_search_csv_query
+      params = {}
+      @controller.stubs(:params).returns(params)
+
+      query = Pool.all
+      options = {resource_class: Katello::Pool, csv: true}
+
+      results = @controller.scoped_search(query, nil, nil, options)
+      assert_equal results.sort, query.sort
+    end
   end
 end

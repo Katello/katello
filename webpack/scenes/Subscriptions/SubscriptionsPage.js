@@ -11,7 +11,8 @@ import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgr
 import ManageManifestModal from './Manifest/';
 import SubscriptionsTable from './SubscriptionsTable';
 import Search from '../../components/Search/index';
-import { orgId } from '../../services/api';
+import api, { orgId } from '../../services/api';
+import { createSubscriptionParams } from './SubscriptionActions.js';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
   MANIFEST_TASKS_BULK_SEARCH_ID,
@@ -28,6 +29,7 @@ class SubscriptionsPage extends Component {
       disableDeleteButton: true,
       polledTask: null,
       showTaskModal: false,
+      searchQuery: '',
     };
   }
 
@@ -137,6 +139,10 @@ class SubscriptionsPage extends Component {
       },
     });
 
+    const updateSearchQuery = (searchQuery) => {
+      this.setState({ searchQuery });
+    };
+
     const showManageManifestModal = () => {
       this.setState({ manifestModalOpen: true });
     };
@@ -162,6 +168,8 @@ class SubscriptionsPage extends Component {
       this.setState({ disableDeleteButton: !rowsSelected });
     };
 
+    const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
+
     return (
       <Grid bsClass="container-fluid">
         <Row>
@@ -172,7 +180,11 @@ class SubscriptionsPage extends Component {
               <Col sm={12}>
                 <Form className="toolbar-pf-actions">
                   <FormGroup className="toolbar-pf-filter">
-                    <Search onSearch={onSearch} getAutoCompleteParams={getAutoCompleteParams} />
+                    <Search
+                      onSearch={onSearch}
+                      getAutoCompleteParams={getAutoCompleteParams}
+                      updateSearchQuery={updateSearchQuery}
+                    />
                   </FormGroup>
 
                   <div className="toolbar-pf-action-right">
@@ -192,7 +204,9 @@ class SubscriptionsPage extends Component {
                         {__('Manage Manifest')}
                       </Button>
 
-                      <Button>
+                      <Button
+                        onClick={() => { api.open('/subscriptions.csv', csvParams); }}
+                      >
                         {__('Export CSV')}
                       </Button>
 

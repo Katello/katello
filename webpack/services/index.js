@@ -45,8 +45,9 @@ export function getTypeIcon(type) {
   return typeIcon;
 }
 
-export const propsToSnakeCase = ob =>
-  reduce(
+export const propsToSnakeCase = (ob) => {
+  if (typeof (ob) !== 'object') throw Error('propsToSnakeCase only takes objects');
+  return reduce(
     ob,
     (snakeOb, val, key) => {
       // eslint-disable-next-line no-param-reassign
@@ -55,3 +56,4 @@ export const propsToSnakeCase = ob =>
     },
     {},
   );
+};
