@@ -43,6 +43,7 @@ class Search extends Component {
   }
 
   onSearch(search) {
+    if (this.props.updateSearchQuery) this.props.updateSearchQuery(search);
     this.props.onSearch(search);
   }
 
@@ -76,6 +77,10 @@ Search.propTypes = {
       }
   */
   getAutoCompleteParams: PropTypes.func.isRequired,
+  updateSearchQuery: PropTypes.func,
 };
 
+Search.defaultProps = {
+  updateSearchQuery: undefined,
+};
 export default Search;

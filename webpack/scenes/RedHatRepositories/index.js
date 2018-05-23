@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Spinner } from 'patternfly-react';
 
-import { loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
+import { createEnabledRepoParams, loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
 import SearchBar from './components/SearchBar';
 import { getSetsComponent, getEnabledComponent } from './helpers';
@@ -25,6 +25,7 @@ class RedHatRepositoriesPage extends Component {
 
   render() {
     const { enabledRepositories, repositorySets } = this.props;
+    const { repoParams } = createEnabledRepoParams(enabledRepositories);
 
     return (
       <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
@@ -32,7 +33,7 @@ class RedHatRepositoriesPage extends Component {
 
         <Row className="toolbar-pf">
           <Col sm={12}>
-            <SearchBar />
+            <SearchBar repoParams={repoParams} />
           </Col>
         </Row>
 

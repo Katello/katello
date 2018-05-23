@@ -14,9 +14,7 @@ export const setRepositoryDisabled = repository => ({
   repository,
 });
 
-export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
-  dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams });
-
+export const createEnabledRepoParams = (extendedParams = {}) => {
   const searchParams = extendedParams.search || {};
   const search = joinSearchQueries([
     'redhat = true',
@@ -24,14 +22,21 @@ export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
     searchParams.query,
   ]);
 
-  const params = {
+  const repoParams = {
     ...{ organization_id: orgId, enabled: 'true' },
     ...propsToSnakeCase(extendedParams),
     search,
   };
 
+  return { searchParams, repoParams };
+};
+
+export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
+  dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams });
+  const { searchParams, repoParams } = createEnabledRepoParams(extendedParams);
+
   api
-    .get('/repositories', {}, params)
+    .get('/repositories', {}, repoParams)
     .then(({ data }) => {
       dispatch({
         type: ENABLED_REPOSITORIES_SUCCESS,
