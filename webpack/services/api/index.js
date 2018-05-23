@@ -59,6 +59,24 @@ class Api {
       headers,
     });
   }
+
+  // Use for endpoints that return a file to download
+  open(url, params) {
+    window.location.href = this.getApiUrl(url) + this.createUrlParams(params);
+  }
+
+  /* eslint-disable class-methods-use-this */
+  createUrlParams(params) {
+    let urlParams = '?';
+    Object.keys(params).forEach((key) => {
+      if (urlParams !== '?') {
+        urlParams += '&';
+      }
+      urlParams += `${key}=${encodeURIComponent(params[key])}`;
+    });
+    return urlParams;
+  }
+  /* eslint-enable class-methods-use-this */
 }
 
 export default new Api();

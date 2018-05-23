@@ -4,6 +4,7 @@ module Katello
     include Api::Version2
     include Api::V2::Rendering
     include Api::V2::ErrorHandling
+    include ::Foreman::Controller::CsvResponder
 
     # support for session (thread-local) variables must be the last filter in this class
     include Foreman::ThreadSession::Cleaner
@@ -56,6 +57,8 @@ module Katello
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
+      params[:full_result] = true if options[:csv]
+      blank_query = resource.none
 
       if params[:order]
         (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
@@ -96,16 +99,17 @@ module Katello
       end
       page = params[:page] || 1
       per_page = params[:per_page] || Setting[:entries_per_page]
-      query = (total.zero? || sub_total.zero?) ? [] : query
+      query = (total.zero? || sub_total.zero?) ? blank_query : query
 
-      scoped_search_results(query, sub_total, total, page, per_page)
+      options[:csv] ? query : scoped_search_results(query, sub_total, total, page, per_page)
     rescue ScopedSearch::QueryNotSupported, ActiveRecord::StatementInvalid => error
       message = error.message
       if error.class == ActiveRecord::StatementInvalid
         Rails.logger.error("Invalid search: #{error.message}")
         message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
       end
-      scoped_search_results([], sub_total, total, page, per_page, message)
+
+      scoped_search_results(blank_query, sub_total, total, page, per_page, message)
     end
 
     protected

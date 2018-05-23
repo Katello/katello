@@ -19,14 +19,15 @@ import { filterRHSubscriptions } from './SubscriptionHelpers.js';
 
 const getResponseError = ({ data }) => data && (data.displayMessage || data.error);
 
+export const createSubscriptionParams = (extendedParams = {}) => ({
+  ...{ organization_id: orgId },
+  ...propsToSnakeCase(extendedParams),
+});
+
 export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: SUBSCRIPTIONS_QUANTITIES_REQUEST });
 
-  const params = {
-    ...{ organization_id: orgId },
-    ...propsToSnakeCase(extendedParams),
-  };
-
+  const params = createSubscriptionParams(extendedParams);
   return api
     .get(`/organizations/${orgId}/upstream_subscriptions`, {}, params)
     .then(({ data }) => {
@@ -46,11 +47,7 @@ export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
 export const loadSubscriptions = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: SUBSCRIPTIONS_REQUEST });
 
-  const params = {
-    ...{ organization_id: orgId },
-    ...propsToSnakeCase(extendedParams),
-  };
-
+  const params = createSubscriptionParams(extendedParams);
   return api
     .get('/subscriptions', {}, params)
     .then(({ data }) => {

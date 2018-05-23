@@ -30,15 +30,34 @@ module Katello
     param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
-      collection = scoped_search(
-        index_relation.distinct, nil, nil, resource_class: Pool, includes: [:subscription], custom_sort: name_sort)
-      if params[:activation_key_id]
-        key_pools = @activation_key.get_key_pools
-        collection[:results] = collection[:results].map do |pool|
-          ActivationKeySubscriptionsPresenter.new(pool, key_pools)
+      options = { resource_class: Pool, includes: [:subscription], custom_sort: name_sort }
+      base_args = [index_relation.distinct, nil, nil]
+
+      respond_to do |format|
+        format.csv do
+          options[:csv] = true
+          collection = scoped_search(*base_args, options)
+          csv_response(collection,
+                       [:id, :subscription_id, :name, :cp_id, :organization_id, :sockets, :cores,
+                        :start_date, :end_date, :available, :quantity, :account_number, :contract_number,
+                        :support_level, :ram, :stacking_id, :multi_entitlement, :type, :product_id,
+                        :unmapped_guest, :virt_only, :virt_who, :upstream?],
+                       ['Pool Id', 'Subscription Id', 'Name', 'Candlepin Id', 'Organization Id',
+                        'Sockets', 'Cores', 'Start Date', 'End Date', 'Available', 'Quantity', 'Account Number',
+                        'Contract Number', 'Support Level', 'RAM', 'Stacking Id', 'Multi Entitlement', 'Type',
+                        'Product Id', 'Unmapped Guest', 'Virt Only', 'Requires Virt Who', 'Upstream'])
+        end
+        format.any do
+          collection = scoped_search(*base_args, options)
+          if params[:activation_key_id]
+            key_pools = @activation_key.get_key_pools
+            collection[:results] = collection[:results].map do |pool|
+              ActivationKeySubscriptionsPresenter.new(pool, key_pools)
+            end
+          end
+          respond(:collection => collection)
         end
       end
-      respond(:collection => collection)
     end
 
     def name_sort
