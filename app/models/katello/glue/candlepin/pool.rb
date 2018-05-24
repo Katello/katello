@@ -201,7 +201,8 @@ module Katello
       end
 
       def hypervisor
-        ::Host.find_by(id: self.hypervisor_id) if self.hypervisor_id
+        host = ::Host.unscoped.find_by(id: self.hypervisor_id) if self.hypervisor_id
+        return host if (host && host.authorized?(:view_hosts))
       end
     end
   end
