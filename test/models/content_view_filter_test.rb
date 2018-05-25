@@ -50,6 +50,14 @@ module Katello
       assert_equal ContentViewPackageFilter, ContentViewFilter.search_for("content_type = rpm").first.class
     end
 
+    def test_search_type_erratum
+      assert_equal ContentViewErratumFilter, ContentViewFilter.search_for("content_type = erratum").first.class
+    end
+
+    def test_search_type_package_group
+      assert_equal ContentViewPackageGroupFilter, ContentViewFilter.search_for("content_type = package_group").first.class
+    end
+
     def test_search_inclusion
       inclusion = @filter.inclusion ? 'include' : 'exclude'
       assert_includes ContentViewFilter.search_for("inclusion_type = #{inclusion}"), @filter
