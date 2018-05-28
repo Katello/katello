@@ -14,27 +14,11 @@ module Katello
       %(<option data-id="#{inherited_value}" value="">#{blank_or_inherit_f(f, attr)}</option>)
     end
 
-    def content_view(host)
-      if host.is_a?(Hostgroup)
-        host.content_view
-      else
-        host.content_facet.try(:content_view)
-      end
-    end
-
     def organizations(host)
       if host.is_a?(Hostgroup)
         host.organizations
       else
         host.organization ? [host.organization] : []
-      end
-    end
-
-    def lifecycle_environment(host)
-      if host.is_a?(Hostgroup)
-        host.lifecycle_environment
-      else
-        host.content_facet.try(:lifecycle_environment)
       end
     end
 
@@ -77,20 +61,19 @@ module Katello
     end
 
     def fetch_lifecycle_environment(host, options = {})
+      return host.lifecycle_environment if host.lifecycle_environment.present?
       selected_host_group = options.fetch(:selected_host_group, nil)
-      return lifecycle_environment(selected_host_group) if selected_host_group.present?
-      selected_env = lifecycle_environment(host)
-      return selected_env if selected_env.present?
+      return selected_host_group.lifecycle_environment if selected_host_group.present?
     end
 
     def fetch_content_view(host, options = {})
+      return host.content_view if host.content_view.present?
       selected_host_group = options.fetch(:selected_host_group, nil)
-      return content_view(selected_host_group) if selected_host_group.present?
-      content_view(host)
+      return selected_host_group.content_view if selected_host_group.present?
     end
 
     def accessible_lifecycle_environments(org, host)
-      selected = lifecycle_environment(host)
+      selected = host.lifecycle_environment
       envs = org.kt_environments.readable
       envs |= [selected] if selected.present? && org == selected.organization
       envs

@@ -12,9 +12,12 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
     User.current = User.anonymous_api_admin
 
     @library = katello_environments(:library)
-    @host =  FactoryBot.build(:host, :with_content, :with_subscription,
-                               :content_view => katello_content_views(:library_dev_view),
-                               :lifecycle_environment => katello_environments(:library), :id => 343)
+    @host =  FactoryBot.build(:host, :with_content, :with_subscription, :id => 343)
+    content_facet = Katello::Host::ContentFacet.new(
+      :content_view => katello_content_views(:library_dev_view),
+      :lifecycle_environment => katello_environments(:library)
+    )
+    @host.content_facet = content_facet
     @host.organization = taxonomies(:organization1)
     @group = FactoryBot.build(:hostgroup)
     @smart_proxy = FactoryBot.create(:smart_proxy, :features => [FactoryBot.create(:feature, name: 'Pulp')])
@@ -26,6 +29,8 @@ class HostAndHostGroupsHelperLifecycleEnvironmentTests < HostsAndHostGroupsHelpe
   end
 
   def test_accessible_lifecycle_environments_limited
+    @host.save
+    @host.reload
     User.current = FactoryBot.create(:user)
     envs = accessible_lifecycle_environments(@library.organization, @host)
     assert_equal([@host.content_facet.lifecycle_environment], envs)
