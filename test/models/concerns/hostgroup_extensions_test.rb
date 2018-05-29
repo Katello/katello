@@ -13,6 +13,21 @@ module Katello
       @puppet_env = smart_proxies(:puppetmaster)
     end
 
+    def test_create_with_content_source
+      content_source = smart_proxies(:four)
+      host_group = Hostgroup.new(:name => 'new_hostgroup', :content_source => content_source)
+      assert_valid host_group
+      assert_equal content_source, host_group.content_source
+    end
+
+    def test_update_content_source
+      content_source = smart_proxies(:four)
+      host_group = Hostgroup.create!(:name => 'new_hostgroup')
+      host_group.content_source = content_source
+      assert_valid host_group
+      assert_equal content_source, host_group.content_source
+    end
+
     def inherited_content_source_id_with_ancestry
       @root.content_source =
         @root.save!
