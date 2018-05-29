@@ -46,9 +46,9 @@ module Actions
 
         def finalize
           organization = ::Organization.find(input[:organization][:id])
-          organization.update_attributes!(
-            :manifest_refreshed_at => Time.now,
-            :audit_comment => _('Manifest refreshed'))
+          organization.manifest_refreshed_at = Time.now
+          organization.audit_comment = _('Manifest refreshed')
+          organization.save(validate: false)
         end
       end
     end
