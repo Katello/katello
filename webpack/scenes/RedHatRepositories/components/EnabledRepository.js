@@ -88,7 +88,7 @@ class EnabledRepository extends Component {
           </Spinner>
         }
         leftContent={<RepositoryTypeIcon id={id} type={type} />}
-        heading={__(name)}
+        heading={name}
         description={`${arch} ${releasever || ''}`}
         stacked
       />

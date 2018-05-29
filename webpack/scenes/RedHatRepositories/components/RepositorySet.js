@@ -11,8 +11,8 @@ const RepositorySet = ({
   <ListView.Item
     id={id}
     className="listViewItem--listItemVariants"
-    description={__(label)}
-    heading={__(name)}
+    description={label}
+    heading={name}
     leftContent={<RepositoryTypeIcon id={id} type={type} />}
     stacked
     hideCloseIcon
