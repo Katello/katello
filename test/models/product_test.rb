@@ -17,6 +17,127 @@ module Katello
       @product.destroy if @product
     end
 
+    test_attributes :pid => '3d873b73-6919-4fda-84df-0e26bdf0c1dc'
+    def test_create_with_name
+      organization = get_organization
+      provider = katello_providers(:anonymous)
+      valid_name_list.each do |name|
+        product = FactoryBot.build(
+          :katello_product,
+          :organization => organization,
+          :provider => provider,
+          :name => name
+        )
+        assert product.valid?, "Validation failed for create with valid name: '#{name}' length: #{name.length})"
+        assert_equal name, product.name
+      end
+    end
+
+    test_attributes :pid => 'f3e2df77-6711-440b-800a-9cebbbec36c5'
+    def test_create_with_description
+      organization = get_organization
+      provider = katello_providers(:anonymous)
+      valid_name_list.each do |description|
+        product = FactoryBot.build(
+          :katello_product,
+          :organization => organization,
+          :provider => provider,
+          :description => description
+        )
+        assert product.valid?, "Validation failed for create with valid description: '#{description}' length: #{description.length})"
+        assert_equal description, product.description
+      end
+    end
+
+    test_attributes :pid => '95cf8e05-fd09-422e-bf6f-8b1dde762976'
+    def test_create_with_label
+      label = RFauxFactory.gen_alphanumeric
+      product = FactoryBot.build(
+        :katello_product,
+        :organization => get_organization,
+        :provider => katello_providers(:anonymous),
+        :name => RFauxFactory.gen_utf8,
+        :label => label
+      )
+      assert_valid product
+      assert_equal label, product.label
+      refute_equal label, product.name
+    end
+
+    test_attributes :pid => '76531f53-09ff-4ee9-89b9-09a697526fb1'
+    def test_create_with_invalid_name
+      organization = get_organization
+      provider = katello_providers(:anonymous)
+      invalid_name_list.each do |name|
+        product = FactoryBot.build(
+            :katello_product,
+            :organization => organization,
+            :provider => provider,
+            :name => name
+        )
+        refute product.valid?, "Validation succeeded for create with invalid name: '#{name}' length: #{name.length})"
+        assert_includes product.errors.keys, :name
+      end
+    end
+
+    test_attributes :pid => '30b1a737-07f1-4786-b68a-734e57c33a62'
+    def test_create_with_invalid_label
+      product = FactoryBot.build(
+          :katello_product,
+          :organization => get_organization,
+          :provider => katello_providers(:anonymous),
+          :label => RFauxFactory.gen_utf8
+      )
+      refute_valid product
+      assert_includes product.errors.keys, :label
+    end
+
+    test_attributes :pid => '1a9f6e0d-43fb-42e2-9dbd-e880f03b0297'
+    def test_update_name
+      valid_name_list.each do |name|
+        @product.name = name
+        assert @product.valid?, "Validation failed for update with valid name: '#{name}' length: #{name.length})"
+      end
+    end
+
+    test_attributes :pid => 'c960c326-2e9f-4ee7-bdec-35a705305067'
+    def test_update_description
+      valid_name_list.each do |description|
+        @product.description = description
+        assert @product.valid?, "Validation failed for update with valid description: '#{description}' length: #{description.length})"
+      end
+    end
+
+    test_attributes :pid => '3075f17f-4475-4b64-9fbd-1e41ced9142d'
+    def test_update_name_to_original
+      @product.save!
+      original_name = @product.name
+      new_name = RFauxFactory.gen_alpha
+      @product.name = new_name
+      @product.save!
+      @product.name = original_name
+      assert_valid @product
+    end
+
+    test_attributes :pid => '3eb61fa8-3524-4872-8f1b-4e88004f66f5'
+    def test_update_with_invalid_name
+      invalid_name_list.each do |name|
+        @product.name = name
+        refute @product.valid?, "Validation succeeded for update with invalid name: '#{name}' length: #{name.length})"
+        assert_includes @product.errors.keys, :name
+      end
+    end
+
+    test_attributes :pid => '065cd673-8d10-46c7-800c-b731b06a5359'
+    def test_update_label
+      @product.label = RFauxFactory.gen_alpha
+      @product.save!
+      @product.label = RFauxFactory.gen_alpha
+      refute_valid @product
+      assert_includes @product.errors.keys, :label
+      assert_equal 'cannot be changed.', @product.errors['label'][0]
+    end
+
     def test_enabled
       products = Product.enabled
       refute_includes products, katello_products(:empty_redhat)
@@ -72,6 +193,7 @@ module Katello
       refute_empty Product.where(:id => @product.id)
     end
 
+    test_attributes :pid => '039269c5-607a-4b70-91dd-b8fed8e50cc6'
     def test_unique_name_per_organization
       @product.save!
       @product2 = build(:katello_product,

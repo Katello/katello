@@ -68,13 +68,17 @@ module Katello
     def test_create
       product_params = {
         :name => 'fedora product',
-        :description => 'this is my cool new product.'
+        :description => 'this is my cool new product.',
+        :label => 'product_label'
       }
       Api::V2::ProductsController.any_instance.expects(:sync_task).with do |action_class, prod, org|
         action_class.must_equal ::Actions::Katello::Product::Create
         prod.must_be_kind_of(Product)
         org.must_equal @organization
         prod.provider = @provider
+        assert_equal product_params[:name], prod.name
+        assert_equal product_params[:description], prod.description
+        assert_equal product_params[:label], prod.label
       end
 
       post :create, params: { :product => product_params, :organization_id => @organization.id }
@@ -130,11 +134,15 @@ module Katello
     end
 
     def test_update
-      params = {:name => 'New Name'}
+      params = { :name => 'New Name', :description => 'Product Description', :label => 'product_label' }
       assert_sync_task(::Actions::Katello::Product::Update) do |product, product_params|
         product.id.must_equal @product.id
         product_params.key?(:name).must_equal true
         product_params[:name].must_equal params[:name]
+        product_params.key?(:description).must_equal true
+        product_params[:description].must_equal params[:description]
+        product_params.key?(:label).must_equal true
+        product_params[:label].must_equal params[:label]
       end
       put :update, params: { :id => @product.id, :product => params }
 
@@ -165,6 +173,7 @@ module Katello
       end
     end
 
+    test_attributes :pid => '30df95f5-0a4e-41ee-a99f-b418c5c5f2f3'
     def test_destroy
       assert_async_task ::Actions::Katello::Product::Destroy do |prod|
         prod.id.must_equal @product.id
