@@ -1,10 +1,22 @@
 describe('Controller: EnvironmentsController', function () {
-    var $scope, paths, lib, PathsService, data;
+    var $scope, paths, lib, PathsService, data, Environment, Nutupane;;
 
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks'));
 
+    beforeEach(function() {
+        Nutupane = function() {
+            this.table = {
+                showColumns: function() {}
+            };
+            this.get = function() {};
+        };
+        Environment = {};
+    });
+
     beforeEach(inject(function ($injector) {
-        var $controller = $injector.get('$controller');
+        var $controller = $injector.get('$controller'),
+            $location = $injector.get('$location'),
+            Organization = $injector.get('MockResource').$new();
         lib = {library: true, name: 'Library'};
         PathsService = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
@@ -23,10 +35,19 @@ describe('Controller: EnvironmentsController', function () {
 
         $controller('EnvironmentsController', {
             $scope: $scope,
-            PathsService: PathsService
+            PathsService: PathsService,
+            $location: $location,
+            Organization: Organization,
+            CurrentOrganization: 'CurrentOrganization',
+            Nutupane: Nutupane,
+            Environment: Environment
         });
 
     }));
+
+    it('attaches the nutupane table to the scope', function() {
+        expect($scope.table).toBeDefined();
+    });
 
     it('should fetch the paths for the current organization', function () {
         expect($scope.paths).toBeDefined();
