@@ -38,13 +38,24 @@ module Actions
           affected_repos = affected_repositories(capsule_content, environment, content_view, repository)
           need_updates = repos_needing_updates(capsule_content, affected_repos)
           repository_ids = get_repository_ids(capsule_content, environment, content_view, repository)
+
+          # Create a list of non-puppet repos to sync first, and then sync puppet repos last.
+          # Puppet modules may refer to non-puppet content in the same CV, and thus need to publish last.
+          puppet_repository_ids = []
+          non_puppet_repository_ids = []
+          repository_ids.each do |repo_id|
+            repo = ::Katello::Repository.find_by(pulp_id: repo_id) || ::Katello::ContentViewPuppetEnvironment.find_by(pulp_id: repo_id)
+            repo.content_type == 'puppet' ? puppet_repository_ids << repo_id : non_puppet_repository_ids << repo_id
+          end
+
           unless repository_ids.blank?
             sequence do
               need_updates.each do |repo|
                 plan_action(Pulp::Repository::Refresh, repo, capsule_id: capsule_content.capsule.id)
               end
               plan_action(ConfigureCapsule, capsule_content, environment, content_view, repository)
-              sync_repos_to_capsule(capsule_content, repository_ids, skip_metadata_check)
+              sync_repos_to_capsule(capsule_content, non_puppet_repository_ids, skip_metadata_check) unless non_puppet_repository_ids.blank?
+              sync_repos_to_capsule(capsule_content, puppet_repository_ids, skip_metadata_check) unless puppet_repository_ids.blank?
             end
           end
         end
