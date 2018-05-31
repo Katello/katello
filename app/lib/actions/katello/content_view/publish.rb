@@ -31,17 +31,14 @@ module Actions
                 end
               end
 
-              sequence do
-                has_modules = content_view.publish_puppet_environment?
-                plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
-                plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
-                            :puppet_modules_present => has_modules)
-              end
-
               repos_to_delete(content_view).each do |repo|
                 plan_action(Repository::Destroy, repo, :skip_environment_update => true, :planned_destroy => true)
               end
             end
+            has_modules = content_view.publish_puppet_environment?
+            plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
+            plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
+                :puppet_modules_present => has_modules)
 
             plan_action(ContentView::UpdateEnvironment, content_view, library)
             plan_action(Katello::Foreman::ContentUpdate, library, content_view)
