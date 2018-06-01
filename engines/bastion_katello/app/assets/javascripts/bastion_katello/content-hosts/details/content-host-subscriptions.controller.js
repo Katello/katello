@@ -29,7 +29,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostSubscriptionsCont
         $scope.table = $scope.nutupane.table;
         $scope.nutupane.masterOnly = true;
         $scope.isRemoving = false;
-
+        $scope.contextAdd = false;
         $scope.groupedSubscriptions = {};
         $scope.$watch('table.rows', function (rows) {
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);

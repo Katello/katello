@@ -31,7 +31,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
         $scope.nutupane.setSearchKey('subscriptionSearch');
         $scope.nutupane.masterOnly = true;
         $scope.table = $scope.nutupane.table;
-
+        $scope.contextAdd = true;
         $scope.isAdding = false;
         $scope.groupedSubscriptions = {};
 
@@ -40,7 +40,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
         });
 
         $scope.getAmountSelectorValues = SubscriptionsHelper.getAmountSelectorValues;
-
         $scope.showMatchHost = false;
         $scope.showMatchInstalled = false;
         $scope.showNoOverlap = false;
