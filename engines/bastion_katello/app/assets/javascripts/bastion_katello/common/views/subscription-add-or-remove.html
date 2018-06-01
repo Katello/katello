@@ -21,7 +21,7 @@
        </td>
      </tr>
      <tr class="grey-table-row" bst-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
-       <td bst-table-cell>
+       <td bst-table-cell ng-show="contextAdd">
          <span ng-hide="subscription.multi_entitlement">
            1
          </span>
@@ -32,7 +32,7 @@
            <option value="">{{ "Automatic" | translate }}</option>
          </select>
        </td>
-
+       <td bst-table-cell ng-hide="contextAdd">{{ subscription.quantity_consumed }}</td>
        <td bst-table-cell>
          <a ui-sref="subscription.info({subscriptionId: subscription.id})">
            {{ subscription | subscriptionConsumedFilter }}
