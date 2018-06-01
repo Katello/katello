@@ -126,8 +126,10 @@ module Katello
 
       r = Resources::Registry::Proxy.get(@_request.fullpath, headers)
       logger.debug r
-      response = JSON.parse(r)
-      render json: response, content_type: response['mediaType']
+      results = JSON.parse(r)
+
+      response.header['Docker-Content-Digest'] = "sha256:#{Digest::SHA256.hexdigest(r)}"
+      render json: r, content_type: results['mediaType']
     end
 
     def check_blob

@@ -223,6 +223,7 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert response.header['Content-Type'] =~ /MEDIATYPE/
+        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
       end
     end
 
