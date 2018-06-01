@@ -6,8 +6,8 @@ class MoveContentSourceIdToContentFacets < ActiveRecord::Migration[4.2]
 
     Host.find_each do |host|
       content_facet = host.content_facet
-      if content_facet && host.content_source_id
-        content_facet.content_source_id = host.content_source_id
+      if content_facet && (content_source_id = host.read_attribute(:content_source_id))
+        content_facet.content_source_id = content_source_id
         content_facet.save!
       end
     end
