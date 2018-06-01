@@ -9,7 +9,7 @@ Foreman::Plugin.register :katello do
            :icon => 'fa fa-book', :after => :monitor_menu do
     menu :top_menu,
          :red_hat_subscriptions,
-         :caption => N_('Red Hat Subscriptions'),
+         :caption => N_('Subscriptions'),
          :url => '/subscriptions',
          :url_hash => {:controller => 'katello/api/v2/subscriptions',
                        :action => 'index'},
