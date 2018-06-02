@@ -3,8 +3,8 @@ module Katello
     module Candlepin
       class ActivationKey < CandlepinResource
         class << self
-          def get(id = nil, params = '')
-            akeys_json = super(path(id) + params, self.default_headers).body
+          def get(id = nil, params = '', owner = nil)
+            akeys_json = super(path(id, owner) + params, self.default_headers).body
             akeys = JSON.parse(akeys_json)
             akeys = [akeys] unless id.nil?
             ::Katello::Util::Data.array_with_indifferent_access akeys
@@ -91,8 +91,12 @@ module Katello
             ::Katello::Util::Data.array_with_indifferent_access(JSON.parse(result || '{}'))
           end
 
-          def path(id = nil)
-            "/candlepin/activation_keys/#{id}"
+          def path(id = nil, owner_id = nil)
+            if owner_id
+              "/candlepin/owners/#{owner_id}/activation_keys/#{id}"
+            else
+              "/candlepin/activation_keys/#{id}"
+            end
           end
         end
       end

@@ -46,7 +46,9 @@ module Katello
 
       assert_equal 3, @org.products.length # new product arrived
       assert_equal 3, @product_contents.length # new content arrived on old product
-      refute_nil @product_contents.find { |pc| pc.content.label == 'rhel-6-server-containerz' } # old product content got updated
+
+      refute_nil @product_contents.to_a.find { |pc| pc.content.name.include?('Containerz') } # content name got updated
+      refute_nil @org.products.to_a.find { |p| p.name.include?('Imagez') } # product name got updated
     end
   end
 end
