@@ -123,63 +123,23 @@ module Katello
         ::Foreman::Logging.logger('katello/manifest_import_logger')
       end
 
-      def update_product_content_from_cp(katello_and_cp_ids)
-        katello_and_cp_ids.each do |id_pair|
-          attrs = Resources::Candlepin::Product.get(self.organization.label, id_pair.second, %w(productContent)).first
-          product_content_attrs = attrs.delete(:productContent) || []
-          product = ::Katello::Product.find(id_pair.first)
-          Glue::Candlepin::Product.import_product_content(product, product_content_attrs)
-        end
-      end
+      def import_products_from_cp
+        cp_products = ::Katello::Resources::Candlepin::Product.all(organization.label, [:id, :name, :multiplier, :productContent])
+        cp_products = cp_products.select { |prod| Glue::Candlepin::Product.engineering_product_id?(prod['id']) }
 
-      # TODO: break up method
-      def import_products_from_cp # rubocop:disable MethodLength
-        db_and_cp_ids = self.organization.providers.redhat.first.products.pluck(:id, :cp_id)
-
-        # this method only imports products which are not already in Katello
-        # no need for a full import on them - just update the product content
-        update_product_content_from_cp(db_and_cp_ids)
-
-        product_in_katello_ids = db_and_cp_ids.map(&:second)
-        products_in_candlepin_ids = []
-
-        marketing_to_engineering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
-          engineering_product_ids = engineering_product_ids.uniq
-          products_in_candlepin_ids << marketing_product_id
-          products_in_candlepin_ids.concat(engineering_product_ids)
-          added_eng_products = (engineering_product_ids - product_in_katello_ids).map do |id|
-            Resources::Candlepin::Product.get(self.organization.label, id)[0]
-          end
-          adjusted_eng_products = []
-          added_eng_products.each do |product_attrs|
-            begin
-              Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
-                p.provider = self
-                p.organization_id = self.organization.id
-              end
-              adjusted_eng_products << product_attrs
-              import_logger.info "import of product '#{product_attrs["name"]}' from Candlepin OK"
-            rescue Errors::SecurityViolation => e
-              # Do not add non-accessible products
-              logger.info "import of product '#{product_attrs["name"]}' from Candlepin failed"
-              import_logger.info e
-            end
-          end
-
-          product_in_katello_ids.concat(adjusted_eng_products.map { |p| p["id"] })
-
-          marketing_product = Katello::Product.find_by_cp_id(marketing_product_id)
-          marketing_product.destroy if marketing_product && marketing_product.redhat?
-        end
-
-        product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
-        product_to_remove_ids.each do |cp_id|
-          product = Product.find_by_cp_id(cp_id, self.organization)
-          Rails.logger.warn "Orphaned Product id #{product.id} found while refreshing/importing manifest."
-        end
+        cp_products.each { |product| import_product(product) }
 
         self.index_subscriptions(self.organization)
-        true
+      end
+
+      def import_product(cp_product)
+        product = organization.products.find_by(:cp_id => cp_product['id'])
+        if product && product.redhat?
+          product.update_attributes!(:name => cp_product['name']) unless product.name == cp_product['name']
+          Glue::Candlepin::Product.import_product_content(product, cp_product['productContent'])
+        elsif product.nil?
+          Glue::Candlepin::Product.import_from_cp(cp_product, organization)
+        end
       end
 
       def index_subscriptions(organization = nil)
@@ -196,32 +156,6 @@ module Katello
       end
 
       protected
-
-      # When a subscription is defined as a virtual data center subscription,
-      # its pools will have a seperate 'derived' marketing product and a seperate set
-      # of 'derived' engineering products. These products become the marketing and
-      # engineering products for the sub pool once a host binds to the original pool.
-      # We need to make sure to include these 'derived' products when creating our mapping.
-      def marketing_to_engineering_product_ids_mapping
-        mapping = {}
-        pools = Resources::Candlepin::Owner.pools self.organization.label
-        pools.each do |pool|
-          mapping[pool[:productId]] ||= []
-          if pool[:providedProducts]
-            eng_product_ids = pool[:providedProducts].map { |provided| provided[:productId] }
-            mapping[pool[:productId]].concat(eng_product_ids)
-          end
-          # Check to see if there are any 'derived' products defined.
-          if pool[:derivedProductId]
-            mapping[pool[:derivedProductId]] ||= []
-            if pool[:derivedProvidedProducts]
-              eng_product_ids = pool[:derivedProvidedProducts].map { |provided| provided[:productId] }
-              mapping[pool[:derivedProductId]].concat(eng_product_ids)
-            end
-          end
-        end
-        mapping
-      end
 
       def candlepin_ping
         @candlepin_ping ||= Resources::Candlepin::CandlepinPing.ping
