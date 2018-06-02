@@ -18,7 +18,7 @@ module Katello
       def get_for_owner(organization)
         Katello::Resources::Candlepin::Product.all(organization).select do |product|
           #this product's id is non-numeric (marketing product), or its a custom product
-          product['id'].to_i.to_s != product['id'] || Katello::Product.find_by(:cp_id => product['id']).try(:custom?)
+          !Glue::Candlepin::Product.engineering_product_id?(product['id']) || Katello::Product.find_by(:cp_id => product['id']).try(:custom?)
         end
       end
     end

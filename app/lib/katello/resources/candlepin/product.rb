@@ -4,7 +4,8 @@ module Katello
       class Product < CandlepinResource
         class << self
           def all(owner_label, included = [])
-            JSON.parse(Candlepin::CandlepinResource.get(path(owner_label) + "?#{included_list(included)}", self.default_headers).body)
+            products = JSON.parse(Candlepin::CandlepinResource.get(path(owner_label) + "?#{included_list(included)}", self.default_headers).body)
+            ::Katello::Util::Data.array_with_indifferent_access products
           end
 
           def find_for_stacking_id(owner_key, stacking_id)

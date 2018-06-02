@@ -12,11 +12,7 @@ module Katello
 
       #@repo1's content is already in fixtures
       [@repo2].each do |repo|
-        content = FactoryBot.create(:katello_content,
-                                    name: repo.name,
-                                    label: repo.label,
-                                    organization_id: repo.product.organization_id,
-                                    cp_content_id: repo.content_id)
+        content = Katello::Content.find_by(cp_content_id: repo.content_id, organization_id: repo.product.organization_id)
 
         FactoryBot.create(:katello_product_content, content: content, product: @product1)
       end

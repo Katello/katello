@@ -10,6 +10,22 @@ module Katello
     end
 
     module InstanceMethods
+      def substitutions
+        {
+          :releasever => self.minor,
+          :basearch => self.arch
+        }
+      end
+
+      def content
+        Katello::Content.find_by(:cp_content_id => self.content_id, :organization_id => self.product.organization_id)
+      end
+
+      def calculate_updated_name
+        fail _("Cannot calculate name for custom repos") if custom?
+        Katello::Candlepin::RepositoryMapper.new(self.product, self.content, self.substitutions).name
+      end
+
       def should_update_content?
         (self.gpg_key_id_was.nil? && !self.gpg_key_id.nil? && self.content.gpgUrl == '') ||
             (!self.gpg_key_id_was.nil? && self.gpg_key_id.nil? && self.content.gpgUrl != '')

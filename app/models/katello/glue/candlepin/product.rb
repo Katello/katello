@@ -32,14 +32,22 @@ module Katello
       name.gsub(/[^a-z0-9\-_ ]/i, "")
     end
 
-    def self.import_from_cp(attrs = nil, &block)
+    def self.engineering_product_id?(id)
+      id.match(/^\d+$/) #engineering products are numeric
+    end
+
+    def self.import_from_cp(attrs, organization)
       product_content_attrs = attrs.delete(:productContent) || []
       import_logger = attrs[:import_logger]
 
-      attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
+      product_attrs = {'name' => validate_name(attrs['name']),
+                       'cp_id' => attrs['id'],
+                       'label' => Util::Model.labelize(attrs['name']),
+                       'multiplier' => attrs['multiplier'],
+                       'organization_id' => organization.id,
+                       'provider_id' => organization.redhat_provider.id}
 
-      product = Product.new(attrs, &block)
-      product.save!
+      product = Product.create!(product_attrs)
       import_product_content(product, product_content_attrs)
     rescue => e
       [Rails.logger, import_logger].each do |logger|
@@ -64,11 +72,12 @@ module Katello
           organization_id: product.organization_id
         }
 
-        # current product has this content - update it
+        # current product has this content - update its name if needed
         # otherwise create a reference to existing content OR new content altogether
         if (existing = product.product_content_by_id(pc[:id]))
-          existing.content.update_attributes!(content_attrs)
-          existing.update_attributes(enabled: params['enabled'])
+          new_name = pc['name']
+          existing.content.update_attributes!(:name => new_name) if existing.content.name != new_name
+          existing.update_attributes!(enabled: params['enabled']) if existing.enabled != params['enabled']
         else
           content = ::Katello::Content.where(:cp_content_id => pc[:id], :organization_id => product.organization_id).first
           content ||= ::Katello::Content.create!(content_attrs)
