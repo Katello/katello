@@ -13,6 +13,26 @@ module Katello
     scoped_search :on => :label, :complete_value => true
     scoped_search :relation => :products, :on => :name, :rename => :product_name, :complete_value => true
 
+    after_save :update_repository_names, :if => :propagate_name_change?
+
+    def update_repository_names
+      self.repositories.each do |repo|
+        repo.update_attributes!(:name => repo.calculate_updated_name)
+      end
+    end
+
+    def repositories
+      Katello::Repository.where(:content_id => self.cp_content_id)
+    end
+
+    def redhat?
+      self.products.first.try(:redhat?)
+    end
+
+    def propagate_name_change?
+      self.saved_change_to_attribute?(:name) && self.redhat?
+    end
+
     def self.import_all
       Organization.all.each do |org|
         org.products.each do |product|
