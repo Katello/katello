@@ -8,7 +8,7 @@ module Katello
 
     def models
       @organization = get_organization
-      @sync_plan = Katello::SyncPlan.find(katello_sync_plans(:sync_plan_hourly).id)
+      @sync_plan = katello_sync_plans(:sync_plan_hourly)
       @products = katello_products(:fedora, :redhat, :empty_product)
     end
 
@@ -26,7 +26,7 @@ module Katello
 
     def setup
       setup_controller_defaults_api
-      login_user(User.find(users(:admin).id))
+      login_user(users(:admin))
       @request.env['HTTP_ACCEPT'] = 'application/json'
       Repository.any_instance.stubs(:sync_status).returns(PulpSyncStatus.new({}))
       Repository.any_instance.stubs(:last_sync).returns(Time.now.to_s)
@@ -51,20 +51,42 @@ module Katello
     end
 
     def test_create
-      post :create, params: { :organization_id => @organization.id, :sync_plan => {:name => 'Hourly Sync Plan',
-                                                                                   :sync_date => '2014-01-09 17:46:00',
-                                                                                   :interval => 'hourly',
-                                                                                   :description => 'This is my cool new product.'} }
+      valid_attr = {
+        :name => 'Hourly Sync Plan',
+        :sync_date => '2014-01-09 17:46:00 +0000',
+        :interval => 'hourly',
+        :description => 'This is my cool new product.',
+        :enabled => true
+      }
+      post :create, params: { :organization_id => @organization.id, :sync_plan => valid_attr }
 
       assert_response :success
       assert_template 'api/v2/common/create'
+      response = JSON.parse(@response.body)
+      assert response.key?('name')
+      assert_equal valid_attr[:name], response['name']
+      assert response.key?('sync_date')
+      assert_equal Time.parse(valid_attr[:sync_date]), Time.parse(response['sync_date'])
+      assert response.key?('interval')
+      assert_equal valid_attr[:interval], response['interval']
+      assert response.key?('description')
+      assert_equal valid_attr[:description], response['description']
+      assert response.key?('enabled')
+      assert_equal valid_attr[:enabled], response['enabled']
     end
 
+    test_attributes :pid => 'b4686463-69c8-4538-b040-6fb5246a7b00'
     def test_create_fail
       post :create, params: { :organization_id => @organization.id, :sync_plan => {:sync_date => '2014-01-09 17:46:00',
                                                                                    :description => 'This is my cool new sync plan.'} }
 
       assert_response :unprocessable_entity
+      response = JSON.parse(@response.body)
+      assert response.key?('errors')
+      assert response['errors'].key?('name')
+      assert_equal 'can\'t be blank', response['errors']['name'][0]
+      assert response['errors'].key?('interval')
+      assert_equal 'is not included in the list', response['errors']['interval'][0]
     end
 
     def test_create_protected
@@ -79,11 +101,29 @@ module Katello
     end
 
     def test_update
-      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => {:name => 'New Name'} }
+      datetime_format = '%Y/%m/%d %H:%M:%S %z'
+      update_attrs = {
+        :name => 'New Name',
+        :interval => 'weekly',
+        :sync_date => Time.now.utc.strftime(datetime_format),
+        :description => 'New Description',
+        :enabled => false
+      }
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
-      assert_equal assigns[:sync_plan].name, 'New Name'
+      assert_equal update_attrs[:name], assigns[:sync_plan].name
+      assert_equal update_attrs[:interval], assigns[:sync_plan].interval
+      assert_equal update_attrs[:enabled], assigns[:sync_plan].enabled
+      assert_equal update_attrs[:sync_date], assigns[:sync_plan].sync_date.strftime(datetime_format)
+    end
+
+    test_attributes :pid => '8c981174-6f55-49c0-8baa-40e5c3fc598c'
+    def test_update_with_invalid_interval
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => { :interval => 'invalid_interval'} }
+      assert_response :unprocessable_entity
+      assert_match 'Validation failed: Interval is not included in the list', @response.body
     end
 
     def test_update_protected
