@@ -18,7 +18,7 @@ attributes :virt_only
 attributes :virt_who
 attributes :upstream? => :upstream
 
-node :hypervisor, :if => lambda { |sub| sub && sub.try(:hypervisor) && sub.hypervisor_id } do |subscription|
+node :hypervisor, :if => lambda { |sub| sub && sub.respond_to?(:hypervisor) && sub.hypervisor } do |subscription|
   {
     id: subscription.hypervisor.id,
     name: subscription.hypervisor.name
