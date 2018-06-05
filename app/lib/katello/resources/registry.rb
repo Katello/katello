@@ -18,12 +18,14 @@ module Katello
       end
 
       class RegistryResource < HttpResource
-        cfg = SETTINGS[:katello][:registry]
-        url = cfg[:url]
-        uri = URI.parse(url)
-        self.prefix = uri.path
-        self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
-        self.ca_cert_file = cfg[:ca_cert_file]
+        if SETTINGS[:katello][:registry]
+          cfg = SETTINGS[:katello][:registry]
+          url = cfg[:url]
+          uri = URI.parse(url)
+          self.prefix = uri.path
+          self.site = "#{uri.scheme}://#{uri.host}:#{uri.port}"
+          self.ca_cert_file = cfg[:ca_cert_file]
+        end
 
         class << self
           def process_response(response)
