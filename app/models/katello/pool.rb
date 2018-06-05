@@ -12,7 +12,8 @@ module Katello
     has_many :subscription_facet_pools, :class_name => "Katello::SubscriptionFacetPool", :dependent => :destroy
     has_many :subscription_facets, :through => :subscription_facet_pools
 
-    belongs_to :organization, :class_name => "Organization", :inverse_of => :pools
+    belongs_to :organization, :class_name => 'Organization', :inverse_of => :pools
+    belongs_to :hypervisor, :class_name => 'Host::Managed', :inverse_of => :hypervisor_pools
 
     scope :in_organization, ->(org_id) { where(:organization_id => org_id) }
     scope :for_activation_key, ->(ak) { joins(:activation_keys).where("#{Katello::ActivationKey.table_name}.id" => ak.id) }
