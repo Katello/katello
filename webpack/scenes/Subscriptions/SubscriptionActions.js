@@ -16,8 +16,7 @@ import {
   DELETE_SUBSCRIPTIONS_FAILURE,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions } from './SubscriptionHelpers.js';
-
-const getResponseError = ({ data }) => data && (data.displayMessage || data.error);
+import { getResponseError } from '../../move_to_foreman/common/helpers.js';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{ organization_id: orgId },
