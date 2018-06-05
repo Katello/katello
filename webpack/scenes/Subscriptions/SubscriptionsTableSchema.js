@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from 'patternfly-react';
+import { Link } from 'react-router-dom';
 import helpers, { selectionHeaderCellFormatter, selectionCellFormatter } from '../../move_to_foreman/common/helpers';
 import { entitlementsInlineEditFormatter } from './EntitlementsInlineEditFormatter';
 import { headerFormat, cellFormat } from '../../move_to_foreman/components/common/table';
@@ -26,9 +27,9 @@ export const columns = (inlineEditController, selectionController) => [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <a href={helpers.urlBuilder('subscriptions', '', rowData.id)}>
+            <Link to={helpers.urlBuilder('xui/subscriptions', '', rowData.id)}>
               {rowData.name}
-            </a>
+            </Link>
           </td>
         ),
       ],
