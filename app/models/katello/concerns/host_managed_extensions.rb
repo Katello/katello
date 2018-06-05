@@ -27,6 +27,8 @@ module Katello
         has_many :host_collection_hosts, :class_name => "::Katello::HostCollectionHosts", :foreign_key => :host_id, :dependent => :destroy
         has_many :host_collections, :class_name => "::Katello::HostCollection", :through => :host_collection_hosts
 
+        has_many :hypervisor_pools, :class_name => '::Katello::Pool', :foreign_key => :hypervisor_id, :dependent => :nullify
+
         before_save :correct_puppet_environment
 
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER

@@ -199,11 +199,6 @@ module Katello
           Katello::PoolActivationKey.where(:activation_key_id => key.id, :pool_id => self.id).first_or_create
         end
       end
-
-      def hypervisor
-        host = ::Host.unscoped.find_by(id: self.hypervisor_id) if self.hypervisor_id
-        return host if (host && host.authorized?(:view_hosts))
-      end
     end
   end
 end
