@@ -11,8 +11,9 @@ module Katello
     let(:dev) { katello_environments(:dev) }
     let(:empty_host) { ::Host::Managed.create!(:name => 'foobar', :managed => false) }
     let(:host) do
-      FactoryBot.create(:host, :with_content, :content_view => view,
-                                     :lifecycle_environment => library)
+      FactoryBot.create(:host, :with_content,
+                        :with_subscription, :content_view => view,
+                        :lifecycle_environment => library)
     end
     let(:proxy) { FactoryBot.create(:smart_proxy, :url => 'http://fakepath.com/foo') }
   end
@@ -23,6 +24,33 @@ module Katello
       assert_includes ::Host.in_content_view_environment(:lifecycle_environment => library), host
       assert_includes ::Host.in_content_view_environment(:content_view => view, :lifecycle_environment => library), host
       refute_includes ::Host.in_content_view_environment(:content_view => view, :lifecycle_environment => dev), host
+    end
+
+    def test_action_not_triggered_on_facet_no_change
+      ForemanTasks.dynflow.world.expects(:plan).never
+      host.update_attributes!(:content_facet_attributes => { :content_view_id => view.id })
+    end
+
+    def test_action_triggered_on_facet_update
+      host.stubs(:execute_planned_action)
+
+      ForemanTasks.dynflow.world
+        .expects(:plan).with(::Actions::Katello::Host::Update, host)
+        .returns(OpenStruct.new(error: false))
+      host.update_attributes!(:content_facet_attributes => { :content_view_id => view2.id })
+
+      host.reload
+      host.content_facet.content_view_id = view.id
+      ForemanTasks.dynflow.world
+        .expects(:plan).with(::Actions::Katello::Host::Update, host)
+        .returns(OpenStruct.new(error: false))
+      host.save!
+
+      host.reload
+      ForemanTasks.dynflow.world
+        .expects(:plan).with(::Actions::Katello::Host::Update, host)
+        .returns(OpenStruct.new(error: false))
+      host.update_attributes!(:content_facet_attributes => { :lifecycle_environment_id => dev.id })
     end
 
     def test_content_facet_update
