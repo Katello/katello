@@ -16,6 +16,16 @@ module Katello
 
         prepend ForemanTasks::Concerns::ActionTriggering
 
+        module Prepended
+          def update_action
+            if subscription_facet.try(:backend_update_needed?)
+              ::Actions::Katello::Host::Update
+            end
+          end
+        end
+
+        prepend Prepended
+
         accepts_nested_attributes_for :subscription_facet, :update_only => true, :reject_if => lambda { |attrs| attrs.values.compact.empty? }
 
         has_many :activation_keys, :through => :subscription_facet
@@ -41,12 +51,6 @@ module Katello
         scoped_search :on => :name, :relation => :hypervisor_host, :complete_value => true, :rename => :hypervisor_host, :ext_method => :find_by_hypervisor_host
         scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
         scoped_search :on => :id, :relation => :pools, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id
-      end
-
-      def update_action
-        if subscription_facet.try(:backend_update_needed?)
-          ::Actions::Katello::Host::Update
-        end
       end
 
       module ClassMethods
