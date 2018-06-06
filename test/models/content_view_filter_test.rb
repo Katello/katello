@@ -46,14 +46,17 @@ module Katello
       assert_equal @filter, ContentViewFilter.search_for("name = #{@filter.name}").first
     end
 
+    test_attributes :pid => '1c9058f1-35c4-46f2-9b21-155ef988564a'
     def test_search_type
       assert_equal ContentViewPackageFilter, ContentViewFilter.search_for("content_type = rpm").first.class
     end
 
+    test_attributes :pid => '6a86060f-6b4f-4688-8ea9-c198e0aeb3f6'
     def test_search_type_erratum
       assert_equal ContentViewErratumFilter, ContentViewFilter.search_for("content_type = erratum").first.class
     end
 
+    test_attributes :pid => '832c50cc-c2c8-48c9-9a23-80956baf5f3c'
     def test_search_type_package_group
       assert_equal ContentViewPackageGroupFilter, ContentViewFilter.search_for("content_type = package_group").first.class
     end
