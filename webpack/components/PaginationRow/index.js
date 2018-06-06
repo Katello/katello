@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Paginator } from 'patternfly-react';
+import { isEqual } from 'lodash';
 
 const defaultPerPageOptions = [5, 10, 15, 25, 50];
 
@@ -26,8 +27,11 @@ class PaginationRow extends Component {
     this.onPerPageSelect = this.onPerPageSelect.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState(initPagination(newProps));
+  static getDerivedStateFromProps(newProps, prevState) {
+    if (!isEqual(newProps.pagination, prevState.pagination)) {
+      return { ...newProps.pagination };
+    }
+    return null;
   }
 
   onPageSet(page) {
