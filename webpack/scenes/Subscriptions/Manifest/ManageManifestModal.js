@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
@@ -31,9 +32,17 @@ class ManageManifestModal extends Component {
     this.loadData();
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({ showModal: props.showModal });
-    this.setState({ actionInProgress: props.taskInProgress });
+  static getDerivedStateFromProps(newProps, prevState) {
+    if (
+      !isEqual(newProps.showModal, prevState.showModal) ||
+      !isEqual(newProps.taskInProgress, prevState.actionInProgress)
+    ) {
+      return {
+        showModal: newProps.showModal,
+        actionInProgress: newProps.taskInProgress,
+      };
+    }
+    return null;
   }
 
   loadData() {
