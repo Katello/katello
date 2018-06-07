@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListView } from 'patternfly-react';
+import { ListView, Icon } from 'patternfly-react';
 
 import RepositoryTypeIcon from './RepositoryTypeIcon';
 import RepositorySetRepositories from './RepositorySetRepositories';
 
 const RepositorySet = ({
-  type, id, name, label, product,
+  type, id, name, label, product, recommended,
 }) => (
   <ListView.Item
     id={id}
@@ -15,6 +15,7 @@ const RepositorySet = ({
     heading={name}
     leftContent={<RepositoryTypeIcon id={id} type={type} />}
     stacked
+    actions={recommended ? <Icon type="fa" name="star" className="recommended-repository-set-icon" /> : ''}
     hideCloseIcon
   >
     <RepositorySetRepositories contentId={id} productId={product.id} />
@@ -30,6 +31,11 @@ RepositorySet.propTypes = {
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
   }).isRequired,
+  recommended: PropTypes.bool,
+};
+
+RepositorySet.defaultProps = {
+  recommended: false,
 };
 
 export default RepositorySet;

@@ -2,12 +2,21 @@ import Immutable from 'seamless-immutable';
 
 export const initialState = Immutable({
   loading: true,
+  recommended: false,
+  results: [],
+  pagination: {},
+});
+
+export const recommendedState = Immutable({
+  loading: true,
+  recommended: true,
   results: [],
   pagination: {},
 });
 
 export const loadingState = Immutable({
   loading: true,
+  recommended: false,
   results: [],
   pagination: {},
 });
@@ -107,9 +116,10 @@ export const requestSuccessResponse = Immutable({
 
 export const successState = Immutable({
   loading: false,
+  recommended: false,
   results: requestSuccessResponse.results,
-  searchIsActive: false,
-  search: undefined,
+  searchIsActive: true,
+  search: requestSuccessResponse.search,
   pagination: {
     page: 1,
     perPage: 5,
