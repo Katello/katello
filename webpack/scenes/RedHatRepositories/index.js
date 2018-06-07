@@ -9,8 +9,9 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { Spinner } from 'patternfly-react';
 
 import { createEnabledRepoParams, loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
-import { loadRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
+import { loadRepositorySets, updateRecommendedRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
 import SearchBar from './components/SearchBar';
+import RecommendedRepositorySetsToggler from './components/RecommendedRepositorySetsToggler';
 import { getSetsComponent, getEnabledComponent } from './helpers';
 
 class RedHatRepositoriesPage extends Component {
@@ -39,7 +40,14 @@ class RedHatRepositoriesPage extends Component {
 
         <Row className="row-eq-height">
           <Col sm={6} className="available-repositories-container">
-            <h2>{__('Available Repositories')}</h2>
+            <div className="available-repositories-header">
+              <h2>{__('Available Repositories')}</h2>
+              <RecommendedRepositorySetsToggler
+                enabled={repositorySets.recommended}
+                onChange={value => this.props.updateRecommendedRepositorySets(value)}
+                className="recommended-repositories-toggler"
+              />
+            </div>
             <Spinner loading={repositorySets.loading}>
               {getSetsComponent(
                 repositorySets,
@@ -76,6 +84,7 @@ class RedHatRepositoriesPage extends Component {
 RedHatRepositoriesPage.propTypes = {
   loadEnabledRepos: PropTypes.func.isRequired,
   loadRepositorySets: PropTypes.func.isRequired,
+  updateRecommendedRepositorySets: PropTypes.func.isRequired,
   enabledRepositories: PropTypes.shape({}).isRequired,
   repositorySets: PropTypes.shape({}).isRequired,
 };
@@ -88,4 +97,5 @@ const mapStateToProps = ({ katello: { redHatRepositories: { enabled, sets } } })
 export default connect(mapStateToProps, {
   loadEnabledRepos,
   loadRepositorySets,
+  updateRecommendedRepositorySets,
 })(RedHatRepositoriesPage);

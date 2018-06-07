@@ -2,6 +2,7 @@ import * as types from '../../consts';
 
 import {
   initialState,
+  recommendedState,
   loadingState,
   requestSuccessResponse,
   successState,
@@ -14,6 +15,13 @@ describe('sets reducer', () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
 
+  it('should update the recommended value on REPOSITORY_SETS_UPDATE_RECOMMENDED', () => {
+    expect(reducer(initialState, {
+      type: types.REPOSITORY_SETS_UPDATE_RECOMMENDED,
+      payload: true,
+    })).toEqual(recommendedState);
+  });
+
   it('should keep loading state on REPOSITORY_SETS_REQUEST', () => {
     expect(reducer(initialState, {
       type: types.REPOSITORY_SETS_REQUEST,
@@ -23,14 +31,14 @@ describe('sets reducer', () => {
   it('should flatten repositories response REPOSITORY_SETS_SUCCESS', () => {
     expect(reducer(initialState, {
       type: types.REPOSITORY_SETS_SUCCESS,
-      response: requestSuccessResponse,
+      payload: { response: requestSuccessResponse, search: requestSuccessResponse.search },
     })).toEqual(successState);
   });
 
   it('should have error on REPOSITORY_SETS_FAILURE', () => {
     expect(reducer(initialState, {
       type: types.REPOSITORY_SETS_FAILURE,
-      error: 'Unable to process request.',
+      payload: 'Unable to process request.',
     })).toEqual(errorState);
   });
 });
