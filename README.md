@@ -1,15 +1,14 @@
 # Katello
 
-[![Build Status](http://ci.theforeman.org/buildStatus/icon?job=test_katello)](http://ci.theforeman.org/job/test_katello)
+[![Build Status](https://ci.theforeman.org/buildStatus/icon?job=test_katello)](https://ci.theforeman.org/job/test_katello)
 [![Code Climate](https://codeclimate.com/github/Katello/katello/badges/gpa.svg)](https://codeclimate.com/github/Katello/katello)
-[![Dependency Status](https://gemnasium.com/Katello/katello.svg)](https://gemnasium.com/Katello/katello)
 
 Full documentation is at https://www.theforeman.org/plugins/katello/
 
 ## About
 
 [Katello](https://www.theforeman.org/plugins/katello/) is a systems life cycle management
-plugin to [Foreman](http://www.theforeman.org). Katello allows you to manage
+plugin to [Foreman](https://www.theforeman.org). Katello allows you to manage
 thousands of machines with one click. Katello can pull content
 from remote repositories into isolated environments, and make subscriptions
 management a breeze.
@@ -60,7 +59,7 @@ rake katello:reset
 ## Found a bug?
 
 That's rather unfortunate. But don't worry! We can help. Just file a bug
-[in our project tracker](http://projects.theforeman.org/projects/katello).
+[in our project tracker](https://projects.theforeman.org/projects/katello).
 
 
 ## Contributing
