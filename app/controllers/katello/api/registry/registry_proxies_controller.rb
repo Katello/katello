@@ -90,11 +90,11 @@ module Katello
 
       if params[:tag]
         if params[:tag][0..6] == 'sha256:'
-          manifest = Katello::DockerManifestList.where(digest: params[:tag]).first || Katello::DockerManifest.where(digest: params[:tag]).first
-          not_found params[:tag] unless manifest
+          @manifest = Katello::DockerManifestList.where(digest: params[:tag]).first || Katello::DockerManifest.where(digest: params[:tag]).first
+          not_found params[:tag] unless @manifest
         else
-          tag = DockerMetaTag.where(repository_id: @repository.id, name: params[:tag]).first
-          not_found params[:tag] unless tag
+          @tag = DockerMetaTag.where(repository_id: @repository.id, name: params[:tag]).first
+          not_found params[:tag] unless @tag
         end
       end
 

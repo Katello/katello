@@ -24,5 +24,6 @@ BASTION_MODULES.push(
     'Bastion.host-collections',
     'Bastion.content-hosts',
     'Bastion.tasks',
+    'Bastion.audits',
     'Bastion.settings'
 );

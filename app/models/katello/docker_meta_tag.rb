@@ -1,5 +1,6 @@
 module Katello
   class DockerMetaTag < Katello::Model
+    audited associated_with: :repository
     include ScopedSearchExtensions
     belongs_to :repository, :inverse_of => :docker_meta_tags, :class_name => "Katello::Repository"
 
