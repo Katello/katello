@@ -55,6 +55,11 @@ export const getTaskSuccessResponse = Immutable({
   cli_example: null,
 });
 
+export const getTaskPendingResponse = {
+  ...getTaskSuccessResponse,
+  pending: true,
+};
+
 export const bulkSearchSuccessResponse = Immutable([
   {
     search_params: {
@@ -92,32 +97,37 @@ export const bulkSearchSuccessActions = [
   },
 ];
 
-export const bulkSearchFailureActions = [
+export const buildBulkSearchFailureActions = (errorCode = 422) => ([
   {
     type: 'TASK_BULK_SEARCH_REQUEST',
   },
   {
-    result: new Error('Request failed with status code 422'),
+    result: new Error(`Request failed with status code ${errorCode}`),
     type: 'TASK_BULK_SEARCH_FAILURE',
   },
-];
+]);
 
-export const getTaskSuccessActions = [
+export const buildTaskSuccessActions = response => ([
   {
     type: 'GET_TASK_REQUEST',
   },
   {
-    response: getTaskSuccessResponse,
+    response,
     type: 'GET_TASK_SUCCESS',
   },
-];
+]);
 
-export const getTaskFailureActions = [
+export const getTaskSuccessActions = buildTaskSuccessActions(getTaskSuccessResponse);
+
+export const getTaskPendingActions = buildTaskSuccessActions(getTaskPendingResponse);
+
+export const buildTaskFailureActions = (errorCode = 422) => ([
   {
     type: 'GET_TASK_REQUEST',
   },
   {
-    result: new Error('Request failed with status code 422'),
+    result: new Error(`Request failed with status code ${errorCode}`),
     type: 'GET_TASK_FAILURE',
   },
-];
+]);
+
