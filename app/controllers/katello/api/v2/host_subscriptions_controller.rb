@@ -17,7 +17,7 @@ module Katello
     def_param_group :subscription_facet_attributes do
       param :release_version, String, :desc => N_("Release version for this Host to use (7Server, 7.1, etc)")
       param :autoheal, :bool, :desc => N_("Sets whether the Host will autoheal subscriptions upon checkin")
-      param :service_level, Integer, :desc => N_("Service level to be used for autoheal.")
+      param :service_level, Integer, :desc => N_("Service level to be used for autoheal")
       param :hypervisor_guest_uuids, Array, :desc => N_("List of hypervisor guest uuids")
       param :installed_products_attributes, Array, :desc => N_("List of products installed on the host") do
         param_group :installed_products
@@ -64,7 +64,7 @@ module Katello
       respond_for_destroy(:resource => @host)
     end
 
-    api :POST, "/hosts/subscriptions/", N_("Register a host with subscription and information.")
+    api :POST, "/hosts/subscriptions/", N_("Register a host with subscription and information")
     param :name, String, :desc => N_("Name of the host"), :required => true
     param :uuid, String, :desc => N_("UUID to use for registered host, random uuid is generated if not provided")
     param :facts, Hash, :desc => N_("Key-value hash of subscription-manager facts, nesting uses a period delimiter (.)")
