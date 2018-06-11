@@ -52,24 +52,31 @@ export const loadTask = (taskId, extendedParams = {}) => (dispatch) => {
     }));
 };
 
+const isUnauthorized = action =>
+  (action.result && action.result.response && action.result.response.status === 401);
+
 export const pollBulkSearch = (extendedParams = {}, interval) => (dispatch) => {
-  const triggerPolling = () => {
-    setTimeout(() => dispatch(pollBulkSearch(extendedParams, interval)), interval);
+  const triggerPolling = (action) => {
+    if (!isUnauthorized(action)) {
+      setTimeout(() => dispatch(pollBulkSearch(extendedParams, interval)), interval);
+    }
   };
 
   return dispatch(bulkSearch(extendedParams)).then(triggerPolling);
 };
 
-export const pollTaskUntilDone = (taskId, extendedParams = {}, interval) =>
-  dispatch => new Promise((resolve) => {
-    const pollUntilDone = (task) => {
-      if (task.pending !== false) {
-        setTimeout(() => dispatch(loadTask(taskId, extendedParams))
-          .then(({ response }) => pollUntilDone(response)), interval);
+export const pollTaskUntilDone = (taskId, extendedParams = {}, interval) => dispatch => (
+  new Promise((resolve, reject) => {
+    const pollUntilDone = (action) => {
+      if (isUnauthorized(action)) {
+        reject(action.result);
+      } else if (action.response.pending !== false) {
+        setTimeout(() => dispatch(loadTask(taskId, extendedParams)).then(pollUntilDone), interval);
       } else {
-        resolve(task);
+        resolve(action.response);
       }
     };
 
-    pollUntilDone({ pending: true });
-  });
+    return dispatch(loadTask(taskId, extendedParams)).then(pollUntilDone);
+  })
+);
