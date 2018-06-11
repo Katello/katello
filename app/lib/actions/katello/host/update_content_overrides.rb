@@ -6,6 +6,7 @@ module Actions
 
         def plan(host, content_override_params, prune_invalid_content_overrides = true)
           action_subject(host)
+          fail _("This Host is not currently registered with subscription-manager.") unless host.subscription_facet
           plan_self(:host_id => host.id, :host_name => host.name, :content_overrides => content_override_params,
                     :prune_invalid_content_overrides => prune_invalid_content_overrides)
         end
