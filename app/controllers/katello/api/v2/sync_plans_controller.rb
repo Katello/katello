@@ -105,13 +105,7 @@ module Katello
     api :PUT, "/organizations/:organization_id/sync_plans/:id/sync", N_("Initiate a sync of the products attached to the sync plan")
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     def sync
-      syncable_products = @sync_plan.products.syncable
-      syncable_repositories = Repository.where(:product_id => syncable_products).has_url
-
-      task = async_task(::Actions::BulkAction,
-                        ::Actions::Katello::Repository::Sync,
-                        syncable_repositories)
-
+      task = async_task(::Actions::Katello::SyncPlan::Run, @sync_plan)
       respond_for_async :resource => task
     rescue Foreman::Exception
       raise HttpErrors::BadRequest, _("No products within sync plan")
