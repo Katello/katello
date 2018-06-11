@@ -66,8 +66,8 @@ module Actions
                       content_view_history_ids: cv_histories.map { |history| history.id })
 
             if organization_destroy
-              content_view.hostgroups.clear
-              content_view.hosts.clear
+              content_view.hostgroups.destroy_all
+              content_view.hosts.destroy_all
             end
           end
         end
