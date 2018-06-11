@@ -223,6 +223,18 @@ module ::Actions::Katello::ContentView
       assert_action_planed_with(action, ::Actions::Katello::ContentViewEnvironment::Destroy, cv_env, :skip_repo_destroy => false, :organization_destroy => false)
       assert_action_planed_with(action, ::Actions::Katello::ContentViewVersion::Destroy, version, :skip_environment_check => true, :skip_destroy_env_content => true)
     end
+
+    context 'organization destroy' do
+      it 'works' do
+        ::Hostgroup.create!(name: 'foo',
+                            content_view: content_view,
+                            lifecycle_environment: environment)
+        options = { organization_destroy: true }
+        action.expects(:action_subject).with(content_view)
+        refute content_view.hosts.first.content_facet.content_facet_errata.empty?
+        plan_action(action, content_view, options)
+      end
+    end
   end
 
   class UpdateTest < TestBase
