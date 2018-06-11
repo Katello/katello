@@ -65,7 +65,7 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :PUT, "/content_view_versions/:id", N_("Update a content view version.")
+    api :PUT, "/content_view_versions/:id", N_("Update a content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :description, String, :desc => N_("The description for the content view version"), :required => true
     def update
@@ -79,7 +79,7 @@ module Katello
       end
     end
 
-    api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata.")
+    api :PUT, "/content_view_versions/:id/republish_repositories", N_("Forces a republish of the version's repositories' metadata")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     def republish_repositories
       task = async_task(::Actions::Katello::ContentViewVersion::RepublishRepositories, @version)
@@ -125,15 +125,15 @@ module Katello
     api :POST, "/content_view_versions/incremental_update", N_("Perform an Incremental Update on one or more Content View Versions")
     param :content_view_version_environments, Array do
       param :content_view_version_id, :number, :desc => N_("Content View Version Ids to perform an incremental update on.  May contain composites as well as one or more components to update.")
-      param :environment_ids, Array, :desc => N_("The list of environments to promote the specified Content View Version to (replacing the older version).")
+      param :environment_ids, Array, :desc => N_("The list of environments to promote the specified Content View Version to (replacing the older version)")
     end
     param :description, String, :desc => N_("The description for the new generated Content View Versions")
-    param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well.")
-    param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment.")
+    param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well")
+    param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment")
     param :add_content, Hash do
-      param :errata_ids, Array, :desc => "Errata ids or uuids to copy into the new versions."
-      param :package_ids, Array, :desc => "Package ids or uuids to copy into the new versions."
-      param :puppet_module_ids, Array, :desc => "Puppet Module ids or uuids to copy into the new versions."
+      param :errata_ids, Array, :desc => "Errata ids or uuids to copy into the new versions"
+      param :package_ids, Array, :desc => "Package ids or uuids to copy into the new versions"
+      param :puppet_module_ids, Array, :desc => "Puppet Module ids or uuids to copy into the new versions"
     end
     param :update_hosts, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.") do
       param :included, Hash, :required => true, :action_aware => true do

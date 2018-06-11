@@ -69,7 +69,7 @@ module Katello
       @lifecycle_environments = @capsule_content.lifecycle_environments(@organization)
     end
 
-    api :DELETE, '/capsules/:id/content/sync', N_('Cancel running smart proxy synchronization.')
+    api :DELETE, '/capsules/:id/content/sync', N_('Cancel running smart proxy synchronization')
     param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
     def cancel_sync
       tasks = capsule_content.cancel_sync
