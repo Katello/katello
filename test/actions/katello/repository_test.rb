@@ -89,7 +89,7 @@ module ::Actions::Katello::Repository
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
 
     def setup
-      content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id)
+      content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id, organization_id: repository.product.organization_id)
       Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id)
       super
     end
