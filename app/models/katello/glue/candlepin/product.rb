@@ -60,7 +60,8 @@ module Katello
           content_type: pc[:type],
           vendor: pc[:vendor],
           gpg_url: pc[:gpgUrl],
-          content_url: pc[:contentUrl]
+          content_url: pc[:contentUrl],
+          organization_id: product.organization_id
         }
 
         # current product has this content - update it
@@ -69,7 +70,7 @@ module Katello
           existing.content.update_attributes!(content_attrs)
           existing.update_attributes(enabled: params['enabled'])
         else
-          content = ::Katello::Content.find_by_cp_content_id(pc[:id])
+          content = ::Katello::Content.where(:cp_content_id => pc[:id], :organization_id => product.organization_id).first
           content ||= ::Katello::Content.create!(content_attrs)
 
           ::Katello::ProductContent.create!(enabled: params[:enabled],

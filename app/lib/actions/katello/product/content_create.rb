@@ -45,6 +45,7 @@ module Actions
           repository.save!
 
           content = ::Katello::Content.create!(name: repository.name,
+                                               organization_id: repository.product.organization_id,
                                                cp_content_id: repository.content_id,
                                                content_type: repository.content_type,
                                                label: repository.custom_content_label,
