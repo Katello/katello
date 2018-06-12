@@ -5,7 +5,7 @@ module Katello
     def setup
       @content_id = 'somecontent-123'
       @product = katello_products(:redhat)
-      @content = FactoryBot.create(:katello_content, cp_content_id: @content_id)
+      @content = FactoryBot.create(:katello_content, cp_content_id: @content_id, :organization_id => @product.organization_id)
       @product_content = FactoryBot.create(:katello_product_content, content: @content, product: @product)
     end
 
