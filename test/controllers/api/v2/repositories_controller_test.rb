@@ -437,6 +437,18 @@ module Katello
       assert_template 'api/v2/common/create'
     end
 
+    test_attributes :pid => '54108f30-d73e-46d3-ae56-cda28678e7e9'
+    def test_create_with_default_download_policy
+      create_task = @controller.expects(:sync_task).with do |action_class, repository|
+        assert_equal ::Actions::Katello::Repository::Create, action_class
+        assert_valid repository
+        assert_equal Setting[:default_download_policy], repository.download_policy
+      end
+      create_task.returns(build_task_stub)
+
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
+    end
+
     def test_create_with_protected_true
       product = mock
       product.expects(:add_repo).with(
