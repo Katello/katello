@@ -15,6 +15,7 @@ module Katello
         content = FactoryBot.create(:katello_content,
                                     name: repo.name,
                                     label: repo.label,
+                                    organization_id: repo.product.organization_id,
                                     cp_content_id: repo.content_id)
 
         FactoryBot.create(:katello_product_content, content: content, product: @product1)

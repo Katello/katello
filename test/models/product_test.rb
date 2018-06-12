@@ -137,7 +137,7 @@ module Katello
 
     def test_find_product_content_by_id
       (1..2).each do |x|
-        content = FactoryBot.create(:katello_content, cp_content_id: "content-#{x}")
+        content = FactoryBot.create(:katello_content, cp_content_id: "content-#{x}", organization_id: @redhat_product.organization_id)
         FactoryBot.create(:katello_product_content, content: content, product: @redhat_product)
       end
 
@@ -163,7 +163,7 @@ module Katello
       fedora_content = product.product_contents.to_a
       puppet.update_attributes(content_id: 2)
 
-      content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id)
+      content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id, organization_id: puppet.product.organization_id)
       FactoryBot.create(:katello_product_content, content: content, product: product)
 
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)

@@ -25,6 +25,7 @@ module Katello
       permissions
 
       @content = FactoryBot.create(:katello_content,
+                                  organization_id: @organization.id,
                                   name: 'content-123',
                                   cp_content_id: 'content-123')
       @content_id = @content.cp_content_id
