@@ -3,7 +3,7 @@ require 'katello/repository_types.rb'
 
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.17'
+  requires_foreman '>= 1.18'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
