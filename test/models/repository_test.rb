@@ -1,7 +1,7 @@
 require File.expand_path("repository_base", File.dirname(__FILE__))
 
 module Katello
-  class RepositoryCreateTest < RepositoryTestBase
+  class RepositoryCreateTest < RepositoryTestBase # rubocop:disable Metrics/ClassLength
     def setup
       super
       User.current = @admin
@@ -21,17 +21,366 @@ module Katello
       refute_empty Repository.where(:id => @repo.id)
     end
 
-    def test_unique_repository_name_per_product_and_environment
-      @repo.save
-      @repo2 = build(:katello_repository,
-                     :environment => @repo.environment,
-                     :product => @repo.product,
-                     :content_view_version => @repo.content_view_version,
-                     :name => @repo.name,
-                     :label => 'Another Label'
-                    )
+    test_attributes :pid => '159f7296-55d2-4360-948f-c24e7d75b962'
+    def test_create_with_name
+      valid_name_list.each do |name|
+        @repo.name = name
+        assert @repo.valid?, "Validation failed for create with valid name: '#{name}' length: #{name.length})"
+        assert_equal name, @repo.name
+      end
+    end
 
-      refute @repo2.valid?
+    test_attributes :pid => '3be1b3fa-0e17-416f-97f0-858709e6b1da'
+    def test_create_with_label
+      valid_label_list.each do |label|
+        @repo.label = label
+        assert @repo.valid?, "Validation failed for create with valid label: '#{label}' length: #{label.length})"
+        assert_equal label, @repo.label
+      end
+    end
+
+    test_attributes :pid => '7bac7f45-0fb3-4443-bb3b-cee72248ca5d'
+    def test_create_with_content_type_yum
+      @repo.content_type = 'yum'
+      @repo.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      assert_valid @repo
+      assert_equal 'yum', @repo.content_type
+    end
+
+    test_attributes :pid => 'daa10ded-6de3-44b3-9707-9f0ac983d2ea'
+    def test_create_with_content_type_puppet
+      @repo.download_policy = nil
+      @repo.content_type = 'puppet'
+      @repo.url = 'http://davidd.fedorapeople.org/repos/random_puppet/'
+      assert_valid @repo
+      assert_equal 'puppet', @repo.content_type
+    end
+
+    test_attributes :pid => '1b17fe37-cdbf-4a79-9b0d-6813ea502754'
+    def test_create_with_authenticated_yum_repo
+      @repo.content_type = 'yum'
+      valid_http_credentials_list(true).each do |credential|
+        url = "http://#{credential[:login]}:#{credential[:pass]}@rplevka.fedorapeople.org/fakerepo01/"
+        @repo.url = url
+        assert @repo.valid?, "Validation failed for create with valid url: '#{url}'"
+        assert_equal url, @repo.url
+        assert_equal 'yum', @repo.content_type
+      end
+    end
+
+    test_attributes :pid => '5e5479c4-904d-4892-bc43-6f81fa3813f8'
+    def test_create_with_download_policy
+      @repo.content_type = 'yum'
+      @repo.url = 'http://inecas.fedorapeople.org/fakerepos/zoo2/'
+      %w[on_demand background immediate].each do |download_policy|
+        @repo.download_policy = download_policy
+        assert @repo.valid?, "Validation failed for create with valid download_policy: '#{download_policy}'"
+        assert_equal download_policy, @repo.download_policy
+      end
+    end
+
+    test_attributes :pid => '8a70de9b-4663-4251-b91e-d3618ee7ef84'
+    def test_create_immediate_update_to_on_demand
+      new_download_policy = 'on_demand'
+      @repo.download_policy = 'immediate'
+      assert @repo.save
+      @repo.download_policy = new_download_policy
+      assert_valid @repo
+      assert_equal new_download_policy, @repo.download_policy
+    end
+
+    test_attributes :pid => '9aaf53be-1127-4559-9faf-899888a52846'
+    def test_create_immediate_update_to_background
+      new_download_policy = 'background'
+      @repo.download_policy = 'immediate'
+      assert @repo.save
+      @repo.download_policy = new_download_policy
+      assert_valid @repo
+      assert_equal new_download_policy, @repo.download_policy
+    end
+
+    test_attributes :pid => '589ff7bb-4251-4218-bb90-4e63c9baf702'
+    def test_create_on_demand_update_to_immediate
+      new_download_policy = 'immediate'
+      @repo.download_policy = 'on_demand'
+      assert @repo.save
+      @repo.download_policy = new_download_policy
+      assert_valid @repo
+      assert_equal new_download_policy, @repo.download_policy
+    end
+
+    test_attributes :pid => '1d9888a0-c5b5-41a7-815d-47e936022a60'
+    def test_create_on_demand_update_to_background
+      new_download_policy = 'background'
+      @repo.download_policy = 'on_demand'
+      assert @repo.save
+      @repo.download_policy = new_download_policy
+      assert_valid @repo
+      assert_equal new_download_policy, @repo.download_policy
+    end
+
+    test_attributes :pid => '169530a7-c5ce-4ca5-8cdd-15398e13e2af'
+    def test_create_background_update_to_immediate
+      new_download_policy = 'immediate'
+      @repo.download_policy = 'background'
+      assert @repo.save
+      @repo.download_policy = new_download_policy
+      assert_valid @repo
+      assert_equal new_download_policy, @repo.download_policy
+    end
+
+    test_attributes :pid => '40a3e963-61ff-41c4-aa6c-d9a4a638af4a'
+    def test_create_background_update_to_on_demand
+      new_download_policy = 'on_demand'
+      @repo.download_policy = 'background'
+      assert @repo.save
+      @repo.download_policy = new_download_policy
+      assert_valid @repo
+      assert_equal new_download_policy, @repo.download_policy
+    end
+
+    test_attributes :pid => 'af9e4f0f-d128-43d2-a680-0a62c7dab266'
+    def test_positive_create_with_authenticated_puppet_repo
+      @repo.download_policy = nil
+      @repo.content_type = 'puppet'
+      valid_http_credentials_list(true).each do |credential|
+        url = "http://#{credential[:login]}:#{credential[:pass]}@rplevka.fedorapeople.org/fakepuppet01/"
+        @repo.url = url
+        assert @repo.valid?, "Validation failed for create with valid url: '#{url}'"
+        assert_equal url, @repo.url
+        assert_equal 'puppet', @repo.content_type
+      end
+    end
+
+    test_attributes :pid => 'c3678878-758a-4501-a038-a59503fee453'
+    def test_create_with_checksum_type
+      %w[sha1 sha256].each do |checksum_type|
+        @repo.checksum_type = checksum_type
+        assert @repo.valid?, "Validation failed for create with valid checksum_type: '#{checksum_type}'"
+        assert_equal checksum_type, @repo.checksum_type
+      end
+    end
+
+    test_attributes :pid => '38f78733-6a72-4bf5-912a-cfc51658f80c'
+    def test_positive_create_unprotected
+      [true, false].each do |unprotected|
+        @repo.unprotected = unprotected
+        assert @repo.valid?, "Validation failed for create with valid unprotected: '#{unprotected}'"
+        assert_equal unprotected, @repo.unprotected
+      end
+    end
+
+    test_attributes :pid => '24947c92-3415-43df-add6-d6eb38afd8a3'
+    def test_create_with_invalid_name
+      invalid_name_list.each do |invalid_name|
+        @repo.name = invalid_name
+        refute @repo.valid?, "Validation passed for create with invalid name: '#{invalid_name}' length: #{invalid_name.length}"
+        assert @repo.errors.key?(:name)
+      end
+    end
+
+    test_attributes :pid => '0493dfc4-0043-4682-b339-ce61da7d48ae'
+    def test_unique_repository_name_per_product_and_environment
+      @repo.save!
+      new_repo = build(:katello_repository,
+                       :environment => @repo.environment,
+                       :product => @repo.product,
+                       :content_view_version => @repo.content_view_version,
+                       :name => @repo.name,
+                       :label => 'another_label'
+                      )
+      refute_valid new_repo
+      assert new_repo.errors.key?(:name)
+      assert_match 'has already been taken for this product.', new_repo.errors[:name][0]
+    end
+
+    test_attributes :pid => 'f646ae84-2660-41bd-9883-331285fa1c9a'
+    def test_create_with_invalid_label
+      @repo.label = RFauxFactory.gen_utf8
+      refute_valid @repo
+      assert @repo.errors.key?(:label)
+      assert_match 'cannot contain characters other than ascii alpha numerals, \'_\', \'-\'.', @repo.errors[:label][0]
+    end
+
+    test_attributes :pid => '0bb9fc3f-d442-4437-b5d8-83024bc7ceab'
+    def test_create_with_invalid_url
+      @repo.content_type = 'yum'
+      RFauxFactory.gen_strings(300).each do |value_type, invalid_url|
+        @repo.url = invalid_url
+        if [ :alpha, :numeric, :alphanumeric ].include?(value_type)
+          refute_valid @repo
+        else
+          assert_raise URI::InvalidURIError do
+            @repo.valid?
+          end
+        end
+        assert @repo.errors.key?(:url)
+        assert_match 'is invalid', @repo.errors[:url][0]
+      end
+    end
+
+    test_attributes :pid => '2ffaa412-e5e5-4bec-afaa-9ea54315df49'
+    def test_create_with_authenticated_url_with_special_characters
+      # get the http_credentials without escaping and select only those of them that must be escaped
+      invalid_credentials = valid_http_credentials_list(false).select { |cred| cred[:quote] }
+      @repo.content_type = 'yum'
+      invalid_credentials.each do |invalid_cred|
+        url = "http://#{invalid_cred[:login]}:#{invalid_cred[:pass]}@rplevka.fedorapeople.org/fakerepo01/"
+        @repo.url = url
+        assert_raise URI::InvalidURIError do
+          @repo.valid?
+        end
+        assert @repo.errors.key?(:url)
+        assert_match 'is invalid', @repo.errors[:url][0]
+      end
+    end
+
+    test_attributes :pid => '5aad4e9f-f7e1-497c-8e1f-55e07e38ee80'
+    def test_create_with_authentication_url_too_long
+      @repo.content_type = 'yum'
+      invalid_http_credentials.each do |invalid_cred|
+        url = "http://#{invalid_cred[:login]}:#{invalid_cred[:pass]}@rplevka.fedorapeople.org/fakerepo01/"
+        @repo.url = url
+        if [ :alpha, :numeric, :alphanumeric ].include?(invalid_cred[:string_type])
+          refute_valid @repo
+        else
+          assert_raise URI::InvalidURIError do
+            @repo.valid?
+          end
+        end
+        assert @repo.errors.key?(:url)
+        assert_match 'is too long (maximum is 1024 characters)', @repo.errors[:url][0]
+      end
+    end
+
+    test_attributes :pid => '24d36e79-855e-4832-a136-30cbd144de44'
+    def test_update_to_invalid_download_policy
+      @repo.download_policy = 'background'
+      assert @repo.save
+      @repo.download_policy = 'invalid_download_policy'
+      refute_valid @repo
+      assert @repo.errors.key?(:download_policy)
+      assert_match 'must be one of the following: immediate, on_demand, background', @repo.errors[:download_policy][0]
+    end
+
+    test_attributes :pid => '8a59cb31-164d-49df-b3c6-9b90634919ce'
+    def test_create_non_yum_with_download_policy
+      @repo.download_policy = 'on_demand'
+      %w[puppet docker ostree].each do |content_type|
+        @repo.content_type = content_type
+        refute @repo.valid?, "Validation succeed for create with download_policy and non-yum repository: #{content_type}"
+        assert @repo.errors.key?(:download_policy)
+        assert_match 'cannot be set for non-yum repositories', @repo.errors[:download_policy][0]
+      end
+    end
+
+    test_attributes :pid => 'c49a3c49-110d-4b74-ae14-5c9494a4541c'
+    def test_create_with_invalid_checksum_type
+      @repo.checksum_type = 'invalid checksum_type'
+      refute_valid @repo
+      assert @repo.errors.key?(:checksum_type)
+      assert_match 'is not included in the list', @repo.errors[:checksum_type][0]
+    end
+
+    test_attributes :pid => '1b428129-7cf9-449b-9e3b-74360c5f9eca'
+    def test_update_with_valid_name
+      valid_name_list.each do |new_name|
+        @fedora_17_x86_64.name = new_name
+        assert @fedora_17_x86_64.valid?, "Validation failed for update with valid name: #{new_name} length: #{new_name.length}"
+        assert_equal new_name, @fedora_17_x86_64.name
+      end
+    end
+
+    test_attributes :pid => '205e6e59-33c6-4a58-9245-1cac3a4f550a'
+    def test_update_checksum
+      @repo.checksum_type = 'sha1'
+      assert @repo.save
+      @repo.checksum_type = 'sha256'
+      assert_valid @repo
+      assert_equal 'sha256', @repo.checksum_type
+    end
+
+    test_attributes :pid => '8fbc11f0-a5c5-498e-a314-87958dcd7832'
+    def test_update_url
+      new_url = 'http://new_repo_url.com'
+      @fedora_17_x86_64.url = new_url
+      assert_valid @fedora_17_x86_64
+      assert_equal new_url, @fedora_17_x86_64.url
+    end
+
+    test_attributes :pid => 'c55d169a-8f11-4bf8-9913-b3d39fee75f0'
+    def test_update_unprotected
+      @fedora_17_x86_64.unprotected = true
+      assert_valid @fedora_17_x86_64
+      assert @fedora_17_x86_64.unprotected
+    end
+
+    test_attributes :pid => '6f2f41a4-d871-4b91-87b1-a5a401c4aa69'
+    def test_update_with_invalid_name
+      invalid_name_list.each do |invalid_name|
+        @fedora_17_x86_64.name = invalid_name
+        refute @fedora_17_x86_64.valid?, "Validation succeed for update with invalid name: #{invalid_name} length: #{invalid_name.length}"
+        assert @fedora_17_x86_64.errors.key?(:name)
+      end
+    end
+
+    test_attributes :pid => '828d85df-3c25-4a69-b6a2-401c6b82e4f3'
+    def test_update_label
+      repo = @fedora_17_x86_64
+      repo.label = 'new_label'
+      refute repo.valid?
+      assert repo.errors.key?(:label)
+      assert_match 'cannot be changed.', repo.errors[:label][0]
+    end
+
+    test_attributes :pid => '47530b1c-e964-402a-a633-c81583fb5b98'
+    def test_update_auth_url_with_special_characters
+      repo = @fedora_17_x86_64
+      # get the http_credentials without escaping and select only those of them that must be escaped
+      invalid_credentials = valid_http_credentials_list(false).select { |cred| cred[:quote] }
+      invalid_credentials.each do |invalid_cred|
+        url = "http://#{invalid_cred[:login]}:#{invalid_cred[:pass]}@rplevka.fedorapeople.org/fakerepo01/"
+        repo.url = url
+        assert_raise URI::InvalidURIError do
+          repo.valid?
+        end
+        assert repo.errors.key?(:url)
+        assert_match 'is invalid', repo.errors[:url][0]
+      end
+    end
+
+    test_attributes :pid => 'cc00fbf4-d284-4404-88d9-ea0c0f03abe1'
+    def test_update_auth_url_too_long
+      repo = @fedora_17_x86_64
+      invalid_http_credentials.each do |invalid_cred|
+        url = "http://#{invalid_cred[:login]}:#{invalid_cred[:pass]}@rplevka.fedorapeople.org/fakerepo01/"
+        repo.url = url
+        if [ :alpha, :numeric, :alphanumeric ].include?(invalid_cred[:string_type])
+          refute_valid repo
+        else
+          assert_raise URI::InvalidURIError do
+            repo.valid?
+          end
+        end
+        assert repo.errors.key?(:url)
+        assert_match 'is too long (maximum is 1024 characters)', repo.errors[:url][0]
+      end
+    end
+
+    test_attributes :pid => '29c2571a-b7fb-4ec7-b433-a1840758bcb0'
+    def test_destroy
+      repo = build(:katello_repository,
+                   :environment => @library,
+                   :product => katello_products(:ostree_product),
+                   :content_view_version => @library.default_content_view_version,
+                   :download_policy => 'on_demand',
+                   :content_type => 'yum',
+                   :url => 'http://rplevka.fedorapeople.org/fakerepo01/'
+                  )
+      repo.save!
+      assert_difference('Repository.count', -1) do
+        repo.delete
+      end
     end
 
     def test_docker_repository_docker_upstream_name_url
@@ -115,21 +464,13 @@ module Katello
       assert @repo.full_path =~ /abc123/
     end
 
-    def test_download_policy
+    test_attributes :pid => 'c39bf33a-26f6-411b-8658-eab1bb40ef84'
+    def test_create_with_invalid_download_policy
       @repo.content_type = 'yum'
-
-      @repo.download_policy = 'immediate'
-      assert @repo.valid?
-      @repo.download_policy = 'on_demand'
-      assert @repo.valid?
-
       @repo.download_policy = 'invalid'
       refute @repo.valid?
       assert @repo.errors.include?(:download_policy)
-
-      @repo.content_type = 'puppet'
-      refute @repo.valid?
-      assert @repo.errors.include?(:download_policy)
+      assert_match 'must be one of the following: immediate, on_demand, background', @repo.errors[:download_policy][0]
     end
 
     def test_compatible_download_policy
@@ -204,11 +545,45 @@ module Katello
       assert_equal "puppet", Repository.find(@repo.id).content_type
     end
 
+    test_attributes :pid => 'f3332dd3-1e6d-44e2-8f24-fae6fba2de8d'
     def test_ostree_content_type
       @repo.content_type = "ostree"
       @repo.download_policy = nil
       assert @repo.save
       assert_equal "ostree", Repository.find(@repo.id).content_type
+    end
+
+    test_attributes :pid => '4d9f1418-cc08-4c3c-a5dd-1d20fb9052a2'
+    def test_ostree_content_type_update_name
+      new_name = 'ostree new name'
+      @ostree.name = new_name
+      assert_valid @ostree
+      assert_equal new_name, @ostree.name
+    end
+
+    test_attributes :pid => '6ba45475-a060-42a7-bc9e-ea2824a5476b'
+    def test_ostree_content_type_update_url
+      new_url = 'https://kojipkgs.fedoraproject.org/atomic/23/'
+      @ostree.url = new_url
+      assert_valid @ostree
+      assert_equal new_url, @ostree.url
+    end
+
+    test_attributes :pid => '05db79ed-28c7-47fc-85f5-194a805d71ca'
+    def test_ostree_content_type_destroy
+      repo = build(:katello_repository,
+                   :environment => @library,
+                   :product => katello_products(:ostree_product),
+                   :content_view_version => @library.default_content_view_version,
+                   :download_policy => nil,
+                   :content_type => 'ostree',
+                   :url => 'https://kojipkgs.fedoraproject.org/atomic/23/',
+                   :unprotected => false
+                  )
+      repo.save!
+      assert_difference('Repository.count', -1) do
+        repo.delete
+      end
     end
 
     def test_docker_pulp_id
