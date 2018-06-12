@@ -97,15 +97,14 @@ export default (state = initialState, action) => {
     }
 
     case TASK_BULK_SEARCH_SUCCESS: {
-      let tasks = [];
+      let tasks;
 
       const search = find(action.response, bulkSearch =>
         bulkSearch.search_params.search_id === MANIFEST_TASKS_BULK_SEARCH_ID);
 
-      if (search) {
+      if (search && search.results.length > 0) {
         tasks = search.results;
       }
-
       return state.set('tasks', tasks);
     }
 
