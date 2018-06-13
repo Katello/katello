@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Spinner, Grid, Row, Col } from 'patternfly-react';
+import { Grid, Row, Col } from 'patternfly-react';
 import SubscriptionDetailInfo from './SubscriptionDetailInfo';
 import SubscriptionDetailAssociations from './SubscriptionDetailAssociations';
 import SubscriptionDetailProducts from './SubscriptionDetailProducts';
+import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 
 class SubscriptionDetails extends Component {
@@ -21,7 +22,7 @@ class SubscriptionDetails extends Component {
     return (
       <Grid bsClass="container-fluid">
         <div>
-          <Spinner loading={subscriptionDetails.loading}>
+          <LoadingState loading={subscriptionDetails.loading} loadingText={__('Loading')}>
             <Row>
               <Col sm={12}>
                 <h1>{subscriptionDetails.name}</h1>
@@ -42,7 +43,7 @@ class SubscriptionDetails extends Component {
                 />
               </Col>
             </Row>
-          </Spinner>
+          </LoadingState>
         </div>
       </Grid>
     );

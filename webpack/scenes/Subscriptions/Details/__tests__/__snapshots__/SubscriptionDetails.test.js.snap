@@ -7,12 +7,9 @@ exports[`subscriptions details page should render and contain appropiate compone
   fluid={false}
 >
   <div>
-    <Spinner
-      className=""
-      inline={false}
-      inverse={false}
+    <LoadingState
       loading={false}
-      size="md"
+      loadingText="Loading"
     >
       <Row
         bsClass="row"
@@ -429,7 +426,7 @@ exports[`subscriptions details page should render and contain appropiate compone
           />
         </Col>
       </Row>
-    </Spinner>
+    </LoadingState>
   </div>
 </Grid>
 `;

@@ -4,6 +4,7 @@ import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'reac
 import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
+import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
@@ -242,13 +243,13 @@ class ManageManifestModal extends Component {
             </Tab>
 
             <Tab eventKey={2} title={__('Manifest History')}>
-              <Spinner loading={manifestHistory.loading} className="small-spacer">
+              <LoadingState loading={manifestHistory.loading} loadingText={__('Loading')}>
                 <Table
                   rows={manifestHistory.results}
                   columns={columns}
                   emptyState={emptyStateData()}
                 />
-              </Spinner>
+              </LoadingState>
             </Tab>
           </Tabs>
         </Modal.Body>

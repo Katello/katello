@@ -212,12 +212,9 @@ exports[`manage manifest modal should render 1`] = `
         eventKey={2}
         title="Manifest History"
       >
-        <Spinner
-          className="small-spacer"
-          inline={false}
-          inverse={false}
+        <LoadingState
           loading={false}
-          size="md"
+          loadingText="Loading"
         >
           <Table
             columns={
@@ -340,7 +337,7 @@ exports[`manage manifest modal should render 1`] = `
               ]
             }
           />
-        </Spinner>
+        </LoadingState>
       </Tab>
     </Uncontrolled(Tabs)>
   </ModalBody>
