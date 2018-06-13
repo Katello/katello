@@ -9,12 +9,9 @@ exports[`upstream subscriptions page should render 1`] = `
   <h1>
     Add Subscriptions
   </h1>
-  <Spinner
-    className="small-spacer"
-    inline={false}
-    inverse={false}
+  <LoadingState
     loading={false}
-    size="md"
+    loadingText="Loading"
   >
     <Row
       bsClass="row"
@@ -221,6 +218,6 @@ exports[`upstream subscriptions page should render 1`] = `
         </LinkContainer>
       </Col>
     </Row>
-  </Spinner>
+  </LoadingState>
 </Grid>
 `;
