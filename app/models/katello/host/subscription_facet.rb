@@ -1,7 +1,7 @@
 module Katello
   module Host
     class SubscriptionFacet < Katello::Model
-      audited :associations => [:pools]
+      audited :associations => [:pools], :except => [:last_checkin]
       self.table_name = 'katello_subscription_facets'
       include Facets::Base
 
