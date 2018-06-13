@@ -4,7 +4,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { bindMethods, Button, Spinner } from 'patternfly-react';
+import { bindMethods, Button } from 'patternfly-react';
+import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';
 import { Table } from '../../../move_to_foreman/components/common/table';
@@ -213,7 +214,7 @@ class UpstreamSubscriptionsPage extends Component {
       <Grid bsClass="container-fluid">
         <h1>{__('Add Subscriptions')}</h1>
 
-        <Spinner loading={upstreamSubscriptions.loading} className="small-spacer">
+        <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
           <Row>
             <Col sm={12}>
               <Table
@@ -227,7 +228,7 @@ class UpstreamSubscriptionsPage extends Component {
             </Col>
           </Row>
           {getSubscriptionActions()}
-        </Spinner>
+        </LoadingState>
       </Grid>
     );
   }
