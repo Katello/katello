@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { sprintf } from 'jed';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
-import { Spinner, Table, Alert } from 'patternfly-react';
+import { Table, Alert } from 'patternfly-react';
+import { LoadingState } from '../../../../move_to_pf/LoadingState';
 import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../move_to_foreman/components/common/table';
 import ConfirmDialog from '../../../../move_to_foreman/components/common/ConfirmDialog';
 import Dialog from '../../../../move_to_foreman/components/common/Dialog';
@@ -256,7 +257,7 @@ class SubscriptionsTable extends Component {
     );
 
     return (
-      <Spinner loading={subscriptions.loading} className="small-spacer">
+      <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
         <ErrorAlerts
           errors={[
             subscriptions.error,
@@ -343,7 +344,7 @@ class SubscriptionsTable extends Component {
           onConfirm={() => this.props.onDeleteSubscriptions(this.state.selectedRows)}
           onCancel={this.props.onSubscriptionDeleteModalClose}
         />
-      </Spinner>
+      </LoadingState>
     );
   }
 }
