@@ -20,8 +20,7 @@
         function fetchRepositories(contentView) {
             var promise, params = {
                 'environment_id': $scope.$stateParams.environmentId,
-                'content_type': ContentService.getRepositoryType(),
-                library: true
+                'content_type': ContentService.getRepositoryType()
             };
 
             if (contentView && contentView.id !== 'all') {
@@ -64,7 +63,7 @@
             return versionId;
         }
 
-        nutupaneParams = {'environment_id': $scope.$stateParams.environmentId, library: true};
+        nutupaneParams = {'environment_id': $scope.$stateParams.environmentId};
         if ($location.search().repositoryId) {
             nutupaneParams['repository_id'] = $location.search().repositoryId;
         }
