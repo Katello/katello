@@ -49,7 +49,7 @@ describe('Controller: EnvironmentContentController', function() {
     });
 
     it("puts a nutupane object on the scope from the Content Service", function() {
-        expect(ContentService.buildNutupane).toHaveBeenCalledWith({'environment_id': 1, library: true});
+        expect(ContentService.buildNutupane).toHaveBeenCalledWith({'environment_id': 1});
         expect($scope.nutupane).toBeDefined();
         expect($scope.nutupane.masterOnly).toBe(true);
     });
