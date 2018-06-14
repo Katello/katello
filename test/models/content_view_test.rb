@@ -560,7 +560,7 @@ module Katello
       @library_view.content_view_puppet_modules.destroy_all
       refute @library_view.publish_puppet_environment?
 
-      @library_view.content_view_puppet_modules.create(:name => 'foo', :uuid => 'bar')
+      @library_view.content_view_puppet_modules.create(:name => 'foo', :author => 'bar')
       assert @library_view.publish_puppet_environment?
 
       @library_view.content_view_puppet_modules.destroy_all
