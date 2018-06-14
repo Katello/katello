@@ -50,10 +50,16 @@
                 display: translate('Puppet Modules'),
                 repositoryType: 'puppet'
             }, {
-                state: 'docker',
+                state: 'tags',
                 resource: 'DockerTag',
-                display: translate('Container Image Tags'),
+                display: false,
                 repositoryType: 'docker'
+            }, {
+                state: 'audits',
+                resource: 'RepositoryAudits',
+                display: false,
+                repositoryType: 'docker',
+                nutupaneParams: {'content_type': 'docker'}
             }, {
                 state: 'ostree',
                 resource: 'OstreeBranch',
@@ -64,6 +70,10 @@
 
         this.getRepositoryType = function () {
             return getContentType(currentState()).repositoryType;
+        };
+
+        this.getNutupaneParams = function () {
+            return getContentType(currentState()).nutupaneParams || {};
         };
 
         this.buildNutupane = function (params) {

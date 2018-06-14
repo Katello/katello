@@ -99,13 +99,29 @@ angular.module('Bastion.environments').config(['$stateProvider', function ($stat
         }
     })
     .state('environment.docker', {
-        url: '/docker?repositoryId&contentViewId',
+        url: '/docker',
+        abstract: true,
+        template: '<div ui-view></div>'
+    })
+    .state('environment.docker.tags', {
+        url: '/tags?repositoryId&contentViewId',
         reloadOnSearch: false,
         permission: 'view_lifecycle_environments',
         controller: 'EnvironmentContentController',
         templateUrl: 'environments/details/views/environment-docker.html',
         ncyBreadcrumb: {
-            label: '{{ "Docker" | translate }}',
+            label: '{{ "Container Image Tags" | translate }}',
+            parent: 'environment.details'
+        }
+    })
+    .state('environment.docker.audits', {
+        url: '/audits?repositoryId&contentViewId',
+        reloadOnSearch: false,
+        permission: 'view_lifecycle_environments',
+        controller: 'EnvironmentContentController',
+        templateUrl: 'environments/details/views/environment-docker-audits.html',
+        ncyBreadcrumb: {
+            label: '{{ "Container Image Audits" | translate }}',
             parent: 'environment.details'
         }
     })

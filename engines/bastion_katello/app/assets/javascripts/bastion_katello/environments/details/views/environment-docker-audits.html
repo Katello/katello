@@ -1,0 +1,38 @@
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="search-filter">
+    <select class="form-control" ng-model="contentView" ng-change="contentViewSelected(contentView)" ng-options="contentView.name for (id, contentView) in contentViews"></select>
+    <select class="form-control" ng-model="repository" ng-change="repositorySelected(repository)" ng-options="repository.name for (id, repository) in repositories"></select>
+  </div>
+
+  <span data-block="no-rows-message" translate>
+    There are no Audits that match the criteria.
+  </span>
+
+  <span data-block="no-search-results-message" translate>
+    Your search returned zero Audits.
+  </span>
+
+  <table data-block="table" class="table table-striped table-bordered">
+    <thead>
+      <tr bst-table-head>
+        <th bst-table-column translate>Timestamp</th>
+        <th bst-table-column translate>User</th>
+        <th bst-table-column translate>Description</th>
+        <th bst-table-column translate>Container Image</th>
+        <th bst-table-column translate>Repository</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr bst-table-row ng-repeat="audit in table.rows">
+        <td bst-table-cell>
+          <a ng-href="/audits/{{ audit.id }}">{{ audit.created_at }}</a>
+        </td>
+        <td bst-table-cell>{{ audit.user_name }}</td>
+        <td bst-table-cell>{{ auditDescription(audit) }}</td>
+        <td bst-table-cell>{{ auditRepository(audit).container_repository_name }}</td>
+        <td bst-table-cell><a ui-sref="product.repository.info({productId: auditRepository(audit).product.id, repositoryId: auditRepository(audit).id})">{{ auditRepository(audit).name }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

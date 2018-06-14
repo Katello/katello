@@ -1,5 +1,6 @@
 module Katello
   class DockerManifest < Katello::Model
+    audited associated_with: :repository
     include Concerns::PulpDatabaseUnit
     has_many :docker_tags, :as => :docker_taggable, :class_name => "Katello::DockerTag", :dependent => :destroy
     has_many :repository_docker_manifests, :class_name => "Katello::RepositoryDockerManifest",

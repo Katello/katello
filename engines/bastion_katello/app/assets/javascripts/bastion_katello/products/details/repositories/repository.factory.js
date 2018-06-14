@@ -51,3 +51,26 @@ angular.module('Bastion.repositories').factory('RepositoryBulkAction',
 
     }]
 );
+
+/**
+ * @ngdoc service
+ * @name  Bastion.repositories.factory:RepositoryAudits
+ *
+ * @requires BastionResource
+ * @requires CurrentOrganization
+ *
+ * @description
+ *   Provides a BastionResource for audits on repositories.
+ */
+angular.module('Bastion.repositories').factory('RepositoryAudits',
+    ['BastionResource', 'CurrentOrganization', function (BastionResource, CurrentOrganization) {
+
+        return BastionResource('katello/api/v2/repositories/bulk/audits',
+            {'organization_id': CurrentOrganization},
+            {
+                audits: {method: 'GET'}
+            }
+        );
+
+    }]
+);

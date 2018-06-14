@@ -23,10 +23,31 @@
       </li>
 
       <li ng-repeat="type in contentTypes" ng-class="{active: isState('environment.' + type.state)}"
+          ng-if="type.display !== false"
           ng-show="type.repositoryType == undefined || repositoryTypeEnabled(type.repositoryType)">
         <a ng-href="{{ $state.href('environment.' + type.state, {environmentId: environment.id}) }}">
           <span translate>{{ type.display }}</span>
         </a>
+      </li>
+
+      <li uib-dropdown
+          ng-class="{active: stateIncludes('environment.docker.tags') || stateIncludes('environment.docker.audits')}"
+          ng-show="repositoryTypeEnabled('docker')">
+        <a uib-dropdown-toggle>
+          <span translate>Container Images</span>
+          <i class="fa fa-chevron-down"></i>
+        </a>
+        <ul uib-dropdown-menu>
+          <li>
+            <a ui-sref="environment.docker.tags">
+              <span translate>Tags</span>
+            </a>
+          </li>
+          <li>
+            <a ui-sref="environment.docker.audits">
+              <span translate>Audits</span>
+            </a>
+        </ul>
       </li>
     </ul>
   </nav>

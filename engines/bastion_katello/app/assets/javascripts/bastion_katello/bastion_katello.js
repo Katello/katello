@@ -91,6 +91,9 @@
 //= require "bastion_katello/architectures/architectures.module.js"
 //= require_tree "./architectures"
 
+//= require "bastion_katello/audits/audits.module.js"
+//= require_tree "./audits"
+
 //= require "bastion_katello/i18n/translations.js"
 
 //= require "bastion_katello/bastion-katello-bootstrap.js"

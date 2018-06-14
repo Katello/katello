@@ -331,6 +331,7 @@ Katello::Engine.routes.draw do
           collection do
             match '/bulk/destroy' => 'repositories_bulk_actions#destroy_repositories', :via => :put
             match '/bulk/sync' => 'repositories_bulk_actions#sync_repositories', :via => :post
+            match '/bulk/audits' => 'repositories_bulk_actions#audits', :via => :get
             get :auto_complete_search
           end
           api_resources :sync, :only => [:index]

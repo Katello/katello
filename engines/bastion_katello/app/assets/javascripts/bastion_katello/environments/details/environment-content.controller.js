@@ -20,8 +20,7 @@
         function fetchRepositories(contentView) {
             var promise, params = {
                 'environment_id': $scope.$stateParams.environmentId,
-                'content_type': ContentService.getRepositoryType(),
-                library: true
+                'content_type': ContentService.getRepositoryType()
             };
 
             if (contentView && contentView.id !== 'all') {
@@ -64,7 +63,8 @@
             return versionId;
         }
 
-        nutupaneParams = {'environment_id': $scope.$stateParams.environmentId, library: true};
+        nutupaneParams = ContentService.getNutupaneParams();
+        nutupaneParams['environment_id'] = $scope.$stateParams.environmentId;
         if ($location.search().repositoryId) {
             nutupaneParams['repository_id'] = $location.search().repositoryId;
         }
@@ -122,6 +122,39 @@
             nutupane.setParams(params);
             nutupane.refresh();
         };
+
+        $scope.auditRepository = function (audit) {
+            var repository, repoId;
+
+            if (audit.auditable_type === 'Katello::DockerMetaTag' ||
+                audit.auditable_type === 'Katello::DockerManifest' ||
+                audit.auditable_type === 'Katello::DockerManifestList') {
+                repoId = audit.associated_id;
+            } else {
+                repoId = audit.auditable_id;
+            }
+
+            repository = _.find($scope.repositories, function (repo) {
+                return repo.id.toString() === repoId.toString();
+            });
+            return repository;
+        }
+
+        $scope.auditDescription = function (audit) {
+            var description;
+
+            if (audit.auditable_type === 'Katello::DockerMetaTag') {
+                description = audit.action + " tag " + audit.auditable_name;
+            } else if (audit.auditable_type === 'Katello::DockerManifest') {
+                description = audit.action + " manifest " + audit.auditable_name;
+            } else if (audit.auditable_type === 'Katello::DockerManifestList') {
+                description = audit.action + " manifest list " + audit.auditable_name;
+            } else {
+                description = audit.action + " repository " + audit.auditable_name;
+            }
+
+            return description;
+        }
     }
 
     angular
