@@ -14,8 +14,9 @@ import {
   loadQuantitiesFailureActions,
   loadQuantitiesSuccessActions,
   quantitiesRequestSuccessResponse,
+  loadTableColumnsSuccessAction,
 } from './subscriptions.fixtures';
-import { loadSubscriptions, updateQuantity, loadAvailableQuantities } from '../SubscriptionActions';
+import { loadSubscriptions, updateQuantity, loadAvailableQuantities, loadTableColumns } from '../SubscriptionActions';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({ subscriptions: Immutable({}) });
@@ -120,6 +121,15 @@ describe('subscription actions', () => {
         });
         return store.dispatch(loadAvailableQuantities())
           .then(() => expect(store.getActions()).toEqual(loadQuantitiesSuccessActions));
+      },
+    );
+  });
+  describe('loadTableColumns', () => {
+    it(
+      'loads table columns',
+      () => {
+        store.dispatch(loadTableColumns());
+        expect(store.getActions()).toEqual(loadTableColumnsSuccessAction);
       },
     );
   });

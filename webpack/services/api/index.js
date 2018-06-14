@@ -111,6 +111,7 @@ export const foremanEndpoint = new ForemanEndpoint();
 
 // eslint-disable-next-line import/prefer-default-export
 const orgNode = () => document.getElementById('organization-id');
+const userNode = () => document.getElementById('user-id');
 // This node does not exist while testing
 export const orgId = () => {
   const node = orgNode();
@@ -119,3 +120,5 @@ export const orgId = () => {
 
   return id === '' ? currentId : id;
 };
+
+export const userId = () => (userNode() ? userNode().dataset.id : '1');

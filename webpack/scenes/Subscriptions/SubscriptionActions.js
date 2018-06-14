@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import api, { orgId } from '../../services/api';
 import { propsToSnakeCase } from '../../services/index';
 
@@ -11,9 +12,13 @@ import {
   UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
   UPDATE_QUANTITY_FAILURE,
+  UPDATE_SUBSCRIPTION_COLUMNS,
   DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
+  SUBSCRIPTION_TABLE_COLUMNS,
+  SUBSCRIPTION_TABLE_DEFAULT_COLUMNS,
+  SUBSCRIPTIONS_COLUMNS_REQUEST,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
@@ -74,6 +79,27 @@ export const updateQuantity = (quantities = {}) => (dispatch) => {
       });
     })
     .catch(result => dispatch(apiError(UPDATE_QUANTITY_FAILURE, result)));
+};
+
+export const loadTableColumns = selectedColumns => (dispatch) => {
+  const enabledColumns = (isEmpty(selectedColumns) ?
+    SUBSCRIPTION_TABLE_DEFAULT_COLUMNS : selectedColumns.columns);
+  dispatch({
+    type: UPDATE_SUBSCRIPTION_COLUMNS,
+    payload: { enabledColumns },
+  });
+
+  const tableColumns = SUBSCRIPTION_TABLE_COLUMNS.map((option) => {
+    const currentOption = option;
+    currentOption.value = enabledColumns.includes(option.key);
+
+    return currentOption;
+  });
+
+  dispatch({
+    type: SUBSCRIPTIONS_COLUMNS_REQUEST,
+    payload: { tableColumns },
+  });
 };
 
 export const deleteSubscriptions = poolIds => (dispatch) => {

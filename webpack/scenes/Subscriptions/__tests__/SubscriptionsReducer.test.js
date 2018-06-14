@@ -10,6 +10,8 @@ import {
   successState,
   errorState,
   quantitiesErrorState,
+  loadingColumnsState,
+  tableColumns,
 } from './subscriptions.fixtures';
 import reducer from '../SubscriptionReducer';
 
@@ -69,5 +71,15 @@ describe('subscriptions reducer', () => {
         message: 'Unable to process request.',
       },
     })).toEqual(quantitiesErrorState);
+  });
+
+  it('should load table columns on a SUBSCRIPTIONS_COLUMNS_REQUEST', () => {
+    const successTableColumnsState = { ...successState };
+    successTableColumnsState.tableColumns = tableColumns;
+
+    expect(reducer(loadingColumnsState, {
+      type: types.SUBSCRIPTIONS_COLUMNS_REQUEST,
+      payload: { tableColumns },
+    })).toEqual(successTableColumnsState);
   });
 });

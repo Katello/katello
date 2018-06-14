@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Immutable from 'seamless-immutable';
+import { isEmpty } from 'lodash';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { renderTaskFinishedToast } from '../Tasks/helpers';
+import OptionTooltip from '../../move_to_pf/OptionTooltip';
+import { notify } from '../../move_to_foreman/foreman_toast_notifications';
+import helpers from '../../move_to_foreman/common/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import { manifestExists } from './SubscriptionHelpers';
 import Search from '../../components/Search/index';
 import api, { orgId } from '../../services/api';
+
+
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
   MANIFEST_TASKS_BULK_SEARCH_ID,
   BULK_TASK_SEARCH_INTERVAL,
+  SUBSCRIPTION_TABLE_NAME,
 } from './SubscriptionConstants';
 
 import './SubscriptionsPage.scss';
@@ -23,6 +31,7 @@ import './SubscriptionsPage.scss';
 class SubscriptionsPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       manifestModalOpen: false,
       subscriptionDeleteModalOpen: false,
@@ -96,6 +105,10 @@ class SubscriptionsPage extends Component {
 
     this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
+    this.props.loadTables().then(() => {
+      const { subscriptionTableSettings, loadTableColumns } = this.props;
+      loadTableColumns(subscriptionTableSettings);
+    });
   }
 
   handleDoneTask(taskToPoll) {
@@ -110,18 +123,19 @@ class SubscriptionsPage extends Component {
   }
 
   render() {
-    const { tasks = [], subscriptions, organization } = this.props;
     const currentOrg = orgId();
+    const {
+      tasks = [], subscriptions, organization, subscriptionTableSettings,
+    } = this.props;
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
-
     let task = null;
 
     if (taskInProgress) {
       [task] = tasks;
     }
-
+    const tableColumns = Immutable.asMutable(subscriptions.tableColumns, { deep: true });
     const onSearch = (search) => {
       this.props.loadSubscriptions({ search });
     };
@@ -165,7 +179,35 @@ class SubscriptionsPage extends Component {
 
 
     const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
+    const getEnabledColumns = (columns) => {
+      const enabledColumns = [];
+      columns.forEach((column) => {
+        if (column.value) {
+          enabledColumns.push(column.key);
+        }
+      });
 
+      return enabledColumns;
+    };
+    const toolTipOnclose = (columns) => {
+      const enabledColumns = getEnabledColumns(columns);
+      const { loadTableColumns, createColumns, updateColumns } = this.props;
+      loadTableColumns({ columns: enabledColumns });
+
+      if (isEmpty(subscriptionTableSettings)) {
+        createColumns({ name: SUBSCRIPTION_TABLE_NAME, columns: enabledColumns });
+      } else {
+        const options = { ...subscriptionTableSettings };
+        options.columns = enabledColumns;
+        updateColumns(options);
+      }
+    };
+    const toolTipOnChange = (columns) => {
+      const { loadTableColumns } = this.props;
+
+      loadTableColumns({ columns: getEnabledColumns(columns) });
+    };
+    const columns = subscriptions.selectedTableColumns;
     const emptyStateData = {
       header: __('There are no Subscriptions to display'),
       description: __('Import a Manifest to manage your Entitlements.'),
@@ -191,7 +233,9 @@ class SubscriptionsPage extends Component {
                       updateSearchQuery={updateSearchQuery}
                     />
                   </FormGroup>
-
+                  <div className="option-tooltip-container">
+                    <OptionTooltip options={tableColumns} icon="fa-columns" id="subscriptionTableTooltip" onChange={toolTipOnChange} onClose={toolTipOnclose} />
+                  </div>
                   <div className="toolbar-pf-action-right">
                     <FormGroup>
                       <LinkContainer
@@ -245,6 +289,7 @@ class SubscriptionsPage extends Component {
             <div id="subscriptions-table" className="modal-container">
               <SubscriptionsTable
                 loadSubscriptions={this.props.loadSubscriptions}
+                tableColumns={columns}
                 updateQuantity={this.props.updateQuantity}
                 emptyState={emptyStateData}
                 subscriptions={this.props.subscriptions}
@@ -271,12 +316,17 @@ class SubscriptionsPage extends Component {
 SubscriptionsPage.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
+  loadTableColumns: PropTypes.func.isRequired,
   subscriptions: PropTypes.shape({}).isRequired,
   organization: PropTypes.shape({}).isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
   bulkSearch: PropTypes.func,
   pollTaskUntilDone: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
+  loadTables: PropTypes.func.isRequired,
+  createColumns: PropTypes.func.isRequired,
+  updateColumns: PropTypes.func.isRequired,
+  subscriptionTableSettings: PropTypes.shape({}).isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
 };

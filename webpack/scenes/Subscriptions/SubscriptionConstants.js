@@ -14,6 +14,9 @@ export const DELETE_SUBSCRIPTIONS_REQUEST = 'DELETE_SUBSCRIPTIONS_REQUEST';
 export const DELETE_SUBSCRIPTIONS_SUCCESS = 'DELETE_SUBSCRIPTIONS_SUCCESS';
 export const DELETE_SUBSCRIPTIONS_FAILURE = 'DELETE_SUBSCRIPTIONS_FAILURE';
 
+export const SUBSCRIPTIONS_COLUMNS_REQUEST = 'SUBSCRIPTIONS_COLUMNS_REQUEST';
+export const UPDATE_SUBSCRIPTION_COLUMNS = 'UPDATE_SUBSCRIPTION_COLUMNS';
+
 export const BLOCKING_FOREMAN_TASK_TYPES = [
   'Actions::Katello::Organization::ManifestImport',
   'Actions::Katello::Organization::ManifestRefresh',
@@ -26,3 +29,54 @@ export const BLOCKING_FOREMAN_TASK_TYPES = [
 
 export const MANIFEST_TASKS_BULK_SEARCH_ID = 'activeManifestTasksSearch';
 export const BULK_TASK_SEARCH_INTERVAL = 10000;
+export const SUBSCRIPTION_TABLE_NAME = 'Katello::Subscriptions';
+export const SUBSCRIPTION_TABLE_COLUMNS = [
+  {
+    key: 'id',
+    label: __('Name'),
+    value: false,
+  },
+  {
+    key: 'product_id',
+    label: __('SKU'),
+    value: false,
+  },
+  {
+    key: 'contract_number',
+    label: __('Contract'),
+    value: false,
+  },
+  {
+    key: 'start_date',
+    label: __('Start Date'),
+    value: false,
+  },
+  {
+    key: 'end_date',
+    label: __('End Date'),
+    value: false,
+  },
+  {
+    key: 'virt_who',
+    label: __('Requires Virt-Who'),
+    value: false,
+  },
+  {
+    key: 'consumed',
+    label: __('Consumed'),
+    value: false,
+  },
+  {
+    key: 'quantity',
+    label: __('Entitlements'),
+    value: false,
+  },
+];
+
+export const SUBSCRIPTION_TABLE_DEFAULT_COLUMNS = [
+  'id',
+  'product_id',
+  'contract_number',
+  'start_date',
+  'end_date',
+];
