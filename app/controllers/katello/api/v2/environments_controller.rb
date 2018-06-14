@@ -76,6 +76,7 @@ module Katello
     param :label, String, :desc => N_("label of the environment"), :required => false
     param :description, String, :desc => N_("description of the environment")
     param :registry_name_pattern, String, :desc => N_("pattern for container image names")
+    param :registry_unauthenticated_pull, :bool, :desc => N_("allow unauthenticed pull of container images")
     param :prior_id, Integer, :required => true, :desc => <<-DESC
       ID of an environment that is prior to the new environment in the chain. It has to be
       either the ID of Library or the ID of an environment at the end of a chain.
@@ -95,6 +96,7 @@ module Katello
     param :new_name, String, :desc => N_("new name to be given to the environment")
     param :description, String, :desc => N_("description of the environment")
     param :registry_name_pattern, String, :desc => N_("pattern for container image names")
+    param :registry_unauthenticated_pull, :bool, :desc => N_("allow unauthenticed pull of container images")
     param :async, :bool, desc: N_("Do not wait for the update action to finish. Default: true")
     def update
       async = ::Foreman::Cast.to_bool(params.fetch(:async, true))
@@ -175,9 +177,9 @@ module Katello
 
     def environment_params
       if @environment && @environment.library?
-        attrs = [:registry_name_pattern]
+        attrs = [:registry_name_pattern, :registry_unauthenticated_pull]
       else
-        attrs = [:name, :description, :registry_name_pattern]
+        attrs = [:name, :description, :registry_name_pattern, :registry_unauthenticated_pull]
       end
       attrs << :label if params[:action] == "create"
       parms = params.require(:environment).permit(*attrs)
