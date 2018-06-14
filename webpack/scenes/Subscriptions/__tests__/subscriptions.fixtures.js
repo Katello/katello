@@ -12,6 +12,8 @@ export const initialState = Immutable({
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
+  tableColumns: [],
+  selectedTableColumns: [],
 });
 
 export const loadingState = Immutable({
@@ -245,6 +247,24 @@ export const successState = Immutable({
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
+  tableColumns: [],
+  selectedTableColumns: [],
+});
+export const settingsSuccessState = Immutable({
+  tables: {
+    loading: false,
+    id: 22,
+    name: 'Katello::Subscriptions',
+    columns: [
+      'id',
+      'product_id',
+      'contract_number',
+      'start_date',
+      'end_date',
+    ],
+    created_at: '2018-06-12 17:05:03 -0600',
+    updated_at: '2018-06-20 13:55:42 -0600',
+  },
 });
 
 export const errorState = Immutable({
@@ -258,6 +278,8 @@ export const errorState = Immutable({
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
+  tableColumns: [],
+  selectedTableColumns: [],
 });
 
 export const quantitiesSuccessState = Immutable({
@@ -359,3 +381,68 @@ export const loadQuantitiesSuccessActions = [
     response: quantitiesRequestSuccessResponse,
   },
 ];
+export const tableColumns = [
+  {
+    key: 'id',
+    label: 'Name',
+    value: true,
+  },
+  {
+    key: 'product_id',
+    label: 'SKU',
+    value: true,
+  },
+  {
+    key: 'contract_number',
+    label: 'Contract',
+    value: true,
+  },
+  {
+    key: 'start_date',
+    label: 'Start Date',
+    value: true,
+  },
+  {
+    key: 'end_date',
+    label: 'End Date',
+    value: true,
+  },
+  {
+    key: 'virt_who',
+    label: 'Requires Virt-Who',
+    value: false,
+  },
+  {
+    key: 'consumed',
+    label: 'Consumed',
+    value: false,
+  },
+  {
+    key: 'quantity',
+    label: 'Entitlements',
+    value: false,
+  },
+];
+export const loadTableColumnsSuccessAction = [
+  {
+    type: 'UPDATE_SUBSCRIPTION_COLUMNS',
+    payload: {
+      enabledColumns: [
+        'id',
+        'product_id',
+        'contract_number',
+        'start_date',
+        'end_date',
+      ],
+    },
+  },
+  {
+    payload: {
+      tableColumns,
+    },
+    type: 'SUBSCRIPTIONS_COLUMNS_REQUEST',
+  },
+];
+export const loadingColumnsState = Immutable({
+  ...successState,
+});

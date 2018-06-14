@@ -46,6 +46,18 @@ exports[`subscriptions page should render 1`] = `
               />
             </FormGroup>
             <div
+              className="option-tooltip-container"
+            >
+              <OptionTooltip
+                icon="fa-columns"
+                id="subscriptionTableTooltip"
+                onChange={[Function]}
+                onClose={[Function]}
+                options={Array []}
+                rootClose={true}
+              />
+            </div>
+            <div
               className="toolbar-pf-action-right"
             >
               <FormGroup
@@ -192,9 +204,12 @@ exports[`subscriptions page should render 1`] = `
               ],
               "search": undefined,
               "searchIsActive": false,
+              "selectedTableColumns": Array [],
+              "tableColumns": Array [],
               "tasks": Array [],
             }
           }
+          tableColumns={Array []}
           task={null}
           toggleDeleteButton={[Function]}
           updateQuantity={[Function]}

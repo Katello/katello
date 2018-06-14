@@ -18,8 +18,19 @@ exports[`subscriptions table should render a loading state 1`] = `
       },
       "quantitiesLoading": false,
       "results": Array [],
+      "selectedTableColumns": Array [],
+      "tableColumns": Array [],
       "tasks": Array [],
     }
+  }
+  tableColumns={
+    Array [
+      "id",
+      "product_id",
+      "contract_number",
+      "start_date",
+      "end_date",
+    ]
   }
   task={
     Object {
@@ -105,21 +116,6 @@ exports[`subscriptions table should render a table 1`] = `
         >
           End Date
         </th>
-        <th
-          class=""
-        >
-          Requires Virt-Who
-        </th>
-        <th
-          class=""
-        >
-          Consumed
-        </th>
-        <th
-          class=""
-        >
-          Entitlements
-        </th>
       </tr>
     </thead>
     <tbody>
@@ -165,20 +161,6 @@ exports[`subscriptions table should render a table 1`] = `
         >
           2047-09-14 15:18:44 -0500
         </td>
-        <td>
-          <span
-            aria-hidden="true"
-            class="fa fa-minus"
-          />
-        </td>
-        <td
-          class=""
-        >
-          1
-        </td>
-        <td>
-          Unlimited
-        </td>
       </tr>
       <tr
         class=""
@@ -221,20 +203,6 @@ exports[`subscriptions table should render a table 1`] = `
           class=""
         >
           2047-09-18 16:54:36 -0500
-        </td>
-        <td>
-          <span
-            aria-hidden="true"
-            class="fa fa-minus"
-          />
-        </td>
-        <td
-          class=""
-        >
-          0
-        </td>
-        <td>
-          Unlimited
         </td>
       </tr>
     </tbody>

@@ -10,6 +10,8 @@ import {
   SUBSCRIPTIONS_QUANTITIES_REQUEST,
   SUBSCRIPTIONS_QUANTITIES_SUCCESS,
   SUBSCRIPTIONS_QUANTITIES_FAILURE,
+  SUBSCRIPTIONS_COLUMNS_REQUEST,
+  UPDATE_SUBSCRIPTION_COLUMNS,
   UPDATE_QUANTITY_REQUEST,
   UPDATE_QUANTITY_SUCCESS,
   UPDATE_QUANTITY_FAILURE,
@@ -25,6 +27,8 @@ const initialState = Immutable({
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
+  tableColumns: [],
+  selectedTableColumns: [],
 });
 
 const mapQuantities = (pools) => {
@@ -46,7 +50,12 @@ export default (state = initialState, action) => {
     case UPDATE_QUANTITY_REQUEST:
     case DELETE_SUBSCRIPTIONS_REQUEST:
       return state.set('loading', true);
-
+    case SUBSCRIPTIONS_COLUMNS_REQUEST:
+      return state
+        .set('tableColumns', action.payload.tableColumns);
+    case UPDATE_SUBSCRIPTION_COLUMNS:
+      return state
+        .set('selectedTableColumns', action.payload.enabledColumns);
     case SUBSCRIPTIONS_SUCCESS: {
       const {
         page, per_page, subtotal, results, // eslint-disable-line camelcase

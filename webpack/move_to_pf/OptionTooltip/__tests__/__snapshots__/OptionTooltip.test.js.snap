@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OptionTooltip renders  1`] = `
+<OverlayTrigger
+  defaultOverlayShown={false}
+  onEnter={[Function]}
+  onExit={[Function]}
+  overlay={
+    <Popover
+      bsClass="popover"
+      className="option-tooltip"
+      id="test"
+      placement="right"
+    >
+      <ul />
+    </Popover>
+  }
+  placement="bottom"
+  rootClose={true}
+  trigger={
+    Array [
+      "click",
+    ]
+  }
+>
+  <i
+    className="fa test tooltip-button"
+  />
+</OverlayTrigger>
+`;
+
+exports[`OptionTooltip renders a list of options with default values  1`] = `
+<OverlayTrigger
+  defaultOverlayShown={false}
+  onEnter={[Function]}
+  onExit={[Function]}
+  overlay={
+    <Popover
+      bsClass="popover"
+      className="option-tooltip"
+      id="test"
+      placement="right"
+    >
+      <ul>
+        <li>
+          <input
+            checked={true}
+            id="option1"
+            name="option1"
+            onChange={[Function]}
+            type="checkbox"
+          />
+          <span>
+            One
+          </span>
+        </li>
+        <li>
+          <input
+            checked={false}
+            id="option2"
+            name="option2"
+            onChange={[Function]}
+            type="checkbox"
+          />
+          <span>
+            Two
+          </span>
+        </li>
+      </ul>
+    </Popover>
+  }
+  placement="bottom"
+  rootClose={true}
+  trigger={
+    Array [
+      "click",
+    ]
+  }
+>
+  <i
+    className="fa test tooltip-button"
+  />
+</OverlayTrigger>
+`;

@@ -2,11 +2,15 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import SubscriptionsPage from '../SubscriptionsPage';
-import { successState } from './subscriptions.fixtures';
-import { loadSubscriptions, updateQuantity } from '../SubscriptionActions';
+import { successState, settingsSuccessState } from './subscriptions.fixtures';
+import { loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
 import { loadSetting } from '../../../move_to_foreman/Settings/SettingsActions';
+import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('../../../move_to_foreman/foreman_toast_notifications');
+const loadTables = () => new Promise((resolve) => {
+  resolve();
+});
 
 describe('subscriptions page', () => {
   const noop = () => {};
@@ -16,7 +20,12 @@ describe('subscriptions page', () => {
     const page = shallow(<SubscriptionsPage
       organization={organization}
       subscriptions={successState}
+      subscriptionTableSettings={settingsSuccessState}
       loadSetting={loadSetting}
+      loadTables={loadTables}
+      loadTableColumns={loadTableColumns}
+      createColumns={createColumns}
+      updateColumns={updateColumns}
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
       pollTaskUntilDone={noop}

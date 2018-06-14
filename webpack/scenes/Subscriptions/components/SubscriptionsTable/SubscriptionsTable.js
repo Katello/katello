@@ -140,7 +140,7 @@ class SubscriptionsTable extends Component {
   }
 
   render() {
-    const { subscriptions, emptyState } = this.props;
+    const { subscriptions, emptyState, tableColumns } = this.props;
     const { groupedSubscriptions } = this.state;
     const allSubscriptionResults = subscriptions.results;
 
@@ -235,11 +235,13 @@ class SubscriptionsTable extends Component {
       bodyMessage = __('No subscriptions match your search criteria.');
     }
 
+    const alwaysDisplayColumns = ['select'];
     const columnsDefinition = createSubscriptionsTableSchema(
       inlineEditController,
       selectionController,
       groupingController,
-    );
+    ).filter(column => tableColumns.includes(column.property) ||
+    alwaysDisplayColumns.includes(column.property));
 
     return (
       <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
@@ -329,6 +331,7 @@ class SubscriptionsTable extends Component {
 }
 
 SubscriptionsTable.propTypes = {
+  tableColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   emptyState: PropTypes.shape({}).isRequired,

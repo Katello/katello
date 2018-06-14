@@ -8,15 +8,24 @@ import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions'
 
 jest.mock('../../../../../move_to_foreman/foreman_toast_notifications');
 jest.useFakeTimers();
+const tableColumns = [
+  'id',
+  'product_id',
+  'contract_number',
+  'start_date',
+  'end_date',
+];
 describe('subscriptions table', () => {
   it('should render a table', async () => {
     // Wrapping SubscriptionTable in MemoryRouter here since it contains
     // a Link componenent, which can't be used outside a Router
     /* eslint-disable react/jsx-indent */
+
     const page = render(<MemoryRouter>
           <SubscriptionsTable
             subscriptions={successState}
             loadSubscriptions={loadSubscriptions}
+            tableColumns={tableColumns}
             updateQuantity={updateQuantity}
             subscriptionDeleteModalOpen={false}
             onSubscriptionDeleteModalClose={() => { }}
@@ -45,6 +54,7 @@ describe('subscriptions table', () => {
         onSubscriptionDeleteModalClose={() => {}}
         onDeleteSubscriptions={() => {}}
         toggleDeleteButton={() => {}}
+        tableColumns={[]}
       />
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
@@ -55,6 +65,7 @@ describe('subscriptions table', () => {
     const page = mount(<SubscriptionsTable
       subscriptions={loadingState}
       loadSubscriptions={loadSubscriptions}
+      tableColumns={tableColumns}
       updateQuantity={updateQuantity}
       subscriptionDeleteModalOpen={false}
       onSubscriptionDeleteModalClose={() => { }}

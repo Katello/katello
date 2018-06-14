@@ -4,6 +4,7 @@ import redHatRepositories from './RedHatRepositories';
 import { subscriptions } from '../../scenes/Subscriptions';
 import { upstreamSubscriptions } from '../../scenes/Subscriptions/UpstreamSubscriptions';
 import { manifestHistory } from '../../scenes/Subscriptions/Manifest';
+import settings from '../../scenes/Settings';
 import { subscriptionDetails } from '../../scenes/Subscriptions/Details';
 import { setOrganization } from '../../components/SelectOrg/SetOrganization';
 
@@ -13,6 +14,7 @@ export default combineReducers({
   subscriptions,
   upstreamSubscriptions,
   manifestHistory,
+  settings,
   subscriptionDetails,
   setOrganization,
 });
