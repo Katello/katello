@@ -6,7 +6,8 @@ extends 'katello/api/v2/common/timestamps'
 attributes :content_type
 attributes :docker_upstream_name
 attributes :mirror_on_sync, :verify_ssl_on_sync
-attributes :unprotected, :full_path, :checksum_type, :container_repository_name
+attributes :unprotected, :full_path, :checksum_type
+attributes :container_repository_name
 attributes :download_policy
 attributes :url,
            :relative_path
@@ -71,5 +72,5 @@ if @object && @object.library_instance_id.nil?
 end
 
 child :environment => :environment do |_repo|
-  attribute :id
+  attribute :id, :registry_unauthenticated_pull
 end

@@ -13,16 +13,27 @@
     <dt translate>Label</dt>
     <dd>{{ environment.label }}</dd>
 
-    <dt translate>Registry Name Pattern</dt>
-    <dd bst-edit-textarea="environment.registry_name_pattern"
-        on-save="save(environment)"
-        readonly="denied('edit_lifecycle_environments', environment)">
-    </dd>
-
     <dt translate>Description</dt>
     <dd bst-edit-textarea="environment.description"
         on-save="save(environment)"
         readonly="denied('edit_lifecycle_environments', environment) || environment.library">
     </dd>
   </dl>
+
+  <h4 translate>Container Image Registry</h4>
+
+  <dl class="dl-horizontal dl-horizontal-left">
+    <dt translate>Unauthenticated Pull</dt>
+    <dd bst-edit-checkbox="environment.registry_unauthenticated_pull"
+        formatter="booleanToYesNo"
+        on-save="save(environment)"
+        readonly="denied('edit_lifecycle_environments', environment)">
+    </dd>
+    <dt translate>Registry Name Pattern</dt>
+    <dd bst-edit-textarea="environment.registry_name_pattern"
+        on-save="save(environment)"
+        readonly="denied('edit_lifecycle_environments', environment)">
+    </dd>
+  </dl>
+
 </div>

@@ -2,7 +2,8 @@ module Katello
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     before_action :disable_strong_params
     before_action :confirm_settings
-    skip_before_action :authorize, except: [:token]
+    skip_before_action :authorize
+    before_action :optional_authorize, only: [:token]
     before_action :registry_authorize, except: [:token]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
     before_action :authorize_repository_write, only: [:push_manifest]
@@ -36,7 +37,19 @@ module Katello
                                              "scope=\"repository:registry:pull,push\""
     end
 
+    def optional_authorize
+      @repository = find_scope_repository
+      if @repository && @repository.environment.registry_unauthenticated_pull
+        true
+      else
+        authorize
+      end
+    end
+
     def registry_authorize
+      @repository = find_readable_repository
+      return true if request.method == 'GET' && @repository && @repository.environment.registry_unauthenticated_pull
+
       token = request.headers['Authorization']
       if token
         token_type, token = token.split
@@ -57,8 +70,12 @@ module Katello
       return false
     end
 
+    def find_writable_repository
+      Repository.docker_type.syncable.find_by_container_repository_name(params[:repository])
+    end
+
     def authorize_repository_write
-      @repository = Repository.syncable.find_by_container_repository_name(params[:repository])
+      @repository = find_writable_repository
       unless @repository
         not_found params[:repository]
         return false
@@ -77,12 +94,17 @@ module Katello
       Repository.where("#{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments)
     end
 
-    def find_repository
-      readable_repositories.find_by_container_repository_name(params[:repository])
+    def find_readable_repository
+      return nil unless params[:repository]
+      repository = Repository.docker_type.find_by_container_repository_name(params[:repository])
+      if repository && !repository.environment.registry_unauthenticated_pull
+        repository = readable_repositories.docker_type.find_by_container_repository_name(params[:repository])
+      end
+      repository
     end
 
     def authorize_repository_read
-      @repository = find_repository
+      @repository = find_readable_repository
       unless @repository
         not_found params[:repository]
         return false
@@ -102,15 +124,20 @@ module Katello
     end
 
     def token
-      personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
-      if personal_token.nil?
-        personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: 6.minutes.from_now)
-        personal_token.generate_token
-        personal_token.save!
+      if @repository && @repository.environment.registry_unauthenticated_pull
+        personal_token = OpenStruct.new(token: 'unauthenticated', issued_at: Time.now, expires_at: Time.now + 3)
       else
-        personal_token.expires_at = 6.minutes.from_now
-        personal_token.save!
+        personal_token = PersonalAccessToken.where(user_id: User.current.id, name: 'registry').first
+        if personal_token.nil?
+          personal_token = PersonalAccessToken.new(user: User.current, name: 'registry', expires_at: 6.minutes.from_now)
+          personal_token.generate_token
+          personal_token.save!
+        else
+          personal_token.expires_at = 6.minutes.from_now
+          personal_token.save!
+        end
       end
+
       response.headers['Docker-Distribution-API-Version'] = 'registry/2.0'
       render json: { token: personal_token.token, expires_at: personal_token.expires_at, issued_at: personal_token.created_at }
     end
@@ -401,6 +428,14 @@ module Katello
         end
         logger.debug "Wrote blob #{digest} to #{layer}"
       end
+    end
+
+    def find_scope_repository
+      scope = params['scope']
+      return nil unless scope
+
+      scopes = scope.split(':')
+      scopes[2] == 'pull' ? Repository.docker_type.find_by_container_repository_name(scopes[1]) : nil
     end
 
     def disable_strong_params
