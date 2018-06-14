@@ -26,6 +26,35 @@ module Katello
       assert content_view_puppet_module.save!
     end
 
+    def test_create_duplicate_name
+      motd1 = katello_puppet_modules(:puppetlabs_motd)
+      motd2 = katello_puppet_modules(:acmecorp_motd)
+
+      ContentViewPuppetModule.create!(:uuid => motd1.uuid, :content_view => @library_view)
+
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => motd2.uuid,
+        :content_view => @library_view
+      )
+
+      refute content_view_puppet_module.valid?
+      assert content_view_puppet_module.errors.full_messages.first =~ /already a module named "motd"/
+    end
+
+    def test_create_duplicate_uuid
+      motd = katello_puppet_modules(:puppetlabs_motd)
+
+      ContentViewPuppetModule.create!(:uuid => motd.uuid, :content_view => @library_view)
+
+      content_view_puppet_module = ContentViewPuppetModule.new(
+        :uuid => motd.uuid,
+        :content_view => @library_view
+      )
+
+      refute content_view_puppet_module.valid?
+      assert content_view_puppet_module.errors.full_messages.join =~ /Uuid has already been taken/
+    end
+
     def test_search_name
       assert_equal @puppet_module, ContentViewPuppetModule.search_for("name = \"#{@puppet_module.name}\"").first
     end

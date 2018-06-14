@@ -5,7 +5,7 @@ module Katello
 
     validates_lengths_from_database
     validates :content_view_id, :presence => true
-    validates :name, :uniqueness => { :scope => :content_view_id }, :allow_blank => true
+    validates :name, :uniqueness => { :scope => :content_view_id, :message => _('There is already a module named "%{value}" in this content view.') }
     validates :uuid, :uniqueness => { :scope => :content_view_id }, :allow_blank => true
 
     validates_with Validators::ContentViewPuppetModuleValidator
@@ -14,6 +14,8 @@ module Katello
     scoped_search :on => :author, :complete_value => true
     scoped_search :on => :uuid, :complete_value => true
     scoped_search :on => :name, :relation => :content_view, :rename => :content_view_name
+
+    before_validation :set_attributes
 
     def puppet_module
       PuppetModule.find_by_uuid(self.uuid)
@@ -37,8 +39,6 @@ module Katello
       latest_from_list = puppet_module_list.where(:author => self.author).order(:sortable_version => :desc).first
       self.computed_version.eql?(latest_from_list.try(:version))
     end
-
-    before_save :set_attributes
 
     private
 
