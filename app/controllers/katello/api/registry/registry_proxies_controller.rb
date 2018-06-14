@@ -1,10 +1,11 @@
 module Katello
+  # rubocop:disable Metrics/ClassLength
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     before_action :disable_strong_params
     before_action :confirm_settings
     skip_before_action :authorize
     before_action :optional_authorize, only: [:token]
-    before_action :registry_authorize, except: [:token]
+    before_action :registry_authorize, except: [:token, :v1_search]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
     before_action :authorize_repository_write, only: [:push_manifest]
     skip_before_action :check_content_type, :only => [:start_upload_blob, :upload_blob, :finish_upload_blob,
@@ -85,13 +86,16 @@ module Katello
 
     # Reduce visible repos to include lifecycle env permissions
     # http://projects.theforeman.org/issues/22914
+    # Also include repositories in lifecycle environments with registry_unauthenticated_pull=true
     def readable_repositories
       table_name = Repository.table_name
-      in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products)).select(:id)
+      in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products))
+                      .select(:id)
       in_environments = Repository.where(:environment_id => Katello::KTEnvironment.authorized(:view_lifecycle_environments)).select(:id)
+      in_unauth_environments = Repository.joins(:environment).where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id)
       in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
       in_versions = Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
-      Repository.where("#{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments)
+      Repository.where("#{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?) or #{table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments, in_unauth_environments)
     end
 
     def find_readable_repository
@@ -273,13 +277,15 @@ module Katello
     end
 
     def v1_search
+      authenticate # to set current_user, not to enforce
       options = {
         resource_class: Katello::Repository
       }
       params[:per_page] = params[:n] || 25
       params[:search] = params[:q]
+
       search_results = scoped_search(readable_repositories.where(content_type: 'docker').distinct,
-                                   :container_repository_name, :asc, options)
+                                     :container_repository_name, :asc, options)
       results = {
         num_results: search_results[:subtotal],
         query: params[:search]

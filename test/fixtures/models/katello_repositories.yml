@@ -444,9 +444,24 @@ busybox:
   url:                  'http://docker.io'
   docker_upstream_name: 'busybox'
 
+busybox_dev:
+  name:                 busybox
+  pulp_id:              "Default_Organization-Test-busybox-dev"
+  content_id:           1
+  content_type:         docker
+  label:                busybox
+  relative_path:        'ACME_Corporation/dev/busybox'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
+  unprotected:           <%= true %>
+  url:                  'http://docker.io'
+  docker_upstream_name: 'busybox'
+
 busybox2:
   name:                 busybox
-  pulp_id:              "Default_Organization-Test-busybox2-library"
+  pulp_id:              "Default_Organization-Test-busybox2-dev"
   content_id:           1
   content_type:         docker
   label:                busybox

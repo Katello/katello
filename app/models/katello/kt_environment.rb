@@ -221,6 +221,12 @@ module Katello
       self.repositories.readable.where(:content_type => Katello::Repository::PUPPET_TYPE)
     end
 
+    def update_container_repositories(registry_unauthenticated_pull)
+      self.repositories.readable.where(:content_type => Katello::Repository::DOCKER_TYPE).each do |repository|
+        repository.update_attributes!(registry_unauthenticated_pull: registry_unauthenticated_pull)
+      end
+    end
+
     def as_json(_options = {})
       to_ret = self.attributes
       to_ret['prior'] = self.prior && self.prior.name

@@ -248,6 +248,33 @@ module Katello
                                     { "name" => "published_library_view-1_0-puppet_product-busybox", "description" => nil }]
                     )
       end
+
+      it "show unauthenticated repositories" do
+        repo = katello_repositories(:busybox_dev)
+        repo.set_container_repository_name
+        assert repo.save!
+        repo.environment.registry_unauthenticated_pull = true
+        assert repo.environment.save!
+
+        @controller.stubs(:authenticate).returns(false)
+        User.current = nil
+        get :v1_search, params: { n: 2 }
+        assert true
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal 1, body["results"].length
+        assert_equal "dev_label-published_dev_view-puppet_product-busybox", body["results"][0]["name"]
+      end
+
+      it "show two repositories" do
+        User.current = User.find(users('admin').id)
+
+        get :v1_search, params: { n: 4 }
+        assert true
+        assert_response 200
+        body = JSON.parse(response.body)
+        assert_equal body["results"].length, 4
+      end
     end
 
     describe "docker pull" do
