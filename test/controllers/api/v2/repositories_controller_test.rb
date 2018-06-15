@@ -694,7 +694,7 @@ module Katello
     def test_remove_content
       @repository.rpms << @rpm
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
-                                           @repository, [@rpm], sync_capsule: true).once.returns(::ForemanTasks::Task.new)
+                                           @repository, [@rpm], sync_capsule: true).once.returns(::ForemanTasks::Task::DynflowTask.new)
 
       put :remove_content, params: { :id => @repository.id, :ids => [@rpm.uuid] }
 
