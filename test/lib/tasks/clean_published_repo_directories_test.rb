@@ -19,7 +19,7 @@ module Katello
       Dir.stubs(:glob).with('/var/lib/pulp/published/yum/master/yum_distributor/*').returns(['Default_Organization-Test-busybox', 'Default_Organization-Test-ostree', 'fedora_17_dev_library_view'])
       ENV['COMMIT'] = 'true'
       ForemanTasks.expects(:sync_task).with(Actions::Katello::Repository::MetadataGenerate,
-                                            Katello::Repository.where(pulp_id: 'Fedora_17').first).returns(ForemanTasks::Task.new)
+                                            Katello::Repository.where(pulp_id: 'Fedora_17').first).returns(ForemanTasks::Task::DynflowTask.new)
 
       Rake.application.invoke_task('katello:clean_published_repo_directories')
     end
