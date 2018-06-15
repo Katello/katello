@@ -9,6 +9,7 @@ module Actions
           pool_ids = []
           sequence do
             pools_with_quantities = pools_with_quantities_params.map do |pool_with_quantity|
+              #fail _("Pool with quantity")
               ::Katello::PoolWithQuantities.fetch(pool_with_quantity)
             end
             cp_consumer = host.subscription_facet.candlepin_consumer

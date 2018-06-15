@@ -33,8 +33,10 @@ angular.module('Bastion.subscriptions').service('SubscriptionsHelper',
             angular.forEach(table.getSelected(), function (subscription) {
                 if (subscription['multi_entitlement']) {
                     amount = subscription.amount;
+                    console.log(amount);
                     if (!amount) {
                         amount = 0;
+                        console.log("Pushing 0");
                     }
                 } else {
                     amount = 1;
