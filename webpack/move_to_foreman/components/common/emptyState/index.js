@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { EmptyState as PfEmptyState, Button } from 'patternfly-react';
+import { LinkContainer } from 'react-router-bootstrap';
 
 const EmptyState = (props) => {
   const {
@@ -29,18 +30,22 @@ const EmptyState = (props) => {
       )}
       {action && (
         <PfEmptyState.Action>
-          <Button href={action.url} bsStyle="primary" bsSize="large">
-            {action.title}
-          </Button>
+          <LinkContainer to={action.url}>
+            <Button href={action.url} bsStyle="primary" bsSize="large">
+              {action.title}
+            </Button>
+          </LinkContainer>
         </PfEmptyState.Action>
       )}
       {secondayActions && (
         <PfEmptyState.Action secondary>
           {secondayActions.map(item => (
-            <Button href={action.url} title={action.title}>
-              {item.title}
-            </Button>
-              ))}
+            <LinkContainer to={item.url}>
+              <Button href={item.url} title={item.title}>
+                {item.title}
+              </Button>
+            </LinkContainer>
+          ))}
         </PfEmptyState.Action>
         )}
     </PfEmptyState>

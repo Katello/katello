@@ -27,15 +27,17 @@ describe('subscriptions table', () => {
   /* eslint-enable react/jsx-indent */
 
   it('should render an empty state', async () => {
-    const page = render(<SubscriptionsTable
-      subscriptions={emptyState}
-      loadSubscriptions={loadSubscriptions}
-      updateQuantity={updateQuantity}
-      subscriptionDeleteModalOpen={false}
-      onSubscriptionDeleteModalClose={() => { }}
-      onDeleteSubscriptions={() => {}}
-      toggleDeleteButton={() => {}}
-    />);
+    const page = render(<MemoryRouter>
+      <SubscriptionsTable
+        subscriptions={emptyState}
+        loadSubscriptions={loadSubscriptions}
+        updateQuantity={updateQuantity}
+        subscriptionDeleteModalOpen={false}
+        onSubscriptionDeleteModalClose={() => {}}
+        onDeleteSubscriptions={() => {}}
+        toggleDeleteButton={() => {}}
+      />
+                        </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
   });
 
