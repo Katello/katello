@@ -20,7 +20,7 @@ export const links = [
     component: UpstreamSubscriptions,
   },
   {
-    path: 'xui/subscriptions/:id',
+    path: "xui/subscriptions/:id(\[0-9]*$\)",
     component: SubscriptionDetails,
   },
 ];
