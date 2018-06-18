@@ -27,7 +27,6 @@ class SubscriptionsPage extends Component {
       manifestModalOpen: false,
       subscriptionDeleteModalOpen: false,
       disableDeleteButton: true,
-      polledTask: null,
       showTaskModal: false,
       searchQuery: '',
     };
@@ -35,6 +34,35 @@ class SubscriptionsPage extends Component {
 
   componentDidMount() {
     this.loadData();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const nextTaskId = nextProps.tasks[0] && nextProps.tasks[0].id;
+
+    if (nextProps.tasks.length === 0 && prevState.polledTask != null) {
+      return { showTaskModal: false, polledTask: undefined };
+    } else if (nextProps.tasks.length > 0 && nextTaskId !== prevState.polledTask) {
+      return {
+        showTaskModal: true,
+        manifestModalOpen: false,
+        polledTask: nextProps.tasks[0].id,
+      };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps) {
+    const { tasks } = this.props;
+    const numberOfTasks = tasks.length;
+    const numberOfPrevTasks = prevProps.tasks.length;
+    let task;
+
+    if (numberOfTasks > 0) {
+      if (numberOfPrevTasks === 0 || prevProps.tasks[0].id !== tasks[0].id) {
+        [task] = this.props.tasks;
+        this.handleDoneTask(task);
+      }
+    }
   }
 
   getDisabledReason(deleteButton) {
@@ -53,16 +81,6 @@ class SubscriptionsPage extends Component {
     return disabledReason;
   }
 
-  showTaskModal(show) {
-    if (this.state.showTaskModal !== show) {
-      this.setState({ showTaskModal: show });
-
-      if (show && this.state.manifestModalOpen) {
-        this.setState({ manifestModalOpen: false });
-      }
-    }
-  }
-
   loadData() {
     this.props.pollBulkSearch({
       search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
@@ -77,23 +95,25 @@ class SubscriptionsPage extends Component {
 
   handleDoneTask(taskToPoll) {
     const POLL_TASK_INTERVAL = 5000;
+    const { pollTaskUntilDone, loadSubscriptions } = this.props;
 
-    if (!this.state.polledTask) {
-      this.setState({ polledTask: taskToPoll });
-      this.props.pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL).then((task) => {
+    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL)
+      .then((task) => {
         function getErrors() {
           return (
             <ul>
-              {
-                task.humanized.errors.map(error => <li key={error}> {error} </li>)
-              }
+              {task.humanized.errors.map(error => (
+                <li key={error}> {error} </li>
+              ))}
             </ul>
           );
         }
 
         const message = (
           <span>
-            <span>{__(`Task ${task.humanized.action} completed with a result of ${task.result}`)} </span>
+            <span>
+              {__(`Task ${task.humanized.action} completed with a result of ${task.result}.`) + ' '}
+            </span>
             {task.errors ? getErrors() : ''}
             <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
               {__('Click here to go to the tasks page for the task.')}
@@ -101,11 +121,13 @@ class SubscriptionsPage extends Component {
           </span>
         );
 
-        notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: task.result });
+        notify({
+          message: ReactDOMServer.renderToStaticMarkup(message),
+          type: task.result,
+        });
 
-        this.props.loadSubscriptions();
+        loadSubscriptions();
       });
-    }
   }
 
   render() {
@@ -118,13 +140,6 @@ class SubscriptionsPage extends Component {
 
     if (taskInProgress) {
       [task] = tasks;
-      this.handleDoneTask(task);
-    }
-
-    if (task) {
-      this.showTaskModal(true);
-    } else {
-      this.showTaskModal(false);
     }
 
     const onSearch = (search) => {
