@@ -34,11 +34,41 @@ module Katello
       assert_template "katello/api/v2/puppet_modules/index"
     end
 
+    test_attributes :pid => 'eafc7a71-d550-4983-9941-b87aa57b83e9'
+    def test_index_by_repo_empty_results
+      repo = katello_repositories(:dev_p_forge)
+      get :index, params: { :repository_id => repo.id }
+      assert_response :success
+      assert_template "katello/api/v2/puppet_modules/index"
+      results = JSON.parse(response.body)
+      assert results.key?('results')
+      assert_empty results['results']
+    end
+
+    test_attributes :pid => '5337b2be-e207-4580-8407-19b88cb40403'
+    def test_index_by_repo_single_result
+      repo = katello_repositories(:dev_p_forge)
+      repo_puppet_module = RepositoryPuppetModule.new(:repository => repo, :puppet_module => @puppet_module)
+      repo_puppet_module.save!
+      get :index, params: { :repository_id => repo.id }
+      results = JSON.parse(response.body)
+      assert results.key?('results')
+      puppet_modules = results['results']
+      assert_equal 1, puppet_modules.length
+      assert_equal @puppet_module.id, puppet_modules[0]['id']
+      assert_equal @puppet_module.name, puppet_modules[0]['name']
+    end
+
     def test_index_by_repo
       get :index, params: { :repository_id => @repo.id }
 
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
+      results = JSON.parse(response.body)
+      assert results.key?('results')
+      puppet_modules = results['results']
+      refute_empty puppet_modules
+      assert_equal %w[abrt dhcp foreman], puppet_modules.map { |pm| pm['name'] }.sort
     end
 
     def test_index_with_environment_id
@@ -48,6 +78,32 @@ module Katello
 
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
+    end
+
+    test_attributes :pid => '3a59e2fc-5c95-405e-bf4a-f1fe78e73300'
+    def test_index_with_content_view_version_empty_results
+      get :index, params: { :content_view_version_id => katello_content_view_versions(:library_view_version_2) }
+
+      assert_response :success
+      results = JSON.parse(@response.body)
+      assert results.key?('results')
+      assert_empty results['results']
+    end
+
+    test_attributes :pid => 'cc358a91-8640-48e3-851d-383e55ba42c3'
+    def test_index_with_content_view_version_single_result
+      puppet_env = katello_content_view_puppet_environments(:dev_view_puppet_environment)
+      ContentViewPuppetEnvironment.stubs(:archived).returns([puppet_env])
+
+      get :index, params: { :content_view_version_id => puppet_env.content_view_version.id }
+
+      assert_response :success
+      results = JSON.parse(response.body)
+      assert results.key?('results')
+      assert_equal 1, results['results'].length
+      puppet_module = results['results'][0]
+      assert_equal puppet_module['id'], @puppet_module.id
+      assert_equal puppet_module['name'], @puppet_module.name
     end
 
     def test_index_with_content_view_version
