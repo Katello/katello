@@ -8,6 +8,10 @@ import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './ManifestHistoryTableSchema';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
 import DeleteManifestModalText from './DeleteManifestModalText';
+import {
+  BLOCKING_FOREMAN_TASK_TYPES,
+  MANIFEST_TASKS_BULK_SEARCH_ID,
+} from '../SubscriptionConstants';
 
 class ManageManifestModal extends Component {
   constructor(props) {
@@ -25,6 +29,8 @@ class ManageManifestModal extends Component {
       'uploadManifest',
       'refreshManifest',
       'deleteManifest',
+      'manifestExists',
+      'disabledTooltipText',
     ]);
   }
 
@@ -45,6 +51,14 @@ class ManageManifestModal extends Component {
     return null;
   }
 
+  componentDidUpdate(prevProp, prevState) {
+    const { actionInProgress } = this.state;
+
+    if (prevState.actionInProgress && !actionInProgress) {
+      this.props.loadOrganization();
+    }
+  }
+
   loadData() {
     this.props.loadManifestHistory();
   }
@@ -59,10 +73,10 @@ class ManageManifestModal extends Component {
   }
 
   uploadManifest(fileList) {
-    if (fileList.length > 0) {
-      this.props.uploadManifest(fileList[0]).then(this.props.loadOrganization);
-    }
     this.setState({ actionInProgress: true });
+    if (fileList.length > 0) {
+      this.props.uploadManifest(fileList[0]);
+    }
   }
 
   refreshManifest() {
@@ -71,8 +85,15 @@ class ManageManifestModal extends Component {
   }
 
   deleteManifest() {
-    this.props.deleteManifest().then(this.props.loadOrganization);
     this.setState({ actionInProgress: true });
+    this.props.deleteManifest()
+      .then(() =>
+        this.props.bulkSearch({
+          search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
+          type: 'all',
+          active_only: true,
+          action_types: BLOCKING_FOREMAN_TASK_TYPES,
+        }));
     this.showDeleteManifestModal(false);
   }
 
@@ -80,6 +101,19 @@ class ManageManifestModal extends Component {
     this.setState({
       showDeleteManifestModalDialog: show,
     });
+  }
+
+  disabledTooltipText() {
+    if (this.state.actionInProgress) {
+      return __('This is disabled because a manifest task is in progress');
+    }
+    return __('This is disabled because no manifest exists');
+  }
+
+  manifestExists() {
+    const { organization } = this.props;
+
+    return organization.owner_details && organization.owner_details.upstreamConsumer;
   }
 
   render() {
@@ -135,7 +169,7 @@ class ManageManifestModal extends Component {
                     <FormControl
                       id="cdnUrl"
                       type="text"
-                      value={organization.redhat_repository_url}
+                      value={organization.redhat_repository_url || ''}
                       onChange={this.saveOrganization}
                     />
                   </Col>
@@ -178,16 +212,17 @@ class ManageManifestModal extends Component {
                       tooltipText={disabledReason}
                       tooltipPlacement="top"
                       title={__('Refresh')}
-                      disabled={actionInProgress || disableManifestActions}
+                      disabled={!this.manifestExists() ||
+                        actionInProgress || disableManifestActions}
                     />
 
                     <TooltipButton
                       onClick={() => this.showDeleteManifestModal(true)}
                       tooltipId="delete-manifest-button-tooltip"
-                      tooltipText={__('This is disabled because a manifest task is in progress.')}
+                      tooltipText={this.disabledTooltipText()}
                       tooltipPlacement="top"
                       title={__('Delete')}
-                      disabled={actionInProgress}
+                      disabled={!this.manifestExists() || actionInProgress}
                     />
 
                     <ConfirmDialog
@@ -241,6 +276,7 @@ ManageManifestModal.propTypes = {
   manifestHistory: PropTypes.shape({}).isRequired,
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
+  bulkSearch: PropTypes.func.isRequired,
 };
 
 ManageManifestModal.defaultProps = {
