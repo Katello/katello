@@ -110,7 +110,7 @@ module Katello
       DockerMetaTag.import_meta_tags([repo2])
 
       # search for goo in repo1
-      # should be a success
+      # should be a success and only goo
       @rule.name = "goo"
       @rule.save!
 
@@ -118,9 +118,8 @@ module Katello
       clauses = filter.generate_clauses(repo1)
 
       refute_empty clauses
-      assert_equal 2, clauses["_id"]["$in"].size
-      assert_includes clauses["_id"]["$in"], schema_goo_repo1.uuid
-      assert_includes clauses["_id"]["$in"], schema1_repo1.uuid
+      assert_equal 1, clauses["_id"]["$in"].size
+      assert_equal clauses["_id"]["$in"], [schema_goo_repo1.uuid]
 
       # now search for goo in repo2
       # it should be nil
