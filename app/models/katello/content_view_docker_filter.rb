@@ -32,7 +32,7 @@ module Katello
 
       query = manifest_klass.in_repositories(repo).where("id in (#{tags_query.to_sql})")
       names = query.all.collect do |manifest|
-        manifest.docker_tags.where(:repository => repo).all.collect do |tag|
+        manifest.docker_tags.where(:repository => repo).where("name ilike ?", query_name).all.collect do |tag|
           tag.uuid
         end
       end
