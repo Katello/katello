@@ -228,6 +228,7 @@ module Katello
       product.expects(:add_repo).with(
         :label => 'Fedora_Repository',
         :name => 'Fedora Repository',
+        :description => 'My Description',
         :url => 'http://www.google.com',
         :content_type => 'yum',
         :arch => 'noarch',
@@ -247,7 +248,7 @@ module Katello
       assert_sync_task(::Actions::Katello::Repository::Create, @repository, false, true)
 
       Product.stubs(:find).returns(product)
-      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :url => 'http://www.google.com', :content_type => 'yum' }
+      post :create, params: { :name => 'Fedora Repository', :product_id => @product.id, :description => 'My Description', :url => 'http://www.google.com', :content_type => 'yum' }
       assert_response :success
       assert_template 'api/v2/common/create'
     end

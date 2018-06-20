@@ -26,6 +26,7 @@ attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :compute_o
 attributes :deb_releases, :deb_components, :deb_architectures
 attributes :ignore_global_proxy
 attributes :ignorable_content
+attributes :description
 
 if @resource.is_a?(Katello::Repository)
   if @resource.distribution_version || @resource.distribution_arch || @resource.distribution_family || @resource.distribution_variant
