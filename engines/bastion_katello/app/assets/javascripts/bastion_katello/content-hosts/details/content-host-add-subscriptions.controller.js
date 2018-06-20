@@ -39,7 +39,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostAddSubscriptionsC
             $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
         });
 
-        $scope.getAmountSelectorValues = SubscriptionsHelper.getAmountSelectorValues;
+        $scope.amountSelectorValues = SubscriptionsHelper.getAmountSelectorValues;
         $scope.showMatchHost = false;
         $scope.showMatchInstalled = false;
         $scope.showNoOverlap = false;

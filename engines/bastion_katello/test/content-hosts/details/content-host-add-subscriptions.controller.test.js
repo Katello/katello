@@ -164,6 +164,6 @@ describe('Controller: ContentHostAddSubscriptionsController', function() {
     });
 
     it("sets a local scope function for getting the selector amount values from the subscription helper", function () {
-        expect($scope.getAmountSelectorValues).toBe(SubscriptionsHelper.getAmountSelectorValues);
+        expect($scope.amountSelectorValues).toBe(SubscriptionsHelper.getAmountSelectorValues);
     });
 });

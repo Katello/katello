@@ -36,6 +36,7 @@ module Katello
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1, nil)
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_B], @consumer.filter_entitlements(1, [1, 1])
         assert_equal [ENTITLEMENT_A, ENTITLEMENT_C], @consumer.filter_entitlements(1, [1, 3])
+        assert_equal [ENTITLEMENT_A, ENTITLEMENT_B, ENTITLEMENT_C], @consumer.filter_entitlements(1)
       end
 
       def test_compliance_reasons
