@@ -41,7 +41,6 @@ module Katello
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
       results = JSON.parse(response.body)
-      assert results.key?('results')
       assert_empty results['results']
     end
 
@@ -52,7 +51,6 @@ module Katello
       repo_puppet_module.save!
       get :index, params: { :repository_id => repo.id }
       results = JSON.parse(response.body)
-      assert results.key?('results')
       puppet_modules = results['results']
       assert_equal 1, puppet_modules.length
       assert_equal @puppet_module.id, puppet_modules[0]['id']
@@ -65,7 +63,6 @@ module Katello
       assert_response :success
       assert_template "katello/api/v2/puppet_modules/index"
       results = JSON.parse(response.body)
-      assert results.key?('results')
       puppet_modules = results['results']
       refute_empty puppet_modules
       assert_equal %w[abrt dhcp foreman], puppet_modules.map { |pm| pm['name'] }.sort
@@ -86,7 +83,6 @@ module Katello
 
       assert_response :success
       results = JSON.parse(@response.body)
-      assert results.key?('results')
       assert_empty results['results']
     end
 
@@ -99,7 +95,6 @@ module Katello
 
       assert_response :success
       results = JSON.parse(response.body)
-      assert results.key?('results')
       assert_equal 1, results['results'].length
       puppet_module = results['results'][0]
       assert_equal puppet_module['id'], @puppet_module.id
