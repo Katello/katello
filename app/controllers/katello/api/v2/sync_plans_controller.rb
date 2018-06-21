@@ -107,8 +107,6 @@ module Katello
     def sync
       task = async_task(::Actions::Katello::SyncPlan::Run, @sync_plan)
       respond_for_async :resource => task
-    rescue Foreman::Exception
-      raise HttpErrors::BadRequest, _("No products within sync plan")
     end
 
     protected
