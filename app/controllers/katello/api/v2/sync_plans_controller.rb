@@ -46,8 +46,9 @@ module Katello
     param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
     param_group :sync_plan
     def create
+      Rails.logger.debug "####################Sync Plan original argument time" + sync_plan_params[:sync_date]
       sync_date = sync_plan_params[:sync_date].to_time(:utc)
-
+      Rails.logger.debug(sync_date.to_s)
       unless sync_date.is_a?(Time)
         fail _("Date format is incorrect.")
       end
@@ -55,8 +56,16 @@ module Katello
       @sync_plan = SyncPlan.new(sync_plan_params)
       @sync_plan.sync_date = sync_date
       @sync_plan.organization = @organization
+      #Here put some method to create and return foreman task recurring logic
+      # recurring_logic = ForemanTasks::RecurringLogic.new_from_cronline("*/2 * * * *")
+      # recurring_logic.save!
+      Rails.logger.debug "####################Calling new function with time " + sync_plan_params[:sync_date].to_time().localtime.to_s
+      recurring_logic = add_recurring_logic_to_sync_plan(sync_date, sync_plan_params[:interval])
+      @sync_plan.recurring_logic_id = recurring_logic.id
       @sync_plan.save!
-
+      Rails.logger.debug "####################Start rec Logic with time " + Time.zone.now.utc.to_s
+      recurring_logic.start_after(::Actions::Katello::SyncPlan::Run, sync_plan_params[:sync_date].to_time, @sync_plan)
+      #recurring_logic.start(::Actions::Katello::SyncPlan::Run, @sync_plan)
       respond_for_create(:resource => @sync_plan)
     end
 
@@ -107,8 +116,6 @@ module Katello
     def sync
       task = async_task(::Actions::Katello::SyncPlan::Run, @sync_plan)
       respond_for_async :resource => task
-    rescue Foreman::Exception
-      raise HttpErrors::BadRequest, _("No products within sync plan")
     end
 
     protected
@@ -118,6 +125,29 @@ module Katello
       fail HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @sync_plan.nil?
       @organization ||= @sync_plan.organization
       @sync_plan
+    end
+
+    def add_recurring_logic_to_sync_plan(sync_date, interval)
+      #Convert UTC time to server local timezone to form cron that can be run on server timezone
+      sync_date_local_zone = sync_date#.in_time_zone(Time.now.getlocal.zone)
+      min , hour, day = sync_date_local_zone.min, sync_date_local_zone.hour, sync_date_local_zone.wday
+      if(interval.downcase.eql? "hourly")
+        Rails.logger.debug("******Got hour")
+        cron = min.to_s + " * * * *"
+      end
+      if(interval.downcase.eql? "daily")
+      Rails.logger.debug("******Got daily")
+      cron = min.to_s + " " + hour.to_s + " * * *"
+      end
+      if(interval.downcase.eql? "weekly")
+        Rails.logger.debug("******Got weekly")
+        cron = min.to_s + " " + hour.to_s + " * * " + day.to_s
+      end
+      recurring_logic = ForemanTasks::RecurringLogic.new_from_cronline(cron)
+      if recurring_logic.save!
+          return recurring_logic
+      end
+      fail _("Error saving recurring logic")
     end
 
     def sync_plan_params

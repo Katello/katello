@@ -4,7 +4,7 @@ attributes :id, :organization_id
 attributes :name, :description
 attributes :interval, :next_sync
 attributes :created_at, :updated_at
-attributes :enabled
+attributes :enabled, :recurring_logic_id
 
 child :products => :products do |_product|
   extends 'katello/api/v2/common/syncable'

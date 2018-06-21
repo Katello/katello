@@ -154,16 +154,8 @@ module Katello
     end
 
     def test_sync
-      repo_ids = @sync_plan.products.collect { |product| product.repositories.map(&:id) }
-      repo_ids.flatten!
-
-      assert_async_task(::Actions::BulkAction) do |action_class, ids|
-        assert_equal action_class, ::Actions::Katello::Repository::Sync
-        assert_equal repo_ids, ids
-      end
-
+      assert_async_task(:Actions::Katello::SyncPlan::Run, @sync_plan)
       put :sync, params: { :id => @sync_plan.id, :organization_id => @organization.id }
-
       assert_response :success
     end
 

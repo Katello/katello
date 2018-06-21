@@ -14,7 +14,9 @@ module Actions
 
         def finalize
           sync_plan = ::Katello::SyncPlan.find(input[:sync_plan][:id])
+          recurring_logic = sync_plan.recurring_logic
           sync_plan.destroy!
+          recurring_logic.destroy!
         end
 
         def humanized_name

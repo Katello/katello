@@ -16,7 +16,7 @@ module Katello
 
     belongs_to :organization, :inverse_of => :sync_plans
     has_many :products, :class_name => "Katello::Product", :dependent => :nullify
-
+    belongs_to :foreman_tasks_recurring_logic, :inverse_of => :sync_plans
     validates_lengths_from_database
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
@@ -34,6 +34,10 @@ module Katello
       products.each do |product|
         errors.add :base, _("Can not add product %s because it is disabled.") % product.name unless product.enabled?
       end
+    end
+
+    def recurring_logic
+      ForemanTasks::RecurringLogic.find(self.recurring_logic_id)
     end
 
     def validate_sync_date

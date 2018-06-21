@@ -44,6 +44,9 @@
       <dt translate>Next Sync</dt>
       <dd>{{ syncPlan.next_sync | date:'medium' }}</dd>
 
+      <dt translate>Recurring Logic</dt>
+      <dd>{{ syncPlan.recurring_logic_id }}</dd>
+
       <dt translate>Sync Enabled</dt>
       <dd bst-edit-checkbox="syncPlan.enabled"
           readonly="denied('edit_sync_plans', syncPlan)"

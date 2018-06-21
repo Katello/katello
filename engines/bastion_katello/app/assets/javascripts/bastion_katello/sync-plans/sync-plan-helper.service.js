@@ -48,13 +48,14 @@
          * @returns $resource sync plan
          */
         this.createSyncPlan = function (syncPlan, success, error) {
+            console.log(syncPlan.startDate.getTimezoneOffset());
             var GMT_OFFSET_MILLISECONDS = syncPlan.startDate.getTimezoneOffset() * 60000,
                 syncDate = new Date(syncPlan.startDate.getTime() + GMT_OFFSET_MILLISECONDS),
                 syncTime = new Date(syncPlan.startTime || new Date());
             syncDate.setHours(syncTime.getHours());
             syncDate.setMinutes(syncTime.getMinutes());
             syncDate.setSeconds(0);
-
+            console.log(syncDate);
             syncPlan['sync_date'] = syncDate.toString();
             syncPlan.$save(success, error);
             return syncPlan;
