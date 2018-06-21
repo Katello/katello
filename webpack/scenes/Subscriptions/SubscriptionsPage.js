@@ -9,7 +9,7 @@ import { notify } from '../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../move_to_foreman/common/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
-import SubscriptionsTable from './SubscriptionsTable';
+import { SubscriptionsTable } from './components/SubscriptionsTable';
 import Search from '../../components/Search/index';
 import api, { orgId } from '../../services/api';
 import { createSubscriptionParams } from './SubscriptionActions.js';
@@ -19,6 +19,7 @@ import {
   BULK_TASK_SEARCH_INTERVAL,
 } from './SubscriptionConstants';
 
+import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class SubscriptionsPage extends Component {
         const message = (
           <span>
             <span>
-              {__(`Task ${task.humanized.action} completed with a result of ${task.result}.`) + ' '}
+              {`${__(`Task ${task.humanized.action} completed with a result of ${task.result}.`)} `}
             </span>
             {task.errors ? getErrors() : ''}
             <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
