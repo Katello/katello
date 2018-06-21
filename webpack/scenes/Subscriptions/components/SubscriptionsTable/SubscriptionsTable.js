@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { sprintf } from 'jed';
-import { cloneDeep, findIndex } from 'lodash';
+import { cloneDeep, findIndex, isEqual } from 'lodash';
 import { Spinner, Table, Alert } from 'patternfly-react';
-import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../move_to_foreman/components/common/table';
-import ConfirmDialog from '../../move_to_foreman/components/common/ConfirmDialog';
-import Dialog from '../../move_to_foreman/components/common/Dialog';
-import { columns } from './SubscriptionsTableSchema';
-import { recordsValid } from './SubscriptionValidations';
+import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../move_to_foreman/components/common/table';
+import ConfirmDialog from '../../../../move_to_foreman/components/common/ConfirmDialog';
+import Dialog from '../../../../move_to_foreman/components/common/Dialog';
+import { recordsValid } from '../../SubscriptionValidations';
+import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
+import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
 
 const emptyStateData = {
   header: __('There are no Subscriptions to display'),
@@ -39,53 +41,56 @@ ErrorAlerts.propTypes = {
   errors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const buildTableRows = (subscriptions, updatedQuantity) =>
-  subscriptions.results.map((subs) => {
-    if (updatedQuantity[subs.id]) {
-      return {
-        ...subs,
-        entitlementsChanged: true,
-        quantity: updatedQuantity[subs.id],
-        availableQuantity: subscriptions.availableQuantities[subs.id],
-      };
-    }
-    return {
-      ...subs,
-      availableQuantity: subscriptions.availableQuantities[subs.id],
-    };
-  });
-
-const buildPools = updatedQuantity =>
-  Object.entries(updatedQuantity)
-    .map(([id, quantity]) => ({
-      id,
-      quantity,
-    }));
-
 class SubscriptionsTable extends Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.subscriptions !== undefined) {
-      return {
-        rows: buildTableRows(
-          nextProps.subscriptions,
-          prevState.updatedQuantity,
-        ),
-      };
-    }
-    return null;
-  }
-
   constructor(props) {
     super(props);
+
     this.state = {
+      rows: undefined,
+      subscriptions: undefined,
+      groupdSubscriptions: undefined,
       updatedQuantity: {},
       editing: false,
-      rows: props.subscriptions.results,
       showUpdateConfirmDialog: false,
       showCancelConfirmDialog: false,
       showErrorDialog: false,
       selectedRows: [],
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      nextProps.subscriptions !== undefined &&
+      !isEqual(nextProps.subscriptions, prevState.subscriptions)
+    ) {
+      const groupdSubscriptions = groupSubscriptionsByProductId(nextProps.subscriptions);
+      const rows = buildTableRows(
+        groupdSubscriptions,
+        nextProps.subscriptions.availableQuantities,
+        prevState.updatedQuantity,
+      );
+
+      return { rows, groupdSubscriptions, subscriptions: nextProps.subscriptions };
+    }
+
+    return null;
+  }
+
+  toggleSubscriptionGroup(groupId) {
+    const { subscriptions } = this.props;
+    const { groupdSubscriptions, updatedQuantity } = this.state;
+    const { open } = groupdSubscriptions[groupId];
+
+    groupdSubscriptions[groupId].open = !open;
+
+
+    const rows = buildTableRows(
+      groupdSubscriptions,
+      subscriptions.availableQuantities,
+      updatedQuantity,
+    );
+
+    this.setState({ rows, groupdSubscriptions });
   }
 
   enableEditing(editingState) {
@@ -96,8 +101,12 @@ class SubscriptionsTable extends Component {
   }
 
   updateRows(updatedQuantity) {
+    const { groupdSubscriptions } = this.state;
+    const { subscriptions } = this.props;
+
     const rows = buildTableRows(
-      this.props.subscriptions,
+      groupdSubscriptions,
+      subscriptions.availableQuantities,
       updatedQuantity,
     );
     this.setState({ rows, updatedQuantity });
@@ -148,6 +157,17 @@ class SubscriptionsTable extends Component {
 
   render() {
     const { subscriptions } = this.props;
+    const { groupdSubscriptions } = this.state;
+
+    const groupingController = {
+      isCollapseable: ({ rowData }) =>
+        // it is the first subscription in the group
+        rowData.id === groupdSubscriptions[rowData.product_id].subscriptions[0].id &&
+        // the group contains more then one subscription
+        groupdSubscriptions[rowData.product_id].subscriptions.length > 1,
+      isCollapsed: ({ rowData }) => !groupdSubscriptions[rowData.product_id].open,
+      toggle: ({ rowData }) => this.toggleSubscriptionGroup(rowData.product_id),
+    };
 
     const inlineEditController = {
       isEditing: ({ rowData }) => (this.state.editing && rowData.available >= 0),
@@ -229,7 +249,11 @@ class SubscriptionsTable extends Component {
       bodyMessage = __('No subscriptions match your search criteria.');
     }
 
-    const columnsDefinition = columns(inlineEditController, selectionController);
+    const columnsDefinition = createSubscriptionsTableSchema(
+      inlineEditController,
+      selectionController,
+      groupingController,
+    );
 
     return (
       <Spinner loading={subscriptions.loading} className="small-spacer">
@@ -267,6 +291,9 @@ class SubscriptionsTable extends Component {
             rows={this.state.rows}
             rowKey="id"
             message={bodyMessage}
+            onRow={rowData => ({
+              className: classNames({ 'open-grouped-row': !groupingController.isCollapsed({ rowData }) }),
+            })}
           />
         </ForemanTable>
         <ConfirmDialog

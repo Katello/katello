@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-react';
-import { validateQuantity } from './SubscriptionValidations';
-import { KEY_CODES } from '../../move_to_foreman/common/helpers';
+import { validateQuantity } from '../../SubscriptionValidations';
+import { KEY_CODES } from '../../../../move_to_foreman/common/helpers';
 
 export const entitlementsInlineEditFormatter =
   inlineEditController => Table.inlineEditFormatterFactory({

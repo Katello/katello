@@ -1,30 +1,30 @@
-import { headerFormat, cellFormat } from '../../../move_to_foreman/components/common/table';
+import { headerFormatter, cellFormatter } from '../../../move_to_foreman/components/common/table';
 
 export const columns = [
   {
     property: 'status',
     header: {
       label: __('Status'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
       props: {
         index: 0,
       },
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
     property: 'statusMessage',
     header: {
       label: __('Message'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
       props: {
         index: 1,
       },
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   // TODO: use date formatter from tomas' PR
@@ -32,13 +32,13 @@ export const columns = [
     property: 'created',
     header: {
       label: __('Timestamp'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
       props: {
         index: 2,
       },
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
 ];

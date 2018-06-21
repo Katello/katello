@@ -8,9 +8,8 @@ import * as settingActions from '../../move_to_foreman/Settings/SettingsActions'
 import reducer from './SubscriptionReducer';
 
 import SubscriptionsPage from './SubscriptionsPage';
-import './Subscriptions.scss';
 
-const EMPTY_ARRAY = []
+const EMPTY_ARRAY = [];
 // map state to props
 const mapStateToProps = state => ({
   subscriptions: state.katello.subscriptions,
