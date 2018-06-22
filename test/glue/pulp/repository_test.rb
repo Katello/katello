@@ -12,7 +12,8 @@ module Katello
       set_user
       backend_stubs
 
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      @default_smart_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      @default_smart_proxy.stub(:pulp_url).returns("https://localhost/pulp")
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
       @fedora_17_library_library_view = katello_repositories(:fedora_17_library_library_view)
@@ -117,7 +118,7 @@ module Katello
   class GluePulpNonVcrTests < GluePulpRepoTestBase
     def test_importer_feed_url
       proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
+      pulp_host = Katello::CapsuleContent.new(@default_smart_proxy).pulp_uri.host
       repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
 
       assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'

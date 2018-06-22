@@ -27,7 +27,6 @@ module Katello
         :consumer_cert_sh => 'katello-rhsm-consumer',
         :pulp => {
           :default_login => 'admin',
-          :url => 'https://localhost/pulp/api/v2/',
           :bulk_load_size => 100,
           :skip_checksum_validation => false,
           :upload_chunk_size => 1_048_575, # upload size in bytes to pulp. see SSLRenegBufferSize in apache

@@ -132,7 +132,11 @@ module Katello
     end
 
     def pulp_url
-      "https://" + self.capsule.hostname + "/pulp/api/v2/"
+      self.capsule.pulp_url
+    end
+
+    def pulp_uri
+      URI.parse(pulp_url)
     end
 
     def pulp_repo_facts(pulp_id)

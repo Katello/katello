@@ -27,7 +27,7 @@ module Actions
 
       def capsule_id(args)
         capsule_hash = args.select { |x| x[:capsule_id] if x.is_a? Hash }
-        capsule_hash[0] ? capsule_hash[0][:capsule_id] : nil
+        capsule_hash[0] ? capsule_hash[0][:capsule_id] : SmartProxy.default_capsule.id
       end
 
       def source_action

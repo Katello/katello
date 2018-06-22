@@ -117,11 +117,6 @@ module Katello
         pulp_repo_facts['content_unit_counts']['srpm']
       end
 
-      def uri
-        uri = URI.parse(SETTINGS[:katello][:pulp][:url])
-        "https://#{uri.host}/pulp/repos/#{relative_path}"
-      end
-
       def to_hash
         pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
       end
@@ -199,20 +194,17 @@ module Katello
       end
 
       def docker_feed_url(capsule = SmartProxy.default_capsule!)
-        pulp_uri = URI.parse(SETTINGS[:katello][:pulp][:url])
+        capsule_content = ::Katello::CapsuleContent.new(capsule)
+
         if capsule.default_capsule?
           self.url if self.respond_to?(:url)
         else
-          "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
+          "https://#{capsule_content.pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
         end
       end
 
       def importer_feed_url(capsule = SmartProxy.default_capsule!)
-        if capsule.default_capsule?
-          self.url if self.respond_to?(:url)
-        else
-          self.full_path(nil, true)
-        end
+        self.full_path(capsule, true)
       end
 
       def yum_importer_values(capsule)
@@ -778,9 +770,11 @@ module Katello
       end
     end
 
-    def full_path(smart_proxy = nil, force_https = false)
-      pulp_uri = URI.parse(smart_proxy ? smart_proxy.url : SETTINGS[:katello][:pulp][:url])
-      scheme   = (self.unprotected && !force_https) ? 'http' : 'https'
+    def full_path(smart_proxy = SmartProxy.default_capsule, force_https = false)
+      capsule_content = ::Katello::CapsuleContent.new(smart_proxy)
+      pulp_uri = capsule_content.pulp_uri
+
+      scheme = (self.unprotected && !force_https) ? 'http' : 'https'
       if docker?
         "#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}/#{container_repository_name}"
       elsif file?

@@ -18,5 +18,12 @@ module ProxyAPI
     rescue => e
       raise ::ProxyAPI::ProxyException.new(url, e, N_("Unable to detect puppet path"))
     end
+
+    def pulp_settings
+      @url += "/settings"
+      @settings ||= parse(get)
+    rescue => e
+      raise ::ProxyAPI::ProxyException.new(url, e, N_("Unable to detect pulp settings"))
+    end
   end
 end

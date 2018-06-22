@@ -97,13 +97,9 @@ module Katello
       end
 
       def pulp_url(capsule_id)
-        if capsule_id
-          capsule_content = ::Katello::CapsuleContent.new(SmartProxy.find(capsule_id))
-          uri = URI.parse(capsule_content.pulp_url)
-          "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
-        else
-          SETTINGS[:katello][:pulp][:url]
-        end
+        capsule_content = ::Katello::CapsuleContent.new(SmartProxy.find(capsule_id))
+        uri = capsule_content.pulp_uri
+        "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
       end
 
       # this checks Pulp is running and responding without need

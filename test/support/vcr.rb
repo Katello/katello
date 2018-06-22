@@ -60,7 +60,7 @@ def configure_vcr
     c.hook_into :webmock
 
     if ENV['record'] == "false" && mode != :none
-      uri = URI.parse(SETTINGS[:katello][:pulp][:url])
+      uri = URI.parse("http://localhost/pulp/api/v2/")
       c.ignore_hosts uri.host
     end
 

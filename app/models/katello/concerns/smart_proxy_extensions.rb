@@ -10,6 +10,7 @@ module Katello
         def refresh
           errors = super
           update_puppet_path
+          update_pulp_url
           errors
         end
       end
@@ -77,6 +78,10 @@ module Katello
         self[:puppet_path] || update_puppet_path
       end
 
+      def pulp_url
+        self[:pulp_url] || update_pulp_url
+      end
+
       def update_puppet_path
         if has_feature?(PULP_FEATURE)
           path = ProxyAPI::Pulp.new(:url => self.url).capsule_puppet_path['puppet_content_dir']
@@ -87,13 +92,19 @@ module Katello
         path
       end
 
-      def pulp_node
-        @pulp_node ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
+      def update_pulp_url
+        if has_feature?(PULP_FEATURE)
+          url = ProxyAPI::Pulp.new(:url => self.url).pulp_settings['pulp_url']
+        elsif has_feature?(PULP_NODE_FEATURE)
+          url = ProxyAPI::PulpNode.new(:url => self.url).pulp_settings['pulp_url']
+        end
+        url += "/api/v2/"
+        self.update_attribute(:pulp_url, url) if persisted?
+        url
       end
 
-      def pulp_url
-        uri = URI.parse(url)
-        "#{uri.scheme}://#{uri.host}/pulp/api/v2/"
+      def pulp_node
+        @pulp_node ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
       end
 
       def default_capsule?
