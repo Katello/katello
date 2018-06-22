@@ -26,6 +26,10 @@ module Katello
     skip_before_action :authorize, :only => [:sync_complete, :gpg_key_content]
     skip_before_action :check_content_type, :only => [:upload_content]
 
+    def custom_index_relation(collection)
+      collection.includes(:product)
+    end
+
     def_param_group :repo do
       param :url, String, :desc => N_("repository source url")
       param :gpg_key_id, :number, :desc => N_("id of the gpg key that will be assigned to the new repository")
@@ -33,8 +37,9 @@ module Katello
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
       param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported")
-      param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
+      param :checksum_type, String, :desc => N_("Checksum of the repository, currently 'sha1' & 'sha256' are supported")
+      param :docker_upstream_name, String, :desc => N_("Name of the upstream docker repository")
+      param :docker_tags_whitelist, Array, :desc => N_("Comma separated list of tags to sync for Container Image repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
       param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
@@ -461,12 +466,14 @@ module Katello
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
-              :deb_releases, :deb_components, :deb_architectures, :description, {:ignorable_content => []}
+              :deb_releases, :deb_components, :deb_architectures, :description, {:ignorable_content => []},
+              {:docker_tags_whitelist => []}
              ]
 
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
-        keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name, :checksum_type, :docker_upstream_name]
+        keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
+                 :checksum_type, :docker_upstream_name]
       end
       params.require(:repository).permit(*keys).to_h
     end
@@ -481,11 +488,13 @@ module Katello
       credential_value
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def construct_repo_from_params(repo_params)
       repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
+      repository.docker_tags_whitelist = repo_params[:docker_tags_whitelist] if repo_params[:docker_tags_whitelist]
       repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
       repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
       repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
@@ -505,6 +514,7 @@ module Katello
 
       repository
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def error_on_rh_product
       fail HttpErrors::BadRequest, _("Red Hat products cannot be manipulated.") if @product.redhat?

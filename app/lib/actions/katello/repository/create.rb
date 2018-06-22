@@ -18,6 +18,7 @@ module Actions
                                         pulp_id: repository.pulp_id,
                                         name: repository.name,
                                         docker_upstream_name: repository.docker_upstream_name,
+                                        docker_tags_whitelist: repository.docker_tags_whitelist,
                                         feed: repository.url,
                                         ssl_ca_cert: certs[:ssl_ca_cert],
                                         ssl_client_cert: certs[:ssl_client_cert],
