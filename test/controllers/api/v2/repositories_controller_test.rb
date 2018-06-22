@@ -704,6 +704,31 @@ module Katello
       put :update, params: { :id => repo.id, :ignorable_content => ignorable_content }
     end
 
+    def test_update_with_whitelist_tags
+      whitelist = ["latest", "1.23"]
+      assert_sync_task(::Actions::Katello::Repository::Update) do |repo, attributes|
+        repo.must_equal @docker_repo
+        attributes.to_hash.must_equal('docker_tags_whitelist' => whitelist)
+      end
+      put :update, params: { :id => @docker_repo.id, :repository => { :docker_tags_whitelist => whitelist } }
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+
+    def test_create_with_whitelist_tags
+      whitelist = ["latest", "1.23"]
+      @docker_repo.docker_tags_whitelist = nil
+      Product.stubs(:find).returns(@product)
+      @product.expects(:add_repo).returns(@docker_repo)
+      assert_sync_task(::Actions::Katello::Repository::Create, @docker_repo, false, true) do |repo|
+        repo.must_equal @docker_repo
+        repo.docker_tags_whitelist.must_equal whitelist
+      end
+      post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox", :docker_tags_whitelist => whitelist }
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
     def test_remove_content
       @repository.rpms << @rpm
       @controller.expects(:sync_task).with(::Actions::Katello::Repository::RemoveContent,
@@ -772,7 +797,7 @@ module Katello
     def test_sync_with_url_override
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
         repo.id.must_equal(@repository.id)
-        pulp_task_id.must_equal(nil)
+        assert_nil pulp_task_id
         options[:source_url].must_equal('file:///tmp/')
       end
       post :sync, params: { :id => @repository.id, :source_url => 'file:///tmp/' }
@@ -782,7 +807,7 @@ module Katello
     def test_sync_with_incremental_flag
       assert_async_task ::Actions::Katello::Repository::Sync do |repo, pulp_task_id, options|
         repo.id.must_equal(@repository.id)
-        pulp_task_id.must_equal(nil)
+        assert_nil pulp_task_id
         options[:source_url].must_equal('file:///tmp/')
         options[:incremental].must_equal true
       end

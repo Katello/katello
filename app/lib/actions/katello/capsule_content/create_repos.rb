@@ -44,6 +44,7 @@ module Actions
                       path: relative_path,
                       with_importer: true,
                       docker_upstream_name: repository.docker? ? repository.container_repository_name : nil,
+                      docker_tags_whitelist: repository.docker? ? repository.docker_tags_whitelist : nil,
                       repo_registry_id: repository.docker? ? repository.container_repository_name : nil,
                       download_policy: repository.capsule_download_policy(capsule_content.capsule),
                       capsule_id: capsule_content.capsule.id)

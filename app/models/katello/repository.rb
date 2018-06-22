@@ -5,6 +5,8 @@ module Katello
     #pulp uses pulp id to sync with 'yum_distributor' on the end
     PULP_ID_MAX_LENGTH = 220
 
+    serialize :docker_tags_whitelist
+
     validates_lengths_from_database :except => [:label]
     before_destroy :assert_deletable
     before_create :downcase_pulp_id
@@ -473,6 +475,7 @@ module Katello
                      :content_view_version => to_version,
                      :content_type => self.content_type,
                      :docker_upstream_name => self.docker_upstream_name,
+                     :docker_tags_whitelist => self.docker_tags_whitelist,
                      :download_policy => download_policy,
                      :unprotected => self.unprotected) do |clone|
         clone.checksum_type = self.checksum_type

@@ -17,6 +17,7 @@ module Actions
           param :path
           param :with_importer
           param :docker_upstream_name
+          param :docker_tags_whitelist
           param :download_policy
           param :capsule_id
           param :mirror_on_sync
@@ -112,6 +113,7 @@ module Actions
           importer = Runcible::Models::DockerImporter.new
           importer.proxy_host      = input[:proxy_host]
           importer.upstream_name   = input[:docker_upstream_name] if input[:docker_upstream_name]
+          importer.tags            = input[:docker_tags_whitelist] if input[:docker_tags_whitelist]
           importer.feed            = input[:feed]
           importer.enable_v1       = false
           importer.ssl_validation  = input[:ssl_validation]

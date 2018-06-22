@@ -187,6 +187,7 @@ module Katello
           options[:upstream_name] = capsule.default_capsule? ? self.docker_upstream_name : self.container_repository_name
           options[:feed] = docker_feed_url(capsule)
           options[:enable_v1] = false
+          options[:tags] = capsule.default_capsule? ? self.docker_tags_whitelist : nil
           Runcible::Models::DockerImporter.new(importer_connection_options(capsule).merge(options))
         when Repository::OSTREE_TYPE
           options = importer_connection_options(capsule)
@@ -438,7 +439,8 @@ module Katello
 
       def pulp_update_needed?
         changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
-                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy ignorable_content)
+                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy
+                                   docker_tags_whitelist ignorable_content)
         changeable_attributes += %w(name container_repository_name) if docker?
         changeable_attributes += %w(deb_releases deb_components deb_architectures) if deb?
         changeable_attributes.any? { |key| previous_changes.key?(key) }
