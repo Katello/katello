@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
-import { notify } from '../../move_to_foreman/foreman_toast_notifications';
-import helpers from '../../move_to_foreman/common/helpers';
+import { renderTaskFinishedToast } from '../Tasks/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
@@ -106,33 +104,7 @@ class SubscriptionsPage extends Component {
 
     pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL)
       .then((task) => {
-        function getErrors() {
-          return (
-            <ul>
-              {task.humanized.errors.map(error => (
-                <li key={error}> {error} </li>
-              ))}
-            </ul>
-          );
-        }
-
-        const message = (
-          <span>
-            <span>
-              {`${__(`Task ${task.humanized.action} completed with a result of ${task.result}.`)} `}
-            </span>
-            {task.errors ? getErrors() : ''}
-            <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
-              {__('Click here to go to the tasks page for the task.')}
-            </a>
-          </span>
-        );
-
-        notify({
-          message: ReactDOMServer.renderToStaticMarkup(message),
-          type: task.result,
-        });
-
+        renderTaskFinishedToast(task);
         loadSubscriptions();
       });
   }
@@ -190,6 +162,7 @@ class SubscriptionsPage extends Component {
     const toggleDeleteButton = (rowsSelected) => {
       this.setState({ disableDeleteButton: !rowsSelected });
     };
+
 
     const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
 
@@ -279,6 +252,8 @@ class SubscriptionsPage extends Component {
                 onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
                 onDeleteSubscriptions={onDeleteSubscriptions}
                 toggleDeleteButton={toggleDeleteButton}
+                task={task}
+                bulkSearch={this.props.bulkSearch}
               />
               <ModalProgressBar
                 show={this.state.showTaskModal}
@@ -299,6 +274,7 @@ SubscriptionsPage.propTypes = {
   subscriptions: PropTypes.shape({}).isRequired,
   organization: PropTypes.shape({}).isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
+  bulkSearch: PropTypes.func,
   pollTaskUntilDone: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
@@ -307,6 +283,7 @@ SubscriptionsPage.propTypes = {
 
 SubscriptionsPage.defaultProps = {
   tasks: [],
+  bulkSearch: undefined,
 };
 
 export default SubscriptionsPage;

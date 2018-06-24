@@ -15,6 +15,7 @@ import './Manifest.scss';
 const mapStateToProps = state => ({
   organization: state.katello.organization,
   manifestHistory: state.katello.manifestHistory,
+  taskDetails: state.katello.manifestHistory.taskDetails,
 });
 
 // map action dispatchers to props
