@@ -6,6 +6,7 @@ import SubscriptionsTable from '../SubscriptionsTable';
 import { successState, loadingState, emptyState } from '../../../__tests__/subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
 
+jest.mock('../../../../../move_to_foreman/foreman_toast_notifications');
 jest.useFakeTimers();
 describe('subscriptions table', () => {
   it('should render a table', async () => {

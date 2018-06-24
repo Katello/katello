@@ -11,6 +11,11 @@ import Dialog from '../../../../move_to_foreman/components/common/Dialog';
 import { recordsValid } from '../../SubscriptionValidations';
 import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
 import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
+import { renderTaskStartedToast } from '../../../Tasks/helpers';
+import {
+  BLOCKING_FOREMAN_TASK_TYPES,
+  MANIFEST_TASKS_BULK_SEARCH_ID,
+} from '../../SubscriptionConstants';
 
 class SubscriptionsTable extends Component {
   constructor(props) {
@@ -104,7 +109,15 @@ class SubscriptionsTable extends Component {
   confirmEdit() {
     this.showUpdateConfirm(false);
     if (Object.keys(this.state.updatedQuantity).length > 0) {
-      this.props.updateQuantity(buildPools(this.state.updatedQuantity));
+      this.props.updateQuantity(buildPools(this.state.updatedQuantity))
+        .then(() =>
+          this.props.bulkSearch({
+            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
+            type: 'all',
+            active_only: true,
+            action_types: BLOCKING_FOREMAN_TASK_TYPES,
+          }))
+        .then(() => renderTaskStartedToast(this.props.task));
     }
     this.enableEditing(false);
   }
@@ -324,6 +337,13 @@ SubscriptionsTable.propTypes = {
   onDeleteSubscriptions: PropTypes.func.isRequired,
   onSubscriptionDeleteModalClose: PropTypes.func.isRequired,
   toggleDeleteButton: PropTypes.func.isRequired,
+  task: PropTypes.shape({}),
+  bulkSearch: PropTypes.func,
+};
+
+SubscriptionsTable.defaultProps = {
+  task: { humanized: {} },
+  bulkSearch: undefined,
 };
 
 export default SubscriptionsTable;

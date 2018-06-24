@@ -9,6 +9,7 @@ import { Table } from '../../../move_to_foreman/components/common/table';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
 import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';
+import { renderTaskStartedToast } from '../../Tasks/helpers';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
@@ -76,7 +77,16 @@ class ManageManifestModal extends Component {
   uploadManifest(fileList) {
     this.setState({ actionInProgress: true });
     if (fileList.length > 0) {
-      this.props.uploadManifest(fileList[0]);
+      this.props
+        .uploadManifest(fileList[0])
+        .then(() =>
+          this.props.bulkSearch({
+            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
+            type: 'all',
+            active_only: true,
+            action_types: BLOCKING_FOREMAN_TASK_TYPES,
+          }))
+        .then(() => renderTaskStartedToast(this.props.taskDetails));
     }
   }
 
@@ -87,14 +97,16 @@ class ManageManifestModal extends Component {
 
   deleteManifest() {
     this.setState({ actionInProgress: true });
-    this.props.deleteManifest()
+    this.props
+      .deleteManifest()
       .then(() =>
         this.props.bulkSearch({
           search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
           type: 'all',
           active_only: true,
           action_types: BLOCKING_FOREMAN_TASK_TYPES,
-        }));
+        }))
+      .then(() => renderTaskStartedToast(this.props.taskDetails));
     this.showDeleteManifestModal(false);
   }
 
@@ -113,7 +125,10 @@ class ManageManifestModal extends Component {
 
   render() {
     const {
-      manifestHistory, organization, disableManifestActions, disabledReason,
+      manifestHistory,
+      organization,
+      disableManifestActions,
+      disabledReason,
     } = this.props;
 
     const { actionInProgress } = this.state;
@@ -130,9 +145,15 @@ class ManageManifestModal extends Component {
     const getManifestName = () => {
       let name = __('No Manifest Uploaded');
 
-      if (organization.owner_details && organization.owner_details.upstreamConsumer) {
-        const link = ['https://', organization.owner_details.upstreamConsumer.webUrl,
-          organization.owner_details.upstreamConsumer.uuid].join('/');
+      if (
+        organization.owner_details &&
+        organization.owner_details.upstreamConsumer
+      ) {
+        const link = [
+          'https://',
+          organization.owner_details.upstreamConsumer.webUrl,
+          organization.owner_details.upstreamConsumer.uuid,
+        ].join('/');
 
         name = (
           <a href={link}>{organization.owner_details.upstreamConsumer.name}</a>
@@ -145,7 +166,11 @@ class ManageManifestModal extends Component {
     return (
       <Modal show={this.state.showModal} onHide={this.hideModal}>
         <Modal.Header>
-          <button className="close" onClick={this.hideModal} aria-label={__('Close')}>
+          <button
+            className="close"
+            onClick={this.hideModal}
+            aria-label={__('Close')}
+          >
             <Icon type="pf" name="close" />
           </button>
           <Modal.Title>{__('Manage Manifest')}</Modal.Title>
@@ -175,11 +200,16 @@ class ManageManifestModal extends Component {
                 <hr />
 
                 <FormGroup>
-                  <ControlLabel className="col-sm-3 control-label" htmlFor="usmaFile">
+                  <ControlLabel
+                    className="col-sm-3 control-label"
+                    htmlFor="usmaFile"
+                  >
                     <OverlayTrigger
                       overlay={
-                        <Tooltip id="usma-tooltip">{__('Upstream Subscription Management Application')}</Tooltip>
-                        }
+                        <Tooltip id="usma-tooltip">
+                          {__('Upstream Subscription Management Application')}
+                        </Tooltip>
+                      }
                       placement="bottom"
                       trigger={['hover', 'focus']}
                       rootClose={false}
@@ -272,9 +302,11 @@ ManageManifestModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
   bulkSearch: PropTypes.func.isRequired,
+  taskDetails: PropTypes.shape({}),
 };
 
 ManageManifestModal.defaultProps = {
+  taskDetails: undefined,
   disableManifestActions: false,
   disabledReason: '',
   onClose() {},
