@@ -21,6 +21,7 @@ export const BLOCKING_FOREMAN_TASK_TYPES = [
   'Actions::Katello::UpstreamSubscriptions::BindEntitlements',
   'Actions::Katello::UpstreamSubscriptions::UpdateEntitlement',
   'Actions::Katello::UpstreamSubscriptions::RemoveEntitlements',
+  'Actions::Katello::UpstreamSubscriptions::UpdateEntitlements',
 ];
 
 export const MANIFEST_TASKS_BULK_SEARCH_ID = 'activeManifestTasksSearch';
