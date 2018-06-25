@@ -9,6 +9,7 @@ module Actions
             plan_action(::Actions::Katello::Product::RepositoriesGpgReset, product)
           end
 
+          product.reload
           plan_action(::Actions::Pulp::Repos::Update, product) if ::SETTINGS[:katello][:use_pulp]
         end
       end
