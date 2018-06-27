@@ -4,6 +4,7 @@ module Actions
     module Repository
       class Sync < Actions::EntryAction
         include Helpers::Presenter
+        include Actions::RecurringAction
         middleware.use Actions::Middleware::KeepCurrentUser
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 

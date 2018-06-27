@@ -88,6 +88,7 @@ module Katello
         filtered = filtered.select { |ent| ent['pool']['id'].to_s == pool_id.to_s } if pool_id
 
         if quantities && quantities.any?
+          # fail _("Here!")
           quantities.map!(&:to_s)
           filtered = quantities.map do |quantity|
             index = filtered.index { |ent| ent['quantity'].to_s == quantity }

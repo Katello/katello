@@ -4,6 +4,7 @@ module Katello
 
     def initialize(pool = nil, quantities = [])
       @pool = pool
+      # fail _(pool.to_s)
       @quantities = quantities
       @quantities = [@quantities] if !@quantities.nil? && !@quantities.is_a?(Array)
     end
