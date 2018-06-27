@@ -36,7 +36,7 @@ export const requestSuccessResponse = Immutable({
   },
   results: [
     {
-      pool_id: '8a99f9815e718933015e85b19e1e11d7',
+      id: '8a99f9815e718933015e85b19e1e11d7',
       quantity: 200,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -47,7 +47,7 @@ export const requestSuccessResponse = Immutable({
       subscription_id: '4753270',
     },
     {
-      pool_id: '8a99f9815e718933015e85b1bfd211db',
+      id: '8a99f9815e718933015e85b1bfd211db',
       quantity: 250,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -65,7 +65,7 @@ export const successState = Immutable({
   loading: false,
   results: [
     {
-      pool_id: '8a99f9815e718933015e85b19e1e11d7',
+      id: '8a99f9815e718933015e85b19e1e11d7',
       quantity: 200,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -76,7 +76,7 @@ export const successState = Immutable({
       subscription_id: '4753270',
     },
     {
-      pool_id: '8a99f9815e718933015e85b1bfd211db',
+      id: '8a99f9815e718933015e85b1bfd211db',
       quantity: 250,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',

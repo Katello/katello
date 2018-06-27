@@ -135,7 +135,7 @@ export const requestSuccessResponseWithRHSubscriptions = Immutable({
 export const quantitiesRequestSuccessResponse = Immutable({
   results: [
     {
-      pool_id: '9a95f981519abf020151ab082c5e0313',
+      id: '9a95f981519abf020151ab082c5e0313',
       quantity: 10000,
       available: 100,
       start_date: '2016-12-15T05:00:00+0000',
@@ -151,7 +151,7 @@ export const quantitiesRequestSuccessResponse = Immutable({
       ],
     },
     {
-      pool_id: '6b123381519abf020151ab082c5e4678',
+      id: '6b123381519abf020151ab082c5e4678',
       quantity: 400,
       available: 40,
       start_date: '2016-12-15T05:00:00+0000',
