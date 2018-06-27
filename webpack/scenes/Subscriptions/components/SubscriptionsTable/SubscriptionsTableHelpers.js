@@ -27,10 +27,10 @@ const buildTableRowsFromGroup = (subscriptionGroup, availableQuantities, updated
   return [buildTableRow(firstSubscription, availableQuantities, updatedQuantity)];
 };
 
-export const buildTableRows = (groupdSubscriptions, availableQuantities, updatedQuantity) => {
+export const buildTableRows = (groupedSubscriptions, availableQuantities, updatedQuantity) => {
   const rows = [];
 
-  Object.values(groupdSubscriptions).forEach(subscriptionGroup =>
+  Object.values(groupedSubscriptions).forEach(subscriptionGroup =>
     rows.push(...buildTableRowsFromGroup(subscriptionGroup, availableQuantities, updatedQuantity)));
 
   return rows;
