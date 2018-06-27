@@ -1,5 +1,3 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import configureMockStore from 'redux-mock-store';
@@ -15,12 +13,11 @@ import {
   deleteManifestSuccessActions,
   deleteManifestFailureActions,
 } from './manifest.fixtures';
-
 import { loadManifestHistory, uploadManifest, refreshManifest, deleteManifest } from '../ManifestActions';
+import { mock as mockApi, mockErrorRequest } from '../../../../mockRequest';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({ manifest: Immutable({}) });
-const mockApi = new MockAdapter(axios);
 
 beforeEach(() => {
   store.clearActions();
@@ -43,7 +40,10 @@ describe('manifest actions', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/manifest_history';
 
     it('and then fails with 422', () => {
-      mockApi.onGet(url).reply(422);
+      mockErrorRequest({
+        url,
+        status: 422,
+      });
 
       return store.dispatch(loadManifestHistory())
         .then(() => expect(store.getActions()).toEqual(manifestHistoryFailureActions));
@@ -61,7 +61,11 @@ describe('manifest actions', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/upload';
 
     it('and then fails with 422', () => {
-      mockApi.onPost(url).reply(422);
+      mockErrorRequest({
+        url,
+        status: 422,
+        method: 'POST',
+      });
 
       return store.dispatch(uploadManifest())
         .then(() => expect(store.getActions()).toEqual(uploadManifestFailureActions));
@@ -79,7 +83,11 @@ describe('manifest actions', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/refresh_manifest';
 
     it('and then fails with 422', () => {
-      mockApi.onPut(url).reply(422);
+      mockErrorRequest({
+        url,
+        status: 422,
+        method: 'PUT',
+      });
 
       return store.dispatch(refreshManifest())
         .then(() => expect(store.getActions()).toEqual(refreshManifestFailureActions));
@@ -97,7 +105,11 @@ describe('manifest actions', () => {
     const url = '/katello/api/v2/organizations/1/subscriptions/delete_manifest';
 
     it('and then fails with 422', () => {
-      mockApi.onPost(url).reply(422);
+      mockErrorRequest({
+        url,
+        status: 422,
+        method: 'POST',
+      });
 
       return store.dispatch(deleteManifest())
         .then(() => expect(store.getActions()).toEqual(deleteManifestFailureActions));

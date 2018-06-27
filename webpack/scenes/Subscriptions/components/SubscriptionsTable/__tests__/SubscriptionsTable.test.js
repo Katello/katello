@@ -27,6 +27,7 @@ describe('subscriptions table', () => {
   /* eslint-enable react/jsx-indent */
 
   it('should render an empty state', async () => {
+    /* eslint-disable react/jsx-indent */
     const page = render(<MemoryRouter>
       <SubscriptionsTable
         subscriptions={emptyState}
