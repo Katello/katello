@@ -1,7 +1,6 @@
 object @resource ||= @object
 
-attributes :pool_id => :id
-attributes :pool_id
+attributes :id
 attributes :status
 attributes :quantity
 attributes :available
@@ -12,7 +11,4 @@ attributes :consumed
 attributes :product_name
 attributes :product_id
 attributes :subscription_id
-
-if params[:pool_ids]
-  attributes :local_pool_ids
-end
+attributes :local_pool_ids
