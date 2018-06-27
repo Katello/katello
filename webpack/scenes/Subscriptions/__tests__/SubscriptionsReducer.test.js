@@ -34,14 +34,18 @@ describe('subscriptions reducer', () => {
   it('should have error on SUBSCRIPTIONS_FAILURE', () => {
     expect(reducer(initialState, {
       type: types.SUBSCRIPTIONS_FAILURE,
-      error: 'Unable to process request.',
+      payload: {
+        message: 'Unable to process request.',
+      },
     })).toEqual(errorState);
   });
 
   it('should have error on UPDATE_QUANTITY_FAILURE', () => {
     expect(reducer(initialState, {
       type: types.UPDATE_QUANTITY_FAILURE,
-      error: 'Unable to process request.',
+      payload: {
+        message: 'Unable to process request.',
+      },
     })).toEqual(errorState);
   });
 
@@ -61,7 +65,9 @@ describe('subscriptions reducer', () => {
   it('should have error on SUBSCRIPTIONS_QUANTITIES_FAILURE', () => {
     expect(reducer(successState, {
       type: types.SUBSCRIPTIONS_QUANTITIES_FAILURE,
-      error: 'Unable to process request.',
+      payload: {
+        message: 'Unable to process request.',
+      },
     })).toEqual(quantitiesErrorState);
   });
 });

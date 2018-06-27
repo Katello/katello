@@ -1,4 +1,5 @@
 import Immutable from 'seamless-immutable';
+import { toastErrorAction, failureAction } from '../../../services/api/testHelpers';
 
 export const initialState = Immutable({
   loading: true,
@@ -248,7 +249,6 @@ export const successState = Immutable({
 
 export const errorState = Immutable({
   loading: false,
-  error: 'Unable to process request.',
   pagination: {
     page: 0,
     perPage: 20,
@@ -278,7 +278,6 @@ export const loadingQuantitiesState = Immutable({
 export const quantitiesErrorState = Immutable({
   ...successState,
   quantitiesLoading: false,
-  quantitiesError: 'Unable to process request.',
 });
 
 export const successActions = [
@@ -310,10 +309,8 @@ export const failureActions = [
   {
     type: 'SUBSCRIPTIONS_REQUEST',
   },
-  {
-    error: 'Request failed with status code 422',
-    type: 'SUBSCRIPTIONS_FAILURE',
-  },
+  failureAction('SUBSCRIPTIONS_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const poolsUpdate = [{
@@ -340,20 +337,16 @@ export const updateQuantityFailureActions = [
     type: 'UPDATE_QUANTITY_REQUEST',
     quantities: poolsUpdate,
   },
-  {
-    error: 'Request failed with status code 422',
-    type: 'UPDATE_QUANTITY_FAILURE',
-  },
+  failureAction('UPDATE_QUANTITY_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const loadQuantitiesFailureActions = [
   {
     type: 'SUBSCRIPTIONS_QUANTITIES_REQUEST',
   },
-  {
-    error: 'Request failed with status code 500',
-    type: 'SUBSCRIPTIONS_QUANTITIES_FAILURE',
-  },
+  failureAction('SUBSCRIPTIONS_QUANTITIES_FAILURE', 'Request failed with status code 500'),
+  toastErrorAction('Request failed with status code 500'),
 ];
 
 export const loadQuantitiesSuccessActions = [

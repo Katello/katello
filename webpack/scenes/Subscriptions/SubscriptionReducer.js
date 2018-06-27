@@ -73,10 +73,14 @@ export default (state = initialState, action) => {
       return state.set('loading', false);
 
     case SUBSCRIPTIONS_FAILURE:
+      return state
+        .set('loading', false)
+        .set('results', [])
+        .set('itemCount', 0);
+
     case UPDATE_QUANTITY_FAILURE:
     case DELETE_SUBSCRIPTIONS_FAILURE:
       return state.merge({
-        error: action.error,
         loading: false,
       });
 
@@ -93,7 +97,6 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_QUANTITIES_FAILURE: {
       return state.merge({
         quantitiesLoading: false,
-        quantitiesError: action.error,
       });
     }
 
