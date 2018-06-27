@@ -25,14 +25,16 @@ class RepositorySetRepositories extends Component {
         </Alert>
       );
     }
-
-    const repos = data.repositories
+    const availableRepos = data.repositories
       .filter(({ enabled }) => !enabled)
       .map(repo => <RepositorySetRepository key={repo.arch + repo.releasever} {...repo} />);
 
+    const repoMessage = (data.repositories.length > 0 && availableRepos.length === 0 ?
+      __('All available architectures for this repo are enabled.') : __('No repositories available.'));
+
     return (
       <Spinner loading={data.loading}>
-        {repos.length ? repos : <div>{__('No repositories available.')}</div>}
+        {availableRepos.length ? availableRepos : <div>{repoMessage}</div>}
       </Spinner>
     );
   }
