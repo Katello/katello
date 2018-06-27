@@ -16,7 +16,7 @@ module Katello
 
     belongs_to :organization, :inverse_of => :sync_plans
     has_many :products, :class_name => "Katello::Product", :dependent => :nullify
-
+    belongs_to :foreman_tasks_recurring_logic, :inverse_of => :sync_plan, :class_name => "ForemanTasks::RecurringLogic", :dependent => :destroy
     validates_lengths_from_database
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
@@ -25,6 +25,9 @@ module Katello
     validate :product_enabled
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
+    before_create :associate_recurring_logic
+    after_create :start_recurring_logic
+    before_update :update_recurring_logic if :rec_logic_change?
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :interval, :complete_value => true
@@ -34,6 +37,26 @@ module Katello
       products.each do |product|
         errors.add :base, _("Can not add product %s because it is disabled.") % product.name unless product.enabled?
       end
+    end
+
+    def associate_recurring_logic
+      self.foreman_tasks_recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval)
+    end
+
+    def update_recurring_logic
+      if rec_logic_change?
+        self.foreman_tasks_recurring_logic.cancel
+        recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval)
+        self.foreman_tasks_recurring_logic = recurring_logic
+      end
+    end
+
+    def toggle_enabled
+      self.foreman_tasks_recurring_logic.enabled = self.enabled
+    end
+
+    def start_recurring_logic
+      self.foreman_tasks_recurring_logic.start_after(::Actions::Katello::SyncPlan::Run, self.sync_date, self)
     end
 
     def validate_sync_date
@@ -112,6 +135,34 @@ module Katello
 
     def self.humanize_class_name(_name = nil)
       _("Sync Plans")
+    end
+
+    def add_recurring_logic_to_sync_plan(sync_date, interval)
+      sync_date_local_zone = sync_date
+      min, hour, day = sync_date_local_zone.min, sync_date_local_zone.hour, sync_date_local_zone.wday
+
+      if (interval.downcase.eql? "hourly")
+        cron = min.to_s + " * * * *"
+      elsif (interval.downcase.eql? "daily")
+        cron = min.to_s + " " + hour.to_s + " * * *"
+      elsif (interval.downcase.eql? "weekly")
+        cron = min.to_s + " " + hour.to_s + " * * " + day.to_s
+      else
+        fail _("Interval not set correctly")
+      end
+
+      recurring_logic = ForemanTasks::RecurringLogic.new_from_cronline(cron)
+      recurring_logic.save!
+      fail _("Error saving recurring logic") if recurring_logic.nil?
+      return recurring_logic
+    end
+
+    def rec_logic_change?
+      sync_date_changed? || interval_changed?
+    end
+
+    def rec_logic_changed?
+      saved_change_to_attribute?(:sync_date) || saved_change_to_attribute?(:interval)
     end
   end
 end

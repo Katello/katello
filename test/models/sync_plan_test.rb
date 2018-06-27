@@ -95,6 +95,7 @@ module Katello
     test_attributes :pid => '325c0ef5-c0e8-4cb9-b85e-87eb7f42c2f8'
     def test_update_enabled
       @plan.save!
+      @plan.start_recurring_logic
       sync_plan_enabled = @plan.enabled
       [!sync_plan_enabled, sync_plan_enabled].each do |enabled|
         @plan.enabled = enabled

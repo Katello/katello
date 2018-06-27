@@ -47,16 +47,13 @@ module Katello
     param_group :sync_plan
     def create
       sync_date = sync_plan_params[:sync_date].to_time(:utc)
-
       unless sync_date.is_a?(Time)
         fail _("Date format is incorrect.")
       end
-
       @sync_plan = SyncPlan.new(sync_plan_params)
       @sync_plan.sync_date = sync_date
       @sync_plan.organization = @organization
       @sync_plan.save!
-
       respond_for_create(:resource => @sync_plan)
     end
 
@@ -67,12 +64,13 @@ module Katello
     param_group :sync_plan
     def update
       sync_date = sync_plan_params.try(:[], :sync_date).try(:to_time)
-
       if !sync_date.nil? && !sync_date.is_a?(Time)
         fail _("Date format is incorrect.")
       end
-
-      sync_task(::Actions::Katello::SyncPlan::Update, @sync_plan, sync_plan_params)
+      @sync_plan.update_attributes!(sync_plan_params) if sync_plan_params
+      toggle_enable = @sync_plan.saved_change_to_attribute?(:enabled)
+      @sync_plan.start_recurring_logic if @sync_plan.rec_logic_changed?
+      @sync_plan.toggle_enabled if toggle_enable
       respond_for_show(:resource => @sync_plan)
     end
 
@@ -89,7 +87,9 @@ module Katello
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     param :product_ids, Array, :desc => N_("List of product ids to add to the sync plan"), :required => true
     def add_products
-      sync_task(::Actions::Katello::SyncPlan::AddProducts, @sync_plan, params[:product_ids])
+      products = ::Katello::Product.where(:id => params[:product_ids]).editable
+      @sync_plan.product_ids = (@sync_plan.product_ids + products.collect { |p| p.id }).uniq
+      @sync_plan.save!
       respond_for_show
     end
 
@@ -97,7 +97,9 @@ module Katello
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     param :product_ids, Array, :desc => N_("List of product ids to remove from the sync plan"), :required => true
     def remove_products
-      sync_task(::Actions::Katello::SyncPlan::RemoveProducts, @sync_plan, params[:product_ids])
+      products = ::Katello::Product.where(:id => params[:product_ids]).editable
+      @sync_plan.product_ids = (@sync_plan.product_ids - products.collect { |p| p.id }).uniq
+      @sync_plan.save!
       respond_for_show
     end
 
@@ -105,16 +107,8 @@ module Katello
     api :PUT, "/organizations/:organization_id/sync_plans/:id/sync", N_("Initiate a sync of the products attached to the sync plan")
     param :id, String, :desc => N_("ID of the sync plan"), :required => true
     def sync
-      syncable_products = @sync_plan.products.syncable
-      syncable_repositories = Repository.where(:product_id => syncable_products).has_url
-
-      task = async_task(::Actions::BulkAction,
-                        ::Actions::Katello::Repository::Sync,
-                        syncable_repositories)
-
+      task = async_task(::Actions::Katello::SyncPlan::Run, @sync_plan)
       respond_for_async :resource => task
-    rescue Foreman::Exception
-      raise HttpErrors::BadRequest, _("No products within sync plan")
     end
 
     protected

@@ -223,13 +223,6 @@ module Katello
                        :content_view_version => self.organization.library.default_content_view_version)
       end
 
-      def setup_sync_schedule
-        schedule = (self.sync_plan && self.sync_plan.schedule_format) || nil
-        self.repos(self.library).each do |repo|
-          repo.sync_schedule(schedule)
-        end
-      end
-
       def custom_repos_create_orchestration
         pre_queue.create(:name => "create pulp repositories for product: #{self.label}", :priority => 1, :action => [self, :set_repos])
       end

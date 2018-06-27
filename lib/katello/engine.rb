@@ -153,6 +153,7 @@ module Katello
       ::Container.send :include, Katello::Concerns::ContainerExtensions
       ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
       ::DockerContainerWizardStates::Image.send :include, Katello::Concerns::DockerContainerWizardStateImageExtensions
+      ForemanTasks::RecurringLogic.send :include, Katello::Concerns::RecurringLogicExtensions
 
       #Controller extensions
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions

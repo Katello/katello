@@ -10,6 +10,11 @@ module Katello
       @organization = get_organization
       @sync_plan = katello_sync_plans(:sync_plan_hourly)
       @products = katello_products(:fedora, :redhat, :empty_product)
+      @recurring_logic = FactoryBot.create(:recurring_logic)
+      @recurring_logic.save!
+      # assert_equal @recurring_logic.cancelled? , true
+      @sync_plan.foreman_tasks_recurring_logic = @recurring_logic
+      @sync_plan.save!
     end
 
     def permissions
@@ -73,13 +78,30 @@ module Katello
       assert_equal valid_attr[:description], response['description']
       assert response.key?('enabled')
       assert_equal valid_attr[:enabled], response['enabled']
+      assert_equal @sync_plan.foreman_tasks_recurring_logic.enabled?, response['enabled']
+    end
+
+    def test_recurring_logic_create
+      valid_attr = {
+        :name => 'Hourly Sync Plan',
+        :sync_date => '2014-01-09 17:46:00 +0000',
+        :interval => 'hourly',
+        :description => 'This is my cool new product.',
+        :enabled => true
+      }
+      post :create, params: { :organization_id => @organization.id, :sync_plan => valid_attr }
+
+      assert_response :success
+      assert_template 'api/v2/common/create'
+      response = JSON.parse(@response.body)
+      assert response.key?('foreman_tasks_recurring_logic_id')
+      assert_not_nil response['foreman_tasks_recurring_logic_id']
     end
 
     test_attributes :pid => 'b4686463-69c8-4538-b040-6fb5246a7b00'
-    def test_create_fail
+    def test_create_fail_no_interval
       post :create, params: { :organization_id => @organization.id, :sync_plan => {:sync_date => '2014-01-09 17:46:00',
                                                                                    :description => 'This is my cool new sync plan.'} }
-
       assert_response :unprocessable_entity
       response = JSON.parse(@response.body)
       assert response.key?('errors')
@@ -107,7 +129,7 @@ module Katello
         :interval => 'weekly',
         :sync_date => Time.now.utc.strftime(datetime_format),
         :description => 'New Description',
-        :enabled => false
+        :enabled => true
       }
       put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
 
@@ -117,6 +139,54 @@ module Katello
       assert_equal update_attrs[:interval], assigns[:sync_plan].interval
       assert_equal update_attrs[:enabled], assigns[:sync_plan].enabled
       assert_equal update_attrs[:sync_date], assigns[:sync_plan].sync_date.strftime(datetime_format)
+    end
+
+    def test_recurring_logic_update_with_sync_date
+      datetime_format = '%Y/%m/%d %H:%M:%S %z'
+      update_attrs = {
+        :sync_date => Time.now.utc.strftime(datetime_format)
+      }
+      old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/show'
+      assert_equal update_attrs[:sync_date], assigns[:sync_plan].sync_date.strftime(datetime_format)
+      assert_not_equal old_rec_logic, assigns[:sync_plan].foreman_tasks_recurring_logic_id
+    end
+
+    def test_recurring_logic_update_with_interval
+      update_attrs = {
+        :interval => 'weekly'
+      }
+      old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/show'
+      assert_equal update_attrs[:interval], assigns[:sync_plan].interval
+      assert_not_equal old_rec_logic, assigns[:sync_plan].foreman_tasks_recurring_logic_id
+    end
+
+    def test_recurring_logic_update_with_all_params
+      datetime_format = '%Y/%m/%d %H:%M:%S %z'
+      update_attrs = {
+        :name => 'New Name',
+        :interval => 'weekly',
+        :sync_date => Time.now.utc.strftime(datetime_format),
+        :description => 'New Description',
+        :enabled => false
+      }
+      old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/show'
+      assert_equal update_attrs[:name], assigns[:sync_plan].name
+      assert_equal update_attrs[:interval], assigns[:sync_plan].interval
+      assert_equal update_attrs[:enabled], assigns[:sync_plan].enabled
+      assert_equal update_attrs[:sync_date], assigns[:sync_plan].sync_date.strftime(datetime_format)
+      assert_not_equal old_rec_logic, assigns[:sync_plan].foreman_tasks_recurring_logic_id
     end
 
     test_attributes :pid => '8c981174-6f55-49c0-8baa-40e5c3fc598c'
@@ -157,10 +227,7 @@ module Katello
 
     def test_add_products
       product_ids = @products.collect { |p| p.id.to_s }
-      ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::AddProducts, @sync_plan, product_ids)
-
       put :add_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => product_ids }
-
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
     end
@@ -176,10 +243,7 @@ module Katello
 
     def test_remove_products
       product_ids = @products.collect { |p| p.id.to_s }
-      ::ForemanTasks.expects(:sync_task).with(::Actions::Katello::SyncPlan::RemoveProducts, @sync_plan, product_ids)
-
       put :remove_products, params: { :id => @sync_plan.id, :organization_id => @organization.id, :product_ids => product_ids }
-
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
     end
@@ -194,16 +258,10 @@ module Katello
     end
 
     def test_sync
-      repo_ids = @sync_plan.products.collect { |product| product.repositories.map(&:id) }
-      repo_ids.flatten!
-
-      assert_async_task(::Actions::BulkAction) do |action_class, ids|
-        assert_equal action_class, ::Actions::Katello::Repository::Sync
-        assert_equal repo_ids, ids
+      assert_async_task(::Actions::Katello::SyncPlan::Run) do |sync_plan|
+        assert_equal sync_plan, @sync_plan
       end
-
       put :sync, params: { :id => @sync_plan.id, :organization_id => @organization.id }
-
       assert_response :success
     end
 

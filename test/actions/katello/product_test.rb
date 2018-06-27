@@ -115,9 +115,6 @@ module ::Actions::Katello::Product
       assert_action_planed_with(action,
                                 ::Actions::Katello::Product::RepositoriesGpgReset,
                                 product)
-      assert_action_planed_with(action,
-                              ::Actions::Pulp::Repos::Update,
-                              product)
     end
 
     it 'raises error when validation fails' do
