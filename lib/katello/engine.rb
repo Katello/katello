@@ -32,7 +32,8 @@ module Katello
           :skip_checksum_validation => false,
           :upload_chunk_size => 1_048_575, # upload size in bytes to pulp. see SSLRenegBufferSize in apache
           :sync_threads => 4,
-          :sync_KBlimit => nil
+          :sync_KBlimit => nil,
+          :notifier_ca_path => "/etc/pki/tls/certs/ca-bundle.crt"
         },
         :candlepin => {
           :url => 'https://localhost:8443/candlepin',
