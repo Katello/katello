@@ -9,8 +9,8 @@ module Katello
         lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
         lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
-        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :upstream_pool_id,
-          :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id,
+        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :product_family,
+          :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id,
           :initializer => :pool_facts
 
         lazy_accessor :name, :support_level, :org, :sockets, :cores, :instance_multiplier,
@@ -66,7 +66,6 @@ module Katello
 
         json["product_id"] = json["productId"] if json["productId"]
         json["upstream_entitlement_id"] = json["upstreamEntitlementId"]
-        json["upstream_pool_id"] = json["upstreamPoolId"]
 
         if self.subscription
           subscription.backend_data["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
@@ -91,7 +90,7 @@ module Katello
         subscription
       end
 
-      # rubocop:disable MethodLength
+      # rubocop:disable MethodLength,Metrics/AbcSize
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
@@ -113,6 +112,7 @@ module Katello
           pool_attributes[json_attribute.underscore] = pool_json[json_attribute]
         end
         pool_attributes[:pool_type] = pool_json["type"] if pool_json.key?("type")
+        pool_attributes[:upstream_pool_id] = pool_json["upstreamPoolId"] if pool_json.key?("upstreamPoolId")
 
         if pool_attributes.key?(:multi_entitlement)
           pool_attributes[:multi_entitlement] = pool_attributes[:multi_entitlement] == "yes"
@@ -145,6 +145,7 @@ module Katello
         self.create_product_associations
         self.import_hosts if index_hosts_and_activation_keys
       end
+      # rubocop:enable MethodLength,Metrics/AbcSize
 
       def create_product_associations
         products = self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]
