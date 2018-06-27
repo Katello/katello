@@ -1,5 +1,3 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
@@ -13,10 +11,10 @@ import {
 import { getTaskSuccessResponse } from '../../../Tasks/__tests__/task.fixtures';
 
 import { loadUpstreamSubscriptions, saveUpstreamSubscriptions } from '../UpstreamSubscriptionsActions';
+import { mock as mockApi, mockErrorRequest } from '../../../../mockRequest';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({ subscriptions: Immutable({}) });
-const mockApi = new MockAdapter(axios);
 
 afterEach(() => {
   store.clearActions();
@@ -28,7 +26,10 @@ describe('upstream subscription actions', () => {
 
   describe('creates UPSTREAM_SUBSCRIPTIONS_REQUEST', () => {
     it('and then fails with 422', () => {
-      mockApi.onGet(url).reply(422);
+      mockErrorRequest({
+        url,
+        status: 422,
+      });
 
       return store.dispatch(loadUpstreamSubscriptions())
         .then(() => expect(store.getActions()).toEqual(getFailureActions));
@@ -48,7 +49,11 @@ describe('upstream subscription actions', () => {
     };
 
     it('and then fails with 422', () => {
-      mockApi.onPost(url).reply(422);
+      mockErrorRequest({
+        url,
+        status: 422,
+        method: 'POST',
+      });
 
       return store.dispatch(saveUpstreamSubscriptions(subscriptionData))
         .then(() => expect(store.getActions()).toEqual(saveFailureActions));
