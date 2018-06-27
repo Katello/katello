@@ -1,5 +1,6 @@
 import api, { orgId } from '../../../services/api';
 import { propsToSnakeCase } from '../../../services/index';
+import { apiError } from '../../../move_to_foreman/common/helpers.js';
 
 import {
   UPSTREAM_SUBSCRIPTIONS_REQUEST,
@@ -27,12 +28,7 @@ export const loadUpstreamSubscriptions = (extendedParams = {}) => (dispatch) => 
         search: extendedParams.search,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: UPSTREAM_SUBSCRIPTIONS_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(UPSTREAM_SUBSCRIPTIONS_FAILURE, result)));
 };
 
 export const saveUpstreamSubscriptions = upstreamSubscriptions => (dispatch) => {
@@ -50,12 +46,7 @@ export const saveUpstreamSubscriptions = upstreamSubscriptions => (dispatch) => 
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE, result)));
 };
 
 export default loadUpstreamSubscriptions;
