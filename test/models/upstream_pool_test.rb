@@ -5,7 +5,7 @@ module Katello
     def setup
       @organization = get_organization
       @raw_pool = [{
-        'id' => :pool_id,
+        'id' => :id,
         'activeSubscription' => :active,
         'quantity' => :quantity,
         'startDate' => :start_date,
@@ -68,9 +68,9 @@ module Katello
 
     def test_fetch_pools_with_pool_ids
       expected = :local_pool_id
-      pool_id_map = {'pool_id' => [expected]}
+      pool_id_map = {'id' => [expected]}
       Katello::Candlepin::PoolService.expects(:local_to_upstream_ids).returns(pool_id_map)
-      stub_fetch_pools(@response, extra_params: [[:poolid, 'pool_id']])
+      stub_fetch_pools(@response, extra_params: [[:poolid, 'id']])
 
       pools = UpstreamPool.fetch_pools(pool_ids: [expected])
 

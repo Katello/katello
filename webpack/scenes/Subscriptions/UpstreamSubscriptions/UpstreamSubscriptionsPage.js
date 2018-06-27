@@ -34,7 +34,7 @@ class UpstreamSubscriptionsPage extends Component {
     const newValue = parseInt(value, 10);
     const pool = {
       ...rowData,
-      id: rowData.pool_id,
+      id: rowData.id,
       updatedQuantity: newValue,
       selected: true,
     };

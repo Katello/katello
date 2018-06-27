@@ -5,7 +5,7 @@ module Katello
     class << self
       def fetch_pools(params)
         quantities_only = ::Foreman::Cast.to_bool(params.delete(:quantities_only))
-        pool_id_map = upstream_pool_id_map(params.delete(:pool_ids))
+        pool_id_map = Katello::Candlepin::PoolService.upstream_pool_id_map(params.delete(:pool_ids))
 
         cp_params = request_params(
           base_params: base_params(params),
@@ -38,20 +38,17 @@ module Katello
         CP_POOL.upstream_consumer_id
       end
 
-      def upstream_pool_id_map(local_pool_ids)
-        return {} unless local_pool_ids
-
-        Katello::Candlepin::PoolService.local_to_upstream_ids(local_pool_ids)
-      end
-
       def response_to_pools(response, pool_id_map: {})
         pools = JSON.parse(response)
+        if pool_id_map.empty?
+          pool_id_map = Katello::Candlepin::PoolService.map_upstream_pools_to_local(pools)
+        end
         pools.map { |pool| self.new(map_attributes(pool, pool_id_map: pool_id_map)) }
       end
 
       def kat_to_cp_map
         {
-          pool_id: 'id',
+          id: 'id',
           active: 'activeSubscription',
           quantity: 'quantity',
           start_date: 'startDate',
@@ -70,13 +67,13 @@ module Katello
           attributes[kat] = pool[cp] if pool[cp]
         end
 
-        attributes[:local_pool_ids] = pool_id_map[attributes[:pool_id]]
+        attributes[:local_pool_ids] = pool_id_map[attributes[:id]]
 
         attributes
       end
 
       def minimal_fields
-        kat_to_cp_map.values_at(:pool_id, :quantity)
+        kat_to_cp_map.values_at(:id, :quantity)
       end
 
       def all_fields
