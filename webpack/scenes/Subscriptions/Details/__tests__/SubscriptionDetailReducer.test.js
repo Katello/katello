@@ -30,7 +30,9 @@ describe('subscriptions reducer', () => {
     const error = 'nothing worked';
     expect(reducer(initialState, {
       type: types.SUBSCRIPTION_DETAILS_FAILURE,
-      error,
+      payload: {
+        message: error,
+      },
     })).toEqual({
       ...initialState,
       error,

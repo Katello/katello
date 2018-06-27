@@ -73,7 +73,7 @@ class UpstreamSubscriptionsPage extends Component {
     const updatedSubscriptions = { pools: updatedPools };
 
     this.props.saveUpstreamSubscriptions(updatedSubscriptions).then(() => {
-      const { task, error } = this.props.upstreamSubscriptions;
+      const { task } = this.props.upstreamSubscriptions;
 
       // TODO: could probably factor this out into a task response component
       if (task) {
@@ -88,18 +88,6 @@ class UpstreamSubscriptionsPage extends Component {
 
         notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: 'success' });
         this.props.history.push('/subscriptions');
-      } else {
-        let errorMessages = [];
-
-        if (error.errors) {
-          errorMessages = error.errors;
-        } else if (error.message) {
-          errorMessages.push(error.message);
-        }
-
-        for (let i = 0; i < errorMessages.length; i += 1) {
-          notify({ message: errorMessages[i], type: 'error' });
-        }
       }
     });
   }
@@ -240,7 +228,6 @@ UpstreamSubscriptionsPage.propTypes = {
   saveUpstreamSubscriptions: PropTypes.func.isRequired,
   upstreamSubscriptions: PropTypes.shape({
     task: PropTypes.shape({}),
-    error: PropTypes.shape({}),
   }).isRequired,
 };
 
