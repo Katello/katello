@@ -37,7 +37,9 @@ describe('upstream subscriptions reducer', () => {
   it('should have error on UPSTREAM_SUBSCRIPTIONS_FAILURE', () => {
     expect(reducer(initialState, {
       type: types.UPSTREAM_SUBSCRIPTIONS_FAILURE,
-      error: 'Unable to process request.',
+      payload: {
+        message: 'Unable to process request.',
+      },
     })).toEqual(errorState);
   });
 
@@ -48,10 +50,13 @@ describe('upstream subscriptions reducer', () => {
     })).toEqual(saveSuccessState);
   });
 
-  it('should have error on SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS', () => {
+  it('should have error on SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE', () => {
     expect(reducer(initialSaveState, {
       type: types.SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE,
-      result: errorResult,
+      payload: {
+        message: 'Unable to process request.',
+        result: errorResult,
+      },
     })).toEqual(saveErrorState);
   });
 });

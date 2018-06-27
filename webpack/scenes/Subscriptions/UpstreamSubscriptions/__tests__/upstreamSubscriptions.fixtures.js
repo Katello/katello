@@ -1,5 +1,6 @@
 import Immutable from 'seamless-immutable';
 import { getTaskSuccessResponse } from '../../../Tasks/__tests__/task.fixtures';
+import { toastErrorAction, failureAction } from '../../../../services/api/testHelpers';
 
 export const initialState = Immutable({
   loading: true,
@@ -135,10 +136,8 @@ export const getFailureActions = [
   {
     type: 'UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'UPSTREAM_SUBSCRIPTIONS_FAILURE',
-  },
+  failureAction('UPSTREAM_SUBSCRIPTIONS_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const saveSuccessActions = [
@@ -155,8 +154,6 @@ export const saveFailureActions = [
   {
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE',
-  },
+  failureAction('SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE'),
+  toastErrorAction(),
 ];
