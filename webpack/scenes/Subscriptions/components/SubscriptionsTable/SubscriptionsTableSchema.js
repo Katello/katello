@@ -43,7 +43,7 @@ export const createSubscriptionsTableSchema = (
       formatters: [
         (value, { rowData }) => (
           <td>
-            <Link to={helpers.urlBuilder('xui/subscriptions', '', rowData.id)}>{rowData.name}</Link>
+            <Link to={helpers.urlBuilder('subscriptions', '', rowData.id)}>{rowData.name}</Link>
           </td>
         ),
       ],

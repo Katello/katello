@@ -9,7 +9,7 @@
  */
 angular.module('Bastion.subscriptions').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('subscriptions', {
-        url: '/subscriptions',
+        url: '/legacy_subscriptions',
         permission: 'view_subscriptions',
         template: '<div ui-view></div>',
         views: {
@@ -25,7 +25,7 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
 
     $stateProvider.state('subscription', {
         abstract: true,
-        url: '/subscriptions/:subscriptionId',
+        url: '/legacy_subscriptions/:subscriptionId',
         permission: 'view_subscriptions',
         controller: 'SubscriptionDetailsController',
         templateUrl: 'subscriptions/details/views/subscription-details.html'
@@ -72,7 +72,7 @@ angular.module('Bastion.subscriptions').config(['$stateProvider', function ($sta
 
     $stateProvider.state('subscriptions-manifest', {
         abstract: true,
-        url: '/subscriptions/manifest',
+        url: '/legacy_subscriptions/manifest',
         permission: 'import_manifest',
         controller: 'ManifestController',
         templateUrl: 'subscriptions/manifest/views/manifest.html'
