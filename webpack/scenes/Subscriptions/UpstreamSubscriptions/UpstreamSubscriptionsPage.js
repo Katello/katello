@@ -87,7 +87,7 @@ class UpstreamSubscriptionsPage extends Component {
         );
 
         notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: 'success' });
-        this.props.history.push('/xui/subscriptions');
+        this.props.history.push('/subscriptions');
       } else {
         let errorMessages = [];
 
@@ -127,7 +127,7 @@ class UpstreamSubscriptionsPage extends Component {
                 {__('Submit')}
               </Button>
 
-              <LinkContainer to="/xui/subscriptions">
+              <LinkContainer to="/subscriptions">
                 <Button>
                   {__('Cancel')}
                 </Button>
