@@ -12,15 +12,15 @@ export const links = [
   },
   {
     text: 'RH Subscriptions',
-    path: 'xui/subscriptions',
+    path: 'subscriptions',
     component: Subscriptions,
   },
   {
-    path: 'xui/subscriptions/add',
+    path: 'subscriptions/add',
     component: UpstreamSubscriptions,
   },
   {
-    path: 'xui/subscriptions/:id(\[0-9]*$\)',
+    path: 'subscriptions/:id(\[0-9]*$\)',
     component: SubscriptionDetails,
   },
 ];

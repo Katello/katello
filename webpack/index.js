@@ -5,14 +5,14 @@
 
 import componentRegistry from 'foremanReact/components/componentRegistry';
 import { mount } from 'foremanReact/common/MountingService';
-import ExperimentalUi from './containers/Application/index';
+import Application from './containers/Application/index';
 import './redux';
 // Not currently mocking anything
 // import './services/api/setupMocks';
 
 componentRegistry.register({
-  name: 'xui_katello',
-  type: ExperimentalUi,
+  name: 'katello',
+  type: Application,
 });
 
-mount('xui_katello', '#reactRoot');
+mount('katello', '#reactRoot');

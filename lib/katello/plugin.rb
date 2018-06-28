@@ -11,7 +11,7 @@ Foreman::Plugin.register :katello do
          :red_hat_subscriptions,
          :caption => N_('Subscriptions'),
          :url => '/subscriptions',
-         :url_hash => {:controller => 'katello/api/v2/subscriptions',
+         :url_hash => {:controller => 'katello/react',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
@@ -189,15 +189,6 @@ Foreman::Plugin.register :katello do
        :engine => Katello::Engine,
        :parent => :hosts_menu,
        :after => :content_hosts,
-       :turbolinks => false
-
-  menu :labs_menu,
-       :experimental_ui,
-       :url => '/xui/subscriptions',
-       :url_hash => {:controller => 'katello/react',
-                     :action => 'index'},
-       :caption => N_('Red Hat Subscriptions'),
-       :parent => :lab_features_menu,
        :turbolinks => false
 
   allowed_template_helpers :subscription_manager_configuration_url, :repository_url
