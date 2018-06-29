@@ -8,7 +8,9 @@
     </td>
     <td class="max_width start_time"></td>
     <td class="max_width duration"></td>
-    <td></td>
+    <td class="max_width details" data-total="<%= prod[:repos].count %>" data-selected="0">
+      <%= _("Selected repositories: %{selected}/%{total}") % { :selected => 0, :total => prod[:repos].count } %>
+    </td>
     <td class="result" id="table_<%= pid %>"></td>
     <% if @show_org %>
       <td><%= prod[:organization] %></td>
