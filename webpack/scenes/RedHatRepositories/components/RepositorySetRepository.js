@@ -8,6 +8,8 @@ import { setRepositoryEnabled } from '../../../redux/actions/RedHatRepositories/
 import '../index.scss';
 import api from '../../../services/api';
 
+const UNSPECIFIED_ARCH = 'Unspecified';
+
 class RepositorySetRepository extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +50,7 @@ class RepositorySetRepository extends Component {
       const data = {
         id: contentId,
         product_id: productId,
-        basearch: arch,
+        basearch: arch == UNSPECIFIED_ARCH ? undefined : arch,
         releasever: releasever || undefined,
       };
 
@@ -121,7 +123,7 @@ RepositorySetRepository.propTypes = {
 
 RepositorySetRepository.defaultProps = {
   releasever: '',
-  arch: __('Unspecified'),
+  arch: __(UNSPECIFIED_ARCH),
 };
 
 export default connect(null, { setRepositoryEnabled })(RepositorySetRepository);
