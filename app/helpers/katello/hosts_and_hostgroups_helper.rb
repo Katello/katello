@@ -76,16 +76,11 @@ module Katello
       end
     end
 
-    def fetch_lifecycle_environment(host, options = {})
-      selected_host_group = options.fetch(:selected_host_group, nil)
-      return lifecycle_environment(selected_host_group) if selected_host_group.present?
-      selected_env = lifecycle_environment(host)
-      return selected_env if selected_env.present?
+    def fetch_lifecycle_environment(host, _options = {})
+      lifecycle_environment(host)
     end
 
-    def fetch_content_view(host, options = {})
-      selected_host_group = options.fetch(:selected_host_group, nil)
-      return content_view(selected_host_group) if selected_host_group.present?
+    def fetch_content_view(host, _options = {})
       content_view(host)
     end
 
