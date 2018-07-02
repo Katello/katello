@@ -1,5 +1,7 @@
 require 'katello_test_helper'
 
+FakeContent = Struct.new(:name, :content_url)
+
 module Katello
   module Util
     class PathWithSubstitutionsTest < ActiveSupport::TestCase
@@ -51,6 +53,32 @@ module Katello
 
         resolved_list = cdn_var.substitute_vars(@el5_path)
         assert_equal [five_server_x86_64, five_point_eight_i386].sort, resolved_list.sort
+      end
+
+      def test_validating_subscriptions_unused_params
+        fake_content_params = ["Red Hat Enterprise Linux Atomic Host (Kickstart)",
+                               "/content/dist/rhel/atomic/7/7Server/x86_64/kickstart"]
+        content = FakeContent.new(*fake_content_params)
+        substitutions = { "basearch": "Unspecified" }
+        error_message = "#{substitutions.keys.join(",")} cannot be specified for #{content.name}"\
+                        " as that information is not substitutable in #{content.content_url}"
+        check_validating_subscriptions(content, substitutions, error_message)
+      end
+
+      def test_validating_subscriptions_needs_params
+        fake_content_params = ["Red Hat Enterprise Linux Atomic Host (Kickstart)",
+                               "/content/dist/$basearch/atomic/7/7Server/x86_64/kickstart"]
+        content = FakeContent.new(*fake_content_params)
+        substitutions = {}
+        error_message = "Missing arguments basearch for #{content.content_url}"
+        check_validating_subscriptions(content, substitutions, error_message)
+      end
+
+      def check_validating_subscriptions(content, substitutions, error_message)
+        cdn_var = CdnVarSubstitutor.new(mock)
+        assert_raises_with_message(Errors::CdnSubstitutionError, error_message) do
+          cdn_var.validate_substitutions(content, substitutions)
+        end
       end
     end
   end
