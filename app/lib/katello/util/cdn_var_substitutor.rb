@@ -28,9 +28,11 @@ module Katello
         needed_substitutions = PathWithSubstitutions.new(real_path, {}).substitutions_needed
 
         if unused_substitutions.any?
-          fail Errors::CdnSubstitutionError, _("%{unused_substitutes} cannot be specified for %{content_name}"\
-                 " as that information is not substitutable in %{content_url} ") %
-              { unaccepted_substitutions: unused_substitutions, content_name: content.name, content_url: content.content_url }
+          fail Errors::CdnSubstitutionError, _("%{unused_substitutions} cannot be specified for %{content_name}"\
+            " as that information is not substitutable in %{content_url} ") %
+            { unused_substitutions: unused_substitutions.join(','),
+              content_name: content.name,
+              content_url: content.content_url }
         end
 
         if needed_substitutions.any?
