@@ -5,7 +5,6 @@ import {
   joinSearchQueries,
   recommendedRepositorySetsQuery,
 } from './helpers';
-
 import {
   REPOSITORY_SETS_REQUEST,
   REPOSITORY_SETS_SUCCESS,
@@ -13,10 +12,13 @@ import {
   REPOSITORY_SETS_UPDATE_RECOMMENDED,
 } from '../../consts';
 import { propsToSnakeCase } from '../../../services/index';
+import handleMissingOrg from '../../../common/helpers';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadRepositorySets = (extendedParams = {}) => (dispatch, getState) => {
   const { recommended } = getState().katello.redHatRepositories.sets;
+
+  if (handleMissingOrg(orgId, dispatch, REPOSITORY_SETS_FAILURE)) return;
 
   dispatch({ type: REPOSITORY_SETS_REQUEST, params: extendedParams });
 

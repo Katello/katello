@@ -17,6 +17,7 @@ import {
 } from './SubscriptionConstants';
 import { filterRHSubscriptions } from './SubscriptionHelpers.js';
 import { getResponseError } from '../../move_to_foreman/common/helpers.js';
+import handleMissingOrg from '../../common/helpers';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{ organization_id: orgId },
@@ -47,6 +48,8 @@ export const loadSubscriptions = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: SUBSCRIPTIONS_REQUEST });
 
   const params = createSubscriptionParams(extendedParams);
+  if (handleMissingOrg(params.organization_id, dispatch, SUBSCRIPTIONS_FAILURE)) return null;
+
   return api
     .get('/subscriptions', {}, params)
     .then(({ data }) => {

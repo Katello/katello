@@ -13,6 +13,8 @@ import { loadRepositorySets, updateRecommendedRepositorySets } from '../../redux
 import SearchBar from './components/SearchBar';
 import RecommendedRepositorySetsToggler from './components/RecommendedRepositorySetsToggler';
 import { getSetsComponent, getEnabledComponent } from './helpers';
+import OrganizationCheck from '../../components/OrganizationCheck';
+import { orgId } from '../../services/api';
 
 class RedHatRepositoriesPage extends Component {
   componentDidMount() {
@@ -32,50 +34,52 @@ class RedHatRepositoriesPage extends Component {
       <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
         <h1>{__('Red Hat Repositories')}</h1>
 
-        <Row className="toolbar-pf">
-          <Col sm={12}>
-            <SearchBar repoParams={repoParams} />
-          </Col>
-        </Row>
+        <OrganizationCheck hide={!orgId}>
+          <Row className="toolbar-pf">
+            <Col sm={12}>
+              <SearchBar repoParams={repoParams} />
+            </Col>
+          </Row>
 
-        <Row className="row-eq-height">
-          <Col sm={6} className="available-repositories-container">
-            <div className="available-repositories-header">
-              <h2>{__('Available Repositories')}</h2>
-              <RecommendedRepositorySetsToggler
-                enabled={repositorySets.recommended}
-                onChange={value => this.props.updateRecommendedRepositorySets(value)}
-                className="recommended-repositories-toggler"
-              />
-            </div>
-            <LoadingState loading={repositorySets.loading} loadingText={__('Loading')}>
-              {getSetsComponent(
-                repositorySets,
-                (pagination) => {
-                  this.props.loadRepositorySets({
-                    ...pagination,
-                    search: repositorySets.search,
-                  });
-                },
-              )}
-            </LoadingState>
-          </Col>
+          <Row className="row-eq-height">
+            <Col sm={6} className="available-repositories-container">
+              <div className="available-repositories-header">
+                <h2>{__('Available Repositories')}</h2>
+                <RecommendedRepositorySetsToggler
+                  enabled={repositorySets.recommended}
+                  onChange={value => this.props.updateRecommendedRepositorySets(value)}
+                  className="recommended-repositories-toggler"
+                />
+              </div>
+              <LoadingState loading={repositorySets.loading} loadingText={__('Loading')}>
+                {getSetsComponent(
+                  repositorySets,
+                  (pagination) => {
+                    this.props.loadRepositorySets({
+                      ...pagination,
+                      search: repositorySets.search,
+                    });
+                  },
+                )}
+              </LoadingState>
+            </Col>
 
-          <Col sm={6} className="enabled-repositories-container">
-            <h2>{__('Enabled Repositories')}</h2>
-            <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
-              {getEnabledComponent(
-                enabledRepositories,
-                (pagination) => {
-                  this.props.loadEnabledRepos({
-                    ...pagination,
-                    search: enabledRepositories.search,
-                  });
-                },
-              )}
-            </LoadingState>
-          </Col>
-        </Row>
+            <Col sm={6} className="enabled-repositories-container">
+              <h2>{__('Enabled Repositories')}</h2>
+              <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
+                {getEnabledComponent(
+                  enabledRepositories,
+                  (pagination) => {
+                    this.props.loadEnabledRepos({
+                      ...pagination,
+                      search: enabledRepositories.search,
+                    });
+                  },
+                )}
+              </LoadingState>
+            </Col>
+          </Row>
+        </OrganizationCheck>
       </Grid>
     );
   }
