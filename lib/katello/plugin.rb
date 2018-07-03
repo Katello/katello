@@ -192,6 +192,8 @@ Foreman::Plugin.register :katello do
        :turbolinks => false
 
   allowed_template_helpers :subscription_manager_configuration_url, :repository_url
+  extend_template_helpers Katello::KatelloUrlsHelper
+
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
   end
