@@ -34,6 +34,10 @@ class SubscriptionsPage extends Component {
     };
   }
 
+  componentDidMount() {
+    this.loadData();
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const { tasks = [] } = nextProps;
     const nextTaskId = tasks[0] && tasks[0].id;
@@ -48,10 +52,6 @@ class SubscriptionsPage extends Component {
       };
     }
     return null;
-  }
-
-  componentDidMount() {
-    this.loadData();
   }
 
   componentDidUpdate(prevProps) {
@@ -139,6 +139,7 @@ class SubscriptionsPage extends Component {
 
   render() {
     const { tasks = [], subscriptions, organization } = this.props;
+    const currentOrg = orgId();
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
@@ -156,7 +157,7 @@ class SubscriptionsPage extends Component {
     const getAutoCompleteParams = search => ({
       endpoint: '/subscriptions/auto_complete_search',
       params: {
-        organization_id: orgId(),
+        organization_id: currentOrg,
         search,
       },
     });
