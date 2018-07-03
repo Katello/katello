@@ -42,6 +42,22 @@ module Katello
       facets = Host::ContentFacet.in_content_view_version_environments([first_cvve])
       assert_includes facets, content_facet
     end
+
+    def test_audit_for_content_facet
+      org = taxonomies(:empty_organization)
+      host1 = ::Host::Managed.create!(:name => 'foohost', :managed => false, :organization_id => org.id)
+      content_facet1 = Katello::Host::ContentFacet.create!(
+        :content_view_id => view.id, :lifecycle_environment_id => library.id, :host => host1
+      )
+
+      recent_audit = Audit.where(auditable_id: content_facet1.id).last
+      assert recent_audit, "No audit record for content_facet"
+      assert_equal 'create', recent_audit.action
+      assert_includes recent_audit.organization_ids, org.id
+
+      content_facet_rec = host1.associated_audits.where(auditable_id: content_facet1.id)
+      assert content_facet_rec, "No associated audit record for content_facet"
+    end
   end
 
   class ContentFacetErrataTest < ContentFacetBase
