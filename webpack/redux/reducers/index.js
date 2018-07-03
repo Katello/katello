@@ -5,6 +5,7 @@ import { subscriptions } from '../../scenes/Subscriptions';
 import { upstreamSubscriptions } from '../../scenes/Subscriptions/UpstreamSubscriptions';
 import { manifestHistory } from '../../scenes/Subscriptions/Manifest';
 import { subscriptionDetails } from '../../scenes/Subscriptions/Details';
+import { setOrganization } from '../../components/SelectOrg/SetOrganization';
 
 export default combineReducers({
   organization,
@@ -13,4 +14,5 @@ export default combineReducers({
   upstreamSubscriptions,
   manifestHistory,
   subscriptionDetails,
+  setOrganization,
 });

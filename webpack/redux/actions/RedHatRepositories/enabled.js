@@ -34,7 +34,6 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
 export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams });
   const { searchParams, repoParams } = createEnabledRepoParams(extendedParams);
-
   api
     .get('/repositories', {}, repoParams)
     .then(({ data }) => {
