@@ -17,6 +17,7 @@ module Katello
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
     param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
+    param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
     param_group :search, Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation, nil, nil, :custom_sort => default_sort,
@@ -92,7 +93,15 @@ module Katello
         relation = @product.displayable_product_contents
       end
 
-      relation = relation.enabled(@organization) if ::Foreman::Cast.to_bool(params[:enabled])
+      if ::Foreman::Cast.to_bool(params[:enabled])
+        relation = relation.enabled(@organization)
+      elsif ::Foreman::Cast.to_bool(params[:with_active_subscription])
+        relation = relation.with_valid_subscription(@organization)
+      else
+        relation = relation.where(:id => Katello::ProductContent.with_valid_subscription(@organization)).or(
+            relation.where(:id => Katello::ProductContent.enabled(@organization)))
+      end
+
       relation = relation.where(Katello::Content.table_name => {:name => params[:name]}) if params[:name].present?
       relation.redhat
     end

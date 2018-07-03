@@ -12,7 +12,6 @@ module Katello
 
     scope :displayable, -> {
       joins(:content).where.not("#{content_table_name}.content_type IN (?)", Katello::Repository.undisplayable_types)
-      .order("LOWER(#{content_table_name}.name) ASC")
     }
 
     scope :redhat, -> {
@@ -30,6 +29,10 @@ module Katello
 
     def self.enabled(organization)
       joins(:content).where("#{self.content_table_name}.cp_content_id" => Katello::Repository.in_organization(organization).select(:content_id))
+    end
+
+    def self.with_valid_subscription(organization)
+      where(:product_id => Katello::PoolProduct.where(:pool_id => organization.pools).select(:product_id))
     end
 
     # used by Katello::Api::V2::RepositorySetsController#index
