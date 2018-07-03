@@ -7,7 +7,7 @@ module Katello
     param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
     param_group :search, Api::V2::ApiController
     def index
-      respond(collection: scoped_search(index_relation, :name, :asc, resource_class: ContentViewFilter.rule_class_for(@filter)))
+      respond(collection: scoped_search(index_relation, :id, :asc, resource_class: ContentViewFilter.rule_class_for(@filter)))
     end
 
     def index_relation
