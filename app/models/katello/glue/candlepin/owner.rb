@@ -39,14 +39,6 @@ module Katello
         self.owner_details['contentAccessMode']
       end
 
-      def pools(consumer_uuid = nil)
-        if consumer_uuid
-          Resources::Candlepin::Owner.pools self.label, :consumer => consumer_uuid
-        else
-          Resources::Candlepin::Owner.pools self.label
-        end
-      end
-
       def generate_debug_cert
         Resources::Candlepin::Owner.generate_ueber_cert(label)
       end
