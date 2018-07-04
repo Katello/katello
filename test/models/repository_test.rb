@@ -441,33 +441,71 @@ module Katello
       assert view_repo.valid?
     end
 
-    def test_docker_repository_docker_upstream_name_format
+    test_attributes :pid => '3360aab2-74f3-4f6e-a083-46498ceacad2'
+    def test_create_docker_with_valid_name
       @repo.unprotected = true
       @repo.content_type = 'docker'
       @repo.download_policy = nil
-      valid = %w( valid
-                  abc/valid
-                  thisisareallylongbutstillvalidname
-                  soisthis/thisisareallylongbutstillvalidname
-                  single/slash
-                  multiple/slash/es abc/def/valid
+      @repo.docker_upstream_name = 'busybox'
+      valid_name_list.each do |name|
+        @repo.name = name
+        assert @repo.valid?, "Validation failed for create with valid name '#{name}' length: #{name.length}"
+      end
+    end
+
+    test_attributes :pid => '742a2118-0ab2-4e63-b978-88fe9f52c034'
+    def test_create_docker_with_valid_upstream_name
+      @repo.unprotected = true
+      @repo.content_type = 'docker'
+      @repo.download_policy = nil
+      valid_docker_upstream_names.each do |name|
+        @repo.docker_upstream_name = name
+        assert @repo.valid?, "Validation failed for create with valid upstream name '#{name}'"
+      end
+    end
+
+    test_attributes :pid => '2c5abb4a-e50b-427a-81d2-57eaf8f57a0f'
+    def test_create_docker_with_invalid_upstream_name
+      @repo.unprotected = true
+      @repo.content_type = 'docker'
+      @repo.download_policy = nil
+      invalid_docker_upstream_names.each do |name|
+        @repo.docker_upstream_name = name
+        refute @repo.valid?, "Validation failed for create with invalid upstream name '#{name}'"
+        assert @repo.errors.key?(:docker_upstream_name)
+      end
+    end
+
+    test_attributes :pid => '4e2fb78d-0b6a-4455-8869-8eaf9d4a61b0'
+    def test_update_docker_with_valid_upstream_name
+      @repo.unprotected = true
+      @repo.content_type = 'docker'
+      @repo.download_policy = nil
+      @repo.docker_upstream_name = 'busybox'
+      @repo.save!
+      valid_docker_upstream_names.each do |name|
+        @repo.docker_upstream_name = name
+        assert @repo.valid?, "Validation failed for update with valid upstream name '#{name}'"
+      end
+    end
+
+    test_attributes :pid => '92df93cb-9de2-40fa-8451-b8c1ba8f45be'
+    def test_destroy_docker
+      repo = build(:katello_repository,
+                   :environment => @library,
+                   :product => katello_products(:empty_product),
+                   :content_view_version => @library.default_content_view_version,
+                   :download_policy => nil,
+                   :content_type => 'docker',
+                   :docker_upstream_name => 'busybox',
+                   :unprotected => true,
+                   :url => 'http://rplevka.fedorapeople.org/fakerepo01/'
                   )
-      valid << 'a' * 255
-      valid.each do |name|
-        @repo.docker_upstream_name = name
-        assert(@repo.valid?, "container image name is valid '#{name}'")
+      repo.save!
+      assert_difference('Repository.count', -1) do
+        repo.delete
       end
-      invalid = %w( things\ with\ spaces
-                    UPPERCASE Uppercase uppercasE Upper/case UPPER/case upper/Case
-                    $ymbols $tuff.th@t.m!ght.h@ve.w%!rd.r#g#x.m*anings()
-                    /startingslash trailingslash/
-                    abcd/.-_
-                    )
-      invalid << 'a' * 256
-      invalid.each do |name|
-        @repo.docker_upstream_name = name
-        refute(@repo.valid?, "container image name is not valid '#{name}'")
-      end
+      refute Repository.exists?(repo.id)
     end
 
     def test_docker_full_path

@@ -41,10 +41,10 @@ module Katello
         { login: 'admin', pass: 'changeme', quote: false },
         { login: '@dmin', pass: 'changeme', quote: true },
         { login: 'adm/n', pass: 'changeme', quote: false },
-        { login: 'admin2', 'pass': 'ch@ngeme', quote: true },
-        { login: 'admin3', 'pass': 'chan:eme', quote: false },
-        { login: 'admin4', 'pass': 'chan/eme', quote: true },
-        { login: 'admin5', 'pass': 'ch@n:eme', quote: true },
+        { login: 'admin2', pass: 'ch@ngeme', quote: true },
+        { login: 'admin3', pass: 'chan:eme', quote: false },
+        { login: 'admin4', pass: 'chan/eme', quote: true },
+        { login: 'admin5', pass: 'ch@n:eme', quote: true },
         { login: '0', pass: 'mypassword', quote: false },
         { login: '0123456789012345678901234567890123456789', pass: 'changeme', quote: false },
         { login: 'admin', pass: '', quote: false },
@@ -75,6 +75,49 @@ module Katello
         end
       end
       credentials
+    end
+
+    def valid_docker_upstream_names
+      value_0 = RFauxFactory.gen_alphanumeric(rand(3..6)).downcase
+      value_1 = RFauxFactory.gen_alphanumeric(rand(3..6)).downcase
+      value_2 = RFauxFactory.gen_alphanumeric(rand(3..6)).downcase
+      value_3 = RFauxFactory.gen_alphanumeric(rand(3..6)).downcase
+      value_4 = RFauxFactory.gen_alphanumeric(1).downcase
+      [
+        # boundaries
+        RFauxFactory.gen_alphanumeric(1).downcase,
+        RFauxFactory.gen_alphanumeric(255).downcase,
+        "#{RFauxFactory.gen_alphanumeric(1).downcase}/#{RFauxFactory.gen_alphanumeric(1).downcase}",
+        "#{RFauxFactory.gen_alphanumeric(127).downcase}/#{RFauxFactory.gen_alphanumeric(127).downcase}",
+        'valid',
+        'thisisareallylongbutstillvalidnam',
+        # allowed non alphanumeric character
+        'abc/valid',
+        'soisthis/thisisareallylongbutstillvalidname',
+        'single/slash',
+        'multiple/slash/es',
+        'abc/def/valid',
+        "#{value_0}-#{value_1}_#{value_2}/#{value_2}-#{value_1}_#{value_0}.#{value_3}",
+        "#{value_4}-_-_/#{value_4}-_."
+      ]
+    end
+
+    def invalid_docker_upstream_names
+      [
+        RFauxFactory.gen_alphanumeric(256).downcase,
+        "#{RFauxFactory.gen_alphanumeric(127).downcase}/#{RFauxFactory.gen_alphanumeric(128).downcase}",
+        "#{RFauxFactory.gen_alphanumeric(128).downcase}/#{RFauxFactory.gen_alphanumeric(127).downcase}",
+        'things with spaces',
+        # with upper case
+        'Ab', 'UPPERCASE', 'Uppercase', 'uppercasE', 'Upper/case', 'UPPER/case', 'upper/Case',
+        # not allowed non alphanumeric character
+        '$ymbols', '$tuff.th@t.m!ght.h@ve.w%!rd.r#g#x.m*anings()', '/startingslash', 'trailingslash/',
+        'abcd/.-_',
+        'abc1d+_ab1cd/ab1cd-abc1d_1abcd.1abcd',
+        'abc1d-ab1cd_ab1cd/ab1cd+ab1cd_abc1d.1abcd',
+        "#{RFauxFactory.gen_alphanumeric(1).downcase}-_-_/-_.",
+        "-_-_/#{RFauxFactory.gen_alphanumeric(1).downcase}-_."
+      ]
     end
   end
 end
