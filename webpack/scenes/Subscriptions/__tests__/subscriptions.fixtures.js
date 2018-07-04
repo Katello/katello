@@ -10,6 +10,7 @@ export const initialState = Immutable({
   itemCount: 0,
   quantitiesLoading: false,
   availableQuantities: {},
+  tasks: [],
 });
 
 export const loadingState = Immutable({
@@ -242,6 +243,7 @@ export const successState = Immutable({
   itemCount: 81,
   quantitiesLoading: false,
   availableQuantities: {},
+  tasks: [],
 });
 
 export const errorState = Immutable({
@@ -255,6 +257,7 @@ export const errorState = Immutable({
   results: [],
   quantitiesLoading: false,
   availableQuantities: {},
+  tasks: [],
 });
 
 export const quantitiesSuccessState = Immutable({
