@@ -9,11 +9,10 @@ import reducer from './SubscriptionReducer';
 
 import SubscriptionsPage from './SubscriptionsPage';
 
-const EMPTY_ARRAY = [];
 // map state to props
 const mapStateToProps = state => ({
   subscriptions: state.katello.subscriptions,
-  tasks: state.katello.subscriptions.tasks || EMPTY_ARRAY,
+  tasks: state.katello.subscriptions.tasks,
 });
 
 // map action dispatchers to props
