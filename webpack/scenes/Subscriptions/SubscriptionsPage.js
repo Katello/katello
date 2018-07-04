@@ -38,36 +38,39 @@ class SubscriptionsPage extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const nextTaskId = nextProps.tasks[0] && nextProps.tasks[0].id;
+    const { tasks = [] } = nextProps;
+    const nextTaskId = tasks[0] && tasks[0].id;
 
-    if (nextProps.tasks.length === 0 && prevState.polledTask != null) {
+    if (tasks.length === 0 && prevState.polledTask != null) {
       return { showTaskModal: false, polledTask: undefined };
-    } else if (nextProps.tasks.length > 0 && nextTaskId !== prevState.polledTask) {
+    } else if (tasks.length > 0 && nextTaskId !== prevState.polledTask) {
       return {
         showTaskModal: true,
         manifestModalOpen: false,
-        polledTask: nextProps.tasks[0].id,
+        polledTask: nextTaskId,
       };
     }
     return null;
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks } = this.props;
+    const { tasks = [] } = this.props;
+    const { tasks: prevTasks = [] } = prevProps;
+
     const numberOfTasks = tasks.length;
-    const numberOfPrevTasks = prevProps.tasks.length;
+    const numberOfPrevTasks = prevTasks.length;
     let task;
 
     if (numberOfTasks > 0) {
-      if (numberOfPrevTasks === 0 || prevProps.tasks[0].id !== tasks[0].id) {
-        [task] = this.props.tasks;
+      if (numberOfPrevTasks === 0 || prevTasks[0].id !== tasks[0].id) {
+        [task] = tasks;
         this.handleDoneTask(task);
       }
     }
   }
 
   getDisabledReason(deleteButton) {
-    const { tasks, subscriptions } = this.props;
+    const { tasks = [], subscriptions } = this.props;
     const { disconnected } = subscriptions;
     let disabledReason = null;
 
@@ -132,7 +135,7 @@ class SubscriptionsPage extends Component {
   }
 
   render() {
-    const { tasks, subscriptions } = this.props;
+    const { tasks = [], subscriptions } = this.props;
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;

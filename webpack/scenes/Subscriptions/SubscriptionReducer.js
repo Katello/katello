@@ -24,6 +24,7 @@ const initialState = Immutable({
   ...initialApiState,
   quantitiesLoading: false,
   availableQuantities: {},
+  tasks: [],
 });
 
 const mapQuantities = (pools) => {
