@@ -27,7 +27,7 @@ angular.module('Bastion.products').controller('ProductsBulkAdvancedSyncModalCont
                 message = translate("Product syncs has been initiated in the background. " +
                     "Click %s to monitor the progress.");
 
-                Notification.setRenderedSuccessMessage(message.replace('%s', taskLink));
+                Notification.setSuccessMessage(message.replace('%s', taskLink));
             };
 
             error = function (response) {
