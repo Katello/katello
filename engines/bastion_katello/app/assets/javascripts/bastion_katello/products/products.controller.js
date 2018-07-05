@@ -64,7 +64,7 @@ angular.module('Bastion.products').controller('ProductsController',
             taskUrl = $scope.taskUrl(taskId);
             taskLink = $sce.trustAsHtml("<a href=" + taskUrl + ">here</a>");
             message = translate("Product delete operation has been initiated in the background. Click %s to monitor the progress.");
-            Notification.setRenderedSuccessMessage(message.replace("%", taskLink));
+            Notification.setSuccessMessage(message.replace("%", taskLink));
         });
 
         $scope.unsetProductDeletionTaskId = function () {
@@ -95,7 +95,7 @@ angular.module('Bastion.products').controller('ProductsController',
                 message = translate("Product sync has been initiated in the background. " +
                     "Click %s to monitor the progress.");
 
-                Notification.setRenderedSuccessMessage(message.replace('%s', taskLink));
+                Notification.setSuccessMessage(message.replace('%s', taskLink));
             };
 
             ProductBulkAction.syncProducts(getBulkParams(), success, bulkError);
