@@ -7,6 +7,7 @@ import {
 
 const initialState = Immutable({
   loading: false,
+  packages: [],
 });
 
 export default (state = initialState, action) => {
@@ -16,10 +17,10 @@ export default (state = initialState, action) => {
     }
 
     case PACKAGES_SUCCESS: {
-      const packages = action.response;
+      const packages = action.response.results;
 
       return state.merge({
-        ...packages,
+        packages,
         loading: false,
       });
     }

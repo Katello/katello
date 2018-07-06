@@ -10,8 +10,6 @@ const mapStateToProps = state => ({
   packages: state.katello.packages,
 });
 
-console.log(packagesActions);
-
 // map action dispatchers to props
 const mapDispatchToProps = dispatch => bindActionCreators(packagesActions, dispatch);
 

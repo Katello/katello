@@ -9,12 +9,12 @@ class PackagesPage extends Component {
   }
 
   componentDidMount() {
-    const { getPackages } = this.props;
-    getPackages();
+    this.props.getPackages();
   }
 
   render() {
     const { packages } = this.props;
+
     return (
       <Grid bsClass="container-fluid">
         <div>
@@ -32,7 +32,7 @@ class PackagesPage extends Component {
                 columns={packagesColumns}
               >
               <Table.Header/>
-              <Table.Body rows={mockRows} rowKey="id" />
+              <Table.Body rows={packages.packages} rowKey="id" />
               </Table.PfProvider>
             </Col>
           </Row>
