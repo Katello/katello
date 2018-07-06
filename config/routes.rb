@@ -21,6 +21,8 @@ Katello::Engine.routes.draw do
   match '/subscriptions' => 'react#index', :via => [:get]
   match '/subscriptions/*page' => 'react#index', :via => [:get]
 
+  match '/packages_example' => 'react#index', :via => [:get]
+
   match '/xui' => 'react#index', :via => [:get]
   match '/xui/*page' => 'react#index', :via => [:get]
 end
