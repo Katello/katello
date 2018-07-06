@@ -82,6 +82,14 @@ module Katello
       assert_includes Repository.readable, @fedora_17_x86_64_dev
     end
 
+    def test_readable_with_environment
+      refute_includes Repository.readable, @fedora_17_x86_64
+      setup_current_user_with_permissions(:name => "view_lifecycle_environments", :search => "name = \"#{@fedora_17_x86_64.environment.name}\"")
+      repos = Repository.readable
+      refute_empty repos
+      assert repos.all? { |repo| repo.environment_id == @fedora_17_x86_64.environment_id }
+    end
+
     def test_deletable
       assert_empty Repository.deletable
     end
