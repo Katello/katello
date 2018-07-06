@@ -3,6 +3,10 @@ namespace :katello do
     ForemanTasks.dynflow.config.remote = true
   end
 
+  def commit?
+    ENV['COMMIT'] == 'true' || ENV['FOREMAN_UPGRADE'] == '1'
+  end
+
   desc "Check for repositories that have not been published since their last sync, and republish if they have."
   task :publish_unpublished_repositories => ["environment", "disable_dynflow", "check_ping"] do
     needing_publish = []
@@ -51,7 +55,7 @@ namespace :katello do
 
   desc "Correct missing pulp repositories. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories.  COMMIT=true to perform operation."
   task :correct_repositories => ["environment", "check_ping"] do
-    puts "All operations will be skipped.  Re-run with COMMIT=true to perform corrections." if ENV['COMMIT'] != 'true'
+    puts "All operations will be skipped.  Re-run with COMMIT=true to perform corrections." unless commit?
 
     User.current = User.anonymous_api_admin
     repos = lookup_repositories
@@ -66,7 +70,7 @@ namespace :katello do
 
   desc "Correct missing pulp repositories for puppet environments. Specify CONTENT_VIEW=name and LIFECYCLE_ENVIRONMENT=name to narrow repositories.  COMMIT=true to perform operation."
   task :correct_puppet_environments => ["environment", "check_ping"] do
-    puts "All operations will be skipped.  Re-run with COMMIT=true to perform corrections." if ENV['COMMIT'] != 'true'
+    puts "All operations will be skipped.  Re-run with COMMIT=true to perform corrections." unless commit?
 
     User.current = User.anonymous_api_admin
     puppet_envs = lookup_puppet_environments
@@ -139,19 +143,18 @@ namespace :katello do
   end
 
   def handle_missing_repo(repo)
-    commit = ENV['COMMIT'] == 'true'
     puts "Repository #{repo.id} Missing"
     if repo.content_view.default?
       puts "Recreating #{repo.id}"
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo) if commit
+      ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo) if commit?
     else
       puts "Deleting #{repo.id}"
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo, :planned_destroy => true) if commit
+      ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo, :planned_destroy => true) if commit?
     end
   end
 
   def handle_missing_puppet_env(puppet_env)
     puts "Content View Puppet Environment #{puppet_env.id} Missing, Creating."
-    ForemanTasks.sync_task(::Actions::Katello::ContentViewPuppetEnvironment::Create, puppet_env) if ENV['COMMIT'] == 'true'
+    ForemanTasks.sync_task(::Actions::Katello::ContentViewPuppetEnvironment::Create, puppet_env) if commit?
   end
 end
