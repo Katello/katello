@@ -15,7 +15,7 @@
       </li>
       <li>
         <p translate>Install the pre-built bootstrap RPM:</p>
-        <pre><code>curl --insecure --output {{ consumerCertRPM }} https://{{ noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pub/{{ consumerCertRPM }}<br>yum localinstall {{ consumerCertRPM }} </code></pre>
+        <pre><code>curl --insecure --output {{ consumerCertRPM }} https://{{ noCapsulesFound ? katelloHostname : hostname(selectedCapsule.url) }}/pub/{{ consumerCertRPM }}<br />yum localinstall {{ consumerCertRPM }} </code></pre>
       </li>
       <li>
         <p translate>Register using subscription-manager:</p>
