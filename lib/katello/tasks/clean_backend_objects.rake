@@ -81,9 +81,13 @@ namespace :katello do
       end
     end
 
+    def commit?
+      ENV['COMMIT'] == 'true' || ENV['FOREMAN_UPGRADE'] == '1'
+    end
+
     # rubocop:disable HandleExceptions
     def execute(error_msg)
-      if ENV['COMMIT'] == 'true'
+      if commit?
         yield
       end
     rescue RestClient::ResourceNotFound
@@ -92,7 +96,7 @@ namespace :katello do
       print e.inspect
     end
 
-    unless ENV['COMMIT'] == 'true'
+    unless commit?
       print "The following changes will not actually be performed.  Rerun with COMMIT=true to apply the changes\n"
     end
 
