@@ -74,7 +74,7 @@ module Katello
     def upstream_pool_params
       upstream_params = params.permit(:page, :per_page, :order, :sort_by, :quantities_only, :attachable, pool_ids: []).to_h
 
-      if params[:full_result]
+      if params[:full_result] || !upstream_params[:pool_ids].empty?
         upstream_params.delete(:per_page)
         upstream_params.delete(:page)
       elsif !params[:per_page]
