@@ -1,18 +1,18 @@
 const mockRows = [
    {
      id: 0,
-     first_name: 'Dan',
-     last_name: 'Abramov',
+     name: 'bear',
+     version: '1.0.2',
    },
    {
      id: 1,
-     first_name: 'Sebastian',
-     last_name: 'Markbåge',
+     name: 'walrus',
+     version: '4.5.1',
    },
    {
      id: 2,
-     first_name: 'Sophie',
-     last_name: 'Alpert',
+     name: 'stork',
+     version: '1.3.2',
    },
 ]
 
