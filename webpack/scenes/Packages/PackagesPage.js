@@ -8,7 +8,13 @@ class PackagesPage extends Component {
     super(props)
   }
 
+  componentDidMount() {
+    const { getPackages } = this.props;
+    getPackages();
+  }
+
   render() {
+    const { packages } = this.props;
     return (
       <Grid bsClass="container-fluid">
         <div>

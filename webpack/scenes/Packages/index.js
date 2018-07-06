@@ -1,3 +1,20 @@
-import PackagesPage from './PackagesPage';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-export default PackagesPage;
+import PackagesPage from './PackagesPage';
+import reducer from './PackagesReducer';
+import * as packagesActions from './PackagesActions';
+
+// map state to props
+const mapStateToProps = state => ({
+  packages: state.katello.packages,
+});
+
+console.log(packagesActions);
+
+// map action dispatchers to props
+const mapDispatchToProps = dispatch => bindActionCreators(packagesActions, dispatch);
+
+export const packages = reducer;
+
+export default connect(mapStateToProps, mapDispatchToProps)(PackagesPage);
