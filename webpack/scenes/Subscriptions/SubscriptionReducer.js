@@ -1,4 +1,3 @@
-import find from 'lodash/find';
 import Immutable from 'seamless-immutable';
 import { initialApiState } from '../../services/api';
 import { TASK_BULK_SEARCH_SUCCESS } from '../Tasks/TaskConstants';
@@ -16,9 +15,10 @@ import {
   DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
+
+import { filterManifestTasksFromBulkSearchResponse } from './SubscriptionHelpers';
 
 const initialState = Immutable({
   ...initialApiState,
@@ -26,19 +26,6 @@ const initialState = Immutable({
   availableQuantities: {},
   tasks: [],
 });
-
-const mapQuantities = (pools) => {
-  const quantityMap = {};
-  pools.forEach(pool =>
-    pool.local_pool_ids && pool.local_pool_ids.forEach((localId) => {
-      if (quantityMap[localId]) {
-        quantityMap[localId] += pool.available;
-      } else {
-        quantityMap[localId] = pool.available;
-      }
-    }));
-  return quantityMap;
-};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -90,7 +77,7 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_QUANTITIES_SUCCESS: {
       return state.merge({
         quantitiesLoading: false,
-        availableQuantities: mapQuantities(action.response.results),
+        availableQuantities: action.payload,
       });
     }
 
@@ -101,15 +88,7 @@ export default (state = initialState, action) => {
     }
 
     case TASK_BULK_SEARCH_SUCCESS: {
-      let tasks;
-
-      const search = find(action.response, bulkSearch =>
-        bulkSearch.search_params.search_id === MANIFEST_TASKS_BULK_SEARCH_ID);
-
-      if (search && search.results.length > 0) {
-        tasks = search.results;
-      }
-      return state.set('tasks', tasks);
+      return state.set('tasks', filterManifestTasksFromBulkSearchResponse(action.response));
     }
 
     case GET_SETTING_SUCCESS: {

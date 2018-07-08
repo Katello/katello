@@ -6,7 +6,6 @@ import {
   loadingQuantitiesState,
   requestSuccessResponse,
   quantitiesSuccessState,
-  quantitiesRequestSuccessResponse,
   successState,
   errorState,
   quantitiesErrorState,
@@ -58,7 +57,7 @@ describe('subscriptions reducer', () => {
   it('should flatten subscriptions response SUBSCRIPTIONS_QUANTITIES_SUCCESS', () => {
     expect(reducer(loadingQuantitiesState, {
       type: types.SUBSCRIPTIONS_QUANTITIES_SUCCESS,
-      response: quantitiesRequestSuccessResponse,
+      payload: quantitiesSuccessState.availableQuantities,
     })).toEqual(quantitiesSuccessState);
   });
 
