@@ -356,6 +356,6 @@ export const loadQuantitiesSuccessActions = [
   },
   {
     type: 'SUBSCRIPTIONS_QUANTITIES_SUCCESS',
-    response: quantitiesRequestSuccessResponse,
+    payload: quantitiesSuccessState.availableQuantities,
   },
 ];
