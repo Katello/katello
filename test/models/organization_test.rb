@@ -23,5 +23,15 @@ module Katello
       org.update_attributes(:service_level => 'bar')
       assert(org.valid?)
     end
+
+    test_attributes :pid => '344573dd-5c46-4d8d-a3cf-e734a7a90ffa'
+    def test_should_not_update_label
+      org = Organization.new(:name => 'My Org', :label => 'my_org')
+      org.save!
+      org.label = 'my_org_label'
+      refute_valid org
+      assert org.errors.include?(:label)
+      assert_equal 'cannot be changed.', org.errors[:label][0]
+    end
   end
 end
