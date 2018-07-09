@@ -2,6 +2,7 @@ import Repos from '../../scenes/RedHatRepositories';
 import Subscriptions from '../../scenes/Subscriptions';
 import UpstreamSubscriptions from '../../scenes/Subscriptions/UpstreamSubscriptions/index';
 import SubscriptionDetails from '../../scenes/Subscriptions/Details';
+import PackagesPage from '../../scenes/Packages';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
@@ -23,4 +24,8 @@ export const links = [
     path: 'subscriptions/:id(\[0-9]*$\)',
     component: SubscriptionDetails,
   },
+  {
+    path: 'packages_example',
+    component: PackagesPage,
+  }
 ];
