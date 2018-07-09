@@ -30,6 +30,11 @@ describe('validateQuantity', () => {
       .toEqual(validationError('Has to be > 0'));
   });
 
+  it('detects zero', () => {
+    expect(validateQuantity('0', 500))
+      .toEqual(validationError('Has to be > 0'));
+  });
+
   it('detects too big quantity', () => {
     expect(validateQuantity('501', 500))
       .toEqual(validationError('Exceeds available quantity'));
