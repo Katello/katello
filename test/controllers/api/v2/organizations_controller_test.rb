@@ -185,6 +185,7 @@ module Katello
         assert_response :success
       end
 
+      test_attributes :pid => 'c9f69ee5-c6dd-4821-bb05-0d93ffa22460'
       def test_create_with_auto_label
         name = "Organization With Label"
         assert_sync_task ::Actions::Katello::Organization::Create do |org|
@@ -197,6 +198,7 @@ module Katello
         assert_response :success
       end
 
+      test_attributes :pid => '2bdd9aa8-a36a-4009-ac29-5c3d6416a2b7'
       def test_create_with_name_and_label
         name = "Organization With Label"
         label = "org_with_label"
@@ -224,6 +226,7 @@ module Katello
         assert_response :success
       end
 
+      test_attributes :pid => 'f7d92392-751e-45de-91da-5ed2a47afc3f'
       def test_create_with_name_label_description
         name = "Organization With Name Label Description"
         label = "organization_with_name_label_description"
