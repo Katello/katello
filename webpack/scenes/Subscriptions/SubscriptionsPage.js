@@ -10,6 +10,7 @@ import helpers from '../../move_to_foreman/common/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
+import { manifestExists } from './SubscriptionHelpers';
 import Search from '../../components/Search/index';
 import api, { orgId } from '../../services/api';
 import { createSubscriptionParams } from './SubscriptionActions.js';
@@ -33,10 +34,6 @@ class SubscriptionsPage extends Component {
     };
   }
 
-  componentDidMount() {
-    this.loadData();
-  }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const { tasks = [] } = nextProps;
     const nextTaskId = tasks[0] && tasks[0].id;
@@ -51,6 +48,10 @@ class SubscriptionsPage extends Component {
       };
     }
     return null;
+  }
+
+  componentDidMount() {
+    this.loadData();
   }
 
   componentDidUpdate(prevProps) {
@@ -70,7 +71,7 @@ class SubscriptionsPage extends Component {
   }
 
   getDisabledReason(deleteButton) {
-    const { tasks = [], subscriptions } = this.props;
+    const { tasks = [], subscriptions, organization } = this.props;
     const { disconnected } = subscriptions;
     let disabledReason = null;
 
@@ -79,7 +80,9 @@ class SubscriptionsPage extends Component {
     } else if (tasks.length > 0) {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
-      disabledReason = __('This is disabled because no subscriptions are selected');
+      disabledReason = __('This is disabled because no subscriptions are selected.');
+    } else if (!manifestExists(organization)) {
+      disabledReason = __('This is disabled because no manifest has been uploaded.');
     }
 
     return disabledReason;
@@ -135,7 +138,7 @@ class SubscriptionsPage extends Component {
   }
 
   render() {
-    const { tasks = [], subscriptions } = this.props;
+    const { tasks = [], subscriptions, organization } = this.props;
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
@@ -189,6 +192,15 @@ class SubscriptionsPage extends Component {
 
     const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
 
+    const emptyStateData = {
+      header: __('There are no Subscriptions to display'),
+      description: __('Import a Manifest to manage your Entitlements.'),
+      action: {
+        onClick: showManageManifestModal,
+        title: __('Import a Manifest'),
+      },
+    };
+
     return (
       <Grid bsClass="container-fluid">
         <Row>
@@ -208,7 +220,10 @@ class SubscriptionsPage extends Component {
 
                   <div className="toolbar-pf-action-right">
                     <FormGroup>
-                      <LinkContainer to="subscriptions/add" disabled={disableManifestActions}>
+                      <LinkContainer
+                        to="subscriptions/add"
+                        disabled={disableManifestActions || !manifestExists(organization)}
+                      >
                         <TooltipButton
                           tooltipId="add-subscriptions-button-tooltip"
                           tooltipText={this.getDisabledReason()}
@@ -257,6 +272,7 @@ class SubscriptionsPage extends Component {
               <SubscriptionsTable
                 loadSubscriptions={this.props.loadSubscriptions}
                 updateQuantity={this.props.updateQuantity}
+                emptyState={emptyStateData}
                 subscriptions={this.props.subscriptions}
                 subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
                 onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
@@ -279,7 +295,8 @@ class SubscriptionsPage extends Component {
 SubscriptionsPage.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
-  subscriptions: PropTypes.shape().isRequired,
+  subscriptions: PropTypes.shape({}).isRequired,
+  organization: PropTypes.shape({}).isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
   pollTaskUntilDone: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
