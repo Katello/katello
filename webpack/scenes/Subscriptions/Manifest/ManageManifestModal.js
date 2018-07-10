@@ -6,8 +6,9 @@ import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
-import { columns } from './ManifestHistoryTableSchema';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
+import { manifestExists } from '../SubscriptionHelpers';
+import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
@@ -30,13 +31,8 @@ class ManageManifestModal extends Component {
       'uploadManifest',
       'refreshManifest',
       'deleteManifest',
-      'manifestExists',
       'disabledTooltipText',
     ]);
-  }
-
-  componentDidMount() {
-    this.loadData();
   }
 
   static getDerivedStateFromProps(newProps, prevState) {
@@ -50,6 +46,10 @@ class ManageManifestModal extends Component {
       };
     }
     return null;
+  }
+
+  componentDidMount() {
+    this.loadData();
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -109,12 +109,6 @@ class ManageManifestModal extends Component {
       return __('This is disabled because a manifest task is in progress');
     }
     return __('This is disabled because no manifest exists');
-  }
-
-  manifestExists() {
-    const { organization } = this.props;
-
-    return organization.owner_details && organization.owner_details.upstreamConsumer;
   }
 
   render() {
@@ -213,7 +207,7 @@ class ManageManifestModal extends Component {
                       tooltipText={disabledReason}
                       tooltipPlacement="top"
                       title={__('Refresh')}
-                      disabled={!this.manifestExists() ||
+                      disabled={!manifestExists(organization) ||
                         actionInProgress || disableManifestActions}
                     />
 
@@ -223,7 +217,7 @@ class ManageManifestModal extends Component {
                       tooltipText={this.disabledTooltipText()}
                       tooltipPlacement="top"
                       title={__('Delete')}
-                      disabled={!this.manifestExists() || actionInProgress}
+                      disabled={!manifestExists(organization) || actionInProgress}
                     />
 
                     <ConfirmDialog

@@ -13,6 +13,7 @@ const EmptyState = (props) => {
     documentationButton = __('Documentation'),
     docUrl,
     action,
+    actionButton,
     secondayActions,
   } = props;
   const defaultDocumantion = `${documentationLabel} <a href=${docUrl}>${documentationButton}</a>`;
@@ -30,11 +31,23 @@ const EmptyState = (props) => {
       )}
       {action && (
         <PfEmptyState.Action>
-          <LinkContainer to={action.url}>
-            <Button href={action.url} bsStyle="primary" bsSize="large">
+          {action.url && (
+            <LinkContainer to={action.url}>
+              <Button href={action.url} bsStyle="primary" bsSize="large">
+                {action.title}
+              </Button>
+            </LinkContainer>
+          )}
+          {action.onClick && (
+            <Button onClick={action.onClick} bsStyle="primary" bsSize="large">
               {action.title}
             </Button>
-          </LinkContainer>
+          )}
+        </PfEmptyState.Action>
+      )}
+      {actionButton && (
+        <PfEmptyState.Action>
+          {actionButton}
         </PfEmptyState.Action>
       )}
       {secondayActions && (
