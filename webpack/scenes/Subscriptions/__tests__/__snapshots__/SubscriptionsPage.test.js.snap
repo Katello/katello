@@ -53,6 +53,7 @@ exports[`subscriptions page should render 1`] = `
               >
                 <LinkContainer
                   activeClassName="active"
+                  disabled={false}
                   exact={false}
                   replace={false}
                   strict={false}
@@ -93,7 +94,7 @@ exports[`subscriptions page should render 1`] = `
                   title="Delete"
                   tooltipId="delete-subscriptions-button-tooltip"
                   tooltipPlacement="top"
-                  tooltipText="This is disabled because no subscriptions are selected"
+                  tooltipText="This is disabled because no subscriptions are selected."
                 />
               </FormGroup>
             </div>
@@ -111,6 +112,16 @@ exports[`subscriptions page should render 1`] = `
         id="subscriptions-table"
       >
         <SubscriptionsTable
+          emptyState={
+            Object {
+              "action": Object {
+                "onClick": [Function],
+                "title": "Import a Manifest",
+              },
+              "description": "Import a Manifest to manage your Entitlements.",
+              "header": "There are no Subscriptions to display",
+            }
+          }
           loadSubscriptions={[Function]}
           onDeleteSubscriptions={[Function]}
           onSubscriptionDeleteModalClose={[Function]}
