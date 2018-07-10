@@ -193,13 +193,9 @@ class UpstreamSubscriptionsPage extends Component {
       description: __('Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to ' +
           'an on-premise subscription management application such as Red Hat Satellite.'),
       docUrl: 'http://redhat.com',
-      documentation: {
-        title: __('Learn more about Subscription Allocations'),
-        url: 'http://redhat.com',
-      },
       action: {
-        title: __('New Subscription Allocation'),
-        url: 'http://redhat.com',
+        title: __('Import a Manifest to Begin'),
+        url: '/subscriptions',
       },
     });
 

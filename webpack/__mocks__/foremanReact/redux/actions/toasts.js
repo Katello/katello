@@ -4,3 +4,5 @@ export const addToast = toast => ({
     message: toast,
   },
 });
+
+export default addToast;
