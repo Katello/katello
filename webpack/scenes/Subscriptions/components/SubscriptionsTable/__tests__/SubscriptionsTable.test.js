@@ -24,13 +24,18 @@ describe('subscriptions table', () => {
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
   });
-  /* eslint-enable react/jsx-indent */
 
   it('should render an empty state', async () => {
+    const emptyStateData = {
+      header: __('Yay empty state'),
+      description: __('There is nothing to see here'),
+    };
+
     /* eslint-disable react/jsx-indent */
     const page = render(<MemoryRouter>
       <SubscriptionsTable
         subscriptions={emptyState}
+        emptyState={emptyStateData}
         loadSubscriptions={loadSubscriptions}
         updateQuantity={updateQuantity}
         subscriptionDeleteModalOpen={false}
@@ -41,6 +46,7 @@ describe('subscriptions table', () => {
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
   });
+  /* eslint-enable react/jsx-indent */
 
   it('should render a loading state', async () => {
     const page = render(<SubscriptionsTable

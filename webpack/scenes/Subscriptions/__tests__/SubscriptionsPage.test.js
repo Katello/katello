@@ -10,9 +10,11 @@ jest.mock('../../../move_to_foreman/foreman_toast_notifications');
 
 describe('subscriptions page', () => {
   const noop = () => {};
+  const organization = { owner_details: { upstreamConsumer: 'blah' } };
 
   it('should render', async () => {
     const page = shallow(<SubscriptionsPage
+      organization={organization}
       subscriptions={successState}
       loadSetting={loadSetting}
       loadSubscriptions={loadSubscriptions}
