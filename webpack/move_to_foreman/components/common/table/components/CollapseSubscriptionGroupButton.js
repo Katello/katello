@@ -6,7 +6,7 @@ import { Icon } from 'patternfly-react';
 const CollapseSubscriptionGroupButton = ({
   collapsed, onClick, ...props
 }) => {
-  const iconName = collapsed ? 'angle-down' : 'angle-right';
+  const iconName = collapsed ? 'angle-right' : 'angle-down';
 
   return (
     <Icon
