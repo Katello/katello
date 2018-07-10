@@ -12,19 +12,6 @@ import { recordsValid } from '../../SubscriptionValidations';
 import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
 import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
 
-const emptyStateData = {
-  header: __('There are no Subscriptions to display'),
-  description: __('Add Subscriptions to this Allocation to manage your Entitlements.'),
-  documentation: {
-    title: __('Learn more about adding Subscriptions to Allocations'),
-    url: 'http://redhat.com',
-  },
-  action: {
-    title: __('Add Subscriptions'),
-    url: 'subscriptions/add',
-  },
-};
-
 class SubscriptionsTable extends Component {
   constructor(props) {
     super(props);
@@ -140,7 +127,7 @@ class SubscriptionsTable extends Component {
   }
 
   render() {
-    const { subscriptions } = this.props;
+    const { subscriptions, emptyState } = this.props;
     const { groupedSubscriptions } = this.state;
     const allSubscriptionResults = subscriptions.results;
 
@@ -245,7 +232,7 @@ class SubscriptionsTable extends Component {
       <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
         <ForemanTable
           columns={columnsDefinition}
-          emptyState={emptyStateData}
+          emptyState={emptyState}
           bodyMessage={bodyMessage}
           rows={this.state.rows}
           components={{
@@ -331,6 +318,7 @@ class SubscriptionsTable extends Component {
 SubscriptionsTable.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
+  emptyState: PropTypes.shape({}).isRequired,
   subscriptions: PropTypes.shape({
     results: PropTypes.array,
   }).isRequired,
