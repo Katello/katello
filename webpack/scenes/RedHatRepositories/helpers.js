@@ -22,7 +22,7 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
       sprintf(
         __('No Red Hat products currently exist, please import a manifest %(anchorBegin)s here %(anchorEnd)s to receive Red Hat content. No repository sets available.'),
         {
-          anchorBegin: '<a href="/subscriptions/manifest/import">',
+          anchorBegin: '<a href="/subscriptions/">',
           anchorEnd: '</a>',
         },
       );
