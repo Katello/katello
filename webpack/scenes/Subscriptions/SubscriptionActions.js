@@ -19,7 +19,7 @@ import { filterRHSubscriptions } from './SubscriptionHelpers.js';
 import { getResponseError } from '../../move_to_foreman/common/helpers.js';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
-  ...{ organization_id: orgId },
+  ...{ organization_id: orgId() },
   ...propsToSnakeCase(extendedParams),
 });
 
@@ -28,7 +28,7 @@ export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
 
   const params = createSubscriptionParams(extendedParams);
   return api
-    .get(`/organizations/${orgId}/upstream_subscriptions`, {}, params)
+    .get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
@@ -76,7 +76,7 @@ export const updateQuantity = (quantities = {}) => (dispatch) => {
   };
 
   return api
-    .put(`/organizations/${orgId}/upstream_subscriptions`, params)
+    .put(`/organizations/${orgId()}/upstream_subscriptions`, params)
     .then(({ data }) => {
       dispatch({
         type: UPDATE_QUANTITY_SUCCESS,
@@ -99,7 +99,7 @@ export const deleteSubscriptions = poolIds => (dispatch) => {
   };
 
   return api
-    .delete(`/organizations/${orgId}/upstream_subscriptions`, {}, params)
+    .delete(`/organizations/${(orgId())}/upstream_subscriptions`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: DELETE_SUBSCRIPTIONS_SUCCESS,

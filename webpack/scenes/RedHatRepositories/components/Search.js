@@ -43,7 +43,7 @@ class RepositorySearch extends Component {
 
   getAutoCompleteParams(search) {
     const params = {
-      organization_id: orgId,
+      organization_id: orgId(),
       search,
     };
 

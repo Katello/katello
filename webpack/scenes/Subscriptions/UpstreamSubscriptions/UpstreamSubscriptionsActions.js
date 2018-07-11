@@ -14,12 +14,12 @@ export const loadUpstreamSubscriptions = (extendedParams = {}) => (dispatch) => 
   dispatch({ type: UPSTREAM_SUBSCRIPTIONS_REQUEST });
 
   const params = {
-    ...{ organization_id: orgId, attachable: true },
+    ...{ organization_id: orgId(), attachable: true },
     ...propsToSnakeCase(extendedParams),
   };
 
   return api
-    .get(`/organizations/${orgId}/upstream_subscriptions`, {}, params)
+    .get(`/organizations/${orgId()}/upstream_subscriptions`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: UPSTREAM_SUBSCRIPTIONS_SUCCESS,
@@ -43,7 +43,7 @@ export const saveUpstreamSubscriptions = upstreamSubscriptions => (dispatch) => 
   };
 
   return api
-    .post(`/organizations/${orgId}/upstream_subscriptions`, params)
+    .post(`/organizations/${orgId()}/upstream_subscriptions`, params)
     .then(({ data }) => {
       dispatch({
         type: SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS,

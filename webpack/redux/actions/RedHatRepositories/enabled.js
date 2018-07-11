@@ -23,7 +23,7 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
   ]);
 
   const repoParams = {
-    ...{ organization_id: orgId, enabled: 'true' },
+    ...{ organization_id: orgId(), enabled: 'true' },
     ...propsToSnakeCase(extendedParams),
     search,
   };

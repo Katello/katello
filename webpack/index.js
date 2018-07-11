@@ -4,7 +4,6 @@
 /* eslint-disable import/no-unresolved */
 
 import componentRegistry from 'foremanReact/components/componentRegistry';
-import { mount } from 'foremanReact/common/MountingService';
 import Application from './containers/Application/index';
 import './redux';
 // Not currently mocking anything
@@ -15,4 +14,3 @@ componentRegistry.register({
   type: Application,
 });
 
-mount('katello', '#reactRoot');

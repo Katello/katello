@@ -3,13 +3,13 @@
 <% end %>
 
 <% content_for(:javascripts) do %>
-    <%= javascript_include_tag *webpack_asset_paths('katello', :extension => 'js'), "data-turbolinks-track" => true, 'defer' => 'defer' %>
+    <%= javascript_include_tag *webpack_asset_paths('katello', :extension => 'js') %>
 <% end %>
 
 <% content_for(:content) do %>
     <%= notifications %>
-    <div id="reactRoot"></div>
     <div id="organization-id" data-id="<%= Organization.current.id if Organization.current %>" ></div>
+    <div id="reactRoot"></div>
 <% end %>
-
 <%= render file: "layouts/base" %>
+<%= mount_react_component('katello', '#reactRoot') %>
