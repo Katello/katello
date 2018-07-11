@@ -28,7 +28,7 @@ export const loadRepositorySets = (extendedParams = {}) => (dispatch, getState) 
   ]);
 
   const params = {
-    ...{ organization_id: orgId },
+    ...{ organization_id: orgId() },
     ...propsToSnakeCase(extendedParams),
     search,
   };

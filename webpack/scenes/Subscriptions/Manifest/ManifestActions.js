@@ -27,7 +27,7 @@ export const uploadManifest = file => (dispatch) => {
   };
 
   return api
-    .post(`/organizations/${orgId}/subscriptions/upload`, formData, config)
+    .post(`/organizations/${orgId()}/subscriptions/upload`, formData, config)
     .then(({ data }) => {
       dispatch({
         type: UPLOAD_MANIFEST_SUCCESS,
@@ -50,7 +50,7 @@ export const refreshManifest = (extendedParams = {}) => (dispatch) => {
   };
 
   return api
-    .put(`/organizations/${orgId}/subscriptions/refresh_manifest`, {}, params)
+    .put(`/organizations/${orgId()}/subscriptions/refresh_manifest`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: REFRESH_MANIFEST_SUCCESS,
@@ -73,7 +73,7 @@ export const deleteManifest = (extendedParams = {}) => (dispatch) => {
   };
 
   return api
-    .post(`/organizations/${orgId}/subscriptions/delete_manifest`, {}, params)
+    .post(`/organizations/${orgId()}/subscriptions/delete_manifest`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: DELETE_MANIFEST_SUCCESS,
@@ -96,7 +96,7 @@ export const loadManifestHistory = (extendedParams = {}) => (dispatch) => {
   };
 
   return api
-    .get(`/organizations/${orgId}/subscriptions/manifest_history`, {}, params)
+    .get(`/organizations/${orgId()}/subscriptions/manifest_history`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: MANIFEST_HISTORY_SUCCESS,

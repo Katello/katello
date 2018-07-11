@@ -150,7 +150,7 @@ class SubscriptionsPage extends Component {
     const getAutoCompleteParams = search => ({
       endpoint: '/subscriptions/auto_complete_search',
       params: {
-        organization_id: orgId,
+        organization_id: orgId(),
         search,
       },
     });

@@ -100,6 +100,6 @@ class ForemanTasksApi extends Api {
 export const foremanTasksApi = new ForemanTasksApi();
 
 // eslint-disable-next-line import/prefer-default-export
-const orgNode = document.getElementById('organization-id');
+const orgNode = () => document.getElementById('organization-id');
 // This node does not exist while testing
-export const orgId = orgNode ? orgNode.dataset.id : '1';
+export const orgId = () => (orgNode() ? orgNode().dataset.id : '1');
