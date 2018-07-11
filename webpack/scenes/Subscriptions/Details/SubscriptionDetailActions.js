@@ -10,7 +10,7 @@ export const loadSubscriptionDetails = subscriptionId => (dispatch) => {
   dispatch({ type: SUBSCRIPTION_DETAILS_REQUEST });
 
   return api
-    .get(`/organizations/${orgId}/subscriptions/${subscriptionId}`)
+    .get(`/organizations/${orgId()}/subscriptions/${subscriptionId}`)
     .then(({ data }) => {
       dispatch({
         type: SUBSCRIPTION_DETAILS_SUCCESS,
