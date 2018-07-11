@@ -23,8 +23,8 @@ const buildTableRowsFromGroup = (subscriptionGroup, availableQuantities, updated
   }
 
   // build row only for the first subscription in the group
-  const [subscription] = subscriptions;
-  return [buildTableRow(subscription, availableQuantities, updatedQuantity)];
+  const [firstSubscription] = subscriptions;
+  return [buildTableRow(firstSubscription, availableQuantities, updatedQuantity)];
 };
 
 export const buildTableRows = (groupdSubscriptions, availableQuantities, updatedQuantity) => {
@@ -47,7 +47,7 @@ export const groupSubscriptionsByProductId = ({ results: subscriptions }) => {
       };
     }
 
-    grouped[subscription.product_id].subscriptions.push(subscription);
+    grouped[subscription.product_id].subscriptions.unshift(subscription);
   });
 
   return grouped;
