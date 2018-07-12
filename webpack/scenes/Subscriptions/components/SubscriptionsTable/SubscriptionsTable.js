@@ -142,6 +142,7 @@ class SubscriptionsTable extends Component {
   render() {
     const { subscriptions } = this.props;
     const { groupedSubscriptions } = this.state;
+    const allSubscriptionResults = subscriptions.results;
 
     const groupingController = {
       isCollapseable: ({ rowData }) =>
@@ -185,7 +186,8 @@ class SubscriptionsTable extends Component {
       },
     };
 
-    const checkAllRowsSelected = () => this.state.rows.length === this.state.selectedRows.length;
+    const checkAllRowsSelected = () =>
+      allSubscriptionResults.length === this.state.selectedRows.length;
 
     const updateDeleteButton = () => {
       this.props.toggleDeleteButton(this.state.selectedRows.length > 0);
@@ -201,7 +203,7 @@ class SubscriptionsTable extends Component {
           );
         } else {
           this.setState(
-            { selectedRows: this.state.rows.map(row => row.id) },
+            { selectedRows: allSubscriptionResults.map(row => row.id) },
             updateDeleteButton,
           );
         }
@@ -229,7 +231,7 @@ class SubscriptionsTable extends Component {
     };
 
     let bodyMessage;
-    if (subscriptions.results.length === 0 && subscriptions.searchIsActive) {
+    if (allSubscriptionResults.length === 0 && subscriptions.searchIsActive) {
       bodyMessage = __('No subscriptions match your search criteria.');
     }
 
