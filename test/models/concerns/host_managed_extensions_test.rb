@@ -114,7 +114,9 @@ module Katello
     end
 
     def test_non_matching_puppet_environment
-      third_party_env = ::Environment.create!(:name => 'someotherenv')
+      third_party_env = ::Environment.create!(:name => 'someotherenv',
+                                              :organizations => [@foreman_host.organization],
+                                              :locations => [@foreman_host.location])
       @foreman_host.environment = third_party_env
       @foreman_host.save!
 
