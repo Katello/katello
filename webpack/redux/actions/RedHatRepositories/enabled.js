@@ -1,6 +1,9 @@
 import api, { orgId } from '../../../services/api';
-import { normalizeRepositorySets, repoTypeFilterToSearchQuery, joinSearchQueries } from './helpers';
-
+import {
+  normalizeRepositorySets,
+  repoTypeFilterToSearchQuery,
+  joinSearchQueries,
+} from './helpers';
 import {
   ENABLED_REPOSITORIES_REQUEST,
   ENABLED_REPOSITORIES_SUCCESS,
@@ -8,6 +11,7 @@ import {
   REPOSITORY_DISABLED,
 } from '../../consts';
 import { propsToSnakeCase } from '../../../services/index';
+import handleMissingOrg from '../../../common/helpers';
 
 export const setRepositoryDisabled = repository => ({
   type: REPOSITORY_DISABLED,
@@ -34,6 +38,8 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
 export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams });
   const { searchParams, repoParams } = createEnabledRepoParams(extendedParams);
+
+  if (handleMissingOrg(repoParams.organization_id, dispatch, ENABLED_REPOSITORIES_FAILURE)) return;
 
   api
     .get('/repositories', {}, repoParams)

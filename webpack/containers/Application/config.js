@@ -20,6 +20,7 @@ export const links = [
     component: UpstreamSubscriptions,
   },
   {
+    /* eslint-disable-next-line no-useless-escape */
     path: 'subscriptions/:id(\[0-9]*$\)',
     component: SubscriptionDetails,
   },
