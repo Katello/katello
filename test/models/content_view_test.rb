@@ -212,6 +212,40 @@ module Katello
       refute_empty @library_view.all_version_library_instances
     end
 
+    test_attributes :pid => '4a3b616d-53ab-4396-9a50-916d6c42a401'
+    def test_should_create_composite
+      view = ContentView.new(:name => "new content view", :organization_id => @organization.id)
+      [false, true].each do |composite|
+        view.composite = composite
+        assert view.valid?, "Validation failed for content view create with valid composite value: #{composite}"
+      end
+    end
+
+    test_attributes :pid => '068e3e7c-34ac-47cb-a1bb-904d12c74cc7'
+    def test_should_create_with_valid_description
+      view = ContentView.new(:name => "new content view", :organization_id => @organization.id)
+      valid_name_list.each do |description|
+        view.description = description
+        assert view.valid?, "Validation failed for content view create with valid description: '#{description}', length: #{description.length}"
+      end
+    end
+
+    test_attributes :pid => '15e6fa3a-1a65-4e7d-8d32-3a81227ac1c8'
+    def test_should_update_name_with_valid_values
+      view = ContentView.create!(:name => "org content view", :organization_id => @organization.id)
+      valid_name_list.each do |name|
+        view.name = name
+        assert view.valid?, "Validation failed for content view update with valid name: '#{name}', length: #{name}"
+      end
+    end
+
+    test_attributes :pid => '77883887-800f-412f-91a3-b2f7ed999c70'
+    def test_should_not_update_label
+      view = ContentView.create!(:name => "org content view", :label => 'org_content_view', :organization_id => @organization.id)
+      view.label = 'new_org_content_view'
+      refute view.valid?, "Validation passed for content view when updating label value"
+    end
+
     def test_composite_content_views_with_repos
       view = ContentView.create!(:name => "Carcosa",
                                  :organization_id => @organization.id,
