@@ -3,6 +3,7 @@
 require "katello_test_helper"
 
 # rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/ClassLength
 module Katello
   class Api::V2::ContentViewsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
@@ -77,6 +78,7 @@ module Katello
       end
     end
 
+    test_attributes :pid => '80d36498-2e71-4aa9-b696-f0a45e86267f'
     def test_create
       post :create, params: { :name => "My View", :label => "My_View", :description => "Cool", :organization_id => @organization.id }
 
@@ -89,6 +91,13 @@ module Katello
       post :create, params: { :name => "My View", :label => "My_View", :description => "Cool" }
 
       assert_response :not_found
+    end
+
+    test_attributes :pid => '261376ca-7d12-41b6-9c36-5f284865243e'
+    def test_should_not_create_with_invalid_name
+      post :create, params: { :name => '', :label => 'My_View', :description => 'Cool', :organization_id => @organization.id }
+      assert_response :unprocessable_entity
+      assert_match "Name can't be blank", @response.body
     end
 
     def test_create_protected
@@ -123,6 +132,7 @@ module Katello
       end
     end
 
+    test_attributes :pid => '3f1457f2-586b-472c-8053-99017c4a4909'
     def test_update
       params = { :name => "My View", :description => "New description" }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
@@ -177,6 +187,13 @@ module Katello
       assert_protected_action(:update, allowed_perms, denied_perms) do
         put :update, params: { :id => @library_dev_staging_view.id, :name => "new name" }
       end
+    end
+
+    test_attributes :pid => '69a2ce8d-19b2-49a3-97db-a1fdebbb16be'
+    def test_should_not_update_with_invalid_name
+      put :update, params: { :id => @library_dev_staging_view.id, :content_view => { :name => '' } }
+      assert_response :unprocessable_entity
+      assert_match "Name can't be blank", @response.body
     end
 
     def test_available_puppet_modules
@@ -260,6 +277,7 @@ module Katello
       assert_equal version_count, view.versions.reload.count
     end
 
+    test_attributes :pid => 'd582f1b3-8118-4e78-a639-237c6f9d27c6'
     def test_destroy
       view = ContentView.create!(:name => "Cat",
                                  :organization => @organization
@@ -280,6 +298,7 @@ module Katello
       end
     end
 
+    test_attributes :pid => 'ee03dc63-e2b0-4a89-a828-2910405279ff'
     def test_copy
       post :copy, params: { :id => @library_dev_staging_view.id, :name => "My New View" }
 
