@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { bindMethods, Button } from 'patternfly-react';
+import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';
@@ -212,7 +213,19 @@ class UpstreamSubscriptionsPage extends Component {
 
     return (
       <Grid bsClass="container-fluid">
-        <h1>{__('Add Subscriptions')}</h1>
+        <BreadcrumbsBar data={{
+          isSwitchable: false,
+          breadcrumbItems: [
+            {
+              caption: __('Subscriptions'),
+              onClick: () => this.props.history.push('/subscriptions'),
+            },
+            {
+              caption: __('Add Subscriptions'),
+            },
+          ],
+        }}
+        />
 
         <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
           <Row>
@@ -242,6 +255,7 @@ UpstreamSubscriptionsPage.propTypes = {
     task: PropTypes.shape({}),
     error: PropTypes.shape({}),
   }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 export default UpstreamSubscriptionsPage;

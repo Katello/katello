@@ -6,25 +6,33 @@ exports[`subscriptions details page should render and contain appropiate compone
   componentClass="div"
   fluid={false}
 >
+  <BreadcrumbsBar
+    data={
+      Object {
+        "breadcrumbItems": Array [
+          Object {
+            "caption": "Subscriptions",
+            "onClick": [Function],
+          },
+          Object {
+            "caption": "OpenShift Employee Subscription",
+          },
+        ],
+        "isSwitchable": true,
+        "resource": Object {
+          "nameField": "name",
+          "resourceUrl": "/katello/api/v2/subscriptions",
+          "switcherItemUrl": "/subscriptions/:id",
+        },
+      }
+    }
+    onSwitcherItemClick={[Function]}
+  />
   <div>
     <LoadingState
       loading={false}
       loadingText="Loading"
     >
-      <Row
-        bsClass="row"
-        componentClass="div"
-      >
-        <Col
-          bsClass="col"
-          componentClass="div"
-          sm={12}
-        >
-          <h1>
-            OpenShift Employee Subscription
-          </h1>
-        </Col>
-      </Row>
       <Row
         bsClass="row"
         componentClass="div"
