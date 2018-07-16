@@ -19,7 +19,6 @@ describe('subscriptions details page', () => {
       subscriptionDetails={successState}
       match={match}
     />);
-    expect(wrapper.find('h1').text()).toEqual(successState.name);
     expect(wrapper.find(SubscriptionDetailAssociations)).toHaveLength(1);
     expect(wrapper.find(SubscriptionDetailInfo)).toHaveLength(1);
     expect(wrapper.find(SubscriptionDetailProducts)).toHaveLength(1);
