@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router';
 import reducer from './SubscriptionDetailReducer';
 import * as subscriptionDetailActions from './SubscriptionDetailActions';
 import SubscriptionDetails from './SubscriptionDetails';
@@ -16,4 +16,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(subscriptionDetailActi
 export const subscriptionDetails = reducer;
 
 // export connected component
-export default connect(mapStateToProps, mapDispatchToProps)(SubscriptionDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SubscriptionDetails));
