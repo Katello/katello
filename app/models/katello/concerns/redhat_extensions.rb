@@ -3,31 +3,6 @@ module Katello
     module RedhatExtensions
       extend ActiveSupport::Concern
 
-      module Overrides
-        def medium_uri(host, url = nil)
-          kickstart_repo = host.try(:content_facet).try(:kickstart_repository) || host.try(:kickstart_repository)
-
-          if host.try(:content_source) && kickstart_repo.present?
-            return URI.parse(kickstart_repo.full_path(host.content_source))
-          else
-            super(host, url)
-          end
-        end
-
-        # overwrite foreman method in operatingsystem.rb
-        def boot_files_uri(medium, architecture, host = nil)
-          return super(medium, architecture, host) unless host.try(:content_source)
-          family_class = self.family.constantize
-          family_class::PXEFILES.values.collect do |img|
-            "#{medium_uri(host)}/#{pxedir}/#{img}"
-          end
-        end
-      end
-
-      included do
-        prepend Overrides
-      end
-
       module ClassMethods
         def find_or_create_operating_system(repo)
           os_name = construct_name(repo.distribution_family)
