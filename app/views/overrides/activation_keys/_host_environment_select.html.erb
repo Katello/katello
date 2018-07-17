@@ -41,6 +41,6 @@ end %>
     select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, @hostgroup.content_source_id), :data => {"spinner_path" => spinner_path},
                :class => 'form-control',  :name => cs_select_name, include_blank: true
   else
-    select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, (@hostgroup || @host).content_source_id), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, include_blank: true
+    select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, @host.content_source_id), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, include_blank: true
   end
 end %>
