@@ -22,6 +22,7 @@ class UpstreamSubscriptionsPage extends Component {
     bindMethods(this, [
       'onChange',
       'saveUpstreamSubscriptions',
+      'quantityValidationInput',
     ]);
   }
 
@@ -31,18 +32,17 @@ class UpstreamSubscriptionsPage extends Component {
 
   onChange(value, rowData) {
     const { selectedRows } = this.state;
-    const newValue = parseInt(value, 10);
     const pool = {
       ...rowData,
       id: rowData.id,
-      updatedQuantity: newValue,
+      updatedQuantity: value,
       selected: true,
     };
 
     const match = this.poolInSelectedRows(pool);
     const index = _.indexOf(selectedRows, match);
 
-    if (newValue > 0) {
+    if (value) {
       if (match) {
         selectedRows.splice(index, 1, pool);
       } else {
@@ -55,6 +55,25 @@ class UpstreamSubscriptionsPage extends Component {
     this.setState({ selectedRows });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  quantityValidation(pool) {
+    const origQuantity = pool.updatedQuantity;
+    if (origQuantity && helpers.stringIsInteger(origQuantity)) {
+      const parsedQuantity = parseInt(origQuantity, 10);
+      const aboveZeroMsg = [false, __('Please enter a positive number above zero')];
+
+      if (parsedQuantity.toString().length > 10) return [false, __('Please limit number to 10 digits')];
+      if (!pool.available) return [false, __('No pools available')];
+      // handling unlimited subscriptions, they show as -1
+      if (pool.available === -1) return parsedQuantity ? [true, ''] : aboveZeroMsg;
+      if (parsedQuantity > pool.available) return [false, __(`Quantity must not be above ${pool.available}`)];
+      if (parsedQuantity <= 0) return aboveZeroMsg;
+    } else {
+      return [false, __('Please enter digits only')];
+    }
+    return [true, ''];
+  }
+
   poolInSelectedRows(pool) {
     const { selectedRows } = this.state;
 
@@ -64,10 +83,24 @@ class UpstreamSubscriptionsPage extends Component {
     );
   }
 
+  quantityValidationInput(pool) {
+    if (!pool || pool.updatedQuantity === undefined) return null;
+    if (this.quantityValidation(pool)[0]) {
+      return 'success';
+    }
+    return 'error';
+  }
+
+  validateSelectedRows() {
+    return Array.isArray(this.state.selectedRows) &&
+           this.state.selectedRows.length &&
+           this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
+  }
+
   saveUpstreamSubscriptions() {
     const updatedPools = _.map(
       this.state.selectedRows,
-      pool => ({ ...pool, quantity: pool.updatedQuantity }),
+      pool => ({ ...pool, quantity: parseInt(pool.updatedQuantity, 10) }),
     );
 
     const updatedSubscriptions = { pools: updatedPools };
@@ -109,7 +142,8 @@ class UpstreamSubscriptionsPage extends Component {
               <Button
                 bsStyle="primary"
                 type="submit"
-                disabled={upstreamSubscriptions.loading}
+                disabled={upstreamSubscriptions.loading ||
+                          !this.validateSelectedRows()}
                 onClick={this.saveUpstreamSubscriptions}
               >
                 {__('Submit')}
