@@ -6,6 +6,7 @@ import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 import { LoadingState } from './index';
+jest.useFakeTimers();
 
 test('Loading State renders properly while loading', () => {
   const component = shallow(
@@ -13,8 +14,10 @@ test('Loading State renders properly while loading', () => {
       <p>Loading Complete</p>
     </LoadingState>
   );
-
-  expect(toJson(component.render())).toMatchSnapshot();
+    jest.runAllTimers();
+    component.update();
+    expect(component.state('render')).toEqual(true);
+    expect(toJson(component.render())).toMatchSnapshot();
 });
 
 test('Loading State renders properly while not loading', () => {
@@ -23,6 +26,7 @@ test('Loading State renders properly while not loading', () => {
       <p>Loading Complete</p>
     </LoadingState>
   );
-
-  expect(toJson(component.render())).toMatchSnapshot();
+    jest.runAllTimers();
+    component.update();
+    expect(toJson(component.render())).toMatchSnapshot();
 });
