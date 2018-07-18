@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TasksMonitor helpers should notify task finished toast 1`] = `
+Object {
+  "message": "<span><span>Task some-action completed with a result of some-results. </span><a href=\\"/foreman_tasks/tasks/some-id/\\">Click here to go to the tasks page for the task.</a></span>",
+  "type": "some-results",
+}
+`;
+
+exports[`TasksMonitor helpers should notify task finished toast with errors 1`] = `
+Object {
+  "message": "<span><span>Task some-action completed with a result of some-results. </span><ul><li> some error number 1 </li><li> some error number 2 </li></ul><a href=\\"/foreman_tasks/tasks/some-id-with-errors/\\">Click here to go to the tasks page for the task.</a></span>",
+  "type": "some-results",
+}
+`;
+
+exports[`TasksMonitor helpers should notify task started toast 1`] = `
+Object {
+  "message": "<span><span>Task some-action has started. </span><a href=\\"/foreman_tasks/tasks/some-id/\\">Click here to go to the tasks page for the task.</a></span>",
+  "type": "info",
+}
+`;

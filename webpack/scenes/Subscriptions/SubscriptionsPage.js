@@ -1,173 +1,104 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-bootstrap';
-import { renderTaskFinishedToast } from '../Tasks/helpers';
+import { Grid, Row, Col } from 'patternfly-react';
+import SubscriptionsToolbar from './components/SubscriptionsToolbar/SubscriptionsToolbar';
+import { notifyTaskFinishedToast } from '../TasksMonitor/TasksMonitorHelpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
-import { manifestExists } from './SubscriptionHelpers';
-import SubscriptionsToolbar from './components/SubscriptionsToolbar/SubscriptionsToolbar';
-import api, { orgId } from '../../services/api';
-import { createSubscriptionParams } from './SubscriptionActions.js';
-import {
-  BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
-  BULK_TASK_SEARCH_INTERVAL,
-} from './SubscriptionConstants';
+import { getAutoCompleteParams } from './SubscriptionHelpers';
 
 import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      manifestModalOpen: false,
-      subscriptionDeleteModalOpen: false,
-      disableDeleteButton: true,
-      showTaskModal: false,
-      searchQuery: '',
-    };
-  }
-
   componentDidMount() {
     this.loadData();
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { tasks = [] } = nextProps;
-    const nextTaskId = tasks[0] && tasks[0].id;
-
-    if (tasks.length === 0 && prevState.polledTask != null) {
-      return { showTaskModal: false, polledTask: undefined };
-    } else if (tasks.length > 0 && nextTaskId !== prevState.polledTask) {
-      return {
-        showTaskModal: true,
-        manifestModalOpen: false,
-        polledTask: nextTaskId,
-      };
-    }
-    return null;
-  }
-
   componentDidUpdate(prevProps) {
-    const { tasks = [] } = this.props;
-    const { tasks: prevTasks = [] } = prevProps;
+    this.notifyManifestTaskDoneIfNeeded(prevProps);
+    this.closeManageManifestModalIfNeeded(prevProps);
+  }
 
-    const numberOfTasks = tasks.length;
-    const numberOfPrevTasks = prevTasks.length;
-    let task;
+  componentWillUnmount() {
+    this.props.stopMonitoringManifestTasks();
+  }
 
-    if (numberOfTasks > 0) {
-      if (numberOfPrevTasks === 0 || prevTasks[0].id !== tasks[0].id) {
-        [task] = tasks;
-        this.handleDoneTask(task);
-      }
+  notifyManifestTaskDoneIfNeeded(prevProps) {
+    const { currentManifestTask: prevManifestTask } = prevProps;
+    const { currentManifestTask } = this.props;
+
+    const shouldNotify =
+      prevManifestTask && currentManifestTask &&
+      prevManifestTask.id === currentManifestTask.id &&
+      prevManifestTask.pending && !currentManifestTask.pending;
+
+    if (shouldNotify) {
+      notifyTaskFinishedToast(currentManifestTask);
+      this.props.loadSubscriptions();
     }
   }
 
-  getDisabledReason(deleteButton) {
-    const { tasks = [], subscriptions, organization } = this.props;
-    const { disconnected } = subscriptions;
-    let disabledReason = null;
+  closeManageManifestModalIfNeeded() {
+    const {
+      currentManifestTask, manifestModalOpened, closeManageManifestModal,
+    } = this.props;
 
-    if (disconnected) {
-      disabledReason = __('This is disabled because disconnected mode is enabled.');
-    } else if (tasks.length > 0) {
-      disabledReason = __('This is disabled because a manifest related task is in progress.');
-    } else if (deleteButton && !disabledReason) {
-      disabledReason = __('This is disabled because no subscriptions are selected.');
-    } else if (!manifestExists(organization)) {
-      disabledReason = __('This is disabled because no manifest has been uploaded.');
+    if (manifestModalOpened && currentManifestTask.pending) {
+      closeManageManifestModal();
     }
-
-    return disabledReason;
   }
 
   loadData() {
-    this.props.pollBulkSearch({
-      search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-      type: 'all',
-      active_only: true,
-      action_types: BLOCKING_FOREMAN_TASK_TYPES,
-    }, BULK_TASK_SEARCH_INTERVAL);
+    const { startMonitoringManifestTasks, loadSetting, loadSubscriptions } = this.props;
 
-    this.props.loadSetting('content_disconnected');
-    this.props.loadSubscriptions();
-  }
-
-  handleDoneTask(taskToPoll) {
-    const POLL_TASK_INTERVAL = 5000;
-    const { pollTaskUntilDone, loadSubscriptions } = this.props;
-
-    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL)
-      .then((task) => {
-        renderTaskFinishedToast(task);
-        loadSubscriptions();
-      });
+    startMonitoringManifestTasks();
+    loadSetting('content_disconnected');
+    loadSubscriptions();
   }
 
   render() {
-    const { tasks = [], subscriptions, organization } = this.props;
-    const currentOrg = orgId();
-    const { disconnected } = subscriptions;
-    const taskInProgress = tasks.length > 0;
-    const disableManifestActions = taskInProgress || disconnected;
-
-    let task = null;
-
-    if (taskInProgress) {
-      [task] = tasks;
-    }
-
-    const onSearch = (search) => {
-      this.props.loadSubscriptions({ search });
-    };
-
-    const getAutoCompleteParams = search => ({
-      endpoint: '/subscriptions/auto_complete_search',
-      params: {
-        organization_id: currentOrg,
-        search,
-      },
-    });
-
-    const updateSearchQuery = (searchQuery) => {
-      this.setState({ searchQuery });
-    };
-
-    const showManageManifestModal = () => {
-      this.setState({ manifestModalOpen: true });
-    };
-
-    const onManageManifestModalClose = () => {
-      this.setState({ manifestModalOpen: false });
-    };
-
-    const showSubscriptionDeleteModal = () => {
-      this.setState({ subscriptionDeleteModalOpen: true });
-    };
-
-    const onSubscriptionDeleteModalClose = () => {
-      this.setState({ subscriptionDeleteModalOpen: false });
-    };
-
-    const onDeleteSubscriptions = (selectedRows) => {
-      this.props.deleteSubscriptions(selectedRows);
-      onSubscriptionDeleteModalClose();
+    const {
+      hasTaskInProgress,
+      currentManifestTask,
+      subscriptions,
+      manifestActionsDisabled,
+      manifestActionsDisabledReason,
+      deleteButtonDisabled,
+      deleteButtonDisabledReason,
+      manifestModalOpened,
+      deleteModalOpened,
+      updateSearchQuery,
+      loadSubscriptions,
+      deleteSubscriptions,
+      exportSubscriptionsCsv,
+      closeDeleteModal,
+      enableDeleteButton,
+      disableDeleteButton,
+      openManageManifestModal,
+      closeManageManifestModal,
+      openDeleteModal,
+      updateQuantity,
+      runMonitorManifestTasksManually,
+    } = this.props;
+    const handleDeleteSubscriptions = (selectedRows) => {
+      deleteSubscriptions(selectedRows);
+      closeDeleteModal();
     };
 
     const toggleDeleteButton = (rowsSelected) => {
-      this.setState({ disableDeleteButton: !rowsSelected });
+      if (rowsSelected) {
+        enableDeleteButton();
+      } else {
+        disableDeleteButton();
+      }
     };
-
-
-    const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
 
     const emptyStateData = {
       header: __('There are no Subscriptions to display'),
       description: __('Import a Manifest to manage your Entitlements.'),
       action: {
-        onClick: showManageManifestModal,
+        onClick: () => openManageManifestModal(),
         title: __('Import a Manifest'),
       },
     };
@@ -178,43 +109,43 @@ class SubscriptionsPage extends Component {
           <Col sm={12}>
             <h1>{__('Red Hat Subscriptions')}</h1>
             <SubscriptionsToolbar
-              disableManifestActions={disableManifestActions}
-              disableManifestReason={this.getDisabledReason()}
-              disableDeleteButton={this.state.disableDeleteButton}
-              disableDeleteReason={this.getDisabledReason(true)}
-              disableAddButton={!manifestExists(organization)}
+              manifestActionsDisabled={manifestActionsDisabled}
+              manifestActionsDisabledReason={manifestActionsDisabledReason}
+              deleteButtonDisabled={manifestActionsDisabled || deleteButtonDisabled}
+              deleteButtonDisabledReason={deleteButtonDisabledReason}
+              addButtonDisabled={manifestActionsDisabled}
               getAutoCompleteParams={getAutoCompleteParams}
               updateSearchQuery={updateSearchQuery}
-              onDeleteButtonClick={showSubscriptionDeleteModal}
-              onSearch={onSearch}
-              onManageManifestButtonClick={showManageManifestModal}
-              onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
+              onDeleteButtonClick={openDeleteModal}
+              onManageManifestButtonClick={openManageManifestModal}
+              onExportCsvButtonClick={exportSubscriptionsCsv}
+              onSearch={search => loadSubscriptions({ search })}
             />
             <ManageManifestModal
-              showModal={this.state.manifestModalOpen}
-              taskInProgress={taskInProgress}
-              disableManifestActions={disableManifestActions}
-              disabledReason={this.getDisabledReason()}
-              onClose={onManageManifestModalClose}
+              showModal={manifestModalOpened}
+              taskInProgress={hasTaskInProgress}
+              disableManifestActions={manifestActionsDisabled}
+              disabledReason={manifestActionsDisabledReason}
+              onClose={closeManageManifestModal}
             />
 
             <div id="subscriptions-table" className="modal-container">
               <SubscriptionsTable
-                loadSubscriptions={this.props.loadSubscriptions}
-                updateQuantity={this.props.updateQuantity}
+                loadSubscriptions={loadSubscriptions}
+                updateQuantity={updateQuantity}
                 emptyState={emptyStateData}
-                subscriptions={this.props.subscriptions}
-                subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
-                onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
-                onDeleteSubscriptions={onDeleteSubscriptions}
+                subscriptions={subscriptions}
+                deleteModalOpened={deleteModalOpened}
+                onSubscriptionDeleteModalClose={closeDeleteModal}
+                onDeleteSubscriptions={handleDeleteSubscriptions}
                 toggleDeleteButton={toggleDeleteButton}
-                task={task}
-                bulkSearch={this.props.bulkSearch}
+                task={currentManifestTask}
+                runMonitorManifestTasksManually={runMonitorManifestTasksManually}
               />
               <ModalProgressBar
-                show={this.state.showTaskModal}
+                show={hasTaskInProgress}
                 container={document.getElementById('subscriptions-table')}
-                task={task}
+                task={currentManifestTask}
               />
             </div>
           </Col>
@@ -225,21 +156,41 @@ class SubscriptionsPage extends Component {
 }
 
 SubscriptionsPage.propTypes = {
+  subscriptions: PropTypes.shape().isRequired,
+  hasTaskInProgress: PropTypes.bool,
+  currentManifestTask: PropTypes.shape({}),
+  manifestModalOpened: PropTypes.bool,
+  deleteModalOpened: PropTypes.bool,
+  manifestActionsDisabled: PropTypes.bool,
+  manifestActionsDisabledReason: PropTypes.string,
+  deleteButtonDisabled: PropTypes.bool,
+  deleteButtonDisabledReason: PropTypes.string,
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
-  subscriptions: PropTypes.shape({}).isRequired,
-  organization: PropTypes.shape({}).isRequired,
-  pollBulkSearch: PropTypes.func.isRequired,
-  bulkSearch: PropTypes.func,
-  pollTaskUntilDone: PropTypes.func.isRequired,
+  startMonitoringManifestTasks: PropTypes.func.isRequired,
+  stopMonitoringManifestTasks: PropTypes.func.isRequired,
+  runMonitorManifestTasksManually: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
-  tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
+  exportSubscriptionsCsv: PropTypes.func.isRequired,
+  openManageManifestModal: PropTypes.func.isRequired,
+  closeManageManifestModal: PropTypes.func.isRequired,
+  openDeleteModal: PropTypes.func.isRequired,
+  closeDeleteModal: PropTypes.func.isRequired,
+  disableDeleteButton: PropTypes.func.isRequired,
+  enableDeleteButton: PropTypes.func.isRequired,
+  updateSearchQuery: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {
-  tasks: [],
-  bulkSearch: undefined,
+  hasTaskInProgress: false,
+  currentManifestTask: null,
+  manifestModalOpened: false,
+  deleteModalOpened: false,
+  manifestActionsDisabled: false,
+  manifestActionsDisabledReason: '',
+  deleteButtonDisabled: false,
+  deleteButtonDisabledReason: '',
 };
 
 export default SubscriptionsPage;

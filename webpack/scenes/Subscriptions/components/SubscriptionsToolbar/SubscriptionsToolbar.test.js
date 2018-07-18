@@ -14,18 +14,18 @@ const fixtures = {
   },
   'renders SubscriptionsToolbar with disabled manifest actions': {
     ...createRequiredProps(),
-    disableManifestActions: true,
-    disableManifestReason: 'some reason for manifest',
+    manifestActionsDisabled: true,
+    manifestActionsDisabledReason: 'some reason for manifest',
   },
   'renders SubscriptionsToolbar with disabled delete button': {
     ...createRequiredProps(),
-    disableDeleteButton: true,
-    disableDeleteReason: 'some reason for delete',
+    deleteButtonDisabled: true,
+    deleteButtonDisabledReason: 'some reason for delete',
   },
   'renders SubscriptionsToolbar with disabled add button': {
     ...createRequiredProps(),
-    disableAddButton: true,
-    disableManifestReason: 'some reason for manifest',
+    addButtonDisabled: true,
+    manifestActionsDisabledReason: 'some reason for manifest',
   },
 };
 

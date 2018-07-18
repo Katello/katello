@@ -12,7 +12,7 @@ const getErrors = task => (
   </ul>
 );
 
-export const renderTaskStartedToast = (task) => {
+export const notifyTaskStartedToast = (task) => {
   const message = (
     <span>
       <span>
@@ -25,13 +25,13 @@ export const renderTaskStartedToast = (task) => {
     </span>
   );
 
-  notify({
+  return notify({
     message: ReactDOMServer.renderToStaticMarkup(message),
     type: 'info',
   });
 };
 
-export const renderTaskFinishedToast = (task) => {
+export const notifyTaskFinishedToast = (task) => {
   const message = (
     <span>
       <span>
@@ -45,7 +45,7 @@ export const renderTaskFinishedToast = (task) => {
     </span>
   );
 
-  notify({
+  return notify({
     message: ReactDOMServer.renderToStaticMarkup(message),
     type: task.result,
   });

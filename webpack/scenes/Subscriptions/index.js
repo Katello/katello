@@ -2,26 +2,47 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as subscriptionActions from './SubscriptionActions';
-import * as taskActions from '../Tasks/TaskActions';
 import * as settingActions from '../../move_to_foreman/Settings/SettingsActions';
+
+import {
+  selectSubscriptionsState,
+  selectManifestActionsDisabled,
+  selectManifestActionsDisabledReason,
+  selectDeleteButtonDisabledReason,
+  selectMonitorCurrentTask,
+  selectHasMonitorTasksInProgress,
+} from './SubscriptionsSelectors';
 
 import reducer from './SubscriptionReducer';
 
 import SubscriptionsPage from './SubscriptionsPage';
 
 // map state to props
-const mapStateToProps = state => ({
-  organization: state.katello.organization,
-  subscriptions: state.katello.subscriptions,
-  tasks: state.katello.subscriptions.tasks,
-});
+const mapStateToProps = (state) => {
+  const subscriptions = selectSubscriptionsState(state);
+
+  return {
+    subscriptions,
+    manifestModalOpened: subscriptions.manifestModalOpened,
+    deleteModalOpened: subscriptions.deleteModalOpened,
+    deleteButtonDisabled: subscriptions.deleteButtonDisabled,
+    manifestActionsDisabled: selectManifestActionsDisabled(state),
+    manifestActionsDisabledReason: selectManifestActionsDisabledReason(state),
+    deleteButtonDisabledReason: selectDeleteButtonDisabledReason(state),
+    currentManifestTask: selectMonitorCurrentTask(state),
+    hasTaskInProgress: selectHasMonitorTasksInProgress(state),
+  };
+};
 
 // map action dispatchers to props
-const actions = { ...subscriptionActions, ...taskActions, ...settingActions };
+const actions = { ...subscriptionActions, ...settingActions };
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 // export reducers
-export const subscriptions = reducer;
+export const reducers = { subscriptions: reducer };
 
 // export connected component
-export default connect(mapStateToProps, mapDispatchToProps)(SubscriptionsPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SubscriptionsPage);

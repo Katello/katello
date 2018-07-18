@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TasksMonitor actions should not start monitoring tasks if already monitored 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "id": "some-monitor-id",
+        "interval": 5000,
+        "params": Object {
+          "param1": "some-param-1",
+          "param2": "some-param-2",
+        },
+      },
+      "type": "TASKS_MONITOR_ALREADY_MONITORED",
+    },
+  ],
+]
+`;
+
+exports[`TasksMonitor actions should run monitor lifecycle 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "id": "some-monitor-id",
+        "tasks": "some-tasks",
+      },
+      "type": "TASKS_MONITOR_SUCCESS",
+    },
+  ],
+]
+`;
+
+exports[`TasksMonitor actions should run monitor lifecycle 2`] = `
+Array [
+  Array [
+    "/tasks/bulk_search",
+    Object {
+      "searches": Array [
+        Object {
+          "param_1": "some-param-1",
+          "param_2": "some-param-2",
+        },
+      ],
+    },
+  ],
+]
+`;
+
+exports[`TasksMonitor actions should run monitor lifecycle and fail because bad server response 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "error": [Error: some error],
+        "id": "some-monitor-id",
+      },
+      "type": "TASKS_MONITOR_FAILED",
+    },
+  ],
+]
+`;
+
+exports[`TasksMonitor actions should run monitor lifecycle and fail because unauthorized 1`] = `
+Array [
+  Array [
+    [Function],
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "error": [Error: Unauthorized],
+        "id": "some-monitor-id",
+      },
+      "type": "TASKS_MONITOR_FAILED",
+    },
+  ],
+]
+`;
+
+exports[`TasksMonitor actions should start monitoring tasks 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "id": "some-monitor-id",
+        "interval": 5000,
+        "intervalId": 1,
+        "params": Object {
+          "param1": "some-param-1",
+          "param2": "some-param-2",
+        },
+      },
+      "type": "TASKS_MONITOR_STARTED",
+    },
+  ],
+  Array [
+    [Function],
+  ],
+]
+`;
+
+exports[`TasksMonitor actions should stop monitoring tasks 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "id": "some-monitor-id",
+        "intervalId": 1234,
+      },
+      "type": "TASKS_MONITOR_STOPPED",
+    },
+  ],
+]
+`;

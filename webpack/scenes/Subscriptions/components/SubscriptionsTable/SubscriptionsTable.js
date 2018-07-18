@@ -11,11 +11,7 @@ import Dialog from '../../../../move_to_foreman/components/common/Dialog';
 import { recordsValid } from '../../SubscriptionValidations';
 import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
 import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
-import { renderTaskStartedToast } from '../../../Tasks/helpers';
-import {
-  BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
-} from '../../SubscriptionConstants';
+import { notifyTaskStartedToast } from '../../../TasksMonitor/TasksMonitorHelpers';
 
 class SubscriptionsTable extends Component {
   constructor(props) {
@@ -106,18 +102,13 @@ class SubscriptionsTable extends Component {
     });
   }
 
-  confirmEdit() {
+  async confirmEdit() {
     this.showUpdateConfirm(false);
+
     if (Object.keys(this.state.updatedQuantity).length > 0) {
-      this.props.updateQuantity(buildPools(this.state.updatedQuantity))
-        .then(() =>
-          this.props.bulkSearch({
-            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-            type: 'all',
-            active_only: true,
-            action_types: BLOCKING_FOREMAN_TASK_TYPES,
-          }))
-        .then(() => renderTaskStartedToast(this.props.task));
+      await this.props.updateQuantity(buildPools(this.state.updatedQuantity));
+      this.props.runMonitorManifestTasksManually();
+      notifyTaskStartedToast(this.props.task);
     }
     this.enableEditing(false);
   }
@@ -305,7 +296,7 @@ class SubscriptionsTable extends Component {
           onCancel={() => this.showErrorDialog(false)}
         />
         <ConfirmDialog
-          show={this.props.subscriptionDeleteModalOpen}
+          show={this.props.deleteModalOpened}
           title={__('Confirm Deletion')}
           dangerouslySetInnerHTML={{
             __html: sprintf(
@@ -335,17 +326,16 @@ SubscriptionsTable.propTypes = {
   subscriptions: PropTypes.shape({
     results: PropTypes.array,
   }).isRequired,
-  subscriptionDeleteModalOpen: PropTypes.bool.isRequired,
+  deleteModalOpened: PropTypes.bool.isRequired,
   onDeleteSubscriptions: PropTypes.func.isRequired,
   onSubscriptionDeleteModalClose: PropTypes.func.isRequired,
   toggleDeleteButton: PropTypes.func.isRequired,
+  runMonitorManifestTasksManually: PropTypes.func.isRequired,
   task: PropTypes.shape({}),
-  bulkSearch: PropTypes.func,
 };
 
 SubscriptionsTable.defaultProps = {
   task: { humanized: {} },
-  bulkSearch: undefined,
 };
 
 export default SubscriptionsTable;

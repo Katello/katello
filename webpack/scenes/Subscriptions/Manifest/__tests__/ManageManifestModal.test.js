@@ -19,7 +19,7 @@ describe('manage manifest modal', () => {
       organization={organization}
       loadOrganization={noop}
       saveOrganization={noop}
-      bulkSearch={noop}
+      runMonitorManifestTasksManually={noop}
       manifestHistory={manifestHistorySuccessState}
       taskInProgress={false}
       showModal

@@ -8,7 +8,7 @@ import {
   saveSuccessActions,
   saveFailureActions,
 } from './upstreamSubscriptions.fixtures';
-import { getTaskSuccessResponse } from '../../../Tasks/__tests__/task.fixtures';
+import { task } from '../../../TasksMonitor/__tests__/TasksMonitor.fixtures';
 
 import { loadUpstreamSubscriptions, saveUpstreamSubscriptions } from '../UpstreamSubscriptionsActions';
 import { mock as mockApi, mockErrorRequest } from '../../../../mockRequest';
@@ -60,7 +60,7 @@ describe('upstream subscription actions', () => {
     });
 
     it('and ends with success', () => {
-      mockApi.onPost(url).reply(200, getTaskSuccessResponse);
+      mockApi.onPost(url).reply(200, task);
 
       return store.dispatch(saveUpstreamSubscriptions(subscriptionData))
         .then(() => expect(store.getActions()).toEqual(saveSuccessActions));

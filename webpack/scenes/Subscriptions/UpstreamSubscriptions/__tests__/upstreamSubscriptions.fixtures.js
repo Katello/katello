@@ -1,5 +1,5 @@
 import Immutable from 'seamless-immutable';
-import { getTaskSuccessResponse } from '../../../Tasks/__tests__/task.fixtures';
+import { task } from '../../../TasksMonitor/__tests__/TasksMonitor.fixtures';
 import { toastErrorAction, failureAction } from '../../../../services/api/testHelpers';
 
 export const initialState = Immutable({
@@ -22,7 +22,7 @@ export const loadingState = Immutable({
   itemCount: 0,
 });
 
-export const taskSuccessResponse = getTaskSuccessResponse;
+export const taskSuccessResponse = task;
 
 export const requestSuccessResponse = Immutable({
   total: 2,
@@ -103,7 +103,7 @@ export const initialSaveState = Immutable({
 
 export const saveSuccessState = Immutable({
   loading: false,
-  task: getTaskSuccessResponse,
+  task: taskSuccessResponse,
 });
 
 export const errorState = Immutable({
@@ -145,7 +145,7 @@ export const saveSuccessActions = [
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
   {
-    response: getTaskSuccessResponse,
+    response: taskSuccessResponse,
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_SUCCESS',
   },
 ];

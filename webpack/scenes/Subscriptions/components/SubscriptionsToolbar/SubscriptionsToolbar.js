@@ -8,11 +8,11 @@ import { noop } from 'foremanReact/common/helpers';
 import Search from '../../../../components/Search/index';
 
 const SubscriptionsToolbar = ({
-  disableManifestActions,
-  disableManifestReason,
-  disableDeleteButton,
-  disableDeleteReason,
-  disableAddButton,
+  manifestActionsDisabled,
+  manifestActionsDisabledReason,
+  deleteButtonDisabled,
+  deleteButtonDisabledReason,
+  addButtonDisabled,
   getAutoCompleteParams,
   updateSearchQuery,
   onDeleteButtonClick,
@@ -35,14 +35,14 @@ const SubscriptionsToolbar = ({
           <FormGroup>
             <LinkContainer
               to="subscriptions/add"
-              disabled={disableManifestActions || disableAddButton}
+              disabled={manifestActionsDisabled || addButtonDisabled}
             >
               <TooltipButton
                 tooltipId="add-subscriptions-button-tooltip"
-                tooltipText={disableManifestReason}
+                tooltipText={manifestActionsDisabledReason}
                 tooltipPlacement="top"
                 title={__('Add Subscriptions')}
-                disabled={disableManifestActions}
+                disabled={manifestActionsDisabled}
                 bsStyle="primary"
               />
             </LinkContainer>
@@ -61,10 +61,10 @@ const SubscriptionsToolbar = ({
               bsStyle="danger"
               onClick={onDeleteButtonClick}
               tooltipId="delete-subscriptions-button-tooltip"
-              tooltipText={disableDeleteReason}
+              tooltipText={deleteButtonDisabledReason}
               tooltipPlacement="top"
               title={__('Delete')}
-              disabled={disableManifestActions || disableDeleteButton}
+              disabled={manifestActionsDisabled || deleteButtonDisabled}
             />
 
           </FormGroup>
@@ -76,11 +76,11 @@ const SubscriptionsToolbar = ({
 
 SubscriptionsToolbar.propTypes = {
   ...Search.propTypes,
-  disableManifestActions: PropTypes.bool,
-  disableManifestReason: PropTypes.string,
-  disableDeleteButton: PropTypes.bool,
-  disableDeleteReason: PropTypes.string,
-  disableAddButton: PropTypes.bool,
+  manifestActionsDisabled: PropTypes.bool,
+  manifestActionsDisabledReason: PropTypes.string,
+  deleteButtonDisabled: PropTypes.bool,
+  deleteButtonDisabledReason: PropTypes.string,
+  addButtonDisabled: PropTypes.bool,
   onDeleteButtonClick: PropTypes.func,
   onManageManifestButtonClick: PropTypes.func,
   onExportCsvButtonClick: PropTypes.func,
@@ -88,11 +88,11 @@ SubscriptionsToolbar.propTypes = {
 
 SubscriptionsToolbar.defaultProps = {
   ...Search.defaultProps,
-  disableManifestActions: false,
-  disableManifestReason: '',
-  disableDeleteButton: false,
-  disableDeleteReason: '',
-  disableAddButton: false,
+  manifestActionsDisabled: false,
+  manifestActionsDisabledReason: '',
+  deleteButtonDisabled: false,
+  deleteButtonDisabledReason: '',
+  addButtonDisabled: false,
   onDeleteButtonClick: noop,
   onManageManifestButtonClick: noop,
   onExportCsvButtonClick: noop,

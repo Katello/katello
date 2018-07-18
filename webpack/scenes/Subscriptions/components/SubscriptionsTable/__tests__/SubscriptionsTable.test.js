@@ -4,7 +4,7 @@ import toJson from 'enzyme-to-json';
 import { MemoryRouter } from 'react-router-dom';
 import SubscriptionsTable from '../SubscriptionsTable';
 import { successState, loadingState, emptyState } from '../../../__tests__/subscriptions.fixtures';
-import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
+import { loadSubscriptions, updateQuantity, runMonitorManifestTasksManually } from '../../../SubscriptionActions';
 
 jest.mock('../../../../../move_to_foreman/foreman_toast_notifications');
 jest.useFakeTimers();
@@ -18,7 +18,8 @@ describe('subscriptions table', () => {
             subscriptions={successState}
             loadSubscriptions={loadSubscriptions}
             updateQuantity={updateQuantity}
-            subscriptionDeleteModalOpen={false}
+            runMonitorManifestTasksManually={runMonitorManifestTasksManually}
+            deleteModalOpened={false}
             onSubscriptionDeleteModalClose={() => { }}
             onDeleteSubscriptions={() => {}}
             toggleDeleteButton={() => {}}
@@ -41,7 +42,8 @@ describe('subscriptions table', () => {
         emptyState={emptyStateData}
         loadSubscriptions={loadSubscriptions}
         updateQuantity={updateQuantity}
-        subscriptionDeleteModalOpen={false}
+        runMonitorManifestTasksManually={runMonitorManifestTasksManually}
+        deleteModalOpened={false}
         onSubscriptionDeleteModalClose={() => {}}
         onDeleteSubscriptions={() => {}}
         toggleDeleteButton={() => {}}
@@ -56,7 +58,8 @@ describe('subscriptions table', () => {
       subscriptions={loadingState}
       loadSubscriptions={loadSubscriptions}
       updateQuantity={updateQuantity}
-      subscriptionDeleteModalOpen={false}
+      runMonitorManifestTasksManually={runMonitorManifestTasksManually}
+      deleteModalOpened={false}
       onSubscriptionDeleteModalClose={() => { }}
       onDeleteSubscriptions={() => {}}
       toggleDeleteButton={() => {}}

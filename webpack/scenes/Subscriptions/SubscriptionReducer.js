@@ -1,6 +1,5 @@
 import Immutable from 'seamless-immutable';
 import { initialApiState } from '../../services/api';
-import { TASK_BULK_SEARCH_SUCCESS } from '../Tasks/TaskConstants';
 
 import {
   SUBSCRIPTIONS_REQUEST,
@@ -15,16 +14,25 @@ import {
   DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
+  SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
+  SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
+  SUBSCRIPTIONS_OPEN_DELETE_MODAL,
+  SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
+  SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
+  SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
+  SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
-
-import { filterManifestTasksFromBulkSearchResponse } from './SubscriptionHelpers';
 
 const initialState = Immutable({
   ...initialApiState,
   quantitiesLoading: false,
   availableQuantities: null,
-  tasks: [],
+  manifestModalOpened: false,
+  deleteModalOpened: false,
+  taskModalOpened: false,
+  deleteButtonDisabled: true,
+  searchQuery: '',
 });
 
 export default (state = initialState, action) => {
@@ -35,15 +43,19 @@ export default (state = initialState, action) => {
       return state.set('loading', true);
 
     case SUBSCRIPTIONS_SUCCESS: {
+      const { response, search } = action.payload;
       const {
-        page, per_page, subtotal, results, // eslint-disable-line camelcase
-      } = action.response;
+        page,
+        per_page, // eslint-disable-line camelcase
+        subtotal,
+        results,
+      } = response;
 
       return state.merge({
         results,
+        search,
         loading: false,
-        searchIsActive: !!action.search,
-        search: action.search,
+        searchIsActive: !!search,
         pagination: {
           page: Number(page),
           // eslint-disable-next-line camelcase
@@ -84,24 +96,36 @@ export default (state = initialState, action) => {
       });
     }
 
-    case SUBSCRIPTIONS_QUANTITIES_FAILURE: {
+    case SUBSCRIPTIONS_QUANTITIES_FAILURE:
       return state.merge({
         quantitiesLoading: false,
         availableQuantities: {},
       });
-    }
 
-    case TASK_BULK_SEARCH_SUCCESS: {
-      return state.set('tasks', filterManifestTasksFromBulkSearchResponse(action.response));
-    }
+    case SUBSCRIPTIONS_OPEN_MANIFEST_MODAL:
+      return state.set('manifestModalOpened', true);
+    case SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL:
+      return state.set('manifestModalOpened', false);
 
-    case GET_SETTING_SUCCESS: {
+    case SUBSCRIPTIONS_OPEN_DELETE_MODAL:
+      return state.set('deleteModalOpened', true);
+    case SUBSCRIPTIONS_CLOSE_DELETE_MODAL:
+      return state.set('deleteModalOpened', false);
+
+    case SUBSCRIPTIONS_DISABLE_DELETE_BUTTON:
+      return state.set('deleteButtonDisabled', true);
+    case SUBSCRIPTIONS_ENABLE_DELETE_BUTTON:
+      return state.set('deleteButtonDisabled', false);
+
+    case SUBSCRIPTIONS_UPDATE_SEARCH_QUERY:
+      return state.set('searchQuery', action.payload);
+
+    case GET_SETTING_SUCCESS:
       if (action.response.name === 'content_disconnected') {
         return state.set('disconnected', action.response.value);
       }
 
       return state;
-    }
 
     default:
       return state;

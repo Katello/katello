@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TasksMonitor selectors should select is monitor active 1`] = `true`;
+
+exports[`TasksMonitor selectors should select monitor 1`] = `
+Object {
+  "interval": 5000,
+  "intervalId": 1234,
+  "params": Object {
+    "param1": "some-param-1",
+    "param2": "some-param-2",
+  },
+  "tasks": Array [],
+}
+`;
+
+exports[`TasksMonitor selectors should select monitor tasks 1`] = `
+Array [
+  Object {
+    "humanized": Object {
+      "action": "some-action",
+    },
+    "id": "some-id",
+    "progress": 0.09,
+    "result": "some-results",
+  },
+  Object {
+    "errors": true,
+    "humanized": Object {
+      "action": "some-action",
+      "errors": Array [
+        "some error number 1",
+        "some error number 2",
+      ],
+    },
+    "id": "some-id-with-errors",
+    "progress": 0.09,
+    "result": "some-results",
+  },
+]
+`;
+
+exports[`TasksMonitor selectors should select the tasks monitor state 1`] = `"some-data"`;

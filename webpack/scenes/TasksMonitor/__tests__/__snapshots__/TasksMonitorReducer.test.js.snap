@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TasksMonitor reducer should handle TASKS_MONITOR_FAILED 1`] = `
+Object {
+  "some-monitor-id": Object {
+    "error": [Error: some-error],
+  },
+}
+`;
+
+exports[`TasksMonitor reducer should handle TASKS_MONITOR_STARTED 1`] = `
+Object {
+  "some-monitor-id": Object {
+    "interval": 5000,
+    "intervalId": 1234,
+    "params": Object {
+      "param1": "some-param-1",
+      "param2": "some-param-2",
+    },
+    "tasks": Array [],
+  },
+}
+`;
+
+exports[`TasksMonitor reducer should handle TASKS_MONITOR_STOPPED 1`] = `
+Object {
+  "some-monitor-id": Object {
+    "intervalId": null,
+  },
+}
+`;
+
+exports[`TasksMonitor reducer should handle TASKS_MONITOR_SUCCESS 1`] = `
+Object {
+  "some-monitor-id": Object {
+    "error": null,
+    "tasks": "some-tasks",
+  },
+}
+`;
+
+exports[`TasksMonitor reducer should return the initial state 1`] = `Object {}`;

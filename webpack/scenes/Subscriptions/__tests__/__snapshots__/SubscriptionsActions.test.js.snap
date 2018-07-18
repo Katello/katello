@@ -1,0 +1,394 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Subscriptions actions should close delete modal 1`] = `
+Object {
+  "type": "SUBSCRIPTIONS_CLOSE_DELETE_MODAL",
+}
+`;
+
+exports[`Subscriptions actions should close manage manifest modal 1`] = `
+Object {
+  "type": "SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL",
+}
+`;
+
+exports[`Subscriptions actions should create subscription params 1`] = `
+Object {
+  "organization_id": "some-org-id",
+  "param_1": "some-param-1",
+  "param_2": "some-param-2",
+  "search": "some-search",
+}
+`;
+
+exports[`Subscriptions actions should delete subscriptions and fail 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "DELETE_SUBSCRIPTIONS_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "result": [Error: some-error],
+      },
+      "type": "DELETE_SUBSCRIPTIONS_FAILURE",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should delete subscriptions and fail 2`] = `
+Array [
+  Array [
+    "/organizations/some-org-id/upstream_subscriptions",
+    Object {},
+    Object {
+      "pool_ids": Array [
+        "1",
+        "2",
+        "3",
+      ],
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should delete subscriptions and success 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "DELETE_SUBSCRIPTIONS_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "response": "some-data",
+      "type": "DELETE_SUBSCRIPTIONS_SUCCESS",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should delete subscriptions and success 2`] = `
+Array [
+  Array [
+    "/organizations/some-org-id/upstream_subscriptions",
+    Object {},
+    Object {
+      "pool_ids": Array [
+        "1",
+        "2",
+        "3",
+      ],
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should disable delete button 1`] = `
+Object {
+  "type": "SUBSCRIPTIONS_DISABLE_DELETE_BUTTON",
+}
+`;
+
+exports[`Subscriptions actions should enable delete button 1`] = `
+Object {
+  "type": "SUBSCRIPTIONS_ENABLE_DELETE_BUTTON",
+}
+`;
+
+exports[`Subscriptions actions should export subscriptions csv 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "organization_id": "some-org-id",
+        "search": "some search query",
+      },
+      "type": "SUBSCRIPTIONS_EXPORT_CSV",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should export subscriptions csv 2`] = `
+Array [
+  Array [
+    "/subscriptions.csv",
+    Object {
+      "organization_id": "some-org-id",
+      "search": "some search query",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should load available quantities and fail 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "SUBSCRIPTIONS_QUANTITIES_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "result": [Error: some-error],
+      },
+      "type": "SUBSCRIPTIONS_QUANTITIES_FAILURE",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should load available quantities and success 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "SUBSCRIPTIONS_QUANTITIES_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": undefined,
+      "type": "SUBSCRIPTIONS_QUANTITIES_SUCCESS",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should load available quantities and success 2`] = `
+Array [
+  Array [
+    "/organizations/some-org-id/upstream_subscriptions",
+    Object {},
+    Object {
+      "organization_id": "some-org-id",
+      "param_1": "some-param-1",
+      "param_2": "some-param-2",
+      "search": "some-search",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should load subscriptions and fail 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "SUBSCRIPTIONS_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "result": [Error: some-error],
+      },
+      "type": "SUBSCRIPTIONS_FAILURE",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should load subscriptions and success 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "SUBSCRIPTIONS_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "response": Object {
+          "results": Array [
+            Object {
+              "id": "some-id",
+            },
+          ],
+        },
+        "search": "some-search",
+      },
+      "type": "SUBSCRIPTIONS_SUCCESS",
+    },
+  ],
+  Array [
+    [Function],
+  ],
+]
+`;
+
+exports[`Subscriptions actions should load subscriptions and success 2`] = `
+Array [
+  Array [
+    "/subscriptions",
+    Object {},
+    Object {
+      "organization_id": "some-org-id",
+      "param_1": "some-param-1",
+      "param_2": "some-param-2",
+      "search": "some-search",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should not start monitoring manifest tasks if its already monitoring 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "id": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+      },
+      "type": "SUBSCRIPTIONS_START_MONITORING_MANIFEST_TASKS_FAILED",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should open delete modal 1`] = `
+Object {
+  "type": "SUBSCRIPTIONS_OPEN_DELETE_MODAL",
+}
+`;
+
+exports[`Subscriptions actions should open manage manifest modal 1`] = `
+Object {
+  "type": "SUBSCRIPTIONS_OPEN_MANIFEST_MODAL",
+}
+`;
+
+exports[`Subscriptions actions should run monitor manifest tasks manually 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+      "type": "SUBSCRIPTIONS_RUN_MONITOR_MANIFEST_TASKS_MANUALLY",
+    },
+  ],
+  Array [
+    "runMonitorLifecycle(SUBSCRIPTIONS_MONITOR_TASKS_ID)",
+  ],
+]
+`;
+
+exports[`Subscriptions actions should start monitoring manifest tasks 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": Object {
+        "id": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+        "interval": 10000,
+        "params": Object {
+          "action_types": Array [
+            "Actions::Katello::Organization::ManifestImport",
+            "Actions::Katello::Organization::ManifestRefresh",
+            "Actions::Katello::Organization::ManifestDelete",
+            "Actions::Katello::UpstreamSubscriptions::BindEntitlements",
+            "Actions::Katello::UpstreamSubscriptions::UpdateEntitlement",
+            "Actions::Katello::UpstreamSubscriptions::RemoveEntitlements",
+            "Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+          ],
+          "active_only": false,
+          "search_id": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+          "type": "all",
+        },
+      },
+      "type": "SUBSCRIPTIONS_START_MONITORING_MANIFEST_TASKS",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "id": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+        "interval": 10000,
+        "params": Object {
+          "action_types": Array [
+            "Actions::Katello::Organization::ManifestImport",
+            "Actions::Katello::Organization::ManifestRefresh",
+            "Actions::Katello::Organization::ManifestDelete",
+            "Actions::Katello::UpstreamSubscriptions::BindEntitlements",
+            "Actions::Katello::UpstreamSubscriptions::UpdateEntitlement",
+            "Actions::Katello::UpstreamSubscriptions::RemoveEntitlements",
+            "Actions::Katello::UpstreamSubscriptions::UpdateEntitlements",
+          ],
+          "active_only": false,
+          "search_id": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+          "type": "all",
+        },
+      },
+      "type": "startMonitoringTasks",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should stop monitoring manifest tasks 1`] = `
+Array [
+  Array [
+    Object {
+      "payload": "SUBSCRIPTIONS_MONITOR_TASKS_ID",
+      "type": "SUBSCRIPTIONS_STOP_MONITORING_MANIFEST_TASKS",
+    },
+  ],
+  Array [
+    "stopMonitoringTasks(SUBSCRIPTIONS_MONITOR_TASKS_ID)",
+  ],
+]
+`;
+
+exports[`Subscriptions actions should update quantity and fail 1`] = `
+Array [
+  Array [
+    Object {
+      "quantities": Object {},
+      "type": "UPDATE_QUANTITY_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "result": [Error: some-error],
+      },
+      "type": "UPDATE_QUANTITY_FAILURE",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should update quantity and success 1`] = `
+Array [
+  Array [
+    Object {
+      "quantities": Object {},
+      "type": "UPDATE_QUANTITY_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "response": "some-data",
+      "type": "UPDATE_QUANTITY_SUCCESS",
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should update quantity and success 2`] = `
+Array [
+  Array [
+    "/organizations/some-org-id/upstream_subscriptions",
+    Object {
+      "pools": Object {},
+    },
+  ],
+]
+`;
+
+exports[`Subscriptions actions should update search query 1`] = `
+Object {
+  "payload": "some search query",
+  "type": "SUBSCRIPTIONS_UPDATE_SEARCH_QUERY",
+}
+`;

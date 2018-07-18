@@ -9,12 +9,8 @@ import { Table } from '../../../move_to_foreman/components/common/table';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
 import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';
-import { renderTaskStartedToast } from '../../Tasks/helpers';
+import { notifyTaskStartedToast } from '../../TasksMonitor/TasksMonitorHelpers';
 import DeleteManifestModalText from './DeleteManifestModalText';
-import {
-  BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
-} from '../SubscriptionConstants';
 
 class ManageManifestModal extends Component {
   constructor(props) {
@@ -79,39 +75,30 @@ class ManageManifestModal extends Component {
     this.props.saveOrganization({ redhat_repository_url: this.state.redhat_repository_url });
   }
 
-  uploadManifest(fileList) {
+  async uploadManifest(fileList) {
     this.setState({ actionInProgress: true });
+
     if (fileList.length > 0) {
-      this.props
-        .uploadManifest(fileList[0])
-        .then(() =>
-          this.props.bulkSearch({
-            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-            type: 'all',
-            active_only: true,
-            action_types: BLOCKING_FOREMAN_TASK_TYPES,
-          }))
-        .then(() => renderTaskStartedToast(this.props.taskDetails));
+      await this.props.uploadManifest(fileList[0]);
+      this.props.runMonitorManifestTasksManually();
+      notifyTaskStartedToast(this.props.taskDetails);
     }
   }
 
-  refreshManifest() {
-    this.props.refreshManifest();
+  async refreshManifest() {
     this.setState({ actionInProgress: true });
+
+    await this.props.refreshManifest();
+    await this.props.runMonitorManifestTasksManually();
   }
 
-  deleteManifest() {
+  async deleteManifest() {
     this.setState({ actionInProgress: true });
-    this.props
-      .deleteManifest()
-      .then(() =>
-        this.props.bulkSearch({
-          search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-          type: 'all',
-          active_only: true,
-          action_types: BLOCKING_FOREMAN_TASK_TYPES,
-        }))
-      .then(() => renderTaskStartedToast(this.props.taskDetails));
+
+    await this.props.deleteManifest();
+    await this.props.runMonitorManifestTasksManually();
+    notifyTaskStartedToast(this.props.taskDetails);
+
     this.showDeleteManifestModal(false);
   }
 
@@ -323,11 +310,11 @@ ManageManifestModal.propTypes = {
   disabledReason: PropTypes.string,
   loadOrganization: PropTypes.func.isRequired,
   saveOrganization: PropTypes.func.isRequired,
+  runMonitorManifestTasksManually: PropTypes.func.isRequired,
   taskInProgress: PropTypes.bool.isRequired,
   manifestHistory: PropTypes.shape({}).isRequired,
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
-  bulkSearch: PropTypes.func.isRequired,
   taskDetails: PropTypes.shape({}),
 };
 

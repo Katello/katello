@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import * as manifestActions from './ManifestActions';
 import * as organizationActions from '../../Organizations/OrganizationActions';
-import * as tasksActions from '../../Tasks/TaskActions';
+import * as subscriptionsActions from '../SubscriptionActions';
 import history from './ManifestHistoryReducer';
 
 import ManifestModal from './ManageManifestModal';
@@ -19,7 +19,9 @@ const mapStateToProps = state => ({
 });
 
 // map action dispatchers to props
-const actions = { ...manifestActions, ...organizationActions, ...tasksActions };
+const actions = {
+  ...manifestActions, ...organizationActions, ...subscriptionsActions,
+};
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 // export reducers
