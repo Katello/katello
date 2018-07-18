@@ -4,8 +4,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { bindMethods, Button } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
+import { Button } from 'patternfly-react';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';
@@ -19,19 +19,13 @@ class UpstreamSubscriptionsPage extends Component {
     this.state = {
       selectedRows: [],
     };
-
-    bindMethods(this, [
-      'onChange',
-      'saveUpstreamSubscriptions',
-      'quantityValidationInput',
-    ]);
   }
 
   componentDidMount() {
     this.loadData();
   }
 
-  onChange(value, rowData) {
+  onChange = (value, rowData) => {
     const { selectedRows } = this.state;
     const pool = {
       ...rowData,
@@ -54,7 +48,7 @@ class UpstreamSubscriptionsPage extends Component {
     }
 
     this.setState({ selectedRows });
-  }
+  };
 
   // eslint-disable-next-line class-methods-use-this
   quantityValidation(pool) {
@@ -84,21 +78,20 @@ class UpstreamSubscriptionsPage extends Component {
     );
   }
 
-  quantityValidationInput(pool) {
+
+  quantityValidationInput = (pool) => {
     if (!pool || pool.updatedQuantity === undefined) return null;
     if (this.quantityValidation(pool)[0]) {
       return 'success';
     }
     return 'error';
-  }
+  };
 
-  validateSelectedRows() {
-    return Array.isArray(this.state.selectedRows) &&
+  validateSelectedRows = () => Array.isArray(this.state.selectedRows) &&
            this.state.selectedRows.length &&
            this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
-  }
 
-  saveUpstreamSubscriptions() {
+  saveUpstreamSubscriptions = () => {
     const updatedPools = _.map(
       this.state.selectedRows,
       pool => ({ ...pool, quantity: parseInt(pool.updatedQuantity, 10) }),
@@ -124,7 +117,7 @@ class UpstreamSubscriptionsPage extends Component {
         this.props.history.push('/subscriptions');
       }
     });
-  }
+  };
 
   loadData() {
     this.props.loadUpstreamSubscriptions();
