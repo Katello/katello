@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
 import helpers from '../../../move_to_foreman/common/helpers';
 import {
   headerFormatter,
@@ -71,7 +71,7 @@ export const columns = (controller, selectionController) => [
     },
   },
   {
-    property: 'quantity',
+    property: 'available',
     header: {
       label: __('Available Entitlements'),
       formatters: [headerFormatter],
@@ -96,22 +96,27 @@ export const columns = (controller, selectionController) => [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <FormGroup>
+            <FormGroup
+              validationState={controller.quantityValidationInput(rowData)}
+            >
               <ControlLabel srOnly>{__('Number to Allocate')}</ControlLabel>
               <FormControl
                 type="text"
                 onBlur={e => controller.onChange(e.target.value, rowData)}
                 defaultValue={rowData.updatedQuantity}
+                onChange={(e) => {
+                  controller.onChange(e.target.value, rowData);
+                }}
                 onKeyDown={(e) => {
                   const key = e.charCode ? e.charCode : e.keyCode;
                   if (key === 13) {
-                    controller.onChange(e.target.value, rowData);
                     controller.saveUpstreamSubscriptions();
                     e.preventDefault();
                   }
                 }}
               />
-              <div>{__('Max')} {rowData.quantity}</div>
+              {controller.quantityValidationInput(rowData) === 'error' &&
+                <HelpBlock>{controller.quantityValidation(rowData)[1]}</HelpBlock>}
             </FormGroup>
           </td>
         ),
