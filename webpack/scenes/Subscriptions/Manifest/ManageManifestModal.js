@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
@@ -25,16 +25,6 @@ class ManageManifestModal extends Component {
       actionInProgress: props.taskInProgress,
       showDeleteManifestModalDialog: false,
     };
-
-    bindMethods(this, [
-      'hideModal',
-      'saveOrganization',
-      'uploadManifest',
-      'refreshManifest',
-      'deleteManifest',
-      'disabledTooltipText',
-      'updateRepositoryUrl',
-    ]);
   }
 
   static getDerivedStateFromProps(newProps, prevState) {
@@ -66,20 +56,20 @@ class ManageManifestModal extends Component {
     this.props.loadManifestHistory();
   }
 
-  hideModal() {
+  hideModal = () => {
     this.setState({ showModal: false, showDeleteManifestModalDialog: false });
     this.props.onClose();
-  }
+  };
 
-  updateRepositoryUrl(event) {
+  updateRepositoryUrl = (event) => {
     this.setState({ redhat_repository_url: event.target.value });
-  }
+  };
 
-  saveOrganization() {
+  saveOrganization = () => {
     this.props.saveOrganization({ redhat_repository_url: this.state.redhat_repository_url });
-  }
+  };
 
-  uploadManifest(fileList) {
+  uploadManifest = (fileList) => {
     this.setState({ actionInProgress: true });
     if (fileList.length > 0) {
       this.props
@@ -93,14 +83,14 @@ class ManageManifestModal extends Component {
           }))
         .then(() => renderTaskStartedToast(this.props.taskDetails));
     }
-  }
+  };
 
-  refreshManifest() {
+  refreshManifest = () => {
     this.props.refreshManifest();
     this.setState({ actionInProgress: true });
-  }
+  };
 
-  deleteManifest() {
+  deleteManifest = () => {
     this.setState({ actionInProgress: true });
     this.props
       .deleteManifest()
@@ -113,20 +103,20 @@ class ManageManifestModal extends Component {
         }))
       .then(() => renderTaskStartedToast(this.props.taskDetails));
     this.showDeleteManifestModal(false);
-  }
+  };
 
-  showDeleteManifestModal(show) {
+  showDeleteManifestModal = (show) => {
     this.setState({
       showDeleteManifestModalDialog: show,
     });
-  }
+  };
 
-  disabledTooltipText() {
+  disabledTooltipText = () => {
     if (this.state.actionInProgress) {
       return __('This is disabled because a manifest task is in progress');
     }
     return __('This is disabled because no manifest exists');
-  }
+  };
 
   render() {
     const {
