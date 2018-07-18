@@ -6,6 +6,12 @@ const urlBuilder = (controller, action, id = undefined) =>
 const urlWithSearch = (base, searchQuery) =>
   `/${base}?search=${searchQuery}`;
 
+const stringIsInteger = (value) => {
+  // checking for positive integers only
+  const reg = new RegExp('^[0-9]+$');
+  return reg.test(value);
+};
+
 export const getResponseErrorMsgs = ({ data }) => {
   if (data) {
     const messages = (data.errors || data.displayMessage || data.message || data.error);
@@ -44,4 +50,5 @@ export default {
   getResponseErrorMsgs,
   apiError,
   KEY_CODES,
+  stringIsInteger,
 };
