@@ -1,15 +1,22 @@
 const buildTableRow = (subscription, availableQuantities, updatedQuantity) => {
+  const availableQuantityLoaded = !!availableQuantities;
+  const availableQuantity = availableQuantityLoaded
+    ? availableQuantities[subscription.id]
+    : null;
+
   if (updatedQuantity[subscription.id]) {
     return {
       ...subscription,
       entitlementsChanged: true,
       quantity: updatedQuantity[subscription.id],
-      availableQuantity: availableQuantities[subscription.id],
+      availableQuantity,
+      availableQuantityLoaded,
     };
   }
   return {
     ...subscription,
-    availableQuantity: availableQuantities[subscription.id],
+    availableQuantity,
+    availableQuantityLoaded,
   };
 };
 
