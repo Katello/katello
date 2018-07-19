@@ -26,14 +26,14 @@ module Katello
       setup_permissions
       setup_controller_defaults_api
 
-      SETTINGS[:katello][:registry] = {url: 'https://localhost:5000', ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
+      SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
 
       File.delete("#{Rails.root}/tmp/manifest.json") if File.exist?("#{Rails.root}/tmp/manifest.json")
     end
 
     describe "registry config" do
       it "ping - unconfigured" do
-        SETTINGS[:katello].except!(:registry)
+        SETTINGS[:katello].except!(:container_image_registry)
         response = get :ping
         body = JSON.parse(response.body)
         assert_response 404
