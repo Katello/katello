@@ -15,6 +15,12 @@ module Katello
         end
       end
 
+      # to overcome the isolated namespace engine difficulties with paths
+      helper Rails.application.routes.url_helpers
+      def _routes
+        Rails.application.routes
+      end
+
       private
 
       def prepare_composer
@@ -42,12 +48,6 @@ module Katello
       def feature_name
         # getting packageInstall from UI, translating to 'katello_package_install' feature
         "katello_#{params[:remote_action].underscore}"
-      end
-
-      # to overcome the isolated namespace engine difficulties with paths
-      helper Rails.application.routes.url_helpers
-      def _routes
-        Rails.application.routes
       end
     end
   else
