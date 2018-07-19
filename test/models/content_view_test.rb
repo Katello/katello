@@ -450,6 +450,29 @@ module Katello
       assert composite.check_composite_action_allowed!(library)
     end
 
+    def test_check_composite_action_allowed_when_setting_enabled_with_active_record_relation
+      # Testing composite content view restrictions (Setting: restrict_composite_view=true)
+      Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Content',
+                     :settings_type => 'boolean', :default => true)
+
+      library = KTEnvironment.where(:id => katello_environments(:library).id)
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      # version with no envs
+      library_view_version_1 = ContentViewVersion.find(katello_content_view_versions(:library_view_version_1).id)
+      # version in library & dev
+      library_dev_view_version = ContentViewVersion.find(katello_content_view_versions(:library_dev_view_version).id)
+
+      composite.component_ids = [library_view_version_1.id]
+      composite.save!
+      assert_raises RuntimeError do
+        composite.check_composite_action_allowed!(library)
+      end
+
+      composite.component_ids = [library_dev_view_version.id]
+      composite.save!
+      assert composite.check_composite_action_allowed!(library)
+    end
+
     def test_check_composite_action_allowed_when_setting_disabled
       # Testing the default behavior (Setting: restrict_composite_view=false)
       Setting.create(:name => 'restrict_composite_view', :category => 'Setting::Content',
