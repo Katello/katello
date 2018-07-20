@@ -1,6 +1,6 @@
 # Katello
 
-[![Build Status](https://ci.theforeman.org/buildStatus/icon?job=test_katello)](https://ci.theforeman.org/job/test_katello)
+[![Build Status](https://ci.theforeman.org/buildStatus/icon?job=katello-nightly-release)](https://ci.theforeman.org/job/katello-nightly-release/)
 [![Code Climate](https://codeclimate.com/github/Katello/katello/badges/gpa.svg)](https://codeclimate.com/github/Katello/katello)
 
 Full documentation is at https://www.theforeman.org/plugins/katello/
@@ -19,18 +19,18 @@ Linux based systems.
 ## Development
 
 The most common way to set up Katello for development is to use
-[katello-deploy](https://github.com/Katello/katello-deploy#development-deployment).
-This will set up a Vagrant instance with the Katello codebase checked out. You
-can also run `setup.rb` directly with katello-deploy if you prefer to not use
-Vagrant.
+[forklift](https://github.com/theforeman/forklift).
+This will set up a virtual machine with the Katello codebase checked out.
+Please use the forklift documentation found in the repository for how
+to get started with forklift.
 
 There is also
 [katello-devel-installer](https://github.com/Katello/katello-installer#development-usage)
 if you would like to use that.
 
 If you have questions or issues with any of the above methods, feel free to ask
-for assistance on #theforeman-dev IRC channel or via the foreman-dev mailing
-list.
+for assistance on #theforeman-dev IRC channel on freenode or via the 
+[community forum](https://community.theforeman.org/)
 
 ### Test Run
 
