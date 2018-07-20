@@ -97,7 +97,7 @@ class SearchBar extends Component {
         <MultiSelect
           value={this.state.filters}
           options={filterOptions}
-          noneSelectedText={__("Filter by type")}
+          noneSelectedText={__('Filter by type')}
           onChange={(e) => {
             const values = [...e.target.options]
               .filter(({ selected }) => selected)
