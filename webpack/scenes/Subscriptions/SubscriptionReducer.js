@@ -87,7 +87,7 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_QUANTITIES_REQUEST:
       return state.merge({
         quantitiesLoading: true,
-        availableQuantities: null
+        availableQuantities: null,
       });
 
     case SUBSCRIPTIONS_QUANTITIES_SUCCESS: {
@@ -100,7 +100,7 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_QUANTITIES_FAILURE: {
       return state.merge({
         quantitiesLoading: false,
-        availableQuantities: {}
+        availableQuantities: {},
       });
     }
 

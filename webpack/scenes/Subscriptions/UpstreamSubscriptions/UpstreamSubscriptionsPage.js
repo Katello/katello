@@ -266,7 +266,6 @@ class UpstreamSubscriptionsPage extends Component {
 }
 
 UpstreamSubscriptionsPage.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
   loadUpstreamSubscriptions: PropTypes.func.isRequired,
   saveUpstreamSubscriptions: PropTypes.func.isRequired,
   upstreamSubscriptions: PropTypes.shape({
