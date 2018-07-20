@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { sprintf } from 'jed';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
-import { Table, Alert } from 'patternfly-react';
+import { Table } from 'patternfly-react';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';
 import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../move_to_foreman/components/common/table';
 import ConfirmDialog from '../../../../move_to_foreman/components/common/ConfirmDialog';
@@ -25,23 +25,6 @@ const emptyStateData = {
   },
 };
 
-const ErrorAlerts = ({ errors }) => {
-  const alerts = errors.filter(Boolean).map(e => (
-    <Alert type={Alert.ALERT_TYPE_ERROR} key={e}>
-      <span>{e}</span>
-    </Alert>
-  ));
-
-  return (
-    <div>
-      {alerts}
-    </div>
-  );
-};
-ErrorAlerts.propTypes = {
-  errors: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
-
 class SubscriptionsTable extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +32,7 @@ class SubscriptionsTable extends Component {
     this.state = {
       rows: undefined,
       subscriptions: undefined,
-      groupdSubscriptions: undefined,
+      groupedSubscriptions: undefined,
       updatedQuantity: {},
       editing: false,
       showUpdateConfirmDialog: false,
@@ -64,14 +47,14 @@ class SubscriptionsTable extends Component {
       nextProps.subscriptions !== undefined &&
       !isEqual(nextProps.subscriptions, prevState.subscriptions)
     ) {
-      const groupdSubscriptions = groupSubscriptionsByProductId(nextProps.subscriptions);
+      const groupedSubscriptions = groupSubscriptionsByProductId(nextProps.subscriptions);
       const rows = buildTableRows(
-        groupdSubscriptions,
+        groupedSubscriptions,
         nextProps.subscriptions.availableQuantities,
         prevState.updatedQuantity,
       );
 
-      return { rows, groupdSubscriptions, subscriptions: nextProps.subscriptions };
+      return { rows, groupedSubscriptions, subscriptions: nextProps.subscriptions };
     }
 
     return null;
@@ -79,19 +62,19 @@ class SubscriptionsTable extends Component {
 
   toggleSubscriptionGroup(groupId) {
     const { subscriptions } = this.props;
-    const { groupdSubscriptions, updatedQuantity } = this.state;
-    const { open } = groupdSubscriptions[groupId];
+    const { groupedSubscriptions, updatedQuantity } = this.state;
+    const { open } = groupedSubscriptions[groupId];
 
-    groupdSubscriptions[groupId].open = !open;
+    groupedSubscriptions[groupId].open = !open;
 
 
     const rows = buildTableRows(
-      groupdSubscriptions,
+      groupedSubscriptions,
       subscriptions.availableQuantities,
       updatedQuantity,
     );
 
-    this.setState({ rows, groupdSubscriptions });
+    this.setState({ rows, groupedSubscriptions });
   }
 
   enableEditing(editingState) {
@@ -102,11 +85,11 @@ class SubscriptionsTable extends Component {
   }
 
   updateRows(updatedQuantity) {
-    const { groupdSubscriptions } = this.state;
+    const { groupedSubscriptions } = this.state;
     const { subscriptions } = this.props;
 
     const rows = buildTableRows(
-      groupdSubscriptions,
+      groupedSubscriptions,
       subscriptions.availableQuantities,
       updatedQuantity,
     );
@@ -158,15 +141,15 @@ class SubscriptionsTable extends Component {
 
   render() {
     const { subscriptions } = this.props;
-    const { groupdSubscriptions } = this.state;
+    const { groupedSubscriptions } = this.state;
 
     const groupingController = {
       isCollapseable: ({ rowData }) =>
         // it is the first subscription in the group
-        rowData.id === groupdSubscriptions[rowData.product_id].subscriptions[0].id &&
+        rowData.id === groupedSubscriptions[rowData.product_id].subscriptions[0].id &&
         // the group contains more then one subscription
-        groupdSubscriptions[rowData.product_id].subscriptions.length > 1,
-      isCollapsed: ({ rowData }) => !groupdSubscriptions[rowData.product_id].open,
+        groupedSubscriptions[rowData.product_id].subscriptions.length > 1,
+      isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
       toggle: ({ rowData }) => this.toggleSubscriptionGroup(rowData.product_id),
     };
 
@@ -258,12 +241,6 @@ class SubscriptionsTable extends Component {
 
     return (
       <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
-        <ErrorAlerts
-          errors={[
-            subscriptions.error,
-            subscriptions.quantitiesError,
-          ]}
-        />
         <ForemanTable
           columns={columnsDefinition}
           emptyState={emptyStateData}

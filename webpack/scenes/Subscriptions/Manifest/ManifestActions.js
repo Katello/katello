@@ -1,5 +1,6 @@
 import api, { orgId } from '../../../services/api';
 import { propsToSnakeCase } from '../../../services/index';
+import { apiError } from '../../../move_to_foreman/common/helpers.js';
 
 import {
   UPLOAD_MANIFEST_REQUEST,
@@ -34,12 +35,7 @@ export const uploadManifest = file => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: UPLOAD_MANIFEST_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(UPLOAD_MANIFEST_FAILURE, result)));
 };
 
 export const refreshManifest = (extendedParams = {}) => (dispatch) => {
@@ -57,12 +53,7 @@ export const refreshManifest = (extendedParams = {}) => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: REFRESH_MANIFEST_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(REFRESH_MANIFEST_FAILURE, result)));
 };
 
 export const deleteManifest = (extendedParams = {}) => (dispatch) => {
@@ -80,12 +71,7 @@ export const deleteManifest = (extendedParams = {}) => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: DELETE_MANIFEST_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(DELETE_MANIFEST_FAILURE, result)));
 };
 
 export const loadManifestHistory = (extendedParams = {}) => (dispatch) => {
@@ -103,12 +89,7 @@ export const loadManifestHistory = (extendedParams = {}) => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: MANIFEST_HISTORY_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(MANIFEST_HISTORY_FAILURE, result)));
 };
 
 export default loadManifestHistory;

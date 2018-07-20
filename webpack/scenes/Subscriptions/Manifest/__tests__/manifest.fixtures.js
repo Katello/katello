@@ -1,4 +1,5 @@
 import Immutable from 'seamless-immutable';
+import { toastErrorAction, failureAction } from '../../../../services/api/testHelpers';
 
 export const manifestHistoryInitialState = Immutable({
   loading: true,
@@ -149,10 +150,8 @@ export const manifestHistoryFailureActions = [
   {
     type: 'MANIFEST_HISTORY_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'MANIFEST_HISTORY_FAILURE',
-  },
+  failureAction('MANIFEST_HISTORY_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const uploadManifestSuccessActions = [
@@ -169,10 +168,8 @@ export const uploadManifestFailureActions = [
   {
     type: 'UPLOAD_MANIFEST_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'UPLOAD_MANIFEST_FAILURE',
-  },
+  failureAction('UPLOAD_MANIFEST_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const refreshManifestSuccessActions = [
@@ -189,10 +186,8 @@ export const refreshManifestFailureActions = [
   {
     type: 'REFRESH_MANIFEST_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'REFRESH_MANIFEST_FAILURE',
-  },
+  failureAction('REFRESH_MANIFEST_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const deleteManifestSuccessActions = [
@@ -209,8 +204,6 @@ export const deleteManifestFailureActions = [
   {
     type: 'DELETE_MANIFEST_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'DELETE_MANIFEST_FAILURE',
-  },
+  failureAction('DELETE_MANIFEST_FAILURE'),
+  toastErrorAction(),
 ];
