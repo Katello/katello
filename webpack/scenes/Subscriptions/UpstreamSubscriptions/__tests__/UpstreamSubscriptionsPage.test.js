@@ -9,6 +9,7 @@ jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 
 describe('upstream subscriptions page', () => {
   let shallowWrapper;
+  const mockHistory = { push: () => {} };
   beforeEach(() => {
     shallowWrapper = shallow(<UpstreamSubscriptionsPage
       upstreamSubscriptions={successState}
@@ -17,7 +18,6 @@ describe('upstream subscriptions page', () => {
       history={mockHistory}
     />);
   });
-  const mockHistory = { push: () => {} };
 
   it('should render', async () => {
     expect(toJson(shallowWrapper)).toMatchSnapshot();
