@@ -87,7 +87,7 @@ namespace :katello do
       print "The following changes will not actually be performed.  Rerun with COMMIT=true to apply the changes\n"
     end
 
-    SETTINGS[:katello][:candlepin][:bulk_load_size] = 15_000
+    SETTINGS[:katello][:candlepin][:bulk_load_size] = 1_500
     User.current = User.anonymous_admin
     cleaner = BackendCleaner.new
     cleaner.populate!
