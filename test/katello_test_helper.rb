@@ -147,6 +147,7 @@ class ActionController::TestCase
 end
 
 class ActiveSupport::TestCase
+  extend Robottelo::Reporter::TestAttributes
   include FactoryBot::Syntax::Methods
   include FixtureTestCase
   include ForemanTasks::TestHelpers::WithInThreadExecutor
