@@ -22,6 +22,7 @@ describe('subscriptions table', () => {
             onSubscriptionDeleteModalClose={() => { }}
             onDeleteSubscriptions={() => {}}
             toggleDeleteButton={() => {}}
+            emptyState={{}}
           />
                         </MemoryRouter>);
     expect(toJson(page)).toMatchSnapshot();
@@ -59,6 +60,7 @@ describe('subscriptions table', () => {
       onSubscriptionDeleteModalClose={() => { }}
       onDeleteSubscriptions={() => {}}
       toggleDeleteButton={() => {}}
+      emptyState={{}}
     />);
     jest.runAllTimers();
     page.update();
