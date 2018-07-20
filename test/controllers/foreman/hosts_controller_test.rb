@@ -49,7 +49,8 @@ class HostsControllerTest < ActionController::TestCase
       get :content_hosts, params: { :format => 'csv', :organization_id => @host.organization_id }
       assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]
       assert_equal "no-cache", response.headers["Cache-Control"]
-      assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"", response.headers["Content-Disposition"]
+      assert_equal "attachment; filename=\"hosts-#{Date.today}.csv\"",
+        response.headers["Content-Disposition"]
       buf = response.stream.instance_variable_get(:@buf)
       assert buf.is_a? Enumerator
       assert_equal "Name,Subscription Status,Installable Updates - Security,Installable Updates - Bug \
