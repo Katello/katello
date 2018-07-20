@@ -15,7 +15,7 @@
       <dd>{{ repository.label }}</dd>
 
       <dt translate>Description</dt>
-      <dd bst-edit-text="repository.description"
+      <dd bst-edit-textarea="repository.description"
 	  on-save="save(repository)"
 	  readonly="product.redhat || denied('edit_products', product)">
       </dd>
