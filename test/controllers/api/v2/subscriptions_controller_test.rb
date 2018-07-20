@@ -41,6 +41,16 @@ module Katello
       assert_template 'api/v2/subscriptions/index'
     end
 
+    def test_index_csv
+      Pool.expects(:get_for_organization).returns(Pool.all)
+      get :index, params: {:format => 'csv', :organization_id => @organization.id }
+      assert_response :success
+      assert_equal "text/csv; charset=utf-8", response.headers["Content-Type"]
+      assert_equal "no-cache", response.headers["Cache-Control"]
+      assert_equal "attachment; filename=\"#{@organization.label}-subscriptions-#{Date.today}.csv\"",
+        response.headers["Content-Disposition"]
+    end
+
     def test_index_protected
       allowed_perms = [@read_permission]
       denied_perms = [@attach_permission, @unattach_permission, @import_permission, @delete_permission]

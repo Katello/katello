@@ -178,6 +178,15 @@ module Katello
       return Organization.find_by(:id => org_id)
     end
 
+    def csv_response(resources, columns = csv_columns, header = nil, filename = nil)
+      if filename || Organization.current.blank?
+        super
+      else
+        filename = "#{Organization.current.label}-#{controller_name}-#{Date.today}.csv"
+        super(resources, columns, header, filename)
+      end
+    end
+
     def find_default_organization_and_or_environment
       return if (params.keys & %w(organization_id owner environment_id host_collection_id)).any?
 
