@@ -13,10 +13,12 @@ jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 describe('subscriptions details page', () => {
   it('should render and contain appropiate components', async () => {
     const match = { params: { id: 1 } };
+    const noop = () => {};
 
     const wrapper = shallow(<SubscriptionDetails
       loadSubscriptionDetails={loadSubscriptionDetails}
       subscriptionDetails={successState}
+      history={{ push: noop }}
       match={match}
     />);
     expect(wrapper.find(SubscriptionDetailAssociations)).toHaveLength(1);

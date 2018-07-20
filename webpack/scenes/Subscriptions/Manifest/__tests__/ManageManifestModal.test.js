@@ -17,6 +17,7 @@ describe('manage manifest modal', () => {
       organization={organization}
       loadOrganization={noop}
       saveOrganization={noop}
+      bulkSearch={noop}
       manifestHistory={manifestHistorySuccessState}
       taskInProgress={false}
       showModal
