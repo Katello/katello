@@ -1,6 +1,7 @@
 module Katello
   class DockerManifestList < Katello::Model
     include Concerns::PulpDatabaseUnit
+    include Glue::Pulp::DockerManifestList
 
     has_many :docker_tags, :as => :docker_taggable, :class_name => "Katello::DockerTag", :dependent => :destroy
     has_many :repository_docker_manifest_lists, :class_name => "Katello::RepositoryDockerManifestList",
@@ -10,6 +11,8 @@ module Katello
     has_many :docker_manifest_list_manifests, :class_name => "Katello::DockerManifestListManifest",
              :dependent => :delete_all, :inverse_of => :docker_manifest_list
     has_many :docker_manifests, :through => :docker_manifest_list_manifests, :inverse_of => :docker_manifest_lists
+    has_many :docker_manifest_list_manifest_platforms, :dependent => :destroy, :class_name => "Katello::DockerManifestListManifestPlatform"
+    has_many :docker_manifest_platforms, :through => :docker_manifest_list_manifest_platforms
 
     CONTENT_TYPE = Pulp::DockerManifestList::CONTENT_TYPE
 
@@ -19,14 +22,6 @@ module Katello
 
     def self.repository_association_class
       RepositoryDockerManifestList
-    end
-
-    def update_from_json(json)
-      update_attributes(:schema_version => json[:schema_version],
-                        :digest => json[:digest],
-                        :downloaded => json[:downloaded],
-                        :docker_manifests => ::Katello::DockerManifest.where(:digest => json[:manifests].pluck(:digest))
-                       )
     end
 
     def self.default_sort

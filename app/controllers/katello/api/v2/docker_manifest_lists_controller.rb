@@ -10,7 +10,7 @@ module Katello
     end
 
     def custom_index_relation(collection)
-      collection.includes(:docker_tags)
+      collection.includes(:docker_tags, :docker_manifest_platforms)
     end
 
     def default_sort

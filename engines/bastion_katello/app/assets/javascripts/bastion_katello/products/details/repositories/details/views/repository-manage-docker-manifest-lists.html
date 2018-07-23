@@ -16,17 +16,15 @@
 
       <thead>
         <tr bst-table-head>
-          <th bst-table-column><span translate>Digest</span></th>
           <th bst-table-column><span translate>Tags</span></th>
-          <th bst-table-column><span translate>Schema Version</span></th>
+          <th bst-table-column><span translate>Digest</span></th>
+          <th bst-table-column><span translate>Platforms</span></th>
+          <th bst-table-column><span translate>Total Size (GB)</span></th>
         </tr>
       </thead>
 
       <tbody>
         <tr bst-table-row ng-repeat="item in table.rows" >
-          <td bst-table-cell>
-            {{ item.digest }}
-          </td>
           <td>
             <span ng-repeat="tag in tagsForManifest(item) ">
               <a ui-sref="docker-tag.info({tagId: tag.id})">
@@ -35,7 +33,19 @@
             </span>
           </td>
           <td bst-table-cell>
-            {{ item.schema_version }}
+            {{ item.digest }}
+          </td>
+          <td bst-table-cell>
+            <span ng-if="item.platforms.length > 0" ng-repeat="platform in item.platforms ">
+              {{ platform.os + " " + platform.arch }}{{$last ? '' : ', ' }}
+            </span>
+          </td>
+          <td bst-table-cell
+              uib-tooltip="{{ totalSizeForManifestList(item) }}"
+              tooltip-animation="false"
+              tooltip-placement="right"
+              tooltip-append-to-body="true">
+            {{ convertMemToGB(totalSizeForManifestList(item)) }}
           </td>
         </tr>
       </tbody>

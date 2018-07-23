@@ -1,8 +1,9 @@
 describe('Controller: RepositoryManageContentController', function() {
-    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerManifestList,  DockerManifest, OstreeBranch, DockerTag;
+    var $scope, translate, Repository, Nutupane, PuppetModule, Package, PackageGroup, DockerManifestList,  DockerManifest, OstreeBranch, DockerTag, Notification, PuppetModule, File, Deb, ContentHostsHelper;
 
     beforeEach(module(
         'Bastion.repositories',
+        'Bastion.content-hosts',
         'Bastion.test-mocks'
     ));
 
@@ -12,6 +13,7 @@ describe('Controller: RepositoryManageContentController', function() {
             $state = $injector.get('$state'),
             Package = $injector.get('MockResource').$new();
 
+        ContentHostsHelper = $injector.get('ContentHostsHelper');
         Repository = $injector.get('MockResource').$new();
         Repository.removeContent = function() {};
 
@@ -37,14 +39,19 @@ describe('Controller: RepositoryManageContentController', function() {
             $scope: $scope,
             $state: $state,
             translate: translate,
+            Notification: Notification,
+            Nutupane: Nutupane,
             Repository: Repository,
-            PuppetModule: PuppetModule,
-            DockerTag: DockerTag,
             Package: Package,
             PackageGroup: PackageGroup,
+            PuppetModule: PuppetModule,
             DockerManifest: DockerManifest,
             DockerManifestList: DockerManifestList,
+            DockerTag: DockerTag,
             OstreeBranch: OstreeBranch,
+            File: File,
+            Deb: Deb,
+            ContentHostsHelper: ContentHostsHelper
         });
     }));
 
