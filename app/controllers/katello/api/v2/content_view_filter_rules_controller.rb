@@ -5,6 +5,8 @@ module Katello
 
     api :GET, "/content_view_filters/:content_view_filter_id/rules", N_("List filter rules")
     param :content_view_filter_id, :number, :desc => N_("filter identifier"), :required => true
+    param :name, String, :desc => N_("name of the content view filter rule"), :required => false
+    param :errata_id, String, :desc => N_("errata_id of the content view filter rule"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       respond(collection: scoped_search(index_relation, :id, :asc, resource_class: ContentViewFilter.rule_class_for(@filter)))
@@ -12,6 +14,8 @@ module Katello
 
     def index_relation
       query = ContentViewFilter.rule_class_for(@filter).where(content_view_filter_id: @filter.id)
+      query = query.where(:name => params[:name]) if params[:name]
+      query = query.where(:errata_id => params[:errata_id]) if params[:errata_id]
       query
     end
 
