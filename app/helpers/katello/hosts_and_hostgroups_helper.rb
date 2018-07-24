@@ -34,8 +34,6 @@ module Katello
     end
 
     def kickstart_repository_id(host, options = {})
-      return if host.try(:medium_id).present?
-
       host_ks_repo_id = host_hostgroup_kickstart_repository_id(host)
       ks_repo_options = kickstart_repository_options(host, options)
       # if the kickstart repo id is set in the selected_hostgroup use that

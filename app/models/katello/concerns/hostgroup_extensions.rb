@@ -17,6 +17,18 @@ module Katello
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source, :only_explicit => true
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
         scoped_search :relation => :lifecycle_environment, :on => :name, :complete_value => true, :rename => :lifecycle_environment, :only_explicit => true
+
+        before_validation :correct_kickstart_repository
+      end
+
+      def correct_kickstart_repository
+        # If switched from ks repo to install media:
+        if medium_id_changed? && medium && kickstart_repository_id
+          self.kickstart_repository_id = nil
+        # If switched from install media to ks repo:
+        elsif kickstart_repository && medium
+          self.medium = nil
+        end
       end
 
       def content_view

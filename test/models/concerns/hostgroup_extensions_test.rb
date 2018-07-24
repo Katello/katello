@@ -86,4 +86,82 @@ module Katello
       refute @root.content_and_puppet_match?
     end
   end
+
+  class HostgroupExtensionsKickstartTest < ActiveSupport::TestCase
+    def setup
+      @distro = katello_repositories(:fedora_17_x86_64)
+      @os = ::Redhat.create_operating_system('RedHat', '17', '0')
+      @os.stubs(:kickstart_repos).returns([@distro])
+      @arch = architectures(:x86_64)
+      @distro_cv = @distro.content_view
+      @distro_env = @distro.environment
+      @content_source = FactoryBot.create(:smart_proxy,
+                                          name: "foobar",
+                                          url: "http://example.com/",
+                                          lifecycle_environments: [@distro_env])
+      @medium = FactoryBot.create(:medium, operatingsystems: [@os])
+    end
+
+    def test_set_kickstart_repository
+      hg = Hostgroup.new(
+        name: 'kickstart_repo',
+        operatingsystem: @os,
+        content_source: @content_source,
+        architecture: @arch,
+        content_view: @distro_cv,
+        lifecycle_environment: @distro_env,
+        kickstart_repository: @distro)
+
+      assert_valid hg
+      assert_equal hg.kickstart_repository, @distro
+    end
+
+    def test_set_installation_medium
+      hg = Hostgroup.new(
+        name: 'install_media',
+        operatingsystem: @os,
+        content_source: @content_source,
+        architecture: @arch,
+        content_view: @distro_cv,
+        lifecycle_environment: @distro_env,
+        medium: @medium)
+
+      assert_valid hg
+      assert_equal hg.medium, @medium
+    end
+
+    def test_change_medium_to_kickstart_repository
+      hg = Hostgroup.new(
+        name: 'install_media',
+        operatingsystem: @os,
+        content_source: @content_source,
+        architecture: @arch,
+        content_view: @distro_cv,
+        lifecycle_environment: @distro_env,
+        medium: @medium)
+
+      assert hg.save
+      hg.kickstart_repository = @distro
+      assert_valid hg
+      assert_nil hg.medium
+      assert_equal hg.kickstart_repository, @distro
+    end
+
+    def test_change_kickstart_repository_to_medium
+      hg = Hostgroup.new(
+        name: 'kickstart_repo',
+        operatingsystem: @os,
+        content_source: @content_source,
+        architecture: @arch,
+        content_view: @distro_cv,
+        lifecycle_environment: @distro_env,
+        kickstart_repository: @distro)
+
+      assert hg.save
+      hg.medium = @medium
+      assert_valid hg
+      assert_nil hg.kickstart_repository
+      assert_equal hg.medium, @medium
+    end
+  end
 end
