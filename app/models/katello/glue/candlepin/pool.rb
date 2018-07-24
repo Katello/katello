@@ -40,6 +40,16 @@ module Katello
         end
         pool.import_data(index_hosts)
       end
+
+      def stacking_subscription(org_label, stacking_id)
+        org = Organization.find_by(:label => org_label)
+        subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => stacking_id)
+        if subscription.nil?
+          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
+          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => found_product['id']) if found_product
+        end
+        subscription
+      end
     end
 
     module InstanceMethods
@@ -80,16 +90,6 @@ module Katello
         providers.any?
       end
 
-      def stacking_subscription(org_label, stacking_id)
-        org = Organization.find_by(:label => org_label)
-        subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :product_id => stacking_id)
-        if subscription.nil?
-          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
-          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => found_product['id']) if found_product
-        end
-        subscription
-      end
-
       # rubocop:disable MethodLength,Metrics/AbcSize
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
@@ -101,7 +101,7 @@ module Katello
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
 
         if pool_json["sourceStackId"]
-          subscription = stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
+          subscription = Pool.stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
         else
           subscription = ::Katello::Subscription.find_by(:cp_id => pool_json["productId"])
         end
