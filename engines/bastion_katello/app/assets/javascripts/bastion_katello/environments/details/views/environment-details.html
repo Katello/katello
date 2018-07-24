@@ -30,10 +30,19 @@
         readonly="denied('edit_lifecycle_environments', environment)">
     </dd>
     <dt translate>Registry Name Pattern</dt>
-    <dd bst-edit-textarea="environment.registry_name_pattern"
-        on-save="save(environment)"
-        readonly="denied('edit_lifecycle_environments', environment)">
+    <dd>
+      <div bst-edit-textarea="environment.registry_name_pattern"
+           on-save="save(environment)"
+           readonly="denied('edit_lifecycle_environments', environment)">
+      </div>
+      <div bst-alert='info'>
+        <span translate>
+          Registry Name Pattern Examples:<i>
+          <br>&lt;%= organization.label %&gt;-&lt;%= lifecycle_environment.label %&gt;-&lt;%= content_view.label %&gt;-&lt;%= product.label %&gt;-&lt;%= repository.label %&gt;
+          <br>&lt;%= organization.label %&gt;/&lt;%= repository.docker_upstream_name %&gt;
+          </i>
+        </span>
+      </div>
     </dd>
   </dl>
-
 </div>
