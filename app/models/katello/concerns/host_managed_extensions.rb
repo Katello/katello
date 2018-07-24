@@ -15,6 +15,19 @@ module Katello
           ids << content_source_id
           ids.uniq.compact
         end
+
+        def update_os_from_facts
+          super
+
+          # If facts causes the OS to change, our kickstart repo might not be
+          # valid anymore. Let's reset it, either to nil or a valid one
+          ks_repo = content_facet&.kickstart_repository
+          valid_repos = operatingsystem.respond_to?(:kickstart_repos) ? (operatingsystem.kickstart_repos(self)&.pluck(:id) || []) : []
+
+          if ks_repo && valid_repos.exclude?(ks_repo.id)
+            content_facet.kickstart_repository_id = valid_repos.first
+          end
+        end
       end
 
       included do
@@ -30,6 +43,7 @@ module Katello
         has_many :hypervisor_pools, :class_name => '::Katello::Pool', :foreign_key => :hypervisor_id, :dependent => :nullify
 
         before_save :correct_puppet_environment
+        before_validation :correct_kickstart_repository
 
         scoped_search :relation => :host_collections, :on => :id, :complete_value => false, :rename => :host_collection_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
@@ -38,6 +52,18 @@ module Katello
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
+      end
+
+      def correct_kickstart_repository
+        return unless content_facet
+
+        # If switched from ks repo to install media:
+        if medium_id_changed? && medium && content_facet.kickstart_repository
+          content_facet.kickstart_repository_id = nil
+        # If switched from install media to ks repo:
+        elsif content_facet.kickstart_repository && medium
+          self.medium = nil
+        end
       end
 
       def rhsm_organization_label
@@ -57,12 +83,12 @@ module Katello
 
       def content_and_puppet_matched?
         content_facet && content_facet.content_view_id_was == environment.try(:content_view).try(:id) &&
-            content_facet.lifecycle_environment_id_was == self.environment.try(:lifecycle_environment).try(:id)
+          content_facet.lifecycle_environment_id_was == self.environment.try(:lifecycle_environment).try(:id)
       end
 
       def content_and_puppet_match?
         content_facet && content_facet.content_view_id == environment.try(:content_view).try(:id) &&
-            content_facet.lifecycle_environment_id == self.environment.try(:lifecycle_environment).try(:id)
+          content_facet.lifecycle_environment_id == self.environment.try(:lifecycle_environment).try(:id)
       end
 
       def import_package_profile(simple_packages)

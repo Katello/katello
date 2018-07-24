@@ -176,4 +176,81 @@ module Katello
       assert_includes ::Host::Managed.search_for("trace_helper = \"sudo systemctl restart sshd\""), @foreman_host
     end
   end
+
+  class HostManagedExtensionsKickstartTest < ActiveSupport::TestCase
+    def setup
+      disable_orchestration # disable foreman orchestration
+      @distro = katello_repositories(:fedora_17_x86_64)
+      @os = ::Redhat.create_operating_system('RedHat', '17', '0')
+      @os.stubs(:kickstart_repos).returns([@distro])
+      @arch = architectures(:x86_64)
+      @distro_cv = @distro.content_view
+      @distro_env = @distro.environment
+      @content_source = FactoryBot.create(:smart_proxy,
+                                          name: "foobar",
+                                          url: "http://example.com/",
+                                          lifecycle_environments: [@distro_env])
+      @medium = FactoryBot.create(:medium, operatingsystems: [@os])
+
+      @host = FactoryBot.create(:host, operatingsystem: @os, arch: @arch)
+      Support::HostSupport.attach_content_facet(@host, @distro_cv, @distro_env)
+      @host.content_facet.content_source = @content_source
+      @host.save!
+    end
+
+    def test_set_medium
+      @host.medium = @medium
+      assert_valid @host
+      assert_equal @host.medium, @medium
+    end
+
+    def test_set_installation_medium
+      @host.content_facet.kickstart_repository = @distro
+      assert_valid @host
+      assert_equal @host.content_facet.kickstart_repository, @distro
+    end
+
+    def test_change_medium_to_kickstart_repository
+      @host.medium = @medium
+      assert @host.save
+
+      @host.content_facet.kickstart_repository = @distro
+      assert_valid @host
+      assert_nil @host.medium
+      assert_equal @host.content_facet.kickstart_repository, @distro
+    end
+
+    def test_change_kickstart_repository_to_medium
+      @host.content_facet.kickstart_repository = @distro
+      assert @host.save
+
+      @host.medium = @medium
+      assert_valid @host
+      assert_nil @host.content_facet.kickstart_repository
+      assert_equal @host.medium, @medium
+    end
+
+    def test_change_os_from_facts_without_ks_repo
+      @host.content_facet.kickstart_repository = @distro
+      assert @host.save
+
+      os = Redhat.new(:name => 'Zippity Do Da', :major => '9')
+      @host.operatingsystem = os
+      @host.send(:update_os_from_facts)
+      assert_nil @host.content_facet.kickstart_repository
+    end
+
+    def test_change_os_from_facts_with_ks_repo
+      @host.content_facet.kickstart_repository = @distro
+      assert @host.save
+
+      ::Redhat.any_instance.stubs(:kickstart_repos).returns([{id: @distro.id}])
+      os = Redhat.new(:name => 'Zippity Do Da', :major => '9')
+      @host.operatingsystem = os
+      @host.send(:update_os_from_facts)
+
+      assert_equal @host.operatingsystem, os
+      assert_equal @host.content_facet.kickstart_repository, @distro
+    end
+  end
 end
