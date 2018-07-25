@@ -81,12 +81,13 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(promise.then).toBeDefined();
     });
 
-    it('should clear the repo upstream password and save on clearUpstreamPassword', function() {
+    it('should clear the repo upstream password and username on clearUpstreamAuth', function() {
         spyOn($scope, 'save');
-        $scope.clearUpstreamPassword($scope.repository);
+        $scope.clearUpstreamAuth($scope.repository);
         expect($scope.save).toHaveBeenCalledWith($scope.repository);
         expect($scope.repository["upstream_password"]).toBe(null);
-        expect($scope.repository["upstream_password_exists"]).toBe(false);
+        expect($scope.repository["upstream_username"]).toBe(null);
+        expect($scope.repository["upstream_auth_exists"]).toBe(false);
     });
 
     it('should save the repository successfully', function() {

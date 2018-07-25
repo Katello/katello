@@ -256,10 +256,11 @@ module Katello
       refute @fedora_17_x86_64.importer_matches?({'importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config}, capsule)
     end
 
-    def test_pulp_update_needed_with_upstream_name_passwd?
+    def test_pulp_update_needed_with_upstream_auth_change?
       repo = katello_repositories(:fedora_17_x86_64)
       refute repo.pulp_update_needed?
       repo.upstream_username = 'amazing'
+      repo.upstream_password = 'super-secret'
       repo.save!
       assert repo.pulp_update_needed?
 

@@ -64,6 +64,10 @@ node :upstream_password_exists do |repo|
   repo.upstream_password.present?
 end
 
+node :upstream_auth_exists do |repo|
+  repo.upstream_username.present? && repo.upstream_password.present?
+end
+
 if @object && @object.library_instance_id.nil?
 
   node :content_view_environments do |repository|
