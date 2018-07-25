@@ -222,15 +222,23 @@ module Katello
     end
 
     def self.installable_for_hosts(hosts = nil)
-      query = Katello::Rpm.joins(:content_facet_applicable_rpms).joins(:repository_rpms).
+      hosts = ::Host.where(:id => hosts) if hosts && hosts.is_a?(Array)
+
+      query = Katello::Rpm.joins(:content_facet_applicable_rpms).
         joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
         #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::ContentFacetApplicableRpm.table_name}.content_facet_id").
         joins("INNER JOIN #{Katello::RepositoryRpm.table_name} AS host_repo_rpm ON \
-          host_repo_rpm.rpm_id = #{Katello::Rpm.table_name}.id").
-        where("#{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_rpm.repository_id")
+          host_repo_rpm.rpm_id = #{Katello::Rpm.table_name}.id AND \
+          #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_rpm.repository_id")
 
-      query = query.joins(:content_facets).where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.map(&:id)) if hosts
-      query.distinct
+      if hosts
+        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet)
+                                .select("#{Katello::Host::ContentFacet.table_name}.id"))
+      else
+        query = query.joins(:content_facet_applicable_rpms)
+      end
+
+      query
     end
 
     def self.applicable_to_hosts(hosts)
