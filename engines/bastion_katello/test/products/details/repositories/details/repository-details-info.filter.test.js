@@ -7,16 +7,17 @@ describe('Filter:upstreamPasswordFilter', function() {
         filter = $filter('upstreamPasswordFilter');
     }));
 
-    it("returns *** for upstream_password_exists = true", function() {
+    it("returns username/*** for upstream_auth_exists = true", function() {
         repository = {
-            "upstream_password_exists" : true
+            "upstream_auth_exists" : true,
+            "upstream_username" : "test_user"
         }
-        expect(filter("", repository)).toBe('******');
+        expect(filter("", repository)).toBe('test_user / ********'); 
     });
 
-    it("returns null for upstream_password_exists = false", function() {
+    it("returns null for upstream_auth_exists = false", function() {
         repository = {
-            "upstream_password_exists" : false
+            "upstream_auth_exists" : false
         }
         expect(filter("", repository)).toBe(null);
     });

@@ -147,6 +147,7 @@ module Katello
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
     validate :ensure_valid_ignorable_content
+    validate :ensure_valid_upstream_authorization
 
     before_validation :set_pulp_id
     before_validation :set_container_repository_name, :if => :docker?
@@ -904,6 +905,17 @@ module Katello
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content."))
       elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
+      end
+    end
+
+    def ensure_valid_upstream_authorization
+      return if (self.upstream_username.blank? && self.upstream_password.blank?)
+      if redhat?
+        errors.add(:base, N_("Upstream username and password may only be set on custom repositories."))
+      elsif self.upstream_username.blank?
+        errors.add(:base, N_("Upstream password requires upstream username be set."))
+      elsif !self.upstream_password
+        errors.add(:base, N_("Upstream username requires upstream password be set.")) # requirement of pulp
       end
     end
 
