@@ -94,7 +94,7 @@ module Katello
     end
 
     test_attributes :pid => '261376ca-7d12-41b6-9c36-5f284865243e'
-    def test_should_not_create_with_invalid_name
+    def test_should_not_create_with_empty_name
       post :create, params: { :name => '', :label => 'My_View', :description => 'Cool', :organization_id => @organization.id }
       assert_response :unprocessable_entity
       assert_match "Name can't be blank", @response.body
@@ -190,7 +190,7 @@ module Katello
     end
 
     test_attributes :pid => '69a2ce8d-19b2-49a3-97db-a1fdebbb16be'
-    def test_should_not_update_with_invalid_name
+    def test_should_not_update_with_empty_name
       put :update, params: { :id => @library_dev_staging_view.id, :content_view => { :name => '' } }
       assert_response :unprocessable_entity
       assert_match "Name can't be blank", @response.body
