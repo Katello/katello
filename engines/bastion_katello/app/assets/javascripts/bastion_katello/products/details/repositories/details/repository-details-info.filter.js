@@ -22,8 +22,8 @@ angular.module('Bastion.components.formatters').filter('ostreeUpstreamSyncPolicy
 
 angular.module('Bastion.components.formatters').filter('upstreamPasswordFilter', [function () {
     return function (displayValue, repository) {
-        if (repository["upstream_password_exists"]) {
-            return "******";
+        if (repository["upstream_auth_exists"]) {
+            return '%(username) / ********'.replace('%(username)', repository["upstream_username"]);
         }
         return null;
     };

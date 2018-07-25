@@ -712,6 +712,29 @@ module Katello
       assert_equal sync_depth, @repo.compute_ostree_upstream_sync_depth
     end
 
+    def test_invalid_upstream_password_update
+      @repo.upstream_password = "password"
+      refute @repo.save
+    end
+
+    def test_invalid_upstream_username_update
+      @repo.upstream_password = "username"
+      refute @repo.save
+    end
+
+    def test_valid_upstream_authorization
+      @repo.upstream_password = "password"
+      @repo.upstream_username = "username"
+      assert @repo.save
+    end
+
+    def test_invalid_upstream_authorization
+      rhel_6 = katello_repositories(:rhel_6_x86_64)
+      rhel_6.upstream_password = "password"
+      rhel_6.upstream_username = "username"
+      refute rhel_6.save
+    end
+
     def test_master_link
       assert @puppet_forge.master?
 
