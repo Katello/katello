@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ListGroup, ListGroupItem } from 'patternfly-react';
+import './SubscriptionDetails.scss';
 
 const SubscriptionDetailProducts = ({ subscriptionDetails }) => (
   <div>
     <h2>{__('Provided Products')}</h2>
-    <ul>
+    <ListGroup className="scrolld-list">
       {subscriptionDetails.provided_products &&
         subscriptionDetails.provided_products.map(prod => (
-          <li key={prod.id}>{prod.name}</li>
+          <ListGroupItem key={prod.id}> {prod.name} </ListGroupItem>
           ))}
-    </ul>
+    </ListGroup>
   </div>
 );
 
