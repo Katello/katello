@@ -251,3 +251,44 @@ class HostsAndHostGroupsHelperKickstartRepositoryIDTest < HostsAndHostGroupsHelp
     assert_nil kickstart_repository_id(::Host.new, :selected_host_group => @hostgroup)
   end
 end
+
+class HostAndHostGroupsHelperContentSourceTests < HostsAndHostGroupsHelperTestBase
+  test 'options include inherited content source when provided' do
+    smart_proxy = FactoryBot.build_stubbed(
+      :smart_proxy,
+      :features => [FactoryBot.create(:feature, name: 'Pulp')]
+    )
+    hostgroup = FactoryBot.build_stubbed(
+      :hostgroup,
+      :content_source => smart_proxy
+    )
+    assert_equal(
+      hostgroup.content_source,
+      fetch_content_source(FactoryBot.build_stubbed(:host), :selected_host_group => hostgroup)
+    )
+  end
+
+  test 'if host has a content_source already, do not inherit from hostgroup' do
+    smart_proxy_hostgroup = FactoryBot.build_stubbed(
+      :smart_proxy,
+      :features => [FactoryBot.create(:feature, name: 'Pulp')]
+    )
+    smart_proxy_host = FactoryBot.build_stubbed(
+      :smart_proxy,
+      :features => [FactoryBot.create(:feature, name: 'Pulp')]
+    )
+    hostgroup = FactoryBot.build_stubbed(
+      :hostgroup,
+      :content_source => smart_proxy_hostgroup
+    )
+    host = FactoryBot.build_stubbed(
+      :host,
+      :hostgroup => hostgroup
+    )
+    host.content_source = smart_proxy_host
+    assert_equal(
+      smart_proxy_host,
+      fetch_content_source(host, :selected_host_group => hostgroup)
+    )
+  end
+end
