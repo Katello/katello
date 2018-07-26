@@ -3,6 +3,10 @@ import { toastErrorAction, failureAction } from '../../../../services/api/testHe
 
 export const initialState = Immutable({
   loading: false,
+  enabledProducts: {
+    results: [],
+    total: 0,
+  },
 });
 
 
