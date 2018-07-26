@@ -72,6 +72,12 @@ module Katello
       return selected_host_group.content_view if selected_host_group.present?
     end
 
+    def fetch_content_source(host, options = {})
+      return host.content_source if host.content_source.present?
+      selected_host_group = options.fetch(:selected_host_group, nil)
+      return selected_host_group.content_source if selected_host_group.present?
+    end
+
     def accessible_lifecycle_environments(org, host)
       selected = host.lifecycle_environment
       envs = org.kt_environments.readable
@@ -97,30 +103,52 @@ module Katello
       end
     end
 
-    def lifecycle_environment_options(host, options = {})
+    # Generic method to provide a list of options in the UI
+    def content_options(host, selected_id, object_type, options = {})
       include_blank = options.fetch(:include_blank, nil)
       include_blank = '<option></option>' if include_blank == true #check for true specifically
-
-      selected_id = fetch_lifecycle_environment(host, options).try(:id)
       orgs = relevant_organizations(host)
       all_options = []
       orgs.each do |org|
-        env_options = ""
-        accessible_lifecycle_environments(org, host).each do |env|
-          selected = selected_id == env.id ? 'selected' : ''
-          env_options << %(<option value="#{env.id}" class="kt-env" #{selected}>#{h(env.name)}</option>)
+        content_object_options = ""
+        accessible_content_objects = if object_type == :lifecycle_environment
+                                       accessible_lifecycle_environments(org, host)
+                                     elsif object_type == :content_source
+                                       accessible_content_proxies(host)
+                                     end
+        accessible_content_objects.each do |content_object|
+          selected = selected_id == content_object.id ? 'selected' : ''
+          content_object_options << %(<option value="#{content_object.id}" class="kt-env" #{selected}>#{h(content_object.name)}</option>)
         end
 
         if orgs.count > 1
-          all_options << %(<optgroup label="#{org.name}">#{env_options}</optgroup>)
+          all_options << %(<optgroup label="#{org.name}">#{content_object_options}</optgroup>)
         else
-          all_options << env_options
+          all_options << content_object_options
         end
       end
 
       all_options = all_options.join
       all_options.insert(0, include_blank) if include_blank
       all_options.html_safe
+    end
+
+    def lifecycle_environment_options(host, options = {})
+      content_options(
+        host,
+        fetch_lifecycle_environment(host, options).try(:id),
+        :lifecycle_environment,
+        options
+      )
+    end
+
+    def content_source_options(host, options = {})
+      content_options(
+        host,
+        fetch_content_source(host, options).try(:id),
+        :content_source,
+        options
+      )
     end
 
     def content_views_for_host(host, options)
