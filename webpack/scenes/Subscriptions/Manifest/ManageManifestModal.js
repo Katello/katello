@@ -242,12 +242,20 @@ class ManageManifestModal extends Component {
                     />
 
                     <TooltipButton
-                      onClick={() => this.showDeleteManifestModal(true)}
+                      renderedButton={(
+                        <Button
+                          disabled={!manifestExists(organization) || actionInProgress}
+                          bsStyle="danger"
+                          onClick={() => this.showDeleteManifestModal(true)}
+                        >
+                          {__('Delete')}
+                        </Button>
+                        )}
+
                       tooltipId="delete-manifest-button-tooltip"
                       tooltipText={this.disabledTooltipText()}
                       tooltipPlacement="top"
-                      title={__('Delete')}
-                      disabled={!manifestExists(organization) || actionInProgress}
+
                     />
 
                     <ConfirmDialog

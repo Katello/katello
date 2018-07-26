@@ -167,9 +167,18 @@ exports[`manage manifest modal should render 1`] = `
                 tooltipText=""
               />
               <TooltipButton
-                disabled={true}
-                onClick={[Function]}
-                title="Delete"
+                renderedButton={
+                  <Button
+                    active={false}
+                    block={false}
+                    bsClass="btn"
+                    bsStyle="danger"
+                    disabled={true}
+                    onClick={[Function]}
+                  >
+                    Delete
+                  </Button>
+                }
                 tooltipId="delete-manifest-button-tooltip"
                 tooltipPlacement="top"
                 tooltipText="This is disabled because no manifest exists"
