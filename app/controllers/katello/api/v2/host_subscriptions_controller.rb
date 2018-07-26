@@ -220,10 +220,12 @@ module Katello
     end
 
     def action_permission
-      if ['add_subscriptions', 'remove_subscriptions', 'auto_attach', 'content_override'].include?(params[:action])
+      if ['add_subscriptions', 'destroy', 'remove_subscriptions', 'auto_attach', 'content_override'].include?(params[:action])
         :edit
-      elsif ['index', 'events', 'product_content'].include?(params[:action])
+      elsif ['index', 'events', 'product_content', 'available_release_versions'].include?(params[:action])
         :view
+      else
+        fail ::Foreman::Exception.new(N_("unknown permission for %s"), "#{params[:controller]}##{params[:action]}")
       end
     end
   end
