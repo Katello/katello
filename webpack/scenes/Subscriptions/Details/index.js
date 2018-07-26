@@ -2,6 +2,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import reducer from './SubscriptionDetailReducer';
+import { loadProducts } from '../../Products/ProductActions';
 import * as subscriptionDetailActions from './SubscriptionDetailActions';
 import SubscriptionDetails from './SubscriptionDetails';
 
@@ -11,7 +12,8 @@ const mapStateToProps = state => ({
 });
 
 // map action dispatchers to props
-const mapDispatchToProps = dispatch => bindActionCreators(subscriptionDetailActions, dispatch);
+const actions = { ...subscriptionDetailActions, loadProducts };
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 export const subscriptionDetails = reducer;
 
