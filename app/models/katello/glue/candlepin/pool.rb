@@ -50,6 +50,42 @@ module Katello
         end
         subscription
       end
+
+      def import_managed_associations
+        import_hosts
+      end
+
+      def import_hosts
+        pool_facet_cache = {}
+        Katello::Host::SubscriptionFacet.find_each do |sub_facet|
+          pool_ids = Katello::Resources::Candlepin::Consumer.entitlements(sub_facet.uuid, ['pool.id']) rescue []
+          pool_ids.map! { |ent| ent['pool']['id'] }
+          pool_ids.each do |pool_cp_id|
+            pool_facet_cache[pool_cp_id] ||= []
+            pool_facet_cache[pool_cp_id] << sub_facet.id
+          end
+        end
+
+        pool_facet_cache.each do |pool_cp_id, facet_ids|
+          pool = Katello::Pool.find_by(:cp_id => pool_cp_id)
+          if pool
+            existing = Katello::SubscriptionFacetPool.where(:pool_id => pool.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
+            new_ids = facet_ids - existing
+            delete_ids = existing - facet_ids
+
+            if delete_ids.any?
+              query = "DELETE FROM #{Katello::SubscriptionFacetPool.table_name} WHERE pool_id=#{pool.id} AND subscription_facet_id IN (#{delete_ids.join(', ')})"
+              ActiveRecord::Base.connection.execute(query)
+            end
+
+            if new_ids.any?
+              inserts = new_ids.map { |new_id| "(#{pool.id}, #{new_id})" }
+              query = "INSERT INTO #{Katello::SubscriptionFacetPool.table_name}  (pool_id, subscription_facet_id) VALUES #{inserts.join(', ')}"
+              ActiveRecord::Base.connection.execute(query)
+            end
+          end
+        end
+      end
     end
 
     module InstanceMethods
@@ -90,7 +126,7 @@ module Katello
         providers.any?
       end
 
-      # rubocop:disable MethodLength,Metrics/AbcSize
+      # rubocop:disable MethodLength
       def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
@@ -143,9 +179,7 @@ module Katello
         self.save!
         self.create_activation_key_associations if index_hosts_and_activation_keys
         self.create_product_associations
-        self.import_hosts if index_hosts_and_activation_keys
       end
-      # rubocop:enable MethodLength,Metrics/AbcSize
 
       def create_product_associations
         products = self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]
@@ -162,28 +196,7 @@ module Katello
         end
       end
 
-      def import_hosts
-        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
-        uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
-
-        sub_facet_ids_from_cp = Katello::Host::SubscriptionFacet.where(:uuid => uuids).select(:id).pluck(:id)
-        sub_facet_ids_from_pool_table = Katello::SubscriptionFacetPool.where(:pool_id => self.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
-        entries_to_add = sub_facet_ids_from_cp - sub_facet_ids_from_pool_table
-        unless entries_to_add.empty?
-          ActiveRecord::Base.transaction do
-            entries_to_add.each do |sub_facet_id|
-              query = "INSERT INTO #{Katello::SubscriptionFacetPool.table_name} (pool_id, subscription_facet_id) VALUES (#{self.id}, #{sub_facet_id})"
-              ActiveRecord::Base.connection.execute(query)
-            end
-          end
-        end
-
-        entries_to_remove = sub_facet_ids_from_pool_table - sub_facet_ids_from_cp
-        Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => entries_to_remove).delete_all
-      end
-
       def import_managed_associations
-        import_hosts
         create_activation_key_associations
       end
 
