@@ -163,8 +163,7 @@ module Katello
       end
 
       def import_hosts
-        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
-        uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
+        uuids = Resources::Candlepin::Pool.consumer_uuids(self.cp_id)
 
         sub_facet_ids_from_cp = Katello::Host::SubscriptionFacet.where(:uuid => uuids).select(:id).pluck(:id)
         sub_facet_ids_from_pool_table = Katello::SubscriptionFacetPool.where(:pool_id => self.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
