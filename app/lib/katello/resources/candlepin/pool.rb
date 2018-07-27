@@ -28,8 +28,8 @@ module Katello
             self.delete(path(id), self.default_headers).code.to_i
           end
 
-          def entitlements(pool_id, included = [])
-            entitlement_json = self.get("#{path(pool_id)}/entitlements?#{included_list(included)}", self.default_headers).body
+          def consumer_uuids(pool_id)
+            entitlement_json = self.get("#{path(pool_id)}/consumer_uuids", self.default_headers).body
             JSON.parse(entitlement_json)
           end
         end
