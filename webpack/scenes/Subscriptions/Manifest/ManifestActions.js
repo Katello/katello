@@ -15,9 +15,11 @@ import {
   MANIFEST_HISTORY_REQUEST,
   MANIFEST_HISTORY_SUCCESS,
   MANIFEST_HISTORY_FAILURE,
+  DELETE_TASKED_ORG,
 } from './ManifestConstants';
 
-export const uploadManifest = file => (dispatch) => {
+export const uploadManifest = file => (dispatch, getState) => {
+  const { displayName } = getState().katello.organization.owner_details;
   dispatch({ type: UPLOAD_MANIFEST_REQUEST });
 
   const formData = new FormData();
@@ -33,6 +35,8 @@ export const uploadManifest = file => (dispatch) => {
       dispatch({
         type: UPLOAD_MANIFEST_SUCCESS,
         response: data,
+        activeTaskOrg: orgId(),
+        activeOrgName: displayName,
       });
     })
     .catch(result => dispatch(apiError(UPLOAD_MANIFEST_FAILURE, result)));
@@ -56,7 +60,8 @@ export const refreshManifest = (extendedParams = {}) => (dispatch) => {
     .catch(result => dispatch(apiError(REFRESH_MANIFEST_FAILURE, result)));
 };
 
-export const deleteManifest = (extendedParams = {}) => (dispatch) => {
+export const deleteManifest = (extendedParams = {}) => (dispatch, getState) => {
+  const { displayName } = getState().katello.organization.owner_details;
   dispatch({ type: DELETE_MANIFEST_REQUEST });
 
   const params = {
@@ -69,6 +74,8 @@ export const deleteManifest = (extendedParams = {}) => (dispatch) => {
       dispatch({
         type: DELETE_MANIFEST_SUCCESS,
         response: data,
+        activeTaskOrg: orgId(),
+        activeOrgName: displayName,
       });
     })
     .catch(result => dispatch(apiError(DELETE_MANIFEST_FAILURE, result)));
@@ -90,6 +97,10 @@ export const loadManifestHistory = (extendedParams = {}) => (dispatch) => {
       });
     })
     .catch(result => dispatch(apiError(MANIFEST_HISTORY_FAILURE, result)));
+};
+
+export const removeActiveTaskOrg = () => (dispatch) => {
+  dispatch({ type: DELETE_TASKED_ORG });
 };
 
 export default loadManifestHistory;

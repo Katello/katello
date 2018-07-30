@@ -6,6 +6,7 @@ import {
   MANIFEST_HISTORY_FAILURE,
   UPLOAD_MANIFEST_SUCCESS,
   DELETE_MANIFEST_SUCCESS,
+  DELETE_TASKED_ORG,
 } from './ManifestConstants';
 
 const initialState = Immutable({ loading: true, results: [] });
@@ -31,10 +32,20 @@ export default (state = initialState, action) => {
       });
 
     case UPLOAD_MANIFEST_SUCCESS:
-      return state.set('taskDetails', action.response);
+      return state
+        .set('taskDetails', action.response)
+        .set('activeTaskOrg', action.activeTaskOrg)
+        .set('activeOrgName', action.activeOrgName);
 
     case DELETE_MANIFEST_SUCCESS:
-      return state.set('taskDetails', action.response);
+      return state
+        .set('taskDetails', action.response)
+        .set('activeTaskOrg', action.activeTaskOrg)
+        .set('activeOrgName', action.activeOrgName);
+
+    case DELETE_TASKED_ORG:
+      return state
+        .set('activeTaskOrg', null);
 
     default:
       return state;
