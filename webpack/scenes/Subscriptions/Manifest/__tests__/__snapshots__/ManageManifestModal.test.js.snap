@@ -73,14 +73,19 @@ exports[`manage manifest modal should render 1`] = `
           <FormGroup
             bsClass="form-group"
           >
-            <ControlLabel
-              bsClass="control-label"
-              className="col-sm-3"
-              htmlFor="cdnUrl"
-              srOnly={false}
+            <Col
+              bsClass="col"
+              componentClass="div"
+              sm={3}
             >
-              Red Hat CDN URL
-            </ControlLabel>
+              <ControlLabel
+                bsClass="control-label"
+                htmlFor="cdnUrl"
+                srOnly={false}
+              >
+                Red Hat CDN URL
+              </ControlLabel>
+            </Col>
             <Col
               bsClass="col"
               componentClass="div"
@@ -94,6 +99,27 @@ exports[`manage manifest modal should render 1`] = `
                 type="text"
                 value="https://redhat.com"
               />
+            </Col>
+          </FormGroup>
+          <FormGroup
+            bsClass="form-group"
+          >
+            <Col
+              bsClass="col"
+              componentClass="div"
+              sm={3}
+              smOffset={3}
+            >
+              <Button
+                active={false}
+                block={false}
+                bsClass="btn"
+                bsStyle="default"
+                disabled={false}
+                onClick={[Function]}
+              >
+                Update
+              </Button>
             </Col>
           </FormGroup>
           <br />
