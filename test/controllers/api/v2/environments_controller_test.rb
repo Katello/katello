@@ -144,7 +144,8 @@ module Katello
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
         :new_name => new_name,
         :label => 'New Label',
-        :description => new_description
+        :description => new_description,
+        :registry_unauthenticated_pull => true
       } }
 
       assert_response :success
@@ -152,6 +153,7 @@ module Katello
       @staging.reload
       assert_equal new_name, @staging.name
       assert_equal new_description, @staging.description
+      assert_equal true, @staging.registry_unauthenticated_pull
       # note: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
