@@ -4,6 +4,8 @@ import toJson from 'enzyme-to-json';
 import ManageManifestModal from '../ManageManifestModal';
 import { manifestHistorySuccessState } from './manifest.fixtures';
 
+jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
+
 describe('manage manifest modal', () => {
   const noop = () => {};
   const organization = { id: 1, redhat_repository_url: 'https://redhat.com' };
@@ -17,6 +19,7 @@ describe('manage manifest modal', () => {
       organization={organization}
       loadOrganization={noop}
       saveOrganization={noop}
+      bulkSearch={noop}
       manifestHistory={manifestHistorySuccessState}
       taskInProgress={false}
       showModal

@@ -15,6 +15,8 @@ pool_one:
   virt_who: true
   hypervisor_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
   stacking_id: "stack8473"
+  upstream_pool_id: 100
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 pool_two:
   cp_id: "xyz123"
@@ -28,6 +30,8 @@ pool_two:
   end_date: "2022-01-01T04:59:59.000+0000"
   consumed: 10
   stacking_id: "stack8473"
+  upstream_pool_id: 101
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 custom_pool:
   cp_id: "xyz1234"
@@ -40,4 +44,4 @@ custom_pool:
   start_date: "2011-10-11T04:00:00.000+0000"
   end_date: "2022-01-01T04:59:59.000+0000"
   consumed: 10
-
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>

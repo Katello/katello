@@ -27,6 +27,7 @@ module Katello
       permissions
     end
 
+    test_attributes :pid => '0bc05510-afc7-4087-ab75-1065ab5ba1d3'
     def test_create
       Organization.any_instance.stubs(:save!).returns(@organization)
       name = 'dev env'
@@ -49,6 +50,7 @@ module Katello
       assert_equal response['description'], description
     end
 
+    test_attributes :pid => 'ec1d985a-6a39-4de6-b635-c803ecedd832'
     def test_create_with_name
       Organization.any_instance.stubs(:save!).returns(@organization)
       env_name = 'dev env'
@@ -64,6 +66,7 @@ module Katello
       assert_equal response['name'], env_name
     end
 
+    test_attributes :pid => '7e8ea2e6-5927-4e86-8ea8-04c3feb524a6'
     def test_create_with_invalid_name
       assert_difference('KTEnvironment.count', 0) do
         post :create, params: { :organization_id => @organization.id, :environment => {
@@ -74,6 +77,7 @@ module Katello
       assert_response :unprocessable_entity
     end
 
+    test_attributes :pid => '55723382-9d98-43c8-85fb-df4702ca7478'
     def test_update_with_invalid_name
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
         :name => ''
@@ -132,6 +136,7 @@ module Katello
       end
     end
 
+    test_attributes :pid => 'b6715e02-f15e-4ab8-8b13-18a3619fee9e'
     def test_update
       original_label = @staging.label
       new_name = 'New Name'
@@ -139,7 +144,8 @@ module Katello
       put :update, params: { :organization_id => @organization.id, :id => @staging.id, :environment => {
         :new_name => new_name,
         :label => 'New Label',
-        :description => new_description
+        :description => new_description,
+        :registry_unauthenticated_pull => true
       } }
 
       assert_response :success
@@ -147,6 +153,7 @@ module Katello
       @staging.reload
       assert_equal new_name, @staging.name
       assert_equal new_description, @staging.description
+      assert_equal true, @staging.registry_unauthenticated_pull
       # note: label is not editable; therefore, confirm that it is unchanged
       assert_equal original_label, @staging.label
     end
@@ -225,6 +232,7 @@ module Katello
       assert_response :success
     end
 
+    test_attributes :pid => 'cd5a97ca-c1e8-41c7-8d6b-f908916b24e1'
     def test_destroy
       destroyable_env = KTEnvironment.create!(:name => "DestroyAble",
                                               :organization => @staging.organization,

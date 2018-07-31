@@ -8,13 +8,12 @@ import * as settingActions from '../../move_to_foreman/Settings/SettingsActions'
 import reducer from './SubscriptionReducer';
 
 import SubscriptionsPage from './SubscriptionsPage';
-import './Subscriptions.scss';
 
-const EMPTY_ARRAY = []
 // map state to props
 const mapStateToProps = state => ({
+  organization: state.katello.organization,
   subscriptions: state.katello.subscriptions,
-  tasks: state.katello.subscriptions.tasks || EMPTY_ARRAY,
+  tasks: state.katello.subscriptions.tasks,
 });
 
 // map action dispatchers to props

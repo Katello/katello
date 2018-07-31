@@ -579,14 +579,22 @@ module Katello
 
     def check_composite_action_allowed!(env)
       if composite? && Setting['restrict_composite_view']
-        # verify that the composite's component view versions exist in the target environment.
+        if components.size != content_view_components.size
+          fail _("Make sure all the component content views are published before publishing/promoting the composite content view. "\
+               "This restriction is optional and can be modified in the Administrator -> Settings -> Content "\
+                "page using the restrict_composite_view flag.")
+        end
+
+        env_ids = env.try(:pluck, 'id') || []
+        env_ids << env.id unless env_ids.size > 0
         components.each do |component|
-          unless component.environments.include?(env)
+          component_environment_ids = component.environments.pluck('id')
+          unless (env_ids - component_environment_ids).empty?
             fail _("The action requested on this composite view cannot be performed until all of the "\
                    "component content view versions have been promoted to the target environment: %{env}.  "\
-                   "This restriction is optional and can be modified in the Administrator -> Settings "\
+                   "This restriction is optional and can be modified in the Administrator -> Settings -> Content "\
                    "page using the restrict_composite_view flag.") %
-                   { :env => env.name }
+                   { :env => env.try(:pluck, 'name') || env.name }
           end
         end
       end

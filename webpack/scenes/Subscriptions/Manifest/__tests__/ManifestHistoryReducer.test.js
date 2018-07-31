@@ -30,7 +30,9 @@ describe('manifest history reducer', () => {
   it('should have error on MANIFEST_HISTORY_FAILURE', () => {
     expect(reducer(manifestHistoryInitialState, {
       type: types.MANIFEST_HISTORY_FAILURE,
-      error: 'Unable to process request.',
+      payload: {
+        message: 'Unable to process request.',
+      },
     })).toEqual(manifestHistoryErrorState);
   });
 });

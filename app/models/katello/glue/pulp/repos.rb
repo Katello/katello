@@ -211,6 +211,7 @@ module Katello
                        :arch => repo_param[:arch],
                        :name => repo_param[:name],
                        :label => repo_param[:label],
+                       :description => repo_param[:description],
                        :url => repo_param[:url],
                        :gpg_key => repo_param[:gpg_key],
                        :ssl_ca_cert => repo_param[:ssl_ca_cert],

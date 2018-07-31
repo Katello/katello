@@ -41,6 +41,16 @@ module Katello
       assert_response :success
     end
 
+    def test_index_pool_ids
+      params = {pool_ids: %w(1 2 3), page: '3', per_page: '7', organization_id: @organization.id}
+      # omit page and per_page params for candlepin
+      UpstreamPool.expects(:fetch_pools).with('pool_ids' => %w(1 2 3)).returns({})
+
+      get :index, params: params
+
+      assert_response :success
+    end
+
     def test_index_no_per_page
       params = {page: '3', organization_id: @organization.id }
       UpstreamPool.expects(:fetch_pools).with('page' => '3', 'per_page' => Setting[:entries_per_page]).returns({})

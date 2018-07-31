@@ -33,19 +33,19 @@ module Katello
       param :ssl_client_cert_id, :number, :desc => N_("Identifier of the SSL Client Cert")
       param :ssl_client_key_id, :number, :desc => N_("Identifier of the SSL Client Key")
       param :unprotected, :bool, :desc => N_("true if this repository can be published via HTTP")
-      param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported.")
+      param :checksum_type, String, :desc => N_("checksum of the repository, currently 'sha1' & 'sha256' are supported")
       param :docker_upstream_name, String, :desc => N_("name of the upstream docker repository")
       param :download_policy, ["immediate", "on_demand", "background"], :desc => N_("download policy for yum repos (either 'immediate', 'on_demand', or 'background')")
-      param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed.")
-      param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA.")
+      param :mirror_on_sync, :bool, :desc => N_("true if this repository when synced has to be mirrored from the source and stale rpms removed")
+      param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
-      param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories.")
-      param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided.")
+      param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
+      param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided")
       param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
-      param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing.")
+      param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing")
       param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % Repository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
     end
 
@@ -73,6 +73,7 @@ module Katello
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
+    param :description, String, :desc => N_("description of the repository")
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
           :required => false
     param_group :search, Api::V2::ApiController
@@ -85,11 +86,11 @@ module Katello
           options[:csv] = true
           repos = scoped_search(*base_args, options)
           csv_response(repos,
-                       [:id, :name, :label, :content_type, :arch, :url, :major, :minor,
+                       [:id, :name, :description, :label, :content_type, :arch, :url, :major, :minor,
                         :cp_label, :content_label, :pulp_id, :container_repository_name,
                         :download_policy, 'relative_path', 'product.id', 'product.name',
                         'environment_id'],
-                       ['Id', 'Name', 'label', 'Content Type', 'Arch', 'Url', 'Major', 'Minor',
+                       ['Id', 'Name', 'label', 'Description', 'Content Type', 'Arch', 'Url', 'Major', 'Minor',
                         'Candlepin Label', 'Content Label', 'Pulp Id', 'Container Repository Name',
                         'Download Policy', 'Relative Path', 'Product Id', 'Product Name',
                         'Environment Id'])
@@ -460,7 +461,7 @@ module Katello
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
-              :deb_releases, :deb_components, :deb_architectures, {:ignorable_content => []}
+              :deb_releases, :deb_components, :deb_architectures, :description, {:ignorable_content => []}
              ]
 
       keys += [:label, :content_type] if params[:action] == "create"
@@ -481,7 +482,7 @@ module Katello
     end
 
     def construct_repo_from_params(repo_params)
-      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :url, :content_type, :arch, :unprotected,
+      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
       repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]

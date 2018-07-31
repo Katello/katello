@@ -1,14 +1,41 @@
-import React from 'react';
-import { Table } from 'patternfly-react';
+import { addToast } from 'foremanReact/redux/actions/toasts';
 
-export default {
-  urlBuilder(controller, action, id = undefined) {
-    return `/${controller}/${id ? `${id}/` : ''}${action}`;
-  },
+const urlBuilder = (controller, action, id = undefined) =>
+  `/${controller}/${id ? `${id}/` : ''}${action}`;
 
-  urlWithSearch(base, searchQuery) {
-    return `/${base}?search=${searchQuery}`;
-  },
+const urlWithSearch = (base, searchQuery) =>
+  `/${base}?search=${searchQuery}`;
+
+const stringIsInteger = (value) => {
+  // checking for positive integers only
+  const reg = new RegExp('^[0-9]+$');
+  return reg.test(value);
+};
+
+export const getResponseErrorMsgs = ({ data }) => {
+  if (data) {
+    const messages = (data.errors || data.displayMessage || data.message || data.error);
+    return (Array.isArray(messages) ? messages : [messages]);
+  }
+  return [];
+};
+
+export const apiError = (actionType, result) => (dispatch) => {
+  const messages = getResponseErrorMsgs(result.response);
+  dispatch({
+    type: actionType,
+    payload: {
+      result,
+      messages,
+    },
+  });
+  messages.forEach((msg) => {
+    dispatch(addToast({
+      type: 'error',
+      message: msg,
+      sticky: true,
+    }));
+  });
 };
 
 export const KEY_CODES = {
@@ -17,26 +44,11 @@ export const KEY_CODES = {
   ESCAPE_KEY: 27,
 };
 
-export const selectionHeaderCellFormatter = (selectionController, label) => (
-  <Table.SelectionHeading aria-label={label}>
-    <Table.Checkbox
-      id="selectAll"
-      label={label}
-      checked={selectionController.allRowsSelected()}
-      onChange={() => selectionController.selectAllRows()}
-    />
-  </Table.SelectionHeading>
-);
-
-export const selectionCellFormatter = (selectionController, value, additionalData) => (
-  <Table.SelectionCell>
-    <Table.Checkbox
-      id={`select${additionalData.rowIndex}`}
-      label={__('Select row')}
-      checked={selectionController.isSelected(additionalData)}
-      onChange={() => selectionController.selectRow(additionalData)}
-    />
-  </Table.SelectionCell>
-);
-
-export const getResponseError = ({ data }) => data && (data.displayMessage || data.error);
+export default {
+  urlBuilder,
+  urlWithSearch,
+  getResponseErrorMsgs,
+  apiError,
+  KEY_CODES,
+  stringIsInteger,
+};

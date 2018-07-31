@@ -17,7 +17,7 @@ const filterOptions = [
   { value: 'rpm', label: __('RPM') },
   { value: 'sourceRpm', label: __('Source RPM') },
   { value: 'debugRpm', label: __('Debug RPM') },
-  { value: 'kickstarter', label: __('Kickstarter') },
+  { value: 'kickstart', label: __('Kickstart') },
   { value: 'ostree', label: __('OSTree') },
   { value: 'beta', label: __('Beta') },
   { value: 'other', label: __('Other') },
@@ -97,6 +97,7 @@ class SearchBar extends Component {
         <MultiSelect
           value={this.state.filters}
           options={filterOptions}
+          noneSelectedText={__('Filter by type')}
           onChange={(e) => {
             const values = [...e.target.options]
               .filter(({ selected }) => selected)

@@ -23,7 +23,7 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
   ]);
 
   const repoParams = {
-    ...{ organization_id: orgId, enabled: 'true' },
+    ...{ organization_id: orgId(), enabled: 'true' },
     ...propsToSnakeCase(extendedParams),
     search,
   };
@@ -34,7 +34,6 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
 export const loadEnabledRepos = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: ENABLED_REPOSITORIES_REQUEST, params: extendedParams });
   const { searchParams, repoParams } = createEnabledRepoParams(extendedParams);
-
   api
     .get('/repositories', {}, repoParams)
     .then(({ data }) => {

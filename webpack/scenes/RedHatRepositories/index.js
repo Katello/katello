@@ -6,8 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { Spinner } from 'patternfly-react';
-
+import { LoadingState } from '../../move_to_pf/LoadingState';
 import { createEnabledRepoParams, loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets, updateRecommendedRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
 import SearchBar from './components/SearchBar';
@@ -31,7 +30,6 @@ class RedHatRepositoriesPage extends Component {
     return (
       <Grid id="redhatRepositoriesPage" bsClass="container-fluid">
         <h1>{__('Red Hat Repositories')}</h1>
-
         <Row className="toolbar-pf">
           <Col sm={12}>
             <SearchBar repoParams={repoParams} />
@@ -48,7 +46,7 @@ class RedHatRepositoriesPage extends Component {
                 className="recommended-repositories-toggler"
               />
             </div>
-            <Spinner loading={repositorySets.loading}>
+            <LoadingState loading={repositorySets.loading} loadingText={__('Loading')}>
               {getSetsComponent(
                 repositorySets,
                 (pagination) => {
@@ -58,12 +56,12 @@ class RedHatRepositoriesPage extends Component {
                   });
                 },
               )}
-            </Spinner>
+            </LoadingState>
           </Col>
 
           <Col sm={6} className="enabled-repositories-container">
             <h2>{__('Enabled Repositories')}</h2>
-            <Spinner loading={enabledRepositories.loading} className="small-spacer">
+            <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
               {getEnabledComponent(
                 enabledRepositories,
                 (pagination) => {
@@ -73,7 +71,7 @@ class RedHatRepositoriesPage extends Component {
                   });
                 },
               )}
-            </Spinner>
+            </LoadingState>
           </Col>
         </Row>
       </Grid>
@@ -87,9 +85,15 @@ RedHatRepositoriesPage.propTypes = {
   updateRecommendedRepositorySets: PropTypes.func.isRequired,
   enabledRepositories: PropTypes.shape({}).isRequired,
   repositorySets: PropTypes.shape({}).isRequired,
+  history: PropTypes.shape({}).isRequired,
+  location: PropTypes.shape({}).isRequired,
 };
 
-const mapStateToProps = ({ katello: { redHatRepositories: { enabled, sets } } }) => ({
+const mapStateToProps = ({
+  katello: {
+    redHatRepositories: { enabled, sets },
+  },
+}) => ({
   enabledRepositories: enabled,
   repositorySets: sets,
 });

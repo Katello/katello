@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Paginator } from 'patternfly-react';
 import { isEqual } from 'lodash';
 
-const defaultPerPageOptions = [5, 10, 15, 25, 50];
+const defaultPerPageOptions = [5, 10, 15, 20, 25, 50];
 
 const initPagination = (props) => {
   const pagination = props.pagination || {};

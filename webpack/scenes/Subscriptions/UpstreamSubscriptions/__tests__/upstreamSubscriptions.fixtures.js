@@ -1,5 +1,6 @@
 import Immutable from 'seamless-immutable';
 import { getTaskSuccessResponse } from '../../../Tasks/__tests__/task.fixtures';
+import { toastErrorAction, failureAction } from '../../../../services/api/testHelpers';
 
 export const initialState = Immutable({
   loading: true,
@@ -36,7 +37,7 @@ export const requestSuccessResponse = Immutable({
   },
   results: [
     {
-      pool_id: '8a99f9815e718933015e85b19e1e11d7',
+      id: '8a99f9815e718933015e85b19e1e11d7',
       quantity: 200,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -47,7 +48,7 @@ export const requestSuccessResponse = Immutable({
       subscription_id: '4753270',
     },
     {
-      pool_id: '8a99f9815e718933015e85b1bfd211db',
+      id: '8a99f9815e718933015e85b1bfd211db',
       quantity: 250,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -65,7 +66,7 @@ export const successState = Immutable({
   loading: false,
   results: [
     {
-      pool_id: '8a99f9815e718933015e85b19e1e11d7',
+      id: '8a99f9815e718933015e85b19e1e11d7',
       quantity: 200,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -76,7 +77,7 @@ export const successState = Immutable({
       subscription_id: '4753270',
     },
     {
-      pool_id: '8a99f9815e718933015e85b1bfd211db',
+      id: '8a99f9815e718933015e85b1bfd211db',
       quantity: 250,
       start_date: '2017-09-15T04:00:00+0000',
       end_date: '2018-09-15T03:59:59+0000',
@@ -135,10 +136,8 @@ export const getFailureActions = [
   {
     type: 'UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'UPSTREAM_SUBSCRIPTIONS_FAILURE',
-  },
+  failureAction('UPSTREAM_SUBSCRIPTIONS_FAILURE'),
+  toastErrorAction(),
 ];
 
 export const saveSuccessActions = [
@@ -155,8 +154,6 @@ export const saveFailureActions = [
   {
     type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_REQUEST',
   },
-  {
-    result: new Error('Request failed with status code 422'),
-    type: 'SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE',
-  },
+  failureAction('SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE'),
+  toastErrorAction(),
 ];

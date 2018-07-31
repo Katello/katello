@@ -9,8 +9,8 @@ module Katello
         lazy_accessor :pool_facts, :initializer => lambda { |_s| self.import_lazy_attributes }
         lazy_accessor :subscription_facts, :initializer => lambda { |_s| self.subscription ? self.subscription.attributes : {} }
 
-        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :upstream_pool_id,
-          :product_family, :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id,
+        lazy_accessor :pool_derived, :owner, :source_pool_id, :virt_limit, :arch, :description, :product_family,
+          :variant, :suggested_quantity, :support_type, :product_id, :type, :upstream_entitlement_id,
           :initializer => :pool_facts
 
         lazy_accessor :name, :support_level, :org, :sockets, :cores, :instance_multiplier,
@@ -40,6 +40,16 @@ module Katello
         end
         pool.import_data(index_hosts)
       end
+
+      def stacking_subscription(org_label, stacking_id)
+        org = Organization.find_by(:label => org_label)
+        subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => stacking_id)
+        if subscription.nil?
+          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
+          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => found_product['id']) if found_product
+        end
+        subscription
+      end
     end
 
     module InstanceMethods
@@ -66,7 +76,6 @@ module Katello
 
         json["product_id"] = json["productId"] if json["productId"]
         json["upstream_entitlement_id"] = json["upstreamEntitlementId"]
-        json["upstream_pool_id"] = json["upstreamPoolId"]
 
         if self.subscription
           subscription.backend_data["attributes"].map { |attr| json[attr["name"].underscore.to_sym] = attr["value"] }
@@ -81,18 +90,8 @@ module Katello
         providers.any?
       end
 
-      def stacking_subscription(org_label, stacking_id)
-        org = Organization.find_by(:label => org_label)
-        subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :product_id => stacking_id)
-        if subscription.nil?
-          found_product = ::Katello::Resources::Candlepin::Product.find_for_stacking_id(org_label, stacking_id)
-          subscription = ::Katello::Subscription.find_by(:organization_id => org.id, :cp_id => found_product['id']) if found_product
-        end
-        subscription
-      end
-
-      # rubocop:disable MethodLength
-      def import_data(index_hosts = false)
+      # rubocop:disable MethodLength,Metrics/AbcSize
+      def import_data(index_hosts_and_activation_keys = false)
         pool_attributes = {}.with_indifferent_access
         pool_json = self.backend_data
 
@@ -102,7 +101,7 @@ module Katello
         product_attributes.map { |attr| pool_attributes[attr["name"].underscore.to_sym] = attr["value"] }
 
         if pool_json["sourceStackId"]
-          subscription = stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
+          subscription = Pool.stacking_subscription(pool_json['owner']['key'], pool_json["sourceStackId"])
         else
           subscription = ::Katello::Subscription.find_by(:cp_id => pool_json["productId"])
         end
@@ -113,6 +112,7 @@ module Katello
           pool_attributes[json_attribute.underscore] = pool_json[json_attribute]
         end
         pool_attributes[:pool_type] = pool_json["type"] if pool_json.key?("type")
+        pool_attributes[:upstream_pool_id] = pool_json["upstreamPoolId"] if pool_json.key?("upstreamPoolId")
 
         if pool_attributes.key?(:multi_entitlement)
           pool_attributes[:multi_entitlement] = pool_attributes[:multi_entitlement] == "yes"
@@ -141,10 +141,11 @@ module Katello
         exceptions = pool_attributes.keys.map(&:to_sym) - self.attribute_names.map(&:to_sym)
         self.update_attributes(pool_attributes.except!(*exceptions))
         self.save!
-        self.create_activation_key_associations
+        self.create_activation_key_associations if index_hosts_and_activation_keys
         self.create_product_associations
-        self.import_hosts if index_hosts
+        self.import_hosts if index_hosts_and_activation_keys
       end
+      # rubocop:enable MethodLength,Metrics/AbcSize
 
       def create_product_associations
         products = self.backend_data["providedProducts"] + self.backend_data["derivedProvidedProducts"]
@@ -162,8 +163,7 @@ module Katello
       end
 
       def import_hosts
-        entitlements = Resources::Candlepin::Pool.entitlements(self.cp_id, ["consumer.uuid"])
-        uuids = entitlements.map { |ent| ent["consumer"]["uuid"] }
+        uuids = Resources::Candlepin::Pool.consumer_uuids(self.cp_id)
 
         sub_facet_ids_from_cp = Katello::Host::SubscriptionFacet.where(:uuid => uuids).select(:id).pluck(:id)
         sub_facet_ids_from_pool_table = Katello::SubscriptionFacetPool.where(:pool_id => self.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
@@ -183,6 +183,7 @@ module Katello
 
       def import_managed_associations
         import_hosts
+        create_activation_key_associations
       end
 
       def hosts

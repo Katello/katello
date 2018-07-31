@@ -1,9 +1,9 @@
 const repoTypeSearchQueryMap = {
-  rpm: '(name ~ rpms) and (name !~ source rpm) and (name !~ debug rpm)',
-  sourceRpm: 'name ~ source rpm',
-  debugRpm: 'name ~ debug rpm',
-  kickstarter: 'name ~ kickstart',
-  ostree: 'name ~ ostree',
+  rpm: '(name !~ source rpm) and (name !~ debug rpm) and (content_type = yum)',
+  sourceRpm: '(name ~ source rpm) and (content_type = yum)',
+  debugRpm: '(name ~ debug rpm) and (content_type = yum)',
+  kickstart: 'content_type = kickstart',
+  ostree: 'content_type = ostree',
   beta: 'name ~ beta',
 };
 

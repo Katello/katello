@@ -11,7 +11,7 @@ Foreman::Plugin.register :katello do
          :red_hat_subscriptions,
          :caption => N_('Subscriptions'),
          :url => '/subscriptions',
-         :url_hash => {:controller => 'katello/api/v2/subscriptions',
+         :url_hash => {:controller => 'katello/react',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false
@@ -191,15 +191,6 @@ Foreman::Plugin.register :katello do
        :after => :content_hosts,
        :turbolinks => false
 
-  menu :labs_menu,
-       :experimental_ui,
-       :url => '/xui/subscriptions',
-       :url_hash => {:controller => 'katello/react',
-                     :action => 'index'},
-       :caption => N_('Red Hat Subscriptions'),
-       :parent => :lab_features_menu,
-       :turbolinks => false
-
   allowed_template_helpers :subscription_manager_configuration_url, :repository_url
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"
@@ -296,6 +287,8 @@ Foreman::Plugin.register :katello do
   end
 
   register_info_provider Katello::Host::InfoProvider
+
+  medium_providers.register(Katello::ManagedContentMediumProvider)
 
   Katello::PermissionCreator.new(self).define
   add_all_permissions_to_default_roles

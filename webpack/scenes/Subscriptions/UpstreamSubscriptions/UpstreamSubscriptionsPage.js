@@ -4,7 +4,9 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { bindMethods, Button, Spinner } from 'patternfly-react';
+import { bindMethods, Button } from 'patternfly-react';
+import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
+import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';
 import { Table } from '../../../move_to_foreman/components/common/table';
@@ -21,6 +23,7 @@ class UpstreamSubscriptionsPage extends Component {
     bindMethods(this, [
       'onChange',
       'saveUpstreamSubscriptions',
+      'quantityValidationInput',
     ]);
   }
 
@@ -30,18 +33,17 @@ class UpstreamSubscriptionsPage extends Component {
 
   onChange(value, rowData) {
     const { selectedRows } = this.state;
-    const newValue = parseInt(value, 10);
     const pool = {
       ...rowData,
-      id: rowData.pool_id,
-      updatedQuantity: newValue,
+      id: rowData.id,
+      updatedQuantity: value,
       selected: true,
     };
 
     const match = this.poolInSelectedRows(pool);
     const index = _.indexOf(selectedRows, match);
 
-    if (newValue > 0) {
+    if (value) {
       if (match) {
         selectedRows.splice(index, 1, pool);
       } else {
@@ -54,6 +56,25 @@ class UpstreamSubscriptionsPage extends Component {
     this.setState({ selectedRows });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  quantityValidation(pool) {
+    const origQuantity = pool.updatedQuantity;
+    if (origQuantity && helpers.stringIsInteger(origQuantity)) {
+      const parsedQuantity = parseInt(origQuantity, 10);
+      const aboveZeroMsg = [false, __('Please enter a positive number above zero')];
+
+      if (parsedQuantity.toString().length > 10) return [false, __('Please limit number to 10 digits')];
+      if (!pool.available) return [false, __('No pools available')];
+      // handling unlimited subscriptions, they show as -1
+      if (pool.available === -1) return parsedQuantity ? [true, ''] : aboveZeroMsg;
+      if (parsedQuantity > pool.available) return [false, __(`Quantity must not be above ${pool.available}`)];
+      if (parsedQuantity <= 0) return aboveZeroMsg;
+    } else {
+      return [false, __('Please enter digits only')];
+    }
+    return [true, ''];
+  }
+
   poolInSelectedRows(pool) {
     const { selectedRows } = this.state;
 
@@ -63,16 +84,30 @@ class UpstreamSubscriptionsPage extends Component {
     );
   }
 
+  quantityValidationInput(pool) {
+    if (!pool || pool.updatedQuantity === undefined) return null;
+    if (this.quantityValidation(pool)[0]) {
+      return 'success';
+    }
+    return 'error';
+  }
+
+  validateSelectedRows() {
+    return Array.isArray(this.state.selectedRows) &&
+           this.state.selectedRows.length &&
+           this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
+  }
+
   saveUpstreamSubscriptions() {
     const updatedPools = _.map(
       this.state.selectedRows,
-      pool => ({ ...pool, quantity: pool.updatedQuantity }),
+      pool => ({ ...pool, quantity: parseInt(pool.updatedQuantity, 10) }),
     );
 
     const updatedSubscriptions = { pools: updatedPools };
 
     this.props.saveUpstreamSubscriptions(updatedSubscriptions).then(() => {
-      const { task, error } = this.props.upstreamSubscriptions;
+      const { task } = this.props.upstreamSubscriptions;
 
       // TODO: could probably factor this out into a task response component
       if (task) {
@@ -86,19 +121,7 @@ class UpstreamSubscriptionsPage extends Component {
         );
 
         notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: 'success' });
-        this.props.history.push('/xui/subscriptions');
-      } else {
-        let errorMessages = [];
-
-        if (error.errors) {
-          errorMessages = error.errors;
-        } else if (error.message) {
-          errorMessages.push(error.message);
-        }
-
-        for (let i = 0; i < errorMessages.length; i += 1) {
-          notify({ message: errorMessages[i], type: 'error' });
-        }
+        this.props.history.push('/subscriptions');
       }
     });
   }
@@ -120,13 +143,14 @@ class UpstreamSubscriptionsPage extends Component {
               <Button
                 bsStyle="primary"
                 type="submit"
-                disabled={upstreamSubscriptions.loading}
+                disabled={upstreamSubscriptions.loading ||
+                          !this.validateSelectedRows()}
                 onClick={this.saveUpstreamSubscriptions}
               >
                 {__('Submit')}
               </Button>
 
-              <LinkContainer to="/xui/subscriptions">
+              <LinkContainer to="/subscriptions">
                 <Button>
                   {__('Cancel')}
                 </Button>
@@ -169,13 +193,9 @@ class UpstreamSubscriptionsPage extends Component {
       description: __('Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to ' +
           'an on-premise subscription management application such as Red Hat Satellite.'),
       docUrl: 'http://redhat.com',
-      documentation: {
-        title: __('Learn more about Subscription Allocations'),
-        url: 'http://redhat.com',
-      },
       action: {
-        title: __('New Subscription Allocation'),
-        url: 'http://redhat.com',
+        title: __('Import a Manifest to Begin'),
+        url: '/subscriptions',
       },
     });
 
@@ -211,9 +231,21 @@ class UpstreamSubscriptionsPage extends Component {
 
     return (
       <Grid bsClass="container-fluid">
-        <h1>{__('Add Subscriptions')}</h1>
+        <BreadcrumbsBar data={{
+          isSwitchable: false,
+          breadcrumbItems: [
+            {
+              caption: __('Subscriptions'),
+              onClick: () => this.props.history.push('/subscriptions'),
+            },
+            {
+              caption: __('Add Subscriptions'),
+            },
+          ],
+        }}
+        />
 
-        <Spinner loading={upstreamSubscriptions.loading} className="small-spacer">
+        <LoadingState loading={upstreamSubscriptions.loading} loadingText={__('Loading')}>
           <Row>
             <Col sm={12}>
               <Table
@@ -227,20 +259,19 @@ class UpstreamSubscriptionsPage extends Component {
             </Col>
           </Row>
           {getSubscriptionActions()}
-        </Spinner>
+        </LoadingState>
       </Grid>
     );
   }
 }
 
 UpstreamSubscriptionsPage.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
   loadUpstreamSubscriptions: PropTypes.func.isRequired,
   saveUpstreamSubscriptions: PropTypes.func.isRequired,
   upstreamSubscriptions: PropTypes.shape({
     task: PropTypes.shape({}),
-    error: PropTypes.shape({}),
   }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 export default UpstreamSubscriptionsPage;

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
-import { notify } from '../../move_to_foreman/foreman_toast_notifications';
-import helpers from '../../move_to_foreman/common/helpers';
+import { renderTaskFinishedToast } from '../Tasks/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
-import SubscriptionsTable from './SubscriptionsTable';
+import { SubscriptionsTable } from './components/SubscriptionsTable';
+import { manifestExists } from './SubscriptionHelpers';
 import Search from '../../components/Search/index';
 import api, { orgId } from '../../services/api';
 import { createSubscriptionParams } from './SubscriptionActions.js';
@@ -19,6 +18,7 @@ import {
   BULK_TASK_SEARCH_INTERVAL,
 } from './SubscriptionConstants';
 
+import './SubscriptionsPage.scss';
 
 class SubscriptionsPage extends Component {
   constructor(props) {
@@ -37,36 +37,39 @@ class SubscriptionsPage extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const nextTaskId = nextProps.tasks[0] && nextProps.tasks[0].id;
+    const { tasks = [] } = nextProps;
+    const nextTaskId = tasks[0] && tasks[0].id;
 
-    if (nextProps.tasks.length === 0 && prevState.polledTask != null) {
+    if (tasks.length === 0 && prevState.polledTask != null) {
       return { showTaskModal: false, polledTask: undefined };
-    } else if (nextProps.tasks.length > 0 && nextTaskId !== prevState.polledTask) {
+    } else if (tasks.length > 0 && nextTaskId !== prevState.polledTask) {
       return {
         showTaskModal: true,
         manifestModalOpen: false,
-        polledTask: nextProps.tasks[0].id,
+        polledTask: nextTaskId,
       };
     }
     return null;
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks } = this.props;
+    const { tasks = [] } = this.props;
+    const { tasks: prevTasks = [] } = prevProps;
+
     const numberOfTasks = tasks.length;
-    const numberOfPrevTasks = prevProps.tasks.length;
+    const numberOfPrevTasks = prevTasks.length;
     let task;
 
     if (numberOfTasks > 0) {
-      if (numberOfPrevTasks === 0 || prevProps.tasks[0].id !== tasks[0].id) {
-        [task] = this.props.tasks;
+      if (numberOfPrevTasks === 0 || prevTasks[0].id !== tasks[0].id) {
+        [task] = tasks;
         this.handleDoneTask(task);
       }
     }
   }
 
   getDisabledReason(deleteButton) {
-    const { tasks, subscriptions } = this.props;
+    const { tasks = [], subscriptions, organization } = this.props;
     const { disconnected } = subscriptions;
     let disabledReason = null;
 
@@ -75,7 +78,9 @@ class SubscriptionsPage extends Component {
     } else if (tasks.length > 0) {
       disabledReason = __('This is disabled because a manifest related task is in progress.');
     } else if (deleteButton && !disabledReason) {
-      disabledReason = __('This is disabled because no subscriptions are selected');
+      disabledReason = __('This is disabled because no subscriptions are selected.');
+    } else if (!manifestExists(organization)) {
+      disabledReason = __('This is disabled because no manifest has been uploaded.');
     }
 
     return disabledReason;
@@ -99,39 +104,14 @@ class SubscriptionsPage extends Component {
 
     pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL)
       .then((task) => {
-        function getErrors() {
-          return (
-            <ul>
-              {task.humanized.errors.map(error => (
-                <li key={error}> {error} </li>
-              ))}
-            </ul>
-          );
-        }
-
-        const message = (
-          <span>
-            <span>
-              {__(`Task ${task.humanized.action} completed with a result of ${task.result}.`) + ' '}
-            </span>
-            {task.errors ? getErrors() : ''}
-            <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
-              {__('Click here to go to the tasks page for the task.')}
-            </a>
-          </span>
-        );
-
-        notify({
-          message: ReactDOMServer.renderToStaticMarkup(message),
-          type: task.result,
-        });
-
+        renderTaskFinishedToast(task);
         loadSubscriptions();
       });
   }
 
   render() {
-    const { tasks, subscriptions } = this.props;
+    const { tasks = [], subscriptions, organization } = this.props;
+    const currentOrg = orgId();
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
@@ -149,7 +129,7 @@ class SubscriptionsPage extends Component {
     const getAutoCompleteParams = search => ({
       endpoint: '/subscriptions/auto_complete_search',
       params: {
-        organization_id: orgId,
+        organization_id: currentOrg,
         search,
       },
     });
@@ -183,7 +163,17 @@ class SubscriptionsPage extends Component {
       this.setState({ disableDeleteButton: !rowsSelected });
     };
 
+
     const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
+
+    const emptyStateData = {
+      header: __('There are no Subscriptions to display'),
+      description: __('Import a Manifest to manage your Entitlements.'),
+      action: {
+        onClick: showManageManifestModal,
+        title: __('Import a Manifest'),
+      },
+    };
 
     return (
       <Grid bsClass="container-fluid">
@@ -204,7 +194,10 @@ class SubscriptionsPage extends Component {
 
                   <div className="toolbar-pf-action-right">
                     <FormGroup>
-                      <LinkContainer to="subscriptions/add" disabled={disableManifestActions}>
+                      <LinkContainer
+                        to="subscriptions/add"
+                        disabled={disableManifestActions || !manifestExists(organization)}
+                      >
                         <TooltipButton
                           tooltipId="add-subscriptions-button-tooltip"
                           tooltipText={this.getDisabledReason()}
@@ -253,11 +246,14 @@ class SubscriptionsPage extends Component {
               <SubscriptionsTable
                 loadSubscriptions={this.props.loadSubscriptions}
                 updateQuantity={this.props.updateQuantity}
+                emptyState={emptyStateData}
                 subscriptions={this.props.subscriptions}
                 subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
                 onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
                 onDeleteSubscriptions={onDeleteSubscriptions}
                 toggleDeleteButton={toggleDeleteButton}
+                task={task}
+                bulkSearch={this.props.bulkSearch}
               />
               <ModalProgressBar
                 show={this.state.showTaskModal}
@@ -275,8 +271,10 @@ class SubscriptionsPage extends Component {
 SubscriptionsPage.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
-  subscriptions: PropTypes.shape().isRequired,
+  subscriptions: PropTypes.shape({}).isRequired,
+  organization: PropTypes.shape({}).isRequired,
   pollBulkSearch: PropTypes.func.isRequired,
+  bulkSearch: PropTypes.func,
   pollTaskUntilDone: PropTypes.func.isRequired,
   loadSetting: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
@@ -285,6 +283,7 @@ SubscriptionsPage.propTypes = {
 
 SubscriptionsPage.defaultProps = {
   tasks: [],
+  bulkSearch: undefined,
 };
 
 export default SubscriptionsPage;

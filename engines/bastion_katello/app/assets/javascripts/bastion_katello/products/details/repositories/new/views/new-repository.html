@@ -22,6 +22,14 @@
                type="text"
                required/>
       </div>
+
+      <div bst-form-group label="{{ 'Description' | translate }}">
+        <textarea id="description"
+	       name="description"
+	       ng-model="repository.description"
+	       type="text"/>
+      </div>
+
       <div bst-form-group label="{{ 'Type' | translate }}">
         <select required
                 id="content_type"

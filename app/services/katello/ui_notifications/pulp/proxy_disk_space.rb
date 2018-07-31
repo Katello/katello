@@ -5,30 +5,29 @@ module Katello
         class << self
           def deliver!
             SmartProxy.unscoped.with_content.each do |proxy|
-              percentage = proxy.statuses[:pulp].storage['pulp_dir']['percent']
+              status = proxy.statuses[:pulp] || proxy.statuses[:pulpnode]
+              next unless (percentage = status&.storage&.dig('pulp_dir', 'percent'))
+
               if percentage[0..2].to_i < 90 && notification_already_exists?(proxy)
                 blueprint.notifications.where(subject: proxy).destroy_all
-                next
-              end
-              next unless update_notifications(proxy).empty?
-              ::Notification.create!(
-                :subject => proxy,
-                :initiator => User.anonymous_admin,
-                :audience => Notification::AUDIENCE_ADMIN,
-                :message => ::UINotifications::StringParser.new(
-                  blueprint.message,
+              elsif update_notifications(proxy).empty? && percentage[0..2].to_i > 90
+                ::Notification.create!(
                   :subject => proxy,
-                  :percentage => percentage
-                ),
-                :notification_blueprint => blueprint
-              )
+                  :initiator => User.anonymous_admin,
+                  :audience => Notification::AUDIENCE_ADMIN,
+                  :message => ::UINotifications::StringParser.new(
+                    blueprint.message,
+                    :subject => proxy,
+                    :percentage => percentage
+                  ),
+                  :notification_blueprint => blueprint
+                )
+              end
             end
           end
 
           def notification_already_exists?(subject)
-            low_disk_notification = Notification.unscoped.find_by(:subject => subject)
-            return false if low_disk_notification.blank?
-            low_disk_notification.notification_blueprint == blueprint
+            blueprint.notifications.where(:subject => subject).any?
           end
 
           def update_notifications(subject)

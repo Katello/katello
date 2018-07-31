@@ -1,11 +1,21 @@
+/* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { Icon } from 'patternfly-react';
 import { Link } from 'react-router-dom';
-import helpers, { selectionHeaderCellFormatter, selectionCellFormatter } from '../../move_to_foreman/common/helpers';
+import helpers from '../../../../move_to_foreman/common/helpers';
 import { entitlementsInlineEditFormatter } from './EntitlementsInlineEditFormatter';
-import { headerFormat, cellFormat } from '../../move_to_foreman/components/common/table';
+import {
+  headerFormatter,
+  cellFormatter,
+  selectionHeaderCellFormatter,
+  collapseableAndSelectionCellFormatter,
+} from '../../../../move_to_foreman/components/common/table';
 
-export const columns = (inlineEditController, selectionController) => [
+export const createSubscriptionsTableSchema = (
+  inlineEditController,
+  selectionController,
+  groupingController,
+) => [
   {
     property: 'select',
     header: {
@@ -13,23 +23,27 @@ export const columns = (inlineEditController, selectionController) => [
       formatters: [label => selectionHeaderCellFormatter(selectionController, label)],
     },
     cell: {
-      formatters: [(value, additionalData) =>
-        selectionCellFormatter(selectionController, value, additionalData)],
+      formatters: [
+        (value, additionalData) =>
+          collapseableAndSelectionCellFormatter(
+            groupingController,
+            selectionController,
+            additionalData,
+          ),
+      ],
     },
   },
   {
     property: 'id',
     header: {
       label: __('Name'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
       formatters: [
         (value, { rowData }) => (
           <td>
-            <Link to={helpers.urlBuilder('xui/subscriptions', '', rowData.id)}>
-              {rowData.name}
-            </Link>
+            <Link to={helpers.urlBuilder('subscriptions', '', rowData.id)}>{rowData.name}</Link>
           </td>
         ),
       ],
@@ -39,53 +53,53 @@ export const columns = (inlineEditController, selectionController) => [
     property: 'product_id',
     header: {
       label: __('SKU'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
     property: 'contract_number',
     header: {
       label: __('Contract'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   }, // TODO: use date formatter from tomas' PR
   {
     property: 'start_date',
     header: {
       label: __('Start Date'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
     property: 'end_date',
     header: {
       label: __('End Date'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
     property: 'virt_who',
     header: {
       label: __('Requires Virt-Who'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
       formatters: [
-        cell => (
+        (value, { rowData }) => (
           <td>
-            <Icon type="fa" name={cell.virt_who ? 'check' : 'minus'} />
+            <Icon type="fa" name={rowData.virt_who ? 'check' : 'minus'} />
           </td>
         ),
       ],
@@ -95,24 +109,20 @@ export const columns = (inlineEditController, selectionController) => [
     property: 'consumed',
     header: {
       label: __('Consumed'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
     property: 'quantity',
     header: {
       label: __('Entitlements'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [
-        entitlementsInlineEditFormatter(inlineEditController),
-      ],
+      formatters: [entitlementsInlineEditFormatter(inlineEditController)],
     },
   },
 ];
-
-export default columns;

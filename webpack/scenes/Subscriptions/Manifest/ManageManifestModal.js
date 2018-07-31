@@ -4,9 +4,12 @@ import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'reac
 import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
+import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
-import { columns } from './ManifestHistoryTableSchema';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
+import { manifestExists } from '../SubscriptionHelpers';
+import { columns } from './ManifestHistoryTableSchema';
+import { renderTaskStartedToast } from '../../Tasks/helpers';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
@@ -29,13 +32,8 @@ class ManageManifestModal extends Component {
       'uploadManifest',
       'refreshManifest',
       'deleteManifest',
-      'manifestExists',
       'disabledTooltipText',
     ]);
-  }
-
-  componentDidMount() {
-    this.loadData();
   }
 
   static getDerivedStateFromProps(newProps, prevState) {
@@ -49,6 +47,10 @@ class ManageManifestModal extends Component {
       };
     }
     return null;
+  }
+
+  componentDidMount() {
+    this.loadData();
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -75,7 +77,16 @@ class ManageManifestModal extends Component {
   uploadManifest(fileList) {
     this.setState({ actionInProgress: true });
     if (fileList.length > 0) {
-      this.props.uploadManifest(fileList[0]);
+      this.props
+        .uploadManifest(fileList[0])
+        .then(() =>
+          this.props.bulkSearch({
+            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
+            type: 'all',
+            active_only: true,
+            action_types: BLOCKING_FOREMAN_TASK_TYPES,
+          }))
+        .then(() => renderTaskStartedToast(this.props.taskDetails));
     }
   }
 
@@ -86,14 +97,16 @@ class ManageManifestModal extends Component {
 
   deleteManifest() {
     this.setState({ actionInProgress: true });
-    this.props.deleteManifest()
+    this.props
+      .deleteManifest()
       .then(() =>
         this.props.bulkSearch({
           search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
           type: 'all',
           active_only: true,
           action_types: BLOCKING_FOREMAN_TASK_TYPES,
-        }));
+        }))
+      .then(() => renderTaskStartedToast(this.props.taskDetails));
     this.showDeleteManifestModal(false);
   }
 
@@ -110,15 +123,12 @@ class ManageManifestModal extends Component {
     return __('This is disabled because no manifest exists');
   }
 
-  manifestExists() {
-    const { organization } = this.props;
-
-    return organization.owner_details && organization.owner_details.upstreamConsumer;
-  }
-
   render() {
     const {
-      manifestHistory, organization, disableManifestActions, disabledReason,
+      manifestHistory,
+      organization,
+      disableManifestActions,
+      disabledReason,
     } = this.props;
 
     const { actionInProgress } = this.state;
@@ -135,9 +145,15 @@ class ManageManifestModal extends Component {
     const getManifestName = () => {
       let name = __('No Manifest Uploaded');
 
-      if (organization.owner_details && organization.owner_details.upstreamConsumer) {
-        const link = ['https://', organization.owner_details.upstreamConsumer.webUrl,
-          organization.owner_details.upstreamConsumer.uuid].join('/');
+      if (
+        organization.owner_details &&
+        organization.owner_details.upstreamConsumer
+      ) {
+        const link = [
+          'https://',
+          organization.owner_details.upstreamConsumer.webUrl,
+          organization.owner_details.upstreamConsumer.uuid,
+        ].join('/');
 
         name = (
           <a href={link}>{organization.owner_details.upstreamConsumer.name}</a>
@@ -150,7 +166,11 @@ class ManageManifestModal extends Component {
     return (
       <Modal show={this.state.showModal} onHide={this.hideModal}>
         <Modal.Header>
-          <button className="close" onClick={this.hideModal} aria-label={__('Close')}>
+          <button
+            className="close"
+            onClick={this.hideModal}
+            aria-label={__('Close')}
+          >
             <Icon type="pf" name="close" />
           </button>
           <Modal.Title>{__('Manage Manifest')}</Modal.Title>
@@ -180,11 +200,16 @@ class ManageManifestModal extends Component {
                 <hr />
 
                 <FormGroup>
-                  <ControlLabel className="col-sm-3 control-label" htmlFor="usmaFile">
+                  <ControlLabel
+                    className="col-sm-3 control-label"
+                    htmlFor="usmaFile"
+                  >
                     <OverlayTrigger
                       overlay={
-                        <Tooltip id="usma-tooltip">{__('Upstream Subscription Management Application')}</Tooltip>
-                        }
+                        <Tooltip id="usma-tooltip">
+                          {__('Upstream Subscription Management Application')}
+                        </Tooltip>
+                      }
                       placement="bottom"
                       trigger={['hover', 'focus']}
                       rootClose={false}
@@ -212,17 +237,25 @@ class ManageManifestModal extends Component {
                       tooltipText={disabledReason}
                       tooltipPlacement="top"
                       title={__('Refresh')}
-                      disabled={!this.manifestExists() ||
+                      disabled={!manifestExists(organization) ||
                         actionInProgress || disableManifestActions}
                     />
 
                     <TooltipButton
-                      onClick={() => this.showDeleteManifestModal(true)}
+                      renderedButton={(
+                        <Button
+                          disabled={!manifestExists(organization) || actionInProgress}
+                          bsStyle="danger"
+                          onClick={() => this.showDeleteManifestModal(true)}
+                        >
+                          {__('Delete')}
+                        </Button>
+                        )}
+
                       tooltipId="delete-manifest-button-tooltip"
                       tooltipText={this.disabledTooltipText()}
                       tooltipPlacement="top"
-                      title={__('Delete')}
-                      disabled={!this.manifestExists() || actionInProgress}
+
                     />
 
                     <ConfirmDialog
@@ -242,13 +275,13 @@ class ManageManifestModal extends Component {
             </Tab>
 
             <Tab eventKey={2} title={__('Manifest History')}>
-              <Spinner loading={manifestHistory.loading} className="small-spacer">
+              <LoadingState loading={manifestHistory.loading} loadingText={__('Loading')}>
                 <Table
                   rows={manifestHistory.results}
                   columns={columns}
                   emptyState={emptyStateData()}
                 />
-              </Spinner>
+              </LoadingState>
             </Tab>
           </Tabs>
         </Modal.Body>
@@ -277,9 +310,11 @@ ManageManifestModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
   bulkSearch: PropTypes.func.isRequired,
+  taskDetails: PropTypes.shape({}),
 };
 
 ManageManifestModal.defaultProps = {
+  taskDetails: undefined,
   disableManifestActions: false,
   disabledReason: '',
   onClose() {},

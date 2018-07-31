@@ -14,6 +14,12 @@
       <dt translate>Label</dt>
       <dd>{{ repository.label }}</dd>
 
+      <dt translate>Description</dt>
+      <dd bst-edit-textarea="repository.description"
+	  on-save="save(repository)"
+	  readonly="product.redhat || denied('edit_products', product)">
+      </dd>
+
       <dt translate>Backend Identifier</dt>
       <dd>{{ repository.backend_identifier }}</dd>
 

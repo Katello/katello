@@ -1,9 +1,11 @@
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import helpers, { selectionHeaderCellFormatter, selectionCellFormatter } from '../../../move_to_foreman/common/helpers';
+import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import helpers from '../../../move_to_foreman/common/helpers';
 import {
-  headerFormat,
-  cellFormat,
+  headerFormatter,
+  cellFormatter,
+  selectionHeaderCellFormatter,
+  selectionCellFormatter,
 } from '../../../move_to_foreman/components/common/table';
 
 export const columns = (controller, selectionController) => [
@@ -14,15 +16,16 @@ export const columns = (controller, selectionController) => [
       formatters: [label => selectionHeaderCellFormatter(selectionController, label)],
     },
     cell: {
-      formatters: [(value, additionalData) =>
-        selectionCellFormatter(selectionController, value, additionalData)],
+      formatters: [
+        (value, additionalData) => selectionCellFormatter(selectionController, additionalData),
+      ],
     },
   },
   {
     property: 'id',
     header: {
       label: __('Subscription Name'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
       formatters: [
@@ -40,10 +43,10 @@ export const columns = (controller, selectionController) => [
     property: 'contract_number',
     header: {
       label: __('Contract'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   // TODO: use date formatter from tomas' PR
@@ -51,27 +54,27 @@ export const columns = (controller, selectionController) => [
     property: 'start_date',
     header: {
       label: __('Start Date'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
     property: 'end_date',
     header: {
       label: __('End Date'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
-      formatters: [cellFormat],
+      formatters: [cellFormatter],
     },
   },
   {
-    property: 'quantity',
+    property: 'available',
     header: {
       label: __('Available Entitlements'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
       formatters: [
@@ -87,28 +90,33 @@ export const columns = (controller, selectionController) => [
     property: 'consumed',
     header: {
       label: __('Quantity to Allocate'),
-      formatters: [headerFormat],
+      formatters: [headerFormatter],
     },
     cell: {
       formatters: [
         (value, { rowData }) => (
           <td>
-            <FormGroup>
+            <FormGroup
+              validationState={controller.quantityValidationInput(rowData)}
+            >
               <ControlLabel srOnly>{__('Number to Allocate')}</ControlLabel>
               <FormControl
                 type="text"
                 onBlur={e => controller.onChange(e.target.value, rowData)}
                 defaultValue={rowData.updatedQuantity}
+                onChange={(e) => {
+                  controller.onChange(e.target.value, rowData);
+                }}
                 onKeyDown={(e) => {
                   const key = e.charCode ? e.charCode : e.keyCode;
                   if (key === 13) {
-                    controller.onChange(e.target.value, rowData);
                     controller.saveUpstreamSubscriptions();
                     e.preventDefault();
                   }
                 }}
               />
-              <div>{__('Max')} {rowData.quantity}</div>
+              {controller.quantityValidationInput(rowData) === 'error' &&
+                <HelpBlock>{controller.quantityValidation(rowData)[1]}</HelpBlock>}
             </FormGroup>
           </td>
         ),

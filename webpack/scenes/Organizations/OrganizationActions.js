@@ -18,7 +18,7 @@ export const loadOrganization = (extendedParams = {}) => (dispatch) => {
   };
 
   return api
-    .get(`/organizations/${orgId}`, {}, params)
+    .get(`/organizations/${orgId()}`, {}, params)
     .then(({ data }) => {
       dispatch({
         type: GET_ORGANIZATION_SUCCESS,
@@ -37,12 +37,12 @@ export const saveOrganization = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: SAVE_ORGANIZATION_REQUEST });
 
   const params = {
-    ...{ id: orgId },
+    ...{ id: orgId() },
     ...propsToSnakeCase(extendedParams),
   };
 
   return api
-    .put(`/organizations/${orgId}`, params)
+    .put(`/organizations/${orgId()}`, params)
     .then(({ data }) => {
       dispatch({
         type: SAVE_ORGANIZATION_SUCCESS,

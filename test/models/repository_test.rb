@@ -1,4 +1,5 @@
 require File.expand_path("repository_base", File.dirname(__FILE__))
+require 'katello_test_helper'
 
 module Katello
   class RepositoryCreateTest < RepositoryTestBase # rubocop:disable Metrics/ClassLength
@@ -8,6 +9,7 @@ module Katello
       @repo = build(:katello_repository, :fedora_17_el6,
                     :environment => @library,
                     :product => katello_products(:fedora),
+                    :description => 'My description',
                     :content_view_version => @library.default_content_view_version
                    )
     end
@@ -405,6 +407,19 @@ module Katello
       @repo.url = nil
       @repo.docker_upstream_name = nil
       assert @repo.valid?
+    end
+
+    test_attributes :pid => '7967e6b5-c206-4ad0-bcf5-64a7ce85233b'
+    def test_docker_repository_update_name
+      @repo = build(:katello_repository, :docker,
+                    :environment => @library,
+                    :product => katello_products(:fedora),
+                    :content_view_version => @library.default_content_view_version
+                   )
+      valid_name_list.each do |name|
+        @repo.name = name
+        assert @repo.valid?, "Can't update docker repo with valid name #{name}"
+      end
     end
 
     def test_docker_repository_in_content_view
@@ -879,6 +894,11 @@ module Katello
     def test_search_content_view_id
       repos = Repository.search_for("content_view_id = \"#{@fedora_17_x86_64.content_views.first.id}\"")
       assert_includes repos, @fedora_17_x86_64
+    end
+
+    def test_search_description
+      repos = Repository.search_for("description = \"#{@fedora_17_x86_64.description}\"")
+      assert_equal repos, [@fedora_17_x86_64]
     end
 
     def test_search_distribution_version

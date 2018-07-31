@@ -7,7 +7,7 @@ module Katello
 
     api :POST, "/package_group", N_("Create a package group")
     param :repository_id, String, :required => true, :desc => N_("repository_id")
-    param :name, String, :required => true, :desc => N_("package group name.")
+    param :name, String, :required => true, :desc => N_("package group name")
     param :description, String, :desc => N_("package group description. Defaults to params[:name]")
     param :user_visible, :bool, :desc => N_("set \"user_visible\" flag on package group. Defaults to true")
     param :mandatory_package_names, Array, :desc => N_("mandatory package names to include in the package group")

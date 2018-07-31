@@ -167,9 +167,18 @@ exports[`manage manifest modal should render 1`] = `
                 tooltipText=""
               />
               <TooltipButton
-                disabled={true}
-                onClick={[Function]}
-                title="Delete"
+                renderedButton={
+                  <Button
+                    active={false}
+                    block={false}
+                    bsClass="btn"
+                    bsStyle="danger"
+                    disabled={true}
+                    onClick={[Function]}
+                  >
+                    Delete
+                  </Button>
+                }
                 tooltipId="delete-manifest-button-tooltip"
                 tooltipPlacement="top"
                 tooltipText="This is disabled because no manifest exists"
@@ -212,12 +221,10 @@ exports[`manage manifest modal should render 1`] = `
         eventKey={2}
         title="Manifest History"
       >
-        <Spinner
-          className="small-spacer"
-          inline={false}
-          inverse={false}
+        <LoadingState
           loading={false}
-          size="md"
+          loadingText="Loading"
+          timeout={300}
         >
           <Table
             columns={
@@ -340,7 +347,7 @@ exports[`manage manifest modal should render 1`] = `
               ]
             }
           />
-        </Spinner>
+        </LoadingState>
       </Tab>
     </Uncontrolled(Tabs)>
   </ModalBody>

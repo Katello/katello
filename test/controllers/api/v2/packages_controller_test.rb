@@ -82,6 +82,15 @@ module Katello
       assert_includes ids, @rpm.id
     end
 
+    def test_index_with_latest
+      response = get :index, params: { :packages_restrict_latest => true }
+
+      assert_response :success
+      ids = JSON.parse(response.body)['results'].map { |p| p['id'] }
+      assert_includes ids, katello_rpms(:one_two).id
+      refute_includes ids, @rpm.id
+    end
+
     def test_index_protected
       assert_protected_action(:index, @auth_permissions, @unauth_permissions) do
         get :index, params: { :repository_id => @repo.id }

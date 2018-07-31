@@ -59,12 +59,14 @@ namespace :katello do
     def clean_backend_orphans(cleaner)
       cp_uuids = cleaner.cp_orphaned_host_uuids
       print "#{cp_uuids.count} orphaned consumer id(s) found in candlepin.\n"
+      print "Candlepin orphaned consumers: #{cp_uuids}\n"
       cp_uuids.each do |consumer_id|
         execute("exception when destroying candlepin consumer #{consumer_id}") { Katello::Resources::Candlepin::Consumer.destroy(consumer_id) }
       end
 
       pulp_uuids = cleaner.pulp_orphaned_host_uuids
       print "#{pulp_uuids.count} orphaned consumer id(s) found in pulp.\n"
+      print "Pulp orphaned consumers: #{pulp_uuids}\n"
       pulp_uuids.each do |consumer_id|
         execute("exception when destroying pulp consumer #{consumer_id}") { Katello.pulp_server.extensions.consumer.delete(consumer_id) }
       end
@@ -85,7 +87,7 @@ namespace :katello do
       print "The following changes will not actually be performed.  Rerun with COMMIT=true to apply the changes\n"
     end
 
-    SETTINGS[:katello][:candlepin][:bulk_load_size] = 15_000
+    SETTINGS[:katello][:candlepin][:bulk_load_size] = 1_500
     User.current = User.anonymous_admin
     cleaner = BackendCleaner.new
     cleaner.populate!

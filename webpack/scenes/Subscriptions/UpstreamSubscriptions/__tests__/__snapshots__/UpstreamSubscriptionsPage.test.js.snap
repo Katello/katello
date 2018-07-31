@@ -6,15 +6,26 @@ exports[`upstream subscriptions page should render 1`] = `
   componentClass="div"
   fluid={false}
 >
-  <h1>
-    Add Subscriptions
-  </h1>
-  <Spinner
-    className="small-spacer"
-    inline={false}
-    inverse={false}
+  <BreadcrumbsBar
+    data={
+      Object {
+        "breadcrumbItems": Array [
+          Object {
+            "caption": "Subscriptions",
+            "onClick": [Function],
+          },
+          Object {
+            "caption": "Add Subscriptions",
+          },
+        ],
+        "isSwitchable": false,
+      }
+    }
+  />
+  <LoadingState
     loading={false}
-    size="md"
+    loadingText="Loading"
+    timeout={300}
   >
     <Row
       bsClass="row"
@@ -110,7 +121,7 @@ exports[`upstream subscriptions page should render 1`] = `
                   ],
                   "label": "Available Entitlements",
                 },
-                "property": "quantity",
+                "property": "available",
               },
               Object {
                 "cell": Object {
@@ -131,15 +142,11 @@ exports[`upstream subscriptions page should render 1`] = `
           emptyState={
             Object {
               "action": Object {
-                "title": "New Subscription Allocation",
-                "url": "http://redhat.com",
+                "title": "Import a Manifest to Begin",
+                "url": "/subscriptions",
               },
               "description": "Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to an on-premise subscription management application such as Red Hat Satellite.",
               "docUrl": "http://redhat.com",
-              "documentation": Object {
-                "title": "Learn more about Subscription Allocations",
-                "url": "http://redhat.com",
-              },
               "header": "There are no Subscription Allocations to display",
             }
           }
@@ -157,7 +164,7 @@ exports[`upstream subscriptions page should render 1`] = `
                 "consumed": 100,
                 "contract_number": "11480900",
                 "end_date": "2018-09-15T03:59:59+0000",
-                "pool_id": "8a99f9815e718933015e85b19e1e11d7",
+                "id": "8a99f9815e718933015e85b19e1e11d7",
                 "product_id": "RH00284",
                 "product_name": "Red Hat Enterprise Linux for Power, LE, Premium (IFL, up to 4 LPARs)",
                 "quantity": 200,
@@ -166,16 +173,16 @@ exports[`upstream subscriptions page should render 1`] = `
                 "subscription_id": "4753270",
               },
               Object {
-                "consumed": 100,
-                "contract_number": "11480900",
+                "consumed": 125,
+                "contract_number": "11480898",
                 "end_date": "2018-09-15T03:59:59+0000",
-                "pool_id": "8a99f9815e718933015e85b19e1e11d7",
-                "product_id": "RH00284",
-                "product_name": "Red Hat Enterprise Linux for Power, LE, Premium (IFL, up to 4 LPARs)",
-                "quantity": 200,
+                "id": "8a99f9815e718933015e85b1bfd211db",
+                "product_id": "RH00447",
+                "product_name": "Red Hat Enterprise Linux Server for ATOM with Smart Management, Hyperscale, Standard (5 Physical Nodes)",
+                "quantity": 250,
                 "selected": false,
                 "start_date": "2017-09-15T04:00:00+0000",
-                "subscription_id": "4753270",
+                "subscription_id": "4753271",
               },
             ]
           }
@@ -196,7 +203,7 @@ exports[`upstream subscriptions page should render 1`] = `
           block={false}
           bsClass="btn"
           bsStyle="primary"
-          disabled={false}
+          disabled={true}
           onClick={[Function]}
           type="submit"
         >
@@ -207,7 +214,7 @@ exports[`upstream subscriptions page should render 1`] = `
           exact={false}
           replace={false}
           strict={false}
-          to="/xui/subscriptions"
+          to="/subscriptions"
         >
           <Button
             active={false}
@@ -221,6 +228,6 @@ exports[`upstream subscriptions page should render 1`] = `
         </LinkContainer>
       </Col>
     </Row>
-  </Spinner>
+  </LoadingState>
 </Grid>
 `;

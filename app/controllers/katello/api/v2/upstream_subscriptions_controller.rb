@@ -18,7 +18,7 @@ module Katello
       N_("List available subscriptions from Red Hat Subscription Management")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param_group :cp_search
-    param :pool_ids, Array, desc: N_("Return only the upstream pools which map to the given local pool IDs")
+    param :pool_ids, Array, desc: N_("Return only the upstream pools which map to the given Katello pool IDs")
     param :quantities_only, :bool, desc: N_("Only returns id and quantity fields")
     param :attachable, :bool, desc: N_("Return only subscriptions which can be attached to the upstream allocation")
     def index
@@ -35,7 +35,7 @@ module Katello
       N_("Update the quantity of one or more subscriptions on an upstream allocation")
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
     param :pools, Array, desc: N_("Array of Pools to be updated. Only pools originating upstream are accepted."), required: true do
-      param :id, String, desc: N_("ID of local pool to update"), required: true
+      param :id, String, desc: N_("Katello ID of local pool to update"), required: true
       param :quantity, Integer, desc: N_("Desired quantity of the pool"), required: true
     end
     def update
@@ -55,7 +55,7 @@ module Katello
     api :POST, "/organizations/:organization_id/upstream_subscriptions",
       N_("Add subscriptions consumed by a manifest from Red Hat Subscription Management")
     param :pools, Array, desc: N_("Array of pools to add"), required: true do
-      param :id, String, desc: N_("Pool ID"), required: true
+      param :id, String, desc: N_("Candlepin ID of pool to add"), required: true
       param :quantity, :number, desc: N_("Quantity of entitlements to bind"), required: true
     end
     param :organization_id, :number, :desc => N_("Organization ID"), :required => true
@@ -74,7 +74,7 @@ module Katello
     def upstream_pool_params
       upstream_params = params.permit(:page, :per_page, :order, :sort_by, :quantities_only, :attachable, pool_ids: []).to_h
 
-      if params[:full_result]
+      if params[:full_result] || !upstream_params[:pool_ids].empty?
         upstream_params.delete(:per_page)
         upstream_params.delete(:page)
       elsif !params[:per_page]

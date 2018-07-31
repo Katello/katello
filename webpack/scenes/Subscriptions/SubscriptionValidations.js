@@ -8,7 +8,7 @@ export const validateQuantity = (quantity, availableQuantity) => {
   if (Number.isNaN(numberValue)) {
     state = 'error';
     message = __('Not a number');
-  } else if (numberValue < 0) {
+  } else if (numberValue <= 0) {
     state = 'error';
     message = __('Has to be > 0');
   } else if (availableQuantity && availableQuantity >= 0 && numberValue > availableQuantity) {

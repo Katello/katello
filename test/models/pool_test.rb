@@ -37,6 +37,15 @@ module Katello
       assert_equal expiring_soon_subscriptions, all_subscriptions - [not_expiring_soon]
     end
 
+    def test_stacking_id
+      assert_equal @pool_one.subscription, Pool.stacking_subscription(@pool_one.organization.label, @pool_one.subscription.cp_id)
+    end
+
+    def test_stacking_id_no_match
+      ::Katello::Resources::Candlepin::Product.expects(:find_for_stacking_id).with(@pool_one.organization.label, 'fake_stack').returns('id' => @pool_two.subscription.cp_id)
+      assert_equal @pool_two.subscription, Pool.stacking_subscription(@pool_one.organization.label, 'fake_stack')
+    end
+
     def test_recently_expired
       unexpired = FactoryBot.build(:katello_pool, :unexpired)
       recently_expired = FactoryBot.build(:katello_pool, :recently_expired)
@@ -88,6 +97,24 @@ module Katello
 
     def test_quantity_available
       assert_equal @pool_one.quantity_available, 9
+    end
+
+    def test_import_all_default
+      org = get_organization
+      Pool.expects(:import_candlepin_ids).with(org).returns([@pool_one.cp_id])
+      Pool.expects(:in_organization).with(org).returns([@pool_one])
+      @pool_one.expects(:import_data).once
+      @pool_one.expects(:import_managed_associations).once
+      Pool.import_all(org)
+    end
+
+    def test_import_all_no_managed_association
+      org = get_organization
+      Pool.expects(:import_candlepin_ids).with(org).returns([@pool_one.cp_id])
+      Pool.expects(:in_organization).with(org).returns([@pool_one])
+      @pool_one.expects(:import_data).once
+      @pool_one.expects(:import_managed_associations).never
+      Pool.import_all(org, false)
     end
 
     def test_quantity_available_unlimited

@@ -77,6 +77,8 @@ module Katello
         query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
       end
 
+      query = self.final_custom_index_relation(query) if self.respond_to?(:final_custom_index_relation)
+
       query = query.select(group).group(group) if group
       sub_total = total.zero? ? 0 : scoped_search_total(query, group)
 

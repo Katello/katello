@@ -111,6 +111,7 @@ module ::Actions::Katello::Product
 
     it 'plans' do
       action.expects(:action_subject).with(product)
+      product.expects(:reload)
       plan_action action, product, :gpg_key_id => key.id
       assert_action_planed_with(action,
                                 ::Actions::Katello::Product::RepositoriesGpgReset,

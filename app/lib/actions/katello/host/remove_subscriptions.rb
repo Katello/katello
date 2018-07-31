@@ -13,7 +13,7 @@ module Actions
             end
             cp_consumer = host.subscription_facet.candlepin_consumer
             entitlements = pools_with_quantities.map do |pool_with_quantities|
-              cp_consumer.filter_entitlements(pool_with_quantities.pool.cp_id, pool_with_quantities.quantities)
+              cp_consumer.filter_entitlements(pool_with_quantities.pool.cp_id)
             end
 
             entitlements.flatten.each do |entitlement|

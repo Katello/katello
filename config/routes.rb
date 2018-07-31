@@ -18,6 +18,10 @@ Katello::Engine.routes.draw do
   get '/katello/providers/redhat_provider', to: redirect('/redhat_repositories')
   match '/redhat_repositories' => 'react#index', :via => [:get]
 
+  match '/subscriptions' => 'react#index', :via => [:get]
+  match '/subscriptions/*page' => 'react#index', :via => [:get]
+
   match '/xui' => 'react#index', :via => [:get]
   match '/xui/*page' => 'react#index', :via => [:get]
+  match '/organization_select' => 'react#index', :via => [:get]
 end

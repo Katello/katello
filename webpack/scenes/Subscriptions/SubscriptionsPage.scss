@@ -1,0 +1,38 @@
+@import '~patternfly/dist/sass/patternfly/variables';
+@import '~patternfly-react/dist/sass/inline-edit';
+
+.editable {
+  &.changed {
+    font-weight: bold;
+  }
+}
+
+.pf-table-inline-edit {
+  tbody {
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    tr.open-grouped-row {
+      background-color: $table-bg-hover;
+      td {
+        border-bottom-color: $table-border-hover;
+      }
+    }
+  }
+
+  .table-view-pf-select {
+    width: 50px;
+
+    .collapse-subscription-group-button {
+      margin-top: 4px;
+      cursor: pointer;
+      float: left;
+      font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+      float: right;
+    }
+  }
+}
