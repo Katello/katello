@@ -132,6 +132,7 @@ Katello::Engine.routes.draw do
         api_resources :debs, :only => [:index, :show] do
           collection do
             get :auto_complete_search
+            get :compare
           end
         end
 
@@ -145,6 +146,7 @@ Katello::Engine.routes.draw do
         api_resources :docker_manifest_lists, :only => [:index, :show] do
           collection do
             get :auto_complete_search
+            get :compare
           end
         end
 

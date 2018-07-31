@@ -52,12 +52,17 @@ module Katello
           fail HttpErrors::NotFound, _("Couldn't find content view versions '%s'") % missing.join(',')
         end
 
-        collection = resource_class.all
-        repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
-        repos = repos.where(:library_instance_id => @repo.id) if @repo
-
         sort_by, sort_order, options = sort_options
-        collection = scoped_search(filter_by_repos(repos, collection).distinct, sort_by, sort_order, options)
+
+        if respond_to?(:custom_collection_by_content_view_version)
+          collection = custom_collection_by_content_view_version(@versions)
+        else
+          repos = Katello::Repository.where(:content_view_version_id => @versions.pluck(:id))
+          repos = repos.where(:library_instance_id => @repo.id) if @repo
+          collection = filter_by_repos(repos, resource_class.all)
+        end
+
+        collection = scoped_search(collection.distinct, sort_by, sort_order, options)
         collection[:results] = collection[:results].map { |item| ContentViewVersionComparePresenter.new(item, @versions, @repo) }
         respond_for_index(:collection => collection)
       end
