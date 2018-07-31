@@ -75,7 +75,7 @@ module Katello
           end
 
           def available_pools(owner_label, uuid, listall = false)
-            url = Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}&add_future=true"
+            url = Candlepin::Pool.path(nil, owner_label) + "?consumer=#{uuid}&listall=#{listall}&add_future=true"
             response = Candlepin::CandlepinResource.get(url, self.default_headers).body
             JSON.parse(response)
           end
@@ -93,8 +93,10 @@ module Katello
             response
           end
 
-          def entitlements(uuid)
-            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
+          def entitlements(uuid, included = [])
+            path = join_path(path(uuid), 'entitlements')
+            path += "?#{included_list(included)}" if included.any?
+            response = Candlepin::CandlepinResource.get(path, self.default_headers).body
             ::Katello::Util::Data.array_with_indifferent_access JSON.parse(response)
           end
 

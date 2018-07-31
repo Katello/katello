@@ -35,6 +35,8 @@ module Katello
       def import_all(organization = nil, import_managed_associations = true)
         organizations = organization ? [organization] : Organization.all
 
+        self.import_managed_associations if import_managed_associations && self.respond_to?(:import_managed_associations)
+
         organizations.each do |org|
           candlepin_ids = import_candlepin_ids(org)
 
