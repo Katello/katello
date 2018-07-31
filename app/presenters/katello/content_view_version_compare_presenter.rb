@@ -7,8 +7,13 @@ module Katello
     end
 
     def comparison
-      item_repos = @item.repositories
-      item_repos.where(:library_instance_id => @repository.id) if @repository
+      if @item.is_a?(::Katello::PuppetModule)
+        item_repos = @item.content_view_puppet_environments
+      else
+        item_repos = @item.repositories
+        item_repos.where(:library_instance_id => @repository.id) if @repository
+      end
+
       item_repos.map(&:content_view_version_id) & @versions.map(&:id)
     end
 

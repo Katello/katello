@@ -10,5 +10,10 @@ module Katello
       end
       collection
     end
+
+    def custom_collection_by_content_view_version(versions)
+      resource_class.joins(:content_view_puppet_environments)
+        .where("#{Katello::ContentViewPuppetEnvironment.table_name}.content_view_version_id" => versions)
+    end
   end
 end
