@@ -32,12 +32,14 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
   }
   return (
     <ListView>
-      <PaginationRow
-        viewType="list"
-        itemCount={itemCount}
-        pagination={pagination}
-        onChange={onPaginationChange}
-      />
+      <div className="sticky-pagination">
+        <PaginationRow
+          viewType="list"
+          itemCount={itemCount}
+          pagination={pagination}
+          onChange={onPaginationChange}
+        />
+      </div>
       {results.map(set => <RepositorySet id={set.id} key={set.id} {...set} />)}
     </ListView>
   );
@@ -60,12 +62,14 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
 
   return (
     <ListView>
-      <PaginationRow
-        viewType="list"
-        itemCount={itemCount}
-        pagination={pagination}
-        onChange={onPaginationChange}
-      />
+      <div className="sticky-pagination sticky-pagination-grey">
+        <PaginationRow
+          viewType="list"
+          itemCount={itemCount}
+          pagination={pagination}
+          onChange={onPaginationChange}
+        />
+      </div>
       {repositories.map(repo => <EnabledRepository key={repo.id} {...repo} />)}
     </ListView>
   );
