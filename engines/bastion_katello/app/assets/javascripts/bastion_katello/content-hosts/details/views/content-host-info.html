@@ -263,36 +263,36 @@
         <dt translate>Last Checkin</dt>
         <dd>{{ (host.subscription_facet_attributes.last_checkin | date:'short') || ("Never checked in" | translate) }}</dd>
       </dl>
-    </div>
 
-    <div class="divider"></div>
+      <div class="divider"></div>
 
-    <h4 translate>Networking</h4>
+      <h4 translate>Networking</h4>
 
-    <dl class="dl-horizontal dl-horizontal-left">
-      <dt translate>Hostname</dt>
-      <dd>{{ host.name }}</dd>
+      <dl class="dl-horizontal dl-horizontal-left">
+        <dt translate>Hostname</dt>
+        <dd>{{ host.name }}</dd>
 
-      <dt translate>IPv4 Address</dt>
-      <dd>{{ host.facts["network::ipv4_address"] }}</dd>
+        <dt translate>IPv4 Address</dt>
+        <dd>{{ host.facts["network::ipv4_address"] }}</dd>
 
-      <dt translate>IPv6 Address</dt>
-      <dd>{{ host.facts["network::ipv6_address"] }}</dd>
+        <dt translate>IPv6 Address</dt>
+        <dd>{{ host.facts["network::ipv6_address"] }}</dd>
 
-      <dt translate>Interfaces</dt>
-      <dd>
-        <div ng-repeat="(interfaceName, interface) in hostFactsAsObject.net.interface" >
-          <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
-             ng-hide="editMode" ng-click="expanded = !expanded"></i>
-          {{ interfaceName }}
-          <div class="sub-detail" ng-show="expanded">
-            <div ng-repeat="(key, value) in interface">
-              <span class="info-sub-label">{{ key.replace("_", " ") }}:</span>
-              <span class="info-sub-value">{{ value }}</span>
+        <dt translate>Interfaces</dt>
+        <dd>
+          <div ng-repeat="(interfaceName, interface) in hostFactsAsObject.net.interface" >
+            <i ng-class="{'fa fa-plus': !expanded, 'fa fa-minus': expanded}" class="expand-icon"
+               ng-hide="editMode" ng-click="expanded = !expanded"></i>
+            {{ interfaceName }}
+            <div class="sub-detail" ng-show="expanded">
+              <div ng-repeat="(key, value) in interface">
+                <span class="info-sub-label">{{ key.replace("_", " ") }}:</span>
+                <span class="info-sub-value">{{ value }}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </dd>
-    </dl>
+        </dd>
+      </dl>
+    </div>
   </div>
 </div>
