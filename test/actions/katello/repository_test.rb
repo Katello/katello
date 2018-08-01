@@ -53,7 +53,6 @@ module ::Actions::Katello::Repository
       run_action plan
       plan.run.must_equal nil
     end
-
   end
 
   class CreateFailTest < TestBase

@@ -7,11 +7,15 @@ module Actions
           action_subject(sync_plan)
           User.as_anonymous_admin do
             fail _("No products in sync plan") unless sync_plan.products
+
             syncable_products = sync_plan.products.syncable
             syncable_repositories = ::Katello::Repository.where(:product_id => syncable_products).has_url
+
             fail _("No syncable repositories found for selected products and options.") if syncable_repositories.empty?
+
             plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync,
                         syncable_repositories)
+
             plan_self(:sync_plan_name => sync_plan.name)
           end
         end

@@ -53,7 +53,7 @@ module Katello
       @sync_plan = SyncPlan.new(sync_plan_params)
       @sync_plan.sync_date = sync_date
       @sync_plan.organization = @organization
-      @sync_plan.save!
+      @sync_plan.save_with_logic!
       respond_for_create(:resource => @sync_plan)
     end
 
@@ -67,10 +67,7 @@ module Katello
       if !sync_date.nil? && !sync_date.is_a?(Time)
         fail _("Date format is incorrect.")
       end
-      @sync_plan.update_attributes!(sync_plan_params) if sync_plan_params
-      toggle_enable = @sync_plan.saved_change_to_attribute?(:enabled)
-      @sync_plan.start_recurring_logic if @sync_plan.rec_logic_changed?
-      @sync_plan.toggle_enabled if toggle_enable
+      @sync_plan.update_attributes_with_logics!(sync_plan_params) if sync_plan_params
       respond_for_show(:resource => @sync_plan)
     end
 

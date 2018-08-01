@@ -56,7 +56,7 @@ module Actions
             end
 
             concurrence do
-             plan_self(:repository_id => repository.id, :clone => clone)
+              plan_self(:repository_id => repository.id, :clone => clone)
             end
           end
         end

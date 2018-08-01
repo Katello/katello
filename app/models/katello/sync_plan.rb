@@ -17,6 +17,7 @@ module Katello
     belongs_to :organization, :inverse_of => :sync_plans
     has_many :products, :class_name => "Katello::Product", :dependent => :nullify
     belongs_to :foreman_tasks_recurring_logic, :inverse_of => :sync_plan, :class_name => "ForemanTasks::RecurringLogic", :dependent => :destroy
+
     validates_lengths_from_database
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
@@ -25,9 +26,6 @@ module Katello
     validate :product_enabled
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-    before_create :associate_recurring_logic
-    after_create :start_recurring_logic
-    before_update :update_recurring_logic if :rec_logic_change?
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :interval, :complete_value => true
@@ -39,16 +37,26 @@ module Katello
       end
     end
 
-    def associate_recurring_logic
-      self.foreman_tasks_recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval)
+    def save_with_logic!
+      associate_recurring_logic
+      self.save!
+      start_recurring_logic
     end
 
-    def update_recurring_logic
-      if rec_logic_change?
-        self.foreman_tasks_recurring_logic.cancel
-        recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval)
-        self.foreman_tasks_recurring_logic = recurring_logic
+    def update_attributes_with_logics!(params)
+      self.update_attributes!(params)
+      if rec_logic_changed?
+        old_rec_logic = self.foreman_tasks_recurring_logic
+        associate_recurring_logic
+        self.save!
+        old_rec_logic.cancel
+        start_recurring_logic
       end
+      toggle_enabled if enabled_toggle?
+    end
+
+    def associate_recurring_logic
+      self.foreman_tasks_recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval)
     end
 
     def toggle_enabled
@@ -56,7 +64,9 @@ module Katello
     end
 
     def start_recurring_logic
-      self.foreman_tasks_recurring_logic.start_after(::Actions::Katello::SyncPlan::Run, self.sync_date, self)
+      User.as_anonymous_admin do
+        self.foreman_tasks_recurring_logic.start_after(::Actions::Katello::SyncPlan::Run, self.sync_date, self)
+      end
     end
 
     def validate_sync_date
@@ -77,13 +87,6 @@ module Katello
 
     def plan_date_time
       self.sync_date.strftime('%Y/%m/%d %H:%M:%S %z')
-    end
-
-    def schedule_format
-      return nil if DURATION[self.interval].nil?
-      date = self.sync_date
-      date = next_sync_date if enabled? && self.sync_date < Time.now
-      "#{date.iso8601}/P#{DURATION[self.interval]}"
     end
 
     def plan_zone
@@ -140,7 +143,9 @@ module Katello
     def add_recurring_logic_to_sync_plan(sync_date, interval)
       sync_date_local_zone = sync_date
       min, hour, day = sync_date_local_zone.min, sync_date_local_zone.hour, sync_date_local_zone.wday
-
+      if interval.nil?
+        fail _("Interval cannot be nil")
+      end
       if (interval.downcase.eql? "hourly")
         cron = min.to_s + " * * * *"
       elsif (interval.downcase.eql? "daily")
@@ -157,12 +162,12 @@ module Katello
       return recurring_logic
     end
 
-    def rec_logic_change?
-      sync_date_changed? || interval_changed?
-    end
-
     def rec_logic_changed?
       saved_change_to_attribute?(:sync_date) || saved_change_to_attribute?(:interval)
+    end
+
+    def enabled_toggle?
+      saved_change_to_attribute?(:enabled)
     end
   end
 end

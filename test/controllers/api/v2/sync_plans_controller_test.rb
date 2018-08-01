@@ -11,8 +11,7 @@ module Katello
       @sync_plan = katello_sync_plans(:sync_plan_hourly)
       @products = katello_products(:fedora, :redhat, :empty_product)
       @recurring_logic = FactoryBot.create(:recurring_logic)
-      @recurring_logic.save!
-      # assert_equal @recurring_logic.cancelled? , true
+      # @recurring_logic.save!
       @sync_plan.foreman_tasks_recurring_logic = @recurring_logic
       @sync_plan.save!
     end
@@ -102,13 +101,9 @@ module Katello
     def test_create_fail_no_interval
       post :create, params: { :organization_id => @organization.id, :sync_plan => {:sync_date => '2014-01-09 17:46:00',
                                                                                    :description => 'This is my cool new sync plan.'} }
-      assert_response :unprocessable_entity
+      assert_response :error
       response = JSON.parse(@response.body)
-      assert response.key?('errors')
-      assert response['errors'].key?('name')
-      assert_equal 'can\'t be blank', response['errors']['name'][0]
-      assert response['errors'].key?('interval')
-      assert_equal 'is not included in the list', response['errors']['interval'][0]
+      assert_equal response["errors"][0], "Interval cannot be nil"
     end
 
     def test_create_protected
@@ -131,6 +126,7 @@ module Katello
         :description => 'New Description',
         :enabled => true
       }
+      old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
       put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
 
       assert_response :success
@@ -139,6 +135,7 @@ module Katello
       assert_equal update_attrs[:interval], assigns[:sync_plan].interval
       assert_equal update_attrs[:enabled], assigns[:sync_plan].enabled
       assert_equal update_attrs[:sync_date], assigns[:sync_plan].sync_date.strftime(datetime_format)
+      assert_not_equal old_rec_logic, assigns[:sync_plan].foreman_tasks_recurring_logic_id
     end
 
     def test_recurring_logic_update_with_sync_date

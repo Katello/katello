@@ -92,10 +92,16 @@ module Katello
       end
     end
 
+    def test_recurring_logic_on_create
+      sync_plan = SyncPlan.new(valid_attributes.merge(:enabled => true))
+      sync_plan.save_with_logic!
+      assert_not_equal sync_plan.foreman_tasks_recurring_logic, nil
+      assert_equal sync_plan.foreman_tasks_recurring_logic.enabled?, sync_plan.enabled
+    end
+
     test_attributes :pid => '325c0ef5-c0e8-4cb9-b85e-87eb7f42c2f8'
     def test_update_enabled
-      @plan.save!
-      @plan.start_recurring_logic
+      @plan.save_with_logic!
       sync_plan_enabled = @plan.enabled
       [!sync_plan_enabled, sync_plan_enabled].each do |enabled|
         @plan.enabled = enabled
@@ -245,47 +251,6 @@ module Katello
       p.destroy
 
       lambda { SyncPlan.find(pid) }.must_raise(ActiveRecord::RecordNotFound)
-    end
-
-    def test_schedule_format
-      @plan.interval = 'weekly'
-      @plan.sync_date = Time.now + 3.days
-
-      schedule = @plan.schedule_format
-      refute_nil schedule
-      assert_match(/\/P7D$/, schedule)
-      assert_includes schedule, @plan.sync_date.iso8601
-    end
-
-    def test_schedule_format_past_weekly
-      @plan.interval = 'weekly'
-      @plan.sync_date = Time.now - 3.days
-
-      schedule = @plan.schedule_format
-      refute_nil schedule
-      assert_match(/\/P7D$/, schedule)
-      assert_includes schedule, @plan.next_sync_date.iso8601
-    end
-
-    def test_schedule_format_past_daily
-      @plan.interval = 'daily'
-      @plan.sync_date = Time.now - 3.days
-
-      schedule = @plan.schedule_format
-      refute_nil schedule
-      assert_match(/\/PT24H$/, schedule)
-      assert_includes schedule, @plan.next_sync_date.iso8601
-    end
-
-    def test_schedule_format_disabled
-      @plan.interval = 'daily'
-      @plan.sync_date = Time.now - 3.days
-      @plan.enabled = false
-
-      schedule = @plan.schedule_format
-      refute_nil schedule
-      assert_match(/\/PT24H$/, schedule)
-      assert_includes schedule, @plan.sync_date.iso8601
     end
 
     def test_product_enabled
