@@ -69,6 +69,7 @@ module Katello
     param :deb_id, String, :desc => N_("Id of a deb package to find repositories that contain the deb")
     param :erratum_id, String, :desc => N_("Id of an erratum to find repositories that contain the erratum")
     param :rpm_id, String, :desc => N_("Id of a rpm package to find repositories that contain the rpm")
+    param :file_id, String, :desc => N_("Id of a file to find repositories that contain the file")
     param :ostree_branch_id, String, :desc => N_("Id of an ostree branch to find repositories that contain that branch")
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
@@ -107,32 +108,9 @@ module Katello
       query = index_relation_product(query)
       query = query.where(:content_type => params[:content_type]) if params[:content_type]
       query = query.where(:name => params[:name]) if params[:name]
-
-      if params[:deb_id]
-        query = query.joins(:debs).where("#{Deb.table_name}.id" => Deb.with_identifiers(params[:deb_id]))
-      end
-
-      if params[:erratum_id]
-        query = query.joins(:errata).where("#{Erratum.table_name}.id" => Erratum.with_identifiers(params[:erratum_id]))
-      end
-
-      if params[:rpm_id]
-        query = query.joins(:rpms).where("#{Rpm.table_name}.id" => Rpm.with_identifiers(params[:rpm_id]))
-      end
-
-      if params[:ostree_branch_id]
-        query = query.joins(:ostree_branches).where("#{OstreeBranch.table_name}.id" => OstreeBranch.with_identifiers(params[:ostree_branch_id]))
-      end
-
-      if params[:puppet_module_id]
-        query = query
-                  .joins(:puppet_modules)
-                  .where("#{PuppetModule.table_name}.id" => PuppetModule.with_identifiers(params[:puppet_module_id]))
-      end
-
+      query = index_relation_content_unit(query)
       query = index_relation_content_view(query)
       query = index_relation_environment(query)
-
       query
     end
 
@@ -168,6 +146,41 @@ module Katello
           query = query.in_default_view
         end
       end
+      query
+    end
+
+    def index_relation_content_unit(query)
+      if params[:deb_id]
+        query = query.joins(:debs)
+          .where("#{Deb.table_name}.id" => Deb.with_identifiers(params[:deb_id]))
+      end
+
+      if params[:erratum_id]
+        query = query.joins(:errata)
+          .where("#{Erratum.table_name}.id" => Erratum.with_identifiers(params[:erratum_id]))
+      end
+
+      if params[:rpm_id]
+        query = query.joins(:rpms)
+          .where("#{Rpm.table_name}.id" => Rpm.with_identifiers(params[:rpm_id]))
+      end
+
+      if params[:file_id]
+        query = query.joins(:files)
+          .where("#{FileUnit.table_name}.id" => FileUnit.with_identifiers(params[:file_id]))
+      end
+
+      if params[:ostree_branch_id]
+        query = query.joins(:ostree_branches)
+          .where("#{OstreeBranch.table_name}.id" => OstreeBranch.with_identifiers(params[:ostree_branch_id]))
+      end
+
+      if params[:puppet_module_id]
+        query = query
+                  .joins(:puppet_modules)
+                  .where("#{PuppetModule.table_name}.id" => PuppetModule.with_identifiers(params[:puppet_module_id]))
+      end
+
       query
     end
 
