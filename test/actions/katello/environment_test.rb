@@ -23,7 +23,7 @@ module ::Actions::Katello::Environment
     end
 
     let(:content_view) do
-      katello_content_views(:library_view)
+      katello_content_views(:library_view_no_version)
     end
 
     let(:content_view_environment) do
