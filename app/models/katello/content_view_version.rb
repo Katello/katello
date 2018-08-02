@@ -44,6 +44,9 @@ module Katello
 
     validates_lengths_from_database
 
+    validates :minor, :uniqueness => {:scope => [:content_view_id, :major], :message => N_(", must be unique to major and version id version.")}
+    validates :minor, numericality: true
+
     scope :default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true) }
     scope :non_default_view, -> { joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false) }
     scope :with_organization_id, ->(organization_id) do

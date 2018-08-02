@@ -7,6 +7,15 @@ acme_default:
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
+# View used for new major/minor api expose
+library_view_no_version:
+  name:           Published Library no version
+  label:          'published_library_no_version'
+  default:        false
+  next_version:   1
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
 
 #View published only to library
 library_view:

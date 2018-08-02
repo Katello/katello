@@ -79,9 +79,13 @@ module Katello
     param :description, String, :desc => N_("Description for the new published content view version")
     param :force_yum_metadata_regeneration, :bool, :desc => N_("Force yum metadata regeneration on the repositories " \
                                                            "in the content view version")
+    param :major, :number, :desc => N_("Override the major version number"), :required => false
+    param :minor, :number, :desc => N_("Override the minor version number"), :required => false
     def publish
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
-                        :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration])
+                        :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration],
+                        :major => params[:major],
+                        :minor => params[:minor])
       respond_for_async :resource => task
     end
 

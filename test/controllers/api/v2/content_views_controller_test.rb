@@ -87,6 +87,20 @@ module Katello
       assert_template 'katello/api/v2/common/create'
     end
 
+    def test_publish_with_version_params
+      target_view = ContentView.find(katello_content_views(:library_dev_view).id)
+
+      assert_async_task ::Actions::Katello::ContentView::Publish do |view, description, params|
+        view.must_equal target_view
+        assert_nil description
+        assert_nil params[:force_metadata_generate]
+        params[:major].must_equal 4
+        params[:minor].must_equal 1
+      end
+
+      post :publish, params: { :id => target_view.id, :major => 4, :minor => 1 }
+    end
+
     def test_create_fail_without_organization_id
       post :create, params: { :name => "My View", :label => "My_View", :description => "Cool" }
 

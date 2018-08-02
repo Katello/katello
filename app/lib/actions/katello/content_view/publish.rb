@@ -9,7 +9,11 @@ module Actions
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           content_view.check_ready_to_publish!
-          version = content_view.create_new_version
+          if options[:minor] && options[:major]
+            version = content_view.create_new_version(options[:major], options[:minor])
+          else
+            version = content_view.create_new_version
+          end
           library = content_view.organization.library
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,

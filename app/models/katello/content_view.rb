@@ -494,7 +494,7 @@ module Katello
                                            :components => components
                                           )
 
-      increment!(:next_version) if minor == 0
+      update_attributes(:next_version => major.to_i + 1) unless major.to_i < next_version
       version
     end
 

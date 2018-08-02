@@ -6,6 +6,7 @@ module Katello
       User.current = User.find(users(:admin).id)
       @cvv = create(:katello_content_view_version, :major => 1, :minor => 0)
       @cvv_minor = create(:katello_content_view_version, :major => 1, :minor => 1)
+      @cvv_override = create(:katello_content_view_version, :major => 5, :minor => 2)
       @cvv.organization.kt_environments << Katello::KTEnvironment.find_by_name(:Library)
       @dev = create(:katello_environment,  :organization => @cvv.organization, :prior => @cvv.organization.library, :name => 'dev')
       @beta = create(:katello_environment, :organization => @cvv.organization, :prior => @dev, :name => 'beta')
@@ -67,6 +68,18 @@ module Katello
       assert_equal [version], version.content_view.versions.for_version(1)
       assert_equal [version], version.content_view.versions.for_version(1.0)
       assert_equal [@cvv_minor], version.content_view.versions.for_version(1.1)
+    end
+
+    def test_version_override
+      version = @cvv
+      content_view = version.content_view
+      content_view.versions << @cvv_override
+
+      assert_equal [version], version.content_view.versions.for_version("1.0")
+      assert_equal [version], version.content_view.versions.for_version("1")
+      assert_equal [version], version.content_view.versions.for_version(1)
+      assert_equal [version], version.content_view.versions.for_version(1.0)
+      assert_equal [@cvv_override], version.content_view.versions.for_version(5.2)
     end
 
     def test_next_incremental_version
