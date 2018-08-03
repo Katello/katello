@@ -101,7 +101,7 @@
       </thead>
 
       <tbody>
-        <tr bst-table-row ng-repeat="urlRow in table.rows | filter:tableFilter" row-select="urlRow">
+        <tr bst-table-row ng-repeat="urlRow in filteredRows(tableFilter)" row-select="urlRow">
           <td bst-table-cell style="white-space:nowrap">{{ urlRow.path }}</td>
         </tr>
       </tbody>
