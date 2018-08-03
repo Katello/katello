@@ -17,8 +17,8 @@
  *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$q', '$timeout', '$http', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'translate',
-    function ($scope, $q, $timeout, $http, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, translate) {
+    ['$scope', '$q', '$timeout', '$http', '$filter', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'translate',
+    function ($scope, $q, $timeout, $http, $filter, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, translate) {
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {
@@ -48,6 +48,21 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.table.rows = transformRows(task.output);
             $scope.table.resource.total = $scope.table.rows.length;
             $scope.table.resource.subtotal = $scope.table.resource.total;
+        };
+
+        $scope.filteredRows = function (filter) {
+            var rows, idx;
+            angular.forEach($scope.table.rows, function (row) {
+                row.unselectable = true;
+            });
+            rows = $filter('filter')($scope.table.rows.slice(), filter);
+            angular.forEach(rows, function (row) {
+                idx = $scope.table.rows.indexOf(row);
+                $scope.table.rows[idx].unselectable = false;
+            });
+            $scope.table.getSelected();
+
+            return (rows);
         };
 
         $scope.setupSelected = function () {
