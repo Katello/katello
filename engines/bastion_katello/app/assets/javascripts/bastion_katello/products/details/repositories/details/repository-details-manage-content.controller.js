@@ -53,15 +53,15 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
         $scope.currentState = $state.current.name.split('.').pop();
 
         contentTypes = {
-            'packages': { type: Package },
-            'package-groups': { type: PackageGroup },
-            'puppet-modules': { type: PuppetModule },
-            'docker-manifests': { type: DockerManifest },
-            'docker-manifest-lists': { type: DockerManifestList },
-            'docker-tags': {type: DockerTag},
-            'ostree-branches': { type: OstreeBranch },
-            'files': { type: File },
-            'debs': { type: Deb }
+            'packages': { type: Package, controllerName: 'katello_rpms' },
+            'package-groups': { type: PackageGroup, controllerName: 'katello_package_groups' },
+            'puppet-modules': { type: PuppetModule, controllerName: 'katello_puppet_modules' },
+            'docker-manifests': { type: DockerManifest, controllerName: 'katello_docker_manifests' },
+            'docker-manifest-lists': { type: DockerManifestList, controllerName: 'katello_docker_manifest_lists' },
+            'docker-tags': {type: DockerTag, controllerName: 'katello_docker_tags'},
+            'ostree-branches': { type: OstreeBranch, controllerName: 'katello_ostree_branches' },
+            'files': { type: File, controllerName: 'katello_files' },
+            'debs': { type: Deb, controllerName: 'katello_debs' }
         };
 
         $scope.contentNutupane = new Nutupane(contentTypes[$scope.currentState].type, {
@@ -69,6 +69,8 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
         });
         $scope.table = $scope.contentNutupane.table;
         $scope.contentNutupane.masterOnly = true;
+
+        $scope.controllerName = contentTypes[$scope.currentState].controllerName;
 
         $scope.removeContent = function () {
             var selected = $scope.table.getSelected();
