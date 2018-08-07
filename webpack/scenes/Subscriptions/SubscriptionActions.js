@@ -16,7 +16,7 @@ import {
   DELETE_SUBSCRIPTIONS_FAILURE,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions } from './SubscriptionHelpers.js';
-import { getResponseError } from '../../move_to_foreman/common/helpers.js';
+import { apiError } from '../../move_to_foreman/common/helpers.js';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
   ...{ organization_id: orgId() },
@@ -35,12 +35,7 @@ export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: SUBSCRIPTIONS_QUANTITIES_FAILURE,
-        error: getResponseError(result.response),
-      });
-    });
+    .catch(result => dispatch(apiError(SUBSCRIPTIONS_QUANTITIES_FAILURE, result)));
 };
 
 export const loadSubscriptions = (extendedParams = {}) => (dispatch) => {
@@ -60,12 +55,7 @@ export const loadSubscriptions = (extendedParams = {}) => (dispatch) => {
         dispatch(loadAvailableQuantities({ poolIds }));
       }
     })
-    .catch((result) => {
-      dispatch({
-        type: SUBSCRIPTIONS_FAILURE,
-        error: getResponseError(result.response),
-      });
-    });
+    .catch(result => dispatch(apiError(SUBSCRIPTIONS_FAILURE, result)));
 };
 
 export const updateQuantity = (quantities = {}) => (dispatch) => {
@@ -83,12 +73,7 @@ export const updateQuantity = (quantities = {}) => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: UPDATE_QUANTITY_FAILURE,
-        error: getResponseError(result.response),
-      });
-    });
+    .catch(result => dispatch(apiError(UPDATE_QUANTITY_FAILURE, result)));
 };
 
 export const deleteSubscriptions = poolIds => (dispatch) => {
@@ -106,13 +91,7 @@ export const deleteSubscriptions = poolIds => (dispatch) => {
         response: data,
       });
     })
-    .catch((result) => {
-      dispatch({
-        type: DELETE_SUBSCRIPTIONS_FAILURE,
-        result,
-      });
-    });
+    .catch(result => dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, result)));
 };
-
 
 export default loadSubscriptions;

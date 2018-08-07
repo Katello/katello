@@ -97,9 +97,9 @@ export const createSubscriptionsTableSchema = (
     },
     cell: {
       formatters: [
-        cell => (
+        (value, { rowData }) => (
           <td>
-            <Icon type="fa" name={cell.virt_who ? 'check' : 'minus'} />
+            <Icon type="fa" name={rowData.virt_who ? 'check' : 'minus'} />
           </td>
         ),
       ],

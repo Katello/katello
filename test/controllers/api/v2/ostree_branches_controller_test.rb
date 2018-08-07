@@ -4,7 +4,7 @@ module Katello
   class Api::V2::OstreeBranchesControllerTest < ActionController::TestCase
     def models
       @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
-      @branch = @repo.ostree_branches.create!(:name => "abc123", :uuid => "123xyz")
+      @branch = @repo.ostree_branches.create!(:name => "abc123", :uuid => "123xyz", :version => "1.1")
     end
 
     def setup
@@ -54,6 +54,14 @@ module Katello
       get :compare, params: { :content_view_version_ids => [@lib_repo.content_view_version_id, @view_repo.content_view_version_id], :repository_id => @lib_repo.id }
       assert_response :success
       assert_template "katello/api/v2/ostree_branches/compare"
+    end
+
+    def test_branch_order
+      @repo.ostree_branches.create!(:name => "def456", :uuid => "456uvw", :version => "1.0")
+
+      get :index
+      tree_branch_uuid = JSON.parse(response.body)['results'][0]['uuid']
+      assert_equal "123xyz", tree_branch_uuid
     end
   end
 end

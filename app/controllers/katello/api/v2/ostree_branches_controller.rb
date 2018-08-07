@@ -4,7 +4,7 @@ module Katello
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     def default_sort
-      %w(version_date desc)
+      %w(version desc)
     end
 
     private

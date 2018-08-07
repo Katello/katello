@@ -11,6 +11,7 @@ import SubscriptionsPage from './SubscriptionsPage';
 
 // map state to props
 const mapStateToProps = state => ({
+  organization: state.katello.organization,
   subscriptions: state.katello.subscriptions,
   tasks: state.katello.subscriptions.tasks,
 });

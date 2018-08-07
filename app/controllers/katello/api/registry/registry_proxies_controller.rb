@@ -449,7 +449,7 @@ module Katello
     end
 
     def confirm_settings
-      return true if SETTINGS[:katello][:registry]
+      return true if SETTINGS[:katello][:container_image_registry]
       render_error('custom_error', :status => :not_found,
                    :locals => { :message => "Registry not configured" })
       false

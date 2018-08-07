@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
-import { ListView, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { ListView } from 'patternfly-react';
 import { connect } from 'react-redux';
 
 import RepositoryTypeIcon from './RepositoryTypeIcon';
 import { setRepositoryDisabled } from '../../../redux/actions/RedHatRepositories/enabled';
 import api from '../../../services/api';
+import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
+import { getResponseErrorMsgs } from '../../../move_to_foreman/common/helpers';
+import EnabledRepositoryContent from './EnabledRepositoryContent';
 
 class EnabledRepository extends Component {
   constructor(props) {
@@ -49,9 +51,12 @@ class EnabledRepository extends Component {
       api
         .put(url, data)
         .then(this.setDisabled)
-        .catch(() => {
+        .catch(({ response }) => {
+          const errors = getResponseErrorMsgs(response);
+          errors.forEach((error) => {
+            notify({ message: error, type: 'error' });
+          });
           this.setState({ loading: false });
-          // TODO: Add error component
         });
     };
 
@@ -67,25 +72,11 @@ class EnabledRepository extends Component {
       <ListView.Item
         key={id}
         actions={
-          <Spinner loading={this.state.loading} inline>
-            <OverlayTrigger
-              overlay={<Tooltip id={this.disableTooltipId}>{__('Disable')}</Tooltip>}
-              placement="bottom"
-              trigger={['hover', 'focus']}
-              rootClose={false}
-            >
-              <button
-                onClick={this.disableRepository}
-                style={{
-                  backgroundColor: 'initial',
-                  border: 'none',
-                  color: '#0388ce',
-                }}
-              >
-                <i className={cx('fa-2x', 'fa fa-minus-circle')} />
-              </button>
-            </OverlayTrigger>
-          </Spinner>
+          <EnabledRepositoryContent
+            loading={this.state.loading}
+            disableTooltipId={this.disableTooltipId}
+            disableRepository={this.disableRepository}
+          />
         }
         leftContent={<RepositoryTypeIcon id={id} type={type} />}
         heading={name}

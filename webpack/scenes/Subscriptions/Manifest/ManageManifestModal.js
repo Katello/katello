@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel, Row } from 'react-bootstrap';
 import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
-import { columns } from './ManifestHistoryTableSchema';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
+import { manifestExists } from '../SubscriptionHelpers';
+import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
@@ -30,13 +31,9 @@ class ManageManifestModal extends Component {
       'uploadManifest',
       'refreshManifest',
       'deleteManifest',
-      'manifestExists',
       'disabledTooltipText',
+      'updateRepositoryUrl',
     ]);
-  }
-
-  componentDidMount() {
-    this.loadData();
   }
 
   static getDerivedStateFromProps(newProps, prevState) {
@@ -50,6 +47,10 @@ class ManageManifestModal extends Component {
       };
     }
     return null;
+  }
+
+  componentDidMount() {
+    this.loadData();
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -69,8 +70,12 @@ class ManageManifestModal extends Component {
     this.props.onClose();
   }
 
-  saveOrganization(event) {
-    this.props.saveOrganization({ redhat_repository_url: event.target.value });
+  updateRepositoryUrl(event) {
+    this.setState({ redhat_repository_url: event.target.value });
+  }
+
+  saveOrganization() {
+    this.props.saveOrganization({ redhat_repository_url: this.state.redhat_repository_url });
   }
 
   uploadManifest(fileList) {
@@ -111,12 +116,6 @@ class ManageManifestModal extends Component {
     return __('This is disabled because no manifest exists');
   }
 
-  manifestExists() {
-    const { organization } = this.props;
-
-    return organization.owner_details && organization.owner_details.upstreamConsumer;
-  }
-
   render() {
     const {
       manifestHistory, organization, disableManifestActions, disabledReason,
@@ -132,7 +131,11 @@ class ManageManifestModal extends Component {
         url: 'http://redhat.com',
       },
     });
-
+    const buttonLoading = (
+      <span>
+        {__('Updating...')}
+        <span className="fa fa-spinner fa-spin" />
+      </span>);
     const getManifestName = () => {
       let name = __('No Manifest Uploaded');
 
@@ -163,16 +166,25 @@ class ManageManifestModal extends Component {
                 <h5>{__('Red Hat Provider Details')}</h5>
                 <hr />
                 <FormGroup>
-                  <ControlLabel className="col-sm-3" htmlFor="cdnUrl">
-                    {__('Red Hat CDN URL')}
-                  </ControlLabel>
+                  <Col sm={3}>
+                    <ControlLabel htmlFor="cdnUrl">
+                      {__('Red Hat CDN URL')}
+                    </ControlLabel>
+                  </Col>
                   <Col sm={9}>
                     <FormControl
                       id="cdnUrl"
                       type="text"
-                      value={organization.redhat_repository_url || ''}
-                      onChange={this.saveOrganization}
+                      value={this.state.redhat_repository_url || organization.redhat_repository_url || ''}
+                      onChange={this.updateRepositoryUrl}
                     />
+                  </Col>
+                </FormGroup>
+                <FormGroup>
+                  <Col smOffset={3} sm={3}>
+                    <Button onClick={this.saveOrganization} disabled={organization.loading}>
+                      {organization.loading ? buttonLoading : __('Update')}
+                    </Button>
                   </Col>
                 </FormGroup>
                 <br />
@@ -213,7 +225,7 @@ class ManageManifestModal extends Component {
                       tooltipText={disabledReason}
                       tooltipPlacement="top"
                       title={__('Refresh')}
-                      disabled={!this.manifestExists() ||
+                      disabled={!manifestExists(organization) ||
                         actionInProgress || disableManifestActions}
                     />
 
@@ -223,7 +235,7 @@ class ManageManifestModal extends Component {
                       tooltipText={this.disabledTooltipText()}
                       tooltipPlacement="top"
                       title={__('Delete')}
-                      disabled={!this.manifestExists() || actionInProgress}
+                      disabled={!manifestExists(organization) || actionInProgress}
                     />
 
                     <ConfirmDialog

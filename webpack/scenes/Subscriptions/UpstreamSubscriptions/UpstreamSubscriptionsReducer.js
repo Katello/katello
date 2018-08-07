@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
 
     case UPSTREAM_SUBSCRIPTIONS_FAILURE:
       return state.merge({
-        error: action.error,
+        error: action.payload.message,
         loading: false,
       });
 
@@ -49,8 +49,7 @@ export default (state = initialState, action) => {
       return state.set('task', action.response).set('loading', false);
 
     case SAVE_UPSTREAM_SUBSCRIPTIONS_FAILURE: {
-      const error = action.result.response.data;
-      return state.set('error', error).set('loading', false);
+      return state.set('error', action.payload.message).set('loading', false);
     }
 
     default:

@@ -1,430 +1,451 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`subscriptions table should render a loading state 1`] = `
-<div
-  class="loading-state"
+<SubscriptionsTable
+  loadSubscriptions={[Function]}
+  onDeleteSubscriptions={[Function]}
+  onSubscriptionDeleteModalClose={[Function]}
+  subscriptionDeleteModalOpen={false}
+  subscriptions={
+    Object {
+      "availableQuantities": null,
+      "itemCount": 0,
+      "loading": true,
+      "pagination": Object {
+        "page": 0,
+        "perPage": 20,
+      },
+      "quantitiesLoading": false,
+      "results": Array [],
+      "tasks": Array [],
+    }
+  }
+  toggleDeleteButton={[Function]}
+  updateQuantity={[Function]}
 >
-  <div
-    class="spinner spinner-lg"
-  />
-  <p>
-    Loading
-  </p>
-</div>
+  <LoadingState
+    loading={true}
+    loadingText="Loading"
+    timeout={300}
+  >
+    <div
+      className="loading-state"
+    >
+      <Spinner
+        className=""
+        inline={false}
+        inverse={false}
+        loading={true}
+        size="lg"
+      >
+        <div
+          className="spinner spinner-lg"
+        />
+      </Spinner>
+      <p>
+        Loading
+      </p>
+    </div>
+  </LoadingState>
+</SubscriptionsTable>
 `;
 
 exports[`subscriptions table should render a table 1`] = `
-Array [
-  <div />,
-  <div>
-    <table
-      class="table table-striped table-bordered table-hover pf-table-inline-edit table-fixed"
-    >
-      <thead>
-        <tr
-          class=""
-        >
-          <th
-            aria-label="Select all rows"
-            class="table-view-pf-select"
-          >
-            <label
-              class="control-label sr-only"
-              for="selectAll"
-            >
-              Select all rows
-            </label>
-            <input
-              id="selectAll"
-              type="checkbox"
-            />
-          </th>
-          <th
-            class=""
-          >
-            Name
-          </th>
-          <th
-            class=""
-          >
-            SKU
-          </th>
-          <th
-            class=""
-          >
-            Contract
-          </th>
-          <th
-            class=""
-          >
-            Start Date
-          </th>
-          <th
-            class=""
-          >
-            End Date
-          </th>
-          <th
-            class=""
-          >
-            Requires Virt-Who
-          </th>
-          <th
-            class=""
-          >
-            Consumed
-          </th>
-          <th
-            class=""
-          >
-            Entitlements
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class=""
-        >
-          <td
-            class="table-view-pf-select"
-          >
-            <label
-              class="control-label sr-only"
-              for="select0"
-            >
-              Select row
-            </label>
-            <input
-              id="select0"
-              type="checkbox"
-            />
-          </td>
-          <td>
-            <a
-              href="/subscriptions/3/"
-            >
-              zoo
-            </a>
-          </td>
-          <td
-            class=""
-          >
-            853987721546
-          </td>
-          <td
-            class=""
-          />
-          <td
-            class=""
-          >
-            2017-09-21 16:18:44 -0400
-          </td>
-          <td
-            class=""
-          >
-            2047-09-14 15:18:44 -0500
-          </td>
-          <td>
-            <span
-              aria-hidden="true"
-              class="fa fa-minus"
-            />
-          </td>
-          <td
-            class=""
-          >
-            1
-          </td>
-          <td>
-            Unlimited
-          </td>
-        </tr>
-        <tr
-          class=""
-        >
-          <td
-            class="table-view-pf-select"
-          >
-            <label
-              class="control-label sr-only"
-              for="select1"
-            >
-              Select row
-            </label>
-            <input
-              id="select1"
-              type="checkbox"
-            />
-          </td>
-          <td>
-            <a
-              href="/subscriptions/4/"
-            >
-              hsdfhsdh
-            </a>
-          </td>
-          <td
-            class=""
-          >
-            947637693017
-          </td>
-          <td
-            class=""
-          />
-          <td
-            class=""
-          >
-            2017-09-25 17:54:36 -0400
-          </td>
-          <td
-            class=""
-          >
-            2047-09-18 16:54:36 -0500
-          </td>
-          <td>
-            <span
-              aria-hidden="true"
-              class="fa fa-minus"
-            />
-          </td>
-          <td
-            class=""
-          >
-            0
-          </td>
-          <td>
-            Unlimited
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <form
-      class="content-view-pf-pagination table-view-pf-pagination clearfix"
-    >
-      <div
-        class="form-group"
+<div>
+  <table
+    class="table table-striped table-bordered table-hover pf-table-inline-edit table-fixed"
+  >
+    <thead>
+      <tr
+        class=""
       >
-        <div
-          class="dropup pagination-pf-pagesize btn-group"
+        <th
+          aria-label="Select all rows"
+          class="table-view-pf-select"
         >
-          <button
-            aria-expanded="false"
-            aria-haspopup="true"
-            class="dropdown-toggle btn btn-default"
-            id="pagination-row-dropdown"
-            role="button"
-            type="button"
+          <label
+            class="control-label sr-only"
+            for="selectAll"
           >
-            2 
-            <span
-              class="caret"
-            />
-          </button>
-          <ul
-            aria-labelledby="pagination-row-dropdown"
-            class="dropdown-menu"
-            role="menu"
-          >
-            <li
-              class=""
-              role="presentation"
-            >
-              <a
-                href="#"
-                role="menuitem"
-                tabindex="-1"
-              >
-                5
-              </a>
-            </li>
-            <li
-              class=""
-              role="presentation"
-            >
-              <a
-                href="#"
-                role="menuitem"
-                tabindex="-1"
-              >
-                10
-              </a>
-            </li>
-            <li
-              class=""
-              role="presentation"
-            >
-              <a
-                href="#"
-                role="menuitem"
-                tabindex="-1"
-              >
-                15
-              </a>
-            </li>
-            <li
-              class=""
-              role="presentation"
-            >
-              <a
-                href="#"
-                role="menuitem"
-                tabindex="-1"
-              >
-                25
-              </a>
-            </li>
-            <li
-              class=""
-              role="presentation"
-            >
-              <a
-                href="#"
-                role="menuitem"
-                tabindex="-1"
-              >
-                50
-              </a>
-            </li>
-          </ul>
-        </div>
-        <span>
-          per page
-        </span>
-      </div>
-      <div
-        class="form-group"
+            Select all rows
+          </label>
+          <input
+            id="selectAll"
+            type="checkbox"
+          />
+        </th>
+        <th
+          class=""
+        >
+          Name
+        </th>
+        <th
+          class=""
+        >
+          SKU
+        </th>
+        <th
+          class=""
+        >
+          Contract
+        </th>
+        <th
+          class=""
+        >
+          Start Date
+        </th>
+        <th
+          class=""
+        >
+          End Date
+        </th>
+        <th
+          class=""
+        >
+          Requires Virt-Who
+        </th>
+        <th
+          class=""
+        >
+          Consumed
+        </th>
+        <th
+          class=""
+        >
+          Entitlements
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class=""
       >
-        <span>
-          <span
-            class="pagination-pf-items-current"
-          >
-            1-2
-          </span>
-           of 
-          <span
-            class="pagination-pf-items-total"
-          >
-            81
-          </span>
-        </span>
-        <ul
-          class="pagination pagination-pf-back"
+        <td
+          class="table-view-pf-select"
         >
-          <li
-            class="disabled"
+          <label
+            class="control-label sr-only"
+            for="select0"
           >
-            <a
-              href="#"
-              title="First Page"
-            >
-              <span
-                aria-hidden="true"
-                class="fa fa-angle-double-left i"
-              />
-            </a>
-          </li>
-          <li
-            class="disabled"
+            Select row
+          </label>
+          <input
+            id="select0"
+            type="checkbox"
+          />
+        </td>
+        <td>
+          <a
+            href="/subscriptions/3/"
           >
-            <a
-              href="#"
-              title="Previous Page"
-            >
-              <span
-                aria-hidden="true"
-                class="fa fa-angle-left i"
-              />
-            </a>
-          </li>
-        </ul>
-        <label
-          class="sr-only control-label"
+            zoo
+          </a>
+        </td>
+        <td
+          class=""
         >
-          Current Page
-        </label>
-        <input
-          class="pagination-pf-page form-control"
-          type="text"
-          value="1"
+          853987721546
+        </td>
+        <td
+          class=""
         />
-        <span>
-           of 
+        <td
+          class=""
+        >
+          2017-09-21 16:18:44 -0400
+        </td>
+        <td
+          class=""
+        >
+          2047-09-14 15:18:44 -0500
+        </td>
+        <td>
           <span
-            class="pagination-pf-pages"
+            aria-hidden="true"
+            class="fa fa-minus"
+          />
+        </td>
+        <td
+          class=""
+        >
+          1
+        </td>
+        <td>
+          Unlimited
+        </td>
+      </tr>
+      <tr
+        class=""
+      >
+        <td
+          class="table-view-pf-select"
+        >
+          <label
+            class="control-label sr-only"
+            for="select1"
           >
-            41
-          </span>
-        </span>
+            Select row
+          </label>
+          <input
+            id="select1"
+            type="checkbox"
+          />
+        </td>
+        <td>
+          <a
+            href="/subscriptions/4/"
+          >
+            hsdfhsdh
+          </a>
+        </td>
+        <td
+          class=""
+        >
+          947637693017
+        </td>
+        <td
+          class=""
+        />
+        <td
+          class=""
+        >
+          2017-09-25 17:54:36 -0400
+        </td>
+        <td
+          class=""
+        >
+          2047-09-18 16:54:36 -0500
+        </td>
+        <td>
+          <span
+            aria-hidden="true"
+            class="fa fa-minus"
+          />
+        </td>
+        <td
+          class=""
+        >
+          0
+        </td>
+        <td>
+          Unlimited
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <form
+    class="content-view-pf-pagination table-view-pf-pagination clearfix"
+  >
+    <div
+      class="form-group"
+    >
+      <div
+        class="dropup pagination-pf-pagesize btn-group"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="dropdown-toggle btn btn-default"
+          id="pagination-row-dropdown"
+          role="button"
+          type="button"
+        >
+          2 
+          <span
+            class="caret"
+          />
+        </button>
         <ul
-          class="pagination pagination-pf-forward"
+          aria-labelledby="pagination-row-dropdown"
+          class="dropdown-menu"
+          role="menu"
         >
           <li
             class=""
+            role="presentation"
           >
             <a
               href="#"
-              title="Next Page"
+              role="menuitem"
+              tabindex="-1"
             >
-              <span
-                aria-hidden="true"
-                class="fa fa-angle-right i"
-              />
+              5
             </a>
           </li>
           <li
             class=""
+            role="presentation"
           >
             <a
               href="#"
-              title="Last Page"
+              role="menuitem"
+              tabindex="-1"
             >
-              <span
-                aria-hidden="true"
-                class="fa fa-angle-double-right i"
-              />
+              10
+            </a>
+          </li>
+          <li
+            class=""
+            role="presentation"
+          >
+            <a
+              href="#"
+              role="menuitem"
+              tabindex="-1"
+            >
+              15
+            </a>
+          </li>
+          <li
+            class=""
+            role="presentation"
+          >
+            <a
+              href="#"
+              role="menuitem"
+              tabindex="-1"
+            >
+              25
+            </a>
+          </li>
+          <li
+            class=""
+            role="presentation"
+          >
+            <a
+              href="#"
+              role="menuitem"
+              tabindex="-1"
+            >
+              50
             </a>
           </li>
         </ul>
       </div>
-    </form>
-  </div>,
-]
+      <span>
+        per page
+      </span>
+    </div>
+    <div
+      class="form-group"
+    >
+      <span>
+        <span
+          class="pagination-pf-items-current"
+        >
+          1-2
+        </span>
+         of 
+        <span
+          class="pagination-pf-items-total"
+        >
+          81
+        </span>
+      </span>
+      <ul
+        class="pagination pagination-pf-back"
+      >
+        <li
+          class="disabled"
+        >
+          <a
+            href="#"
+            title="First Page"
+          >
+            <span
+              aria-hidden="true"
+              class="fa fa-angle-double-left i"
+            />
+          </a>
+        </li>
+        <li
+          class="disabled"
+        >
+          <a
+            href="#"
+            title="Previous Page"
+          >
+            <span
+              aria-hidden="true"
+              class="fa fa-angle-left i"
+            />
+          </a>
+        </li>
+      </ul>
+      <label
+        class="sr-only control-label"
+      >
+        Current Page
+      </label>
+      <input
+        class="pagination-pf-page form-control"
+        type="text"
+        value="1"
+      />
+      <span>
+         of 
+        <span
+          class="pagination-pf-pages"
+        >
+          41
+        </span>
+      </span>
+      <ul
+        class="pagination pagination-pf-forward"
+      >
+        <li
+          class=""
+        >
+          <a
+            href="#"
+            title="Next Page"
+          >
+            <span
+              aria-hidden="true"
+              class="fa fa-angle-right i"
+            />
+          </a>
+        </li>
+        <li
+          class=""
+        >
+          <a
+            href="#"
+            title="Last Page"
+          >
+            <span
+              aria-hidden="true"
+              class="fa fa-angle-double-right i"
+            />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </form>
+</div>
 `;
 
 exports[`subscriptions table should render an empty state 1`] = `
-Array [
-  <div />,
+<div
+  class="blank-slate-pf"
+>
   <div
-    class="blank-slate-pf"
+    class="blank-slate-pf-icon"
   >
-    <div
-      class="blank-slate-pf-icon"
-    >
-      <span
-        aria-hidden="true"
-        class="pficon pficon-add-circle-o"
-      />
-    </div>
-    <h4
-      class="h1 blank-slate-pf-title"
-    >
-      There are no Subscriptions to display
-    </h4>
-    <p
-      class="blank-slate-pf-info"
-    >
-      Add Subscriptions to this Allocation to manage your Entitlements.
-    </p>
-    <div
-      class="blank-slate-pf-main-action"
-    >
-      <a
-        class="btn btn-lg btn-primary"
-        href="subscriptions/add"
-      >
-        Add Subscriptions
-      </a>
-    </div>
-  </div>,
-]
+    <span
+      aria-hidden="true"
+      class="pficon pficon-add-circle-o"
+    />
+  </div>
+  <h4
+    class="h1 blank-slate-pf-title"
+  >
+    Yay empty state
+  </h4>
+  <p
+    class="blank-slate-pf-info"
+  >
+    There is nothing to see here
+  </p>
+</div>
 `;
