@@ -1,6 +1,6 @@
 module Katello
   module Concerns
-    module InputTemplateScopeExtensions
+    module BaseTemplateScopeExtensions
       extend ActiveSupport::Concern
 
       module Overrides
@@ -14,7 +14,7 @@ module Katello
       end
 
       def errata(id)
-        Katello::Erratum.with_identifiers(id).map(&:attributes).first.slice!('created_at', 'updated_at')
+        Katello::Erratum.in_repositories(Katello::Repository.readable).with_identifiers(id).map(&:attributes).first.slice!('created_at', 'updated_at')
       end
     end
   end
