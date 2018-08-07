@@ -135,9 +135,7 @@ module Katello
 
       # Lib Extensions
       ::Foreman::Renderer::Scope::Variables::Base.send :include, Katello::Concerns::RendererExtensions
-      if Katello.with_remote_execution?
-        ::ForemanRemoteExecution::Renderer::Scope::Input.send :include, Katello::Concerns::InputTemplateScopeExtensions
-      end
+      ::Foreman::Renderer::Scope::Base.send :include, Katello::Concerns::BaseTemplateScopeExtensions
 
       # Model extensions
       ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
