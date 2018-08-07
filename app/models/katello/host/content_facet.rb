@@ -21,7 +21,7 @@ module Katello
 
       validates :content_view, :presence => true, :allow_blank => false
       validates :lifecycle_environment, :presence => true, :allow_blank => false
-      validates_with Validators::AssociationExistsValidator, attributes: [:content_source]
+      validates_with ::AssociationExistsValidator, attributes: [:content_source]
       validates :host, :presence => true, :allow_blank => false
       validates_with Validators::ContentViewEnvironmentValidator
 

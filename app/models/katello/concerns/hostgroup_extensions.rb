@@ -13,6 +13,7 @@ module Katello
 
         validates_with Katello::Validators::ContentViewEnvironmentValidator
         validates_with Katello::Validators::HostgroupKickstartRepositoryValidator
+        validates_with ::AssociationExistsValidator, attributes: [:content_source]
 
         scoped_search :relation => :content_source, :on => :name, :complete_value => true, :rename => :content_source, :only_explicit => true
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view, :only_explicit => true
