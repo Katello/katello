@@ -159,7 +159,7 @@ module Katello
       ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
       ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
 
-      ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
+      ::Foreman::Plugin::ImporterRegistry.register(Katello::RhsmFactName::FACT_TYPE, 'Katello::RhsmFactImporter')
       ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
 
       #Helper Extensions
