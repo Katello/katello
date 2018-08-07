@@ -460,7 +460,6 @@ module Katello
 
       Repository.new(:environment => to_env,
                      :product => self.product,
-                     :cp_label => self.cp_label,
                      :library_instance => library,
                      :label => self.label,
                      :name => self.name,

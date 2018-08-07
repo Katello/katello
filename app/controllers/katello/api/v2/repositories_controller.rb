@@ -87,12 +87,12 @@ module Katello
           repos = scoped_search(*base_args, options)
           csv_response(repos,
                        [:id, :name, :description, :label, :content_type, :arch, :url, :major, :minor,
-                        :cp_label, :content_label, :pulp_id, :container_repository_name,
+                        :content_label, :pulp_id, :container_repository_name,
                         :download_policy, 'relative_path', 'product.id', 'product.name',
                         'environment_id'],
-                       ['Id', 'Name', 'label', 'Description', 'Content Type', 'Arch', 'Url', 'Major', 'Minor',
-                        'Candlepin Label', 'Content Label', 'Pulp Id', 'Container Repository Name',
-                        'Download Policy', 'Relative Path', 'Product Id', 'Product Name',
+                       ['Id', 'Name', 'Description', 'label', 'Content Type', 'Arch', 'Url', 'Major', 'Minor',
+                        'Content Label', 'Pulp Id', 'Container Repository Name', 'Download Policy', 'Relative Path',
+                        'Product Id', 'Product Name',
                         'Environment Id'])
         end
         format.any do

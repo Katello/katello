@@ -23,7 +23,6 @@ module Katello
         repository = Repository.new(
           :environment => product.organization.library,
           :product => product,
-          :cp_label => content.label,
           :content_id => content.cp_content_id,
           :arch => arch,
           :major => major,
