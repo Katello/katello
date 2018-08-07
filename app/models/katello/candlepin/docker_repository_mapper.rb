@@ -30,7 +30,6 @@ module Katello
         end
         ::Katello::Repository.new(:environment => product.organization.library,
                                  :product => product,
-                                 :cp_label => content.label,
                                  :content_id => content.cp_content_id,
                                  :relative_path => relative_path,
                                  :name => name,

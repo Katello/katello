@@ -4,7 +4,6 @@ extends 'katello/api/v2/common/identifier'
 
 attributes :content_type, :url, :relative_path, :arch, :content_id
 attributes :pulp_id => :backend_identifier
-attributes :cp_label => :content_label
 attributes :major, :minor
 attributes :container_repository_name
 
@@ -13,6 +12,10 @@ child :product do |_product|
   node :sync_plan do |_sync_plan|
     attributes :name, :description, :sync_date, :interval, :next_sync
   end
+end
+
+node :cp_label do |repo|
+  repo.content.try(:label)
 end
 
 node :content_counts do |repo|
