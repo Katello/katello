@@ -744,6 +744,14 @@ module Katello
           generated_importer.config == capsule_importer['config']
       end
 
+      def module_streams_data
+        unit_search(type_ids: [ "modulemd" ]).parsed_body
+      end
+
+      def module_defaults_data
+        unit_search(type_ids: [ "modulemd_defaults" ]).parsed_body
+      end
+
       protected
 
       def object_to_hash(object)
@@ -796,6 +804,7 @@ module Katello
         Katello::Srpm.import_for_repository(self, full_index)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
+        Katello::ModuleStream.import_for_repository(self)
         self.import_distribution_data
       else
         index_linked_repo
