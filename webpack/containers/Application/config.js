@@ -5,32 +5,34 @@ import SubscriptionDetails from '../../scenes/Subscriptions/Details';
 import SetOrganization from '../../components/SelectOrg/SetOrganization';
 import WithOrganization from '../../components/WithOrganization/withOrganization';
 import ModuleStreams from '../../scenes/ModuleStreams';
+import withHeader from './withHeaders';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
   {
-    text: __('RH Repos'),
     path: 'redhat_repositories',
-    component: WithOrganization(Repos, '/redhat_repositories'),
+    component: WithOrganization(
+      withHeader(Repos, { title: __('RH Repos') }),
+      '/redhat_repositories',
+    ),
   },
   {
-    text: __('RH Subscriptions'),
     path: 'subscriptions',
-    component: WithOrganization(Subscriptions, '/subscriptions'),
+    component: WithOrganization(
+      withHeader(Subscriptions, { title: __('RH Subscriptions') }),
+      '/subscriptions',
+    ),
   },
   {
-    text: __('Add Subscriptions'),
     path: 'subscriptions/add',
-    component: UpstreamSubscriptions,
+    component: withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') }),
   },
   {
-    text: __('Subscription Details'),
     // eslint-disable-next-line no-useless-escape
-    path: 'subscriptions/:id(\[0-9]*$\)',
-    component: SubscriptionDetails,
+    path: 'subscriptions/:id([0-9]*$)',
+    component: withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
   },
   {
-    text: __('Select Organization'),
     path: 'organization_select',
     component: SetOrganization,
   },
