@@ -1,4 +1,5 @@
 import Immutable from 'seamless-immutable';
+import { toastErrorAction, failureAction } from '../../../../services/api/testHelpers';
 
 export const initialState = Immutable({
   loading: false,
@@ -148,10 +149,8 @@ export const loadSubscriptionsDetailsFailureActions = [
   {
     type: 'SUBSCRIPTION_DETAILS_REQUEST',
   },
-  {
-    error: 'Request failed with status code 500',
-    type: 'SUBSCRIPTION_DETAILS_FAILURE',
-  },
+  failureAction('SUBSCRIPTION_DETAILS_FAILURE', 'Request failed with status code 500'),
+  toastErrorAction('Request failed with status code 500'),
 ];
 
 export const loadSubscriptionsDetailsSuccessActions = [

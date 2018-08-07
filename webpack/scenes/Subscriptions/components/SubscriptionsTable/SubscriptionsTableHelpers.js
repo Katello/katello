@@ -1,15 +1,22 @@
 const buildTableRow = (subscription, availableQuantities, updatedQuantity) => {
+  const availableQuantityLoaded = !!availableQuantities;
+  const availableQuantity = availableQuantityLoaded
+    ? availableQuantities[subscription.id]
+    : null;
+
   if (updatedQuantity[subscription.id]) {
     return {
       ...subscription,
       entitlementsChanged: true,
       quantity: updatedQuantity[subscription.id],
-      availableQuantity: availableQuantities[subscription.id],
+      availableQuantity,
+      availableQuantityLoaded,
     };
   }
   return {
     ...subscription,
-    availableQuantity: availableQuantities[subscription.id],
+    availableQuantity,
+    availableQuantityLoaded,
   };
 };
 
@@ -27,10 +34,10 @@ const buildTableRowsFromGroup = (subscriptionGroup, availableQuantities, updated
   return [buildTableRow(firstSubscription, availableQuantities, updatedQuantity)];
 };
 
-export const buildTableRows = (groupdSubscriptions, availableQuantities, updatedQuantity) => {
+export const buildTableRows = (groupedSubscriptions, availableQuantities, updatedQuantity) => {
   const rows = [];
 
-  Object.values(groupdSubscriptions).forEach(subscriptionGroup =>
+  Object.values(groupedSubscriptions).forEach(subscriptionGroup =>
     rows.push(...buildTableRowsFromGroup(subscriptionGroup, availableQuantities, updatedQuantity)));
 
   return rows;

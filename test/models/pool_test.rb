@@ -37,6 +37,15 @@ module Katello
       assert_equal expiring_soon_subscriptions, all_subscriptions - [not_expiring_soon]
     end
 
+    def test_stacking_id
+      assert_equal @pool_one.subscription, Pool.stacking_subscription(@pool_one.organization.label, @pool_one.subscription.cp_id)
+    end
+
+    def test_stacking_id_no_match
+      ::Katello::Resources::Candlepin::Product.expects(:find_for_stacking_id).with(@pool_one.organization.label, 'fake_stack').returns('id' => @pool_two.subscription.cp_id)
+      assert_equal @pool_two.subscription, Pool.stacking_subscription(@pool_one.organization.label, 'fake_stack')
+    end
+
     def test_recently_expired
       unexpired = FactoryBot.build(:katello_pool, :unexpired)
       recently_expired = FactoryBot.build(:katello_pool, :recently_expired)

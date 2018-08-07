@@ -12,6 +12,7 @@ exports[`upstream subscriptions page should render 1`] = `
   <LoadingState
     loading={false}
     loadingText="Loading"
+    timeout={300}
   >
     <Row
       bsClass="row"
@@ -128,15 +129,11 @@ exports[`upstream subscriptions page should render 1`] = `
           emptyState={
             Object {
               "action": Object {
-                "title": "New Subscription Allocation",
-                "url": "http://redhat.com",
+                "title": "Import a Manifest to Begin",
+                "url": "/subscriptions",
               },
               "description": "Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to an on-premise subscription management application such as Red Hat Satellite.",
               "docUrl": "http://redhat.com",
-              "documentation": Object {
-                "title": "Learn more about Subscription Allocations",
-                "url": "http://redhat.com",
-              },
               "header": "There are no Subscription Allocations to display",
             }
           }

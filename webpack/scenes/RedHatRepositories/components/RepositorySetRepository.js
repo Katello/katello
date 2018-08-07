@@ -50,7 +50,7 @@ class RepositorySetRepository extends Component {
       const data = {
         id: contentId,
         product_id: productId,
-        basearch: arch == UNSPECIFIED_ARCH ? undefined : arch,
+        basearch: arch === UNSPECIFIED_ARCH ? undefined : arch,
         releasever: releasever || undefined,
       };
 

@@ -7,10 +7,13 @@ if Katello.with_remote_execution?
         sync = !Rails.env.test? && Setting[:remote_execution_sync_templates]
         # import! was renamed to import_raw! around 1.3.1
         if JobTemplate.respond_to?('import_raw!')
-          JobTemplate.import_raw!(File.read(template), :default => true, :locked => true, :update => sync)
+          template = JobTemplate.import_raw!(File.read(template), :default => true, :locked => true, :update => sync)
         else
-          JobTemplate.import!(File.read(template), :default => true, :locked => true, :update => sync)
+          template = JobTemplate.import!(File.read(template), :default => true, :locked => true, :update => sync)
         end
+
+        template.organizations << Organization.unscoped.all if template && template.organizations.empty?
+        template.locations << Location.unscoped.all if template && template.locations.empty?
       end
     end
   end

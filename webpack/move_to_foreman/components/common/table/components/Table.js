@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table as PfTable } from 'patternfly-react';
 import { noop } from 'foremanReact/common/helpers';
-import EmptyState from '../../emptyState';
+import EmptyState from '../../EmptyState';
 import PaginationRow from '../../../../../components/PaginationRow/index';
 
 import TableBody from './TableBody';

@@ -26,7 +26,7 @@ export default (state = initialState, action) => {
 
     case SUBSCRIPTION_DETAILS_FAILURE: {
       return state.merge({
-        error: action.error,
+        error: action.payload.message,
         loading: false,
       });
     }

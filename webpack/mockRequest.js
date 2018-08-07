@@ -2,7 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 // TODO: figure out way to reuse this from foreman
-const mock = new MockAdapter(axios);
+export const mock = new MockAdapter(axios);
 const methods = {
   GET: 'onGet',
   POST: 'onPost',
@@ -15,10 +15,10 @@ const errorResponse = msg => ({ displayMessage: msg });
 export const mockRequest = ({
   method = 'GET',
   url,
-  data = null,
+  data,
   status = 200,
   response = null,
-}) => mock[methods[method]](url, data).reply(status, response);
+}) => mock[methods[method.toUpperCase()]](url, data).reply(status, response);
 
 export const mockErrorRequest = ({
   status = 500,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { sprintf } from 'jed';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
-import { Table, Alert } from 'patternfly-react';
+import { Table } from 'patternfly-react';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';
 import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../move_to_foreman/components/common/table';
 import ConfirmDialog from '../../../../move_to_foreman/components/common/ConfirmDialog';
@@ -12,36 +12,6 @@ import { recordsValid } from '../../SubscriptionValidations';
 import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
 import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
 
-const emptyStateData = {
-  header: __('There are no Subscriptions to display'),
-  description: __('Add Subscriptions to this Allocation to manage your Entitlements.'),
-  documentation: {
-    title: __('Learn more about adding Subscriptions to Allocations'),
-    url: 'http://redhat.com',
-  },
-  action: {
-    title: __('Add Subscriptions'),
-    url: 'subscriptions/add',
-  },
-};
-
-const ErrorAlerts = ({ errors }) => {
-  const alerts = errors.filter(Boolean).map(e => (
-    <Alert type={Alert.ALERT_TYPE_ERROR} key={e}>
-      <span>{e}</span>
-    </Alert>
-  ));
-
-  return (
-    <div>
-      {alerts}
-    </div>
-  );
-};
-ErrorAlerts.propTypes = {
-  errors: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
-
 class SubscriptionsTable extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +19,7 @@ class SubscriptionsTable extends Component {
     this.state = {
       rows: undefined,
       subscriptions: undefined,
-      groupdSubscriptions: undefined,
+      groupedSubscriptions: undefined,
       updatedQuantity: {},
       editing: false,
       showUpdateConfirmDialog: false,
@@ -64,14 +34,14 @@ class SubscriptionsTable extends Component {
       nextProps.subscriptions !== undefined &&
       !isEqual(nextProps.subscriptions, prevState.subscriptions)
     ) {
-      const groupdSubscriptions = groupSubscriptionsByProductId(nextProps.subscriptions);
+      const groupedSubscriptions = groupSubscriptionsByProductId(nextProps.subscriptions);
       const rows = buildTableRows(
-        groupdSubscriptions,
+        groupedSubscriptions,
         nextProps.subscriptions.availableQuantities,
         prevState.updatedQuantity,
       );
 
-      return { rows, groupdSubscriptions, subscriptions: nextProps.subscriptions };
+      return { rows, groupedSubscriptions, subscriptions: nextProps.subscriptions };
     }
 
     return null;
@@ -79,19 +49,19 @@ class SubscriptionsTable extends Component {
 
   toggleSubscriptionGroup(groupId) {
     const { subscriptions } = this.props;
-    const { groupdSubscriptions, updatedQuantity } = this.state;
-    const { open } = groupdSubscriptions[groupId];
+    const { groupedSubscriptions, updatedQuantity } = this.state;
+    const { open } = groupedSubscriptions[groupId];
 
-    groupdSubscriptions[groupId].open = !open;
+    groupedSubscriptions[groupId].open = !open;
 
 
     const rows = buildTableRows(
-      groupdSubscriptions,
+      groupedSubscriptions,
       subscriptions.availableQuantities,
       updatedQuantity,
     );
 
-    this.setState({ rows, groupdSubscriptions });
+    this.setState({ rows, groupedSubscriptions });
   }
 
   enableEditing(editingState) {
@@ -102,11 +72,11 @@ class SubscriptionsTable extends Component {
   }
 
   updateRows(updatedQuantity) {
-    const { groupdSubscriptions } = this.state;
+    const { groupedSubscriptions } = this.state;
     const { subscriptions } = this.props;
 
     const rows = buildTableRows(
-      groupdSubscriptions,
+      groupedSubscriptions,
       subscriptions.availableQuantities,
       updatedQuantity,
     );
@@ -157,16 +127,17 @@ class SubscriptionsTable extends Component {
   }
 
   render() {
-    const { subscriptions } = this.props;
-    const { groupdSubscriptions } = this.state;
+    const { subscriptions, emptyState } = this.props;
+    const { groupedSubscriptions } = this.state;
+    const allSubscriptionResults = subscriptions.results;
 
     const groupingController = {
       isCollapseable: ({ rowData }) =>
         // it is the first subscription in the group
-        rowData.id === groupdSubscriptions[rowData.product_id].subscriptions[0].id &&
+        rowData.id === groupedSubscriptions[rowData.product_id].subscriptions[0].id &&
         // the group contains more then one subscription
-        groupdSubscriptions[rowData.product_id].subscriptions.length > 1,
-      isCollapsed: ({ rowData }) => !groupdSubscriptions[rowData.product_id].open,
+        groupedSubscriptions[rowData.product_id].subscriptions.length > 1,
+      isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
       toggle: ({ rowData }) => this.toggleSubscriptionGroup(rowData.product_id),
     };
 
@@ -202,7 +173,8 @@ class SubscriptionsTable extends Component {
       },
     };
 
-    const checkAllRowsSelected = () => this.state.rows.length === this.state.selectedRows.length;
+    const checkAllRowsSelected = () =>
+      allSubscriptionResults.length === this.state.selectedRows.length;
 
     const updateDeleteButton = () => {
       this.props.toggleDeleteButton(this.state.selectedRows.length > 0);
@@ -218,7 +190,7 @@ class SubscriptionsTable extends Component {
           );
         } else {
           this.setState(
-            { selectedRows: this.state.rows.map(row => row.id) },
+            { selectedRows: allSubscriptionResults.map(row => row.id) },
             updateDeleteButton,
           );
         }
@@ -246,7 +218,7 @@ class SubscriptionsTable extends Component {
     };
 
     let bodyMessage;
-    if (subscriptions.results.length === 0 && subscriptions.searchIsActive) {
+    if (allSubscriptionResults.length === 0 && subscriptions.searchIsActive) {
       bodyMessage = __('No subscriptions match your search criteria.');
     }
 
@@ -258,15 +230,9 @@ class SubscriptionsTable extends Component {
 
     return (
       <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
-        <ErrorAlerts
-          errors={[
-            subscriptions.error,
-            subscriptions.quantitiesError,
-          ]}
-        />
         <ForemanTable
           columns={columnsDefinition}
-          emptyState={emptyStateData}
+          emptyState={emptyState}
           bodyMessage={bodyMessage}
           rows={this.state.rows}
           components={{
@@ -352,6 +318,7 @@ class SubscriptionsTable extends Component {
 SubscriptionsTable.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
+  emptyState: PropTypes.shape({}).isRequired,
   subscriptions: PropTypes.shape({
     results: PropTypes.array,
   }).isRequired,

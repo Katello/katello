@@ -73,7 +73,7 @@ class UpstreamSubscriptionsPage extends Component {
     const updatedSubscriptions = { pools: updatedPools };
 
     this.props.saveUpstreamSubscriptions(updatedSubscriptions).then(() => {
-      const { task, error } = this.props.upstreamSubscriptions;
+      const { task } = this.props.upstreamSubscriptions;
 
       // TODO: could probably factor this out into a task response component
       if (task) {
@@ -88,18 +88,6 @@ class UpstreamSubscriptionsPage extends Component {
 
         notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: 'success' });
         this.props.history.push('/subscriptions');
-      } else {
-        let errorMessages = [];
-
-        if (error.errors) {
-          errorMessages = error.errors;
-        } else if (error.message) {
-          errorMessages.push(error.message);
-        }
-
-        for (let i = 0; i < errorMessages.length; i += 1) {
-          notify({ message: errorMessages[i], type: 'error' });
-        }
       }
     });
   }
@@ -170,13 +158,9 @@ class UpstreamSubscriptionsPage extends Component {
       description: __('Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to ' +
           'an on-premise subscription management application such as Red Hat Satellite.'),
       docUrl: 'http://redhat.com',
-      documentation: {
-        title: __('Learn more about Subscription Allocations'),
-        url: 'http://redhat.com',
-      },
       action: {
-        title: __('New Subscription Allocation'),
-        url: 'http://redhat.com',
+        title: __('Import a Manifest to Begin'),
+        url: '/subscriptions',
       },
     });
 
@@ -240,7 +224,6 @@ UpstreamSubscriptionsPage.propTypes = {
   saveUpstreamSubscriptions: PropTypes.func.isRequired,
   upstreamSubscriptions: PropTypes.shape({
     task: PropTypes.shape({}),
-    error: PropTypes.shape({}),
   }).isRequired,
 };
 

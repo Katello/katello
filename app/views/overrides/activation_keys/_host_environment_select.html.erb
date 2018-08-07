@@ -35,12 +35,11 @@ end %>
 <% cs_select_name =  using_hostgroups_page? ? 'hostgroup[content_source_id]' : 'host[content_facet_attributes][content_source_id]' %>
 <% cs_select_attr = using_hostgroups_page? ? 'content_source' : 'content_facet.content_source' %>
 
-<% proxies = accessible_content_proxies(@host || @hostgroup) %>
 <%= field(f, cs_select_attr, {:label => _("Content Source")}) do
   if using_hostgroups_page?
-    select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, @hostgroup.content_source_id), :data => {"spinner_path" => spinner_path},
+    select_tag cs_select_id, content_source_options(@hostgroup, :selected_host_group => @hostgroup.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path},
                :class => 'form-control',  :name => cs_select_name, include_blank: true
   else
-    select_tag cs_select_id, options_from_collection_for_select(proxies, :id, :name, (@hostgroup || @host).content_source_id), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, include_blank: true
+    select_tag cs_select_id, content_source_options(@host, :selected_host_group => @host.hostgroup, :include_blank => blank_or_inherit_with_id(f, :content_source)), :data => {"spinner_path" => spinner_path}, :class => 'form-control',  :name => cs_select_name, include_blank: true
   end
 end %>

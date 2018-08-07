@@ -23,7 +23,7 @@ import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsCons
 const initialState = Immutable({
   ...initialApiState,
   quantitiesLoading: false,
-  availableQuantities: {},
+  availableQuantities: null,
   tasks: [],
 });
 
@@ -73,15 +73,22 @@ export default (state = initialState, action) => {
       return state.set('loading', false);
 
     case SUBSCRIPTIONS_FAILURE:
+      return state
+        .set('loading', false)
+        .set('results', [])
+        .set('itemCount', 0);
+
     case UPDATE_QUANTITY_FAILURE:
     case DELETE_SUBSCRIPTIONS_FAILURE:
       return state.merge({
-        error: action.error,
         loading: false,
       });
 
     case SUBSCRIPTIONS_QUANTITIES_REQUEST:
-      return state.set('quantitiesLoading', true);
+      return state.merge({
+        quantitiesLoading: true,
+        availableQuantities: null
+      });
 
     case SUBSCRIPTIONS_QUANTITIES_SUCCESS: {
       return state.merge({
@@ -93,7 +100,7 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_QUANTITIES_FAILURE: {
       return state.merge({
         quantitiesLoading: false,
-        quantitiesError: action.error,
+        availableQuantities: {}
       });
     }
 

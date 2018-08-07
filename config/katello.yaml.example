@@ -71,6 +71,11 @@
   #    :user: login
   #    :password: password
 
+  # Internal configuration for communication from server to pulp crane service.
+  :container_image_registry:
+    :crane_url: https://localhost:5000
+    :crane_ca_cert_file: /etc/pki/katello/certs/katello-server-ca.crt
+
 # Logging configuration can be changed by uncommenting the loggers
 # section and the logger configuration desired.
 #

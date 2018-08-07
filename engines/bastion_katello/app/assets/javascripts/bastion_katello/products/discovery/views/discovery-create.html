@@ -44,7 +44,7 @@
 
     <div bst-form-group ng-show="createRepoChoices.newProduct === 'true' && contentCredentials.length !== 0"
          label="{{ 'GPG Key' | translate }}">
-      <select class="form-control" ng-model="createRepoChoices.product.content_credential_id"
+      <select class="form-control" ng-model="createRepoChoices.product.gpg_key_id"
               ng-options="content_credential.id as content_credential.name for content_credential in contentCredentials"/>
     </div>
 
