@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ListView } from 'patternfly-react';
-import { connect } from 'react-redux';
+import { sprintf } from 'jed';
 
-import RepositoryTypeIcon from './RepositoryTypeIcon';
-import { setRepositoryDisabled } from '../../../redux/actions/RedHatRepositories/enabled';
-import api from '../../../services/api';
-import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
-import { getResponseErrorMsgs } from '../../../move_to_foreman/common/helpers';
+import RepositoryTypeIcon from '../RepositoryTypeIcon';
+
+import { notify } from '../../../../move_to_foreman/foreman_toast_notifications';
 import EnabledRepositoryContent from './EnabledRepositoryContent';
 
 class EnabledRepository extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { loading: false };
-    this.setDisabled = () => {
+    this.repoForAction = () => {
       const {
         productId, contentId, arch, releasever, name, type,
       } = this.props;
 
-      const disabledRepo = {
+      return {
         contentId,
         productId,
         name,
@@ -28,36 +25,37 @@ class EnabledRepository extends Component {
         arch,
         releasever,
       };
+    };
 
-      this.props.setRepositoryDisabled(disabledRepo);
+    this.setDisabled = () => {
+      this.props.setRepositoryDisabled(this.repoForAction());
+    };
+
+    this.reload = () => (
+      this.props.loadEnabledRepos({
+        ...this.props.pagination,
+        search: this.props.search,
+      }, true)
+    );
+
+    this.notifyDisabled = () => {
+      notify({
+        message: sprintf(__("Repository '%(repoName)s' has been disabled."), { repoName: this.props.name }),
+        type: 'success',
+      });
+    };
+
+    this.reloadAndNotify = (result) => {
+      if (result.success) {
+        this.reload()
+          .then(this.setDisabled)
+          .then(this.notifyDisabled);
+      }
     };
 
     this.disableRepository = () => {
-      this.setState({ loading: true });
-
-      const {
-        productId, contentId, arch, releasever,
-      } = this.props;
-
-      const url = `/products/${productId}/repository_sets/${contentId}/disable`;
-
-      const data = {
-        id: contentId,
-        product_id: productId,
-        basearch: arch,
-        releasever,
-      };
-
-      api
-        .put(url, data)
-        .then(this.setDisabled)
-        .catch(({ response }) => {
-          const errors = getResponseErrorMsgs(response);
-          errors.forEach((error) => {
-            notify({ message: error, type: 'error' });
-          });
-          this.setState({ loading: false });
-        });
+      this.props.disableRepository(this.repoForAction())
+        .then(this.reloadAndNotify);
     };
 
     this.disableTooltipId = `disable-${props.id}`;
@@ -73,7 +71,7 @@ class EnabledRepository extends Component {
         key={id}
         actions={
           <EnabledRepositoryContent
-            loading={this.state.loading}
+            loading={this.props.loading}
             disableTooltipId={this.disableTooltipId}
             disableRepository={this.disableRepository}
           />
@@ -95,14 +93,28 @@ EnabledRepository.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   arch: PropTypes.string.isRequired,
+  search: PropTypes.shape({
+    query: PropTypes.string,
+    searchList: PropTypes.string,
+    filters: PropTypes.array,
+  }),
+  pagination: PropTypes.shape({
+    page: PropTypes.number,
+    perPage: PropTypes.number,
+  }).isRequired,
+  loading: PropTypes.bool,
   releasever: PropTypes.string,
   orphaned: PropTypes.bool,
   setRepositoryDisabled: PropTypes.func.isRequired,
+  loadEnabledRepos: PropTypes.func.isRequired,
+  disableRepository: PropTypes.func.isRequired,
 };
 
 EnabledRepository.defaultProps = {
   releasever: '',
   orphaned: false,
+  search: {},
+  loading: false,
 };
 
-export default connect(null, { setRepositoryDisabled })(EnabledRepository);
+export default EnabledRepository;

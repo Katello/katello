@@ -4,19 +4,49 @@ import {
   REPOSITORY_SET_REPOSITORIES_REQUEST,
   REPOSITORY_SET_REPOSITORIES_SUCCESS,
   REPOSITORY_SET_REPOSITORIES_FAILURE,
+  ENABLE_REPOSITORY_REQUEST,
+  ENABLE_REPOSITORY_FAILURE,
   REPOSITORY_ENABLED,
   REPOSITORY_DISABLED,
 } from '../../consts';
 
 import { normalizeContentSetRepositories } from '../../actions/RedHatRepositories/repositorySetRepositories';
 
+const reposMatch = (repoA, repoB) => (
+  repoA.arch === repoB.arch &&
+  repoA.releasever === repoB.releasever
+);
+
+const changeRepoState = (state, repoToChange, stateDiff) => {
+  const existingRepositorySet = state[repoToChange.contentId];
+
+  if (existingRepositorySet) {
+    const index = existingRepositorySet
+      .repositories
+      .findIndex(repo => reposMatch(repo, repoToChange));
+
+    if (index >= 0) {
+      const repo = existingRepositorySet.repositories[index];
+      return state.setIn([repoToChange.contentId, 'repositories', index], {
+        ...repo,
+        ...stateDiff,
+      });
+    }
+  }
+
+  return state;
+};
+
 const initialState = Immutable({});
 
 export default (state = initialState, action) => {
-  let existingRepositorySet;
-  let index;
-
   switch (action.type) {
+    case ENABLE_REPOSITORY_REQUEST:
+      return changeRepoState(state, action.repository, { loading: true });
+
+    case ENABLE_REPOSITORY_FAILURE:
+      return changeRepoState(state, action.payload.repository, { loading: false, error: true });
+
     case REPOSITORY_SET_REPOSITORIES_REQUEST:
       return state.set(action.contentId, {
         loading: true,
@@ -43,53 +73,14 @@ export default (state = initialState, action) => {
       });
 
     case REPOSITORY_ENABLED:
-      existingRepositorySet = state[action.repository.contentId];
-
-      if (existingRepositorySet) {
-        index = existingRepositorySet.repositories.findIndex(({ arch, releasever }) => {
-          if (arch !== action.repository.arch) {
-            return false;
-          }
-
-          if (releasever) {
-            return releasever === action.repository.releasever;
-          }
-
-          return true;
-        });
-
-        if (index >= 0) {
-          return state.setIn([action.repository.contentId, 'repositories', index, 'enabled'], true);
-        }
-      }
-
-      return state;
+      return changeRepoState(state, action.repository, {
+        enabled: true,
+        loading: false,
+        error: false,
+      });
 
     case REPOSITORY_DISABLED:
-      existingRepositorySet = state[action.repository.contentId];
-
-      if (existingRepositorySet) {
-        index = existingRepositorySet.repositories.findIndex((repo) => {
-          if (repo.arch !== action.repository.arch) {
-            return false;
-          }
-
-          if (repo.releasever) {
-            return repo.releasever === action.repository.releasever;
-          }
-
-          return true;
-        });
-
-        if (index >= 0) {
-          return state.setIn(
-            [action.repository.contentId, 'repositories', index, 'enabled'],
-            false,
-          );
-        }
-      }
-
-      return state;
+      return changeRepoState(state, action.repository, { enabled: false });
 
     default:
       return state;

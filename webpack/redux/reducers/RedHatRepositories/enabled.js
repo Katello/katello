@@ -5,8 +5,8 @@ import {
   ENABLED_REPOSITORIES_REQUEST,
   ENABLED_REPOSITORIES_SUCCESS,
   ENABLED_REPOSITORIES_FAILURE,
-  REPOSITORY_ENABLED,
-  REPOSITORY_DISABLED,
+  DISABLE_REPOSITORY_REQUEST,
+  DISABLE_REPOSITORY_FAILURE,
 } from '../../consts';
 
 import { initialState } from './enabled.fixtures.js';
@@ -35,24 +35,37 @@ const mapRepo = (repo) => {
 
 const mapRepositories = sets => sets.map(mapRepo);
 
-export default (state = initialState, action) => {
-  if (action.type === REPOSITORY_ENABLED) {
-    return state.set('repositories', state.repositories.concat([action.repository]));
-  } else if (action.type === REPOSITORY_DISABLED) {
-    return state.set(
-      'repositories',
-      state.repositories.filter((repo) => {
-        const isMatch =
-          action.repository.arch === repo.arch &&
-          action.repository.contentId === repo.contentId &&
-          action.repository.productId === repo.productId &&
-          action.repository.releasever === repo.releasever;
+const reposMatch = (repoA, repoB) => (
+  repoA.arch === repoB.arch &&
+  repoA.contentId === repoB.contentId &&
+  repoA.productId === repoB.productId &&
+  repoA.releasever === repoB.releasever
+);
 
-        return !isMatch;
-      }),
-    );
+const changeRepoState = (state, repoToChange, stateDiff) => (
+  state.set(
+    'repositories',
+    state.repositories.map((repo) => {
+      if (reposMatch(repo, repoToChange)) {
+        return {
+          ...repo,
+          ...stateDiff,
+        };
+      }
+      return repo;
+    }),
+  )
+);
+
+export default (state = initialState, action) => {
+  if (action.type === DISABLE_REPOSITORY_REQUEST) {
+    return changeRepoState(state, action.repository, { loading: true });
+  } else if (action.type === DISABLE_REPOSITORY_FAILURE) {
+    return changeRepoState(state, action.payload.repository, { loading: false });
   } else if (action.type === ENABLED_REPOSITORIES_REQUEST) {
-    return state.set(['loading'], true);
+    if (!action.silent) {
+      return state.set(['loading'], true);
+    }
   } else if (action.type === ENABLED_REPOSITORIES_SUCCESS) {
     const {
       page, per_page, subtotal, results, // eslint-disable-line camelcase

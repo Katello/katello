@@ -14,7 +14,7 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
     itemCount,
   } = repoSetsState;
 
-  if (results.length === 0) {
+  if (itemCount === 0) {
     if (searchIsActive) {
       return <p>{__('No repository sets match your search criteria.')}</p>;
     }
@@ -53,7 +53,7 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
     itemCount,
   } = enabledReposState;
 
-  if (repositories.length === 0) {
+  if (itemCount === 0) {
     if (searchIsActive) {
       return <p>{__('No enabled repositories match your search criteria.')}</p>;
     }
@@ -74,6 +74,3 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
     </ListView>
   );
 };
-
-export const yStream = releasever => releasever.match(/^\d+\.\d+$/) != null;
-

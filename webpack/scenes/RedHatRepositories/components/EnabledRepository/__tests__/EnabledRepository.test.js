@@ -3,25 +3,29 @@ import thunk from 'redux-thunk';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import configureMockStore from 'redux-mock-store';
-import RepositorySetRepository from '../RepositorySetRepository';
-
-jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
+import EnabledRepository from '../EnabledRepository';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
 
-describe('RepositorySetRepository Component', () => {
+describe('Enabled Repositories Component', () => {
   let shallowWrapper;
   beforeEach(() => {
-    shallowWrapper = shallow(<RepositorySetRepository
+    shallowWrapper = shallow(<EnabledRepository
       store={store}
+      id={1}
       contentId={1}
       productId={1}
-      label="some label"
+      name="foo"
+      orphaned={false}
+      type="foo"
       arch="foo"
       releaseVer="1.1.1"
-      type="foo"
-      setRepositoryEnabled={() => {}}
+      label="some label"
+      pagination={{}}
+      setRepositoryDisabled={() => {}}
+      loadEnabledRepos={() => {}}
+      disableRepository={() => {}}
     />);
   });
 
@@ -33,3 +37,4 @@ describe('RepositorySetRepository Component', () => {
     expect(toJson(shallowWrapper)).toMatchSnapshot();
   });
 });
+

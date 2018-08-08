@@ -133,3 +133,13 @@ export const enabledState = successState.setIn(
   [contentId, 'repositories', enabledIndex, 'enabled'],
   true,
 );
+
+export const enablingState = successState.setIn(
+  [contentId, 'repositories', enabledIndex, 'loading'],
+  true,
+);
+
+export const enablingFailedState = successState.setIn(
+  [contentId, 'repositories', enabledIndex, 'error'],
+  true,
+);
