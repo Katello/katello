@@ -86,7 +86,7 @@ module Katello
     api :GET, "/products/:id", N_("Show a product")
     param :id, :number, :desc => N_("product numeric identifier"), :required => true
     def show
-      find_product(:includes => [{:repositories => :environment}])
+      find_product(:includes => [{:root_repositories => {:repositories => :environment}}])
       respond_for_show(:resource => @product)
     end
 

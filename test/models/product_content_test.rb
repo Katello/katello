@@ -31,18 +31,19 @@ module Katello
       assert_empty @product_content.repositories
 
       repo = katello_repositories(:fedora_17_x86_64)
-      repo.update_attributes!(product: @product, content_id: @content_id)
+      repo.root.update_attributes!(product: @product, content_id: @content_id)
 
-      assert_equal 1, @product_content.repositories.size
+      assert_equal repo.clones.count + 1, @product_content.repositories.size
 
-      assert_equal @product_content.repositories.first, repo
+      assert_includes @product_content.repositories, repo
     end
 
     def test_enabled
       assert_includes Katello::ProductContent.all, @product_content
       refute_includes Katello::ProductContent.enabled(@product.organization), @product_content
 
-      FactoryBot.create(:katello_repository, :product => @product, :content_id => @content_id, :environment_id => @product.organization.library.id,
+      root = FactoryBot.create(:katello_root_repository, :product => @product, :content_id => @content_id)
+      FactoryBot.create(:katello_repository, :root => root, :environment_id => @product.organization.library.id,
         :content_view_version_id => @product.organization.default_content_view.versions.first.id)
 
       assert_includes Katello::ProductContent.enabled(@product.organization), @product_content

@@ -3,7 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::OstreeBranchesControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
+      @repo = Repository.find(katello_repositories(:ostree).id)
       @branch = @repo.ostree_branches.create!(:name => "abc123", :uuid => "123xyz", :version => "1.1")
     end
 
@@ -16,6 +16,15 @@ module Katello
       get :index
       assert_response :success
       assert_template "katello/api/v2/ostree_branches/index"
+    end
+
+    def test_index_version_date_sort
+      response = get :index, params: {sort_by: 'created', sort_order: 'desc'}
+      body = JSON.parse(response.body)
+
+      assert_response :success
+      assert_template "katello/api/v2/ostree_branches/index"
+      assert_empty body['error']
     end
 
     def test_index_with_repository

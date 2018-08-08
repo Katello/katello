@@ -42,7 +42,7 @@ module Katello
     end
 
     def self.grouped
-      grouped_fields = "#{table_name}.name, #{Repository.table_name}.name, #{Product.table_name}.name"
+      grouped_fields = "#{table_name}.name, #{Repository.table_name}.root_id, #{Product.table_name}.name"
       ids = distinct.select("ON (#{grouped_fields}) #{table_name}.id").joins(:repository => :product)
       where(:id => ids)
     end

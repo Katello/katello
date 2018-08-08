@@ -28,7 +28,7 @@ module Katello
     def self.create_repo(repo_id)
       @repo = Repository.find_by_id(repo_id)
       @repo.relative_path = @repo.puppet? ? PULP_TMP_DIR : 'test_path'
-      @repo.url = @repo.puppet? ? @puppet_repo_url : @repo_url
+      @repo.root.url = @repo.puppet? ? @puppet_repo_url : @repo_url
 
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create,
                                content_type: @repo.content_type,

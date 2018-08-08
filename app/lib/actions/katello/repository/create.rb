@@ -5,6 +5,8 @@ module Actions
         # rubocop:disable MethodLength
         def plan(repository, clone = false, plan_create = false)
           repository.save!
+          root = repository.root
+
           action_subject(repository)
 
           org = repository.organization
@@ -18,17 +20,17 @@ module Actions
                                         pulp_id: repository.pulp_id,
                                         name: repository.name,
                                         docker_upstream_name: repository.docker_upstream_name,
-                                        docker_tags_whitelist: repository.docker_tags_whitelist,
+                                        docker_tags_whitelist: root.docker_tags_whitelist,
                                         feed: repository.url,
                                         ssl_ca_cert: certs[:ssl_ca_cert],
                                         ssl_client_cert: certs[:ssl_client_cert],
                                         ssl_client_key: certs[:ssl_client_key],
                                         unprotected: repository.unprotected,
-                                        checksum_type: repository.checksum_type,
+                                        checksum_type: repository.saved_checksum_type || repository.checksum_type,
                                         path: path,
                                         download_policy: repository.download_policy,
-                                        ostree_upstream_sync_depth: repository.compute_ostree_upstream_sync_depth,
-                                        ostree_publish_depth: repository.compute_ostree_upstream_sync_depth,
+                                        ostree_upstream_sync_depth: root.compute_ostree_upstream_sync_depth,
+                                        ostree_publish_depth: root.compute_ostree_upstream_sync_depth,
                                         deb_releases: repository.deb_releases,
                                         deb_components: repository.deb_components,
                                         deb_architectures: repository.deb_architectures,
@@ -50,7 +52,7 @@ module Actions
                 plan_action(ContentView::UpdateEnvironment, org.default_content_view,
                             org.library, repository.content_id)
               else
-                content_create = plan_action(Katello::Product::ContentCreate, repository)
+                content_create = plan_action(Katello::Product::ContentCreate, root)
                 plan_action(ContentView::UpdateEnvironment, org.default_content_view,
                             org.library, content_create.input[:content_id])
               end

@@ -4,7 +4,6 @@ require 'helpers/repo_test_data'
 module Katello
   describe Product do
     include OrchestrationHelper
-    include ProductHelperMethods
     include OrganizationHelperMethods
 
     before(:each) do
@@ -108,9 +107,9 @@ module Katello
         disable_repo_orchestration
         product = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge(:organization_id => @organization.id))
         2.times do
-          create(:katello_repository, product: product, environment: @organization.library,
-                                      content_view_version: @organization.library.default_content_view_version,
-                                      url: "http://something")
+          root = create(:katello_root_repository, product: product, url: "http://something")
+          create(:katello_repository, :root_id => root.id, :content_view_version => @organization.library.default_content_view_version,
+                                          :environment => @organization.library)
         end
         product.repositories.length.must_equal(2)
         product.repositories.map(&:environment).length.must_be(:>, product.environments.length)

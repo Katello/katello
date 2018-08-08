@@ -26,6 +26,7 @@ module Katello
       :katello_providers => Katello::Provider,
       :katello_puppet_modules => Katello::PuppetModule,
       :katello_repository_puppet_modules => Katello::RepositoryPuppetModule,
+      :katello_root_repositories => Katello::RootRepository,
       :katello_repositories => Katello::Repository,
       :katello_sync_plans => Katello::SyncPlan,
       :katello_host_collections => Katello::HostCollection,

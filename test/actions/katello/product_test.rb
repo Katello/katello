@@ -1,69 +1,5 @@
 require 'katello_test_helper'
 
-module Katello
-  describe ::Actions::Katello::Product do
-    include Dynflow::Testing
-    include Support::Actions::Fixtures
-    include FactoryBot::Syntax::Methods
-
-    before :all do
-      @org = FactoryBot.build('katello_organization')
-      @provider = FactoryBot.build('katello_fedora_hosted_provider', organization: @org)
-      @product = FactoryBot.build('katello_product', provider: @provider, cp_id: 1234)
-      @repository = FactoryBot.build('katello_repository', product: @product, content_id: 'foobar')
-      @content = FactoryBot.build(:katello_content)
-      @product_content = FactoryBot.build(:katello_product_content, product: @product, content: @content)
-      @product.stubs(:product_content_by_id).returns(@product_content)
-    end
-
-    describe 'Content Destroy' do
-      let(:action_class) { ::Actions::Katello::Product::ContentDestroy }
-      let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::ContentDestroy }
-      let(:candlepin_remove_class) { ::Actions::Candlepin::Product::ContentRemove }
-
-      it 'plans' do
-        @repository.stubs(:other_repos_with_same_product_and_content).returns([])
-        @repository.stubs(:other_repos_with_same_content).returns([])
-
-        Katello::Content.expects(:find).returns(@content)
-
-        action = create_action action_class
-        action.stubs(:action_subject).with(@repository)
-        plan_action action, @repository
-        assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
-                                                                  owner: @product.organization.label,
-                                                                  content_id: @repository.content_id
-        assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id,
-                                                                   owner: @product.organization.label
-      end
-
-      it 'does not remove content if other content exists in different product' do
-        repo2 = FactoryBot.build('katello_repository', product: @product)
-        @repository.stubs(:other_repos_with_same_product_and_content).returns([])
-        @repository.stubs(:other_repos_with_same_content).returns([repo2])
-
-        action = create_action action_class
-        action.stubs(:action_subject).with(@repository)
-        plan_action action, @repository
-        assert_action_planed action, candlepin_remove_class
-        refute_action_planed action, candlepin_destroy_class
-      end
-
-      it 'does not destroy or remove content if other content exists in same product' do
-        repo2 = FactoryBot.build('katello_repository', product: @product)
-        @repository.stubs(:other_repos_with_same_product_and_content).returns([repo2])
-        @repository.stubs(:other_repos_with_same_content).returns([repo2])
-
-        action = create_action action_class
-        action.stubs(:action_subject).with(@repository)
-        plan_action action, @repository
-        assert_action_planed action, candlepin_remove_class
-        refute_action_planed action, candlepin_destroy_class
-      end
-    end
-  end
-end
-
 module ::Actions::Katello::Product
   class TestBase < ActiveSupport::TestCase
     include Dynflow::Testing
@@ -72,6 +8,61 @@ module ::Actions::Katello::Product
     include FactoryBot::Syntax::Methods
 
     let(:action) { create_action action_class }
+  end
+
+  class ProductTest < TestBase
+    include Dynflow::Testing
+    include Support::Actions::Fixtures
+    include FactoryBot::Syntax::Methods
+
+    describe ::Actions::Katello::Product do
+      before :all do
+        @org = taxonomies(:empty_organization)
+        @content = FactoryBot.create(:katello_content, :organization => @org, :cp_content_id => 'foobar')
+        @provider = FactoryBot.build('katello_fedora_hosted_provider', organization: @org)
+        @product = FactoryBot.build('katello_product', provider: @provider, cp_id: 1234, :organization => @org)
+        @root = FactoryBot.build('katello_root_repository', product: @product, content_id: @content.cp_content_id)
+        @repository = FactoryBot.build('katello_repository', root: @root)
+        @product_content = FactoryBot.build(:katello_product_content, product: @product, content: @content)
+        @product.stubs(:product_content_by_id).returns(@product_content)
+      end
+
+      describe 'Content Destroy' do
+        let(:action_class) { ::Actions::Katello::Product::ContentDestroy }
+        let(:candlepin_destroy_class) { ::Actions::Candlepin::Product::ContentDestroy }
+        let(:candlepin_remove_class) { ::Actions::Candlepin::Product::ContentRemove }
+
+        it 'plans' do
+          Katello::Content.expects(:find).returns(@content)
+
+          action = create_action action_class
+          action.stubs(:action_subject).with(@repository)
+          plan_action action, @repository.root
+          assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
+                                                                    owner: @product.organization.label,
+                                                                    content_id: @repository.content_id
+          assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id,
+                                                                     owner: @product.organization.label
+        end
+
+        it 'removes contents even if cp content_id is very large' do
+          Katello::Content.expects(:find).returns(@content)
+
+          action = create_action action_class
+          action.stubs(:action_subject).with(@repository)
+
+          plan_action action, @repository.root
+          assert_empty @content.product_contents
+        end
+
+        it 'remove contents if other content exists in different product' do
+          action = create_action action_class
+          action.stubs(:action_subject).with(@repository)
+          plan_action action, @repository.root
+          assert_action_planed action, candlepin_remove_class
+        end
+      end
+    end
   end
 
   class CreateTest < TestBase

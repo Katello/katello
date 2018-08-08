@@ -7,11 +7,16 @@ module Katello
 
     def setup
       @branches = YAML.load_file(BRANCHES).values.map(&:deep_symbolize_keys)
-      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
+      @repo = Repository.find(katello_repositories(:ostree).id)
 
       ids = @branches.map { |attrs| attrs[:_id] }
       ::Katello::Pulp::OstreeBranch.stubs(:ids_for_repository).returns(ids)
       ::Katello::Pulp::OstreeBranch.stubs(:fetch).returns(@branches)
+    end
+
+    def test_search_by_repository
+      @repo.index_content
+      assert_includes OstreeBranch.search_for("repository = \"#{@repo.name}\""), OstreeBranch.find_by(:commit => @branches.first[:commit])
     end
 
     def test_index_db_ostree_branches

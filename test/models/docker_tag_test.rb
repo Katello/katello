@@ -11,7 +11,7 @@ module Katello
       @manifest = create(:docker_manifest)
       @tag = create(:docker_tag, :repository => @repo)
 
-      @repo.library_instances_inverse.each do |repo|
+      @repo.clones.each do |repo|
         repo.docker_tags << @tag.dup
       end
     end
@@ -47,7 +47,7 @@ module Katello
     end
 
     def test_related_tags
-      assert_equal 3, @tag.related_tags.count
+      assert_equal 4, @tag.related_tags.count
     end
   end
 end
