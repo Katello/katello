@@ -1,5 +1,7 @@
 import Immutable from 'seamless-immutable';
 
+export const disabledIndex = 1;
+
 export const initialState = Immutable({
   loading: true,
   repositories: [],
@@ -147,3 +149,13 @@ export const errorState = Immutable({
   repositories: [],
   error: 'Unable to process request.',
 });
+
+export const disablingState = successState.setIn(
+  ['repositories', disabledIndex, 'loading'],
+  true,
+);
+
+export const disablingFailedState = successState.setIn(
+  ['repositories', disabledIndex, 'loading'],
+  false,
+);

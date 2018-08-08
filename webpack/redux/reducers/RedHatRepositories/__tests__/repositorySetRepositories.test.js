@@ -1,4 +1,4 @@
-import * as types from '../../consts';
+import * as types from '../../../consts';
 
 import {
   contentId,
@@ -9,8 +9,11 @@ import {
   successState,
   errorState,
   enabledState,
-} from './repositorySetRepositories.fixtures';
-import reducer from './repositorySetRepositories';
+  enablingState,
+  enablingFailedState,
+
+} from '../repositorySetRepositories.fixtures';
+import reducer from '../repositorySetRepositories';
 
 describe('repositorySetRepositories reducer', () => {
   it('should return the initial state', () => {
@@ -62,5 +65,30 @@ describe('repositorySetRepositories reducer', () => {
       },
       error: 'Unable to process request.',
     })).toEqual(successState);
+  });
+
+  it('sets loading of a repo to true on ENABLE_REPOSITORY_REQUEST', () => {
+    expect(reducer(successState, {
+      type: types.ENABLE_REPOSITORY_REQUEST,
+      repository: {
+        contentId,
+        releasever: '7.2',
+        arch: 'x86_64',
+      },
+    })).toEqual(enablingState);
+  });
+
+  it('sets loading of a repo to false and error to true on ENABLE_REPOSITORY_FAILURE', () => {
+    expect(reducer(successState, {
+      type: types.ENABLE_REPOSITORY_FAILURE,
+      payload: {
+        repository: {
+          contentId,
+          releasever: '7.2',
+          arch: 'x86_64',
+        },
+        error: 'Unable to process request.',
+      },
+    })).toEqual(enablingFailedState);
   });
 });

@@ -81,7 +81,7 @@ class SearchBar extends Component {
         perPage: this.props.enabledRepositories.pagination.perPage,
         search: enabledSearch,
       };
-      this.props.loadEnabledRepos(enabledParams, enabledSearch);
+      this.props.loadEnabledRepos(enabledParams);
     }
   }
 

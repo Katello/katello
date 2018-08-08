@@ -13,7 +13,7 @@ const stringIsInteger = (value) => {
 };
 
 
-const getSubscriptionsErrorMessege = (message) => {
+const getSubscriptionsErrorMessage = (message) => {
   const errorMessageHash = {
     '404 Not Found': __('The subscription cannot be found upstream'),
     '410 Gone': __('The subscription is no longer available'),
@@ -25,7 +25,7 @@ const getCustomMessage = (actionType, message) => {
   let customMessage;
   switch (actionType) {
     case SUBSCRIPTIONS_QUANTITIES_FAILURE:
-      customMessage = getSubscriptionsErrorMessege(message);
+      customMessage = getSubscriptionsErrorMessage(message);
       break;
     default:
       customMessage = null;
@@ -33,9 +33,9 @@ const getCustomMessage = (actionType, message) => {
   return customMessage;
 };
 
-export const getResponseErrorMsgs = ({ data, customErrorMessage, actionType }) => {
+export const getResponseErrorMsgs = ({ data, actionType }) => {
   if (data) {
-    const customMessage = customErrorMessage || getCustomMessage(actionType, data.displayMessage);
+    const customMessage = getCustomMessage(actionType, data.displayMessage);
     const messages =
       customMessage ||
       data.errors ||
@@ -47,16 +47,37 @@ export const getResponseErrorMsgs = ({ data, customErrorMessage, actionType }) =
   return [];
 };
 
-export const apiError = (actionType, result, customErrorMessage) => (dispatch) => {
-  const errorsData = { data: result.response.data, customErrorMessage, actionType };
-  const messages = getResponseErrorMsgs(errorsData);
+
+export const resultWithSuccessFlag = result => (
+  {
+    ...result,
+    success: (result.status < 300),
+  }
+);
+
+export const apiSuccess = (actionType, result, additionalData = {}) => (dispatch) => {
+  dispatch({
+    type: actionType,
+    response: result.data,
+    ...additionalData,
+  });
+
+  return resultWithSuccessFlag(result);
+};
+
+export const apiResponse = (actionType, result, additionalData = {}) => (dispatch) => {
   dispatch({
     type: actionType,
     payload: {
       result,
-      messages,
+      ...additionalData,
     },
   });
+
+  return resultWithSuccessFlag(result);
+};
+
+export const sendErrorNotifications = messages => (dispatch) => {
   messages.forEach((msg) => {
     dispatch(addToast({
       type: 'error',
@@ -64,6 +85,20 @@ export const apiError = (actionType, result, customErrorMessage) => (dispatch) =
       sticky: true,
     }));
   });
+};
+
+export const apiError = (actionType, result, additionalData = {}) => (dispatch) => {
+  const messages = getResponseErrorMsgs(result.response);
+
+  const dataExtenstion = {
+    messages,
+    ...additionalData,
+  };
+
+  apiResponse(actionType, result, dataExtenstion)(dispatch);
+  sendErrorNotifications(messages)(dispatch);
+
+  return resultWithSuccessFlag(result);
 };
 
 export const KEY_CODES = {

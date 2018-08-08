@@ -1,4 +1,4 @@
-import * as types from '../../consts';
+import * as types from '../../../consts';
 
 import {
   initialState,
@@ -7,8 +7,8 @@ import {
   requestSuccessResponse,
   successState,
   errorState,
-} from './sets.fixtures';
-import reducer from './sets';
+} from '../sets.fixtures';
+import reducer from '../sets';
 
 describe('sets reducer', () => {
   it('should return the initial state', () => {

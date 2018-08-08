@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Alert, Spinner } from 'patternfly-react';
 
 import loadRepositorySetRepos from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
-import RepositorySetRepository from './RepositorySetRepository';
-import { yStream } from '../helpers';
+import RepositorySetRepository from './RepositorySetRepository/';
+import { yStream } from './RepositorySetRepositoriesHelpers';
 
 class RepositorySetRepositories extends Component {
   componentDidMount() {
