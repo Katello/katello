@@ -44,11 +44,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkSubscription
                 });
             };
 
-            $scope.contentNutupane = new Nutupane(Subscription, params);
+
+            $scope.contentNutupane = new Nutupane(Subscription, params,
+              'queryPaged', {disableAutoLoad: true});
             $scope.controllerName = 'katello_subscriptions';
             $scope.table = $scope.contentNutupane.table;
             $scope.contentNutupane.setSearchKey('subscriptionSearch');
             $scope.contentNutupane.masterOnly = true;
+            $scope.contentNutupane.load();
             $scope.groupedSubscriptions = {};
 
             $scope.$watch('table.rows', function (rows) {
