@@ -377,6 +377,7 @@ module Katello
       if to_env && self.clones.in_content_views([content_view]).in_environment(to_env).any?
         fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
                   {:to_env => to_env, :cv_name => content_view.name}
+
       end
 
       if self.library_instance?
