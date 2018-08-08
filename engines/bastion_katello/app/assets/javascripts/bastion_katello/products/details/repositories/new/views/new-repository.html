@@ -224,7 +224,7 @@
         </label>
       </div>
 
-      <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'GPG Key' | translate }}" ng-show="repository.content_type === 'yum' || repository.content_type === 'deb'">
         <select id="gpg_key_id"
                 name="gpg_key_id"
                 ng-model="repository.gpg_key_id"

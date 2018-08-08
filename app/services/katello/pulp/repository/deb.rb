@@ -7,7 +7,9 @@ module Katello
             feed: root.url,
             releases: root.deb_releases,
             components: root.deb_components,
-            architectures: root.deb_architectures
+            architectures: root.deb_architectures,
+            gpg_keys: root&.gpg_key&.content,
+            require_signature: root.gpg_key.present?
           }
           importer_class.new(config.merge(master_importer_connection_options))
         end
@@ -17,7 +19,9 @@ module Katello
             feed: external_url,
             releases: root.deb_releases,
             components: root.deb_components,
-            architectures: root.deb_architectures
+            architectures: root.deb_architectures,
+            gpg_keys: root&.gpg_key&.content,
+            require_signature: root.gpg_key.present?
           }
           importer_class.new(config.merge(mirror_importer_connection_options))
         end

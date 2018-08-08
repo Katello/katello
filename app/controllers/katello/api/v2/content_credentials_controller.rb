@@ -69,7 +69,7 @@ module Katello
     param :id, :number, :desc => N_("content credential numeric identifier"), :required => true
     param_group :content_credential
     def update
-      @content_credential.update_attributes!(content_credential_params)
+      sync_task(::Actions::Katello::GpgKey::Update, @content_credential, content_credential_params.to_h)
       respond_for_show(:resource => @content_credential)
     end
 

@@ -141,7 +141,7 @@ module Katello
     delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :to => :root
     delegate :name, :label, :docker_upstream_name, :url, :to => :root
 
-    delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :content_id, :arch, :label, :url, :unprotected,
+    delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :gpg_key, :content_id, :arch, :label, :url, :unprotected,
              :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
              :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
              :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,

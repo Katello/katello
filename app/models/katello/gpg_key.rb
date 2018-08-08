@@ -2,6 +2,7 @@ module Katello
   class GpgKey < Katello::Model
     audited :associations => [:products]
 
+    include ForemanTasks::Concerns::ActionSubject
     include Katello::Authorization::GpgKey
     MAX_CONTENT_LINE_LENGTH = 65
 
