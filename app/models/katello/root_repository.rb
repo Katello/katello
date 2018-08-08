@@ -235,7 +235,7 @@ module Katello
       changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
                                  upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy ignorable_content)
       changeable_attributes += %w(name container_repository_name) if docker?
-      changeable_attributes += %w(deb_releases deb_components deb_architectures) if deb?
+      changeable_attributes += %w(deb_releases deb_components deb_architectures gpg_key_id) if deb?
       changeable_attributes.any? { |key| previous_changes.key?(key) }
     end
 

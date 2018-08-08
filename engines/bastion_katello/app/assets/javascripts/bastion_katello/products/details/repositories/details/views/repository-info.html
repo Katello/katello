@@ -188,7 +188,7 @@
         </dd>
       </span>
 
-      <span ng-if="repository.content_type === 'yum' && !product.redhat">
+      <span ng-if="(repository.content_type === 'yum' && !product.redhat) || repository.content_type === 'deb'">
         <dt translate>GPG Key</dt>
         <dd bst-edit-select="repository.gpg_key.name"
             readonly="product.redhat ||denied('edit_products', product)"
@@ -196,6 +196,8 @@
             options="gpgKeys()"
             on-save="save(repository)">
         </dd>
+      </span>
+      <span ng-if="repository.content_type === 'yum' && !product.redhat">
         <dt translate>SSL CA Cert</dt>
         <dd bst-edit-select="repository.ssl_ca_cert.name"
             readonly="product.redhat ||denied('edit_products', product)"

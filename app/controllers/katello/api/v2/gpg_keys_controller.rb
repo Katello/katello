@@ -61,7 +61,8 @@ module Katello
     param :id, :number, :desc => N_("gpg key numeric identifier"), :required => true
     param_group :gpg_key
     def update
-      @gpg_key.update_attributes!(gpg_key_params)
+      sync_task(::Actions::Katello::GpgKey::Update, @gpg_key, gpg_key_params.to_h)
+
       respond_for_show(:resource => @gpg_key)
     end
 
