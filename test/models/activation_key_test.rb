@@ -165,7 +165,7 @@ module Katello
 
       @dev_key.stubs(:get_key_pools).returns(cp_pools)
 
-      assert_equal pool_one.products, @dev_key.products
+      assert_equal pool_one.products.sort, @dev_key.products.sort
     end
 
     def test_available_subscriptions

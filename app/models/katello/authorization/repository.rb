@@ -20,19 +20,19 @@ module Katello
 
     module ClassMethods
       def readable
-        in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products)).select(:id)
+        in_products = Repository.in_product(Katello::Product.authorized(:view_products)).select(:id)
         in_environments = Repository.where(:environment_id => Katello::KTEnvironment.authorized(:view_lifecycle_environments)).select(:id)
         in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
         in_versions = Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
-        where("#{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments)
+        joins(:root).where("#{Repository.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?) or #{self.table_name}.id in (?)", in_products, in_content_views, in_versions, in_environments)
       end
 
       def deletable
-        where(:product_id => Katello::Product.authorized(:destroy_products))
+        in_product(Katello::Product.authorized(:destroy_products))
       end
 
       def syncable
-        where(:product_id => Katello::Product.authorized(:sync_products))
+        in_product(Katello::Product.authorized(:sync_products))
       end
     end
   end

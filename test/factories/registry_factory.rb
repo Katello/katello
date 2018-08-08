@@ -99,16 +99,32 @@ FactoryBot.define do
   end
 
   factory :registry_repository, class: Katello::Repository do
+    association :root, :factory => :katello_root_repository, :strategy => :build
     sequence(:pulp_id) { |n| "pulp-#{n}" }
-    sequence(:content_id)
-    unprotected true
+
+    transient do
+      product nil
+      content_id nil
+      content_type nil
+      label nil
+      name nil
+      docker_upstream_name nil
+      url nil
+    end
+
+    after(:build) do |repo, evaluator|
+      %w(product content_id content_type label name docker_upstream_name url).each do |attr|
+        repo.root.send("#{attr}=", evaluator.send(attr)) if evaluator.send(attr)
+      end
+      repo.root.unprotected = true
+      repo.root.download_policy = ""
+    end
 
     trait :hq_repo_alpha do
       content_type "docker"
       name "Alpha Image"
       label "alpha_image"
       relative_path "headquarters-hq_product-alpha_image"
-      download_policy ""
       url "http://devel.example.com:5000/alpha"
       docker_upstream_name "registry/alpha"
     end
@@ -117,26 +133,23 @@ FactoryBot.define do
       name "Beta Image"
       label "beta_image"
       relative_path "headquarters-hq_product-beta_image"
-      download_policy ""
       url "http://devel.example.com:5000/beta"
       docker_upstream_name "registry/beta"
     end
 
     trait :fo_repo_alpha do
       content_type "docker"
-      name "Alpha Image"
-      label "alpha_image"
+      name "Alpha Image2"
+      label "alpha_image2"
       relative_path "fieldoffice-fo_product-alpha_image"
-      download_policy ""
       url "http://devel.example.com:5000/alpha"
       docker_upstream_name "registry/alpha"
     end
     trait :fo_repo_beta do
       content_type "docker"
-      name "Beta Image"
-      label "beta_image"
+      name "Beta Image2"
+      label "beta_image2"
       relative_path "fieldoffice-fo_product-beta_image"
-      download_policy ""
       url "http://devel.example.com:5000/beta"
       docker_upstream_name "registry/beta"
     end

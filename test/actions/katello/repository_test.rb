@@ -81,7 +81,7 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
 
-      plan_action action, repository, :unprotected => true
+      plan_action action, repository.root, :unprotected => true
       assert_action_planed_with action, pulp_action_class, repository
       assert_action_planed action, candlepin_action_class
     end
@@ -98,6 +98,11 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(in_use_repository)
       in_use_repository.stubs(:assert_deletable).returns(true)
+      in_use_repository.stubs(:destroyable?).returns(true)
+      in_use_repository.stubs(:pulp_scratchpad_checksum_type).returns(nil)
+      clone = in_use_repository.build_clone(:environment => katello_environments(:dev), :content_view => katello_content_views(:library_dev_view))
+      clone.save!
+
       action.expects(:plan_self)
       plan_action action, in_use_repository
       assert_action_planed_with action, pulp_action_class, pulp_id: in_use_repository.pulp_id
@@ -111,7 +116,7 @@ module ::Actions::Katello::Repository
       action.expects(:plan_self)
       plan_action action, unpublished_repository
 
-      assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository
+      assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository.root
     end
 
     it 'plan fails if repository is not deletable' do
@@ -320,7 +325,7 @@ module ::Actions::Katello::Repository
 
     it 'skips applicability if non-yum' do
       action = create_action action_class
-      docker_repository.url = 'http://foo.com/foo'
+      docker_repository.root.url = 'http://foo.com/foo'
       action.stubs(:action_subject).with(docker_repository)
       plan_action action, docker_repository
 
@@ -445,9 +450,7 @@ module ::Actions::Katello::Repository
       clone = mock
       action.expects(:find_or_build_environment_clone).returns(clone)
       clone.expects(:new_record?).returns(false)
-      clone.expects(:copy_library_instance_attributes)
       clone.expects(:yum?).returns(false)
-      clone.expects(:save!)
       ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
 
       plan_action(action, source_repo, env)
@@ -483,9 +486,7 @@ module ::Actions::Katello::Repository
       clone = mock
       action.expects(:find_or_build_environment_clone).returns(clone)
       clone.expects(:new_record?).returns(false)
-      clone.expects(:copy_library_instance_attributes)
       clone.expects(:yum?).returns(false)
-      clone.expects(:save!)
       ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
 
       plan_action(action, source_repo, env)

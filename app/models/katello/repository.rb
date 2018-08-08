@@ -1,17 +1,12 @@
 module Katello
   # rubocop:disable Metrics/ClassLength
   class Repository < Katello::Model
-    audited
     #pulp uses pulp id to sync with 'yum_distributor' on the end
     PULP_ID_MAX_LENGTH = 220
 
-    serialize :docker_tags_whitelist
-
-    validates_lengths_from_database :except => [:label]
+    validates_lengths_from_database
     before_destroy :assert_deletable
     before_create :downcase_pulp_id
-    before_validation :update_ostree_upstream_sync_policy
-    serialize :ignorable_content
 
     include ForemanTasks::Concerns::ActionSubject
     include Glue::Candlepin::Repository
@@ -19,8 +14,6 @@ module Katello
 
     include Glue if (SETTINGS[:katello][:use_cp] || SETTINGS[:katello][:use_pulp])
     include Authorization::Repository
-
-    include Ext::LabelFromName
     include Katello::Engine.routes.url_helpers
 
     include ERB::Util
@@ -32,28 +25,18 @@ module Katello
     DOCKER_TYPE = 'docker'.freeze
     OSTREE_TYPE = 'ostree'.freeze
 
-    IGNORABLE_CONTENT_UNIT_TYPES = %w(rpm drpm srpm distribution erratum).freeze
-    CHECKSUM_TYPES = %w(sha1 sha256).freeze
-    SUBSCRIBABLE_TYPES = [YUM_TYPE, OSTREE_TYPE, DEB_TYPE].freeze
-
-    OSTREE_UPSTREAM_SYNC_POLICY_LATEST = "latest".freeze
-    OSTREE_UPSTREAM_SYNC_POLICY_ALL = "all".freeze
-    OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM = "custom".freeze
-    OSTREE_UPSTREAM_SYNC_POLICIES = [OSTREE_UPSTREAM_SYNC_POLICY_LATEST, OSTREE_UPSTREAM_SYNC_POLICY_ALL, OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM].freeze
-
     define_model_callbacks :sync, :only => :after
 
+    belongs_to :root, :inverse_of => :repositories, :class_name => "Katello::RootRepository"
     belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
-    belongs_to :product, :inverse_of => :repositories, :class_name => "Katello::Product"
-    belongs_to :gpg_key, :inverse_of => :repositories, :class_name => "Katello::GpgKey"
-    belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_repos
-    belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_repos
-    belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_repos
-    belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
-    has_many :library_instances_inverse, # TODO: what is the proper name?
+    belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse, :foreign_key => :library_instance_id
+    has_many :library_instances_inverse,
              :class_name  => 'Katello::Repository',
              :dependent   => :restrict_with_exception,
              :foreign_key => :library_instance_id
+
+    has_one :product, :through => :root
+
     has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
                                          :dependent => :destroy, :inverse_of => :repository
     has_many :content_views, :through => :content_view_repositories
@@ -111,65 +94,33 @@ module Katello
                                       :foreign_key => :content_view_filter_id
     belongs_to :content_view_version, :inverse_of => :repositories, :class_name => "Katello::ContentViewVersion"
 
-    validates :product_id, :presence => true
-    validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
-    validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
-
-    validates_with Validators::ContainerImageNameValidator, :attributes => :docker_upstream_name, :allow_blank => true, :if => :docker?
     validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
+    validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :container_repository_name, :uniqueness => true, :if => :docker?
-
-    validates :ostree_upstream_sync_policy, :inclusion => {:in => OSTREE_UPSTREAM_SYNC_POLICIES, :allow_blank => true}, :if => :ostree?
-    validates :ostree_upstream_sync_depth, :presence => true, :numericality => { :only_integer => true },
-      :if => proc { |r| r.ostree? && r.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM }
-    #validates :content_id, :presence => true #add back after fixing add_repo orchestration
-    validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-    validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-    validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :label
-    validates_with Validators::RepositoryUniqueAttributeValidator, :attributes => :name
-    validates_with Validators::KatelloUrlFormatValidator,
-      :attributes => :url, :nil_allowed => proc { |repo| repo.custom? }, :field_name => :url,
-      :if => proc { |repo| repo.in_default_view? }
-    validates :content_type, :inclusion => {
-      :in => ->(_) { Katello::RepositoryTypeManager.repository_types.keys },
-      :allow_blank => false,
-      :message => ->(_, _) { _("must be one of the following: %s") % Katello::RepositoryTypeManager.repository_types.keys.join(', ') }
-    }
-    validates :download_policy, inclusion: {
-      :in => ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES,
-      :message => _("must be one of the following: %s") % ::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.join(', ')
-    }, if: :yum?
-    validate :ensure_no_download_policy, if: ->(repo) { !repo.yum? }
-    validate :ensure_no_ostree_upstream_sync_policy, if: ->(repo) { !repo.ostree? }
-    validate :ensure_valid_docker_attributes, :if => :docker?
-    validate :ensure_docker_repo_unprotected, :if => :docker?
-    validate :ensure_has_url_for_ostree, :if => :ostree?
-    validate :ensure_ostree_repo_protected, :if => :ostree?
-    validate :ensure_compatible_download_policy, :if => :yum?
-    validate :ensure_valid_ignorable_content
-    validate :ensure_valid_upstream_authorization
 
     before_validation :set_pulp_id
     before_validation :set_container_repository_name, :if => :docker?
 
-    scope :has_url, -> { where('url IS NOT NULL') }
+    scope :has_url, -> { joins(:root).where.not("#{RootRepository.table_name}.url" => nil) }
+    scope :on_demand, -> { joins(:root).where("#{RootRepository.table_name}.download_policy" => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND) }
     scope :in_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true) }
     scope :in_non_default_view, -> { joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => false) }
-    scope :deb_type, -> { where(:content_type => DEB_TYPE) }
-    scope :yum_type, -> { where(:content_type => YUM_TYPE) }
-    scope :file_type, -> { where(:content_type => FILE_TYPE) }
-    scope :puppet_type, -> { where(:content_type => PUPPET_TYPE) }
-    scope :docker_type, -> { where(:content_type => DOCKER_TYPE) }
-    scope :ostree_type, -> { where(:content_type => OSTREE_TYPE) }
-    scope :non_puppet, -> { where("content_type != ?", PUPPET_TYPE) }
+    scope :deb_type, -> { with_type(DEB_TYPE) }
+    scope :yum_type, -> { with_type(YUM_TYPE) }
+    scope :file_type, -> { with_type(FILE_TYPE) }
+    scope :puppet_type, -> { with_type(PUPPET_TYPE) }
+    scope :docker_type, -> { with_type(DOCKER_TYPE) }
+    scope :ostree_type, -> { with_type(OSTREE_TYPE) }
+    scope :non_puppet, -> { with_type(RepositoryTypeManager.repository_types.keys - [PUPPET_TYPE]) }
     scope :non_archived, -> { where('environment_id is not NULL') }
     scope :archived, -> { where('environment_id is NULL') }
-    scope :subscribable, -> { where(content_type: SUBSCRIBABLE_TYPES) }
     scope :in_published_environments, -> { in_content_views(Katello::ContentView.non_default).where.not(:environment_id => nil) }
+    scope :order_by_root, ->(attr) { joins(:root).order("#{Katello::RootRepository.table_name}.#{attr}") }
 
-    scoped_search :on => :name, :complete_value => true
+    scoped_search :on => :name, :relation => :root, :complete_value => true
     scoped_search :rename => :product, :on => :name, :relation => :product, :complete_value => true
-    scoped_search :on => :content_type, :complete_value => -> do
+    scoped_search :rename => :product_id, :on => :id, :relation => :product
+    scoped_search :on => :content_type, :relation => :root, :complete_value => -> do
       Katello::RepositoryTypeManager.repository_types.keys.each_with_object({}) { |value, hash| hash[value.to_sym] = value }
     end
     scoped_search :on => :content_view_id, :relation => :content_view_repositories, :validator => ScopedSearch::Validators::INTEGER, :only_explicit => true
@@ -179,10 +130,25 @@ module Katello
     scoped_search :on => :distribution_variant, :complete_value => true
     scoped_search :on => :distribution_bootable, :complete_value => true
     scoped_search :on => :distribution_uuid, :complete_value => true
-    scoped_search :on => :ignore_global_proxy, :complete_value => true
+    scoped_search :on => :ignore_global_proxy, :relation => :root, :complete_value => true
     scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
     scoped_search :on => :container_repository_name, :complete_value => true
-    scoped_search :on => :description, :only_explicit => true
+    scoped_search :on => :description, :relation => :root, :only_explicit => true
+
+    delegate :product, :redhat?, :custom?, :to => :root
+    delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :to => :root
+    delegate :name, :label, :docker_upstream_name, :url, :to => :root
+
+    delegate :name, :created_at, :updated_at, :major, :minor, :gpg_key_id, :content_id, :arch, :label, :url, :unprotected,
+             :content_type, :product_id, :checksum_type, :docker_upstream_name, :mirror_on_sync, :"mirror_on_sync?",
+             :download_policy, :verify_ssl_on_sync, :"verify_ssl_on_sync?", :upstream_username, :upstream_password,
+             :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :deb_releases, :deb_components, :deb_architectures,
+             :ignore_global_proxy, :ssl_ca_cert_id, :ssl_ca_cert, :ssl_client_cert, :ssl_client_cert_id, :ssl_client_key_id,
+             :ssl_client_key, :ignorable_content, :description, :docker_tags_whitelist, :to => :root
+
+    def self.with_type(content_type)
+      joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)
+    end
 
     def organization
       if self.environment
@@ -215,6 +181,10 @@ module Katello
       self.content_view_version.content_view
     end
 
+    def library_instance?
+      self.content_view.default?
+    end
+
     def self.undisplayable_types
       ret = [::Katello::Repository::CANDLEPIN_DOCKER_TYPE]
 
@@ -234,7 +204,7 @@ module Katello
     end
 
     def self.in_product(prod)
-      where(product_id: prod)
+      where(:root_id => RootRepository.where(product_id: prod))
     end
 
     def self.in_content_views(views)
@@ -260,37 +230,18 @@ module Katello
     end
 
     def on_demand?
-      download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
-    end
-
-    def self.in_environments_products(env_ids, product_ids)
-      in_environment(env_ids).in_product(product_ids)
-    end
-
-    def other_repos_with_same_product_and_content
-      Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id)
-          .where("#{self.class.table_name}.id != #{self.id}")
-    end
-
-    def other_repos_with_same_content
-      Repository.where(:content_id => self.content_id).where("#{self.class.table_name}.id != #{self.id}")
+      root.download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
     end
 
     def yum_gpg_key_url
       # if the repo has a gpg key return a url to access it
-      if (self.gpg_key && self.gpg_key.content.present?)
+      if self.root.gpg_key.try(:content).present?
         "../..#{gpg_key_content_api_repository_url(self, :only_path => true)}"
       end
     end
 
     def product_type
       redhat? ? "redhat" : "custom"
-    end
-
-    delegate :redhat?, to: :product
-
-    def custom?
-      !redhat?
     end
 
     def empty_errata
@@ -315,18 +266,16 @@ module Katello
       end
     end
 
-    def library_instance?
-      library_instance.nil?
+    def clones
+      self.root.repositories.where.not(:id => library_instance_id || id)
     end
 
-    def clones
-      lib_id = self.library_instance_id || self.id
-      Repository.where(:library_instance_id => lib_id)
+    def all_instances
+      self.root.repositories
     end
 
     def group
-      library_repo = library_instance? ? self : library_instance
-      clones.to_a << library_repo
+      all_instances
     end
 
     #is the repo cloned in the specified environment
@@ -335,8 +284,8 @@ module Katello
     end
 
     def promoted?
-      if environment && environment.library? && Repository.where(:library_instance_id => self.id).any?
-        true
+      if environment && environment.library?
+        self.clones.any?
       else
         false
       end
@@ -345,26 +294,12 @@ module Katello
     def get_clone(env)
       if self.content_view.default
         # this repo is part of a default content view
-        lib_id = self.library_instance_id || self.id
-        Repository.in_environment(env).where(:library_instance_id => lib_id).
+        Repository.in_environment(env).clones.
             joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true).first
       else
         # this repo is part of a content view that was published from a user created view
         self.content_view.get_repo_clone(env, self).first
       end
-    end
-
-    def gpg_key_name=(name)
-      if name.blank?
-        self.gpg_key = nil
-      else
-        self.gpg_key = GpgKey.readable.find_by!(:name => name)
-      end
-    end
-
-    def copy_library_instance_attributes
-      self.unprotected = library_instance.unprotected
-      self.checksum_type = library_instance.checksum_type
     end
 
     # Returns true if the pulp_task_id was triggered by the last synchronization
@@ -378,41 +313,29 @@ module Katello
       return task && task.main_action.pulp_task_id == pulp_task_id
     end
 
-    def as_json(*args)
-      ret = super
-      ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
-      ret["package_count"] = package_count rescue nil
-      ret["last_sync"] = last_sync rescue nil
-      ret["puppet_module_count"] = self.puppet_modules.count rescue nil
-      ret
-    end
+    def generate_repo_path
+      _org, _content, content_path = (self.library_instance || self).relative_path.split("/", 3)
 
-    def self.clone_repo_path(options)
-      repo = options[:repository]
-      repo_lib = repo.library_instance ? repo.library_instance : repo
-      org, _, content_path = repo_lib.relative_path.split("/", 3)
-      if options[:environment]
-        cve = ContentViewEnvironment.where(:environment_id => options[:environment],
-                                           :content_view_id => options[:content_view]).first
-        "#{org}/#{cve.label}/#{content_path}"
+      if self.environment
+        cve = ContentViewEnvironment.where(:environment_id => self.environment,
+                                           :content_view_id => self.content_view).first
+        "#{organization.label}/#{cve.label}/#{content_path}"
       else
-        "#{org}/#{ContentView::CONTENT_DIR}/#{options[:content_view].label}/#{options[:version].version}/#{content_path}"
+        "#{organization.label}/#{ContentView::CONTENT_DIR}/#{self.content_view.label}/#{self.content_view_version.version}/#{content_path}"
       end
     end
 
-    def self.clone_docker_repo_path(options)
-      repo = options[:repository]
-      org = repo.organization.label.downcase
-      if options[:environment]
-        cve = ContentViewEnvironment.where(:environment_id => options[:environment],
-                                           :content_view_id => options[:content_view]).first
-        view = repo.content_view.label
-        product = repo.product.label
+    def generate_docker_repo_path
+      org = self.organization.label.downcase
+      if self.environment
+        cve = ContentViewEnvironment.where(:environment_id => self.environment,
+                                           :content_view_id => self.content_view).first
+        view = self.content_view.label
+        product = self.product.label
         env = cve.label.split('/').first
-        "#{org}-#{env.downcase}-#{view}-#{product}-#{repo.label}"
+        "#{org}-#{env.downcase}-#{view}-#{product}-#{self.root.label}"
       else
-        content_path = repo.relative_path.gsub("#{org}-", '')
-        "#{org}-#{options[:content_view].label}-#{options[:version].version}-#{content_path}"
+        "#{org}-#{self.content_view.label}-#{self.content_view_version.version}-#{self.root.product.label}-#{self.root.label}"
       end
     end
 
@@ -434,13 +357,13 @@ module Katello
     end
 
     # TODO: break up method
-    # rubocop:disable MethodLength
     def build_clone(options)
       to_env       = options[:environment]
       version      = options[:version]
       content_view = options[:content_view] || to_env.default_content_view
       to_version   = version || content_view.version(to_env)
-      library      = self.library_instance ? self.library_instance : self
+
+      fail _("Cannot clone into the Default Content View") if content_view.default?
 
       if to_env && version
         fail "Cannot clone into both an environment and a content view version archive"
@@ -451,52 +374,26 @@ module Katello
                   {:view => content_view.name, :env => to_env.name}
       end
 
-      if content_view.default?
-        if to_env.prior != self.environment
-          fail _("Cannot clone repository from %{from_env} to %{to_env}. They are not sequential.") %
-                    {:from_env => self.environment.name, :to_env => to_env.name}
-        end
-        if self.cloned_in?(to_env)
-          fail _("Repository has already been promoted to %{to_env}") %
-                  {:to_env => to_env}
-        end
-      else
-        if to_env &&
-            content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
-          fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
-                    {:to_env => to_env, :cv_name => content_view.name}
-        end
+      if to_env && self.clones.in_content_views([content_view]).in_environment(to_env).any?
+        fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
+                  {:to_env => to_env, :cv_name => content_view.name}
       end
 
-      Repository.new(:environment => to_env,
-                     :product => self.product,
-                     :library_instance => library,
-                     :label => self.label,
-                     :name => self.name,
-                     :arch => self.arch,
-                     :major => self.major,
-                     :minor => self.minor,
-                     :content_id => self.content_id,
+      if self.yum?
+        if self.library_instance?
+          checksum_type = root.checksum_type || pulp_scratchpad_checksum_type
+        else
+          checksum_type = self.saved_checksum_type
+        end
+      end
+      clone = Repository.new(:environment => to_env,
+                     :library_instance => self.library_instance || self,
+                     :root => self.root,
                      :content_view_version => to_version,
-                     :content_type => self.content_type,
-                     :checksum_type => checksum_type || source_repo_checksum_type,
-                     :docker_upstream_name => self.docker_upstream_name,
-                     :docker_tags_whitelist => self.docker_tags_whitelist,
-                     :download_policy => download_policy,
-                     :unprotected => self.unprotected) do |clone|
-        options = {
-          :repository => self,
-          :environment => to_env,
-          :content_view => content_view,
-          :version => version
-        }
+                     :saved_checksum_type => checksum_type)
 
-        clone.relative_path = if clone.docker?
-                                Repository.clone_docker_repo_path(options)
-                              else
-                                Repository.clone_repo_path(options)
-                              end
-      end
+      clone.relative_path = clone.docker? ? clone.generate_docker_repo_path : clone.generate_repo_path
+      clone
     end
 
     def cancel_dynflow_sync
@@ -516,25 +413,17 @@ module Katello
                                 for_resource(self).order(:started_at).last
     end
 
-    def create_clone(options)
-      clone = build_clone(options)
-      clone.save!
-      return clone
-    end
-
     # returns other instances of this repo with the same library
     # equivalent of repo
     def environmental_instances(view)
-      repo = self.library_instance || self
-      search = Repository.non_archived.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s" % [repo.id, repo.id])
-      search.in_content_views([view])
+      self.all_instances.non_archived.in_content_views([view])
     end
 
     def archived_instance
       if self.environment_id.nil? || self.library_instance_id.nil?
         self
       else
-        self.content_view_version.archived_repos.where(:library_instance_id => self.library_instance_id).first
+        self.content_view_version.archived_repos.where(:root_id => self.root_id).first
       end
     end
 
@@ -543,7 +432,7 @@ module Katello
     end
 
     def url?
-      url.present?
+      root.url.present?
     end
 
     def name_conflicts
@@ -590,16 +479,6 @@ module Katello
 
     def ostree_branch_names
       self.ostree_branches.map(&:name)
-    end
-
-    def compute_ostree_upstream_sync_depth
-      if ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM
-        ostree_upstream_sync_depth
-      elsif ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_ALL
-        -1
-      else
-        0
-      end
     end
 
     def ostree_capsule_sync_depth
@@ -756,7 +635,7 @@ module Katello
     def component_source_repositories
       #find other copies of this repositories, in the CV version's components, that are in the 'archive'
       Katello::Repository.where(:content_view_version_id => self.content_view_version.components, :environment_id => nil,
-                                :library_instance_id => self.library_instance_id)
+                                :root_id => self.root_id)
     end
 
     def self.linked_repositories
@@ -771,12 +650,13 @@ module Katello
       value = value == 'true'
       value = !value if operator == '<>'
 
-      product_ids = Katello::Product.redhat.pluck(:id)
+      product_ids = Katello::Product.redhat.select(:id)
+      root_ids = Katello::RootRepository.where(:product_id => product_ids).pluck(:id)
       if product_ids.empty?
         {:conditions => "1=0"}
       else
         operator = value ? 'IN' : 'NOT IN'
-        {:conditions => "#{Katello::Repository.table_name}.product_id #{operator} (#{product_ids.join(',')})"}
+        {:conditions => "#{Katello::Repository.table_name}.root_id #{operator} (#{root_ids.join(',')})"}
       end
     end
 
@@ -803,6 +683,23 @@ module Katello
 
     def self.clean_container_name(name)
       name.gsub(/[^-\/\w]/, "_").gsub(/_{3,}/, "_").gsub(/-_|^_+|_+$/, "").downcase.strip
+    end
+
+    def custom_repo_path
+      return custom_docker_repo_path if docker?
+      if [environment, product, root.label].any?(&:nil?)
+        return nil # can't generate valid path
+      end
+      prefix = [environment.organization.label, environment.label].map { |x| x.gsub(/[^-\w]/, "_") }.join("/")
+      prefix + root.custom_content_path
+    end
+
+    def custom_docker_repo_path
+      if [environment, product, root.label].any?(&:nil?)
+        return nil # can't generate valid path
+      end
+      parts = [environment.organization.label, product.label, root.label]
+      parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("-").downcase
     end
 
     protected
@@ -833,44 +730,6 @@ module Katello
       end
     end
 
-    def ensure_compatible_download_policy
-      if library_instance? && !url.blank? && URI(url).scheme == 'file' &&
-          [::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND, ::Runcible::Models::YumImporter::DOWNLOAD_BACKGROUND].include?(download_policy)
-        errors.add(:download_policy, N_("Cannot sync file:// repositories with On Demand or Background Download Policies"))
-      end
-    end
-
-    def ensure_valid_docker_attributes
-      if library_instance? && (!url.blank? && docker_upstream_name.blank?)
-        errors.add(:docker_upstream_name, N_("cannot be blank when Repository URL is provided."))
-        errors.add(:base, N_("Upstream Name cannot be blank when Repository URL is provided."))
-      end
-    end
-
-    def ensure_docker_repo_unprotected
-      unless unprotected
-        errors.add(:base, N_("Container Image Repositories are not protected at this time. " \
-                             "They need to be published via http to be available to containers."))
-      end
-    end
-
-    def ensure_no_download_policy
-      if !yum? && download_policy.present?
-        errors.add(:download_policy, N_("cannot be set for non-yum repositories."))
-      end
-    end
-
-    def ensure_has_url_for_ostree
-      return true if url.present? || library_instance_id
-      errors.add(:url, N_("cannot be blank. RPM OSTree Repository URL required for syncing from the upstream."))
-    end
-
-    def ensure_ostree_repo_protected
-      if unprotected
-        errors.add(:base, N_("OSTree Repositories cannot be unprotected."))
-      end
-    end
-
     def remove_docker_content(manifests)
       destroyable_manifests = manifests.select do |manifest|
         manifest.repositories.empty? || manifest.docker_manifest_lists.empty?
@@ -881,46 +740,6 @@ module Katello
         manifest.destroy
       end
       DockerMetaTag.cleanup_tags
-    end
-
-    def update_ostree_upstream_sync_policy
-      return unless ostree?
-      if self.ostree_upstream_sync_policy.blank?
-        self.ostree_upstream_sync_policy = OSTREE_UPSTREAM_SYNC_POLICY_LATEST
-      end
-
-      if self.ostree_upstream_sync_policy_changed? &&
-        previous_changes[:ostree_upstream_sync_policy].present?
-        self.ostree_upstream_sync_depth = nil unless self.ostree_upstream_sync_policy == OSTREE_UPSTREAM_SYNC_POLICY_CUSTOM
-      end
-    end
-
-    def ensure_no_ostree_upstream_sync_policy
-      if !ostree? && ostree_upstream_sync_policy.present?
-        errors.add(:ostree_upstream_sync_policy, N_("cannot be set for non-ostree repositories."))
-      end
-    end
-
-    def ensure_valid_ignorable_content
-      return if ignorable_content.blank?
-      if !yum?
-        errors.add(:ignorable_content, N_("Ignorable content can be only set for Yum repositories."))
-      elsif !ignorable_content.is_a?(Array)
-        errors.add(:ignorable_content, N_("Invalid value specified for ignorable content."))
-      elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
-        errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
-      end
-    end
-
-    def ensure_valid_upstream_authorization
-      return if (self.upstream_username.blank? && self.upstream_password.blank?)
-      if redhat?
-        errors.add(:base, N_("Upstream username and password may only be set on custom repositories."))
-      elsif self.upstream_username.blank?
-        errors.add(:base, N_("Upstream password requires upstream username be set."))
-      elsif !self.upstream_password
-        errors.add(:base, N_("Upstream username requires upstream password be set.")) # requirement of pulp
-      end
     end
 
     class Jail < ::Safemode::Jail

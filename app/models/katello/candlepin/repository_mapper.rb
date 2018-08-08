@@ -10,50 +10,37 @@ module Katello
       end
 
       def find_repository
-        ::Katello::Repository.where(product_id: product.id,
+        root = ::Katello::RootRepository.where(product_id: product.id,
                                     content_id: content.cp_content_id,
-                                    environment_id: product.organization.library.id,
                                     minor: minor,
                                     arch: arch).first
+        if root
+          Katello::Repository.where(root: root,
+                                    environment_id: product.organization.library.id).first
+
+        end
       end
 
       def build_repository
-        certificate_and_key = get_certificate_and_key(product, @content.modified_product_ids(product.organization))
-
-        repository = Repository.new(
-          :environment => product.organization.library,
+        root = RootRepository.new(
           :product => product,
           :content_id => content.cp_content_id,
           :arch => arch,
           :major => major,
           :minor => minor,
-          :relative_path => relative_path,
           :name => name,
           :label => label,
           :url => feed_url,
-          :feed_ca => ::Katello::Repository.feed_ca_cert(feed_url),
-          :feed_cert => certificate_and_key[:cert],
-          :feed_key => certificate_and_key[:key],
           :content_type => katello_content_type,
-          :preserve_metadata => true, #preserve repo metadata when importing from cp
           :unprotected => unprotected?,
           :download_policy => download_policy,
-          :mirror_on_sync => true,
-          :content_view_version => product.organization.
-                                  library.default_content_view_version
+          :mirror_on_sync => true
         )
 
-        repository
-      end
-
-      def get_certificate_and_key(product, modified_product_ids = [])
-        modified_product_ids.each do |modified_product_id|
-          modified_product = Product.where(:cp_id => modified_product_id).first
-          product = modified_product if modified_product &&
-                                        modified_product.certificate &&
-                                        modified_product.key
-        end
-        {:cert => product.certificate, :key => product.key}
+        Repository.new(:root => root,
+                       :relative_path => relative_path,
+                       :environment => product.organization.library,
+                       :content_view_version => product.organization.library.default_content_view_version)
       end
 
       def validate!

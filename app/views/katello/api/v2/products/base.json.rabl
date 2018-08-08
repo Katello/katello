@@ -22,5 +22,5 @@ child :sync_plan do
 end
 
 node :repository_count do |product|
-  product.library_repositories.count
+  product.root_repositories.count
 end

@@ -2,6 +2,8 @@ module Katello
   class Api::V2::RepositoriesController < Api::V2::ApiController # rubocop:disable Metrics/ClassLength
     include Katello::Concerns::FilteredAutoCompleteSearch
 
+    wrap_parameters :repository, :include => RootRepository.attribute_names
+
     CONTENT_CREDENTIAL_GPG_KEY_TYPE = "gpg_key".freeze
     CONTENT_CREDENTIAL_SSL_CA_CERT_TYPE = "ssl_ca_cert".freeze
     CONTENT_CREDENTIAL_SSL_CLIENT_CERT_TYPE = "ssl_client_cert".freeze
@@ -45,13 +47,13 @@ module Katello
       param :verify_ssl_on_sync, :bool, :desc => N_("if true, Katello will verify the upstream url's SSL certifcates are signed by a trusted CA")
       param :upstream_username, String, :desc => N_("Username of the upstream repository user used for authentication")
       param :upstream_password, String, :desc => N_("Password of the upstream repository user used for authentication")
-      param :ostree_upstream_sync_policy, ::Katello::Repository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
+      param :ostree_upstream_sync_policy, ::Katello::RootRepository::OSTREE_UPSTREAM_SYNC_POLICIES, :desc => N_("policies for syncing upstream ostree repositories")
       param :ostree_upstream_sync_depth, :number, :desc => N_("if a custom sync policy is chosen for ostree repositories then a 'depth' value must be provided")
       param :deb_releases, String, :desc => N_("comma separated list of releases to be synched from deb-archive")
       param :deb_components, String, :desc => N_("comma separated list of repo components to be synched from deb-archive")
       param :deb_architectures, String, :desc => N_("comma separated list of architectures to be synched from deb-archive")
       param :ignore_global_proxy, :bool, :desc => N_("if true, will ignore the globally configured proxy when syncing")
-      param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % Repository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
+      param :ignorable_content, Array, :desc => N_("List of content units to ignore while syncing a yum repository. Must be subset of %s") % RootRepository::IGNORABLE_CONTENT_UNIT_TYPES.join(",")
     end
 
     def_param_group :repo_create do
@@ -85,7 +87,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       base_args = [index_relation.distinct, :name, :asc]
-      options = {:includes => [:gpg_key, :product, :environment]}
+      options = {:includes => [:environment, {:root => [:gpg_key, :product]}]}
 
       respond_to do |format|
         format.csv do
@@ -111,8 +113,8 @@ module Katello
     def index_relation
       query = Repository.readable
       query = index_relation_product(query)
-      query = query.where(:content_type => params[:content_type]) if params[:content_type]
-      query = query.where(:name => params[:name]) if params[:name]
+      query = query.with_type(params[:content_type]) if params[:content_type]
+      query = query.where(:root_id => RootRepository.where(:name => params[:name])) if params[:name]
       query = index_relation_content_unit(query)
       query = index_relation_content_view(query)
       query = index_relation_environment(query)
@@ -120,15 +122,15 @@ module Katello
     end
 
     def index_relation_product(query)
-      query = query.joins(:product).where("#{Product.table_name}.organization_id" => @organization) if @organization
-      query = query.where(:product_id => @product.id) if @product
+      query = query.joins(:root => :product).where("#{Product.table_name}.organization_id" => @organization) if @organization
+      query = query.joins(:root).where("#{RootRepository.table_name}.product_id" => @product.id) if @product
       query
     end
 
     def index_relation_content_view(query)
       if params[:content_view_version_id]
         query = query.where(:content_view_version_id => params[:content_view_version_id])
-        query = Repository.where(:id => query.map(&:library_instance_id)) if params[:library]
+        query = Katello::Repository.where(:id => query.select(:library_instance_id)) if params[:library]
       elsif params[:content_view_id]
         query = filter_by_content_view(query, params[:content_view_id], params[:environment_id], params[:available_for] == 'content_view')
       end
@@ -195,7 +197,7 @@ module Katello
     param_group :repo_create
     param_group :repo
     def create
-      repo_params = repository_params
+      repo_params = filtered_repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
@@ -215,10 +217,10 @@ module Katello
       repo_params[:ssl_client_cert] = ssl_client_cert
       repo_params[:ssl_client_key] = ssl_client_key
 
-      repository = construct_repo_from_params(repo_params)
-      sync_task(::Actions::Katello::Repository::Create, repository, false, true)
-      repository = Repository.find(repository.id)
-      respond_for_create(:resource => repository)
+      root = construct_repo_from_params(repo_params)
+      sync_task(::Actions::Katello::Repository::CreateRoot, root)
+      @repository = root.reload.library_instance
+      respond_for_create(:resource => @repository)
     end
 
     api :GET, "/repositories/repository_types", N_("Show the available repository types")
@@ -306,7 +308,7 @@ module Katello
     param_group :repo
     def update
       repo_params = repository_params
-      sync_task(::Actions::Katello::Repository::Update, @repository, repo_params)
+      sync_task(::Actions::Katello::Repository::Update, @repository.root, repo_params)
       respond_for_show(:resource => @repository)
     end
 
@@ -414,8 +416,8 @@ module Katello
     api :GET, "/repositories/:id/gpg_key_content", N_("Return the content of a repo gpg key, used directly by yum")
     param :id, :number, :required => true
     def gpg_key_content
-      if @repository.gpg_key && @repository.gpg_key.content.present?
-        render(:plain => @repository.gpg_key.content, :layout => false)
+      if @repository.root.gpg_key && @repository.root.gpg_key.content.present?
+        render(:plain => @repository.root.gpg_key.content, :layout => false)
       else
         head(404)
       end
@@ -449,6 +451,14 @@ module Katello
       end
     end
 
+    def filtered_repository_params
+      params = repository_params
+      ::Katello::RootRepository::CONTENT_ATTRIBUTE_RESTRICTIONS.each do |attribute, types|
+        params.delete(attribute) unless types.include?(params[:content_type])
+      end
+      params
+    end
+
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
@@ -461,7 +471,7 @@ module Katello
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
                  :checksum_type, :docker_upstream_name]
       end
-      params.require(:repository).permit(*keys).to_h
+      params.require(:repository).permit(*keys).to_h.with_indifferent_access
     end
 
     def get_content_credential(repo_params, content_type)
@@ -476,29 +486,29 @@ module Katello
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def construct_repo_from_params(repo_params)
-      repository = @product.add_repo(Hash[repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
+      root = @product.add_repo(repo_params.slice(:label, :name, :description, :url, :content_type, :arch, :unprotected,
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
-                                                            :checksum_type, :download_policy).to_h.map { |k, v| [k.to_sym, v] }])
-      repository.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
-      repository.docker_tags_whitelist = repo_params[:docker_tags_whitelist] if repo_params[:docker_tags_whitelist]
-      repository.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
-      repository.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
-      repository.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
-      repository.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
-      repository.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
-      repository.ignorable_content = repo_params[:ignorable_content] if repository.yum? && repo_params.key?(:ignorable_content)
+                                                            :checksum_type, :download_policy).to_h.with_indifferent_access)
+      root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
+      root.docker_tags_whitelist = repo_params[:docker_tags_whitelist] if repo_params[:docker_tags_whitelist]
+      root.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
+      root.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
+      root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)
+      root.upstream_username = repo_params[:upstream_username] if repo_params.key?(:upstream_username)
+      root.upstream_password = repo_params[:upstream_password] if repo_params.key?(:upstream_password)
+      root.ignorable_content = repo_params[:ignorable_content] if root.yum? && repo_params.key?(:ignorable_content)
 
-      if repository.ostree?
-        repository.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
-        repository.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
+      if root.ostree?
+        root.ostree_upstream_sync_policy = repo_params[:ostree_upstream_sync_policy]
+        root.ostree_upstream_sync_depth = repo_params[:ostree_upstream_sync_depth]
       end
-      if repository.deb?
-        repository.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
-        repository.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
-        repository.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
+      if root.deb?
+        root.deb_releases = repo_params[:deb_releases] if repo_params[:deb_releases]
+        root.deb_components = repo_params[:deb_components] if repo_params[:deb_components]
+        root.deb_architectures = repo_params[:deb_architectures] if repo_params[:deb_architectures]
       end
 
-      repository
+      root
     end
     # rubocop:enable Metrics/CyclomaticComplexity
 

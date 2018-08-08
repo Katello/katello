@@ -52,6 +52,10 @@ module Katello
           ContentView.default.where(:organization_id => self.id).first
         end
 
+        def default_content_view_version
+          default_content_view.versions.first
+        end
+
         def promotion_paths
           #I'm sure there's a better way to do this
           self.kt_environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
@@ -137,9 +141,9 @@ module Katello
           products.any?(&:syncable_content?)
         end
 
-        def enabled_product_content_for(repositories)
-          return [] if repositories.blank?
-          content_ids = repositories.pluck(:content_id)
+        def enabled_product_content_for(roots)
+          return [] if roots.blank?
+          content_ids = roots.pluck(:content_id)
 
           filtered_product_content do |pc|
             content_ids.include?(pc.content.cp_content_id) && pc.product.enabled?

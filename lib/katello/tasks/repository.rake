@@ -33,7 +33,7 @@ namespace :katello do
     repos = lookup_repositories
 
     if repos.any?
-      task = ForemanTasks.async_task(Actions::Katello::Repository::BulkMetadataGenerate, repos.all.order(:name))
+      task = ForemanTasks.async_task(Actions::Katello::Repository::BulkMetadataGenerate, repos.all.order_by_root(:name))
       puts "Regenerating #{repos.count} repositories.  You can monitor these on task id #{task.id}\n"
     else
       puts "No repositories found for regeneration."
@@ -46,7 +46,7 @@ namespace :katello do
     repos = lookup_repositories
 
     if repos.any?
-      task = ForemanTasks.async_task(::Actions::BulkAction, Actions::Katello::Repository::RefreshRepository, repos.all.order(:name))
+      task = ForemanTasks.async_task(::Actions::BulkAction, Actions::Katello::Repository::RefreshRepository, repos.all.order_by_root(:name))
       puts "Refreshing #{repos.count} repositories.  You can monitor these on task id #{task.id}\n"
     else
       puts "No repositories found for regeneration."

@@ -9,8 +9,7 @@ module Actions
         def plan(product, content, options)
           repository = repository_mapper(product,
                                          content,
-                                         options,
-                                         options[:registry_name]).find_repository
+                                         options).find_repository
           if repository
             action_subject(repository)
             plan_action(Repository::Destroy, repository, :planned_destroy => true)
@@ -21,17 +20,10 @@ module Actions
 
         private
 
-        def repository_mapper(product, content, substitutions, registry_name)
-          if content.content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
-            ::Katello::Candlepin::DockerRepositoryMapper.new(product,
-                                                             content,
-                                                             registry_name)
-
-          else
-            ::Katello::Candlepin::RepositoryMapper.new(product,
-                                                       content,
-                                                       substitutions)
-          end
+        def repository_mapper(product, content, substitutions)
+          ::Katello::Candlepin::RepositoryMapper.new(product,
+                                                     content,
+                                                     substitutions)
         end
       end
     end

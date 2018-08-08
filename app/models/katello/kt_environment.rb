@@ -217,7 +217,7 @@ module Katello
     end
 
     def puppet_repositories
-      self.repositories.readable.where(:content_type => Katello::Repository::PUPPET_TYPE)
+      self.repositories.readable.puppet_type
     end
 
     def as_json(_options = {})
@@ -238,33 +238,6 @@ module Katello
 
     def key_for(item)
       "environment_#{id}_#{item}"
-    end
-
-    def find_packages_by_name(name)
-      products = self.products.collect do |prod|
-        prod.find_packages_by_name(self, name).collect do |p|
-          p[:product_id] = prod.cp_id
-          p
-        end
-      end
-      products.flatten(1)
-    end
-
-    def find_packages_by_nvre(name, version, release, epoch)
-      products = self.products.collect do |prod|
-        prod.find_packages_by_nvre(self, name, version, release, epoch).collect do |p|
-          p[:product_id] = prod.cp_id
-          p
-        end
-      end
-      products.flatten(1)
-    end
-
-    def get_distribution(id)
-      distribution = self.products.collect do |prod|
-        prod.get_distribution(self, id)
-      end
-      distribution.flatten(1)
     end
 
     def add_to_default_capsule

@@ -104,7 +104,8 @@ module Katello
                                           :search => "name=\"#{Repository.first.product.name}\"")
 
       assert_equal([Repository.first], Product.readable_repositories([Repository.first.id]))
-      assert_empty(Product.readable_repositories([Repository.where('product_id != ?', Katello::Product.readable.pluck(:id)).first]))
+      assert_empty(Product.readable_repositories(
+          [Repository.joins(:root).where("#{RootRepository.table_name}.product_id != ?", Katello::Product.readable.pluck(:id)).first]))
     end
   end
 end

@@ -16,13 +16,17 @@ module Katello
     after_save :update_repository_names, :if => :propagate_name_change?
 
     def update_repository_names
-      self.repositories.each do |repo|
-        repo.update_attributes!(:name => repo.calculate_updated_name)
+      root_repositories.each do |root|
+        root.update_attributes!(:name => root.calculate_updated_name)
       end
     end
 
+    def root_repositories
+      Katello::RootRepository.where(:content_id => self.cp_content_id)
+    end
+
     def repositories
-      Katello::Repository.where(:content_id => self.cp_content_id)
+      Katello::Repository.where(:root_id => root_repositories)
     end
 
     def redhat?

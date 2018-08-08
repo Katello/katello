@@ -2,16 +2,20 @@ object @resource
 
 extends 'katello/api/v2/common/identifier'
 
-attributes :content_type, :url, :relative_path, :arch, :content_id
 attributes :pulp_id => :backend_identifier
-attributes :major, :minor
-attributes :container_repository_name
+attributes :relative_path
 
-child :product do |_product|
-  attributes :id, :cp_id, :name
-  attributes :orphaned? => :orphaned
-  node :sync_plan do |_sync_plan|
-    attributes :name, :description, :sync_date, :interval, :next_sync
+glue(@object.root) do
+  attributes :content_type, :url, :arch, :content_id
+  attributes :major, :minor
+  attributes :container_repository_name
+
+  child :product do |_product|
+    attributes :id, :cp_id, :name
+    attributes :orphaned? => :orphaned
+    node :sync_plan do |_sync_plan|
+      attributes :name, :description, :sync_date, :interval, :next_sync
+    end
   end
 end
 

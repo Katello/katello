@@ -411,7 +411,7 @@ module Katello
     end
 
     def duplicate_docker_repos
-      duplicate_repositories.where(:content_type => Katello::Repository::DOCKER_TYPE)
+      duplicate_repositories.docker_type
     end
 
     def check_non_composite_components
@@ -647,7 +647,7 @@ module Katello
     end
 
     def on_demand_repositories
-      repositories.where(download_policy: ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
+      repositories.on_demand
     end
 
     protected

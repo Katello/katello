@@ -18,6 +18,7 @@ module Katello
              :through => :content_view_puppet_environment_puppet_modules,
              :class_name => "Katello::ContentViewPuppetEnvironment"
 
+    scoped_search :on => :id, :only_explicit => true
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :author, :complete_value => true
     scoped_search :on => :version, :complete_value => true

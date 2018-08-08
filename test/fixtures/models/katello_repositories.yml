@@ -1,15 +1,8 @@
 fedora_17_x86_64:
-  name:                 Fedora 17 x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
   pulp_id:              Fedora_17
-  content_id:           1
-  content_type:         yum
-  description:          'My description'
-  label:                fedora_17_x86_64_label
   relative_path:        'ACME_Corporation/library/fedora_17_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  url:                 "http://myrepo.com"
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   distribution_arch: "x86_64"
   distribution_version: "2.1"
@@ -17,578 +10,310 @@ fedora_17_x86_64:
   distribution_variant: "TestVariant"
   distribution_bootable: true
   distribution_uuid: 'xyz123'
-  download_policy: on_demand
 
 fedora_17_x86_64_dev:
-  name:                 Fedora 17 x86_64 dev
-  pulp_id:              2
-  content_id:           1
-  content_type:         yum
   library_instance:     fedora_17_x86_64
-  label:                fedora_17_x86_64_dev_label
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              2
   relative_path:        'ACME_Corporation/dev/fedora_17_dev_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
-  url:                 "http://myrepo.com"
   distribution_arch: "x86_64"
   distribution_version: "2.1"
   distribution_family: "Test Family"
   distribution_variant: "TestVariant"
   distribution_bootable: false
   distribution_uuid: 'xyz123'
-  download_policy: immediate
 
 fedora_17_x86_64_dev_archive:
-  name:                 Fedora 17 x86_64 dev
-  pulp_id:              2_archive
-  content_id:           1
-  content_type:         yum
   library_instance:     fedora_17_x86_64
-  label:                fedora_17_x86_64_dev_label
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              2_archive
   relative_path:        'ACME_Corporation/dev/fedora_17_dev_label'
   environment_id:
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
-  url:                 "http://myrepo.com"
   distribution_arch: "x86_64"
   distribution_version: "2.1"
   distribution_family: "Test Family"
   distribution_variant: "TestVariant"
   distribution_bootable: false
   distribution_uuid: 'xyz123'
-  download_policy: immediate
 
 fedora_17_x86_64_duplicate:
-  name:                 Fedora 17 x86_64 duplicate
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_duplicate_root) %>
   pulp_id:              2_duplicate
-  content_id:           1
-  content_type:         yum
-  label:                fedora_17_x86_64_duplicate_label
   relative_path:        'ACME_Corporation/dev/fedora_17_duplicate_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                 "http://myrepo.com"
   distribution_arch: "x86_64"
   distribution_version: "2.1"
   distribution_family: "Test Family"
   distribution_variant: "TestVariant"
   distribution_bootable: true
   distribution_uuid: 'xyz123'
-  download_policy: immediate
 
 fedora_17_library_library_view:
-  name:                 Fedora 17 library library view
-  pulp_id:              fedora_17_library_library_view
-  content_id:           1
-  content_type:         yum
   library_instance:     fedora_17_x86_64
-  label:                fedora_17_x86_64_library_library_view
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              fedora_17_library_library_view
   relative_path:        'ACME_Corporation/dev/fedora_17_library_library_view_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  url:                 "http://myrepo.com"
   distribution_arch: "x86_64"
   distribution_version: "2.1"
   distribution_family: "Test Family"
   distribution_variant: "TestVariant"
   distribution_bootable: true
   distribution_uuid: 'xyz123'
-  download_policy: immediate
 
 fedora_17_dev_library_view:
-  name:                 Fedora 17 dev library view
-  pulp_id:              fedora_17_dev_library_view
-  content_id:           1
-  content_type:         yum
   library_instance:     fedora_17_x86_64
-  label:                fedora_17_x86_64_dev_library_view
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              fedora_17_dev_library_view
   relative_path:        'ACME_Corporation/dev/fedora_17_library_library_view_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-  url:                 "http://myrepo.com"
-  download_policy: on_demand
 
 feedless_fedora_17_x86_64:
-  name:                 Feedless Fedora 17 x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:feedless_fedora_17_x86_64_root) %>
   pulp_id:              feedless_1
-  content_id:           1
-  content_type:         yum
-  label:                feedless_fedora_17_x86_64_label
   relative_path:        'ACME_Corporation/library/fedora_17_label_no_feed'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  download_policy: on_demand
 
 rhel_7_x86_64:
-  name:                 RHEL 7 x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_7_x86_64_root) %>
   pulp_id:              9
-  content_id:           69
-  major:                7
-  minor:                7Server
-  content_type:         yum
-  label:                rhel_7_x86_64_label
   relative_path:        'ACME_Corporation/library/rhel_7_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                 'https://cdn.example.com/rhel/7/os'
   distribution_arch: "x86_64"
   distribution_version: "3.0"
   distribution_family: "Other Family"
   distribution_variant: "TestVariant"
   distribution_bootable: false
-  download_policy: background
 
 rhel_6_x86_64:
-  name:                 RHEL 6 x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              pulp-uuid-rhel_6_x86_64
-  content_id:           69
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label
   relative_path:        'ACME_Corporation/library/rhel_6_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                 'https://cdn.example.com/rhel/6/os'
   distribution_arch: "x86_64"
   distribution_version: "6.1"
   distribution_family: "Other Family"
   distribution_variant: "TestVariant"
   distribution_bootable: true
-  download_policy: on_demand
 
 rhel_6_x86_64_dev:
-  name:                 RHEL 6 x86_64
+  library_instance:     rhel_6_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8
-  content_id:           69
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label
   relative_path:        'ACME_Corporation/library/rhel_6_label'
-  url:                 'https://cdn.example.com/rhel/6/os'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-  url:                 'https://cdn.example.com/rhel/6/os'
-  download_policy: on_demand
 
 rhel_6_x86_64_dev_archive:
-  name:                 RHEL 6 x86_64
+  library_instance:     rhel_6_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_arch
-  content_id:           69
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label
   relative_path:        'ACME_Corporation/library/rhel_6_label'
-  url:                 'https://cdn.example.com/rhel/6/os'
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-  url:                 'https://cdn.example.com/rhel/6/os'
-  download_policy: on_demand
 
 fedora_17_no_arch:
-  name:                 Fedora 17 no arch
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_no_arch_root) %>
   pulp_id:              1
-  content_id:           1
-  content_type:         yum
-  label:                fedora_17_no_arch_label
   relative_path:        'ACME_Corporation/library/fedora_17_label_no_arch'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  url:                 "http://myrepo.com"
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
   distribution_version: "2.1"
   distribution_family: 'Red Hat Enterprise Linux'
   distribution_variant: "TestVariant"
   distribution_bootable: true
-  download_policy: on_demand
 
 rhel_7_no_arch:
-  name:                 RHEL 7 no_arch
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_7_no_arch_root) %>
   pulp_id:              9_noarch
-  content_id:           1
-  major:                7
-  minor:                7Server
-  content_type:         yum
-  label:                rhel_7_no_arch_label
   relative_path:        'ACME_Corporation/library/rhel_7_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                 'https://cdn.example.com/rhel/7/os'
   distribution_version: "3.0"
   distribution_family: "Other Family"
   distribution_variant: "TestVariant"
   distribution_bootable: false
-  download_policy: on_demand
 
 p_forge:
-  name:                 P Forge
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:p_forge_root) %>
   pulp_id:              4
-  content_id:           1
-  content_type:         puppet
-  label:                p_forge
   relative_path:        'ACME_Corporation/library/LibraryView/p_forge'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
 
 lib_p_forge:
-  name:                 P Forge
+  library_instance:     p_forge
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:p_forge_root) %>
   pulp_id:              10
-  content_id:           1
-  content_type:         puppet
-  label:                p_forge
   relative_path:        'ACME_Corporation/library/LibraryView/p_forge'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
 
 dev_p_forge:
-  name:                 P Forge
+  library_instance:     p_forge
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:p_forge_root) %>
   pulp_id:              5
-  content_id:           1
-  content_type:         puppet
-  label:                p_forge
   relative_path:        'ACME_Corporation/library/DevView/p_forge'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:p_forge) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
 
 rhel_6_x86_64_library_view_1:
-  name:                 RHEL 6 x86_64 library view 1
+  library_instance:     rhel_6_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_view1
-  content_id:           1
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label
   relative_path:        'ACME_Corporation/library/rhel_6_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  download_policy: on_demand
 
 rhel_6_x86_64_library_view_1_archive:
-  name:                 RHEL 6 x86_64 library view 1 archive
+  library_instance:     rhel_6_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_view1_archive
-  content_id:           1
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label
   relative_path:        'ACME_Corporation/library/rhel_6_label'
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  download_policy: on_demand
 
 fedora_17_x86_64_library_view_1:
-  name:                 Fedora 17 x86_64 lib view 1
-  pulp_id:              3_view1
-  content_id:           1
-  label:                fedora_17_x86_64_label
   library_instance:     fedora_17_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              3_view1
   relative_path:        'ACME_Corporation/library/LibraryView/fedora_17_label'
   environment_id:
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  download_policy: on_demand
 
 fedora_17_x86_64_library_view_2:
-  name:                 Fedora 17 x86_64 lib view 2
-  pulp_id:              3_view2
-  content_id:           1
-  label:                fedora_17_x86_64_label
   library_instance:     fedora_17_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              3_view2
   relative_path:        'ACME_Corporation/library/LibraryView/fedora_17_label'
   environment_id:
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-  download_policy: on_demand
 
 fedora_17_x86_64_library_view_2_library:
-  name:                 Fedora 17 x86_64 lib view 2 lib
-  pulp_id:              3_view2_library
-  content_id:           1
-  label:                fedora_17_x86_64_label
   library_instance:     fedora_17_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              3_view2_library
   relative_path:        'ACME_Corporation/library/LibraryView/fedora_17_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-  url:                  "http://www.pleaseack.com"
-  download_policy: on_demand
 
 fedora_17_unpublished:
-  name:                 Fedora 17 x86_64 unpublished
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_unpublished_root) %>
   pulp_id:              6
-  content_id:           8374837483743
-  label:                fedora_17_unpublished_label
   relative_path:        'ACME_Corporation/library/fedora_17_unpublished_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                  "http://www.pleaseack.com"
-  download_policy:      immediate
 
 fedora_17_unpublished_2:
-  name:                 Fedora 17 x86_64 2
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_unpublished_2_root) %>
   pulp_id:              7
-  content_id:           1
-  label:                fedora_17_unpublished_2_label
   relative_path:        'ACME_Corporation/library/fedora_17_unpublished_2_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                  "http://www.pleaseack.com"
-  download_policy: on_demand
 
 srpm_repo:
-  name:                 Source rpm repo
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:srpm_repo_root) %>
   pulp_id:              source_rpm
-  content_id:           38493849
-  content_type:         yum
-  label:                source_rpm
   relative_path:        'ACME_Corporation/library/LibraryView/source_rpm'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  download_policy: on_demand
-
-
-iso:
-  name:                 ISO REpo
-  pulp_id:              8iso
-  content_id:           1
-  content_type:         file
-  label:                iso
-  relative_path:        'ACME_Corporation/library/LibraryView/iso'
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-
-ostree_rhel7:
-  name:                 ostree_rhel7
-  pulp_id:              "Default_Organization-Test-ostree"
-  content_id:           1
-  content_type:         ostree
-  label:                ostree_rhel7
-  relative_path:        '/ACME_Corporation/library/LibraryView/ostree_rhel7'
-  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:ostree_product) %>
-  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  url:                  "http://cdn.qa.redhat.com/content/htb/rhel/server/7/x86_64/extras/ostree/"
 
 redis:
-  name:                 redis
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:redis_root) %>
   pulp_id:              "Default_Organization-Test-redis"
-  content_id:           1
-  content_type:         docker
-  label:                redis
   relative_path:        'ACME_Corporation/library/redis'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  unprotected:           <%= true %>
 
 busybox:
-  name:                 busybox
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:busybox_root) %>
   pulp_id:              "Default_Organization-Test-busybox-library"
-  content_id:           1
-  content_type:         docker
-  label:                busybox
   relative_path:        'ACME_Corporation/library/busybox'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  unprotected:           <%= true %>
-  url:                  'http://docker.io'
-  docker_upstream_name: 'busybox'
 
 busybox_dev:
-  name:                 busybox
+  library_instance:     busybox
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:busybox_root) %>
   pulp_id:              "Default_Organization-Test-busybox-dev"
-  content_id:           1
-  content_type:         docker
-  label:                busybox
   relative_path:        'ACME_Corporation/dev/busybox'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
-  unprotected:           <%= true %>
-  url:                  'http://docker.io'
-  docker_upstream_name: 'busybox'
 
 busybox2:
-  name:                 busybox
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:busybox2_root) %>
   pulp_id:              "Default_Organization-Test-busybox2-dev"
-  content_id:           1
-  content_type:         docker
-  label:                busybox
   relative_path:        'ACME_Corporation/library/busybox'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  unprotected:           <%= true %>
-  url:                  'http://docker.io'
-  docker_upstream_name: 'busybox'
 
 busybox_view1:
-  name:                 busybox
-  pulp_id:              "Default_Organization-Test-busybox"
-  content_id:           1
-  content_type:         docker
   library_instance:     busybox
-  label:                busybox
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:busybox_root) %>
+  pulp_id:              "Default_Organization-Test-busybox"
   relative_path:        'ACME_Corporation/library/busybox'
   environment_id:
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  unprotected:           <%= true %>
 
 busybox_view2:
-  name:                 busybox
-  pulp_id:              "Default_Organization-Test-busybox"
-  content_id:           1
-  content_type:         docker
   library_instance:     busybox
-  label:                busybox
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:busybox_root) %>
+  pulp_id:              "Default_Organization-Test-busybox"
   relative_path:        'ACME_Corporation/library/busybox'
   environment_id:
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_2) %>
-  unprotected:           <%= true %>
 
 rhel_6_x86_64_composite_view_version_1:
-  name:                 RHEL 6 x86_64
+  library_instance:     rhel_6_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_composite_version1
-  content_id:           69
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label_composite_view_version_1
   relative_path:        'ACME_Corporation/library/composite/rhel_6_label'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
-  download_policy: on_demand
 
 
 rhel_6_x86_64_composite_view_version_1_archive:
-  name:                 RHEL 6 x86_64
+  library_instance:     rhel_6_x86_64
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64_root) %>
   pulp_id:              8_composite_version1_archive
-  content_id:           69
-  major:                6
-  minor:                6Server
-  content_type:         yum
-  label:                rhel_6_x86_64_label_composite_view_version_1
   relative_path:        'ACME_Corporation/library/composite/rhel_6_label'
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
-  library_instance_id:  <%= ActiveRecord::FixtureSet.identify(:rhel_6_x86_64) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
-  download_policy: on_demand
 
 ostree:
-  name:                 ostree
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
   pulp_id:              100
-  content_id:           1
-  content_type:         ostree
-  label:                ostree
-  url:                  "http://www.ostree-zoo.com/ostree"
   relative_path:        '/ACME_Corporation/library/ostree'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  unprotected:           <%= false %>
-  ostree_upstream_sync_policy: latest
 
 ostree_view1:
-  name:                 ostree
-  pulp_id:              "Default_Organization-Test-ostree"
-  content_id:           2
-  content_type:         ostree
   library_instance:     ostree
-  label:                ostree
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:ostree_root) %>
+  pulp_id:              "Default_Organization-Test-ostree"
   relative_path:        '/ACME_Corporation/library/ostree'
   environment_id:
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:puppet_product) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_view_version_1) %>
-  unprotected:           <%= true %>
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:redhat) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
 
 generic_file:
-  name:                 My Files
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
   pulp_id:              "Default_Organization-Cabinet-My_Files"
-  content_id:           10
-  content_type:         file
-  label:                My_Files
   relative_path:        '/Default_Organization/library/My_Files'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
-  unprotected:           <%= true %>
 
 generic_file_dev:
-  name:                 My Files
+  library_instance:     generic_file
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:generic_file_root) %>
   pulp_id:              "Default_Organization-Cabinet-My_Files"
-  content_id:           10
-  content_type:         file
-  library_instance:     My_Files
-  label:                My_Files_dev
   relative_path:        '/Default_Organization/dev/My_Files'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
-  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
-  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>

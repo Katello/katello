@@ -6,10 +6,10 @@ module Katello
 
     has_many :repository_package_groups, :class_name => "Katello::RepositoryPackageGroup", :dependent => :destroy, :inverse_of => :package_group
     has_many :repositories, :through => :repository_package_groups, :class_name => "Katello::Repository"
+    has_many :roots, :through => :repositories, :class_name => "Katello::RootRepository"
 
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :uuid, :rename => :id, :complete_value => true
-    scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true
 
     def self.repository_association_class
       RepositoryPackageGroup

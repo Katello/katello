@@ -3,47 +3,37 @@ module Actions
     module Repository
       class Update < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
-        # rubocop:disable MethodLength
-        def plan(repository, repo_params)
-          action_subject repository
-          repository = repository.reload
+
+        def plan(root, repo_params)
+          repository = root.library_instance
+          action_subject root.library_instance
+
           repo_params[:url] = nil if repo_params[:url] == ''
-          repository.update_attributes!(repo_params)
+          root.update_attributes!(repo_params)
 
           if update_content?(repository)
-            content_url = ::Katello::Glue::Pulp::Repos.custom_content_path(repository.product, repository.label)
-            katello_content_id = repository.product.product_content_by_id(repository.content_id).content_id
-            content = ::Katello::Content.find(katello_content_id)
+            content = root.content
 
             plan_action(::Actions::Candlepin::Product::ContentUpdate,
                         :owner => repository.organization.label,
-                        :content_id => repository.content_id,
+                        :content_id => root.content_id,
                         :name => content.name,
-                        :content_url => content_url,
+                        :content_url => root.custom_content_path,
                         :gpg_key_url => repository.yum_gpg_key_url,
                         :label => content.label,
-                        :type => repository.content_type,
-                        :arches => repository.arch == "noarch" ? nil : repository.arch)
+                        :type => root.content_type,
+                        :arches => root.arch == "noarch" ? nil : root.arch)
 
             content.update_attributes!(name: content.name,
-                                       content_url: content_url,
+                                       content_url: root.custom_content_path,
                                        content_type: repository.content_type,
                                        label: content.label,
                                        gpg_url: repository.yum_gpg_key_url)
-
           end
 
-          if SETTINGS[:katello][:use_pulp] && repository.pulp_update_needed?
-            plan_action(::Actions::Pulp::Repository::Refresh, repository)
-          end
-
-          if SETTINGS[:katello][:use_pulp] && (repository.previous_changes.key?('unprotected') ||
-              repository.previous_changes.key?('checksum_type') ||
-              repository.previous_changes.key?('container_repository_name'))
-            plan_self(:repository_id => repository.id)
-          end
+          plan_action(::Actions::Pulp::Repository::Refresh, repository) if root.pulp_update_needed?
+          plan_self(:repository_id => root.library_instance.id)
         end
-        # rubocop:enable MethodLength
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
@@ -53,10 +43,7 @@ module Actions
         private
 
         def update_content?(repository)
-          SETTINGS[:katello][:use_cp] &&
-            SETTINGS[:katello][:use_pulp] &&
-            repository.library_instance? &&
-            !repository.product.redhat?
+          repository.library_instance? && !repository.product.redhat?
         end
       end
     end

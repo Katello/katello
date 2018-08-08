@@ -9,8 +9,8 @@ module Katello
                        :organization => get_organization,
                        :provider => katello_providers(:anonymous)
                       )
-      @redhat_product = Product.find(katello_products(:redhat).id)
-      @promoted_product = Product.find(katello_products(:fedora).id)
+      @redhat_product = katello_products(:redhat)
+      @promoted_product = katello_products(:fedora)
     end
 
     def teardown
@@ -218,7 +218,7 @@ module Katello
 
     def test_syncable_content
       products_with_syncable_repos = Product.all.select do |prod|
-        prod.repositories.any? { |r| r.url.present? }
+        prod.root_repositories.any? { |r| r.url.present? }
       end
       products = Katello::Product.syncable_content
       assert_equal products_with_syncable_repos.length, products.length
@@ -242,17 +242,17 @@ module Katello
     end
 
     def test_subscribable_with_puppet_repo
-      puppet_repo = katello_repositories(:p_forge)
+      puppet_repo = katello_root_repositories(:p_forge_root)
       product = katello_products(:fedora)
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
-      product.repositories = [puppet_repo]
+      product.root_repositories = [puppet_repo]
 
       refute_includes Product.subscribable, product
     end
 
     def test_subscribable_without_repos
       product = katello_products(:fedora)
-      product.repositories = []
+      product.root_repositories = []
 
       assert_includes Product.subscribable, product
     end
@@ -272,7 +272,7 @@ module Katello
     def test_subscribable_puppet_and_yum_repos
       product = katello_products(:fedora)
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
-      product.repositories << katello_repositories(:p_forge)
+      product.root_repositories << katello_root_repositories(:p_forge_root)
 
       assert_includes Product.subscribable, product
     end
@@ -283,15 +283,15 @@ module Katello
       puppet = katello_repositories(:p_forge)
 
       fedora_content = product.product_contents.to_a
-      puppet.update_attributes(content_id: 2)
+      puppet.root.update_attributes(content_id: 2)
 
       content = FactoryBot.create(:katello_content, cp_content_id: puppet.content_id, organization_id: puppet.product.organization_id)
       FactoryBot.create(:katello_product_content, content: content, product: product)
 
       Repository.any_instance.stubs(:exist_for_environment?).returns(true)
-      product.repositories = [fedora, puppet]
+      product.root_repositories = [fedora.root, puppet.root]
 
-      assert_equal fedora_content, product.available_content
+      assert_equal fedora_content, product.available_content.to_a
     end
 
     def test_audit_on_product_update

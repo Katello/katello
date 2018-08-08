@@ -14,7 +14,6 @@ module Katello
     scoped_search on: :version, complete_value: true
     scoped_search on: :context, complete_value: true
     scoped_search on: :arch, complete_value: true
-    scoped_search relation: :repositories, on: :name, rename: :repository, complete_value: true
     scoped_search on: :host, rename: :host,
                   only_explicit: true,
                   ext_method: :find_by_host_name,
