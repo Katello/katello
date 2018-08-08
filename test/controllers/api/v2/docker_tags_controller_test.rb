@@ -38,7 +38,8 @@ module Katello
     def test_grouped_index
       organization = @repo.organization
       repos_stub = stub(:in_organization => [@repo])
-      Repository.expects(:readable).returns(repos_stub)
+      ::Katello::Repository.expects(:readable).returns(repos_stub)
+
       get :index, params: { :organization_id => organization.id, :grouped => true }
 
       assert_response :success
@@ -50,6 +51,7 @@ module Katello
 
     def test_index_equal_digest
       organization = @repo.organization
+      ENV['test'] =  'foo'
       get :index, params: { :organization_id => organization.id, :search => "digest=abc123" }
 
       assert_response :success

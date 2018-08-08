@@ -28,7 +28,7 @@ module Katello
     end
 
     def self.enabled(organization)
-      joins(:content).where("#{self.content_table_name}.cp_content_id" => Katello::Repository.in_organization(organization).select(:content_id))
+      joins(:content).where("#{self.content_table_name}.cp_content_id" => Katello::RootRepository.in_organization(organization).select(:content_id))
     end
 
     def self.with_valid_subscription(organization)
@@ -37,7 +37,7 @@ module Katello
 
     # used by Katello::Api::V2::RepositorySetsController#index
     def repositories
-      product.repositories.in_default_view.has_url.where(:content_id => content.cp_content_id)
+      Katello::Repository.where(:root_id => product.root_repositories.has_url.where(:content_id => content.cp_content_id))
     end
   end
 end

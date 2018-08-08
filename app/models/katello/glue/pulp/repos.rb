@@ -12,35 +12,6 @@ module Katello
       "#{path_prefix}/#{path}"
     end
 
-    # repo path for custom product repos (RH repo paths are derived from
-    # content url)
-    def self.custom_repo_path(environment, product, repo_label)
-      if [environment, product, repo_label].any?(&:nil?)
-        return nil # can't generate valid path
-      end
-      prefix = [environment.organization.label, environment.label].map { |x| x.gsub(/[^-\w]/, "_") }.join("/")
-      prefix + custom_content_path(product, repo_label)
-    end
-
-    def self.custom_docker_repo_path(environment, product, repo_label)
-      if [environment, product, repo_label].any?(&:nil?)
-        return nil # can't generate valid path
-      end
-      parts = [environment.organization.label, product.label, repo_label]
-      parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("-").downcase
-    end
-
-    def self.custom_content_path(product, repo_label)
-      parts = []
-      # We generate repo path only for custom product content. We add this
-      # constant string to avoid collisions with RH content. RH content url
-      # begins usually with something like "/content/dist/rhel/...".
-      # There we prefix custom content/repo url with "/custom/..."
-      parts << "custom"
-      parts += [product.label, repo_label]
-      "/" + parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("/")
-    end
-
     def self.prepopulate!(products, environment, repos = [], content_view = nil)
       if content_view.nil?
         if environment.library?
@@ -67,38 +38,6 @@ module Katello
         return self.repos(library).empty?
       end
 
-      def promote(from_env, to_env)
-        @orchestration_for = :promote
-
-        async_tasks = promote_repos repos(from_env), from_env, to_env
-        unless to_env.products.include? self
-          self.environments << to_env
-        end
-
-        save!
-        async_tasks
-      end
-
-      def find_packages_by_name(env, name)
-        packages = self.repos(env).collect do |repo|
-          repo.find_packages_by_name(name).collect do |p|
-            p[:repo_id] = repo.id
-            p
-          end
-        end
-        packages.flatten(1)
-      end
-
-      def find_packages_by_nvre(env, name, version, release, epoch)
-        packages = self.repos(env).collect do |repo|
-          repo.find_packages_by_nvre(name, version, release, epoch).collect do |p|
-            p[:repo_id] = repo.id
-            p
-          end
-        end
-        packages.flatten(1)
-      end
-
       def distributions(env)
         to_ret = []
         self.repos(env).each do |repo|
@@ -106,13 +45,6 @@ module Katello
           to_ret += distros unless distros.empty?
         end
         to_ret
-      end
-
-      def get_distribution(env, id)
-        distribution = self.repos(env).map do |repo|
-          repo.distributions.find_all { |d| d.id == id }
-        end
-        distribution.flatten(1)
       end
 
       def promoted_to?(target_env)
@@ -200,42 +132,7 @@ module Katello
           repo_param[:download_policy] = Setting[:default_download_policy]
         end
 
-        rel_path = if repo_param[:content_type] == 'docker'
-                     Glue::Pulp::Repos.custom_docker_repo_path(self.library, self, repo_param[:label])
-                   else
-                     Glue::Pulp::Repos.custom_repo_path(self.library, self, repo_param[:label])
-                   end
-        Repository.new(:environment => self.organization.library,
-                       :product => self,
-                       :relative_path => rel_path,
-                       :arch => repo_param[:arch],
-                       :name => repo_param[:name],
-                       :label => repo_param[:label],
-                       :description => repo_param[:description],
-                       :url => repo_param[:url],
-                       :gpg_key => repo_param[:gpg_key],
-                       :ssl_ca_cert => repo_param[:ssl_ca_cert],
-                       :ssl_client_cert => repo_param[:ssl_client_cert],
-                       :ssl_client_key => repo_param[:ssl_client_key],
-                       :unprotected => repo_param[:unprotected],
-                       :content_type => repo_param[:content_type],
-                       :checksum_type => repo_param[:checksum_type],
-                       :download_policy => repo_param[:download_policy],
-                       :content_view_version => self.organization.library.default_content_view_version)
-      end
-
-      def custom_repos_create_orchestration
-        pre_queue.create(:name => "create pulp repositories for product: #{self.label}", :priority => 1, :action => [self, :set_repos])
-      end
-
-      protected
-
-      def promote_repos(repos, from_env, to_env)
-        async_tasks = []
-        repos.each do |repo|
-          async_tasks << repo.promote(from_env, to_env)
-        end
-        async_tasks.flatten(1)
+        RootRepository.new(repo_param.merge(:product_id => self.id))
       end
     end
   end

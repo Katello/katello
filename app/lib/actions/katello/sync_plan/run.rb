@@ -9,12 +9,12 @@ module Actions
             fail _("No products in sync plan") unless sync_plan.products
 
             syncable_products = sync_plan.products.syncable
-            syncable_repositories = ::Katello::Repository.where(:product_id => syncable_products).has_url
+            syncable_roots = ::Katello::RootRepository.where(:product_id => syncable_products).has_url
 
-            fail _("No syncable repositories found for selected products and options.") if syncable_repositories.empty?
+            fail _("No syncable repositories found for selected products and options.") if syncable_roots.empty?
 
             plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync,
-                        syncable_repositories)
+                        syncable_roots.map(&:library_instance))
 
             plan_self(:sync_plan_name => sync_plan.name)
           end

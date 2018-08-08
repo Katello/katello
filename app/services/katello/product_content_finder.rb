@@ -24,10 +24,10 @@ module Katello
 
       considered_products = match_subscription ? consumable.products : consumable.organization.products.enabled.uniq
 
-      repositories = Katello::Repository.where(:product_id => considered_products).subscribable
-      repositories = repositories.where(:content_view_version_id => version.id) if version
+      roots = Katello::RootRepository.where(:product_id => considered_products).subscribable
+      roots = roots.in_content_view_version(version) if version
 
-      consumable.organization.enabled_product_content_for(repositories)
+      consumable.organization.enabled_product_content_for(roots)
     end
 
     def presenter_with_overrides(overrides)

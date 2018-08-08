@@ -1,22 +1,37 @@
 FactoryBot.define do
   factory :katello_repository, :class => Katello::Repository do
-    sequence(:name) { |n| "Repo #{n}" }
-    sequence(:label) { |n| "repo_#{n}" }
+    association :root, :factory => :katello_root_repository, :strategy => :build
+
     sequence(:pulp_id) { |n| "pulp-#{n}" }
-    sequence(:content_id)
     sequence(:relative_path) { |n| "/ACME_Corporation/DEV/Repo#{n}" }
-    url "http://localhost/foo"
-    download_policy "on_demand"
+
+    transient do
+      product nil
+      product_id nil
+      content_id nil
+      content_type nil
+      label nil
+      name nil
+      docker_upstream_name nil
+      url nil
+      unprotected nil
+      download_policy nil
+    end
+
+    after(:build) do |repo, evaluator|
+      %w(product product_id content_id content_type label name docker_upstream_name url unprotected download_policy).each do |attr|
+        repo.root.send("#{attr}=", evaluator.send(attr)) if evaluator.send(attr)
+      end
+    end
 
     trait :fedora_17_el6 do
-      name "Fedora 17 el6"
-      label "fedora_17_el6_label"
+      association :root, :factory => :katello_root_repository, :trait => :fedora_17_el6_root, :strategy => :build
       pulp_id "Fedora_17_el6"
-      content_id "450"
       relative_path "/ACME_Corporation/Library/fedora_17_el6_label"
     end
 
     trait :fedora_17_x86_64_dev do
+      association :root, :fedora_17_x86_64_dev_root, :factory => :katello_root_repository, :strategy => :build
       name "Fedora 17"
       label "fedora_17_dev_label"
       pulp_id "2"
@@ -25,29 +40,21 @@ FactoryBot.define do
     end
 
     trait :docker do
-      content_type "docker"
-      docker_upstream_name "dockeruser/repo"
-      download_policy ""
-      label "dockeruser_repo"
-      name "dockeruser/repo"
+      association :root, :docker_root, :factory => :katello_root_repository, :strategy => :build
       relative_path "empty_organization-fedora_label-dockeruser_repo"
-      unprotected true
     end
 
     trait :puppet do
-      content_type "puppet"
+      association :root, :puppet_root, :factory => :katello_root_repository, :strategy => :build
       download_policy ""
     end
 
     trait :iso do
-      content_type "file"
-      download_policy ""
+      association :root, :iso_root, :factory => :katello_root_repository, :strategy => :build
     end
 
     trait :ostree do
-      content_type "ostree"
-      download_policy ""
-      ostree_upstream_sync_policy "latest"
+      association :root, :ostree_root, :factory => :katello_root_repository, :strategy => :build
     end
 
     factory :docker_repository, traits: [:docker]

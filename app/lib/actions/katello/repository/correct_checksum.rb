@@ -8,12 +8,12 @@ module Actions
 
         def finalize
           ::User.current = ::User.anonymous_admin
-          repo = ::Katello::Repository.find(input[:repo_id])
+          root = ::Katello::Repository.find(input[:repo_id]).root
 
-          if repo.pulp_scratchpad_checksum_type &&
-              repo.pulp_scratchpad_checksum_type != repo.source_repo_checksum_type
-            repo.source_repo_checksum_type = repo.pulp_scratchpad_checksum_type
-            repo.save!
+          if root.pulp_scratchpad_checksum_type &&
+              root.pulp_scratchpad_checksum_type != root.source_repo_checksum_type
+            root.source_repo_checksum_type = root.pulp_scratchpad_checksum_type
+            root.save!
           end
         ensure
           ::User.current = nil

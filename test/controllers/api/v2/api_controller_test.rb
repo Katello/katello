@@ -126,8 +126,8 @@ module Katello
       refute results[:error].blank?
       assert_includes results[:error], bad_column
       assert_equal [], results[:results]
-      assert_nil results[:subtotal]
-      assert_nil results[:total]
+      assert_equal 0, results[:subtotal]
+      assert_equal 0, results[:total]
       assert_nil results[:page]
       assert_nil results[:per_page]
     end
@@ -155,8 +155,8 @@ module Katello
       results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
 
       assert_equal [], results[:results]
-      assert_nil results[:subtotal]
-      assert_nil results[:total]
+      assert_equal 0, results[:subtotal]
+      assert_equal 0, results[:total]
       assert_nil results[:page]
       assert_nil results[:per_page]
       assert_equal error_message, results[:error]
@@ -170,8 +170,8 @@ module Katello
       results = @controller.scoped_search(@query, 'errata_type', @default_sort[1], @options)
 
       assert_equal [], results[:results]
-      assert_nil results[:subtotal]
-      assert_nil results[:total]
+      assert_equal 0, results[:subtotal]
+      assert_equal 0, results[:total]
       assert_nil results[:page]
       assert_nil results[:per_page]
       assert_equal error_message, results[:error]

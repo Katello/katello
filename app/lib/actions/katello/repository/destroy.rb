@@ -24,11 +24,11 @@ module Actions
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
           sequence do
-            repository.destroy! if planned_destroy
+            delete_record(repository) if planned_destroy
             if repository.redhat?
               handle_redhat_content(repository)
             else
-              handle_custom_content(repository) unless skip_environment_update
+              handle_custom_content(repository.root) unless skip_environment_update
             end
           end
 
@@ -38,14 +38,14 @@ module Actions
         def finalize
           unless input[:planned_destroy]
             repository = ::Katello::Repository.find(input[:repository][:id])
-            repository.destroy!
+            delete_record(repository)
           end
         end
 
-        def handle_custom_content(repository)
+        def handle_custom_content(root)
           #if this is the last instance of a custom repo, destroy the content
-          if repository.other_repos_with_same_product_and_content.empty?
-            plan_action(Product::ContentDestroy, repository)
+          if root.repositories.count == 1
+            plan_action(Product::ContentDestroy, root)
           end
         end
 
@@ -53,6 +53,11 @@ module Actions
           if repository.content_view.content_view_environment(repository.environment)
             plan_action(ContentView::UpdateEnvironment, repository.content_view, repository.environment)
           end
+        end
+
+        def delete_record(repository)
+          repository.destroy!
+          repository.root.destroy! if repository.root.repositories.empty?
         end
 
         def humanized_name

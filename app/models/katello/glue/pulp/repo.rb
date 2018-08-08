@@ -271,7 +271,7 @@ module Katello
           yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
           yum_dist_options[:skip] = ignorable_content if ignorable_content
           #check the instance variable, as we do not want to go to pulp
-          yum_dist_options['checksum_type'] = self.checksum_type
+          yum_dist_options['checksum_type'] = self.saved_checksum_type || self.checksum_type
           yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, self.unprotected, true,
                                                           yum_dist_options)
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
@@ -306,7 +306,7 @@ module Katello
           options = { :id => self.pulp_id,
                       :auto_publish => true,
                       :relative_path => relative_path,
-                      :depth => self.compute_ostree_upstream_sync_depth }
+                      :depth => self.root.compute_ostree_upstream_sync_depth }
 
           dist = Runcible::Models::OstreeDistributor.new(options)
           distributors = [dist]
@@ -351,37 +351,12 @@ module Katello
         !found.nil?
       end
 
-      def other_repos_with_same_product_and_content
-        Repository.where(:content_id => self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
-      end
-
-      def other_repos_with_same_content
-        Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
-      end
-
       def package_group_count
         content_unit_counts = 0
         if self.pulp_repo_facts
           content_unit_counts = self.pulp_repo_facts[:content_unit_counts][:package_group]
         end
         content_unit_counts
-      end
-
-      def find_packages_by_name(name)
-        Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name
-      end
-
-      def find_packages_by_nvre(name, version, release, epoch)
-        Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name, version, release, epoch
-      end
-
-      def pulp_update_needed?
-        changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
-                                   upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy
-                                   docker_tags_whitelist ignorable_content)
-        changeable_attributes += %w(name container_repository_name) if docker?
-        changeable_attributes += %w(deb_releases deb_components deb_architectures) if deb?
-        changeable_attributes.any? { |key| previous_changes.key?(key) }
       end
 
       def sync(options = {})
@@ -397,59 +372,6 @@ module Katello
         end
         task.save!
         return [task]
-      end
-
-      def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
-        content_classes = {
-          Katello::Rpm::CONTENT_TYPE => :rpm,
-          Katello::PackageGroup::CONTENT_TYPE => :package_group,
-          Katello::Erratum::CONTENT_TYPE => :errata,
-          Katello::PuppetModule::CONTENT_TYPE => :puppet_module
-        }
-        fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
-                                                                       unless content_classes[content_type]
-        criteria = {}
-        case content_type
-        when Runcible::Extensions::Rpm.content_type
-          criteria[:fields] = Pulp::Rpm::PULP_SELECT_FIELDS
-        when Runcible::Extensions::Errata.content_type
-          criteria[:fields] = Pulp::Erratum::PULP_SELECT_FIELDS
-        end
-
-        if filter_clauses && !filter_clauses.empty?
-          if content_type == Runcible::Extensions::PuppetModule.content_type
-            criteria[:filters] = {:association => filter_clauses}
-          else
-            criteria[:filters] = {:unit => filter_clauses}
-          end
-        end
-        criteria[:override_config] = override_config unless override_config.empty?
-        Katello.pulp_server.extensions.send(content_classes[content_type]).copy(self.pulp_id, to_repo.pulp_id, criteria)
-      end
-
-      def clone_contents(to_repo)
-        events = []
-
-        if self.content_type == Repository::PUPPET_TYPE
-          events << Katello.pulp_server.extensions.puppet_module.copy(self.pulp_id, to_repo.pulp_id)
-        else
-          # In order to reduce the memory usage of pulp during the copy process,
-          # include the fields that will uniquely identify the rpm. If no fields
-          # are listed, pulp will retrieve every field it knows about for the rpm
-          # (e.g. changelog, filelist...etc).
-          events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
-                                                    :fields => Pulp::Rpm::PULP_SELECT_FIELDS)
-
-          # Since the rpms will be copied above, during the copy of errata and package groups,
-          # include the copy_children flag to request that pulp skip copying them again.
-          events << Katello.pulp_server.extensions.errata.copy(self.pulp_id, to_repo.pulp_id,
-                                                    :fields => Pulp::Erratum::PULP_SELECT_FIELDS,
-                                                    :copy_children => false)
-          events << Katello.pulp_server.extensions.package_group.copy(self.pulp_id, to_repo.pulp_id, :copy_children => false)
-          events << clone_file_metadata(to_repo)
-        end
-
-        events
       end
 
       def clone_file_metadata(to_repo)
@@ -604,7 +526,7 @@ module Katello
         policy = capsule.download_policy || Setting[:default_proxy_download_policy]
         if self.yum?
           if policy == ::SmartProxy::DOWNLOAD_INHERIT
-            (self.library_instance || self).download_policy
+            self.root.download_policy
           else
             policy
           end

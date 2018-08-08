@@ -27,44 +27,16 @@ module Actions
         private
 
         def fetch_results
-          if content.content_type == ::Katello::Repository::CANDLEPIN_DOCKER_TYPE
-            prepare_results_docker_content
-          else
-            substitutor = cdn_var_substitutor
-            return [] unless substitutor
-            substitutor.substitute_vars(content.content_url).map do |path_with_substitutions|
-              prepare_result(path_with_substitutions.substitutions, path_with_substitutions.path)
-            end
+          substitutor = cdn_var_substitutor
+          return [] unless substitutor
+          substitutor.substitute_vars(content.content_url).map do |path_with_substitutions|
+            prepare_result(path_with_substitutions.substitutions, path_with_substitutions.path)
           end
         end
 
         def cdn_var_substitutor
           return unless (cdn_resource = product.cdn_resource)
           cdn_resource.substitutor
-        end
-
-        def prepare_results_docker_content
-          registries = product.cdn_resource.get_docker_registries(content.content_url)
-          registries.map do |registry|
-            mapper = ::Katello::Candlepin::DockerRepositoryMapper.new(product,
-                                                                content,
-                                                                registry['name'])
-            mapper.registries = registries
-            mapper.registry_repo = registry
-            repo = mapper.find_repository
-            unique_id = repo.try(:pulp_id) || SecureRandom.uuid
-
-            {
-              substitutions: {},
-              path:          mapper.feed_url,
-              repo_name:     mapper.name,
-              pulp_id:       unique_id,
-              registry_name: registry["name"],
-              enabled:       !repo.nil?,
-              promoted:      (!repo.nil? && repo.promoted?),
-              repository_id: repo.try(:id)
-            }
-          end
         end
 
         def prepare_result(substitutions, _path)

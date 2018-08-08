@@ -4,6 +4,9 @@ module Katello
   class RepositoryTestBase < ActiveSupport::TestCase
     def setup
       @acme_corporation                 = get_organization
+      @fedora_root                      = katello_root_repositories(:fedora_17_x86_64_root)
+      @rhel6_root                       = katello_root_repositories(:rhel_6_x86_64_root)
+      @ostree_root = katello_root_repositories(:ostree_root)
       @fedora_17_x86_64                 = katello_repositories(:fedora_17_x86_64)
       @fedora_17_x86_64_dev             = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_library_library_view   = katello_repositories(:fedora_17_library_library_view)
@@ -11,7 +14,6 @@ module Katello
       @puppet_forge                     = katello_repositories(:p_forge)
       @redis                            = katello_repositories(:redis)
       @ostree                           = katello_repositories(:ostree)
-      @ostree_rhel7                     = katello_repositories(:ostree_rhel7)
       @fedora                           = katello_products(:fedora)
       @library                          = katello_environments(:library)
       @dev                              = katello_environments(:dev)

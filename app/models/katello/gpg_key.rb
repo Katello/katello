@@ -8,7 +8,9 @@ module Katello
     GPG_KEY_TYPE = 'gpg_key'.freeze
     CERT_TYPE = 'cert'.freeze
 
-    has_many :repositories, :class_name => "Katello::Repository", :inverse_of => :gpg_key, :dependent => :nullify
+    has_many :root_repositories, :class_name => "Katello::RootRepository", :inverse_of => :gpg_key, :dependent => :nullify
+    has_many :repositories, :through => :root_repositories
+
     has_many :products, :class_name => "Katello::Product", :inverse_of => :gpg_key, :dependent => :nullify
     has_many :ssl_ca_products, :class_name => "Katello::Product", :foreign_key => "ssl_ca_cert_id",
                                :inverse_of => :ssl_ca_cert, :dependent => :nullify
@@ -16,11 +18,11 @@ module Katello
                                    :inverse_of => :ssl_client_cert, :dependent => :nullify
     has_many :ssl_key_products, :class_name => "Katello::Product", :foreign_key => "ssl_client_key_id",
                                 :inverse_of => :ssl_client_key, :dependent => :nullify
-    has_many :ssl_ca_repos, :class_name => "Katello::Repository", :foreign_key => "ssl_ca_cert_id",
+    has_many :ssl_ca_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_ca_cert_id",
                             :inverse_of => :ssl_ca_cert, :dependent => :nullify
-    has_many :ssl_client_repos, :class_name => "Katello::Repository", :foreign_key => "ssl_client_cert_id",
+    has_many :ssl_client_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_client_cert_id",
                                 :inverse_of => :ssl_client_cert, :dependent => :nullify
-    has_many :ssl_key_repos, :class_name => "Katello::Repository", :foreign_key => "ssl_client_key_id",
+    has_many :ssl_key_root_repos, :class_name => "Katello::RootRepository", :foreign_key => "ssl_client_key_id",
                              :inverse_of => :ssl_client_key, :dependent => :nullify
     belongs_to :organization, :inverse_of => :gpg_keys
 
@@ -40,16 +42,6 @@ module Katello
 
     def use_gpg_content_validator?
       content_type == GPG_KEY_TYPE && SETTINGS[:katello][:gpg_strict_validation]
-    end
-
-    def as_json(options = {})
-      options ||= {}
-      ret = super(options.except(:details))
-      if options[:details]
-        ret[:products] = products.map { |p| {:name => p.name} }
-        ret[:repositories] = repositories.map { |r| {:product => {:name => r.product.name}, :name => r.name} }
-      end
-      ret
     end
 
     def self.humanize_class_name(_name = nil)

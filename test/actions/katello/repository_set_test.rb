@@ -35,7 +35,9 @@ module ::Actions::Katello::RepositorySet
     def repository_already_enabled!
       as_admin do
         katello_repositories(:rhel_6_x86_64).
-            update_attributes!(:relative_path => "#{expected_relative_path}", :content_id => content.cp_content_id,
+            update_attributes!(:relative_path => "#{expected_relative_path}")
+        katello_repositories(:rhel_6_x86_64).root.
+            update_attributes(:content_id => content.cp_content_id,
                               :arch => 'x86_64', :minor => '6Server')
       end
     end
@@ -48,7 +50,6 @@ module ::Actions::Katello::RepositorySet
       action.expects(:action_subject).with do |repository|
         repository.relative_path.must_equal expected_relative_path
       end
-      content.expects(:modified_product_ids).returns([])
       plan_action action, product, content, substitutions
       assert_action_planed action, ::Actions::Katello::Repository::Create
     end

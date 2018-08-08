@@ -32,7 +32,7 @@ module Katello
 
     def test_regenerate_repo_metadata
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::BulkMetadataGenerate,
-                                             Katello::Repository.all.order(:name)).returns(ForemanTasks::Task::DynflowTask::DynflowTask.new)
+                                             Katello::Repository.all.order_by_root(:name)).returns(ForemanTasks::Task::DynflowTask::DynflowTask.new)
 
       Rake.application.invoke_task('katello:regenerate_repo_metadata')
     end
@@ -40,7 +40,7 @@ module Katello
     def test_regenerate_repo_metadata_env
       ENV['LIFECYCLE_ENVIRONMENT'] = @library_repo.environment.name
 
-      expected_repos = Katello::Repository.in_environment(@library_repo.environment).order(:name)
+      expected_repos = Katello::Repository.in_environment(@library_repo.environment).order_by_root(:name)
       Katello::Repository.stubs(:in_environment).returns(expected_repos)
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Repository::BulkMetadataGenerate,
                                              expected_repos).returns(ForemanTasks::Task::DynflowTask.new)
@@ -58,7 +58,7 @@ module Katello
 
     def test_refresh_pulp_repo_details
       ForemanTasks.expects(:async_task).with(::Actions::BulkAction, Actions::Katello::Repository::RefreshRepository,
-                                             Katello::Repository.all.order(:name)).returns(ForemanTasks::Task::DynflowTask.new)
+                                             Katello::Repository.all.order_by_root(:name)).returns(ForemanTasks::Task::DynflowTask.new)
 
       Rake.application.invoke_task('katello:refresh_pulp_repo_details')
     end

@@ -1,6 +1,7 @@
 module Katello
   class DockerMetaTag < Katello::Model
     include ScopedSearchExtensions
+
     belongs_to :repository, :inverse_of => :docker_meta_tags, :class_name => "Katello::Repository"
 
     belongs_to :schema1, :class_name => "Katello::DockerTag",
@@ -10,14 +11,22 @@ module Katello
                           :inverse_of => :schema2_meta_tag
 
     scoped_search :on => :name, :complete_value => true, :rename => :tag
+    scoped_search :on => :id, :only_explicit => true
+    scoped_search :on => :name, :complete_value => true
     scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => { "1" => "1", "2" => "2"},
                   :only_explicit => true, :ext_method => :find_by_schema_version, :operators => ["="]
-    scoped_search :relation => :repository, :on => :name, :rename => :repository,
-                  :complete_value => true, :only_explicit => true
     scoped_search :relation => :repository, :on => :container_repository_name, :rename => :image,
                   :complete_value => true, :only_explicit => true
     scoped_search :on => :digest, :rename => :digest, :complete_value => false,
                   :only_explicit => true, :ext_method => :find_by_digest, :operators => ["="]
+    scoped_search :relation => :repositories, :on => :name, :rename => :repository, :complete_value => true,
+                  :ext_method => :search_by_repo_name, :only_explicit => true
+
+    def self.search_by_repo_name(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["#{Katello::RootRepository.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+      query = self.joins(:repository => :root).where(conditions).select('id')
+      {:conditions => "#{self.table_name}.id IN (#{query.to_sql})"}
+    end
 
     def self.meta_tags_by_digest_query(operator, digest, manifest_klass)
       search = "digest #{operator} ?"

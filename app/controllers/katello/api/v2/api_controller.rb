@@ -54,6 +54,9 @@ module Katello
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/PerceivedComplexity
     def scoped_search(query, default_sort_by, default_sort_order, options = {})
+      params[:sort_by] ||= default_sort_by
+      params[:sort_order] ||= default_sort_order
+
       resource = options[:resource_class] || resource_class
       includes = options.fetch(:includes, [])
       group = options.fetch(:group, nil)
@@ -62,33 +65,21 @@ module Katello
 
       if params[:order]
         (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
-      end
-
-      sort_attr = (params[:sort_by] || default_sort_by).to_s.downcase
-
-      if sort_attr.present? && !resource.column_names.include?(sort_attr)
-        fail ScopedSearch::QueryNotSupported, _("the field (%s) in the order statement is not valid field for search") % sort_attr
+      else
+        params[:order] = "#{params[:sort_by]} #{params[:sort_order]}"
       end
 
       total = scoped_search_total(query, group)
 
-      unless empty_search_query?
-        query = query.pluck(:id) if query.respond_to?(:pluck)
-        query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
-      end
+      query = query.select(:id) if query.respond_to?(:select)
+      query = resource.search_for(*search_options).where("#{resource.table_name}.id" => query)
 
       query = self.final_custom_index_relation(query) if self.respond_to?(:final_custom_index_relation)
 
       query = query.select(group).group(group) if group
       sub_total = total.zero? ? 0 : scoped_search_total(query, group)
 
-      if sort_attr.present?
-        sort_order = (params[:sort_order] || default_sort_order).to_s.downcase
-        sort_order = default_sort_order unless ['desc', 'asc'].include?(sort_order)
-        query = query.order(sort_attr => sort_order.to_sym)
-        params[:sort_by] = sort_attr
-        params[:sort_order] = sort_order
-      elsif options[:custom_sort]
+      if options[:custom_sort]
         query = options[:custom_sort].call(query)
       end
       query = query.order("#{query.table_name}.id DESC") unless group #secondary order to ensure sort is deterministic
@@ -111,7 +102,7 @@ module Katello
         message = _('Your search query was invalid. Please revise it and try again. The full error has been sent to the application logs.')
       end
 
-      scoped_search_results(blank_query, sub_total, total, page, per_page, message)
+      scoped_search_results(blank_query, 0, 0, page, per_page, message)
     end
 
     protected

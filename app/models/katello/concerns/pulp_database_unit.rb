@@ -3,6 +3,7 @@ require 'set'
 module Katello
   module Concerns::PulpDatabaseUnit
     extend ActiveSupport::Concern
+    include Katello::Concerns::SearchByRepositoryName
 
     #  Class.repository_association_class
     #  Class#update_from_json
