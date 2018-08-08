@@ -42,6 +42,7 @@ describe('Controller: ContentHostsBulkSubscriptionsModalController', function() 
             this.invalidate = function () {};
             this.setSearchKey = function () {};
             this.table = { };
+            this.load = function () {};
         };
 
         hostIds = {included: {ids: [1, 2, 3]}};
