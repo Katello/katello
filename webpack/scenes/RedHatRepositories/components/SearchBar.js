@@ -97,6 +97,7 @@ class SearchBar extends Component {
         <MultiSelect
           value={this.state.filters}
           options={filterOptions}
+          defaultValue="rpm"
           noneSelectedText={__('Filter by type')}
           onChange={(e) => {
             const values = [...e.target.options]
