@@ -4,8 +4,8 @@ module Actions
       class Monitor < Actions::Base
         include ::Dynflow::Action::Singleton
 
-        Event = Algebrick.type do
-          fields! event_type: String, object_id: Integer, created_at: Time
+        Count = Algebrick.type do
+          fields! count: Integer, time: Time
         end
 
         Fatal = Algebrick.type do
@@ -33,6 +33,7 @@ module Actions
         end
 
         def run(event = nil)
+          action_logger.debug("message_queue_event: #{event}")
           match(event,
                 (on nil do
                   initialize_service
@@ -40,8 +41,8 @@ module Actions
                 (on Ready do
                   listen_for_events
                 end),
-                (on Event do
-                   act_on_event(event)
+                (on Count do
+                   update_count(event)
                  end),
                 (on Close | Dynflow::Action::Cancellable::Cancel do
                    close_service
@@ -105,17 +106,10 @@ module Actions
           end
         end
 
-        def act_on_event(event)
-          ::User.as_anonymous_admin do
-            output[:last_event] = "#{event.event_type} - #{event.object_id}"
-            ::Katello::EventQueue.event_class(event.event_type).new(event.object_id).run
-          end
-        rescue => e
-          world.logger.error(e.message)
-          world.logger.error(e.backtrace.join("\n"))
-          output[:last_error] = e.message
-        ensure
-          ::Katello::EventQueue.clear_events(event.event_type, event.object_id, event.created_at)
+        def update_count(event)
+          output[:count] ||= 0
+          output[:count] += event.count
+          output[:last_count_update] = event.time
           suspend
         end
 

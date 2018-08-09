@@ -22,17 +22,14 @@ class Actions::Katello::EventQueueMonitorTest < ActiveSupport::TestCase
       action.run(action_class::Ready)
     end
 
-    it 'should process events' do
-      host = FactoryBot.create(:host)
+    it 'should process counts' do
       action_class.any_instance.stubs(:suspend).yields(nil)
-      ::Katello::EventQueue.push_event(::Katello::Events::ImportHostApplicability::EVENT_TYPE, host.id)
-      event = Katello::EventQueue.next_event
 
       suspended_class.any_instance.expects(:notify_ready).once
-      Katello::Events::ImportHostApplicability.any_instance.expects(:run).once
 
       action = run_action planned_action
-      action.run(action_class::Event[event.event_type, event.object_id, event.created_at.to_time])
+      action.run(action_class::Count[5, Time.now])
+      assert_equal 5, action.output[:count]
     end
   end
 end
