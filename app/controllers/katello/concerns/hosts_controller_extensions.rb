@@ -20,7 +20,7 @@ module Katello
 
         def destroy
           Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
-          process_success
+          process_success :success_redirect => hosts_path
         rescue StandardError => ex
           process_error(:object => @host, :error_msg => ex.message, :redirect => saved_redirect_url_or(send("#{controller_name}_url")))
         end
