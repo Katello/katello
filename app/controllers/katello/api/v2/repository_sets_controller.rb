@@ -13,17 +13,20 @@ module Katello
       api_version "v2"
     end
 
+    api :GET, "/repository_sets", N_("List repository sets.")
     api :GET, "/products/:product_id/repository_sets", N_("List repository sets for a product.")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
     param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param_group :search, Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation, nil, nil, :custom_sort => default_sort,
                                            :resource_class => Katello::ProductContent))
     end
 
+    api :GET, "/repository_sets/:id", N_("Get info about a repository set")
     api :GET, "/products/:product_id/repository_sets/:id", N_("Get info about a repository set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
@@ -31,6 +34,7 @@ module Katello
       respond :resource => @product_content
     end
 
+    api :GET, "/repository_sets/:id/available_repositories", N_("Get list of available repositories for the repository set")
     api :GET, "/products/:product_id/repository_sets/:id/available_repositories", N_("Get list of available repositories for the repository set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set")
     param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
@@ -56,6 +60,7 @@ module Katello
       respond_for_index :collection => collection
     end
 
+    api :PUT, "/repository_sets/:id/enable", N_("Enable a repository from the set")
     api :PUT, "/products/:product_id/repository_sets/:id/enable", N_("Enable a repository from the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to enable")
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
@@ -66,6 +71,7 @@ module Katello
       respond_for_async :resource => task
     end
 
+    api :PUT, "/repository_sets/:id/disable", N_("Disable a repository from the set")
     api :PUT, "/products/:product_id/repository_sets/:id/disable", N_("Disable a repository from the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to disable")
     param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
