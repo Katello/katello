@@ -53,7 +53,7 @@ class SubscriptionsPage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks = [] } = this.props;
+    const { tasks = [], activeOrgName } = this.props;
     const { tasks: prevTasks = [] } = prevProps;
 
     const numberOfTasks = tasks.length;
@@ -63,7 +63,7 @@ class SubscriptionsPage extends Component {
     if (numberOfTasks > 0) {
       if (numberOfPrevTasks === 0 || prevTasks[0].id !== tasks[0].id) {
         [task] = tasks;
-        this.handleDoneTask(task);
+        this.handleDoneTask(task, activeOrgName);
       }
     }
   }
@@ -98,24 +98,31 @@ class SubscriptionsPage extends Component {
     this.props.loadSubscriptions();
   }
 
-  handleDoneTask(taskToPoll) {
+  handleDoneTask(taskToPoll, orgName) {
     const POLL_TASK_INTERVAL = 5000;
-    const { pollTaskUntilDone, loadSubscriptions } = this.props;
+    const { pollTaskUntilDone, loadSubscriptions, removeActiveTaskOrg } = this.props;
 
     pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL)
       .then((task) => {
-        renderTaskFinishedToast(task);
+        renderTaskFinishedToast(task, orgName);
         loadSubscriptions();
+        removeActiveTaskOrg();
       });
   }
 
   render() {
-    const { tasks = [], subscriptions, organization } = this.props;
+    const {
+      tasks = [],
+      subscriptions,
+      organization,
+      activeTaskOrg,
+    } = this.props;
     const currentOrg = orgId();
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;
 
+    const orgIsChanged = activeTaskOrg && currentOrg !== activeTaskOrg;
     let task = null;
 
     if (taskInProgress) {
@@ -255,11 +262,13 @@ class SubscriptionsPage extends Component {
                 task={task}
                 bulkSearch={this.props.bulkSearch}
               />
+              {!orgIsChanged &&
               <ModalProgressBar
                 show={this.state.showTaskModal}
                 container={document.getElementById('subscriptions-table')}
                 task={task}
               />
+              }
             </div>
           </Col>
         </Row>
@@ -279,11 +288,14 @@ SubscriptionsPage.propTypes = {
   loadSetting: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
+  removeActiveTaskOrg: PropTypes.func.isRequired,
+  activeTaskOrg: PropTypes.string,
 };
 
 SubscriptionsPage.defaultProps = {
   tasks: [],
   bulkSearch: undefined,
+  activeTaskOrg: undefined,
 };
 
 export default SubscriptionsPage;

@@ -31,11 +31,11 @@ export const renderTaskStartedToast = (task) => {
   });
 };
 
-export const renderTaskFinishedToast = (task) => {
+export const renderTaskFinishedToast = (task, orgName) => {
   const message = (
     <span>
       <span>
-        {`${__(`Task ${task.humanized.action} completed with a result of ${task.result}.`)}`}
+        {`${__(`Task ${task.humanized.action} completed with a result of ${task.result} in organization ${orgName}.`)} `}
         {' '}
       </span>
       {task.errors ? getErrors(task) : ''}
