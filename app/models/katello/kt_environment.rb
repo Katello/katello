@@ -61,6 +61,7 @@ module Katello
 
     # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
     before_destroy :assert_deletable, :prepend => true
+    before_destroy :remove_from_path, :prepend => true
 
     scope(:not_in_capsule,
       lambda do |capsule|
@@ -173,8 +174,6 @@ module Katello
 
       if library?
         errors.add :base, _("Library lifecycle environments may not be deleted.")
-      elsif !successor.nil?
-        errors.add :base, _("Lifecycle Environment %s has a successor.  Only the last lifecycle environment on a path can be deleted") % self.name
       end
 
       if content_facets.any?
@@ -227,6 +226,14 @@ module Katello
       to_ret['prior_id'] = self.prior && self.prior.id
       to_ret['organization'] = self.organization && self.organization.name
       to_ret
+    end
+
+    def remove_from_path
+      if self.successor && self.prior
+        prior_env = self.prior
+        self.env_priors.destroy_all
+        self.successor.env_priors.first.update_attributes!(:prior_id => prior_env.id)
+      end
     end
 
     def key_for(item)

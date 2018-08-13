@@ -42,6 +42,19 @@ module Katello
       end
     end
 
+    def test_destroy_middle
+      env = katello_environments(:qa_path1)
+      prior = env.prior
+      successor = env.successor
+
+      assert env.deletable?
+      env.destroy!
+      successor.reload
+
+      assert_equal prior, successor.prior
+      assert_includes prior.successors, successor
+    end
+
     def test_destroy_library
       User.current = User.find(users(:admin).id)
       org = FactoryBot.create(:katello_organization)
