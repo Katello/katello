@@ -1,7 +1,6 @@
-import find from 'lodash/find';
 import Immutable from 'seamless-immutable';
 import { initialApiState } from '../../services/api';
-import { TASK_BULK_SEARCH_SUCCESS } from '../Tasks/TaskConstants';
+import { TASK_BULK_SEARCH_SUCCESS, RESET_TASKS, GET_TASK_SUCCESS } from '../Tasks/TaskConstants';
 
 import {
   SUBSCRIPTIONS_REQUEST,
@@ -18,7 +17,6 @@ import {
   DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
@@ -114,15 +112,23 @@ export default (state = initialState, action) => {
     }
 
     case TASK_BULK_SEARCH_SUCCESS: {
-      let tasks;
+      const tasks = action.response.results;
+      const prevTasksSize = state.tasks.length;
+      const shouldInitTasks = prevTasksSize === 0 && tasks.length > 0;
+      const isTaskFinished = prevTasksSize > 0 && !state.tasks[0].pending;
 
-      const search = find(action.response, bulkSearch =>
-        bulkSearch.search_params.search_id === MANIFEST_TASKS_BULK_SEARCH_ID);
-
-      if (search && search.results.length > 0) {
-        tasks = search.results;
+      if (shouldInitTasks || isTaskFinished) {
+        return state.set('tasks', tasks);
       }
-      return state.set('tasks', tasks);
+      return state;
+    }
+
+    case GET_TASK_SUCCESS: {
+      return state.set('tasks', [action.response]);
+    }
+
+    case RESET_TASKS: {
+      return state.set('tasks', []);
     }
 
     case GET_SETTING_SUCCESS: {

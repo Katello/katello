@@ -31,6 +31,10 @@ describe('subscriptions page', () => {
       pollTaskUntilDone={noop}
       pollBulkSearch={noop}
       deleteSubscriptions={() => {}}
+      resetTasks={noop}
+      uploadManifest={noop}
+      deleteManifest={noop}
+      refreshManifest={noop}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

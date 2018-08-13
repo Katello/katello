@@ -12,10 +12,7 @@ import { recordsValid } from '../../SubscriptionValidations';
 import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
 import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
 import { renderTaskStartedToast } from '../../../Tasks/helpers';
-import {
-  BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
-} from '../../SubscriptionConstants';
+import { BLOCKING_FOREMAN_TASK_TYPES } from '../../SubscriptionConstants';
 
 class SubscriptionsTable extends Component {
   constructor(props) {
@@ -112,10 +109,9 @@ class SubscriptionsTable extends Component {
       this.props.updateQuantity(buildPools(this.state.updatedQuantity))
         .then(() =>
           this.props.bulkSearch({
-            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-            type: 'all',
-            active_only: true,
-            action_types: BLOCKING_FOREMAN_TASK_TYPES,
+            action: `organization '${this.props.organization.owner_details.displayName}'`,
+            result: 'pending',
+            label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
           }))
         .then(() => renderTaskStartedToast(this.props.task));
     }
@@ -344,11 +340,17 @@ SubscriptionsTable.propTypes = {
   toggleDeleteButton: PropTypes.func.isRequired,
   task: PropTypes.shape({}),
   bulkSearch: PropTypes.func,
+  organization: PropTypes.shape({
+    owner_details: PropTypes.shape({
+      displayName: PropTypes.string,
+    }),
+  }),
 };
 
 SubscriptionsTable.defaultProps = {
   task: { humanized: {} },
   bulkSearch: undefined,
+  organization: undefined,
 };
 
 export default SubscriptionsTable;

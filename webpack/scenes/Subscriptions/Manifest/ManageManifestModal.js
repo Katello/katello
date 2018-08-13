@@ -9,12 +9,7 @@ import { Table } from '../../../move_to_foreman/components/common/table';
 import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
 import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';
-import { renderTaskStartedToast } from '../../Tasks/helpers';
 import DeleteManifestModalText from './DeleteManifestModalText';
-import {
-  BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
-} from '../SubscriptionConstants';
 
 class ManageManifestModal extends Component {
   constructor(props) {
@@ -70,38 +65,23 @@ class ManageManifestModal extends Component {
   };
 
   uploadManifest = (fileList) => {
+    this.hideModal();
     this.setState({ actionInProgress: true });
     if (fileList.length > 0) {
-      this.props
-        .uploadManifest(fileList[0])
-        .then(() =>
-          this.props.bulkSearch({
-            search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-            type: 'all',
-            active_only: true,
-            action_types: BLOCKING_FOREMAN_TASK_TYPES,
-          }))
-        .then(() => renderTaskStartedToast(this.props.taskDetails));
+      this.props.upload(fileList[0]);
     }
   };
 
   refreshManifest = () => {
-    this.props.refreshManifest();
+    this.hideModal();
     this.setState({ actionInProgress: true });
+    this.props.refresh();
   };
 
   deleteManifest = () => {
+    this.hideModal();
     this.setState({ actionInProgress: true });
-    this.props
-      .deleteManifest()
-      .then(() =>
-        this.props.bulkSearch({
-          search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-          type: 'all',
-          active_only: true,
-          action_types: BLOCKING_FOREMAN_TASK_TYPES,
-        }))
-      .then(() => renderTaskStartedToast(this.props.taskDetails));
+    this.props.delete();
     this.showDeleteManifestModal(false);
   };
 
@@ -304,9 +284,9 @@ class ManageManifestModal extends Component {
 }
 
 ManageManifestModal.propTypes = {
-  uploadManifest: PropTypes.func.isRequired,
-  refreshManifest: PropTypes.func.isRequired,
-  deleteManifest: PropTypes.func.isRequired,
+  upload: PropTypes.func.isRequired,
+  refresh: PropTypes.func.isRequired,
+  delete: PropTypes.func.isRequired,
   loadManifestHistory: PropTypes.func.isRequired,
   organization: PropTypes.shape({}).isRequired,
   disableManifestActions: PropTypes.bool,
@@ -317,7 +297,6 @@ ManageManifestModal.propTypes = {
   manifestHistory: PropTypes.shape({}).isRequired,
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
-  bulkSearch: PropTypes.func.isRequired,
   taskDetails: PropTypes.shape({}),
 };
 

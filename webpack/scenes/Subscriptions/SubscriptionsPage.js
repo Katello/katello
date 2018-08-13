@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
-import { renderTaskFinishedToast } from '../Tasks/helpers';
 import OptionTooltip from '../../move_to_pf/OptionTooltip';
+import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
@@ -19,7 +19,6 @@ import api, { orgId } from '../../services/api';
 import { createSubscriptionParams } from './SubscriptionActions.js';
 import {
   BLOCKING_FOREMAN_TASK_TYPES,
-  MANIFEST_TASKS_BULK_SEARCH_ID,
   BULK_TASK_SEARCH_INTERVAL,
   SUBSCRIPTION_TABLE_NAME,
 } from './SubscriptionConstants';
@@ -37,41 +36,56 @@ class SubscriptionsPage extends Component {
       showTaskModal: false,
       searchQuery: '',
     };
+    this.uploadManifest = this.uploadManifest.bind(this);
+    this.deleteManifest = this.deleteManifest.bind(this);
+    this.refreshManifest = this.refreshManifest.bind(this);
   }
 
   componentDidMount() {
-    this.loadData();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { tasks = [] } = nextProps;
-    const nextTaskId = tasks[0] && tasks[0].id;
-
-    if (tasks.length === 0 && prevState.polledTask != null) {
-      return { showTaskModal: false, polledTask: undefined };
-    } else if (tasks.length > 0 && nextTaskId !== prevState.polledTask) {
-      return {
-        showTaskModal: true,
-        manifestModalOpen: false,
-        polledTask: nextTaskId,
-      };
-    }
-    return null;
+    this.props.resetTasks();
+    this.props.loadSetting('content_disconnected');
+    this.props.loadSubscriptions();
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks = [] } = this.props;
+    const { tasks = [], organization } = this.props;
     const { tasks: prevTasks = [] } = prevProps;
-
+    const currentOrg = Number(orgId());
     const numberOfTasks = tasks.length;
     const numberOfPrevTasks = prevTasks.length;
-    let task;
+    const [task] = tasks;
 
     if (numberOfTasks > 0) {
-      if (numberOfPrevTasks === 0 || prevTasks[0].id !== tasks[0].id) {
-        [task] = tasks;
-        this.handleDoneTask(task);
+      if (currentOrg === task.input.organization.id) {
+        if (!this.state.showTaskModal) {
+        // eslint-disable-next-line
+        this.setState({
+            showTaskModal: true,
+          });
+        }
       }
+
+      if (numberOfPrevTasks === 0 || prevTasks[0].id !== task.id) {
+        if (currentOrg === task.input.organization.id) {
+          this.handleDoneTask(task);
+        } else if (this.state.showTaskModal) {
+          // eslint-disable-next-line
+            this.setState({
+            showTaskModal: false,
+          });
+        }
+      }
+    }
+
+    if (numberOfTasks === 0) {
+      if (this.state.showTaskModal && !this.state.pollingATask) {
+        // eslint-disable-next-line
+        this.setState({ showTaskModal: false });
+      }
+    }
+
+    if (!isEqual(organization.owner_details, prevProps.organization.owner_details)) {
+      this.pollTasks();
     }
   }
 
@@ -93,13 +107,14 @@ class SubscriptionsPage extends Component {
     return disabledReason;
   }
 
-  loadData() {
-    this.props.pollBulkSearch({
-      search_id: MANIFEST_TASKS_BULK_SEARCH_ID,
-      type: 'all',
-      active_only: true,
-      action_types: BLOCKING_FOREMAN_TASK_TYPES,
-    }, BULK_TASK_SEARCH_INTERVAL);
+  pollTasks() {
+    const { pollBulkSearch, organization } = this.props;
+
+    pollBulkSearch({
+      action: `organization '${organization.owner_details.displayName}'`,
+      result: 'pending',
+      label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+    }, BULK_TASK_SEARCH_INTERVAL, organization.id);
 
     this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
@@ -111,14 +126,41 @@ class SubscriptionsPage extends Component {
 
   handleDoneTask(taskToPoll) {
     const POLL_TASK_INTERVAL = 5000;
-    const { pollTaskUntilDone, loadSubscriptions } = this.props;
+    const { pollTaskUntilDone, loadSubscriptions, organization } = this.props;
 
-    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL)
+    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, organization.id)
       .then((task) => {
         renderTaskFinishedToast(task);
         loadSubscriptions();
+        this.setState({ pollingATask: false });
       });
   }
+
+  manifestAction(callback, file = undefined) {
+    this.setState({
+      showTaskModal: true,
+      pollingATask: true,
+    });
+    callback(file)
+      .then(() => renderTaskStartedToast(this.props.taskDetails))
+      .then(() =>
+        setTimeout(() => this.props.bulkSearch({
+          action: `organization '${this.props.organization.owner_details.displayName}'`,
+          result: 'pending',
+          label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+        })), 100);
+  }
+  uploadManifest = (file) => {
+    this.manifestAction(this.props.uploadManifest, file);
+  };
+
+  deleteManifest = () => {
+    this.manifestAction(this.props.deleteManifest);
+  };
+
+  refreshManifest = () => {
+    this.manifestAction(this.props.refreshManifest);
+  };
 
   render() {
     const currentOrg = orgId();
@@ -282,6 +324,9 @@ class SubscriptionsPage extends Component {
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
               onClose={onManageManifestModalClose}
+              upload={this.uploadManifest}
+              delete={this.deleteManifest}
+              refresh={this.refreshManifest}
             />
 
             <div id="subscriptions-table" className="modal-container">
@@ -313,10 +358,18 @@ class SubscriptionsPage extends Component {
 
 SubscriptionsPage.propTypes = {
   loadSubscriptions: PropTypes.func.isRequired,
+  uploadManifest: PropTypes.func.isRequired,
+  deleteManifest: PropTypes.func.isRequired,
+  resetTasks: PropTypes.func.isRequired,
   updateQuantity: PropTypes.func.isRequired,
   loadTableColumns: PropTypes.func.isRequired,
+  taskDetails: PropTypes.shape({}),
   subscriptions: PropTypes.shape({}).isRequired,
-  organization: PropTypes.shape({}).isRequired,
+  organization: PropTypes.shape({
+    owner_details: PropTypes.shape({
+      displayName: PropTypes.string,
+    }),
+  }),
   pollBulkSearch: PropTypes.func.isRequired,
   bulkSearch: PropTypes.func,
   pollTaskUntilDone: PropTypes.func.isRequired,
@@ -327,11 +380,14 @@ SubscriptionsPage.propTypes = {
   subscriptionTableSettings: PropTypes.shape({}).isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
+  refreshManifest: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {
   tasks: [],
   bulkSearch: undefined,
+  taskDetails: {},
+  organization: undefined,
 };
 
 export default SubscriptionsPage;

@@ -6,11 +6,14 @@ import * as subscriptionActions from './SubscriptionActions';
 import * as taskActions from '../Tasks/TaskActions';
 import * as settingActions from '../../move_to_foreman/Settings/SettingsActions';
 import * as tableActions from '../Settings/Tables/TableActions';
+import * as manifestActions from './Manifest/ManifestActions';
+
 import reducer from './SubscriptionReducer';
 import { SUBSCRIPTION_TABLE_NAME } from './SubscriptionConstants';
 import SubscriptionsPage from './SubscriptionsPage';
 
 // map state to props
+
 const mapStateToProps = (state) => {
   const subscriptionTableSettings = state.katello.settings.tables[SUBSCRIPTION_TABLE_NAME] || {};
 
@@ -19,6 +22,7 @@ const mapStateToProps = (state) => {
     subscriptions: state.katello.subscriptions,
     tasks: state.katello.subscriptions.tasks,
     subscriptionTableSettings,
+    taskDetails: state.katello.manifestHistory.taskDetails,
   };
 };
 
@@ -28,7 +32,9 @@ const actions = {
   ...taskActions,
   ...settingActions,
   ...tableActions,
+  ...manifestActions,
 };
+
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 // export reducers
