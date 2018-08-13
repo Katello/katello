@@ -10,9 +10,8 @@ module Actions
         end
 
         def plan(env, options = {})
-          unless env.deletable?
-            fail env.errors.full_messages.join(" ")
-          end
+          fail env.errors.full_messages.join(" ") unless env.deletable?
+
           skip_repo_destroy = options.fetch(:skip_repo_destroy, false)
           organization_destroy = options.fetch(:organization_destroy, false)
           sequence do
