@@ -85,8 +85,6 @@ RedHatRepositoriesPage.propTypes = {
   updateRecommendedRepositorySets: PropTypes.func.isRequired,
   enabledRepositories: PropTypes.shape({}).isRequired,
   repositorySets: PropTypes.shape({}).isRequired,
-  history: PropTypes.shape({}).isRequired,
-  location: PropTypes.shape({}).isRequired,
 };
 
 const mapStateToProps = ({

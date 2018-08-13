@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { orgId } from '../../services/api';
 import SetOrganization from '../SelectOrg/SetOrganization';
 import titleWithCaret from '../../helpers/caret';
 
 function withOrganization(WrappedComponent, redirectPath) {
-  return class CheckOrg extends Component {
+  class CheckOrg extends Component {
     componentDidUpdate(prevProps) {
       const { location } = this.props;
 
@@ -16,13 +17,20 @@ function withOrganization(WrappedComponent, redirectPath) {
         document.getElementById('organization-dropdown').children[0].innerHTML = titleWithCaret(orgTitle);
       }
     }
+
     render() {
       if (!orgId()) {
         return <SetOrganization redirectPath={redirectPath} />;
       }
       return <WrappedComponent {...this.props} />;
     }
+  }
+
+  CheckOrg.propTypes = {
+    location: PropTypes.shape({}).isRequired,
   };
+
+  return CheckOrg;
 }
 
 export default withOrganization;
