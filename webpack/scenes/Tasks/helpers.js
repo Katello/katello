@@ -1,9 +1,11 @@
 import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { sprintf } from 'jed';
 import helpers from '../../move_to_foreman/common/helpers';
 import { notify } from '../../move_to_foreman/foreman_toast_notifications';
 
+const link = id => ({
+  children: __('Go to task page'),
+  href: helpers.urlBuilder('foreman_tasks/tasks', '', id),
+});
 const getErrors = task => (
   <ul>
     {task.humanized.errors.map(error => (
@@ -15,42 +17,25 @@ const getErrors = task => (
 export const renderTaskStartedToast = (task) => {
   if (!task) return;
 
-  const message = (
-    <span>
-      <span>
-        {sprintf('Task %s has started.', task.humanized.action)}
-        {' '}
-      </span>
-      <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
-        {__('Click here to go to the tasks page for the task.')}
-      </a>
-    </span>
-  );
+  const message = (__(`Task ${task.humanized.action} has started.`));
 
   notify({
-    message: ReactDOMServer.renderToStaticMarkup(message),
+    message,
     type: 'info',
+    link: link(task.id),
+
   });
 };
 
 export const renderTaskFinishedToast = (task) => {
   if (!task) return;
 
-  const message = (
-    <span>
-      <span>
-        {`${__(`Task ${task.humanized.action} completed with a result of ${task.result}.`)}`}
-        {' '}
-      </span>
-      {task.errors ? getErrors(task) : ''}
-      <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
-        {__('Click here to go to the tasks page for the task.')}
-      </a>
-    </span>
-  );
+  const message = __(`Task ${task.action} completed with a result of ${task.result}.
+  ${task.errors ? getErrors(task) : ''}`);
 
   notify({
-    message: ReactDOMServer.renderToStaticMarkup(message),
+    message,
     type: task.result,
+    link: link(task.id),
   });
 };

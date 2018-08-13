@@ -12,9 +12,9 @@ describe('manage manifest modal', () => {
 
   it('should render', async () => {
     const page = shallow(<ManageManifestModal
-      uploadManifest={noop}
-      refreshManifest={noop}
-      deleteManifest={noop}
+      upload={noop}
+      refresh={noop}
+      delete={noop}
       loadManifestHistory={noop}
       organization={organization}
       loadOrganization={noop}

@@ -17,7 +17,10 @@ import {
 import { bulkSearch, loadTask, pollTaskUntilDone, pollBulkSearch } from '../TaskActions';
 
 const mockStore = configureMockStore([thunk]);
-const store = mockStore({ tasks: Immutable({}) });
+const store = mockStore({
+  tasks: Immutable({}),
+  katello: { organization: { id: 1, loading: false } },
+});
 const mockApi = new MockAdapter(axios);
 
 beforeEach(() => {
@@ -44,17 +47,17 @@ afterEach(() => {
 
 describe('task actions', () => {
   describe('creates TASK_BULK_SEARCH_REQUEST', () => {
-    const url = '/foreman_tasks/api/tasks/bulk_search';
+    const url = '/foreman_tasks/api/tasks';
 
     it('and then fails with 422', () => {
-      mockApi.onPost(url).reply(422);
+      mockApi.onGet(url).reply(422);
 
       return store.dispatch(bulkSearch())
         .then(() => expect(store.getActions()).toEqual(buildBulkSearchFailureActions()));
     });
 
     it('and ends with success', () => {
-      mockApi.onPost(url).reply(200, bulkSearchSuccessResponse);
+      mockApi.onGet(url).reply(200, bulkSearchSuccessResponse);
 
       return store.dispatch(bulkSearch())
         .then(() => expect(store.getActions()).toEqual(bulkSearchSuccessActions));
@@ -88,7 +91,7 @@ describe('task actions', () => {
       mockApi.onGet(url).replyOnce(200, getTaskSuccessResponse);
 
       return store
-        .dispatch(pollTaskUntilDone(taskId, {}, 1))
+        .dispatch(pollTaskUntilDone(taskId, {}, 1, 1))
         .then(() => {
           expect(store.getActions()).toEqual(getTaskSuccessActions);
           expect(setTimeoutSpy).toHaveBeenCalledTimes(0);
@@ -109,7 +112,7 @@ describe('task actions', () => {
         .concat(getTaskSuccessActions);
 
       return store
-        .dispatch(pollTaskUntilDone(taskId, {}, 1))
+        .dispatch(pollTaskUntilDone(taskId, {}, 1, 1))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
           expect(setTimeoutSpy).toHaveBeenCalledTimes(2);
@@ -125,7 +128,7 @@ describe('task actions', () => {
         .concat(buildTaskFailureActions(401));
 
       return store
-        .dispatch(pollTaskUntilDone(taskId, {}, 1))
+        .dispatch(pollTaskUntilDone(taskId, {}, 1, 1))
         .catch(() => {
           expect(store.getActions()).toEqual(expectedActions);
           expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
@@ -134,15 +137,15 @@ describe('task actions', () => {
   });
 
   describe('pollBulkSearch', () => {
-    const url = '/foreman_tasks/api/tasks/bulk_search';
+    const url = '/foreman_tasks/api/tasks';
 
     it('polls', () => {
       mockApi
-        .onPost(url)
+        .onGet(url)
         .replyOnce(200, bulkSearchSuccessResponse);
 
       return store
-        .dispatch(pollBulkSearch({}, 1))
+        .dispatch(pollBulkSearch({}, 1, 1))
         .then(() => {
           expect(store.getActions()).toEqual(bulkSearchSuccessActions);
           expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
@@ -151,10 +154,10 @@ describe('task actions', () => {
 
     it('stops polling on unauthorized response', () => {
       mockApi
-        .onPost(url).replyOnce(401);
+        .onGet(url).replyOnce(401);
 
       return store
-        .dispatch(pollBulkSearch({}, 1))
+        .dispatch(pollBulkSearch({}, 1, 1))
         .then(() => {
           expect(store.getActions()).toEqual(buildBulkSearchFailureActions(401));
           expect(setTimeoutSpy).toHaveBeenCalledTimes(0);
