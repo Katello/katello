@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel, Row } from 'react-bootstrap';
+import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { bindMethods, Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
 import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';

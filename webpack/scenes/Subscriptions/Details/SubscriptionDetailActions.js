@@ -6,7 +6,7 @@ import {
 } from './SubscriptionDetailConstants';
 import { apiError } from '../../../move_to_foreman/common/helpers.js';
 
-export const loadSubscriptionDetails = subscriptionId => (dispatch, getState) => {
+export const loadSubscriptionDetails = subscriptionId => (dispatch) => {
   dispatch({ type: SUBSCRIPTION_DETAILS_REQUEST });
 
   return api

@@ -9,8 +9,8 @@
     "test:current": "jest webpack --watch",
     "format": "prettier --single-quote --trailing-comma es5 --write 'webpack/**/*.js'",
     "build": "npm run format && npm run lint",
-    "lint": "eslint webpack/ || exit 0",
-    "lint:fix": "eslint --fix webpack/ || exit 0",
+    "lint": "eslint webpack/",
+    "lint:fix": "eslint --fix webpack/",
     "lint:test": "npm run lint && npm test"
   },
   "repository": {
