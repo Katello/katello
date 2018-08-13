@@ -25,7 +25,7 @@ module Katello
       update_attributes(:schema_version => json[:schema_version],
                         :digest => json[:digest],
                         :downloaded => json[:downloaded],
-                        :docker_manifests => ::Katello::DockerManifest.where(:digest => json[:manifests])
+                        :docker_manifests => ::Katello::DockerManifest.where(:digest => json[:manifests].pluck(:digest))
                        )
     end
 
