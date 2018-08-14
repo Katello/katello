@@ -428,14 +428,6 @@ module Katello
         end
       end
 
-      def sync_schedule(date_and_time)
-        if date_and_time
-          Katello.pulp_server.extensions.repository.create_or_update_schedule(self.pulp_id, importer_type, date_and_time)
-        else
-          Katello.pulp_server.extensions.repository.remove_schedules(self.pulp_id, importer_type)
-        end
-      end
-
       def find_packages_by_name(name)
         Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name
       end

@@ -53,22 +53,6 @@ module ::Actions::Katello::Repository
       run_action plan
       plan.run.must_equal nil
     end
-
-    it 'plans product repos update when sync plan present' do
-      repository.product.sync_plan = FactoryBot.build('katello_sync_plan',
-                                                       :products => [repository.product])
-
-      plan_action action, repository
-      assert_action_planed action, ::Actions::Pulp::Repos::Update
-    end
-
-    it 'does not plan product repos update when clone flag is present' do
-      repository.product.sync_plan = FactoryBot.build('katello_sync_plan',
-                                                       :products => [repository.product])
-
-      plan_action action, repository, true
-      refute_action_planed action, ::Actions::Pulp::Repos::Update
-    end
   end
 
   class CreateFailTest < TestBase

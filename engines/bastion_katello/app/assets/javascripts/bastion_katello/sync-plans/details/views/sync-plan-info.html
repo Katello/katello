@@ -27,9 +27,9 @@
         <div class="row">
           <div class="col-sm-5">
             <div class="input-group">
-               <input type="text" uib-datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
-                      class="form-control" is-open="isOpen" show-weeks="false" tabindex="4" required/>
-               <span class="input-group-btn">
+              <input type="text" uib-datepicker-popup id="syncDate" name="syncDate" ng-model="syncPlan.syncDate"
+                     class="form-control" is-open="isOpen" show-weeks="false" tabindex="4" required/>
+              <span class="input-group-btn">
                  <button type="button" class="btn btn-default" ng-click="isOpen = !isOpen">
                    <i class="fa fa-calendar"></i>
                  </button>
@@ -43,6 +43,13 @@
 
       <dt translate>Next Sync</dt>
       <dd>{{ syncPlan.next_sync | date:'medium' }}</dd>
+
+      <dt translate>Recurring Logic</dt>
+      <dd>
+        <a href="/foreman_tasks/recurring_logics/{{syncPlan.foreman_tasks_recurring_logic_id}}">
+          {{ syncPlan.foreman_tasks_recurring_logic_id }}
+        </a>
+      </dd>
 
       <dt translate>Sync Enabled</dt>
       <dd bst-edit-checkbox="syncPlan.enabled"

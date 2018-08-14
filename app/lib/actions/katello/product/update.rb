@@ -13,9 +13,7 @@ module Actions
               product.previous_changes.key?('ssl_client_key_id'))
             plan_action(::Actions::Katello::Product::RepositoriesCertsReset, product)
           end
-
           product.reload
-          plan_action(::Actions::Pulp::Repos::Update, product) if ::SETTINGS[:katello][:use_pulp]
         end
       end
     end
