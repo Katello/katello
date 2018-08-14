@@ -7,7 +7,7 @@ module Katello
       @module_stream_river = katello_module_streams(:river)
       @module_stream_empty = katello_module_streams(:empty)
       @module_profile_tributary = katello_module_profiles(:tributary)
-      @module_stream_rpm_boat = katello_module_stream_rpms(:boat)
+      @module_stream_artifact_boat = katello_module_stream_artifacts(:boat)
     end
 
     def test_update_from_json
@@ -17,7 +17,7 @@ module Katello
       assert_equal @module_stream_empty.context, pulp_module_data['context']
       assert_equal @module_stream_empty.stream, pulp_module_data['stream']
       assert_equal @module_stream_empty.arch, pulp_module_data['arch']
-      assert @module_stream_empty.rpms.first.nvra, pulp_module_data['artifacts'].first
+      assert @module_stream_empty.artifacts.first.name, pulp_module_data['artifacts'].first
       assert @module_stream_empty.profiles.first.name, pulp_module_data['profiles'].keys.first
       assert @module_stream_empty.profiles.first.rpms.first.name, pulp_module_data['profiles'].values.first.first
     end
@@ -31,7 +31,7 @@ module Katello
     end
 
     def test_rpms_relation
-      assert @module_stream_river.rpms.include?(@module_stream_rpm_boat)
+      assert @module_stream_river.artifacts.include?(@module_stream_artifact_boat)
     end
 
     def pulp_module_data

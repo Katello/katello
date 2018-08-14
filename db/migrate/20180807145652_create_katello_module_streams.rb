@@ -33,9 +33,9 @@ class CreateKatelloModuleStreams < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    create_table :katello_module_stream_rpms do |t|
-      t.references :module_stream, null: false, index: { name: :katello_mod_stream_rpms_mod_stream_idx }
-      t.string :nvra
+    create_table :katello_module_stream_artifacts do |t|
+      t.references :module_stream, null: false, index: { name: :katello_mod_stream_artifacts_mod_stream_idx }
+      t.string :name
 
       t.timestamps
     end
@@ -43,8 +43,8 @@ class CreateKatelloModuleStreams < ActiveRecord::Migration[5.1]
     add_index :katello_repository_module_streams, [:repository_id, :module_stream_id],
               unique: true, name: :katello_module_streams_repo_stream_uniq
 
-    add_index :katello_module_stream_rpms, [:module_stream_id, :nvra],
-              unique: true, name: :katello_module_stream_rpms_nvra_mod_stream_id_uniq
+    add_index :katello_module_stream_artifacts, [:module_stream_id, :name],
+              unique: true, name: :katello_module_stream_artifacts_name_mod_stream_id_uniq
 
     add_foreign_key :katello_repository_module_streams,
                     :katello_repositories,
@@ -66,10 +66,10 @@ class CreateKatelloModuleStreams < ActiveRecord::Migration[5.1]
                     column: :module_profile_id,
                     name: :katello_mod_profile_rpm_mod_profile_id_fk
 
-    add_foreign_key :katello_module_stream_rpms,
+    add_foreign_key :katello_module_stream_artifacts,
                     :katello_module_streams,
                     column: :module_stream_id,
-                    name: :katello_mod_stream_rpms_mod_stream_id_fk
+                    name: :katello_mod_stream_artifacts_mod_stream_id_fk
   end
 
   def down
@@ -77,12 +77,12 @@ class CreateKatelloModuleStreams < ActiveRecord::Migration[5.1]
     remove_foreign_key :katello_repository_module_streams, name: :katello_repo_mod_stream_mod_stream_id_fk
     remove_foreign_key :katello_module_profiles, name: :katello_mod_profile_mod_stream_id_fk
     remove_foreign_key :katello_module_profile_rpms, name: :katello_mod_profile_rpm_mod_profile_id_fk
-    remove_foreign_key :katello_module_stream_rpms, name: :katello_mod_stream_rpms_mod_stream_id_fk
+    remove_foreign_key :katello_module_stream_artifacts, name: :katello_mod_stream_artifacts_mod_stream_id_fk
 
     drop_table :katello_module_streams
     drop_table :katello_repository_module_streams
     drop_table :katello_module_profiles
     drop_table :katello_module_profile_rpms
-    drop_table :katello_module_stream_rpms
+    drop_table :katello_module_stream_artifacts
   end
 end

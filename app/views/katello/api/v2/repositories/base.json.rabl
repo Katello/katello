@@ -31,7 +31,8 @@ node :content_counts do |repo|
     :erratum => repo.errata.count,
     :puppet_module => repo.puppet_modules.count,
     :file => repo.files.count,
-    :deb => repo.debs.count
+    :deb => repo.debs.count,
+    :module_stream => repo.module_streams.count
   }
 end
 
