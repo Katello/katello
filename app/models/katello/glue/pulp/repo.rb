@@ -744,14 +744,6 @@ module Katello
           generated_importer.config == capsule_importer['config']
       end
 
-      def module_streams_data
-        unit_search(type_ids: [ "modulemd" ]).parsed_body
-      end
-
-      def module_defaults_data
-        unit_search(type_ids: [ "modulemd_defaults" ]).parsed_body
-      end
-
       protected
 
       def object_to_hash(object)

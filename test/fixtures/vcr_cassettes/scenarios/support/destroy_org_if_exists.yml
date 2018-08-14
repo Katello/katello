@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/scenario_test
+    uri: https://coffee.jomitsch.example.com:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -12,37 +12,80 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="7b05sMZmZrrp6Z6zqu1RyZgcZs1eiIMG3RSXWyHnduI",
-        oauth_signature="aJuK0qjXOF7N81vLQzrF6oit6pM%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534362682", oauth_version="1.0"
+      - OAuth oauth_consumer_key="AdoV269D57DssaF5sCDMoygDLex53WhZ", oauth_nonce="GK0sfs8MMF0P6IOFl5GdWhQY6MDbB8Nk4MCPBZAOOfU",
+        oauth_signature="vGPyaUOHscvccqdUoe7z%2BflBwdw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1534359089", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
     status:
-      code: 404
-      message: Not Found
+      code: 200
+      message: OK
     headers:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 7130e792-6b73-4ef7-bebd-47b947d40a3f
+      - a4547017-87a4-438c-a721-352a1703a15d
       X-Version:
-      - 2.4.5-1
       - 2.4.5-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Wed, 15 Aug 2018 19:51:22 GMT
+      - Wed, 15 Aug 2018 18:51:30 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIHNjZW5h
-        cmlvX3Rlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJlcXVlc3RVdWlkIjoi
-        NzEzMGU3OTItNmI3My00ZWY3LWJlYmQtNDdiOTQ3ZDQwYTNmIn0=
+        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNVQxODozMjozOSswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDgtMTVUMTg6MzI6MzkrMDAwMCIsImlkIjoiNDAyOGY5MDA2
+        NTNlZGM1MDAxNjUzZWRjNzUyYzAwMDIiLCJrZXkiOiJzY2VuYXJpb190ZXN0
+        IiwiZGlzcGxheU5hbWUiOiJzY2VuYXJpb190ZXN0IiwicGFyZW50T3duZXIi
+        Om51bGwsImNvbnRlbnRQcmVmaXgiOiIvc2NlbmFyaW9fdGVzdC8kZW52Iiwi
+        ZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25zdW1lciI6
+        bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQiOmZhbHNl
+        LCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29udGVudEFj
+        Y2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVzaGVkIjpu
+        dWxsLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0=
+    http_version:
+  recorded_at: Wed, 15 Aug 2018 18:51:30 GMT
+- request:
+    method: delete
+    uri: https://coffee.jomitsch.example.com:8443/candlepin/owners/scenario_test
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      Authorization:
+      - OAuth oauth_consumer_key="AdoV269D57DssaF5sCDMoygDLex53WhZ", oauth_nonce="QKdfKoh5y8mAUkrQwuYKtWChKGlL27zb6IYMwGvRWk",
+        oauth_signature="UUrCIHCAGPU90D3%2FZ%2F%2BG5kZbtzs%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1534359090", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 6dbfaf73-5b0c-412d-be19-fbcf58cffcf8
+      X-Version:
+      - 2.4.5-1
+      Date:
+      - Wed, 15 Aug 2018 18:51:30 GMT
+    body:
+      encoding: UTF-8
+      base64_string: ''
     http_version: 
-  recorded_at: Wed, 15 Aug 2018 19:51:22 GMT
+  recorded_at: Wed, 15 Aug 2018 18:51:30 GMT
 recorded_with: VCR 3.0.3

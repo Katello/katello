@@ -307,6 +307,12 @@
             </a>
           </td>
         </tr>
+        <tr ng-show="repository.content_type === 'yum'">
+          <td translate>Module Streams</td>
+          <td class="align-center">
+            {{ repository.content_counts.module_stream || 0 }}
+          </td>
+        </tr>
         <tr ng-show="repository.content_type === 'puppet'">
           <td translate>Puppet Modules</td>
           <td class="align-center">

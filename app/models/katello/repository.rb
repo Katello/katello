@@ -99,8 +99,8 @@ module Katello
     has_many :kickstart_hostgroups, :class_name => "::Hostgroup", :foreign_key => :kickstart_repository_id,
              :inverse_of => :kickstart_repository, :dependent => :nullify
 
-    has_many :repository_module_stream, class_name: "Katello::RepositoryModuleStream", dependent: :delete_all
-    has_many :module_streams, through: :repository_module_stream
+    has_many :repository_module_streams, class_name: "Katello::RepositoryModuleStream", dependent: :delete_all
+    has_many :module_streams, through: :repository_module_streams
 
     # rubocop:disable HasAndBelongsToMany
     # TODO: change this into has_many :through association
