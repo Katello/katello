@@ -342,11 +342,6 @@ module Katello
       TaskSupport.wait_on_tasks(task_list)
     end
 
-    def test_sync_schedule
-      time = "2013-08-01T00:00:00-04:00/P1D"
-      assert @fedora_17_x86_64.sync_schedule(time)
-    end
-
     def test_custom_repo_path
       product = @fedora_17_x86_64.product
       env = @fedora_17_x86_64.product.organization.library

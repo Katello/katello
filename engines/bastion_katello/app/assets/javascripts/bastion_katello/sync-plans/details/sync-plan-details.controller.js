@@ -40,8 +40,9 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsController',
             };
 
             $scope.removeSyncPlan = function (syncPlan) {
+                var syncPlanName = syncPlan.name;
                 syncPlan.$remove(function () {
-                    Notification.setSuccessMessage(translate('Sync Plan %s has been deleted.').replace('%s', syncPlan.name));
+                    Notification.setSuccessMessage(translate('Sync Plan %s has been deleted.').replace('%s', syncPlanName));
                     $scope.transitionTo('sync-plans');
                 });
             };
