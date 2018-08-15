@@ -144,6 +144,17 @@ class ActionController::TestCase
   def stub_find_organization(org)
     Organization.stubs(:find_by_id).returns(org)
   end
+
+  def setup_product_permissions
+    @read_permission = :view_products
+    @create_permission = :create_products
+    @update_permission = :edit_products
+    @destroy_permission = :destroy_products
+    @sync_permission = :sync_products
+
+    @auth_permissions = [@read_permission]
+    @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
+  end
 end
 
 class ActiveSupport::TestCase
