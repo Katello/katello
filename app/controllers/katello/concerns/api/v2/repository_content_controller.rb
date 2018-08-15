@@ -225,6 +225,8 @@ module Katello
           _("OSTree Branch")
         when "Katello::FileUnit"
           _("File")
+        when "Katello::ModuleStream"
+          _("Module Stream")
         else
           fail "Can't find resource class: #{resource_class}"
         end

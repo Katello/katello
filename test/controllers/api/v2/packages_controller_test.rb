@@ -10,23 +10,12 @@ module Katello
       Pulp::Rpm.any_instance.stubs(:backend_data).returns({})
     end
 
-    def permissions
-      @read_permission = :view_products
-      @create_permission = :create_products
-      @update_permission = :edit_products
-      @destroy_permission = :destroy_products
-      @sync_permission = :sync_products
-
-      @auth_permissions = [@read_permission]
-      @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
-    end
-
     def setup
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
       models
-      permissions
+      setup_product_permissions
     end
 
     def test_index
