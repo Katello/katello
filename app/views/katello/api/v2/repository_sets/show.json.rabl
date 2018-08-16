@@ -5,7 +5,8 @@ object @resource
 glue :content do
   node do |content|
     {
-      id: content.cp_content_id,
+      id: content.id,
+      cp_content: content.cp_content_id,
       name: content.name,
       label: content.label,
       vendor: content.vendor,
