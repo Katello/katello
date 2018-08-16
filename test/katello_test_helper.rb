@@ -253,6 +253,10 @@ class ActiveSupport::TestCase
     Setting[:default_location_subscribed_hosts] = Location.first.title
     Setting[:default_location_puppet_content] = Location.first.title
   end
+
+  def set_ca_file
+    Setting[:ssl_ca_file] = File.join("#{Katello::Engine.root}", "/ca/redhat-uep.pem")
+  end
 end
 
 def disable_lazy_accessors

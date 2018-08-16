@@ -17,7 +17,10 @@ module Katello
     end
 
     def test_verify_ueber_cert_no_change
-      Setting[:ssl_ca_file] = File.join("#{Katello::Engine.root}", "/test/services/cert/helpers/ca.crt")
+      store = OpenSSL::X509::Store.new
+      OpenSSL::X509::Store.stubs(:new).returns(store)
+      store.expects(:add_file).with(@original_ssl_ca_file).returns
+      store.expects(:verify).returns(true)
       @org.expects(:regenerate_ueber_cert).never
       Cert::Certs.verify_ueber_cert(@org)
     end

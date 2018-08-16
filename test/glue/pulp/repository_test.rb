@@ -11,7 +11,7 @@ module Katello
     def setup
       set_user
       backend_stubs
-
+      set_ca_file
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
