@@ -4,8 +4,7 @@ module Katello
 
     include Katello::Concerns::FilteredAutoCompleteSearch
 
-    before_action :find_product, :except => [:index, :auto_complete_search]
-    before_action :find_product_or_organization, :only => [:index, :auto_complete_search]
+    before_action :find_product_or_organization
     before_action :custom_product?
     before_action :find_product_content, :except => [:index, :auto_complete_search]
 
@@ -15,7 +14,7 @@ module Katello
 
     api :GET, "/repository_sets", N_("List repository sets.")
     api :GET, "/products/:product_id/repository_sets", N_("List repository sets for a product.")
-    param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
+    param :product_id, :number, :required => false, :desc => N_("ID of a product to list repository sets from")
     param :name, String, :required => false, :desc => N_("Repository set name to search on")
     param :enabled, :bool, :required => false, :desc => N_("If true, only return repository sets that have been enabled. Defaults to false")
     param :with_active_subscription, :bool, :required => false, :desc => N_("If true, only return repository sets that are associated with an active subscriptions")
@@ -28,7 +27,8 @@ module Katello
     api :GET, "/repository_sets/:id", N_("Get info about a repository set")
     api :GET, "/products/:product_id/repository_sets/:id", N_("Get info about a repository set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set")
-    param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
+    param :product_id, :number, :required => false, :desc => N_("ID of a product to list repository sets from")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def show
       respond :resource => @product_content
     end
@@ -36,7 +36,8 @@ module Katello
     api :GET, "/repository_sets/:id/available_repositories", N_("Get list of available repositories for the repository set")
     api :GET, "/products/:product_id/repository_sets/:id/available_repositories", N_("Get list of available repositories for the repository set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set")
-    param :product_id, :number, :required => true, :desc => N_("ID of a product to list repository sets from")
+    param :product_id, :number, :required => false, :desc => N_("ID of a product to list repository sets from")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def available_repositories
       scan_cdn = sync_task(::Actions::Katello::RepositorySet::ScanCdn, @product, @product_content.content.cp_content_id)
       repos = scan_cdn.output[:results]
@@ -72,9 +73,10 @@ module Katello
     api :PUT, "/repository_sets/:id/enable", N_("Enable a repository from the set")
     api :PUT, "/products/:product_id/repository_sets/:id/enable", N_("Enable a repository from the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to enable")
-    param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
+    param :product_id, :number, :required => false, :desc => N_("ID of the product containing the repository set")
     param :basearch, String, :required => false, :desc => N_("Basearch to enable")
     param :releasever, String, :required => false, :desc => N_("Releasever to enable")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def enable
       task = sync_task(::Actions::Katello::RepositorySet::EnableRepository, @product, @product_content.content, substitutions)
       respond_for_async :resource => task
@@ -83,9 +85,10 @@ module Katello
     api :PUT, "/repository_sets/:id/disable", N_("Disable a repository from the set")
     api :PUT, "/products/:product_id/repository_sets/:id/disable", N_("Disable a repository from the set")
     param :id, :number, :required => true, :desc => N_("ID of the repository set to disable")
-    param :product_id, :number, :required => true, :desc => N_("ID of the product containing the repository set")
+    param :product_id, :number, :required => false, :desc => N_("ID of the product containing the repository set")
     param :basearch, String, :required => false, :desc => N_("Basearch to disable")
     param :releasever, String, :required => false, :desc => N_("Releasever to disable")
+    param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     def disable
       task = sync_task(::Actions::Katello::RepositorySet::DisableRepository, @product, @product_content.content, substitutions)
       respond_for_async :resource => task
@@ -118,8 +121,14 @@ module Katello
     end
 
     def find_product_content
-      @product_content = @product.product_content_by_id(params[:id])
+      if @product.present?
+        @product_content = @product.product_content_by_id(params[:id])
+      else
+        content = Katello::Content.find_by(:cp_content_id => params[:id], :organization_id => @organization[:id])
+        @product_content = Katello::ProductContent.find_by(:id => content[:id])
+      end
       fail HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
+      @product = @product_content.product if @product.nil?
     end
 
     def find_product_or_organization
