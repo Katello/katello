@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { ListView, Spinner, OverlayTrigger, Tooltip, Icon } from 'patternfly-react';
+import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from 'patternfly-react';
 import { connect } from 'react-redux';
 
+
+import { yStream } from '../helpers';
 import { setRepositoryEnabled } from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import '../index.scss';
 import api from '../../../services/api';
@@ -64,12 +66,27 @@ class RepositorySetRepository extends Component {
   }
 
   render() {
-    const { arch, releasever } = this.props;
+    const { arch, releasever, type } = this.props;
+
+    const yStreamHelp = () => (
+      <span translate>
+        This repository is not suggested. Please see additional&nbsp;
+        <a href="https://access.redhat.com/articles/1586183">documentation</a>
+        &nbsp;prior to use.
+      </span>
+    );
+    const shouldDeemphasize = () => type !== 'kickstart' && yStream(releasever);
+    const repositoryHeading = () => (
+      <span>
+        {arch} {releasever}
+        {shouldDeemphasize() ? (<FieldLevelHelp content={yStreamHelp()} />) : null}
+      </span>
+    );
 
     return (
       <ListView.Item
-        heading={`${arch} ${releasever}`}
-        className="list-item-with-divider"
+        heading={repositoryHeading()}
+        className={`list-item-with-divider ${shouldDeemphasize() ? 'deemphasize' : ''}`}
         leftContent={
           this.state.error ? (
             <div className="list-error-danger">
@@ -118,12 +135,14 @@ RepositorySetRepository.propTypes = {
   productId: PropTypes.number.isRequired,
   arch: PropTypes.string,
   releasever: PropTypes.string,
+  type: PropTypes.string,
   setRepositoryEnabled: PropTypes.func.isRequired,
 };
 
 RepositorySetRepository.defaultProps = {
   releasever: '',
   arch: __(UNSPECIFIED_ARCH),
+  type: '',
 };
 
 export default connect(null, { setRepositoryEnabled })(RepositorySetRepository);

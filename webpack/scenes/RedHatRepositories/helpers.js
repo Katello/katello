@@ -74,3 +74,6 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
     </ListView>
   );
 };
+
+export const yStream = releasever => releasever.match(/^\d+\.\d+$/) != null;
+
