@@ -2,7 +2,7 @@ module Actions
   module Katello
     module Repository
       class CloneToVersion < Actions::Base
-        # allows accessing the build object from the superior action
+        # allows accessing the built object from the superior action
         attr_accessor :new_repository
 
         def plan(repositories, content_view_version, options = {})
