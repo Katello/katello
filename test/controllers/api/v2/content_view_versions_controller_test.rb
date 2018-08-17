@@ -299,6 +299,19 @@ module Katello
       assert_response :success
     end
 
+    def test_incremental_update_with_deb
+      version = @library_dev_staging_view.versions.first
+      errata_id = Katello::Erratum.first.uuid
+      deb_id = Katello::Deb.first.id
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
+                                            [{:content_view_version => version, :environments => [@beta]}], [],
+                                            {'errata_ids' => [errata_id], 'deb_ids' => [deb_id]}, true, [], nil).returns({})
+
+      put :incremental_update, params: { :content_view_version_environments => [{:content_view_version_id => version.id, :environment_ids => [@beta.id]}], :add_content => {:errata_ids => [errata_id], :deb_ids => [deb_id]}, :resolve_dependencies => true }
+
+      assert_response :success
+    end
+
     def test_incremental_update_without_env
       version = @library_dev_staging_view.versions.first
       errata_id = Katello::Erratum.first.uuid

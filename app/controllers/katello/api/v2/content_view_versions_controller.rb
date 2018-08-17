@@ -133,6 +133,7 @@ module Katello
     param :add_content, Hash do
       param :errata_ids, Array, :desc => "Errata ids or uuids to copy into the new versions"
       param :package_ids, Array, :desc => "Package ids or uuids to copy into the new versions"
+      param :deb_ids, Array, :desc => "Deb Package ids or uuids to copy into the new versions"
       param :puppet_module_ids, Array, :desc => "Puppet Module ids or uuids to copy into the new versions"
     end
     param :update_hosts, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.") do
@@ -275,6 +276,10 @@ module Katello
 
       if content[:package_ids]
         fail _("package_ids is not an array") unless content[:package_ids].is_a?(Array)
+      end
+
+      if content[:deb_ids]
+        fail _("deb_ids is not an array") unless content[:deb_ids].is_a?(Array)
       end
 
       if content[:puppet_module_ids]

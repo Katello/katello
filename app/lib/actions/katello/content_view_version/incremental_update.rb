@@ -7,6 +7,7 @@ module Actions
         HUMANIZED_TYPES = {
           ::Katello::Erratum::CONTENT_TYPE => "Errata",
           ::Katello::Rpm::CONTENT_TYPE => "Packages",
+          ::Katello::Deb::CONTENT_TYPE => "Deb Packages",
           ::Katello::PuppetModule::CONTENT_TYPE => "Puppet Modules"
         }.freeze
 
@@ -67,7 +68,8 @@ module Actions
           copy_output = []
           sequence do
             new_repo = plan_action(Repository::CloneToVersion, source_repos, new_version, :incremental => true).new_repository
-            copy_output = copy_yum_content(new_repo, dep_solve, content[:package_ids], content[:errata_ids])
+            copy_output += copy_deb_content(new_repo, dep_solve, content[:deb_ids])
+            copy_output += copy_yum_content(new_repo, dep_solve, content[:package_ids], content[:errata_ids])
 
             plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
@@ -118,6 +120,7 @@ module Actions
         def run
           content = { ::Katello::Erratum::CONTENT_TYPE => [],
                       ::Katello::Rpm::CONTENT_TYPE => [],
+                      ::Katello::Deb::CONTENT_TYPE => [],
                       ::Katello::PuppetModule::CONTENT_TYPE => []}
 
           input[:copy_action_outputs].each do |copy_output|
@@ -130,6 +133,8 @@ module Actions
                   content[::Katello::Erratum::CONTENT_TYPE] << unit['id']
                 when ::Katello::Rpm::CONTENT_TYPE
                   content[::Katello::Rpm::CONTENT_TYPE] << ::Katello::Util::Package.build_nvra(unit)
+                when ::Katello::Deb::CONTENT_TYPE
+                  content[::Katello::Deb::CONTENT_TYPE] << "#{unit['name']}_#{unit['version']}_#{unit['architecture']}"
                 when ::Katello::PuppetModule::CONTENT_TYPE
                   content[::Katello::PuppetModule::CONTENT_TYPE] << "#{unit['author']}-#{unit['name']}-#{unit['version']}"
                 end
@@ -208,6 +213,19 @@ module Actions
 
         def promote(new_version, environments)
           plan_action(Katello::ContentView::Promote, new_version, environments, true)
+        end
+
+        def copy_deb_content(new_repo, dep_solve, deb_ids)
+          copy_outputs = []
+          if new_repo.content_type == ::Katello::Repository::DEB_TYPE
+            unless deb_ids.blank?
+              deb_uuids = ::Katello::Deb.with_identifiers(deb_ids).pluck(:uuid)
+              copy_outputs << plan_copy(Pulp::Repository::CopyDeb, new_repo.library_instance, new_repo,
+                                        { :filters => {:association => {'unit_id' => {'$in' => deb_uuids}}}},
+                                        :recursive => true, :resolve_dependencies => dep_solve).output
+            end
+          end
+          copy_outputs
         end
 
         def copy_yum_content(new_repo, dep_solve, package_ids, errata_ids)
