@@ -7,8 +7,16 @@ module Katello
     has_many :profiles, class_name: "Katello::ModuleProfile", dependent: :destroy
     has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy
 
-    CONTENT_TYPE = Pulp::ModuleStream::CONTENT_TYPE
+    scoped_search on: :name, complete_value: true
+    scoped_search on: :uuid, complete_value: true
+    scoped_search on: :stream, complete_value: true
+    scoped_search on: :version, complete_value: true
+    scoped_search on: :context, complete_value: true
+    scoped_search on: :arch, complete_value: true
+    scoped_search relation: :repositories, on: :name, rename: :repository, complete_value: true
+    scoped_search relation: :repositories, on: :id, rename: :repository_id, complete_value: true
 
+    CONTENT_TYPE = Pulp::ModuleStream::CONTENT_TYPE
     MODULE_STREAM_DEFAULT_CONTENT_TYPE = "modulemd_defaults".freeze
 
     def self.default_sort

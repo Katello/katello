@@ -134,7 +134,9 @@
               </div>
 
               <div>
-                {{ repository.content_counts.module_stream || 0 }} Module Streams
+                <a ng-href="/module_streams?search=repository_id={{repository.id}}">
+                  {{ repository.content_counts.module_stream || 0 }} Module Streams
+                </a>
               </div>
             </span>
 

@@ -27,7 +27,9 @@
             </a>
           </div>
           <div>
-            {{ repository.content_counts.module_stream }} Module Streams
+            <a ng-href="/module_streams?search=repository_id={{repository.id}}">
+              {{ repository.content_counts.module_stream }} Module Streams
+            </a>
           </div>
         </td>
       </tr>

@@ -16,7 +16,7 @@ class TypeAhead extends Component {
     super(props);
 
     this.state = {
-      inputValue: '',
+      inputValue: this.props.initialInputValue,
     };
 
     this.handleStateChange = this.handleStateChange.bind(this);
@@ -116,10 +116,12 @@ TypeAhead.propTypes = {
   onInputUpdate: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   actionText: PropTypes.string,
+  initialInputValue: PropTypes.string,
 };
 
 TypeAhead.defaultProps = {
   actionText: 'Search',
+  initialInputValue: '',
 };
 
 export default TypeAhead;
