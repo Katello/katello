@@ -20,8 +20,14 @@ module Katello
         include ApiPieExtensions
 
         def create
-          @hostgroup = Hostgroup.new(hostgroup_params)
-          process_response @hostgroup.save
+          begin
+            @hostgroup = Hostgroup.new(hostgroup_params)
+            process_response @hostgroup.save
+          rescue ActiveRecord::InvalidForeignKey => error
+            e = error.message.scan(/\(([^)]+)\)/)
+            resource = e[0][0] ; id = e[1][0]
+            not_found _("#{resource} with id #{id} not found")
+          end
         end
 
         def update
