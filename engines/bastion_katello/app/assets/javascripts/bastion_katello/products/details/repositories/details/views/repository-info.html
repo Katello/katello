@@ -318,7 +318,9 @@
         <tr ng-show="repository.content_type === 'yum'">
           <td translate>Module Streams</td>
           <td class="align-center">
-            {{ repository.content_counts.module_stream || 0 }}
+            <a ng-href="/module_streams?search=repository_id={{repository.id}}">
+              {{ repository.content_counts.module_stream || 0 }}
+            </a>
           </td>
         </tr>
         <tr ng-show="repository.content_type === 'puppet'">
