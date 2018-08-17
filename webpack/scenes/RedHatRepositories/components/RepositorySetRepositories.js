@@ -5,6 +5,7 @@ import { Alert, Spinner } from 'patternfly-react';
 
 import loadRepositorySetRepos from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import RepositorySetRepository from './RepositorySetRepository';
+import { yStream } from '../helpers';
 
 class RepositorySetRepositories extends Component {
   componentDidMount() {
@@ -16,7 +17,7 @@ class RepositorySetRepositories extends Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, type } = this.props;
 
     if (data.error) {
       return (
@@ -25,9 +26,12 @@ class RepositorySetRepositories extends Component {
         </Alert>
       );
     }
-    const availableRepos = data.repositories
-      .filter(({ enabled }) => !enabled)
-      .map(repo => <RepositorySetRepository key={repo.arch + repo.releasever} {...repo} />);
+
+    const availableRepos = [...data.repositories.filter(({ enabled }) => !enabled)]
+      .sort((repo1, repo2) => yStream(repo1.releasever || '') - yStream(repo2.releasever || ''))
+      .map(repo => (
+        <RepositorySetRepository key={repo.arch + repo.releasever} type={type} {...repo} />
+      ));
 
     const repoMessage = (data.repositories.length > 0 && availableRepos.length === 0 ?
       __('All available architectures for this repo are enabled.') : __('No repositories available.'));

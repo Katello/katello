@@ -18,7 +18,7 @@ const RepositorySet = ({
     actions={recommended ? <Icon type="fa" name="star" className="recommended-repository-set-icon" /> : ''}
     hideCloseIcon
   >
-    <RepositorySetRepositories contentId={id} productId={product.id} />
+    <RepositorySetRepositories contentId={id} productId={product.id} type={type} />
   </ListView.Item>
 );
 
