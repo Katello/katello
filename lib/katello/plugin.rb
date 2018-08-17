@@ -113,17 +113,6 @@ Foreman::Plugin.register :katello do
            :turbolinks => false
     end
 
-    if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::YUM_TYPE)
-      menu :top_menu,
-           :errata,
-           :caption => N_('Errata'),
-           :url => '/errata',
-           :url_hash => {:controller => 'katello/api/v2/errata',
-                         :action => 'index'},
-           :engine => Katello::Engine,
-           :turbolinks => false
-    end
-
     if ::Katello::RepositoryTypeManager.enabled?(::Katello::Repository::FILE_TYPE)
       menu :top_menu,
            :files,
@@ -152,6 +141,24 @@ Foreman::Plugin.register :katello do
            :caption => N_('Packages'),
            :url => '/packages',
            :url_hash => {:controller => 'katello/api/v2/packages',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+
+      menu :top_menu,
+           :errata,
+           :caption => N_('Errata'),
+           :url => '/errata',
+           :url_hash => {:controller => 'katello/api/v2/errata',
+                         :action => 'index'},
+           :engine => Katello::Engine,
+           :turbolinks => false
+
+      menu :top_menu,
+           :module_streams,
+           :caption => N_('Module Streams'),
+           :url => '/module_streams',
+           :url_hash => {:controller => 'katello/api/v2/module_streams',
                          :action => 'index'},
            :engine => Katello::Engine,
            :turbolinks => false

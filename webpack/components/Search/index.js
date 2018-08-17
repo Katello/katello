@@ -48,6 +48,7 @@ class Search extends Component {
   }
 
   render() {
+    const { initialInputValue } = this.props;
     return (
       <div>
         <ControlLabel srOnly>{__('Search')}</ControlLabel>
@@ -55,6 +56,7 @@ class Search extends Component {
           items={this.state.items}
           onInputUpdate={this.onInputUpdate}
           onSearch={this.onSearch}
+          initialInputValue={initialInputValue}
         />
       </div>
     );
@@ -78,9 +80,11 @@ Search.propTypes = {
   */
   getAutoCompleteParams: PropTypes.func.isRequired,
   updateSearchQuery: PropTypes.func,
+  initialInputValue: PropTypes.string,
 };
 
 Search.defaultProps = {
   updateSearchQuery: undefined,
+  initialInputValue: '',
 };
 export default Search;

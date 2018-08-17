@@ -4,6 +4,7 @@ import UpstreamSubscriptions from '../../scenes/Subscriptions/UpstreamSubscripti
 import SubscriptionDetails from '../../scenes/Subscriptions/Details';
 import SetOrganization from '../../components/SelectOrg/SetOrganization';
 import WithOrganization from '../../components/WithOrganization/withOrganization';
+import ModuleStreams from '../../scenes/ModuleStreams';
 
 // eslint-disable-next-line import/prefer-default-export
 export const links = [
@@ -32,5 +33,10 @@ export const links = [
     text: __('Select Organization'),
     path: 'organization_select',
     component: SetOrganization,
+  },
+  {
+    text: 'Module Streams',
+    path: 'module_streams',
+    component: ModuleStreams,
   },
 ];

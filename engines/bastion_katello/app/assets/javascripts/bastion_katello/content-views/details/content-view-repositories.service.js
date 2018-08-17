@@ -85,7 +85,6 @@ angular.module('Bastion.content-views').service('ContentViewRepositoriesUtil',
                     nutupane.refresh();
                 });
             };
-
         };
 
     }]
