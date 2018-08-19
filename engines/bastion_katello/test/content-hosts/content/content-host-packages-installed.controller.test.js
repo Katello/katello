@@ -66,7 +66,7 @@ describe('Controller: ContentHostPackagesInstalledController', function() {
 
         spyOn(HostPackage, 'remove');
         $scope.removeSelectedPackages();
-        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockHost.id, packages: [mockPackageClone]},
+        expect(HostPackage.remove).toHaveBeenCalledWith({id: mockHost.id, packages: ['foo']},
                                                           jasmine.any(Function), jasmine.any(Function));
         expect($scope.working).toBe(true);
     });
