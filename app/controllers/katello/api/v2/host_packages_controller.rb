@@ -102,13 +102,9 @@ module Katello
       @host = resource_finder(::Host::Managed.authorized(:view_hosts, ::Host::Managed), params[:host_id])
     end
 
-    def valid_package_name?(package_name)
-      package_name =~ /^[a-zA-Z0-9\-\.\_\+\,]+$/
-    end
-
     def validate_package_list_format(packages)
       packages.each do |package|
-        if !valid_package_name?(package) && !package.is_a?(Hash)
+        unless package.is_a?(String) && ::Katello::Util::Package.valid_package_name_format(package).nil?
           fail HttpErrors::BadRequest, _("%s is not a valid package name") % package
         end
       end
