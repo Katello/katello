@@ -95,6 +95,18 @@ module Katello
       assert_response :success
     end
 
+    def test_invalid_package_input
+      methods = [:remove, :install, :upgrade]
+
+      methods.each do |method|
+        put method, params: { host_id: @host.id, packages: [{name: 'foo'}] }
+        assert_response 400
+
+        put method, params: { host_id: @host.id, packages: %w(*) }
+        assert_response 400
+      end
+    end
+
     def test_remove_group
       assert_async_task ::Actions::Katello::Host::PackageGroup::Remove do |host, groups|
         host.id == @host.id && groups == %w(blah)
