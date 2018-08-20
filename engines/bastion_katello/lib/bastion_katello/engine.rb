@@ -10,7 +10,7 @@ module BastionKatello
       consumer_cert_rpm = 'katello-ca-consumer-latest.noarch.rpm'
       consumer_cert_rpm = SETTINGS[:katello][:consumer_cert_rpm] if SETTINGS.key?(:katello)
 
-      db_migrated = ActiveRecord::Base.connection.table_exists?(Setting.table_name)
+      db_migrated = !Foreman.in_setup_db_rake? && ActiveRecord::Base.connection.table_exists?(Setting.table_name)
 
       Bastion.register_plugin(
         :name => 'bastion_katello',
@@ -40,7 +40,7 @@ module BastionKatello
           'consumerCertRPM' => consumer_cert_rpm,
           'defaultDownloadPolicy' => !Foreman.in_rake? && db_migrated && Setting['default_download_policy'],
           'remoteExecutionPresent' => ::Katello.with_remote_execution?,
-          'remoteExecutionByDefault' => ::Katello.with_remote_execution? && !Foreman.in_rake?('db:migrate') &&
+          'remoteExecutionByDefault' => ::Katello.with_remote_execution? &&
                                         db_migrated && Setting['remote_execution_by_default']
         }
       )
