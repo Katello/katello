@@ -80,7 +80,7 @@ module Katello
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
     param :description, String, :desc => N_("description of the repository")
-    param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' is supported."),
+    param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
     param_group :search, Api::V2::ApiController
     def index
@@ -144,8 +144,9 @@ module Katello
         instance_ids += instances.where(:library_instance_id => nil)
         query = Repository.where(:id => instance_ids)
       elsif (params[:library] && !params[:environment_id]) || (params[:environment_id].blank? && params[:content_view_version_id].blank? && params[:content_view_id].blank?)
-
-        if @organization
+        if params[:available_for] == 'content_view_version'
+          query = query.where.not(:content_view_version_id => nil, :environment_id => nil)
+        elsif @organization
           query = query.where(:content_view_version_id => @organization.default_content_view.versions.first.id)
         else
           query = query.in_default_view
@@ -529,8 +530,11 @@ module Katello
       elsif environment_id
         version = ContentViewVersion.in_environment(environment_id).where(:content_view_id => content_view_id)
         query = query.where(:content_view_version_id => version)
-      else
+      elsif params[:available_for] != 'content_view_version'
         query = query.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => content_view_id)
+      else
+        version_ids = ContentViewVersion.where(:content_view_id => content_view_id).pluck(:id)
+        query = query.where('content_view_version_id IN (?) AND environment_id IS NOT NULL', version_ids)
       end
       query
     end
