@@ -10,13 +10,15 @@
             ng-model="environmentFilter"
             ng-options="e.id as e.name for e in environments"
             ng-change="filterPackages()">
+      <option value="">{{ "All Lifecycle Environments" | translate }}</option>
     </select>
 
     <select class="form-control"
             ng-disabled="!contentViews || filteredCVs.length === 0"
             ng-model="contentViewFilter"
-            ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter:{environment_ids: environmentFilter})"
+            ng-options="cv as cv.name for cv in filteredCVs = (contentViews | filter: (environmentFilter ? {environment_ids: environmentFilter} : ''))"
             ng-change="filterPackages()">
+      <option value="">{{ "All Content Views" | translate }}</option>
     </select>
     <p class="help-block" translate ng-show="filteredCVs.length === 0">
       There are no Content Views in this Environment.

@@ -223,6 +223,21 @@ module Katello
       end
     end
 
+    def test_index_available_for_content_view_version_with_content_view
+      fedora_dev_repo = katello_repositories(:fedora_17_x86_64_dev)
+      response = get :index, params: { :rpm_id => @rpm.id, :content_view_id => fedora_dev_repo.content_view_version.content_view_id, :organization_id => @organization.id, :available_for => :content_view_version }
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, [fedora_dev_repo.id]
+    end
+
+    def test_index_available_for_content_view_version
+      response = get :index, params: { :rpm_id => @rpm.id, :organization_id => @organization.id, :available_for => :content_view_version }
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, @rpm.repository_ids
+    end
+
     def test_create
       product = mock
       product.expects(:add_repo).with(

@@ -50,27 +50,56 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
 
         $scope.filterPackages = function () {
             var foundVersion, env;
-            params['environment_id'] = $scope.environmentFilter;
-
             if ($scope.contentViewFilter) {
-                foundVersion = _.find($scope.contentViewFilter.versions, function(version) {
-                    // Find the version belonging to the environment specified by the enviroment filter
-                    env = _.find(version.environment_ids, function(envId) {
-                        return envId === $scope.environmentFilter;
+                if ($scope.environmentFilter) {
+
+                    foundVersion = _.find($scope.contentViewFilter.versions, function(version) {
+                        // Find the version belonging to the environment specified by the enviroment filter
+                        env = _.find(version.environment_ids, function(envId) {
+                            return envId === $scope.environmentFilter;
+                        });
+
+                        return !angular.isUndefined(env);
                     });
 
-                    return !angular.isUndefined(env);
-                });
+                    if (!angular.isUndefined(foundVersion)) {
+                        $scope.setContentViewFilter(foundVersion.id);
+                    }
 
-                if (!angular.isUndefined(foundVersion)) {
-                    params['content_view_version_id'] = foundVersion.id;
                 } else {
-                    delete params['content_view_version_id'];
+                    $scope.setContentViewFilter($scope.contentViewFilter.id, 'content_view_version');
                 }
+            } else {
+                $scope.clearContentViewFilter();
+            }
+
+            if ($scope.environmentFilter) {
+                params['environment_id'] = $scope.environmentFilter;
+            } else {
+                delete params['environment_id'];
+                params['available_for'] = 'content_view_version';
             }
 
             repositoriesNutupane.setParams = (params);
             repositoriesNutupane.refresh();
+        };
+
+        $scope.setContentViewFilter = function(selectedId, keyName) {
+            if (keyName && keyName === 'content_view_version') {
+                params['content_view_id'] = selectedId;
+                params['available_for'] = keyName;
+                delete params['content_view_version_id'];
+            } else {
+                params['content_view_version_id'] = selectedId;
+                delete params['content_view_id'];
+                delete params['available_for'];
+            }
+        };
+
+        $scope.clearContentViewFilter = function () {
+            delete params['content_view_version_id'];
+            delete params['content_view_id'];
+            delete params['available_for'];
         };
     }]
 );
