@@ -37,7 +37,8 @@
             return [
                 {id: 'hourly', value: translate('hourly')},
                 {id: 'daily', value: translate('daily')},
-                {id: 'weekly', value: translate('weekly')}
+                {id: 'weekly', value: translate('weekly')},
+                {id: 'custom cron', value: translate('custom cron')}
             ];
 
         };

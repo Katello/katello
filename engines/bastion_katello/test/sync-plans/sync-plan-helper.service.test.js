@@ -29,7 +29,7 @@ describe('Service: SyncPlanHelper', function() {
 
     it("returns the list of valid sync plan intervals", function () {
         var intervals = SyncPlanHelper.getIntervals();
-        expect(intervals.length).toBe(3);
+        expect(intervals.length).toBe(4);
         expect(intervals[0].id).toBeDefined();
         expect(intervals[0].value).toBeDefined();
     });

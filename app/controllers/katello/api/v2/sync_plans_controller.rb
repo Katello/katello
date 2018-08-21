@@ -13,6 +13,7 @@ module Katello
       param :sync_date, String, :desc => N_("start datetime of synchronization"), :required => true, :action_aware => true
       param :description, String, :desc => N_("sync plan description")
       param :enabled, :bool, :desc => N_("enables or disables synchronization"), :required => true, :action_aware => true
+      param :cron_expression, String, :desc => N_("Add custom cron logic for sync plan")
     end
 
     api :GET, "/sync_plans", N_("List sync plans")
@@ -46,12 +47,10 @@ module Katello
     param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
     param_group :sync_plan
     def create
-      sync_date = sync_plan_params[:sync_date].to_time(:utc)
-      unless sync_date.is_a?(Time)
+      unless sync_plan_params[:sync_date].to_time(:utc).is_a?(Time)
         fail _("Date format is incorrect.")
       end
       @sync_plan = SyncPlan.new(sync_plan_params)
-      @sync_plan.sync_date = sync_date
       @sync_plan.organization = @organization
       @sync_plan.save_with_logic!
       respond_for_create(:resource => @sync_plan)
@@ -117,7 +116,7 @@ module Katello
     end
 
     def sync_plan_params
-      params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids, :enabled)
+      params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids, :enabled, :cron_expression)
     end
   end
 end
