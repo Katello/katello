@@ -41,20 +41,22 @@
 
     <div ng-form name="systemContentForm" class="form" ng-hide="content.workingMode || denied('edit_hosts')" novalidate>
       <div>
-        <input id="package" type="radio"
-               ng-model="content.contentType"
-               ng-change="updatePlaceholder(content.contentType)"
-               ng-disabled="content.confirm"
-               value="package"/>
-        <label for="package" translate>Package</label>
-
-        <input id="package_group" type="radio"
-               ng-model="content.contentType"
-               ng-change="updatePlaceholder(content.contentType)"
-               ng-disabled="content.confirm"
-               value="package_group"/>
-        <label for="package_group" translate>Package Group</label>
-
+        <label class="radio-inline" for="package">
+          <input id="package" type="radio"
+                 ng-model="content.contentType"
+                 ng-change="updatePlaceholder(content.contentType)"
+                 ng-disabled="content.confirm"
+                 value="package"/>
+          <span translate>Package</span>
+        </label>
+        <label class="radio-inline" for="package_group">
+          <input id="package_group" type="radio"
+                 ng-model="content.contentType"
+                 ng-change="updatePlaceholder(content.contentType)"
+                 ng-disabled="content.confirm"
+                 value="package_group"/>
+          <span translate>Package Group</span>
+        </label>
       </div>
 
       <div class="form-group">
