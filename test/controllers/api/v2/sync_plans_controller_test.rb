@@ -12,7 +12,7 @@ module Katello
       @products = katello_products(:fedora, :redhat, :empty_product)
       @recurring_logic = FactoryBot.create(:recurring_logic)
       @sync_plan.foreman_tasks_recurring_logic = @recurring_logic
-      @sync_plan.save!
+      @sync_plan.save_with_logic!
     end
 
     def permissions

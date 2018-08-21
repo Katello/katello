@@ -26,7 +26,7 @@ module Katello
 
     # Returns a list of valid sync intervals.
     def valid_sync_intervals
-      %w[hourly daily weekly]
+      ["hourly", "daily", "weekly", "custom cron"]
     end
 
     test_attributes :pid => 'df5837e7-3d0f-464a-bd67-86b423c16eb4'
@@ -131,7 +131,7 @@ module Katello
 
     test_attributes :pid => 'cf2eddf8-b4db-430e-a9b0-83c626b45068'
     def test_update_interval
-      @plan.save!
+      @plan.save_with_logic!
       # create a new valid list of intervals with the current interval in the last position
       intervals = valid_sync_intervals.reject { |interval| interval == @plan.interval }
       intervals << @plan.interval
@@ -144,7 +144,7 @@ module Katello
 
     test_attributes :pid => 'fad472c7-01b4-453b-ae33-0845c9e0dfd4'
     def test_update_sync_date
-      @plan.save!
+      @plan.save_with_logic!
       valid_sync_dates.each do |sync_date|
         @plan.sync_date = sync_date
         assert_valid @plan
@@ -162,7 +162,7 @@ module Katello
     end
 
     def test_update_with_invalid_interval
-      @plan.save!
+      @plan.save_with_logic!
       invalid_name_list.each do |interval|
         @plan.interval = interval
         refute_valid @plan
@@ -173,7 +173,8 @@ module Katello
     def test_sync_date_future
       sync_date = '5000/11/17 18:26:48 +0000'
       @plan.sync_date = sync_date
-      @plan.next_sync.to_s.must_equal(sync_date)
+      @plan.save_with_logic!
+      @plan.next_sync.to_s.must_equal('5000/11/18 18:26:00 +0000')
     end
 
     def sync_date_if_disabled
@@ -185,54 +186,68 @@ module Katello
     def test_sync_date_if_bad_interval
       @plan.sync_date = '1999-11-17 18:26:48 UTC'
       @plan.interval = 'blah'
-      assert_nil @plan.next_sync
+      assert_raises(Exception) { @plan.save_with_logic! }
     end
 
     def test_next_run_hourly
       @plan.interval = 'hourly'
-      @plan.sync_date = '1999-11-17 09:26:00 UTC'
-
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 1, 9, 26, 0, "+00:00"))
-
-      Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9, 30))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 1, 10, 26, 0, "+00:00"))
+      @plan.sync_date = '1999-11-17 09:26:00 UTC'
+      @plan.save_with_logic!
+      datetime = "2012/01/01 09:26:00 +0000"
+      @plan.next_sync.to_s.must_equal(datetime)
     end
 
     def test_next_run_daily
       @plan.interval = 'daily'
       @plan.sync_date = '1999-11-17 09:26:00 UTC'
-
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 1, 9, 26, 0, "+00:00"))
-
-      Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9, 27))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 2, 9, 26, 0, "+00:00"))
-
-      Time.stubs(:now).returns(Time.utc(2012, 1, 2, 9))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 2, 9, 26, 0, "+00:00"))
+      @plan.save_with_logic!
+      datetime = "2012/01/01 09:26:00 +0000"
+      @plan.next_sync.to_s.must_equal(datetime)
     end
 
     def test_next_run_weekly
       @plan.interval = 'weekly'
-      @plan.sync_date = '1999-11-17 09:26:00 UTC'
+      @plan.sync_date = '1999-11-17 09:26:00 UTC' #WEDNESDAY
+      Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
+      @plan.save_with_logic!
+      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 4, 9, 26, 0, "+00:00")) #WEDNESDAY
+    end
 
-      Time.stubs(:now).returns(Time.new(2012, 1, 1, 9, 0, 0, "+00:00"))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 4, 9, 26, 0, "+00:00"))
+    def test_next_run_cron_hourly
+      @plan.interval = 'custom cron'
+      @plan.sync_date = '1999-11-17 09:00:00 UTC'
+      @plan.cron_expression = "10 * * * *" #Every hour at 10 minutes
+      Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
+      @plan.save_with_logic!
+      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 1, 9, 10, 0, "+00:00"))
+    end
 
-      Time.stubs(:now).returns(Time.new(2012, 1, 11, 9, 30, 0, "+00:00"))
-      @plan.next_sync.must_equal(Time.new(2012, 1, 18, 9, 26, 0, "+00:00"))
+    def test_next_run_cron_daily_at_time
+      @plan.interval = 'custom cron'
+      @plan.sync_date = '1999-11-17 09:00:00 UTC'
+      @plan.cron_expression = "5 10 * * *" #Everyday at 10:05  #
+      Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
+      @plan.save_with_logic!
+      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 1, 10, 05, 0, "+00:00"))
+    end
+
+    def test_next_run_cron_monthly
+      @plan.interval = 'custom cron'
+      @plan.sync_date = '1999-11-17 09:00:00 UTC'
+      @plan.cron_expression = "15 14 5 * *" #At 14:15 on day-of-month 5
+      Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
+      @plan.save_with_logic!
+      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 5, 14, 15, 0, "+00:00"))
     end
 
     def test_next_run_weekly_week_prior_time_after_now
       @plan.interval = 'weekly'
-      @plan.sync_date = '2012-11-10 09:26:00 UTC'
-
+      @plan.sync_date = '2012-11-10 09:26:00 UTC' #SATURDAY
       Time.stubs(:now).returns(Time.new(2012, 11, 17, 9, 20, 0, "+00:00"))
-      @plan.next_sync.must_equal(Time.new(2012, 11, 17, 9, 26, 0, "+00:00"))
-
-      Time.stubs(:now).returns(Time.new(2012, 11, 17, 9, 30, 0, "+00:00"))
-      @plan.next_sync.must_equal(Time.new(2012, 11, 24, 9, 26, 0, "+00:00"))
+      @plan.save_with_logic!
+      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 11, 17, 9, 26, 0, "+00:00"))
     end
 
     def test_update

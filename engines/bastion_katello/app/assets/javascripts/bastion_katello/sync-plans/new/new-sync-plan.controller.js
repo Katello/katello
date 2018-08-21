@@ -19,22 +19,24 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
             $scope.syncPlan = new SyncPlan();
             $scope.syncPlan.interval = $scope.intervals[0].id;
             $scope.syncPlan.startDate = new Date();
+            $scope.working = false;
 
             function success(syncPlan) {
-                $scope.working = false;
                 $scope.$state.go('sync-plan.info', {syncPlanId: syncPlan.id});
                 Notification.setSuccessMessage(translate('New sync plan successfully created.'));
             }
 
             function error(response) {
                 var form = SyncPlanHelper.getForm();
-
-                angular.forEach(response.data.errors, function (errors, field) {
-                    form[field].$setValidity('server', false);
-                    form[field].$error.messages = errors;
-                });
-
                 $scope.working = false;
+                angular.forEach(response.data.errors, function (errors, field) {
+                    if (form[field]) {
+                        form[field].$setValidity('server', false);
+                        form[field].$error.messages = errors;
+                    } else {
+                        Notification.setErrorMessage("Error saving the Sync Plan: " + " " + errors);
+                    }
+                });
             }
 
             $scope.createSyncPlan = function (syncPlan) {

@@ -37,7 +37,8 @@
             return [
                 {id: 'hourly', value: translate('hourly')},
                 {id: 'daily', value: translate('daily')},
-                {id: 'weekly', value: translate('weekly')}
+                {id: 'weekly', value: translate('weekly')},
+                {id: 'custom cron', value: translate('custom cron')}
             ];
 
         };
@@ -48,8 +49,7 @@
          * @returns $resource sync plan
          */
         this.createSyncPlan = function (syncPlan, success, error) {
-            var GMT_OFFSET_MILLISECONDS = syncPlan.startDate.getTimezoneOffset() * 60000,
-                syncDate = new Date(syncPlan.startDate.getTime() + GMT_OFFSET_MILLISECONDS),
+            var syncDate = new Date(syncPlan.startDate.getTime()),
                 syncTime = new Date(syncPlan.startTime || new Date());
             syncDate.setHours(syncTime.getHours());
             syncDate.setMinutes(syncTime.getMinutes());

@@ -28,6 +28,14 @@
     </select>
   </div>
 
+  <div bst-form-group label="{{ 'Custom Cron' | translate }}" ng-show="syncPlan.interval === 'custom cron'">
+   <input id="cron_expression"
+             name="cron_expression"
+             ng-model="syncPlan.cron_expression"
+             type="text"
+             tabindex="4"/>
+  </div>
+
   <div bst-form-group label="{{ 'Start Date' | translate }}">
     <div class="input-group">
       <input type="text" uib-datepicker-popup
@@ -36,7 +44,7 @@
              is-open="isOpen"
              ng-model="syncPlan.startDate"
              show-weeks="false"
-             tabindex="4"
+             tabindex="5"
              required/>
 
      <span class="input-group-btn">

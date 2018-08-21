@@ -21,8 +21,12 @@ angular.module('Bastion.products').controller('NewSyncPlanModalController',
                 var form = SyncPlanHelper.getForm();
 
                 angular.forEach(response.data.errors, function (errors, field) {
-                    form[field].$setValidity('server', false);
-                    form[field].$error.messages = errors;
+                    if (form[field]) {
+                        form[field].$setValidity('server', false);
+                        form[field].$error.messages = errors;
+                    } else {
+                        Notification.setErrorMessage("Error saving the Sync Plan: " + " " + errors);
+                    }
                 });
             }
 
