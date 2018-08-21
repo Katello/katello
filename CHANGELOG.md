@@ -1,4 +1,4 @@
-# 3.8.0 Stout (2018-08-08)
+# 3.8.0 Stout (2018-08-20)
 
 ## Features
 
@@ -35,6 +35,12 @@
 ### Errata Management
  * Link "Click here to select Errata for an Incremental Update" doesn't work ([#24543](https://projects.theforeman.org/issues/24543), [f5f4a0fd](https://github.com/Katello/katello.git/commit/f5f4a0fd38b2e7ca0629a09cfd05f14149b60bd8))
 
+### Repositories
+ * [File Repository] - All Repositories are shown for file content instead of contained Library Repositories ([#24529](https://projects.theforeman.org/issues/24529), [115bb7d1](https://github.com/Katello/katello.git/commit/115bb7d1e70f826ed5adc4f5e03f02b57e0b4413))
+ * Synced OSTREE version shows incorrect order on Katello server. ([#24275](https://projects.theforeman.org/issues/24275), [725cfe7e](https://github.com/Katello/katello.git/commit/725cfe7e65f59e2c0bfa1981588e95159219fb4f))
+ * add description field to repository model ([#23493](https://projects.theforeman.org/issues/23493), [d9618362](https://github.com/Katello/katello.git/commit/d9618362c94e4bbe94f25ffc480ae90a163b4bef))
+ * using a filter for bastion layout/partials/table.html does not update the selected counts ([#18282](https://projects.theforeman.org/issues/18282), [5820dc3a](https://github.com/Katello/katello.git/commit/5820dc3a34e8dee3c4e32c1f92a4ee1244f14be2))
+
 ### Tests
  * react/jest test failures ([#24423](https://projects.theforeman.org/issues/24423), [c37ea4a5](https://github.com/Katello/katello.git/commit/c37ea4a53a492c04e849a208977e178923627b8c))
  * clean up test output for jest (react) tests ([#24336](https://projects.theforeman.org/issues/24336), [63746060](https://github.com/Katello/katello.git/commit/63746060ec97dfbfea0908e922a98fbe13d32db8))
@@ -53,11 +59,6 @@
  * docker v2 api - pull_manifest not setting Docker-Content-Digest response header ([#23778](https://projects.theforeman.org/issues/23778), [c569d5d2](https://github.com/Katello/katello.git/commit/c569d5d2056e6f67a181d7c7fcde5449c6cbf97f))
  * As a user I want the full docker v2 api ([#22951](https://projects.theforeman.org/issues/22951), [989648bf](https://github.com/Katello/katello.git/commit/989648bf14ad62c608cea0860dac04781f42b751))
 
-### Repositories
- * Synced OSTREE version shows incorrect order on Katello server. ([#24275](https://projects.theforeman.org/issues/24275), [725cfe7e](https://github.com/Katello/katello.git/commit/725cfe7e65f59e2c0bfa1981588e95159219fb4f))
- * add description field to repository model ([#23493](https://projects.theforeman.org/issues/23493), [d9618362](https://github.com/Katello/katello.git/commit/d9618362c94e4bbe94f25ffc480ae90a163b4bef))
- * using a filter for bastion layout/partials/table.html does not update the selected counts ([#18282](https://projects.theforeman.org/issues/18282), [5820dc3a](https://github.com/Katello/katello.git/commit/5820dc3a34e8dee3c4e32c1f92a4ee1244f14be2))
-
 ### Lifecycle Environments
  * Registry Name Pattern feature needs helpful usage clues ([#24168](https://projects.theforeman.org/issues/24168), [069fe180](https://github.com/Katello/katello.git/commit/069fe1807f91ab1048b2ab654aac2ac8cbae274f))
  * use full page width on lifecycle environment details page ([#23839](https://projects.theforeman.org/issues/23839), [75248db2](https://github.com/Katello/katello.git/commit/75248db283afac9f665bffc66aeba85de73151c5))
@@ -65,6 +66,7 @@
 ### Installer
  * puppet-capsule to puppet-foreman_proxy_content migration drops the puppet answer ([#24088](https://projects.theforeman.org/issues/24088), [c508e58d](https://github.com/Katello/katello-installer.git/commit/c508e58d2251e5fdbfa8ced6f583c7e132320cff))
  * foreman-installer does not install hammer openscap plugin ([#23242](https://projects.theforeman.org/issues/23242), [0d7f9618](https://github.com/Katello/katello-installer.git/commit/0d7f961829417df30651e7feb166d6b9b1be18f0))
+ * Duplicate declaration: /etc/foreman-proxy/ssl_key.pem ([#18806](https://projects.theforeman.org/issues/18806), [edad3438](https://github.com/Katello/katello-installer.git/commit/edad3438dcb2367df2ca4ba1e0f5b1b4fe16b1bf))
 
 ### Subscriptions
  * Subscription info can show many provided products ([#24005](https://projects.theforeman.org/issues/24005), [9f13c705](https://github.com/Katello/katello.git/commit/9f13c70556c55726faa87ee0f596c92915de3510))
