@@ -22,7 +22,6 @@ module ::Actions::Katello::Repository
       set_user
       ::Katello::Product.any_instance.stubs(:certificate).returns(nil)
       ::Katello::Product.any_instance.stubs(:key).returns(nil)
-      ::Katello::Repository.stubs(:ensure_sync_notification)
     end
   end
 

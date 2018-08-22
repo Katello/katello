@@ -832,28 +832,6 @@ module Katello
       assert_response :success
     end
 
-    def test_sync_complete
-      logout_user
-      token = 'imalittleteapotshortandstout'
-      SETTINGS[:katello][:post_sync_url] = "http://foo.com/foo?token=#{token}"
-      Repository.stubs(:where).returns([@repository])
-
-      assert_async_task ::Actions::Katello::Repository::ScheduledSync do |repo, task_id|
-        repo.id == @repository.id && task_id == '1234'
-      end
-
-      post(:sync_complete, params: { :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {:task_id => '1234'} })
-      assert_response :success
-    end
-
-    def test_sync_complete_bad_token
-      token = 'super_secret'
-      SETTINGS[:katello][:post_sync_url] = "http://foo.com/foo?token=attacker_key"
-      post :sync_complete, params: { :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {} }
-
-      assert_response 403
-    end
-
     def test_sync_protected
       allowed_perms = [@sync_permission]
       denied_perms = [@create_permission, @read_permission, @destroy_permission, @update_permission]

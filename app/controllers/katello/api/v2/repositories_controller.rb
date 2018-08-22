@@ -23,7 +23,7 @@ module Katello
     before_action :error_on_rh_product, :only => [:create]
     before_action :error_on_rh_repo, :only => [:destroy]
 
-    skip_before_action :authorize, :only => [:sync_complete, :gpg_key_content]
+    skip_before_action :authorize, :only => [:gpg_key_content]
     skip_before_action :check_content_type, :only => [:upload_content]
 
     def custom_index_relation(collection)
@@ -314,34 +314,6 @@ module Katello
     def destroy
       sync_task(::Actions::Katello::Repository::Destroy, @repository)
       respond_for_destroy
-    end
-
-    api :POST, "/repositories/sync_complete"
-    desc N_("URL for post sync notification from pulp")
-    param 'token', String, :desc => N_("shared secret token"), :required => true
-    param 'payload', Hash, :required => true do
-      param 'repo_id', String, :required => true
-    end
-    param 'call_report', Hash, :required => true do
-      param 'task_id', String, :required => true
-    end
-    def sync_complete
-      if params[:token] != Rack::Utils.parse_query(URI(SETTINGS[:katello][:post_sync_url]).query)['token']
-        fail Errors::SecurityViolation, _("Token invalid during sync_complete.")
-      end
-
-      repo_id = params['payload']['repo_id']
-      task_id = params['call_report']['task_id']
-      User.current = User.anonymous_admin
-
-      repo = Repository.where(:pulp_id => repo_id).first
-      fail _("Couldn't find repository '%s'") % repo_id if repo.nil?
-      Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-
-      unless repo.dynflow_handled_last_sync?(task_id)
-        async_task(::Actions::Katello::Repository::ScheduledSync, repo, task_id)
-      end
-      render :json => {}
     end
 
     api :PUT, "/repositories/:id/remove_packages"

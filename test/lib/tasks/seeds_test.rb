@@ -10,7 +10,6 @@ module Katello
       Setting.stubs(:[]).with(:default_location_puppet_content).returns('')
       Setting.stubs(:[]).with(:authorize_login_delegation_auth_source_user_autocreate).returns('EXTERNAL')
       Setting.stubs(:[]).with(:entries_per_page).returns(20)
-      Katello::Repository.stubs(:ensure_sync_notification)
     end
 
     def seed

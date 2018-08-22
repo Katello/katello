@@ -11,7 +11,6 @@ module Scenarios
       default_capsule = mock
       default_capsule.stubs(:default_capsule?).returns(true)
       SmartProxy.stubs(:default_capsule).returns(default_capsule)
-      Katello::Repository.stubs(:ensure_sync_notification)
     end
 
     def test_scenarios

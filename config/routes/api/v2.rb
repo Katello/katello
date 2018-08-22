@@ -270,7 +270,6 @@ Katello::Engine.routes.draw do
 
         api_resources :repositories, :only => [:index, :create, :show, :destroy, :update] do
           collection do
-            post :sync_complete
             get :auto_complete_search
             get :repository_types
           end

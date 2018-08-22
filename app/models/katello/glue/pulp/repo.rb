@@ -3,8 +3,6 @@ module Katello
     # TODO: move into submodules
     # rubocop:disable MethodLength
     # rubocop:disable ModuleLength
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/CyclomaticComplexity
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
@@ -26,35 +24,6 @@ module Katello
 
         lazy_accessor :distributors,
                       :initializer => lambda { |_s| pulp_repo_facts["distributors"] if pulp_id }
-
-        def self.ensure_sync_notification
-          results = {:existing => [], :deleted => []}
-          resource = Katello.pulp_server.resources.event_notifier
-          url = SETTINGS[:katello][:post_sync_url]
-          ca_path = SETTINGS[:katello][:pulp][:notifier_ca_path]
-          type = Runcible::Resources::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
-          notifs = resource.list
-
-          # delete any similar tasks with the wrong url (in case it changed)
-          notifs.select { |n| n['event_types'] == [type] }.each do |e|
-            if e['notifier_config']['url'] != url || e['notifier_config']['ca_path'] != ca_path
-              resource.delete(e['id'])
-              results[:deleted] << e
-            else
-              results[:existing] << e
-            end
-          end
-
-          #only create a notifier if one doesn't exist with the correct url
-          exists = notifs.select { |n| n['event_types'] == [type] && n['notifier_config']['url'] == url }
-
-          if exists.empty?
-            resource.create(Runcible::Resources::EventNotifier::NotifierTypes::REST_API, {:url => url, :ca_path => ca_path}, [type])
-            results[:created] = url
-          end
-
-          results
-        end
 
         def self.delete_orphaned_content
           Katello.pulp_server.resources.content.remove_orphans
