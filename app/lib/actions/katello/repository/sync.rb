@@ -36,8 +36,6 @@ module Actions
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
           sequence do
-            plan_action(::Actions::Pulp::Repository::EnsureSyncNotification)
-
             # clear yum metadata if validate_contents is on (to avoid metadata corruption issues)
             plan_action(Pulp::Repository::RemoveYumMetadataFile, :pulp_id => repo.pulp_id) if validate_contents
 

@@ -507,7 +507,7 @@ module Katello
     end
 
     def latest_dynflow_sync
-      @latest_dynflow_sync ||= ForemanTasks::Task::DynflowTask.where(:label => [::Actions::Katello::Repository::Sync.name, ::Actions::Katello::Repository::ScheduledSync.name]).
+      @latest_dynflow_sync ||= ForemanTasks::Task::DynflowTask.where(:label => ::Actions::Katello::Repository::Sync.name).
                                 for_resource(self).order(:started_at).last
     end
 

@@ -25,7 +25,6 @@ module Actions
             action_subject product, :cp_id => product.cp_id
 
             plan_self
-            plan_action ::Actions::Pulp::Repository::EnsureSyncNotification
             plan_action Katello::Product::ReindexSubscriptions, product
           end
         end

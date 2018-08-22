@@ -22,7 +22,6 @@ module Katello
         :rest_client_timeout => 30,
         :gpg_strict_validation => false,
         :redhat_repository_url => 'https://cdn.redhat.com',
-        :post_sync_url => 'http://localhost:3000/katello/api/v2/repositories/sync_complete?token=katello',
         :consumer_cert_rpm => 'katello-ca-consumer-latest.noarch.rpm',
         :consumer_cert_sh => 'katello-rhsm-consumer',
         :pulp => {
