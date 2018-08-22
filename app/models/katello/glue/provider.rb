@@ -5,6 +5,8 @@ module Katello
     end
 
     module InstanceMethods
+      API_URL = 'https://subscription.rhsm.redhat.com/subscription/consumers/'.freeze
+
       def sync
         Rails.logger.debug "Syncing provider #{name}"
         syncs = self.products.collect do |p|
@@ -60,7 +62,7 @@ module Katello
         end
 
         # Default to Red Hat
-        url = upstream['apiUrl'] || 'https://subscription.rhn.redhat.com/subscription/consumers/'
+        url = upstream['apiUrl'] || API_URL
 
         # TODO: wait until ca_path is supported
         #       https://github.com/L2G/rest-client-fork/pull/8
@@ -83,7 +85,7 @@ module Katello
         end
 
         # Default to Red Hat
-        url = upstream['apiUrl'] || 'https://subscription.rhn.redhat.com/subscription/consumers/'
+        url = upstream['apiUrl'] || API_URL
 
         # TODO: wait until ca_path is supported
         #       https://github.com/L2G/rest-client-fork/pull/8
