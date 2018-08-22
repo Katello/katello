@@ -4,6 +4,7 @@ import { Icon } from 'patternfly-react';
 import { Link } from 'react-router-dom';
 import helpers from '../../../../move_to_foreman/common/helpers';
 import { entitlementsInlineEditFormatter } from './EntitlementsInlineEditFormatter';
+import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';
 import {
   headerFormatter,
   cellFormatter,
@@ -47,6 +48,16 @@ export const createSubscriptionsTableSchema = (
           </td>
         ),
       ],
+    },
+  },
+  {
+    property: 'type',
+    header: {
+      label: __('Type'),
+      formatters: [headerFormatter],
+    },
+    cell: {
+      formatters: [subscriptionTypeFormatter],
     },
   },
   {
