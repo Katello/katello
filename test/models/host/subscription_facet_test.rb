@@ -18,6 +18,60 @@ module Katello
     let(:subscription_facet) { host.subscription_facet }
   end
 
+  class SubscriptionFacetSystemPurposeTest < SubscriptionFacetBase
+    def test_update_addons
+      [[], %w(EUS AUS)].each do |addons|
+        subscription_facet.update_addons(addons)
+        assert_equal addons, subscription_facet.purpose_addons.pluck(:name)
+      end
+    end
+
+    def test_update_addons_nil
+      assert subscription_facet.update_addons(nil)
+    end
+
+    def test_search_role
+      subscription_facet.update_role('satellite')
+
+      assert_includes ::Host.search_for("role = satellite"), host
+    end
+
+    def test_search_addon
+      subscription_facet.update_addons(['EUS'])
+
+      assert_includes ::Host.search_for("addon = EUS"), host
+    end
+
+    def test_search_usage
+      subscription_facet.update_usage('disaster recovery')
+
+      assert_includes ::Host.search_for('usage = "disaster recovery"'), host
+    end
+
+    def test_update_from_consumer_attributes
+      Katello::Resources::Candlepin::Consumer.stubs(:virtual_guests).returns([])
+      Katello::Resources::Candlepin::Consumer.stubs(:virtual_host).returns(nil)
+
+      # set intial values
+      params = { role: 'satellite', addOns: %w(one two), usage: 'DR' }
+      subscription_facet.update_from_consumer_attributes(params.with_indifferent_access)
+
+      # purpose attributes are preserved when not sent to us
+      subscription_facet.update_from_consumer_attributes({}.with_indifferent_access)
+
+      assert_equal params[:role], subscription_facet.purpose_role.name
+      assert_equal params[:usage], subscription_facet.purpose_usage.name
+      assert_equal params[:addOns], subscription_facet.purpose_addons.pluck(:name)
+
+      # purpose attributes can be cleared
+      subscription_facet.update_from_consumer_attributes({role: '', addOns: [], usage: ''}.with_indifferent_access)
+
+      refute subscription_facet.purpose_role
+      refute subscription_facet.purpose_usage
+      assert_empty subscription_facet.purpose_addons
+    end
+  end
+
   class SubscriptionFacetTest < SubscriptionFacetBase
     include FactImporterIsolation
     allow_transactions_for_any_importer
