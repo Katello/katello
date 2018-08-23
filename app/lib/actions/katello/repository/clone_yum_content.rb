@@ -39,6 +39,8 @@ module Actions
             end
             plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
             plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
+            plan_copy(Pulp::Repository::CopyModuleStream, source_repo, target_repo, nil)
+            plan_copy(Pulp::Repository::CopyModuleDefault, source_repo, target_repo)
 
             # Check for matching content before indexing happens, the content in pulp is
             # actually updated, but it is not reflected in the database yet.

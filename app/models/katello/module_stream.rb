@@ -7,7 +7,9 @@ module Katello
     has_many :profiles, class_name: "Katello::ModuleProfile", dependent: :destroy
     has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy
 
-    CONTENT_TYPE = 'modulemd'.freeze
+    CONTENT_TYPE = Pulp::ModuleStream::CONTENT_TYPE
+
+    MODULE_STREAM_DEFAULT_CONTENT_TYPE = "modulemd_defaults".freeze
 
     def self.default_sort
       order(:name)

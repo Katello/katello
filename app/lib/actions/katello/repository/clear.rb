@@ -8,6 +8,8 @@ module Actions
            Pulp::Repository::RemovePackageGroup,
            Pulp::Repository::RemoveDistribution,
            Pulp::Repository::RemoveYumMetadataFile,
+           Pulp::Repository::RemoveModuleDefault,
+           Pulp::Repository::RemoveModuleStream,
            Pulp::Repository::RemoveFile,
            Pulp::Repository::RemovePuppetModule,
            Pulp::Repository::RemoveDockerManifest,

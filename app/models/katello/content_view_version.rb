@@ -264,6 +264,10 @@ module Katello
       Katello::Rpm.in_repositories(self.repositories.archived).count
     end
 
+    def module_stream_count
+      Katello::ModuleStream.in_repositories(self.repositories.archived).count
+    end
+
     def file_count
       Katello::FileUnit.in_repositories(self.repositories.archived).count
     end
