@@ -367,37 +367,6 @@ module Katello
         content_unit_counts
       end
 
-      # remove errata and groups from this repo
-      # that have no packages
-      def purge_empty_groups_errata
-        package_lists = package_lists_for_publish
-        rpm_names = package_lists[:names]
-        filenames = package_lists[:filenames]
-
-        # Remove all errata with no packages
-        errata_to_delete = errata.collect do |erratum|
-          erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
-        end
-        errata_to_delete.compact!
-
-        #do the errata remove call
-        unless errata_to_delete.empty?
-          unassociate_by_filter(ContentViewErratumFilter::CONTENT_TYPE,
-                                 "id" => { "$in" => errata_to_delete })
-        end
-
-        # Remove all  package groups with no packages
-        package_groups_to_delete = package_groups.collect do |group|
-          group.package_group_id if rpm_names.intersection(group.package_names).empty?
-        end
-        package_groups_to_delete.compact!
-
-        unless package_groups_to_delete.empty?
-          unassociate_by_filter(ContentViewPackageGroupFilter::CONTENT_TYPE,
-                                 "id" => { "$in" => package_groups_to_delete })
-        end
-      end
-
       def find_packages_by_name(name)
         Katello.pulp_server.extensions.repository.rpms_by_nvre self.pulp_id, name
       end
@@ -509,7 +478,8 @@ module Katello
       def content_types
         [Katello.pulp_server.extensions.errata,
          Katello.pulp_server.extensions.package_group,
-         Katello.pulp_server.extensions.puppet_module
+         Katello.pulp_server.extensions.puppet_module,
+         Katello.pulp_server.extensions.module_stream
         ]
       end
 
@@ -600,28 +570,6 @@ module Katello
 
       def unit_search(options = {})
         Katello.pulp_server.extensions.repository.unit_search(self.pulp_id, options)
-      end
-
-      # A helper method used by purge_empty_groups_errata
-      # to obtain a list of package filenames and names
-      # so that it could mix/match empty package groups
-      # and errata and purge them.
-      def package_lists_for_publish
-        names = []
-        filenames = []
-        rpm_list = []
-        rpm_ids = Katello::Pulp::Rpm.ids_for_repository(self)
-        rpm_ids.each_slice(SETTINGS[:katello][:pulp][:bulk_load_size]) do |sub_list|
-          rpm_list.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(
-                                  sub_list, %w(filename name), :include_repos => false))
-        end
-
-        rpm_list.each do |rpm|
-          filenames << rpm["filename"]
-          names << rpm["name"]
-        end
-        {:names => names.to_set,
-         :filenames => filenames.to_set}
       end
 
       def docker?

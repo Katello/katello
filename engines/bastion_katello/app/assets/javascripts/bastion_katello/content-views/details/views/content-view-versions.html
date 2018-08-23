@@ -62,6 +62,9 @@
               <span translate>{{ version.errata_counts.total }} Errata</span>
               (<span errata-counts="version.errata_counts"></span>)
             </div>
+            <div translate ng-if="version.module_stream_count && version.module_stream_count > 0">
+              {{ version.module_stream_count }} Module Streams
+            </div>
             <div translate ng-if="version.puppet_module_count && version.puppet_module_count > 0">
               {{ version.puppet_module_count }} Puppet Modules
             </div>
