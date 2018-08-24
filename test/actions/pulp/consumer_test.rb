@@ -10,7 +10,15 @@ module ::Actions::Pulp
     let(:uuid) { 'uuid' }
     let(:consumer_name) { 'gregor' }
     let(:type) { 'rpm' }
-    let(:args) { %w(vim vi) }
+    let(:args) { %w(vim walrus-0.71-1.noarch) }
+    let(:expected_extension_params) do
+      [
+        "uuid",
+        "rpm",
+        ["vim", {:name => "walrus", :version => "0.71", :release => "1", :arch => "noarch"}],
+        {"importkeys" => true}
+      ]
+    end
 
     def setup
       set_user
@@ -46,17 +54,24 @@ module ::Actions::Pulp
 
     def test_install_content
       action = plan_consumer_action(::Actions::Pulp::Consumer::ContentInstall)
-      it_runs(action, :extensions, :consumer, :install_content)
+      it_runs(action, :extensions, :consumer, :install_content) do |expectation|
+        expectation.with(*expected_extension_params)
+      end
     end
 
     def test_update_content
       action = plan_consumer_action(::Actions::Pulp::Consumer::ContentUpdate)
-      it_runs(action, :extensions, :consumer, :update_content)
+      it_runs(action, :extensions, :consumer, :update_content) do |expectation|
+        expectation.with(*expected_extension_params)
+      end
     end
 
     def test_uninstall_content
       action = plan_consumer_action(::Actions::Pulp::Consumer::ContentUninstall)
-      it_runs(action, :extensions, :consumer, :uninstall_content)
+      expected_extension_params.pop
+      it_runs(action, :extensions, :consumer, :uninstall_content) do |expectation|
+        expectation.with(*expected_extension_params)
+      end
     end
 
     def test_regenerate_applicability
