@@ -14,7 +14,7 @@ module Actions
         def invoke_external_task
           pulp_extensions.consumer.uninstall_content(input[:consumer_uuid],
                                                      input[:type],
-                                                     input[:args])
+                                                     parse_units_for_type)
         end
 
         def presenter
