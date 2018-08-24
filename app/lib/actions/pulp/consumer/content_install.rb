@@ -14,7 +14,7 @@ module Actions
         def invoke_external_task
           task = pulp_extensions.consumer.install_content(input[:consumer_uuid],
                                                    input[:type],
-                                                   input[:args],
+                                                   parse_units_for_type,
                                                     "importkeys" => true)
           schedule_timeout(Setting['content_action_accept_timeout'])
           task
