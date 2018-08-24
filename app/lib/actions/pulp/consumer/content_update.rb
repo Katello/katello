@@ -17,7 +17,7 @@ module Actions
 
           pulp_extensions.consumer.update_content(input[:consumer_uuid],
                                                   input[:type],
-                                                  input[:args],
+                                                  parse_units_for_type,
                                                   options)
         end
 
