@@ -37,6 +37,24 @@ describe('subscriptions table', () => {
     expect(toJson(page)).toMatchSnapshot();
   });
 
+  it('should disable checkboxes for custom subscriptions', async () => {
+    /* eslint-disable react/jsx-indent */
+    const page = render(<MemoryRouter>
+      <SubscriptionsTable
+        subscriptions={successState}
+        loadSubscriptions={loadSubscriptions}
+        tableColumns={tableColumns}
+        updateQuantity={updateQuantity}
+        subscriptionDeleteModalOpen={false}
+        onSubscriptionDeleteModalClose={() => { }}
+        onDeleteSubscriptions={() => {}}
+        toggleDeleteButton={() => {}}
+        emptyState={{}}
+      />
+                        </MemoryRouter>);
+    expect(page.find('#select1').is('[disabled]')).toBe(true);
+  });
+
   it('should render an empty state', async () => {
     const emptyStateData = {
       header: __('Yay empty state'),
