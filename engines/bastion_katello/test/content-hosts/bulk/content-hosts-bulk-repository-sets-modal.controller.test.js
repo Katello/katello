@@ -17,6 +17,8 @@ describe('Controller: ContentHostsBulkRepositorySetsModalController', function()
             autoAttach: function() {}
         };
         Nutupane = function() {
+           this.load = function () {};
+           this.setSearchKey = function () {};
            this.getAllSelectedResults = function() {
                return {
                    included: { resources: repositorySetIds }

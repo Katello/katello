@@ -28,14 +28,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkRepositorySe
         nutupaneParams = {
             'organization_id': CurrentOrganization,
             'offset': 0,
-            'sort_by': 'name',
-            'sort_order': 'ASC',
             'paged': true
         };
 
-        nutupane = new Nutupane(RepositorySet, nutupaneParams, 'queryPaged');
+        nutupane = new Nutupane(RepositorySet, nutupaneParams,
+          'queryPaged', {disableAutoLoad: true});
         $scope.controllerName = 'katello_repository_sets';
         nutupane.masterOnly = true;
+        nutupane.setSearchKey('repoSetsSearch');
+        nutupane.load();
 
         $scope.table = nutupane.table;
 
