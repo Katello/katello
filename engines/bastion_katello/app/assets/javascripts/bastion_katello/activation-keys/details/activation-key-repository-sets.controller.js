@@ -35,8 +35,8 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyRepositorySet
             contentAccessModeEnv: false
         };
         $scope.toggleFilters = function () {
-            $scope.nutupane.table.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
-            $scope.nutupane.table.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll;
+            $scope.nutupane.params['content_access_mode_env'] = $scope.contentAccessModes.contentAccessModeEnv;
+            $scope.nutupane.params['content_access_mode_all'] = $scope.contentAccessModes.contentAccessModeAll;
             $scope.nutupane.refresh();
         };
 
