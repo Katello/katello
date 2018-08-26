@@ -13,5 +13,6 @@ export default (
     onChange={() => selectionController.selectRow(additionalData)}
     before={before}
     after={after}
+    disabled={additionalData.disabled}
   />
 );

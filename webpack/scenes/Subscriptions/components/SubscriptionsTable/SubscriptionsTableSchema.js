@@ -25,12 +25,16 @@ export const createSubscriptionsTableSchema = (
     },
     cell: {
       formatters: [
-        (value, additionalData) =>
-          collapseableAndSelectionCellFormatter(
+        (value, additionalData) => {
+          // eslint-disable-next-line no-param-reassign
+          additionalData.disabled = additionalData.rowData.available === -1;
+
+          return collapseableAndSelectionCellFormatter(
             groupingController,
             selectionController,
             additionalData,
-          ),
+          );
+        },
       ],
     },
   },
