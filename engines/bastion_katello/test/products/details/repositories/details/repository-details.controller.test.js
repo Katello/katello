@@ -17,6 +17,7 @@ describe('Controller: RepositoryDetailsController', function() {
         $scope = $injector.get('$rootScope').$new();
         $state = $injector.get('$state');
 
+        $scope.repository = repository;
         $scope.denied = function() {return false};
         $scope.$stateParams = {
             productId: 1,

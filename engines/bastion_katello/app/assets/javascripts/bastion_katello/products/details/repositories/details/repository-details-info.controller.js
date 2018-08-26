@@ -87,9 +87,21 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
         $scope.save = function (repository) {
             var deferred = $q.defer();
+            if (!_.isEmpty(repository.commaTagsWhitelist)) {
+                repository["docker_tags_whitelist"] = repository.commaTagsWhitelist.split(",").map(function(tag) {
+                    return tag.trim();
+                });
+            } else {
+                repository["docker_tags_whitelist"] = [];
+            }
 
             repository.$update(function (response) {
                 deferred.resolve(response);
+                if (!_.isEmpty(response["docker_tags_whitelist"])) {
+                    repository.commaTagsWhitelist = repository["docker_tags_whitelist"].join(", ");
+                } else {
+                    repository.commaTagsWhitelist = null;
+                }
                 Notification.setSuccessMessage(translate('Repository Saved.'));
             }, function (response) {
                 deferred.reject(response);
