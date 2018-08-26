@@ -227,6 +227,13 @@
             on-save="save(repository)">
         </dd>
       </span>
+      <span ng-if="repository.content_type == 'docker'">
+        <dt translate>Limit Sync Tags</dt>
+        <dd bst-edit-text="repository.commaTagsWhitelist"
+            on-save="save(repository)"
+            readonly="denied('edit_products', product)">
+        </dd>
+      </span>
     </dl>
 
     <div class="divider"></div>

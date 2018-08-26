@@ -41,6 +41,11 @@
             'product_id': $scope.$stateParams.productId,
             'id': $scope.$stateParams.repositoryId
         }, function () {
+            if (!_.isEmpty($scope.repository["docker_tags_whitelist"])) {
+                $scope.repository.commaTagsWhitelist = $scope.repository["docker_tags_whitelist"].join(", ");
+            } else {
+                $scope.repository.commaTagsWhitelist = "";
+            }
             $scope.page.loading = false;
         }, function (response) {
             $scope.page.loading = false;
