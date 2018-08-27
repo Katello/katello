@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { orgId } from '../../services/api';
 import SetOrganization from '../SelectOrg/SetOrganization';
 import titleWithCaret from '../../helpers/caret';
+import Header from '../../containers/Application/Headers';
 
 function withOrganization(WrappedComponent, redirectPath) {
   class CheckOrg extends Component {
@@ -20,7 +21,12 @@ function withOrganization(WrappedComponent, redirectPath) {
 
     render() {
       if (!orgId()) {
-        return <SetOrganization redirectPath={redirectPath} />;
+        return (
+          <React.Fragment>
+            <Header title={__('Select Organization')} />
+            <SetOrganization redirectPath={redirectPath} />
+          </React.Fragment>
+        );
       }
       return <WrappedComponent {...this.props} />;
     }
