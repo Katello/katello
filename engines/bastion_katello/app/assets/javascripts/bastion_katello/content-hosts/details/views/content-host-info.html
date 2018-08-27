@@ -85,7 +85,14 @@
             on-save="saveSubscriptionFacet(host)">
         </dd>
 
-        <dt translate>Service Level</dt>
+      </dl>
+
+      <div class="divider"></div>
+
+      <h4 translate>System Purpose</h4>
+
+      <dl class="dl-horizontal dl-horizontal-left">
+        <dt translate>Service Level (SLA)</dt>
         <dd bst-edit-select="host.subscription_facet_attributes.service_level"
             readonly="denied('edit_hosts', host)"
             selector="host.subscription_facet_attributes.service_level"
@@ -95,6 +102,40 @@
             on-delete="clearServiceLevel()"
             on-save="saveSubscriptionFacet(host)">
         </dd>
+
+        <dt translate>Usage Type</dt>
+        <dd bst-edit-select="host.subscription_facet_attributes.purpose_usage"
+            readonly="denied('edit_hosts', host)"
+            selector="host.subscription_facet_attributes.purpose_usage"
+            options="purposeUsages()"
+            options-format="option for option in options"
+            deletable="true"
+            on-delete="clearUsage()"
+            on-save="saveSubscriptionFacet(host)">
+        </dd>
+
+        <dt translate>Role</dt>
+        <dd bst-edit-select="host.subscription_facet_attributes.purpose_role"
+            readonly="denied('edit_hosts', host)"
+            selector="host.subscription_facet_attributes.purpose_role"
+            options="purposeRoles()"
+            options-format="option for option in options"
+            deletable="true"
+            on-delete="clearRole()"
+            on-save="saveSubscriptionFacet(host)">
+        </dd>
+
+        <dt translate>Add ons</dt>
+        <dd bst-edit-multiselect="host.subscription_facet_attributes.purpose_addons"
+            readonly="denied('edit_hosts', host)"
+            formatter="arrayToString"
+            deletable="true"
+            on-delete="clearAddOns()"
+            selector="host.subscription_facet_attributes.purpose_addons"
+            options="purposeAddons()"
+            on-save="saveSubscriptionFacet(host)">
+        </dd>
+
       </dl>
 
       <div class="divider"></div>

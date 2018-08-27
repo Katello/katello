@@ -5,7 +5,6 @@ require "katello_test_helper"
 module Katello
   class Api::V2::OrganizationsControllerTest < ActionController::TestCase
     include Support::ForemanTasks::Task
-
     include Support::ForemanTasks::Task
 
     def permissions
@@ -25,6 +24,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       Organization.any_instance.stubs(:service_levels)
       Organization.any_instance.stubs(:service_level)
+      Organization.any_instance.stubs(:system_purposes)
       Organization.any_instance.stubs(:owner_details).returns({})
       models
       permissions
