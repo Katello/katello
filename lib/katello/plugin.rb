@@ -210,8 +210,8 @@ Foreman::Plugin.register :katello do
   parameter_filter ::Host::Managed, :host_collection_ids => [],
     :content_facet_attributes => [:content_view_id, :lifecycle_environment_id, :content_source_id,
                                   :host, :kickstart_repository_id],
-    :subscription_facet_attributes => [:release_version, :autoheal, :service_level, :host,
-                                       {:installed_products => [:product_id, :product_name, :arch, :version]}, :facts, :hypervisor_guest_uuids => []]
+    :subscription_facet_attributes => [:release_version, :autoheal, :purpose_usage, :purpose_role, :service_level, :host,
+                                       {:installed_products => [:product_id, :product_name, :arch, :version]}, :facts, :hypervisor_guest_uuids => [], :purpose_addons => []]
   parameter_filter Hostgroup, :content_view_id, :lifecycle_environment_id, :content_source_id,
     :kickstart_repository_id
   parameter_filter Organization, :label, :service_level

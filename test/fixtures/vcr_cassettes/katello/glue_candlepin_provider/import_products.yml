@@ -1248,7 +1248,7 @@ http_interactions:
   recorded_at: Thu, 16 Aug 2018 20:59:59 GMT
 - request:
     method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
+    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b0165448b7464023a
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -1260,22 +1260,25 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="xG121Wbxw6WUn7Frgbwxj2DsMS2pnsz1WEBLavSTI",
-        oauth_signature="IYhhDQ7s9IZ0qmTizZdUAqilnLU%3D", oauth_signature_method="HMAC-SHA1",
+      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="x2Rpp2DYq5IppYUmXHDolBn7ibPTtwNLH2pFwcprU",
+        oauth_signature="4%2BEOgTUowqPEpbCzxXIfouZhpKY%3D", oauth_signature_method="HMAC-SHA1",
         oauth_timestamp="1534453314", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
       Cp-User:
       - foreman_admin
   response:
     status:
-      code: 404
-      message: Not Found
+      code: 200
+      message: OK
     headers:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 2409ea65-6dda-42ec-bd19-bdc2df7a54d4
+      - 3e49fc64-bc28-4621-8059-6226fb753cd0
       X-Version:
-      - 2.4.5-1
       - 2.4.5-1
       Content-Type:
       - application/json
@@ -1286,15 +1289,108 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIEdsdWVD
-        YW5kbGVwaW5Qcm92aWRlclRlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJl
-        cXVlc3RVdWlkIjoiMjQwOWVhNjUtNmRkYS00MmVjLWJkMTktYmRjMmRmN2E1
-        NGQ0In0=
+        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
+        NTQzZDkxYjAxNjU0NDhiNzQ2NDAyM2EiLCJ0eXBlIjoiTk9STUFMIiwib3du
+        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0OGI3M2QxMDIyNyIs
+        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
+        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
+        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
+        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
+        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
+        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
+        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
+        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
+        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
+        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
+        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
+        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
+        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
+        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
+        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
+        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
+        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
+        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
+        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
+        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
+        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
+        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
+        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
+        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
+        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
+        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
+        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
+        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
+        bG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUi
+        fSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7
+        Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7Im5hbWUiOiJu
+        YW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxv
+        cGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVlIjoiRGV2ZWxv
+        cGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxwcGMscHBjNjQs
+        cHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5hbWUiOiJzb2Nr
+        ZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFs
+        dWUiOiJMMS1MMyJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
+        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
+        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
+        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
+        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
+        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
+        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
+        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
+        InN1YnNjcmlwdGlvbklkIjoiYmE1NDRjMGRiNTgwNGFkY2IyMDMwN2IzOGY3
+        NGIzMjciLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4
+        Yjc0NjQwMjNhIn0=
     http_version: 
   recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
 - request:
+    method: get
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="ajuZDOjStunHuZvUR4Uw2d1BVXTHffBMfxli0f6OFw0",
+        oauth_signature="nA02KmUtGJiOTsMHP4EuHzDeM3o%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884703", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 0106abd3-c182-4e4b-a98e-70642414db8c
+      X-Version:
+      - 2.5.6-1
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:11:43 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIEdsdWVD
+        YW5kbGVwaW5Qcm92aWRlclRlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJl
+        cXVlc3RVdWlkIjoiMDEwNmFiZDMtYzE4Mi00ZTRiLWE5OGUtNzA2NDI0MTRk
+        YjhjIn0=
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:11:43 GMT
+- request:
     method: post
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/
     body:
       encoding: UTF-8
       base64_string: |
@@ -1307,11 +1403,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw",
-        oauth_nonce="6hVXkNeLBPhlakPrkDyxwhLmWtIb7hZ1qGWejNv32w", oauth_signature="Rxlf3l%2BSsYhkSNBR1etlOduF7Rs%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1534453314", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
+        oauth_nonce="IHlPTRJ83iWV7e6mCV2ULSFYDTNxCCcR5E0Qlw6ug", oauth_signature="r2dVjscDWc2wDBUj%2Fs5gGA9UcqU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884703", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -1328,21 +1424,21 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 895643cc-d54e-4c45-bcce-3c1c237946ee
+      - af40dba0-ccb9-45d6-b723-17866b4da4c6
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:43 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiNzNkMTAyMjciLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTEyNGFhYTAwMzciLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
         UHJvdmlkZXJUZXN0IiwiZGlzcGxheU5hbWUiOiJHbHVlQ2FuZGxlcGluUHJv
         dmlkZXJUZXN0IiwicGFyZW50T3duZXIiOm51bGwsImNvbnRlbnRQcmVmaXgi
         OiIvR2x1ZUNhbmRsZXBpblByb3ZpZGVyVGVzdC8kZW52IiwiZGVmYXVsdFNl
@@ -1352,14 +1448,14 @@ http_interactions:
         aXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVzaGVkIjpudWxsLCJocmVm
         IjoiL293bmVycy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0=
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:43 GMT
 - request:
     method: post
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/imports?force=MANIFEST_SAME
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/imports?force=MANIFEST_SAME
     body:
       encoding: ASCII-8BIT
       base64_string: |
-        LS0tLS0tUnVieUZvcm1Cb3VuZGFyeXQxNEt5emp4ZXdsNmF1dUQNCkNvbnRl
+        LS0tLS0tUnVieUZvcm1Cb3VuZGFyeXpnbEFaZ29HUGQzQ1F5MksNCkNvbnRl
         bnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iaW1wb3J0IjsgZmls
         ZW5hbWU9Im1hbmlmZXN0X3NtYWxsLnppcCINCkNvbnRlbnQtVHlwZTogYXBw
         bGljYXRpb24vemlwDQoNClBLAwQUAAAACADXeXtLnDwnurSXAQA7pAEAEwAA
@@ -3698,25 +3794,25 @@ http_interactions:
         MUGbiWgmznVQSwECNAMUAAAACADXeXtLnDwnurSXAQA7pAEAEwAAAAAAAAAB
         AAAAtIEAAAAAY29uc3VtZXJfZXhwb3J0LnppcFBLAQI0AxQAAAAIANd5e0ux
         HaR9BQIAAAACAAAJAAAAAAAAAAEAAAC0geWXAQBzaWduYXR1cmVQSwUGAAAA
-        AAIAAgB4AAAAEZoBAAAADQotLS0tLS1SdWJ5Rm9ybUJvdW5kYXJ5dDE0S3l6
-        anhld2w2YXV1RC0tDQo=
+        AAIAAgB4AAAAEZoBAAAADQotLS0tLS1SdWJ5Rm9ybUJvdW5kYXJ5emdsQVpn
+        b0dQZDNDUXkySy0tDQo=
     headers:
       Accept:
       - application/json
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw",
-        oauth_nonce="YADPz3n2RWLEgGu8FlAL02zZG7Sebp1z6jcWQDjbWY", oauth_signature="E9awht%2FafdZ1D8fkZaoypBGYAjI%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1534453314", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
+        oauth_nonce="fRsSFbLMoMKZkoiP1sWNgkf9QRxyP7lvbgZOZRkodo", oauth_signature="SFqg2RhGt25X1G2DJWi38wS9xoU%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884703", oauth_version="1.0"
       Cp-User:
       - foreman_admin
       Content-Length:
       - '105314'
       Content-Type:
-      - multipart/form-data; boundary=----RubyFormBoundaryt14Kyzjxewl6auuD
+      - multipart/form-data; boundary=----RubyFormBoundaryzglAZgoGPd3CQy2K
   response:
     status:
       code: 200
@@ -3725,43 +3821,42 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 0ad0c225-37a2-4085-95b2-0602f155a2d8
+      - c1340627-f27f-4c96-b7d6-bf01cddedba7
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:43 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiNzQ3ZTAyM2YiLCJzdGF0dXMiOiJTVUNDRVNTIiwi
-        c3RhdHVzTWVzc2FnZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QgZmls
-        ZSBpbXBvcnRlZCBmb3JjaWJseS4iLCJmaWxlTmFtZSI6Im1hbmlmZXN0X3Nt
-        YWxsLnppcCIsImdlbmVyYXRlZEJ5IjoiY2FuZGxlcGluX2FkbWluIiwiZ2Vu
-        ZXJhdGVkRGF0ZSI6IjIwMTctMTEtMjFUMTY6MDE6MDUrMDAwMCIsInVwc3Ry
-        ZWFtQ29uc3VtZXIiOnsiY3JlYXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQr
-        MDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJp
-        ZCI6IjQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4Yjc0N2UwMjQwIiwidXVpZCI6
-        IjJmNTc4OGVmLTFlYTMtNDBjNS05YWY4LTliOWU3NzY3MDVlNyIsIm5hbWUi
-        OiJqdHVyZWwta2F0ZWxsby0yIiwidHlwZSI6eyJjcmVhdGVkIjoiMjAxOC0w
-        OC0xNlQxOToxNTowNyswMDAwIiwidXBkYXRlZCI6IjIwMTgtMDgtMTZUMTk6
-        MTU6MDcrMDAwMCIsImlkIjoiNDAyOGU5NDQ2NTQzZDkxYjAxNjU0NDI5YjA5
-        MDAwMDgiLCJsYWJlbCI6InNhdGVsbGl0ZSIsIm1hbmlmZXN0Ijp0cnVlfSwi
-        b3duZXJJZCI6IjQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4YjczZDEwMjI3Iiwi
-        Y29udGVudEFjY2Vzc01vZGUiOm51bGwsIndlYlVybCI6ImFjY2Vzcy5yZWRo
-        YXQuY29tL21hbmFnZW1lbnQvZGlzdHJpYnV0b3JzLyIsImFwaVVybCI6Imh0
-        dHBzOi8vc3Vic2NyaXB0aW9uLnJobi5yZWRoYXQuY29tL3N1YnNjcmlwdGlv
-        bi9jb25zdW1lcnMvIn19
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0NCswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDQrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTEyNGQxOTAwNDkiLCJzdGF0dXMiOiJTVUNDRVNTX1dJ
+        VEhfV0FSTklORyIsInN0YXR1c01lc3NhZ2UiOiJHbHVlQ2FuZGxlcGluUHJv
+        dmlkZXJUZXN0IGZpbGUgaW1wb3J0ZWQgZm9yY2libHkuTm8gYWN0aXZlIHN1
+        YnNjcmlwdGlvbnMgZm91bmQgaW4gdGhlIGZpbGUuIiwiZ2VuZXJhdGVkQnki
+        OiJjYW5kbGVwaW5fYWRtaW4iLCJnZW5lcmF0ZWREYXRlIjoiMjAxNy0xMS0y
+        MVQxNjowMTowNSswMDAwIiwidXBzdHJlYW1Db25zdW1lciI6eyJjcmVhdGVk
+        IjoiMjAxOC0wOS0yNVQxNDoxMTo0NCswMDAwIiwidXBkYXRlZCI6IjIwMTgt
+        MDktMjVUMTQ6MTE6NDQrMDAwMCIsImlkIjoiNDAyOGY5YWI2NjExMGZkYjAx
+        NjYxMTEyNGQxOTAwNGEiLCJ1dWlkIjoiMmY1Nzg4ZWYtMWVhMy00MGM1LTlh
+        ZjgtOWI5ZTc3NjcwNWU3IiwibmFtZSI6Imp0dXJlbC1rYXRlbGxvLTIiLCJh
+        cGlVcmwiOiJodHRwczovL3N1YnNjcmlwdGlvbi5yaG4ucmVkaGF0LmNvbS9z
+        dWJzY3JpcHRpb24vY29uc3VtZXJzLyIsIndlYlVybCI6ImFjY2Vzcy5yZWRo
+        YXQuY29tL21hbmFnZW1lbnQvZGlzdHJpYnV0b3JzLyIsIm93bmVySWQiOiI0
+        MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0YWFhMDAzNyIsImNvbnRlbnRBY2Nl
+        c3NNb2RlIjpudWxsLCJ0eXBlIjp7ImlkIjoiNDAyOGY5YWI2NWM5NzUwYzAx
+        NjVjOTg0ZTI4NzAwMDMiLCJsYWJlbCI6InNhdGVsbGl0ZSIsIm1hbmlmZXN0
+        Ijp0cnVlfX0sImZpbGVOYW1lIjoibWFuaWZlc3Rfc21hbGwuemlwIn0=
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
 - request:
     method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/?include=productContent
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/?include=productContent
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -3771,11 +3866,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="fKbhw1h17aUdwQUsGjTbWY8AsKP0jQhub8SkRek1zs",
-        oauth_signature="DbZsssYcgIfNOAhsC4QnJBNyu%2Fw%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453314", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="cdEQW9EZ9in0XEk8GMnXn5rUee9TMVKOahRRWjutE",
+        oauth_signature="E9CA6E85bTi9idEe7TAW0BmwcDQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884704", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -3790,87 +3885,90 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 7075901c-4852-4900-9a81-9ebb059b4a40
+      - 1dc90e33-5680-47af-8dff-33e36419ac14
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:44 GMT
     body:
       encoding: UTF-8
       base64_string: |
         W3siaWQiOiIxNzIiLCJuYW1lIjoiTVJHIFJlYWx0aW1lIiwibXVsdGlwbGll
         ciI6MSwicHJvZHVjdENvbnRlbnQiOlt7ImNvbnRlbnQiOnsiY3JlYXRlZCI6
-        IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA4
-        LTE2VDIxOjAxOjU0KzAwMDAiLCJ1dWlkIjoiNDAyOGU5NDQ2NTQzZDkxYjAx
-        NjU0NDhiNzQ1ODAyMmUiLCJpZCI6IjE1NDMiLCJ0eXBlIjoieXVtIiwibGFi
+        IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA5
+        LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2NjExMGZkYjAx
+        NjYxMTEyNGM3OTAwM2QiLCJpZCI6IjE1NDMiLCJ0eXBlIjoieXVtIiwibGFi
         ZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLXNvdXJjZS1ycG1zIiwibmFt
         ZSI6Ik1SRyBSZWFsdGltZSAoU291cmNlIFJQTXMpIiwidmVuZG9yIjoiUmVk
         IEhhdCIsImNvbnRlbnRVcmwiOiIvY29udGVudC9kaXN0L3JoZWwvc2VydmVy
         LzYvJHJlbGVhc2V2ZXIvJGJhc2VhcmNoL21yZy1yLzIvc291cmNlL1NSUE1T
         IiwicmVxdWlyZWRUYWdzIjoicmhlbC02LXNlcnZlciIsImdwZ1VybCI6ImZp
         bGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQTS1HUEctS0VZLXJlZGhhdC1yZWxl
-        YXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJt
-        ZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFzZVZlciI6bnVsbH0sImVuYWJsZWQi
-        OmZhbHNlfSx7ImNvbnRlbnQiOnsiY3JlYXRlZCI6IjIwMTgtMDgtMTZUMjE6
-        MDE6NTQrMDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAw
-        MDAiLCJ1dWlkIjoiNDAyOGU5NDQ2NTQzZDkxYjAxNjU0NDhiNzQ1ODAyMmYi
-        LCJpZCI6IjE1NDIiLCJ0eXBlIjoieXVtIiwibGFiZWwiOiJyaGVsLTYtc2Vy
-        dmVyLXJlYWx0aW1lLWRlYnVnLXJwbXMiLCJuYW1lIjoiTVJHIFJlYWx0aW1l
-        IChEZWJ1ZyBSUE1zKSIsInZlbmRvciI6IlJlZCBIYXQiLCJjb250ZW50VXJs
-        IjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci82LyRyZWxlYXNldmVyLyRi
-        YXNlYXJjaC9tcmctci8yL2RlYnVnIiwicmVxdWlyZWRUYWdzIjoicmhlbC02
-        LXNlcnZlciIsImdwZ1VybCI6ImZpbGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQ
-        TS1HUEctS0VZLXJlZGhhdC1yZWxlYXNlIiwibW9kaWZpZWRQcm9kdWN0SWRz
-        IjpbXSwiYXJjaGVzIjpudWxsLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFz
-        ZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQiOnsiY3Jl
-        YXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInVwZGF0ZWQiOiIy
-        MDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1dWlkIjoiNDAyOGU5NDQ2NTQz
-        ZDkxYjAxNjU0NDhiNzQ1ODAyMzEiLCJpZCI6IjE1NDEiLCJ0eXBlIjoieXVt
-        IiwibGFiZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLXJwbXMiLCJuYW1l
-        IjoiTVJHIFJlYWx0aW1lIChSUE1zKSIsInZlbmRvciI6IlJlZCBIYXQiLCJj
-        b250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci82LyRyZWxl
-        YXNldmVyLyRiYXNlYXJjaC9tcmctci8yL29zIiwicmVxdWlyZWRUYWdzIjoi
-        cmhlbC02LXNlcnZlciIsImdwZ1VybCI6ImZpbGU6Ly8vZXRjL3BraS9ycG0t
-        Z3BnL1JQTS1HUEctS0VZLXJlZGhhdC1yZWxlYXNlIiwibW9kaWZpZWRQcm9k
-        dWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJtZXRhZGF0YUV4cGlyZSI6MSwi
-        cmVsZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfV19LHsiaWQiOiJS
-        SDIyNjI0NzQiLCJuYW1lIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IERl
-        dmVsb3BlciBTdWl0ZSIsIm11bHRpcGxpZXIiOjEsInByb2R1Y3RDb250ZW50
-        IjpbXX0seyJpZCI6IjI3MyIsIm5hbWUiOiJSZWQgSGF0IENvbnRhaW5lciBJ
-        bWFnZXMiLCJtdWx0aXBsaWVyIjoxLCJwcm9kdWN0Q29udGVudCI6W3siY29u
-        dGVudCI6eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwi
-        dXBkYXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInV1aWQiOiI0
-        MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0OGI3NDU3MDIyZCIsImlkIjoiNTU4MiIs
-        InR5cGUiOiJjb250YWluZXJpbWFnZSIsImxhYmVsIjoicmhlbC03LXNlcnZl
-        ci1jb250YWluZXJzIiwibmFtZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51
-        eCA3IFNlcnZlciAoQ29udGFpbmVycykiLCJ2ZW5kb3IiOiJSZWQgSGF0Iiwi
-        Y29udGVudFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNy83U2Vy
-        dmVyL3g4Nl82NC9jb250YWluZXJzIiwicmVxdWlyZWRUYWdzIjoicmhlbC03
-        LXNlcnZlciIsImdwZ1VybCI6ImZpbGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQ
-        TS1HUEctS0VZLXJlZGhhdC1yZWxlYXNlIiwibW9kaWZpZWRQcm9kdWN0SWRz
-        IjpbXSwiYXJjaGVzIjpudWxsLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFz
-        ZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQiOnsiY3Jl
-        YXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInVwZGF0ZWQiOiIy
-        MDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1dWlkIjoiNDAyOGU5NDQ2NTQz
-        ZDkxYjAxNjU0NDhiNzQ1ODAyMzAiLCJpZCI6IjM4NzciLCJ0eXBlIjoiY29u
-        dGFpbmVyaW1hZ2UiLCJsYWJlbCI6InJoZWwtNi1zZXJ2ZXItY29udGFpbmVy
-        cyIsIm5hbWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggNiBTZXJ2ZXIg
-        KENvbnRhaW5lcnMpIiwidmVuZG9yIjoiUmVkIEhhdCIsImNvbnRlbnRVcmwi
-        OiIvY29udGVudC9kaXN0L3JoZWwvc2VydmVyLzYvNlNlcnZlci94ODZfNjQv
-        Y29udGFpbmVycyIsInJlcXVpcmVkVGFncyI6InJoZWwtNi1zZXJ2ZXIiLCJn
-        cGdVcmwiOiJmaWxlOi8vL2V0Yy9wa2kvcnBtLWdwZy9SUE0tR1BHLUtFWS1y
-        ZWRoYXQtcmVsZWFzZSIsIm1vZGlmaWVkUHJvZHVjdElkcyI6W10sImFyY2hl
-        cyI6bnVsbCwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VWZXIiOm51bGx9
-        LCJlbmFibGVkIjpmYWxzZX1dfV0=
+        YXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJy
+        ZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVs
+        ZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQiOnsi
+        Y3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQi
+        OiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTEyNGM3OTAwM2UiLCJpZCI6IjE1NDIiLCJ0eXBlIjoi
+        eXVtIiwibGFiZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLWRlYnVnLXJw
+        bXMiLCJuYW1lIjoiTVJHIFJlYWx0aW1lIChEZWJ1ZyBSUE1zKSIsInZlbmRv
+        ciI6IlJlZCBIYXQiLCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVs
+        L3NlcnZlci82LyRyZWxlYXNldmVyLyRiYXNlYXJjaC9tcmctci8yL2RlYnVn
+        IiwicmVxdWlyZWRUYWdzIjoicmhlbC02LXNlcnZlciIsImdwZ1VybCI6ImZp
+        bGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQTS1HUEctS0VZLXJlZGhhdC1yZWxl
+        YXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJy
+        ZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVs
+        ZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQiOnsi
+        Y3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQi
+        OiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTEyNGM3OTAwNDAiLCJpZCI6IjE1NDEiLCJ0eXBlIjoi
+        eXVtIiwibGFiZWwiOiJyaGVsLTYtc2VydmVyLXJlYWx0aW1lLXJwbXMiLCJu
+        YW1lIjoiTVJHIFJlYWx0aW1lIChSUE1zKSIsInZlbmRvciI6IlJlZCBIYXQi
+        LCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci82LyRy
+        ZWxlYXNldmVyLyRiYXNlYXJjaC9tcmctci8yL29zIiwicmVxdWlyZWRUYWdz
+        IjoicmhlbC02LXNlcnZlciIsImdwZ1VybCI6ImZpbGU6Ly8vZXRjL3BraS9y
+        cG0tZ3BnL1JQTS1HUEctS0VZLXJlZGhhdC1yZWxlYXNlIiwibW9kaWZpZWRQ
+        cm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxsLCJyZXF1aXJlZFByb2R1Y3RJ
+        ZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFzZVZlciI6bnVsbH0s
+        ImVuYWJsZWQiOmZhbHNlfV19LHsiaWQiOiJSSDIyNjI0NzQiLCJuYW1lIjoi
+        UmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IERldmVsb3BlciBTdWl0ZSIsIm11
+        bHRpcGxpZXIiOjEsInByb2R1Y3RDb250ZW50IjpbXX0seyJpZCI6IjI3MyIs
+        Im5hbWUiOiJSZWQgSGF0IENvbnRhaW5lciBJbWFnZXMiLCJtdWx0aXBsaWVy
+        IjoxLCJwcm9kdWN0Q29udGVudCI6W3siY29udGVudCI6eyJjcmVhdGVkIjoi
+        MjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXBkYXRlZCI6IjIwMTgtMDkt
+        MjVUMTQ6MTE6NDMrMDAwMCIsInV1aWQiOiI0MDI4ZjlhYjY2MTEwZmRiMDE2
+        NjExMTI0Yzc5MDAzYyIsImlkIjoiNTU4MiIsInR5cGUiOiJjb250YWluZXJp
+        bWFnZSIsImxhYmVsIjoicmhlbC03LXNlcnZlci1jb250YWluZXJzIiwibmFt
+        ZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCA3IFNlcnZlciAoQ29udGFp
+        bmVycykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29udGVudFVybCI6Ii9jb250
+        ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNy83U2VydmVyL3g4Nl82NC9jb250YWlu
+        ZXJzIiwicmVxdWlyZWRUYWdzIjoicmhlbC03LXNlcnZlciIsImdwZ1VybCI6
+        ImZpbGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQTS1HUEctS0VZLXJlZGhhdC1y
+        ZWxlYXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwiYXJjaGVzIjpudWxs
+        LCJyZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJtZXRhZGF0YUV4cGlyZSI6MSwi
+        cmVsZWFzZVZlciI6bnVsbH0sImVuYWJsZWQiOmZhbHNlfSx7ImNvbnRlbnQi
+        OnsiY3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0
+        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5
+        YWI2NjExMGZkYjAxNjYxMTEyNGM3OTAwM2YiLCJpZCI6IjM4NzciLCJ0eXBl
+        IjoiY29udGFpbmVyaW1hZ2UiLCJsYWJlbCI6InJoZWwtNi1zZXJ2ZXItY29u
+        dGFpbmVycyIsIm5hbWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggNiBT
+        ZXJ2ZXIgKENvbnRhaW5lcnMpIiwidmVuZG9yIjoiUmVkIEhhdCIsImNvbnRl
+        bnRVcmwiOiIvY29udGVudC9kaXN0L3JoZWwvc2VydmVyLzYvNlNlcnZlci94
+        ODZfNjQvY29udGFpbmVycyIsInJlcXVpcmVkVGFncyI6InJoZWwtNi1zZXJ2
+        ZXIiLCJncGdVcmwiOiJmaWxlOi8vL2V0Yy9wa2kvcnBtLWdwZy9SUE0tR1BH
+        LUtFWS1yZWRoYXQtcmVsZWFzZSIsIm1vZGlmaWVkUHJvZHVjdElkcyI6W10s
+        ImFyY2hlcyI6bnVsbCwicmVxdWlyZWRQcm9kdWN0SWRzIjpbXSwibWV0YWRh
+        dGFFeHBpcmUiOjEsInJlbGVhc2VWZXIiOm51bGx9LCJlbmFibGVkIjpmYWxz
+        ZX1dfV0=
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
 - request:
     method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -3880,11 +3978,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="PWbdgIIf8GsgSpnECkm5ypB5ZTb8T2b2pJN5eofBE",
-        oauth_signature="fSw%2Bau1XZdmvAYT9c8Ejo%2BeNoOk%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453314", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="MRE3piCyh60CkBYDwKp11rAYe1xHtLejiK9FJhxYt4",
+        oauth_signature="%2FK4YZNXY%2Fjuri0LUkPytf6K1Gwo%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884704", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -3899,124 +3997,127 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - ef7088e2-833b-4f47-92c1-fa415fac15f0
+      - 6e486292-ffab-4714-99a3-2ce79e7568b3
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:44 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        W3siY3JlYXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInVwZGF0
-        ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1dWlkIjoiNDAyOGU5
-        NDQ2NTQzZDkxYjAxNjU0NDhiNzQ1YjAyMzIiLCJpZCI6IjE3MiIsIm5hbWUi
+        W3siY3JlYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0
+        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5
+        YWI2NjExMGZkYjAxNjYxMTEyNGNhNDAwNDEiLCJpZCI6IjE3MiIsIm5hbWUi
         OiJNUkcgUmVhbHRpbWUiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1dGVzIjpb
         eyJuYW1lIjoibmFtZSIsInZhbHVlIjoiTVJHIFJlYWx0aW1lIn0seyJuYW1l
         IjoiYXJjaCIsInZhbHVlIjoieDg2XzY0In0seyJuYW1lIjoidHlwZSIsInZh
         bHVlIjoiU1ZDIn1dLCJkZXBlbmRlbnRQcm9kdWN0SWRzIjpbXSwiaHJlZiI6
-        Ii9wcm9kdWN0cy80MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0OGI3NDViMDIzMiIs
+        Ii9wcm9kdWN0cy80MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0Y2E0MDA0MSIs
         InByb2R1Y3RDb250ZW50IjpbeyJjb250ZW50Ijp7ImNyZWF0ZWQiOiIyMDE4
-        LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOC0xNlQy
-        MTowMTo1NCswMDAwIiwidXVpZCI6IjQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4
-        Yjc0NTgwMjJlIiwiaWQiOiIxNTQzIiwidHlwZSI6Inl1bSIsImxhYmVsIjoi
+        LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOS0yNVQx
+        NDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBmZGIwMTY2MTEx
+        MjRjNzkwMDNkIiwiaWQiOiIxNTQzIiwidHlwZSI6Inl1bSIsImxhYmVsIjoi
         cmhlbC02LXNlcnZlci1yZWFsdGltZS1zb3VyY2UtcnBtcyIsIm5hbWUiOiJN
         UkcgUmVhbHRpbWUgKFNvdXJjZSBSUE1zKSIsInZlbmRvciI6IlJlZCBIYXQi
         LCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci82LyRy
         ZWxlYXNldmVyLyRiYXNlYXJjaC9tcmctci8yL3NvdXJjZS9TUlBNUyIsInJl
         cXVpcmVkVGFncyI6InJoZWwtNi1zZXJ2ZXIiLCJncGdVcmwiOiJmaWxlOi8v
         L2V0Yy9wa2kvcnBtLWdwZy9SUE0tR1BHLUtFWS1yZWRoYXQtcmVsZWFzZSIs
-        Im1vZGlmaWVkUHJvZHVjdElkcyI6W10sImFyY2hlcyI6bnVsbCwibWV0YWRh
-        dGFFeHBpcmUiOjEsInJlbGVhc2VWZXIiOm51bGx9LCJlbmFibGVkIjpmYWxz
-        ZX0seyJjb250ZW50Ijp7ImNyZWF0ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0
-        KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwi
-        dXVpZCI6IjQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4Yjc0NTgwMjJmIiwiaWQi
-        OiIxNTQyIiwidHlwZSI6Inl1bSIsImxhYmVsIjoicmhlbC02LXNlcnZlci1y
-        ZWFsdGltZS1kZWJ1Zy1ycG1zIiwibmFtZSI6Ik1SRyBSZWFsdGltZSAoRGVi
-        dWcgUlBNcykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29udGVudFVybCI6Ii9j
-        b250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNi8kcmVsZWFzZXZlci8kYmFzZWFy
-        Y2gvbXJnLXIvMi9kZWJ1ZyIsInJlcXVpcmVkVGFncyI6InJoZWwtNi1zZXJ2
-        ZXIiLCJncGdVcmwiOiJmaWxlOi8vL2V0Yy9wa2kvcnBtLWdwZy9SUE0tR1BH
-        LUtFWS1yZWRoYXQtcmVsZWFzZSIsIm1vZGlmaWVkUHJvZHVjdElkcyI6W10s
-        ImFyY2hlcyI6bnVsbCwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VWZXIi
-        Om51bGx9LCJlbmFibGVkIjpmYWxzZX0seyJjb250ZW50Ijp7ImNyZWF0ZWQi
-        OiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0w
-        OC0xNlQyMTowMTo1NCswMDAwIiwidXVpZCI6IjQwMjhlOTQ0NjU0M2Q5MWIw
-        MTY1NDQ4Yjc0NTgwMjMxIiwiaWQiOiIxNTQxIiwidHlwZSI6Inl1bSIsImxh
-        YmVsIjoicmhlbC02LXNlcnZlci1yZWFsdGltZS1ycG1zIiwibmFtZSI6Ik1S
-        RyBSZWFsdGltZSAoUlBNcykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29udGVu
-        dFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNi8kcmVsZWFzZXZl
-        ci8kYmFzZWFyY2gvbXJnLXIvMi9vcyIsInJlcXVpcmVkVGFncyI6InJoZWwt
-        Ni1zZXJ2ZXIiLCJncGdVcmwiOiJmaWxlOi8vL2V0Yy9wa2kvcnBtLWdwZy9S
-        UE0tR1BHLUtFWS1yZWRoYXQtcmVsZWFzZSIsIm1vZGlmaWVkUHJvZHVjdElk
-        cyI6W10sImFyY2hlcyI6bnVsbCwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVh
-        c2VWZXIiOm51bGx9LCJlbmFibGVkIjpmYWxzZX1dfSx7ImNyZWF0ZWQiOiIy
-        MDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOC0x
-        NlQyMTowMTo1NCswMDAwIiwidXVpZCI6IjQwMjhlOTQ0NjU0M2Q5MWIwMTY1
-        NDQ4Yjc0NWIwMjM2IiwiaWQiOiJSSDIyNjI0NzQiLCJuYW1lIjoiUmVkIEhh
-        dCBFbnRlcnByaXNlIExpbnV4IERldmVsb3BlciBTdWl0ZSIsIm11bHRpcGxp
-        ZXIiOjEsImF0dHJpYnV0ZXMiOlt7Im5hbWUiOiJwcm9kdWN0X2ZhbWlseSIs
-        InZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4In0seyJuYW1lIjoi
-        ZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZhbHVlIjoiU0FNIn0seyJuYW1l
-        IjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFsdWUiOiIxIn0seyJuYW1lIjoi
-        cGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJSSEVMIn0seyJuYW1lIjoiZGVz
-        Y3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCJ9
-        LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFsdWUiOiJTdWJzY3JpcHRpb25z
-        In0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIsInZhbHVlIjoiU2VsZi1TdXBw
-        b3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVlIjoiTUtUIn0seyJuYW1lIjoi
-        b3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9LHsibmFtZSI6InBoX3Byb2R1
-        Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZlbG9wZXIifSx7Im5hbWUiOiJl
-        eHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUifSx7Im5hbWUiOiJzdWJ0eXBl
-        IiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0
-        IiwidmFsdWUiOiIxMDAifSx7Im5hbWUiOiJuYW1lIiwidmFsdWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIn0seyJuYW1l
-        IjoidmFyaWFudCIsInZhbHVlIjoiRGV2ZWxvcGVyIn0seyJuYW1lIjoiYXJj
-        aCIsInZhbHVlIjoiaWE2NCxwcGMscHBjNjQscHBjNjRsZSxzMzkwLHMzOTB4
-        LHg4Nix4ODZfNjQifSx7Im5hbWUiOiJzb2NrZXRzIiwidmFsdWUiOiI4In0s
-        eyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFsdWUiOiJMMS1MMyJ9XSwiZGVw
-        ZW5kZW50UHJvZHVjdElkcyI6W10sImhyZWYiOiIvcHJvZHVjdHMvNDAyOGU5
-        NDQ2NTQzZDkxYjAxNjU0NDhiNzQ1YjAyMzYiLCJwcm9kdWN0Q29udGVudCI6
-        W119LHsiY3JlYXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInVw
-        ZGF0ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJ1dWlkIjoiNDAy
-        OGU5NDQ2NTQzZDkxYjAxNjU0NDhiNzQ1YjAyMzciLCJpZCI6IjI3MyIsIm5h
-        bWUiOiJSZWQgSGF0IENvbnRhaW5lciBJbWFnZXMiLCJtdWx0aXBsaWVyIjox
-        LCJhdHRyaWJ1dGVzIjpbeyJuYW1lIjoibmFtZSIsInZhbHVlIjoiUmVkIEhh
-        dCBDb250YWluZXIgSW1hZ2VzIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoi
-        eDg2XzY0In0seyJuYW1lIjoidHlwZSIsInZhbHVlIjoiU1ZDIn1dLCJkZXBl
-        bmRlbnRQcm9kdWN0SWRzIjpbXSwiaHJlZiI6Ii9wcm9kdWN0cy80MDI4ZTk0
-        NDY1NDNkOTFiMDE2NTQ0OGI3NDViMDIzNyIsInByb2R1Y3RDb250ZW50Ijpb
-        eyJjb250ZW50Ijp7ImNyZWF0ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAw
-        MDAiLCJ1cGRhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXVp
-        ZCI6IjQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4Yjc0NTcwMjJkIiwiaWQiOiI1
-        NTgyIiwidHlwZSI6ImNvbnRhaW5lcmltYWdlIiwibGFiZWwiOiJyaGVsLTct
-        c2VydmVyLWNvbnRhaW5lcnMiLCJuYW1lIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4IDcgU2VydmVyIChDb250YWluZXJzKSIsInZlbmRvciI6IlJlZCBI
-        YXQiLCJjb250ZW50VXJsIjoiL2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci83
-        LzdTZXJ2ZXIveDg2XzY0L2NvbnRhaW5lcnMiLCJyZXF1aXJlZFRhZ3MiOiJy
-        aGVsLTctc2VydmVyIiwiZ3BnVXJsIjoiZmlsZTovLy9ldGMvcGtpL3JwbS1n
-        cGcvUlBNLUdQRy1LRVktcmVkaGF0LXJlbGVhc2UiLCJtb2RpZmllZFByb2R1
-        Y3RJZHMiOltdLCJhcmNoZXMiOm51bGwsIm1ldGFkYXRhRXhwaXJlIjoxLCJy
-        ZWxlYXNlVmVyIjpudWxsfSwiZW5hYmxlZCI6ZmFsc2V9LHsiY29udGVudCI6
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInV1aWQiOiI0MDI4ZTk0
-        NDY1NDNkOTFiMDE2NTQ0OGI3NDU4MDIzMCIsImlkIjoiMzg3NyIsInR5cGUi
-        OiJjb250YWluZXJpbWFnZSIsImxhYmVsIjoicmhlbC02LXNlcnZlci1jb250
-        YWluZXJzIiwibmFtZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCA2IFNl
-        cnZlciAoQ29udGFpbmVycykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29udGVu
-        dFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNi82U2VydmVyL3g4
-        Nl82NC9jb250YWluZXJzIiwicmVxdWlyZWRUYWdzIjoicmhlbC02LXNlcnZl
-        ciIsImdwZ1VybCI6ImZpbGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQTS1HUEct
-        S0VZLXJlZGhhdC1yZWxlYXNlIiwibW9kaWZpZWRQcm9kdWN0SWRzIjpbXSwi
-        YXJjaGVzIjpudWxsLCJtZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFzZVZlciI6
-        bnVsbH0sImVuYWJsZWQiOmZhbHNlfV19XQ==
+        Im1vZGlmaWVkUHJvZHVjdElkcyI6W10sImFyY2hlcyI6bnVsbCwicmVxdWly
+        ZWRQcm9kdWN0SWRzIjpbXSwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VW
+        ZXIiOm51bGx9LCJlbmFibGVkIjpmYWxzZX0seyJjb250ZW50Ijp7ImNyZWF0
+        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
+        OC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBm
+        ZGIwMTY2MTExMjRjNzkwMDNlIiwiaWQiOiIxNTQyIiwidHlwZSI6Inl1bSIs
+        ImxhYmVsIjoicmhlbC02LXNlcnZlci1yZWFsdGltZS1kZWJ1Zy1ycG1zIiwi
+        bmFtZSI6Ik1SRyBSZWFsdGltZSAoRGVidWcgUlBNcykiLCJ2ZW5kb3IiOiJS
+        ZWQgSGF0IiwiY29udGVudFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2
+        ZXIvNi8kcmVsZWFzZXZlci8kYmFzZWFyY2gvbXJnLXIvMi9kZWJ1ZyIsInJl
+        cXVpcmVkVGFncyI6InJoZWwtNi1zZXJ2ZXIiLCJncGdVcmwiOiJmaWxlOi8v
+        L2V0Yy9wa2kvcnBtLWdwZy9SUE0tR1BHLUtFWS1yZWRoYXQtcmVsZWFzZSIs
+        Im1vZGlmaWVkUHJvZHVjdElkcyI6W10sImFyY2hlcyI6bnVsbCwicmVxdWly
+        ZWRQcm9kdWN0SWRzIjpbXSwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VW
+        ZXIiOm51bGx9LCJlbmFibGVkIjpmYWxzZX0seyJjb250ZW50Ijp7ImNyZWF0
+        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
+        OC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBm
+        ZGIwMTY2MTExMjRjNzkwMDQwIiwiaWQiOiIxNTQxIiwidHlwZSI6Inl1bSIs
+        ImxhYmVsIjoicmhlbC02LXNlcnZlci1yZWFsdGltZS1ycG1zIiwibmFtZSI6
+        Ik1SRyBSZWFsdGltZSAoUlBNcykiLCJ2ZW5kb3IiOiJSZWQgSGF0IiwiY29u
+        dGVudFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNi8kcmVsZWFz
+        ZXZlci8kYmFzZWFyY2gvbXJnLXIvMi9vcyIsInJlcXVpcmVkVGFncyI6InJo
+        ZWwtNi1zZXJ2ZXIiLCJncGdVcmwiOiJmaWxlOi8vL2V0Yy9wa2kvcnBtLWdw
+        Zy9SUE0tR1BHLUtFWS1yZWRoYXQtcmVsZWFzZSIsIm1vZGlmaWVkUHJvZHVj
+        dElkcyI6W10sImFyY2hlcyI6bnVsbCwicmVxdWlyZWRQcm9kdWN0SWRzIjpb
+        XSwibWV0YWRhdGFFeHBpcmUiOjEsInJlbGVhc2VWZXIiOm51bGx9LCJlbmFi
+        bGVkIjpmYWxzZX1dfSx7ImNyZWF0ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQz
+        KzAwMDAiLCJ1cGRhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwi
+        dXVpZCI6IjQwMjhmOWFiNjYxMTBmZGIwMTY2MTExMjRjYTUwMDQ1IiwiaWQi
+        OiJSSDIyNjI0NzQiLCJuYW1lIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4
+        IERldmVsb3BlciBTdWl0ZSIsIm11bHRpcGxpZXIiOjEsImF0dHJpYnV0ZXMi
+        Olt7Im5hbWUiOiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBF
+        bnRlcnByaXNlIExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90
+        eXBlcyIsInZhbHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFi
+        bGVkIiwidmFsdWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwi
+        dmFsdWUiOiJSSEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6
+        IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVn
+        b3J5IiwidmFsdWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9y
+        dF9sZXZlbCIsInZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlw
+        ZSIsInZhbHVlIjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1
+        ZSI6IjQxNCJ9LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoi
+        UkhFTCBEZXZlbG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFs
+        dWUiOiIzNjUifSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1
+        cHBvcnQifSx7Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7
+        Im5hbWUiOiJuYW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGlu
+        dXggRGV2ZWxvcGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVl
+        IjoiRGV2ZWxvcGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxw
+        cGMscHBjNjQscHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5h
+        bWUiOiJzb2NrZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90
+        eXBlIiwidmFsdWUiOiJMMS1MMyJ9XSwiZGVwZW5kZW50UHJvZHVjdElkcyI6
+        W10sImhyZWYiOiIvcHJvZHVjdHMvNDAyOGY5YWI2NjExMGZkYjAxNjYxMTEy
+        NGNhNTAwNDUiLCJwcm9kdWN0Q29udGVudCI6W119LHsiY3JlYXRlZCI6IjIw
+        MTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInVwZGF0ZWQiOiIyMDE4LTA5LTI1
+        VDE0OjExOjQzKzAwMDAiLCJ1dWlkIjoiNDAyOGY5YWI2NjExMGZkYjAxNjYx
+        MTEyNGNhNTAwNDYiLCJpZCI6IjI3MyIsIm5hbWUiOiJSZWQgSGF0IENvbnRh
+        aW5lciBJbWFnZXMiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1dGVzIjpbeyJu
+        YW1lIjoibmFtZSIsInZhbHVlIjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2Vz
+        In0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoieDg2XzY0In0seyJuYW1lIjoi
+        dHlwZSIsInZhbHVlIjoiU1ZDIn1dLCJkZXBlbmRlbnRQcm9kdWN0SWRzIjpb
+        XSwiaHJlZiI6Ii9wcm9kdWN0cy80MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0
+        Y2E1MDA0NiIsInByb2R1Y3RDb250ZW50IjpbeyJjb250ZW50Ijp7ImNyZWF0
+        ZWQiOiIyMDE4LTA5LTI1VDE0OjExOjQzKzAwMDAiLCJ1cGRhdGVkIjoiMjAx
+        OC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXVpZCI6IjQwMjhmOWFiNjYxMTBm
+        ZGIwMTY2MTExMjRjNzkwMDNjIiwiaWQiOiI1NTgyIiwidHlwZSI6ImNvbnRh
+        aW5lcmltYWdlIiwibGFiZWwiOiJyaGVsLTctc2VydmVyLWNvbnRhaW5lcnMi
+        LCJuYW1lIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IDcgU2VydmVyIChD
+        b250YWluZXJzKSIsInZlbmRvciI6IlJlZCBIYXQiLCJjb250ZW50VXJsIjoi
+        L2NvbnRlbnQvZGlzdC9yaGVsL3NlcnZlci83LzdTZXJ2ZXIveDg2XzY0L2Nv
+        bnRhaW5lcnMiLCJyZXF1aXJlZFRhZ3MiOiJyaGVsLTctc2VydmVyIiwiZ3Bn
+        VXJsIjoiZmlsZTovLy9ldGMvcGtpL3JwbS1ncGcvUlBNLUdQRy1LRVktcmVk
+        aGF0LXJlbGVhc2UiLCJtb2RpZmllZFByb2R1Y3RJZHMiOltdLCJhcmNoZXMi
+        Om51bGwsInJlcXVpcmVkUHJvZHVjdElkcyI6W10sIm1ldGFkYXRhRXhwaXJl
+        IjoxLCJyZWxlYXNlVmVyIjpudWxsfSwiZW5hYmxlZCI6ZmFsc2V9LHsiY29u
+        dGVudCI6eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwi
+        dXBkYXRlZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInV1aWQiOiI0
+        MDI4ZjlhYjY2MTEwZmRiMDE2NjExMTI0Yzc5MDAzZiIsImlkIjoiMzg3NyIs
+        InR5cGUiOiJjb250YWluZXJpbWFnZSIsImxhYmVsIjoicmhlbC02LXNlcnZl
+        ci1jb250YWluZXJzIiwibmFtZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51
+        eCA2IFNlcnZlciAoQ29udGFpbmVycykiLCJ2ZW5kb3IiOiJSZWQgSGF0Iiwi
+        Y29udGVudFVybCI6Ii9jb250ZW50L2Rpc3QvcmhlbC9zZXJ2ZXIvNi82U2Vy
+        dmVyL3g4Nl82NC9jb250YWluZXJzIiwicmVxdWlyZWRUYWdzIjoicmhlbC02
+        LXNlcnZlciIsImdwZ1VybCI6ImZpbGU6Ly8vZXRjL3BraS9ycG0tZ3BnL1JQ
+        TS1HUEctS0VZLXJlZGhhdC1yZWxlYXNlIiwibW9kaWZpZWRQcm9kdWN0SWRz
+        IjpbXSwiYXJjaGVzIjpudWxsLCJyZXF1aXJlZFByb2R1Y3RJZHMiOltdLCJt
+        ZXRhZGF0YUV4cGlyZSI6MSwicmVsZWFzZVZlciI6bnVsbH0sImVuYWJsZWQi
+        OmZhbHNlfV19XQ==
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
 - request:
     method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/RH2262474/
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/products/RH2262474/
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -4026,11 +4127,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="yjzOz9CsDqWW1iOCGAzMPUKSkFAg9GKaHeOFBCjGIc",
-        oauth_signature="xceHbAdDzIH8fo7GreJP4jHCdr0%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453314", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="BdtapxCwJBPpFLdbapkDtrtEJc9jt51csO3mB5rmcE",
+        oauth_signature="KqHqnvRIjLouGzVsRJlpIBLvlvI%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884704", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -4045,21 +4146,21 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 71908ee4-9c45-4f86-bd40-763f67856b7d
+      - cc1328a4-00ad-498e-a02f-03776e9b034d
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:44 GMT
     body:
       encoding: UTF-8
       base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInV1aWQiOiI0MDI4ZTk0
-        NDY1NDNkOTFiMDE2NTQ0OGI3NDViMDIzNiIsImlkIjoiUkgyMjYyNDc0Iiwi
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMTo0MyswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTE6NDMrMDAwMCIsInV1aWQiOiI0MDI4Zjlh
+        YjY2MTEwZmRiMDE2NjExMTI0Y2E1MDA0NSIsImlkIjoiUkgyMjYyNDc0Iiwi
         bmFtZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51eCBEZXZlbG9wZXIgU3Vp
         dGUiLCJtdWx0aXBsaWVyIjoxLCJhdHRyaWJ1dGVzIjpbeyJuYW1lIjoicHJv
         ZHVjdF9mYW1pbHkiLCJ2YWx1ZSI6IlJlZCBIYXQgRW50ZXJwcmlzZSBMaW51
@@ -4081,13 +4182,13 @@ http_interactions:
         bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29ja2V0cyIs
         InZhbHVlIjoiOCJ9LHsibmFtZSI6InN1cHBvcnRfdHlwZSIsInZhbHVlIjoi
         TDEtTDMifV0sImRlcGVuZGVudFByb2R1Y3RJZHMiOltdLCJocmVmIjoiL3By
-        b2R1Y3RzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4Yjc0NWIwMjM2IiwicHJv
+        b2R1Y3RzLzQwMjhmOWFiNjYxMTBmZGIwMTY2MTExMjRjYTUwMDQ1IiwicHJv
         ZHVjdENvbnRlbnQiOltdfQ==
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
 - request:
     method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/pools?add_future=true&attribute=unmapped_guests_only:!true
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest/pools?add_future=true&attribute=unmapped_guests_only:!true
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -4097,11 +4198,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="etKst1V0EvY3I6gAVkCdlLq5PzOwJoHfX6IfigKYA",
-        oauth_signature="ys43vMMfGvYGa3JVgUm98Tu1r7s%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453314", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="xbxveFKtJIsieNpQZzAjXGAKiXGNlEPAwHi9VOclBc",
+        oauth_signature="miW%2BmeWFzR44kRd5GRpiqDI2v3o%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884704", oauth_version="1.0"
       Accept-Language:
       - en
       Content-Type:
@@ -4116,170 +4217,25 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 9291da4f-1262-497a-8c3b-c8ad839d26bc
+      - 331bbf89-87cb-4eab-8b46-96f3c4a0a3be
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Content-Type:
       - application/json
       Transfer-Encoding:
       - chunked
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:44 GMT
     body:
       encoding: UTF-8
-      base64_string: |
-        W3siY3JlYXRlZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsInVwZGF0
-        ZWQiOiIyMDE4LTA4LTE2VDIxOjAxOjU0KzAwMDAiLCJpZCI6IjQwMjhlOTQ0
-        NjU0M2Q5MWIwMTY1NDQ4Yjc0NjQwMjNhIiwidHlwZSI6Ik5PUk1BTCIsIm93
-        bmVyIjp7ImlkIjoiNDAyOGU5NDQ2NTQzZDkxYjAxNjU0NDhiNzNkMTAyMjci
-        LCJrZXkiOiJHbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0IiwiZGlzcGxheU5h
-        bWUiOiJHbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0IiwiaHJlZiI6Ii9vd25l
-        cnMvR2x1ZUNhbmRsZXBpblByb3ZpZGVyVGVzdCJ9LCJhY3RpdmVTdWJzY3Jp
-        cHRpb24iOnRydWUsImNyZWF0ZWRCeVNoYXJlIjpmYWxzZSwiaGFzU2hhcmVk
-        QW5jZXN0b3IiOmZhbHNlLCJzb3VyY2VFbnRpdGxlbWVudCI6bnVsbCwicXVh
-        bnRpdHkiOjEsInN0YXJ0RGF0ZSI6IjIwMTctMDItMDJUMDU6MDA6MDArMDAw
-        MCIsImVuZERhdGUiOiIyMDM4LTAyLTAyVDA0OjU5OjU5KzAwMDAiLCJhdHRy
-        aWJ1dGVzIjpbXSwicmVzdHJpY3RlZFRvVXNlcm5hbWUiOm51bGwsImNvbnRy
-        YWN0TnVtYmVyIjoiMTEyODAzMjEiLCJhY2NvdW50TnVtYmVyIjoiOTQxMTMz
-        Iiwib3JkZXJOdW1iZXIiOm51bGwsImNvbnN1bWVkIjowLCJleHBvcnRlZCI6
-        MCwic2hhcmVkIjowLCJicmFuZGluZyI6W10sImNhbGN1bGF0ZWRBdHRyaWJ1
-        dGVzIjp7ImNvbXBsaWFuY2VfdHlwZSI6IlN0YW5kYXJkIn0sInVwc3RyZWFt
-        UG9vbElkIjoiOGE4NWY5ODE1OWZlYjI0ZjAxNTlmZjc0ZDdlODRkMjQiLCJ1
-        cHN0cmVhbUVudGl0bGVtZW50SWQiOiI4YTg1Zjk4NzVmZGYyYzkzMDE1ZmRm
-        NGY4MzY1MGRlYyIsInVwc3RyZWFtQ29uc3VtZXJJZCI6IjJmNTc4OGVmLTFl
-        YTMtNDBjNS05YWY4LTliOWU3NzY3MDVlNyIsInByb2R1Y3ROYW1lIjoiUmVk
-        IEhhdCBFbnRlcnByaXNlIExpbnV4IERldmVsb3BlciBTdWl0ZSIsInByb2R1
-        Y3RJZCI6IlJIMjI2MjQ3NCIsInByb2R1Y3RBdHRyaWJ1dGVzIjpbeyJuYW1l
-        IjoicHJvZHVjdF9mYW1pbHkiLCJ2YWx1ZSI6IlJlZCBIYXQgRW50ZXJwcmlz
-        ZSBMaW51eCJ9LHsibmFtZSI6ImVuYWJsZWRfY29uc3VtZXJfdHlwZXMiLCJ2
-        YWx1ZSI6IlNBTSJ9LHsibmFtZSI6Im1hbmFnZW1lbnRfZW5hYmxlZCIsInZh
-        bHVlIjoiMSJ9LHsibmFtZSI6InBoX3Byb2R1Y3RfbGluZSIsInZhbHVlIjoi
-        UkhFTCJ9LHsibmFtZSI6ImRlc2NyaXB0aW9uIiwidmFsdWUiOiJSZWQgSGF0
-        IEVudGVycHJpc2UgTGludXgifSx7Im5hbWUiOiJwaF9jYXRlZ29yeSIsInZh
-        bHVlIjoiU3Vic2NyaXB0aW9ucyJ9LHsibmFtZSI6InN1cHBvcnRfbGV2ZWwi
-        LCJ2YWx1ZSI6IlNlbGYtU3VwcG9ydCJ9LHsibmFtZSI6InR5cGUiLCJ2YWx1
-        ZSI6Ik1LVCJ9LHsibmFtZSI6Im9wdGlvbl9jb2RlIiwidmFsdWUiOiI0MTQi
-        fSx7Im5hbWUiOiJwaF9wcm9kdWN0X25hbWUiLCJ2YWx1ZSI6IlJIRUwgRGV2
-        ZWxvcGVyIn0seyJuYW1lIjoiZXhwaXJlc19hZnRlciIsInZhbHVlIjoiMzY1
-        In0seyJuYW1lIjoic3VidHlwZSIsInZhbHVlIjoiU2VsZi1TdXBwb3J0In0s
-        eyJuYW1lIjoidmlydF9saW1pdCIsInZhbHVlIjoiMTAwIn0seyJuYW1lIjoi
-        bmFtZSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNlIExpbnV4IERldmVs
-        b3BlciBTdWl0ZSJ9LHsibmFtZSI6InZhcmlhbnQiLCJ2YWx1ZSI6IkRldmVs
-        b3BlciJ9LHsibmFtZSI6ImFyY2giLCJ2YWx1ZSI6ImlhNjQscHBjLHBwYzY0
-        LHBwYzY0bGUsczM5MCxzMzkweCx4ODYseDg2XzY0In0seyJuYW1lIjoic29j
-        a2V0cyIsInZhbHVlIjoiOCJ9LHsibmFtZSI6InN1cHBvcnRfdHlwZSIsInZh
-        bHVlIjoiTDEtTDMifV0sInN0YWNrSWQiOm51bGwsInN0YWNrZWQiOmZhbHNl
-        LCJzb3VyY2VTdGFja0lkIjpudWxsLCJkZXZlbG9wbWVudFBvb2wiOmZhbHNl
-        LCJkZXJpdmVkUHJvZHVjdEF0dHJpYnV0ZXMiOltdLCJkZXJpdmVkUHJvZHVj
-        dElkIjpudWxsLCJkZXJpdmVkUHJvZHVjdE5hbWUiOm51bGwsInByb3ZpZGVk
-        UHJvZHVjdHMiOlt7InByb2R1Y3RJZCI6IjE3MiIsInByb2R1Y3ROYW1lIjoi
-        TVJHIFJlYWx0aW1lIn0seyJwcm9kdWN0SWQiOiIyNzMiLCJwcm9kdWN0TmFt
-        ZSI6IlJlZCBIYXQgQ29udGFpbmVyIEltYWdlcyJ9XSwiZGVyaXZlZFByb3Zp
-        ZGVkUHJvZHVjdHMiOltdLCJzdWJzY3JpcHRpb25TdWJLZXkiOiJtYXN0ZXIi
-        LCJzdWJzY3JpcHRpb25JZCI6ImJhNTQ0YzBkYjU4MDRhZGNiMjAzMDdiMzhm
-        NzRiMzI3IiwiaHJlZiI6Ii9wb29scy80MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0
-        OGI3NDY0MDIzYSJ9XQ==
+      base64_string: 'W10=
+
+'
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/pools/4028e9446543d91b0165448b7464023a
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="x2Rpp2DYq5IppYUmXHDolBn7ibPTtwNLH2pFwcprU",
-        oauth_signature="4%2BEOgTUowqPEpbCzxXIfouZhpKY%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453314", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 3e49fc64-bc28-4621-8059-6226fb753cd0
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMTo1NCswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDE6NTQrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiNzQ2NDAyM2EiLCJ0eXBlIjoiTk9STUFMIiwib3du
-        ZXIiOnsiaWQiOiI0MDI4ZTk0NDY1NDNkOTFiMDE2NTQ0OGI3M2QxMDIyNyIs
-        ImtleSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJkaXNwbGF5TmFt
-        ZSI6IkdsdWVDYW5kbGVwaW5Qcm92aWRlclRlc3QiLCJocmVmIjoiL293bmVy
-        cy9HbHVlQ2FuZGxlcGluUHJvdmlkZXJUZXN0In0sImFjdGl2ZVN1YnNjcmlw
-        dGlvbiI6dHJ1ZSwiY3JlYXRlZEJ5U2hhcmUiOmZhbHNlLCJoYXNTaGFyZWRB
-        bmNlc3RvciI6ZmFsc2UsInNvdXJjZUVudGl0bGVtZW50IjpudWxsLCJxdWFu
-        dGl0eSI6MSwic3RhcnREYXRlIjoiMjAxNy0wMi0wMlQwNTowMDowMCswMDAw
-        IiwiZW5kRGF0ZSI6IjIwMzgtMDItMDJUMDQ6NTk6NTkrMDAwMCIsImF0dHJp
-        YnV0ZXMiOltdLCJyZXN0cmljdGVkVG9Vc2VybmFtZSI6bnVsbCwiY29udHJh
-        Y3ROdW1iZXIiOiIxMTI4MDMyMSIsImFjY291bnROdW1iZXIiOiI5NDExMzMi
-        LCJvcmRlck51bWJlciI6bnVsbCwiY29uc3VtZWQiOjAsImV4cG9ydGVkIjow
-        LCJzaGFyZWQiOjAsImJyYW5kaW5nIjpbXSwiY2FsY3VsYXRlZEF0dHJpYnV0
-        ZXMiOnsiY29tcGxpYW5jZV90eXBlIjoiU3RhbmRhcmQifSwidXBzdHJlYW1Q
-        b29sSWQiOiI4YTg1Zjk4MTU5ZmViMjRmMDE1OWZmNzRkN2U4NGQyNCIsInVw
-        c3RyZWFtRW50aXRsZW1lbnRJZCI6IjhhODVmOTg3NWZkZjJjOTMwMTVmZGY0
-        ZjgzNjUwZGVjIiwidXBzdHJlYW1Db25zdW1lcklkIjoiMmY1Nzg4ZWYtMWVh
-        My00MGM1LTlhZjgtOWI5ZTc3NjcwNWU3IiwicHJvZHVjdE5hbWUiOiJSZWQg
-        SGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxvcGVyIFN1aXRlIiwicHJvZHVj
-        dElkIjoiUkgyMjYyNDc0IiwicHJvZHVjdEF0dHJpYnV0ZXMiOlt7Im5hbWUi
-        OiJwcm9kdWN0X2ZhbWlseSIsInZhbHVlIjoiUmVkIEhhdCBFbnRlcnByaXNl
-        IExpbnV4In0seyJuYW1lIjoiZW5hYmxlZF9jb25zdW1lcl90eXBlcyIsInZh
-        bHVlIjoiU0FNIn0seyJuYW1lIjoibWFuYWdlbWVudF9lbmFibGVkIiwidmFs
-        dWUiOiIxIn0seyJuYW1lIjoicGhfcHJvZHVjdF9saW5lIiwidmFsdWUiOiJS
-        SEVMIn0seyJuYW1lIjoiZGVzY3JpcHRpb24iLCJ2YWx1ZSI6IlJlZCBIYXQg
-        RW50ZXJwcmlzZSBMaW51eCJ9LHsibmFtZSI6InBoX2NhdGVnb3J5IiwidmFs
-        dWUiOiJTdWJzY3JpcHRpb25zIn0seyJuYW1lIjoic3VwcG9ydF9sZXZlbCIs
-        InZhbHVlIjoiU2VsZi1TdXBwb3J0In0seyJuYW1lIjoidHlwZSIsInZhbHVl
-        IjoiTUtUIn0seyJuYW1lIjoib3B0aW9uX2NvZGUiLCJ2YWx1ZSI6IjQxNCJ9
-        LHsibmFtZSI6InBoX3Byb2R1Y3RfbmFtZSIsInZhbHVlIjoiUkhFTCBEZXZl
-        bG9wZXIifSx7Im5hbWUiOiJleHBpcmVzX2FmdGVyIiwidmFsdWUiOiIzNjUi
-        fSx7Im5hbWUiOiJzdWJ0eXBlIiwidmFsdWUiOiJTZWxmLVN1cHBvcnQifSx7
-        Im5hbWUiOiJ2aXJ0X2xpbWl0IiwidmFsdWUiOiIxMDAifSx7Im5hbWUiOiJu
-        YW1lIiwidmFsdWUiOiJSZWQgSGF0IEVudGVycHJpc2UgTGludXggRGV2ZWxv
-        cGVyIFN1aXRlIn0seyJuYW1lIjoidmFyaWFudCIsInZhbHVlIjoiRGV2ZWxv
-        cGVyIn0seyJuYW1lIjoiYXJjaCIsInZhbHVlIjoiaWE2NCxwcGMscHBjNjQs
-        cHBjNjRsZSxzMzkwLHMzOTB4LHg4Nix4ODZfNjQifSx7Im5hbWUiOiJzb2Nr
-        ZXRzIiwidmFsdWUiOiI4In0seyJuYW1lIjoic3VwcG9ydF90eXBlIiwidmFs
-        dWUiOiJMMS1MMyJ9XSwic3RhY2tJZCI6bnVsbCwic3RhY2tlZCI6ZmFsc2Us
-        InNvdXJjZVN0YWNrSWQiOm51bGwsImRldmVsb3BtZW50UG9vbCI6ZmFsc2Us
-        ImRlcml2ZWRQcm9kdWN0QXR0cmlidXRlcyI6W10sImRlcml2ZWRQcm9kdWN0
-        SWQiOm51bGwsImRlcml2ZWRQcm9kdWN0TmFtZSI6bnVsbCwicHJvdmlkZWRQ
-        cm9kdWN0cyI6W3sicHJvZHVjdElkIjoiMTcyIiwicHJvZHVjdE5hbWUiOiJN
-        UkcgUmVhbHRpbWUifSx7InByb2R1Y3RJZCI6IjI3MyIsInByb2R1Y3ROYW1l
-        IjoiUmVkIEhhdCBDb250YWluZXIgSW1hZ2VzIn1dLCJkZXJpdmVkUHJvdmlk
-        ZWRQcm9kdWN0cyI6W10sInN1YnNjcmlwdGlvblN1YktleSI6Im1hc3RlciIs
-        InN1YnNjcmlwdGlvbklkIjoiYmE1NDRjMGRiNTgwNGFkY2IyMDMwN2IzOGY3
-        NGIzMjciLCJocmVmIjoiL3Bvb2xzLzQwMjhlOTQ0NjU0M2Q5MWIwMTY1NDQ4
-        Yjc0NjQwMjNhIn0=
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:54 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
 - request:
     method: delete
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinProviderTest
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -4289,11 +4245,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="N8zrQxmZeqwZHChfPe6LP9E8DXh4jDjoZgcGeAp4TU",
-        oauth_signature="xRSZwgFAM7o2pc2jgW%2FtBJ150VI%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453315", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="T1inDBNNhU30yLN1uqoPbqDVK3WWKg8WY6L7Q84",
+        oauth_signature="93I9VEiqX6mFzOzfTzqJcCHCTJw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884704", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -4304,14 +4260,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 9213e40a-a3f1-42dc-9329-e859fa9c4b2e
+      - 7d48b4f3-6c7e-43e6-af4d-0ec1cf59f529
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Date:
-      - Thu, 16 Aug 2018 21:01:54 GMT
+      - Tue, 25 Sep 2018 14:11:44 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:01:55 GMT
+  recorded_at: Tue, 25 Sep 2018 14:11:44 GMT
 recorded_with: VCR 3.0.3

@@ -19,14 +19,7 @@ module Katello
 
       has_many :compliance_reasons, :class_name => "Katello::ComplianceReason", :dependent => :destroy, :inverse_of => :subscription_facet
 
-      has_many :subscription_facet_purpose_addons, :class_name => "Katello::SubscriptionFacetPurposeAddon", :dependent => :destroy, :inverse_of => :subscription_facet
-      has_many :purpose_addons, :class_name => "Katello::PurposeAddon", :through => :subscription_facet_purpose_addons
-
-      has_one :subscription_facet_purpose_role, :class_name => "Katello::SubscriptionFacetPurposeRole", :dependent => :destroy, :inverse_of => :subscription_facet
-      has_one :purpose_role, :class_name => "Katello::PurposeRole", :through => :subscription_facet_purpose_role
-
-      has_one :subscription_facet_purpose_usage, :class_name => "Katello::SubscriptionFacetPurposeUsage", :dependent => :destroy, :inverse_of => :subscription_facet
-      has_one :purpose_usage, :class_name => "Katello::PurposeUsage", :through => :subscription_facet_purpose_usage
+      serialize :purpose_addons, Array
 
       validates :host, :presence => true, :allow_blank => false
 
@@ -52,33 +45,14 @@ module Katello
         self.registered_at = consumer_params['created'] unless consumer_params['created'].blank?
         self.last_checkin = consumer_params['lastCheckin'] unless consumer_params['lastCheckin'].blank?
         self.update_installed_products(consumer_params['installedProducts']) if consumer_params.key?('installedProducts')
-        self.update_role(consumer_params['role']) unless consumer_params['role'].nil?
-        self.update_usage(consumer_params['usage']) unless consumer_params['usage'].nil?
-        self.update_addons(consumer_params['addOns']) unless consumer_params['addOns'].nil?
+        self.purpose_role = consumer_params['role'] unless consumer_params['role'].nil?
+        self.purpose_usage = consumer_params['usage'] unless consumer_params['usage'].nil?
+        self.purpose_addons = consumer_params['addOns'] unless consumer_params['addOns'].nil?
 
         unless consumer_params['releaseVer'].blank?
           release = consumer_params['releaseVer']
           release = release['releaseVer'] if release.is_a?(Hash)
           self.release_version = release
-        end
-      end
-
-      def update_usage(usage)
-        self.purpose_usage = unless usage.blank?
-                               Katello::PurposeUsage.find_or_create_by(name: usage)
-                             end
-      end
-
-      def update_role(role)
-        self.purpose_role = unless role.blank?
-                              Katello::PurposeRole.find_or_create_by(name: role)
-                            end
-      end
-
-      def update_addons(addons)
-        addons ||= []
-        self.purpose_addons = addons.map do |name|
-          Katello::PurposeAddon.find_or_create_by(name: name)
         end
       end
 
@@ -145,6 +119,9 @@ module Katello
       def consumer_attributes
         attrs = {
           :autoheal => autoheal,
+          :usage => purpose_usage,
+          :role => purpose_role,
+          :addOns => purpose_addons,
           :serviceLevel => service_level,
           :releaseVer => release_version,
           :environment => {:id => self.candlepin_environment_id},
@@ -277,7 +254,7 @@ module Katello
       end
 
       def backend_update_needed?
-        %w(release_version service_level autoheal).each do |method|
+        %w(release_version service_level autoheal purpose_role purpose_usage purpose_addons).each do |method|
           return true if self.send("#{method}_changed?")
         end
         if self.host.content_facet

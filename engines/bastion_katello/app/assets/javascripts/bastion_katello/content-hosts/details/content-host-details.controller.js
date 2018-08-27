@@ -20,6 +20,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
     function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister) {
         $scope.menuExpander = MenuExpander;
 
+        $scope.purposeAddonsList = [];
+
         $scope.panel = {
             error: false,
             loading: true
@@ -48,12 +50,24 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
         $scope.saveSubscriptionFacet = function (host) {
             var newHost = {id: host.id};
+            var addOns = [];
+
+            angular.forEach($scope.purposeAddonsList, function (addOn) {
+                if (addOn.selected) {
+                    addOns.push(addOn.name);
+                }
+            });
+
             newHost['subscription_facet_attributes'] = {
                 id: host.subscription_facet_attributes.id,
                 autoheal: host.subscription_facet_attributes.autoheal,
+                'purpose_role': host.subscription_facet_attributes.purpose_role,
+                'purpose_usage': host.subscription_facet_attributes.purpose_usage,
+                'purpose_addons': addOns,
                 'service_level': host.subscription_facet_attributes.service_level,
                 'release_version': host.subscription_facet_attributes.release_version
             };
+
             return $scope.save(newHost, true);
         };
         // @TODO end hack
@@ -122,6 +136,45 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             });
 
             return deferred.promise;
+        };
+
+        $scope.purposeRoles = function () {
+            var deferred = $q.defer();
+
+            Organization.get({id: CurrentOrganization}, function (organization) {
+                deferred.resolve(organization.system_purposes.role);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.purposeUsages = function () {
+            var deferred = $q.defer();
+
+            Organization.get({id: CurrentOrganization}, function (organization) {
+                deferred.resolve(organization.system_purposes.usage);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.purposeAddons = function () {
+            var deferred = $q.defer();
+
+            Organization.get({id: CurrentOrganization}, function (organization) {
+                deferred.resolve(organization.system_purposes.addons);
+            });
+
+            return deferred.promise.then(
+                function(addOns) {
+                    $scope.purposeAddonsList = [];
+
+                    angular.forEach(addOns, function (addOn) {
+                        $scope.purposeAddonsList.push({"name": addOn, "selected": $scope.host.subscription_facet_attributes.purpose_addons.indexOf(addOn) > -1});
+                    });
+
+                    return $scope.purposeAddonsList;
+                });
         };
 
         $scope.unregisterContentHost = function (host) {

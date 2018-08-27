@@ -115,6 +115,15 @@ module Katello
             end
           end
 
+          def system_purpose(key)
+            response = Candlepin::CandlepinResource.get(join_path(path(key), 'system_purpose'), self.default_headers).body
+            if response.empty?
+              return []
+            else
+              JSON.parse(response)['systemPurposeAttributes']
+            end
+          end
+
           def auto_attach(key)
             response = self.post(join_path(path(key), 'entitlements'), "", self.default_headers).body
             if response.empty?

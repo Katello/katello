@@ -2497,221 +2497,6 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 16 Aug 2018 20:59:25 GMT
 - request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="CJduS0fmmB1YXQz8lrhmPa5thOX68YeDzLuVjPM",
-        oauth_signature="p98q4upHcc%2FS4xsgzhBCvHzbuds%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453329", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 60034c14-122b-4b7e-a788-97e32cbe211e
-      X-Version:
-      - 2.4.5-1
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIEdsdWVD
-        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMSBjb3VsZCBub3QgYmUgZm91bmQu
-        IiwicmVxdWVzdFV1aWQiOiI2MDAzNGMxNC0xMjJiLTRiN2UtYTc4OC05N2Uz
-        MmNiZTIxMWUifQ==
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
-- request:
-    method: post
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJrZXkiOiJHbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEiLCJkaXNw
-        bGF5TmFtZSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMSIsImNv
-        bnRlbnRQcmVmaXgiOiIvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8x
-        LyRlbnYifQ==
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw",
-        oauth_nonce="Uvb3zOcXtQAicyhXlbM4fJTOmWJi8S5FI19V9sU5DQ", oauth_signature="ZKwBqijhlZ%2F3jqlLsg5iarrdyLs%3D",
-        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1534453329", oauth_version="1.0"
-      Accept-Language:
-      - en
-      Content-Type:
-      - application/json
-      Cp-User:
-      - foreman_admin
-      Content-Length:
-      - '142'
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 1335b984-cb9c-4942-bef4-aa4693eb960b
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMjowOSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDI6MDkrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiYWU1ZjAyODAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
-        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
-        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
-        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
-        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
-        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
-        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
-        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
-        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
-        ZXN0U3lzdGVtXzEifQ==
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="HydXreUFm9VCqzsLPYslr7TdlJoJLup060aWJKxA",
-        oauth_signature="Nec5%2Bt1Szh4j4Fg2EffzjO%2B%2FYNw%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453329", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - ecb31365-1c05-44c3-9309-151a92f638a3
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMjowOSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDI6MDkrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiYWU1ZjAyODAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
-        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
-        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
-        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
-        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
-        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
-        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
-        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
-        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
-        ZXN0U3lzdGVtXzEifQ==
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="iHvZXhj1PfdIxPXAdYXcIF3shGSoYozjQG0nFZMnIA",
-        oauth_signature="8661w483D91fWDstsF4d7eBZpt0%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453329", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - d1497eb4-7dbc-49a8-9b99-4a588259b6d2
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMjowOSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDI6MDkrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiYWU1ZjAyODAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
-        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
-        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
-        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
-        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
-        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
-        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
-        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
-        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
-        ZXN0U3lzdGVtXzEifQ==
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
-- request:
     method: put
     uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
     body:
@@ -2778,59 +2563,6 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
 - request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="PFZAORLvLBo6pdJcCfojrBRiaCHF5qXgIAbWhrfke4",
-        oauth_signature="9kpHJPUd7JzpHtJn22ONELrSDqE%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453329", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - cd47dc10-eb01-419a-b400-ae93dd2e12bc
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMjowOSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDI6MDkrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiYWU1ZjAyODAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
-        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
-        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
-        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
-        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
-        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
-        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
-        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
-        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
-        ZXN0U3lzdGVtXzEifQ==
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
-- request:
     method: put
     uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
     body:
@@ -2876,59 +2608,6 @@ http_interactions:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
       - 8ef6a5fd-7f3b-44fc-bad1-7b4a384ae49d
-      X-Version:
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcmVhdGVkIjoiMjAxOC0wOC0xNlQyMTowMjowOSswMDAwIiwidXBkYXRl
-        ZCI6IjIwMTgtMDgtMTZUMjE6MDI6MDkrMDAwMCIsImlkIjoiNDAyOGU5NDQ2
-        NTQzZDkxYjAxNjU0NDhiYWU1ZjAyODAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
-        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
-        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
-        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
-        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
-        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
-        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
-        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
-        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
-        ZXN0U3lzdGVtXzEifQ==
-    http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
-- request:
-    method: get
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
-      Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="GZ1YnEE2tVFIaJrpB9G0qFtBZB11LoP5Y5aAh2qEalE",
-        oauth_signature="x8B%2FZF3nV7bYk%2B6yW8DZW0ltXag%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453329", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 8c46b6a1-cb09-4197-9f07-1d12cae1b6d1
       X-Version:
       - 2.4.5-1
       Content-Type:
@@ -3026,8 +2705,537 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
 - request:
+    method: get
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="Ies19S08zrrUvtk3Jhnifv1EYpYhZZMcfqk9Og0LOzE",
+        oauth_signature="OmANfn6REhl6YbC%2BkpZf9JMbNUg%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884650", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - a50e4e52-ce9c-45b0-8660-a1557d25d5f1
+      X-Version:
+      - 2.5.6-1
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:51 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIEdsdWVD
+        YW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMSBjb3VsZCBub3QgYmUgZm91bmQu
+        IiwicmVxdWVzdFV1aWQiOiJhNTBlNGU1Mi1jZTljLTQ1YjAtODY2MC1hMTU1
+        N2QyNWQ1ZjEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:51 GMT
+- request:
+    method: post
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJrZXkiOiJHbHVlQ2FuZGxlcGluT3duZXJUZXN0U3lzdGVtXzEiLCJkaXNw
+        bGF5TmFtZSI6IkdsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMSIsImNv
+        bnRlbnRQcmVmaXgiOiIvR2x1ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8x
+        LyRlbnYifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
+        oauth_nonce="qYYzSY7fbLyccoT7bTYt5pQckN0KCZJxw2CLOcWUIuA", oauth_signature="KIhNO2C7bYbd0IJsleQd7pI7Z4c%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884651", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '142'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - d1a9ab73-7b37-41e7-a9e0-cee698d73cff
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:51 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:52 GMT
+- request:
+    method: get
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="vgSroLmNo97LCRHD9diC0yqv16wWle7bO4U0DrWJMA",
+        oauth_signature="LaJcYPlB5M3guWBzhJyrDlSHYHY%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884652", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 07e44616-adf0-4b23-a182-cbe9b0ce8194
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:51 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:52 GMT
+- request:
+    method: get
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="294XA54iLXwHolLncaUQZIGfkIGhDv0g8DVz3duAEIU",
+        oauth_signature="1r6aIvuEImREKdjAeZXzRRsNiUk%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884652", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 8ddfc57f-c05f-46d5-a2d5-347f3ca97747
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:51 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:52 GMT
+- request:
+    method: put
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6IlByZW1pdW0iLCJ1cHN0cmVh
+        bUNvbnN1bWVyIjpudWxsLCJsb2dMZXZlbCI6bnVsbCwiYXV0b2JpbmREaXNh
+        YmxlZCI6ZmFsc2UsImNvbnRlbnRBY2Nlc3NNb2RlIjoiZW50aXRsZW1lbnQi
+        LCJjb250ZW50QWNjZXNzTW9kZUxpc3QiOiJlbnRpdGxlbWVudCIsImxhc3RS
+        ZWZyZXNoZWQiOm51bGwsImhyZWYiOiIvb3duZXJzL0dsdWVDYW5kbGVwaW5P
+        d25lclRlc3RTeXN0ZW1fMSJ9
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
+        oauth_nonce="CceOZ3OpWnSX9kLFcIFuAztG2ct3QgghPT20PGGkaNo", oauth_signature="6c5pzLKlk7lI3N%2FEGblndYWA1zM%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884652", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '513'
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 2a8225a8-139b-457f-8ecc-1aa8e2553ccb
+      X-Version:
+      - 2.5.6-1
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:52 GMT
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IlNlcnZpY2UgbGV2ZWwgXCJQcmVtaXVtXCIg
+        aXMgbm90IGF2YWlsYWJsZSB0byB1bml0cyBvZiBvcmdhbml6YXRpb24gR2x1
+        ZUNhbmRsZXBpbk93bmVyVGVzdFN5c3RlbV8xLiIsInJlcXVlc3RVdWlkIjoi
+        MmE4MjI1YTgtMTM5Yi00NTdmLThlY2MtMWFhOGUyNTUzY2NiIn0=
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:52 GMT
+- request:
+    method: get
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="sfRCN1sJottT2UiF44zSlfjdWuQe4TRoQmbGJo0",
+        oauth_signature="gQE%2Fwjm5KtAcLR8qQLzgpyuGrns%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884652", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - d6ad1f19-8692-4898-9d01-87e4fe6fa522
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:53 GMT
+- request:
+    method: put
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6IiIsInVwc3RyZWFtQ29uc3Vt
+        ZXIiOm51bGwsImxvZ0xldmVsIjpudWxsLCJhdXRvYmluZERpc2FibGVkIjpm
+        YWxzZSwiY29udGVudEFjY2Vzc01vZGUiOiJlbnRpdGxlbWVudCIsImNvbnRl
+        bnRBY2Nlc3NNb2RlTGlzdCI6ImVudGl0bGVtZW50IiwibGFzdFJlZnJlc2hl
+        ZCI6bnVsbCwiaHJlZiI6Ii9vd25lcnMvR2x1ZUNhbmRsZXBpbk93bmVyVGVz
+        dFN5c3RlbV8xIn0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
+        oauth_nonce="mkKs7NmJXb9jzwg8VXcFWA0VolRpoqHCm47c3JSUs", oauth_signature="GtwpFGZtnSf8lR5rHAk%2FkGj2aeI%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884653", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '506'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 4208bb66-5479-4f4d-862e-4f38887a8e4a
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:53 GMT
+- request:
+    method: get
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="QdGFPGhQ41dfoU2CculNXrumO7NNCcsvOdGwd6PqMSY",
+        oauth_signature="e7EwcgrlQ%2FhiNU8TT6XerFAoPaw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884653", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 2bcdfc27-7bda-47b6-9811-40befb1a0b6a
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:53 GMT
+- request:
+    method: put
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE",
+        oauth_nonce="3YNbO3TVGIQssp81pIuk7f6bJKb1fVR1UsYwXlsMWU", oauth_signature="hDTW8y2kwIXwomuh6v58kqWN2ak%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1537884653", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+      Content-Length:
+      - '508'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - f8e7e5f9-c0c3-47f1-887a-49c6d154a676
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 25 Sep 2018 14:10:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0wOS0yNVQxNDoxMDo1MiswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMDktMjVUMTQ6MTA6NTIrMDAwMCIsImlkIjoiNDAyOGY5YWI2
+        NjExMGZkYjAxNjYxMTExODJmYjAwMDAiLCJrZXkiOiJHbHVlQ2FuZGxlcGlu
+        T3duZXJUZXN0U3lzdGVtXzEiLCJkaXNwbGF5TmFtZSI6IkdsdWVDYW5kbGVw
+        aW5Pd25lclRlc3RTeXN0ZW1fMSIsInBhcmVudE93bmVyIjpudWxsLCJjb250
+        ZW50UHJlZml4IjoiL0dsdWVDYW5kbGVwaW5Pd25lclRlc3RTeXN0ZW1fMS8k
+        ZW52IiwiZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25z
+        dW1lciI6bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQi
+        OmZhbHNlLCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29u
+        dGVudEFjY2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVz
+        aGVkIjpudWxsLCJocmVmIjoiL293bmVycy9HbHVlQ2FuZGxlcGluT3duZXJU
+        ZXN0U3lzdGVtXzEifQ==
+    http_version: 
+  recorded_at: Tue, 25 Sep 2018 14:10:53 GMT
+- request:
     method: delete
-    uri: https://alpha.partello.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
+    uri: https://porpoise.astriaporta.example.com:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -3037,11 +3245,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="f3SrjSXwpnyQJkiNLCAuePYsZU5UbVUw", oauth_nonce="COi7O5ZVUd7fP3jzDIvDf2Im7DgCUc2QZnQO8hQqijk",
-        oauth_signature="L6KWp4L9kcAzexd%2FWzq3b%2FqII%2F0%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534453329", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5H3cVBtkPzuh4ryJ6wCtXV7LyfcvsnXE", oauth_nonce="Q6OO8Idq5MQaE8xx6VajUu3S9bDDBNc9aCeedUsKw",
+        oauth_signature="jhZV7gb5544Ge1FT4QzWBrTe7%2BQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1537884653", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -3052,14 +3260,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 78ac465a-4f62-4f64-bb34-c3c8f39c2420
+      - 56e87c1c-052f-4a8f-8252-305ebb5495e6
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Date:
-      - Thu, 16 Aug 2018 21:02:09 GMT
+      - Tue, 25 Sep 2018 14:10:52 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Thu, 16 Aug 2018 21:02:09 GMT
+  recorded_at: Tue, 25 Sep 2018 14:10:53 GMT
 recorded_with: VCR 3.0.3
