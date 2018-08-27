@@ -97,8 +97,8 @@ module Katello
         pulp_repo_facts.merge(as_json).merge(:sync_state => sync_state)
       end
 
-      def pulp_checksum_type
-        find_distributor['config']['checksum_type'] if self.try(:yum?) && find_distributor
+      def pulp_scratchpad_checksum_type
+        pulp_repo_facts&.dig('scratchpad', 'checksum_type')
       end
 
       def pulp_counts_differ?
