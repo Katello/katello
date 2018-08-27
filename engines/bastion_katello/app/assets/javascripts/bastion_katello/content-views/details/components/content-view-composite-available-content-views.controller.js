@@ -65,6 +65,7 @@ angular.module('Bastion.content-views').controller('ContentViewCompositeAvailabl
                                                     components: components}, function () {
                     var newContentIds = _.map(selectedRows, 'id');
                     $scope.saveSuccess();
+                    $scope.fetchContentView();
                     params['without[]'] = params["without[]"].concat(newContentIds);
                     nutupane.setParams(params);
                     nutupane.refresh();
