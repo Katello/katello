@@ -253,6 +253,10 @@ module Katello
       content_view_version && content_view_version.default_content_view?
     end
 
+    def on_demand?
+      download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+    end
+
     def self.in_environments_products(env_ids, product_ids)
       in_environment(env_ids).in_product(product_ids)
     end
@@ -470,10 +474,10 @@ module Katello
                      :content_id => self.content_id,
                      :content_view_version => to_version,
                      :content_type => self.content_type,
+                     :checksum_type => checksum_type || source_repo_checksum_type,
                      :docker_upstream_name => self.docker_upstream_name,
                      :download_policy => download_policy,
                      :unprotected => self.unprotected) do |clone|
-        clone.checksum_type = self.checksum_type
         options = {
           :repository => self,
           :environment => to_env,

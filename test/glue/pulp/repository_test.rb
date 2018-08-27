@@ -115,6 +115,9 @@ module Katello
   end
 
   class GluePulpNonVcrTests < GluePulpRepoTestBase
+    SHA1 = "sha1".freeze
+    SHA256 = "sha256".freeze
+
     def test_importer_feed_url
       proxy = SmartProxy.new(:url => 'http://foo.com/foo')
       pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
@@ -284,6 +287,23 @@ module Katello
       ostree_repo.save!
       assert ostree_repo.pulp_update_needed?
     end
+
+    def test_pulp_scratchpad_checksum_type
+      repo = katello_repositories(:fedora_17_x86_64)
+
+      repo.stubs(:pulp_repo_facts)
+      repo.stubs(:distributors).
+        returns([{ "distributor_type_id" => Runcible::Models::YumDistributor.type_id }])
+
+      assert_nil repo.pulp_scratchpad_checksum_type
+
+      repo.stubs(:pulp_repo_facts).returns("scratchpad" => {"checksum_type" => SHA1})
+      repo.stubs(:distributors).
+        returns([{ "config" => {},
+                   "distributor_type_id" => Runcible::Models::YumDistributor.type_id }])
+
+      assert_equal repo.pulp_scratchpad_checksum_type, SHA1
+    end
   end
 
   class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
@@ -368,6 +388,16 @@ module Katello
       @fedora_17_x86_64.url = 'https://www.yahoo.com'
       @fedora_17_x86_64.save!
       assert @fedora_17_x86_64.pulp_update_needed?
+    end
+
+    def test_pulp_scratchpad_checksum_type
+      repo = katello_repositories(:rhel_7_x86_64)
+      repo.create_pulp_repo
+
+      assert_nil repo.pulp_scratchpad_checksum_type
+
+      assert_nil ::Katello.pulp_server.extensions
+        .repository.delete(repo.pulp_id).parsed_body['error']
     end
   end
 
