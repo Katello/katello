@@ -82,17 +82,8 @@ module Katello
       end
 
       def content_and_puppet_matched?
-        if content_facet.content_view_id_changed?
-          content_view_id_value = content_facet.content_view_id_was
-          lifecycle_environment_id_value = content_facet.lifecycle_environment_id_was
-        else
-          content_view_id_value = content_facet.content_view_id_before_last_save
-          lifecycle_environment_id_value = content_facet.lifecycle_environment_id_before_last_save
-        end
-
-        content_facet &&
-          content_view_id_value == environment.try(:content_view).try(:id) &&
-          lifecycle_environment_id_value == self.environment.try(:lifecycle_environment).try(:id)
+        content_facet && content_facet.content_view_id_was == environment.try(:content_view).try(:id) &&
+          content_facet.lifecycle_environment_id_was == self.environment.try(:lifecycle_environment).try(:id)
       end
 
       def content_and_puppet_match?
