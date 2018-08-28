@@ -1,5 +1,5 @@
 const repoTypeSearchQueryMap = {
-  rpm: '(name !~ source rpm) and (name !~ debug rpm) and (content_type = yum)',
+  rpm: '(name !~ source rpm) and (name !~ debug rpm) and (content_type = yum) and (name !~ beta) and (product_name !~ beta)',
   sourceRpm: '(name ~ source rpm) and (content_type = yum)',
   debugRpm: '(name ~ debug rpm) and (content_type = yum)',
   kickstart: 'content_type = kickstart',
