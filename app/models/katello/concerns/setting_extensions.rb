@@ -11,7 +11,7 @@ module Katello
       end
 
       def recalculate_errata_status
-        ForemanTasks.async_task(Actions::Katello::Host::RecalculateErrataStatus) if value_previously_changed? && name == 'errata_status_installable'
+        ForemanTasks.async_task(Actions::Katello::Host::RecalculateErrataStatus) if saved_change_to_attribute?(:value) && name == 'errata_status_installable'
       end
     end
   end

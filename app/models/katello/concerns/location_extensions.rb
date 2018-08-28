@@ -15,7 +15,7 @@ module Katello
       end
 
       def reset_settings
-        if self.title_previously_changed?
+        if saved_change_to_attribute?(:title)
           if ::Setting[:default_location_subscribed_hosts] == self.title_before_last_save
             ::Setting[:default_location_subscribed_hosts] = self.title
           end
