@@ -15,11 +15,11 @@ module Katello
       end
 
       def reset_settings
-        if self.title_changed?
-          if ::Setting[:default_location_subscribed_hosts] == self.title_was
+        if saved_change_to_attribute?(:title)
+          if ::Setting[:default_location_subscribed_hosts] == self.title_before_last_save
             ::Setting[:default_location_subscribed_hosts] = self.title
           end
-          if ::Setting[:default_location_puppet_content] == self.title_was
+          if ::Setting[:default_location_puppet_content] == self.title_before_last_save
             ::Setting[:default_location_puppet_content] = self.title
           end
         end
