@@ -2,16 +2,19 @@ module Katello
   class RepoDiscovery
     attr_reader :found, :crawled, :to_follow
 
-    def initialize(url, content_type = 'yum', upstream_username = nil, upstream_password = nil, proxy = {}, crawled = [], found = [], to_follow = [])
+    # rubocop:disable Metrics/ParameterLists
+    def initialize(url, content_type = 'yum', upstream_username = nil, upstream_password = nil, search = '*', proxy = {}, crawled = [], found = [], to_follow = [])
       @uri = uri(url)
       @content_type = content_type
       @upstream_username = upstream_username.empty? ? nil : upstream_username
       @upstream_password = upstream_password.empty? ? nil : upstream_password
+      @search = search
       @found = found
       @crawled = crawled
       @to_follow = to_follow
       @proxy = proxy
     end
+    # rubocop:enable Metrics/ParameterLists
 
     def uri(url)
       #add a / on the end, as directories require it or else
@@ -43,11 +46,12 @@ module Katello
       params[:user] = @upstream_username unless @upstream_username.empty?
       params[:password] = @upstream_password unless @upstream_password.empty?
       begin
-        results = RestClient.get(@uri.to_s + "v1/search?q=*", params)
+        results = RestClient.get(@uri.to_s + "v1/search?q=#{@search}", params)
         JSON.parse(results)['results'].each do |result|
           @found << result['name']
         end
       rescue
+        # Note: v2 endpoint does not support search
         results = RestClient.get(@uri.to_s + "v2/_catalog", params)
         @found = JSON.parse(results)['repositories']
       end

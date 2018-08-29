@@ -111,18 +111,30 @@ describe('Controller: DiscoveryController', function() {
 
         $scope.discover();
 
-        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'yum', upstream_username: undefined, upstream_password: undefined},
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'yum', upstream_username: undefined, upstream_password: undefined, search: undefined},
                                                                jasmine.any(Function));
     });
 
-    it('should initiate yum discovery', function() {
+    it('should initiate docker discovery', function() {
         $scope.discovery.url = 'http://fake/';
         $scope.discovery.contentType = 'docker';
         spyOn(Organization, 'repoDiscover').and.callThrough();
 
         $scope.discover();
 
-        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined},
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: undefined},
+                                                               jasmine.any(Function));
+    });
+
+    it('should initiate docker discovery with search', function() {
+        $scope.discovery.url = 'http://fake/';
+        $scope.discovery.contentType = 'docker';
+        $scope.discovery.search = 'search';
+        spyOn(Organization, 'repoDiscover').and.callThrough();
+
+        $scope.discover();
+
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'http://fake/', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: 'search'},
                                                                jasmine.any(Function));
     });
 
