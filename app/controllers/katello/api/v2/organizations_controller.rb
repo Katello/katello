@@ -96,10 +96,12 @@ module Katello
     param :content_type, String, :desc => N_("One of yum or docker")
     param :upstream_username, String, :desc => N_("Username to access URL")
     param :upstream_password, String, :desc => N_("Password to access URL")
+    param :search, String, :desc => N_("Search pattern (defaults to '*')")
     def repo_discover
       fail _("url not defined.") if params[:url].blank?
+      registry_search = params[:search].empty? ? '*' : params[:search]
       task = async_task(::Actions::Katello::Repository::Discover, params[:url], params[:content_type],
-                        params[:upstream_username], params[:upstream_password])
+                        params[:upstream_username], params[:upstream_password], registry_search)
       respond_for_async :resource => task
     end
 

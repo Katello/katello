@@ -148,7 +148,8 @@ angular.module('Bastion.products').controller('DiscoveryController',
                 id: CurrentOrganization, url: $scope.discovery.url,
                 'content_type': $scope.discovery.contentType,
                 'upstream_username': $scope.discovery.upstreamUsername,
-                'upstream_password': $scope.discovery.upstreamPassword
+                'upstream_password': $scope.discovery.upstreamPassword,
+                search: $scope.discovery.search
             };
 
             Organization.repoDiscover(params, function (task) {

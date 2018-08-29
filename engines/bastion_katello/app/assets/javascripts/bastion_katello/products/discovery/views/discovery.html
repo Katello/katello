@@ -48,6 +48,16 @@
              name="upstreamPassword"/>
     </div>
 
+    <div bst-form-group ng-show="discovery.contentType === 'docker'"
+         label="{{ 'Registry Search Parameter' | translate }}">
+      <input type="text" id="registrySearch"
+             class="form-control"
+             ng-model="discovery.search"
+             ng-disabled="discovery.working"
+             placeholder="Default: * (search all)"
+             name="discoverySearch"/>
+    </div>
+
     <span class="input-group-btn">
       <button ng-show="!discovery.working && permitted('edit_products')"
               ng-disabled="discoveryForm.discoveryUrl.$invalid"
