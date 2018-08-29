@@ -45,6 +45,7 @@ module Katello
 
     api :GET, "/content_view_versions/:id", N_("Show content view version")
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
+    param :organization_id, :number, :desc => N_("Organization identifier"), :required => false
     def show
       respond :resource => @version
     end

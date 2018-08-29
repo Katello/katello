@@ -114,6 +114,13 @@ module Katello
 
     def test_show
       ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
+      get :show, params: { :id => @library_dev_staging_view.versions.first.id, :organization_id => @library_dev_staging_view.organization.id }
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/show'
+    end
+
+    def test_show_without_orgid
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
       get :show, params: { :id => @library_dev_staging_view.versions.first.id }
       assert_response :success
       assert_template 'api/v2/content_view_versions/show'
