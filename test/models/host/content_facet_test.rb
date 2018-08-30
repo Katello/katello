@@ -194,6 +194,11 @@ module Katello
       assert_includes rpm_one.repositories, repo
       rpm_two.repositories = []
       host_one.content_facet.bound_repositories << repo
+
+      #shouldn't matter if facet is invalid
+      host_one.content_facet.lifecycle_environment = katello_environments(:qa_path2)
+      refute host_one.valid?
+
       host_one.content_facet.update_applicability_counts
 
       assert_equal 2, host_one.content_facet.applicable_rpm_count
