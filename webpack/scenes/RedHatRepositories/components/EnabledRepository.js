@@ -65,9 +65,8 @@ class EnabledRepository extends Component {
 
   render() {
     const {
-      arch, name, id, type, releasever,
+      arch, name, id, type, releasever, orphaned,
     } = this.props;
-
     return (
       <ListView.Item
         key={id}
@@ -79,7 +78,7 @@ class EnabledRepository extends Component {
           />
         }
         leftContent={<RepositoryTypeIcon id={id} type={type} />}
-        heading={name}
+        heading={`${name} ${orphaned ? __('(Orphaned)') : ''}`}
         description={`${arch} ${releasever || ''}`}
         stacked
       />
@@ -95,11 +94,13 @@ EnabledRepository.propTypes = {
   type: PropTypes.string.isRequired,
   arch: PropTypes.string.isRequired,
   releasever: PropTypes.string,
+  orphaned: PropTypes.bool,
   setRepositoryDisabled: PropTypes.func.isRequired,
 };
 
 EnabledRepository.defaultProps = {
   releasever: '',
+  orphaned: false,
 };
 
 export default connect(null, { setRepositoryDisabled })(EnabledRepository);

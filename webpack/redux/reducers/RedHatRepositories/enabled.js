@@ -25,6 +25,7 @@ const mapRepo = (repo) => {
     name,
     releasever: minor,
     type: repo.content_type,
+    orphaned: repo.product.orphaned,
     contentId: parseInt(repo.content_id, 10),
     productId: parseInt(repo.product.id, 10),
   });

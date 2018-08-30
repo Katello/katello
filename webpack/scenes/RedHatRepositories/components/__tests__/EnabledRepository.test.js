@@ -19,6 +19,7 @@ describe('Enabled Repositories Component', () => {
       contentId={1}
       productId={1}
       name="foo"
+      orphaned={false}
       type="foo"
       arch="foo"
       releaseVer="1.1.1"
