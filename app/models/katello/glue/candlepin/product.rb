@@ -107,10 +107,6 @@ module Katello
         super
       end
 
-      def orphaned?
-        self.provider.redhat_provider? && self.certificate.nil?
-      end
-
       def support_level
         return _attr(:support_level)
       end

@@ -98,6 +98,10 @@ module Katello
       super
     end
 
+    def orphaned?
+      self.pool_products.empty?
+    end
+
     def repos(env, content_view = nil, include_feedless = true)
       if content_view.nil?
         if !env.library?

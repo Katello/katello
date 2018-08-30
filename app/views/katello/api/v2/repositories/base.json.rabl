@@ -9,6 +9,7 @@ attributes :container_repository_name
 
 child :product do |_product|
   attributes :id, :cp_id, :name
+  attributes :orphaned? => :orphaned
   node :sync_plan do |_sync_plan|
     attributes :name, :description, :sync_date, :interval, :next_sync
   end
