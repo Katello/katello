@@ -83,13 +83,14 @@ module Katello
       end
 
       def update_applicability_counts
-        self.update_attributes!(
+        self.assign_attributes(
             :installable_security_errata_count => self.installable_errata.security.count,
             :installable_bugfix_errata_count => self.installable_errata.bugfix.count,
             :installable_enhancement_errata_count => self.installable_errata.enhancement.count,
             :applicable_rpm_count => self.content_facet_applicable_rpms.count,
             :upgradable_rpm_count => self.installable_rpms.count
         )
+        self.save!(:validate => false)
       end
 
       def import_rpm_applicability(partial)
