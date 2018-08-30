@@ -16,7 +16,7 @@ module Katello
     scoped_search :on => :release, :complete_value => true, :ext_method => :scoped_search_release
     scoped_search :on => :arch, :complete_value => true
     scoped_search :on => :epoch, :complete_value => true
-    scoped_search :on => :evr, :ext_method => :scoped_search_evr
+    scoped_search :on => :evr, :ext_method => :scoped_search_evr, :only_explicit => true
     scoped_search :on => :filename, :complete_value => true
     scoped_search :on => :sourcerpm, :complete_value => true
     scoped_search :on => :checksum
