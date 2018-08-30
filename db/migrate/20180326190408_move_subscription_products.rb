@@ -35,6 +35,7 @@ class MoveSubscriptionProducts < ActiveRecord::Migration[5.1]
     add_foreign_key "katello_pool_products", "katello_products",
                     :name => "katello_pool_products_product_id_fk", :column => "product_id"
 
+    FakeSubscription.reset_column_information
     FakeSubscription.find_each do |sub|
       sub.subscription_products.each do |sub_product|
         sub.pool_ids.each do |pool_id|
@@ -60,6 +61,7 @@ class MoveSubscriptionProducts < ActiveRecord::Migration[5.1]
     add_foreign_key "katello_subscription_products", "katello_products",
                     :name => "katello_subscription_products_product_id_fk", :column => "product_id"
 
+    FakeSubscription.reset_column_information
     FakeSubscription.find_each do |sub|
       pool = sub.pools.first
       if pool
