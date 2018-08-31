@@ -11,7 +11,7 @@ Foreman::Plugin.register :katello do
          :red_hat_subscriptions,
          :caption => N_('Subscriptions'),
          :url => '/subscriptions',
-         :url_hash => {:controller => 'katello/react',
+         :url_hash => {:controller => 'katello/api/v2/subscriptions',
                        :action => 'index'},
          :engine => Katello::Engine,
          :turbolinks => false

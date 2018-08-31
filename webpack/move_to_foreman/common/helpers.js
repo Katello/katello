@@ -14,7 +14,7 @@ const stringIsInteger = (value) => {
 
 export const getResponseErrorMsgs = ({ data }) => {
   if (data) {
-    const messages = (data.errors || data.displayMessage || data.message || data.error);
+    const messages = (data.errors || data.displayMessage || data.message || data.error.message);
     return (Array.isArray(messages) ? messages : [messages]);
   }
   return [];
