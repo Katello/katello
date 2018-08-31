@@ -13,6 +13,8 @@ const getErrors = task => (
 );
 
 export const renderTaskStartedToast = (task) => {
+  if (!task) return;
+
   const message = (
     <span>
       <span>
@@ -32,6 +34,8 @@ export const renderTaskStartedToast = (task) => {
 };
 
 export const renderTaskFinishedToast = (task) => {
+  if (!task) return;
+
   const message = (
     <span>
       <span>
