@@ -11,6 +11,14 @@ class Api::V2::HostgroupsControllerTest < ActionController::TestCase
     @hostgroup = hostgroups(:common)
   end
 
+  def test_parameters_included_in_hostgroup_show
+    get :show, params: { :id => hostgroups(:common).to_param }
+    assert_response :success
+    assert_template 'katello/api/v2/hostgroups_extensions/show'
+    response = JSON.parse(@response.body)
+    assert response.key?('parameters')
+  end
+
   test_attributes :pid => '70fe5df8-8917-4a46-b37a-708f449fe749'
   def test_show_content_attributes
     content_fields = %w[
