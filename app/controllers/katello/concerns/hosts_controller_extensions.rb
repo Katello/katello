@@ -20,7 +20,7 @@ module Katello
 
         def destroy
           if Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
-            process_success(:success_redirect => hosts_path)
+            process_success redirection_url_on_host_deletion
           else
             process_error :redirect => :back, :error_msg => _("Failed to delete %{host}: %{errors}") % { :host => @host, :errors => @host.errors.full_messages }
           end
