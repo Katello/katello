@@ -15,7 +15,7 @@ import {
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
 } from './SubscriptionConstants';
-import { filterRHSubscriptions } from './SubscriptionHelpers.js';
+import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
@@ -32,7 +32,7 @@ export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
     .then(({ data }) => {
       dispatch({
         type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
-        response: data,
+        payload: selectSubscriptionsQuantitiesFromResponse(data),
       });
     })
     .catch(result => dispatch(apiError(SUBSCRIPTIONS_QUANTITIES_FAILURE, result)));
