@@ -29,7 +29,35 @@ module Katello
       mock_pulp
       # this host will end up on the nil facets list and the no subscription
       # facet list. This is OK.
-      Katello::RegistrationManager.expects(:unregister_host).with(@host).twice
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, {}).twice
+
+      Rake.application.invoke_task('katello:clean_backend_objects')
+    end
+
+    def test_managed_host
+      clear_hosts(@host.id)
+      ENV['COMMIT'] = 'true'
+
+      @host.update_column(:managed, true)
+      @host.subscription_facet.update_attributes!(:uuid => nil)
+      mock_cp
+      mock_pulp
+
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true).twice
+
+      Rake.application.invoke_task('katello:clean_backend_objects')
+    end
+
+    def test_compute_resource_host
+      clear_hosts(@host.id)
+      ENV['COMMIT'] = 'true'
+
+      @host.update_column(:compute_resource_id, compute_resources(:mycompute).id)
+      @host.subscription_facet.update_attributes!(:uuid => nil)
+      mock_cp
+      mock_pulp
+
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, :unregistering => true).twice
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -40,7 +68,7 @@ module Katello
 
       mock_cp
       mock_pulp([{"id" => @host.content_facet.uuid}])
-      Katello::RegistrationManager.expects(:unregister_host).with(@host)
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, {})
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
@@ -51,7 +79,7 @@ module Katello
 
       mock_cp([@host.subscription_facet.uuid])
       mock_pulp
-      Katello::RegistrationManager.expects(:unregister_host).with(@host)
+      Katello::RegistrationManager.expects(:unregister_host).with(@host, {})
 
       Rake.application.invoke_task('katello:clean_backend_objects')
     end
