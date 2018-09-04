@@ -61,8 +61,8 @@ node(:ssl_client_key, :unless => lambda { |repository| repository.ssl_client_key
   {:id => repository.ssl_client_key.id, :name => repository.ssl_client_key.name}
 end
 
-node :upstream_password_exists do |repo|
-  repo.upstream_password.present?
+node :upstream_auth_exists do |repo|
+  repo.upstream_username.present? && repo.upstream_password.present?
 end
 
 if @object && @object.library_instance_id.nil?

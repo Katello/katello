@@ -106,7 +106,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }, function (response) {
                 deferred.reject(response);
                 _.each(response.data.errors, function (errorMessage) {
-                    Notification.setErrorMessage(translate("An error occurred saving the Repository: ") + errorMessage);
+                    Notification.setErrorMessage(translate("An error occurred saving the Repository: ") + errorMessage.replace(/</, "").replace(/>/, ""));
                 });
             });
 
@@ -163,9 +163,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return DownloadPolicy.downloadPolicyName(downloadPolicy);
         };
 
-        $scope.clearUpstreamPassword = function () {
+        $scope.clearUpstreamAuth = function () {
             $scope.repository['upstream_password'] = null;
-            $scope.repository['upstream_password_exists'] = false;
+            $scope.repository['upstream_auth_exists'] = false;
+            $scope.repository['upstream_username'] = null;
             $scope.save($scope.repository);
         };
     }]

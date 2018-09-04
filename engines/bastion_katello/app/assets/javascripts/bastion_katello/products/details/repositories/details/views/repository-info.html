@@ -82,27 +82,28 @@
           readonly="denied('edit_products', product)">
       </dd>
 
-      <dt translate>Upstream Username</dt>
-      <dd bst-edit-text="repository.upstream_username"
-          on-save="save(repository)"
-          readonly="product.redhat || denied('edit_products', product)">
-      </dd>
-
-      <dt translate>Upstream Password</dt>
-      <dd bst-edit-custom="repository.upstream_password_exists"
-          readonly="denied('edit_products', product)"
-          on-save="save(repository)"
-          formatter="upstreamPasswordFilter"
-          formatter-options="repository"
-          deletable="repository.upstream_password_exists"
-          on-delete="clearUpstreamPassword()"
-          >
+      <span ng-show="!product.redhat">
+        <dt translate>Upstream Authorization</dt>
+        <dd bst-edit-custom="repository.upstream_auth_exists"
+            readonly="denied('edit_products', product)"
+            on-save="save(repository)"
+            formatter="upstreamPasswordFilter"
+            formatter-options="repository"
+            deletable="repository.upstream_auth_exists"
+            on-delete="clearUpstreamAuth()">
+          <div translate>Upstream Username</div>
+          <input id="upstream_username"
+                 name="upstream_username"
+                 type="name"
+                 ng-model="repository.upstream_username"/>
+          <div translate>Upstream Password</div>
           <input id="upstream_password"
-            name="upstream_password"
-            type="password"
-            ng-model="repository.upstream_password"/>
-      </dd>
-
+                 name="upstream_password"
+                 type="password"
+                 ng-model="repository.upstream_password"/>
+        </dd>
+      </span>
+ 
       <span ng-show="repository.content_type === 'yum'">
         <dt translate>Yum Metadata Checksum</dt>
         <dd bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
