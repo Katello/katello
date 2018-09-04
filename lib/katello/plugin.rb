@@ -240,6 +240,8 @@ Foreman::Plugin.register :katello do
   register_custom_status(Katello::SubscriptionStatus)
   register_custom_status(Katello::TraceStatus)
 
+  extend_rabl_template 'api/v2/smart_proxies/main', 'katello/api/v2/smart_proxies/download_policy'
+
   extend_page "smart_proxies/show" do |cx|
     cx.add_pagelet :details_content,
                    :name => _('Storage'),
