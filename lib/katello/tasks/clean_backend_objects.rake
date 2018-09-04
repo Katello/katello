@@ -42,17 +42,17 @@ namespace :katello do
     def cleanup_hosts(cleaner)
       cleaner.hosts_with_nil_facets.each do |host|
         print "Host #{host.id} #{host.name} is partially missing subscription information.  Un-registering\n"
-        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host) }
+        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host, host_unregister_options(host)) }
       end
 
       cleaner.hosts_with_no_subscriptions.each do |host|
         print "Host #{host.id} #{host.name} #{host.subscription_facet.try(:uuid)} is partially missing subscription information.  Un-registering\n"
-        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host) }
+        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host, host_unregister_options(host)) }
       end
 
       cleaner.hosts_with_no_content.each do |host|
         print "Host #{host.id} #{host.name} #{host.content_facet.try(:uuid)} is partially missing content information.  Un-registering\n"
-        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host) }
+        execute("Failed to delete host") { Katello::RegistrationManager.unregister_host(host, host_unregister_options(host)) }
       end
     end
 
@@ -69,6 +69,15 @@ namespace :katello do
       print "Pulp orphaned consumers: #{pulp_uuids}\n"
       pulp_uuids.each do |consumer_id|
         execute("exception when destroying pulp consumer #{consumer_id}") { Katello.pulp_server.extensions.consumer.delete(consumer_id) }
+      end
+    end
+
+    def host_unregister_options(host)
+      if host.managed? || host.compute_resource
+        print "Leaving provisioning record for #{host.name} in place, it is either managed or assigned to a compute resource."
+        {:unregistering => true}
+      else
+        {}
       end
     end
 
