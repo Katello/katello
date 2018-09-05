@@ -52,11 +52,21 @@ module Katello
         end
       end
 
+      sorted_repos = repos.sort_by do |repo|
+        major, minor = repo[:substitutions][:releasever].nil? ? [1000, 1000] : repo[:substitutions][:releasever].split('.').map(&:to_i)
+        major = major == 0 ? 1000 : major
+        minor = minor.nil? ? 1000 : minor
+        arch = repo[:substitutions][:basearch].nil? ? "" : repo[:substitutions][:basearch]
+
+        [arch, major, minor]
+      end
+
       collection = {
-        :results  => repos,
+        :results => sorted_repos.reverse,
         :subtotal => repos.size,
         :total    => repos.size
       }
+
       respond_for_index :collection => collection
     end
 

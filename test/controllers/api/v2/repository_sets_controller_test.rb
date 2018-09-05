@@ -103,6 +103,36 @@ module Katello
       assert_response :success
     end
 
+    def test_available_repo_sort
+      task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn
+
+      repo_set = lambda { |version: "", arch: "", path: ""|
+        { :substitutions => { :releasever => version, :basearch => arch }, :path => path }.with_indifferent_access
+      }
+
+      expected_sort = [repo_set.call(version: nil, arch: "x86_64"),
+                       repo_set.call(version: ".10", arch: "x86_64"),
+                       repo_set.call(version: "7Server", arch: "x86_64"),
+                       repo_set.call(version: "7.10", arch: "x86_64"),
+                       repo_set.call(version: "7.9", arch: "x86_64"),
+                       repo_set.call(version: "7.0", arch: "x86_64"),
+                       repo_set.call(version: "5.10", arch: "x86_64"),
+                       repo_set.call(version: "5.2", arch: "x86_64"),
+                       repo_set.call(version: "5.1", arch: "x86_64"),
+                       repo_set.call(version: "4.2", arch: "x86_64"),
+                       repo_set.call(version: "5Workstation", arch: "ia64"),
+                       repo_set.call(version: "5.10", arch: "ia64"),
+                       repo_set.call(version: "5.11", arch: "i386"),
+                       repo_set.call(version: "5.10", arch: "i386"),
+                       repo_set.call(version: "5.10", arch: "")]
+
+      task.expects(:output).at_least_once.returns(results: expected_sort.shuffle)
+
+      get :available_repositories, params: { product_id: @product.id, id: @content_id }
+
+      assert_equal expected_sort, JSON.parse(response.body)['results']
+    end
+
     def test_available_repositories_protected
       allowed_perms = [@view_permission]
       denied_perms = [@attach_permission, @unattach_permission, @delete_permission, @import_permission]

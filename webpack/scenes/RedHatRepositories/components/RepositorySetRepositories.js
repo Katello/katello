@@ -16,6 +16,37 @@ class RepositorySetRepositories extends Component {
     }
   }
 
+  sortedRepos = repos => [...repos.filter(({ enabled }) => !enabled)]
+    .sort((repo1, repo2) => {
+      const repo1YStream = yStream(repo1.releasever || '');
+      const repo2YStream = yStream(repo2.releasever || '');
+
+      if (repo1YStream < repo2YStream) {
+        return -1;
+      }
+
+      if (repo2YStream < repo1YStream) {
+        return 1;
+      }
+
+      if (repo1.arch === repo2.arch) {
+        const repo1MajorMinor = repo1.releasever.split('.');
+        const repo2MajorMinor = repo2.releasever.split('.');
+
+        const repo1Major = parseInt(repo1MajorMinor[0], 10);
+        const repo2Major = parseInt(repo2MajorMinor[0], 10);
+
+        if (repo1Major === repo2Major) {
+          const repo1Minor = parseInt(repo1MajorMinor[1], 10);
+          const repo2Minor = parseInt(repo2MajorMinor[1], 10);
+
+          if (repo1Minor === repo2Minor) {
+            return 0;
+          } return (repo1Minor > repo2Minor) ? -1 : 1;
+        } return (repo1Major > repo2Major) ? -1 : 1;
+      } return (repo1.arch > repo2.arch) ? -1 : 1;
+    });
+
   render() {
     const { data, type } = this.props;
 
@@ -27,11 +58,9 @@ class RepositorySetRepositories extends Component {
       );
     }
 
-    const availableRepos = [...data.repositories.filter(({ enabled }) => !enabled)]
-      .sort((repo1, repo2) => yStream(repo1.releasever || '') - yStream(repo2.releasever || ''))
-      .map(repo => (
-        <RepositorySetRepository key={repo.arch + repo.releasever} type={type} {...repo} />
-      ));
+    const availableRepos = this.sortedRepos(data.repositories).map(repo => (
+      <RepositorySetRepository key={repo.arch + repo.releasever} type={type} {...repo} />
+    ));
 
     const repoMessage = (data.repositories.length > 0 && availableRepos.length === 0 ?
       __('All available architectures for this repo are enabled.') : __('No repositories available.'));
