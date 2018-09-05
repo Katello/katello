@@ -1,10 +1,10 @@
 import { addToast } from 'foremanReact/redux/actions/toasts';
+import { SUBSCRIPTIONS_QUANTITIES_FAILURE } from '../../scenes/Subscriptions/SubscriptionConstants';
 
 const urlBuilder = (controller, action, id = undefined) =>
   `/${controller}/${id ? `${id}/` : ''}${action}`;
 
-const urlWithSearch = (base, searchQuery) =>
-  `/${base}?search=${searchQuery}`;
+const urlWithSearch = (base, searchQuery) => `/${base}?search=${searchQuery}`;
 
 const stringIsInteger = (value) => {
   // checking for positive integers only
@@ -12,16 +12,44 @@ const stringIsInteger = (value) => {
   return reg.test(value);
 };
 
-export const getResponseErrorMsgs = ({ data }) => {
+
+const getSubscriptionsErrorMessege = (message) => {
+  const errorMessageHash = {
+    '404 Not Found': __('The subscription cannot be found upstream'),
+    '410 Gone': __('The subscription is no longer available'),
+  };
+  return errorMessageHash[message];
+};
+
+const getCustomMessage = (actionType, message) => {
+  let customMessage;
+  switch (actionType) {
+    case SUBSCRIPTIONS_QUANTITIES_FAILURE:
+      customMessage = getSubscriptionsErrorMessege(message);
+      break;
+    default:
+      customMessage = null;
+  }
+  return customMessage;
+};
+
+export const getResponseErrorMsgs = ({ data, customErrorMessage, actionType }) => {
   if (data) {
-    const messages = (data.errors || data.displayMessage || data.message || data.error.message);
-    return (Array.isArray(messages) ? messages : [messages]);
+    const customMessage = customErrorMessage || getCustomMessage(actionType, data.displayMessage);
+    const messages =
+      customMessage ||
+      data.errors ||
+      data.displayMessage ||
+      data.message ||
+      data.error;
+    return Array.isArray(messages) ? messages : [messages];
   }
   return [];
 };
 
-export const apiError = (actionType, result) => (dispatch) => {
-  const messages = getResponseErrorMsgs(result.response);
+export const apiError = (actionType, result, customErrorMessage) => (dispatch) => {
+  const errorsData = { data: result.response.data, customErrorMessage, actionType };
+  const messages = getResponseErrorMsgs(errorsData);
   dispatch({
     type: actionType,
     payload: {
