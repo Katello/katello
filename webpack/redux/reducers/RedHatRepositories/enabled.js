@@ -17,12 +17,14 @@ const mapRepo = (repo) => {
     id,
     name,
     minor,
+    cp_label: label,
   } = repo;
 
   return ({
     arch,
     id,
     name,
+    label,
     releasever: minor,
     type: repo.content_type,
     orphaned: repo.product.orphaned,
