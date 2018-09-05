@@ -17,6 +17,7 @@ describe('RepositorySetRepository Component', () => {
       store={store}
       contentId={1}
       productId={1}
+      label="some label"
       arch="foo"
       releaseVer="1.1.1"
       type="foo"

@@ -24,7 +24,7 @@ class RepositorySetRepository extends Component {
       const { data: { output: { repository: { id, name, content_type: type } } } } = response;
 
       const {
-        productId, contentId, arch, releasever,
+        productId, contentId, arch, releasever, label,
       } = this.props;
 
       const enabledRepo = {
@@ -35,6 +35,7 @@ class RepositorySetRepository extends Component {
         type,
         arch,
         releasever,
+        label,
       };
 
       this.props.setRepositoryEnabled(enabledRepo);
@@ -136,6 +137,7 @@ RepositorySetRepository.propTypes = {
   arch: PropTypes.string,
   releasever: PropTypes.string,
   type: PropTypes.string,
+  label: PropTypes.string,
   setRepositoryEnabled: PropTypes.func.isRequired,
 };
 
@@ -143,6 +145,7 @@ RepositorySetRepository.defaultProps = {
   releasever: '',
   arch: __(UNSPECIFIED_ARCH),
   type: '',
+  label: '',
 };
 
 export default connect(null, { setRepositoryEnabled })(RepositorySetRepository);

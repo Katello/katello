@@ -23,6 +23,7 @@ describe('Enabled Repositories Component', () => {
       type="foo"
       arch="foo"
       releaseVer="1.1.1"
+      label="some label"
       setRepositoryDisabled={() => {}}
     />);
   });
