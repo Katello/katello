@@ -15,7 +15,11 @@ namespace :katello do
           sync_plan.products.each do |product|
             product.repos(product.library).each do |repo_k|
               repo = ::Katello::Repository.find(repo_k.id)
-              Katello.pulp_server.extensions.repository.remove_schedules(repo.pulp_id, repo.importer_type)
+              begin
+                Katello.pulp_server.extensions.repository.remove_schedules(repo.pulp_id, repo.importer_type)
+              rescue RestClient::ResourceNotFound
+                puts "Could not update repository #{repo.id}, missing in pulp."
+              end
             end
           end
         end
