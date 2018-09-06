@@ -58,7 +58,8 @@ module ::Actions::Katello::Host::Erratum
     end
 
     it 'plans installs with batching' do
-      Setting.stubs(:[]).returns(2)
+      Setting.stubs(:[]).with('remote_execution_by_default').returns(false)
+      Setting.stubs(:[]).with('erratum_install_batch_size').returns(2)
       action.stubs(:action_subject).with(host, :hostname => host.name, :errata => errata_ids)
       host.stubs(:id).returns(42)
       host.stubs(:content_facet).returns(content_facet)
