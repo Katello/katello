@@ -9,6 +9,7 @@ import SubscriptionDetailEnabledProducts from './SubscriptionDetailEnabledProduc
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import api from '../../../services/api';
+import { orgId } from '../../../services/api'
 
 class SubscriptionDetails extends Component {
   constructor() {
@@ -49,7 +50,7 @@ class SubscriptionDetails extends Component {
 
     const resource = {
       nameField: 'name',
-      resourceUrl: api.getApiUrl('/subscriptions'),
+      resourceUrl: api.getApiUrl(`/organizations/${orgId()}/subscriptions`),
       switcherItemUrl: '/subscriptions/:id',
     };
 
