@@ -28,10 +28,11 @@ module Actions
         end
 
         def distributor_config
+          input[:override_config] ||= {}
           # the check for YumCloneDistributor is here for backwards compatibility
           if input[:distributor_type_id] == Runcible::Models::YumCloneDistributor.type_id
-            { override_config: { source_repo_id: input[:source_pulp_id],
-                                 source_distributor_id: source_distributor_id} }
+            { override_config: input[:override_config].merge(source_repo_id: input[:source_pulp_id],
+                                                               source_distributor_id: source_distributor_id) }
           else
             { override_config: input[:override_config] }
           end
