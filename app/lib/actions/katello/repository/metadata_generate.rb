@@ -21,7 +21,7 @@ module Actions
         end
 
         def override_config(distributor_class, force)
-          if distributor_class == Runcible::Models::YumDistributor
+          if distributor_class == Runcible::Models::YumDistributor || distributor_class == Runcible::Models::YumCloneDistributor
             {:force_full => force}
           else
             {}

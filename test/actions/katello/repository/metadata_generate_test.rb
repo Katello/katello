@@ -65,7 +65,7 @@ module Actions
       assert_action_planed_with(action, pulp_publish_class, :pulp_id => yum_repo.pulp_id,
           :distributor_type_id => Runcible::Models::YumCloneDistributor.type_id,
           :source_pulp_id => yum_repo2.pulp_id,
-          :override_config => {},
+          :override_config => {:force_full => false},
           :dependency => nil,
           :matching_content => nil)
     end
