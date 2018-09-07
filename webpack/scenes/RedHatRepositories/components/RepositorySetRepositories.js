@@ -48,10 +48,15 @@ RepositorySetRepositories.propTypes = {
   loadRepositorySetRepos: PropTypes.func.isRequired,
   contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
+  type: PropTypes.string,
   data: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
     repositories: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
+};
+
+RepositorySetRepositories.defaultProps = {
+  type: '',
 };
 
 const mapStateToProps = (
