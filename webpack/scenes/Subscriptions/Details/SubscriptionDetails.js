@@ -8,8 +8,7 @@ import SubscriptionDetailProducts from './SubscriptionDetailProducts';
 import SubscriptionDetailEnabledProducts from './SubscriptionDetailEnabledProducts';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
-import api from '../../../services/api';
-import { orgId } from '../../../services/api'
+import api, { orgId } from '../../../services/api';
 
 class SubscriptionDetails extends Component {
   constructor() {
