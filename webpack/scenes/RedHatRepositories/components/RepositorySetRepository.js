@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from 'patternfly-react';
 import { connect } from 'react-redux';
-
+import { sprintf } from 'jed';
 
 import { yStream } from '../helpers';
 import { setRepositoryEnabled } from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
@@ -69,18 +69,22 @@ class RepositorySetRepository extends Component {
   render() {
     const { arch, releasever, type } = this.props;
 
-    const yStreamHelp = () => (
-      <span translate>
-        This repository is not suggested. Please see additional&nbsp;
-        <a href="https://access.redhat.com/articles/1586183">documentation</a>
-        &nbsp;prior to use.
-      </span>
-    );
+
+    const yStreamHelpText =
+      sprintf(
+        __('This repository is not suggested. Please see additional %(anchorBegin)sdocumentation%(anchorEnd)s prior to use.'),
+        {
+          anchorBegin: '<a href="https://access.redhat.com/articles/1586183">',
+          anchorEnd: '</a>',
+        },
+      );
+    // eslint-disable-next-line react/no-danger
+    const yStreamHelp = <span dangerouslySetInnerHTML={{ __html: yStreamHelpText }} />;
     const shouldDeemphasize = () => type !== 'kickstart' && yStream(releasever);
     const repositoryHeading = () => (
       <span>
         {arch} {releasever}
-        {shouldDeemphasize() ? (<FieldLevelHelp content={yStreamHelp()} />) : null}
+        {shouldDeemphasize() ? (<FieldLevelHelp content={yStreamHelp} />) : null}
       </span>
     );
 
