@@ -206,10 +206,6 @@ module Katello
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions
       ::Api::V2::SmartProxiesController.send :include, Katello::Concerns::Api::V2::SmartProxiesControllerExtensions
 
-      ::SettingsController.class_eval do
-        helper Katello::Concerns::SettingsHelperExtensions
-      end
-
       Katello::EventQueue.register_event(Katello::Events::ImportHostApplicability::EVENT_TYPE, Katello::Events::ImportHostApplicability)
       Katello::EventQueue.register_event(Katello::Events::ImportPool::EVENT_TYPE, Katello::Events::ImportPool)
 
