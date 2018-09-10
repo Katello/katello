@@ -13,25 +13,46 @@ class Setting::Content < Setting
     self.transaction do
       [
         self.set('katello_default_provision', N_("Default provisioning template for Operating Systems created from synced content"),
-                 'Kickstart default', N_('Default synced OS provisioning template')),
-        self.set('katello_default_finish', N_("Default finish template for new Operating Systems created from synced content"),
-                 'Kickstart default finish', N_('Default synced OS finish template')),
+                 'Kickstart default', N_('Default synced OS provisioning template'),
+                 nil, :collection => proc { katello_template_setting_values("provision") }
+                ),
+        self.set('katello_default_finish',
+                 N_("Default finish template for new Operating Systems created from synced content"),
+                 'Kickstart default finish', N_('Default synced OS finish template'),
+                 nil, :collection => proc { katello_template_setting_values("finish") }
+                ),
         self.set('katello_default_user_data', N_("Default user data for new Operating Systems created from synced content"),
-                 'Kickstart default user data', N_('Default synced OS user-data')),
+                 'Kickstart default user data', N_('Default synced OS user-data'),
+                 nil, :collection => proc { katello_template_setting_values("user_data") }
+                ),
         self.set('katello_default_PXELinux', N_("Default PXELinux template for new Operating Systems created from synced content"),
-                 'Kickstart default PXELinux', N_('Default synced OS PXELinux template')),
+                 'Kickstart default PXELinux', N_('Default synced OS PXELinux template'),
+                 nil, :collection => proc { katello_template_setting_values("PXELinux") }
+                ),
         self.set('katello_default_PXEGrub', N_("Default PXEGrub template for new Operating Systems created from synced content"),
-                 'Kickstart default PXEGrub', N_('Default synced OS PXEGrub template')),
+                 'Kickstart default PXEGrub', N_('Default synced OS PXEGrub template'),
+                 nil, :collection => proc { katello_template_setting_values("PXEGrub") }
+                ),
         self.set('katello_default_PXEGrub2', N_("Default PXEGrub2 template for new Operating Systems created from synced content"),
-                 'Kickstart default PXEGrub2', N_('Default synced OS PXEGrub2 template')),
+                 'Kickstart default PXEGrub2', N_('Default synced OS PXEGrub2 template'),
+                 nil, :collection => proc { katello_template_setting_values("PXEGrub2") }
+                ),
         self.set('katello_default_iPXE', N_("Default iPXE template for new Operating Systems created from synced content"),
-                 'Kickstart default iPXE', N_('Default synced OS iPXE template')),
+                 'Kickstart default iPXE', N_('Default synced OS iPXE template'),
+                 nil, :collection => proc { katello_template_setting_values("iPXE") }
+                ),
         self.set('katello_default_ptable', N_("Default partitioning table for new Operating Systems created from synced content"),
-                 'Kickstart default', N_('Default synced OS partition table')),
+                 'Kickstart default', N_('Default synced OS partition table'),
+                 nil, :collection => proc { Hash[Template.all.where(:type => "Ptable").map { |tmp| [tmp[:name], tmp[:name]] }] }
+                ),
         self.set('katello_default_kexec', N_("Default kexec template for new Operating Systems created from synced content"),
-                 'Discovery Red Hat kexec', N_('Default synced OS kexec template')),
+                 'Discovery Red Hat kexec', N_('Default synced OS kexec template'),
+                 nil, :collection => proc { katello_template_setting_values("kexec") }
+                ),
         self.set('katello_default_atomic_provision', N_("Default provisioning template for new Atomic Operating Systems created from synced content"),
-                 'Atomic Kickstart default', N_('Default synced OS Atomic template')),
+                 'Atomic Kickstart default', N_('Default synced OS Atomic template'),
+                 nil, :collection => proc { katello_template_setting_values("provision") }
+                ),
         self.set('manifest_refresh_timeout', N_('Timeout when refreshing a manifest (in seconds)'), 60 * 20, N_("Manifest refresh timeout")),
         self.set('content_action_accept_timeout', N_("Time in seconds to wait for a Host to pickup a remote action"),
                  20, N_('Accept action timeout')),
@@ -82,6 +103,11 @@ class Setting::Content < Setting
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true
+  end
+
+  def self.katello_template_setting_values(name)
+    templates = ProvisioningTemplate.where(:template_kind => TemplateKind.where(:name => name))
+    templates.each_with_object({}) { |tmpl, hash| hash[tmpl.name] = tmpl.name }
   end
 end
 
