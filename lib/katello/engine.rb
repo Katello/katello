@@ -221,6 +221,8 @@ module Katello
         helper Katello::Concerns::HostsAndHostgroupsHelperExtensions
       end
 
+      ::AuditSearch::ClassMethods.prepend Katello::Concerns::AuditSearch
+
       load 'katello/repository_types.rb'
       load 'katello/scheduled_jobs.rb'
     end
