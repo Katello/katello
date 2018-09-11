@@ -9,11 +9,26 @@ module Actions
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           content_view.check_ready_to_publish!
+
+          if options[:repos_units].present?
+            valid_labels_from_cv = content_view.repositories.map(&:label)
+            labels_from_repos_units = options[:repos_units].map { |repo| repo[:label] }
+
+            labels_from_repos_units.each do |label|
+              fail _("Repository label '%s' is not associated with content view.") % label unless valid_labels_from_cv.include? label
+            end
+
+            valid_labels_from_cv.each do |label|
+              fail _("Content view has repository label '%s' which is not specified in repos_units parameter.") % label unless labels_from_repos_units.include? label
+            end
+          end
+
           if options[:minor] && options[:major]
             version = content_view.create_new_version(options[:major], options[:minor])
           else
             version = content_view.create_new_version
           end
+
           library = content_view.organization.library
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version,
                                                           :user => ::User.current.login,
@@ -29,7 +44,7 @@ module Actions
             concurrence do
               content_view.publish_repositories do |repositories|
                 sequence do
-                  clone_to_version = plan_action(Repository::CloneToVersion, repositories, version)
+                  clone_to_version = plan_action(Repository::CloneToVersion, repositories, version, :repos_units => options[:repos_units])
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library,
                               :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
                 end

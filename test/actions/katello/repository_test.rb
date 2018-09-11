@@ -562,7 +562,7 @@ module ::Actions::Katello::Repository
       plan_action(action, [repository], false, nil, 0, "8")
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear,
                                 repository)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneYumContent, custom_repository, repository, [], false,
+      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneYumContent, custom_repository, repository, [], :purge_empty_units => false,
                                     :generate_metadata => false, :index_content => false)
     end
 

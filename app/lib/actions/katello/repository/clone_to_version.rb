@@ -5,12 +5,15 @@ module Actions
         # allows accessing the build object from the superior action
         attr_accessor :new_repository
 
-        def plan(repositories, content_view_version, incremental = false)
+        def plan(repositories, content_view_version, options = {})
+          incremental = options.fetch(:incremental, false)
           content_view = content_view_version.content_view
           filters = incremental ? [] : content_view.filters.applicable(repositories.first)
 
           self.new_repository = repositories.first.build_clone(content_view: content_view,
                                                                version: content_view_version)
+
+          rpm_filenames = extract_rpm_filenames(options.fetch(:repos_units, nil), repositories.first.label)
 
           sequence do
             plan_action(Repository::Create, new_repository, true, false)
@@ -22,8 +25,8 @@ module Actions
             else
               repositories.each do |repository|
                 if new_repository.yum?
-                  plan_action(Repository::CloneYumContent, repository, new_repository, filters, !incremental,
-                              :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
+                  plan_action(Repository::CloneYumContent, repository, new_repository, filters, :purge_empty_units => !incremental,
+                              :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental, :rpm_filenames => rpm_filenames)
                 elsif new_repository.deb?
                   plan_action(Repository::CloneDebContent, repository, new_repository, filters, !incremental,
                               :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
@@ -37,6 +40,15 @@ module Actions
               end
             end
           end
+        end
+
+        def extract_rpm_filenames(repos_units, repo_label)
+          return if repos_units.blank?
+
+          repo_units = repos_units.detect { |r| r[:label] == repo_label }
+          return if repo_units.blank?
+
+          repo_units.fetch(:rpm_filenames, nil)
         end
       end
     end
