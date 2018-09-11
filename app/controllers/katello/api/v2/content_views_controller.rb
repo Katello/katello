@@ -81,11 +81,23 @@ module Katello
                                                            "in the content view version")
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
+
+    param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
+      param :repo_units, Hash, :desc => N_("a hash containing a repo label and list of units"), :required => true do
+        param :label, String, :desc => N_("repo label"), :required => true
+        param :rpm_filenames, Array, :desc => N_("list of rpm filename strings to include in published version"), :required => true
+      end
+    end
     def publish
+      if params[:repos_units].present? && @view.composite?
+        fail HttpErrors::BadRequest, _("Directly setting package lists on composite content views is not allowed. Please " \
+                                     "update the components, then re-publish the composite.")
+      end
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
                         :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration],
                         :major => params[:major],
-                        :minor => params[:minor])
+                        :minor => params[:minor],
+                        :repos_units => params[:repos_units])
       respond_for_async :resource => task
     end
 

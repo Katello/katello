@@ -66,7 +66,7 @@ module Actions
         def copy_repos(source_repos, new_version, content, dep_solve)
           copy_output = []
           sequence do
-            new_repo = plan_action(Repository::CloneToVersion, source_repos, new_version, true).new_repository
+            new_repo = plan_action(Repository::CloneToVersion, source_repos, new_version, :incremental => true).new_repository
             copy_output = copy_yum_content(new_repo, dep_solve, content[:package_ids], content[:errata_ids])
 
             plan_action(Katello::Repository::MetadataGenerate, new_repo)

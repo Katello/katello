@@ -3,9 +3,13 @@ module Actions
     module Repository
       class CloneYumContent < Actions::Base
         # rubocop:disable MethodLength
-        def plan(source_repo, target_repo, filters, purge_empty_units, options = {})
+        # rubocop:disable Metrics/CyclomaticComplexity TODO: refactor to push everything into options hash
+        # rubocop:disable Metrics/PerceivedComplexity
+        def plan(source_repo, target_repo, filters, options = {})
           generate_metadata = options.fetch(:generate_metadata, true)
           index_content = options.fetch(:index_content, true)
+          rpm_filenames = options.fetch(:rpm_filenames, {})
+          purge_empty_units = options.fetch(:purge_empty_units, {})
 
           copy_clauses = nil
           remove_clauses = nil
@@ -17,6 +21,19 @@ module Actions
             clause_gen.generate
             copy_clauses = clause_gen.copy_clause
             remove_clauses = clause_gen.remove_clause
+          end
+
+          # if we are providing a list of files, process that here and override filters
+          if rpm_filenames.present?
+            # log a warning if we are overriding the list of RPMs and using a filter
+            # ensure we have all the files we want to copy
+            rpms_available = source_repo.rpms.pluck(:filename)
+            rpm_filenames.each do |filename|
+              fail "%s not available in repository %s" % [filename, source_repo.label] unless rpms_available.include? filename
+            end
+            copy_clauses = { 'filename' => { '$in' => rpm_filenames } }
+            remove_clauses = nil
+            Rails.logger.warn("Filters on content view have been overridden by passed-in filename list during publish") if filters.any?
           end
 
           sequence do
@@ -60,7 +77,7 @@ module Actions
               plan_action(Katello::Repository::IndexPackageGroups, target_repo)
             end
 
-            source_repository = filters.empty? ? source_repo : nil
+            source_repository = filters.empty? && rpm_filenames.empty? ? source_repo : nil
 
             if generate_metadata
               plan_action(Katello::Repository::MetadataGenerate,

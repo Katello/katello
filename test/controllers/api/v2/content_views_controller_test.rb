@@ -196,13 +196,13 @@ module Katello
 
     def test_duplicate_component_error_message
       view = katello_content_views(:library_view)
-      view_version = create(:katello_content_view_version, :content_view => view)
+      view_version = create(:katello_content_view_version, :content_view => view, :major => 8999)
 
       composite = katello_content_views(:composite_view)
       ContentViewComponent.create!(:composite_content_view => composite,
                                    :content_view_version => view_version, :latest => false)
 
-      view_version2 = create(:katello_content_view_version, :content_view => view)
+      view_version2 = create(:katello_content_view_version, :content_view => view, :major => 9001)
 
       put :update, params: { id: composite.id, content_view: { component_ids: [view_version.id, view_version2.id] } }
       display_message = JSON.parse(response.body)['displayMessage']
@@ -305,6 +305,12 @@ module Katello
       post :publish, params: { :id => view.id }
       assert_response 400
       assert_equal version_count, view.versions.reload.count
+    end
+
+    def test_publish_composite_with_repos_units
+      composite = ContentView.find(katello_content_views(:composite_view).id)
+      post :publish, params: { :id => composite.id, :repos_units => "{\"hello\": 1}" }
+      assert_response 400
     end
 
     test_attributes :pid => 'd582f1b3-8118-4e78-a639-237c6f9d27c6'

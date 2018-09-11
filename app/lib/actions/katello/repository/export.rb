@@ -71,7 +71,7 @@ module Actions
               sequence do
                 if repo.link?
                   plan_action(Katello::Repository::Clear, repo)
-                  plan_action(Katello::Repository::CloneYumContent, repo.target_repository, repo, [], false,
+                  plan_action(Katello::Repository::CloneYumContent, repo.target_repository, repo, [], :purge_empty_units => false,
                               :generate_metadata => false, :index_content => false)
                 end
               end

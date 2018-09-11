@@ -22,12 +22,13 @@ module Actions
       action = create_action(action_class)
       cloned_repo.expects(:link?).returns(false)
       yum_repo.expects(:build_clone).returns(cloned_repo)
+      options = {}
 
-      plan_action(action, [yum_repo], version)
+      plan_action(action, [yum_repo], version, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneYumContent,
-                                yum_repo, cloned_repo, [], true, :generate_metadata => true,
-                                :index_content => true, :simple_clone => false)
+                                yum_repo, cloned_repo, [], :purge_empty_units => true, :generate_metadata => true,
+                                :index_content => true, :simple_clone => false, :rpm_filenames => nil)
     end
 
     it 'plans to clone yum metadata' do
@@ -35,10 +36,11 @@ module Actions
 
       action = create_action(action_class)
       cloned_repo.expects(:link?).returns(true)
+      options = {}
 
       yum_repo.expects(:build_clone).returns(cloned_repo)
 
-      plan_action(action, [yum_repo], version)
+      plan_action(action, [yum_repo], version, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneYumMetadata,
                                 yum_repo, cloned_repo, :force_yum_metadata_regeneration => true)
@@ -50,8 +52,9 @@ module Actions
 
       action = create_action(action_class)
       docker_repo.expects(:build_clone).returns(cloned_repo)
+      options = {}
 
-      plan_action(action, [docker_repo], version)
+      plan_action(action, [docker_repo], version, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneDockerContent,
                                 docker_repo, cloned_repo, [])
@@ -62,8 +65,9 @@ module Actions
                                             version: version)
       action = create_action(action_class)
       file_repo.expects(:build_clone).returns(cloned_repo)
+      options = {}
 
-      plan_action(action, [file_repo], version)
+      plan_action(action, [file_repo], version, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneFileContent,
                                 file_repo, cloned_repo)
