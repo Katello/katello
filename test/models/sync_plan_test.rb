@@ -250,6 +250,16 @@ module Katello
       Time.parse(@plan.next_sync).must_equal(Time.new(2012, 11, 17, 9, 26, 0, "+00:00"))
     end
 
+    def test_invalid_custom_cron_expression
+      @plan.interval = 'custom cron'
+      @plan.sync_date = '1999-11-17 09:00:00 UTC'
+      @plan.cron_expression = "15 5 5a * *" #Wrong Cron Expression
+      exception = assert_raises Exception do
+        @plan.save_with_logic!
+      end
+      assert_equal('Cron expression is not valid!', exception.message)
+    end
+
     def test_update
       @plan.save!
       p = SyncPlan.find_by_name('Norman Rockwell')
