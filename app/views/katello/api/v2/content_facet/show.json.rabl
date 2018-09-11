@@ -22,8 +22,4 @@ child :content_facet => :content_facet_attributes do
   end
 end
 
-child :host_collections => :host_collections do
-  attributes :id, :name
-end
-
 attributes :description, :facts
