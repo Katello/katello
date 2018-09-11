@@ -4,8 +4,6 @@ module Actions
       class RemoveContent < Actions::EntryAction
         include Dynflow::Action::WithSubPlans
 
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(repository, content_units, options = {})
           sync_capsule = options.fetch(:sync_capsule, true)
           if repository.redhat?

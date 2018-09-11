@@ -2,8 +2,6 @@ module Actions
   module Katello
     module ContentViewVersion
       class Export < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(content_view_version, export_to_iso, since, iso_size)
           # assemble data to feed to Pulp
           content_view = ::Katello::ContentView.find(content_view_version.content_view_id)

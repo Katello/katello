@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Repository
       class FetchPxeFiles < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         input_format do
           param :id, Integer
           param :capsule_id, Integer

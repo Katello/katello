@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Host
       class GenerateApplicability < Actions::Base
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(hosts, use_queue = true)
           uuids = hosts.map { |host| host.content_facet.try(:uuid) }.compact
           unless uuids.empty?

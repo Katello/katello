@@ -3,7 +3,6 @@ module Actions
     module Repository
       class Destroy < Actions::EntryAction
         middleware.use ::Actions::Middleware::RemoteAction
-        middleware.use ::Actions::Middleware::KeepCurrentUser
 
         # options:
         #   skip_environment_update - defaults to false. skips updating the CP environment

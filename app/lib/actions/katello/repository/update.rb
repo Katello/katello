@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Repository
       class Update < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(root, repo_params)
           repository = root.library_instance
           action_subject root.library_instance

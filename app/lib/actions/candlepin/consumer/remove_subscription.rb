@@ -2,8 +2,6 @@ module Actions
   module Candlepin
     module Consumer
       class RemoveSubscription < Candlepin::Abstract
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         input_format do
           param :uuid, String
           param :entitlement_id, String

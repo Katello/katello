@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Host
       class AttachSubscriptions < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(host, pools_with_quantities_params)
           action_subject(host)
           sequence do
