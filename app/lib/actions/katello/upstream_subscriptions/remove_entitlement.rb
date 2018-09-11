@@ -2,7 +2,6 @@ module Actions
   module Katello
     module UpstreamSubscriptions
       class RemoveEntitlement < Actions::Base
-        middleware.use Actions::Middleware::KeepCurrentTaxonomies
         middleware.use Actions::Middleware::PropagateCandlepinErrors
 
         input_format do

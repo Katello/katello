@@ -2,8 +2,6 @@ module Actions
   module Katello
     module UpstreamSubscriptions
       class BindEntitlement < Actions::Base
-        middleware.use Actions::Middleware::KeepCurrentTaxonomies
-
         def run
           output[:response] = ::Katello::Resources::Candlepin::UpstreamConsumer
             .bind_entitlement(pool)
