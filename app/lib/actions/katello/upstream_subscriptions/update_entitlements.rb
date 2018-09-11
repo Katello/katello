@@ -2,8 +2,6 @@ module Actions
   module Katello
     module UpstreamSubscriptions
       class UpdateEntitlements < Actions::Base
-        middleware.use Actions::Middleware::KeepCurrentTaxonomies
-
         def plan(pools = [])
           fail _("No pools were provided.") if pools.blank?
           fail _("Current organization is not set.") unless ::Organization.current

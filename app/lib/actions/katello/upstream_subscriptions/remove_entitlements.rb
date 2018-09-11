@@ -2,8 +2,6 @@ module Actions
   module Katello
     module UpstreamSubscriptions
       class RemoveEntitlements < Actions::Base
-        middleware.use Actions::Middleware::KeepCurrentTaxonomies
-
         def plan(pool_ids = [])
           ids = pool_ids.uniq.compact
           fail _("No pool IDs were provided.") if ids.blank?
