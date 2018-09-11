@@ -4,7 +4,6 @@ module Actions
     module Repository
       class Sync < Actions::EntryAction
         include Helpers::Presenter
-        middleware.use Actions::Middleware::KeepCurrentUser
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         input_format do

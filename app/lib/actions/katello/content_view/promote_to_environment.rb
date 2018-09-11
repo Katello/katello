@@ -3,8 +3,6 @@ module Actions
   module Katello
     module ContentView
       class PromoteToEnvironment < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(version, environment, description)
           history = ::Katello::ContentViewHistory.create!(:content_view_version => version, :user => ::User.current.login,
                                                           :environment => environment, :task => self.task,

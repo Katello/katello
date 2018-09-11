@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Host
       class UploadPackageProfile < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(host, profile_string)
           action_subject host
 

@@ -3,8 +3,6 @@ module Actions
   module Katello
     module Repository
       class ImportUpload < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(repository, upload_ids, options = {})
           action_subject(repository)
 

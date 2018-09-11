@@ -3,8 +3,6 @@ module Actions
   module Katello
     module ContentView
       class Publish < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         # rubocop:disable MethodLength
         def plan(content_view, description = "", options = {})
           action_subject(content_view)

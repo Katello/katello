@@ -2,8 +2,6 @@ module Actions
   module Katello
     module ContentView
       class Promote < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(version, environments, is_force = false, description = nil)
           action_subject(version.content_view)
           version.check_ready_to_promote!(environments)

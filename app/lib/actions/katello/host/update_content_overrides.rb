@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Host
       class UpdateContentOverrides < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def plan(host, content_override_params, prune_invalid_content_overrides = true)
           action_subject(host)
           fail _("This Host is not currently registered with subscription-manager.") unless host.subscription_facet

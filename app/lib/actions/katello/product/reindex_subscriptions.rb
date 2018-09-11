@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Product
       class ReindexSubscriptions < Actions::EntryAction
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         input_format do
           param :id
         end

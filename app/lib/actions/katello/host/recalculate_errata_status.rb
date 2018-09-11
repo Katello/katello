@@ -2,8 +2,6 @@ module Actions
   module Katello
     module Host
       class RecalculateErrataStatus < Actions::Base
-        middleware.use Actions::Middleware::KeepCurrentUser
-
         def run
           ::Host.unscoped.find_each do |host|
             begin
