@@ -9,13 +9,14 @@
  * @requires Environment
  * @requires ContentView
  * @requires CurrentOrganization
+ * @requires RepositoriesFilters
  *
  * @description
  *   Provides the functionality for the package repositories page.
  */
 angular.module('Bastion.packages').controller('PackageRepositoriesController',
-    ['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization',
-    function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization) {
+    ['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization', 'RepositoriesFilters',
+    function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization, RepositoriesFilters) {
         var repositoriesNutupane, environment, contentView;
         var params = {
             'rpm_id': $scope.$stateParams.packageId,
@@ -49,57 +50,11 @@ angular.module('Bastion.packages').controller('PackageRepositoriesController',
         });
 
         $scope.filterPackages = function () {
-            var foundVersion, env;
-            if ($scope.contentViewFilter) {
-                if ($scope.environmentFilter) {
-
-                    foundVersion = _.find($scope.contentViewFilter.versions, function(version) {
-                        // Find the version belonging to the environment specified by the enviroment filter
-                        env = _.find(version.environment_ids, function(envId) {
-                            return envId === $scope.environmentFilter;
-                        });
-
-                        return !angular.isUndefined(env);
-                    });
-
-                    if (!angular.isUndefined(foundVersion)) {
-                        $scope.setContentViewFilter(foundVersion.id);
-                    }
-
-                } else {
-                    $scope.setContentViewFilter($scope.contentViewFilter.id, 'content_view_version');
-                }
-            } else {
-                $scope.clearContentViewFilter();
-            }
-
-            if ($scope.environmentFilter) {
-                params['environment_id'] = $scope.environmentFilter;
-            } else {
-                delete params['environment_id'];
-                params['available_for'] = 'content_view_version';
-            }
-
+            params = RepositoriesFilters.modifyParamsUsingFilters(
+                params, $scope.contentViewFilter, $scope.environmentFilter
+            );
             repositoriesNutupane.setParams = (params);
             repositoriesNutupane.refresh();
-        };
-
-        $scope.setContentViewFilter = function(selectedId, keyName) {
-            if (keyName && keyName === 'content_view_version') {
-                params['content_view_id'] = selectedId;
-                params['available_for'] = keyName;
-                delete params['content_view_version_id'];
-            } else {
-                params['content_view_version_id'] = selectedId;
-                delete params['content_view_id'];
-                delete params['available_for'];
-            }
-        };
-
-        $scope.clearContentViewFilter = function () {
-            delete params['content_view_version_id'];
-            delete params['content_view_id'];
-            delete params['available_for'];
         };
     }]
 );
