@@ -12,6 +12,7 @@ BASTION_MODULES.push(
     'Bastion.hosts',
     'Bastion.puppet-modules',
     'Bastion.ostree-branches',
+    'Bastion.module-streams',
     'Bastion.environments',
     'Bastion.content-credentials',
     'Bastion.hosts',

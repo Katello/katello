@@ -132,9 +132,10 @@
                   {{ repository.content_counts.package_group || 0 }} Package Groups
                 </a>
               </div>
-
               <div>
-                {{ repository.content_counts.module_stream || 0 }} Module Streams
+                <a ui-sref="product.repository.manage-content.module-streams({productId: product.id, repositoryId: repository.id})">
+                  {{ repository.content_counts.module_stream || 0 }} Module Streams
+                </a>
               </div>
             </span>
 

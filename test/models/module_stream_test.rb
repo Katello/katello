@@ -34,6 +34,46 @@ module Katello
       assert @module_stream_river.artifacts.include?(@module_stream_artifact_boat)
     end
 
+    def test_search_name
+      module_streams = ModuleStream.search_for("name = \"#{@module_stream_river.name}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_version
+      module_streams = ModuleStream.search_for("version = \"#{@module_stream_river.version}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_uuid
+      module_streams = ModuleStream.search_for("uuid = \"#{@module_stream_river.uuid}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_stream
+      module_streams = ModuleStream.search_for("stream = \"#{@module_stream_river.stream}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_context
+      module_streams = ModuleStream.search_for("context = \"#{@module_stream_river.context}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_arch
+      module_streams = ModuleStream.search_for("arch = \"#{@module_stream_river.arch}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_repository_name
+      module_streams = ModuleStream.search_for("repository = \"#{@fedora_repo.name}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
+    def test_search_repository_id
+      module_streams = ModuleStream.search_for("repository_id = \"#{@fedora_repo.id}\"")
+      assert_includes module_streams, @module_stream_river
+    end
+
     def pulp_module_data
       @pulp_module_data ||= {
         "repository_memberships" => [@fedora_repo.pulp_id],
