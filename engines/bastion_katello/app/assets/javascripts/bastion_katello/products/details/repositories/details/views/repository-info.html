@@ -103,7 +103,7 @@
                  ng-model="repository.upstream_password"/>
         </dd>
       </span>
- 
+
       <span ng-show="repository.content_type === 'yum'">
         <dt translate>Yum Metadata Checksum</dt>
         <dd bst-edit-select="checksumTypeDisplay(repository.checksum_type)"
@@ -318,7 +318,7 @@
         <tr ng-show="repository.content_type === 'yum'">
           <td translate>Module Streams</td>
           <td class="align-center">
-            <a ng-href="/module_streams?search=repository_id={{repository.id}}">
+            <a ui-sref="product.repository.manage-content.module-streams({productId: product.id, repositoryId: repository.id})">
               {{ repository.content_counts.module_stream || 0 }}
             </a>
           </td>

@@ -17,13 +17,14 @@
  * @requires OstreeBranch
  * @requires File
  * @requires Deb
+ * @requires ModuleStream
  *
  * @description
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ModuleStream',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ModuleStream) {
         var contentTypes;
 
         function success(response, selected) {
@@ -61,7 +62,8 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             'docker-tags': {type: DockerTag, controllerName: 'katello_docker_tags'},
             'ostree-branches': { type: OstreeBranch, controllerName: 'katello_ostree_branches' },
             'files': { type: File, controllerName: 'katello_files' },
-            'debs': { type: Deb, controllerName: 'katello_debs' }
+            'debs': { type: Deb, controllerName: 'katello_debs' },
+            'module-streams': { type: ModuleStream, controllerName: 'katello_module_streams' }
         };
 
         $scope.contentNutupane = new Nutupane(contentTypes[$scope.currentState].type, {

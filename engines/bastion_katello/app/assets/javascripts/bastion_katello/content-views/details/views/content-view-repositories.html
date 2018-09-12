@@ -105,8 +105,8 @@
             </a>
           </div>
           <div>
-            <a ng-href="/module_streams?search=repository_id={{repository.id}}">
-              {{ repository.content_counts.module_stream }} Module Streams
+            <a ui-sref="product.repository.manage-content.module-streams({productId: repository.product.id, repositoryId: repository.id})">
+              {{ repository.content_counts.module_stream || 0 }} Module Streams
             </a>
           </div>
         </td>

@@ -69,11 +69,6 @@ module Katello
       assert_includes module_streams, @module_stream_river
     end
 
-    def test_search_repository_id
-      module_streams = ModuleStream.search_for("repository_id = \"#{@fedora_repo.id}\"")
-      assert_includes module_streams, @module_stream_river
-    end
-
     def pulp_module_data
       @pulp_module_data ||= {
         "repository_memberships" => [@fedora_repo.pulp_id],

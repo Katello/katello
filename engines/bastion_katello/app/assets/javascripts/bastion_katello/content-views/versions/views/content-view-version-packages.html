@@ -1,6 +1,6 @@
 <div data-extend-template="layouts/partials/table.html">
   <div data-block="search-filter">
-    <select class="form-control" ng-model="repository" ng-options="repository.name for (id, repository) in repositories"></select>
+    <select class="form-control" ng-model="repositoryId" ng-options="repo.id as repo.name for repo in repositories"></select>
   </div>
 
   <table data-block="table" class="table table-striped table-bordered">
