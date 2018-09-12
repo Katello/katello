@@ -194,6 +194,22 @@ module Katello
       assert_template 'katello/api/v2/common/update'
     end
 
+    def test_duplicate_component_error_message
+      view = katello_content_views(:library_view)
+      view_version = create(:katello_content_view_version, :content_view => view)
+
+      composite = katello_content_views(:composite_view)
+      ContentViewComponent.create!(:composite_content_view => composite,
+                                   :content_view_version => view_version, :latest => false)
+
+      view_version2 = create(:katello_content_view_version, :content_view => view)
+
+      put :update, params: { id: composite.id, content_view: { component_ids: [view_version.id, view_version2.id] } }
+      display_message = JSON.parse(response.body)['displayMessage']
+      test_message = "Validation failed: Base Another component already includes content view with ID #{view_version.content_view_id}"
+      assert_equal test_message, display_message
+    end
+
     def test_update_protected
       allowed_perms = [@update_permission]
       denied_perms = [@view_permission, @create_permission, :destroy_content_views]

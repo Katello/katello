@@ -43,7 +43,7 @@ module Katello
       end
 
       if attached_content_view_ids.include?(view.id)
-        errors.add(:base, _("Duplicate Content View. Another component already includes this view"))
+        errors.add(:base, _("Another component already includes content view with ID %s" % view.id))
       end
     end
 

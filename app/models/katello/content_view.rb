@@ -24,7 +24,7 @@ module Katello
     # component_composites -> Bottom Up, given I am a component CV get the associated composites that I belong to
     #
     has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy,
-             :inverse_of => :composite_content_view, :foreign_key => :composite_content_view_id
+             :inverse_of => :composite_content_view, :foreign_key => :composite_content_view_id, autosave: true
 
     has_many :component_composites, :class_name => "Katello::ContentViewComponent",
              :dependent => :destroy, :inverse_of => :content_view, :foreign_key => :content_view_id

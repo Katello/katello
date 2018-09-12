@@ -109,12 +109,12 @@ module Katello
       @composite = @composite.reload
       component = ContentViewComponent.create(:composite_content_view => @composite,
                                               :content_view => view1, :latest => true)
-      refute_with_error(component, /^Duplicate Content View. Another component already includes this view/)
+      refute_with_error(component, /^Another component already includes content view with ID/)
 
       component = ContentViewComponent.create(:composite_content_view => @composite,
                                               :content_view_version => version1, :latest => false)
       refute_with_error(component,
-                             /^Duplicate Content View. Another component already includes this view/)
+                             /^Another component already includes content view with ID/)
     end
 
     def test_latest_versions
