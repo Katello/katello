@@ -109,6 +109,22 @@ module Katello
       end
     end
 
+    def test_invalid_cron_status
+      @plan.cron_expression = "20 * * * *"
+      assert_raises(Exception) { @plan.save_with_logic! }
+      assert_equal @plan.errors.full_messages.first.to_s, "Custom cron expression only needs to be set for interval value of custom cron"
+      @plan.interval = 'custom cron'
+      assert @plan.save_with_logic!
+    end
+
+    def test_nil_cron_status
+      @plan.interval = 'custom cron'
+      exception = assert_raises Exception do
+        @plan.save_with_logic!
+      end
+      assert_equal('Cron expression is not valid!', exception.message)
+    end
+
     test_attributes :pid => 'dbfadf4f-50af-4aa8-8d7d-43988dc4528f'
     def test_update_name
       @plan.save!

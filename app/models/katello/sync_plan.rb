@@ -25,6 +25,7 @@ module Katello
     validates :enabled, :inclusion => [true, false]
     validate :validate_sync_date
     validate :product_enabled
+    validate :custom_cron_interval_expression
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     before_destroy :cancel_recurring_logic
@@ -40,6 +41,10 @@ module Katello
       end
     end
 
+    def custom_cron_interval_expression
+      errors.add :base, _("Custom cron expression only needs to be set for interval value of custom cron") if cron_status_mismatch?
+    end
+
     def save_with_logic!
       associate_recurring_logic
       self.save!
@@ -48,6 +53,7 @@ module Katello
 
     def update_attributes_with_logics!(params)
       transaction do
+        params["cron_expression"] = '' unless params["interval"].eql? CUSTOM_CRON
         self.update_attributes!(params)
         if rec_logic_changed?
           old_rec_logic = self.foreman_tasks_recurring_logic
@@ -79,7 +85,7 @@ module Katello
     end
 
     def cancel_recurring_logic
-      self.foreman_tasks_recurring_logic.cancel
+      self.foreman_tasks_recurring_logic.cancel if self.foreman_tasks_recurring_logic
     end
 
     def validate_sync_date
@@ -135,7 +141,7 @@ module Katello
         cron = min.to_s + " " + hour.to_s + " * * *"
       elsif (interval.downcase.eql? "weekly")
         cron = min.to_s + " " + hour.to_s + " * * " + day.to_s
-      elsif (interval.downcase.eql? "custom cron")
+      elsif (interval.downcase.eql? CUSTOM_CRON)
         cron = cron_expression
       else
         fail _("Interval not set correctly")
@@ -157,11 +163,8 @@ module Katello
       saved_change_to_attribute?(:enabled)
     end
 
-    def valid_cron_logic?(cron_logic)
-      parser = CronParser.new(cron_logic, Time.zone)
-      parser.next(Time.zone.now)
-    rescue ArgumentError => _
-      false
+    def cron_status_mismatch?
+      self.interval != CUSTOM_CRON && !(self.cron_expression.nil? || self.cron_expression.eql?(''))
     end
   end
 end
