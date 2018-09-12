@@ -9,13 +9,14 @@
  * @requires Environment
  * @requires ContentView
  * @requires CurrentOrganization
+ * @requires RepositoriesFilters
  *
  * @description
  *   Provides the functionality for the errata details repositories page.
  */
 angular.module('Bastion.errata').controller('ErratumRepositoriesController',
-['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization',
-function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization) {
+['$scope', '$q', 'Nutupane', 'Repository', 'Environment', 'ContentView', 'CurrentOrganization', 'RepositoriesFilters',
+function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrganization, RepositoriesFilters) {
     var repositoriesNutupane, environment, contentView, params = {
         'erratum_id': $scope.$stateParams.errataId,
         'organization_id': CurrentOrganization
@@ -48,26 +49,9 @@ function ($scope, $q, Nutupane, Repository, Environment, ContentView, CurrentOrg
     });
 
     $scope.filterErrata = function () {
-        var foundVersion, env;
-        params['environment_id'] = $scope.environmentFilter;
-
-        if ($scope.contentViewFilter) {
-            foundVersion = _.find($scope.contentViewFilter.versions, function(version) {
-                // Find the version belonging to the environment specified by the enviroment filter
-                env = _.find(version.environment_ids, function(envId) {
-                    return envId === $scope.environmentFilter;
-                });
-
-                return !angular.isUndefined(env);
-            });
-
-            if (!angular.isUndefined(foundVersion)) {
-                params['content_view_version_id'] = foundVersion.id;
-            } else {
-                delete params['content_view_version_id'];
-            }
-        }
-
+        params = RepositoriesFilters.modifyParamsUsingFilters(
+            params, $scope.contentViewFilter, $scope.environmentFilter
+        );
         repositoriesNutupane.setParams = (params);
         repositoriesNutupane.refresh();
     };
