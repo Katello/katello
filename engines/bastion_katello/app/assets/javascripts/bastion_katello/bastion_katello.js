@@ -37,6 +37,9 @@
 //= require "bastion_katello/debs/debs.module.js"
 //= require_tree "./debs"
 
+//= require "bastion_katello/module-streams/module-streams.module.js"
+//= require_tree "./module-streams"
+
 //= require "bastion_katello/errata/errata.module"
 //= require_tree "./errata"
 
