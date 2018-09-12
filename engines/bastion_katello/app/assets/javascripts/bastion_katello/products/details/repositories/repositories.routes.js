@@ -144,6 +144,15 @@
                 parent: 'product.repository.info'
             }
         })
+        .state('product.repository.manage-content.module-streams', {
+            url: '/module_streams',
+            permission: 'view_products',
+            templateUrl: 'products/details/repositories/details/views/repository-manage-module-streams.html',
+            ncyBreadcrumb: {
+                label: "{{'Module Streams' | translate }}",
+                parent: 'product.repository.info'
+            }
+        })
         .state('product.repository.manage-content.debs', {
             url: '/content/debs',
             permission: 'view_products',

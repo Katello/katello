@@ -10,7 +10,7 @@
      *   ui-router state.
      */
     function ContentViewVersionContentController($scope, translate, Nutupane, Package, Erratum,
-                                                 PackageGroup, PuppetModule, OstreeBranch, Deb, Repository,
+                                                 PackageGroup, PuppetModule, OstreeBranch, ModuleStream, Deb, Repository,
                                                  ContentViewVersion) {
         var nutupane, contentTypes, currentState, params;
 
@@ -22,7 +22,6 @@
                 params: {
                     'content_type': "docker",
                     'content_view_version_id': $scope.$stateParams.versionId
-
                 }
             },
             'yum': {
@@ -57,6 +56,14 @@
                     'content_view_version_id': $scope.$stateParams.versionId,
                     'sort_by': 'version_date',
                     'sort_order': 'DESC'
+                }
+            },
+            'module-streams': {
+                type: ModuleStream,
+                params: {
+                    'content_view_version_id': $scope.$stateParams.versionId,
+                    'sort_by': 'name',
+                    'sort_order': 'ASC'
                 }
             },
             'components': {
@@ -94,22 +101,24 @@
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;
 
-        $scope.repository = {name: translate('All Repositories'), id: 'all'};
+        $scope.repositoryId = "all";
         $scope.repositories = [];
 
         $scope.version.$promise.then(function (version) {
             $scope.repositories = version.repositories;
-            $scope.repositories.unshift($scope.repository);
+            if ($scope.repositories[0].id !== "all") {
+                $scope.repositories.unshift({name: translate('All Repositories'), id: 'all'});
+            }
         });
 
-        $scope.$watch('repository', function (repository) {
+        $scope.$watch('repositoryId', function (repositoryId) {
             var nutupaneParams = nutupane.getParams();
 
-            if (repository.id === 'all') {
+            if (repositoryId === 'all') {
                 nutupaneParams['repository_id'] = null;
                 nutupane.setParams(nutupaneParams);
             } else {
-                nutupaneParams['repository_id'] = repository.id;
+                nutupaneParams['repository_id'] = repositoryId;
                 nutupane.setParams(nutupaneParams);
             }
 
@@ -122,6 +131,6 @@
         .controller('ContentViewVersionContentController', ContentViewVersionContentController);
 
     ContentViewVersionContentController.$inject = ['$scope', 'translate', 'Nutupane', 'Package', 'Erratum',
-                                                   'PackageGroup', 'PuppetModule', 'OstreeBranch', 'Deb', 'Repository', 'ContentViewVersion'];
+                                                   'PackageGroup', 'PuppetModule', 'OstreeBranch', 'ModuleStream', 'Deb', 'Repository', 'ContentViewVersion'];
 
 })();

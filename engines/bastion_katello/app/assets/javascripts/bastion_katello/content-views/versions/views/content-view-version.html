@@ -29,6 +29,13 @@
       </a>
     </li>
 
+    <li ng-class="{active: isState('content-view.version.module-streams')}"
+        ng-show="version.module_stream_count !== 0">
+      <a ui-sref="content-view.version.module-streams({versionId: version.id})">
+        <span translate>Module Streams</span>
+      </a>
+    </li>
+
     <li ng-class="{active: isState('content-view.version.errata')}"
         ng-show="hasErrata(version)">
       <a ui-sref="content-view.version.errata({versionId: version.id})">

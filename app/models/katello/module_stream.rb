@@ -14,7 +14,6 @@ module Katello
     scoped_search on: :context, complete_value: true
     scoped_search on: :arch, complete_value: true
     scoped_search relation: :repositories, on: :name, rename: :repository, complete_value: true
-    scoped_search relation: :repositories, on: :id, rename: :repository_id, complete_value: true
 
     CONTENT_TYPE = Pulp::ModuleStream::CONTENT_TYPE
     MODULE_STREAM_DEFAULT_CONTENT_TYPE = "modulemd_defaults".freeze

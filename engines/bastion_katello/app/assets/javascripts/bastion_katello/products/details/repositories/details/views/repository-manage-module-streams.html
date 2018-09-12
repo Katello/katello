@@ -1,0 +1,17 @@
+<span page-title ng-model="repository">{{ 'Manage Module Streams for Repository:' | translate }} {{ repository.name }}</span>
+
+<div data-block="messages">
+  <div bst-alert="success" ng-hide="generationTaskId === undefined">
+    <button type="button" class="close" ng-click="clearTaskId()">&times;</button>
+    <p translate>
+      Module Stream metadata generation has been initiated in the background.  Click
+      <a ng-href="{{ taskUrl() }}">Here</a> to monitor the progress.
+    </p>
+  </div>
+</div>
+
+<div data-extend-template="layouts/partials/table.html">
+  <div data-block="table">
+      <ng-include src="'module-streams/views/partials/module-streams-table.html'"> </ng-include>
+  </div>
+</div>
