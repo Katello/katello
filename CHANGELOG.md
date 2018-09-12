@@ -1,3 +1,69 @@
+# 3.7.1 Blonde Ale (2018-09-12)
+
+### Upgrades
+ * 3.6 to 3.7 upgrade issue: katello_pools_hypervisor_fk constraint violation ([#24892](https://projects.theforeman.org/issues/24892), [4a599e7e](https://github.com/Katello/katello.git/commit/4a599e7e79fce6654ae0edcfd8064f83960189b2))
+ * User db upgrade from 3.4 to 3.7 failed at Upgrade Step: set_upstream_pool_id ([#24374](https://projects.theforeman.org/issues/24374), [3830ac7b](https://github.com/Katello/katello.git/commit/3830ac7bfdb77bd7f5909ee6544217f8ae3ade52))
+
+### Hosts
+ * clean_backend_objects does not verify managed host status prior to action ([#24812](https://projects.theforeman.org/issues/24812), [8667e2bf](https://github.com/Katello/katello.git/commit/8667e2bfd02710455a86c694eb37f2af3eda41bd))
+ * updating errata counts on a content host should not use validation ([#24768](https://projects.theforeman.org/issues/24768), [b0a37152](https://github.com/Katello/katello.git/commit/b0a371522a891b6aba5c782665c727e814c4717c))
+ * Bulk action for Manage Repository Sets is broken ([#24678](https://projects.theforeman.org/issues/24678), [677f715c](https://github.com/Katello/katello.git/commit/677f715ccafdc689dbffc564a9c27e31aaacb4a5))
+ * Cannot remove packages from content host web UI ([#24651](https://projects.theforeman.org/issues/24651), [146bd13d](https://github.com/Katello/katello.git/commit/146bd13d0671af002eebb3ec6813df7767c07a51))
+ * Pushing updates from katello 3.7 to CentOS 7.5 client not working  ([#24523](https://projects.theforeman.org/issues/24523), [29a85705](https://github.com/Katello/hammer-cli-katello.git/commit/29a8570582c1a8b17e8d175b800cee108ec203f6), [e71b3b39](https://github.com/Katello/katello.git/commit/e71b3b39ada4be835a351439b2260ea47b51f265))
+ * Content source is not inherited from hostgroup while creating host ([#24390](https://projects.theforeman.org/issues/24390), [c10267ef](https://github.com/Katello/katello.git/commit/c10267ef1296b2b05480e985a93f447b077534bb))
+
+### Repositories
+ * unable to search for packages ([#24769](https://projects.theforeman.org/issues/24769), [9f5f1585](https://github.com/Katello/katello.git/commit/9f5f15856327f35556fbc60dd05a9cff539dba6b))
+ * On the Sync Status page, the Active Only checkbox does not work ([#24499](https://projects.theforeman.org/issues/24499), [f6ed298a](https://github.com/Katello/katello.git/commit/f6ed298ab1c28b356ec1e582b40219f8750fc9fe))
+ * Content Host Applicable Package List page can DOS Foreman server and Postgres ([#24389](https://projects.theforeman.org/issues/24389), [b9430c00](https://github.com/Katello/katello.git/commit/b9430c00c72c75511113e518d4f3bf94d3cf5ad0))
+ * No notification and 500 ISE while disabling repository included in published content view ([#24310](https://projects.theforeman.org/issues/24310), [6c19cff5](https://github.com/Katello/katello.git/commit/6c19cff5b5c4952c60fefaf5ab662a98bbe89423))
+ * Repo discovery: adding GPG key doesn't actually assign it to neither repo nor product ([#24265](https://projects.theforeman.org/issues/24265), [99c55453](https://github.com/Katello/katello.git/commit/99c554533427536022d65b1279e1b024c24e72d4))
+ * Recommended repositories toggle is too close to the "Available Repositories" header on narrow displays ([#24243](https://projects.theforeman.org/issues/24243), [ac3032d4](https://github.com/Katello/katello.git/commit/ac3032d4349930576ffa57d3a01476ea1f953cc9))
+ * RH Repositories page ostree filter shows no results ([#24188](https://projects.theforeman.org/issues/24188), [54437044](https://github.com/Katello/katello.git/commit/54437044ca53d92e69ab9eae77f059a38a7d53a2))
+ * Cannot sync Atomic kickstart nor RPMs ([#23801](https://projects.theforeman.org/issues/23801))
+
+### Client/Agent
+ * installation/update package using Katello web UI not working ([#24500](https://projects.theforeman.org/issues/24500), [40928baa](https://github.com/Katello/katello-host-tools.git/commit/40928baab704da9784f6af2719e06dadc3eb2130))
+ * Error when using REX for errata installation ([#24304](https://projects.theforeman.org/issues/24304), [62b93c1d](https://github.com/Katello/katello.git/commit/62b93c1d3678c392ef606aef2e22b7525c343b6e))
+
+### Subscriptions
+ * Black background instead of transparency on subscription related modals ([#24354](https://projects.theforeman.org/issues/24354), [4fa6778b](https://github.com/Katello/katello.git/commit/4fa6778bcc3529636dc8315edd97451007ec4c1b))
+ * "Requires Virt-Who" column incorrect in new Subscriptions UI ([#24335](https://projects.theforeman.org/issues/24335), [51788d9c](https://github.com/Katello/katello.git/commit/51788d9cef0016554050434f3ab9dc9bc3f2f5ec))
+ * Add Subscriptions: Subscriptions with Unlimited Entitlements list as "-1" ([#24309](https://projects.theforeman.org/issues/24309))
+ * Difficulty editing CDN url field ([#24292](https://projects.theforeman.org/issues/24292), [0475d841](https://github.com/Katello/katello.git/commit/0475d8414d2871ee3f3a59f0d61e1589c9b80735))
+ * Subscriptions page throws error under the "Any Organization" context ([#24143](https://projects.theforeman.org/issues/24143), [6ef62d1f](https://github.com/Katello/katello.git/commit/6ef62d1f497f905848f6185a279ca12d0c170eb8))
+ * "Select All" on folded subscriptions should be implied/automatic ([#24141](https://projects.theforeman.org/issues/24141), [afd62c48](https://github.com/Katello/katello.git/commit/afd62c4862ed175ff85480ade745c2e329df71c0))
+ * Hide link to "Add subscriptions" when no manifest is uploaded ([#24129](https://projects.theforeman.org/issues/24129), [d04bf684](https://github.com/Katello/katello.git/commit/d04bf684dad7949ec72b8cc463eabdede1ac3b6f))
+ * UI fails silently when uploading manifests produces warnings/errors ([#24127](https://projects.theforeman.org/issues/24127))
+ * processing virt-who report blocks RHSM certs checks what can lead to 503 errors ([#23995](https://projects.theforeman.org/issues/23995), [e0d2c879](https://github.com/Katello/katello.git/commit/e0d2c8790718e5aaf366a76b33ee446c06999bde))
+ * Add product content info to new subscription details page ([#23886](https://projects.theforeman.org/issues/23886), [3fdd5848](https://github.com/Katello/katello.git/commit/3fdd5848139237dec6f8b5605984e878500c1d32))
+ * RH Subscriptions: ensure toast notifications when a task is started ([#23750](https://projects.theforeman.org/issues/23750), [98a8e8ce](https://github.com/Katello/katello.git/commit/98a8e8ce992bf082d4338724424b050f6d7c6209))
+ * Error when fetching available subscription quantities shouldn't block quantity editing ([#23510](https://projects.theforeman.org/issues/23510), [c5283890](https://github.com/Katello/katello.git/commit/c528389076d19fee443f9dcfa2b85ed3db12874f))
+
+### Tests
+ * clean up test output for jest (react) tests ([#24336](https://projects.theforeman.org/issues/24336), [63746060](https://github.com/Katello/katello.git/commit/63746060ec97dfbfea0908e922a98fbe13d32db8))
+
+### Tooling
+ * Add eslint to jenkins for webpack ([#24324](https://projects.theforeman.org/issues/24324), [2f5e99ff](https://github.com/Katello/katello.git/commit/2f5e99ff6329f7f0fbda715196bd6e89d64c1c98))
+
+### Web UI
+ * Loading state should render a spinner after a small delay  ([#24288](https://projects.theforeman.org/issues/24288), [4c976ff6](https://github.com/Katello/katello.git/commit/4c976ff6ccf4006a111b7af07720c373592fd39e))
+ * Its not clear what repo type filter does in RH repos page ([#24229](https://projects.theforeman.org/issues/24229), [8bdeb0a5](https://github.com/Katello/katello.git/commit/8bdeb0a52d33435b94dd13fa9af207028f0cabf1))
+ * New Sync Plan Start Time Not Displayed Properly ([#23989](https://projects.theforeman.org/issues/23989), [a1a4f753](https://github.com/Katello/katello.git/commit/a1a4f7534141046fbc57517ddd45a643a1ab437f))
+
+### Content Views
+ * restrict_composite_view flag prevents CCV promotion even when component versions have been promoted ([#24273](https://projects.theforeman.org/issues/24273), [70341125](https://github.com/Katello/katello.git/commit/7034112539920b72df5b31506fe85aa86bf5c13f))
+ * Content view incremental update fails when --packages option used ([#22696](https://projects.theforeman.org/issues/22696), [f7576287](https://github.com/Katello/hammer-cli-katello.git/commit/f757628797c44c2816d09442993205cd9dfd8630))
+
+### Hammer
+ * Filtering of some entities does not work ([#23993](https://projects.theforeman.org/issues/23993), [31e2fb82](https://github.com/Katello/hammer-cli-katello.git/commit/31e2fb825d4ec563cc069850a785f1e79f0a31cf))
+
+### Other
+ * Katello Upgrade from 3.6.0 to 3.7.0 fails on subscription import ([#24649](https://projects.theforeman.org/issues/24649))
+ * on smartproxies, calls to api/v2/ are no passed to upstream foreman server ([#24341](https://projects.theforeman.org/issues/24341))
+ * fix <br> tag ([#24190](https://projects.theforeman.org/issues/24190), [d80d7114](https://github.com/Katello/katello.git/commit/d80d7114b961c52aae29bca086084171d38f0101))
+ * Unable to use select action on content host (Manage Subscription) ([#23992](https://projects.theforeman.org/issues/23992), [7a355320](https://github.com/Katello/katello.git/commit/7a3553208ece870f213bac05725f576d27e8c6a5))
+ * RH repos XUI: page crashes when in Any context ([#22568](https://projects.theforeman.org/issues/22568), [6ef62d1f](https://github.com/Katello/katello.git/commit/6ef62d1f497f905848f6185a279ca12d0c170eb8))
 # 3.7.0 Blonde Ale (2018-07-23)
 
 ## Features
