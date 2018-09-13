@@ -22,6 +22,7 @@ module Katello
     scoped_search :on => :content_type, :relation => :content
     scoped_search :on => :label, :relation => :content
     scoped_search :on => :name, :relation => :product, :rename => :product_name
+    scoped_search :on => :id, :relation => :product, :rename => :product_id, :only_explicit => true
 
     def self.content_table_name
       Katello::Content.table_name

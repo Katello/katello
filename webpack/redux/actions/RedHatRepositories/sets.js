@@ -2,6 +2,7 @@ import api, { orgId } from '../../../services/api';
 import {
   normalizeRepositorySets,
   repoTypeFilterToSearchQuery,
+  productsIdsToSearchQuery,
   joinSearchQueries,
   recommendedRepositorySetsQuery,
 } from './helpers';
@@ -23,6 +24,7 @@ export const loadRepositorySets = (extendedParams = {}) => (dispatch, getState) 
   const searchParams = extendedParams.search || {};
   const search = joinSearchQueries([
     repoTypeFilterToSearchQuery(searchParams.filters || []),
+    productsIdsToSearchQuery(searchParams.products || []),
     searchParams.query,
     recommended ? recommendedRepositorySetsQuery : '',
   ]);

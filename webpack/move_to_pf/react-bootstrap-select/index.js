@@ -53,12 +53,12 @@ class BootstrapSelect extends React.Component {
   render() {
     // TODO: these classes are required because foreman assumes that all selects should use select2 and jquery multiselect
     // TODO: see also http://projects.theforeman.org/issues/21952
-    const { noneSelectedText, defaultValue, defaultValues, value, ...props} = this.props;
+    const { noneSelectedText, defaultValue, defaultValues, value, maxItemsCountForFullLabel, ...props} = this.props;
     const initialValue = defaultValues || defaultValue || value;
 
     return <FormControl {...props}
                         data-none-selected-text={noneSelectedText}
-                        data-selected-text-format="count>3"
+                        data-selected-text-format={`count>${maxItemsCountForFullLabel}`}
                         data-count-selected-text={__('{0} items selected')}
                         defaultValue={initialValue}
                         componentClass="select"
@@ -71,10 +71,12 @@ BootstrapSelect.propTypes = {
   noneSelectedText: PropTypes.string,
   defaultValue: PropTypes.string,
   defaultValues: PropTypes.arrayOf(PropTypes.string),
+  maxItemsCountForFullLabel: PropTypes.number,
 };
 
 BootstrapSelect.defaultProps = {
   noneSelectedText: __('Nothing selected'),
+  maxItemsCountForFullLabel: 3,
   defaultValue: null,
   defaultValues: null,
 };

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OrganizationProducts actions should load organization products and fail 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "ORGANIZATION_PRODUCTS_REQUEST",
+    },
+  ],
+  Array [
+    undefined,
+  ],
+]
+`;
+
+exports[`OrganizationProducts actions should load organization products and success 1`] = `
+Array [
+  Array [
+    Object {
+      "type": "ORGANIZATION_PRODUCTS_REQUEST",
+    },
+  ],
+  Array [
+    Object {
+      "payload": Object {
+        "orgId": "some-org-id",
+        "results": Array [
+          Object {
+            "id": "some-id",
+          },
+        ],
+      },
+      "type": "ORGANIZATION_PRODUCTS_SUCCESS",
+    },
+  ],
+]
+`;
+
+exports[`OrganizationProducts actions should load organization products and success 2`] = `
+Array [
+  Array [
+    "/organizations/some-org-id/products/",
+    Object {},
+    Object {
+      "search": "some-search",
+    },
+  ],
+]
+`;

@@ -223,6 +223,18 @@ module Katello
       refute_includes repos, @puppet_forge
     end
 
+    def test_search_product_name
+      repos = Repository.search_for("product_name = \"#{@fedora_17_x86_64.product.name}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
+
+    def test_search_product_id
+      repos = Repository.search_for("product_id = \"#{@fedora_17_x86_64.product.id}\"")
+      assert_includes repos, @fedora_17_x86_64
+      refute_includes repos, @puppet_forge
+    end
+
     def test_search_content_view_id
       repos = Repository.search_for("content_view_id = \"#{@fedora_17_x86_64.content_views.first.id}\"")
       assert_includes repos, @fedora_17_x86_64

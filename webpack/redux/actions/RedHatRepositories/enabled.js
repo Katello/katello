@@ -1,5 +1,10 @@
 import api, { orgId } from '../../../services/api';
-import { normalizeRepositorySets, repoTypeFilterToSearchQuery, joinSearchQueries } from './helpers';
+import {
+  normalizeRepositorySets,
+  repoTypeFilterToSearchQuery,
+  productsIdsToSearchQuery,
+  joinSearchQueries,
+} from './helpers';
 import { apiError, apiSuccess } from '../../../move_to_foreman/common/helpers.js';
 
 import {
@@ -23,6 +28,7 @@ export const createEnabledRepoParams = (extendedParams = {}) => {
   const search = joinSearchQueries([
     'redhat = true',
     repoTypeFilterToSearchQuery(searchParams.filters || []),
+    productsIdsToSearchQuery(searchParams.products || []),
     searchParams.query,
   ]);
 
