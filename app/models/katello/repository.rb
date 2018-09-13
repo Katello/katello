@@ -183,6 +183,8 @@ module Katello
     scoped_search :on => :redhat, :complete_value => { :true => true, :false => false }, :ext_method => :search_by_redhat
     scoped_search :on => :container_repository_name, :complete_value => true
     scoped_search :on => :description, :only_explicit => true
+    scoped_search :on => :name, :relation => :product, :rename => :product_name
+    scoped_search :on => :id, :relation => :product, :rename => :product_id
 
     def organization
       if self.environment
