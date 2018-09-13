@@ -46,5 +46,12 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
             }
         });
 
+        $scope.$watch('contentView.composite', function () {
+            if (!$scope.contentView.composite) {
+                /* eslint-disable camelcase */
+                $scope.contentView.auto_publish = false;
+                /* eslint-enable camelcase */
+            }
+        });
     }]
 );
