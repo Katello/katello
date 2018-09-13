@@ -19,6 +19,36 @@
   .deemphasize {
     color: lightgray;
   }
+  .search-bar-row {
+    min-height: 26px;
+    margin-bottom: 10px;
+
+    .form-group {
+      box-sizing: border-box;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &.export-csv-form-group {
+        float: right;
+      }
+    }
+    &.search-bar-selects-row {
+      .form-group {
+        border: none;
+
+        @media (min-width: 1280px) {
+          &:first-child {
+            min-width: 300px;
+          }
+          &:last-child {
+            min-width: 180px;
+          }
+        }
+      }
+    }
+  }
 
   .list-group-item-header .list-view-pf-description,
   .enabled-repositories-container .list-view-pf-description {
