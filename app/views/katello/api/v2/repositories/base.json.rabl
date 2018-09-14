@@ -46,3 +46,7 @@ node :last_sync_words do |object|
     time_ago_in_words(Time.parse(object.latest_dynflow_sync.ended_at.to_s))
   end
 end
+
+child :content_view => :content_view do |_repo|
+  attribute :id, :name
+end
