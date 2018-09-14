@@ -1,5 +1,5 @@
 module Katello
-  class ModuleStreamArtifact < ApplicationRecord
-    belongs_to :module_stream, class_name: "Katello::ModuleStream"
+  class ModuleStreamArtifact < Katello::Model
+    belongs_to :module_stream, class_name: "Katello::ModuleStream", inverse_of: :artifacts
   end
 end
