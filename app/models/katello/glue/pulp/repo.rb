@@ -703,7 +703,7 @@ module Katello
       elsif ostree?
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/ostree/web/#{relative_path}"
       elsif deb?
-        "#{scheme}://#{pulp_uri.host.downcase}/pulp/deb/#{relative_path}"
+        "#{scheme}://#{pulp_uri.host.downcase}/pulp/deb/#{relative_path}/"
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
