@@ -12,3 +12,10 @@ child :profiles => :profiles do
     attributes :id, :name
   end
 end
+
+child :library_repositories => :repositories do
+  attributes :id, :name
+  glue :product do
+    attributes :id => :product_id, :name => :product_name
+  end
+end

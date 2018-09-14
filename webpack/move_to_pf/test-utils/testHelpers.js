@@ -53,11 +53,23 @@ export const testActionSnapshot = async (runAction) => {
 
 /**
  * Test actions with fixtures and snapshots
- * @param  {Object} fixtures key=fixture description, value=action runner function
+ * @param  {Object} fixtures  key=fixture description,
+ *                            value=action runner function or
+ *                                  object({
+ *                                    action = action runner function,
+ *                                    test = other function to run after the action
+ *                                  })
  */
 export const testActionSnapshotWithFixtures = fixtures =>
   Object.entries(fixtures).forEach(([description, runAction]) =>
-    it(description, () => testActionSnapshot(runAction)));
+    it(description, async () => {
+      if (typeof runAction === 'function') {
+        await testActionSnapshot(runAction);
+      } else {
+        await testActionSnapshot(runAction.action);
+        runAction.test();
+      }
+    }));
 
 /**
  * Test a reducer with fixtures and snapshots

@@ -5,6 +5,7 @@ import SubscriptionDetails from '../../scenes/Subscriptions/Details';
 import SetOrganization from '../../components/SelectOrg/SetOrganization';
 import WithOrganization from '../../components/WithOrganization/withOrganization';
 import ModuleStreams from '../../scenes/ModuleStreams';
+import ModuleStreamDetails from '../../scenes/ModuleStreams/Details';
 import withHeader from './withHeaders';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -37,8 +38,13 @@ export const links = [
     component: SetOrganization,
   },
   {
-    text: 'Module Streams',
+    text: __('Module Streams'),
     path: 'module_streams',
-    component: ModuleStreams,
+    component: withHeader(ModuleStreams, { title: __('Module Streams') }),
+  },
+  {
+    text: __('Module Stream Details'),
+    path: 'module_streams/:id([0-9]*$)',
+    component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
   },
 ];
