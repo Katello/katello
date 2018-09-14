@@ -1,11 +1,11 @@
 module Katello
-  class ModuleStream < ApplicationRecord
+  class ModuleStream < Katello::Model
     include Concerns::PulpDatabaseUnit
     has_many :repository_module_streams, class_name: "Katello::RepositoryModuleStream",
       dependent: :destroy, inverse_of: :module_stream
     has_many :repositories, through: :repository_module_streams, class_name: "Katello::Repository"
-    has_many :profiles, class_name: "Katello::ModuleProfile", dependent: :destroy
-    has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy
+    has_many :profiles, class_name: "Katello::ModuleProfile", dependent: :destroy, inverse_of: :module_stream
+    has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy, inverse_of: :module_stream
 
     scoped_search on: :name, complete_value: true
     scoped_search on: :uuid, complete_value: true
@@ -48,6 +48,10 @@ module Katello
           profile.rpms.where(name: rpm).first_or_create!
         end
       end
+    end
+
+    def self.available_for_hosts(hosts)
+      joins(repositories: :content_facets).merge(Katello::Host::ContentFacet.where(host_id: hosts)).distinct
     end
   end
 end

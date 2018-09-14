@@ -727,6 +727,7 @@ module Katello
         Rpm.copy_repository_associations(base_repo, self)
         Erratum.copy_repository_associations(base_repo, self)
         PackageGroup.copy_repository_associations(base_repo, self)
+        ModuleStream.copy_repository_associations(base_repo, self)
         self.update_attributes!(
           :distribution_version => base_repo.distribution_version,
           :distribution_arch => base_repo.distribution_arch,

@@ -69,6 +69,20 @@ module Katello
       assert_includes module_streams, @module_stream_river
     end
 
+    def test_available_hosts
+      content_view = katello_content_views(:library_dev_view)
+      environment = katello_environments(:library)
+      host = FactoryBot.create(:host, :with_content, :content_view => content_view,
+                                     :lifecycle_environment => environment)
+      content_facet = host.content_facet
+      content_facet.bound_repositories = [Katello::Repository.find(@fedora_repo.id)]
+      content_facet.save!
+
+      host_without_modules = hosts(:without_errata)
+      assert_empty ModuleStream.available_for_hosts([host_without_modules.id])
+      assert_includes ModuleStream.available_for_hosts([host.id]), @module_stream_river
+    end
+
     def pulp_module_data
       @pulp_module_data ||= {
         "repository_memberships" => [@fedora_repo.pulp_id],
