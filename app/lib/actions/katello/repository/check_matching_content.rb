@@ -14,13 +14,25 @@ module Actions
           source_repo = ::Katello::Repository.find(input[:source_repo_id])
           target_repo = ::Katello::Repository.find(input[:target_repo_id])
 
-          srpms_match = srpms_match?(source_repo, target_repo)
-          rpms = rpms_match?(source_repo, target_repo)
-          errata = errata_match?(source_repo, target_repo)
-          package_groups = package_groups_match?(source_repo, target_repo)
-          distributions = distributions_match?(source_repo, target_repo)
+          if source_repo.content_type == ::Katello::Repository::YUM_TYPE
+            srpms_match = srpms_match?(source_repo, target_repo)
+            rpms = rpms_match?(source_repo, target_repo)
+            errata = errata_match?(source_repo, target_repo)
+            package_groups = package_groups_match?(source_repo, target_repo)
+            distributions = distributions_match?(source_repo, target_repo)
 
-          output[:matching_content] = srpms_match && rpms && errata && package_groups && distributions && target_repo.published?
+            output[:matching_content] = srpms_match && rpms && errata && package_groups && distributions && target_repo.published?
+          end
+
+          if source_repo.content_type == ::Katello::Repository::DEB_TYPE
+            debs = debs_match?(source_repo, target_repo)
+
+            output[:matching_content] = debs && target_repo.published?
+          end
+        end
+
+        def debs_match?(source_repo, target_repo)
+          source_repo.deb_ids.sort == target_repo.deb_ids.sort
         end
 
         def srpms_match?(source_repo, target_repo)
