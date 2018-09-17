@@ -11,7 +11,8 @@
     "build": "npm run format && npm run lint",
     "lint": "eslint webpack/",
     "lint:fix": "eslint --fix webpack/",
-    "lint:test": "npm run lint && npm test"
+    "lint:test": "npm run lint && npm test",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "babel-preset-react": "^6.24.1",
     "enzyme": "^3.4.0",
     "enzyme-adapter-react-16": "^1.4.0",
+    "coveralls": "^3.0.0",
     "enzyme-to-json": "^3.1.2",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.0.0",
@@ -74,6 +76,9 @@
     "seamless-immutable": "^7.1.2"
   },
   "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": ["webpack/**/*.js", "!webpack/**/bundle*"],
+    "coverageReporters": ["lcov"],
     "testURL": "http://localhost/",
     "setupFiles": [
       "raf/polyfill",
