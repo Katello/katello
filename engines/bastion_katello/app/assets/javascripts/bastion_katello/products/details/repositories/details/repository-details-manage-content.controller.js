@@ -22,8 +22,8 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryManageContentController',
-    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb',
-    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb) {
+    ['$scope', '$state', 'translate', 'Notification', 'Nutupane', 'Repository', 'Package', 'PackageGroup', 'PuppetModule', 'DockerManifest', 'DockerManifestList', 'DockerTag', 'OstreeBranch', 'File', 'Deb', 'ContentHostsHelper',
+    function ($scope, $state, translate, Notification, Nutupane, Repository, Package, PackageGroup, PuppetModule, DockerManifest, DockerManifestList, DockerTag, OstreeBranch, File, Deb, ContentHostsHelper) {
         var contentTypes;
 
         function success(response, selected) {
@@ -94,6 +94,13 @@ angular.module('Bastion.repositories').controller('RepositoryManageContentContro
             return _.filter(manifest.tags, function(tag) {
                 return tag.repository_id + '' === $scope.$stateParams.repositoryId;
             });
+        };
+
+        $scope.convertMemToGB = ContentHostsHelper.convertMemToGB;
+        $scope.totalSizeForManifestList = function(manifestList) {
+            return manifestList.manifests.reduce( function(total, manifest) {
+                return total + manifest.layers_size;
+            }, 0);
         };
 
         $scope.updateSelectable = function(item) {

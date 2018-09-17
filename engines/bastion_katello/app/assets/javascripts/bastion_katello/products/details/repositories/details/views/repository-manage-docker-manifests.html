@@ -42,9 +42,11 @@
       <thead>
         <tr bst-table-head row-select>
           <th bst-table-column><span translate>Tags</span></th>
-          <th bst-table-column><span translate>Schema Version</span></th>
           <th bst-table-column><span translate>Digest</span></th>
-          <th bst-table-column><span translate>Manifest Lists</span></th>
+          <th bst-table-column><span translate>Manifest List Digests</span></th>
+          <th bst-table-column><span translate>Platforms</span></th>
+          <th bst-table-column><span translate>Schema Version</span></th>
+          <th bst-table-column><span translate>Size (GB)</span></th>
         </tr>
       </thead>
 
@@ -52,8 +54,12 @@
         <tr bst-table-row ng-repeat="item in table.rows"
             row-select="item" ng-init="updateSelectable(item)">
           <td bst-table-cell>
-            <div ng-if="item.manifest_lists.length > 0" translate>
-              Part of a manifest list
+            <div ng-if="item.manifest_lists.length > 0" ng-repeat="manifest_list in item.manifest_lists">
+              <span ng-repeat="tag in tagsForManifest(manifest_list) ">
+                <a ui-sref="docker-tag.info({tagId: tag.id})">
+                  <span class="registry-image-tag">{{ tag.name }}</span>
+                </a>
+              </span>
             </div>
             <span ng-if="item.manifest_lists.length === 0" ng-repeat="tag in tagsForManifest(item) ">
               <a ui-sref="docker-tag.info({tagId: tag.id})">
@@ -62,14 +68,31 @@
             </span>
           </td>
           <td bst-table-cell>
-            {{ item.schema_version }}
-          </td>
-          <td bst-table-cell>
             {{ item.digest }}
           </td>
           <td bst-table-cell>
             <span ng-if="item.manifest_lists.length > 0" ng-repeat="ml in item.manifest_lists ">
               {{ml.digest}}
+            </span>
+          </td>
+          <td bst-table-cell>
+            <span ng-if="item.platforms.length > 0" ng-repeat="platform in item.platforms ">
+              {{ platform.os + " " + platform.arch }}{{$last ? '' : ', ' }}
+            </span>
+          </td>
+          <td bst-table-cell>
+            {{ item.schema_version }}
+          </td>
+          <td bst-table-cell>
+            <span ng-if="item.platforms.length > 0"
+                  uib-tooltip="{{ item.layers_size }}"
+                  tooltip-animation="false"
+                  tooltip-placement="right"
+                  tooltip-append-to-body="true">
+              {{ convertMemToGB(item.layers_size) }}
+            </span>
+            <span ng-if="item.platforms.length === 0" translate>
+              Unknown
             </span>
           </td>
         </tr>

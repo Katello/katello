@@ -19,8 +19,9 @@ module Katello
 
     def test_import_for_repository
       Katello::DockerManifest.import_for_repository(@repo)
-      assert_equal 1, @repo.docker_manifests.count
-      assert_equal @repo.docker_manifests.first, DockerManifest.find_by_digest(@manifests.first[:digest])
+      assert_equal 2, @repo.docker_manifests.count
+      assert_equal 0, @repo.docker_manifests.all[0].layers_size
+      assert_equal 300, @repo.docker_manifests.all[1].layers_size
     end
 
     def test_search_manifest
