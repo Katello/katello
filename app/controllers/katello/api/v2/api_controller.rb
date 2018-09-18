@@ -22,10 +22,8 @@ module Katello
       param :per_page, :number, :desc => N_("Number of results per page to return")
       param :order, String, :desc => N_("Sort field and order, eg. 'id DESC'")
       param :full_result, :bool, :desc => N_("Whether or not to show all results")
-      param :sort, Hash, :desc => N_("Hash version of 'order' param") do
-        param :by, String, :desc => N_("Field to sort the results on")
-        param :order, String, :desc => N_("How to order the sorted results (e.g. ASC for ascending)")
-      end
+      param :sort_by, String, :desc => N_("Field to sort the results on")
+      param :sort_order, String, :desc => N_("How to order the sorted results (e.g. ASC for ascending)")
     end
 
     param :object_root, String, :desc => N_("root-node of single-resource responses (optional)")
