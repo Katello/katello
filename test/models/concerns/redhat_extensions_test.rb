@@ -84,11 +84,11 @@ module Katello
       @host.medium = @os.media.first
       @host.content_facet.content_source = nil
       @host.content_facet.kickstart_repository = @repo_with_distro
-      assert_equal @os.media.first.path, @host.host_medium_provider.medium_uri.to_s
+      assert_equal @os.media.first.path, @host.medium_provider.medium_uri.to_s
 
       @host.content_facet.content_source = @content_source
       @host.content_facet.kickstart_repository = nil
-      assert_equal @os.media.first.path, @host.host_medium_provider.medium_uri.to_s
+      assert_equal @os.media.first.path, @host.medium_provider.medium_uri.to_s
     end
 
     def test_medium_uri_for_no_content_source_or_ks_repo_hg
@@ -96,21 +96,21 @@ module Katello
       @hostgroup.medium = @os.media.first
       @hostgroup.content_source = nil
       @hostgroup.kickstart_repository = @repo_with_distro
-      assert_equal @os.media.first.path, @hostgroup.host_medium_provider.medium_uri.to_s
+      assert_equal @os.media.first.path, @hostgroup.medium_provider.medium_uri.to_s
 
       @hostgroup.content_source = @content_source
       @hostgroup.kickstart_repository = nil
-      assert_equal @os.media.first.path, @hostgroup.host_medium_provider.medium_uri.to_s
+      assert_equal @os.media.first.path, @hostgroup.medium_provider.medium_uri.to_s
     end
 
     def test_medium_uri_with_a_kickstart_repo
       @host.content_facet.kickstart_repository = @repo_with_distro
-      assert_equal @repo_with_distro.full_path(@content_source), @host.host_medium_provider.medium_uri.to_s
+      assert_equal @repo_with_distro.full_path(@content_source), @host.medium_provider.medium_uri.to_s
     end
 
     def test_medium_uri_with_a_kickstart_repo_hg
       @hostgroup.kickstart_repository = @repo_with_distro
-      assert_equal @repo_with_distro.full_path(@content_source), @hostgroup.host_medium_provider.medium_uri.to_s
+      assert_equal @repo_with_distro.full_path(@content_source), @hostgroup.medium_provider.medium_uri.to_s
     end
 
     def test_kickstart_repos_with_no_content_source
