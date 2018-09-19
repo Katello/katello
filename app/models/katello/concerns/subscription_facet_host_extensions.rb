@@ -53,7 +53,7 @@ module Katello
         scoped_search :on => :hypervisor, :relation => :subscription_facet, :complete_value => true
         scoped_search :on => :name, :relation => :hypervisor_host, :complete_value => true, :rename => :hypervisor_host, :ext_method => :find_by_hypervisor_host
         scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
-        scoped_search :on => :id, :relation => :pools, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id
+        scoped_search :on => :id, :relation => :pools, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id, :only_explicit => true
         scoped_search :on => :name, :rename => :addon, :relation => :purpose_addons, :ext_method => :find_by_addon_name, :complete_value => true
         scoped_search :on => :name, :rename => :role, :relation => :purpose_role, :ext_method => :find_by_role_name, :complete_value => true
         scoped_search :on => :name, :rename => :usage, :relation => :purpose_usage, :ext_method => :find_by_usage_name, :complete_value => true
