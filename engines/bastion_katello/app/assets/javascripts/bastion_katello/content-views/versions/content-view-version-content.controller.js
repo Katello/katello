@@ -19,13 +19,16 @@
         contentTypes = {
             'docker': {
                 type: Repository,
+                repositoryType: 'docker',
                 params: {
                     'content_type': "docker",
                     'content_view_version_id': $scope.$stateParams.versionId
+
                 }
             },
             'yum': {
                 type: Repository,
+                repositoryType: 'yum',
                 params: {
                     'content_type': "yum",
                     'content_view_version_id': $scope.$stateParams.versionId,
@@ -33,10 +36,12 @@
                 }
             },
             'packages': {
-                type: Package
+                type: Package,
+                repositoryType: 'yum'
             },
             'package-groups': {
                 type: PackageGroup,
+                repositoryType: 'yum',
                 params: {
                     'sort_by': 'name',
                     'sort_order': 'ASC',
@@ -44,13 +49,16 @@
                 }
             },
             'errata': {
-                type: Erratum
+                type: Erratum,
+                repositoryType: 'yum'
             },
             'puppet-modules': {
-                type: PuppetModule
+                type: PuppetModule,
+                repositoryType: 'puppet'
             },
             'ostree-branches': {
                 type: OstreeBranch,
+                repositoryType: 'ostree',
                 params: {
                     'content_type': "ostree",
                     'content_view_version_id': $scope.$stateParams.versionId,
@@ -60,6 +68,7 @@
             },
             'module-streams': {
                 type: ModuleStream,
+                repositoryType: 'yum',
                 params: {
                     'content_view_version_id': $scope.$stateParams.versionId,
                     'sort_by': 'name',
@@ -74,6 +83,7 @@
             },
             'file': {
                 type: Repository,
+                repositoryType: 'file',
                 params: {
                     'content_type': 'file',
                     'content_view_version_id': $scope.$stateParams.versionId,
@@ -82,6 +92,7 @@
             },
             'apt': {
                 type: Repository,
+                repositoryType: 'deb',
                 params: {
                     'content_type': 'deb',
                     'content_view_version_id': $scope.$stateParams.versionId,
@@ -89,7 +100,8 @@
                 }
             },
             'deb': {
-                type: Deb
+                type: Deb,
+                repositoryType: 'deb'
             }
         };
 
@@ -100,13 +112,17 @@
 
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;
+        $scope.contentTypeInfo = contentTypes[currentState];
 
         $scope.repositoryId = "all";
         $scope.repositories = [];
 
         $scope.version.$promise.then(function (version) {
-            $scope.repositories = version.repositories;
-            if ($scope.repositories[0].id !== "all") {
+            $scope.repositories = _.filter(version.repositories, function(repo) {
+                return $scope.contentTypeInfo.repositoryType === repo["content_type"];
+            });
+
+            if ($scope.repositories.length === 0 || $scope.repositories[0].id !== "all") {
                 $scope.repositories.unshift({name: translate('All Repositories'), id: 'all'});
             }
         });

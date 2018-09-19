@@ -39,7 +39,7 @@ describe('Controller: ContentViewsVersionContentController', function() {
             $scope.$stateParams = {versionId: '1'};
             $scope.$state = {current: {name: state}};
             $scope.version = ContentViewVersion.get({id: 1});
-            $scope.version.repositories = [{id: 1}];
+            $scope.version.repositories = [{id: 1, 'content_type': 'yum'}];
 
             $controller('ContentViewVersionContentController', {
                 $scope: $scope,
