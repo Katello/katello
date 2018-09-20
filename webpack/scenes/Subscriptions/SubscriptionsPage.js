@@ -8,8 +8,6 @@ import { Button } from 'patternfly-react';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { renderTaskFinishedToast } from '../Tasks/helpers';
 import OptionTooltip from '../../move_to_pf/OptionTooltip';
-import { notify } from '../../move_to_foreman/foreman_toast_notifications';
-import helpers from '../../move_to_foreman/common/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
