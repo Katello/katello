@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Col, ListView } from 'patternfly-react';
 import SubscriptionDetailProduct from './SubscriptionDetailProduct';
 
-const SubscriptionDetailEnabledProducts = ({ enabledProducts }) => {
-  const listItems = enabledProducts.results.map(product => ({
+const SubscriptionDetailProductContent = ({ productContent }) => {
+  const listItems = productContent.results.map(product => ({
     index: product.id,
     title: product.name,
     availableContent: (
@@ -47,8 +47,8 @@ const SubscriptionDetailEnabledProducts = ({ enabledProducts }) => {
   );
 };
 
-SubscriptionDetailEnabledProducts.propTypes = {
-  enabledProducts: PropTypes.shape({}).isRequired,
+SubscriptionDetailProductContent.propTypes = {
+  productContent: PropTypes.shape({}).isRequired,
 };
 
-export default SubscriptionDetailEnabledProducts;
+export default SubscriptionDetailProductContent;
