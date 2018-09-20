@@ -16,9 +16,9 @@ const TableSchema = [
     },
   },
   {
-    property: 'version',
+    property: 'stream',
     header: {
-      label: __('Version'),
+      label: __('Stream'),
       formatters: [headerFormatter],
     },
     cell: {
@@ -26,9 +26,9 @@ const TableSchema = [
     },
   },
   {
-    property: 'stream',
+    property: 'version',
     header: {
-      label: __('Stream'),
+      label: __('Version'),
       formatters: [headerFormatter],
     },
     cell: {

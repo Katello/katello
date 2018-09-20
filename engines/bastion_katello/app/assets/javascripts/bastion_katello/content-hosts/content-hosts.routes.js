@@ -247,5 +247,19 @@ angular.module('Bastion.content-hosts').config(['$stateProvider', function ($sta
             label: "{{ 'Traces' | translate }}",
             parent: 'content-host.info'
         }
+    })
+    .state('content-host.module-streams', {
+        abstract: true,
+        controller: 'ContentHostModuleStreamsController',
+        template: '<div ui-view></div>'
+    })
+    .state('content-host.module-streams.index', {
+        url: '/module-streams',
+        permission: 'view_hosts',
+        templateUrl: 'content-hosts/content/views/content-host-module-streams.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Module Streams' | translate }}",
+            parent: 'content-host.info'
+        }
     });
 }]);

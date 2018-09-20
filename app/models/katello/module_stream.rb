@@ -1,6 +1,7 @@
 module Katello
   class ModuleStream < Katello::Model
     include Concerns::PulpDatabaseUnit
+    include ScopedSearchExtensions
     has_many :repository_module_streams, class_name: "Katello::RepositoryModuleStream",
       dependent: :destroy, inverse_of: :module_stream
     has_many :repositories, through: :repository_module_streams, class_name: "Katello::Repository"
@@ -14,6 +15,16 @@ module Katello
     scoped_search on: :context, complete_value: true
     scoped_search on: :arch, complete_value: true
     scoped_search relation: :repositories, on: :name, rename: :repository, complete_value: true
+    scoped_search on: :host, rename: :host,
+                  only_explicit: true,
+                  ext_method: :find_by_host_name,
+                  complete_value: false
+
+    scoped_search on: :module_spec, rename: :module_spec,
+                   only_explicit: true,
+                   ext_method: :find_by_module_spec,
+                   complete_value: false,
+                   operators: ["=", "~"]
 
     CONTENT_TYPE = Pulp::ModuleStream::CONTENT_TYPE
     MODULE_STREAM_DEFAULT_CONTENT_TYPE = "modulemd_defaults".freeze
@@ -51,7 +62,48 @@ module Katello
     end
 
     def self.available_for_hosts(hosts)
-      joins(repositories: :content_facets).merge(Katello::Host::ContentFacet.where(host_id: hosts)).distinct
+      where("#{table_name}.id" => ::Katello::ModuleStream.joins(repositories: :content_facets).
+            select("#{table_name}.id").
+            merge(::Katello::Host::ContentFacet.where(host_id: hosts)))
+    end
+
+    def module_spec
+      # NAME:STREAM:VERSION:CONTEXT:ARCH
+      items = []
+      ["name", "stream", "version", "context", "arch"].each do |item|
+        if attributes[item]
+          items << attributes[item]
+        else
+          break
+        end
+      end
+      items.join(":")
+    end
+
+    def self.parse_module_spec(module_spec)
+      # NAME:STREAM:VERSION:CONTEXT:ARCH/PROFILE
+      spec = module_spec.split("/").first
+      name, stream, version, context, arch = spec.split(":")
+      {:name => name, :stream => stream, :version => version, :context => context, :arch => arch}.compact
+    end
+
+    def self.find_by_host_name(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["#{::Host::Managed.table_name}.name #{operator} ?", value_to_sql(operator, value)])
+      hosts = ::Host::Managed.authorized("view_hosts").where(conditions).select(:id)
+      if hosts.empty?
+        { :conditions => "1=0" }
+      else
+        { :conditions => "#{::Katello::ModuleStream.table_name}.id in (#{available_for_hosts(hosts).select(:id).to_sql})" }
+      end
+    end
+
+    def self.find_by_module_spec(_key, _operator, value)
+      spec = parse_module_spec(value)
+      if spec.empty?
+        { :conditions => "1=0" }
+      else
+        { :conditions => "#{::Katello::ModuleStream.table_name}.id in (#{select(:id).where(spec).to_sql})" }
+      end
     end
   end
 end
