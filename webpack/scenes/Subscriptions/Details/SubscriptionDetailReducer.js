@@ -12,7 +12,7 @@ import {
 
 const initialState = Immutable({
   loading: false,
-  enabledProducts: {
+  productContent: {
     results: [],
     total: 0,
   },
@@ -38,10 +38,10 @@ export default (state = initialState, action) => {
     }
 
     case PRODUCTS_SUCCESS: {
-      const enabledProducts = { enabledProducts: action.response };
+      const productContent = { productContent: action.response };
 
       return state.merge({
-        ...enabledProducts,
+        ...productContent,
         loading: false,
       });
     }

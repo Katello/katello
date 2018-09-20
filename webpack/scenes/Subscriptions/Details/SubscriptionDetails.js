@@ -5,7 +5,7 @@ import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import SubscriptionDetailInfo from './SubscriptionDetailInfo';
 import SubscriptionDetailAssociations from './SubscriptionDetailAssociations';
 import SubscriptionDetailProducts from './SubscriptionDetailProducts';
-import SubscriptionDetailEnabledProducts from './SubscriptionDetailEnabledProducts';
+import SubscriptionDetailProductContent from './SubscriptionDetailProductContent';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import api, { orgId } from '../../../services/api';
@@ -85,7 +85,7 @@ class SubscriptionDetails extends Component {
                   <div>{__('Details')}</div>
                 </NavItem>
                 <NavItem eventKey={2}>
-                  <div>{__('Enabled Products')}</div>
+                  <div>{__('Product Content')}</div>
                 </NavItem>
               </Nav>
               <Grid bsClass="container-fluid">
@@ -114,8 +114,8 @@ class SubscriptionDetails extends Component {
                     <div>
                       <Row>
                         <Col sm={12}>
-                          <SubscriptionDetailEnabledProducts
-                            enabledProducts={subscriptionDetails.enabledProducts}
+                          <SubscriptionDetailProductContent
+                            productContent={subscriptionDetails.productContent}
                           />
                         </Col>
                       </Row>

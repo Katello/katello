@@ -1,14 +1,14 @@
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
 import { ListView } from 'patternfly-react';
-import SubscriptionDetailEnabledProducts from '../SubscriptionDetailEnabledProducts';
+import SubscriptionDetailProductContent from '../SubscriptionDetailProductContent';
 import { availableContent, product } from '../../../Products/__tests__/products.fixtures.js';
 
-describe('subscription detail enabled products page', () => {
+describe('subscription detail product content page', () => {
   it('renders correctly', () => {
     const testRenderer = TestRenderer
-      .create(<SubscriptionDetailEnabledProducts
-        enabledProducts={{ results: [product([availableContent])] }}
+      .create(<SubscriptionDetailProductContent
+        productContent={{ results: [product([availableContent])] }}
       />);
     const testInstance = testRenderer.root;
 
