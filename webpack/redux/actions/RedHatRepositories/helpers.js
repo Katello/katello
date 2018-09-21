@@ -53,6 +53,10 @@ export const repoTypeFilterToSearchQuery = filters => filters
   .map(f => `(${maptToSearchQuery(f)})`)
   .join(' or ');
 
+export const productsIdsToSearchQuery = productIds => productIds
+  .map(id => `(product_id = "${id}")`)
+  .join(' or ');
+
 export const joinSearchQueries = parts => parts
   .filter(v => (v && v !== ''))
   .map(v => `(${v})`)

@@ -8,6 +8,7 @@ import settings from '../../scenes/Settings';
 import { subscriptionDetails } from '../../scenes/Subscriptions/Details';
 import { setOrganization } from '../../components/SelectOrg/SetOrganization';
 import { moduleStreams } from '../../scenes/ModuleStreams';
+import { reducers as organizationProductsReducers } from '../OrganizationProducts';
 
 export default combineReducers({
   organization,
@@ -19,4 +20,5 @@ export default combineReducers({
   subscriptionDetails,
   setOrganization,
   moduleStreams,
+  ...organizationProductsReducers,
 });

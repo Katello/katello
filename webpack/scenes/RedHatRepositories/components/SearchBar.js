@@ -6,6 +6,11 @@ import PropTypes from 'prop-types';
 import { Button } from 'patternfly-react';
 import { Form, FormGroup } from 'react-bootstrap';
 
+import { selectOrganizationProducts }
+  from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';
+import { loadOrganizationProducts }
+  from '../../../redux/OrganizationProducts/OrganizationProductsActions';
+
 import { loadEnabledRepos } from '../../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../../redux/actions/RedHatRepositories/sets';
 
@@ -37,6 +42,11 @@ class SearchBar extends Component {
     this.onSelectSearchList = this.onSelectSearchList.bind(this);
   }
 
+  componentDidMount() {
+    // load all products until we use filtering and pagination
+    this.props.loadOrganizationProducts({ per_page: 1000 });
+  }
+
   onSearch(query) {
     this.updateSearch({ query });
   }
@@ -47,6 +57,10 @@ class SearchBar extends Component {
 
   onSelectFilterType(filters) {
     this.updateSearch({ filters });
+  }
+
+  onSelectProduct(products) {
+    this.updateSearch({ products });
   }
 
   updateSearch(stateUpdate = {}) {
@@ -86,35 +100,55 @@ class SearchBar extends Component {
   }
 
   render() {
-    const { repoParams } = this.props;
+    const { repoParams, organizationProducts } = this.props;
+
+    const getMultiSelectValuesFromEvent = e => [...e.target.options]
+      .filter(({ selected }) => selected)
+      .map(({ value }) => value);
 
     return (
       <Form className="toolbar-pf-actions">
-        <FormGroup className="toolbar-pf-filter">
-          <Search onSearch={this.onSearch} onSelectSearchList={this.onSelectSearchList} />
-        </FormGroup>
+        <div className="search-bar-row">
+          <FormGroup className="toolbar-pf-filter">
+            <Search onSearch={this.onSearch} onSelectSearchList={this.onSelectSearchList} />
+          </FormGroup>
 
-        <MultiSelect
-          value={this.state.filters}
-          options={filterOptions}
-          defaultValue="rpm"
-          noneSelectedText={__('Filter by type')}
-          onChange={(e) => {
-            const values = [...e.target.options]
-              .filter(({ selected }) => selected)
-              .map(({ value }) => value);
-            this.onSelectFilterType(values);
-          }}
-        />
+          <FormGroup className="export-csv-form-group">
+            <Button
+              className="export-csv-button"
+              onClick={() => { api.open('/repositories.csv', repoParams); }}
+            >
+              {__('Export as CSV')}
+            </Button>
+          </FormGroup>
+        </div>
 
-        <FormGroup>
-          <Button
-            className="export-csv-button"
-            onClick={() => { api.open('/repositories.csv', repoParams); }}
-          >
-            {__('Export Enabled as CSV')}
-          </Button>
-        </FormGroup>
+        <div className="search-bar-row search-bar-selects-row">
+          <MultiSelect
+            className="product-select"
+            value="product"
+            options={organizationProducts.map(product => ({
+              value: product.id, label: product.name,
+            }))}
+            defaultValue="product"
+            noneSelectedText={__('Filter by Product')}
+            maxItemsCountForFullLabel="2"
+            onChange={(e) => {
+              const values = getMultiSelectValuesFromEvent(e);
+              this.onSelectProduct(values);
+            }}
+          />
+          <MultiSelect
+            value={this.state.filters}
+            options={filterOptions}
+            defaultValue="rpm"
+            noneSelectedText={__('Filter by type')}
+            onChange={(e) => {
+              const values = getMultiSelectValuesFromEvent(e);
+              this.onSelectFilterType(values);
+            }}
+          />
+        </div>
       </Form>
     );
   }
@@ -123,6 +157,11 @@ class SearchBar extends Component {
 SearchBar.propTypes = {
   loadEnabledRepos: PropTypes.func.isRequired,
   loadRepositorySets: PropTypes.func.isRequired,
+  loadOrganizationProducts: PropTypes.func.isRequired,
+  organizationProducts: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    name: PropTypes.string,
+  })).isRequired,
   repoParams: PropTypes.shape({}).isRequired,
   enabledRepositories: PropTypes.shape({
     pagination: PropTypes.shape({
@@ -136,12 +175,18 @@ SearchBar.propTypes = {
   }).isRequired,
 };
 
-const mapStateToProps = ({ katello: { redHatRepositories: { enabled, sets } } }) => ({
-  enabledRepositories: enabled,
-  repositorySets: sets,
-});
+const mapStateToProps = (state) => {
+  const { katello: { redHatRepositories: { enabled, sets } } } = state;
+
+  return {
+    enabledRepositories: enabled,
+    repositorySets: sets,
+    organizationProducts: selectOrganizationProducts(state),
+  };
+};
 
 export default connect(mapStateToProps, {
   loadEnabledRepos,
   loadRepositorySets,
+  loadOrganizationProducts,
 })(SearchBar);
