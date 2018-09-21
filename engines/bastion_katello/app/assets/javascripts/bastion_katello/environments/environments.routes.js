@@ -87,6 +87,17 @@ angular.module('Bastion.environments').config(['$stateProvider', function ($stat
             parent: 'environment.details'
         }
     })
+    .state('environment.module-streams', {
+        url: '/module-streams?repositoryId&contentViewId',
+        reloadOnSearch: false,
+        permission: 'view_lifecycle_environments',
+        controller: 'EnvironmentContentController',
+        templateUrl: 'environments/details/views/environment-module-streams.html',
+        ncyBreadcrumb: {
+            label: '{{ "Module Streams" | translate }}',
+            parent: 'environment.details'
+        }
+    })
     .state('environment.puppet-modules', {
         url: '/puppet-modules?contentViewId',
         reloadOnSearch: false,
