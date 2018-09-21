@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Button } from 'patternfly-react';
 import { Form, FormGroup } from 'react-bootstrap';
 
 import { selectOrganizationProducts }
@@ -14,7 +13,6 @@ import { loadOrganizationProducts }
 import { loadEnabledRepos } from '../../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets } from '../../../redux/actions/RedHatRepositories/sets';
 
-import api from '../../../services/api';
 import Search from './Search';
 import MultiSelect from '../../../components/MultiSelect/index';
 
@@ -100,7 +98,7 @@ class SearchBar extends Component {
   }
 
   render() {
-    const { repoParams, organizationProducts } = this.props;
+    const { organizationProducts } = this.props;
 
     const getMultiSelectValuesFromEvent = e => [...e.target.options]
       .filter(({ selected }) => selected)
@@ -111,15 +109,6 @@ class SearchBar extends Component {
         <div className="search-bar-row">
           <FormGroup className="toolbar-pf-filter">
             <Search onSearch={this.onSearch} onSelectSearchList={this.onSelectSearchList} />
-          </FormGroup>
-
-          <FormGroup className="export-csv-form-group">
-            <Button
-              className="export-csv-button"
-              onClick={() => { api.open('/repositories.csv', repoParams); }}
-            >
-              {__('Export as CSV')}
-            </Button>
           </FormGroup>
         </div>
 
@@ -164,7 +153,6 @@ SearchBar.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     name: PropTypes.string,
   })).isRequired,
-  repoParams: PropTypes.shape({}).isRequired,
   enabledRepositories: PropTypes.shape({
     pagination: PropTypes.shape({
       perPage: PropTypes.number,

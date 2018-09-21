@@ -6,12 +6,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
+import { Button } from 'patternfly-react';
 import { LoadingState } from '../../move_to_pf/LoadingState';
 import { createEnabledRepoParams, loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets, updateRecommendedRepositorySets } from '../../redux/actions/RedHatRepositories/sets';
 import SearchBar from './components/SearchBar';
 import RecommendedRepositorySetsToggler from './components/RecommendedRepositorySetsToggler';
 import { getSetsComponent, getEnabledComponent } from './helpers';
+import api from '../../services/api';
 
 class RedHatRepositoriesPage extends Component {
   componentDidMount() {
@@ -32,7 +34,7 @@ class RedHatRepositoriesPage extends Component {
         <h1>{__('Red Hat Repositories')}</h1>
         <Row className="toolbar-pf">
           <Col sm={12}>
-            <SearchBar repoParams={repoParams} />
+            <SearchBar />
           </Col>
         </Row>
 
@@ -60,7 +62,16 @@ class RedHatRepositoriesPage extends Component {
           </Col>
 
           <Col sm={6} className="enabled-repositories-container">
-            <h2>{__('Enabled Repositories')}</h2>
+            <h2>
+              {__('Enabled Repositories')}
+              <Button
+                className="pull-right"
+                onClick={() => { api.open('/repositories.csv', repoParams); }}
+              >
+                {__('Export as CSV')}
+              </Button>
+            </h2>
+
             <LoadingState loading={enabledRepositories.loading} loadingText={__('Loading')}>
               {getEnabledComponent(
                 enabledRepositories,
