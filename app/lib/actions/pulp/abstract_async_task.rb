@@ -102,6 +102,7 @@ module Actions
       private
 
       def external_task=(external_task_data)
+        external_task_data = [] if external_task_data.nil?
         external_task_data = [external_task_data] if external_task_data.is_a?(Hash)
 
         new_tasks = []
