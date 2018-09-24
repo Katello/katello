@@ -686,7 +686,7 @@ module Katello
     end
 
     def custom_repo_path
-      return custom_docker_repo_path if docker?
+      return self.custom_docker_repo_path if docker?
       if [environment, product, root.label].any?(&:nil?)
         return nil # can't generate valid path
       end
