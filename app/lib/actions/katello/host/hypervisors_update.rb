@@ -34,7 +34,7 @@ module Actions
           load_hosts_by_duplicate_name
           create_missing_hosts
 
-          candlepin_data = ::Katello::Resources::Candlepin::Consumer.get(uuid: @hosts.keys)
+          candlepin_data = ::Katello::Resources::Candlepin::Consumer.get(:uuid => @hosts.keys, :include_only => [:uuid])
           @candlepin_attributes = candlepin_data.map { |consumer| [consumer[:uuid], consumer] }.to_h
         end
 

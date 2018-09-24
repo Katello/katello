@@ -201,7 +201,11 @@ module Katello
       def hash_to_query(query_parameters)
         query_parameters.inject("?") do |so_far, current|
           so_far << "&" unless so_far == "?"
-          so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
+          if current[1].is_a?(Array)
+            so_far << current[1].map { |attr| "#{current[0]}=#{attr}" }.join('&')
+          else
+            so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
+          end
         end
       end
     end
