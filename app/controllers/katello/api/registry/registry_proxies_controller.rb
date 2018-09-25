@@ -3,13 +3,15 @@ module Katello
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     before_action :disable_strong_params
     before_action :confirm_settings
+    before_action :confirm_push_settings, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
+                                                 :chunk_upload_blob, :push_manifest]
     skip_before_action :authorize
     before_action :optional_authorize, only: [:token]
     before_action :registry_authorize, except: [:token, :v1_search]
     before_action :authorize_repository_read, only: [:pull_manifest, :tags_list]
     before_action :authorize_repository_write, only: [:push_manifest]
-    skip_before_action :check_content_type, :only => [:start_upload_blob, :upload_blob, :finish_upload_blob,
-                                                      :chunk_upload_blob, :push_manifest]
+    skip_before_action :check_content_type, only: [:start_upload_blob, :upload_blob, :finish_upload_blob,
+                                                   :chunk_upload_blob, :push_manifest]
     skip_after_action :log_response_body, :only => [:pull_blob]
 
     wrap_parameters false
@@ -449,10 +451,15 @@ module Katello
     end
 
     def confirm_settings
-      return true if SETTINGS[:katello][:container_image_registry]
+      return true if SETTINGS.dig(:katello, :container_image_registry)
       render_error('custom_error', :status => :not_found,
                    :locals => { :message => "Registry not configured" })
-      false
+    end
+
+    def confirm_push_settings
+      return true if SETTINGS.dig(:katello, :container_image_registry, :allow_push)
+      render_error('custom_error', :status => :not_found,
+                   :locals => { :message => "Registry push not supported" })
     end
 
     def request_url
