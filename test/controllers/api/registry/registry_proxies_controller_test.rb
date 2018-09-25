@@ -1,5 +1,6 @@
 require "katello_test_helper"
 
+#rubocop:disable Metrics/ModuleLength
 module Katello
   #rubocop:disable Metrics/BlockLength
   describe Api::Registry::RegistryProxiesController do
@@ -26,7 +27,7 @@ module Katello
       setup_permissions
       setup_controller_defaults_api
 
-      SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
+      SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: true}
 
       File.delete("#{Rails.root}/tmp/manifest.json") if File.exist?("#{Rails.root}/tmp/manifest.json")
     end
@@ -375,6 +376,22 @@ module Katello
         put :push_manifest, params: { repository: 'repository', tag: 'tag' },
             body: manifest.to_json
         assert_response 200
+      end
+
+      it "push manifest - disabled with false" do
+        SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt', allow_push: false}
+        put :push_manifest, params: { repository: 'repository', tag: 'tag' }
+        assert_response 404
+        body = JSON.parse(response.body)
+        assert_equal "Registry push not supported", body['error']['message']
+      end
+
+      it "push manifest - disabled by omission" do
+        SETTINGS[:katello][:container_image_registry] = {crane_url: 'https://localhost:5000', crane_ca_cert_file: '/etc/pki/katello/certs/katello-default-ca.crt'}
+        put :push_manifest, params: { repository: 'repository', tag: 'tag' }
+        assert_response 404
+        body = JSON.parse(response.body)
+        assert_equal "Registry push not supported", body['error']['message']
       end
     end
 
