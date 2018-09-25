@@ -39,12 +39,6 @@
     </div>
 
     <div data-extend-template="layouts/partials/table.html">
-      <div data-block="search">
-        <input type="text" class="form-control" stop-event="click"
-               placeholder="{{ 'Filter...' | translate }}"
-               ng-model="repositorySetFilter"/>
-      </div>
-
       <div data-block="list-actions">
         <div class="btn-group" select-action-dropdown>
           <ul class="dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="split-button">
@@ -70,7 +64,7 @@
       </div>
 
       <span data-block="no-rows-message" translate>
-        No Repository Sets provided through subscriptions.
+        No enabled Repository Sets provided through subscriptions.
       </span>
 
       <span data-block="no-search-results-message" translate>
