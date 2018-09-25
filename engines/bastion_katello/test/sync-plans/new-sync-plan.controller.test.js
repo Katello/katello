@@ -78,7 +78,7 @@ describe('Controller: NewSyncPlanController', function() {
 
             $scope.createSyncPlan(syncPlan);
 
-            expect($scope.working).toBe(false);
+            expect($scope.isWorking).toBe(false);
             expect(Notification.setSuccessMessage).toHaveBeenCalled();
             expect($scope.$state.go).toHaveBeenCalledWith('sync-plan.info', {syncPlanId: syncPlan.id});
         });
@@ -101,7 +101,7 @@ describe('Controller: NewSyncPlanController', function() {
 
             $scope.createSyncPlan(syncPlan);
 
-            expect($scope.working).toBe(false);
+            expect($scope.isWorking).toBe(false);
             expect($scope.$state.go).not.toHaveBeenCalled();
             expect(form.name.$setValidity).toHaveBeenCalledWith('server', false);
             expect(form.name.$error.messages).toBe('has already been taken');
