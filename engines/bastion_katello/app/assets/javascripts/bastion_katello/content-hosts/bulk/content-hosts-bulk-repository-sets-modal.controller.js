@@ -28,7 +28,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkRepositorySe
         nutupaneParams = {
             'organization_id': CurrentOrganization,
             'offset': 0,
-            'paged': true
+            'paged': true,
+            'enabled': true
         };
 
         nutupane = new Nutupane(RepositorySet, nutupaneParams,
