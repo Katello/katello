@@ -68,10 +68,10 @@
   <div ng-init="setForm(syncPlanForm);"></div>
 
   <div ng-show="isState('sync-plans.new')">
-    <div bst-form-buttons
+    <div bst-save-control
          on-cancel="transitionBack()"
          on-save="createSyncPlan(syncPlan)"
-         working="working">
+         working="isWorking">
     </div>
   </div>
 </div>
