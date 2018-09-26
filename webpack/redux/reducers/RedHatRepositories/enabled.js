@@ -17,7 +17,7 @@ const mapRepo = (repo) => {
     id,
     name,
     minor,
-    cp_label: label,
+    content_label: label,
   } = repo;
 
   return ({

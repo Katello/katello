@@ -15,7 +15,7 @@ child :product do |_product|
   end
 end
 
-node :cp_label do |repo|
+node :content_label do |repo|
   repo.content.try(:label)
 end
 
