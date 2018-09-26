@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 
-import { InputGroup, Button } from 'patternfly-react';
+import { InputGroup, Button, Icon } from 'patternfly-react';
 import TypeAheadInput from './TypeAheadInput';
 import TypeAheadItems from './TypeAheadItems';
 import { getActiveItems } from './helpers';
@@ -28,6 +28,10 @@ class TypeAhead extends Component {
       this.setState({ inputValue });
     }
   }
+
+  clearSearch = () => {
+    this.setState({ inputValue: '' }, () => this.props.onSearch(this.state.inputValue));
+  };
 
   render() {
     const {
@@ -90,6 +94,13 @@ class TypeAhead extends Component {
                   onInputFocus={openMenu}
                   passedProps={getInputProps()}
                 />
+                {this.state.inputValue &&
+                  <InputGroup.Button>
+                    <Button onClick={this.clearSearch}>
+                      <Icon name="times" />
+                    </Button>
+                  </InputGroup.Button>
+                }
                 <InputGroup.Button>
                   <Button onClick={() => onSearch(inputValue)}>{actionText}</Button>
                 </InputGroup.Button>
