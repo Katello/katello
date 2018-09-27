@@ -4,6 +4,7 @@ module Katello
   class ModuleStreamTest < ActiveSupport::TestCase
     def setup
       @fedora_repo = katello_repositories(:fedora_17_x86_64)
+      @fedora_repo_in_env = katello_repositories(:fedora_17_x86_64_dev)
       @module_stream_river = katello_module_streams(:river)
       @module_stream_empty = katello_module_streams(:empty)
       @module_profile_tributary = katello_module_profiles(:tributary)
@@ -67,6 +68,12 @@ module Katello
     def test_search_repository_name
       module_streams = ModuleStream.search_for("repository = \"#{@fedora_repo.name}\"")
       assert_includes module_streams, @module_stream_river
+    end
+
+    def test_library_repositories
+      repos = @module_stream_river.library_repositories
+      assert_includes repos, @fedora_repo
+      refute_includes repos, @fedora_repo_in_env
     end
 
     def test_available_hosts

@@ -61,7 +61,7 @@ module Katello
     end
 
     def library_repositories
-      self.repositories.select { |repo| repo.library_instance? }
+      self.repositories.where(library_instance: nil)
     end
 
     def self.available_for_hosts(hosts)
