@@ -4,6 +4,8 @@ module Katello
       class Consumer < CandlepinResource
         extend ConsumerResource
 
+        GET_PARAM_BATCH_SIZE = 75
+
         class << self
           def all_uuids
             cp_consumers = Organization.all.map do |org|
@@ -23,6 +25,14 @@ module Katello
                 JSON.parse(response)
               end
             end
+          end
+
+          def get_all(uuids)
+            consumers = []
+            uuids.each_slice(GET_PARAM_BATCH_SIZE) do |slice|
+              consumers += get(:uuid => slice)
+            end
+            consumers
           end
 
           def create(env_id, parameters, activation_key_cp_ids)
