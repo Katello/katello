@@ -19,8 +19,8 @@ module Katello
       @library_dev_staging_view = katello_content_views(:library_dev_staging_view)
       @cvpe_one = katello_content_view_puppet_environments(:archive_view_puppet_environment)
       @fedora_17_x86_64.relative_path = 'test_path/'
-      @fedora_17_x86_64.url = "file:///var/www/test_repos/zoo"
-      @fedora_17_x86_64.download_policy = 'immediate'
+      @fedora_17_x86_64.root.url = "file:///var/www/test_repos/zoo"
+      @fedora_17_x86_64.root.download_policy = 'immediate'
     end
 
     def backend_stubs
@@ -121,12 +121,12 @@ module Katello
     def test_importer_feed_url
       proxy = SmartProxy.new(:url => 'http://foo.com/foo')
       pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
-      repo = ::Katello::Repository.new(:url => 'http://zodiak.com/ted', :unprotected => false, :relative_path => '/elbow')
+      repo = ::Katello::Repository.new(:root => Katello::RootRepository.new(:url => 'http://zodiak.com/ted', :unprotected => false), :relative_path => '/elbow')
 
       assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'
       assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
 
-      repo.unprotected = true
+      repo.root.unprotected = true
       assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
     end
 
@@ -196,7 +196,7 @@ module Katello
       repo = katello_repositories(:fedora_17_x86_64)
       username = "justin"
       password = "super-secret"
-      repo.update_attributes!(:upstream_username => username, :upstream_password => password)
+      repo.root.update_attributes!(:upstream_username => username, :upstream_password => password)
       importer = repo.generate_importer
       assert_equal username,  importer.basic_auth_username
       assert_equal password,  importer.basic_auth_password
@@ -208,7 +208,7 @@ module Katello
       repo = katello_repositories(:fedora_17_x86_64)
       username = "justin"
       password = "super-secret"
-      repo.update_attributes!(:upstream_username => username, :upstream_password => password)
+      repo.root.update_attributes!(:upstream_username => username, :upstream_password => password)
       importer = repo.generate_importer(proxy)
       assert_nil importer.basic_auth_username
       assert_nil importer.basic_auth_password
@@ -217,7 +217,7 @@ module Katello
     def test_distributors_ostree
       ostree_repo = katello_repositories(:ostree)
       depth = 100
-      ostree_repo.expects(:compute_ostree_upstream_sync_depth).returns(depth)
+      ostree_repo.root.expects(:compute_ostree_upstream_sync_depth).returns(depth)
       distributors = ostree_repo.generate_distributors
       assert 1, distributors.size
       assert_equal depth, distributors.first.depth
@@ -257,36 +257,6 @@ module Katello
 
       yum_config['some_other_attribute'] = 'asdf'
       refute @fedora_17_x86_64.importer_matches?({'importer_type_id' => Runcible::Models::YumImporter::ID, 'config' => yum_config}, capsule)
-    end
-
-    def test_pulp_update_needed_with_upstream_auth_change?
-      repo = katello_repositories(:fedora_17_x86_64)
-      refute repo.pulp_update_needed?
-      repo.upstream_username = 'amazing'
-      repo.upstream_password = 'super-secret'
-      repo.save!
-      assert repo.pulp_update_needed?
-
-      repo = katello_repositories(:fedora_17_x86_64).reload
-      refute repo.pulp_update_needed?
-      repo.upstream_password = 'amazing'
-      repo.save!
-      assert repo.pulp_update_needed?
-    end
-
-    def test_ostree_pulp_update_needed?
-      ostree_repo = katello_repositories(:ostree)
-      refute ostree_repo.pulp_update_needed?
-      ostree_repo.ostree_upstream_sync_policy = "custom"
-      ostree_repo.ostree_upstream_sync_depth = 10
-      ostree_repo.save!
-      assert ostree_repo.pulp_update_needed?
-
-      ostree_repo = katello_repositories(:ostree).reload
-      refute ostree_repo.pulp_update_needed?
-      ostree_repo.ostree_upstream_sync_depth = 5000
-      ostree_repo.save!
-      assert ostree_repo.pulp_update_needed?
     end
 
     def test_pulp_scratchpad_checksum_type
@@ -364,26 +334,13 @@ module Katello
     end
 
     def test_custom_repo_path
-      product = @fedora_17_x86_64.product
-      env = @fedora_17_x86_64.product.organization.library
-      env.organization.stubs(:label).returns("ACME")
-      assert_nil Glue::Pulp::Repos.custom_repo_path(nil, product, "test")
+      @fedora_17_x86_64.organization.stubs(:label).returns("ACME")
+      @fedora_17_x86_64.root.label = 'test'
       assert_equal "ACME/library_label/custom/fedora_label/test",
-        Glue::Pulp::Repos.custom_repo_path(env, product, "test")
-    end
+        @fedora_17_x86_64.custom_repo_path
 
-    def test_pulp_update_needed?
-      refute @fedora_17_x86_64.pulp_update_needed?
-
-      @fedora_17_x86_64.url = 'https://www.google.com'
-      @fedora_17_x86_64.save!
-      assert @fedora_17_x86_64.pulp_update_needed?
-
-      @fedora_17_x86_64.stubs(:redhat?).returns(true)
-
-      @fedora_17_x86_64.url = 'https://www.yahoo.com'
-      @fedora_17_x86_64.save!
-      assert @fedora_17_x86_64.pulp_update_needed?
+      @fedora_17_x86_64.environment = nil
+      assert_nil @fedora_17_x86_64.custom_repo_path
     end
 
     def test_pulp_scratchpad_checksum_type
@@ -404,7 +361,7 @@ module Katello
       super
       @p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
       @p_forge.relative_path = RepositorySupport::PULP_TMP_DIR
-      @p_forge.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
+      @p_forge.root.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
       create_repo(@p_forge)
       @p_forge = @p_forge
       ForemanTasks.sync_task(Actions::Pulp::Repository::DistributorPublish,
@@ -472,14 +429,6 @@ module Katello
       refute ::Katello::Repository.distribution_bootable?('files' => [{:relativepath => '/bar/foo'}])
     end
 
-    def test_find_packages_by_name
-      refute_empty @fedora_17_x86_64.find_packages_by_name('elephant')
-    end
-
-    def test_find_packages_by_nvre
-      refute_empty @fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0')
-    end
-
     def test_package_groups
       @fedora_17_x86_64 = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
       package_groups = @fedora_17_x86_64.package_groups
@@ -505,31 +454,6 @@ module Katello
 
     def test_published
       assert @fedora_17_x86_64.published?
-    end
-
-    def test_create_clone
-      dev = KTEnvironment.find(katello_environments(:dev).id)
-      clone = @fedora_17_library_library_view.create_clone(:environment => dev, :content_view => @library_dev_staging_view)
-
-      assert_kind_of Repository, clone
-    ensure
-      clone.destroy
-      assert_empty Repository.where(:id => clone.id)
-    end
-
-    def test_clone_contents
-      library = KTEnvironment.find(katello_environments(:library).id)
-      @fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(:repository => @fedora_17_x86_64,
-                                                                        :environment => library,
-                                                                        :content_view => library.default_content_view)
-      @fedora_17_x86_64_dev.create_pulp_repo
-
-      task_list = @fedora_17_x86_64.clone_contents(@fedora_17_x86_64_dev)
-      assert_equal 4, task_list.length
-
-      TaskSupport.wait_on_tasks(task_list)
-    ensure
-      delete_repo(@fedora_17_x86_64_dev)
     end
   end
 end

@@ -18,8 +18,8 @@ module Katello
     end
 
     def test_related_tags
-      assert_equal 6, @tag_schema1.related_tags.count
-      assert_equal 6, @tag_schema2.related_tags.count
+      assert_equal 8, @tag_schema1.related_tags.count
+      assert_equal 8, @tag_schema2.related_tags.count
     end
 
     def test_with_uuid

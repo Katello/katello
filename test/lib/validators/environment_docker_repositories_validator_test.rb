@@ -93,7 +93,8 @@ module Katello
       @fo_env_dev.save
       fo_cvv_single_repo = create(:registry_content_view_version, :fo_cvv_single_repo,
                                   content_view: @fo_cv_single_repo)
-      fo_repo = create(:registry_repository, :fo_repo_alpha,
+      fo_repo = create(:registry_repository, :hq_repo_alpha,
+             :root => hq_repo.root,
              environment: @fo_env_dev,
              product: @fo_product,
              content_view_version: fo_cvv_single_repo)

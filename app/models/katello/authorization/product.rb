@@ -50,10 +50,9 @@ module Katello
             query = query.where(:id => repo_ids)
           end
 
-          query.joins(:product)
-               .joins(:content_view_version)
-               .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.default.pluck(:id))
-               .where(:product_id => Katello::Product.readable.pluck(:id))
+          query.joins(:content_view_version)
+               .where("#{::Katello::ContentViewVersion.table_name}.content_view_id" => Katello::ContentView.default.pluck(:id))
+               .in_product(::Katello::Product.readable)
         end
 
         def syncable?

@@ -47,6 +47,9 @@ module Katello
       @key.environment = @repo2_cv.environment
       @key.content_view = @repo2_cv.content_view
 
+      Katello::Repository.where(:root => Katello::RootRepository.where(:content_id => @repo1.content_id),
+                                :content_view_version_id => @key.content_view.version(@key.environment)).destroy_all
+
       pcf = Katello::ProductContentFinder.new(:consumable => @key, :match_environment => true)
       product_content = pcf.product_content
 

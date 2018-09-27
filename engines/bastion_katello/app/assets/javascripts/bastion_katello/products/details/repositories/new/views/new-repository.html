@@ -90,7 +90,7 @@
         </p>
       </div>
 
-      <div bst-form-group label="{{ 'Upstream Sync Policy' | translate }}"  ng-show="repository.content_type === 'ostree'">
+      <div bst-form-group label="{{ 'Upstream Sync Policy' | translate }}"  ng-if="repository.content_type === 'ostree'">
         <select required
                 id="ostree_upstream_sync_policy"
                 name="ostree_upstream_sync_policy"
@@ -110,7 +110,7 @@
       </div>
 
 
-      <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-show="repository.content_type === 'docker'">
+      <div bst-form-group label="{{ 'Upstream Repository Name' | translate }}"  ng-if="repository.content_type === 'docker'">
         <input id="docker_upstream_name"
                name="docker_upstream_name"
                ng-model="repository.docker_upstream_name"
@@ -121,7 +121,7 @@
 
       </div>
 
-      <div bst-form-group label="{{ 'Ignorable Content' | translate }}"  ng-show="repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'Ignorable Content' | translate }}"  ng-if="repository.content_type === 'yum'">
         <select id="ignorable_content"
                 name="ignorable_content"
                 multiple="true"
@@ -167,7 +167,7 @@
       </div>
 
 
-      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-show="repository.content_type === 'yum'">
+      <div bst-form-group label="{{ 'Download Policy' | translate }}" ng-if="repository.content_type === 'yum'">
         <select id="download_policy"
                 name="download_policy"
                 ng-model="repository.download_policy"
@@ -180,7 +180,7 @@
         </p>
       </div>
 
-      <div class="checkbox" ng-show="repository.content_type === 'yum' || repository.content_type === 'puppet'">
+      <div class="checkbox" ng-if="repository.content_type === 'yum' || repository.content_type === 'puppet'">
         <label>
           <input id="mirror_on_sync" name="mirror_on_sync" ng-model="repository.mirror_on_sync" type="checkbox"/>
           <span translate>Mirror on Sync</span>

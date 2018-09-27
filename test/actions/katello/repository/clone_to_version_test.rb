@@ -21,6 +21,7 @@ module Actions
 
       action = create_action(action_class)
       cloned_repo.expects(:link?).returns(false)
+      cloned_repo.root = yum_repo.root
       yum_repo.expects(:build_clone).returns(cloned_repo)
 
       plan_action(action, [yum_repo], version)

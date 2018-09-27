@@ -1,5 +1,4 @@
 module Katello
-  # rubocop:disable Metrics/ClassLength
   class Api::Registry::RegistryProxiesController < Api::V2::ApiController
     before_action :disable_strong_params
     before_action :confirm_settings
@@ -89,8 +88,7 @@ module Katello
     # Also include repositories in lifecycle environments with registry_unauthenticated_pull=true
     def readable_repositories
       table_name = Repository.table_name
-      in_products = Repository.where(:product_id => Katello::Product.authorized(:view_products))
-                      .select(:id)
+      in_products = Repository.in_product(Katello::Product.authorized(:view_products)).select(:id)
       in_environments = Repository.where(:environment_id => Katello::KTEnvironment.authorized(:view_lifecycle_environments)).select(:id)
       in_unauth_environments = Repository.joins(:environment).where("#{Katello::KTEnvironment.table_name}.registry_unauthenticated_pull" => true).select(:id)
       in_content_views = Repository.joins(:content_view_repositories).where("#{ContentViewRepository.table_name}.content_view_id" => Katello::ContentView.readable).select(:id)
@@ -100,9 +98,9 @@ module Katello
 
     def find_readable_repository
       return nil unless params[:repository]
-      repository = Repository.docker_type.find_by_container_repository_name(params[:repository])
+      repository = Repository.docker_type.find_by(container_repository_name: params[:repository])
       if repository && !repository.environment.registry_unauthenticated_pull
-        repository = readable_repositories.docker_type.find_by_container_repository_name(params[:repository])
+        repository = readable_repositories.docker_type.find_by(container_repository_name: params[:repository])
       end
       repository
     end
@@ -284,8 +282,9 @@ module Katello
       params[:per_page] = params[:n] || 25
       params[:search] = params[:q]
 
-      search_results = scoped_search(readable_repositories.where(content_type: 'docker').distinct,
+      search_results = scoped_search(readable_repositories.docker_type.distinct,
                                      :container_repository_name, :asc, options)
+
       results = {
         num_results: search_results[:subtotal],
         query: params[:search]

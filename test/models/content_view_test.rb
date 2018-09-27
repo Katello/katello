@@ -19,9 +19,8 @@ module Katello
       org = @organization
       product = create(:katello_product, provider: org.anonymous_provider,
                        organization: org, name: 'Registry', label: 'registry')
-      repo = create(:docker_repository, product: product,
-                    content_view_version: org.default_content_view.versions.first,
-                    name: 'image/one', label: 'image_one', docker_upstream_name: 'image/one')
+      repo = create(:docker_repository, content_view_version: org.default_content_view.versions.first,
+                    docker_upstream_name: 'image/one', :product => product)
 
       cv1 = create(:katello_content_view, organization: org,
                    name: 'CV1', label: 'cv1')
@@ -132,7 +131,6 @@ module Katello
 
     def test_promote
       skip "TODO: Fix content views"
-      Repository.any_instance.stubs(:clone_contents).returns([])
       Repository.any_instance.stubs(:checksum_type).returns(nil)
       Repository.any_instance.stubs(:uri).returns('http://test_uri/')
       Repository.any_instance.stubs(:bootable_distribution).returns(nil)
@@ -258,19 +256,14 @@ module Katello
     end
 
     def test_on_demand_repositories
-      product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
-      repo1 = create(:katello_repository,
-                     content_view_version: @organization.default_content_view.versions.first,
-                     download_policy: ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND,
-                     product: product)
+      repo1 = katello_repositories(:rhel_6_x86_64)
+      repo1.root.update_attributes(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND)
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo1
       assert view1.on_demand_repositories.include?(repo1)
 
-      repo2 = create(:katello_repository,
-                     content_view_version: @organization.default_content_view.versions.first,
-                     download_policy: ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE,
-                     product: product)
+      repo2 = katello_repositories(:fedora_17_x86_64)
+      repo2.root.update_attributes(:download_policy => ::Runcible::Models::YumImporter::DOWNLOAD_IMMEDIATE)
       view2 = create(:katello_content_view, organization: @organization)
       view2.repositories << repo2
       refute view2.on_demand_repositories.include?(repo2)
@@ -372,10 +365,12 @@ module Katello
 
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo
-      repo1 = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id)
+
+      repo1 = Repository.new(root: repo.root, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo.id, :relative_path => '/foo')
       repo1.stubs(:container_repository_name).returns('repo1')
       repo1.stubs(:set_container_repository_name).returns('repo1')
       repo1.save!
+
       version1 = create(:katello_content_view_version, :content_view => view1, :repositories => [repo1])
 
       view2 = create(:katello_content_view, organization: @organization)
@@ -397,13 +392,13 @@ module Katello
       composite = ContentView.find(katello_content_views(:composite_view).id)
       product = create(:katello_product, provider: @organization.anonymous_provider, organization: @organization)
 
-      repo1_lib = create(:docker_repository, label: 'repo1', product: product, content_view_version: @organization.default_content_view.versions.first)
+      repo1_lib = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first)
       view1 = create(:katello_content_view, organization: @organization)
       view1.repositories << repo1_lib
-      repo1_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo1_lib.id)
+      repo1_cv = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo1_lib.id)
       version1 = create(:katello_content_view_version, :content_view => view1, :repositories => [repo1_cv])
 
-      repo2_lib = create(:docker_repository, label: 'repo2', product: product, content_view_version: @organization.default_content_view.versions.first)
+      repo2_lib = create(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first)
       view2 = create(:katello_content_view, organization: @organization)
       view2.repositories << repo2_lib
       repo2_cv = build(:docker_repository, product: product, content_view_version: @organization.default_content_view.versions.first, library_instance_id: repo2_lib.id)
@@ -555,7 +550,6 @@ module Katello
     end
 
     def test_add_repository_from_other_org
-      view = @library_view
       other_org = create(:katello_organization)
       other_org.create_library
       other_org.create_anonymous_provider
@@ -563,15 +557,14 @@ module Katello
       library_view = create(:katello_content_view, :default => true,
                                                    :name => "Default Organization View",
                                                    :organization => other_org)
+      view = create(:katello_content_view, :default => false, :organization => other_org)
 
       ::Katello::ContentViewVersion.create! do |v|
         v.content_view = library_view
         v.major = 1
       end
 
-      product = create(:katello_product, :organization => other_org, :provider => other_org.anonymous_provider)
-      repo = create(:katello_repository, :product => product, :content_view_version =>
-          other_org.default_content_view.versions.first)
+      repo = katello_repositories(:rhel_6_x86_64)
 
       assert_raises(ActiveRecord::RecordInvalid) do
         view.repositories << repo

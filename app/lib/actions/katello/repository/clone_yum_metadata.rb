@@ -7,7 +7,7 @@ module Actions
             # Check for matching content before indexing happens, the content in pulp is
             # actually updated, but it is not reflected in the database yet.
             output = {}
-            if !target_repo.previous_changes.include?(:unprotected) &&
+            if !target_repo.root.previous_changes.include?(:unprotected) &&
                 target_repo.environment && !options[:force_yum_metadata_regeneration]
               output = plan_action(Katello::Repository::CheckMatchingContent,
                                    :source_repo_id => source_repo.id,

@@ -43,14 +43,14 @@ module Katello
     end
 
     describe "#collect_minor" do
-      let(:repositories) { ['1', '2', '2', nil].map { |minor| Repository.new(:minor => minor) } }
+      let(:repositories) { ['1', '2', '2', nil].map { |minor| Repository.new(:root => RootRepository.new(:minor => minor)) } }
       let(:collected_by_minor) { object.collect_minor(repositories) }
       subject { collected_by_minor }
       it { subject.size.must_equal(2) }
     end
 
     describe "repositories with minor" do
-      let(:repositories) { ['1', '2', '2', nil].map { |minor| Repository.new(:minor => minor) } }
+      let(:repositories) { ['1', '2', '2', nil].map { |minor| Repository.new(:root => RootRepository.new(:minor => minor)) } }
       subject { object.collect_minor(repositories).first }
       it { subject.size.must_equal(2) }
       it { subject.keys.must_include('1', '2') }
@@ -60,13 +60,13 @@ module Katello
     end
 
     describe "repositories without minor" do
-      let(:repositories) { ['1', '2', '2', nil].map { |minor| Repository.new(:minor => minor) } }
+      let(:repositories) { ['1', '2', '2', nil].map { |minor| Repository.new(:root => RootRepository.new(:minor => minor)) } }
       subject { object.collect_minor(repositories).last }
       it { subject.size.must_equal(1) }
     end
 
     describe "#collect_arches" do
-      let(:repositories) { %w(i386 i386 x86_64).map { |arch| Repository.new(:arch => arch) } }
+      let(:repositories) { %w(i386 i386 x86_64).map { |arch| Repository.new(:root => RootRepository.new(:arch => arch)) } }
       subject { object.collect_arches(repositories) }
       it { subject.size.must_equal(2) }
       it { subject.keys.must_include('i386', 'x86_64') }
@@ -76,12 +76,12 @@ module Katello
     end
 
     describe "#minors" do
-      subject { object.minors('1' => [Repository.new]).first }
+      subject { object.minors('1' => [Repository.new(:root => RootRepository.new)]).first }
       it { subject.keys.must_include(:id, :name) }
     end
 
     describe "#arches" do
-      subject { object.arches([Repository.new(:arch => 'i386')]).first }
+      subject { object.arches([Repository.new(:root => RootRepository.new(:arch => 'i386'))]).first }
       it { subject.keys.must_include(:id, :name) }
     end
   end

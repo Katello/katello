@@ -32,7 +32,7 @@ module ::Actions::Katello::ContentViewVersion
       stub_remote_user
       @rpm = katello_rpms(:one)
 
-      new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id)
+      new_repo = ::Katello::Repository.new(:pulp_id => 387, :library_instance_id => library_repo.id, :root => library_repo.root)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_repository).returns(new_repo)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:new_puppet_environment).returns(Katello::ContentViewPuppetEnvironment)
 

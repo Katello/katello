@@ -10,7 +10,7 @@ module Actions
         end
 
         def plan(env, options = {})
-          repositories = options[:content_type] ? env.repositories.where(content_type: options[:content_type]) : env.repositories
+          repositories = options[:content_type] ? env.repositories.with_type(options[:content_type]) : env.repositories
           action_subject(env)
           concurrence do
             repositories.each do |repository|

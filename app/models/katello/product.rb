@@ -16,11 +16,13 @@ module Katello
     belongs_to :sync_plan, :inverse_of => :products, :class_name => 'Katello::SyncPlan'
     belongs_to :gpg_key, :inverse_of => :products, :class_name => "Katello::GpgKey"
     has_many :product_contents, :foreign_key => 'product_id', :class_name => "Katello::ProductContent", :dependent => :destroy
+    has_many :contents, :through => :product_contents
     has_many :displayable_product_contents, -> { displayable }, :foreign_key => 'product_id', :class_name => "Katello::ProductContent", :dependent => :destroy
     belongs_to :ssl_ca_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_ca_products
     belongs_to :ssl_client_cert, :class_name => "Katello::GpgKey", :inverse_of => :ssl_client_products
     belongs_to :ssl_client_key, :class_name => "Katello::GpgKey", :inverse_of => :ssl_key_products
-    has_many :repositories, :class_name => "Katello::Repository", :dependent => :restrict_with_exception
+    has_many :root_repositories, :class_name => "Katello::RootRepository", :dependent => :restrict_with_exception
+    has_many :repositories, :through => :root_repositories
 
     has_many :pool_products, :class_name => "Katello::PoolProduct", :dependent => :destroy
     has_many :pools, :through => :pool_products
@@ -59,20 +61,20 @@ module Katello
       where(:organization_id => organizations)
     end
 
-    scope :syncable_content, -> { distinct.where(Katello::Repository.arel_table[:url].not_eq(nil)).joins(:repositories) }
+    scope :syncable_content, -> { distinct.where(Katello::RootRepository.arel_table[:url].not_eq(nil)).joins(:root_repositories) }
     scope :redhat, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => Provider::REDHAT) }
     scope :custom, -> { joins(:provider).where("#{Provider.table_name}.provider_type" => [Provider::CUSTOM, Provider::ANONYMOUS]) }
     scope :with_contents, -> { includes(:product_contents) }
 
     def self.subscribable
-      joins("LEFT OUTER JOIN #{Katello::Repository.table_name} repo ON repo.product_id = #{self.table_name}.id")
-        .where("repo.content_type IN (?) OR repo IS NULL", Repository::SUBSCRIBABLE_TYPES)
+      joins("LEFT OUTER JOIN #{Katello::RootRepository.table_name} repo ON repo.product_id = #{self.table_name}.id")
+        .where("repo.content_type IN (?) OR repo IS NULL", RootRepository::SUBSCRIBABLE_TYPES)
         .group("#{self.table_name}.id, repo.product_id")
     end
 
     def self.enabled
       self.where("#{Product.table_name}.id in (?) or #{Product.table_name}.id in (?)",
-                 Product.redhat.joins(:repositories).distinct.pluck(:id), Product.custom.pluck(:id))
+                 Product.redhat.joins(:root_repositories => :repositories).select(:id), Product.custom.select(:id))
     end
 
     before_create :assign_unique_label
@@ -160,14 +162,14 @@ module Katello
     end
 
     def published_content_views
-      Katello::ContentView.non_default.joins(:content_view_versions => :repositories).
-          where("#{Katello::Repository.table_name}.product_id" => self.id)
+      Katello::ContentView.non_default.joins(:content_view_versions => {:repositories => :root}).
+          where("#{Katello::RootRepository.table_name}.product_id" => self.id)
     end
 
     def published_content_view_versions
-      Katello::ContentViewVersion.joins(:content_view).joins(:repositories).
+      Katello::ContentViewVersion.joins(:content_view).joins(:repositories => :root).
           where("#{Katello::ContentView.table_name}.default" => false).
-          where("#{Katello::Repository.table_name}.product_id" => self.id).order(:content_view_id)
+          where("#{Katello::RootRepository.table_name}.product_id" => self.id).order(:content_view_id)
     end
 
     def anonymous?
@@ -176,14 +178,6 @@ module Katello
 
     def used_by_another_org?
       self.class.where(["cp_id = ? AND id != ?", cp_id, id]).count > 0
-    end
-
-    def gpg_key_name=(name)
-      if name.blank?
-        self.gpg_key = nil
-      else
-        self.gpg_key = GpgKey.readable.find_by!(:name => name)
-      end
     end
 
     scope :all_in_org, ->(org) { Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id) }
@@ -229,10 +223,9 @@ module Katello
     end
 
     def available_content(content_view_version_id = nil)
-      product_contents.select do |product_content|
-        repos = self.repositories.subscribable.where(content_id: product_content.content.cp_content_id)
-        repos.exists? && (content_view_version_id.nil? || repos.where(content_view_version_id: content_view_version_id.to_i).count > 0)
-      end
+      root_repos = self.root_repositories.subscribable
+      root_repos = root_repos.join(:repositories).where(:content_view_version_id => content_view_version_id) if content_view_version_id
+      self.product_contents.joins(:content).where("#{Katello::Content.table_name}.cp_content_id" => root_repos.select(:content_id))
     end
 
     def related_resources

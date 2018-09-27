@@ -3,7 +3,7 @@ require "katello_test_helper"
 module Katello
   class Api::V2::OstreeBranchesControllerTest < ActionController::TestCase
     def models
-      @repo = Repository.find(katello_repositories(:ostree_rhel7).id)
+      @repo = Repository.find(katello_repositories(:ostree).id)
       @branch = @repo.ostree_branches.create!(:name => "abc123", :uuid => "123xyz", :version => "1.1")
     end
 
