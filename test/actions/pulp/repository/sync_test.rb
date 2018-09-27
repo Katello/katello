@@ -3,6 +3,11 @@ require_relative 'test_base.rb'
 
 module ::Actions::Pulp::Repository
   class SyncTest < VCRTestBase
+    def setup
+      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
+      SmartProxy.stubs(:default_capsule).returns(proxy)
+    end
+
     def test_sync
       ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).main_action
       assert_equal 8, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
@@ -11,6 +16,10 @@ module ::Actions::Pulp::Repository
 
   class BackgroundSyncTest < VCRTestBase
     let(:repo) { katello_repositories(:rhel_7_x86_64) }
+    def setup
+      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
+      SmartProxy.stubs(:default_capsule).returns(proxy)
+    end
 
     def test_sync
       output = ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).output
