@@ -7,6 +7,7 @@ module Katello
     @repo_url = "file:///var/www/test_repos/zoo"
     @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
     @repo = nil
+    @proxy = SmartProxy.new(:url => 'http://foo.com/foo')
 
     def self.repo_id
       @repo.id
@@ -51,6 +52,7 @@ module Katello
     end
 
     def self.sync_repo
+      SmartProxy.stubs(:default_capsule).returns(@proxy)
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync,
                                pulp_id: @repo.pulp_id
                               )

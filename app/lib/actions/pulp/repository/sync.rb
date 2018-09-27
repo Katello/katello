@@ -16,25 +16,12 @@ module Actions
             # don't initiate, just load the existing task
             task_resource.poll(input[:task_id])
           else
-            sync_options = {}
-
-            if SETTINGS[:katello][:pulp][:sync_KBlimit]
-              # set bandwidth limit
-              sync_options[:max_speed] ||= SETTINGS[:katello][:pulp][:sync_KBlimit]
-            end
-            if SETTINGS[:katello][:pulp][:sync_threads]
-              # set threads per sync
-              sync_options[:num_threads] ||= SETTINGS[:katello][:pulp][:sync_threads]
-            end
-
-            sync_options[:feed] = input[:source_url] if input[:source_url]
-            sync_options[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
-
-            sync_options.merge!(input[:options]) if input[:options]
-
-            output[:pulp_tasks] = pulp_tasks =
-                                    [pulp_resources.repository.sync(input[:pulp_id], override_config: sync_options)]
-
+            overrides = {}
+            overrides[:feed] = input[:source_url] if input[:source_url]
+            overrides[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
+            overrides[:options] = input[:options] if input[:options]
+            repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
+            output[:pulp_tasks] = pulp_tasks = ::Katello::Pulp::Repository.new(repo, smart_proxy(input[:capsule_id])).sync(overrides)
             pulp_tasks
           end
         end
