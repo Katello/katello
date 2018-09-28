@@ -30,7 +30,7 @@ class SearchBar extends Component {
     this.state = {
       query: '',
       searchList: 'available',
-      filters: [],
+      filters: ['rpm'],
     };
 
     this.onSearch = this.onSearch.bind(this);
@@ -97,7 +97,7 @@ class SearchBar extends Component {
         <MultiSelect
           value={this.state.filters}
           options={filterOptions}
-          defaultValue="rpm"
+          defaultValues={['rpm']}
           noneSelectedText={__('Filter by type')}
           onChange={(e) => {
             const values = [...e.target.options]

@@ -8,7 +8,7 @@ function MultiSelect(props) {
   const {
     options,
     onChange,
-    defaultValue,
+    defaultValues,
     ...otherProps
   } = props;
 
@@ -19,9 +19,14 @@ function MultiSelect(props) {
   ));
 
   return (
-    <FormGroup controlId="formControlsSelectMultiple" defaultValue={defaultValue}>
+    <FormGroup controlId="formControlsSelectMultiple">
       <ControlLabel srOnly>{__('Select Value')}</ControlLabel>
-      <BootstrapSelect {...otherProps} multiple onChange={evt => onChange(evt)}>
+      <BootstrapSelect
+        defaultValues={defaultValues}
+        {...otherProps}
+        multiple
+        onChange={evt => onChange(evt)}
+      >
         {optionComponents}
       </BootstrapSelect>
     </FormGroup>
@@ -30,13 +35,13 @@ function MultiSelect(props) {
 
 MultiSelect.defaultProps = {
   onChange: () => {},
-  defaultValue: null,
+  defaultValues: null,
 };
 
 MultiSelect.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func,
-  defaultValue: PropTypes.string,
+  defaultValues: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default MultiSelect;
