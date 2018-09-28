@@ -11,7 +11,11 @@
 
   <tbody>
     <tr bst-table-row ng-repeat="module in table.rows">
-      <td bst-table-cell>{{ module.name }}</td>
+      <td bst-table-cell>
+        <a href="module_streams/{{ module.id }}">
+          {{ module.name }}
+        </a>
+      </td>
       <td bst-table-cell>{{ module.stream }}</td>
       <td bst-table-cell>{{ module.version }}</td>
       <td bst-table-cell>{{ module.context }}</td>
