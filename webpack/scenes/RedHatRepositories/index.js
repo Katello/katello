@@ -20,7 +20,7 @@ class RedHatRepositoriesPage extends Component {
 
   loadData() {
     this.props.loadEnabledRepos();
-    this.props.loadRepositorySets();
+    this.props.loadRepositorySets({ search: { filters: ['rpm'] } });
   }
 
   render() {
