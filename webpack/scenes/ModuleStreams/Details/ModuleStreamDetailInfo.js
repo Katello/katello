@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 
 const displayMap = {
-  name: 'Name',
-  stream: 'Stream',
-  version: 'Version',
-  arch: 'Arch',
-  context: 'Context',
-  description: 'Description',
-  summary: 'Summary',
-  uuid: 'UUID',
+  name: __('Name'),
+  stream: __('Stream'),
+  version: __('Version'),
+  arch: __('Arch'),
+  context: __('Context'),
+  description: __('Description'),
+  summary: __('Summary'),
+  uuid: __('UUID'),
 };
 
 const ModuleStreamDetailInfo = ({ moduleStreamDetails }) => (
@@ -19,7 +19,7 @@ const ModuleStreamDetailInfo = ({ moduleStreamDetails }) => (
       {Object.keys(moduleStreamDetails).map(key => (
         Object.keys(displayMap).includes(key) &&
           <tr key={key}>
-            <td><b>{__(displayMap[key])}</b></td>
+            <td><b>{displayMap[key]}</b></td>
             <td>{moduleStreamDetails[key]}</td>
           </tr>
       ))}
