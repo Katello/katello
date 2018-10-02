@@ -78,5 +78,16 @@ angular.module('Bastion.content-hosts').service('ContentHostsModalHelper', ['$ui
                 }
             });
         };
+
+        this.openModuleStreamsModal = function() {
+            $uibModal.open({
+                templateUrl: 'content-hosts/bulk/views/content-host-bulk-module-streams-modal.html',
+                controller: 'ContentHostsBulkModuleStreamsModalController',
+                size: 'lg',
+                resolve: {
+                    hostIds: this.resolveFunc()
+                }
+            });
+        };
     }]
 );

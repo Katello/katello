@@ -30,6 +30,8 @@ module Katello
       def hosts
         if params[:scoped_search].present?
           params[:scoped_search]
+        elsif params[:host_collection_id].present?
+          ::Katello::HostCollection.find(params[:host_collection_id]).hosts
         else
           ::Host.where(:id => params[:host_ids].try(:split, ','))
         end

@@ -1,23 +1,20 @@
-<span page-title ng-model="host">{{ 'Module Streams for: ' | translate }} {{ host.name }}</span>
-<div bst-feature-flag="remote_actions">
-  <h3 translate ng-hide="selectedModuleStreamOption === 'available'">Available Module Streams</h3>
-</div>
+<div data-extend-template="components/views/bst-modal.html">
+  <h4 data-block="modal-header">Content Host Module Stream Management</h4>
+  <div data-block="modal-body">
+    <div bst-feature-flag="remote_actions">
+      <h3 translate ng-hide="selectedModuleStreamOption === 'available'">Available Module Streams</h3>
+    </div>
 
-<div ng-hide="host.hasContent()">
-  <div data-extend-template="common/views/registration.html"></div>
-</div>
+    <form id="moduleStreamActionForm" method="post" action="/katello/remote_execution">
+      <input type="hidden" name="remote_action" ng-value="moduleStreamActionFormValues.remoteAction"/>
+      <input type="hidden" name="module_spec" ng-value="moduleStreamActionFormValues.moduleSpec"/>
+      <input type="hidden" name="host_collection_id" ng-value="moduleStreamActionFormValues.hostCollectionId"/>
+      <input type="hidden" name="host_ids" ng-value="moduleStreamActionFormValues.hostIds"/>
+      <input type="hidden" name="customize" ng-value="moduleStreamActionFormValues.customize"/>
+      <input type="hidden" name="authenticity_token" ng-value="moduleStreamActionFormValues.authenticityToken"/>
+    </form>
 
-<div ng-if="host && host.hasContent()">
-  <form id="moduleStreamActionForm" method="post" action="/katello/remote_execution">
-    <input type="hidden" name="remote_action" ng-value="moduleStreamActionFormValues.remoteAction"/>
-    <input type="hidden" name="module_stream_action" ng-value="moduleStreamActionFormValues.moduleStreamAction"/>
-    <input type="hidden" name="module_spec" ng-value="moduleStreamActionFormValues.moduleSpec"/>
-    <input type="hidden" name="host_ids" ng-value="moduleStreamActionFormValues.hostIds"/>
-    <input type="hidden" name="customize" ng-value="moduleStreamActionFormValues.customize"/>
-    <input type="hidden" name="authenticity_token" ng-value="moduleStreamActionFormValues.authenticityToken"/>
-  </form>
-
-  <div data-extend-template="layouts/partials/table.html">
+    <div data-extend-template="layouts/partials/table.html">
 
     <span data-block="no-rows-message" translate>
       There are no Module Streams to display.
@@ -64,5 +61,6 @@
         </tbody>
       </table>
     </div>
+  </div>
   </div>
 </div>
