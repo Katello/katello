@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   headerFormatter,
   cellFormatter,
@@ -17,7 +16,9 @@ const TableSchema = [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <Link to={helpers.urlBuilder(`products/${rowData.product_id}/repositories`, '', rowData.id)}>{rowData.name}</Link>
+            <a href={helpers.urlBuilder(`products/${rowData.product_id}/repositories`, '', rowData.id)}>
+              {rowData.name}
+            </a>
           </td>
         ),
       ],
