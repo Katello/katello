@@ -8,7 +8,10 @@ import reducer from './UpstreamSubscriptionsReducer';
 import UpstreamSubscriptionsPage from './UpstreamSubscriptionsPage';
 
 // map state to props
-const mapStateToProps = state => ({ upstreamSubscriptions: state.katello.upstreamSubscriptions });
+const mapStateToProps = state => ({
+  upstreamSubscriptions: state.katello.upstreamSubscriptions,
+  error: state.katello.upstreamSubscriptions.error,
+});
 
 // map action dispatchers to props
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

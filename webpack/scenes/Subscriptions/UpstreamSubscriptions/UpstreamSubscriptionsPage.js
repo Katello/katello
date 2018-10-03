@@ -25,6 +25,12 @@ class UpstreamSubscriptionsPage extends Component {
     this.loadData();
   }
 
+  componentDidUpdate() {
+    if (this.props.error.length > 0) {
+      this.props.history.push('/subscriptions');
+    }
+  }
+
   onChange = (value, rowData) => {
     const { selectedRows } = this.state;
     const pool = {
@@ -265,6 +271,11 @@ UpstreamSubscriptionsPage.propTypes = {
     task: PropTypes.shape({}),
   }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  error: PropTypes.shape([PropTypes.shape({})]),
+};
+
+UpstreamSubscriptionsPage.defaultProps = {
+  error: {},
 };
 
 export default UpstreamSubscriptionsPage;

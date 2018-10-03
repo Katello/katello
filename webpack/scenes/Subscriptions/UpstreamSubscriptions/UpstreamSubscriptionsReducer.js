@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
 
     case UPSTREAM_SUBSCRIPTIONS_FAILURE:
       return state.merge({
-        error: action.payload.message,
+        error: action.payload.messages,
         loading: false,
       });
 

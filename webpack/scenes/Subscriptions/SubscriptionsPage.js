@@ -45,6 +45,10 @@ class SubscriptionsPage extends Component {
     this.props.resetTasks();
     this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
+    this.props.loadTables().then(() => {
+      const { subscriptionTableSettings, loadTableColumns } = this.props;
+      loadTableColumns(subscriptionTableSettings);
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -84,7 +88,8 @@ class SubscriptionsPage extends Component {
       }
     }
 
-    if (!isEqual(organization.owner_details, prevProps.organization.owner_details)) {
+    if (prevProps.organization.owner_details &&
+       !isEqual(organization.owner_details, prevProps.organization.owner_details)) {
       this.pollTasks();
     }
   }

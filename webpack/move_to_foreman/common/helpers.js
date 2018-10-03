@@ -81,7 +81,7 @@ export const sendErrorNotifications = messages => (dispatch) => {
   messages.forEach((msg) => {
     dispatch(addToast({
       type: 'error',
-      message: msg,
+      message: `${msg.message}: ${msg.details}`,
       sticky: true,
     }));
   });

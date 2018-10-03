@@ -9,7 +9,7 @@ export const failureAction = (type, message = 'Request failed with status code 4
   }
 );
 
-export const toastErrorAction = (message = 'Request failed with status code 422') => (
+export const toastErrorAction = (message = 'Error 422: oh no, something went wrong') => (
   {
     payload: {
       message: {

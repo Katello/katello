@@ -24,7 +24,7 @@ export const mockErrorRequest = ({
   status = 500,
   ...options
 }) => mockRequest({
-  response: errorResponse(`Request failed with status code ${status}`),
+  response: { message: `Error ${status}`, details: 'oh no, something went wrong' },
   status,
   ...options,
 });
