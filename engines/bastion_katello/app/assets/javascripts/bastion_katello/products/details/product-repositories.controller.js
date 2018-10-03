@@ -65,11 +65,10 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
             var success, error, params = getParams(), removalPromise;
 
             success = function (response) {
-                var message = translate('Removal of selected repositories initiated successfully. ');
-
-                message += translate('<a href="/foreman_tasks/tasks/%taskId">Click here to check the status of the task.</a>').
-                    replace('%taskId', response.task.id);
-                Notification.setSuccessMessage(message);
+                var message = translate('Removal of selected repositories initiated successfully.');
+                var link = ("/foreman_tasks/tasks/%taskId").replace('%taskId', response.task.id);
+                var alertBody = { children: translate("Click to view task"), href: link };
+                Notification.setSuccessMessage(message, {link: alertBody});
             };
 
             error = function (response) {
