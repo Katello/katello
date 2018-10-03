@@ -20,9 +20,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
             { action: 'disable', description: translate("Disable")},
             { action: 'install', description: translate("Install")},
             { action: 'update', description: translate("Update")},
-            { action: 'remove', description: translate("Remove")},
-            { action: 'lock', description: translate("Lock")},
-            { action: 'unlock', description: translate("Unlock")}
+            { action: 'remove', description: translate("Remove")}
         ];
         $scope.working = false;
 
