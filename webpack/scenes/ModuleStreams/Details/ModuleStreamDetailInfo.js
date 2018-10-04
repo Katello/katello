@@ -2,27 +2,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 
-const displayMap = {
-  name: __('Name'),
-  stream: __('Stream'),
-  version: __('Version'),
-  arch: __('Arch'),
-  context: __('Context'),
-  description: __('Description'),
-  summary: __('Summary'),
-  uuid: __('UUID'),
+// using Map to preserve order
+const displayMap = new Map([
+  ['name', __('Name')],
+  ['summary', __('Summary')],
+  ['description', __('Description')],
+  ['stream', __('Stream')],
+  ['version', __('Version')],
+  ['arch', __('Arch')],
+  ['context', __('Context')],
+  ['uuid', __('UUID')],
+]);
+
+const createRows = (details, mapping) => {
+  const rows = [];
+  /* eslint-disable no-restricted-syntax, react/jsx-closing-tag-location */
+  for (const key of mapping.keys()) {
+    rows.push(<tr key={key}>
+      <td><b>{mapping.get(key)}</b></td>
+      <td>{details[key]}</td>
+    </tr>);
+  }
+  /* eslint-enable no-restricted-syntax, react/jsx-closing-tag-location */
+  return rows;
 };
 
 const ModuleStreamDetailInfo = ({ moduleStreamDetails }) => (
   <Table>
     <tbody>
-      {Object.keys(moduleStreamDetails).map(key => (
-        Object.keys(displayMap).includes(key) &&
-          <tr key={key}>
-            <td><b>{displayMap[key]}</b></td>
-            <td>{moduleStreamDetails[key]}</td>
-          </tr>
-      ))}
+      {createRows(moduleStreamDetails, displayMap)}
     </tbody>
   </Table>
 );
