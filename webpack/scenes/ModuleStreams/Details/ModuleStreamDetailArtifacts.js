@@ -4,13 +4,16 @@ import PropTypes from 'prop-types';
 const ModuleStreamDetailArtifacts = ({ artifacts }) => (
   <div>
     <ul>
-      {artifacts.map(artifact => <li key={artifact.id}>{artifact.name}</li>)}
+      {artifacts.map(({ id, name }) => <li key={id}>{name}</li>)}
     </ul>
   </div>
 );
 
 ModuleStreamDetailArtifacts.propTypes = {
-  artifacts: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  artifacts: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+  })).isRequired,
 };
 
 export default ModuleStreamDetailArtifacts;

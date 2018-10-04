@@ -36,7 +36,16 @@ const ModuleStreamDetailInfo = ({ moduleStreamDetails }) => (
 );
 
 ModuleStreamDetailInfo.propTypes = {
-  moduleStreamDetails: PropTypes.shape({}).isRequired,
+  moduleStreamDetails: PropTypes.shape({
+    name: PropTypes.string,
+    summary: PropTypes.string,
+    description: PropTypes.string,
+    stream: PropTypes.string,
+    version: PropTypes.string,
+    arch: PropTypes.string,
+    context: PropTypes.string,
+    uuid: PropTypes.string,
+  }).isRequired,
 };
 
 export default ModuleStreamDetailInfo;

@@ -39,7 +39,10 @@ class ProfileRpmsCellFormatter extends Component {
           onClick={this.onClick}
           name={this.iconName()}
         />}
-        {rpms.map(rpm => rpm.name).slice(0, this.state.showAmount).join(', ')}
+        {rpms
+          .slice(0, this.state.showAmount)
+          .map(rpm => rpm.name)
+          .join(', ')}
         {largeList && !this.state.expanded && ', ...'}
       </td>
     );

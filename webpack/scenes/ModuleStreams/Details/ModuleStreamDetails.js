@@ -10,11 +10,6 @@ import ModuleStreamDetailArtifacts from './ModuleStreamDetailArtifacts';
 import ModuleStreamDetailProfiles from './Profiles/ModuleStreamDetailProfiles';
 
 class ModuleStreamDetails extends Component {
-  constructor(props) {
-    super(props);
-    this.moduleStreamId = parseInt(this.props.match.params.id, 10);
-  }
-
   componentDidMount() {
     this.updateModuleStream();
   }
@@ -22,14 +17,14 @@ class ModuleStreamDetails extends Component {
   componentDidUpdate(prevProps) {
     const { match: { params: prevRouterParams } } = this.props;
     const { match: { params: currentRouterParams } } = prevProps;
-    if (prevRouterParams.id !== currentRouterParams.id) {
+    if (prevRouterParams.id && (prevRouterParams.id !== currentRouterParams.id)) {
       this.updateModuleStream();
     }
   }
 
   updateModuleStream = () => {
-    this.moduleStreamId = parseInt(this.props.match.params.id, 10);
-    this.props.loadModuleStreamDetails(this.moduleStreamId);
+    const moduleStreamId = parseInt(this.props.match.params.id, 10);
+    this.props.loadModuleStreamDetails(moduleStreamId);
   };
 
   handleBreadcrumbSwitcherItem = (e, url) => {

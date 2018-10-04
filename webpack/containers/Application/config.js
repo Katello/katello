@@ -38,12 +38,10 @@ export const links = [
     component: SetOrganization,
   },
   {
-    text: __('Module Streams'),
     path: 'module_streams',
     component: withHeader(ModuleStreams, { title: __('Module Streams') }),
   },
   {
-    text: __('Module Stream Details'),
     path: 'module_streams/:id([0-9]*$)',
     component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
   },
