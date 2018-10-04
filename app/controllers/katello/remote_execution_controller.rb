@@ -40,6 +40,12 @@ module Katello
           { :errata => params[:name] }
         elsif feature_name == 'katello_service_restart'
           { :helper => params[:name] }
+        elsif feature_name == 'katello_module_stream_action'
+          fail HttpErrors::NotFound, _('module streams not found') if params[:module_spec].blank?
+          fail HttpErrors::NotFound, _('actions not found') if params[:module_stream_action].blank?
+          inputs = { :module_spec => params[:module_spec], :action => params[:module_stream_action] }
+          inputs[:options] = params[:options] if params[:options]
+          inputs
         else
           { :package => params[:name] }
         end

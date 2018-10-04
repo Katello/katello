@@ -43,6 +43,20 @@ module Katello
       end
     end
 
+    def test_index_with_name_stream_only
+      get :index, params: { :name_stream_only => 1, :repository_id => @repo.id }
+
+      assert_response :success
+      assert_template "katello/api/v2/module_streams/name_streams"
+    end
+
+    def test_index_with_host_ids
+      get :index, params: { :host_ids => [hosts(:one).id, hosts(:two).id], :repository_id => @repo.id }
+
+      assert_response :success
+      assert_template "katello/api/v2/module_streams/index"
+    end
+
     def test_show
       get :show, params: { :id => @module_stream_river.id }
 

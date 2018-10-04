@@ -80,7 +80,33 @@ module Katello
 
       host_without_modules = hosts(:without_errata)
       assert_empty ModuleStream.available_for_hosts([host_without_modules.id])
+      assert_empty ModuleStream.search_for("host=#{host_without_modules.name}")
+
       assert_includes ModuleStream.available_for_hosts([host.id]), @module_stream_river
+      assert_includes ModuleStream.search_for("host=#{host.name}"), @module_stream_river
+    end
+
+    def test_module_spec
+      inputs = [
+        [{:name => "boo"}, "boo"],
+        [{:name => "boo", :stream => "100"}, "boo:100"],
+        [{:name => "boo", :stream => "100", :version => "11111"}, "boo:100:11111"],
+        [{:name => "boo", :stream => "100", :version => "11111", :context => "cccc"}, "boo:100:11111:cccc"],
+        [{:name => "boo", :stream => "100", :version => "11111", :context => "cccc", :arch => "noarch"}, "boo:100:11111:cccc:noarch"],
+        [{:name => "boo", :stream => "100", :version => "11111", :arch => "noarch"}, "boo:100:11111"],
+        [{:name => "boo", :stream => "100", :context => "cccc", :arch => "noarch"}, "boo:100"],
+        [{:name => "boo", :version => "11111", :context => "cccc", :arch => "noarch"}, "boo"]
+      ]
+      inputs.each do |params, expectation|
+        assert_equal expectation, ModuleStream.new(params).module_spec
+        assert_equal expectation, ModuleStream.new(ModuleStream.parse_module_spec(expectation)).module_spec
+      end
+    end
+
+    def test_module_spec_search
+      assert_includes ModuleStream.search_for("module_spec=#{@module_stream_river.module_spec}"), @module_stream_river
+      assert_includes ModuleStream.search_for("module_spec~#{@module_stream_river.name}"), @module_stream_river
+      assert_includes ModuleStream.search_for("module_spec~#{@module_stream_river.name}:#{@module_stream_river.stream}"), @module_stream_river
     end
 
     def pulp_module_data
