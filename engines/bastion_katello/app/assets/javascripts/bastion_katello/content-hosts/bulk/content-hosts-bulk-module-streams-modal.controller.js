@@ -41,14 +41,13 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
         };
 
         $scope.moduleStreamActions = [
-            { action: 'module_stream_enable', description: translate("Enable")},
-            { action: 'module_stream_disable', description: translate("Disable")},
-            { action: 'module_stream_install', description: translate("Install")},
-            { action: 'module_stream_update', description: translate("Update")},
-            { action: 'module_stream_remove', description: translate("Remove")},
-            { action: 'module_stream_lock', description: translate("Lock")},
-            { action: 'module_stream_unlock', description: translate("Unlock")}
+          { action: 'enable', description: translate("Enable")},
+          { action: 'disable', description: translate("Disable")},
+          { action: 'install', description: translate("Install")},
+          { action: 'update', description: translate("Update")},
+          { action: 'remove', description: translate("Remove")}
         ];
+
         $scope.working = false;
 
         nutupaneParams = { 'name_stream_only': '1' };
@@ -68,14 +67,15 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
         $scope.moduleStreamActionFormValues = {
-            authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, '')
+            authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
+            remoteAction: 'module_stream_action'
         };
 
         $scope.performViaRemoteExecution = function(moduleSpec, actionType) {
             $scope.working = true;
             $scope.moduleStreamActionFormValues.moduleSpec = moduleSpec;
-            $scope.moduleStreamActionFormValues.remoteAction = actionType;
-            console.log($scope.$stateParams.hostCollectionId);
+            $scope.moduleStreamActionFormValues.moduleStreamAction = actionType;
+
             if ($scope.$stateParams && $scope.$stateParams.hostCollectionId) {
               $scope.moduleStreamActionFormValues.hostCollectionId = $scope.$stateParams.hostCollectionId;
             } else if (hostIds.included.ids) {
