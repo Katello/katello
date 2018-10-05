@@ -150,6 +150,10 @@ module Katello
       joins(:root).where("#{RootRepository.table_name}.content_type" => content_type)
     end
 
+    def backend_service(smart_proxy)
+      @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
+    end
+
     def organization
       if self.environment
         self.environment.organization
@@ -479,10 +483,6 @@ module Katello
 
     def ostree_branch_names
       self.ostree_branches.map(&:name)
-    end
-
-    def ostree_capsule_sync_depth
-      -1
     end
 
     def units_for_removal(ids)

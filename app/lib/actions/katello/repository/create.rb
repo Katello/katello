@@ -2,7 +2,6 @@ module Actions
   module Katello
     module Repository
       class Create < Actions::EntryAction
-        # rubocop:disable MethodLength
         def plan(repository, clone = false, plan_create = false)
           repository.save!
           root = repository.root
@@ -10,38 +9,9 @@ module Actions
           action_subject(repository)
 
           org = repository.organization
-          path = repository.relative_path unless repository.puppet?
-
           create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            certs = repository.importer_connection_options
-            create_action = plan_action(create_action,
-                                        content_type: repository.content_type,
-                                        pulp_id: repository.pulp_id,
-                                        name: repository.name,
-                                        docker_upstream_name: repository.docker_upstream_name,
-                                        docker_tags_whitelist: root.docker_tags_whitelist,
-                                        feed: repository.url,
-                                        ssl_ca_cert: certs[:ssl_ca_cert],
-                                        ssl_client_cert: certs[:ssl_client_cert],
-                                        ssl_client_key: certs[:ssl_client_key],
-                                        unprotected: repository.unprotected,
-                                        checksum_type: repository.saved_checksum_type || repository.checksum_type,
-                                        path: path,
-                                        download_policy: repository.download_policy,
-                                        ostree_upstream_sync_depth: root.compute_ostree_upstream_sync_depth,
-                                        ostree_publish_depth: root.compute_ostree_upstream_sync_depth,
-                                        deb_releases: repository.deb_releases,
-                                        deb_components: repository.deb_components,
-                                        deb_architectures: repository.deb_architectures,
-                                        with_importer: true,
-                                        mirror_on_sync: repository.mirror_on_sync?,
-                                        ssl_validation: certs[:ssl_validation],
-                                        upstream_username: repository.upstream_username,
-                                        upstream_password: repository.upstream_password,
-                                        repo_registry_id: repository.container_repository_name,
-                                        proxy_host: repository.proxy_host_value,
-                                        ignorable_content: repository.ignorable_content)
+            create_action = plan_action(create_action, repository)
 
             return if create_action.error
 

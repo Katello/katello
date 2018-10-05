@@ -2,7 +2,6 @@ module Katello
   module Glue::Pulp::Repo
     # TODO: move into submodules
     # rubocop:disable MethodLength
-    # rubocop:disable ModuleLength
     def self.included(base)
       base.send :include, LazyAccessor
       base.send :include, InstanceMethods
@@ -116,233 +115,12 @@ module Katello
         pulp_repo_facts[:content_unit_counts].values.all? { |value| value == 0 }
       end
 
-      def create_pulp_repo
-        #if we are in library, no need for an distributor, but need to sync
-        if self.environment.try(:library?)
-          importer = generate_importer
-        else
-          #if not in library, no need for sync info, but we need a distributor
-          case self.content_type
-          when Repository::YUM_TYPE
-            importer = Runcible::Models::YumImporter.new
-          when Repository::PUPPET_TYPE
-            importer = Runcible::Models::PuppetImporter.new
-          when Repository::DEB_TYPE
-            importer = Runcible::Models::DebImporter.new
-          end
-        end
-
-        distributors = generate_distributors
-
-        Katello.pulp_server.extensions.repository.create_with_importer_and_distributors(self.pulp_id,
-                                                                                        importer,
-                                                                                        distributors,
-                                                                                        :display_name => self.name)
-      rescue RestClient::ServiceUnavailable => e
-        message = _("Pulp service unavailable during creating repository '%s', please try again later.") % self.name
-        raise PulpErrors::ServiceUnavailable.new(message, e)
-      end
-
       def generate_importer(capsule = SmartProxy.default_capsule!)
-        case self.content_type
-        when Repository::YUM_TYPE
-          Runcible::Models::YumImporter.new(yum_importer_values(capsule))
-        when Repository::FILE_TYPE
-          Runcible::Models::IsoImporter.new(importer_connection_options(capsule).merge(:feed => importer_feed_url(capsule)))
-        when Repository::PUPPET_TYPE
-          Runcible::Models::PuppetImporter.new(puppet_importer_values(capsule))
-        when Repository::DOCKER_TYPE
-          options = {}
-          options[:upstream_name] = capsule.default_capsule? ? self.docker_upstream_name : self.container_repository_name
-          options[:feed] = docker_feed_url(capsule)
-          options[:enable_v1] = false
-          options[:tags] = capsule.default_capsule? ? self.docker_tags_whitelist : nil
-          Runcible::Models::DockerImporter.new(importer_connection_options(capsule).merge(options))
-        when Repository::OSTREE_TYPE
-          options = importer_connection_options(capsule)
-          options[:depth] = capsule.default_capsule? ? root.compute_ostree_upstream_sync_depth : ostree_capsule_sync_depth
-          options[:feed] = self.importer_feed_url(capsule)
-          Runcible::Models::OstreeImporter.new(options)
-        when Repository::DEB_TYPE
-          Runcible::Models::DebImporter.new(deb_importer_values(capsule))
-        else
-          fail _("Unexpected repo type %s") % self.content_type
-        end
-      end
-
-      def docker_feed_url(capsule = SmartProxy.default_capsule!)
-        pulp_uri = URI.parse(SETTINGS[:katello][:pulp][:url])
-        if capsule.default_capsule?
-          self.url if self.respond_to?(:url)
-        else
-          "https://#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}"
-        end
-      end
-
-      def importer_feed_url(capsule = SmartProxy.default_capsule!)
-        if capsule.default_capsule?
-          self.url if self.respond_to?(:url)
-        else
-          self.full_path(nil, true)
-        end
-      end
-
-      def yum_importer_values(capsule)
-        if capsule.default_capsule?
-          new_download_policy = self.download_policy
-        else
-          new_download_policy = capsule_download_policy(capsule)
-        end
-
-        config = {
-          :feed => self.importer_feed_url(capsule),
-          :download_policy => new_download_policy,
-          :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
-        }
-        config[:type_skip_list] = ignorable_content if ignorable_content
-        config.merge(importer_connection_options(capsule))
-      end
-
-      def proxy_host_value
-        self.ignore_global_proxy ? "" : nil
-      end
-
-      def puppet_importer_values(capsule)
-        config = {
-          :feed => self.importer_feed_url(capsule),
-          :remove_missing => capsule.default_capsule? ? self.mirror_on_sync? : true
-        }
-        config.merge(importer_connection_options(capsule))
-      end
-
-      def deb_importer_values(capsule)
-        config = {
-          feed: self.importer_feed_url(capsule),
-          releases: self.deb_releases,
-          components: self.deb_components,
-          architectures: self.deb_architectures
-        }
-        config.merge(importer_connection_options(capsule))
-      end
-
-      def importer_connection_options(capsule = SmartProxy.default_capsule!)
-        if !capsule.default_capsule?
-          ueber_cert = ::Cert::Certs.ueber_cert(organization)
-          importer_options = {
-            :ssl_client_cert => ueber_cert[:cert],
-            :ssl_client_key => ueber_cert[:key],
-            :ssl_ca_cert => ::Cert::Certs.ca_cert
-          }
-        elsif self.try(:redhat?) && self.content_view.default? && Katello::Resources::CDN::CdnResource.redhat_cdn?(url)
-          importer_options = {
-            :ssl_client_cert => self.product.certificate,
-            :ssl_client_key => self.product.key,
-            :ssl_ca_cert => Katello::Repository.feed_ca_cert(url),
-            :proxy_host => self.proxy_host_value
-          }
-        elsif self.ssl_client_cert && self.ssl_client_key && self.ssl_ca_cert
-          importer_options = {
-            :ssl_client_cert => self.ssl_client_cert.content,
-            :ssl_client_key => self.ssl_client_key.content,
-            :ssl_ca_cert => self.ssl_ca_cert.content
-          }
-        else
-          importer_options = {
-            :ssl_client_cert => nil,
-            :ssl_client_key => nil,
-            :ssl_ca_cert => nil,
-            :proxy_host => self.proxy_host_value
-          }
-        end
-        unless self.is_a?(::Katello::ContentViewPuppetEnvironment)
-          importer_options.merge!(:ssl_validation => verify_ssl_on_sync?)
-          if capsule.default_capsule?
-            importer_options.merge!(:basic_auth_username => upstream_username,
-                                    :basic_auth_password => upstream_password)
-          end
-        end
-        importer_options
+        backend_service(capsule).generate_importer
       end
 
       def generate_distributors(capsule = SmartProxy.default_capsule!)
-        case self.content_type
-        when Repository::YUM_TYPE
-          yum_dist_id = self.pulp_id
-          yum_dist_options = {:protected => true, :id => yum_dist_id, :auto_publish => true}
-          yum_dist_options[:skip] = ignorable_content if ignorable_content
-          #check the instance variable, as we do not want to go to pulp
-          yum_dist_options['checksum_type'] = self.saved_checksum_type || self.checksum_type
-          yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, self.unprotected, true,
-                                                          yum_dist_options)
-          clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
-                                                                 :destination_distributor_id => yum_dist_id)
-          export_dist = Runcible::Models::ExportDistributor.new(false, false, self.relative_path)
-          distributors = [yum_dist, export_dist]
-          distributors << clone_dist if capsule.default_capsule?
-        when Repository::FILE_TYPE
-          dist = Runcible::Models::IsoDistributor.new(self.relative_path, self.unprotected, true, auto_publish: true)
-          distributors = [dist]
-        when Repository::PUPPET_TYPE
-          capsule ||= SmartProxy.default_capsule!
-          dist_options = { :id => self.pulp_id, :auto_publish => true }
-          repo_path =  File.join(capsule.puppet_path,
-                                 Environment.construct_name(self.organization,
-                                                            self.environment,
-                                                            self.content_view),
-                                 'modules')
-          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(repo_path, dist_options)
-
-          dist_options[:id] = "#{self.pulp_id}_puppet"
-          puppet_dist = Runcible::Models::PuppetDistributor.new(nil, (self.unprotected || false),
-                                                                true, dist_options)
-
-          distributors = [puppet_dist, puppet_install_dist]
-        when Repository::DOCKER_TYPE
-          options = { :protected => !self.unprotected, :id => self.pulp_id, :auto_publish => true,
-                      :repo_registry_id => container_repository_name}
-          docker_dist = Runcible::Models::DockerDistributor.new(options)
-          distributors = [docker_dist]
-        when Repository::OSTREE_TYPE
-          options = { :id => self.pulp_id,
-                      :auto_publish => true,
-                      :relative_path => relative_path,
-                      :depth => self.root.compute_ostree_upstream_sync_depth }
-
-          dist = Runcible::Models::OstreeDistributor.new(options)
-          distributors = [dist]
-        when Repository::DEB_TYPE
-          options = {
-            id: self.pulp_id,
-            auto_publish: true
-          }
-          http = self.unprotected
-          https = true
-          dist = Runcible::Models::DebDistributor.new(self.relative_path, http, https, options)
-          distributors = [dist]
-        else
-          fail _("Unexpected repo type %s") % self.content_type
-        end
-
-        distributors
-      end
-
-      def importer_type
-        case self.content_type
-        when Repository::YUM_TYPE
-          Runcible::Models::YumImporter::ID
-        when Repository::FILE_TYPE
-          Runcible::Models::IsoImporter::ID
-        when Repository::PUPPET_TYPE
-          Runcible::Models::PuppetImporter::ID
-        when Repository::DOCKER_TYPE
-          Runcible::Models::DockerImporter::ID
-        when Repository::OSTREE_TYPE
-          Runcible::Models::OstreeImporter::ID
-        when Repository::DEB_TYPE
-          Runcible::Models::DebImporter::ID
-        else
-          fail _("Unexpected repo type %s") % self.content_type
-        end
+        backend_service(capsule).generate_distributors
       end
 
       def populate_from(repos_map)
@@ -575,14 +353,13 @@ module Katello
           generated.delete('checksum_type')
           actual.delete('checksum_type')
         end
-        generated.delete('repo-registry-id')
-        generated == actual
+        generated.compact == actual.compact
       end
 
       def importer_matches?(capsule_importer, capsule)
         generated_importer = self.generate_importer(capsule)
         capsule_importer.try(:[], 'importer_type_id') == generated_importer.id &&
-          generated_importer.config == capsule_importer['config']
+            generated_importer.config.compact == capsule_importer['config'].compact
       end
 
       protected

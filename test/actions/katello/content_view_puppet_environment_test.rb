@@ -17,13 +17,11 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
 
     it 'plans' do
       default_capsule = mock
-      default_capsule.expects(:puppet_path).returns('/etc/puppet/environments')
       SmartProxy.expects(:default_capsule).returns(default_capsule)
       puppet_env.expects(:save!)
       action.expects(:action_subject).with(puppet_env)
 
       plan_action action, puppet_env
-      assert_action_planed action, ::Actions::Pulp::Repository::Create
       refute_action_planed action, ::Actions::Katello::Product::ContentCreate
     end
   end

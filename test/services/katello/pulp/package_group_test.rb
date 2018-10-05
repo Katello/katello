@@ -6,26 +6,19 @@ module Katello
     class PackageGroupTestBase < ActiveSupport::TestCase
       include RepositorySupport
 
-      @@package_group_id = nil
-
       def setup
-        User.current = User.find(FIXTURES['users']['admin']['id'])
+        User.current = users(:admin)
 
-        VCR.insert_cassette('services/pulp/package_group')
+        @repo = katello_repositories(:fedora_17_x86_64)
+        RepositorySupport.create_and_sync_repo(@repo)
+        Katello::PackageGroup.import_for_repository(@repo)
 
-        repository_id = FIXTURES['katello_repositories']['fedora_17_x86_64']['id']
-        RepositorySupport.create_and_sync_repo(repository_id)
-
-        @@package_groups = RepositorySupport.repo.package_groups
-
+        @@package_groups = @repo.package_groups
         @@package_group_names = ['bird', 'mammal']
-
-        Katello::PackageGroup.import_for_repository(RepositorySupport.repo)
       end
 
       def teardown
-        RepositorySupport.destroy_repo
-        VCR.eject_cassette
+        RepositorySupport.destroy_repo(@repo)
       end
     end
 

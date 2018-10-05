@@ -62,14 +62,20 @@ module Katello
         }
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
 
-        def self.default_capsule
+        def self.pulp_master
           unscoped.with_features(PULP_FEATURE).first
         end
 
+        def self.pulp_master!
+          pulp_master || fail(_("Could not find a smart proxy with pulp feature."))
+        end
+
+        def self.default_capsule
+          pulp_master
+        end
+
         def self.default_capsule!
-          capsule = default_capsule
-          fail _("Could not find a smart proxy with pulp feature.") if capsule.nil?
-          capsule
+          pulp_master!
         end
       end
 
@@ -87,26 +93,34 @@ module Katello
         path
       end
 
-      def pulp_node
-        @pulp_node ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
-      end
-
       def pulp_url
         uri = URI.parse(url)
         "#{uri.scheme}://#{uri.host}/pulp/api/v2/"
       end
 
-      def default_capsule?
+      def pulp_api
+        @pulp_api ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
+      end
+
+      def pulp_mirror?
+        self.features.map(&:name).include?(PULP_NODE_FEATURE)
+      end
+
+      def pulp_master?
         # use map instead of pluck in case the features aren't saved yet during create
         self.features.map(&:name).include?(PULP_FEATURE)
       end
 
+      #deprecated methods
+      alias_method :pulp_node, :pulp_api
+      alias_method :default_capsule?, :pulp_master?
+
       def associate_organizations
-        self.organizations = Organization.all if self.default_capsule?
+        self.organizations = Organization.all if self.pulp_master?
       end
 
       def associate_default_locations
-        return unless default_capsule?
+        return unless pulp_master?
         ['puppet_content', 'subscribed_hosts'].each do |type|
           default_location = ::Location.unscoped.find_by_title(
             ::Setting[:"default_location_#{type}"])
@@ -121,7 +135,7 @@ module Katello
       end
 
       def associate_lifecycle_environments
-        self.lifecycle_environments = Katello::KTEnvironment.all if self.default_capsule?
+        self.lifecycle_environments = Katello::KTEnvironment.all if self.pulp_master?
       end
     end
   end

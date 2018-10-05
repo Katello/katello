@@ -92,7 +92,7 @@ module Katello
     end
 
     def default_capsule?
-      @capsule.default_capsule?
+      @capsule.pulp_master?
     end
 
     def orphaned_repos
@@ -132,7 +132,7 @@ module Katello
     end
 
     def pulp_url
-      "https://" + self.capsule.hostname + "/pulp/api/v2/"
+      self.capsule.pulp_url
     end
 
     def pulp_repo_facts(pulp_id)
@@ -164,7 +164,7 @@ module Katello
     end
 
     def self.default_capsule
-      proxy = SmartProxy.with_features(SmartProxy::PULP_FEATURE).first
+      proxy = SmartProxy.pulp_master
       self.new(proxy) if proxy
     end
 

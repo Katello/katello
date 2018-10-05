@@ -12,7 +12,7 @@ module Katello
       set_user
       backend_stubs
       set_ca_file
-      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      @master_proxy = FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @fedora_17_x86_64_dev = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_x86_64 = katello_repositories(:fedora_17_x86_64)
       @fedora_17_library_library_view = katello_repositories(:fedora_17_library_library_view)
@@ -21,6 +21,7 @@ module Katello
       @fedora_17_x86_64.relative_path = 'test_path/'
       @fedora_17_x86_64.root.url = "file:///var/www/test_repos/zoo"
       @fedora_17_x86_64.root.download_policy = 'immediate'
+      @fedora_17_x86_64.root.save!
     end
 
     def backend_stubs
@@ -41,18 +42,7 @@ module Katello
     end
 
     def self.create_repo(repository)
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create,
-                              content_type: repository.content_type,
-                              pulp_id: repository.pulp_id,
-                              name: repository.name,
-                              feed: repository.url,
-                              ssl_ca_cert: "foo",
-                              ssl_client_cert: "foo",
-                              ssl_client_key: "foo",
-                              unprotected: repository.unprotected,
-                              checksum_type: repository.checksum_type,
-                              path: repository.relative_path,
-                              with_importer: true)
+      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create, repository)
     end
   end
 
@@ -118,35 +108,6 @@ module Katello
     SHA1 = "sha1".freeze
     SHA256 = "sha256".freeze
 
-    def test_importer_feed_url
-      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      pulp_host = URI.parse(SETTINGS[:katello][:pulp][:url]).host
-      repo = ::Katello::Repository.new(:root => Katello::RootRepository.new(:url => 'http://zodiak.com/ted', :unprotected => false), :relative_path => '/elbow')
-
-      assert_equal repo.importer_feed_url, 'http://zodiak.com/ted'
-      assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
-
-      repo.root.unprotected = true
-      assert_equal repo.importer_feed_url(proxy), "https://#{pulp_host}/pulp/repos//elbow/"
-    end
-
-    def test_importer_connection_options
-      ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      assert @fedora_17_x86_64.importer_connection_options(proxy).key?(:ssl_validation)
-      refute @cvpe_one.importer_connection_options(proxy).key?(:ssl_validation)
-    end
-
-    def test_relative_path
-      assert_equal 'test_path/', @fedora_17_x86_64.relative_path
-    end
-
-    def test_relative_path=
-      @fedora_17_x86_64.relative_path = 'new_path/'
-
-      refute_equal 'test_path/', @fedora_17_x86_64.relative_path
-    end
-
     def test_populate_from
       assert @fedora_17_x86_64.populate_from(@fedora_17_x86_64.pulp_id => {})
     end
@@ -204,7 +165,7 @@ module Katello
 
     def test_importer_upstream_username_passwd_with_capsule
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      proxy = FactoryBot.build(:bmc_smart_proxy)
+      proxy = FactoryBot.build(:smart_proxy, :pulp_mirror)
       repo = katello_repositories(:fedora_17_x86_64)
       username = "justin"
       password = "super-secret"
@@ -233,13 +194,12 @@ module Katello
 
     def test_importer_ostree_capsule
       ::Cert::Certs.stubs(:ueber_cert).returns(:cert => 'foo', :key => 'bar')
-      capsule = FactoryBot.build(:bmc_smart_proxy)
-      depth = 100
+      capsule = FactoryBot.build(:smart_proxy, :pulp_mirror)
       ostree_repo = katello_repositories(:ostree)
       ostree_repo.root.expects(:compute_ostree_upstream_sync_depth).never
-      ostree_repo.expects(:ostree_capsule_sync_depth).returns(depth)
+
       importer = ostree_repo.generate_importer(capsule)
-      assert_equal depth, importer.depth
+      assert_equal Katello::Pulp::Repository::Ostree::PULP_MIRROR_SYNC_DEPTH, importer.depth
     end
 
     def test_importer_matches?
@@ -282,11 +242,6 @@ module Katello
       super
       @fedora_17_x86_64 = @fedora_17_x86_64
     end
-
-    def test_create_pulp_repo
-      assert create_repo(@fedora_17_x86_64)
-      delete_repo(@fedora_17_x86_64)
-    end
   end
 
   class GluePulpRepoTest < GluePulpRepoTestBase
@@ -295,6 +250,7 @@ module Katello
       self.create_repo(@fedora_17_x86_64)
       @fedora_17_x86_64 = @fedora_17_x86_64
       @fedora_17_x86_64.relative_path = 'test_path/'
+      @mirror_proxy = FactoryBot.build(:smart_proxy, :pulp_mirror)
     end
 
     def teardown
@@ -313,14 +269,14 @@ module Katello
     end
 
     def test_generate_distributors_with_external_capsule
-      dists = @fedora_17_x86_64.generate_distributors(OpenStruct.new(:default_capsule? => false))
+      dists = @fedora_17_x86_64.generate_distributors(@mirror_proxy)
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
       assert_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
-      refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
+      assert_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
     end
 
     def test_generate_distributors_with_default_capsule
-      dists = @fedora_17_x86_64.generate_distributors(OpenStruct.new(:default_capsule? => true))
+      dists = @fedora_17_x86_64.generate_distributors(@master_proxy)
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::YumCloneDistributor }
       refute_empty dists.select { |d| d.is_a? Runcible::Models::ExportDistributor }
@@ -345,7 +301,7 @@ module Katello
 
     def test_pulp_scratchpad_checksum_type
       repo = katello_repositories(:rhel_7_x86_64)
-      repo.create_pulp_repo
+      create_repo(repo)
 
       assert_nil repo.pulp_scratchpad_checksum_type
 
@@ -381,8 +337,7 @@ module Katello
   class GluePulpRepoContentsTest < GluePulpRepoTestBase
     def setup
       super
-
-      @fedora_17_x86_64.create_pulp_repo
+      create_repo(@fedora_17_x86_64)
       task_list = @fedora_17_x86_64.sync
       TaskSupport.wait_on_tasks(task_list)
     end
@@ -443,7 +398,7 @@ module Katello
 
       @fedora_17_x86_64_dev = Repository.find(FIXTURES['katello_repositories']['fedora_17_x86_64_dev']['id'])
 
-      @fedora_17_x86_64.create_pulp_repo
+      create_repo(@fedora_17_x86_64)
       task_list = @fedora_17_x86_64.sync
       TaskSupport.wait_on_tasks(task_list)
     end

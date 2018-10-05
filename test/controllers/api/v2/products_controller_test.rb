@@ -75,6 +75,7 @@ module Katello
         action_class.must_equal ::Actions::Katello::Product::Create
         prod.must_be_kind_of(Product)
         org.must_equal @organization
+        prod.organization = @organization
         prod.provider = @provider
         assert_equal product_params[:name], prod.name
         assert_equal product_params[:description], prod.description

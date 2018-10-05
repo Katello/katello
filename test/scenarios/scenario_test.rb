@@ -8,9 +8,7 @@ module Scenarios
     include ForemanTasks::TestHelpers::WithInThreadExecutor
 
     def setup
-      default_capsule = SmartProxy.new(:url => 'http://foo.com/foo')
-      default_capsule.stubs(:default_capsule?).returns(true)
-      SmartProxy.stubs(:default_capsule).returns(default_capsule)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
 
     def test_scenarios

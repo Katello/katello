@@ -12,7 +12,7 @@ module Katello
       end
     end
 
-    def_field :allow_creation_by_user
+    def_field :allow_creation_by_user, :service_class
     attr_reader :id
 
     def initialize(id)

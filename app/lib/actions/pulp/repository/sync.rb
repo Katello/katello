@@ -21,8 +21,7 @@ module Actions
             overrides[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
             overrides[:options] = input[:options] if input[:options]
             repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
-            output[:pulp_tasks] = pulp_tasks = ::Katello::Pulp::Repository.new(repo, smart_proxy(input[:capsule_id])).sync(overrides)
-            pulp_tasks
+            output[:pulp_tasks] = repo.backend_service(smart_proxy).sync(overrides)
           end
         end
 

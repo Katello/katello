@@ -7,7 +7,7 @@ module Actions
           fail _("Action not allowed for the default capsule.") if capsule_content.default_capsule?
 
           repos_to_create(capsule_content, environment, content_view, repository).each do |repo|
-            create_repo_in_pulp(capsule_content, repo)
+            plan_action(Pulp::Repository::Create, repo, capsule_content.capsule)
           end
         end
 
@@ -24,30 +24,6 @@ module Actions
             repos = list_of_repos_to_sync - current_repos_on_capsule
           end
           repos
-        end
-
-        def create_repo_in_pulp(capsule_content, repository)
-          ueber_cert = ::Cert::Certs.ueber_cert(repository.organization)
-          relative_path = repository_relative_path(repository, capsule_content)
-          checksum_type = repository.yum? ? repository.checksum_type : nil
-
-          plan_action(Pulp::Repository::Create,
-                      content_type: repository.content_type,
-                      pulp_id: repository.pulp_id,
-                      name: repository.name,
-                      feed: repository.docker? ? repository.docker_feed_url(capsule_content.capsule) : repository.full_path(nil, true),
-                      ssl_ca_cert: ::Cert::Certs.ca_cert,
-                      ssl_client_cert: ueber_cert[:cert],
-                      ssl_client_key: ueber_cert[:key],
-                      unprotected: repository.unprotected,
-                      checksum_type: checksum_type,
-                      path: relative_path,
-                      with_importer: true,
-                      docker_upstream_name: repository.docker? ? repository.container_repository_name : nil,
-                      docker_tags_whitelist: repository.docker? ? repository.docker_tags_whitelist : nil,
-                      repo_registry_id: repository.docker? ? repository.container_repository_name : nil,
-                      download_policy: repository.capsule_download_policy(capsule_content.capsule),
-                      capsule_id: capsule_content.capsule.id)
         end
 
         def repository_relative_path(repository, capsule_content)
