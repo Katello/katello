@@ -8,20 +8,16 @@
  * @requires ModuleStream
  * @requires translate
  * @requires Nutupane
+ * @requires ModuleStreamActions
  *
  * @description
  *   Provides the functionality for the content host module streams list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsController',
-    ['$scope', '$timeout', '$window', 'ModuleStream', 'translate', 'Nutupane', 'BastionConfig',
-    function ($scope, $timeout, $window, ModuleStream, translate, Nutupane, BastionConfig) {
-        $scope.moduleStreamActions = [
-            { action: 'enable', description: translate("Enable")},
-            { action: 'disable', description: translate("Disable")},
-            { action: 'install', description: translate("Install")},
-            { action: 'update', description: translate("Update")},
-            { action: 'remove', description: translate("Remove")}
-        ];
+    ['$scope', '$timeout', '$window', 'ModuleStream', 'translate', 'Nutupane', 'BastionConfig', 'ModuleStreamActions',
+    function ($scope, $timeout, $window, ModuleStream, translate, Nutupane, BastionConfig, ModuleStreamActions) {
+        $scope.moduleStreamActions =  ModuleStreamActions.getActions();
+
         $scope.working = false;
 
         $scope.moduleStreamsNutupane = new Nutupane(ModuleStream, {
