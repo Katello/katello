@@ -123,24 +123,8 @@ module ::Actions::Katello::CapsuleContent
 
       action = create_and_plan_action(action_class, capsule_content)
 
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::Create) do |(input)|
-        input.must_equal(content_type: repository.content_type,
-                         pulp_id: repository.pulp_id,
-                         name: repository.name,
-                         feed: repository.full_path,
-                         ssl_ca_cert: ::Cert::Certs.ca_cert,
-                         ssl_client_cert: cert[:cert],
-                         ssl_client_key: cert[:key],
-                         unprotected: repository.unprotected,
-                         download_policy: repository.capsule_download_policy(capsule_content.capsule),
-                         checksum_type: repository.checksum_type,
-                         path: repository.relative_path,
-                         with_importer: true,
-                         docker_upstream_name: repository.container_repository_name,
-                         docker_tags_whitelist: repository.docker_tags_whitelist,
-                         :repo_registry_id => nil,
-                         capsule_id: capsule_content.capsule.id
-                        )
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::Create) do |input|
+        input[0].must_equal(repository)
       end
     end
   end

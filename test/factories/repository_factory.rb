@@ -67,6 +67,10 @@ FactoryBot.define do
       product { FactoryBot.create(:katello_product, :with_provider, organization: organization) }
     end
 
+    trait :deb do
+      association :root, :deb_root, :factory => :katello_root_repository, :strategy => :build
+    end
+
     factory :docker_repository, traits: [:docker]
   end
 end

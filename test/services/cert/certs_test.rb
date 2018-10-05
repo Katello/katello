@@ -3,8 +3,9 @@ require 'support/candlepin/owner_support'
 
 module Katello
   class CertsTest < ActiveSupport::TestCase
+    include VCR::TestCase
+
     def setup
-      VCR.insert_cassette('lib/tasks/verify_ueber_cert')
       @org = get_organization
       Resources::Candlepin::Owner.create(@org.label, @org.name)
       @original_ssl_ca_file = Setting[:ssl_ca_file]
@@ -12,7 +13,6 @@ module Katello
 
     def teardown
       Resources::Candlepin::Owner.destroy(@org.label)
-      VCR.eject_cassette
       Setting[:ssl_ca_file] = @original_ssl_ca_file
     end
 

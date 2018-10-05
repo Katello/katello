@@ -34,10 +34,6 @@ module Katello
       Repository::PUPPET_TYPE
     end
 
-    def unprotected
-      false
-    end
-
     def mirror_on_sync?
       true
     end
@@ -50,20 +46,12 @@ module Katello
       true
     end
 
+    def backend_service(smart_proxy)
+      @service ||= Katello::Pulp::Repository.instance_for_type(nonpersisted_repository, smart_proxy)
+    end
+
     def node_syncable?
       environment
-    end
-
-    def ssl_client_cert
-      false
-    end
-
-    def ssl_client_key
-      false
-    end
-
-    def ssl_ca_cert
-      false
     end
 
     def organization
@@ -91,25 +79,16 @@ module Katello
       self.environment.nil?
     end
 
-    def generate_puppet_path(capsule)
-      # rubocop:disable Style/EmptyElse
-      if self.environment
-        File.join(capsule.puppet_path, generate_puppet_env_name, 'modules')
-      else
-        nil #don't generate archived content view puppet environments
-      end
-    end
-
-    def generate_puppet_env_name
-      if self.environment
-        Environment.construct_name(self.organization,
-                                   self.environment,
-                                   self.content_view)
-      end
-    end
-
-    def ignore_global_proxy
-      false
+    def nonpersisted_repository
+      #This creates a mock repository that can be used
+      root = ::Katello::RootRepository.new(content_type: ::Katello::Repository::PUPPET_TYPE,
+                                           name: "#{content_view.name} Puppet Environment",
+                                           mirror_on_sync: true,
+             product: Product.new(:organization => organization))
+      ::Katello::Repository.new(root: root,
+                                pulp_id: pulp_id,
+                                content_view_version: content_view_version,
+                                environment: environment)
     end
 
     def set_pulp_id

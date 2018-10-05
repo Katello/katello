@@ -17,12 +17,12 @@ module ::Actions::Pulp::Repository
 
     def setup
       set_user
-      ::Katello::RepositorySupport.create_repo(repo.id)
+      ::Katello::RepositorySupport.create_repo(repo)
     end
 
     def teardown
       set_user
-      ::Katello::RepositorySupport.destroy_repo(repo.pulp_id)
+      ::Katello::RepositorySupport.destroy_repo(repo)
     end
   end
 end

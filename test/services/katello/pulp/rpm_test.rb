@@ -6,20 +6,18 @@ module Katello
     class RpmTestBase < ActiveSupport::TestCase
       include RepositorySupport
 
-      @@package_id = nil
-
       def setup
         User.current = users(:admin)
-        VCR.insert_cassette('services/pulp/rpm')
-        repo = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
-        RepositorySupport.create_and_sync_repo(repo.id)
-        Katello::Rpm.import_for_repository(RepositorySupport.repo, true)
-        @package_id = RepositorySupport.repo.rpms.first.id
+
+        @repo = katello_repositories(:fedora_17_x86_64)
+
+        RepositorySupport.create_and_sync_repo(@repo)
+        Katello::Rpm.import_for_repository(@repo, true)
+        @package_id = @repo.rpms.first.id
       end
 
       def teardown
-        RepositorySupport.destroy_repo
-        VCR.eject_cassette
+        RepositorySupport.destroy_repo(@repo)
         User.current = nil
       end
     end

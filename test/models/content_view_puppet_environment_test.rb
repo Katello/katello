@@ -55,14 +55,12 @@ module Katello
     end
 
     def test_puppet_importer_values_for_mirror_on_sync
-      assert_equal true, @puppet_env.mirror_on_sync?
+      assert @puppet_env.mirror_on_sync?
       capsule = OpenStruct.new(:default_capsule? => true)
-      @puppet_env.expects(:mirror_on_sync?).returns(true)
-      @puppet_env.expects(:importer_connection_options).returns({}).at_least_once
 
-      assert_equal true, @puppet_env.generate_importer(capsule).remove_missing
+      refute @puppet_env.nonpersisted_repository.generate_importer(capsule).remove_missing
       other_capsule = OpenStruct.new(:default_capsule? => false)
-      assert_equal true, @puppet_env.generate_importer(other_capsule).remove_missing
+      assert true, @puppet_env.nonpersisted_repository.generate_importer(other_capsule).remove_missing
     end
   end
 

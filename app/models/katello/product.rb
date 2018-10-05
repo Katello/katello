@@ -127,8 +127,6 @@ module Katello
       !self.provider.redhat_provider? || self.repositories.present?
     end
 
-    delegate :organization, to: :provider
-
     delegate :library, to: :organization
 
     def plan_name

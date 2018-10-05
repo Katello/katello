@@ -3,14 +3,10 @@ require 'katello_test_helper'
 module Katello
   module Service
     class RegistrationManagerTestBase < ActiveSupport::TestCase
+      include VCR::TestCase
+
       def setup
         User.current = User.find(FIXTURES['users']['admin']['id'])
-
-        VCR.insert_cassette('services/katello')
-      end
-
-      def teardown
-        VCR.eject_cassette
       end
     end
 

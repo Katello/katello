@@ -1,8 +1,59 @@
 ---
 http_interactions:
 - request:
+    method: get
+    uri: https://dev.example.com:8443/candlepin/owners/scenario_test
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.0p0
+      Authorization:
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="32PLqnJA0HPwUAatU3Oc9x9XCgWWIxLTPkKMyzJLw",
+        oauth_signature="kKIFhxCxelvug%2BNAUmUE3Frnnrc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1540228105", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - b8633e85-bfbf-4223-a1eb-82bf91525a3c
+      X-Version:
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 22 Oct 2018 17:08:25 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcmVhdGVkIjoiMjAxOC0xMC0yMlQxNzowNjoyMyswMDAwIiwidXBkYXRl
+        ZCI6IjIwMTgtMTAtMjJUMTc6MDY6MjMrMDAwMCIsImlkIjoiNDAyOGY5NTE2
+        Njg4N2Q2ZjAxNjY5Y2JkZTk4YjAwM2MiLCJrZXkiOiJzY2VuYXJpb190ZXN0
+        IiwiZGlzcGxheU5hbWUiOiJzY2VuYXJpb190ZXN0IiwicGFyZW50T3duZXIi
+        Om51bGwsImNvbnRlbnRQcmVmaXgiOiIvc2NlbmFyaW9fdGVzdC8kZW52Iiwi
+        ZGVmYXVsdFNlcnZpY2VMZXZlbCI6bnVsbCwidXBzdHJlYW1Db25zdW1lciI6
+        bnVsbCwibG9nTGV2ZWwiOm51bGwsImF1dG9iaW5kRGlzYWJsZWQiOmZhbHNl
+        LCJjb250ZW50QWNjZXNzTW9kZSI6ImVudGl0bGVtZW50IiwiY29udGVudEFj
+        Y2Vzc01vZGVMaXN0IjoiZW50aXRsZW1lbnQiLCJsYXN0UmVmcmVzaGVkIjpu
+        dWxsLCJocmVmIjoiL293bmVycy9zY2VuYXJpb190ZXN0In0=
+    http_version: 
+  recorded_at: Mon, 22 Oct 2018 17:08:25 GMT
+- request:
     method: delete
-    uri: https://coffee.jomitsch.example.com:8443/candlepin/owners/scenario_test
+    uri: https://dev.example.com:8443/candlepin/owners/scenario_test
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -12,11 +63,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.0p0
       Authorization:
-      - OAuth oauth_consumer_key="AdoV269D57DssaF5sCDMoygDLex53WhZ", oauth_nonce="QKdfKoh5y8mAUkrQwuYKtWChKGlL27zb6IYMwGvRWk",
-        oauth_signature="UUrCIHCAGPU90D3%2FZ%2F%2BG5kZbtzs%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1534359090", oauth_version="1.0"
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="HelIMHw6VBCfqTjV9oJsZtBw2Dnty58ipiPzpKZRQ",
+        oauth_signature="Pw%2F%2FVrNgjSyJLLI6BqfhXWqvobw%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1540228105", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -27,59 +78,14 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - 6dbfaf73-5b0c-412d-be19-fbcf58cffcf8
+      - 1b72ae42-fd0b-48a1-a911-bd56ae25594c
       X-Version:
-      - 2.4.5-1
+      - 2.5.6-1
       Date:
-      - Wed, 15 Aug 2018 18:51:30 GMT
+      - Mon, 22 Oct 2018 17:08:25 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Wed, 15 Aug 2018 18:51:30 GMT
-- request:
-    method: get
-    uri: https://centos7-devel.example.com:8443/candlepin/owners/scenario_test
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.4p296
-      Authorization:
-      - OAuth oauth_consumer_key="RXUZiPe4uwZ95JbUkqg7xsB9s92KYi78", oauth_nonce="2O7xeI9MZsC2VKnaXjjp9svclTmsYBgoWXFgFRxQ",
-        oauth_signature="tPh1VQMKzpao%2Fg7QKhAQ21ZI1ys%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1538393397", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
-  response:
-    status:
-      code: 404
-      message: Not Found
-    headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 91dfb136-9cb1-4283-a697-67f935d1e876
-      X-Version:
-      - 2.4.5-1
-      - 2.4.5-1
-      Content-Type:
-      - application/json
-      Transfer-Encoding:
-      - chunked
-      Date:
-      - Mon, 01 Oct 2018 11:29:57 GMT
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJkaXNwbGF5TWVzc2FnZSI6Ik9yZ2FuaXphdGlvbiB3aXRoIGlkIHNjZW5h
-        cmlvX3Rlc3QgY291bGQgbm90IGJlIGZvdW5kLiIsInJlcXVlc3RVdWlkIjoi
-        OTFkZmIxMzYtOWNiMS00MjgzLWE2OTctNjdmOTM1ZDFlODc2In0=
-    http_version: 
-  recorded_at: Mon, 01 Oct 2018 11:29:57 GMT
+  recorded_at: Mon, 22 Oct 2018 17:08:25 GMT
 recorded_with: VCR 3.0.3

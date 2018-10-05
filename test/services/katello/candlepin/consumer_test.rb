@@ -4,14 +4,10 @@ require 'support/pulp/repository_support'
 module Katello
   module Service
     class CandlepinConsumerTestBase < ActiveSupport::TestCase
+      include VCR::TestCase
+
       def setup
         User.current = User.find(FIXTURES['users']['admin']['id'])
-
-        VCR.insert_cassette('services/candlepin/consumer')
-      end
-
-      def teardown
-        VCR.eject_cassette
       end
     end
 

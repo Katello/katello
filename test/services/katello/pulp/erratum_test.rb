@@ -6,39 +6,35 @@ module Katello
     class ErratumTestBase < ActiveSupport::TestCase
       include RepositorySupport
 
-      @@package_id = nil
+      ERRATA_ID = 'RHSA-2010:0858'.freeze
 
       def setup
-        User.current = User.find(FIXTURES['users']['admin']['id'])
+        User.current = users(:admin)
 
-        VCR.insert_cassette('services/pulp/erratum')
-
-        RepositorySupport.create_and_sync_repo(FIXTURES['katello_repositories']['fedora_17_x86_64']['id'])
-
-        @@full_errata_id = 'RHSA-2010:0858'
+        @repo = katello_repositories(:fedora_17_x86_64)
+        RepositorySupport.create_and_sync_repo(@repo)
       end
 
       def teardown
-        RepositorySupport.destroy_repo
-        VCR.eject_cassette
+        RepositorySupport.destroy_repo(@repo)
       end
     end
 
     class ErratumTest < ErratumTestBase
       def test_backend_data
-        Katello::Erratum.import_for_repository(RepositorySupport.repo)
-        erratum = Pulp::Erratum.new(Erratum.find_by_errata_id(@@full_errata_id).uuid)
-        assert @@full_errata_id, erratum .backend_data['id']
+        Katello::Erratum.import_for_repository(@repo)
+        erratum = Pulp::Erratum.new(Erratum.find_by_errata_id(ERRATA_ID).uuid)
+        assert ERRATA_ID, erratum .backend_data['id']
       end
 
       def test_pulp_data
-        Katello::Erratum.import_for_repository(RepositorySupport.repo)
-        uuid = Erratum.find_by_errata_id(@@full_errata_id).uuid
-        assert @@full_errata_id, Pulp::Erratum.pulp_data(uuid)['id']
+        Katello::Erratum.import_for_repository(@repo)
+        uuid = Erratum.find_by_errata_id(ERRATA_ID).uuid
+        assert ERRATA_ID, Pulp::Erratum.pulp_data(uuid)['id']
       end
 
       def test_update_from_json
-        uuid = Katello::Pulp::Erratum.fetch_for_repository(RepositorySupport.repo.pulp_id).detect { |e| e['id'] == @@full_errata_id }['_id']
+        uuid = Katello::Pulp::Erratum.fetch_for_repository(@repo.pulp_id).detect { |e| e['id'] == ERRATA_ID }['_id']
         errata_data = Pulp::Erratum.pulp_data(uuid)
         erratum = Erratum.create!(:uuid => errata_data['_id'])
         erratum.update_from_json(errata_data)

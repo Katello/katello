@@ -1,0 +1,101 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://dev.example.com:8443/candlepin/consumers/fake-uuid-from-katello/guests
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.0p0
+      Authorization:
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="AlxaNEffBZt2JtzB5C56DGhkDQ8cWPEkigj7nttWko",
+        oauth_signature="YTcYGXD9ecoaNiYpynqr4lncwQ4%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1540226452", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 4bc39525-debd-4ba3-9ce8-ec8e3ebd899c
+      X-Version:
+      - 2.5.6-1
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 22 Oct 2018 16:40:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IkNvbnN1bWVyIHdpdGggaWQgZmFrZS11dWlk
+        LWZyb20ta2F0ZWxsbyBjb3VsZCBub3QgYmUgZm91bmQuIiwicmVxdWVzdFV1
+        aWQiOiI0YmMzOTUyNS1kZWJkLTRiYTMtOWNlOC1lYzhlM2ViZDg5OWMifQ==
+    http_version: 
+  recorded_at: Mon, 22 Oct 2018 16:40:52 GMT
+- request:
+    method: get
+    uri: https://dev.example.com:8443/candlepin/consumers/fake-uuid-from-katello/host
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.0p0
+      Authorization:
+      - OAuth oauth_consumer_key="5xjexjFsNy2Jg2VCvapxSWPpkYWabRcp", oauth_nonce="wZ1lROFnV9DjpG1Oyh2ApBuEgzSxlfcUNM2DqYbnFc",
+        oauth_signature="ypWMtJk%2B60V%2BQdMrOzNCfLLUi2k%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1540226452", oauth_version="1.0"
+      Accept-Language:
+      - en
+      Content-Type:
+      - application/json
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - d6eebfbe-efd1-42b2-820b-3c272633a72e
+      X-Version:
+      - 2.5.6-1
+      - 2.5.6-1
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Mon, 22 Oct 2018 16:40:52 GMT
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJkaXNwbGF5TWVzc2FnZSI6IkNvbnN1bWVyIHdpdGggaWQgZmFrZS11dWlk
+        LWZyb20ta2F0ZWxsbyBjb3VsZCBub3QgYmUgZm91bmQuIiwicmVxdWVzdFV1
+        aWQiOiJkNmVlYmZiZS1lZmQxLTQyYjItODIwYi0zYzI3MjYzM2E3MmUifQ==
+    http_version: 
+  recorded_at: Mon, 22 Oct 2018 16:40:52 GMT
+recorded_with: VCR 3.0.3

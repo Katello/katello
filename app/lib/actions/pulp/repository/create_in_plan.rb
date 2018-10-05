@@ -4,24 +4,10 @@ module Actions
       class CreateInPlan < Create
         alias_method :perform_run, :run
 
-        def plan(input)
-          plan_self(input)
-          pulp_extensions.repository.create_with_importer_and_distributors(input[:pulp_id],
-                                                                           importer,
-                                                                           distributors,
-                                                                           display_name: input[:name])
-        rescue => e
-          raise e.try(:http_body) ? error_message(e.http_body) || e : e
-        end
-
-        def error_message(body)
-          JSON.parse(body)['error_message']
-        rescue JSON::ParserError
-          nil
-        end
-
-        def run
-          self.output = input
+        def plan(repository)
+          input[:response] = repository.backend_service(smart_proxy).create
+        rescue RestClient::Conflict
+          Rails.logger.warn("Tried to add repository #{input[:pulp_id]} that already exists.")
         end
       end
     end

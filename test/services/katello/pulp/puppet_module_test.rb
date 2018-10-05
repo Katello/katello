@@ -4,12 +4,12 @@ require 'support/pulp/repository_support'
 module Katello
   module Service
     class PuppetModuleTest < ActiveSupport::TestCase
+      include RepositorySupport
+
       def setup
         set_user
 
-        VCR.insert_cassette('services/pulp/puppet_module')
-
-        @repository = Repository.find(katello_repositories(:p_forge).id)
+        @repository = ::Katello::Repository.find(katello_repositories(:p_forge).id)
         RepositorySupport.create_and_sync_repo(@repository)
         @repository.index_content
 
@@ -17,8 +17,7 @@ module Katello
       end
 
       def teardown
-        RepositorySupport.destroy_repo
-        VCR.eject_cassette
+        RepositorySupport.destroy_repo(@repository)
       end
 
       def test_backend_data
