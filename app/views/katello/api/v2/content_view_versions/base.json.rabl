@@ -67,7 +67,7 @@ child :environments => :environments do
 end
 
 child :archived_repos => :repositories do
-  attributes :id, :name, :label, :content_type
+  attributes :id, :name, :label, :content_type, :library_instance_id
 end
 
 child :last_event => :last_event do
