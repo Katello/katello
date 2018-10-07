@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListView } from 'patternfly-react';
-import { sprintf } from 'jed';
+import { sprintf } from 'foremanReact/common/I18n';
 
 import PaginationRow from '../../components/PaginationRow/index';
 import RepositorySet from './components/RepositorySet';

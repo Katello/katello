@@ -1,3 +1,4 @@
+import { translate as __ } from 'foremanReact/common/I18n';
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { SUBSCRIPTIONS_QUANTITIES_FAILURE } from '../../scenes/Subscriptions/SubscriptionConstants';
 

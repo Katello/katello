@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, ProgressBar } from 'patternfly-react';
-import { sprintf } from 'jed';
+import { sprintf } from 'foremanReact/common/I18n';
 
 const ModalProgressBar = (props) => {
   const { show, container, task } = props;

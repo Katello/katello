@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { EmptyState as PfEmptyState, Button } from 'patternfly-react';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const EmptyState = (props) => {

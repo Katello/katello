@@ -1,4 +1,5 @@
 import React from 'react';
+import { translate as __ } from 'foremanReact/common/I18n';
 import helpers from '../../move_to_foreman/common/helpers';
 import { notify } from '../../move_to_foreman/foreman_toast_notifications';
 

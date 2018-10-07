@@ -1,5 +1,5 @@
 import React from 'react';
-import { sprintf } from 'jed';
+import { sprintf } from 'foremanReact/common/I18n';
 import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-react';
 import { validateQuantity } from '../../SubscriptionValidations';
 import { KEY_CODES } from '../../../../move_to_foreman/common/helpers';

@@ -1,3 +1,4 @@
+import { translate as __ } from 'foremanReact/common/I18n';
 import Repos from '../../scenes/RedHatRepositories';
 import Subscriptions from '../../scenes/Subscriptions';
 import UpstreamSubscriptions from '../../scenes/Subscriptions/UpstreamSubscriptions/index';

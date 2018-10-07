@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import SubscriptionDetailInfo from './SubscriptionDetailInfo';

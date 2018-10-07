@@ -1,3 +1,4 @@
+import { translate as __ } from 'foremanReact/common/I18n';
 import { filterRHSubscriptions } from './SubscriptionHelpers.js';
 
 export const validateQuantity = (quantity, availableQuantity) => {
