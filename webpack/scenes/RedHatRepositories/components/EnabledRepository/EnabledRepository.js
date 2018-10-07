@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ListView } from 'patternfly-react';
-import { sprintf } from 'jed';
+import { sprintf } from 'foremanReact/common/I18n';
 
 import RepositoryTypeIcon from '../RepositoryTypeIcon';
 

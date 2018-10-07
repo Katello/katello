@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
+import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';

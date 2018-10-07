@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
+import { translate as __ } from 'foremanReact/common/I18n';
 import { isEmpty, isEqual } from 'lodash';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';

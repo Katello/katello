@@ -1,3 +1,5 @@
+import { translate as __ } from 'foremanReact/common/I18n';
+
 const question = __('Are you sure you want to delete the manifest?');
 const note = __(`Note: Deleting a subscription manifest is STRONGLY discouraged.
                  Deleting a manifest will:`);

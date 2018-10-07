@@ -1,3 +1,5 @@
+import { translate as __ } from 'foremanReact/common/I18n';
+
 export default {
   name: __('Name'),
   description: __('Description'),

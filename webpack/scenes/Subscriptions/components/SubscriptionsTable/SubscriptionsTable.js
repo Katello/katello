@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { sprintf } from 'jed';
+import { sprintf } from 'foremanReact/common/I18n';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
 import { Table } from 'patternfly-react';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';

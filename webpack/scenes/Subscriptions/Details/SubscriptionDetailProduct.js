@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'patternfly-react';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 const SubscriptionDetailProduct = ({ content }) => (
   <Row key={content.id}>

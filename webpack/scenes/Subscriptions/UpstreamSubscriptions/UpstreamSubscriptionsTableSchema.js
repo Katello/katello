@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { translate as __ } from 'foremanReact/common/I18n';
 import helpers from '../../../move_to_foreman/common/helpers';
 import {
   headerFormatter,
