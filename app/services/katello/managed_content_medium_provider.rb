@@ -20,8 +20,6 @@ module Katello
       end
     end
 
-    private
-
     def kickstart_repo
       @kickstart_repo ||= entity.try(:content_facet).try(:kickstart_repository) || entity.try(:kickstart_repository)
     end

@@ -57,6 +57,16 @@ FactoryBot.define do
       association :root, :ostree_root, :factory => :katello_root_repository, :strategy => :build
     end
 
+    trait :with_content_view do
+      association :content_view_version, factory: :katello_content_view_version
+    end
+
+    trait :with_product do
+      with_content_view
+
+      product { FactoryBot.create(:katello_product, :with_provider, organization: organization) }
+    end
+
     factory :docker_repository, traits: [:docker]
   end
 end
