@@ -8,5 +8,9 @@ FactoryBot.define do
       description "The open source Linux distribution."
       label "fedora_label"
     end
+
+    trait :with_provider do
+      association :provider, factory: :katello_provider
+    end
   end
 end
