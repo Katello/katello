@@ -36,34 +36,30 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
 
         nutupaneParams = { 'name_stream_only': '1' };
 
-        if (hostIds.included.ids) {
-            nutupaneParams['host_ids'] = hostIds.included.ids.join(',');
-        } else {
-            nutupaneParams['host_collection_id'] = $scope.$stateParams.hostCollectionId;
-        }
-
-        $scope.moduleStreamsNutupane = new Nutupane(ModuleStream, nutupaneParams);
-
+        $scope.moduleStreamsNutupane = new Nutupane(ModuleStream, Object.assign(
+          nutupaneParams,
+          hostIds
+        ));
+        $scope.controllerName = 'katello_module_streams';
         $scope.moduleStreamsNutupane.masterOnly = true;
         $scope.table = $scope.moduleStreamsNutupane.table;
-
         $scope.remoteExecutionPresent = BastionConfig.remoteExecutionPresent;
         $scope.remoteExecutionByDefault = BastionConfig.remoteExecutionByDefault;
+
         $scope.moduleStreamActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
-            remoteAction: 'module_stream_action'
+            remoteAction: 'module_stream_action',
+            search: hostIds.included.search
         };
+
+        if (hostIds.included.ids) {
+            $scope.moduleStreamActionFormValues.hostIds = hostIds.included.ids.join(',');
+        }
 
         $scope.performViaRemoteExecution = function(moduleSpec, actionType) {
             $scope.working = true;
             $scope.moduleStreamActionFormValues.moduleSpec = moduleSpec;
             $scope.moduleStreamActionFormValues.moduleStreamAction = actionType;
-
-            if ($scope.$stateParams.hostCollectionId) {
-                $scope.moduleStreamActionFormValues.hostCollectionId = $scope.$stateParams.hostCollectionId;
-            } else if (hostIds.included.ids) {
-                $scope.moduleStreamActionFormValues.hostIds = hostIds.included.ids.join(',');
-            };
 
             $timeout(function () {
                 angular.element('#moduleStreamActionForm').submit();
