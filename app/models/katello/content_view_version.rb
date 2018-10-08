@@ -40,6 +40,7 @@ module Katello
              :class_name => "Katello::ContentViewVersionComponent"
     has_many :composites, :through => :content_view_version_composites, :source => :composite_version,
              :class_name => "Katello::ContentViewVersion", :inverse_of => :components
+    has_many :published_in_composite_content_views, through: :composites, source: :content_view
 
     delegate :default, :default?, to: :content_view
 
