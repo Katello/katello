@@ -22,8 +22,7 @@ module Katello
     param :organization_id, :number, :desc => N_("organization identifier"), :required => false
     param_group :search, Api::V2::ApiController
     def index
-      respond(:collection => scoped_search(index_relation, nil, nil, :custom_sort => default_sort,
-                                           :resource_class => Katello::ProductContent))
+      respond(:collection => scoped_search(index_relation, :name, :asc, :resource_class => Katello::ProductContent))
     end
 
     api :GET, "/repository_sets/:id", N_("Get info about a repository set")
@@ -96,10 +95,6 @@ module Katello
 
     def resource_class
       Katello::Content
-    end
-
-    def default_sort
-      lambda { |relation| relation.order("#{Katello::Content.table_name}.name asc") }
     end
 
     def index_relation

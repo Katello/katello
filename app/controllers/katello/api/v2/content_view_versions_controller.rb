@@ -24,10 +24,9 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       options = {
-        :includes => [:content_view, :environments, :composite_content_views, :history => :task],
-        :custom_sort => lambda { |query| query.order("#{ContentViewVersion.table_name}.major desc, #{ContentViewVersion.table_name}.minor desc") }
+        :includes => [:content_view, :environments, :composite_content_views, :history => :task]
       }
-      respond(:collection => scoped_search(index_relation.distinct, nil, nil, options))
+      respond(:collection => scoped_search(index_relation.distinct, :version, :desc, options))
     end
 
     def index_relation
