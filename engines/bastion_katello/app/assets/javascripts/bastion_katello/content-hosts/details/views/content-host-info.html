@@ -33,11 +33,11 @@
         </dt>
         <dd bst-feature-flag="remote_actions">
           <span ng-show="host.content_facet_attributes.katello_agent_installed">
-            <span class="{{ table.getHostStatusIcon(0) }}"></span>
+            <span class="{{ getHostStatusIcon(0) }}"></span>
             <span translate>Installed</span>
           </span>
           <span ng-hide="host.content_facet_attributes.katello_agent_installed">
-            <span class="{{ table.getHostStatusIcon(1) }}"></span>
+            <span class="{{ getHostStatusIcon(1) }}"></span>
             <span translate>Not installed</span>
           </span>
         </dd>
@@ -67,7 +67,7 @@
       <dl class="dl-horizontal dl-horizontal-left">
         <dt translate>Subscription Status</dt>
         <dd>
-          <i ng-class="table.getHostStatusIcon(host.subscription_global_status)"></i>
+          <i ng-class="getHostStatusIcon(host.subscription_global_status)"></i>
           {{ host.subscription_status_label }}
         </dd>
 
