@@ -17,13 +17,10 @@ class ProfileRpmsCellFormatter extends Component {
   onClick = () => {
     const { rpms } = this.props;
 
-    this.setState(
-      { expanded: !this.state.expanded },
-      () => {
-        const showAmount = this.state.expanded ? rpms.length : this.minAmount;
-        this.setState({ showAmount });
-      },
-    );
+    this.setState(state => ({
+      expanded: !state.expanded,
+      showAmount: !state.expanded ? rpms.length : this.minAmount,
+    }));
   };
 
   iconName = () => (this.state.expanded ? 'angle-down' : 'angle-right');
