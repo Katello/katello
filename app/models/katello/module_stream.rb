@@ -60,6 +60,10 @@ module Katello
       end
     end
 
+    def library_repositories
+      self.repositories.where(library_instance: nil)
+    end
+
     def self.available_for_hosts(hosts)
       where("#{table_name}.id" => ::Katello::ModuleStream.joins(repositories: :content_facets).
             select("#{table_name}.id").
