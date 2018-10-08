@@ -52,6 +52,13 @@ module Katello
       assert_template 'api/v2/content_view_versions/index'
     end
 
+    def test_index_with_content_view_sorted
+      ContentViewVersion.any_instance.stubs(:puppet_modules).returns([])
+      get :index, params: { :content_view_id => @library_dev_staging_view.id, :order => 'version ASC' }
+      assert_response :success
+      assert_template 'api/v2/content_view_versions/index'
+    end
+
     def test_index_with_content_view_in_environment
       expected_version = ContentViewVersion.find(katello_content_view_versions(:library_view_version_2).id)
 

@@ -30,8 +30,8 @@ module Katello
     param :match_installed, :bool, :desc => N_("Return subscriptions that match installed products of the specified host")
     param :no_overlap, :bool, :desc => N_("Return subscriptions which do not overlap with a currently-attached subscription")
     def index
-      options = { resource_class: Pool, includes: [:subscription], custom_sort: name_sort }
-      base_args = [index_relation.distinct, nil, nil]
+      options = { resource_class: Pool, includes: [:subscription] }
+      base_args = [index_relation.distinct, :name, :asc]
 
       respond_to do |format|
         format.csv do
@@ -58,10 +58,6 @@ module Katello
           respond(:collection => collection)
         end
       end
-    end
-
-    def name_sort
-      lambda { |relation| relation.order("katello_subscriptions.name ASC") }
     end
 
     def index_relation
