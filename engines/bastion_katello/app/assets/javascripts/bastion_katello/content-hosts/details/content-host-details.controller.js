@@ -11,14 +11,17 @@
  * @requires MenuExpander
  * @requires ApiErrorHandler
  * @requires deleteHostOnUnregister
+ * @requires ContentHostsHelper
  *
  * @description
  *   Provides the functionality for the content host details action pane.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostDetailsController',
-    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister',
-    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister) {
+    ['$scope', '$state', '$q', 'translate', 'Host', 'HostSubscription', 'Organization', 'CurrentOrganization', 'Notification', 'MenuExpander', 'ApiErrorHandler', 'deleteHostOnUnregister', 'ContentHostsHelper',
+    function ($scope, $state, $q, translate, Host, HostSubscription, Organization, CurrentOrganization, Notification, MenuExpander, ApiErrorHandler, deleteHostOnUnregister, ContentHostsHelper) {
         $scope.menuExpander = MenuExpander;
+
+        $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
 
         $scope.purposeAddonsList = [];
 
