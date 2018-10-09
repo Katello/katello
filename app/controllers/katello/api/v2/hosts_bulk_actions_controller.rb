@@ -252,7 +252,11 @@ module Katello
         N_("Fetch available module streams for hosts.")
     param_group :bulk_params
     def module_streams
-      respond_for_index(:collection => scoped_search(Katello::ModuleStream.available_for_hosts(@hosts)))
+      options = {}
+      options[:group] = [:name, :stream]
+      options[:resource_class] = Katello::ModuleStream
+      host_module_streams = Katello::ModuleStream.available_for_hosts(@hosts)
+      respond_for_index(collection: scoped_search(host_module_streams, :name, :asc, options))
     end
 
     private

@@ -36,7 +36,7 @@ module Katello
             search: params[:scoped_search],
             excluded: params[:excluded]
           }
-        )
+                       )
       end
 
       def inputs
