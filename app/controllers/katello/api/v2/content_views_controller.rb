@@ -83,10 +83,8 @@ module Katello
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
 
     param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
-      param :repo_units, Hash, :desc => N_("a hash containing a repo label and list of units"), :required => true do
-        param :label, String, :desc => N_("repo label"), :required => true
-        param :rpm_filenames, Array, :desc => N_("list of rpm filename strings to include in published version"), :required => true
-      end
+      param :label, String, :desc => N_("repo label"), :required => true
+      param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
     end
     def publish
       if params[:repos_units].present? && @view.composite?
