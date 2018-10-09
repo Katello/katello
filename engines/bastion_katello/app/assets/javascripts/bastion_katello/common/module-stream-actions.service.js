@@ -1,26 +1,26 @@
 (function () {
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name  Bastion.common.service:ModuleStreamActions
-   *
-   * @description
-   *   Provides common list of actions for module streams
-   */
+    /**
+     * @ngdoc service
+     * @name  Bastion.common.service:ModuleStreamActions
+     *
+     * @description
+     *   Provides common list of actions for module streams
+     */
 
-  function ModuleStreamActions(translate) {
-    this.getActions = function() {
-      return [
-        { action: 'enable', description: translate("Enable")},
-        { action: 'disable', description: translate("Disable")},
-        { action: 'install', description: translate("Install")},
-        { action: 'update', description: translate("Update")},
-        { action: 'remove', description: translate("Remove")}
-      ];
+    function ModuleStreamActions(translate) {
+        this.getActions = function() {
+            return [
+                { action: 'enable', description: translate("Enable")},
+                { action: 'disable', description: translate("Disable")},
+                { action: 'install', description: translate("Install")},
+                { action: 'update', description: translate("Update")},
+                { action: 'remove', description: translate("Remove")}
+            ];
+        };
     }
-  }
 
-  angular.module('Bastion.common').service('ModuleStreamActions', ModuleStreamActions);
-  ModuleStreamActions.$inject = ['translate'];
+    angular.module('Bastion.common').service('ModuleStreamActions', ModuleStreamActions);
+    ModuleStreamActions.$inject = ['translate'];
 })();

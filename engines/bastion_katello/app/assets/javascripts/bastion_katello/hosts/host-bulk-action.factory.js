@@ -24,7 +24,8 @@ angular.module('Bastion.hosts').factory('HostBulkAction',
             destroyHosts: {method: 'PUT', params: {action: 'destroy'}},
             environmentContentView: {method: 'PUT', params: {action: 'environment_content_view'}},
             releaseVersion: {method: 'PUT', params: {action: 'release_version'}},
-            availableIncrementalUpdates: {method: 'POST', isArray: true, params: {action: 'available_incremental_updates'}}
+            availableIncrementalUpdates: {method: 'POST', isArray: true, params: {action: 'available_incremental_updates'}},
+            moduleStreams: {method: 'POST', params: {action: 'module_streams'}}
         });
 
     }]

@@ -6,8 +6,9 @@
  * @requires $window
  * @requires $timeout
  * @requires $uibModalInstance
- * @requires ModuleStream
+ * @requires HostBulkAction
  * @requires Nutupane
+ * @requires BastionConfig
  * @requires hostIds
  * @requires ModuleStreamActions
  *
@@ -16,12 +17,10 @@
  */
 
 angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStreamsModalController',
-    ['$scope', '$window', '$timeout', '$uibModalInstance', 'ModuleStream', 'Nutupane', 'BastionConfig',
+    ['$scope', '$window', '$timeout', '$uibModalInstance', 'HostBulkAction', 'Nutupane', 'BastionConfig',
      'hostIds', 'ModuleStreamActions',
-    function ($scope, $window, $timeout, $uibModalInstance, ModuleStream, Nutupane,
+    function ($scope, $window, $timeout, $uibModalInstance, HostBulkAction, Nutupane,
               BastionConfig, hostIds, ModuleStreamActions) {
-        var nutupaneParams;
-
         $scope.ok = function () {
             $uibModalInstance.close();
         };
@@ -34,12 +33,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
 
         $scope.working = false;
 
-        nutupaneParams = { 'name_stream_only': '1' };
-
-        $scope.moduleStreamsNutupane = new Nutupane(ModuleStream, Object.assign(
-            nutupaneParams,
+        $scope.moduleStreamsNutupane = new Nutupane(HostBulkAction, _.extend(
+            { 'name_stream_only': '1' },
             hostIds
-        ));
+        ), 'moduleStreams');
         $scope.controllerName = 'katello_module_streams';
         $scope.moduleStreamsNutupane.masterOnly = true;
         $scope.table = $scope.moduleStreamsNutupane.table;
@@ -65,7 +62,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
                 angular.element('#moduleStreamActionForm').submit();
             }, 0);
         };
-        console.log(hostIds);
     }
   ]
 );

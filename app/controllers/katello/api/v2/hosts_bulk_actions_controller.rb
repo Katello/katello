@@ -249,9 +249,9 @@ module Katello
     end
 
     api :POST, "/hosts/bulk/module_streams",
-        N_("Fetch applicable module_streams for a host.")
+        N_("Fetch available module streams for hosts.")
     param_group :bulk_params
-    def applicable_module_streams
+    def module_streams
       respond_for_index(:collection => scoped_search(Katello::ModuleStream.available_for_hosts(@hosts)))
     end
 

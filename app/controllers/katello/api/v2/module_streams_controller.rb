@@ -8,7 +8,6 @@ module Katello
 
     update_api(:index) do
       param :host_ids, Array, :desc => N_("List of host id to list available module streams for")
-      param :host_collection_id, :number, :desc => N_("Host collection to list available module streams for")
       param :name_stream_only, :boolean, :desc => N_("Return name and stream information only)")
     end
     def index
