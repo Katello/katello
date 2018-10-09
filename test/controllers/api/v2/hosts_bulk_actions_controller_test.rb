@@ -333,5 +333,15 @@ module Katello
       put :content_overrides, params: { :included => {:ids => @host_ids}, :content_overrides => expected_content_overrides }
       assert_response :success
     end
+
+    def test_module_streams
+      post :module_streams, params: {
+        included: {:ids => @host_ids},
+        organization_id: @org.id,
+        host_collection_ids: [@host_collection1.id, @host_collection2.id]
+      }
+
+      assert_response :success
+    end
   end
 end

@@ -256,7 +256,8 @@ module Katello
       options[:group] = [:name, :stream]
       options[:resource_class] = Katello::ModuleStream
       host_module_streams = Katello::ModuleStream.available_for_hosts(@hosts)
-      respond_for_index(collection: scoped_search(host_module_streams, :name, :asc, options))
+      respond_for_index(collection: scoped_search(host_module_streams, :name, :asc, options),
+                        template: '../../../api/v2/module_streams/name_streams')
     end
 
     private

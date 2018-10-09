@@ -33,10 +33,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
 
         $scope.working = false;
 
-        $scope.moduleStreamsNutupane = new Nutupane(HostBulkAction, _.extend(
-            { 'name_stream_only': '1' },
-            hostIds
-        ), 'moduleStreams');
+        $scope.moduleStreamsNutupane = new Nutupane(HostBulkAction, hostIds, 'moduleStreams');
         $scope.controllerName = 'katello_module_streams';
         $scope.moduleStreamsNutupane.masterOnly = true;
         $scope.table = $scope.moduleStreamsNutupane.table;

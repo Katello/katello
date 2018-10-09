@@ -72,8 +72,8 @@ describe('Controller: ContentHostsBulkModuleStreamsModalController', function() 
             hostIds: '1,2,3', 
             moduleSpec: 'django:1.9', 
             moduleStreamAction: 'enable'
-          };
-          $scope.performViaRemoteExecution("django:1.9", "enable");;
-          expect($scope.moduleStreamActionFormValues).toEqual(formValues);
+        };
+        $scope.performViaRemoteExecution("django:1.9", "enable");;
+        expect($scope.moduleStreamActionFormValues).toEqual(formValues);
     });
 });
