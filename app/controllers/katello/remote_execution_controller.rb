@@ -1,7 +1,7 @@
 module Katello
   if Katello.with_remote_execution?
     class RemoteExecutionController < JobInvocationsController
-      include BulkHostsExtensions
+      include Concerns::Api::V2::BulkHostsExtensions
 
       def new
         @composer = prepare_composer

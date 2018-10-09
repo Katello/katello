@@ -39,11 +39,8 @@ module Katello
     def check_params
       @name_stream_only = ::Foreman::Cast.to_bool(params[:name_stream_only])
 
-      if params[:host_collection_id] || params[:host_ids]
-        @host_ids = []
-        @host_ids += Katello::HostCollection.find(params[:host_collection_id]).host_ids if params[:host_collection_id]
-        @host_ids += params[:host_ids].is_a?(Array) ? params[:host_ids] : params[:host_ids].split(",") if params[:host_ids]
-
+      if params[:host_ids]
+        @host_ids = params[:host_ids].is_a?(Array) ? params[:host_ids] : params[:host_ids].split(",")
         if ::Host::Managed.authorized("view_hosts").where(:id => @host_ids).count != @host_ids.count
           fail HttpErrors::NotFound, _('One or more hosts not found')
         end

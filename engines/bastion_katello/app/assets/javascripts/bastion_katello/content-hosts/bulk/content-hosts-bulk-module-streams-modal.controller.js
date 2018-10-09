@@ -37,8 +37,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
         nutupaneParams = { 'name_stream_only': '1' };
 
         $scope.moduleStreamsNutupane = new Nutupane(ModuleStream, Object.assign(
-          nutupaneParams,
-          hostIds
+            nutupaneParams,
+            hostIds
         ));
         $scope.controllerName = 'katello_module_streams';
         $scope.moduleStreamsNutupane.masterOnly = true;
@@ -65,6 +65,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
                 angular.element('#moduleStreamActionForm').submit();
             }, 0);
         };
+        console.log(hostIds);
     }
   ]
 );
