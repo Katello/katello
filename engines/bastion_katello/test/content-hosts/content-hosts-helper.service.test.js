@@ -10,10 +10,9 @@ describe('Controller: ContentHostsController', function() {
         ContentHostsHelper = $injector.get('ContentHostsHelper');
     }));
 
-    it("provides a way to get the status color for the content host.", function() {
-        expect(ContentHostsHelper.getHostStatusIcon("valid")).toBe(greenStatus);
-        expect(ContentHostsHelper.getHostStatusIcon("partial")).toBe(yellowStatus);
-        expect(ContentHostsHelper.getHostStatusIcon("error")).toBe(redStatus);
+    it("provides a way to get the status icon for system purpose on a host.", function() {
+        expect(ContentHostsHelper.getHostPurposeStatusIcon(0)).toBe("pficon pficon-ok");
+        expect(ContentHostsHelper.getHostPurposeStatusIcon(1)).toBe("pficon pficon-warning-triangle-o");
     });
 
     it("provides a way to get the global status color.", function() {

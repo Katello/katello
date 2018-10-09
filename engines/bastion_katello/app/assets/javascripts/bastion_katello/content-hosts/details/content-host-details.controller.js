@@ -22,6 +22,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.menuExpander = MenuExpander;
 
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
+        $scope.getHostPurposeStatusIcon = ContentHostsHelper.getHostPurposeStatusIcon;
 
         $scope.purposeAddonsList = [];
 

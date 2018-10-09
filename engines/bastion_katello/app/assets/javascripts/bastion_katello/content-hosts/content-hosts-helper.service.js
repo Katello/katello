@@ -23,10 +23,6 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
         this.getHostStatusIcon = function (globalStatus) {
             var icons;
             var colors = {
-                // we can remove 'valid', 'partial', and 'invalid' when http://projects.theforeman.org/issues/15347 is fixed
-                'valid': 'green',
-                'partial': 'yellow',
-                'invalid': 'red',
                 0: 'green',
                 1: 'yellow',
                 2: 'red'
@@ -40,6 +36,14 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
             };
 
             return icons[globalStatus];
+        };
+
+        this.getHostPurposeStatusIcon = function (statusCode) {
+            if (parseInt(statusCode) === 0) {
+                return 'pficon pficon-ok';
+            }
+
+            return 'pficon pficon-warning-triangle-o';
         };
     }
 );
