@@ -192,6 +192,11 @@ module Katello
         end
 
         host.get_status(::Katello::ErrataStatus).destroy
+        host.get_status(::Katello::PurposeSlaStatus).destroy
+        host.get_status(::Katello::PurposeRoleStatus).destroy
+        host.get_status(::Katello::PurposeUsageStatus).destroy
+        host.get_status(::Katello::PurposeAddonsStatus).destroy
+        host.get_status(::Katello::PurposeStatus).destroy
         host.get_status(::Katello::SubscriptionStatus).destroy
         host.get_status(::Katello::TraceStatus).destroy
         host.installed_packages.delete_all

@@ -167,6 +167,13 @@ module Katello
             end
           end
 
+          def purpose_compliance(uuid)
+            response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'purpose_compliance'), self.default_headers(uuid)).body
+            if response.present?
+              JSON.parse(response).with_indifferent_access
+            end
+          end
+
           def events(uuid)
             response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
             if response.present?

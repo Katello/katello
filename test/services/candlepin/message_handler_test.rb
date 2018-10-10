@@ -26,6 +26,29 @@ module Katello
     end
   end
 
+  class SystemPurposeComplianceCreatedTest < MessageHandlerTestBase
+    def setup
+      super
+      @handler = load_handler('system_purpose_compliance.created')
+    end
+
+    def test_compliant_role
+      assert_equal false, @handler.compliant_role?
+    end
+
+    def test_compliant_usage
+      assert_equal false, @handler.compliant_usage?
+    end
+
+    def test_compliant_addons
+      assert_equal false, @handler.compliant_addons?
+    end
+
+    def test_compliant_sla
+      assert_equal false, @handler.compliant_sla?
+    end
+  end
+
   class ComplianceCreatedTest < MessageHandlerTestBase
     def setup
       super
@@ -37,12 +60,12 @@ module Katello
     end
 
     def test_reasons
-      assert_equal 1, @handler.consumer_reasons.count
-      assert_equal 'Red Hat Enterprise Linux Server', @handler.consumer_reasons[0]['productName']
+      assert_equal 1, @handler.reasons.count
+      assert_equal 'Red Hat Enterprise Linux Server', @handler.reasons[0]['productName']
     end
 
     def test_status
-      assert_equal 'invalid', @handler.sub_status
+      assert_equal 'invalid', @handler.status
     end
 
     def test_subscription_facet

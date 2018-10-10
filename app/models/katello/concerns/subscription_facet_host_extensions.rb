@@ -14,6 +14,31 @@ module Katello
           :unsubscribed_hypervisor => Katello::SubscriptionStatus::UNSUBSCRIBED_HYPERVISOR
         }.freeze
 
+        SLA_STATUS_MAP = {
+          :valid => Katello::PurposeSlaStatus::VALID,
+          :invalid => Katello::PurposeSlaStatus::INVALID
+        }.freeze
+
+        USAGE_STATUS_MAP = {
+          :valid => Katello::PurposeUsageStatus::VALID,
+          :invalid => Katello::PurposeUsageStatus::INVALID
+        }.freeze
+
+        ROLE_STATUS_MAP = {
+          :valid => Katello::PurposeRoleStatus::VALID,
+          :invalid => Katello::PurposeRoleStatus::INVALID
+        }.freeze
+
+        ADDONS_STATUS_MAP = {
+          :valid => Katello::PurposeAddonsStatus::VALID,
+          :invalid => Katello::PurposeAddonsStatus::INVALID
+        }.freeze
+
+        PURPOSE_STATUS_MAP = {
+          :valid => Katello::PurposeStatus::VALID,
+          :invalid => Katello::PurposeStatus::INVALID
+        }.freeze
+
         prepend ForemanTasks::Concerns::ActionTriggering
 
         module Prepended
@@ -32,10 +57,21 @@ module Katello
         has_many :pools, :through => :subscription_facet
         has_many :subscriptions, :through => :pools
         has_one :subscription_status_object, :class_name => 'Katello::SubscriptionStatus', :foreign_key => 'host_id', :dependent => :destroy
+        has_one :purpose_sla_status_object, :class_name => 'Katello::PurposeSlaStatus', :foreign_key => 'host_id', :dependent => :destroy
+        has_one :purpose_role_status_object, :class_name => 'Katello::PurposeRoleStatus', :foreign_key => 'host_id', :dependent => :destroy
+        has_one :purpose_usage_status_object, :class_name => 'Katello::PurposeUsageStatus', :foreign_key => 'host_id', :dependent => :destroy
+        has_one :purpose_addons_status_object, :class_name => 'Katello::PurposeAddonsStatus', :foreign_key => 'host_id', :dependent => :destroy
+        has_one :purpose_status_object, :class_name => 'Katello::PurposeStatus', :foreign_key => 'host_id', :dependent => :destroy
         has_one :hypervisor_host, :through => :subscription_facet
 
         scoped_search :on => :status, :relation => :subscription_status_object, :rename => :subscription_status,
                       :complete_value => SUBSCRIPTION_STATUS_MAP
+
+        scoped_search on: :status, relation: :purpose_sla_status_object, rename: :sla_status, complete_value: SLA_STATUS_MAP
+        scoped_search on: :status, relation: :purpose_role_status_object, rename: :role_status, complete_value: ROLE_STATUS_MAP
+        scoped_search on: :status, relation: :purpose_usage_status_object, rename: :usage_status, complete_value: USAGE_STATUS_MAP
+        scoped_search on: :status, relation: :purpose_addons_status_object, rename: :addons_status, complete_value: ADDONS_STATUS_MAP
+        scoped_search on: :status, relation: :purpose_status_object, rename: :purpose_status, complete_value: PURPOSE_STATUS_MAP
 
         scoped_search :on => :release_version, :relation => :subscription_facet, :complete_value => true, :only_explicit => true
         scoped_search :on => :autoheal, :relation => :subscription_facet, :complete_value => true, :only_explicit => true

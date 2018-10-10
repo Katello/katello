@@ -21,12 +21,28 @@ module Katello
         data ? JSON.parse(data) : {}
       end
 
-      def sub_status
+      def status
         event_data['status']
       end
 
-      def consumer_reasons
+      def reasons
         event_data['reasons']
+      end
+
+      def compliant_role?
+        reasons.none? { |reason| reason.match(/role/) }
+      end
+
+      def compliant_usage?
+        reasons.none? { |reason| reason.match(/usage/) }
+      end
+
+      def compliant_addons?
+        reasons.none? { |reason| reason.match(/add on/) }
+      end
+
+      def compliant_sla?
+        reasons.none? { |reason| reason.match(/sla/) }
       end
 
       def consumer_uuid
