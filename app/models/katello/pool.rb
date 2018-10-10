@@ -76,5 +76,9 @@ module Katello
     def default_sort
       Pool.joins(:subscription).order("subscription.name")
     end
+
+    class Jail < ::Safemode::Jail
+      allow :id, :name, :available, :quantity, :product_id, :contract_number
+    end
   end
 end
