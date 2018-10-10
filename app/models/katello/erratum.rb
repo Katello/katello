@@ -212,5 +212,9 @@ module Katello
       end
       run_until(needed_function, action_function)
     end
+
+    class Jail < ::Safemode::Jail
+      allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested
+    end
   end
 end
