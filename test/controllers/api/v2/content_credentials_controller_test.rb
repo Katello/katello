@@ -69,5 +69,75 @@ module Katello
       assert_response :success, @response.body
       assert_equal content, @cert.reload.content
     end
+
+    def test_create
+      test_key_name = "testkey"
+      content = "abc123"
+      temp_content_file = Tempfile.new(content)
+      temp_content_file.write(content)
+      temp_content_file.rewind
+      uploaded_file = Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
+      post :create, params: { :organization_id => @organization.id, :name => test_key_name, :content_type => "gpg_key", :content => uploaded_file}
+      assert_response :success
+    end
+
+    def test_create_existing_name
+      content = "abc123"
+      temp_content_file = Tempfile.new(content)
+      temp_content_file.write(content)
+      temp_content_file.rewind
+      uploaded_file = Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
+      post :create, params: { :organization_id => @organization.id, :name => @gpg_key.name, :content_type => "gpg_key", :content => uploaded_file }
+      assert_response 422, @response.body
+      response = JSON.parse(@response.body)
+      assert_equal response["displayMessage"], "Validation failed: Name has already been taken"
+    end
+
+    def test_create_invalid_content
+      post :create, params: { :organization_id => @organization.id, :name => "newame"}
+      assert_response 422, @response.body
+      response = JSON.parse(@response.body)
+      assert_equal response["displayMessage"], "Validation failed: Content can't be blank"
+    end
+
+    def test_create_invalid_name
+      content = "abc123"
+      temp_content_file = Tempfile.new(content)
+      temp_content_file.write(content)
+      temp_content_file.rewind
+      uploaded_file = Rack::Test::UploadedFile.new(temp_content_file.path, "text/plain")
+      post :create, params: { :organization_id => @organization.id, :name => "\t", :content_type => "gpg_key", :content => uploaded_file}
+      assert_response 422, @response.body
+      response = JSON.parse(@response.body)
+      assert_equal response["displayMessage"], "Validation failed: Name can't be blank, Name must contain at least 1 character"
+    end
+
+    def test_update
+      test_key_name = "testkey"
+      new_content = "abc123"
+      put :update, params: { :id => @gpg_key.id, :name => test_key_name, :content => new_content }
+      assert_response :success
+      assert_equal test_key_name, @gpg_key.reload.name
+      assert_equal new_content, @gpg_key.reload.content
+    end
+
+    def test_update_invalid_name
+      put :update, params: { :id => @gpg_key.id, :name => " " }
+      assert_response 422, @response.body
+      response = JSON.parse(@response.body)
+      assert_equal response["displayMessage"], "Validation failed: Name can't be blank, Name must contain at least 1 character"
+    end
+
+    def test_update_invalid_content
+      put :update, params: { :id => @gpg_key.id, :content => " " }
+      assert_response 422, @response.body
+      response = JSON.parse(@response.body)
+      assert_equal response["displayMessage"], "Validation failed: Content can't be blank"
+    end
+
+    def test_destroy
+      delete :destroy, params: { :id => @gpg_key.id }
+      assert_response :success
+    end
   end
 end
