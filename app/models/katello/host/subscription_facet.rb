@@ -153,13 +153,17 @@ module Katello
       end
 
       def update_subscription_status(status_override = nil)
-        status = host.get_status(::Katello::SubscriptionStatus)
-        if status_override
-          status.status = status.to_status(:status_override => status_override)
-          status.save!
-        else
-          host.get_status(::Katello::SubscriptionStatus).refresh!
-        end
+        update_status(::Katello::SubscriptionStatus, status_override: status_override)
+
+        host.refresh_global_status!
+      end
+
+      def update_purpose_status(valid_sla: nil, valid_role: nil, valid_usage: nil, valid_addons: nil)
+        update_status(::Katello::PurposeSlaStatus, status_override: valid_sla)
+        update_status(::Katello::PurposeRoleStatus, status_override: valid_role)
+        update_status(::Katello::PurposeUsageStatus, status_override: valid_usage)
+        update_status(::Katello::PurposeAddonsStatus, status_override: valid_addons)
+        update_status(::Katello::PurposeStatus)
 
         host.refresh_global_status!
       end
@@ -261,6 +265,18 @@ module Katello
           return true if (self.host.content_facet.content_view_id_changed? || self.host.content_facet.lifecycle_environment_id_changed?)
         end
         false
+      end
+
+      private
+
+      def update_status(status_class, **args)
+        status = host.get_status(status_class)
+        if args[:status_override].nil?
+          host.get_status(status_class).refresh!
+        else
+          status.status = status.to_status(**args)
+          status.save!
+        end
       end
     end
   end

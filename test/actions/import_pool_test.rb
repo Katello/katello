@@ -6,6 +6,7 @@ module Katello
     let(:pool) { OpenStruct.new(:id => pool_id) }
     let(:pool_two) { katello_pools(:pool_two) }
     let(:subscription_facet) { katello_subscription_facets(:one) }
+    let(:handler) { ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger) }
 
     before do
       ::Katello::Pool.stubs(:search).returns([pool])
@@ -15,9 +16,34 @@ module Katello
     end
 
     def message(subject, content = {})
-      result = {:subject => subject }
-      result[:content] = JSON.generate(content)
+      result = {
+        subject: subject,
+        content: JSON.generate(content)
+      }
       OpenStruct.new(result)
+    end
+
+    describe 'handles compliance.created' do
+      let(:mymessage) do
+        message("compliance.created", 'eventData' => "{\"status\":\"invalid\"}")
+      end
+
+      it 're-indexes the subscription status' do
+        subscription_facet.expects(:update_subscription_status)
+        subscription_facet.expects(:update_compliance_reasons)
+        handler.handle(mymessage)
+      end
+    end
+
+    describe 'handles system_purpose_compliance.created' do
+      let(:mymessage) do
+        message("system_purpose_compliance.created", 'eventData' => "{\"reasons\":[]}")
+      end
+
+      it 're-indexes the purpose status' do
+        subscription_facet.expects(:update_purpose_status)
+        handler.handle(mymessage)
+      end
     end
 
     describe 'handles entitlement.created' do
@@ -26,7 +52,7 @@ module Katello
       end
 
       it 'reindex the pool' do
-        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
+        handler.handle(mymessage)
       end
     end
 
@@ -36,7 +62,7 @@ module Katello
       end
 
       it 'reindex the pool' do
-        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
+        handler.handle(mymessage)
       end
     end
 
@@ -46,7 +72,7 @@ module Katello
       end
 
       it 'adds pool to index and reindex the pool' do
-        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
+        handler.handle(mymessage)
       end
     end
 
@@ -56,7 +82,7 @@ module Katello
       end
 
       it 'pool removed from index' do
-        ::Actions::Candlepin::ImportPoolHandler.new(Rails.logger).handle(mymessage)
+        handler.handle(mymessage)
       end
     end
   end

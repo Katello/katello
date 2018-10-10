@@ -23,6 +23,7 @@ module Katello
                                                              ::Katello::ContentOverride.from_entitlement_hash(override)
                                                            end
                                                          end)
+      lazy_accessor :purpose_compliance, :initializer => lambda { |_s| Resources::Candlepin::Consumer.purpose_compliance(uuid) }
 
       attr_accessor :uuid, :owner_label
 
@@ -118,6 +119,22 @@ module Katello
 
       def compliance_reasons
         self.class.friendly_compliance_reasons(Resources::Candlepin::Consumer.compliance(uuid)['reasons'])
+      end
+
+      def compliant_role?
+        purpose_compliance['nonCompliantRole'].nil?
+      end
+
+      def compliant_usage?
+        purpose_compliance['nonCompliantUsage'].nil?
+      end
+
+      def compliant_addons?
+        purpose_compliance['nonCompliantAddOns'].empty?
+      end
+
+      def compliant_sla?
+        purpose_compliance['nonCompliantSLA'].empty?
       end
 
       def entitlements?

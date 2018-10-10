@@ -245,6 +245,11 @@ Foreman::Plugin.register :katello do
 
   register_custom_status(Katello::ErrataStatus)
   register_custom_status(Katello::SubscriptionStatus)
+  register_custom_status(Katello::PurposeSlaStatus)
+  register_custom_status(Katello::PurposeRoleStatus)
+  register_custom_status(Katello::PurposeUsageStatus)
+  register_custom_status(Katello::PurposeAddonsStatus)
+  register_custom_status(Katello::PurposeStatus)
   register_custom_status(Katello::TraceStatus)
 
   extend_rabl_template 'api/v2/smart_proxies/main', 'katello/api/v2/smart_proxies/download_policy'

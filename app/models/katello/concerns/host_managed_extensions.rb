@@ -163,6 +163,46 @@ module Katello
         @errata_status_label ||= get_status(::Katello::ErrataStatus).to_label(options)
       end
 
+      def purpose_status
+        @purpose_status ||= get_status(::Katello::PurposeStatus).status
+      end
+
+      def purpose_status_label(options = {})
+        @purpose_status_label ||= get_status(::Katello::PurposeStatus).to_label(options)
+      end
+
+      def purpose_sla_status
+        @purpose_sla_status ||= get_status(::Katello::PurposeSlaStatus).status
+      end
+
+      def purpose_sla_status_label(options = {})
+        @purpose_sla_status_label ||= get_status(::Katello::PurposeSlaStatus).to_label(options)
+      end
+
+      def purpose_role_status
+        @purpose_role_status ||= get_status(::Katello::PurposeRoleStatus).status
+      end
+
+      def purpose_role_status_label(options = {})
+        @purpose_role_status_label ||= get_status(::Katello::PurposeRoleStatus).to_label(options)
+      end
+
+      def purpose_usage_status
+        @purpose_usage_status ||= get_status(::Katello::PurposeUsageStatus).status
+      end
+
+      def purpose_usage_status_label(options = {})
+        @purpose_usage_status_label ||= get_status(::Katello::PurposeUsageStatus).to_label(options)
+      end
+
+      def purpose_addons_status
+        @purpose_addons_status ||= get_status(::Katello::PurposeAddonsStatus).status
+      end
+
+      def purpose_addons_status_label(options = {})
+        @purpose_addons_status_label ||= get_status(::Katello::PurposeAddonsStatus).to_label(options)
+      end
+
       def valid_content_override_label?(content_label)
         available_content = subscription_facet.candlepin_consumer.available_product_content
         available_content.map(&:content).any? { |content| content.label == content_label }
