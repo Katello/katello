@@ -3,6 +3,10 @@ module Katello
     module SubscriptionFacetHostExtensions
       extend ActiveSupport::Concern
 
+      # This module depends on #value_to_sql which is defined in ScopedSearchExtensions
+      # make sure this dependency is met.
+      include ::ScopedSearchExtensions
+
       included do
         audited :associations => [:pools]
 
