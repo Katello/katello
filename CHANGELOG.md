@@ -1,16 +1,21 @@
-# 3.7.1 Blonde Ale (2018-09-12)
+# 3.7.1 Blonde Ale (2018-10-11)
 
-### Upgrades
- * 3.6 to 3.7 upgrade issue: katello_pools_hypervisor_fk constraint violation ([#24892](https://projects.theforeman.org/issues/24892), [4a599e7e](https://github.com/Katello/katello.git/commit/4a599e7e79fce6654ae0edcfd8064f83960189b2))
- * User db upgrade from 3.4 to 3.7 failed at Upgrade Step: set_upstream_pool_id ([#24374](https://projects.theforeman.org/issues/24374), [3830ac7b](https://github.com/Katello/katello.git/commit/3830ac7bfdb77bd7f5909ee6544217f8ae3ade52))
+## Features
+
+## Bug Fixes
 
 ### Hosts
+ * Unit test failure on host full search ([#24986](https://projects.theforeman.org/issues/24986), [82d5494c](https://github.com/Katello/katello.git/commit/82d5494cf9cd68e69fa2cf7b90c275892c0a6fdc))
  * clean_backend_objects does not verify managed host status prior to action ([#24812](https://projects.theforeman.org/issues/24812), [8667e2bf](https://github.com/Katello/katello.git/commit/8667e2bfd02710455a86c694eb37f2af3eda41bd))
  * updating errata counts on a content host should not use validation ([#24768](https://projects.theforeman.org/issues/24768), [b0a37152](https://github.com/Katello/katello.git/commit/b0a371522a891b6aba5c782665c727e814c4717c))
  * Bulk action for Manage Repository Sets is broken ([#24678](https://projects.theforeman.org/issues/24678), [677f715c](https://github.com/Katello/katello.git/commit/677f715ccafdc689dbffc564a9c27e31aaacb4a5))
  * Cannot remove packages from content host web UI ([#24651](https://projects.theforeman.org/issues/24651), [146bd13d](https://github.com/Katello/katello.git/commit/146bd13d0671af002eebb3ec6813df7767c07a51))
  * Pushing updates from katello 3.7 to CentOS 7.5 client not working  ([#24523](https://projects.theforeman.org/issues/24523), [29a85705](https://github.com/Katello/hammer-cli-katello.git/commit/29a8570582c1a8b17e8d175b800cee108ec203f6), [e71b3b39](https://github.com/Katello/katello.git/commit/e71b3b39ada4be835a351439b2260ea47b51f265))
  * Content source is not inherited from hostgroup while creating host ([#24390](https://projects.theforeman.org/issues/24390), [c10267ef](https://github.com/Katello/katello.git/commit/c10267ef1296b2b05480e985a93f447b077534bb))
+
+### Upgrades
+ * 3.6 to 3.7 upgrade issue: katello_pools_hypervisor_fk constraint violation ([#24892](https://projects.theforeman.org/issues/24892), [4a599e7e](https://github.com/Katello/katello.git/commit/4a599e7e79fce6654ae0edcfd8064f83960189b2))
+ * User db upgrade from 3.4 to 3.7 failed at Upgrade Step: set_upstream_pool_id ([#24374](https://projects.theforeman.org/issues/24374), [3830ac7b](https://github.com/Katello/katello.git/commit/3830ac7bfdb77bd7f5909ee6544217f8ae3ade52))
 
 ### Repositories
  * unable to search for packages ([#24769](https://projects.theforeman.org/issues/24769), [9f5f1585](https://github.com/Katello/katello.git/commit/9f5f15856327f35556fbc60dd05a9cff539dba6b))
@@ -35,7 +40,6 @@
  * "Select All" on folded subscriptions should be implied/automatic ([#24141](https://projects.theforeman.org/issues/24141), [afd62c48](https://github.com/Katello/katello.git/commit/afd62c4862ed175ff85480ade745c2e329df71c0))
  * Hide link to "Add subscriptions" when no manifest is uploaded ([#24129](https://projects.theforeman.org/issues/24129), [d04bf684](https://github.com/Katello/katello.git/commit/d04bf684dad7949ec72b8cc463eabdede1ac3b6f))
  * UI fails silently when uploading manifests produces warnings/errors ([#24127](https://projects.theforeman.org/issues/24127))
- * processing virt-who report blocks RHSM certs checks what can lead to 503 errors ([#23995](https://projects.theforeman.org/issues/23995), [e0d2c879](https://github.com/Katello/katello.git/commit/e0d2c8790718e5aaf366a76b33ee446c06999bde))
  * Add product content info to new subscription details page ([#23886](https://projects.theforeman.org/issues/23886), [3fdd5848](https://github.com/Katello/katello.git/commit/3fdd5848139237dec6f8b5605984e878500c1d32))
  * RH Subscriptions: ensure toast notifications when a task is started ([#23750](https://projects.theforeman.org/issues/23750), [98a8e8ce](https://github.com/Katello/katello.git/commit/98a8e8ce992bf082d4338724424b050f6d7c6209))
  * Error when fetching available subscription quantities shouldn't block quantity editing ([#23510](https://projects.theforeman.org/issues/23510), [c5283890](https://github.com/Katello/katello.git/commit/c528389076d19fee443f9dcfa2b85ed3db12874f))
