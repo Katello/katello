@@ -197,10 +197,6 @@ module Katello
       require_dependency "#{Katello::Engine.root}/app/services/katello/proxy_status/pulp_node"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
 
-      #facet extensions
-      ::Host::Managed.send :include, ::Katello::Concerns::ContentFacetHostExtensions
-      ::Host::Managed.send :include, ::Katello::Concerns::SubscriptionFacetHostExtensions
-
       #Api controller extensions
       ::Api::V2::HostsController.send :include, Katello::Concerns::Api::V2::HostsControllerExtensions
       ::Api::V2::HostgroupsController.send :include, Katello::Concerns::Api::V2::HostgroupsControllerExtensions

@@ -266,11 +266,13 @@ Foreman::Plugin.register :katello do
     api_view :list => 'katello/api/v2/content_facet/base_with_root', :single => 'katello/api/v2/content_facet/show'
     api_docs :content_facet_attributes, ::Katello::Api::V2::HostContentsController
     template_compatibility_properties :content_source_id, :content_source
+    extend_model ::Katello::Concerns::ContentFacetHostExtensions
   end
 
   register_facet Katello::Host::SubscriptionFacet, :subscription_facet do
     api_view :list => 'katello/api/v2/subscription_facet/base_with_root', :single => 'katello/api/v2/subscription_facet/show'
     api_docs :subscription_facet_attributes, ::Katello::Api::V2::HostSubscriptionsController
+    extend_model ::Katello::Concerns::SubscriptionFacetHostExtensions
   end
 
   if Katello.with_remote_execution?
