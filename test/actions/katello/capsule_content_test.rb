@@ -22,7 +22,7 @@ module ::Actions::Katello::CapsuleContent
 
     before do
       set_user
-      ::Katello::CapsuleContent.any_instance.stubs(:ping_pulp).returns({})
+      SmartProxy.any_instance.stubs(:ping_pulp).returns({})
     end
 
     def synced_repos(action, repos)
@@ -43,13 +43,13 @@ module ::Actions::Katello::CapsuleContent
     let(:action) { create_action(action_class) }
 
     before do
-      action.expects(:action_subject).with(capsule_content.capsule)
+      action.expects(:action_subject).with(capsule_content.smart_proxy)
     end
 
     it 'plans' do
-      capsule_content.add_lifecycle_environment(environment)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
       action_class.any_instance.expects(:repos_needing_updates).returns([repository])
-      capsule_content_sync = plan_action(action, capsule_content.capsule)
+      capsule_content_sync = plan_action(action, capsule_content.smart_proxy)
 
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
@@ -57,32 +57,32 @@ module ::Actions::Katello::CapsuleContent
       assert_action_planed_with(action,
                                 ::Actions::Pulp::Repository::Refresh,
                                 repository,
-                                :capsule_id => capsule_content.capsule.id
+                                :capsule_id => capsule_content.smart_proxy.id
                                )
     end
 
     it 'allows limiting scope of the syncing to one environment' do
-      capsule_content.add_lifecycle_environment(dev_environment)
+      capsule_content.smart_proxy.add_lifecycle_environment(dev_environment)
       action_class.any_instance.expects(:repos_needing_updates).returns([])
-      capsule_content_sync = plan_action(action, capsule_content.capsule, :environment_id => dev_environment.id)
+      capsule_content_sync = plan_action(action, capsule_content.smart_proxy, :environment_id => dev_environment.id)
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
       assert_equal 9, synced_repos.uniq.count
     end
 
     it 'fails when trying to sync to the default capsule' do
-      Katello::CapsuleContent.any_instance.stubs(:default_capsule?).returns(true)
+      SmartProxy.any_instance.stubs(:pulp_master?).returns(true)
       assert_raises(RuntimeError) do
-        plan_action(action, capsule_content.capsule, :environment_id => dev_environment.id)
+        plan_action(action, capsule_content.smart_proxy, :environment_id => dev_environment.id)
       end
     end
 
     it 'fails when trying to sync a lifecyle environment that is not attached' do
-      capsule_content.add_lifecycle_environment(environment)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
 
-      Katello::CapsuleContent.any_instance.stubs(:lifecycle_environments).returns([])
+      Katello::Pulp::SmartProxyRepository.any_instance.stubs(:lifecycle_environments).returns([])
       assert_raises(RuntimeError) do
-        plan_action(action, capsule_content.capsule, :environment_id => staging_environment.id)
+        plan_action(action, capsule_content.smart_proxy, :environment_id => staging_environment.id)
       end
     end
   end
@@ -112,16 +112,16 @@ module ::Actions::Katello::CapsuleContent
     end
 
     before do
-      capsule_content.add_lifecycle_environment(environment)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
       ::Cert::Certs.stubs(:ca_cert).returns(cert)
       ::Cert::Certs.stubs(:ueber_cert).with(repository.organization).returns(cert)
     end
 
     it 'creates repos needed on the capsule' do
-      capsule_content.stubs(:current_repositories).returns([custom_repository])
-      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository, repository])
+      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:current_repositories).returns([custom_repository])
+      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:repos_available_to_capsule).returns([custom_repository, repository])
 
-      action = create_and_plan_action(action_class, capsule_content)
+      action = create_and_plan_action(action_class, capsule_content.smart_proxy)
 
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Create) do |input|
         input[0].must_equal(repository)
@@ -131,26 +131,25 @@ module ::Actions::Katello::CapsuleContent
 
   class RemoveUnneededReposTest < TestBase
     let(:action_class) { ::Actions::Katello::CapsuleContent::RemoveUnneededRepos }
+    before do
+      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:current_repositories).returns([custom_repository, repository])
+      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:repos_available_to_capsule).returns([custom_repository])
+      ::Katello::Pulp::SmartProxyRepository.any_instance.expects(:delete_orphaned_repos).once.returns(nil)
+    end
 
     it "removes unneeded repos" do
-      capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
-      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
-      capsule_content.stubs(:orphaned_repos).returns([])
-
-      action = create_and_plan_action(action_class, capsule_content)
+      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:orphaned_repos).returns([])
+      action = create_and_plan_action(action_class, capsule_content.smart_proxy)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|
-        input.must_equal(:pulp_id => repository.pulp_id, :capsule_id => capsule_content.capsule.id)
+        input.must_equal(:repository_id => repository.id, :capsule_id => capsule_content.smart_proxy.id)
       end
     end
 
     it "removes deleted repos" do
-      capsule_content.stubs(:current_repositories).returns([custom_repository, repository])
-      capsule_content.stubs(:repos_available_to_capsule).returns([custom_repository])
-      capsule_content.stubs(:orphaned_repos).returns([repository.pulp_id])
-
-      action = create_and_plan_action(action_class, capsule_content)
+      ::Katello::Pulp::SmartProxyRepository.any_instance.stubs(:orphaned_repos).returns([repository.pulp_id])
+      action = create_and_plan_action(action_class, capsule_content.smart_proxy)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::Destroy) do |(input)|
-        input.must_equal(:pulp_id => repository.pulp_id, :capsule_id => capsule_content.capsule.id)
+        input.must_equal(:repository_id => repository.id, :capsule_id => capsule_content.smart_proxy.id)
       end
     end
   end

@@ -32,8 +32,8 @@ module Scenarios
 
       @support.sleep_if_needed
       @support.sync_repo(repo)
-
-      @support.destroy_org(org)
+      @support.sleep_if_needed
+      @support.destroy_org(org, repo)
     end
   end
 end

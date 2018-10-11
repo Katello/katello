@@ -46,7 +46,7 @@ module Actions
             clone.save!
             plan_action(ContentViewPuppetEnvironment::Clear, clone)
 
-            unless ::Katello::Repository.needs_distributor_updates([clone], ::Katello::CapsuleContent.new(::SmartProxy.default_capsule)).empty?
+            unless ::Katello::Repository.needs_distributor_updates([clone], SmartProxy.pulp_master).empty?
               plan_action(Pulp::Repository::Refresh, clone)
             end
           end

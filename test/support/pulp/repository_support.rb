@@ -47,7 +47,9 @@ module Katello
     end
 
     def self.destroy_repo(repo)
-      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_master
+
+      ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id, :capsule_id => ::SmartProxy.pulp_master.id)
     rescue RestClient::ResourceNotFound => e
       puts "Failed to destroy repo #{e.message}"
     end

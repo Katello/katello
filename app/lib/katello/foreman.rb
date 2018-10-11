@@ -14,14 +14,14 @@ module Katello
 
           # Associate the puppet environment with the locations that are currently
           # associated with the capsules that have the target lifecycle environment.
-          capsule_contents = Katello::CapsuleContent.with_environment(environment, true)
+          capsule_contents = SmartProxy.with_environment(environment, true)
           unless capsule_contents.blank?
-            locations = capsule_contents.map(&:capsule).map(&:locations).compact.flatten.uniq
+            locations = capsule_contents.map(&:locations).compact.flatten.uniq
             foreman_environment.locations = locations
             foreman_environment.save!
           end
 
-          if (foreman_smart_proxy = SmartProxy.default_capsule)
+          if (foreman_smart_proxy = SmartProxy.pulp_master)
             PuppetClassImporter.new(:url => foreman_smart_proxy.url, :env => foreman_environment.name).update_environment
           end
         end

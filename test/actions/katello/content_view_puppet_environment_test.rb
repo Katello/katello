@@ -17,7 +17,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
 
     it 'plans' do
       default_capsule = mock
-      SmartProxy.expects(:default_capsule).returns(default_capsule)
+      SmartProxy.stubs(:pulp_master).returns(default_capsule)
       puppet_env.expects(:save!)
       action.expects(:action_subject).with(puppet_env)
 
@@ -143,7 +143,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
       action.expects(:plan_self)
       plan_action action, puppet_env
 
-      assert_action_planed_with action, ::Actions::Pulp::Repository::Destroy, pulp_id: puppet_env.pulp_id
+      assert_action_planed_with action, ::Actions::Pulp::Repository::Destroy, content_view_puppet_environment_id: puppet_env.id
     end
   end
 end

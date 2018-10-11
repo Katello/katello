@@ -4,7 +4,7 @@ module Actions
       class Destroy < Actions::EntryAction
         def plan(puppet_env)
           action_subject(puppet_env)
-          plan_action(Pulp::Repository::Destroy, pulp_id: puppet_env.pulp_id)
+          plan_action(Pulp::Repository::Destroy, content_view_puppet_environment_id: puppet_env.id)
           plan_self
         end
 

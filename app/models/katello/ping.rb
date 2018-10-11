@@ -98,8 +98,7 @@ module Katello
 
       def pulp_url(capsule_id)
         if capsule_id
-          capsule_content = ::Katello::CapsuleContent.new(SmartProxy.find(capsule_id))
-          uri = URI.parse(capsule_content.pulp_url)
+          uri = URI.parse(SmartProxy.find(capsule_id).pulp_url)
           "#{uri.scheme}://#{uri.host.downcase}/pulp/api/v2"
         else
           SETTINGS[:katello][:pulp][:url]

@@ -21,7 +21,7 @@ module Actions
           end
 
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
-          plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
+          plan_action(Pulp::Repository::Destroy, repository_id: repository.id)
           sequence do
             delete_record(repository) if planned_destroy
             if repository.redhat?

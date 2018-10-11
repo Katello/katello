@@ -14,7 +14,7 @@ module Actions
               #only clear if it should be empty, but its not
               plan_action(Repository::Clear, clone) if (!clone.yum? || !clone.empty_in_pulp?)
 
-              if ::Katello::Repository.needs_distributor_updates([clone], ::Katello::CapsuleContent.new(::SmartProxy.default_capsule)).first
+              if ::Katello::Repository.needs_distributor_updates([clone], SmartProxy.pulp_master).first
                 plan_action(Pulp::Repository::Refresh, clone)
               end
             end

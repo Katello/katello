@@ -3,15 +3,24 @@ module Actions
     module Repository
       class Destroy < Pulp::AbstractAsyncTask
         input_format do
-          param :pulp_id
+          param :repository_id
           param :capsule_id
+          param :content_view_puppet_environment_id
         end
 
         def invoke_external_task
-          output[:pulp_tasks] = pulp_extensions.repository.delete(input[:pulp_id])
-        rescue RestClient::ResourceNotFound
-          Rails.logger.warn("Tried to delete repository #{input[:pulp_id]}, but it did not exist.")
-          []
+          begin
+            if input[:content_view_puppet_environment_id]
+              repo = ::Katello::ContentViewPuppetEnvironment.find(input[:content_view_puppet_environment_id]).nonpersisted_repository
+            else
+              repo = ::Katello::Repository.find(input[:repository_id])
+            end
+          rescue ActiveRecord::RecordNotFound
+            Rails.logger.warn("Tried to delete repository #{input[:repository_id]}, but it did not exist.")
+            return []
+          end
+          capsule = input[:capsule_id] ? smart_proxy(input[:capsule_id]) : SmartProxy.pulp_master
+          output[:pulp_tasks] = repo.backend_service(capsule).delete
         end
       end
     end

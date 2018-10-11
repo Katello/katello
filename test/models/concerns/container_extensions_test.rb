@@ -23,11 +23,9 @@ module Katello
     def test_container_repo_url_no_capsule
       counter = OpenStruct.new(:count => 1)
       hostname = "www.redhat-registry.com"
-      default_capsule = mock
-      CapsuleContent.expects(:default_capsule).returns(default_capsule)
       capsule = mock
       capsule.expects(:url => "http://" + hostname + ":8000")
-      default_capsule.expects(:capsule).returns(capsule)
+      SmartProxy.stubs(:pulp_master).returns(capsule)
       @container.stubs(:capsule).returns
       Repository.expects(:where).with(:container_repository_name => @container.repository_name).returns(counter)
       url = @container.repository_pull_url

@@ -3,7 +3,7 @@ module Actions
     module ContentViewPuppetEnvironment
       class Create < Actions::EntryAction
         def plan(puppet_environment, clone = false)
-          internal_capsule = SmartProxy.default_capsule
+          internal_capsule = SmartProxy.pulp_master
           fail _("Content View %s  cannot be published without an internal capsule." % puppet_environment.name) unless internal_capsule
 
           User.as_anonymous_admin { puppet_environment.save! }

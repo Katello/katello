@@ -23,7 +23,7 @@ module Actions
                           :puppet_modules_present => version.promote_puppet_environment?)
 
               repos_to_delete(version, environment).each do |repo|
-                plan_action(Repository::Destroy, repo, :skip_environment_update => true, :planned_destroy => true)
+                plan_action(Repository::Destroy, repo, :skip_environment_update => true, :planned_destroy => false)
               end
             end
 
@@ -41,7 +41,8 @@ module Actions
 
         def run
           environment = ::Katello::KTEnvironment.find(input[:environment_id])
-          if ::Katello::CapsuleContent.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
+
+          if ::SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
             ForemanTasks.async_task(ContentView::CapsuleSync,
                                     ::Katello::ContentView.find(input[:content_view_id]),
                                     environment)

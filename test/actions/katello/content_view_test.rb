@@ -294,14 +294,14 @@ module ::Actions::Katello::ContentView
     end
 
     it 'plans' do
-      capsule_content_1 = new_capsule_content(:three)
-      capsule_content_2 = new_capsule_content(:four)
-      capsule_content_1.add_lifecycle_environment(library)
-      capsule_content_2.add_lifecycle_environment(library)
+      smart_proxy_service_1 = new_capsule_content(:three)
+      smart_proxy_service_2 = new_capsule_content(:four)
+      smart_proxy_service_1.smart_proxy.add_lifecycle_environment(library)
+      smart_proxy_service_2.smart_proxy.add_lifecycle_environment(library)
 
       plan_action(action, content_view, library)
       assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync,
-                                 [capsule_content_1.capsule, capsule_content_2.capsule],
+                                 [smart_proxy_service_1.smart_proxy, smart_proxy_service_2.smart_proxy],
                                  :content_view_id => content_view.id, :environment_id => library.id)
     end
   end
