@@ -120,14 +120,6 @@ module Katello
         self.class.friendly_compliance_reasons(Resources::Candlepin::Consumer.compliance(uuid)['reasons'])
       end
 
-      def entitlements?
-        # use cahced consumer_attributes if possible
-        count = @consumer_attributes.try(:[], 'entitlementCount')
-        return count > 0 if count
-
-        !entitlements.empty?
-      end
-
       def self.friendly_compliance_reasons(candlepin_reasons)
         candlepin_reasons.map do |reason|
           product_name = reason['productName'] || reason['attributes']['name']
