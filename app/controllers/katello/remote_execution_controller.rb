@@ -30,9 +30,10 @@ module Katello
       end
 
       def hosts
+        host_ids = params[:host_ids].is_a?(String) ? params[:host_ids].split(',') : params[:host_ids]
         find_bulk_hosts('edit_hosts',
           included: {
-            ids: params[:host_ids],
+            ids: host_ids,
             search: params[:scoped_search],
             excluded: params[:excluded]
           }

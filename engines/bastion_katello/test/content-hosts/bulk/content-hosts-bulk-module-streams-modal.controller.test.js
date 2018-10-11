@@ -52,12 +52,6 @@ describe('Controller: ContentHostsBulkModuleStreamsModalController', function() 
         });
     }));
 
-    it("provides a function for closing the modal", function () {
-        spyOn($uibModalInstance, 'close');
-        $scope.ok();
-        expect($uibModalInstance.close).toHaveBeenCalled();
-    });
-
     it("provides a function for cancelling the modal", function () {
         spyOn($uibModalInstance, 'dismiss');
         $scope.cancel();

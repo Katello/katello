@@ -37,7 +37,7 @@
         <tbody>
           <tr bst-table-row ng-repeat="module in table.rows">
             <td bst-table-cell>
-              <a href="/module_streams?search=module_spec%3D{{ module.module_spec }}+and+host%3D{{ host.name }}">
+              <a href="/module_streams?search=module_spec%3D{{ module.module_spec }}">
               {{ module.name }}</a></td>
             <td bst-table-cell>{{ module.stream }}</td>
             <td bst-table-cell>
@@ -63,5 +63,8 @@
       </table>
     </div>
   </div>
+  </div>
+  <div data-block="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()" translate>Cancel</button>
   </div>
 </div>

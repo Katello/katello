@@ -21,10 +21,6 @@ angular.module('Bastion.content-hosts').controller('ContentHostsBulkModuleStream
      'hostIds', 'ModuleStreamActions',
     function ($scope, $window, $timeout, $uibModalInstance, HostBulkAction, Nutupane,
               BastionConfig, hostIds, ModuleStreamActions) {
-        $scope.ok = function () {
-            $uibModalInstance.close();
-        };
-
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
