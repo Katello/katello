@@ -20,16 +20,6 @@ module Katello::Host
       @hypervisor_name = "virt-who-#{@host.name}-#{@organization.id}"
       @host.update_attributes!(:name => @hypervisor_name)
       @hypervisor_results = [{ :name => old_name, :uuid => @host.subscription_facet.uuid, :organization_label => @organization.label }]
-      ::Katello::Resources::Candlepin::Consumer.stubs(:get).returns(
-        [
-          {
-            uuid: @host.subscription_facet.uuid,
-            entitlementStatus: Katello::SubscriptionStatus::UNKNOWN,
-            'guestIds' => ['test-id-1'],
-            'entitlementCount' => 0
-          }
-        ]
-      )
     end
 
     let(:action_class) { ::Actions::Katello::Host::Hypervisors }
@@ -38,35 +28,33 @@ module Katello::Host
       it 'new hypervisor' do
         @host.subscription_facet.destroy!
         @host.reload
+        new_facet = ::Katello::Host::SubscriptionFacet.new
+        ::Katello::Host::SubscriptionFacet.expects(:new).returns(new_facet)
 
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
         plan_action(action, :hypervisors => @hypervisor_results)
         finalize_action(action)
-
-        @host.reload
-        assert_not_nil @host.subscription_facet
       end
 
       it 'existing hypervisor, no facet' do
-        @host.subscription_facet.delete
-        @host.save!
+        @host.subscription_facet.destroy!
+        @host.reload
+        ::Host.expects(:find_by).with(:name => @hypervisor_name).returns(@host)
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
         plan_action(action, :hypervisors => @hypervisor_results)
         finalize_action(action)
-        @host.reload
-        assert_not_nil @host.subscription_facet
       end
 
       it 'existing hypervisor, renamed' do
         @hypervisor_results[0][:name] = 'hypervisor.renamed'
+        ::Host.expects(:find_by).never
+        ::Katello::Host::SubscriptionFacet.expects(:new).never
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
         plan_action(action, :hypervisors => @hypervisor_results)
-        assert_difference('::Katello::Host::SubscriptionFacet.count', 0) do
-          finalize_action(action)
-        end
+        finalize_action(action)
       end
 
       it 'existing hypervisor, no org' do
