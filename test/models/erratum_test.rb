@@ -149,6 +149,24 @@ module Katello
       errata.update_from_json(json.as_json)
 
       assert_equal errata.reload.packages.count, pkg_count + 2
+      assert_empty errata.module_stream_packages
+      assert_equal errata.packages.non_module_stream_packages.count, pkg_count + 2
+    end
+
+    def test_update_from_json_modules
+      pkg = {:name => 'foo', :version => 3, :arch => 'x86_64', :epoch => 0, :release => '.el3', :filename => 'blahblah.rpm'}.with_indifferent_access
+
+      module_stream = katello_module_streams(:river)
+      module_stream_json = ModuleStream.parse_module_spec(module_stream.module_spec)
+      errata = katello_errata(:security)
+      pkg_count = errata.packages.count
+
+      json = errata.attributes.merge('pkglist' => [{'packages' => [pkg], 'module' => module_stream_json}])
+      errata.update_from_json(json.as_json)
+      assert_equal errata.reload.packages.count, pkg_count + 1
+      assert_equal errata.module_stream_packages.count, 1
+      assert_equal errata.module_stream_packages.keys.first, module_stream.module_spec
+      assert_equal errata.reload.packages.non_module_stream_packages.count, pkg_count
     end
 
     def test_update_from_json_epoch_dates

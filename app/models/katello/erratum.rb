@@ -136,6 +136,7 @@ module Katello
         end
       end
       update_packages(json['pkglist']) unless json['pkglist'].blank?
+      update_modules(json['pkglist']) unless json['pkglist'].blank?
     end
 
     def self.list_filenames_by_clauses(repo, clauses)
@@ -147,6 +148,19 @@ module Katello
       Katello::ErratumPackage.joins(:erratum => :repository_errata).
           where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
           where(statement).pluck(:filename)
+    end
+
+    def module_stream_packages
+      # return something like
+      # {module_stream => [packages]}
+      ret = {}
+      packages.each do |pack|
+        pack.module_streams.each do |mod|
+          ret[mod.module_spec] ||= []
+          ret[mod.module_spec] << pack.nvrea unless ret[mod.module_spec].include?(pack.nvrea)
+        end
+      end
+      ret
     end
 
     private
@@ -210,6 +224,37 @@ module Katello
       action_function = lambda do |needed|
         self.packages.create!(needed)
       end
+      run_until(needed_function, action_function)
+    end
+
+    def update_modules(json)
+      needed_function = lambda do
+        module_stream_attributes = []
+        json.each do |package_item|
+          if package_item['module']
+            module_stream = ModuleStream.where(package_item['module']).first_or_create!
+            nvreas = package_item["packages"].map { |hash| "#{hash['name']}-#{hash['version']}-#{hash['release']}.#{hash['arch']}" }
+            module_stream_id_column = "#{ModuleStreamErratumPackage.table_name}.module_stream_id"
+            existing = ErratumPackage.joins(:module_streams).
+                                      where(module_stream_id_column => module_stream.id,
+                                            :nvrea => nvreas).pluck(:nvrea)
+
+            (nvreas - existing).each do |nvrea|
+              package = self.packages.find_by(:nvrea => nvrea)
+              module_stream_attributes << { :module_stream_id => module_stream.id,
+                                            :erratum_package_id => package.id }
+            end
+          end
+        end
+        module_stream_attributes.uniq
+      end
+
+      action_function = lambda do |needed|
+        needed.each do |msep|
+          ModuleStreamErratumPackage.create!(msep)
+        end
+      end
+
       run_until(needed_function, action_function)
     end
 
