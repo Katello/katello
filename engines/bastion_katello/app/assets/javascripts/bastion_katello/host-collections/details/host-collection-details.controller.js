@@ -73,6 +73,10 @@ angular.module('Bastion.host-collections').controller('HostCollectionDetailsCont
             ContentHostsModalHelper.openSubscriptionsModal();
         };
 
+        $scope.openModuleStreamsModal = function () {
+            ContentHostsModalHelper.openModuleStreamsModal();
+        };
+
         $scope.save = function (hostCollection) {
             var deferred = $q.defer();
 

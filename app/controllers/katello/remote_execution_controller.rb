@@ -1,6 +1,8 @@
 module Katello
   if Katello.with_remote_execution?
     class RemoteExecutionController < JobInvocationsController
+      include Concerns::Api::V2::BulkHostsExtensions
+
       def new
         @composer = prepare_composer
       end
@@ -28,11 +30,14 @@ module Katello
       end
 
       def hosts
-        if params[:scoped_search].present?
-          params[:scoped_search]
-        else
-          ::Host.where(:id => params[:host_ids].try(:split, ','))
-        end
+        host_ids = params[:host_ids].is_a?(String) ? params[:host_ids].split(',') : params[:host_ids]
+        find_bulk_hosts('edit_hosts',
+          included: {
+            ids: host_ids,
+            search: params[:scoped_search],
+            excluded: params[:excluded]
+          }
+                       )
       end
 
       def inputs

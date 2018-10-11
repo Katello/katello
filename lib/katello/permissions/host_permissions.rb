@@ -45,6 +45,7 @@ Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'katello/api/v2/hosts_bulk_actions/applicable_errata',
   'katello/api/v2/hosts_bulk_actions/installable_errata',
   'katello/api/v2/hosts_bulk_actions/available_incremental_updates',
+  'katello/api/v2/hosts_bulk_actions/module_streams',
   'katello/api/v2/host_packages/index',
   'katello/api/v2/host_tracer/index',
   'katello/remote_execution/new',

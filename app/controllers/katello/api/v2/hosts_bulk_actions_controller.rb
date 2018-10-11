@@ -248,6 +248,18 @@ module Katello
       respond_for_index :collection => response, :template => :available_incremental_updates
     end
 
+    api :POST, "/hosts/bulk/module_streams",
+        N_("Fetch available module streams for hosts.")
+    param_group :bulk_params
+    def module_streams
+      options = {}
+      options[:group] = [:name, :stream]
+      options[:resource_class] = Katello::ModuleStream
+      host_module_streams = Katello::ModuleStream.available_for_hosts(@hosts)
+      respond_for_index(collection: scoped_search(host_module_streams, :name, :asc, options),
+                        template: '../../../api/v2/module_streams/name_streams')
+    end
+
     private
 
     def find_errata
