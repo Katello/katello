@@ -28,8 +28,9 @@ module Katello
     end
 
     def test_index
-      get :index, params: { :host_id => @host_dev.id }
+      response = get :index, params: { :host_id => @host_dev.id }
 
+      assert_nil JSON.parse(response.body)['error']
       assert_response :success
       assert_template 'api/v2/host_errata/index'
     end
