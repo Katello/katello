@@ -27,7 +27,7 @@ module Katello
         fail _("Either both parameters 'content_view_id' and 'environment_id' should be specified or neither should be specified")
       end
 
-      collection = scoped_search(index_relation, 'updated_at', 'desc', :resource_class => Erratum, :includes => [:cves])
+      collection = scoped_search(index_relation, 'updated', 'desc', :resource_class => Erratum, :includes => [:cves])
 
       @installable_errata_ids = []
       if @host.content_facet
