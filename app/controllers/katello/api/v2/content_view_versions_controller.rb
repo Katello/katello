@@ -85,12 +85,13 @@ module Katello
       respond_for_async :resource => task
     end
 
-    api :POST, "/content_view_versions/:id/export", N_("Export a content view version")
+    api :POST, "/content_view_versions/:id/export", N_("Export a content view version"), :deprecated => true
     param :id, :number, :desc => N_("Content view version identifier"), :required => true
     param :export_to_iso, :bool, :desc => N_("Export to ISO format"), :required => false
     param :iso_mb_size, :number, :desc => N_("maximum size of each ISO in MB"), :required => false
     param :since, Date, :desc => N_("Optional date of last export (ex: 2010-01-01T12:00:00Z)"), :required => false
     def export
+      ::Foreman::Deprecation.api_deprecation_warning("Export is being deprecated and will be removed in a future version of Katello. Use hammer content-view version export instead.")
       if params[:export_to_iso].blank? && params[:iso_mb_size].present?
         fail HttpErrors::BadRequest, _("ISO export must be enabled when specifying ISO size")
       end
