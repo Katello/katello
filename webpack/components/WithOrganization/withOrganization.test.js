@@ -4,7 +4,6 @@ import toJson from 'enzyme-to-json';
 import withOrganization from './withOrganization';
 
 jest.mock('../SelectOrg/SetOrganization');
-jest.mock('../../helpers/caret');
 
 describe('subscriptions page', () => {
   const WrappedComponent = () => <div> Wrapped! </div>;
