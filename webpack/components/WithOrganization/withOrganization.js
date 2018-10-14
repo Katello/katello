@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import SetOrganization from '../SelectOrg/SetOrganization';
-import titleWithCaret from '../../helpers/caret';
 import Header from '../../containers/Application/Headers';
 
 function withOrganization(WrappedComponent, redirectPath) {
@@ -22,14 +21,11 @@ function withOrganization(WrappedComponent, redirectPath) {
 
     componentDidUpdate(prevProps) {
       const { location } = this.props;
-
-      // TODO: use topbar react component
       const orgTitle = get(location, 'state.orgChanged');
       const prevOrgTitle = get(prevProps, 'location.state.orgChanged');
 
       if (orgTitle !== prevOrgTitle) {
-        document.getElementById('organization-dropdown')
-          .children[0].innerHTML = titleWithCaret(orgTitle);
+        window.tfm.nav.changeOrganization(orgTitle);
       }
     }
 

@@ -38,7 +38,7 @@ class SetOrganization extends Component {
     } = this.props;
     const { id, item } = this.state;
 
-    changeCurrentOrgaziation(`${id}-${item}`).then(() =>
+    changeCurrentOrgaziation(encodeURIComponent(`${id}-${item}`)).then(() =>
       history.push({
         pathname: redirectPath,
         state: { orgChanged: this.state.item },
