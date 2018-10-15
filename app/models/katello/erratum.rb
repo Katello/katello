@@ -153,14 +153,16 @@ module Katello
     def module_stream_packages
       # return something like
       # {module_stream => [packages]}
-      ret = {}
+      module_stream_rpms = {}
       packages.each do |pack|
         pack.module_streams.each do |mod|
-          ret[mod.module_spec] ||= []
-          ret[mod.module_spec] << pack.nvrea unless ret[mod.module_spec].include?(pack.nvrea)
+          module_stream_rpms[mod.module_spec_hash] ||= []
+          module_stream_rpms[mod.module_spec_hash] << pack.nvrea unless module_stream_rpms[mod.module_spec_hash].include?(pack.nvrea)
         end
       end
-      ret
+      module_stream_rpms.map do |module_hash, nvreas|
+        module_hash.merge(:packages => nvreas)
+      end
     end
 
     private

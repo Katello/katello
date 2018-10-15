@@ -85,6 +85,10 @@ module Katello
       items.join(":")
     end
 
+    def module_spec_hash
+      {:name => name, :stream => stream, :version => version, :context => context, :arch => arch}.compact
+    end
+
     def self.parse_module_spec(module_spec)
       # NAME:STREAM:VERSION:CONTEXT:ARCH/PROFILE
       spec = module_spec.split("/").first

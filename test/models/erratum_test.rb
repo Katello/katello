@@ -157,7 +157,7 @@ module Katello
       pkg = {:name => 'foo', :version => 3, :arch => 'x86_64', :epoch => 0, :release => '.el3', :filename => 'blahblah.rpm'}.with_indifferent_access
 
       module_stream = katello_module_streams(:river)
-      module_stream_json = ModuleStream.parse_module_spec(module_stream.module_spec)
+      module_stream_json = module_stream.module_spec_hash
       errata = katello_errata(:security)
       pkg_count = errata.packages.count
 
@@ -165,7 +165,7 @@ module Katello
       errata.update_from_json(json.as_json)
       assert_equal errata.reload.packages.count, pkg_count + 1
       assert_equal errata.module_stream_packages.count, 1
-      assert_equal errata.module_stream_packages.keys.first, module_stream.module_spec
+      assert_equal errata.module_stream_packages.first, module_stream.module_spec_hash.merge(:packages => [Util::Package.build_nvrea(pkg, false)])
       assert_equal errata.reload.packages.non_module_stream_packages.count, pkg_count
     end
 
