@@ -134,5 +134,14 @@ angular.module('Bastion.errata').config(['$stateProvider', function ($stateProvi
             label: "{{ task.id }}",
             parent: 'erratum.info'
         }
+    })
+    .state('erratum.packages', {
+        url: '/packages',
+        permission: ['view_products', 'view_content_views'],
+        templateUrl: 'errata/details/views/erratum-packages.html',
+        ncyBreadcrumb: {
+            label: "{{ 'Packages' | translate }}",
+            parent: 'erratum.info'
+        }
     });
 }]);

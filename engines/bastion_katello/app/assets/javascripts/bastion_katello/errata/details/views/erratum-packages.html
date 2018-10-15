@@ -1,0 +1,34 @@
+<span page-title ng-model="errata">{{ 'Packages for Errata: ' | translate }} {{ errata.title }}</span>
+
+<div data-extend-template="layouts/two-column-details.html">
+  <div data-block="left-column">
+    <h3 translate>Independent Packages</h3>
+    <ul>
+      <p ng-show="!errata.packages.length" >No Packages to show</p>
+      <li ng-show="errata.packages.length" ng-repeat="package in errata.packages">
+        <a href="/packages?search={{package}}">
+          {{ package }}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div data-block="right-column">
+    <h3 translate>Module Stream Packages</h3>
+    <ul>
+      <p ng-show="!errata.module_streams.length" >No Packages to show</p>
+      <li ng-show="errata.module_streams.length" ng-repeat="moduleStream in errata.module_streams">
+        <a href="/module_streams/{{ moduleStream.id }}">
+          <b>{{ moduleStream.name + ":" + moduleStream.stream }}</b>
+        </a>
+        <ul>
+          <li ng-repeat="package in  moduleStream.packages">
+            <a href="/packages?search={{package}}">
+              {{ package }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
