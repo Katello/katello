@@ -21,15 +21,16 @@ module ::Actions::Pulp::Repository
       ::Katello::Ping.stubs(:ping).returns(:services => ping)
     end
 
-    def test_with_no_capsule_id
-      pulp_repo = {
-        :importers => [{}],
-        :distributors => []
-      }.with_indifferent_access
+    describe 'Refresh' do
+      let(:planned_action) do
+        create_and_plan_action action_class, repo
+      end
 
-      Runcible::Extensions::Repository.any_instance.expects(:retrieve_with_details).twice.returns(pulp_repo)
-
-      create_and_plan_action(action_class, repo)
+      it 'runs' do
+        ::Katello::Repository.expects(:find_by).returns repo
+        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns({})
+        run_action planned_action
+      end
     end
   end
 end

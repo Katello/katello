@@ -132,6 +132,21 @@ module Katello
         ensure
           delete_repo(@custom)
         end
+
+        def test_refresh
+          repo = Katello::Pulp::Repository::Yum.new(@custom, @master)
+          repo.create
+          distributor = repo.backend_data['distributors'].find { |dist| dist['distributor_type_id'] == 'yum_distributor' }
+          task_list = repo.smart_proxy.pulp_api.resources.repository.delete_distributor(@custom.pulp_id, distributor['id'])
+          refute_empty task_list
+          TaskSupport.wait_on_tasks(task_list)
+          assert_equal 2, repo.backend_data(true)['distributors'].count
+          repo_refresh = Katello::Pulp::Repository::Yum.new(@custom, @master)
+          repo_refresh.refresh
+          assert_equal 3, repo.backend_data(true)['distributors'].count
+        ensure
+          delete_repo(@custom)
+        end
       end
     end
   end
