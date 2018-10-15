@@ -153,6 +153,18 @@ class ActionController::TestCase
     @auth_permissions = [@read_permission]
     @unauth_permissions = [@create_permission, @update_permission, @destroy_permission, @sync_permission]
   end
+
+  def assert_response(type, message = nil)
+    if type == :success
+      if response.body.present? && /json/.match(response.headers['Content-Type'])
+        json_body = JSON.parse(response.body)
+        if json_body.is_a?(Hash)
+          assert_nil json_body['error']
+        end
+      end
+    end
+    super(type, message)
+  end
 end
 
 class ActiveSupport::TestCase
