@@ -118,7 +118,7 @@ module Katello
 
     def next_sync_date
       return nil unless (self.enabled || !self.foreman_tasks_recurring_logic.tasks.nil?)
-      self.foreman_tasks_recurring_logic.tasks.order(:start_at).last.start_at
+      self.foreman_tasks_recurring_logic.tasks.order(:start_at).last.try(:start_at)
     end
 
     def next_sync
