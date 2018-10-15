@@ -160,7 +160,7 @@ module Katello
           Runcible::Models::DockerImporter.new(importer_connection_options(capsule).merge(options))
         when Repository::OSTREE_TYPE
           options = importer_connection_options(capsule)
-          options[:depth] = capsule.default_capsule? ? compute_ostree_upstream_sync_depth : ostree_capsule_sync_depth
+          options[:depth] = capsule.default_capsule? ? root.compute_ostree_upstream_sync_depth : ostree_capsule_sync_depth
           options[:feed] = self.importer_feed_url(capsule)
           Runcible::Models::OstreeImporter.new(options)
         when Repository::DEB_TYPE
