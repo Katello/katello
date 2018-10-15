@@ -23,6 +23,6 @@ node :packages do |e|
   e.packages.non_module_stream_packages.pluck(:nvrea)
 end
 
-node :module_stream_packages do |e|
-  e.module_stream_packages
+node :module_streams do |e|
+  e.module_streams
 end

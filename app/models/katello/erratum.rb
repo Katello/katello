@@ -150,7 +150,7 @@ module Katello
           where(statement).pluck(:filename)
     end
 
-    def module_stream_packages
+    def module_streams
       # return something like
       # {module_stream => [packages]}
       module_stream_rpms = {}

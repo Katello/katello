@@ -149,7 +149,7 @@ module Katello
       errata.update_from_json(json.as_json)
 
       assert_equal errata.reload.packages.count, pkg_count + 2
-      assert_empty errata.module_stream_packages
+      assert_empty errata.module_streams
       assert_equal errata.packages.non_module_stream_packages.count, pkg_count + 2
     end
 
@@ -164,8 +164,8 @@ module Katello
       json = errata.attributes.merge('pkglist' => [{'packages' => [pkg], 'module' => module_stream_json}])
       errata.update_from_json(json.as_json)
       assert_equal errata.reload.packages.count, pkg_count + 1
-      assert_equal errata.module_stream_packages.count, 1
-      assert_equal errata.module_stream_packages.first, module_stream.module_spec_hash.merge(:packages => [Util::Package.build_nvrea(pkg, false)])
+      assert_equal errata.module_streams.count, 1
+      assert_equal errata.module_streams.first, module_stream.module_spec_hash.merge(:packages => [Util::Package.build_nvrea(pkg, false)])
       assert_equal errata.reload.packages.non_module_stream_packages.count, pkg_count
     end
 
