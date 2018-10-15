@@ -21,7 +21,8 @@ glue(@resource.root) do
   attributes :product_type
   attributes :ostree_branch_names => :ostree_branches
   attributes :upstream_username
-  attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth, :compute_ostree_upstream_sync_depth => :computed_ostree_upstream_sync_depth
+  attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth
+  attributes :compute_ostree_upstream_sync_depth => :computed_ostree_upstream_sync_depth
   attributes :deb_releases, :deb_components, :deb_architectures
   attributes :ignore_global_proxy
   attributes :ignorable_content
