@@ -226,7 +226,7 @@ module Katello
     def test_importer_ostree
       ostree_repo = katello_repositories(:ostree)
       depth = 100
-      ostree_repo.expects(:compute_ostree_upstream_sync_depth).returns(depth)
+      ostree_repo.root.expects(:compute_ostree_upstream_sync_depth).returns(depth)
       importer = ostree_repo.generate_importer
       assert_equal depth, importer.depth
     end
@@ -236,7 +236,7 @@ module Katello
       capsule = FactoryBot.build(:bmc_smart_proxy)
       depth = 100
       ostree_repo = katello_repositories(:ostree)
-      ostree_repo.expects(:compute_ostree_upstream_sync_depth).never
+      ostree_repo.root.expects(:compute_ostree_upstream_sync_depth).never
       ostree_repo.expects(:ostree_capsule_sync_depth).returns(depth)
       importer = ostree_repo.generate_importer(capsule)
       assert_equal depth, importer.depth
