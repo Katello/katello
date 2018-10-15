@@ -216,7 +216,7 @@ module Katello
       needed_function = lambda do
         package_hashes = json.map { |list| list['packages'] }.flatten
         package_attributes = package_hashes.map do |hash|
-          nvrea = "#{hash['name']}-#{hash['version']}-#{hash['release']}.#{hash['arch']}"
+          nvrea = Util::Package.build_nvrea(hash.with_indifferent_access, false)
           {'name' => hash['name'], 'nvrea' => nvrea, 'filename' => hash['filename']}
         end
         existing_nvreas = self.packages.pluck(:nvrea)
@@ -235,7 +235,7 @@ module Katello
         json.each do |package_item|
           if package_item['module']
             module_stream = ModuleStream.where(package_item['module']).first_or_create!
-            nvreas = package_item["packages"].map { |hash| "#{hash['name']}-#{hash['version']}-#{hash['release']}.#{hash['arch']}" }
+            nvreas = package_item["packages"].map { |hash| Util::Package.build_nvrea(hash.with_indifferent_access, false) }
             module_stream_id_column = "#{ModuleStreamErratumPackage.table_name}.module_stream_id"
             existing = ErratumPackage.joins(:module_streams).
                                       where(module_stream_id_column => module_stream.id,
