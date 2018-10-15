@@ -165,7 +165,7 @@ module Katello
       errata.update_from_json(json.as_json)
       assert_equal errata.reload.packages.count, pkg_count + 1
       assert_equal errata.module_streams.count, 1
-      assert_equal errata.module_streams.first, module_stream.module_spec_hash.merge(:packages => [Util::Package.build_nvrea(pkg, false)])
+      assert_equal errata.module_streams.first, module_stream.module_spec_hash.merge(:packages => [Util::Package.build_nvra(pkg)])
       assert_equal errata.reload.packages.non_module_stream_packages.count, pkg_count
     end
 
