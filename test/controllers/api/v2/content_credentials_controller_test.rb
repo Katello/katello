@@ -44,7 +44,6 @@ module Katello
 
     def test_content
       get :content, params: { :id => @gpg_key.id }
-      assert_response :success
       assert_equal @response.body, @gpg_key.content
     end
 

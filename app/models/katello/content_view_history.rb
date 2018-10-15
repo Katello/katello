@@ -25,6 +25,7 @@ module Katello
     alias_method :version, :content_view_version
     alias_attribute :description, :notes
 
+    scoped_search :on => :id, :relation => :content_view_version, :rename => :content_view_version_id
     scoped_search :on => :name, :relation => :environment, :rename => :environment, :complete_value => true
 
     enum action: {
