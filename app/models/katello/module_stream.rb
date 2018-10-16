@@ -86,7 +86,7 @@ module Katello
     end
 
     def module_spec_hash
-      {:name => name, :stream => stream, :version => version, :context => context, :arch => arch}.compact
+      {:name => name, :stream => stream, :version => version, :context => context, :arch => arch, :id => id}.compact
     end
 
     def self.parse_module_spec(module_spec)
