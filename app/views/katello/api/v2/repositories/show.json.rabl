@@ -19,7 +19,6 @@ glue(@resource.root) do
   attributes :ssl_client_key_id
 
   attributes :product_type
-  attributes :ostree_branch_names => :ostree_branches
   attributes :upstream_username
   attributes :ostree_upstream_sync_policy, :ostree_upstream_sync_depth
   attributes :compute_ostree_upstream_sync_depth => :computed_ostree_upstream_sync_depth
@@ -45,6 +44,7 @@ glue(@resource.root) do
   end
 end
 
+attributes :ostree_branch_names => :ostree_branches
 attributes :relative_path
 attributes :promoted? => :promoted
 attributes :content_view_version_id, :library_instance_id
