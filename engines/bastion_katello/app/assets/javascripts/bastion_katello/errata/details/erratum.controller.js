@@ -16,6 +16,8 @@ angular.module('Bastion.errata').controller('ErratumController', ['$scope', 'Err
             loading: true
         };
 
+        $scope.moduleStreamShowMap = {};
+
         if ($scope.errata) {
             $scope.panel.loading = false;
         }
@@ -26,5 +28,22 @@ angular.module('Bastion.errata').controller('ErratumController', ['$scope', 'Err
             $scope.panel.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);
         });
+
+        $scope.showModuleStreamList = function (moduleStreamId) {
+            return (!$scope.moduleStreamShowMap.hasOwnProperty(moduleStreamId) ||
+                     $scope.moduleStreamShowMap[moduleStreamId]);
+        };
+
+        $scope.toggleModuleStreamList = function (moduleStreamId) {
+            if ($scope.moduleStreamShowMap.hasOwnProperty(moduleStreamId)) {
+                $scope.moduleStreamShowMap[moduleStreamId] = !$scope.moduleStreamShowMap[moduleStreamId];
+            } else {
+                $scope.moduleStreamShowMap[moduleStreamId] = false;
+            }
+        };
+
+        $scope.moduleStreamChevron = function (moduleStreamId) {
+            return $scope.showModuleStreamList(moduleStreamId) ? 'down' : 'right';
+        };
     }
 ]);
