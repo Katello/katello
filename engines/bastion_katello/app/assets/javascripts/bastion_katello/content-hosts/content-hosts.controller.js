@@ -37,7 +37,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostsController',
             'sort_order': 'ASC'
         };
 
-        $scope.csvQuery = $httpParamSerializer(params);
+        $scope.csvQuery = function () {
+            return $httpParamSerializer(params);
+        };
+
         nutupane = new Nutupane(Host, params);
         $scope.controllerName = 'hosts';
         nutupane.masterOnly = true;
