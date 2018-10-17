@@ -7,6 +7,8 @@ module Katello
     has_many :repositories, through: :repository_module_streams, class_name: "Katello::Repository"
     has_many :profiles, class_name: "Katello::ModuleProfile", dependent: :destroy, inverse_of: :module_stream
     has_many :artifacts, class_name: "Katello::ModuleStreamArtifact", dependent: :destroy, inverse_of: :module_stream
+    has_many :module_stream_errata_packages, class_name: "Katello::ModuleStreamErratumPackage", dependent: :destroy, inverse_of: :module_stream
+    has_many :erratum_packages, class_name: "Katello::ErratumPackage", :through => :module_stream_errata_packages
 
     scoped_search on: :name, complete_value: true
     scoped_search on: :uuid, complete_value: true
@@ -81,6 +83,10 @@ module Katello
         end
       end
       items.join(":")
+    end
+
+    def module_spec_hash
+      {:name => name, :stream => stream, :version => version, :context => context, :arch => arch, :id => id}.compact
     end
 
     def self.parse_module_spec(module_spec)

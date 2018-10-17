@@ -635,9 +635,9 @@ module Katello
       if self.master?
         Katello::Rpm.import_for_repository(self, full_index)
         Katello::Srpm.import_for_repository(self, full_index)
+        Katello::ModuleStream.import_for_repository(self)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
-        Katello::ModuleStream.import_for_repository(self)
         self.import_distribution_data
       else
         index_linked_repo

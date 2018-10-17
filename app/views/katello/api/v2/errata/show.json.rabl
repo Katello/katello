@@ -20,5 +20,9 @@ node(:hosts_available_count) { |m| m.hosts_available(params[:organization_id]).c
 node(:hosts_applicable_count) { |m| m.hosts_applicable(params[:organization_id]).count }
 
 node :packages do |e|
-  e.packages.pluck(:nvrea)
+  e.packages.non_module_stream_packages.pluck(:nvrea)
+end
+
+node :module_streams do |e|
+  e.module_streams
 end
