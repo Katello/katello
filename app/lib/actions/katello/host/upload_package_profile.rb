@@ -29,11 +29,7 @@ module Actions
           Dynflow::Action::Rescue::Skip
         end
 
-        def run
-          profile = JSON.parse(input[:profile_string])
-          #free the huge string from the memory
-          input[:profile_string] = 'TRIMMED'.freeze
-
+        def self.upload(input, profile)
           host = ::Host.find_by(:id => input[:host_id])
           if host.nil?
             Rails.logger.warn("Host with ID %s not found, continuing" % input[:host_id])
@@ -50,6 +46,13 @@ module Actions
               Rails.logger.warn("Host installed package list with ID %s was not able to be written to the DB (host likely is deleted), continuing" % input[:host_id])
             end
           end
+        end
+
+        def run
+          profile = JSON.parse(input[:profile_string])
+          #free the huge string from the memory
+          input[:profile_string] = 'TRIMMED'.freeze
+          UploadPackageProfile.upload(input, profile)
         end
       end
     end

@@ -24,5 +24,12 @@ module Katello
         put :upload_package_profile, params: { :id => @host.subscription_facet.uuid }
       end
     end
+
+    it "test_upload_profiles_protected" do
+      Resources::Candlepin::Consumer.stubs(:get)
+      assert_protected_action(:upload_profiles, :edit_hosts) do
+        put :upload_profiles, params: { :id => @host.subscription_facet.uuid }
+      end
+    end
   end
 end

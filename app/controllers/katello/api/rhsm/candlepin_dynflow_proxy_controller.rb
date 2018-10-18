@@ -4,9 +4,9 @@ module Katello
     include ForemanTasks::Triggers
     include AbstractController::Callbacks
 
-    skip_before_action :authorize, :only => [:upload_package_profile]
-    before_action :find_host, :only => [:upload_package_profile]
-    before_action :authorize_client_or_user, :only => [:upload_package_profile]
+    skip_before_action :authorize, :only => [:upload_package_profile, :upload_profiles]
+    before_action :find_host, :only => [:upload_package_profile, :upload_profiles]
+    before_action :authorize_client_or_user, :only => [:upload_package_profile, :upload_profiles]
 
     skip_before_action :check_content_type
 
@@ -16,6 +16,15 @@ module Katello
     def upload_package_profile
       User.as_anonymous_admin do
         async_task(::Actions::Katello::Host::UploadPackageProfile, @host, request.raw_post)
+      end
+      render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
+    end
+
+    #api :PUT, "/consumers/:id/profiles", N_("Update installed packages, enabled repos, module inventory")
+    #param :id, String, :desc => N_("UUID of the consumer"), :required => true
+    def upload_profiles
+      User.as_anonymous_admin do
+        async_task(::Actions::Katello::Host::UploadProfiles, @host, request.raw_post)
       end
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
