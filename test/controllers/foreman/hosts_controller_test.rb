@@ -66,4 +66,28 @@ Content View,Registered,Last Checkin\n",
       assert_equal 2, buf.count
     end
   end
+
+  context 'destroy with katello overrides' do
+    let(:host) do
+      FactoryBot.create(:host, :managed)
+    end
+
+    setup do
+      @request.env['HTTP_REFERER'] = host_path(host)
+    end
+
+    test 'should destroy a host' do
+      delete :destroy, params: { :id => host.name }
+      assert_nil flash[:error]
+      assert_not_nil flash[:success]
+      assert_redirected_to hosts_url
+    end
+
+    test 'shows an error when host can not be destroyed' do
+      ::Katello::RegistrationManager.stubs(:unregister_host).returns(false)
+      delete :destroy, params: { :id => host.name }
+      assert_not_nil flash[:error]
+      assert_redirected_to host_path(host)
+    end
+  end
 end
