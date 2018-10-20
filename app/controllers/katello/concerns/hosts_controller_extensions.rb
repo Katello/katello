@@ -19,8 +19,11 @@ module Katello
         prepend Overrides
 
         def destroy
-          Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
-          process_success :success_redirect => hosts_path
+          if Katello::RegistrationManager.unregister_host(@host, :unregistering => false)
+            process_success(:success_redirect => hosts_path)
+          else
+            process_error :redirect => :back, :error_msg => _("Failed to delete %{host}: %{errors}") % { :host => @host, :errors => @host.errors.full_messages }
+          end
         rescue StandardError => ex
           process_error(:object => @host, :error_msg => ex.message, :redirect => saved_redirect_url_or(send("#{controller_name}_url")))
         end
