@@ -21,7 +21,7 @@
 angular.module('Bastion.products').controller('ProductsController',
     ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'Notification',
     function ($scope, $state, $sce, $location, $uibModal, translate, Nutupane, Product, ProductBulkAction, CurrentOrganization, Notification) {
-        var nutupane, nutupaneParams, taskUrl, taskLink, getBulkParams, bulkError, params;
+        var nutupane, nutupaneParams, taskLink, getBulkParams, bulkError, params;
 
         getBulkParams = function () {
             return {
@@ -60,11 +60,12 @@ angular.module('Bastion.products').controller('ProductsController',
         $scope.table = nutupane.table;
 
         $scope.$on('productDelete', function (event, taskId) {
-            var message;
-            taskUrl = $scope.taskUrl(taskId);
-            taskLink = $sce.trustAsHtml("<a href=" + taskUrl + ">here</a>");
-            message = translate("Product delete operation has been initiated in the background. Click %s to monitor the progress.");
-            Notification.setSuccessMessage(message.replace("%", taskLink));
+            var message = translate("Product delete operation has been initiated in the background.");
+            Notification.setSuccessMessage(message, {
+                link: {
+                    children: translate("Click to view task"),
+                    href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', taskId)
+                }});
         });
 
         $scope.unsetProductDeletionTaskId = function () {
