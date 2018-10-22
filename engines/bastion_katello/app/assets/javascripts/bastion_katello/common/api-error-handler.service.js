@@ -32,6 +32,11 @@
             var defaultErrorMessage = translate('Something went wrong when saving the resource.');
             handleError(response, $scope, defaultErrorMessage);
         };
+
+        this.handleDELETERequestErrors = function (response, $scope) {
+            var defaultErrorMessage = translate('Something went wrong when deleting the resource.');
+            handleError(response, $scope, defaultErrorMessage);
+        };
     }
 
     angular.module('Bastion.common').service('ApiErrorHandler', ApiErrorHandler);
