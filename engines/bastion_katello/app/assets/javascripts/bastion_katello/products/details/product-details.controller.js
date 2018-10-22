@@ -14,7 +14,7 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsController',
-    ['$scope', '$state', '$uibModal', 'translate', 'Product', 'Notification', 'ApiErrorHandler', function ($scope, $state, $uibModal, translate, Product, Notification, ApiErrorHandler) {
+    ['$rootScope', '$scope', '$state', '$uibModal', 'translate', 'Product', 'Notification', 'ApiErrorHandler', function ($rootScope, $scope, $state, $uibModal, translate, Product, Notification, ApiErrorHandler) {
         $scope.page = {
             error: false,
             loading: true
@@ -33,8 +33,11 @@ angular.module('Bastion.products').controller('ProductDetailsController',
 
         $scope.removeProduct = function (product) {
             product.$delete(function (data) {
-                $scope.$emit('productDelete', data.id);
-                $scope.transitionTo('products');
+                $scope.transitionTo('products').then(function() {
+                    $rootScope.$broadcast('productDelete', data.id);
+                });
+            }, function (data) {
+                ApiErrorHandler.handleDELETERequestErrors(data, $scope);
             });
         };
 
