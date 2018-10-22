@@ -52,7 +52,7 @@ describe('Controller: ProductDetailsController', function() {
     });
 
     it('provides a method to remove a product', function() {
-        spyOn($scope, 'transitionTo');
+        spyOn($scope, 'transitionTo').and.returnValue({then: (function() {})});
 
         $scope.removeProduct($scope.product);
 
