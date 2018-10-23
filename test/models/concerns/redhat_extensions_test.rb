@@ -114,16 +114,22 @@ module Katello
     end
 
     def test_kickstart_repos_with_no_content_source
-      @os.expects(:distribution_repositories).with(@host).returns([@repo_with_distro])
+      distro_repos = mock('distribution_repos').tap do |mock|
+        mock.expects(:where).returns([@repo_with_distro])
+      end
+      @os.expects(:distribution_repositories).with(@host).returns(distro_repos)
       @host.content_facet.content_source = nil
       assert_empty @os.kickstart_repos(@host)
     end
 
     def test_kickstart_repos_with_one_distro
-      @os.expects(:distribution_repositories).with(@host).returns([@repo_with_distro])
+      distro_repos = mock('distribution_repos').tap do |mock|
+        mock.expects(:where).returns([@repo_with_distro])
+      end
+      @os.expects(:distribution_repositories).with(@host).returns(distro_repos)
       repos = @os.kickstart_repos(@host)
       refute_empty repos
-      assert_equal @repo_with_distro.full_path(@content_source), repos.first[:path]
+      assert_equal @repo_with_distro.full_path(@content_source), repos.first[:url]
     end
   end
 end

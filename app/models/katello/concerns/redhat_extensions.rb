@@ -41,13 +41,24 @@ module Katello
       end
 
       def kickstart_repos(host)
-        distros = distribution_repositories(host)
+        distros = distribution_repositories(host).where(distribution_bootable: true)
         if distros && host.content_source
-          distros.map do |distro|
-            {:id => distro.id, :name => distro.name, :path => distro.full_path(host.content_source)}
-          end
+          distros.map { |distro| distro.to_hash(host.content_source) }
         else
           []
+        end
+      end
+
+      def variant_repo(host, variant)
+        if variant && host.content_source
+          product_id = host&.content_facet&.kickstart_repository&.product_id
+          distro = distribution_repositories(host)
+            .joins(:product)
+            .where(
+              distribution_variant: variant,
+              "#{Katello::Product.table_name}.id": product_id
+            ).first
+          distro.to_hash(host.content_source) if distro
         end
       end
 
@@ -58,8 +69,7 @@ module Katello
         if content_view && lifecycle_environment && host.os && host.architecture
           Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
               where(:distribution_version => host.os.release,
-                    :distribution_arch => host.architecture.name,
-                    :distribution_bootable => true)
+                    :distribution_arch => host.architecture.name)
         else
           []
         end
