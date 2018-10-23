@@ -18,102 +18,23 @@ exports[`subscriptions page should render 1`] = `
       <h1>
         Red Hat Subscriptions
       </h1>
-      <Row
-        bsClass="row"
-        className="toolbar-pf table-view-pf-toolbar-external"
-        componentClass="div"
-      >
-        <Col
-          bsClass="col"
-          componentClass="div"
-          sm={12}
-        >
-          <Form
-            bsClass="form"
-            className="toolbar-pf-actions"
-            componentClass="form"
-            horizontal={false}
-            inline={false}
-          >
-            <FormGroup
-              bsClass="form-group"
-              className="toolbar-pf-filter"
-            >
-              <Search
-                getAutoCompleteParams={[Function]}
-                initialInputValue=""
-                onSearch={[Function]}
-                updateSearchQuery={[Function]}
-              />
-            </FormGroup>
-            <div
-              className="option-tooltip-container"
-            >
-              <OptionTooltip
-                icon="fa-columns"
-                id="subscriptionTableTooltip"
-                onChange={[Function]}
-                onClose={[Function]}
-                options={Array []}
-                rootClose={true}
-              />
-            </div>
-            <div
-              className="toolbar-pf-action-right"
-            >
-              <FormGroup
-                bsClass="form-group"
-              >
-                <LinkContainer
-                  activeClassName="active"
-                  disabled={false}
-                  exact={false}
-                  replace={false}
-                  strict={false}
-                  to="subscriptions/add"
-                >
-                  <TooltipButton
-                    bsStyle="primary"
-                    title="Add Subscriptions"
-                    tooltipId="add-subscriptions-button-tooltip"
-                    tooltipPlacement="top"
-                    tooltipText={null}
-                  />
-                </LinkContainer>
-                <Button
-                  active={false}
-                  block={false}
-                  bsClass="btn"
-                  bsStyle="default"
-                  disabled={false}
-                  onClick={[Function]}
-                >
-                  Manage Manifest
-                </Button>
-                <Button
-                  active={false}
-                  block={false}
-                  bsClass="btn"
-                  bsStyle="default"
-                  disabled={false}
-                  onClick={[Function]}
-                >
-                  Export CSV
-                </Button>
-                <TooltipButton
-                  bsStyle="danger"
-                  disabled={true}
-                  onClick={[Function]}
-                  title="Delete"
-                  tooltipId="delete-subscriptions-button-tooltip"
-                  tooltipPlacement="top"
-                  tooltipText="This is disabled because no subscriptions are selected."
-                />
-              </FormGroup>
-            </div>
-          </Form>
-        </Col>
-      </Row>
+      <SubscriptionsToolbar
+        disableAddButton={false}
+        disableDeleteButton={true}
+        disableDeleteReason="This is disabled because no subscriptions are selected."
+        disableManifestActions={false}
+        disableManifestReason={null}
+        getAutoCompleteParams={[Function]}
+        initialInputValue=""
+        onDeleteButtonClick={[Function]}
+        onExportCsvButtonClick={[Function]}
+        onManageManifestButtonClick={[Function]}
+        onSearch={[Function]}
+        tableColumns={Array []}
+        toolTipOnChange={[Function]}
+        toolTipOnclose={[Function]}
+        updateSearchQuery={[Function]}
+      />
       <Connect(ManageManifestModal)
         delete={[Function]}
         disabledReason={null}
