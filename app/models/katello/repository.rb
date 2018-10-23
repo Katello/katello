@@ -278,6 +278,10 @@ module Katello
       all_instances
     end
 
+    def to_hash(content_source = nil)
+      {id: id, name: label, url: full_path(content_source)}
+    end
+
     #is the repo cloned in the specified environment
     def cloned_in?(env)
       !get_clone(env).nil?
