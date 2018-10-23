@@ -3,12 +3,11 @@ object @resource
 extends 'katello/api/v2/common/identifier'
 
 attributes :pulp_id => :backend_identifier
-attributes :relative_path
+attributes :relative_path, :container_repository_name, :full_path
 
 glue(@object.root) do
   attributes :content_type, :url, :arch, :content_id
   attributes :major, :minor
-  attributes :container_repository_name
 
   child :product do |_product|
     attributes :id, :cp_id, :name
