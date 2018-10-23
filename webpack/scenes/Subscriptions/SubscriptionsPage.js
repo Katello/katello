@@ -3,17 +3,13 @@ import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { isEmpty, isEqual } from 'lodash';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
-import { Button } from 'patternfly-react';
-import TooltipButton from 'react-bootstrap-tooltip-button';
-import OptionTooltip from '../../move_to_pf/OptionTooltip';
+import { Grid, Row, Col } from 'patternfly-react';
 import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
+import SubscriptionsToolbar from './components/SubscriptionsToolbar';
 import { manifestExists } from './SubscriptionHelpers';
-import Search from '../../components/Search/index';
 import api, { orgId } from '../../services/api';
 
 
@@ -264,60 +260,22 @@ class SubscriptionsPage extends Component {
           <Col sm={12}>
             <h1>{__('Red Hat Subscriptions')}</h1>
 
-            <Row className="toolbar-pf table-view-pf-toolbar-external">
-              <Col sm={12}>
-                <Form className="toolbar-pf-actions">
-                  <FormGroup className="toolbar-pf-filter">
-                    <Search
-                      onSearch={onSearch}
-                      getAutoCompleteParams={getAutoCompleteParams}
-                      updateSearchQuery={updateSearchQuery}
-                    />
-                  </FormGroup>
-                  <div className="option-tooltip-container">
-                    <OptionTooltip options={tableColumns} icon="fa-columns" id="subscriptionTableTooltip" onChange={toolTipOnChange} onClose={toolTipOnclose} />
-                  </div>
-                  <div className="toolbar-pf-action-right">
-                    <FormGroup>
-                      <LinkContainer
-                        to="subscriptions/add"
-                        disabled={disableManifestActions || !manifestExists(organization)}
-                      >
-                        <TooltipButton
-                          tooltipId="add-subscriptions-button-tooltip"
-                          tooltipText={this.getDisabledReason()}
-                          tooltipPlacement="top"
-                          title={__('Add Subscriptions')}
-                          disabled={disableManifestActions}
-                          bsStyle="primary"
-                        />
-                      </LinkContainer>
-
-                      <Button onClick={showManageManifestModal}>
-                        {__('Manage Manifest')}
-                      </Button>
-
-                      <Button
-                        onClick={() => { api.open('/subscriptions.csv', csvParams); }}
-                      >
-                        {__('Export CSV')}
-                      </Button>
-
-                      <TooltipButton
-                        bsStyle="danger"
-                        onClick={showSubscriptionDeleteModal}
-                        tooltipId="delete-subscriptions-button-tooltip"
-                        tooltipText={this.getDisabledReason(true)}
-                        tooltipPlacement="top"
-                        title={__('Delete')}
-                        disabled={disableManifestActions || this.state.disableDeleteButton}
-                      />
-
-                    </FormGroup>
-                  </div>
-                </Form>
-              </Col>
-            </Row>
+            <SubscriptionsToolbar
+              disableManifestActions={disableManifestActions}
+              disableManifestReason={this.getDisabledReason()}
+              disableDeleteButton={this.state.disableDeleteButton}
+              disableDeleteReason={this.getDisabledReason(true)}
+              disableAddButton={!manifestExists(organization)}
+              getAutoCompleteParams={getAutoCompleteParams}
+              updateSearchQuery={updateSearchQuery}
+              onDeleteButtonClick={showSubscriptionDeleteModal}
+              onSearch={onSearch}
+              onManageManifestButtonClick={showManageManifestModal}
+              onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
+              tableColumns={tableColumns}
+              toolTipOnChange={toolTipOnChange}
+              toolTipOnclose={toolTipOnclose}
+            />
 
             <ManageManifestModal
               showModal={this.state.manifestModalOpen}
