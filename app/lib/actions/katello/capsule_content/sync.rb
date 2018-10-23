@@ -73,7 +73,7 @@ module Actions
                               capsule_id: capsule_content.capsule.id,
                               repo_pulp_id: repo_id)
                 end
-                pulp_options = { remove_missing: repo && ["puppet", "yum"].include?(repo.content_type) }
+                pulp_options = { remove_missing: repo && ["deb", "puppet", "yum"].include?(repo.content_type) }
                 pulp_options[:force_full] = true if skip_metadata_check && repo.content_type == "yum"
                 plan_action(Pulp::Consumer::SyncCapsule,
                             capsule_id: capsule_content.capsule.id,
