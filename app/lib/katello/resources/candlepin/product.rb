@@ -9,7 +9,7 @@ module Katello
           end
 
           def find_for_stacking_id(owner_key, stacking_id)
-            Subscription.get_for_owner(owner_key).each do |subscription|
+            Resources::Candlepin::Subscription.get_for_owner(owner_key).each do |subscription|
               if subscription['product']['attributes'].any? { |attr| attr['name'] == 'stacking_id' && attr['value'] == stacking_id }
                 return subscription['product']
               end
