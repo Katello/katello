@@ -5,6 +5,7 @@ module Katello
         def generate_master_importer
           config = {
             feed: root.url,
+            remove_missing: root.mirror_on_sync?,
             releases: root.deb_releases,
             components: root.deb_components,
             architectures: root.deb_architectures
@@ -15,6 +16,7 @@ module Katello
         def generate_mirror_importer
           config = {
             feed: external_url,
+            remove_missing: true,
             releases: root.deb_releases,
             components: root.deb_components,
             architectures: root.deb_architectures
