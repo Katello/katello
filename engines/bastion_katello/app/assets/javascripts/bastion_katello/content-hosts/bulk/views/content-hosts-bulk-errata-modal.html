@@ -120,55 +120,70 @@
         <section>
 
           <div class="detail">
-            <span class="info-label" translate>Type</span>
+            <span class="info-label" translate><b>Type</b></span>
             <span class="info-value">{{ erratum.type }}</span>
           </div>
           <div class="detail">
-            <span class="info-label" translate>Title</span>
+            <span class="info-label" translate><b>Title</b></span>
             <span class="info-value">{{ erratum.title }}</span>
           </div>
           <div class="detail">
-            <span class="info-label" translate>Issued</span>
+            <span class="info-label" translate><b>Issued</b></span>
             <span class="info-value">{{ erratum.issued }}</span>
           </div>
           <div class="detail">
-            <span class="info-label" translate>Updated</span>
+            <span class="info-label" translate><b>Updated</b></span>
             <span class="info-value">{{ erratum.updated }}</span>
           </div>
           <div class="detail">
-            <span class="info-label" translate>Reboot Suggested</span>
+            <span class="info-label" translate><b>Reboot Suggested</b></span>
             <span class="info-value">{{ erratum.reboot_suggested }}</span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Description</span>
+            <span class="info-label" translate><b>Description</b></span>
             <span class="info-value">
-        <p ng-repeat="paragraph in erratum.description.split('\n\n')">
-          {{ paragraph }}
-        </p>
-      </span>
+              <p ng-repeat="paragraph in erratum.description.split('\n\n')">
+                {{ paragraph }}
+              </p>
+            </span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Solution</span>
+            <span class="info-label" translate><b>Solution</b></span>
             <span class="info-value">
-        <p ng-repeat="paragraph in erratum.solution.split('\n\n')">
-          {{ paragraph }}
-        </p>
-      </span>
+              <p ng-repeat="paragraph in erratum.solution.split('\n\n')">
+                {{ paragraph }}
+              </p>
+            </span>
           </div>
 
           <div class="detail">
-            <span class="info-label" translate>Packages</span>
+            <span class="info-label" translate><b>Packages</b></span>
             <span class="info-value">
-        <ul>
-          <li ng-repeat="package in erratum.packages">
-            {{ package }}
-          </li>
-        </ul>
-      </span>
+              <ul>
+                <li ng-repeat="package in erratum.packages">
+                  {{ package }}
+                </li>
+              </ul>
+            </span>
           </div>
 
+          <div class="detail">
+            <span class="info-label" translate><b>Module Streams</b></span>
+            <span class="info-value">
+              <ul>
+                <li ng-repeat="moduleStream in erratum.module_streams">
+                  {{ moduleStream.name + ":" + moduleStream.stream }}
+                  <ul>
+                    <li ng-repeat="package in moduleStream.packages">
+                      {{ package }}
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </span>
+          </div>
         </section>
       </div>
   </div>
