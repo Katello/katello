@@ -20,17 +20,17 @@ module Katello
 
     PARAM_ACTIONS = {
       :install_content => {
-        :package => :install_packages,
-        :package_group => :install_package_groups,
+        :package => ::Actions::Katello::Host::Package::Install,
+        :package_group => ::Actions::Katello::Host::PackageGroup::Install,
         :errata => :install_errata
       },
       :update_content => {
-        :package => :update_packages,
-        :package_group => :update_package_groups
+        :package => ::Actions::Katello::Host::Package::Update,
+        :package_group => ::Actions::Katello::Host::PackageGroup::Install
       },
       :remove_content => {
-        :package => :uninstall_packages,
-        :package_group => :uninstall_package_groups
+        :package => ::Actions::Katello::Host::Package::Remove,
+        :package_group => ::Actions::Katello::Host::PackageGroup::Remove
       }
     }.with_indifferent_access
 
@@ -308,9 +308,12 @@ module Katello
         task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, errata_uuids.uniq)
         respond_for_async :resource => task
       else
-        action = Katello::BulkActions.new(@hosts)
-        job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]], params[:content], :update_all => params[:update_all])
-        respond_for_show :template => 'job', :resource => job
+        content = params[:content]
+        if params[:action] == :update_content && params[:update_all]
+          content = []
+        end
+        task = async_task(::Actions::BulkAction, PARAM_ACTIONS[params[:action]][params[:content_type]], @hosts, content)
+        respond_for_async :resource => task
       end
     end
 

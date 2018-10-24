@@ -11,6 +11,7 @@ module Actions
                         consumer_uuid: host.content_facet.uuid,
                         type:          'rpm',
                         args:          packages)
+            plan_self(:host_id => host.id)
           end
 
           def humanized_name
@@ -42,6 +43,11 @@ module Actions
 
           def rescue_strategy
             Dynflow::Action::Rescue::Skip
+          end
+
+          def finalize
+            host = ::Host.find_by(:id => input[:host_id])
+            host.update(audit_comment: _("Removal of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")})
           end
         end
       end
