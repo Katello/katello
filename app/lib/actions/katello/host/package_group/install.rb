@@ -13,6 +13,7 @@ module Actions
                         consumer_uuid: host.content_facet.uuid,
                         type:          'package_group',
                         args:          groups)
+            plan_self(:host_id => host.id)
           end
 
           def humanized_name
@@ -29,6 +30,11 @@ module Actions
 
           def rescue_strategy
             Dynflow::Action::Rescue::Skip
+          end
+
+          def finalize
+            host = ::Host.find_by(:id => input[:host_id])
+            host.update(audit_comment: _("Installation of package group(s) requested: %{groups}") % {groups: input[:groups].join(", ")})
           end
         end
       end
