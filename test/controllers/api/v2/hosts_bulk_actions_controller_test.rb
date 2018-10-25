@@ -55,7 +55,11 @@ module Katello
     end
 
     def test_install_package
-      BulkActions.any_instance.expects(:install_packages).once.returns({})
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::Package::Install
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :install_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
 
@@ -63,7 +67,11 @@ module Katello
     end
 
     def test_update_package
-      BulkActions.any_instance.expects(:update_packages).once.returns({})
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::Package::Update
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :update_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
 
@@ -71,7 +79,11 @@ module Katello
     end
 
     def test_remove_package
-      BulkActions.any_instance.expects(:uninstall_packages).once.returns({})
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::Package::Remove
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :remove_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package', :content => ['foo'] }
 
@@ -79,7 +91,11 @@ module Katello
     end
 
     def test_install_package_group
-      BulkActions.any_instance.expects(:install_package_groups).once.returns({})
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Install
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :install_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package_group', :content => ['foo group'] }
 
@@ -87,7 +103,11 @@ module Katello
     end
 
     def test_update_package_group
-      BulkActions.any_instance.expects(:update_package_groups).once.returns({})
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Install
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :update_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package_group', :content => ['foo group'] }
 
@@ -95,7 +115,11 @@ module Katello
     end
 
     def test_remove_package_group
-      BulkActions.any_instance.expects(:uninstall_package_groups).once.returns({})
+      assert_async_task(::Actions::BulkAction) do |action_class, hosts|
+        assert_equal action_class, ::Actions::Katello::Host::PackageGroup::Remove
+        assert_includes hosts, @host1
+        assert_includes hosts, @host2
+      end
 
       put :remove_content, params: { :included => {:ids => @host_ids}, :organization_id => @org.id, :content_type => 'package_group', :content => ['foo group'] }
 
