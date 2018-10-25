@@ -1,85 +1,168 @@
-import * as types from '../SubscriptionConstants';
+import { testReducerSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
 
+import { GET_SETTING_SUCCESS } from '../../../move_to_foreman/Settings/SettingsConstants';
 import {
-  initialState,
-  loadingState,
-  loadingQuantitiesState,
-  requestSuccessResponse,
-  quantitiesSuccessState,
-  quantitiesRequestSuccessResponse,
-  successState,
-  errorState,
-  quantitiesErrorState,
-  loadingColumnsState,
-  tableColumns,
-} from './subscriptions.fixtures';
+  SUBSCRIPTIONS_REQUEST,
+  SUBSCRIPTIONS_SUCCESS,
+  SUBSCRIPTIONS_FAILURE,
+  SUBSCRIPTIONS_COLUMNS_REQUEST,
+  UPDATE_SUBSCRIPTION_COLUMNS,
+  SUBSCRIPTIONS_QUANTITIES_REQUEST,
+  SUBSCRIPTIONS_QUANTITIES_SUCCESS,
+  SUBSCRIPTIONS_QUANTITIES_FAILURE,
+  UPDATE_QUANTITY_REQUEST,
+  UPDATE_QUANTITY_SUCCESS,
+  UPDATE_QUANTITY_FAILURE,
+  DELETE_SUBSCRIPTIONS_REQUEST,
+  DELETE_SUBSCRIPTIONS_SUCCESS,
+  DELETE_SUBSCRIPTIONS_FAILURE,
+  SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
+  SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
+  TASK_BULK_SEARCH_SUCCESS,
+  GET_TASK_SUCCESS,
+  RESET_TASKS,
+} from '../SubscriptionConstants';
 import reducer from '../SubscriptionReducer';
 
-describe('subscriptions reducer', () => {
-  it('should return the initial state', () => {
-    expect(reducer(undefined, {})).toEqual(initialState);
-  });
-
-  it('should keep loading state on SUBSCRIPTIONS_REQUEST', () => {
-    expect(reducer(initialState, {
-      type: types.SUBSCRIPTIONS_REQUEST,
-    })).toEqual(loadingState);
-  });
-
-  it('should flatten subscriptions response SUBSCRIPTIONS_SUCCESS', () => {
-    expect(reducer(initialState, {
-      type: types.SUBSCRIPTIONS_SUCCESS,
-      response: requestSuccessResponse,
-    })).toEqual(successState);
-  });
-
-  it('should have error on SUBSCRIPTIONS_FAILURE', () => {
-    expect(reducer(initialState, {
-      type: types.SUBSCRIPTIONS_FAILURE,
+const fixtures = {
+  'should return the initial state': {},
+  'should handle SUBSCRIPTIONS_REQUEST': {
+    action: {
+      type: SUBSCRIPTIONS_REQUEST,
+    },
+  },
+  'should handle UPDATE_QUANTITY_REQUEST': {
+    action: {
+      type: UPDATE_QUANTITY_REQUEST,
+    },
+  },
+  'should handle DELETE_SUBSCRIPTIONS_REQUEST': {
+    action: {
+      type: DELETE_SUBSCRIPTIONS_REQUEST,
+    },
+  },
+  'should handle SUBSCRIPTIONS_COLUMNS_REQUEST': {
+    action: {
+      type: SUBSCRIPTIONS_COLUMNS_REQUEST,
       payload: {
-        message: 'Unable to process request.',
+        tableColumns: ['col1', 'col2', 'col3'],
       },
-    })).toEqual(errorState);
-  });
-
-  it('should have error on UPDATE_QUANTITY_FAILURE', () => {
-    expect(reducer(initialState, {
-      type: types.UPDATE_QUANTITY_FAILURE,
+    },
+  },
+  'should handle UPDATE_SUBSCRIPTION_COLUMNS': {
+    action: {
+      type: UPDATE_SUBSCRIPTION_COLUMNS,
       payload: {
-        message: 'Unable to process request.',
+        enabledColumns: ['col1', 'col2'],
       },
-    })).toEqual(errorState);
-  });
-
-  it('should flip quantitiesLoading on SUBSCRIPTIONS_QUANTITIES_REQUEST', () => {
-    expect(reducer(successState, {
-      type: types.SUBSCRIPTIONS_QUANTITIES_REQUEST,
-    })).toEqual(loadingQuantitiesState);
-  });
-
-  it('should flatten subscriptions response SUBSCRIPTIONS_QUANTITIES_SUCCESS', () => {
-    expect(reducer(loadingQuantitiesState, {
-      type: types.SUBSCRIPTIONS_QUANTITIES_SUCCESS,
-      response: quantitiesRequestSuccessResponse,
-    })).toEqual(quantitiesSuccessState);
-  });
-
-  it('should have error on SUBSCRIPTIONS_QUANTITIES_FAILURE', () => {
-    expect(reducer(successState, {
-      type: types.SUBSCRIPTIONS_QUANTITIES_FAILURE,
-      payload: {
-        message: 'Unable to process request.',
+    },
+  },
+  'should handle SUBSCRIPTIONS_SUCCESS': {
+    action: {
+      type: SUBSCRIPTIONS_SUCCESS,
+      response: {
+        page: 1,
+        per_page: 10, // eslint-disable-line camelcase
+        subtotal: 20,
+        results: 'some-results',
       },
-    })).toEqual(quantitiesErrorState);
-  });
+      search: 'some search',
+    },
+  },
+  'should handle DELETE_SUBSCRIPTIONS_SUCCESS': {
+    action: {
+      type: DELETE_SUBSCRIPTIONS_SUCCESS,
+    },
+  },
+  'should handle UPDATE_QUANTITY_SUCCESS': {
+    action: {
+      type: UPDATE_QUANTITY_SUCCESS,
+    },
+  },
+  'should handle SUBSCRIPTIONS_FAILURE': {
+    action: {
+      type: SUBSCRIPTIONS_FAILURE,
+    },
+  },
+  'should handle UPDATE_QUANTITY_FAILURE': {
+    action: {
+      type: UPDATE_QUANTITY_FAILURE,
+    },
+  },
+  'should handle DELETE_SUBSCRIPTIONS_FAILURE': {
+    action: {
+      type: DELETE_SUBSCRIPTIONS_FAILURE,
+    },
+  },
+  'should handle SUBSCRIPTIONS_QUANTITIES_REQUEST': {
+    action: {
+      type: SUBSCRIPTIONS_QUANTITIES_REQUEST,
+    },
+  },
+  'should handle SUBSCRIPTIONS_QUANTITIES_SUCCESS': {
+    action: {
+      type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
+      payload: 'some-quantities-data',
+    },
+  },
+  'should handle SUBSCRIPTIONS_QUANTITIES_FAILURE': {
+    action: {
+      type: SUBSCRIPTIONS_QUANTITIES_FAILURE,
+    },
+  },
+  'should handle SUBSCRIPTIONS_OPEN_MANIFEST_MODAL': {
+    action: {
+      type: SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
+    },
+  },
+  'should handle SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL': {
+    action: {
+      type: SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
+    },
+  },
+  'should handle GET_SETTING_SUCCESS with content_disconnected response': {
+    action: {
+      type: GET_SETTING_SUCCESS,
+      response: {
+        name: 'content_disconnected',
+        value: 'some-value',
+      },
+    },
+  },
+  'should handle GET_SETTING_SUCCESS without content_disconnected response': {
+    action: {
+      type: GET_SETTING_SUCCESS,
+      response: {
+        name: 'some-name',
+        value: 'some-value',
+      },
+    },
+  },
+  'should handle TASK_BULK_SEARCH_SUCCESS': {
+    action: {
+      type: TASK_BULK_SEARCH_SUCCESS,
+      response: {
+        results: ['result1', 'result2'],
+      },
+    },
+  },
+  'should handle GET_TASK_SUCCESS': {
+    action: {
+      type: GET_TASK_SUCCESS,
+      response: {
+        results: 'some-result',
+      },
+    },
+  },
+  'should handle RESET_TASKS': {
+    action: {
+      type: RESET_TASKS,
+      response: {
+        results: 'some-result',
+      },
+    },
+  },
+};
 
-  it('should load table columns on a SUBSCRIPTIONS_COLUMNS_REQUEST', () => {
-    const successTableColumnsState = { ...successState };
-    successTableColumnsState.tableColumns = tableColumns;
-
-    expect(reducer(loadingColumnsState, {
-      type: types.SUBSCRIPTIONS_COLUMNS_REQUEST,
-      payload: { tableColumns },
-    })).toEqual(successTableColumnsState);
-  });
-});
+describe('Subscriptions reducer', () =>
+  testReducerSnapshotWithFixtures(reducer, fixtures));

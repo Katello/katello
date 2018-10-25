@@ -19,8 +19,10 @@ import {
   SUBSCRIPTION_TABLE_COLUMNS,
   SUBSCRIPTION_TABLE_DEFAULT_COLUMNS,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
+  SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
+  SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
 } from './SubscriptionConstants';
-import { filterRHSubscriptions } from './SubscriptionHelpers.js';
+import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
 
 export const createSubscriptionParams = (extendedParams = {}) => ({
@@ -37,7 +39,7 @@ export const loadAvailableQuantities = (extendedParams = {}) => (dispatch) => {
     .then(({ data }) => {
       dispatch({
         type: SUBSCRIPTIONS_QUANTITIES_SUCCESS,
-        response: data,
+        payload: selectSubscriptionsQuantitiesFromResponse(data),
       });
     })
     .catch(result => dispatch(apiError(SUBSCRIPTIONS_QUANTITIES_FAILURE, result)));
@@ -119,5 +121,8 @@ export const deleteSubscriptions = poolIds => (dispatch) => {
     })
     .catch(result => dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, result)));
 };
+
+export const openManageManifestModal = () => ({ type: SUBSCRIPTIONS_OPEN_MANIFEST_MODAL });
+export const closeManageManifestModal = () => ({ type: SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL });
 
 export default loadSubscriptions;

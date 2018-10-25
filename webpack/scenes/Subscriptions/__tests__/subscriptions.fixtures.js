@@ -3,6 +3,7 @@ import { toastErrorAction, failureAction } from '../../../services/api/testHelpe
 
 export const initialState = Immutable({
   loading: true,
+  manifestModalOpened: false,
   results: [],
   pagination: {
     page: 0,
@@ -183,6 +184,7 @@ export const quantitiesRequestSuccessResponse = Immutable({
 
 export const successState = Immutable({
   loading: false,
+  manifestModalOpened: false,
   results: [
     {
       id: 3,
@@ -269,6 +271,7 @@ export const settingsSuccessState = Immutable({
 
 export const errorState = Immutable({
   loading: false,
+  manifestModalOpened: false,
   pagination: {
     page: 0,
     perPage: 20,
@@ -372,13 +375,15 @@ export const loadQuantitiesFailureActions = [
   toastErrorAction('Request failed with status code 500'),
 ];
 
+export const loadQuantitiesSuccessActionPayload = { 4: 100, 5: 100, 6: 40 };
+
 export const loadQuantitiesSuccessActions = [
   {
     type: 'SUBSCRIPTIONS_QUANTITIES_REQUEST',
   },
   {
     type: 'SUBSCRIPTIONS_QUANTITIES_SUCCESS',
-    response: quantitiesRequestSuccessResponse,
+    payload: loadQuantitiesSuccessActionPayload,
   },
 ];
 export const tableColumns = [
