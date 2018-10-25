@@ -27,7 +27,6 @@ class SubscriptionsPage extends Component {
     super(props);
 
     this.state = {
-      manifestModalOpen: false,
       subscriptionDeleteModalOpen: false,
       disableDeleteButton: true,
       showTaskModal: false,
@@ -162,6 +161,7 @@ class SubscriptionsPage extends Component {
   render() {
     const currentOrg = orgId();
     const {
+      manifestModalOpened, openManageManifestModal, closeManageManifestModal,
       tasks = [], subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     const { disconnected } = subscriptions;
@@ -187,14 +187,6 @@ class SubscriptionsPage extends Component {
 
     const updateSearchQuery = (searchQuery) => {
       this.setState({ searchQuery });
-    };
-
-    const showManageManifestModal = () => {
-      this.setState({ manifestModalOpen: true });
-    };
-
-    const onManageManifestModalClose = () => {
-      this.setState({ manifestModalOpen: false });
     };
 
     const showSubscriptionDeleteModal = () => {
@@ -249,7 +241,7 @@ class SubscriptionsPage extends Component {
       header: __('There are no Subscriptions to display'),
       description: __('Import a Manifest to manage your Entitlements.'),
       action: {
-        onClick: showManageManifestModal,
+        onClick: () => openManageManifestModal(),
         title: __('Import a Manifest'),
       },
     };
@@ -270,7 +262,7 @@ class SubscriptionsPage extends Component {
               updateSearchQuery={updateSearchQuery}
               onDeleteButtonClick={showSubscriptionDeleteModal}
               onSearch={onSearch}
-              onManageManifestButtonClick={showManageManifestModal}
+              onManageManifestButtonClick={openManageManifestModal}
               onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
               tableColumns={tableColumns}
               toolTipOnChange={toolTipOnChange}
@@ -278,11 +270,11 @@ class SubscriptionsPage extends Component {
             />
 
             <ManageManifestModal
-              showModal={this.state.manifestModalOpen}
+              showModal={manifestModalOpened}
               taskInProgress={taskInProgress}
               disableManifestActions={disableManifestActions}
               disabledReason={this.getDisabledReason()}
-              onClose={onManageManifestModalClose}
+              onClose={closeManageManifestModal}
               upload={this.uploadManifest}
               delete={this.deleteManifest}
               refresh={this.refreshManifest}
@@ -340,6 +332,9 @@ SubscriptionsPage.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
   refreshManifest: PropTypes.func.isRequired,
+  openManageManifestModal: PropTypes.func.isRequired,
+  closeManageManifestModal: PropTypes.func.isRequired,
+  manifestModalOpened: PropTypes.bool,
 };
 
 SubscriptionsPage.defaultProps = {
@@ -347,6 +342,7 @@ SubscriptionsPage.defaultProps = {
   bulkSearch: undefined,
   taskDetails: {},
   organization: undefined,
+  manifestModalOpened: false,
 };
 
 export default SubscriptionsPage;

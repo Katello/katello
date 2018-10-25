@@ -8,20 +8,27 @@ import * as settingActions from '../../move_to_foreman/Settings/SettingsActions'
 import * as tableActions from '../Settings/Tables/TableActions';
 import * as manifestActions from './Manifest/ManifestActions';
 
+import {
+  selectSubscriptionsState,
+  selectManifestModalOpened,
+  selectSubscriptionsTasks,
+} from './SubscriptionsSelectors';
+
 import reducer from './SubscriptionReducer';
 import { SUBSCRIPTION_TABLE_NAME } from './SubscriptionConstants';
 import SubscriptionsPage from './SubscriptionsPage';
 
 // map state to props
-
 const mapStateToProps = (state) => {
+  const subscriptions = selectSubscriptionsState(state);
   const subscriptionTableSettings = state.katello.settings.tables[SUBSCRIPTION_TABLE_NAME] || {};
 
   return {
-    organization: state.katello.organization,
-    subscriptions: state.katello.subscriptions,
-    tasks: state.katello.subscriptions.tasks,
+    subscriptions,
     subscriptionTableSettings,
+    tasks: selectSubscriptionsTasks(state),
+    manifestModalOpened: selectManifestModalOpened(state),
+    organization: state.katello.organization,
     taskDetails: state.katello.manifestHistory.taskDetails,
   };
 };

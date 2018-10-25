@@ -17,30 +17,20 @@ import {
   DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
+  SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
+  SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
 const initialState = Immutable({
   ...initialApiState,
+  manifestModalOpened: false,
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
   tableColumns: [],
   selectedTableColumns: [],
 });
-
-const mapQuantities = (pools) => {
-  const quantityMap = {};
-  pools.forEach(pool =>
-    pool.local_pool_ids && pool.local_pool_ids.forEach((localId) => {
-      if (quantityMap[localId]) {
-        quantityMap[localId] += pool.available;
-      } else {
-        quantityMap[localId] = pool.available;
-      }
-    }));
-  return quantityMap;
-};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -100,7 +90,7 @@ export default (state = initialState, action) => {
     case SUBSCRIPTIONS_QUANTITIES_SUCCESS: {
       return state.merge({
         quantitiesLoading: false,
-        availableQuantities: mapQuantities(action.response.results),
+        availableQuantities: action.payload,
       });
     }
 
@@ -138,6 +128,11 @@ export default (state = initialState, action) => {
 
       return state;
     }
+
+    case SUBSCRIPTIONS_OPEN_MANIFEST_MODAL:
+      return state.set('manifestModalOpened', true);
+    case SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL:
+      return state.set('manifestModalOpened', false);
 
     default:
       return state;
