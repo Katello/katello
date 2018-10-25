@@ -6,10 +6,11 @@ module ::Actions::Katello::Host::PackageGroup
     include Support::Actions::Fixtures
 
     let(:content_facet) { mock('a_system', uuid: 'uuid').mimic!(::Katello::Host::ContentFacet) }
-    let(:host) { mock('a_host', content_facet: content_facet).mimic!(::Host::Managed) }
+    let(:host) { mock('a_host', content_facet: content_facet, id: 42).mimic!(::Host::Managed) }
 
     let(:action) do
       action = create_action action_class
+      action.expects(:plan_self)
       action.stubs(:action_subject).with(host, :groups => package_groups = %w(backup))
       plan_action action, host, package_groups
     end
