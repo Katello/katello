@@ -170,7 +170,9 @@ angular.module('Bastion.content-views').controller('ContentViewVersionsControlle
 
         $scope.status = function (version) {
             var taskTypes = $scope.taskTypes,
-                deletionEvents = findTaskTypes(version['active_history'], taskTypes.deletion),
+                deletionEvents = _.filter(findTaskTypes(version['active_history'], taskTypes.deletion), function(history) {
+                    return history.environment != null;
+                }),
                 promotionEvents = findTaskTypes(version['active_history'], taskTypes.promotion),
                 publishEvents = findTaskTypes(version['active_history'], taskTypes.publish),
                 messages = "";

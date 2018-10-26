@@ -15,7 +15,8 @@ describe('Controller: ContentViewVersionsController', function() {
         $scope.reloadVersions = function () {};
         $scope.taskTypes = {
             promotion: "promotion",
-            publish: "publish"
+            publish: "publish",
+            deletion: "deletion"
         };
 
         $scope.transitionTo = function(){};
@@ -106,5 +107,20 @@ describe('Controller: ContentViewVersionsController', function() {
 
         version.last_event.task.label = $scope.taskTypes.publish;
         expect($scope.historyText(version)).toBe("Published");
+    });
+
+    it("displays correct number of environments", function() {
+        var version = {active_history: [ {task: {label: "promotion"}} ],
+            environments: []
+        };
+        expect($scope.status(version)).toBe("Promoting to 1 environment.");
+
+        version = {active_history: [ {task: {label: "publish"}} ] };
+        expect($scope.status(version)).toBe("Publishing and promoting to 1 environment.");
+
+        version = {active_history: [ {environment: {name: "test"}, task: {label: "deletion"} }, {environment: null, task: {label: "deletion"} } ],
+            environments: [ {name: "test"} ]
+        };
+        expect($scope.status(version)).toBe("Deleting from 1 environment.");
     });
 });
