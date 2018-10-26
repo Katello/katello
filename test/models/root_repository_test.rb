@@ -271,6 +271,18 @@ module Katello
       assert_match 'is not included in the list', @root.errors[:checksum_type][0]
     end
 
+    def test_create_with_duplicate_name_different_product
+      fedora = katello_products(:fedora)
+      redhat = katello_products(:redhat)
+
+      RootRepository.create!(:product => fedora, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/')
+      RootRepository.create!(:product => redhat, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/')
+
+      assert_raises(ActiveRecord::RecordInvalid) do
+        RootRepository.create!(:product => fedora, :name => :foo, :content_type => :yum, :download_policy => :immediate, :url => 'http://foo/')
+      end
+    end
+
     def test_invalid_upstream_password_update
       @root.upstream_password = "password"
       refute @root.save
