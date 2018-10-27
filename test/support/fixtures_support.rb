@@ -50,7 +50,10 @@ module Katello
       :katello_module_profiles => Katello::ModuleProfile,
       :katello_module_stream_artifacts => Katello::ModuleStreamArtifact,
       :katello_module_profile_rpms => Katello::ModuleProfileRpm,
-      :katello_repository_module_streams => Katello::RepositoryModuleStream
+      :katello_repository_module_streams => Katello::RepositoryModuleStream,
+      :katello_content_facet_applicable_module_streams => Katello::ContentFacetApplicableModuleStream,
+      :katello_available_module_streams => Katello::AvailableModuleStream,
+      :katello_host_available_module_streams => Katello::HostAvailableModuleStream
     }.freeze
 
     # rubocop:disable Naming/AccessorMethodName

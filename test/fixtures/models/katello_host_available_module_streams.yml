@@ -1,0 +1,15 @@
+host_module_stream_server_one:
+  available_module_stream_id: <%= ActiveRecord::FixtureSet.identify(:available_module_stream_one) %>
+  host_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  status: 'enabled'
+  installed_profiles: <%= ["default"] %>
+
+host_module_stream_server_two:
+  available_module_stream_id: <%= ActiveRecord::FixtureSet.identify(:available_module_stream_two) %>
+  host_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  status: 'disabled'
+
+host_module_stream_server_three:
+  available_module_stream_id: <%= ActiveRecord::FixtureSet.identify(:available_module_stream_river) %>
+  host_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  status: 'enabled'

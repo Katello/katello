@@ -30,6 +30,7 @@ module Katello
         has_one :content_source, :through => :content_facet
         has_many :applicable_errata, :through => :content_facet
         has_many :applicable_rpms, :through => :content_facet
+        has_many :applicable_module_streams, :through => :content_facet
 
         scoped_search :relation => :content_view, :on => :name, :complete_value => true, :rename => :content_view
         scoped_search :relation => :content_facet, :on => :content_view_id, :rename => :content_view_id, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER

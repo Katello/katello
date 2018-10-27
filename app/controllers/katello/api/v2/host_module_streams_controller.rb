@@ -19,6 +19,8 @@ module Katello
     end
 
     def index_relation
+      return HostAvailableModuleStream.upgradable([@host]) if params[:status] == HostAvailableModuleStream::UPGRADABLE
+
       rel = @host.host_available_module_streams
       return rel if params[:status].blank?
       rel.send(::Katello::HostAvailableModuleStream::API_STATES[params[:status]])

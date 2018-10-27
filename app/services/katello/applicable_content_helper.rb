@@ -1,8 +1,8 @@
 module Katello
-  class ApplicableContentImporter
+  class ApplicableContentHelper
     attr_accessor :content_facet, :content_unit_class
 
-    def initialize(content_facet, content_unit_class)
+    def initialize(content_unit_class, content_facet = nil)
       self.content_facet = content_facet
       self.content_unit_class = content_unit_class
     end
@@ -25,14 +25,43 @@ module Katello
       content_facet.send(applicable_units).in_repositories(repos)
     end
 
+    def installable_for_hosts(hosts = nil)
+      # Main goal of this query
+      # 1) Get me the applicable content units for these set of hosts
+      # 2) Now further prune this list. Only include units from repos that have been "enabled" on those hosts.
+      #    In other words, prune the list to only include the units in the "bound" repositories signified by
+      #    the inner join between ContentFacetRepository and Repository<Unit>
+
+      hosts = ::Host.where(:id => hosts) if hosts && hosts.is_a?(Array)
+      query = content_unit_class.joins(content_facet_association_units).
+        joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
+        #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{content_facet_association_class.table_name}.content_facet_id").
+        joins("INNER JOIN #{content_unit_class.repository_association_class.table_name} AS host_repo_content ON \
+          host_repo_content.#{content_unit_association_id} = #{content_unit_class.table_name}.id AND \
+          #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_content.repository_id")
+
+      if hosts
+        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet)
+                                .select("#{Katello::Host::ContentFacet.table_name}.id"))
+      else
+        query = query.joins(content_facet_association_units)
+      end
+
+      query
+    end
+
     private
 
+    def content_units
+      content_unit_class.name.demodulize.pluralize.underscore.to_sym
+    end
+
     def applicable_units
-      "applicable_#{content_unit_class.name.demodulize.pluralize.underscore}"
+      "applicable_#{content_units}".to_sym
     end
 
     def content_unit_association_id
-      "#{content_unit_class.name.demodulize.underscore}_id"
+      "#{content_unit_class.name.demodulize.underscore}_id".to_sym
     end
 
     def content_type
@@ -40,7 +69,12 @@ module Katello
     end
 
     def content_facet_association_class
+      # Example: ContentFacetErratum
       self.content_unit_class.content_facet_association_class
+    end
+
+    def content_facet_association_units
+      content_facet_association_class.name.demodulize.pluralize.underscore.to_sym
     end
 
     def applicable_differences(partial)

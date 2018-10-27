@@ -19,6 +19,9 @@ module Katello
       has_many :content_facet_applicable_rpms, :class_name => "Katello::ContentFacetApplicableRpm", :dependent => :delete_all, :inverse_of => :content_facet
       has_many :applicable_rpms, :through => :content_facet_applicable_rpms, :class_name => "Katello::Rpm", :source => :rpm
 
+      has_many :content_facet_applicable_module_streams, :class_name => "Katello::ContentFacetApplicableModuleStream", :dependent => :delete_all, :inverse_of => :content_facet
+      has_many :applicable_module_streams, :through => :content_facet_applicable_module_streams, :class_name => "Katello::ModuleStream", :source => :module_stream
+
       validates :content_view, :presence => true, :allow_blank => false
       validates :lifecycle_environment, :presence => true, :allow_blank => false
       validates_with ::AssociationExistsValidator, attributes: [:content_source]
@@ -49,11 +52,15 @@ module Katello
       end
 
       def installable_errata(env = nil, content_view = nil)
-        ApplicableContentImporter.new(self, Erratum).installable(env, content_view)
+        ApplicableContentHelper.new(Erratum, self).installable(env, content_view)
       end
 
       def installable_rpms(env = nil, content_view = nil)
-        ApplicableContentImporter.new(self, Rpm).installable(env, content_view)
+        ApplicableContentHelper.new(Rpm, self).installable(env, content_view)
+      end
+
+      def installable_module_streams(env = nil, content_view = nil)
+        ApplicableContentHelper.new(ModuleStream, self).installable(env, content_view)
       end
 
       def errata_counts
@@ -67,6 +74,7 @@ module Katello
       end
 
       def import_applicability(partial = false)
+        import_module_stream_applicability(partial)
         import_errata_applicability(partial)
         import_rpm_applicability(partial)
         update_applicability_counts
@@ -78,18 +86,24 @@ module Katello
             :installable_bugfix_errata_count => self.installable_errata.bugfix.count,
             :installable_enhancement_errata_count => self.installable_errata.enhancement.count,
             :applicable_rpm_count => self.content_facet_applicable_rpms.count,
-            :upgradable_rpm_count => self.installable_rpms.count
+            :upgradable_rpm_count => self.installable_rpms.count,
+            :applicable_module_stream_count => self.content_facet_applicable_module_streams.count,
+            :upgradable_module_stream_count => self.installable_module_streams.count
         )
         self.save!(:validate => false)
       end
 
       def import_rpm_applicability(partial)
-        ApplicableContentImporter.new(self, Rpm).import(partial)
+        ApplicableContentHelper.new(Rpm, self).import(partial)
       end
 
       def import_errata_applicability(partial)
-        ApplicableContentImporter.new(self, Erratum).import(partial)
+        ApplicableContentHelper.new(Erratum, self).import(partial)
         self.update_errata_status
+      end
+
+      def import_module_stream_applicability(partial)
+        ApplicableContentHelper.new(ModuleStream, self).import(partial)
       end
 
       def self.in_content_view_version_environments(version_environments)
