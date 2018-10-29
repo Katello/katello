@@ -20,8 +20,8 @@ module Katello
       render :json => Resources::Candlepin::Consumer.get(@host.subscription_facet.uuid)
     end
 
-    #api :PUT, "/consumers/:id/profiles", N_("Update installed packages, enabled repos, module inventory")
-    #param :id, String, :desc => N_("UUID of the consumer"), :required => true
+    api :PUT, "/consumers/:id/profiles", N_("Update installed packages, enabled repos, module inventory")
+    param :id, String, :desc => N_("UUID of the consumer"), :required => true
     def upload_profiles
       User.as_anonymous_admin do
         async_task(::Actions::Katello::Host::UploadProfiles, @host, request.raw_post)
