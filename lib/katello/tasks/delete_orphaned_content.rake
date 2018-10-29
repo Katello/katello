@@ -1,7 +1,7 @@
 namespace :katello do
   task :delete_orphaned_content => ["environment"] do
     User.current = User.anonymous_admin
-    SmartProxy.with_content.reverse.each do |proxy|
+    SmartProxy.with_content.reverse_each do |proxy|
       begin
         ForemanTasks.async_task(Actions::Katello::CapsuleContent::RemoveOrphans,
                                 :capsule_id => proxy.id)

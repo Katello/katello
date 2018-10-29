@@ -1,4 +1,3 @@
-
 attributes :description
 attributes :license, :buildhost, :vendor, :relativepath
 attributes :children, :checksumtype, :size, :url, :build_time, :summary, :group, :requires, :provides, :files

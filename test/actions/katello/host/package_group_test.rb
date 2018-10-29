@@ -36,7 +36,7 @@ module ::Actions::Katello::Host::PackageGroup
           action.humanized_output.must_equal <<-OUTPUT.strip_heredoc.chomp
             amanda-2.6.1p2-8.el6.x86_64
             amanda-client-2.6.1p2-8.el6.x86_64
-            OUTPUT
+          OUTPUT
         end
       end
 
@@ -55,7 +55,7 @@ module ::Actions::Katello::Host::PackageGroup
           action.humanized_output.must_equal <<-MSG.strip_heredoc.chomp
             No new packages installed
             emacss: No package(s) available to install
-            MSG
+          MSG
         end
       end
     end

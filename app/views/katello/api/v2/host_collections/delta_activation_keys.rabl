@@ -1,4 +1,3 @@
-
 collection @collection
 
 attributes :id

@@ -19,6 +19,7 @@ namespace :katello do
       passed = []
       ::Host.unscoped.where("name like '%.%'").find_each do |host|
         next if passed.include?(host.name.downcase)
+
         passed << host.name.downcase
         puts "Skipping #{host.name}, more than one record." && next if ::Host.unscoped.where(:name => host.name).count > 1
 
@@ -29,6 +30,7 @@ namespace :katello do
 
     def unify_two(name1, name2)
       fail _("#{name1} specified twice") if name1 == name2
+
       host1 = Host.find_by(:name => name1)
       host2 = Host.find_by(:name => name2)
       if host1.nil? || host2.nil?
