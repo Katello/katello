@@ -122,10 +122,6 @@ module Katello
         content_facet.update_repositories_by_paths(paths.compact)
       end
 
-      def import_module_streams(module_streams)
-        # TODO: Implement this when module stream support is added
-      end
-
       def sync_package_associations(new_installed_package_ids)
         old_associated_ids = self.installed_package_ids
         table_name = self.host_installed_packages.table_name

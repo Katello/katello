@@ -40,7 +40,6 @@ module Actions
             Rails.logger.warn("Host with ID %s has no content facet, continuing" % input[:host_id])
           else
             package_profile = nil
-            modulemd_inventory = nil
             enabled_repos = nil
             profiles.each do |profile|
               payload = profile["profile"]
@@ -49,13 +48,10 @@ module Actions
                 package_profile = payload
               when "enabled_repos"
                 enabled_repos = payload
-              else
-                modulemd_inventory = payload
               end
             end
-            UploadPackageProfile.upload(input, package_profile)
+            UploadPackageProfile.upload(input[:host_id], package_profile)
             host.import_enabled_repositories(enabled_repos)
-            host.import_module_streams(modulemd_inventory)
           end
         end
       end
