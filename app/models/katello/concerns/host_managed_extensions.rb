@@ -35,6 +35,10 @@ module Katello
 
         has_many :host_installed_packages, :class_name => "::Katello::HostInstalledPackage", :foreign_key => :host_id, :dependent => :delete_all
         has_many :installed_packages, :class_name => "::Katello::InstalledPackage", :through => :host_installed_packages
+
+        has_many :host_available_module_streams, :class_name => "::Katello::HostAvailableModuleStream", :foreign_key => :host_id, :dependent => :delete_all
+        has_many :available_module_streams, :class_name => "::Katello::AvailableModuleStream", :through => :host_available_module_streams
+
         has_many :host_traces, :class_name => "::Katello::HostTracer", :foreign_key => :host_id, :dependent => :destroy
 
         has_many :host_collection_hosts, :class_name => "::Katello::HostCollectionHosts", :foreign_key => :host_id, :dependent => :destroy
@@ -49,6 +53,8 @@ module Katello
         scoped_search :relation => :host_collections, :on => :name, :complete_value => true, :rename => :host_collection
         scoped_search :relation => :installed_packages, :on => :nvra, :complete_value => true, :rename => :installed_package, :only_explicit => true
         scoped_search :relation => :installed_packages, :on => :name, :complete_value => true, :rename => :installed_package_name, :only_explicit => true
+        scoped_search :relation => :available_module_streams, :on => :name, :complete_value => true, :rename => :available_module_stream_name, :only_explicit => true
+        scoped_search :relation => :available_module_streams, :on => :stream, :complete_value => true, :rename => :available_module_stream_stream, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :application, :complete_value => true, :rename => :trace_app, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :app_type, :complete_value => true, :rename => :trace_app_type, :only_explicit => true
         scoped_search :relation => :host_traces, :on => :helper, :complete_value => true, :rename => :trace_helper, :only_explicit => true
@@ -120,6 +126,43 @@ module Katello
           end
         end
         content_facet.update_repositories_by_paths(paths.compact)
+      end
+
+      def import_module_streams(module_streams)
+        # TODO: Implement this when module stream support is added
+        streams = {}
+        module_streams.each do |module_stream|
+          stream = AvailableModuleStream.where(name: module_stream["name"],
+                                               stream: module_stream["stream"]).first_or_create!
+          streams[stream.id] = module_stream
+        end
+        sync_available_module_stream_associations(streams)
+      end
+
+      def sync_available_module_stream_associations(new_available_module_streams)
+        updatable_streams = self.host_available_module_streams.where(:available_module_stream_id => new_available_module_streams.keys)
+
+        old_associated_ids = self.available_module_stream_ids
+
+        delete_ids = old_associated_ids - new_available_module_streams.keys
+        if delete_ids.any?
+          self.host_available_module_streams.where(:available_module_stream_id => delete_ids).delete_all
+        end
+        new_ids = new_available_module_streams.keys - old_associated_ids
+        new_ids.each do |new_id|
+          module_stream = new_available_module_streams[new_id]
+          self.host_available_module_streams.create!(host_id: self.id,
+                                          available_module_stream_id: new_id,
+                                          installed_profiles: module_stream["installed_profiles"],
+                                          status: module_stream["status"])
+        end
+
+        updatable_streams.each do |hams|
+          module_stream = new_available_module_streams[hams.available_module_stream_id]
+          if module_stream["status"] != hams.status || module_stream["installed_profiles"] != hams.installed_profiles
+            hams.update_attributes!(:status => module_stream["status"], :installed_profiles => module_stream["installed_profiles"])
+          end
+        end
       end
 
       def sync_package_associations(new_installed_package_ids)

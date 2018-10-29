@@ -46,6 +46,8 @@ module Actions
                 UploadPackageProfile.upload(input[:host_id], payload)
               when "enabled_repos"
                 host.import_enabled_repositories(payload)
+              else
+                host.import_module_streams(payload)
               end
             end
           end
