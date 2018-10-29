@@ -12,6 +12,7 @@ namespace :katello do
       system(service_start.gsub("%s", "mongod"))
       sleep(10)
       fail "Cannot migrate pulp database" unless system("sudo -u apache /usr/bin/pulp-manage-db")
+
       SERVICES.each { |s| system(service_start.gsub("%s", s)) }
       puts "Pulp database reset."
     end

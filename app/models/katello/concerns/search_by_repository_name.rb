@@ -1,4 +1,3 @@
-
 module Katello
   module Concerns
     module SearchByRepositoryName
