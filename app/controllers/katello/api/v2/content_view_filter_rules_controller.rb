@@ -107,7 +107,7 @@ module Katello
 
     def find_rule
       rule_clazz = ContentViewFilter.rule_class_for(@filter)
-      @rule = rule_clazz.find(params[:id])
+      @rule = rule_clazz.where(content_view_filter_id: @filter.id).find(params[:id])
     end
 
     def rule_params

@@ -4,3 +4,10 @@ package_rule:
   content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:populated_package_filter) %>
   created_at:              <%= Time.now %>
   updated_at:              <%= Time.now %>
+
+test_package:
+  name:                    package def
+  version:                 1.0
+  content_view_filter_id:  <%= ActiveRecord::FixtureSet.identify(:simple_filter) %>
+  created_at:              <%= Time.now %>
+  updated_at:              <%= Time.now %>
