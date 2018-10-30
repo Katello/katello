@@ -43,7 +43,7 @@ module Actions
             rescue RestClient::ResourceNotFound
               Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % host_id)
             rescue ActiveRecord::InvalidForeignKey # this happens if the host gets deleted in between the "find_by" and "import_package_profile"
-              Rails.logger.warn("Host installed package list with ID %s was not able to be written to the DB (host likely is deleted), continuing" % input[:host_id])
+              Rails.logger.warn("Host installed package list with ID %s was not able to be written to the DB (host likely is deleted), continuing" % host_id)
             end
           end
         end
