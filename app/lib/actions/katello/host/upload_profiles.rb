@@ -50,8 +50,8 @@ module Actions
                 enabled_repos = payload
               end
             end
-            UploadPackageProfile.upload(input[:host_id], package_profile)
-            host.import_enabled_repositories(enabled_repos)
+            UploadPackageProfile.upload(input[:host_id], package_profile) if package_profile
+            host.import_enabled_repositories(enabled_repos) if enabled_repos
           end
         end
       end
