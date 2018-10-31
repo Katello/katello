@@ -39,19 +39,15 @@ module Actions
           elsif host.content_facet.nil? || host.content_facet.uuid.nil?
             Rails.logger.warn("Host with ID %s has no content facet, continuing" % input[:host_id])
           else
-            package_profile = nil
-            enabled_repos = nil
             profiles.each do |profile|
               payload = profile["profile"]
               case profile["content_type"]
               when "rpm"
-                package_profile = payload
+                UploadPackageProfile.upload(input[:host_id], payload)
               when "enabled_repos"
-                enabled_repos = payload
+                host.import_enabled_repositories(payload)
               end
             end
-            UploadPackageProfile.upload(input[:host_id], package_profile) if package_profile
-            host.import_enabled_repositories(enabled_repos) if enabled_repos
           end
         end
       end
