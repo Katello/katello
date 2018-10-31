@@ -178,7 +178,9 @@ module Katello
       @dev_key.stubs(:get_pools).returns(cp_pools)
       @dev_key.pools = []
 
-      assert_equal [pool_one, pool_two], @dev_key.available_subscriptions
+      assert @dev_key.available_subscriptions.include? pool_one
+      assert @dev_key.available_subscriptions.include? pool_two
+      assert_equal @dev_key.available_subscriptions.length, 2
     end
 
     context 'host_collection' do
