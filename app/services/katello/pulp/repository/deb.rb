@@ -41,6 +41,14 @@ module Katello
         def importer_class
           Runcible::Models::DebImporter
         end
+
+        def copy_contents(destination_repo, _options = {})
+          [
+            @smart_proxy.pulp_api.extensions.deb.copy(@repo.pulp_id, destination_repo.pulp_id, fields: ::Katello::Pulp::Deb::PULP_SELECT_FIELDS),
+            @smart_proxy.pulp_api.extensions.deb_release.copy(@repo.pulp_id, destination_repo.pulp_id, {}),
+            @smart_proxy.pulp_api.extensions.deb_component.copy(@repo.pulp_id, destination_repo.pulp_id, {})
+          ]
+        end
       end
     end
   end

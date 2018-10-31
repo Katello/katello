@@ -53,11 +53,19 @@ module Katello
         fail NotImplementedError
       end
 
+      def copy_contents(_destination_repo, _filters)
+        fail NotImplementedError
+      end
+
+      def should_purge_empty_contents?
+        false
+      end
+
       def sync(overrides = {})
         sync_options = {}
         sync_options[:max_speed] = SETTINGS.dig(:katello, :pulp, :sync_KBlimit)
         sync_options[:num_threads] = SETTINGS.dig(:katello, :pulp, :sync_threads)
-        sync_options[:feed] = overrides[:feed] if overrides[:feed]
+        sync_options[:feed] = overrides[:source_url] if overrides[:source_url]
         sync_options[:validate] = !SETTINGS.dig(:katello, :pulp, :skip_checksum_validation)
         sync_options.merge!(overrides[:options]) if overrides[:options]
         [smart_proxy.pulp_api.resources.repository.sync(@repo.pulp_id, override_config: sync_options.compact!)]
@@ -173,6 +181,16 @@ module Katello
           found = generated_distributors.find { |dist| dist.type_id == distributor['distributor_type_id'] }
           smart_proxy.pulp_api.resources.repository.delete_distributor(repo.pulp_id, distributor['id']) unless found
         end
+      end
+
+      def copy_units(destination_repo, units, options = {})
+        content_type = units.first.class::CONTENT_TYPE
+        uuids = units.pluck(:uuid)
+        override_config = {}
+        override_config[:recursive] = true if options[:recursive]
+        override_config[:resolve_dependencies] = true if options[:resolve_dependencies]
+
+        smart_proxy.pulp_api.extensions.send(content_type).copy(repo.pulp_id, destination_repo.pulp_id, ids: uuids, override_config: override_config)
       end
     end
   end

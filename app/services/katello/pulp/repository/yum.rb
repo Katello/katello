@@ -59,6 +59,75 @@ module Katello
         def regenerate_applicability
           smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
         end
+
+        def copy_contents(destination_repo, options = {})
+          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters], options[:rpm_filenames])
+          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, rpm_copy_clauses)]
+          if rpm_remove_clauses
+            tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
+                                                                         type_ids: [::Katello::Pulp::Rpm::CONTENT_TYPE],
+                                                                          filters: {unit: rpm_remove_clauses})
+          end
+
+          [:srpm, :errata, :package_group, :yum_repo_metadata_file, :distribution, :module, :module_default].each do |type|
+            tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
+          end
+          tasks
+        end
+
+        def purge_empty_contents
+          [purge_empty_errata, purge_empty_package_groups]
+        end
+
+        def should_purge_empty_contents?
+          true
+        end
+
+        private
+
+        def purge_empty_errata
+          task = nil
+          repo.empty_errata! do |errata_to_delete|
+            task = repo.unassociate_by_filter(::Katello::ContentViewErratumFilter::CONTENT_TYPE,
+                                                "id" => { "$in" => errata_to_delete.map(&:errata_id) })
+          end
+          task
+        end
+
+        def purge_empty_package_groups
+          rpm_names = repo.rpms.pluck(:name).uniq
+
+          # Remove all  package groups with no packages
+          package_groups_to_delete = repo.package_groups.select do |group|
+            (rpm_names & group.package_names).empty?
+          end
+
+          repo.repository_package_groups.where(:package_group_id => package_groups_to_delete.map(&:id)).delete_all
+
+          criteria = {:association => {"unit_id" => {"$in" => package_groups_to_delete.compact}}}
+          smart_proxy.pulp_api.extensions.repository.unassociate_units(repo.pulp_id, :filters => criteria)
+        end
+
+        def generate_copy_clauses(filters, rpm_filenames)
+          if rpm_filenames&.any?
+            copy_clauses = {filters: {unit: { 'filename' => { '$in' => rpm_filenames } }}}
+            remove_clauses = nil
+          elsif filters
+            clause_gen = ::Katello::Util::PackageClauseGenerator.new(repo, filters.yum)
+            clause_gen.generate
+
+            copy = clause_gen.copy_clause
+            copy_clauses = {filters: {unit: copy }} if copy
+
+            remove = clause_gen.remove_clause
+            remove_clauses = {filters: {unit: remove}} if remove
+          else
+            copy_clauses = {}
+            remove_clauses = nil
+          end
+          copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
+          [copy_clauses, remove_clauses]
+        end
       end
     end
   end

@@ -37,6 +37,16 @@ module Katello
         def importer_class
           Runcible::Models::PuppetImporter
         end
+
+        def copy_contents(destination_repo, options = {})
+          if options[:puppet_modules]
+            module_uuids = options[:puppet_modules].pluck(:uuid)
+            clauses = { 'unit_id' => { "$in" => module_uuids } }
+          else
+            clauses = {}
+          end
+          @smart_proxy.pulp_api.extensions.puppet_module.copy(@repo.pulp_id, destination_repo.pulp_id, clauses)
+        end
       end
     end
   end

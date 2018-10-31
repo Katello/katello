@@ -42,6 +42,20 @@ module Katello
       refute_includes @fedora_17_x86_64.empty_errata, erratum
     end
 
+    def test_empty_errata!
+      @fedora_17_x86_64.errata.destroy_all
+      filename = 'much-rpm.much-wow'
+
+      erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
+        new_erratum.uuid = "foo"
+        new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
+      end
+
+      errata = @fedora_17_x86_64.empty_errata!
+      assert_includes errata, erratum
+      assert_not_includes @fedora_17_x86_64.reload.errata, erratum
+    end
+
     def test_archived_instance
       archived_repo = katello_repositories(:fedora_17_x86_64_dev_archive)
       env_repo = katello_repositories(:fedora_17_x86_64_dev)

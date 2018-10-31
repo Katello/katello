@@ -439,79 +439,6 @@ module ::Actions::Katello::Repository
     end
   end
 
-  class CloneDockerContentTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::CloneDockerContent }
-    let(:source_repo) { katello_repositories(:redis) }
-    let(:target_repo) { katello_repositories(:busybox) }
-
-    it 'plans' do
-      action = create_action action_class
-      plan_action(action, source_repo, target_repo, [])
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyDockerTag,
-                                source_pulp_id: source_repo.pulp_id,
-                                target_pulp_id: target_repo.pulp_id,
-                                clauses: nil)
-
-      assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
-    end
-  end
-
-  class CloneDockerContentEnvironmentTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
-    let(:source_repo) { katello_repositories(:redis) }
-
-    it 'plans' do
-      ::Katello::CapsuleContent.stubs(:new).returns(capsule_content)
-      action = create_action action_class
-      env = mock
-      clone = mock
-      action.expects(:find_or_build_environment_clone).returns(clone)
-      clone.expects(:new_record?).returns(false)
-      clone.expects(:yum?).returns(false)
-      ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
-
-      plan_action(action, source_repo, env)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneDockerContent, source_repo, clone, [])
-    end
-  end
-
-  class CloneOstreeContentTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::CloneOstreeContent }
-    let(:source_repo) { katello_repositories(:ostree) }
-    let(:target_repo) { katello_repositories(:ostree_view1) }
-
-    it 'plans' do
-      action = create_action action_class
-      plan_action(action, source_repo, target_repo)
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyOstreeBranch,
-                                source_pulp_id: source_repo.pulp_id,
-                                target_pulp_id: target_repo.pulp_id)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::MetadataGenerate, target_repo)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::IndexContent, id: target_repo.id)
-    end
-  end
-
-  class CloneOstreeContentEnvironmentTest < TestBase
-    let(:action_class) { ::Actions::Katello::Repository::CloneToEnvironment }
-    let(:source_repo) { katello_repositories(:ostree) }
-
-    it 'plans' do
-      ::Katello::CapsuleContent.stubs(:new).returns(capsule_content)
-      action = create_action action_class
-      env = mock
-      clone = mock
-      action.expects(:find_or_build_environment_clone).returns(clone)
-      clone.expects(:new_record?).returns(false)
-      clone.expects(:yum?).returns(false)
-      ::Katello::Repository.expects(:needs_distributor_updates).with([clone], capsule_content).returns([])
-
-      plan_action(action, source_repo, env)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::Clear, clone)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneOstreeContent, source_repo, clone)
-    end
-  end
-
   class CapsuleSyncTest < TestBase
     include Support::CapsuleSupport
 
@@ -579,8 +506,8 @@ module ::Actions::Katello::Repository
       plan_action(action, [repository], false, nil, 0, "8")
       assert_action_planed_with(action, ::Actions::Katello::Repository::Clear,
                                 repository)
-      assert_action_planed_with(action, ::Actions::Katello::Repository::CloneYumContent, custom_repository, repository, [], :purge_empty_units => false,
-                                    :generate_metadata => false, :index_content => false)
+
+      assert_action_planed_with(action, Actions::Pulp::Repository::CopyAllUnits, custom_repository, repository)
     end
 
     it 'plans without export destination' do

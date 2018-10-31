@@ -37,6 +37,15 @@ module Katello
         def importer_class
           Runcible::Models::DockerImporter
         end
+
+        def copy_contents(destination_repo, options = {})
+          if options[:filters]
+            clause_gen = ::Katello::Util::DockerManifestClauseGenerator.new(@repo, options[:filters])
+            criteria = {filters: {:unit => clause_gen.copy_clause } }
+          end
+
+          @smart_proxy.pulp_api.extensions.docker_tag.copy(@repo.pulp_id, destination_repo.pulp_id, criteria || {})
+        end
       end
     end
   end

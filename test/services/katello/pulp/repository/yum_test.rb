@@ -14,6 +14,7 @@ module Katello
           @rhel6 = katello_repositories(:rhel_6_x86_64)
           @rhel6_cv = katello_repositories(:rhel_6_x86_64_dev)
           @custom = katello_repositories(:fedora_17_x86_64)
+          @custom_cv = katello_repositories(:fedora_17_x86_64_library_view_1)
 
           @rhel6.product.stubs(:certificate).returns('mycert')
           @rhel6.product.stubs(:key).returns('mykey')
@@ -23,6 +24,14 @@ module Katello
 
         def delete_repo(repo)
           ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id) rescue ''
+        end
+
+        def sync_repo(repo)
+          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id)
+        end
+
+        def create_repo(repo)
+          repo.backend_service(SmartProxy.pulp_master).create
         end
       end
 
@@ -146,6 +155,45 @@ module Katello
           assert_equal 3, repo.backend_data(true)['distributors'].count
         ensure
           delete_repo(@custom)
+        end
+      end
+
+      class YumVcrCopyTest < YumBaseTest
+        def setup
+          super
+          @custom.root.update_attributes(:url => 'file:///var/www/test_repos/zoo')
+          create_repo(@custom)
+          sync_repo(@custom)
+          create_repo(@custom_cv)
+        end
+
+        def teardown
+          delete_repo(@custom)
+          delete_repo(@custom_cv)
+        end
+
+        def test_copy_no_filters
+          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv))
+          assert_equal SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom.pulp_id)[:content_unit_counts].except('package_category'),
+                       SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
+        end
+
+        def test_copy_rpm_filenames
+          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :rpm_filenames => ['walrus-0.3-0.8.noarch.rpm']))
+          counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
+
+          assert_equal 1, counts[:rpm]
+          assert_equal 3, counts[:erratum]
+        end
+
+        def test_errata_filter
+          @custom.index_content
+          filter = Katello::ContentViewErratumFilter.create!(:inclusion => true, :content_view_id => @custom_cv.content_view.id, :name => 'asdf')
+          filter.erratum_rules << Katello::ContentViewErratumFilterRule.new(:errata_id => 'RHEA-2010:0002')
+          TaskSupport.wait_on_tasks(@custom.backend_service(@master).copy_contents(@custom_cv, :filters => Katello::ContentViewErratumFilter.where(:id => filter.id)))
+          counts = SmartProxy.pulp_master.pulp_api.extensions.repository.retrieve_with_details(@custom_cv.pulp_id)[:content_unit_counts]
+          assert_equal 1, counts[:rpm]
+          assert_equal 3, counts[:erratum]
         end
       end
     end

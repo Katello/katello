@@ -34,6 +34,10 @@ module Katello
         def importer_class
           Runcible::Models::OstreeImporter
         end
+
+        def copy_contents(destination_repo, _options = {})
+          @smart_proxy.pulp_api.extensions.ostree_branch.copy(@repo.pulp_id, destination_repo.pulp_id, {})
+        end
       end
     end
   end

@@ -48,7 +48,7 @@ module Katello
     def test_group_by_repoid
       puppet_modules = PuppetModule.group_by_repoid([@abrt, @dhcp])
       assert_equal puppet_modules.keys.length, 1
-      assert_equal puppet_modules[@repo.pulp_id].sort, [@abrt.uuid, @dhcp.uuid].sort
+      assert_equal puppet_modules[@repo.id].sort, [@abrt, @dhcp].sort
     end
 
     def test_parse_metadata

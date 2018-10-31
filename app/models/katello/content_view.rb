@@ -519,24 +519,21 @@ module Katello
       build_puppet_env(options).save!
     end
 
-    def computed_module_ids_by_repoid
-      uuids = []
+    def computed_modules_by_repoid
       names_and_authors = []
       puppet_modules = []
 
       if composite?
-        uuids = component_modules_to_publish.collect { |puppet_module| puppet_module.uuid }
+        puppet_modules = component_modules_to_publish
       else
         puppet_modules_to_publish.each do |cvpm|
           if cvpm.uuid
-            uuids << cvpm.uuid
+            puppet_modules << cvpm.puppet_module
           else
             names_and_authors << { :name => cvpm.name, :author => cvpm.author }
           end
         end
       end
-
-      puppet_modules = PuppetModule.where(:uuid => uuids).to_a if uuids.present?
 
       if names_and_authors.present?
         names_and_authors.each do |name_and_author|
