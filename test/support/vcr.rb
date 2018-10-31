@@ -19,10 +19,11 @@ module VCR
 
     module Overrides
       def run
-        VCR.insert_cassette(cassette_name, :match_requests_on => vcr_matches)
-        to_ret = super
-        VCR.eject_cassette
-        to_ret
+        value = nil
+        VCR.use_cassette(cassette_name, :match_requests_on => vcr_matches) do
+          value = super
+        end
+        value
       end
     end
 
