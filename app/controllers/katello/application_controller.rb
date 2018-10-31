@@ -3,8 +3,6 @@ require 'base64'
 
 module Katello
   class ApplicationController < ::ApplicationController
-    include ::HomeHelper
-
     layout 'katello/layouts/katello'
 
     clear_helpers
