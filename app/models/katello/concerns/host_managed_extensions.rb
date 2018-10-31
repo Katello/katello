@@ -115,7 +115,7 @@ module Katello
           if !repo['baseurl'].blank?
             URI(repo['baseurl'].first).path
           else
-            logger.warn("System #{@host.name} (#{@host.id}) attempted to bind to unspecific repo (#{repo}).")
+            logger.warn("System #{name} (#{id}) attempted to bind to unspecific repo (#{repo}).")
             nil
           end
         end
