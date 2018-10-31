@@ -25,10 +25,7 @@ module Actions
               clone = setup_puppet_environment_clone(from_version, clone)
 
               self.new_puppet_environment = clone
-              plan_action(Pulp::Repository::CopyPuppetModule,
-                          source_pulp_id: source.pulp_id,
-                          target_pulp_id: clone.pulp_id,
-                          criteria: nil)
+              plan_action(Pulp::ContentViewPuppetEnvironment::CopyContents, clone, :source_content_view_puppet_environment_id => source.id)
 
               concurrence do
                 plan_action(Katello::Repository::MetadataGenerate, clone) if environment

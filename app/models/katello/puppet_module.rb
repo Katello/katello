@@ -65,8 +65,8 @@ module Katello
         repo = puppet_module.repositories.first
 
         if repo
-          result[repo.pulp_id] ||= []
-          result[repo.pulp_id] << puppet_module.uuid
+          result[repo.id] ||= []
+          result[repo.id] << puppet_module
         else
           fail _("Could not find Repository for module %s.") % puppet_module.name
         end

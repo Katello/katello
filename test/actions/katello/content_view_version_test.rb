@@ -40,11 +40,11 @@ module ::Actions::Katello::ContentViewVersion
       action.stubs(:task).returns(task)
       action.expects(:action_subject).with(content_view_version.content_view)
       plan_action(action, content_view_version, [library], :content => {:package_ids => [@rpm.id]})
-      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyRpm,
-                                :source_pulp_id => library_repo.pulp_id,
-                                :target_pulp_id => new_repo.pulp_id,
-                                :full_clauses => { :filters => {:association => {'unit_id' => {'$in' => [@rpm.uuid]}}}},
-                                :override_config => {:resolve_dependencies => false}, :include_result => true)
+
+      assert_action_planed_with(action, ::Actions::Pulp::Repository::CopyUnits,
+                                library_repo, new_repo,
+                                Katello::Rpm.with_identifiers(@rpm.id),
+                                :resolve_dependencies => false)
     end
   end
   class ExportTest < TestBase

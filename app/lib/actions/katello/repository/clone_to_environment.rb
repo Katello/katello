@@ -19,17 +19,7 @@ module Actions
               end
             end
 
-            if repository.yum?
-              plan_action(Repository::CloneYumMetadata, repository, clone)
-            elsif repository.deb?
-              plan_action(Repository::CloneDebContent, repository, clone, [], false)
-            elsif repository.docker?
-              plan_action(Repository::CloneDockerContent, repository, clone, [])
-            elsif repository.ostree?
-              plan_action(Repository::CloneOstreeContent, repository, clone)
-            elsif repository.file?
-              plan_action(Repository::CloneFileContent, repository, clone)
-            end
+            plan_action(::Actions::Katello::Repository::CloneContents, [repository], clone, :copy_contents => !clone.yum?)
           end
         end
 

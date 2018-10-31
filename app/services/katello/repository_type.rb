@@ -13,11 +13,16 @@ module Katello
     end
 
     def_field :allow_creation_by_user, :service_class
+    attr_accessor :metadata_publish_matching_check
     attr_reader :id
 
     def initialize(id)
       @id = id.to_sym
       allow_creation_by_user(true)
+    end
+
+    def prevent_unneeded_metadata_publish
+      self.metadata_publish_matching_check = true
     end
 
     def <=>(other)

@@ -219,10 +219,10 @@ module Actions
           copy_outputs = []
           if new_repo.content_type == ::Katello::Repository::DEB_TYPE
             unless deb_ids.blank?
-              deb_uuids = ::Katello::Deb.with_identifiers(deb_ids).pluck(:uuid)
-              copy_outputs << plan_copy(Pulp::Repository::CopyDeb, new_repo.library_instance, new_repo,
-                                        { :filters => {:association => {'unit_id' => {'$in' => deb_uuids}}}},
-                                        :recursive => true, :resolve_dependencies => dep_solve).output
+              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
+                                          ::Katello::Deb.with_identifiers(deb_ids),
+                                        recursive: true,
+                                        resolve_dependencies: dep_solve).output
             end
           end
           copy_outputs
@@ -232,17 +232,16 @@ module Actions
           copy_outputs = []
           if new_repo.content_type == ::Katello::Repository::YUM_TYPE
             unless errata_ids.blank?
-              errata_uuids = ::Katello::Erratum.with_identifiers(errata_ids).pluck(:uuid)
-              copy_outputs << plan_copy(Pulp::Repository::CopyErrata, new_repo.library_instance, new_repo,
-                                        { :filters => {:association => {'unit_id' => {'$in' => errata_uuids}}}},
-                                        :recursive => true, :resolve_dependencies => dep_solve).output
+              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
+                                        ::Katello::Erratum.with_identifiers(errata_ids),
+                                        recursive: true,
+                                        resolve_dependencies: dep_solve).output
             end
 
             unless package_ids.blank?
-              package_uuids = ::Katello::Rpm.with_identifiers(package_ids).pluck(:uuid)
-              copy_outputs << plan_copy(Pulp::Repository::CopyRpm, new_repo.library_instance, new_repo,
-                                        { :filters => {:association => {'unit_id' => {'$in' => package_uuids}}}},
-                                        :resolve_dependencies => dep_solve).output
+              copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
+                                        ::Katello::Rpm.with_identifiers(package_ids),
+                                        resolve_dependencies: dep_solve).output
             end
           end
           copy_outputs
@@ -270,11 +269,11 @@ module Actions
           ::Katello::PuppetModule.with_identifiers(ids)
         end
 
-        def copy_puppet_module(new_repo, module_id)
+        def copy_puppet_modules(new_repo, module_id)
           puppet_module = find_puppet_modules([module_id]).first
-          possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_view
-          plan_action(Pulp::Repository::CopyPuppetModule, :source_pulp_id => possible_repos.first.pulp_id,
-                    :target_pulp_id => new_repo.pulp_id, :clauses => {'unit_id' => puppet_module.uuid}, :include_result => true)
+          possible_repos = puppet_module.repositories.in_organization(new_repo.organization).in_default_vie
+          plan_action(Pulp::Repository::CopyUnits, possible_repos.first, new_repo,
+                                                  [puppet_module])
         end
 
         def plan_copy(action_class, source_repo, target_repo, clauses = nil, override_config = nil)
