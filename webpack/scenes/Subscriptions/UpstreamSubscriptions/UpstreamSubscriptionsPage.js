@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOMServer from 'react-dom/server';
 import _ from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
 import PropTypes from 'prop-types';
@@ -114,7 +113,7 @@ class UpstreamSubscriptionsPage extends Component {
           </span>
         );
 
-        notify({ message: ReactDOMServer.renderToStaticMarkup(message), type: 'success' });
+        notify({ message, type: 'success' });
         this.props.history.push('/subscriptions');
       }
     });
