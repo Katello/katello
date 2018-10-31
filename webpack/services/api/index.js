@@ -110,15 +110,12 @@ class ForemanEndpoint extends Api {
 export const foremanEndpoint = new ForemanEndpoint();
 
 // eslint-disable-next-line import/prefer-default-export
-const orgNode = () => document.getElementById('organization-id');
 const userNode = () => document.getElementById('user-id');
 // This node does not exist while testing
 export const orgId = () => {
-  const node = orgNode();
-  const id = node && node.dataset.id;
-  const { katello: { setOrganization: { currentId } } } = store.getState();
+  const { layout: { currentOrganization: { id } } } = store.getState();
 
-  return id === '' ? currentId : id;
+  return id;
 };
 
 export const userId = () => (userNode() ? userNode().dataset.id : '1');

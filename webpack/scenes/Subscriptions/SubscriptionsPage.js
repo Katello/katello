@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty } from 'lodash';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
 import { Button } from 'patternfly-react';
@@ -14,7 +14,7 @@ import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import { manifestExists } from './SubscriptionHelpers';
 import Search from '../../components/Search/index';
-import api, { orgId } from '../../services/api';
+import api from '../../services/api';
 
 
 import { createSubscriptionParams } from './SubscriptionActions.js';
@@ -49,9 +49,9 @@ class SubscriptionsPage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks = [], organization } = this.props;
+    const { tasks = [], org } = this.props;
     const { tasks: prevTasks = [] } = prevProps;
-    const currentOrg = Number(orgId());
+    const currentOrg = org.id;
     const numberOfTasks = tasks.length;
     const numberOfPrevTasks = prevTasks.length;
     const [task] = tasks;
@@ -85,7 +85,7 @@ class SubscriptionsPage extends Component {
       }
     }
 
-    if (!isEqual(organization.owner_details, prevProps.organization.owner_details)) {
+    if (currentOrg !== prevProps.org.id) {
       this.pollTasks();
     }
   }
@@ -109,13 +109,12 @@ class SubscriptionsPage extends Component {
   }
 
   pollTasks() {
-    const { pollBulkSearch, organization } = this.props;
-
+    const { pollBulkSearch, org: { title, id } } = this.props;
     pollBulkSearch({
-      action: `organization '${organization.owner_details.displayName}'`,
+      action: `organization '${title}'`,
       result: 'pending',
       label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-    }, BULK_TASK_SEARCH_INTERVAL, organization.id);
+    }, BULK_TASK_SEARCH_INTERVAL, id);
 
     this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
@@ -127,9 +126,9 @@ class SubscriptionsPage extends Component {
 
   handleDoneTask(taskToPoll) {
     const POLL_TASK_INTERVAL = 5000;
-    const { pollTaskUntilDone, loadSubscriptions, organization } = this.props;
+    const { pollTaskUntilDone, loadSubscriptions, org: { id } } = this.props;
 
-    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, organization.id)
+    pollTaskUntilDone(taskToPoll.id, {}, POLL_TASK_INTERVAL, id)
       .then((task) => {
         renderTaskFinishedToast(task);
         loadSubscriptions();
@@ -146,7 +145,7 @@ class SubscriptionsPage extends Component {
       .then(() => renderTaskStartedToast(this.props.taskDetails))
       .then(() =>
         setTimeout(() => this.props.bulkSearch({
-          action: `organization '${this.props.organization.owner_details.displayName}'`,
+          action: `organization '${this.props.org.title}'`,
           result: 'pending',
           label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
         })), 100);
@@ -164,10 +163,10 @@ class SubscriptionsPage extends Component {
   };
 
   render() {
-    const currentOrg = orgId();
     const {
-      tasks = [], subscriptions, organization, subscriptionTableSettings,
+      tasks = [], subscriptions, organization, subscriptionTableSettings, org,
     } = this.props;
+    const currentOrg = org.id;
     const { disconnected } = subscriptions;
     const taskInProgress = tasks.length > 0;
     const disableManifestActions = taskInProgress || disconnected;

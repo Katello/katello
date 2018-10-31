@@ -2,41 +2,32 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { get } from 'lodash';
+import { withRouter } from 'react-router';
 import SetOrganization from '../SelectOrg/SetOrganization';
 import Header from '../../containers/Application/Headers';
 
 function withOrganization(WrappedComponent, redirectPath) {
   class CheckOrg extends Component {
-    constructor(props) {
-      super(props);
-      this.state = { orgId: null };
-    }
-    static getDerivedStateFromProps(newProps, state) {
-      const orgNodeId = document.getElementById('organization-id').dataset.id;
-
-      if (state.orgId !== orgNodeId) {
-        return { orgId: orgNodeId };
-      }
-      return null;
-    }
-
     componentDidUpdate(prevProps) {
-      const { location } = this.props;
-      const orgTitle = get(location, 'state.orgChanged');
-      const prevOrgTitle = get(prevProps, 'location.state.orgChanged');
+      const { org, history } = this.props;
+      const orgHasBeenSwitched = prevProps.org.id !== org.id;
 
-      if (orgTitle !== prevOrgTitle) {
-        window.tfm.nav.changeOrganization(orgTitle);
+      if (org.id &&
+          orgHasBeenSwitched &&
+          history.location.pathname !== redirectPath) {
+        history.push({
+          pathname: redirectPath,
+        });
       }
     }
 
     render() {
-      const { location } = this.props;
-      const newOrgSelected = get(location, 'state.orgChanged');
+      const { org } = this.props;
+      // const newOrgSelected = get(location, 'state.orgChanged');
 
-      if (newOrgSelected) {
-        return <WrappedComponent {...this.props} />;
-      } else if (this.state.orgId === '') {
+      // if (newOrgSelected) {
+      //   return <WrappedComponent {...this.props} />;
+      if (!org.id) {
         return (
           <React.Fragment>
             <Header title={__('Select Organization')} />
@@ -54,7 +45,7 @@ function withOrganization(WrappedComponent, redirectPath) {
   CheckOrg.defaultProps = {
     location: undefined,
   };
-  return CheckOrg;
+  return withRouter(CheckOrg);
 }
 
 export default withOrganization;

@@ -9,7 +9,10 @@ import reducer from '../../scenes/Organizations/OrganizationReducer';
 import Routes from './Routes';
 import './overrides.scss';
 
-const mapStateToProps = state => ({ organization: state.organization });
+const mapStateToProps = state => ({
+  organization: state.organization,
+  currOrg: state.layout.currentOrganization,
+});
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 export const organization = reducer;
@@ -28,7 +31,7 @@ class Application extends Component {
   render() {
     return (
       <Router>
-        <Routes />
+        <Routes org={this.props.currOrg} />
       </Router>
     );
   }
@@ -36,6 +39,7 @@ class Application extends Component {
 
 Application.propTypes = {
   loadOrganization: PropTypes.func.isRequired,
+  currOrg: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);

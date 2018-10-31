@@ -39,11 +39,13 @@ class SetOrganization extends Component {
     } = this.props;
     const { id, item } = this.state;
 
-    changeCurrentOrgaziation(encodeURIComponent(`${id}-${item}`)).then(() =>
+    changeCurrentOrgaziation(encodeURIComponent(`${id}-${item}`)).then(() => {
+      window.tfm.nav.changeOrganization({ title: item, id });
       history.push({
         pathname: redirectPath,
         state: { orgChanged: this.state.item },
-      }));
+      });
+    });
   }
 
   render() {

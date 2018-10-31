@@ -13,37 +13,43 @@ import withHeader from './withHeaders';
 export const links = [
   {
     path: 'redhat_repositories',
-    component: WithOrganization(
+    Component: WithOrganization(
       withHeader(Repos, { title: __('RH Repos') }),
       '/redhat_repositories',
     ),
   },
   {
     path: 'subscriptions',
-    component: WithOrganization(
+    Component: WithOrganization(
       withHeader(Subscriptions, { title: __('RH Subscriptions') }),
       '/subscriptions',
     ),
   },
   {
     path: 'subscriptions/add',
-    component: withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') }),
+    Component: WithOrganization(
+      withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') }),
+      '/subscriptions',
+    ),
   },
   {
     // eslint-disable-next-line no-useless-escape
     path: 'subscriptions/:id([0-9]*$)',
-    component: withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
+    Component: WithOrganization(
+      withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
+      '/subscriptions',
+    ),
   },
   {
     path: 'organization_select',
-    component: SetOrganization,
+    Component: SetOrganization,
   },
   {
     path: 'module_streams',
-    component: withHeader(ModuleStreams, { title: __('Module Streams') }),
+    Component: withHeader(ModuleStreams, { title: __('Module Streams') }),
   },
   {
     path: 'module_streams/:id([0-9]*$)',
-    component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
+    Component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
   },
 ];

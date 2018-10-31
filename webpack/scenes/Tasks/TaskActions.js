@@ -71,15 +71,15 @@ const isUnauthorized = action =>
 
 export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
   (dispatch, getState) => {
+    const { currentOrganization: { id } } = getState().layout;
     const triggerPolling = (action) => {
-      const { id } = getState().katello.organization;
       if (!isUnauthorized(action)) {
         if (id === orgId) {
           setTimeout(() => dispatch(pollBulkSearch(extendedParams, interval, orgId)), interval);
         }
       }
     };
-    const { id, loading } = getState().katello.organization;
+    const { loading } = getState().katello.organization;
 
     if (id === orgId && !loading) {
       return dispatch(bulkSearch(extendedParams)).then(triggerPolling);
@@ -91,7 +91,8 @@ export const pollBulkSearch = (extendedParams = {}, interval, orgId) =>
 export const pollTaskUntilDone = (taskId, extendedParams = {}, interval, orgId) =>
   (dispatch, getState) => new Promise((resolve, reject) => {
     const pollUntilDone = (action) => {
-      const { id, loading } = getState().katello.organization;
+      const { loading } = getState().katello.organization;
+      const { currentOrganization: { id } } = getState().layout;
 
       if (isUnauthorized(action) || id !== orgId || loading) {
         reject(action.result);
