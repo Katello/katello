@@ -5,7 +5,7 @@ module Actions
         alias_method :perform_run, :run
 
         def plan(repository)
-          input[:response] = repository.backend_service(smart_proxy).create
+          input[:response] = repository.backend_service(SmartProxy.pulp_master).create
         rescue RestClient::Conflict
           Rails.logger.warn("Tried to add repository #{input[:pulp_id]} that already exists.")
         end

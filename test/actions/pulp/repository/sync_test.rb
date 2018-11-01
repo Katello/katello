@@ -4,8 +4,7 @@ require_relative 'test_base.rb'
 module ::Actions::Pulp::Repository
   class SyncTest < VCRTestBase
     def setup
-      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      SmartProxy.stubs(:default_capsule).returns(proxy)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
 
     def test_sync
@@ -17,8 +16,7 @@ module ::Actions::Pulp::Repository
   class BackgroundSyncTest < VCRTestBase
     let(:repo) { katello_repositories(:rhel_7_x86_64) }
     def setup
-      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      SmartProxy.stubs(:default_capsule).returns(proxy)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
 
     def test_sync

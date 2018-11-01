@@ -6,12 +6,11 @@ module ::Actions::Pulp::Repository
     let(:action_class) { ::Actions::Pulp::Repository::Sync }
 
     before do
-      stub_remote_user
+      stub_remote_user(true)
       @repo = Katello::Repository.find(katello_repositories(:fedora_17_x86_64).id)
       pulp_response = { 'spawned_tasks' => [{'task_id' => 'other' }]}
       Runcible::Resources::Repository.any_instance.stubs(:sync).returns pulp_response
-      proxy = SmartProxy.new(:url => 'http://foo.com/foo')
-      SmartProxy.stubs(:default_capsule).returns(proxy)
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
 
     it 'runs' do
@@ -19,6 +18,7 @@ module ::Actions::Pulp::Repository
       task1         = task_base.merge('tags' => ['pulp:action:sync'])
       task2         = task1.merge(task_progress_hash(6, 8))
       task3         = task1.merge(task_progress_hash(0, 8)).merge(task_finished_hash)
+
       plan_action action, pulp_id: @repo.pulp_id
       action = run_action action do |actn|
         stub_task_poll actn, task1, task2, task3
