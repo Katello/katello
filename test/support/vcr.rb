@@ -4,6 +4,12 @@ require "active_support/concern"
 
 WebMock.allow_net_connect!
 
+class FakeLogger
+  def puts(value)
+    Rails.logger.error("VCR: #{value}")
+  end
+end
+
 module VCR
   def self.live?
     VCR.configuration.default_cassette_options[:record] != :none
@@ -57,6 +63,7 @@ def configure_vcr
   end
 
   VCR.configure do |c|
+    c.debug_logger = FakeLogger.new
     c.cassette_library_dir = VCR.cassette_path
     c.hook_into :webmock
 
@@ -64,6 +71,7 @@ def configure_vcr
       uri = URI.parse(SETTINGS[:katello][:pulp][:url])
       c.ignore_hosts uri.host
     end
+
 
     c.default_cassette_options = {
       :record => mode,
