@@ -16,7 +16,7 @@ angular.module('Bastion.content-views').controller('ContentViewHistoryController
 
         nutupane = new Nutupane(ContentViewHistory, {
             contentViewId: $scope.$stateParams.contentViewId,
-            'sort_by': 'created_at',
+            'sort_by': 'content_view_version_id',
             'sort_order': 'DESC'
         });
         $scope.controllerName = 'katello_content_views';
