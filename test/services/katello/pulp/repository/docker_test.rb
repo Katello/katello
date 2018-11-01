@@ -20,11 +20,6 @@ module Katello
       end
 
       class DockerVcrTest < DockerBaseTest
-        def setup
-          super
-          delete_repo(@repo)
-        end
-
         def test_create
           @repo.root.mirror_on_sync = true
 
