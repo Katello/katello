@@ -12,8 +12,8 @@ module Actions
         capsule_content(capsule_id).extensions
       end
 
-      def smart_proxy(capsule_id = nil)
-        capsule_id ? SmartProxy.unscoped.find(capsule_id || input[:capsule_id]) : SmartProxy.default_capsule
+      def smart_proxy(id)
+        SmartProxy.unscoped.find(id)
       end
 
       private
