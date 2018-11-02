@@ -89,6 +89,14 @@ module Katello
         fail HttpErrors::BadRequest, _("Directly setting package lists on composite content views is not allowed. Please " \
                                      "update the components, then re-publish the composite.")
       end
+      if params[:major].present? && params[:minor].present? && ContentViewVersion.find_by(:content_view_id => params[:id], :major => params[:major], :minor => params[:minor]).present?
+        fail HttpErrors::BadRequest, _("A CV version already exists with the same major and minor version (%{major}.%{minor})") % {:major => params[:major], :minor => params[:minor]}
+      end
+
+      if params[:major].present? && params[:minor].nil? || params[:major].nil? && params[:minor].present?
+        fail HttpErrors::BadRequest, _("Both major and minor parameters have to be used to override a CV version")
+      end
+
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
                         :major => params[:major],
                         :minor => params[:minor],
