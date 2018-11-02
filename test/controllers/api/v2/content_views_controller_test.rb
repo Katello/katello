@@ -322,6 +322,24 @@ module Katello
       assert_response :success
     end
 
+    def test_publish_with_dup_params
+      target_view = ContentView.find(katello_content_views(:library_dev_view).id)
+      post :publish, params: { :id => target_view.id, :major => 1, :minor => 0 }
+      assert_response 400
+    end
+
+    def test_publish_with_only_major
+      target_view = ContentView.find(katello_content_views(:library_dev_view).id)
+      post :publish, params: { :id => target_view.id, :major => 1 }
+      assert_response 400
+    end
+
+    def test_publish_with_only_minor
+      target_view = ContentView.find(katello_content_views(:library_dev_view).id)
+      post :publish, params: { :id => target_view.id, :minor => 1 }
+      assert_response 400
+    end
+
     def test_destroy_protected
       diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       diff_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{diff_view.name}\"" }
