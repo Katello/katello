@@ -110,6 +110,18 @@ module Katello
         found
       end
 
+      def import_enabled_repositories(repos)
+        paths = repos.map do |repo|
+          if !repo['baseurl'].blank?
+            URI(repo['baseurl'].first).path
+          else
+            logger.warn("System #{name} (#{id}) attempted to bind to unspecific repo (#{repo}).")
+            nil
+          end
+        end
+        content_facet.update_repositories_by_paths(paths.compact)
+      end
+
       def sync_package_associations(new_installed_package_ids)
         old_associated_ids = self.installed_package_ids
         table_name = self.host_installed_packages.table_name

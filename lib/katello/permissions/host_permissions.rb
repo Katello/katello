@@ -26,6 +26,7 @@ Foreman::AccessControl.permission(:edit_hosts).actions.concat [
   'katello/api/v2/hosts_bulk_actions/environment_content_view',
   'katello/api/v2/hosts_bulk_actions/release_version',
   'katello/api/rhsm/candlepin_dynflow_proxy/upload_package_profile',
+  'katello/api/rhsm/candlepin_dynflow_proxy/upload_profiles',
   'katello/api/rhsm/candlepin_proxies/regenerate_identity_certificates',
   'katello/api/rhsm/candlepin_proxies/hypervisors_update',
   'katello/api/rhsm/candlepin_proxies/async_hypervisors_update',

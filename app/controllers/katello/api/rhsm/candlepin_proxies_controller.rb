@@ -9,10 +9,10 @@ module Katello
 
     around_action :repackage_message
     before_action :find_host, :only => [:consumer_show, :consumer_destroy, :consumer_checkin, :enabled_repos,
-                                        :upload_package_profile, :regenerate_identity_certificates, :facts,
+                                        :regenerate_identity_certificates, :facts,
                                         :available_releases, :serials, :upload_tracer_profile]
     before_action :authorize, :only => [:consumer_create, :list_owners, :rhsm_index]
-    before_action :authorize_client_or_user, :only => [:consumer_show, :upload_package_profile, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
+    before_action :authorize_client_or_user, :only => [:consumer_show, :regenerate_identity_certificates, :upload_tracer_profile, :facts, :proxy_jobs_get_path]
     before_action :authorize_client_or_admin, :only => [:hypervisors_update, :async_hypervisors_update]
     before_action :authorize_proxy_routes, :only => [:get, :post, :put, :delete]
     before_action :authorize_client, :only => [:consumer_destroy, :consumer_checkin,
@@ -188,18 +188,9 @@ module Katello
       repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
       repos_params = repos_params['repos'] || []
 
-      paths = repos_params.map do |repo|
-        if !repo['baseurl'].blank?
-          URI(repo['baseurl'].first).path
-        else
-          logger.warn("System #{@host.name} (#{@host.id}) attempted to bind to unspecific repo (#{repo}).")
-          nil
-        end
-      end
-
       result = nil
       User.as_anonymous_admin do
-        result = @host.content_facet.update_repositories_by_paths(paths.compact)
+        result = @host.import_enabled_repositories(repos_params)
       end
 
       respond_for_show :resource => result
@@ -250,7 +241,7 @@ module Katello
     #description N_("This service is available for unauthenticated users")
     def server_status
       candlepin_response = Resources::Candlepin::CandlepinPing.ping
-      status = { :managerCapabilities => candlepin_response['managerCapabilities'],
+      status = { :managerCapabilities => candlepin_response['managerCapabilities'] + ["combined_reporting"],
                  :result => candlepin_response['result'],
                  :rulesSource => candlepin_response['rulesSource'],
                  :rulesVersion => candlepin_response['rulesVersion'],
