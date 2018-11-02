@@ -93,6 +93,7 @@ module ::Actions::Katello::Repository
     let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
     let(:in_use_repository) { katello_repositories(:fedora_17_no_arch) }
     let(:published_repository) { katello_repositories(:rhel_6_x86_64) }
+    let(:published_fedora_repository) { katello_repositories(:fedora_17_x86_64) }
 
     it 'plans' do
       action = create_action action_class
@@ -117,6 +118,19 @@ module ::Actions::Katello::Repository
       plan_action action, unpublished_repository
 
       assert_action_planed_with action, ::Actions::Katello::Product::ContentDestroy, unpublished_repository.root
+    end
+
+    it 'does not plan content destroy when custom and 1 clone with planned destroy' do
+      clones = published_fedora_repository.clones
+      clone = clones.first
+      clones.where.not(id: clone.id).destroy_all
+
+      action = create_action action_class
+      action.stubs(:action_subject).with(clone)
+      action.expects(:plan_self)
+      plan_action action, clone, planned_destroy: true
+
+      refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
 
     it 'plan fails if repository is not deletable' do
