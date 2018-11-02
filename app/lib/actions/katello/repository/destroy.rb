@@ -28,7 +28,7 @@ module Actions
             if repository.redhat?
               handle_redhat_content(repository)
             else
-              handle_custom_content(repository.root) unless skip_environment_update
+              handle_custom_content(repository) unless skip_environment_update
             end
           end
 
@@ -42,10 +42,10 @@ module Actions
           end
         end
 
-        def handle_custom_content(root)
+        def handle_custom_content(repository)
           #if this is the last instance of a custom repo, destroy the content
-          if root.repositories.count == 1
-            plan_action(Product::ContentDestroy, root)
+          if repository.root.repositories.where.not(id: repository.id).empty?
+            plan_action(::Actions::Katello::Product::ContentDestroy, repository.root)
           end
         end
 
