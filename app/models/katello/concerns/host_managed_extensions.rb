@@ -129,7 +129,6 @@ module Katello
       end
 
       def import_module_streams(module_streams)
-        # TODO: Implement this when module stream support is added
         streams = {}
         module_streams.each do |module_stream|
           stream = AvailableModuleStream.where(name: module_stream["name"],
@@ -152,9 +151,9 @@ module Katello
         new_ids.each do |new_id|
           module_stream = new_available_module_streams[new_id]
           self.host_available_module_streams.create!(host_id: self.id,
-                                          available_module_stream_id: new_id,
-                                          installed_profiles: module_stream["installed_profiles"],
-                                          status: module_stream["status"])
+                                                     available_module_stream_id: new_id,
+                                                     installed_profiles: module_stream["installed_profiles"],
+                                                     status: module_stream["status"])
         end
 
         updatable_streams.each do |hams|
