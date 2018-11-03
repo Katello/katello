@@ -20,16 +20,14 @@ module Katello
         Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'rpm', profile)
       end
 
-      def applicable_errata_ids
-        response = Katello.pulp_server.extensions.consumer.applicable_errata([self.uuid])
+      def applicable_ids(content_unit_type)
+        consumer_method = :applicable_rpms
+        if content_unit_type == ::Katello::Erratum::CONTENT_TYPE
+          consumer_method = :applicable_errata
+        end
+        response = Katello.pulp_server.extensions.consumer.send(consumer_method, [self.uuid])
         return [] if response.empty?
-        response[0]['applicability']['erratum'] || []
-      end
-
-      def applicable_rpm_ids
-        response = Katello.pulp_server.extensions.consumer.applicable_rpms([self.uuid])
-        return [] if response.empty?
-        response[0]['applicability']['rpm'] || []
+        response[0]['applicability'][content_unit_type] || []
       end
 
       def bind_yum_repositories(ids)

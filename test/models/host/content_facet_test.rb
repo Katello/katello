@@ -224,7 +224,7 @@ module Katello
     def test_partial_import
       refute_includes host.content_facet.applicable_errata, enhancement_errata
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_errata_ids).returns([enhancement_errata.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.uuid])
       content_facet.import_errata_applicability(true)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
@@ -233,14 +233,14 @@ module Katello
     def test_partial_import_empty
       content_facet.applicable_errata << enhancement_errata
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_errata_ids).returns([])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([])
       content_facet.import_errata_applicability(true)
 
       assert_empty content_facet.reload.applicable_errata
     end
 
     def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_errata_ids).returns([enhancement_errata.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.uuid])
       content_facet.import_errata_applicability(false)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
@@ -267,7 +267,7 @@ module Katello
     def test_partial_import
       refute_includes host.content_facet.applicable_rpms, rpm
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_rpm_ids).returns([rpm.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.uuid])
       content_facet.import_rpm_applicability(true)
 
       assert_equal [rpm], content_facet.reload.applicable_rpms
@@ -276,14 +276,14 @@ module Katello
     def test_partial_import_empty
       content_facet.applicable_rpms << rpm
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_rpm_ids).returns([])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([])
       content_facet.import_rpm_applicability(true)
 
       assert_empty content_facet.reload.applicable_rpms
     end
 
     def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_rpm_ids).returns([rpm.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.uuid])
       content_facet.import_rpm_applicability(false)
 
       assert_equal [rpm], content_facet.reload.applicable_rpms

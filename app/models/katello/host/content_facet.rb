@@ -49,21 +49,11 @@ module Katello
       end
 
       def installable_errata(env = nil, content_view = nil)
-        repos = if env && content_view
-                  Katello::Repository.in_environment(env).in_content_views([content_view])
-                else
-                  self.bound_repositories.pluck(:id)
-                end
-        self.applicable_errata.in_repositories(repos)
+        ApplicableContentImporter.new(self, Erratum).installable(env, content_view)
       end
 
       def installable_rpms(env = nil, content_view = nil)
-        repos = if env && content_view
-                  Katello::Repository.in_environment(env).in_content_views([content_view])
-                else
-                  self.bound_repositories.pluck(:id)
-                end
-        self.applicable_rpms.in_repositories(repos)
+        ApplicableContentImporter.new(self, Rpm).installable(env, content_view)
       end
 
       def errata_counts
@@ -94,48 +84,12 @@ module Katello
       end
 
       def import_rpm_applicability(partial)
-        to_add, to_remove = applicable_rpm_differences(partial)
-        Katello::ContentFacetApplicableRpm.where(:content_facet_id => self.id).delete_all unless partial
-        ActiveRecord::Base.transaction do
-          insert_rpm_applicability(to_add) unless to_add.blank?
-          remove_rpm_applicability(to_remove) unless to_remove.blank?
-        end
+        ApplicableContentImporter.new(self, Rpm).import(partial)
       end
 
       def import_errata_applicability(partial)
-        to_add, to_remove = applicable_errata_differences(partial)
-        Katello::ContentFacetErratum.where(:content_facet_id => self.id).delete_all unless partial
-        ActiveRecord::Base.transaction do
-          insert_errata_applicability(to_add) unless to_add.blank?
-          remove_errata_applicability(to_remove) unless to_remove.blank?
-        end
+        ApplicableContentImporter.new(self, Erratum).import(partial)
         self.update_errata_status
-      end
-
-      def applicable_errata_differences(partial)
-        errata_uuids = ::Katello::Pulp::Consumer.new(self.uuid).applicable_errata_ids
-        if partial
-          consumer_uuids = applicable_errata.pluck("#{Erratum.table_name}.uuid")
-          to_remove = consumer_uuids - errata_uuids
-          to_add = errata_uuids - consumer_uuids
-        else
-          to_add = errata_uuids
-          to_remove = nil
-        end
-        [to_add, to_remove]
-      end
-
-      def applicable_rpm_differences(partial)
-        rpm_uuids = ::Katello::Pulp::Consumer.new(self.uuid).applicable_rpm_ids
-        if partial
-          consumer_uuids = applicable_rpms.pluck("#{Rpm.table_name}.uuid")
-          to_remove = consumer_uuids - rpm_uuids
-          to_add = rpm_uuids - consumer_uuids
-        else
-          to_add = rpm_uuids
-          to_remove = nil
-        end
-        [to_add, to_remove]
       end
 
       def self.in_content_view_version_environments(version_environments)
@@ -206,36 +160,6 @@ module Katello
         facet_attributes[:lifecycle_environment_id] ||= hostgroup.inherited_lifecycle_environment_id
         facet_attributes[:content_source_id] ||= hostgroup.inherited_content_source_id
         facet_attributes
-      end
-
-      private
-
-      def insert_rpm_applicability(uuids)
-        applicable_rpm_ids = ::Katello::Rpm.where(:uuid => uuids).pluck(:id)
-        unless applicable_rpm_ids.empty?
-          inserts = applicable_rpm_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{self.id.to_i})" }
-          sql = "INSERT INTO #{Katello::ContentFacetApplicableRpm.table_name} (rpm_id, content_facet_id) VALUES #{inserts.join(', ')}"
-          ActiveRecord::Base.connection.execute(sql)
-        end
-      end
-
-      def remove_rpm_applicability(uuids)
-        applicable_rpm_ids = ::Katello::Rpm.where(:uuid => uuids).pluck(:id)
-        Katello::ContentFacetApplicableRpm.where(:content_facet_id => self.id, :rpm_id => applicable_rpm_ids).delete_all
-      end
-
-      def insert_errata_applicability(uuids)
-        applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
-        unless applicable_errata_ids.empty?
-          inserts = applicable_errata_ids.map { |erratum_id| "(#{erratum_id.to_i}, #{self.id.to_i})" }
-          sql = "INSERT INTO #{Katello::ContentFacetErratum.table_name} (erratum_id, content_facet_id) VALUES #{inserts.join(', ')}"
-          ActiveRecord::Base.connection.execute(sql)
-        end
-      end
-
-      def remove_errata_applicability(uuids)
-        applicable_errata_ids = ::Katello::Erratum.where(:uuid => uuids).pluck(:id)
-        Katello::ContentFacetErratum.where(:content_facet_id => self.id, :erratum_id => applicable_errata_ids).delete_all
       end
     end
   end
