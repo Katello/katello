@@ -22,6 +22,7 @@ module Actions
                           type:          'erratum',
                           args:          errata_ids)
             end
+            plan_self(:host_id => host.id)
           end
 
           def humanized_name
@@ -38,6 +39,11 @@ module Actions
 
           def presenter
             Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
+          end
+
+          def finalize
+            host = ::Host.find_by(:id => input[:host_id])
+            host.update(audit_comment: _("Installation of errata requested: %{errata}") % {errata: input[:errata].join(", ")})
           end
         end
       end
