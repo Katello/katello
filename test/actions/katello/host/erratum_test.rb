@@ -11,6 +11,7 @@ module ::Actions::Katello::Host::Erratum
     let(:errata_ids) { %w(RHBA-2014-1234 RHBA-2014-1235 RHBA-2014-1236 RHBA-2014-1237) }
     let(:action) do
       action = create_action action_class
+      action.expects(:plan_self)
       action.stubs(:action_subject).with(host, :errata => errata = %w(RHBA-2014-1234))
       plan_action action, host, errata
     end
