@@ -7,7 +7,7 @@ module ::Actions::Katello::Host::Erratum
 
     let(:uuid) { 'uuid' }
     let(:content_facet) { mock('a_system', uuid: uuid).mimic!(::Katello::Host::ContentFacet) }
-    let(:host) { mock('a_host', content_facet: content_facet).mimic!(::Host::Managed) }
+    let(:host) { mock('a_host', content_facet: content_facet, id: 42).mimic!(::Host::Managed) }
     let(:errata_ids) { %w(RHBA-2014-1234 RHBA-2014-1235 RHBA-2014-1236 RHBA-2014-1237) }
     let(:action) do
       action = create_action action_class
@@ -56,8 +56,10 @@ module ::Actions::Katello::Host::Erratum
     it 'plans installs with batching' do
       Setting.stubs(:[]).returns(2)
       action.stubs(:action_subject).with(host, :errata => errata_ids)
+      host.stubs(:id).returns(42)
       host.stubs(:content_facet).returns(content_facet)
       content_facet.stubs(:uuid).returns(uuid)
+      action.expects(:plan_self)
       plan_action action, host, errata_ids
 
       errata_ids.each_slice(Setting['erratum_install_batch_size']) do |errata_ids_batch|
