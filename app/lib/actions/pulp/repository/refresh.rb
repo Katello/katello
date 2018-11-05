@@ -7,8 +7,8 @@ module Actions
           param :pulp_id
         end
 
-        def plan(repository, input = {})
-          plan_self(:capsule_id => input[:capsule_id], :pulp_id => repository.pulp_id)
+        def plan(repository, options = {})
+          plan_self(:capsule_id => options[:capsule_id], :pulp_id => repository.pulp_id)
         end
 
         def run

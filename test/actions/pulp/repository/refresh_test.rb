@@ -23,7 +23,7 @@ module ::Actions::Pulp::Repository
 
     describe 'Refresh' do
       let(:planned_action) do
-        create_and_plan_action action_class, repo
+        create_and_plan_action action_class, repo, :capsule_id => SmartProxy.pulp_master.id
       end
 
       it 'runs' do
