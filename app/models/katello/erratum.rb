@@ -48,6 +48,10 @@ module Katello
       RepositoryErratum
     end
 
+    def self.content_facet_association_class
+      ContentFacetErratum
+    end
+
     def self.applicable_to_hosts(hosts)
       # Note: ContentFacetErrata actually holds the "Applicable Errata" to that host
       # It is not the errata "belonging" to the host. Its rather the errata that is "applicable"

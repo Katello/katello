@@ -31,6 +31,10 @@ module Katello
       RepositoryRpm
     end
 
+    def self.content_facet_association_class
+      ContentFacetApplicableRpm
+    end
+
     def self.scoped_search_version(_key, operator, value)
       self.scoped_search_sortable('version', operator, value)
     end
