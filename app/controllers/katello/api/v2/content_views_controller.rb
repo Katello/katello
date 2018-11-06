@@ -77,8 +77,6 @@ module Katello
     api :POST, "/content_views/:id/publish", N_("Publish a content view")
     param :id, :number, :desc => N_("Content view identifier"), :required => true
     param :description, String, :desc => N_("Description for the new published content view version")
-    param :force_yum_metadata_regeneration, :bool, :desc => N_("Force yum metadata regeneration on the repositories " \
-                                                           "in the content view version")
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
 
@@ -92,7 +90,6 @@ module Katello
                                      "update the components, then re-publish the composite.")
       end
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
-                        :force_yum_metadata_regeneration => params[:force_yum_metadata_regeneration],
                         :major => params[:major],
                         :minor => params[:minor],
                         :repos_units => params[:repos_units])

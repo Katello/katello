@@ -20,8 +20,7 @@ module Actions
 
             if new_repository.link?
               fail "Cannot clone metadata if more than one repository" if repositories.count > 1
-              plan_action(Repository::CloneYumMetadata, repositories[0], new_repository,
-                                                            :force_yum_metadata_regeneration => true)
+              plan_action(Repository::CloneYumMetadata, repositories[0], new_repository)
             else
               repositories.each do |repository|
                 if new_repository.yum?

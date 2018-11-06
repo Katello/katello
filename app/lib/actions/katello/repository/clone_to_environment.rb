@@ -4,7 +4,7 @@ module Actions
       # Clones the contnet of the repository into the environment
       # effectively promotion the repository to the environment
       class CloneToEnvironment < Actions::Base
-        def plan(repository, environment, options = {})
+        def plan(repository, environment)
           clone = find_or_build_environment_clone(repository, environment)
 
           sequence do
@@ -20,11 +20,9 @@ module Actions
             end
 
             if repository.yum?
-              plan_action(Repository::CloneYumMetadata, repository, clone,
-                          :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
+              plan_action(Repository::CloneYumMetadata, repository, clone)
             elsif repository.deb?
-              plan_action(Repository::CloneDebContent, repository, clone, [], false,
-                          :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
+              plan_action(Repository::CloneDebContent, repository, clone, [], false)
             elsif repository.docker?
               plan_action(Repository::CloneDockerContent, repository, clone, [])
             elsif repository.ostree?

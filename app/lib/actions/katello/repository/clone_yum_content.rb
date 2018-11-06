@@ -4,7 +4,6 @@ module Actions
       class CloneYumContent < Actions::Base
         # rubocop:disable MethodLength
         # rubocop:disable Metrics/CyclomaticComplexity TODO: refactor to push everything into options hash
-        # rubocop:disable Metrics/PerceivedComplexity
         def plan(source_repo, target_repo, filters, options = {})
           generate_metadata = options.fetch(:generate_metadata, true)
           index_content = options.fetch(:index_content, true)
@@ -62,7 +61,7 @@ module Actions
             # Check for matching content before indexing happens, the content in pulp is
             # actually updated, but it is not reflected in the database yet.
             output = {}
-            if target_repo.environment && !options[:force_yum_metadata_regeneration]
+            if target_repo.environment
               output = plan_action(Katello::Repository::CheckMatchingContent,
                                    :source_repo_id => source_repo.id,
                                    :target_repo_id => target_repo.id).output

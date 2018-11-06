@@ -44,7 +44,7 @@ module Actions
       plan_action(action, [yum_repo], version, options)
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneYumMetadata,
-                                yum_repo, cloned_repo, :force_yum_metadata_regeneration => true)
+                                yum_repo, cloned_repo)
     end
 
     it 'plans to clone docker units' do

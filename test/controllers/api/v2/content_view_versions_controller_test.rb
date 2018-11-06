@@ -184,7 +184,7 @@ module Katello
 
     def test_promote
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@dev], false, 'trystero', :force_yum_metadata_regeneration => nil).returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@dev], false, 'trystero').returns({})
       post :promote, params: { :id => version.id, :environment_ids => [@dev.id], :description => 'trystero' }
 
       assert_response :success
@@ -205,8 +205,8 @@ module Katello
 
     def test_bad_promote_out_of_sequence
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil,
-                                            :force_yum_metadata_regeneration => nil).raises(::Katello::HttpErrors::BadRequest)
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil).
+          raises(::Katello::HttpErrors::BadRequest)
       post :promote, params: { :id => version.id, :environment_ids => [@beta.id] }
 
       assert_response 500
@@ -214,8 +214,7 @@ module Katello
 
     def test_promote_out_of_sequence_force
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], true, nil,
-                                            :force_yum_metadata_regeneration => nil).returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], true, nil).returns({})
       post :promote, params: { :id => version.id, :environment_ids => [@beta.id], :force => 1 }
 
       assert_response :success
@@ -223,8 +222,7 @@ module Katello
 
     def test_promote_out_of_sequence_force_false
       version = @library_dev_staging_view.versions.first
-      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil,
-                                            :force_yum_metadata_regeneration => nil).returns({})
+      @controller.expects(:async_task).with(::Actions::Katello::ContentView::Promote, version, [@beta], false, nil).returns({})
       post :promote, params: { :id => version.id, :environment_ids => [@beta.id], :force => 0 }
 
       assert_response :success
