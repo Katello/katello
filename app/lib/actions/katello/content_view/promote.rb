@@ -4,7 +4,7 @@ module Actions
       class Promote < Actions::EntryAction
         middleware.use Actions::Middleware::KeepCurrentUser
 
-        def plan(version, environments, is_force = false, description = nil, options = {})
+        def plan(version, environments, is_force = false, description = nil)
           action_subject(version.content_view)
           version.check_ready_to_promote!(environments)
 
@@ -15,8 +15,7 @@ module Actions
           environments.each do |environment|
             sequence do
               plan_action(Katello::ContentViewVersion::BeforePromoteHook, :id => version.id)
-              plan_action(ContentView::PromoteToEnvironment, version, environment, description,
-                          :force_yum_metadata_regeneration => options[:force_yum_metadata_regeneration])
+              plan_action(ContentView::PromoteToEnvironment, version, environment, description)
               plan_action(Katello::ContentViewVersion::AfterPromoteHook, :id => version.id)
             end
           end

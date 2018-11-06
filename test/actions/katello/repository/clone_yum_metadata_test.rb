@@ -32,20 +32,6 @@ module Actions
                                 :matching_content => matching_action[0].output[:matching_content])
     end
 
-    it 'plans to clone the metadata with force_yum_metadata_regeneration' do
-      action = create_action(action_class)
-
-      plan_action(action, archive_repo, environment_repo, :force_yum_metadata_regeneration => true)
-
-      refute_action_planed(action, Katello::Repository::CheckMatchingContent)
-
-      assert_action_planed_with(action, Katello::Repository::IndexContent, :id => environment_repo.id)
-
-      assert_action_planed_with(action, Katello::Repository::MetadataGenerate, environment_repo,
-                                :source_repository => archive_repo,
-                                :matching_content => nil)
-    end
-
     it 'plans to clone the metadata if unprotected changed' do
       action = create_action(action_class)
       environment_repo.root.update_attributes!(:unprotected => !environment_repo.unprotected)
