@@ -47,6 +47,7 @@ module Katello::Host
           packages.map(&:nvra).must_equal(expected_packages.map(&:nvra))
         end
         @host.expects(:import_enabled_repositories).with(enabled_repos)
+        @host.expects(:import_module_streams).with(modumd_inventory)
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -62,6 +63,7 @@ module Katello::Host
         ::Katello::Pulp::Consumer.expects(:new).returns(mock_consumer)
         @host.expects(:import_package_profile).with(any_parameters).never
         @host.expects(:import_enabled_repositories).with(enabled_repos)
+        @host.expects(:import_module_streams).with(modumd_inventory)
 
         plan_action action, @host, profile.to_json
         run_action action
@@ -100,7 +102,7 @@ module Katello::Host
         ::Katello::Pulp::Consumer.expects(:new).returns(mock_consumer)
         @host.expects(:import_package_profile).with(any_parameters).raises(ActiveRecord::InvalidForeignKey)
         @host.expects(:import_enabled_repositories).with(enabled_repos)
-
+        @host.expects(:import_module_streams).with(modumd_inventory)
         plan_action action, @host, profile.to_json
         run_action action
       end

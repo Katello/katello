@@ -169,6 +169,74 @@ module Katello
     end
   end
 
+  class HostAvailableModulesTest < HostManagedExtensionsTestBase
+    def make_module_json(name = "foo", status = "unknown", installed_profiles = [])
+      {
+        "name" => name,
+        "stream" => "8",
+        "version" => "20180308143646",
+        "context" => "c2c572ec",
+        "arch" => "x86_64",
+        "profiles" => [
+          "development",
+          "minimal",
+          "default"
+        ],
+        "installed_profiles" => installed_profiles,
+        "status" => status
+      }
+    end
+
+    def test_import_modules
+      modules_json = [
+        make_module_json("enabled-installed", "enabled", ["default"]),
+        make_module_json("enabled2", "enabled"),
+        make_module_json("disabled", "disabled"),
+        make_module_json("unknown", "unknown")
+      ]
+      @foreman_host.import_module_streams(modules_json)
+      assert_equal 1, @foreman_host.host_available_module_streams.installed.size
+      assert_equal 2, @foreman_host.host_available_module_streams.enabled.size
+      assert_equal 1, @foreman_host.host_available_module_streams.disabled.size
+      assert_equal 1, @foreman_host.host_available_module_streams.unknown.size
+
+      installed_params = modules_json.first
+
+      installed = @foreman_host.host_available_module_streams.installed.first
+      assert_equal installed_params["name"], installed.available_module_stream.name
+      assert_equal installed_params["stream"], installed.available_module_stream.stream
+      assert_equal installed_params["installed_profiles"], installed.installed_profiles
+      assert_equal "enabled", installed.status
+      refute_empty installed.installed_profiles
+    end
+
+    def test_import_modules_with_update
+      modules_json = [make_module_json("enabled21111", "enabled")]
+      prior_count = HostAvailableModuleStream.count
+      @foreman_host.import_module_streams(modules_json)
+      assert_equal prior_count + 1, HostAvailableModuleStream.count
+      assert_equal "enabled", @foreman_host.reload.host_available_module_streams.first.status
+
+      modules_json.first["status"] = "unknown"
+
+      @foreman_host.import_module_streams(modules_json)
+      assert_equal "unknown", @foreman_host.reload.host_available_module_streams.first.status
+      assert_equal prior_count + 1, HostAvailableModuleStream.count
+
+      @foreman_host.import_module_streams([])
+      assert_empty @foreman_host.reload.host_available_module_streams
+      assert_equal prior_count, HostAvailableModuleStream.count
+
+      @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", ["default"])])
+      assert_equal "enabled", @foreman_host.reload.host_available_module_streams.first.status
+      assert_equal ["default"], @foreman_host.reload.host_available_module_streams.first.installed_profiles
+
+      @foreman_host.import_module_streams([make_module_json("xxxx", "enabled", [])])
+      assert_equal "enabled", @foreman_host.reload.host_available_module_streams.first.status
+      assert_empty @foreman_host.reload.host_available_module_streams.first.installed_profiles
+    end
+  end
+
   class HostTracerTest < HostManagedExtensionsTestBase
     def setup
       super

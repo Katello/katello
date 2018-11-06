@@ -16,7 +16,8 @@
                 { action: 'disable', description: translate("Disable")},
                 { action: 'install', description: translate("Install")},
                 { action: 'update', description: translate("Update")},
-                { action: 'remove', description: translate("Remove")}
+                { action: 'remove', description: translate("Remove")},
+                { action: 'reset', description: translate("Reset")}
             ];
         };
     }

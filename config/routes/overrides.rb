@@ -92,6 +92,10 @@ Foreman::Application.routes.draw do
             end
           end
 
+          resources :module_streams, :only => [:index], :controller => :host_module_streams do
+            get :auto_complete_search, :on => :collection
+          end
+
           resources :subscriptions, :only => [:index], :controller => :host_subscriptions do
             collection do
               put :auto_attach

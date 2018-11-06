@@ -40,6 +40,8 @@ Foreman::AccessControl.permission(:view_hosts).actions.concat [
   'katello/api/v2/host_errata/index',
   'katello/api/v2/host_errata/show',
   'katello/api/v2/host_errata/auto_complete_search',
+  'katello/api/v2/host_module_streams/index',
+  'katello/api/v2/host_module_streams/auto_complete_search',
   'katello/api/v2/host_subscriptions/index',
   'katello/api/v2/host_subscriptions/events',
   'katello/api/v2/host_subscriptions/product_content',
