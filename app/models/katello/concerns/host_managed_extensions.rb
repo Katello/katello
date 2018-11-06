@@ -140,13 +140,13 @@ module Katello
 
       def sync_available_module_stream_associations(new_available_module_streams)
         updatable_streams = self.host_available_module_streams.where(:available_module_stream_id => new_available_module_streams.keys)
-
         old_associated_ids = self.available_module_stream_ids
-
         delete_ids = old_associated_ids - new_available_module_streams.keys
+
         if delete_ids.any?
           self.host_available_module_streams.where(:available_module_stream_id => delete_ids).delete_all
         end
+
         new_ids = new_available_module_streams.keys - old_associated_ids
         new_ids.each do |new_id|
           module_stream = new_available_module_streams[new_id]
@@ -158,8 +158,10 @@ module Katello
 
         updatable_streams.each do |hams|
           module_stream = new_available_module_streams[hams.available_module_stream_id]
-          if module_stream["status"] != hams.status || module_stream["installed_profiles"] != hams.installed_profiles
-            hams.update_attributes!(:status => module_stream["status"], :installed_profiles => module_stream["installed_profiles"])
+          shared_keys = hams.attributes.keys & module_stream.keys
+          module_stream_data = module_stream.slice(*shared_keys)
+          if hams.attributes.slice(*shared_keys) != module_stream_data
+            hams.update_attributes!(module_stream_data)
           end
         end
       end
