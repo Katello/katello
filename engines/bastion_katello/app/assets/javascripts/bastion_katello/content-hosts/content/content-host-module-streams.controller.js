@@ -5,24 +5,24 @@
  * @requires $scope
  * @resource $timeout
  * @resource $window
- * @requires ModuleStream
+ * @requires HostModuleStream
  * @requires Nutupane
  * @requires ModuleStreamActions
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the content host module streams list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsController',
-    ['$scope', '$timeout', '$window', 'ModuleStream', 'Nutupane', 'BastionConfig', 'ModuleStreamActions',
-    function ($scope, $timeout, $window, ModuleStream, Nutupane, BastionConfig, ModuleStreamActions) {
+    ['$scope', '$timeout', '$window', 'HostModuleStream', 'Nutupane', 'BastionConfig', 'ModuleStreamActions', 'translate',
+    function ($scope, $timeout, $window, HostModuleStream, Nutupane, BastionConfig, ModuleStreamActions, translate) {
         $scope.moduleStreamActions = ModuleStreamActions.getActions();
 
         $scope.working = false;
 
-        $scope.moduleStreamsNutupane = new Nutupane(ModuleStream, {
-            'host_ids': [$scope.$stateParams.hostId],
-            'name_stream_only': '1'
-        });
+        $scope.nutupaneParams = { id: $scope.$stateParams.hostId };
+
+        $scope.moduleStreamsNutupane = new Nutupane(HostModuleStream, $scope.nutupaneParams);
 
         $scope.moduleStreamsNutupane.masterOnly = true;
         $scope.table = $scope.moduleStreamsNutupane.table;
@@ -32,6 +32,17 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
         $scope.moduleStreamActionFormValues = {
             authenticityToken: $window.AUTH_TOKEN.replace(/&quot;/g, ''),
             remoteAction: 'module_stream_action'
+        };
+
+        $scope.moduleStreamStatus = function(module) {
+            var statuses = [];
+            if (["enabled", "disabled"].includes(module.status)) {
+                statuses.push(translate(_.capitalize(module.status)));
+            }
+            if (module.installed_profiles.length) {
+                statuses.push(translate("Installed"));
+            }
+            return statuses.join(", ");
         };
 
         $scope.performViaRemoteExecution = function(moduleSpec, actionType) {
@@ -44,5 +55,14 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
                 angular.element('#moduleStreamActionForm').submit();
             }, 0);
         };
+
+        $scope.$watch(
+          function(scope) {
+              return scope.nutupaneParams.status;
+          },
+          function() {
+              $scope.moduleStreamsNutupane.refresh();
+          }
+        );
     }
 ]);

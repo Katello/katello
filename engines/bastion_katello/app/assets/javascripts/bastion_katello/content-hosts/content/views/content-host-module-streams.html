@@ -8,6 +8,7 @@
 </div>
 
 <div ng-if="host && host.hasContent()">
+
   <form id="moduleStreamActionForm" method="post" action="/katello/remote_execution">
     <input type="hidden" name="remote_action" ng-value="moduleStreamActionFormValues.remoteAction"/>
     <input type="hidden" name="module_stream_action" ng-value="moduleStreamActionFormValues.moduleStreamAction"/>
@@ -18,6 +19,22 @@
   </form>
 
   <div data-extend-template="layouts/partials/table.html">
+    <span data-block="filters">
+      <div class="kat-clearfix">
+        <div class="kat-inline">
+          <label translate>Filter by Status: </label>
+        </div>
+        <div class="kat-inline">
+          <select ng-model="nutupaneParams.status">
+            <option value="">All</option>
+            <option value="enabled" translate>Enabled</option>
+            <option value="installed" translate>Installed</option>
+            <option value="disabled" translate>Disabled</option>
+            <option value="unknown" translate>Unknown</option>
+          </select>
+        </div>
+      </div>
+    </span>
 
     <span data-block="no-rows-message" translate>
       There are no Module Streams to display.
@@ -32,6 +49,8 @@
           <tr bst-table-head>
             <th bst-table-column translate>Name</th>
             <th bst-table-column translate>Stream</th>
+            <th bst-table-column translate>Status</th>
+            <th bst-table-column translate>Installed Profile</th>
             <th bst-table-column translate>Actions</th>
           </tr>
         </thead>
@@ -42,6 +61,12 @@
               <a href="/module_streams?search=module_spec%3D{{ module.module_spec }}+and+host%3D{{ host.name }}">
               {{ module.name }}</a></td>
             <td bst-table-cell>{{ module.stream }}</td>
+            <td bst-table-cell>
+              {{ moduleStreamStatus(module) }}
+            </td>
+            <td bst-table-cell>
+              {{ module.installed_profiles.join(", ") }}
+            </td>
             <td bst-table-cell>
               <div class="dropdown" ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)">
                 <button class="btn btn-default dropdown-toggle" ng-disabled="$scope.working" type="button" id="dropdownMenu1" data-toggle="dropdown"> Actions
