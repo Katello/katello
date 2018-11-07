@@ -667,7 +667,7 @@ module Katello
     end
 
     def self.safe_render_container_name(repository, pattern = nil)
-      if pattern || (repository.environment && !repository.environment.registry_name_pattern.empty?)
+      if (pattern && !pattern.blank?) || (repository.environment && !repository.environment.registry_name_pattern.empty?)
         pattern ||= repository.environment.registry_name_pattern
         allowed_methods = {}
         allowed_vars = {}
