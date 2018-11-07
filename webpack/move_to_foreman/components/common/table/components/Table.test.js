@@ -3,6 +3,8 @@ import { testComponentSnapshotsWithFixtures } from '../../../../../move_to_pf/te
 import Table from './Table';
 import { columnsFixtures, rowsFixtures } from './TableFixtures';
 
+jest.mock('foremanReact/components/Pagination/PaginationWrapper');
+
 const fixtures = {
   'renders Table with emptyState': {
     columns: columnsFixtures,

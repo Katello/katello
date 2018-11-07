@@ -7,6 +7,7 @@ import { loadUpstreamSubscriptions, saveUpstreamSubscriptions } from '../Upstrea
 
 jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 jest.mock('foremanReact/components/BreadcrumbBar');
+jest.mock('foremanReact/components/Pagination/PaginationWrapper');
 
 describe('upstream subscriptions page', () => {
   let shallowWrapper;
