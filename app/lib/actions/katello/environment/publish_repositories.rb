@@ -15,7 +15,8 @@ module Actions
           concurrence do
             repositories.each do |repository|
               sequence do
-                plan_action(::Actions::Katello::Repository::Update, repository, container_repository_name: repository.container_repository_name)
+                repository.set_container_repository_name
+                plan_action(::Actions::Katello::Repository::InstanceUpdate, repository)
                 plan_action(::Actions::Katello::Repository::CapsuleSync, repository)
               end
             end
