@@ -22,7 +22,7 @@ module Katello
               includes = params.key?(:include_only) ? "&" + included_list(params.delete(:include_only)) : ""
               fetch_paged do |page_add|
                 response = super(path + hash_to_query(params) + includes + "&#{page_add}", self.default_headers).body
-                JSON.parse(response)
+                JSON.parse(response).map(&:with_indifferent_access)
               end
             end
           end
