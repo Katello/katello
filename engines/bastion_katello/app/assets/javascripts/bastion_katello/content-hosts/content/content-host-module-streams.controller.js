@@ -8,13 +8,14 @@
  * @requires HostModuleStream
  * @requires Nutupane
  * @requires ModuleStreamActions
+ * @requires translate
  *
  * @description
  *   Provides the functionality for the content host module streams list and actions.
  */
 angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsController',
-    ['$scope', '$timeout', '$window', 'HostModuleStream', 'Nutupane', 'BastionConfig', 'ModuleStreamActions',
-    function ($scope, $timeout, $window, HostModuleStream, Nutupane, BastionConfig, ModuleStreamActions) {
+    ['$scope', '$timeout', '$window', 'HostModuleStream', 'Nutupane', 'BastionConfig', 'ModuleStreamActions', 'translate',
+    function ($scope, $timeout, $window, HostModuleStream, Nutupane, BastionConfig, ModuleStreamActions, translate) {
         $scope.moduleStreamActions = ModuleStreamActions.getActions();
 
         $scope.working = false;
@@ -36,10 +37,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
         $scope.moduleStreamStatus = function(module) {
             var statuses = [];
             if (["enabled", "disabled"].includes(module.status)) {
-                statuses.push(_.capitalize(module.status));
+                statuses.push(translate(_.capitalize(module.status)));
             }
             if (module.installed_profiles.length) {
-                statuses.push("Installed");
+                statuses.push(translate("Installed"));
             }
             return statuses.join(", ");
         };
