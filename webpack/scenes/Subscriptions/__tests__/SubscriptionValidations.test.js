@@ -44,6 +44,11 @@ describe('validateQuantity', () => {
     expect(validateQuantity(100))
       .toEqual(validResult);
   });
+
+  it('detects unlimited maxQuantity', () => {
+    expect(validateQuantity('500000', -1))
+      .toEqual(validResult);
+  });
 });
 
 describe('recordsValid', () => {
@@ -54,8 +59,8 @@ describe('recordsValid', () => {
   /* eslint-disable object-curly-newline */
   it('accepts valid array', () => {
     const rows = [
-      { quantity: 10, available: 10, availableQuantity: 100, upstream_pool_id: ' ' },
-      { quantity: 10, available: 10, availableQuantity: -1 },
+      { quantity: 10, available: 10, upstreamAvailable: 100, upstream_pool_id: ' ' },
+      { quantity: 10, available: 10, upstreamAvailable: -1 },
       { quantity: -1, available: -1 },
       { quantity: 10, available: 10, upstream_pool_id: ' ' },
     ];
@@ -66,8 +71,8 @@ describe('recordsValid', () => {
   it('detects invalid record', () => {
     /* eslint-disable object-curly-newline */
     const rows = [
-      { quantity: 10, available: 10, availableQuantity: 100, upstream_pool_id: ' ' },
-      { quantity: 10, available: 10, availableQuantity: 5, upstream_pool_id: ' ' },
+      { quantity: 10, available: 10, upstreamAvailable: 100, maxQuantity: 100, upstream_pool_id: ' ' },
+      { quantity: 10, available: 10, upstreamAvailable: 0, maxQuantity: 5, upstream_pool_id: ' ' },
     ];
     /* eslint-enable object-curly-newline */
     expect(recordsValid(rows)).toBe(false);
