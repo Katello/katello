@@ -194,7 +194,8 @@ module Katello
       labels = [
         ['test', '<%= repository.label %>', 'test'],
         ['test', '<%= organization.label %> <%= repository.label %>', 'empty_organization_test'],
-        ['test', ' <%= organization.label %>   <%= repository.label %> ', 'empty_organization_test']
+        ['test', ' <%= organization.label %>   <%= repository.label %> ', 'empty_organization_test'],
+        ['test', '', 'empty_organization-puppet_product-test']
       ]
 
       labels.each do |label, pattern, result|
