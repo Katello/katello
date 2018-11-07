@@ -7,7 +7,9 @@ import { successState, loadingState, emptyState } from '../../../__tests__/subsc
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';
 
 jest.mock('../../../../../move_to_foreman/foreman_toast_notifications');
+jest.mock('foremanReact/components/Pagination/PaginationWrapper');
 jest.useFakeTimers();
+
 const tableColumns = [
   'id',
   'product_id',

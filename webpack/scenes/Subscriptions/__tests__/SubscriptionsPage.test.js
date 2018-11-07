@@ -8,6 +8,8 @@ import { loadSetting } from '../../../move_to_foreman/Settings/SettingsActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
 jest.mock('../../../move_to_foreman/foreman_toast_notifications');
+jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
+
 const loadTables = () => new Promise((resolve) => {
   resolve();
 });

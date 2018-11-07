@@ -1,8 +1,8 @@
 import React from 'react';
 import { ListView } from 'patternfly-react';
 import { sprintf } from 'foremanReact/common/I18n';
+import Pagination from 'foremanReact/components/Pagination/PaginationWrapper';
 
-import PaginationRow from '../../components/PaginationRow/index';
 import RepositorySet from './components/RepositorySet';
 import EnabledRepository from './components/EnabledRepository';
 
@@ -33,7 +33,7 @@ export const getSetsComponent = (repoSetsState, onPaginationChange) => {
   return (
     <ListView>
       <div className="sticky-pagination">
-        <PaginationRow
+        <Pagination
           viewType="list"
           itemCount={itemCount}
           pagination={pagination}
@@ -63,7 +63,7 @@ export const getEnabledComponent = (enabledReposState, onPaginationChange) => {
   return (
     <ListView>
       <div className="sticky-pagination sticky-pagination-grey">
-        <PaginationRow
+        <Pagination
           viewType="list"
           itemCount={itemCount}
           pagination={pagination}

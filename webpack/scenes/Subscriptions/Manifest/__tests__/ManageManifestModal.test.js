@@ -5,6 +5,7 @@ import ManageManifestModal from '../ManageManifestModal';
 import { manifestHistorySuccessState } from './manifest.fixtures';
 
 jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
+jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 
 describe('manage manifest modal', () => {
   const noop = () => {};
