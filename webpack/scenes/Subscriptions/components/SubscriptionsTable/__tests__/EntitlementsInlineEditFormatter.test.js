@@ -22,7 +22,7 @@ describe('EntitlementsInlineEditFormatter', () => {
         const controller = mockController();
         const value = 100;
         const formatter = editFormatter(controller)(value, data({
-          availableQuantityLoaded: false,
+          upstreamAvailableLoaded: false,
         }));
 
         expect(toJson(shallow(formatter))).toMatchSnapshot();
@@ -34,8 +34,9 @@ describe('EntitlementsInlineEditFormatter', () => {
         const controller = mockController();
         const value = 100;
         const formatter = editFormatter(controller)(value, data({
-          availableQuantityLoaded: true,
-          availableQuantity: 500,
+          upstreamAvailableLoaded: true,
+          upstreamAvailable: 500,
+          maxQuantity: 600,
         }));
 
         expect(toJson(shallow(formatter))).toMatchSnapshot();
@@ -45,8 +46,9 @@ describe('EntitlementsInlineEditFormatter', () => {
         const controller = mockController();
         const value = 100;
         const formatter = editFormatter(controller)(value, data({
-          availableQuantityLoaded: true,
-          availableQuantity: -1,
+          upstreamAvailableLoaded: true,
+          upstreamAvailable: -1,
+          maxQuantity: -1,
         }));
 
         expect(toJson(shallow(formatter))).toMatchSnapshot();
@@ -56,8 +58,9 @@ describe('EntitlementsInlineEditFormatter', () => {
         const controller = mockController();
         const value = 200;
         const formatter = editFormatter(controller)(value, data({
-          availableQuantityLoaded: true,
-          availableQuantity: 100,
+          upstreamAvailableLoaded: true,
+          upstreamAvailable: 100,
+          maxQuantity: 150,
         }));
 
         expect(toJson(shallow(formatter))).toMatchSnapshot();
@@ -67,8 +70,9 @@ describe('EntitlementsInlineEditFormatter', () => {
         const controller = mockController({ changed: true });
         const value = 100;
         const formatter = editFormatter(controller)(value, data({
-          availableQuantityLoaded: true,
-          availableQuantity: 200,
+          upstreamAvailableLoaded: true,
+          upstreamAvailable: 200,
+          maxQuantity: 300,
         }));
 
         expect(toJson(shallow(formatter))).toMatchSnapshot();
@@ -80,7 +84,7 @@ describe('EntitlementsInlineEditFormatter', () => {
         const controller = mockController();
         const value = 200;
         const formatter = editFormatter(controller)(value, data({
-          availableQuantityLoaded: true,
+          upstreamAvailableLoaded: true,
         }));
 
         expect(toJson(shallow(formatter))).toMatchSnapshot();

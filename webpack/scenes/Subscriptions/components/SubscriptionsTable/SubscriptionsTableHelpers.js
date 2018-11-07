@@ -1,23 +1,36 @@
+const getMaxQuantity = (subscription, upstreamAvailable) => {
+  if (upstreamAvailable === -1) {
+    return upstreamAvailable;
+  }
+  return upstreamAvailable + subscription.quantity;
+};
+
 const buildTableRow = (subscription, availableQuantities, updatedQuantity) => {
-  const availableQuantityLoaded = !!availableQuantities;
-  const availableQuantity = availableQuantityLoaded
+  const upstreamAvailableLoaded = !!availableQuantities;
+  const upstreamAvailable = upstreamAvailableLoaded
     ? availableQuantities[subscription.id]
     : null;
 
+  let maxQuantity;
+  if (upstreamAvailableLoaded) {
+    maxQuantity = getMaxQuantity(subscription, upstreamAvailable);
+  }
+
+  const baseSubscription = {
+    ...subscription,
+    upstreamAvailable,
+    upstreamAvailableLoaded,
+    maxQuantity,
+  };
+
   if (updatedQuantity[subscription.id]) {
     return {
-      ...subscription,
+      ...baseSubscription,
       entitlementsChanged: true,
       quantity: updatedQuantity[subscription.id],
-      availableQuantity,
-      availableQuantityLoaded,
     };
   }
-  return {
-    ...subscription,
-    availableQuantity,
-    availableQuantityLoaded,
-  };
+  return baseSubscription;
 };
 
 const buildTableRowsFromGroup = (subscriptionGroup, availableQuantities, updatedQuantity) => {
@@ -36,7 +49,6 @@ const buildTableRowsFromGroup = (subscriptionGroup, availableQuantities, updated
 
 export const buildTableRows = (groupedSubscriptions, availableQuantities, updatedQuantity) => {
   const rows = [];
-
   Object.values(groupedSubscriptions).forEach(subscriptionGroup =>
     rows.push(...buildTableRowsFromGroup(subscriptionGroup, availableQuantities, updatedQuantity)));
 

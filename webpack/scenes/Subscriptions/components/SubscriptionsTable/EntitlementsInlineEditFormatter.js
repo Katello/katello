@@ -34,20 +34,22 @@ export const entitlementsInlineEditFormatter =
       );
     },
     renderEdit: (value, additionalData) => {
-      const { availableQuantity, availableQuantityLoaded } = additionalData.rowData;
+      const {
+        upstreamAvailable, upstreamAvailableLoaded, maxQuantity,
+      } = additionalData.rowData;
 
       const className = inlineEditController.hasChanged(additionalData)
         ? 'editable editing changed'
         : 'editable editing';
 
       let maxMessage;
-      if (availableQuantityLoaded && (availableQuantity !== undefined)) {
-        maxMessage = (availableQuantity < 1)
+      if (maxQuantity && upstreamAvailableLoaded && (upstreamAvailable !== undefined)) {
+        maxMessage = (upstreamAvailable < 0)
           ? __('Unlimited')
-          : sprintf(__('Max %(availableQuantity)s'), { availableQuantity });
+          : sprintf(__('Max %(maxQuantity)s'), { maxQuantity });
       }
 
-      const validation = validateQuantity(value, availableQuantity);
+      const validation = validateQuantity(value, maxQuantity);
 
       const formGroup = (
         // We have to block editing until available quantities are loaded.
@@ -58,7 +60,7 @@ export const entitlementsInlineEditFormatter =
         // The same issue prevents from correct switching inputs on TAB.
         // See the reactabular code for details:
         // https://github.com/reactabular/reactabular/blob/master/packages/reactabular-table/src/body-row.js#L58
-        <Spinner loading={!availableQuantityLoaded} size="xs">
+        <Spinner loading={!upstreamAvailableLoaded} size="xs">
           <FormGroup
             validationState={validation.state}
           >

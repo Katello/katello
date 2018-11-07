@@ -1,7 +1,7 @@
 import { translate as __ } from 'foremanReact/common/I18n';
 import { filterRHSubscriptions } from './SubscriptionHelpers.js';
 
-export const validateQuantity = (quantity, availableQuantity) => {
+export const validateQuantity = (quantity, maxQuantity) => {
   let state;
   let message;
 
@@ -12,7 +12,7 @@ export const validateQuantity = (quantity, availableQuantity) => {
   } else if (numberValue <= 0) {
     state = 'error';
     message = __('Has to be > 0');
-  } else if (availableQuantity && availableQuantity >= 0 && numberValue > availableQuantity) {
+  } else if (maxQuantity && maxQuantity >= 0 && numberValue > maxQuantity) {
     state = 'error';
     message = __('Exceeds available quantity');
   }
@@ -23,4 +23,4 @@ export const validateQuantity = (quantity, availableQuantity) => {
 };
 
 export const recordsValid = rows =>
-  filterRHSubscriptions(rows).every(row => validateQuantity(row.quantity, row.availableQuantity).state !== 'error');
+  filterRHSubscriptions(rows).every(row => validateQuantity(row.quantity, row.maxQuantity).state !== 'error');
