@@ -6,9 +6,9 @@ module Actions
           key_id = product.gpg_key_id
           # Plan Repository::Update only for repositories which have different gpg key
           product.repositories.each do |repo|
-            if repo.gpg_key_id != key_id
+            if repo.root.gpg_key_id != key_id
               plan_action(::Actions::Katello::Repository::Update,
-                          repo,
+                          repo.root,
                           :gpg_key_id => key_id)
             end
           end
