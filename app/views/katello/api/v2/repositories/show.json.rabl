@@ -27,16 +27,16 @@ glue(@resource.root) do
   attributes :ignorable_content
   attributes :description
 
-  child :ssl_ca_cert do
-    attributes :id, :name
+  node :ssl_ca_cert do
+    attributes :id => @resource.root&.ssl_ca_cert&.id, :name => @resource.root&.ssl_ca_cert&.name
   end
 
-  child :ssl_client_cert do
-    attributes :id, :name
+  node :ssl_client_cert do
+    attributes :id => @resource.root&.ssl_client_cert&.id, :name => @resource.root&.ssl_client_cert&.name
   end
 
-  child :ssl_client_key do
-    attributes :id, :name
+  node :ssl_client_key do
+    attributes :id => @resource.root&.ssl_client_key&.id, :name => @resource.root&.ssl_client_key&.name
   end
 
   child :gpg_key do
