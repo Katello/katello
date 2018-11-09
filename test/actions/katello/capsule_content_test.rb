@@ -67,7 +67,7 @@ module ::Actions::Katello::CapsuleContent
       capsule_content_sync = plan_action(action, capsule_content.capsule, :environment_id => dev_environment.id)
       synced_repos = synced_repos(capsule_content_sync, capsule_content.repos_available_to_capsule)
 
-      assert_equal synced_repos.uniq.count, 8
+      assert_equal 9, synced_repos.uniq.count
     end
 
     it 'fails when trying to sync to the default capsule' do

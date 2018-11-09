@@ -9,7 +9,7 @@ module Katello
     def test_content_view_environments
       content_view_environments = @presenter.content_view_environments
 
-      assert_equal content_view_environments.length, 4
+      assert_equal 5, content_view_environments.length
     end
   end
 end

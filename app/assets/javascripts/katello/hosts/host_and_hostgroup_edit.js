@@ -6,8 +6,8 @@ $(document).on('ContentLoad', function(){
     window.tfm.hosts.registerPluginAttributes("os",
          ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'content_source_id', 'architecture_id']);
 
-    $("#hostgroup_lifecycle_environment_id").change(KT.hosts.fetchContentViews);
-    $("#host_lifecycle_environment_id").change(KT.hosts.fetchContentViews);
+    $("#hostgroup_lifecycle_environment_id").change(KT.hosts.environmentChanged);
+    $("#host_lifecycle_environment_id").change(KT.hosts.environmentChanged);
 
     $("#hostgroup_content_view_id").change(KT.hosts.contentViewSelected);
     $("#host_content_view_id").change(KT.hosts.contentViewSelected);
@@ -19,18 +19,33 @@ $(document).on('ContentLoad', function(){
     KT.hosts.set_media_selection_bindings();
 });
 
+KT.hosts.environmentChanged = function() {
+  // if we don't save the currently selected view it's likely
+  // it will be undefined in toggle_installation_medium due to the CV dropdown reload
+  var previous_content_view = KT.hosts.getSelectedContentView();
+
+  KT.hosts.fetchContentViews();
+  KT.hosts.toggle_installation_medium(previous_content_view);
+};
+
 KT.hosts.fetchContentViews = function () {
     var select = KT.hosts.getContentViewSelect();
     var envId = KT.hosts.getSelectedEnvironment();
+    var option;
+    var previous_view = KT.hosts.getSelectedContentView();
+
     select.find('option').remove();
     if (envId) {
         KT.hosts.signalContentViewFetch(true);
         var url = foreman_url('/katello/api/v2/content_views/');
         $.get(url, {environment_id: envId, full_result: true}, function (data) {
-            select.find('option').remove();
             select.append($("<option />"));
             $.each(data.results, function(index, view) {
-                select.append($("<option />").val(view.id).text(view.name));
+                option = $("<option />").val(view.id).text(view.name);
+                if (view.id === parseInt(previous_view)) {
+                  option.prop('selected', true);
+                }
+                select.append(option);
             });
             KT.hosts.signalContentViewFetch(false);
         });
@@ -40,7 +55,6 @@ KT.hosts.fetchContentViews = function () {
 KT.hosts.signalContentViewFetch = function(fetching) {
     var select = KT.hosts.getContentViewSelect();
     var select2 = KT.hosts.getContentViewSelect2();
-        //parent = select.parent(),
         spinner = $('<img>').attr('src', select.data("spinner-path")),
         spinner_id = "content_view_spinner";
 
@@ -118,10 +132,10 @@ KT.hosts.getSelectedEnvironment = function () {
 };
 
 KT.hosts.onKatelloHostEditLoad = function(){
-    var prefxies = ['host', 'hostgroup'],
-        attributes = ['lifecycle_environment_id', 'content_view_id', 'environment_id', 'architecture_id'];
+    var prefixes = ['host', 'hostgroup'],
+        attributes = ['content_view_id', 'environment_id', 'architecture_id'];
 
-    $.each(prefxies, function(index, prefix) {
+    $.each(prefixes, function(index, prefix) {
         $.each(attributes, function(attrIndex, attribute) {
             $('body').on('change', '#' + prefix + '_' + attribute, function () {
                 KT.hosts.toggle_installation_medium();
@@ -134,18 +148,20 @@ KT.hosts.onKatelloHostEditLoad = function(){
     });
 };
 
-KT.hosts.toggle_installation_medium = function() {
-    var lifecycle_environment_id, content_source_id, architecture_id, operatingsystem_id, content_view_id;
+KT.hosts.toggle_installation_medium = function(content_view_id) {
+    var lifecycle_environment_id, content_source_id, architecture_id, operatingsystem_id;
+
+    if (content_view_id === undefined) {
+      content_view_id = KT.hosts.getSelectedContentView();
+    }
 
     if ($('#hostgroup_parent_id').length > 0) {
       lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
-      content_view_id = KT.hosts.getSelectedContentView();
       content_source_id = $('#content_source_id').val();
       architecture_id = $('#hostgroup_architecture_id').val();
       operatingsystem_id = $('#hostgroup_operatingsystem_id').val();
     } else {
       lifecycle_environment_id = KT.hosts.getSelectedEnvironment();
-      content_view_id = KT.hosts.getSelectedContentView();
       content_source_id = $('#content_source_id').val();
       architecture_id = $('#host_architecture_id').val();
       operatingsystem_id = $('#host_operatingsystem_id').val();

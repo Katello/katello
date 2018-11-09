@@ -88,3 +88,13 @@ library_composite_view:
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:composite_view_version_1) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+
+library_dev_view_acme:
+  name:           Published acme view dev environment
+  label:          'published_acme_view_dev'
+  cp_id:          13
+  environment_id: <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::FixtureSet.identify(:acme_default) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
