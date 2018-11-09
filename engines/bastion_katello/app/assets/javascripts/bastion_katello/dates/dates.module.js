@@ -19,7 +19,7 @@ angular.module('Bastion.dates').factory('componentRegistry',
 angular.module('Bastion.dates').factory('dateComponent',
     ['componentRegistry', function(componentRegistry) {
         return function(componentName) {
-            var dateWrapper = componentRegistry.wrapperFactory().with('i18n').with('dataMapper').wrapper;
+            var dateWrapper = componentRegistry.wrapperFactory().with('i18n').wrapper;
             return dateWrapper(componentRegistry.getComponent(componentName).type);
         };
     }]
