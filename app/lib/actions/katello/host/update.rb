@@ -45,7 +45,11 @@ module Actions
         end
 
         def resource_locks
-          :update
+          if Setting[:host_update_lock]
+            :link
+          else
+            :update
+          end
         end
 
         def rescue_strategy
