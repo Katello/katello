@@ -90,19 +90,20 @@ module Katello
   class HostgroupExtensionsKickstartTest < ActiveSupport::TestCase
     def setup
       @distro = katello_repositories(:fedora_17_x86_64)
+      @dev_distro = katello_repositories(:fedora_17_x86_64_acme_dev)
       @os = ::Redhat.create_operating_system('RedHat', '17', '0')
-      @os.stubs(:kickstart_repos).returns([@distro])
       @arch = architectures(:x86_64)
       @distro_cv = @distro.content_view
       @distro_env = @distro.environment
       @content_source = FactoryBot.create(:smart_proxy,
                                           name: "foobar",
                                           url: "http://example.com/",
-                                          lifecycle_environments: [@distro_env])
+                                          lifecycle_environments: [@distro_env, @dev_distro.environment])
       @medium = FactoryBot.create(:medium, operatingsystems: [@os])
     end
 
     def test_set_kickstart_repository
+      @os.stubs(:kickstart_repos).returns([@distro])
       hg = Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
@@ -131,6 +132,7 @@ module Katello
     end
 
     def test_change_medium_to_kickstart_repository
+      @os.stubs(:kickstart_repos).returns([@distro])
       hg = Hostgroup.new(
         name: 'install_media',
         operatingsystem: @os,
@@ -148,6 +150,7 @@ module Katello
     end
 
     def test_change_kickstart_repository_to_medium
+      @os.stubs(:kickstart_repos).returns([@distro])
       hg = Hostgroup.new(
         name: 'kickstart_repo',
         operatingsystem: @os,
@@ -162,6 +165,24 @@ module Katello
       assert_valid hg
       assert_nil hg.kickstart_repository
       assert_equal hg.medium, @medium
+    end
+
+    def test_change_lifecycle_environment_mismatched_kickstart
+      hg = Hostgroup.new(
+        name: 'kickstart_repo',
+        operatingsystem: @os,
+        content_source: @content_source,
+        architecture: @arch,
+        content_view: @distro_cv,
+        lifecycle_environment: @distro_env,
+        kickstart_repository: @distro)
+
+      # changing the lifecycle environment will trigger
+      # code which attempts to reassign the kickstart repo by its label
+      hg.lifecycle_environment = @dev_distro.environment
+
+      assert hg.save
+      assert_equal hg.kickstart_repository_id, @dev_distro.id
     end
   end
 end

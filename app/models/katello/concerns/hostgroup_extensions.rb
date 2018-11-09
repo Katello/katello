@@ -30,6 +30,12 @@ module Katello
         elsif kickstart_repository && medium
           self.medium = nil
         end
+
+        unless matching_kickstart_repository?
+          if (equivalent = equivalent_kickstart_repository)
+            self.kickstart_repository_id = equivalent[:id]
+          end
+        end
       end
 
       def content_view
@@ -79,6 +85,17 @@ module Katello
       def content_and_puppet_match?
         self.content_view && self.lifecycle_environment && self.content_view == self.environment.try(:content_view) &&
             self.lifecycle_environment == self.environment.try(:lifecycle_environment)
+      end
+
+      def equivalent_kickstart_repository
+        return unless operatingsystem && kickstart_repository
+        ks_repos = operatingsystem.kickstart_repos(self)
+        ks_repos.find { |repo| repo[:name] == kickstart_repository.label }
+      end
+
+      def matching_kickstart_repository?
+        return true unless operatingsystem
+        operatingsystem.kickstart_repos(self).any? { |repo| repo[:id] == kickstart_repository_id }
       end
 
       private

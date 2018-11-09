@@ -96,7 +96,7 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
-      assert_equal response_ids.sort, ids.sort
+      assert_equal ids.sort, response_ids.sort
     end
 
     def test_index_with_environment_id
@@ -207,12 +207,12 @@ module Katello
     end
 
     def test_index_with_name
-      id = RootRepository.find_by(:name => katello_repositories(:fedora_17_x86_64).name).library_instance.id
+      ids = RootRepository.find_by(:name => katello_repositories(:fedora_17_x86_64).name).repositories.where(content_view_version: @organization.default_content_view.versions.first).pluck(:id)
       response = get :index, params: { :name => katello_repositories(:fedora_17_x86_64).name, :organization_id => @organization.id }
 
       assert_response :success
       assert_template 'api/v2/repositories/index'
-      assert_response_ids response, [id]
+      assert_response_ids response, ids
     end
 
     def test_index_protected

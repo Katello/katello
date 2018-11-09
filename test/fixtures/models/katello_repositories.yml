@@ -11,6 +11,19 @@ fedora_17_x86_64:
   distribution_bootable: true
   distribution_uuid: 'xyz123'
 
+fedora_17_x86_64_acme_dev:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              fedora_17_acme_dev
+  relative_path:        'ACME_Corporation/dev/fedora_17_dev_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  distribution_arch: "x86_64"
+  distribution_version: "17.0"
+  distribution_family: "Test Family"
+  distribution_variant: "TestVariant"
+  distribution_bootable: true
+  distribution_uuid: 'xyz123'
+
 fedora_17_x86_64_dev:
   library_instance:     fedora_17_x86_64
   root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>

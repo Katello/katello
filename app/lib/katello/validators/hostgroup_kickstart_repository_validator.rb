@@ -18,7 +18,7 @@ module Katello
                 _("Kickstart repositories can only be assigned to hosts in the Red Hat family")
               elsif hostgroup.architecture.blank?
                 _("Please select an architecture before assigning a kickstart repository")
-              elsif hostgroup.operatingsystem.kickstart_repos(hostgroup).none? { |repo| repo[:id] == hostgroup.kickstart_repository_id }
+              elsif !hostgroup.matching_kickstart_repository?
                 _("The selected kickstart repository is not part of the assigned content view, lifecycle environment,
                   content source, operating system, and architecture")
               end

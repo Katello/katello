@@ -1,4 +1,3 @@
-<%= javascript "katello/hosts/host_and_hostgroup_edit" %>
 <%
 kickstart_repo_id = using_hostgroups_page? ? kickstart_repository_id(@hostgroup) : kickstart_repository_id(@host, :selected_host_group => @hostgroup)
 host = using_hostgroups_page? ? @hostgroup : @host
