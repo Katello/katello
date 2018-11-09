@@ -6,7 +6,8 @@ module Katello
 
     before_action :check_params, :only => :index
 
-    update_api(:index) do
+    # updating params inherited from Katello::Concerns::Api::V2::RepositoryContentController
+    apipie_update_params([:index]) do
       param :host_ids, Array, :desc => N_("List of host id to list available module streams for")
       param :name_stream_only, :boolean, :desc => N_("Return name and stream information only)")
     end
