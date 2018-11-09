@@ -27,7 +27,7 @@ angular.module('Bastion.dates').factory('dateComponent',
 
 angular.module('Bastion.dates').directive('date',
     ['dateComponent', 'reactDirective', function(dateComponent, reactDirective) {
-        return reactDirective(dateComponent('Date'), ['date']);
+        return reactDirective(dateComponent('IsoDate'), ['date']);
     }]
 );
 
