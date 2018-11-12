@@ -119,9 +119,9 @@ class SearchBar extends Component {
             options={organizationProducts.map(product => ({
               value: product.id, label: product.name,
             }))}
-            defaultValue="product"
+            defaultValues={[]}
             noneSelectedText={__('Filter by Product')}
-            maxItemsCountForFullLabel="2"
+            maxItemsCountForFullLabel={2}
             onChange={(e) => {
               const values = getMultiSelectValuesFromEvent(e);
               this.onSelectProduct(values);

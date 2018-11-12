@@ -74,7 +74,7 @@ export default (state = initialState, action) => {
     return Immutable({
       repositories: mapRepositories(results),
       pagination: {
-        page: Number(page),
+        page: Number(page) || 0,
         // server can return per_page: null when there's error in the search query,
         // don't store it in such case
         // eslint-disable-next-line camelcase
