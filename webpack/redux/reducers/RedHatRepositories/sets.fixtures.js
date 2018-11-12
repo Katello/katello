@@ -4,21 +4,30 @@ export const initialState = Immutable({
   loading: true,
   recommended: false,
   results: [],
-  pagination: {},
+  pagination: {
+    page: 0,
+  },
+  itemCount: 0,
 });
 
 export const recommendedState = Immutable({
   loading: true,
   recommended: true,
   results: [],
-  pagination: {},
+  pagination: {
+    page: 0,
+  },
+  itemCount: 0,
 });
 
 export const loadingState = Immutable({
   loading: true,
   recommended: false,
   results: [],
-  pagination: {},
+  pagination: {
+    page: 0,
+  },
+  itemCount: 0,
 });
 
 export const requestSuccessResponse = Immutable({

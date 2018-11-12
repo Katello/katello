@@ -5,13 +5,19 @@ export const disabledIndex = 1;
 export const initialState = Immutable({
   loading: true,
   repositories: [],
-  pagination: {},
+  pagination: {
+    page: 0,
+  },
+  itemCount: 0,
 });
 
 export const loadingState = Immutable({
   loading: true,
   repositories: [],
-  pagination: {},
+  pagination: {
+    page: 0,
+  },
+  itemCount: 0,
 });
 
 export const requestSuccessResponse = Immutable({
