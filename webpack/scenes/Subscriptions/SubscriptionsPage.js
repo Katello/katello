@@ -26,9 +26,6 @@ class SubscriptionsPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      disableDeleteButton: true,
-    };
     this.uploadManifest = this.uploadManifest.bind(this);
     this.deleteManifest = this.deleteManifest.bind(this);
     this.refreshManifest = this.refreshManifest.bind(this);
@@ -158,6 +155,7 @@ class SubscriptionsPage extends Component {
     const {
       manifestModalOpened, openManageManifestModal, closeManageManifestModal,
       deleteModalOpened, openDeleteModal, closeDeleteModal,
+      deleteButtonDisabled, disableDeleteButton, enableDeleteButton,
       searchQuery, updateSearchQuery,
       taskModalOpened,
       tasks = [], subscriptions, organization, subscriptionTableSettings,
@@ -188,9 +186,8 @@ class SubscriptionsPage extends Component {
       closeDeleteModal();
     };
 
-    const toggleDeleteButton = (rowsSelected) => {
-      this.setState({ disableDeleteButton: !rowsSelected });
-    };
+    const toggleDeleteButton = rowsSelected =>
+      (rowsSelected ? enableDeleteButton() : disableDeleteButton());
 
 
     const csvParams = createSubscriptionParams({ search: searchQuery });
@@ -241,7 +238,7 @@ class SubscriptionsPage extends Component {
             <SubscriptionsToolbar
               disableManifestActions={disableManifestActions}
               disableManifestReason={this.getDisabledReason()}
-              disableDeleteButton={this.state.disableDeleteButton}
+              disableDeleteButton={deleteButtonDisabled}
               disableDeleteReason={this.getDisabledReason(true)}
               disableAddButton={!manifestExists(organization)}
               getAutoCompleteParams={getAutoCompleteParams}
@@ -329,6 +326,9 @@ SubscriptionsPage.propTypes = {
   taskModalOpened: PropTypes.bool,
   openTaskModal: PropTypes.func.isRequired,
   closeTaskModal: PropTypes.func.isRequired,
+  deleteButtonDisabled: PropTypes.bool,
+  disableDeleteButton: PropTypes.func.isRequired,
+  enableDeleteButton: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {
@@ -340,6 +340,7 @@ SubscriptionsPage.defaultProps = {
   manifestModalOpened: false,
   deleteModalOpened: false,
   taskModalOpened: false,
+  deleteButtonDisabled: true,
 };
 
 export default SubscriptionsPage;

@@ -42,6 +42,8 @@ describe('subscriptions page', () => {
       closeDeleteModal={noop}
       openTaskModal={noop}
       closeTaskModal={noop}
+      disableDeleteButton={noop}
+      enableDeleteButton={noop}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

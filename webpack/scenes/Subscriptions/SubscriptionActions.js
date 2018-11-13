@@ -26,6 +26,8 @@ import {
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
   SUBSCRIPTIONS_OPEN_TASK_MODAL,
   SUBSCRIPTIONS_CLOSE_TASK_MODAL,
+  SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
+  SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
@@ -140,5 +142,8 @@ export const closeDeleteModal = () => ({ type: SUBSCRIPTIONS_CLOSE_DELETE_MODAL 
 
 export const openTaskModal = () => ({ type: SUBSCRIPTIONS_OPEN_TASK_MODAL });
 export const closeTaskModal = () => ({ type: SUBSCRIPTIONS_CLOSE_TASK_MODAL });
+
+export const disableDeleteButton = () => ({ type: SUBSCRIPTIONS_DISABLE_DELETE_BUTTON });
+export const enableDeleteButton = () => ({ type: SUBSCRIPTIONS_ENABLE_DELETE_BUTTON });
 
 export default loadSubscriptions;
