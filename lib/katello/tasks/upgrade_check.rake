@@ -11,7 +11,7 @@ namespace :katello do
     puts "Checking upgradeability...\n\n"
 
     # check for any running tasks
-    task_count = ::ForemanTasks::Task.active.where("label NOT IN (?)", [CP_LISTEN_ACTION, EVENT_QUEUE_ACTION]).count
+    task_count = ::ForemanTasks::Task.active.where("label NOT IN (?)", [CP_LISTEN_ACTION, EVENT_QUEUE_ACTION]).where("state != 'scheduled'").count
     task_status = task_count > 0 ? fail : success
     puts "Checking for running tasks..."
     puts "[#{task_status}] - There are #{task_count} active tasks. "
