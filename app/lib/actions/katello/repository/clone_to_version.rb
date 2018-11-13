@@ -22,21 +22,31 @@ module Actions
               fail "Cannot clone metadata if more than one repository" if repositories.count > 1
               plan_action(Repository::CloneYumMetadata, repositories[0], new_repository)
             else
-              repositories.each do |repository|
-                if new_repository.yum?
-                  plan_action(Repository::CloneYumContent, repository, new_repository, filters, :purge_empty_units => !incremental,
-                              :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental, :rpm_filenames => rpm_filenames)
-                elsif new_repository.deb?
-                  plan_action(Repository::CloneDebContent, repository, new_repository, filters, !incremental,
-                              :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
-                elsif new_repository.docker?
-                  plan_action(Repository::CloneDockerContent, repository, new_repository, filters)
-                elsif new_repository.ostree?
-                  plan_action(Repository::CloneOstreeContent, repository, new_repository)
-                elsif new_repository.file?
-                  plan_action(Repository::CloneFileContent, repository, new_repository)
-                end
-              end
+              clone_repository_content(repositories, new_repository, filters, incremental, rpm_filenames)
+            end
+
+            plan_action(Katello::Repository::MetadataGenerate, new_repository) if repositories.length > 1
+          end
+        end
+
+        def clone_repository_content(repositories, new_repository, filters, incremental, rpm_filenames)
+          repositories.each do |repository|
+            if new_repository.yum?
+              # If there is more than one repository passed here, that means that there are duplicate repos in a composite content view.
+              # We skip generating metadata in this case and generate it later to prevent conflicting data, such as filters.
+              skip_metadata = incremental || repositories.length > 1
+              plan_action(Repository::CloneYumContent, repository, new_repository, filters, :purge_empty_units => !incremental,
+                          :generate_metadata => !skip_metadata, :index_content => !incremental,
+                          :simple_clone => incremental, :rpm_filenames => rpm_filenames)
+            elsif new_repository.deb?
+              plan_action(Repository::CloneDebContent, repository, new_repository, filters, !incremental,
+                          :generate_metadata => !incremental, :index_content => !incremental, :simple_clone => incremental)
+            elsif new_repository.docker?
+              plan_action(Repository::CloneDockerContent, repository, new_repository, filters)
+            elsif new_repository.ostree?
+              plan_action(Repository::CloneOstreeContent, repository, new_repository)
+            elsif new_repository.file?
+              plan_action(Repository::CloneFileContent, repository, new_repository)
             end
           end
         end
