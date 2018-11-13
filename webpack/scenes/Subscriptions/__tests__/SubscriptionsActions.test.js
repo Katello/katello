@@ -2,6 +2,7 @@ import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import configureMockStore from 'redux-mock-store';
 import { mockRequest, mockErrorRequest, mockReset } from '../../../mockRequest';
+import { testActionSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
 import {
   requestSuccessResponse,
   requestSuccessResponseWithRHSubscriptions,
@@ -16,7 +17,14 @@ import {
   quantitiesRequestSuccessResponse,
   loadTableColumnsSuccessAction,
 } from './subscriptions.fixtures';
-import { loadSubscriptions, updateQuantity, loadAvailableQuantities, loadTableColumns } from '../SubscriptionActions';
+import {
+  loadSubscriptions,
+  updateQuantity,
+  loadAvailableQuantities,
+  loadTableColumns,
+  openManageManifestModal,
+  closeManageManifestModal,
+} from '../SubscriptionActions';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({ subscriptions: Immutable({}) });
@@ -133,4 +141,9 @@ describe('subscription actions', () => {
       },
     );
   });
+
+  describe('manageManifestModal', () => testActionSnapshotWithFixtures({
+    'it should open manage-manifest modal': () => openManageManifestModal(),
+    'it should close manage-manifest modal': () => closeManageManifestModal(),
+  }));
 });
