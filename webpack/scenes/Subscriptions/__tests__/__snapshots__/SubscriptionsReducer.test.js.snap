@@ -3,6 +3,7 @@
 exports[`Subscriptions reducer should handle DELETE_SUBSCRIPTIONS_FAILURE 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": false,
   "manifestModalOpened": false,
@@ -21,6 +22,7 @@ Object {
 exports[`Subscriptions reducer should handle DELETE_SUBSCRIPTIONS_REQUEST 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -39,6 +41,7 @@ Object {
 exports[`Subscriptions reducer should handle DELETE_SUBSCRIPTIONS_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": false,
   "manifestModalOpened": false,
@@ -57,6 +60,7 @@ Object {
 exports[`Subscriptions reducer should handle GET_SETTING_SUCCESS with content_disconnected response 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "disconnected": "some-value",
   "itemCount": 0,
   "loading": true,
@@ -76,6 +80,7 @@ Object {
 exports[`Subscriptions reducer should handle GET_SETTING_SUCCESS without content_disconnected response 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -94,6 +99,7 @@ Object {
 exports[`Subscriptions reducer should handle GET_TASK_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -112,6 +118,26 @@ Object {
 exports[`Subscriptions reducer should handle RESET_TASKS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
+  "itemCount": 0,
+  "loading": true,
+  "manifestModalOpened": false,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "tasks": Array [],
+}
+`;
+
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_CLOSE_DELETE_MODAL 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -130,6 +156,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -148,6 +175,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_COLUMNS_REQUEST 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -170,8 +198,28 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_FAILURE 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": false,
+  "manifestModalOpened": false,
+  "pagination": Object {
+    "page": 0,
+    "perPage": 20,
+  },
+  "quantitiesLoading": false,
+  "results": Array [],
+  "selectedTableColumns": Array [],
+  "tableColumns": Array [],
+  "tasks": Array [],
+}
+`;
+
+exports[`Subscriptions reducer should handle SUBSCRIPTIONS_OPEN_DELETE_MODAL 1`] = `
+Object {
+  "availableQuantities": null,
+  "deleteModalOpened": true,
+  "itemCount": 0,
+  "loading": true,
   "manifestModalOpened": false,
   "pagination": Object {
     "page": 0,
@@ -188,6 +236,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_OPEN_MANIFEST_MODAL 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": true,
@@ -206,6 +255,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_QUANTITIES_FAILURE 1`] = `
 Object {
   "availableQuantities": Object {},
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -224,6 +274,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_QUANTITIES_REQUEST 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -242,6 +293,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_QUANTITIES_SUCCESS 1`] = `
 Object {
   "availableQuantities": "some-quantities-data",
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -260,6 +312,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_REQUEST 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -278,6 +331,7 @@ Object {
 exports[`Subscriptions reducer should handle SUBSCRIPTIONS_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 20,
   "loading": false,
   "manifestModalOpened": false,
@@ -298,6 +352,7 @@ Object {
 exports[`Subscriptions reducer should handle TASK_BULK_SEARCH_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -316,6 +371,7 @@ Object {
 exports[`Subscriptions reducer should handle UPDATE_QUANTITY_FAILURE 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": false,
   "manifestModalOpened": false,
@@ -334,6 +390,7 @@ Object {
 exports[`Subscriptions reducer should handle UPDATE_QUANTITY_REQUEST 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -352,6 +409,7 @@ Object {
 exports[`Subscriptions reducer should handle UPDATE_QUANTITY_SUCCESS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": false,
   "manifestModalOpened": false,
@@ -370,6 +428,7 @@ Object {
 exports[`Subscriptions reducer should handle UPDATE_SUBSCRIPTION_COLUMNS 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,
@@ -391,6 +450,7 @@ Object {
 exports[`Subscriptions reducer should return the initial state 1`] = `
 Object {
   "availableQuantities": null,
+  "deleteModalOpened": false,
   "itemCount": 0,
   "loading": true,
   "manifestModalOpened": false,

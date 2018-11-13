@@ -19,12 +19,15 @@ import {
   DELETE_SUBSCRIPTIONS_FAILURE,
   SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
   SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
+  SUBSCRIPTIONS_OPEN_DELETE_MODAL,
+  SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
 const initialState = Immutable({
   ...initialApiState,
   manifestModalOpened: false,
+  deleteModalOpened: false,
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
@@ -133,6 +136,11 @@ export default (state = initialState, action) => {
       return state.set('manifestModalOpened', true);
     case SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL:
       return state.set('manifestModalOpened', false);
+
+    case SUBSCRIPTIONS_OPEN_DELETE_MODAL:
+      return state.set('deleteModalOpened', true);
+    case SUBSCRIPTIONS_CLOSE_DELETE_MODAL:
+      return state.set('deleteModalOpened', false);
 
     default:
       return state;

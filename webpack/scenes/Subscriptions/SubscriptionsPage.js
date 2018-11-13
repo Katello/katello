@@ -27,7 +27,6 @@ class SubscriptionsPage extends Component {
     super(props);
 
     this.state = {
-      subscriptionDeleteModalOpen: false,
       disableDeleteButton: true,
       showTaskModal: false,
       searchQuery: '',
@@ -162,6 +161,7 @@ class SubscriptionsPage extends Component {
     const currentOrg = orgId();
     const {
       manifestModalOpened, openManageManifestModal, closeManageManifestModal,
+      deleteModalOpened, openDeleteModal, closeDeleteModal,
       tasks = [], subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     const { disconnected } = subscriptions;
@@ -189,17 +189,9 @@ class SubscriptionsPage extends Component {
       this.setState({ searchQuery });
     };
 
-    const showSubscriptionDeleteModal = () => {
-      this.setState({ subscriptionDeleteModalOpen: true });
-    };
-
-    const onSubscriptionDeleteModalClose = () => {
-      this.setState({ subscriptionDeleteModalOpen: false });
-    };
-
     const onDeleteSubscriptions = (selectedRows) => {
       this.props.deleteSubscriptions(selectedRows);
-      onSubscriptionDeleteModalClose();
+      closeDeleteModal();
     };
 
     const toggleDeleteButton = (rowsSelected) => {
@@ -260,7 +252,7 @@ class SubscriptionsPage extends Component {
               disableAddButton={!manifestExists(organization)}
               getAutoCompleteParams={getAutoCompleteParams}
               updateSearchQuery={updateSearchQuery}
-              onDeleteButtonClick={showSubscriptionDeleteModal}
+              onDeleteButtonClick={openDeleteModal}
               onSearch={onSearch}
               onManageManifestButtonClick={openManageManifestModal}
               onExportCsvButtonClick={() => { api.open('/subscriptions.csv', csvParams); }}
@@ -287,8 +279,8 @@ class SubscriptionsPage extends Component {
                 updateQuantity={this.props.updateQuantity}
                 emptyState={emptyStateData}
                 subscriptions={this.props.subscriptions}
-                subscriptionDeleteModalOpen={this.state.subscriptionDeleteModalOpen}
-                onSubscriptionDeleteModalClose={onSubscriptionDeleteModalClose}
+                subscriptionDeleteModalOpen={deleteModalOpened}
+                onSubscriptionDeleteModalClose={closeDeleteModal}
                 onDeleteSubscriptions={onDeleteSubscriptions}
                 toggleDeleteButton={toggleDeleteButton}
                 task={task}
@@ -335,6 +327,9 @@ SubscriptionsPage.propTypes = {
   openManageManifestModal: PropTypes.func.isRequired,
   closeManageManifestModal: PropTypes.func.isRequired,
   manifestModalOpened: PropTypes.bool,
+  deleteModalOpened: PropTypes.bool,
+  openDeleteModal: PropTypes.func.isRequired,
+  closeDeleteModal: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {
@@ -343,6 +338,7 @@ SubscriptionsPage.defaultProps = {
   taskDetails: {},
   organization: undefined,
   manifestModalOpened: false,
+  deleteModalOpened: false,
 };
 
 export default SubscriptionsPage;

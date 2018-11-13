@@ -37,6 +37,8 @@ describe('subscriptions page', () => {
       refreshManifest={noop}
       openManageManifestModal={noop}
       closeManageManifestModal={noop}
+      openDeleteModal={noop}
+      closeDeleteModal={noop}
     />);
     expect(toJson(page)).toMatchSnapshot();
   });

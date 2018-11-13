@@ -21,6 +21,8 @@ import {
   SUBSCRIPTIONS_COLUMNS_REQUEST,
   SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
   SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
+  SUBSCRIPTIONS_OPEN_DELETE_MODAL,
+  SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
 } from './SubscriptionConstants';
 import { filterRHSubscriptions, selectSubscriptionsQuantitiesFromResponse } from './SubscriptionHelpers.js';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
@@ -124,5 +126,8 @@ export const deleteSubscriptions = poolIds => (dispatch) => {
 
 export const openManageManifestModal = () => ({ type: SUBSCRIPTIONS_OPEN_MANIFEST_MODAL });
 export const closeManageManifestModal = () => ({ type: SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL });
+
+export const openDeleteModal = () => ({ type: SUBSCRIPTIONS_OPEN_DELETE_MODAL });
+export const closeDeleteModal = () => ({ type: SUBSCRIPTIONS_CLOSE_DELETE_MODAL });
 
 export default loadSubscriptions;
