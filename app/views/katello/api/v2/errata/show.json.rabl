@@ -16,8 +16,10 @@ end
 attributes :title => :name
 attributes :errata_type => :type
 
-node(:hosts_available_count) { |m| m.hosts_available(params[:organization_id]).count }
-node(:hosts_applicable_count) { |m| m.hosts_applicable(params[:organization_id]).count }
+unless @disable_counts
+  node(:hosts_available_count) { |m| m.hosts_available(params[:organization_id]).count }
+  node(:hosts_applicable_count) { |m| m.hosts_applicable(params[:organization_id]).count }
+end
 
 node :packages do |e|
   e.packages.non_module_stream_packages.pluck(:nvrea)

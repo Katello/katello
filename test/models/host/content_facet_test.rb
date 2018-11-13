@@ -149,10 +149,10 @@ module Katello
 
       unavailable = content_facet.applicable_errata - content_facet.installable_errata
       refute_empty unavailable
-      content_facets = Katello::Host::ContentFacet.with_non_installable_errata([unavailable.first])
+      content_facets = Katello::Host::ContentFacet.with_non_installable_errata([unavailable.first], [host.id])
       assert_includes content_facets, content_facet
 
-      content_facets = Katello::Host::ContentFacet.with_non_installable_errata([content_facet.installable_errata.first])
+      content_facets = Katello::Host::ContentFacet.with_non_installable_errata([content_facet.installable_errata.first], [host.id])
       refute content_facets.include?(content_facet)
     end
 
