@@ -24,6 +24,8 @@ import {
   loadTableColumns,
   openManageManifestModal,
   closeManageManifestModal,
+  openDeleteModal,
+  closeDeleteModal,
 } from '../SubscriptionActions';
 
 const mockStore = configureMockStore([thunk]);
@@ -145,5 +147,10 @@ describe('subscription actions', () => {
   describe('manageManifestModal', () => testActionSnapshotWithFixtures({
     'it should open manage-manifest modal': () => openManageManifestModal(),
     'it should close manage-manifest modal': () => closeManageManifestModal(),
+  }));
+
+  describe('deleteModal', () => testActionSnapshotWithFixtures({
+    'it should open delete modal': () => openDeleteModal(),
+    'it should close delete modal': () => closeDeleteModal(),
   }));
 });
