@@ -15,6 +15,7 @@ module Katello
 
     # disable *_count fields on erratum rabl, since they perform N+1 queries
     before_action :disable_erratum_hosts_count
+    before_action :set_compatibility_mode
 
     resource_description do
       api_version 'v2'
@@ -341,6 +342,10 @@ module Katello
 
     def disable_erratum_hosts_count
       @disable_counts = true
+    end
+
+    def set_compatibility_mode
+      @compatibility_mode = params[:compatibility_mode]
     end
   end
 end
