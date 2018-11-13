@@ -13,6 +13,9 @@ module Katello
 
     before_action :validate_content_action, :only => [:install_content, :update_content, :remove_content]
 
+    # disable *_count fields on erratum rabl, since they perform N+1 queries
+    before_action :disable_erratum_hosts_count
+
     resource_description do
       api_version 'v2'
       api_base_url "/api"
@@ -225,8 +228,7 @@ module Katello
     param :errata_ids, Array, :desc => N_("List of Errata ids")
     def available_incremental_updates
       version_environments = {}
-      content_facets = Katello::Host::ContentFacet.with_non_installable_errata(@errata).
-          where("#{Katello::Host::ContentFacet.table_name}.host_id" => @hosts)
+      content_facets = Katello::Host::ContentFacet.with_non_installable_errata(@errata, @hosts)
 
       ContentViewEnvironment.for_content_facets(content_facets).each do |cve|
         version = cve.content_view_version
@@ -332,6 +334,10 @@ module Katello
 
     def find_content_view
       @view = ContentView.find(params[:content_view_id])
+    end
+
+    def disable_erratum_hosts_count
+      @disable_counts = true
     end
   end
 end

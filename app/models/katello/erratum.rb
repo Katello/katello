@@ -92,32 +92,25 @@ module Katello
     end
 
     def self.installable_for_hosts(hosts = nil)
-      self.where(:id => ids_installable_for_hosts(hosts))
-    end
-
-    def self.ids_installable_for_hosts(hosts = nil)
-      hosts = ::Host.where(:id => hosts) if hosts && hosts.is_a?(Array)
-
       # Main goal of this query
       # 1) Get me the applicable errata for these set of hosts
       # 2) Now further prune this list. Only include errata from repos that have been "enabled" on those hosts.
       #    In other words, prune the list to only include the errate in the "bound" repositories signified by
       #    the inner join between ContentFacetRepository and RepositoryErratum
-      query = self.joins(:content_facet_errata).
-        joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
-        #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{Katello::ContentFacetErratum.table_name}.content_facet_id").
-        joins("INNER JOIN #{Katello::RepositoryErratum.table_name} AS host_repo_errata ON \
-          host_repo_errata.erratum_id = #{Katello::Erratum.table_name}.id AND \
-          #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_errata.repository_id")
+      facet_repos = Katello::ContentFacetRepository.joins(:content_facet => :host).select(:repository_id)
+      facet_errata = Katello::ContentFacetErratum.joins(:content_facet => :host).select(:erratum_id)
 
       if hosts
-        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet)
-                                .select("#{Katello::Host::ContentFacet.table_name}.id"))
-      else
-        query = query.joins(:content_facet_errata)
+        hosts = ::Host.where(id: hosts) if hosts.is_a?(Array)
+        facet_repos = facet_repos.merge(hosts).reorder(nil)
+        facet_errata = facet_errata.merge(hosts).reorder(nil)
       end
 
-      query
+      self.joins(:repository_errata).where(Katello::RepositoryErratum.table_name => {repository_id: facet_repos, erratum_id: facet_errata}).distinct
+    end
+
+    def self.ids_installable_for_hosts(hosts = nil)
+      installable_for_hosts(hosts).select(:id)
     end
 
     def update_from_json(json)
