@@ -29,6 +29,8 @@ import {
   closeDeleteModal,
   openTaskModal,
   closeTaskModal,
+  disableDeleteButton,
+  enableDeleteButton,
 } from '../SubscriptionActions';
 
 const mockStore = configureMockStore([thunk]);
@@ -164,5 +166,10 @@ describe('subscription actions', () => {
   describe('taskModal', () => testActionSnapshotWithFixtures({
     'it should open task modal': () => openTaskModal(),
     'it should close task modal': () => closeTaskModal(),
+  }));
+
+  describe('deleteButtonDisabled', () => testActionSnapshotWithFixtures({
+    'it should disable the delete button': () => disableDeleteButton(),
+    'it should enable the delete button': () => enableDeleteButton(),
   }));
 });

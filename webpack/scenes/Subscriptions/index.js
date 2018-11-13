@@ -14,6 +14,7 @@ import {
   selectManifestModalOpened,
   selectDeleteModalOpened,
   selectTaskModalOpened,
+  selectDeleteButtonDisabled,
   selectSubscriptionsTasks,
 } from './SubscriptionsSelectors';
 
@@ -34,6 +35,7 @@ const mapStateToProps = (state) => {
     manifestModalOpened: selectManifestModalOpened(state),
     deleteModalOpened: selectDeleteModalOpened(state),
     taskModalOpened: selectTaskModalOpened(state),
+    deleteButtonDisabled: selectDeleteButtonDisabled(state),
     organization: state.katello.organization,
     taskDetails: state.katello.manifestHistory.taskDetails,
   };

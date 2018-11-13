@@ -24,6 +24,8 @@ import {
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
   SUBSCRIPTIONS_OPEN_TASK_MODAL,
   SUBSCRIPTIONS_CLOSE_TASK_MODAL,
+  SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
+  SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
@@ -33,6 +35,7 @@ const initialState = Immutable({
   manifestModalOpened: false,
   deleteModalOpened: false,
   taskModalOpened: false,
+  deleteButtonDisabled: true,
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
@@ -154,6 +157,11 @@ export default (state = initialState, action) => {
       return state.set('taskModalOpened', true);
     case SUBSCRIPTIONS_CLOSE_TASK_MODAL:
       return state.set('taskModalOpened', false);
+
+    case SUBSCRIPTIONS_DISABLE_DELETE_BUTTON:
+      return state.set('deleteButtonDisabled', true);
+    case SUBSCRIPTIONS_ENABLE_DELETE_BUTTON:
+      return state.set('deleteButtonDisabled', false);
 
     default:
       return state;
