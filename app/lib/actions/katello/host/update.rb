@@ -5,6 +5,7 @@ module Actions
         middleware.use ::Actions::Middleware::RemoteAction
 
         def plan(host, consumer_params = nil)
+          input[:hostname] = host.name
           action_subject host
           sequence do
             host.content_facet.save! if host.content_facet
