@@ -51,21 +51,25 @@ describe('recordsValid', () => {
     expect(recordsValid([])).toBe(true);
   });
 
+  /* eslint-disable object-curly-newline */
   it('accepts valid array', () => {
     const rows = [
-      { quantity: 10, available: 10, availableQuantity: 100 },
+      { quantity: 10, available: 10, availableQuantity: 100, upstream_pool_id: ' ' },
       { quantity: 10, available: 10, availableQuantity: -1 },
       { quantity: -1, available: -1 },
-      { quantity: 10, available: 10 },
+      { quantity: 10, available: 10, upstream_pool_id: ' ' },
     ];
     expect(recordsValid(rows)).toBe(true);
   });
+  /* eslint-enable object-curly-newline */
 
   it('detects invalid record', () => {
+    /* eslint-disable object-curly-newline */
     const rows = [
-      { quantity: 10, available: 10, availableQuantity: 100 },
-      { quantity: 10, available: 10, availableQuantity: 5 },
+      { quantity: 10, available: 10, availableQuantity: 100, upstream_pool_id: ' ' },
+      { quantity: 10, available: 10, availableQuantity: 5, upstream_pool_id: ' ' },
     ];
+    /* eslint-enable object-curly-newline */
     expect(recordsValid(rows)).toBe(false);
   });
 });
