@@ -17,6 +17,7 @@ attributes :unmapped_guest
 attributes :virt_only
 attributes :virt_who
 attributes :upstream? => :upstream
+attributes :upstream_pool_id
 
 node :hypervisor, :if => lambda { |sub| sub && sub.respond_to?(:hypervisor) && sub.hypervisor } do |subscription|
   {
