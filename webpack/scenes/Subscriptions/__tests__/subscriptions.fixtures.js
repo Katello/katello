@@ -132,6 +132,7 @@ export const requestSuccessResponseWithRHSubscriptions = Immutable({
       virt_only: false,
       virt_who: false,
       upstream: true,
+      upstream_pool_id: '8a85f98160f068060160f06e922a0201',
     },
   ],
 });

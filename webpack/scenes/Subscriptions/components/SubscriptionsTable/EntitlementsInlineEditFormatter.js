@@ -10,9 +10,9 @@ export const entitlementsInlineEditFormatter =
       inlineEditController.isEditing(additionalData),
     renderValue: (value, additionalData) => {
       const { rowData } = additionalData;
-      if (rowData.available < 0) {
+      if (rowData.available < 0 || !rowData.upstream_pool_id) {
         return (
-          <td>{__('Unlimited')}</td>
+          <td>{rowData.available < 0 ? __('Unlimited') : rowData.available}</td>
         );
       }
       return (

@@ -92,7 +92,9 @@ describe('EntitlementsInlineEditFormatter', () => {
     it('renders the value', async () => {
       const controller = mockController({ editing: false });
       const value = 200;
-      const formatter = editFormatter(controller)(value, data({}));
+      const formatter = editFormatter(controller)(value, data({
+        upstream_pool_id: ' ',
+      }));
 
       expect(toJson(shallow(formatter))).toMatchSnapshot();
     });
@@ -102,6 +104,7 @@ describe('EntitlementsInlineEditFormatter', () => {
       const value = 200;
       const formatter = editFormatter(controller)(value, data({
         available: -1,
+        upstream_pool_id: ' ',
       }));
 
       expect(toJson(shallow(formatter))).toMatchSnapshot();

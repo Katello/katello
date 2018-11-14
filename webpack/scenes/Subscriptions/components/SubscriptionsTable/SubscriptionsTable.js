@@ -151,7 +151,8 @@ class SubscriptionsTable extends Component {
     };
 
     const inlineEditController = {
-      isEditing: ({ rowData }) => (this.state.editing && rowData.available >= 0),
+      isEditing: ({ rowData }) =>
+        (this.state.editing && rowData.available >= 0 && rowData.upstream_pool_id),
       hasChanged: ({ rowData }) => {
         const editedValue = this.state.updatedQuantity[rowData.id];
         return this.hasQuantityChanged(rowData, editedValue);
