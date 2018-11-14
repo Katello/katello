@@ -5,14 +5,27 @@ Array [
   Object {
     "available": 0,
     "key": "sub-1",
+    "upstream_pool_id": " ",
   },
   Object {
     "available": 4,
     "key": "sub-2",
+    "upstream_pool_id": " ",
   },
   Object {
     "available": 100,
     "key": "sub-4",
+    "upstream_pool_id": " ",
+  },
+]
+`;
+
+exports[`Subscription helper should filter subscriptions without upstream_pool_id 1`] = `
+Array [
+  Object {
+    "available": 4,
+    "key": "sub-2",
+    "upstream_pool_id": " ",
   },
 ]
 `;
