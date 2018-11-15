@@ -26,10 +26,20 @@ module ::Actions::Pulp::Repository
         create_and_plan_action action_class, repo, :capsule_id => SmartProxy.pulp_master.id
       end
 
+      let(:planned_action_without_capsule_id) do
+        create_and_plan_action action_class, repo
+      end
+
       it 'runs' do
         ::Katello::Repository.expects(:find_by).returns repo
         repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns({})
         run_action planned_action
+      end
+
+      it 'runs without a capsule ID (uses default proxy)' do
+        ::Katello::Repository.expects(:find_by).returns repo
+        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns({})
+        run_action planned_action_without_capsule_id
       end
     end
   end
