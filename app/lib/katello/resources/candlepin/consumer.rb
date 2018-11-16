@@ -35,6 +35,15 @@ module Katello
             consumers
           end
 
+          # workaround for https://bugzilla.redhat.com/1647724
+          def get_all_with_facts(uuids)
+            consumers = []
+            uuids.each do |uuid|
+              consumers << get(uuid)
+            end
+            consumers
+          end
+
           def create(env_id, parameters, activation_key_cp_ids)
             parameters['installedProducts'] ||= [] #if installed products is nil, candlepin won't attach custom products
             url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
