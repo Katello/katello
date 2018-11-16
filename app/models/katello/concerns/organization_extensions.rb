@@ -68,7 +68,7 @@ module Katello
         end
 
         def active_pools_count
-          self.pools.count { |p| p[:activeSubscription] == true }
+          self.pools.where.not(:unmapped_guest => true).count
         end
 
         def anonymous_provider
