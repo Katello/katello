@@ -1,3 +1,23 @@
+# 3.8.1 Stout (2018-11-16)
+
+## Bug Fixes
+
+### Hosts
+ * when a host can not be deleted no error is shown ([#25255](https://projects.theforeman.org/issues/25255), [6eb60894](https://github.com/Katello/katello.git/commit/6eb6089429453028d046b6ecf42c31c6706beafe))
+
+### ElasticSearch
+ * ActiveRecord::RecordInvalid error when syncing RHEL 7 s390x kickstart repo ([#24988](https://projects.theforeman.org/issues/24988), [afc237c6](https://github.com/Katello/katello.git/commit/afc237c6f4577a3306c4e658ca6b225d3b50d41b))
+
+### Documentation
+ * Traces not working after client update to 3.8 RC3 ([#24766](https://projects.theforeman.org/issues/24766))
+
+### Repositories
+ * content hosts registered after 3.8RC upgrade doesn't show repository sets ([#24592](https://projects.theforeman.org/issues/24592), [1de3a99c](https://github.com/Katello/katello.git/commit/1de3a99c10c95588fa52335755ad748f80ed3914))
+
+### Other
+ * Any error in 'Pulp disk space notification' or 'Subscription expiration notification' still marks the task as success and it doesn't re-schedule next event ([#24765](https://projects.theforeman.org/issues/24765), [f1ab4b8b](https://github.com/Katello/katello.git/commit/f1ab4b8bed4e9f6e95149210acbd4d6e014dce82))
+ * unable to publish a content view including RH repo with a filter ([#24730](https://projects.theforeman.org/issues/24730), [3477c3b3](https://github.com/Katello/katello.git/commit/3477c3b3159d32ed79e4ad6f382904ff3ae1149d))
+ * "Host not found" error after deleting host ([#24584](https://projects.theforeman.org/issues/24584), [473b94ba](https://github.com/Katello/katello.git/commit/473b94bad5d6d5f14a2e363b20b05aaaa18bede6))
 # 3.8.0 Stout (2018-08-29)
 
 ## Features
