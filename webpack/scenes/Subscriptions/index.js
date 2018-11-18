@@ -10,6 +10,7 @@ import * as manifestActions from './Manifest/ManifestActions';
 
 import {
   selectSubscriptionsState,
+  selectSearchQuery,
   selectManifestModalOpened,
   selectDeleteModalOpened,
   selectSubscriptionsTasks,
@@ -28,6 +29,7 @@ const mapStateToProps = (state) => {
     subscriptions,
     subscriptionTableSettings,
     tasks: selectSubscriptionsTasks(state),
+    searchQuery: selectSearchQuery(state),
     manifestModalOpened: selectManifestModalOpened(state),
     deleteModalOpened: selectDeleteModalOpened(state),
     organization: state.katello.organization,

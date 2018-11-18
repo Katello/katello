@@ -35,6 +35,7 @@ describe('subscriptions page', () => {
       uploadManifest={noop}
       deleteManifest={noop}
       refreshManifest={noop}
+      updateSearchQuery={noop}
       openManageManifestModal={noop}
       closeManageManifestModal={noop}
       openDeleteModal={noop}

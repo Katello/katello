@@ -19,6 +19,7 @@ import {
   SUBSCRIPTION_TABLE_COLUMNS,
   SUBSCRIPTION_TABLE_DEFAULT_COLUMNS,
   SUBSCRIPTIONS_COLUMNS_REQUEST,
+  SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
   SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
@@ -123,6 +124,11 @@ export const deleteSubscriptions = poolIds => (dispatch) => {
     })
     .catch(result => dispatch(apiError(DELETE_SUBSCRIPTIONS_FAILURE, result)));
 };
+
+export const updateSearchQuery = query => ({
+  type: SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
+  payload: query,
+});
 
 export const openManageManifestModal = () => ({ type: SUBSCRIPTIONS_OPEN_MANIFEST_MODAL });
 export const closeManageManifestModal = () => ({ type: SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL });
