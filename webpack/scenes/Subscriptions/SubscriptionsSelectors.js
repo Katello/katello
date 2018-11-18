@@ -10,5 +10,8 @@ export const selectDeleteModalOpened = state =>
 export const selectSearchQuery = state =>
   selectSubscriptionsState(state).searchQuery;
 
+export const selectTaskModalOpened = state =>
+  selectSubscriptionsState(state).taskModalOpened;
+
 export const selectSubscriptionsTasks = state =>
   selectSubscriptionsState(state).tasks;

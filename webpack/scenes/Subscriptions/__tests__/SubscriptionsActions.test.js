@@ -27,6 +27,8 @@ import {
   closeManageManifestModal,
   openDeleteModal,
   closeDeleteModal,
+  openTaskModal,
+  closeTaskModal,
 } from '../SubscriptionActions';
 
 const mockStore = configureMockStore([thunk]);
@@ -157,5 +159,10 @@ describe('subscription actions', () => {
 
   describe('searchQuery', () => testActionSnapshotWithFixtures({
     'it should update the search-query': () => updateSearchQuery('some-query'),
+  }));
+
+  describe('taskModal', () => testActionSnapshotWithFixtures({
+    'it should open task modal': () => openTaskModal(),
+    'it should close task modal': () => closeTaskModal(),
   }));
 });

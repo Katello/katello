@@ -5,6 +5,7 @@ import {
   selectManifestModalOpened,
   selectDeleteModalOpened,
   selectSubscriptionsTasks,
+  selectTaskModalOpened,
 } from '../SubscriptionsSelectors';
 
 const state = {
@@ -13,6 +14,7 @@ const state = {
       searchQuery: 'some-query',
       manifestModalOpened: false,
       deleteModalOpened: false,
+      taskModalOpened: false,
       tasks: ['task1', 'task2'],
     },
   },
@@ -23,6 +25,7 @@ const fixtures = {
   'should select search-query': () => selectSearchQuery(state),
   'should select manifest-modal-opened': () => selectManifestModalOpened(state),
   'should select delete-modal-opened': () => selectDeleteModalOpened(state),
+  'should select task-modal-opened': () => selectTaskModalOpened(state),
   'should select subscriptions tasks': () => selectSubscriptionsTasks(state),
 };
 

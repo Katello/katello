@@ -22,6 +22,8 @@ import {
   SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
+  SUBSCRIPTIONS_OPEN_TASK_MODAL,
+  SUBSCRIPTIONS_CLOSE_TASK_MODAL,
 } from './SubscriptionConstants';
 import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
@@ -30,6 +32,7 @@ const initialState = Immutable({
   searchQuery: '',
   manifestModalOpened: false,
   deleteModalOpened: false,
+  taskModalOpened: false,
   quantitiesLoading: false,
   availableQuantities: null,
   tasks: [],
@@ -146,6 +149,11 @@ export default (state = initialState, action) => {
       return state.set('deleteModalOpened', true);
     case SUBSCRIPTIONS_CLOSE_DELETE_MODAL:
       return state.set('deleteModalOpened', false);
+
+    case SUBSCRIPTIONS_OPEN_TASK_MODAL:
+      return state.set('taskModalOpened', true);
+    case SUBSCRIPTIONS_CLOSE_TASK_MODAL:
+      return state.set('taskModalOpened', false);
 
     default:
       return state;
