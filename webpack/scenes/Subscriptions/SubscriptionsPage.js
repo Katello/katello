@@ -28,7 +28,6 @@ class SubscriptionsPage extends Component {
 
     this.state = {
       disableDeleteButton: true,
-      showTaskModal: false,
     };
     this.uploadManifest = this.uploadManifest.bind(this);
     this.deleteManifest = this.deleteManifest.bind(this);
@@ -42,7 +41,9 @@ class SubscriptionsPage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { tasks = [], organization } = this.props;
+    const {
+      tasks = [], organization, taskModalOpened, openTaskModal, closeTaskModal,
+    } = this.props;
     const { tasks: prevTasks = [] } = prevProps;
     const currentOrg = Number(orgId());
     const numberOfTasks = tasks.length;
@@ -51,30 +52,23 @@ class SubscriptionsPage extends Component {
 
     if (numberOfTasks > 0) {
       if (currentOrg === task.input.organization.id) {
-        if (!this.state.showTaskModal) {
-        // eslint-disable-next-line
-        this.setState({
-            showTaskModal: true,
-          });
+        if (!taskModalOpened) {
+          openTaskModal();
         }
       }
 
       if (numberOfPrevTasks === 0 || prevTasks[0].id !== task.id) {
         if (currentOrg === task.input.organization.id) {
           this.handleDoneTask(task);
-        } else if (this.state.showTaskModal) {
-          // eslint-disable-next-line
-            this.setState({
-            showTaskModal: false,
-          });
+        } else if (taskModalOpened) {
+          closeTaskModal();
         }
       }
     }
 
     if (numberOfTasks === 0) {
-      if (this.state.showTaskModal && !this.state.pollingATask) {
-        // eslint-disable-next-line
-        this.setState({ showTaskModal: false });
+      if (taskModalOpened && !this.state.pollingATask) {
+        closeTaskModal();
       }
     }
 
@@ -131,8 +125,11 @@ class SubscriptionsPage extends Component {
   }
 
   manifestAction(callback, file = undefined) {
+    const { openTaskModal } = this.props;
+
+    openTaskModal();
+
     this.setState({
-      showTaskModal: true,
       pollingATask: true,
     });
     callback(file)
@@ -162,6 +159,7 @@ class SubscriptionsPage extends Component {
       manifestModalOpened, openManageManifestModal, closeManageManifestModal,
       deleteModalOpened, openDeleteModal, closeDeleteModal,
       searchQuery, updateSearchQuery,
+      taskModalOpened,
       tasks = [], subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     const { disconnected } = subscriptions;
@@ -283,7 +281,7 @@ class SubscriptionsPage extends Component {
                 bulkSearch={this.props.bulkSearch}
               />
               <ModalProgressBar
-                show={this.state.showTaskModal}
+                show={taskModalOpened}
                 container={document.getElementById('subscriptions-table')}
                 task={task}
               />
@@ -328,6 +326,9 @@ SubscriptionsPage.propTypes = {
   deleteModalOpened: PropTypes.bool,
   openDeleteModal: PropTypes.func.isRequired,
   closeDeleteModal: PropTypes.func.isRequired,
+  taskModalOpened: PropTypes.bool,
+  openTaskModal: PropTypes.func.isRequired,
+  closeTaskModal: PropTypes.func.isRequired,
 };
 
 SubscriptionsPage.defaultProps = {
@@ -338,6 +339,7 @@ SubscriptionsPage.defaultProps = {
   searchQuery: '',
   manifestModalOpened: false,
   deleteModalOpened: false,
+  taskModalOpened: false,
 };
 
 export default SubscriptionsPage;

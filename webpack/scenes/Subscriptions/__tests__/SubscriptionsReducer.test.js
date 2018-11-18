@@ -21,6 +21,8 @@ import {
   SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
   SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
+  SUBSCRIPTIONS_OPEN_TASK_MODAL,
+  SUBSCRIPTIONS_CLOSE_TASK_MODAL,
   TASK_BULK_SEARCH_SUCCESS,
   GET_TASK_SUCCESS,
   RESET_TASKS,
@@ -137,6 +139,16 @@ const fixtures = {
   'should handle SUBSCRIPTIONS_CLOSE_DELETE_MODAL': {
     action: {
       type: SUBSCRIPTIONS_CLOSE_DELETE_MODAL,
+    },
+  },
+  'should handle SUBSCRIPTIONS_OPEN_TASK_MODAL': {
+    action: {
+      type: SUBSCRIPTIONS_OPEN_TASK_MODAL,
+    },
+  },
+  'should handle SUBSCRIPTIONS_CLOSE_TASK_MODAL': {
+    action: {
+      type: SUBSCRIPTIONS_CLOSE_TASK_MODAL,
     },
   },
   'should handle GET_SETTING_SUCCESS with content_disconnected response': {
