@@ -29,7 +29,6 @@ class SubscriptionsPage extends Component {
     this.state = {
       disableDeleteButton: true,
       showTaskModal: false,
-      searchQuery: '',
     };
     this.uploadManifest = this.uploadManifest.bind(this);
     this.deleteManifest = this.deleteManifest.bind(this);
@@ -162,6 +161,7 @@ class SubscriptionsPage extends Component {
     const {
       manifestModalOpened, openManageManifestModal, closeManageManifestModal,
       deleteModalOpened, openDeleteModal, closeDeleteModal,
+      searchQuery, updateSearchQuery,
       tasks = [], subscriptions, organization, subscriptionTableSettings,
     } = this.props;
     const { disconnected } = subscriptions;
@@ -185,10 +185,6 @@ class SubscriptionsPage extends Component {
       },
     });
 
-    const updateSearchQuery = (searchQuery) => {
-      this.setState({ searchQuery });
-    };
-
     const onDeleteSubscriptions = (selectedRows) => {
       this.props.deleteSubscriptions(selectedRows);
       closeDeleteModal();
@@ -199,7 +195,7 @@ class SubscriptionsPage extends Component {
     };
 
 
-    const csvParams = createSubscriptionParams({ search: this.state.searchQuery });
+    const csvParams = createSubscriptionParams({ search: searchQuery });
     const getEnabledColumns = (columns) => {
       const enabledColumns = [];
       columns.forEach((column) => {
@@ -324,6 +320,8 @@ SubscriptionsPage.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
   refreshManifest: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string,
+  updateSearchQuery: PropTypes.func.isRequired,
   openManageManifestModal: PropTypes.func.isRequired,
   closeManageManifestModal: PropTypes.func.isRequired,
   manifestModalOpened: PropTypes.bool,
@@ -337,6 +335,7 @@ SubscriptionsPage.defaultProps = {
   bulkSearch: undefined,
   taskDetails: {},
   organization: undefined,
+  searchQuery: '',
   manifestModalOpened: false,
   deleteModalOpened: false,
 };

@@ -17,6 +17,7 @@ import {
   DELETE_SUBSCRIPTIONS_REQUEST,
   DELETE_SUBSCRIPTIONS_SUCCESS,
   DELETE_SUBSCRIPTIONS_FAILURE,
+  SUBSCRIPTIONS_UPDATE_SEARCH_QUERY,
   SUBSCRIPTIONS_OPEN_MANIFEST_MODAL,
   SUBSCRIPTIONS_CLOSE_MANIFEST_MODAL,
   SUBSCRIPTIONS_OPEN_DELETE_MODAL,
@@ -26,6 +27,7 @@ import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsCons
 
 const initialState = Immutable({
   ...initialApiState,
+  searchQuery: '',
   manifestModalOpened: false,
   deleteModalOpened: false,
   quantitiesLoading: false,
@@ -131,6 +133,9 @@ export default (state = initialState, action) => {
 
       return state;
     }
+
+    case SUBSCRIPTIONS_UPDATE_SEARCH_QUERY:
+      return state.set('searchQuery', action.payload);
 
     case SUBSCRIPTIONS_OPEN_MANIFEST_MODAL:
       return state.set('manifestModalOpened', true);

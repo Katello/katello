@@ -7,5 +7,8 @@ export const selectManifestModalOpened = state =>
 export const selectDeleteModalOpened = state =>
   selectSubscriptionsState(state).deleteModalOpened;
 
+export const selectSearchQuery = state =>
+  selectSubscriptionsState(state).searchQuery;
+
 export const selectSubscriptionsTasks = state =>
   selectSubscriptionsState(state).tasks;

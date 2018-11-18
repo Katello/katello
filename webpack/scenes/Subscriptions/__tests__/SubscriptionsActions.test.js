@@ -22,6 +22,7 @@ import {
   updateQuantity,
   loadAvailableQuantities,
   loadTableColumns,
+  updateSearchQuery,
   openManageManifestModal,
   closeManageManifestModal,
   openDeleteModal,
@@ -152,5 +153,9 @@ describe('subscription actions', () => {
   describe('deleteModal', () => testActionSnapshotWithFixtures({
     'it should open delete modal': () => openDeleteModal(),
     'it should close delete modal': () => closeDeleteModal(),
+  }));
+
+  describe('searchQuery', () => testActionSnapshotWithFixtures({
+    'it should update the search-query': () => updateSearchQuery('some-query'),
   }));
 });
