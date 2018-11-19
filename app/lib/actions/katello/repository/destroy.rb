@@ -26,7 +26,7 @@ module Actions
           sequence do
             delete_record(repository) if planned_destroy
             if repository.redhat?
-              handle_redhat_content(repository)
+              handle_redhat_content(repository) unless skip_environment_update
             else
               handle_custom_content(repository) unless skip_environment_update
             end
