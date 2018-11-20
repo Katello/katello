@@ -1,5 +1,5 @@
 describe('Controller: NewSyncPlanModalController', function() {
-    var $scope, $uibModalInstance, SyncPlan, SyncPlanHelper;
+    var $scope, $uibModalInstance, SyncPlan, SyncPlanHelper, Notification;
 
     beforeEach(module(
         'Bastion.sync-plans',
@@ -8,7 +8,6 @@ describe('Controller: NewSyncPlanModalController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller');
-
         SyncPlan = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
@@ -40,11 +39,17 @@ describe('Controller: NewSyncPlanModalController', function() {
             setForm: function () {}
         };
 
+        Notification = {
+            setSuccessMessage: function () {},
+            setErrorMessage: function () {}
+        };
+
         $controller('NewSyncPlanModalController', {
             $scope: $scope,
             $uibModalInstance: $uibModalInstance,
             SyncPlan: SyncPlan,
-            SyncPlanHelper: SyncPlanHelper
+            SyncPlanHelper: SyncPlanHelper,
+            Notification: Notification
         });
     }));
 
@@ -74,8 +79,10 @@ describe('Controller: NewSyncPlanModalController', function() {
         });
 
         it('and succeed', function() {
+            spyOn(Notification, 'setSuccessMessage');
             spyOn($uibModalInstance, 'close');
             $scope.ok(syncPlan);
+            expect(Notification.setSuccessMessage).toHaveBeenCalled();
             expect($uibModalInstance.close).toHaveBeenCalledWith(syncPlan);
         });
 

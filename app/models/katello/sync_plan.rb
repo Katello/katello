@@ -46,6 +46,7 @@ module Katello
     end
 
     def save_with_logic!
+      self.cron_expression = '' if (self.cron_expression && !(self.interval.eql? CUSTOM_CRON))
       associate_recurring_logic
       self.save!
       start_recurring_logic
