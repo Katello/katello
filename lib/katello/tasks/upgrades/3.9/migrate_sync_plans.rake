@@ -7,6 +7,8 @@ namespace :katello do
         puts "Starting recurring logic for migrated sync plans and deleting Pulp schedules"
 
         Katello::SyncPlan.find_each do |sync_plan|
+          sync_plan.associate_recurring_logic
+          sync_plan.save!
           if sync_plan.foreman_tasks_recurring_logic.state.nil?
             sync_plan.start_recurring_logic
             sync_plan.foreman_tasks_recurring_logic.enabled = false unless sync_plan.enabled
