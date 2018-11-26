@@ -80,9 +80,11 @@ module Katello
     end
 
     initializer "katello.initialize_cp_listener", :before => :finisher_hook do
-      ForemanTasks.dynflow.config.post_executor_init do |world|
-        ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
-        ::Actions::Katello::EventQueue::Monitor.ensure_running(world)
+      unless Rails.env.test?
+        ForemanTasks.dynflow.config.post_executor_init do |world|
+          ::Actions::Candlepin::ListenOnCandlepinEvents.ensure_running(world)
+          ::Actions::Katello::EventQueue::Monitor.ensure_running(world)
+        end
       end
     end
 
