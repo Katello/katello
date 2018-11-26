@@ -40,6 +40,9 @@ module Actions
 
         def load_hosts_by_uuid
           hosts_by_uuid = ::Host.eager_load(:subscription_facet).where(katello_subscription_facets: { uuid: hypervisors_field(:uuid) })
+          hosts_by_uuid.each do |host|
+            validate_host_organization(host, host.organization.try(:id))
+          end
           @hosts.merge!(hosts_by_uuid.map { |host| [host.subscription_facet.uuid, host] }.to_h)
         end
 
