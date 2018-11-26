@@ -49,6 +49,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def regenerate_applicability
+        fail NotImplementedError
+      end
+
       def sync(overrides = {})
         sync_options = {}
         sync_options[:max_speed] = SETTINGS.dig(:katello, :pulp, :sync_KBlimit)

@@ -50,7 +50,7 @@ module Actions
               plan_action(Pulp::Repository::Download, :pulp_id => repo.pulp_id, :options => {:verify_all_units => true}) if validate_contents
               plan_action(Katello::Repository::MetadataGenerate, repo, :force => true) if skip_metadata_check
               plan_action(Katello::Repository::ErrataMail, repo, nil, contents_changed)
-              plan_action(Pulp::Repository::RegenerateApplicability, :pulp_id => repo.pulp_id, :contents_changed => contents_changed) if generate_applicability
+              plan_action(Pulp::Repository::RegenerateApplicability, :repository_id => repo.id, :contents_changed => contents_changed) if generate_applicability
             end
             plan_self(:id => repo.id, :sync_result => output, :skip_metadata_check => skip_metadata_check, :validate_contents => validate_contents,
                       :contents_changed => contents_changed)

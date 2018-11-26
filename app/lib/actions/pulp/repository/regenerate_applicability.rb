@@ -5,12 +5,15 @@ module Actions
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         input_format do
-          param :pulp_id
+          param :repository_id
+          param :capsule_id
           param :contents_changed
         end
 
         def invoke_external_task
-          pulp_extensions.repository.regenerate_applicability_by_ids([input[:pulp_id]], true)
+          capsule_id = input[:capsule_id] || SmartProxy.default_capsule!.id
+          repo = ::Katello::Repository.find(input[:repository_id])
+          repo.backend_service(smart_proxy(capsule_id)).regenerate_applicability
         end
       end
     end
