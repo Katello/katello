@@ -55,6 +55,10 @@ module Katello
             policy
           end
         end
+
+        def regenerate_applicability
+          smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
+        end
       end
     end
   end
