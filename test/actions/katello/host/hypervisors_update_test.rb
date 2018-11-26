@@ -9,6 +9,10 @@ module Katello::Host
     before :each do
       User.current = users(:admin)
       @organization = FactoryBot.build(:katello_organization)
+      location = taxonomies(:location1)
+      Setting[:default_location_puppet_content] = location.title
+      Setting[:default_location_subscribed_hosts] = location.title
+
       @content_view = katello_content_views(:library_dev_view)
       @content_view_environment = katello_content_view_environments(:library_dev_view_library)
       Dynflow::Testing::DummyPlannedAction.any_instance.stubs(:error).returns(nil)
