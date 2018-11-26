@@ -42,7 +42,9 @@ module Katello::Host
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
         plan_action(action, :hypervisors => @hypervisor_results)
-        finalize_action(action)
+        action = finalize_action(action)
+
+        action.state.must_equal :success
 
         @host.reload
         assert_not_nil @host.subscription_facet
@@ -54,7 +56,10 @@ module Katello::Host
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
         plan_action(action, :hypervisors => @hypervisor_results)
-        finalize_action(action)
+        action = finalize_action(action)
+
+        action.state.must_equal :success
+
         @host.reload
         assert_not_nil @host.subscription_facet
       end
@@ -65,8 +70,10 @@ module Katello::Host
 
         plan_action(action, :hypervisors => @hypervisor_results)
         assert_difference('::Katello::Host::SubscriptionFacet.count', 0) do
-          finalize_action(action)
+          action = finalize_action(action)
         end
+
+        action.state.must_equal :success
       end
 
       it 'existing hypervisor, no org' do
