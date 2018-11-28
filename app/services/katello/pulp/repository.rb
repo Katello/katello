@@ -57,6 +57,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def content_service
+        Katello::Pulp::Content
+      end
+
       def should_purge_empty_contents?
         false
       end
