@@ -9,7 +9,7 @@ module Katello
     api :POST, "/repositories/:repository_id/content_uploads", N_("Create an upload request")
     param :repository_id, :number, :required => true, :desc => N_("repository id")
     def create
-      render :json => pulp_content.create_upload_request
+      render :json => @repository.backend_content_service(::SmartProxy.pulp_master).create_upload
     end
 
     api :PUT, "/repositories/:repository_id/content_uploads/:id", N_("Upload a chunk of the file's content")
@@ -18,7 +18,8 @@ module Katello
     param :offset, :number, :required => true, :desc => N_("The offset in the file where the content starts")
     param :content, File, :required => true, :desc => N_("The actual file contents")
     def update
-      pulp_content.upload_bits(params[:id], params[:offset], params[:content])
+      @repository.backend_content_service(::SmartProxy.pulp_master)
+        .upload_chunk(params[:id], params[:offset], params[:content])
       head :no_content
     end
 
@@ -26,15 +27,11 @@ module Katello
     param :repository_id, :number, :required => true, :desc => N_("Repository id")
     param :id, :number, :required => true, :desc => N_("Upload request id")
     def destroy
-      pulp_content.delete_upload_request(params[:id])
+      @repository.backend_content_service(::SmartProxy.pulp_master).delete_upload(params[:id])
       head :no_content
     end
 
     private
-
-    def pulp_content
-      Katello.pulp_server.resources.content
-    end
 
     def find_repository
       @repository = Repository.find(params[:repository_id])

@@ -159,6 +159,10 @@ module Katello
       @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
     end
 
+    def backend_content_service(smart_proxy)
+      backend_service(smart_proxy).content_service
+    end
+
     def organization
       if self.environment
         self.environment.organization
