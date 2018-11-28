@@ -32,22 +32,18 @@ module Katello
       #    In other words, prune the list to only include the units in the "bound" repositories signified by
       #    the inner join between ContentFacetRepository and Repository<Unit>
 
-      hosts = ::Host.where(:id => hosts) if hosts && hosts.is_a?(Array)
-      query = content_unit_class.joins(content_facet_association_units).
-        joins("INNER JOIN #{Katello::ContentFacetRepository.table_name} on \
-        #{Katello::ContentFacetRepository.table_name}.content_facet_id = #{content_facet_association_class.table_name}.content_facet_id").
-        joins("INNER JOIN #{content_unit_class.repository_association_class.table_name} AS host_repo_content ON \
-          host_repo_content.#{content_unit_association_id} = #{content_unit_class.table_name}.id AND \
-          #{Katello::ContentFacetRepository.table_name}.repository_id = host_repo_content.repository_id")
+      facet_repos = Katello::ContentFacetRepository.joins(:content_facet => :host).select(:repository_id)
+      facet_content_units = content_facet_association_class.joins(:content_facet => :host).select(content_unit_association_id)
 
       if hosts
-        query = query.where("#{Katello::ContentFacetRepository.table_name}.content_facet_id" => hosts.joins(:content_facet)
-                                .select("#{Katello::Host::ContentFacet.table_name}.id"))
-      else
-        query = query.joins(content_facet_association_units)
+        hosts = ::Host.where(id: hosts) if hosts.is_a?(Array)
+        facet_repos = facet_repos.merge(hosts).reorder(nil)
+        facet_content_units = facet_content_units.merge(hosts).reorder(nil)
       end
 
-      query
+      content_unit_class.joins(repository_association_units).
+                         where(repository_association_class.table_name => {:repository_id => facet_repos,
+                                                                           content_unit_association_id => facet_content_units}).distinct
     end
 
     private
@@ -75,6 +71,14 @@ module Katello
 
     def content_facet_association_units
       content_facet_association_class.name.demodulize.pluralize.underscore.to_sym
+    end
+
+    def repository_association_class
+      content_unit_class.repository_association_class
+    end
+
+    def repository_association_units
+      repository_association_class.name.demodulize.pluralize.underscore.to_sym
     end
 
     def applicable_differences(partial)
