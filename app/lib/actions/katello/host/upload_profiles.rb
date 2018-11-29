@@ -29,6 +29,18 @@ module Actions
           Dynflow::Action::Rescue::Skip
         end
 
+        def import_module_streams(payload, host)
+          enabled_payload = payload.map do |profile|
+            profile.slice("name", "stream", "version", "context", "arch") if profile["status"] == "enabled"
+          end
+          enabled_payload.compact!
+
+          ::Katello::Pulp::Consumer.new(host.content_facet.uuid).upload_module_stream_profile(enabled_payload)
+          host.import_module_streams(payload)
+        rescue RestClient::ResourceNotFound
+          Rails.logger.warn("Host with ID %s was not known to Pulp, continuing" % input[:host_id])
+        end
+
         def run
           profiles = JSON.parse(input[:profile_string])
           #free the huge string from the memory
@@ -47,7 +59,7 @@ module Actions
               when "enabled_repos"
                 host.import_enabled_repositories(payload)
               else
-                host.import_module_streams(payload)
+                import_module_streams(payload, host)
               end
             end
           end

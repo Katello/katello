@@ -20,11 +20,19 @@ module Katello
         Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'rpm', profile)
       end
 
+      def upload_module_stream_profile(profile)
+        Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'modulemd', profile)
+      end
+
       def applicable_ids(content_unit_type)
-        consumer_method = :applicable_rpms
-        if content_unit_type == ::Katello::Erratum::CONTENT_TYPE
-          consumer_method = :applicable_errata
-        end
+        consumer_method = case content_unit_type
+                          when ::Katello::Erratum::CONTENT_TYPE
+                            :applicable_errata
+                          when ::Katello::ModuleStream::CONTENT_TYPE
+                            :applicable_module_streams
+                          else
+                            :applicable_rpms
+                          end
         response = Katello.pulp_server.extensions.consumer.send(consumer_method, [self.uuid])
         return [] if response.empty?
         response[0]['applicability'][content_unit_type] || []

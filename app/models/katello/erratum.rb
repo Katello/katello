@@ -92,21 +92,7 @@ module Katello
     end
 
     def self.installable_for_hosts(hosts = nil)
-      # Main goal of this query
-      # 1) Get me the applicable errata for these set of hosts
-      # 2) Now further prune this list. Only include errata from repos that have been "enabled" on those hosts.
-      #    In other words, prune the list to only include the errate in the "bound" repositories signified by
-      #    the inner join between ContentFacetRepository and RepositoryErratum
-      facet_repos = Katello::ContentFacetRepository.joins(:content_facet => :host).select(:repository_id)
-      facet_errata = Katello::ContentFacetErratum.joins(:content_facet => :host).select(:erratum_id)
-
-      if hosts
-        hosts = ::Host.where(id: hosts) if hosts.is_a?(Array)
-        facet_repos = facet_repos.merge(hosts).reorder(nil)
-        facet_errata = facet_errata.merge(hosts).reorder(nil)
-      end
-
-      self.joins(:repository_errata).where(Katello::RepositoryErratum.table_name => {repository_id: facet_repos, erratum_id: facet_errata}).distinct
+      ApplicableContentHelper.new(Erratum).installable_for_hosts(hosts)
     end
 
     def self.ids_installable_for_hosts(hosts = nil)

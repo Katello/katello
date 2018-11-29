@@ -1,7 +1,11 @@
-one:
+river:
   repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
   module_stream_id: <%= ActiveRecord::FixtureSet.identify(:river) %>
 
+one:
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>
+  module_stream_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+
 two:
   repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_dev) %>
-  module_stream_id: <%= ActiveRecord::FixtureSet.identify(:river) %>
+  module_stream_id: <%= ActiveRecord::FixtureSet.identify(:two) %>

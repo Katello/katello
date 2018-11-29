@@ -31,6 +31,7 @@
             <option value="installed" translate>Installed</option>
             <option value="disabled" translate>Disabled</option>
             <option value="unknown" translate>Unknown</option>
+            <option value="upgradable" translate>Upgrade Available</option>
           </select>
         </div>
       </div>
@@ -63,6 +64,9 @@
             <td bst-table-cell>{{ module.stream }}</td>
             <td bst-table-cell>
               {{ moduleStreamStatus(module) }}
+              <span ng-if="module.upgradable" class="pficon pficon-info"
+                    uib-tooltip="{{ 'Upgrade Available' | translate }}"
+              > </span>
             </td>
             <td bst-table-cell>
               {{ module.installed_profiles.join(", ") }}

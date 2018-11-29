@@ -10,6 +10,10 @@ module Katello
     has_many :module_stream_errata_packages, class_name: "Katello::ModuleStreamErratumPackage", dependent: :destroy, inverse_of: :module_stream
     has_many :erratum_packages, class_name: "Katello::ErratumPackage", :through => :module_stream_errata_packages
 
+    has_many :content_facet_applicable_module_streams, :class_name => "Katello::ContentFacetApplicableModuleStream",
+             :dependent => :destroy, :inverse_of => :module_stream
+    has_many :content_facets, :through => :content_facet_applicable_module_streams, :class_name => "Katello::Host::ContentFacet"
+
     scoped_search on: :name, complete_value: true
     scoped_search on: :uuid, complete_value: true
     scoped_search on: :stream, complete_value: true
@@ -36,6 +40,14 @@ module Katello
 
     def self.repository_association_class
       RepositoryModuleStream
+    end
+
+    def self.content_facet_association_class
+      ContentFacetApplicableModuleStream
+    end
+
+    def self.installable_for_hosts(hosts = nil)
+      ApplicableContentHelper.new(ModuleStream).installable_for_hosts(hosts)
     end
 
     def update_from_json(json)
