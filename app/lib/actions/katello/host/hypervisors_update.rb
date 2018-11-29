@@ -30,9 +30,9 @@ module Actions
           @organizations = ::Organization.where(label: hypervisors_field(:organization_label)).map { |org| [org.label, org] }.to_h
           @hosts = {}
 
-          load_hosts_by_uuid
-          load_hosts_by_duplicate_name
-          create_missing_hosts
+          @hosts.merge!(load_hosts_by_uuid)
+          @hosts.merge!(load_hosts_by_duplicate_name)
+          @hosts.merge!(create_missing_hosts)
 
           candlepin_data = ::Katello::Resources::Candlepin::Consumer.get_all(@hosts.keys)
           @candlepin_attributes = candlepin_data.map { |consumer| [consumer[:uuid], consumer] }.to_h
@@ -40,7 +40,10 @@ module Actions
 
         def load_hosts_by_uuid
           hosts_by_uuid = ::Host.eager_load(:subscription_facet).where(katello_subscription_facets: { uuid: hypervisors_field(:uuid) })
-          @hosts.merge(hosts_by_uuid.map { |host| [host.subscription_facet.uuid, host] }.to_h)
+          hosts_by_uuid.each do |host|
+            validate_host_organization(host, host.organization.try(:id))
+          end
+          hosts_by_uuid.map { |host| [host.subscription_facet.uuid, host] }.to_h
         end
 
         def load_hosts_by_duplicate_name
@@ -52,16 +55,18 @@ module Actions
             validate_host_organization(host, duplicate_name_orgs[host.name].try(:id))
           end
 
-          @hosts.merge!(hosts_by_dup_name.map { |host| [duplicate_names[host.name], host] }.to_h)
+          hosts_by_dup_name.map { |host| [duplicate_names[host.name], host] }.to_h
         end
 
         def create_missing_hosts
           # remaining hypervisors
+          new_hypervisors = {}
           @hypervisors.each do |hypervisor|
             next if @hosts.key?(hypervisor[:uuid])
             duplicate_name, org = duplicate_name(hypervisor)
-            @hosts[hypervisor[:uuid]] = create_host_for_hypervisor(duplicate_name, org)
+            new_hypervisors[hypervisor[:uuid]] = create_host_for_hypervisor(duplicate_name, org)
           end
+          new_hypervisors
         end
 
         def generate_duplicates_list
