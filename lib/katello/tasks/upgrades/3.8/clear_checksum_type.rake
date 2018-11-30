@@ -5,24 +5,25 @@ namespace :katello do
       task :clear_checksum_type => %w(environment) do
         User.current = User.anonymous_admin
 
-        Katello::Repository.yum_type.find_each do |repo|
-          repo.transaction do
+        Katello::RootRepository.yum_type.find_each do |root_repo|
+          root_repo.transaction do
             begin
-              if repo.on_demand? && repo.url.present?
-                repo.update_attribute(:checksum_type, nil)
+              if root_repo.on_demand? && root_repo.url.present?
+                root_repo.update_attribute(:checksum_type, nil)
 
-                if repo.find_distributor[:config]&.delete(:checksum_type)
-                  Katello.pulp_server.resources.repository.update_distributor(
-                    repo.pulp_id, repo.find_distributor[:id], repo.find_distributor[:config])
+                root_repo.repositories.each do |repo|
+                  begin
+                    repo.update_attribute(:saved_checksum_type, nil)
+
+                    if repo.find_distributor[:config]&.delete(:checksum_type)
+                      SmartProxy.pulp_master.pulp_api.resources.repository.update_distributor(
+                        repo.pulp_id, repo.find_distributor[:id], repo.find_distributor[:config])
+                    end
+                  # rubocop:disable HandleExceptions
+                  rescue RestClient::ResourceNotFound
+                  end
                 end
               end
-
-              if repo.library_instance?
-                repo.update_attributes!(
-                  source_repo_checksum_type: repo.pulp_scratchpad_checksum_type)
-              end
-            # rubocop:disable HandleExceptions
-            rescue RestClient::ResourceNotFound
             end
           end
         end
