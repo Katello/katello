@@ -231,6 +231,10 @@ module Katello
       (%w(unprotected checksum_type container_repsoitory_name) & previous_changes.keys).any?
     end
 
+    def on_demand?
+      self.download_policy == Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
+    end
+
     def pulp_update_needed?
       changeable_attributes = %w(url unprotected checksum_type docker_upstream_name download_policy mirror_on_sync verify_ssl_on_sync
                                  upstream_username upstream_password ostree_upstream_sync_policy ostree_upstream_sync_depth ignore_global_proxy ignorable_content)
