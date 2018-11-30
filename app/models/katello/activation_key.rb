@@ -59,7 +59,8 @@ module Katello
     scoped_search :on => :content_view_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :description, :complete_value => true
     scoped_search :on => :name, :relation => :subscriptions, :rename => :subscription_name, :complete_value => true, :ext_method => :find_by_subscription_name
-    scoped_search :on => :id, :relation => :subscriptions, :rename => :subscription_id, :complete_value => true, :ext_method => :find_by_subscription_id
+    scoped_search :on => :id, :relation => :subscriptions, :rename => :subscription_id, :complete_value => true,
+                  :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER, :ext_method => :find_by_subscription_id
 
     def environment_exists
       if environment_id && environment.nil?
