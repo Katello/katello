@@ -39,7 +39,7 @@ module Katello
 
       def process_response(resp)
         logger.debug "Processing response: #{resp.code}"
-        logger.debug resp.body
+        logger.debug filter_sensitive_data(resp.body)
         return resp unless resp.code.to_i >= 400
         parsed = {}
         message = "Rest exception while processing the call"
@@ -59,6 +59,10 @@ module Katello
           end
         end
         fail RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
+      end
+
+      def filter_sensitive_data(payload)
+        payload.gsub(/-----BEGIN RSA PRIVATE KEY-----.*-----END RSA PRIVATE KEY-----/, '[filtered]')
       end
 
       def print_debug_info(_a_path, headers = {}, payload = {})
