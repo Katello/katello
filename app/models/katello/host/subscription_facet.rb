@@ -31,7 +31,6 @@ module Katello
 
       def update_from_consumer_attributes(consumer_params)
         import_database_attributes(consumer_params)
-        self.hypervisor_guest_uuids = consumer_params['guestIds'] unless consumer_params['hypervisor_guest_uuids'].blank?
         self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
       end
 
