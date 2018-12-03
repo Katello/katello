@@ -135,6 +135,12 @@ module Katello
       assert_includes activation_keys, @dev_key
     end
 
+    def test_search_subscription_id_handles_non_integer
+      assert_raises ScopedSearch::QueryNotSupported do
+        ActivationKey.search_for("subscription_id = \"notaninteger\"")
+      end
+    end
+
     def test_search_subscription_name
       activation_keys = ActivationKey.search_for("subscription_name = \"#{@pool_one.subscription.name}\"")
       assert_includes activation_keys, @dev_key
