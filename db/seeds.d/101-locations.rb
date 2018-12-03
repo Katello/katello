@@ -4,17 +4,15 @@
 # !!! PLEASE KEEP THIS SCRIPT IDEMPOTENT !!!
 #
 
-if Location.exists? || ENV['SEED_LOCATION'].present?
-  # Create a new location to be used as the Katello Default.
-  if ENV['SEED_LOCATION'].blank?
-    default_location = Location.first
-  else
-    default_location = Location.where(:name => ENV['SEED_LOCATION']).first_or_create
-  end
-  if Setting[:default_location_subscribed_hosts].empty?
-    Setting[:default_location_subscribed_hosts] = default_location.title
-  end
-  if Setting[:default_location_puppet_content].empty?
-    Setting[:default_location_puppet_content] = default_location.title
-  end
+# Create a new location to be used as the Katello Default.
+if ENV['SEED_LOCATION'].blank?
+  default_location = Location.first
+else
+  default_location = Location.where(:name => ENV['SEED_LOCATION']).first_or_create
+end
+if Setting[:default_location_subscribed_hosts].empty?
+  Setting[:default_location_subscribed_hosts] = default_location.title
+end
+if Setting[:default_location_puppet_content].empty?
+  Setting[:default_location_puppet_content] = default_location.title
 end

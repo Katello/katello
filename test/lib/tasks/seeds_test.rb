@@ -29,29 +29,17 @@ module Katello
       Location.destroy_all
     end
 
-    test "don't create a default location if no locations exist" do
-      Location.stubs(:exists?).returns(false)
-      seed
-      refute Location.default_location_ids.present?
+    test 'with SEED_LOCATION' do
+      with_env('SEED_LOCATION' => 'test_location_seed') { seed }
+      assert Location.find_by_title('test_location_seed').present?
     end
 
-    test "with nothing" do
-      Setting[:default_location_puppet_content] = nil
-      Setting[:default_location_subscribed_hosts] = nil
-      Location.delete_all
-
+    test 'without SEED_LOCATION' do
       seed
-      assert_empty Location.all
-    end
-
-    test "create a default location on seed on a fresh install" do
-      with_env('SEED_LOCATION' => 'seed_test') do
-        seed
-      end
-      Setting.unstub(:[])
-      assert Location.default_location_ids.present?
-      default_location = Location.find(Location.default_location_ids.first)
-      assert_equal 'seed_test', default_location.title
+      # check that default_location_subscribed_hosts gets set
+      assert_equal Setting.find_by_name('default_location_subscribed_hosts').value, Location.first.title
+      # check that default_location_puppet_content gets set
+      assert_equal Setting.find_by_name('default_location_puppet_content').value, Location.first.title
     end
   end
 
