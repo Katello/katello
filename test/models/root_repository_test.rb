@@ -391,6 +391,13 @@ module Katello
       end
     end
 
+    def test_pulp_update_needed_with_docker_white_tags?
+      refute @docker_root.pulp_update_needed?
+      @docker_root.docker_tags_whitelist = ['3.7']
+      @docker_root.save!
+      assert @docker_root.pulp_update_needed?
+    end
+
     def test_pulp_update_needed_with_upstream_auth_change?
       repo = katello_root_repositories(:fedora_17_x86_64_root)
       refute repo.pulp_update_needed?
