@@ -1,3 +1,34 @@
+# 3.9.1 New England IPA (2018-12-04)
+
+## Features
+
+## Bug Fixes
+
+### Installer
+ * Upgrade from 6.4.0 to 6.4.1 failed at Upgrade Step: remove_legacy_mongo ([#25561](https://projects.theforeman.org/issues/25561))
+
+### Upgrades
+ * Upgrade issue 3.8 -> 3.9 ([#25544](https://projects.theforeman.org/issues/25544), [dd6df320](https://github.com/Katello/katello.git/commit/dd6df32019fdcd30da9fa7a5e57e3d6bbe372bd9))
+
+### Subscriptions
+ * Non-unlimited guest subscriptions breaks subscription page inline edit ([#25464](https://projects.theforeman.org/issues/25464), [ac0620f2](https://github.com/Katello/katello.git/commit/ac0620f2d614d6ad690008f3f5a2d7848972ce6e))
+
+### Content Views
+ * Invalid content of CCV with two same repos with filters ([#25452](https://projects.theforeman.org/issues/25452), [021586e3](https://github.com/Katello/katello.git/commit/021586e3f9a092225f9526d11df8bc2b8f49d712))
+
+### Host Collections
+ * host_collection controller does not return host_ids key inside a POST response ([#25420](https://projects.theforeman.org/issues/25420), [a9383fbb](https://github.com/Katello/katello.git/commit/a9383fbbbb8660c219d55ed30210a77a7edc2e85))
+
+### Docker
+ * publishing docker repo in content view errors with 'Content View publish to environment Library will result in invalid container image name of member repositories' ([#25414](https://projects.theforeman.org/issues/25414), [29d5245e](https://github.com/Katello/katello.git/commit/29d5245e0f0a517921481ff2ddc9433057f519c2))
+
+### Hosts
+ * Export list of content host do not honour search filter ([#25226](https://projects.theforeman.org/issues/25226), [0a4673e6](https://github.com/Katello/katello.git/commit/0a4673e6035cc5b0d416035ffac35765b5bfb1aa))
+
+### Other
+ * 1.19 -> 1.20 upgrade fail: “add queue katello_event_queue –durable’ returned 1 instead of one of [0] ([#25571](https://projects.theforeman.org/issues/25571))
+ * No Product View after Katello Update 3.8 -> 3.9 ([#25562](https://projects.theforeman.org/issues/25562), [d1005da0](https://github.com/Katello/katello.git/commit/d1005da0d2e72f1eea14dd1261070ac077f42776))
+ * Singleton actions may not start after unclean shutdown ([#25541](https://projects.theforeman.org/issues/25541), [c23ae22b](https://github.com/Katello/katello.git/commit/c23ae22b7d82fc35e277fb6aad3ae167e706472f))
 # 3.9.0 New England IPA (2018-11-16)
 
 ## Features
