@@ -6,7 +6,8 @@ module Katello
       @acme_corporation                 = get_organization
       @fedora_root                      = katello_root_repositories(:fedora_17_x86_64_root)
       @rhel6_root                       = katello_root_repositories(:rhel_6_x86_64_root)
-      @ostree_root = katello_root_repositories(:ostree_root)
+      @ostree_root                      = katello_root_repositories(:ostree_root)
+      @docker_root                      = katello_root_repositories(:busybox_root)
       @fedora_17_x86_64                 = katello_repositories(:fedora_17_x86_64)
       @fedora_17_x86_64_dev             = katello_repositories(:fedora_17_x86_64_dev)
       @fedora_17_library_library_view   = katello_repositories(:fedora_17_library_library_view)
