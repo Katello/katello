@@ -144,5 +144,10 @@ module Katello
     def test_pool_id
       assert_equal @pool_id, @handler.pool_id
     end
+
+    def test_delete_pool
+      @handler.delete_pool
+      assert_empty Katello::Pool.find_by(:cp_id => @pool_id)
+    end
   end
 end
