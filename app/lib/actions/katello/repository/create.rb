@@ -18,13 +18,12 @@ module Actions
             # when creating a clone, the following actions are handled by the
             # publish/promote process
             unless clone
+              view_env = org.default_content_view.content_view_environment(org.library)
               if repository.product.redhat?
-                plan_action(ContentView::UpdateEnvironment, org.default_content_view,
-                            org.library, repository.content_id)
+                plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => repository.content_id)
               else
                 content_create = plan_action(Katello::Product::ContentCreate, root)
-                plan_action(ContentView::UpdateEnvironment, org.default_content_view,
-                            org.library, content_create.input[:content_id])
+                plan_action(Actions::Candlepin::Environment::AddContentToEnvironment, :view_env_cp_id => view_env.cp_id, :content_id => content_create.input[:content_id])
               end
             end
 
