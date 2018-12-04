@@ -112,7 +112,7 @@ class ManageManifestModal extends Component {
       header: __('There is no Manifest History to display.'),
       description: __('Import a Manifest using the manifest tab above.'),
       documentation: {
-        label: __('Learn more about adding Subscription Manifests'),
+        title: __('Learn more about adding Subscription Manifests'),
         url: 'http://redhat.com',
       },
     });
