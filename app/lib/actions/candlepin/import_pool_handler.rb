@@ -25,7 +25,7 @@ module Actions
         when /pool\.created/
           message_handler.import_pool
         when /pool\.deleted/
-          message_handler.import_pool
+          message_handler.delete_pool
         when /^compliance\.created/
           reindex_subscription_status
         when /system_purpose_compliance\.created/
