@@ -85,6 +85,13 @@ module Katello
           ::Katello::Pool.import_pool(pool_id, index_hosts)
         end
       end
+
+      def delete_pool
+        if pool
+          Rails.logger.info "deleting pool #{pool.id} from Katello"
+          pool.destroy!
+        end
+      end
     end
   end
 end
