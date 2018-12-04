@@ -61,6 +61,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostModuleStreamsCont
               return scope.nutupaneParams.status;
           },
           function() {
+              $scope.nutupaneParams.page = 1;
               $scope.moduleStreamsNutupane.refresh();
           }
         );
