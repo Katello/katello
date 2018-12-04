@@ -27,6 +27,7 @@ module ::Actions::Katello::Repository
 
   class CreateTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Create }
+    let(:candlepin_action_class) { ::Actions::Candlepin::Environment::AddContentToEnvironment }
 
     before do
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
@@ -39,6 +40,7 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       plan_action action, repository
+      assert_action_planed_with action, candlepin_action_class, view_env_cp_id: "1", content_id: "69"
     end
 
     it 'no clone flag means generate metadata in run phase' do
@@ -51,6 +53,7 @@ module ::Actions::Katello::Repository
       plan = plan_action action, repository, true
       run_action plan
       plan.run.must_equal nil
+      refute_action_planed action, candlepin_action_class
     end
   end
 
