@@ -10,6 +10,14 @@ module Katello
       assert setting.valid?
     end
 
+    def test_foreman_proxy_content_auto_sync_setting
+      setting = Setting.where(:name => "foreman_proxy_content_auto_sync").first
+      setting.value = "invalid"
+      refute setting.valid?
+      setting.value = true
+      assert setting.valid?
+    end
+
     def test_recalculate_errata_status
       ForemanTasks.expects(:async_task).with(::Actions::Katello::Host::RecalculateErrataStatus)
       setting = Setting.where(:name => "errata_status_installable").first
