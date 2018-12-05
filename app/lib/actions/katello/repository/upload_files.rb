@@ -37,7 +37,7 @@ module Actions
         end
 
         def run
-          ForemanTasks.async_task(Repository::CapsuleSync, ::Katello::Repository.find(input[:repository][:id]))
+          ForemanTasks.async_task(Repository::CapsuleSync, ::Katello::Repository.find(input[:repository][:id])) if Setting[:foreman_proxy_content_auto_sync]
         rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 

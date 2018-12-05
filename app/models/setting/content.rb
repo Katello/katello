@@ -67,6 +67,8 @@ class Setting::Content < Setting
                  false, N_('Restrict Composite Content View promotion')),
         self.set('check_services_before_actions', N_("Whether or not to check the status of backend services such as pulp and candlepin prior to performing some actions."),
                  true, N_('Check services before actions')),
+        self.set('foreman_proxy_content_auto_sync', N_("Whether or not to auto sync the Smart Proxies after a Content View promotion."),
+                 true, N_('Sync Smart Proxies after Content View promotion')),
         self.set('default_download_policy', N_("Default download policy for repositories (either 'immediate', 'on_demand', or 'background')"), "on_demand",
                  N_('Default Repository download policy'), nil, :collection => download_policies),
         self.set('default_proxy_download_policy', N_("Default download policy for Smart Proxy syncs (either 'inherit', immediate', 'on_demand', or 'background')"), "on_demand",
