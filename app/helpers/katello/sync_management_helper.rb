@@ -25,7 +25,7 @@ module Katello
     end
 
     def any_syncable?
-      Product.syncable? && current_organization.syncable_content?
+      Product.syncable? && current_organization_data.syncable_content?
     end
 
     def error_state?(status)

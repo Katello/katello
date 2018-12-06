@@ -12,6 +12,7 @@ module Katello
 
     before_action :set_gettext_locale
     helper_method :current_organization
+    helper_method :current_organization_data
     before_action :require_org
 
     protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -49,7 +50,7 @@ module Katello
       'generic'
     end
 
-    def current_organization
+    def current_organization_data
       if !session[:current_organization_id]
         @current_org = Organization.current
         return @current_org
@@ -72,14 +73,18 @@ module Katello
       end
     end
 
-    def current_organization=(org)
+    def current_organization
+      current_organization_data&.name
+    end
+
+    def current_organization_data=(org)
       session[:current_organization_id] = org.try(:id)
     end
 
     private # why bother? methods below are not testable/tested
 
     def require_org
-      unless session && current_organization
+      unless session && current_organization_data
         redirect_to '/select_organization?toState=' + request.path
       end
     end
