@@ -146,7 +146,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             var deferred = $q.defer();
 
             Organization.get({id: CurrentOrganization}, function (organization) {
-                deferred.resolve(organization.system_purposes.role);
+                deferred.resolve(organization.system_purposes.roles);
             });
 
             return deferred.promise;
