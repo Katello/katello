@@ -24,16 +24,13 @@ module Katello::Host
       @hypervisor_name = "virt-who-#{@host.name}-#{@organization.id}"
       @host.update_attributes!(:name => @hypervisor_name)
       @hypervisor_results = [{ :name => old_name, :uuid => @host.subscription_facet.uuid, :organization_label => @organization.label }]
-      ::Katello::Resources::Candlepin::Consumer.stubs(:get).returns(
-        [
-          {
-            uuid: @host.subscription_facet.uuid,
-            entitlementStatus: Katello::SubscriptionStatus::UNKNOWN,
-            'guestIds' => ['test-id-1'],
-            'entitlementCount' => 0
-          }
-        ]
-      )
+      @consumer = {
+        uuid: @host.subscription_facet.uuid,
+        entitlementStatus: Katello::SubscriptionStatus::UNKNOWN,
+        guestIds: ['test-id-1'],
+        entitlementCount: 0
+      }.with_indifferent_access
+      ::Katello::Resources::Candlepin::Consumer.stubs(:get).returns([@consumer])
     end
 
     let(:action_class) { ::Actions::Katello::Host::Hypervisors }
