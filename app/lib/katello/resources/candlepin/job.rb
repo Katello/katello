@@ -3,7 +3,7 @@ module Katello
     module Candlepin
       class Job < CandlepinResource
         class << self
-          NOT_FINISHED_STATES = %w(CREATED PENDING RUNNING).freeze unless defined? NOT_FINISHED_STATES
+          NOT_FINISHED_STATES = %w(CREATED WAITING PENDING RUNNING).freeze unless defined? NOT_FINISHED_STATES
 
           def not_finished?(job)
             NOT_FINISHED_STATES.include?(job[:state])
