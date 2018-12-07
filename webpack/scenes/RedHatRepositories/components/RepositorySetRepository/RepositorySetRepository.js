@@ -16,13 +16,13 @@ class RepositorySetRepository extends Component {
 
     this.repoForAction = () => {
       const {
-        productId, contentId, archDisplay, releasever, label,
+        productId, contentId, arch, releasever, label,
       } = this.props;
 
       return {
         productId,
         contentId,
-        archDisplay,
+        arch,
         releasever,
         label,
       };
@@ -62,9 +62,9 @@ class RepositorySetRepository extends Component {
   }
 
   render() {
-    const { archDisplay, releasever, type } = this.props;
+    const { arch, releasever, type } = this.props;
 
-    const archLabel = archDisplay || __('Default');
+    const archLabel = arch || __('Default');
     const releaseverLabel = releasever || '';
 
     const yStreamHelpText =
@@ -135,7 +135,7 @@ class RepositorySetRepository extends Component {
 RepositorySetRepository.propTypes = {
   contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
-  archDisplay: PropTypes.string,
+  arch: PropTypes.string,
   releasever: PropTypes.string,
   type: PropTypes.string,
   label: PropTypes.string,
@@ -159,7 +159,7 @@ RepositorySetRepository.defaultProps = {
   type: '',
   label: '',
   releasever: undefined,
-  archDisplay: undefined,
+  arch: undefined,
   enabledSearch: {},
   loading: false,
   error: false,

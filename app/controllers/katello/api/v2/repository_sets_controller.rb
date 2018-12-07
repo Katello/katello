@@ -56,8 +56,9 @@ module Katello
         major, minor = repo[:substitutions][:releasever].nil? ? [1000, 1000] : repo[:substitutions][:releasever].split('.').map(&:to_i)
         major = major == 0 ? 1000 : major
         minor = minor.nil? ? 1000 : minor
+        arch = repo[:substitutions][:basearch].nil? ? "" : repo[:substitutions][:basearch]
 
-        [repo[:arch], major, minor]
+        [arch, major, minor]
       end
 
       collection = {

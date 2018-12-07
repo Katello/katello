@@ -109,7 +109,6 @@ module ::Actions::Katello::RepositorySet
           must_equal("results" =>
                        [{"substitutions" => {"basearch" => "x86_64", "releasever" => "6Server"},
                          "path" => "/product/x86_64/6Server",
-                         "arch" => "x86_64",
                          "repo_name" => "Content 123 x86_64 6Server",
                          "name" => "Content 123",
                          "pulp_id" => 'foobar',

@@ -50,8 +50,7 @@ module Actions
             name:          mapper.content.name,
             enabled:       !repo.nil?,
             promoted:      (!repo.nil? && repo.promoted?),
-            repository_id: repo.try(:id),
-            arch:          substitutions[:basearch] || @product.arch
+            repository_id: repo.try(:id)
           }
         end
 

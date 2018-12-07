@@ -20,8 +20,7 @@ export function normalizeContentSetRepositories(repos, contentId, productId) {
   return repos.map(repo => ({
     contentId: parseInt(contentId, 10),
     productId: parseInt(productId, 10),
-    archDisplay: repo.arch,
-    archSubstitution: repo.substitutions.basearch,
+    arch: repo.substitutions.basearch,
     releasever: repo.substitutions.releasever,
     enabled: repo.enabled,
     error: false,
@@ -31,13 +30,13 @@ export function normalizeContentSetRepositories(repos, contentId, productId) {
 
 export const enableRepository = repository => (dispatch) => {
   const {
-    productId, contentId, archSubstitution, releasever,
+    productId, contentId, arch, releasever,
   } = repository;
 
   const repoData = {
     id: contentId,
     product_id: productId,
-    basearch: archSubstitution,
+    basearch: arch,
     releasever,
   };
 

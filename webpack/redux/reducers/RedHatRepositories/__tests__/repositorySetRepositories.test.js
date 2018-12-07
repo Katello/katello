@@ -50,7 +50,7 @@ describe('repositorySetRepositories reducer', () => {
       repository: {
         contentId,
         releasever: '7.2',
-        archSubstitution: 'x86_64',
+        arch: 'x86_64',
       },
     })).toEqual(enabledState);
   });
@@ -61,7 +61,7 @@ describe('repositorySetRepositories reducer', () => {
       repository: {
         contentId,
         releasever: '7.2',
-        archSubstitution: 'x86_64',
+        arch: 'x86_64',
       },
       error: 'Unable to process request.',
     })).toEqual(successState);
@@ -73,7 +73,7 @@ describe('repositorySetRepositories reducer', () => {
       repository: {
         contentId,
         releasever: '7.2',
-        archSubstitution: 'x86_64',
+        arch: 'x86_64',
       },
     })).toEqual(enablingState);
   });
@@ -85,7 +85,7 @@ describe('repositorySetRepositories reducer', () => {
         repository: {
           contentId,
           releasever: '7.2',
-          archSubstitution: 'x86_64',
+          arch: 'x86_64',
         },
         error: 'Unable to process request.',
       },
