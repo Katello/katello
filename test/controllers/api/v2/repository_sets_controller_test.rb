@@ -107,7 +107,7 @@ module Katello
       task = assert_sync_task ::Actions::Katello::RepositorySet::ScanCdn
 
       repo_set = lambda { |version: "", arch: "", path: ""|
-        { :substitutions => { :releasever => version, :basearch => arch }, :path => path }.with_indifferent_access
+        { :substitutions => { :releasever => version, :basearch => arch }, :path => path, :arch => arch }.with_indifferent_access
       }
 
       expected_sort = [repo_set.call(version: nil, arch: "x86_64"),
