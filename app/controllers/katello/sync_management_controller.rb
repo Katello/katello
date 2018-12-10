@@ -17,7 +17,7 @@ module Katello
     end
 
     def index
-      org = current_organization_data
+      org = current_organization_object
       @products = org.library.products.readable
       redhat_products, custom_products = @products.partition(&:redhat?)
       redhat_products.sort_by { |p| p.name.downcase }
