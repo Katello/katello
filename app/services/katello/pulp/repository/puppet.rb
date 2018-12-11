@@ -19,7 +19,7 @@ module Katello
         end
 
         def generate_distributors
-          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(puppet_install_distributor_path, :id => repo.pulp_id, :auto_publish => false)
+          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(puppet_install_distributor_path, :subdir => 'modules', :id => repo.pulp_id, :auto_publish => false)
           puppet_dist = Runcible::Models::PuppetDistributor.new(nil, (root.unprotected || false), true,
                                                                 :id => "#{repo.pulp_id}_puppet", :auto_publish => true)
           [puppet_dist, puppet_install_dist]
@@ -27,7 +27,7 @@ module Katello
 
         def puppet_install_distributor_path
           puppet_env = ::Environment.construct_name(repo.organization, repo.environment, repo.content_view)
-          ::File.join(smart_proxy.puppet_path, puppet_env, 'modules')
+          ::File.join(smart_proxy.puppet_path, puppet_env)
         end
 
         def partial_repo_path
