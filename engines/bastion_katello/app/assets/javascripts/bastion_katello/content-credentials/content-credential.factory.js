@@ -11,30 +11,33 @@ angular.module("Bastion.content-credentials").factory("ContentCredential", [
     "BastionResource",
     "CurrentOrganization",
     function(BastionResource, CurrentOrganization) {
-        function appendData(collection, fullData, usedAs) {
-            angular.forEach(fullData, function(data) {
+        var repoTypeMap = {
+            "gpg_key_repos": "GPG Key",
+            "ssl_ca_root_repos": "SSL CA Cert",
+            "ssl_client_root_repos": "SSL Client Cert",
+            "ssl_key_root_repos": "SSL Client Key"
+        };
+
+        var productTypeMap = {
+            "gpg_key_products": "GPG Key",
+            "ssl_ca_products": "SSL CA Cert",
+            "ssl_client_products": "SSL Client Cert",
+            "ssl_key_products": "SSL Client Key"
+        };
+
+        function appendData(allData, fullCredential, usedAs) {
+            angular.forEach(fullCredential, function(data) {
                 data.usedAs = usedAs;
-                collection.push(data);
+                allData.push(data);
             });
         }
 
-        function sortContentCredentialData(data, cases) {
+        function parseContentCredentialData(data, typeMap) {
             var contentCredential = angular.fromJson(data);
             var allData = [];
             _.forOwn(contentCredential, function(value, key) {
-                switch (key) {
-                    case cases[0]:
-                        appendData(allData, value, "GPG Key");
-                        break;
-                    case cases[1]:
-                        appendData(allData, value, "SSL CA Cert");
-                        break;
-                    case cases[2]:
-                        appendData(allData, value, "SSL Client Cert");
-                        break;
-                    case cases[3]:
-                        appendData(allData, value, "SSL Client Key");
-                        break;
+                if (typeMap.hasOwnProperty(key)) {
+                    appendData(allData, value, typeMap[key]);
                 }
             });
             return allData;
@@ -53,12 +56,7 @@ angular.module("Bastion.content-credentials").factory("ContentCredential", [
                 products: {
                     method: "GET",
                     transformResponse: function(data) {
-                        var allProducts = sortContentCredentialData(data, [
-                            "gpg_key_products",
-                            "ssl_ca_products",
-                            "ssl_client_products",
-                            "ssl_key_products"
-                        ]);
+                        var allProducts = parseContentCredentialData(data, productTypeMap);
                         return {
                             total: allProducts.length,
                             subtotal: allProducts.length,
@@ -69,12 +67,7 @@ angular.module("Bastion.content-credentials").factory("ContentCredential", [
                 repositories: {
                     method: "GET",
                     transformResponse: function(data) {
-                        var allRepos = sortContentCredentialData(data, [
-                            "gpg_key_repos",
-                            "ssl_ca_root_repos",
-                            "ssl_client_root_repos",
-                            "ssl_key_root_repos"
-                        ]);
+                        var allRepos = parseContentCredentialData(data, repoTypeMap);
                         return {
                             total: allRepos.length,
                             subtotal: allRepos.length,
