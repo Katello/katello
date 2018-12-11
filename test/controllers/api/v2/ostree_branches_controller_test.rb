@@ -67,10 +67,21 @@ module Katello
 
     def test_branch_order
       @repo.ostree_branches.create!(:name => "def456", :uuid => "456uvw", :version => "1.0")
+      @repo.ostree_branches.create!(:name => "ghi789", :uuid => "789rst", :version => "1.11")
+      @repo.ostree_branches.create!(:name => "jkl123", :uuid => "123opq", :version => "1.10")
+      @repo.ostree_branches.create!(:name => "mno456", :uuid => "456lmn", :version => "1.11.12")
+      @repo.ostree_branches.create!(:name => "pqr789", :uuid => "789ijk", :version => "1.11.120")
+      @repo.ostree_branches.create!(:name => "stu123", :uuid => "123fgh", :version => "1.11.119")
 
       get :index
-      tree_branch_uuid = JSON.parse(response.body)['results'][0]['uuid']
-      assert_equal "123xyz", tree_branch_uuid
+      results = JSON.parse(response.body)['results']
+      
+      actual_branch_order = results.collect do |branch|
+        branch['uuid']
+      end
+
+      expected_branch_order = ["789ijk", "123fgh", "456lmn", "789rst", "123opq", "123xyz", "456uvw"]
+      assert_equal expected_branch_order, actual_branch_order
     end
   end
 end
