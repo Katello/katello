@@ -19,7 +19,7 @@ child :products => :gpg_key_products do
   end
 end
 
-child :repositories => :gpg_key_repos do
+child :root_repositories => :gpg_key_repos do
   attribute :id
   attribute :name
   attribute :content_type
@@ -40,7 +40,7 @@ child :ssl_ca_products => :ssl_ca_products do
   end
 end
 
-child :ssl_ca_repos => :ssl_ca_repos do
+child :ssl_ca_root_repos => :ssl_ca_root_repos do
   attribute :id
   attribute :name
   attribute :content_type
@@ -61,7 +61,7 @@ child :ssl_client_products => :ssl_client_products do
   end
 end
 
-child :ssl_client_repos => :ssl_client_repos do
+child :ssl_client_root_repos => :ssl_client_root_repos do
   attribute :id
   attribute :name
   attribute :content_type
@@ -82,7 +82,7 @@ child :ssl_key_products => :ssl_key_products do
   end
 end
 
-child :ssl_key_repos => :ssl_key_repos do
+child :ssl_key_root_repos => :ssl_key_root_repos do
   attribute :id
   attribute :name
   attribute :content_type

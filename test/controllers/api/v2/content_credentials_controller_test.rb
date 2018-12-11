@@ -33,6 +33,13 @@ module Katello
       assert_template 'api/v2/content_credentials/index'
     end
 
+    def test_show
+      get :show, params: { organization_id: @organization.id, id: @gpg_key.id }
+
+      assert_response :success
+      assert_template 'api/v2/content_credentials/show'
+    end
+
     def test_index_protected
       allowed_perms = [@view_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
