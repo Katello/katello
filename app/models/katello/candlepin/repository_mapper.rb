@@ -106,7 +106,11 @@ module Katello
       end
 
       def unprotected?
-        kickstart? || file?
+        kickstart? || file? || suse?
+      end
+
+      def suse?
+        content.content_type == Repository::YUM_TYPE && path.downcase.include?("/suse")
       end
 
       def file?
