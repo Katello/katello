@@ -421,12 +421,12 @@ export const tableColumns = [
   {
     key: 'consumed',
     label: 'Consumed',
-    value: false,
+    value: true,
   },
   {
     key: 'quantity',
     label: 'Entitlements',
-    value: false,
+    value: true,
   },
 ];
 export const loadTableColumnsSuccessAction = [
@@ -439,6 +439,8 @@ export const loadTableColumnsSuccessAction = [
         'contract_number',
         'start_date',
         'end_date',
+        'consumed',
+        'quantity',
       ],
     },
   },
