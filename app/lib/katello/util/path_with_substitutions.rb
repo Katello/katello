@@ -1,7 +1,7 @@
 module Katello
   module Util
     class PathWithSubstitutions
-      ARCHITECTURES = ["x86_64", "s390x", "ppc64le", "aarch64" ].freeze
+      ARCHITECTURES = ["x86_64", "s390x", "ppc64le", "aarch64", "multiarch", "ppc64"].freeze
 
       include Comparable
 
@@ -18,18 +18,13 @@ module Katello
       end
 
       def split_path
-        @split ||= @path.split('/').reject(&:blank?)
+        @split ||= @path.split('/').map(&:downcase).reject(&:blank?)
       end
 
       def generate_substitutions_from_path
-        # in RHEL8, arch is typically in the 5th position of the path, so we check here first
-        if split_path.length >= 5 && ARCHITECTURES.include?(split_path[4])
-          @substitutions["basearch"] = split_path[4]
-        else
-          arches = split_path & ARCHITECTURES
-          arch = arches.first
-          @substitutions["basearch"] = arch if arch
-        end
+        arches = split_path & ARCHITECTURES
+        arch = arches.first
+        @substitutions["basearch"] = arch if arch
       end
 
       def substitutions_needed
