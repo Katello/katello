@@ -389,22 +389,11 @@ module Katello
         params[:upload_ids].each { |upload_id| uploads << {'id' => upload_id} }
       end
 
-      upload_ids = uploads.map { |upload| upload['id'] }
-      unit_keys = uploads.map do |upload|
-        if @repository.file? || @repository.docker?
-          upload.except('id')
-        else
-          upload.except('id').except('name')
-        end
-      end
-
-      unit_type_id = unit_keys[0] && unit_keys[0].include?('digest') ? 'docker_tag' : @repository.unit_type_id
-
       begin
-        task = send(async ? :async_task : :sync_task, ::Actions::Katello::Repository::ImportUpload,
-                    @repository, upload_ids, :unit_type_id => unit_type_id, :unit_keys => unit_keys,
-                    :generate_metadata => generate_metadata, :sync_capsule => sync_capsule)
-        respond_for_async(resource: task)
+        respond_for_async(resource: send(
+          async ? :async_task : :sync_task,
+          ::Actions::Katello::Repository::ImportUpload, @repository, uploads,
+          generate_metadata: generate_metadata, sync_capsule: sync_capsule))
       rescue => e
         raise HttpErrors::BadRequest, e.message
       end

@@ -374,43 +374,37 @@ module Katello
     def upload_manifest(tar_file)
       upload_id = pulp_content.create_upload_request['upload_id']
       filename = tmp_file(tar_file)
-      File.open(filename, 'rb') do |file|
-        pulp_content.upload_bits(upload_id, 0, file.read)
+      uploads = []
 
-        file.rewind
+      File.open(filename, 'rb') do |file|
         content = file.read
-        unit_keys = [{
+        pulp_content.upload_bits(upload_id, 0, content)
+
+        uploads << {
+          id: upload_id,
           name: filename,
           size: file.size,
           checksum: Digest::SHA256.hexdigest(content)
-        }]
-        unit_type_id = 'docker_manifest'
-        task = sync_task(::Actions::Katello::Repository::ImportUpload,
-                         @repository, [upload_id], :unit_type_id => unit_type_id,
-                         :unit_keys => unit_keys,
-                         :generate_metadata => true, :sync_capsule => true)
-        digest = task.output['upload_results'][0]['digest']
-
-        File.delete(filename)
-
-        digest
+        }
       end
+
+      File.delete(filename)
+      task = sync_task(::Actions::Katello::Repository::ImportUpload,
+                       @repository, uploads, generate_metadata: true, sync_capsule: true)
+      task.output['upload_results'][0]['digest']
     ensure
       pulp_content.delete_upload_request(upload_id) if upload_id
     end
 
     def upload_tag(digest, tag)
       upload_id = pulp_content.create_upload_request['upload_id']
-      unit_keys = [{
+      uploads = [{
+        id: upload_id,
         name: tag,
         digest: digest
       }]
-      unit_type_id = 'docker_tag'
-      sync_task(::Actions::Katello::Repository::ImportUpload,
-                       @repository, [upload_id], :unit_type_id => unit_type_id,
-                       :unit_keys => unit_keys,
-                       :generate_metadata => true, :sync_capsule => true)
-
+      sync_task(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
+                :generate_metadata => true, :sync_capsule => true)
       tag
     ensure
       pulp_content.delete_upload_request(upload_id) if upload_id

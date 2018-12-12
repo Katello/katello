@@ -1,6 +1,5 @@
 require "katello_test_helper"
 
-#rubocop:disable Metrics/ModuleLength
 module Katello
   #rubocop:disable Metrics/BlockLength
   describe Api::Registry::RegistryProxiesController do
@@ -352,17 +351,10 @@ module Katello
         @controller.expects(:sync_task)
           .times(2)
           .returns(stub('task', :output => {'upload_results' => [{ 'digest' => 'sha256:1234' }]}), true)
-          .with do |action_class, repository, upload_ids, params|
+          .with do |action_class, repository, uploads, params|
             assert_equal ::Actions::Katello::Repository::ImportUpload, action_class
             assert_equal @repository, repository
-            assert_equal [123], upload_ids
-            if params[:unit_type_id] == 'docker_manifest'
-              assert_equal [:checksum, :name, :size], params[:unit_keys][0].keys.sort
-            elsif params[:unit_type_id] == 'docker_tag'
-              assert_equal [{name: 'tag', digest: 'sha256:1234'}], params[:unit_keys]
-            else
-              assert_equal "unknown unit_type_id", params[:unit_type_id]
-            end
+            assert_equal [123], uploads.pluck(:id)
             assert_equal true, params[:generate_metadata]
             assert_equal true, params[:sync_capsule]
           end

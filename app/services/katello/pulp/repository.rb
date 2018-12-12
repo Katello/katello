@@ -21,6 +21,16 @@ module Katello
         Katello::RepositoryTypeManager.repository_types[repo.root.content_type].service_class.new(repo, smart_proxy)
       end
 
+      def unit_type_id(_uploads = [])
+        @repo.unit_type_id
+      end
+
+      def unit_keys(uploads)
+        uploads.map do |upload|
+          upload.except('id', 'name')
+        end
+      end
+
       def partial_repo_path
         fail NotImplementedError
       end

@@ -705,10 +705,8 @@ module Katello
     def test_import_upload_ids
       uploads = [{'id' => '1'}]
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository,
-              uploads.map { |u| u['id'] }, unit_type_id: 'rpm',
-              unit_keys: uploads.map { |u| u.except('id') }, generate_metadata: false,
-              sync_capsule: false)
+        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
+              generate_metadata: false, sync_capsule: false)
         .returns(build_task_stub)
 
       put(:import_uploads, params: { :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] }, :publish_repository => 'false', sync_capsule: 'false' })
@@ -719,10 +717,8 @@ module Katello
     def test_two_import_upload_ids
       uploads = [{'id' => '1'}, {'id' => '2'}]
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository,
-              uploads.map { |u| u['id'] }, unit_type_id: 'rpm',
-              unit_keys: uploads.map { |u| u.except('id') }, generate_metadata: false,
-              sync_capsule: false)
+        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
+              generate_metadata: false, sync_capsule: false)
         .returns(build_task_stub)
 
       put(:import_uploads, params: { :id => @repository.id, :upload_ids => uploads.map { |u| u['id'] }, :publish_repository => 'false', sync_capsule: 'false' })
@@ -735,9 +731,7 @@ module Katello
       # make sure name gets ignored for non-file repos
       # this is yum repo. So unit keys should except name
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @repository,
-              uploads.map { |u| u['id'] }, unit_type_id: 'rpm',
-              unit_keys: uploads.map { |u| u.except('id').except('name') },
+        .with(::Actions::Katello::Repository::ImportUpload, @repository, uploads,
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
@@ -752,9 +746,7 @@ module Katello
       file_repo = katello_repositories(:generic_file)
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, file_repo,
-              uploads.map { |u| u['id'] }, unit_type_id: 'iso',
-              unit_keys: uploads.map { |u| u.except('id') },
+        .with(::Actions::Katello::Repository::ImportUpload, file_repo, uploads,
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
@@ -768,9 +760,7 @@ module Katello
       # this is docker repo. So unit keys should accept name
       uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @docker_repo,
-              uploads.map { |u| u['id'] }, unit_type_id: 'docker_manifest',
-              unit_keys: uploads.map { |u| u.except('id') },
+        .with(::Actions::Katello::Repository::ImportUpload, @docker_repo, uploads,
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 
@@ -784,9 +774,7 @@ module Katello
       # make sure name is not ignored for docker repos
       # this is docker repo so unit keys should acccept name
       @controller.expects(:sync_task)
-        .with(::Actions::Katello::Repository::ImportUpload, @docker_repo,
-              uploads.map { |u| u['id'] }, unit_type_id: 'docker_tag',
-              unit_keys: uploads.map { |u| u.except('id') },
+        .with(::Actions::Katello::Repository::ImportUpload, @docker_repo, uploads,
               generate_metadata: true, sync_capsule: true)
         .returns(build_task_stub)
 

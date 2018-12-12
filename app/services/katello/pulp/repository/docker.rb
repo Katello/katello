@@ -2,6 +2,16 @@ module Katello
   module Pulp
     class Repository
       class Docker < ::Katello::Pulp::Repository
+        def unit_type_id(uploads = [])
+          uploads.pluck('digest').any? ? 'docker_tag' : super
+        end
+
+        def unit_keys(uploads)
+          uploads.map do |upload|
+            upload.except('id')
+          end
+        end
+
         def generate_master_importer
           config = {
             feed: root.url,
