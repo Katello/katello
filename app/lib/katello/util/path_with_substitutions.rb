@@ -1,6 +1,8 @@
 module Katello
   module Util
     class PathWithSubstitutions
+      ARCHITECTURES = ["x86_64", "s390x", "ppc64le", "aarch64" ].freeze
+
       include Comparable
 
       attr_accessor :substitutions
@@ -12,35 +14,28 @@ module Katello
         @substitutions = substitutions
         @path = path
         @resolved = []
-        create_rhel_eight_substitutions
+        generate_substitutions_from_path if @substitutions.empty?
       end
 
       def split_path
         @split ||= @path.split('/').reject(&:blank?)
       end
 
+      def generate_substitutions_from_path
+        # in RHEL8, arch is typically in the 5th position of the path, so we check here first
+        if split_path.length >= 5 && ARCHITECTURES.include?(split_path[4])
+          @substitutions["basearch"] = split_path[4]
+        else
+          arches = split_path & ARCHITECTURES
+          arch = arches.first
+          @substitutions["basearch"] = arch if arch
+        end
+      end
+
       def substitutions_needed
         # e.g. if content_url = "/content/dist/rhel/server/7/$releasever/$basearch/kickstart"
         #      return ['releasever', 'basearch']
         split_path.map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
-      end
-
-      def create_rhel_eight_substitutions
-        @substitutions["basearch"] = rhel_eight_arch if rhel_eight?
-      end
-
-      def rhel_eight?
-        # url for RHEL8 repos can be either format:
-        # /content/dist/rhel8/8.0/x86_64/baseos/os/ OR
-        # /content/dist/layered/rhel8/x86_64/product
-        rhel8 = "rhel8"
-        split_path[2] == rhel8 || split_path[3] == rhel8
-      end
-
-      def rhel_eight_arch
-        # arch for RHEL8 repo paths is always the in the 5th position of the url i.e.
-        # /content/dist/rhel8/8.0/x86_64/baseos/os/ OR
-        split_path[4]
       end
 
       def substitutable?

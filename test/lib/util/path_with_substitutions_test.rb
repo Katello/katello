@@ -8,6 +8,7 @@ module Katello
         @non_sub_path = '/content/dist/rhel/server/5/5Server/x86_64/os'
         @el8_path = '/content/dist/rhel8/8.0/x86_64/baseos/os/'
         @el8_layered_path = '/content/dist/layered/rhel8/x86_64/product'
+        @el8_arch_misplaced = '/content/dist/rhel8/x86_64/product'
         @releasever_list = ['5Server', '5.8']
         @arch_list = ['x86_64', 'i386']
         @cdn = Katello::Resources::CDN::CdnResource.new('http://someurl/')
@@ -23,22 +24,13 @@ module Katello
         refute PathWithSubstitutions.new(@non_sub_path, {}).substitutable?
       end
 
-      def test_rhel_eight
-        assert PathWithSubstitutions.new(@el8_path, {}).rhel_eight?
-        assert PathWithSubstitutions.new(@el8_layered_path, {}).rhel_eight?
-        refute PathWithSubstitutions.new(@el5_path, {}).rhel_eight?
-      end
-
-      def test_rhel_eight_arch
-        assert_equal PathWithSubstitutions.new(@el8_path, {}).rhel_eight_arch, "x86_64"
-        assert_equal PathWithSubstitutions.new(@el8_layered_path, {}).rhel_eight_arch, "x86_64"
-      end
-
       def test_rhel_eight_substitutions
         el8_path_with_sub = PathWithSubstitutions.new(@el8_path, {})
         el8_layered_path_with_sub = PathWithSubstitutions.new(@el8_layered_path, {})
+        el8_arch_misplaced_path_with_sub = PathWithSubstitutions.new(@el8_arch_misplaced, {})
         assert_equal el8_path_with_sub.substitutions["basearch"], "x86_64"
         assert_equal el8_layered_path_with_sub.substitutions["basearch"], "x86_64"
+        assert_equal el8_arch_misplaced_path_with_sub.substitutions["basearch"], "x86_64"
       end
 
       def test_resolve_substitutions_releasever
