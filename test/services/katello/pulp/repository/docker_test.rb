@@ -41,6 +41,21 @@ module Katello
         ensure
           delete_repo(@repo)
         end
+
+        def test_unit_keys
+          upload = {'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}
+          assert_equal [upload.except('id')], @repo.backend_service(@master).unit_keys([upload])
+        end
+
+        def test_unit_type_id_docker_manifest
+          uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+          assert_equal 'docker_manifest', @repo.backend_service(@master).unit_type_id(uploads)
+        end
+
+        def test_unit_type_id_docker_tag
+          uploads = [{'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test', 'digest' => 'sha256:1234'}]
+          assert_equal 'docker_tag', @repo.backend_service(@master).unit_type_id(uploads)
+        end
       end
     end
   end

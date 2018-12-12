@@ -2,6 +2,12 @@ module Katello
   module Pulp
     class Repository
       class File < ::Katello::Pulp::Repository
+        def unit_keys(uploads)
+          uploads.map do |upload|
+            upload.except('id')
+          end
+        end
+
         def generate_master_importer
           config = { feed: root.url }
           importer_class.new(config.merge(master_importer_connection_options))

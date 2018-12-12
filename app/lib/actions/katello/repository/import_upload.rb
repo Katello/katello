@@ -3,13 +3,15 @@ module Actions
   module Katello
     module Repository
       class ImportUpload < Actions::EntryAction
-        def plan(repository, upload_ids, options = {})
+        def plan(repository, uploads, options = {})
           action_subject(repository)
+          repo_service = repository.backend_service(::SmartProxy.pulp_master)
 
-          unit_keys = options.fetch(:unit_keys, {})
+          upload_ids = uploads.pluck('id')
+          unit_keys = repo_service.unit_keys(uploads)
           generate_metadata = options.fetch(:generate_metadata, true)
           sync_capsule = options.fetch(:sync_capsule, true)
-          unit_type_id = options.fetch(:unit_type_id, repository.unit_type_id)
+          unit_type_id = repo_service.unit_type_id(uploads)
 
           sequence do
             upload_results = concurrence do

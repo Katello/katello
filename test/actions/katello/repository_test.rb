@@ -267,9 +267,7 @@ module ::Actions::Katello::Repository
 
       uploads = [{'id' => 1, 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
 
-      plan_action action, docker_repository,
-              uploads.map { |u| u['id'] }, unit_type_id: 'docker_manifest',
-              unit_keys: uploads.map { |u| u.except('id') },
+      plan_action action, docker_repository, uploads,
               generate_metadata: true, sync_capsule: true
 
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
@@ -283,19 +281,17 @@ module ::Actions::Katello::Repository
     it 'plans' do
       action.expects(:action_subject).with(docker_repository)
 
-      uploads = [{'id' => 1, 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}]
+      uploads = [{'id' => 1, 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test', 'digest' => 'sha256:1234'}]
 
       unit_keys = uploads.map { |u| u.except('id') }
 
-      plan_action action, docker_repository,
-              uploads.map { |u| u['id'] }, unit_type_id: 'docker_tag',
-              unit_keys: unit_keys,
+      plan_action action, docker_repository, uploads,
               generate_metadata: true, sync_capsule: true
 
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
                                  pulp_id: docker_repository.pulp_id,
                                  unit_type_id: 'docker_tag',
-                                 unit_key: {'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'},
+                                 unit_key: unit_keys[0],
                                  upload_id: 1, unit_metadata: unit_keys[0]
                                 )
     end
