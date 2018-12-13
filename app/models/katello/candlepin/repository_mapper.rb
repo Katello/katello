@@ -110,7 +110,7 @@ module Katello
       end
 
       def suse?
-        content.content_type == Repository::YUM_TYPE && path.downcase.include?("/suse")
+        content.content_type == Repository::YUM_TYPE && path.downcase.match(/suse/)
       end
 
       def file?
