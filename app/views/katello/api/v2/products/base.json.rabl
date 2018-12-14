@@ -18,7 +18,7 @@ child({:available_content => :available_content}, :if => params[:include_availab
 end
 
 child :sync_plan do
-  attributes :id, :name, :description, :sync_date, :interval, :next_sync
+  attributes :id, :name, :description, :sync_date, :interval, :next_sync, :cron_expression
 end
 
 node :repository_count do |product|
