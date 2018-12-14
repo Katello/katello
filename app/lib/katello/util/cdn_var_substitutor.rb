@@ -60,7 +60,8 @@ module Katello
         return resolved if to_resolve.empty?
 
         futures = to_resolve.map do |path_with_substitution|
-          Concurrent.future do
+          future_namespace = defined?(Concurrent::Promises) ? Concurrent::Promises : Concurrent
+          future_namespace.future do
             path_with_substitution.resolve_substitutions(@resource)
           end
         end
