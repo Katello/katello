@@ -47,6 +47,7 @@ module Katello
     validate :ensure_ostree_repo_protected, :if => :ostree?
     validate :ensure_compatible_download_policy, :if => :yum?
     validate :ensure_valid_ignorable_content
+    validate :ensure_valid_docker_tags_whitelist
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
     validates :url, presence: true, if: :ostree?
@@ -170,6 +171,15 @@ module Katello
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content."))
       elsif ignorable_content.any? { |item| !IGNORABLE_CONTENT_UNIT_TYPES.include?(item) }
         errors.add(:ignorable_content, N_("Invalid value specified for ignorable content. Permissible values %s") % IGNORABLE_CONTENT_UNIT_TYPES.join(","))
+      end
+    end
+
+    def ensure_valid_docker_tags_whitelist
+      return if docker_tags_whitelist.blank?
+      if !docker?
+        errors.add(:docker_tags_whitelist, N_("White list can be only set for Container Image repositories."))
+      elsif !docker_tags_whitelist.is_a?(Array)
+        errors.add(:docker_tags_whitelist, N_("Invalid value specified for Container Image repositories."))
       end
     end
 

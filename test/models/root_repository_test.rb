@@ -617,6 +617,19 @@ module Katello
       @root.ignorable_content = nil
       assert @root.valid?
     end
+
+    def test_docker_white_tags
+      @docker_root.url = "http://foo.com"
+      @docker_root.docker_tags_whitelist = nil
+      assert @root.valid?
+      @docker_root.docker_tags_whitelist = ["latest", "1.1"]
+      assert @docker_root.valid?
+
+      @root.content_type = Repository::OSTREE_TYPE
+      @root.docker_tags_whitelist = ["boo"]
+      refute @root.valid?
+      assert @root.errors.include?(:docker_tags_whitelist)
+    end
   end
 
   class RootRepositoryInstanceTest < RepositoryTestBase
