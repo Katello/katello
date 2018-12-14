@@ -14,6 +14,11 @@
     Weekly on {{ product.sync_plan.sync_date | date:'EEEE' }} at {{ product.sync_plan.sync_date | date:'mediumTime' }} (Server Time)
   </span>
 </dd>
+<dd ng-if="product.sync_plan.cron_expression">
+  <span translate>
+    Custom Cron : {{ product.sync_plan.cron_expression }}
+  </span>
+</dd>
 <dd ng-hide="product.sync_plan.next_sync">
   <span translate>
     Synced manually, no interval set.
