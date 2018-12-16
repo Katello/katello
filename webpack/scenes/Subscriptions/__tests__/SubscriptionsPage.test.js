@@ -17,36 +17,44 @@ const loadTables = () => new Promise((resolve) => {
 describe('subscriptions page', () => {
   const noop = () => {};
   const organization = { owner_details: { upstreamConsumer: 'blah' } };
+  const page = shallow(<SubscriptionsPage
+    organization={organization}
+    subscriptions={successState}
+    subscriptionTableSettings={settingsSuccessState}
+    loadSetting={loadSetting}
+    loadTables={loadTables}
+    loadTableColumns={loadTableColumns}
+    createColumns={createColumns}
+    updateColumns={updateColumns}
+    loadSubscriptions={loadSubscriptions}
+    updateQuantity={updateQuantity}
+    pollTaskUntilDone={noop}
+    pollBulkSearch={noop}
+    deleteSubscriptions={() => {}}
+    resetTasks={noop}
+    uploadManifest={noop}
+    deleteManifest={noop}
+    refreshManifest={noop}
+    updateSearchQuery={noop}
+    openManageManifestModal={noop}
+    closeManageManifestModal={noop}
+    openDeleteModal={noop}
+    closeDeleteModal={noop}
+    openTaskModal={noop}
+    closeTaskModal={noop}
+    disableDeleteButton={noop}
+    enableDeleteButton={noop}
+  />);
 
   it('should render', async () => {
-    const page = shallow(<SubscriptionsPage
-      organization={organization}
-      subscriptions={successState}
-      subscriptionTableSettings={settingsSuccessState}
-      loadSetting={loadSetting}
-      loadTables={loadTables}
-      loadTableColumns={loadTableColumns}
-      createColumns={createColumns}
-      updateColumns={updateColumns}
-      loadSubscriptions={loadSubscriptions}
-      updateQuantity={updateQuantity}
-      pollTaskUntilDone={noop}
-      pollBulkSearch={noop}
-      deleteSubscriptions={() => {}}
-      resetTasks={noop}
-      uploadManifest={noop}
-      deleteManifest={noop}
-      refreshManifest={noop}
-      updateSearchQuery={noop}
-      openManageManifestModal={noop}
-      closeManageManifestModal={noop}
-      openDeleteModal={noop}
-      closeDeleteModal={noop}
-      openTaskModal={noop}
-      closeTaskModal={noop}
-      disableDeleteButton={noop}
-      enableDeleteButton={noop}
-    />);
     expect(toJson(page)).toMatchSnapshot();
+  });
+
+  it('should poll tasks when org changes', async () => {
+    jest.spyOn(page.instance(), 'pollTasks');
+
+    page.setProps({ organization: { id: 1 } });
+
+    expect(page.instance().pollTasks).toHaveBeenCalled();
   });
 });

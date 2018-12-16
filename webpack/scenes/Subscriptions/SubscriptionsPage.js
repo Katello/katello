@@ -69,7 +69,7 @@ class SubscriptionsPage extends Component {
       }
     }
 
-    if (!isEqual(organization.owner_details, prevProps.organization.owner_details)) {
+    if (!isEqual(organization, prevProps.organization)) {
       this.pollTasks();
     }
   }
@@ -95,11 +95,13 @@ class SubscriptionsPage extends Component {
   pollTasks() {
     const { pollBulkSearch, organization } = this.props;
 
-    pollBulkSearch({
-      action: `organization '${organization.owner_details.displayName}'`,
-      result: 'pending',
-      label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-    }, BULK_TASK_SEARCH_INTERVAL, organization.id);
+    if (organization && organization.owner_details) {
+      pollBulkSearch({
+        action: `organization '${organization.owner_details.displayName}'`,
+        result: 'pending',
+        label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
+      }, BULK_TASK_SEARCH_INTERVAL, organization.id);
+    }
 
     this.props.loadSetting('content_disconnected');
     this.props.loadSubscriptions();
