@@ -110,7 +110,7 @@ module Katello
       end
 
       def suse?
-        content.content_type == Repository::YUM_TYPE && path.downcase.match(/suse/)
+        content.content_type == Repository::YUM_TYPE && !!path.downcase.match(/suse/) # rubocop:disable Style/DoubleNegation
       end
 
       def file?
