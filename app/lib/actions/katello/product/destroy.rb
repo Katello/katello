@@ -35,9 +35,7 @@ module Actions
                             cp_id: product.cp_id, organization_label: product.organization.label)
               plan_action(Candlepin::Product::DeleteSubscriptions,
                             cp_id: product.cp_id, organization_label: product.organization.label)
-            end
 
-            unless organization_destroy
               concurrence do
                 remaining_product_content.each do |pc|
                   plan_action(Candlepin::Product::ContentRemove,
@@ -48,6 +46,8 @@ module Actions
                 plan_action(Candlepin::Product::Destroy, cp_id: product.cp_id, :owner => product.organization.label)
               end
             end
+
+            clear_pool_associations(product)
 
             plan_self(:product_id => product.id)
           end
@@ -60,6 +60,10 @@ module Actions
 
         def humanized_name
           _("Delete Product")
+        end
+
+        def clear_pool_associations(product)
+          product.pool_products.delete_all
         end
 
         def view_versions(product)
