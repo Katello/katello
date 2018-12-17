@@ -217,7 +217,8 @@ module Katello
         module_stream_attributes = []
         json.each do |package_item|
           if package_item['module']
-            module_stream = ModuleStream.where(package_item['module']).first_or_create!
+            module_stream = ModuleStream.where(package_item['module']).first
+            next if module_stream.blank?
             nvreas = package_item["packages"].map { |hash| Util::Package.build_nvra(hash) }
             module_stream_id_column = "#{ModuleStreamErratumPackage.table_name}.module_stream_id"
             existing = ErratumPackage.joins(:module_streams).
