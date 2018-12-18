@@ -67,7 +67,7 @@ module Katello
 
       def test_validating_subscriptions_needs_params
         fake_content_params = ["Red Hat Enterprise Linux Atomic Host (Kickstart)",
-                               "/content/dist/$basearch/atomic/7/7Server/fakearch/kickstart"]
+                               "/content/dist/$basearch/atomic/7/7Server/x86_64/kickstart"]
         content = FakeContent.new(*fake_content_params)
         substitutions = {}
         error_message = "Missing arguments basearch for #{content.content_url}"

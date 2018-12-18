@@ -14,7 +14,7 @@ module Katello
         @substitutions = substitutions
         @path = path
         @resolved = []
-        generate_substitutions_from_path if @substitutions.empty?
+        generate_substitutions_from_path if @substitutions.empty? && substitutions_needed.empty?
       end
 
       def split_path
