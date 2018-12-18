@@ -13,7 +13,7 @@ module Katello
       assert mapper.unprotected?
 
       mapper.expects(:path).returns("/special/redhat")
-      refute mapper.unprotected?
+      assert_equal mapper.unprotected?, false
     end
   end
 end
