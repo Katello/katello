@@ -310,30 +310,6 @@ module Katello
     end
   end
 
-  class GluePulpPuppetRepoTest < GluePulpRepoTestBase
-    @p_forge = nil
-
-    def setup
-      super
-      @p_forge = Repository.find(FIXTURES['katello_repositories']['p_forge']['id'])
-      @p_forge.relative_path = RepositorySupport::PULP_TMP_DIR
-      @p_forge.root.url = "http://davidd.fedorapeople.org/repos/random_puppet/"
-      create_repo(@p_forge)
-      @p_forge = @p_forge
-      ForemanTasks.sync_task(Actions::Pulp::Repository::DistributorPublish,
-                             :pulp_id => @p_forge.pulp_id,
-                             :distributor_type_id => Runcible::Models::PuppetInstallDistributor.type_id)
-    end
-
-    def teardown
-      delete_repo(@p_forge)
-    end
-
-    def test_generate_distributors
-      refute_nil @p_forge.find_distributor
-    end
-  end
-
   class GluePulpRepoContentsTest < GluePulpRepoTestBase
     def setup
       super
