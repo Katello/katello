@@ -36,12 +36,6 @@ module Katello
       repo.root.save!
 
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Create, repo)
-
-      if repo.puppet?
-        ForemanTasks.sync_task(::Actions::Pulp::Repository::DistributorPublish,
-                               :pulp_id => repo.pulp_id,
-                               :distributor_type_id => Runcible::Models::PuppetInstallDistributor.type_id)
-      end
     end
 
     def self.sync_repo(repo)

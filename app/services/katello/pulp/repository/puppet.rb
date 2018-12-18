@@ -19,7 +19,7 @@ module Katello
         end
 
         def generate_distributors
-          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(puppet_install_distributor_path, :id => repo.pulp_id, :auto_publish => true)
+          puppet_install_dist = Runcible::Models::PuppetInstallDistributor.new(puppet_install_distributor_path, :id => repo.pulp_id, :auto_publish => false)
           puppet_dist = Runcible::Models::PuppetDistributor.new(nil, (root.unprotected || false), true,
                                                                 :id => "#{repo.pulp_id}_puppet", :auto_publish => true)
           [puppet_dist, puppet_install_dist]
