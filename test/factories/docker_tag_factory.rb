@@ -3,21 +3,20 @@ FactoryBot.define do
     sequence(:name) { |n| "2.#{n}" }
     repository :docker_repository
     association :docker_taggable, :factory => :docker_manifest
-  end
-  trait :schema1 do
-    after(:build) do |tag|
-      tag.docker_taggable.schema_version = 1
+
+    trait :schema1 do
+      association :docker_taggable, :factory => [:docker_manifest, :schema1]
     end
-  end
-  trait :latest do
-    name "latest"
-  end
+    trait :latest do
+      name "latest"
+    end
 
-  trait :with_uuid do
-    uuid { SecureRandom.hex }
-  end
+    trait :with_uuid do
+      uuid { SecureRandom.hex }
+    end
 
-  trait :with_manifest_list do
-    association :docker_taggable, :factory => :docker_manifest_list
+    trait :with_manifest_list do
+      association :docker_taggable, :factory => :docker_manifest_list
+    end
   end
 end

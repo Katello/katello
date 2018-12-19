@@ -40,7 +40,7 @@ module Katello
 
       repo.docker_tags << schema2
       repo.docker_tags << schema1
-      repo.docker_manifest_lists << schema1.docker_manifest_list
+      repo.docker_manifests << schema1.docker_manifest
       repo.docker_manifest_lists << schema2.docker_manifest_list
 
       repo.save!
