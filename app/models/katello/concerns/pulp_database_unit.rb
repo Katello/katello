@@ -37,7 +37,11 @@ module Katello
       end
 
       def in_repositories(repos)
-        where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
+        if manage_repository_association
+          where(:id => repository_association_class.where(:repository_id => repos).select(unit_id_field))
+        else
+          where(:repository_id => repos)
+        end
       end
 
       def pulp_data(uuid)
@@ -91,14 +95,26 @@ module Katello
       end
 
       def copy_repository_associations(source_repo, dest_repo)
-        delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
-                       #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
-        ActiveRecord::Base.connection.execute(delete_query)
+        if manage_repository_association
+          delete_query = "delete from #{repository_association_class.table_name} where repository_id = #{dest_repo.id} and
+                         #{unit_id_field} not in (select #{unit_id_field} from #{repository_association_class.table_name} where repository_id = #{source_repo.id})"
 
-        insert_query = "insert into #{repository_association_class.table_name} (repository_id, #{unit_id_field})
-                        select #{dest_repo.id} as repository_id, #{unit_id_field} from #{repository_association_class.table_name}
-                        where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
-                        from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
+          insert_query = "insert into #{repository_association_class.table_name} (repository_id, #{unit_id_field})
+                          select #{dest_repo.id} as repository_id, #{unit_id_field} from #{repository_association_class.table_name}
+                          where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
+                          from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
+        else
+          columns = column_names - ["id", "uuid", "created_at", "updated_at", "repository_id"]
+
+          delete_query = "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
+                          uuid not in (select uuid from #{self.table_name} where repository_id = #{source_repo.id})"
+          insert_query = "insert into #{self.table_name} (repository_id, uuid, #{columns.join(',')})
+                    select #{dest_repo.id} as repository_id, uuid, #{columns.join(',')} from #{self.table_name}
+                    where repository_id = #{source_repo.id} and uuid not in (select uuid
+                    from #{self.table_name} where repository_id = #{dest_repo.id})"
+
+        end
+        ActiveRecord::Base.connection.execute(delete_query)
         ActiveRecord::Base.connection.execute(insert_query)
       end
 

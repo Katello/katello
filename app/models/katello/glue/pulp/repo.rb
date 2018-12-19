@@ -415,6 +415,7 @@ module Katello
         Katello::ModuleStream.import_for_repository(self)
         Katello::Erratum.import_for_repository(self)
         Katello::PackageGroup.import_for_repository(self)
+        Katello::YumMetadataFile.import_for_repository(self)
         self.import_distribution_data
       else
         index_linked_repo
@@ -427,6 +428,8 @@ module Katello
         Erratum.copy_repository_associations(base_repo, self)
         PackageGroup.copy_repository_associations(base_repo, self)
         ModuleStream.copy_repository_associations(base_repo, self)
+        YumMetadataFile.copy_repository_associations(base_repo, self)
+
         self.update_attributes!(
           :distribution_version => base_repo.distribution_version,
           :distribution_arch => base_repo.distribution_arch,
