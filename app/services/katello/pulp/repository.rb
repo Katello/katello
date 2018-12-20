@@ -65,7 +65,7 @@ module Katello
         sync_options = {}
         sync_options[:max_speed] = SETTINGS.dig(:katello, :pulp, :sync_KBlimit)
         sync_options[:num_threads] = SETTINGS.dig(:katello, :pulp, :sync_threads)
-        sync_options[:feed] = overrides[:source_url] if overrides[:source_url]
+        sync_options[:feed] = overrides[:feed] if overrides[:feed]
         sync_options[:validate] = !SETTINGS.dig(:katello, :pulp, :skip_checksum_validation)
         sync_options.merge!(overrides[:options]) if overrides[:options]
         [smart_proxy.pulp_api.resources.repository.sync(@repo.pulp_id, override_config: sync_options.compact!)]
