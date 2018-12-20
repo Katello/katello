@@ -4,9 +4,11 @@
 # !!! PLEASE KEEP THIS SCRIPT IDEMPOTENT !!!
 #
 
-Organization.all.each do |org|
-  User.as(::User.anonymous_api_admin.login) do
-    ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) unless org.library
+unless Rails.env.test?
+  Organization.all.each do |org|
+    User.as(::User.anonymous_api_admin.login) do
+      ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org) unless org.library
+    end
   end
 end
 

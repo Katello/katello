@@ -43,14 +43,6 @@ module Katello
     end
   end
 
-  class OrganizationsTest < SeedsTest
-    test "setup org bindings for every org in foreman" do
-      org = Organization.create!(:name => "myOrg")
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Organization::Create, org)
-      seed
-    end
-  end
-
   class PulpProxyTest < SeedsTest
     test "Make sure Pulp Proxy features exist" do
       seed
