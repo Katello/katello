@@ -21,7 +21,7 @@
 angular.module('Bastion.products').controller('ProductsController',
     ['$scope', '$state', '$sce', '$location', '$uibModal', 'translate', 'Nutupane', 'Product', 'ProductBulkAction', 'CurrentOrganization', 'Notification',
     function ($scope, $state, $sce, $location, $uibModal, translate, Nutupane, Product, ProductBulkAction, CurrentOrganization, Notification) {
-        var nutupane, nutupaneParams, taskLink, getBulkParams, bulkError, params;
+        var nutupane, nutupaneParams, getBulkParams, bulkError, params;
 
         getBulkParams = function () {
             return {
@@ -90,13 +90,12 @@ angular.module('Bastion.products').controller('ProductsController',
             var success;
 
             success = function (task) {
-                var url = $state.href('task', {taskId: task.id}), message;
-
-                taskLink = $sce.trustAsHtml("<a href=" + url + ">here</a>");
-                message = translate("Product sync has been initiated in the background. " +
-                    "Click %s to monitor the progress.");
-
-                Notification.setSuccessMessage(message.replace('%s', taskLink));
+                var message = translate("Product sync has been initiated in the background.");
+                Notification.setSuccessMessage(message, {
+                    link: {
+                        children: translate("Click to monitor task progress."),
+                        href: translate("/foreman_tasks/tasks/%taskId").replace('%taskId', task.id)
+                    }});
             };
 
             ProductBulkAction.syncProducts(getBulkParams(), success, bulkError);
