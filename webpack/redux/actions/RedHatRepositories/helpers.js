@@ -7,21 +7,30 @@ const repoTypeSearchQueryMap = {
   beta: 'name ~ beta',
 };
 
-const recommendedRepositorySetLables = [
+const recommendedRepositoriesRHEL = [
   'rhel-7-server-rpms',
-  'rhel-6-server-rpms',
-  'rhel-6-server-satellite-tools-6.3-rpms',
-  'rhel-server-rhscl-7-rpms',
-  'rhel-7-server-satellite-capsule-6.3-rpms',
-  'rhel-7-server-satellite-capsule-6.4-rpms',
-  'rhel-7-server-satellite-tools-6.3-rpms',
-  'rhel-6-server-satellite-tools-6.3-rpms',
-  'rhel-7-server-ansible-2.5-rpms',
   'rhel-7-server-optional-rpms',
   'rhel-7-server-extras-rpms',
-  'rhel-5-server-els-rpms',
   'rhel-7-server-eus-rpms',
+  'rhel-6-server-rpms',
+  'rhel-5-server-els-rpms',
 ];
+
+const recommendedRepositoriesSatTools = [
+  'rhel-7-server-satellite-tools-6.4-rpms',
+  'rhel-6-server-satellite-tools-6.4-rpms',
+  'rhel-5-server-els-satellite-tools-6.4-rpms',
+];
+
+const recommendedRepositoriesMisc = [
+  'rhel-server-rhscl-7-rpms',
+  'rhel-7-server-satellite-capsule-6.4-rpms',
+  'rhel-7-server-ansible-2.6-rpms',
+];
+
+const recommendedRepositorySetLables = recommendedRepositoriesRHEL
+  .concat(recommendedRepositoriesSatTools)
+  .concat(recommendedRepositoriesMisc);
 
 const createLablesQuery = lables =>
   lables.map(label => `label = ${label}`).join(' or ');
