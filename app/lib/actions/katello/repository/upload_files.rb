@@ -1,3 +1,4 @@
+# rubocop:disable HandleExceptions
 require 'fileutils'
 require 'English'
 
@@ -33,6 +34,11 @@ module Actions
           # Delete tmp files when some exception occurred. Would be
           # nice to have other ways to do that: https://github.com/Dynflow/dynflow/issues/130
           delete_tmp_files(tmp_files) if $ERROR_INFO && tmp_files
+        end
+
+        def run
+          ForemanTasks.async_task(Repository::CapsuleSync, ::Katello::Repository.find(input[:repository][:id]))
+        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         def humanized_name
