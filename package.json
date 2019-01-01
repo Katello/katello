@@ -12,6 +12,8 @@
     "lint": "eslint webpack/",
     "lint:fix": "eslint --fix webpack/",
     "lint:test": "npm run lint && npm test",
+    "vendor:add": "./node_modules/.bin/tfm-add-vendor",
+    "vendor:migrate": "./node_modules/.bin/tfm-migrate-vendors './webpack/**/*{.js,.scss}'",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
@@ -22,19 +24,27 @@
     "url": "http://projects.theforeman.org/projects/katello/issues"
   },
   "devDependencies": {
+    "@theforeman/vendor": "^0.0.2",
     "@storybook/react": "^3.2.17",
     "@storybook/storybook-deployer": "^2.0.0",
+    "babel-cli": "^6.10.1",
     "babel-core": "^6.26.3",
-    "babel-jest": "^23.4.0",
-    "babel-eslint": "^8.2.6",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-dynamic-import-node": "^2.0.0",
+    "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
+    "babel-plugin-transform-export-default": "^7.0.0-alpha.20",
+    "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "coveralls": "^3.0.0",
     "enzyme": "^3.4.0",
     "enzyme-adapter-react-16": "^1.4.0",
-    "coveralls": "^3.0.0",
     "enzyme-to-json": "^3.1.2",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.0.0",
@@ -51,31 +61,17 @@
     "redux-thunk": "^2.2.0"
   },
   "dependencies": {
+    "angular": "1.5.5",
     "axios": "^0.17.1",
     "axios-mock-adapter": "^1.10.0",
     "bootstrap-select": "1.12.4",
-    "classnames": "^2.2.5",
     "downshift": "^1.28.0",
-    "jed": "^1.1.1",
     "lodash": "^4.17.5",
-    "patternfly": "^3.41.1",
-    "patternfly-react": "^2.5.1",
-    "angular": "1.5.5",
     "ngreact": "^0.5.0",
-    "prop-types": "^15.6.0",
-    "query-string": "^6.1.0",
-    "react": "^16.4.0",
-    "react-bootstrap": "^0.32.1",
-    "react-bootstrap-tooltip-button": "^1.0.6",
-    "react-dom": "^16.4.0",
-    "react-ellipsis-with-tooltip": "^1.0.7",
-    "react-helmet": "^5.2.0",
-    "react-redux": "^5.0.6",
-    "react-router": "^4.2.0",
-    "react-router-bootstrap": "0.24.4",
-    "react-router-dom": "^4.2.2",
-    "redux": "^3.7.2",
-    "seamless-immutable": "^7.1.2"
+    "query-string": "^6.1.0"
+  },
+  "peerDependencies": {
+    "@theforeman/vendor": "^0.0.2"
   },
   "jest": {
     "collectCoverage": true,
@@ -91,8 +87,19 @@
       "raf/polyfill",
       "./webpack/test_setup.js"
     ],
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@theforeman/vendor).+\\.js$"
+    ],
+    "moduleDirectories": [
+      "node_modules/@theforeman/vendor/node_modules",
+      "node_modules"
+    ],
     "setupTestFrameworkScriptFile": "./webpack/global_test_setup.js",
     "testPathIgnorePatterns": [
+      "/@theforeman/vendor/",
       "/node_modules/",
       "<rootDir>/foreman/",
       "<rootDir>/.+fixtures.+",

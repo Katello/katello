@@ -1,6 +1,7 @@
 // Setup file for enzyme
 // See http://airbnb.io/enzyme/docs/installation/react-16.html
-import 'babel-polyfill';
+import '@theforeman/vendor/jest-setup';
+
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import * as Services from './services/api';

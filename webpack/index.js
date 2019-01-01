@@ -3,6 +3,8 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 
+import '@foreman/vendor';
+
 import componentRegistry from 'foremanReact/components/componentRegistry';
 import Application from './containers/Application/index';
 import './redux';
@@ -13,4 +15,3 @@ componentRegistry.register({
   name: 'katello',
   type: Application,
 });
-
