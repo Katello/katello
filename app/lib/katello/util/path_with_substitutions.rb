@@ -14,14 +14,18 @@ module Katello
         @substitutions = substitutions
         @path = path
         @resolved = []
-        generate_substitutions_from_path if @substitutions.empty? && substitutions_needed.empty?
+        check_for_subs_in_path if no_base_arch_passed?
+      end
+
+      def no_base_arch_passed?
+        @substitutions.keys.exclude?("basearch") && substitutions_needed.exclude?("basearch")
       end
 
       def split_path
         @split ||= @path.split('/').map(&:downcase).reject(&:blank?)
       end
 
-      def generate_substitutions_from_path
+      def check_for_subs_in_path
         arches = split_path & ARCHITECTURES
         arch = arches.first
         @substitutions["basearch"] = arch if arch

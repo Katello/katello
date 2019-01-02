@@ -33,6 +33,15 @@ module Katello
         assert_equal el8_arch_misplaced_path_with_sub.substitutions["basearch"], "x86_64"
       end
 
+      def test_no_basearch_substitutions
+        relver = 'rhel8'
+        arch = 'x86_64'
+        no_base_arch_path = "/content/dist/$releasever/#{arch}/product"
+        no_base_arch = PathWithSubstitutions.new(no_base_arch_path, "releasever" => relver)
+        assert_equal no_base_arch.substitutions["basearch"], arch
+        assert_equal no_base_arch.substitutions["releasever"], relver
+      end
+
       def test_resolve_substitutions_releasever
         path = PathWithSubstitutions.new(@el5_path, {})
         @cdn.expects(:fetch_substitutions).with('/content/dist/rhel/server/5/').returns(@releasever_list)
