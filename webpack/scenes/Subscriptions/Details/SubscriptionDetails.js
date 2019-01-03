@@ -137,6 +137,11 @@ SubscriptionDetails.propTypes = {
   loadProducts: PropTypes.func.isRequired,
   subscriptionDetails: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default SubscriptionDetails;
