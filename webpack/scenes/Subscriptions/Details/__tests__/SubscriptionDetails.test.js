@@ -14,7 +14,7 @@ jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 
 describe('subscriptions details page', () => {
   it('should render and contain appropiate components', async () => {
-    const match = { params: { id: 1 } };
+    const match = { params: { id: '1' } };
     const noop = () => {};
 
     const wrapper = shallow(<SubscriptionDetails
