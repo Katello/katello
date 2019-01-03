@@ -18,9 +18,9 @@ module Katello
       assert_equal @module_stream_empty.context, pulp_module_data['context']
       assert_equal @module_stream_empty.stream, pulp_module_data['stream']
       assert_equal @module_stream_empty.arch, pulp_module_data['arch']
-      assert @module_stream_empty.artifacts.first.name, pulp_module_data['artifacts'].first
-      assert @module_stream_empty.profiles.first.name, pulp_module_data['profiles'].keys.first
-      assert @module_stream_empty.profiles.first.rpms.first.name, pulp_module_data['profiles'].values.first.first
+      assert_equal @module_stream_empty.artifacts.pluck(:name), pulp_module_data['artifacts']
+      assert_equal @module_stream_empty.profiles.pluck(:name), pulp_module_data['profiles'].keys
+      assert_equal @module_stream_empty.profiles.first.rpms.pluck(:name), pulp_module_data['profiles'].values.first
     end
 
     def test_repositories_relation
@@ -122,11 +122,11 @@ module Katello
         "_storage_path" => "/var/lib/pulp/content/units/modulemd/04/f5586ee14de4e35c67ab08d26cb7a05e7fff0de07dceab66133a5820c382ce",
         "name" => "duck",
         "stream" => "0",
-        "artifacts" => ["duck-0:0.7-1.noarch"],
+        "artifacts" => ["duck-0:0.7-1.noarch", "cat-0:0.8-1.noarch"],
         "checksum" => "7e57227ce357ab585349301507eee064b034c188088d7bab7a4025adcb6873b6",
         "_last_updated" => "2018-08-08T18:28:44Z",
         "_content_type_id" => "modulemd",
-        "profiles" => {"default" => ["duck"]},
+        "profiles" => {"default" => ["duck", "cat"]},
         "summary" => "Duck 0.7 module",
         "_href" => "/pulp/api/v2/content/units/modulemd/2c5ebdc1-1504-4089-a318-c83ace3acdde/",
         "downloaded" => true,

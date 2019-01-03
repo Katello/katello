@@ -61,15 +61,21 @@ module Katello
 
     def create_stream_artifacts(artifacts)
       artifacts.each do |name|
-        self.artifacts.where(name: name).first_or_create!
+        Katello::Util::Support.active_record_retry do
+          self.artifacts.where(name: name).first_or_create!
+        end
       end
     end
 
     def create_profiles(profiles)
       profiles.select do |profile, rpms|
-        profile = self.profiles.where(name: profile).first_or_create!
+        Katello::Util::Support.active_record_retry do
+          profile = self.profiles.where(name: profile).first_or_create!
+        end
         rpms.each do |rpm|
-          profile.rpms.where(name: rpm).first_or_create!
+          Katello::Util::Support.active_record_retry do
+            profile.rpms.where(name: rpm).first_or_create!
+          end
         end
       end
     end
