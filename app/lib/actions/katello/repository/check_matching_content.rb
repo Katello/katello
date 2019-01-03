@@ -65,9 +65,9 @@ module Actions
         end
 
         def yum_metadata_files_match?(source_repo, target_repo)
-          source_repo_checkums = source_repo.yum_metadata_files.pluck(:checksum).sort
-          target_repo_checkums = target_repo.yum_metadata_files.pluck(:checksum).sort
-          source_repo_checkums == target_repo_checkums
+          source_repo_items = source_repo.yum_metadata_files.pluck(:name, :checksum).sort
+          target_repo_items = target_repo.yum_metadata_files.pluck(:name, :checksum).sort
+          source_repo_items == target_repo_items
         end
       end
     end

@@ -40,11 +40,14 @@ module Katello
 
     def test_update_from_json
       uuid = 'foo'
+      name = "foo.gz"
       YumMetadataFile.create!(:uuid => uuid)
-      json = @ymf1.attributes.merge('checksum' => 'xxxxxx')
+      json = @ymf1.attributes.merge('checksum' => 'xxxxxx',
+                                    '_storage_path' => "/var/lib/pulp/foo/#{name}")
       @ymf1.update_from_json(json.with_indifferent_access)
       @ymf1 = @ymf1.reload
       refute @ymf1.checksum.blank?
+      assert_equal name, @ymf1.name
     end
 
     def test_with_identifiers

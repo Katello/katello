@@ -3,6 +3,7 @@ class CreateYumMetadataFile < ActiveRecord::Migration[5.2]
     create_table :katello_yum_metadata_files do |t|
       t.string :uuid, null: false
       t.string :checksum, null: true
+      t.string :name, null: true
       t.integer :repository_id, null: true
       t.timestamps
     end
