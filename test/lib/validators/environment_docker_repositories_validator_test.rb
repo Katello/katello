@@ -59,7 +59,7 @@ module Katello
 
       @hq_env_dev.registry_name_pattern = "pattern"
       @validator.validate(@hq_env_dev)
-      assert_equal ["Registry name pattern results in duplicate container image names"],
+      assert_equal ["Registry name pattern results in duplicate container image names for these repositories: Alpha Image, Beta Image."],
                    @hq_env_dev.errors[:registry_name_pattern]
     end
 
