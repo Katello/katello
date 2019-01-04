@@ -22,7 +22,7 @@ module Katello
       end
     end
 
-    class PackageGroupTest < PackageGroupTestBase
+    class PackageGroupVcrTest < PackageGroupTestBase
       def test_repo_package_groups
         assert_equal 2, @@package_groups.length
         assert_equal @@package_group_names, @@package_groups.map(&:name).sort
@@ -31,14 +31,31 @@ module Katello
       def test_pulp_data
         assert_equal @@package_group_names[0], Pulp::PackageGroup.pulp_data(@@package_groups.sort_by(&:name).first.pulp_id)['id']
       end
+    end
 
-      def test_update_from_json
-        uuid = @@package_groups.first.pulp_id
-        PackageGroup.where(:pulp_id => uuid).first.destroy! if PackageGroup.exists?(:pulp_id => uuid)
-        package_group = PackageGroup.create!(:pulp_id => uuid)
-        package_group_data = Pulp::PackageGroup.pulp_data(uuid)
-        package_group.update_from_json(package_group_data)
-        assert_equal package_group.name, package_group_data["name"]
+    class PackageGroupTest < ActiveSupport::TestCase
+      def test_update_model_new
+        uuid = 'foo'
+
+        PackageGroup.where(:pulp_id => uuid).destroy_all
+        group = PackageGroup.create!(:pulp_id => uuid)
+
+        json = {'name' => 'foobar'}
+        service = Pulp::PackageGroup.new(uuid)
+        service.backend_data = json
+        service.update_model(group)
+
+        assert_equal group.name, json["name"]
+      end
+
+      def test_update_from_json_desc
+        pg = PackageGroup.create!(:pulp_id => "foo")
+        json = pg.attributes.merge('description' => 'an update').as_json
+        service = Pulp::PackageGroup.new(pg.pulp_id)
+        service.backend_data = json
+        service.update_model(pg)
+
+        assert_equal pg.description, json['description']
       end
     end
   end

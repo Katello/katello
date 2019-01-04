@@ -16,19 +16,6 @@ module Katello
       end
     end
 
-    def test_import_from_json
-      @tag.repository_id = nil
-      @tag.docker_taggable = nil
-      @tag.name = nil
-      @tag.save!
-
-      json = {'manifest_digest' => @manifest.digest, 'repo_id' => @repo.pulp_id, 'name' => 'jabberwock'}
-      @tag.update_from_json(json)
-
-      refute_nil @tag.name
-      assert_equal @tag.docker_manifest, @manifest
-    end
-
     def test_in_repositories
       tags = DockerTag.in_repositories(@repo)
       assert_equal [@tag], tags

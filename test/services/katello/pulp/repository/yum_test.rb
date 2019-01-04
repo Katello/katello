@@ -77,6 +77,14 @@ module Katello
           assert_equal service.external_url, "http://#{host}/pulp/repos/elbow/"
           assert_equal service.external_url(true), "https://#{host}/pulp/repos/elbow/"
         end
+
+        def test_class_distribution_bootable?
+          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/foo/kernel.img'}])
+          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/foo/initrd.img'}])
+          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/vmlinuz'}])
+          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo/pxeboot'}])
+          refute ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo'}])
+        end
       end
 
       class YumVcrTest < YumBaseTest

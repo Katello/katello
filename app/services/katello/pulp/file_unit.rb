@@ -8,6 +8,14 @@ module Katello
       CONTENT_TYPE = "iso".freeze
 
       lazy_accessor :pulp_facts, :initializer => :backend_data
+
+      def update_model(model)
+        custom_json = {}
+        custom_json['checksum'] = backend_data['checksum']
+        custom_json['path'] = backend_data['name']
+        custom_json['name'] = File.basename(backend_data['name'])
+        model.update_attributes!(custom_json)
+      end
     end
   end
 end

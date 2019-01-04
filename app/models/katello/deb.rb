@@ -34,15 +34,6 @@ module Katello
       Katello::Util::PackageFilter.new(self, version, Katello::Util::PackageFilter::EQUAL).results
     end
 
-    def update_from_json(json)
-      keys = Pulp::Deb::PULP_INDEXED_FIELDS - ['_id']
-      custom_json = json.slice(*keys)
-      if custom_json.any? { |name, value| self.send(name) != value }
-        self.assign_attributes(custom_json)
-        self.save!
-      end
-    end
-
     def self.total_for_repositories(repos)
       self.in_repositories(repos).count
     end

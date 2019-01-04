@@ -3,17 +3,13 @@ require 'support/pulp/repository_support'
 
 module Katello
   module Services
-    class RpmNonVcrTest < ActiveSupport::TestCase
-      def setup
-        @rpm_one = katello_rpms(:one)
-      end
-
+    class SrpmNonVcrTest < ActiveSupport::TestCase
       def test_update_model
         pulp_id = 'foo'
-        model = Rpm.create!(:pulp_id => pulp_id)
+        model = Srpm.create!(:pulp_id => pulp_id)
         json = model.attributes.merge('summary' => 'an update', 'version' => '3', 'release' => '4')
 
-        service = Katello::Pulp::Rpm.new(pulp_id)
+        service = Katello::Pulp::Srpm.new(pulp_id)
         service.backend_data = json
         service.update_model(model)
 
@@ -26,15 +22,15 @@ module Katello
       end
 
       def test_update_model_is_idempotent
-        rpm = katello_rpms(:one)
-        last_updated = rpm.updated_at
-        json = rpm.attributes
+        srpm = katello_srpms(:one)
+        last_updated = srpm.updated_at
+        json = srpm.attributes
 
-        service = Katello::Pulp::Rpm.new(rpm.pulp_id)
+        service = Katello::Pulp::Srpm.new(srpm.pulp_id)
         service.backend_data = json
-        service.update_model(rpm)
+        service.update_model(srpm)
 
-        assert_equal rpm.reload.updated_at, last_updated
+        assert_equal srpm.reload.updated_at, last_updated
       end
     end
 

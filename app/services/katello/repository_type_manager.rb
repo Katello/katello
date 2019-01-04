@@ -30,6 +30,19 @@ module Katello
         repository_types[repository_type.to_s]
       end
 
+      def find_content_type(katello_label)
+        repository_types.values.each do |repo_type|
+          repo_type.content_types.each do |content_type|
+            return content_type if content_type.model_class::CONTENT_TYPE == katello_label.to_s
+          end
+        end
+        nil
+      end
+
+      def find_content_type!(katello_label)
+        find_content_type(katello_label) || fail("Couldn't find content type #{katello_label}")
+      end
+
       def enabled?(repository_type)
         find(repository_type).present?
       end

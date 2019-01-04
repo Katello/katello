@@ -4,7 +4,7 @@ module Katello
 
     self.table_name = 'katello_files'
 
-    CONTENT_TYPE = Pulp::FileUnit::CONTENT_TYPE
+    CONTENT_TYPE = 'file'.freeze
 
     has_many :repository_files, :class_name => "Katello::RepositoryFile", :dependent => :destroy, :inverse_of => :file, :foreign_key => :file_id
     has_many :repositories, :through => :repository_files, :class_name => "Katello::Repository"
@@ -23,14 +23,6 @@ module Katello
 
     def self.unit_id_field
       'file_id'
-    end
-
-    def update_from_json(json)
-      custom_json = {}
-      custom_json['checksum'] = json['checksum']
-      custom_json['path'] = json['name']
-      custom_json['name'] = File.basename(json['name'])
-      self.update_attributes!(custom_json)
     end
 
     def self.total_for_repositories(repos)

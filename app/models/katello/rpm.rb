@@ -2,7 +2,7 @@ module Katello
   class Rpm < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    CONTENT_TYPE = Pulp::Rpm::CONTENT_TYPE
+    CONTENT_TYPE = 'rpm'.freeze
 
     has_many :repository_rpms, :class_name => "Katello::RepositoryRpm", :dependent => :destroy, :inverse_of => :rpm
     has_many :repositories, :through => :repository_rpms, :class_name => "Katello::Repository"
@@ -185,18 +185,6 @@ module Katello
 
     def self.search_version_equal(version)
       Katello::Util::PackageFilter.new(self, version, Katello::Util::PackageFilter::EQUAL).results
-    end
-
-    def update_from_json(json)
-      keys = Pulp::Rpm::PULP_INDEXED_FIELDS - ['_id']
-      custom_json = json.slice(*keys)
-      if custom_json.any? { |name, value| self.send(name) != value }
-        custom_json[:release_sortable] = Util::Package.sortable_version(custom_json[:release])
-        custom_json[:version_sortable] = Util::Package.sortable_version(custom_json[:version])
-        self.assign_attributes(custom_json)
-        self.nvra = self.build_nvra
-        self.save!
-      end
     end
 
     def self.total_for_repositories(repos)

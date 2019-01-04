@@ -1,7 +1,7 @@
 module Katello
   module Pulp
     class Repository < ::Actions::Pulp::Abstract
-      attr_accessor :repo, :input, :pulp_api
+      attr_accessor :repo, :input
       attr_accessor :smart_proxy
       delegate :root, to: :repo
 
@@ -206,6 +206,16 @@ module Katello
         override_config[:resolve_dependencies] = true if options[:resolve_dependencies]
 
         smart_proxy.pulp_api.extensions.send(content_type).copy(repo.pulp_id, destination_repo.pulp_id, ids: unit_ids, override_config: override_config)
+      end
+
+      def content_unit_types
+        Katello::RepositoryTypeManager.find(repo.content_type)
+      end
+
+      def index_content_units
+        content_unit_types.each do |content_type|
+          content_type.pulp2_service_class
+        end
       end
     end
   end

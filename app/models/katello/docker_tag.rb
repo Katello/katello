@@ -2,6 +2,9 @@ module Katello
   class DockerTag < Katello::Model
     include Concerns::PulpDatabaseUnit
     include ScopedSearchExtensions
+
+    CONTENT_TYPE = 'docker_tag'.freeze
+
     belongs_to :docker_taggable, :polymorphic => true, :inverse_of => :docker_tags
     belongs_to :repository, :inverse_of => :docker_tags, :class_name => "Katello::Repository"
 
@@ -45,14 +48,6 @@ module Katello
       where(:id => ids)
     end
 
-    def update_from_json(json)
-      taggable_class = json['manifest_type'] == "list" ? ::Katello::DockerManifestList : ::Katello::DockerManifest
-      self.docker_taggable = taggable_class.find_by(:digest => json['manifest_digest'])
-      self.repository_id = ::Katello::Repository.find_by(:pulp_id => json['repo_id']).try(:id)
-      self.name = json['name']
-      self.save!
-    end
-
     def self.import_all(pulp_ids = nil, options = {})
       ::Katello::DockerTag.destroy_all if pulp_ids.blank?
       super
@@ -65,7 +60,7 @@ module Katello
       end
     end
 
-    def self.import_for_repository(repository)
+    def self.import_for_repository(repository, _force)
       ::Katello::DockerTag.where(:repository_id => repository).destroy_all
       super(repository, true)
     end

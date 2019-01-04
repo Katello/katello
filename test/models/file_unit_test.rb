@@ -33,23 +33,6 @@ module Katello
       assert_include files, @file_two
     end
 
-    def test_update_from_json
-      pulp_id = 'foo'
-      FileUnit.create!(:pulp_id => pulp_id)
-      json = @file_one.attributes.merge('checksum' => '1234515')
-      @file_one.update_from_json(json.with_indifferent_access)
-      @file_one = FileUnit.find(@file_one.id)
-
-      assert_equal @file_one.name, json['name']
-    end
-
-    def test_update_from_json_is_idempotent
-      last_updated = @file_one.updated_at
-      json = @file_one.attributes
-      @file_one.update_from_json(json)
-      assert_equal FileUnit.find(@file_one.id).updated_at, last_updated
-    end
-
     def test_with_identifiers
       assert_includes FileUnit.with_identifiers(@file_one.id), @file_one
       assert_includes FileUnit.with_identifiers([@file_one.id]), @file_one

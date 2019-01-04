@@ -260,7 +260,7 @@ class ActiveSupport::TestCase
   end
 
   def assert_service_used(service_class)
-    service_class.any_instance.expects(:backend_data).returns({})
+    service_class.any_instance.expects(:fetch_backend_data).returns({})
     yield
   end
 

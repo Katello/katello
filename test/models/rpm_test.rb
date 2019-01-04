@@ -10,6 +10,7 @@ module Katello
       @rpm_one_two = katello_rpms(:one_two)
 
       Rpm.any_instance.stubs(:backend_data).returns({})
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
   end
 
@@ -76,26 +77,6 @@ module Katello
       rpms = Rpm.in_repositories(@repo).search_for('release < 2.el7')
       expected = [@rpm_one, @rpm_two]
       assert_equal expected, rpms.to_a.sort
-    end
-
-    def test_update_from_json
-      pulp_id = 'foo'
-      Rpm.create!(:pulp_id => pulp_id)
-      json = @rpm_one.attributes.merge('summary' => 'an update', 'version' => '3', 'release' => '4')
-      @rpm_one.update_from_json(json.with_indifferent_access)
-      @rpm_one = @rpm_one.reload
-
-      assert_equal @rpm_one.summary, json['summary']
-      refute @rpm_one.release_sortable.blank?
-      refute @rpm_one.version_sortable.blank?
-      refute @rpm_one.nvra.blank?
-    end
-
-    def test_update_from_json_is_idempotent
-      last_updated = @rpm_one.updated_at
-      json = @rpm_one.attributes
-      @rpm_one.update_from_json(json)
-      assert_equal @rpm_one.reload.updated_at, last_updated
     end
 
     def test_with_identifiers
@@ -218,6 +199,7 @@ module Katello
     FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "rpms.yml")
 
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @repo = katello_repositories(:fedora_17_unpublished)
       @packages = YAML.load_file(FIXTURES_FILE).values.map(&:with_indifferent_access)
 

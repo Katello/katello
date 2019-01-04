@@ -75,6 +75,33 @@ module Katello
           tasks
         end
 
+        def import_distribution_data
+          distribution = smart_proxy.pulp_api.extensions.repository.distributions(repo.pulp_id).first
+          if distribution
+            repo.update_attributes!(
+              :distribution_version => distribution["version"],
+              :distribution_arch => distribution["arch"],
+              :distribution_family => distribution["family"],
+              :distribution_variant => distribution["variant"],
+              :distribution_uuid => distribution["_id"],
+              :distribution_bootable => self.class.distribution_bootable?(distribution)
+            )
+          end
+        end
+
+        def self.distribution_bootable?(distribution)
+          # Not every distribution from Pulp represents a bootable
+          # repo. Determine based on the files in the repo.
+          distribution["files"].any? do |file|
+            if file.is_a? Hash
+              filename = file[:relativepath]
+            else
+              filename = file
+            end
+            filename.include?('vmlinuz') || filename.include?('pxeboot') || filename.include?('kernel.img') || filename.include?('initrd.img')
+          end
+        end
+
         def purge_empty_contents
           [purge_empty_errata, purge_empty_package_groups]
         end

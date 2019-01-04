@@ -11,18 +11,6 @@ module Katello
       @module_stream_artifact_boat = katello_module_stream_artifacts(:boat)
     end
 
-    def test_update_from_json
-      @module_stream_empty.update_from_json(pulp_module_data)
-      assert_equal @module_stream_empty.name, pulp_module_data['name']
-      assert_equal @module_stream_empty.version, pulp_module_data['version'].to_s
-      assert_equal @module_stream_empty.context, pulp_module_data['context']
-      assert_equal @module_stream_empty.stream, pulp_module_data['stream']
-      assert_equal @module_stream_empty.arch, pulp_module_data['arch']
-      assert_equal @module_stream_empty.artifacts.pluck(:name), pulp_module_data['artifacts']
-      assert_equal @module_stream_empty.profiles.pluck(:name), pulp_module_data['profiles'].keys
-      assert_equal @module_stream_empty.profiles.first.rpms.pluck(:name), pulp_module_data['profiles'].values.first
-    end
-
     def test_repositories_relation
       assert @module_stream_river.repositories.include?(@fedora_repo)
     end

@@ -21,24 +21,6 @@ module Katello
       assert_equal Util::Package.sortable_version(version), puppet_module.sortable_version
     end
 
-    def test_update_from_json
-      json = @dhcp.attributes.merge('summary' => 'an update', 'version' => '3', 'name' => 'dns', 'author' => 'katello')
-      @dhcp.update_from_json(json.with_indifferent_access)
-      @dhcp = PuppetModule.find(@dhcp.id)
-
-      assert_equal @dhcp.summary, json['summary']
-      assert_equal @dhcp.name, json['name']
-      assert_equal @dhcp.author, json['author']
-      assert_equal '01-3', @dhcp.sortable_version
-    end
-
-    def test_update_from_json_is_idempotent
-      last_updated = @abrt.updated_at
-      json = @abrt.attributes
-      @abrt.update_from_json(json)
-      assert_equal PuppetModule.find(@abrt.id).updated_at, last_updated
-    end
-
     def test_with_identifiers
       assert_includes PuppetModule.with_identifiers(@abrt.id), @abrt
       assert_includes PuppetModule.with_identifiers([@abrt.id]), @abrt

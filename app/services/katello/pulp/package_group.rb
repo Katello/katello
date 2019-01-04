@@ -11,6 +11,10 @@ module Katello
                     :conditional_package_names, :default_package_names, :_id,
                     :repository_memberships,
                     :initializer => :pulp_facts
+
+      def update_model(model)
+        model.update_attributes!(backend_data.slice('name', 'description'))
+      end
     end
   end
 end

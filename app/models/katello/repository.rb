@@ -524,17 +524,18 @@ module Katello
       end
     end
 
-    def import_distribution_data
-      distribution = Katello.pulp_server.extensions.repository.distributions(self.pulp_id).first
-      if distribution
+    def import_distribution_data(target_repo = nil)
+      if target_repo
         self.update_attributes!(
-          :distribution_version => distribution["version"],
-          :distribution_arch => distribution["arch"],
-          :distribution_family => distribution["family"],
-          :distribution_variant => distribution["variant"],
-          :distribution_uuid => distribution["_id"],
-          :distribution_bootable => ::Katello::Repository.distribution_bootable?(distribution)
+          :distribution_version => target_repo.distribution_version,
+          :distribution_arch => target_repo.distribution_arch,
+          :distribution_family => target_repo.distribution_family,
+          :distribution_variant => target_repo.distribution_variant,
+          :distribution_uuid => target_repo.distribution_uuid,
+          :distribution_bootable => target_repo.distribution_bootable
         )
+      else
+        self.backend_service(SmartProxy.pulp_master).import_distribution_data
       end
     end
 
@@ -722,6 +723,33 @@ module Katello
       end
       parts = [environment.organization.label, product.label, root.label]
       parts.map { |x| x.gsub(/[^-\w]/, "_") }.join("-").downcase
+    end
+
+    def repository_type
+      RepositoryTypeManager.find(self.content_type)
+    end
+
+    def index_linked_repo
+      if (base_repo = self.target_repository)
+        repository_type.content_types.each do |type|
+          type.model_class.copy_repository_associations(base_repo, self)
+          repository_type.index_additional_data_proc&.call(self, target_repository)
+        end
+      else
+        Rails.logger.error("Cannot index #{self.id}, no target repository found.")
+      end
+    end
+
+    def index_content(full_index = false)
+      if self.yum? && !self.master?
+        index_linked_repo
+      else
+        repository_type.content_types.each do |type|
+          type.model_class.import_for_repository(self, full_index)
+        end
+        repository_type.index_additional_data_proc&.call(self)
+      end
+      true
     end
 
     protected

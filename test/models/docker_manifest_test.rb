@@ -12,6 +12,7 @@ module Katello
       @tags = YAML.load_file(TAGS).values.map(&:deep_symbolize_keys)
       @repo = Repository.find(katello_repositories(:redis).id)
 
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       ids = @manifests.map { |attrs| attrs[:_id] }
       Katello::Pulp::DockerManifest.stubs(:ids_for_repository).returns(ids)
       Katello::Pulp::DockerManifest.stubs(:fetch).returns(@manifests)
