@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from '@theforeman/vendor/react';
 import _ from 'lodash';
 import { translate as __ } from 'foremanReact/common/I18n';
-import PropTypes from 'prop-types';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Grid, Row, Col } from 'react-bootstrap';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { LinkContainer } from '@theforeman/vendor/react-router-bootstrap';
+import { Grid, Row, Col } from '@theforeman/vendor/react-bootstrap';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
-import { Button } from 'patternfly-react';
+import { Button } from '@theforeman/vendor/patternfly-react';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import helpers from '../../../move_to_foreman/common/helpers';

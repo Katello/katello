@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
 import { noop } from 'foremanReact/common/helpers';
-import { Icon } from 'patternfly-react';
+import { Icon } from '@theforeman/vendor/patternfly-react';
 
 const CollapseSubscriptionGroupButton = ({
   collapsed, onClick, ...props

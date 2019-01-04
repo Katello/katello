@@ -1,4 +1,4 @@
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import TestRenderer from 'react-test-renderer';
 import SubscriptionDetailProducts from '../SubscriptionDetailProducts';
 import { successState } from './subscriptionDetails.fixtures';

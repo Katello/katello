@@ -1,5 +1,5 @@
-import axios from 'axios';
-import Immutable from 'seamless-immutable';
+import axios from '@theforeman/vendor/axios';
+import Immutable from '@theforeman/vendor/seamless-immutable';
 import store from 'foremanReact/redux';
 
 const getcsrfToken = () => {

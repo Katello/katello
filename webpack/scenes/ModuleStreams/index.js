@@ -1,6 +1,6 @@
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { bindActionCreators } from '@theforeman/vendor/redux';
+import { connect } from '@theforeman/vendor/react-redux';
+import { withRouter } from '@theforeman/vendor/react-router';
 
 import ModuleStreamsPage from './ModuleStreamsPage';
 import reducer from './ModuleStreamsReducer';

@@ -2,11 +2,11 @@
 /* eslint import/no-unresolved: [2, { ignore: [foremanReact/*] }] */
 /* eslint-disable import/no-unresolved */
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-bootstrap';
-import { Button } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { connect } from '@theforeman/vendor/react-redux';
+import { Grid, Row, Col } from '@theforeman/vendor/react-bootstrap';
+import { Button } from '@theforeman/vendor/patternfly-react';
 import { LoadingState } from '../../move_to_pf/LoadingState';
 import { createEnabledRepoParams, loadEnabledRepos } from '../../redux/actions/RedHatRepositories/enabled';
 import { loadRepositorySets, updateRecommendedRepositorySets } from '../../redux/actions/RedHatRepositories/sets';

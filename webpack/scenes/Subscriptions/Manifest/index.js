@@ -1,6 +1,6 @@
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@theforeman/vendor/redux';
 
-import { connect } from 'react-redux';
+import { connect } from '@theforeman/vendor/react-redux';
 
 import * as manifestActions from './ManifestActions';
 import * as organizationActions from '../../Organizations/OrganizationActions';

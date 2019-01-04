@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
-import { Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import cx from '@theforeman/vendor/classnames';
+import { Spinner, OverlayTrigger, Tooltip } from '@theforeman/vendor/patternfly-react';
 
 const EnabledRepositoryContent = ({ loading, disableTooltipId, disableRepository }) => (
   <Spinner loading={loading} inline>

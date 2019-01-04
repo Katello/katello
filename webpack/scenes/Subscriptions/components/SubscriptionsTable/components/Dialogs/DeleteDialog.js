@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { MessageDialog } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { MessageDialog } from '@theforeman/vendor/patternfly-react';
 import { sprintf } from 'foremanReact/common/I18n';
 
 const DeleteDialog = ({

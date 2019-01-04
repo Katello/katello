@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Table } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Table } from '@theforeman/vendor/patternfly-react';
 import TableSchema from './TableSchema';
 
 const ModuleStreamDetailProfiles = ({ profiles }) => (

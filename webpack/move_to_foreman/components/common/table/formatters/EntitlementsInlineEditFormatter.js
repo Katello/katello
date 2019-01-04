@@ -1,6 +1,6 @@
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import { sprintf } from 'foremanReact/common/I18n';
-import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-react';
+import { Table, FormControl, FormGroup, HelpBlock, Spinner } from '@theforeman/vendor/patternfly-react';
 import { validateQuantity } from '../../../../../scenes/Subscriptions/SubscriptionValidations';
 import { KEY_CODES } from '../../../../common/helpers';
 

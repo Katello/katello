@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { ListView } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { ListView } from '@theforeman/vendor/patternfly-react';
 import { sprintf } from 'foremanReact/common/I18n';
 
 import RepositoryTypeIcon from '../RepositoryTypeIcon';

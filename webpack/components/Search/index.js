@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { Component } from 'react';
-import { ControlLabel } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import React, { Component } from '@theforeman/vendor/react';
+import { ControlLabel } from '@theforeman/vendor/react-bootstrap';
+import PropTypes from '@theforeman/vendor/prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import TypeAhead from '../../move_to_pf/TypeAhead/TypeAhead';
 import api from '../../services/api';

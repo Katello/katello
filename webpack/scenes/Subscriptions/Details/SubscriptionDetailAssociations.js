@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Table } from 'react-bootstrap';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Table } from '@theforeman/vendor/react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
 import helpers from '../../../move_to_foreman/common/helpers.js';
 

@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Col, ListView } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Col, ListView } from '@theforeman/vendor/patternfly-react';
 import SubscriptionDetailProduct from './SubscriptionDetailProduct';
 
 const SubscriptionDetailProductContent = ({ productContent }) => {

@@ -1,5 +1,5 @@
-import React from 'react';
-import { ListView } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import { ListView } from '@theforeman/vendor/patternfly-react';
 import { sprintf } from 'foremanReact/common/I18n';
 import Pagination from 'foremanReact/components/Pagination/PaginationWrapper';
 

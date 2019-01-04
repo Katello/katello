@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip, MessageDialog } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from '@theforeman/vendor/react-bootstrap';
+import { Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip, MessageDialog } from '@theforeman/vendor/patternfly-react';
 import { isEqual } from 'lodash';
-import TooltipButton from 'react-bootstrap-tooltip-button';
+import TooltipButton from '@theforeman/vendor/react-bootstrap-tooltip-button';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { manifestExists } from '../SubscriptionHelpers';

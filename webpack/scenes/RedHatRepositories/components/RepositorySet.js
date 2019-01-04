@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { ListView, Icon } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { ListView, Icon } from '@theforeman/vendor/patternfly-react';
 
 import RepositoryTypeIcon from './RepositoryTypeIcon';
 import RepositorySetRepositories from './RepositorySetRepositories';

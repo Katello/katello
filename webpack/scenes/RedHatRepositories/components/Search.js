@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { Component } from 'react';
-import { DropdownButton, MenuItem } from 'patternfly-react';
-import PropTypes from 'prop-types';
+import React, { Component } from '@theforeman/vendor/react';
+import { DropdownButton, MenuItem } from '@theforeman/vendor/patternfly-react';
+import PropTypes from '@theforeman/vendor/prop-types';
 
 import '../index.scss';
 import Search from '../../../components/Search/index';

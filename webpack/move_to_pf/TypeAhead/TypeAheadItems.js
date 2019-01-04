@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Dropdown, MenuItem } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Dropdown, MenuItem } from '@theforeman/vendor/patternfly-react';
 
 const TypeAheadItems = ({
   items, activeItems, getItemProps, highlightedIndex,

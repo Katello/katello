@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from '@theforeman/vendor/react';
+import { Link } from '@theforeman/vendor/react-router-dom';
 import helpers from '../../../../move_to_foreman/common/helpers';
 
 export const subscriptionTypeFormatter = (value, { rowData }) => {

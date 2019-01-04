@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { Popover, OverlayTrigger } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import classNames from '@theforeman/vendor/classnames';
+import { Popover, OverlayTrigger } from '@theforeman/vendor/patternfly-react';
 import './OptionTooltip.scss';
 
 class OptionTooltip extends Component {

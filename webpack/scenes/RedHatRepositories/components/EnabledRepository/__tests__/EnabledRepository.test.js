@@ -1,5 +1,5 @@
-import React from 'react';
-import thunk from 'redux-thunk';
+import React from '@theforeman/vendor/react';
+import thunk from '@theforeman/vendor/redux-thunk';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import configureMockStore from 'redux-mock-store';

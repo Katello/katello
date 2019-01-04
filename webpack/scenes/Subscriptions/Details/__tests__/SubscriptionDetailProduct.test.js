@@ -1,4 +1,4 @@
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import TestRenderer from 'react-test-renderer';
 import SubscriptionDetailProduct from '../SubscriptionDetailProduct';
 import { availableContent } from '../../../Products/__tests__/products.fixtures.js';

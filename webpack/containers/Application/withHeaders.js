@@ -1,4 +1,4 @@
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import Header from '../Application/Headers';
 
 function withHeader(WrappedComponent, tags) {

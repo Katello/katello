@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
 import UpdateDialog from './UpdateDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import InputsErrorsDialog from './InputsErrorsDialog';

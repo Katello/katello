@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { bindActionCreators } from '@theforeman/vendor/redux';
+import { connect } from '@theforeman/vendor/react-redux';
 
 import { translate as __ } from 'foremanReact/common/I18n';
 import { get } from 'lodash';

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
+import React from '@theforeman/vendor/react';
+import { Helmet } from '@theforeman/vendor/react-helmet';
 
 const Header = props => (
   <Helmet>

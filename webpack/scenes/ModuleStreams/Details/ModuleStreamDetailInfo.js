@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Table } from 'react-bootstrap';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Table } from '@theforeman/vendor/react-bootstrap';
 
 // using Map to preserve order
 const displayMap = new Map([

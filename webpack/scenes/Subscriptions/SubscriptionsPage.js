@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Immutable from 'seamless-immutable';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import Immutable from '@theforeman/vendor/seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { isEmpty, isEqual } from 'lodash';
-import { Grid, Row, Col } from 'patternfly-react';
+import { Grid, Row, Col } from '@theforeman/vendor/patternfly-react';
 import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
 import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';

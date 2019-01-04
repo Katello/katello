@@ -1,4 +1,4 @@
-import Immutable from 'seamless-immutable';
+import Immutable from '@theforeman/vendor/seamless-immutable';
 import {
   GET_ORGANIZATIONS_LIST_SUCCESS,
   GET_ORGANIZATIONS_LIST_REQUEST,

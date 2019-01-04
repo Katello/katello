@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Table as PfTable } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Table as PfTable } from '@theforeman/vendor/patternfly-react';
 import { noop } from 'foremanReact/common/helpers';
 import EmptyState from 'foremanReact/components/common/EmptyState';
 import Pagination from 'foremanReact/components/Pagination/PaginationWrapper';

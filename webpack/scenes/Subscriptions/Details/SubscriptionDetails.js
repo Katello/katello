@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from 'patternfly-react';
+import { Nav, NavItem, TabPane, TabContent, TabContainer, Grid, Row, Col } from '@theforeman/vendor/patternfly-react';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import SubscriptionDetailInfo from './SubscriptionDetailInfo';
 import SubscriptionDetailAssociations from './SubscriptionDetailAssociations';

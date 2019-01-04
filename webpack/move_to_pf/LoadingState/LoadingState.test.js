@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Ignore eslint for this entire file because our rules
 // don't match patternfly-react's rules
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 

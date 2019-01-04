@@ -1,7 +1,7 @@
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import { render, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from '@theforeman/vendor/react-router-dom';
 import SubscriptionsTable from '../SubscriptionsTable';
 import { successState, loadingState, emptyState } from '../../../__tests__/subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity } from '../../../SubscriptionActions';

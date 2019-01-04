@@ -1,5 +1,5 @@
-import React from 'react';
-import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import React from '@theforeman/vendor/react';
+import { FormGroup, FormControl, ControlLabel, HelpBlock } from '@theforeman/vendor/react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
 import helpers from '../../../move_to_foreman/common/helpers';
 import {

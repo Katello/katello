@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { BrowserRouter as Router } from '@theforeman/vendor/react-router-dom';
+import { bindActionCreators } from '@theforeman/vendor/redux';
+import { connect } from '@theforeman/vendor/react-redux';
 import { orgId } from '../../services/api';
 import * as actions from '../../scenes/Organizations/OrganizationActions';
 import reducer from '../../scenes/Organizations/OrganizationReducer';

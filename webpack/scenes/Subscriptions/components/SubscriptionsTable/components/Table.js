@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Table as PFtable } from 'patternfly-react';
-import classNames from 'classnames';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Table as PFtable } from '@theforeman/vendor/patternfly-react';
+import classNames from '@theforeman/vendor/classnames';
 import { createSubscriptionsTableSchema } from '../SubscriptionsTableSchema';
 import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../../move_to_foreman/components/common/table';
 

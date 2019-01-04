@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { FormControl } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { FormControl } from '@theforeman/vendor/patternfly-react';
 
 class TypeAheadInput extends Component {
   constructor(props) {

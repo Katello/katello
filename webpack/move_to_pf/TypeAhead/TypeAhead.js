@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from '@theforeman/vendor/react';
 import Downshift from 'downshift';
-import PropTypes from 'prop-types';
+import PropTypes from '@theforeman/vendor/prop-types';
 
-import { InputGroup, Button, Icon } from 'patternfly-react';
+import { InputGroup, Button, Icon } from '@theforeman/vendor/patternfly-react';
 import TypeAheadInput from './TypeAheadInput';
 import TypeAheadItems from './TypeAheadItems';
 import { getActiveItems } from './helpers';

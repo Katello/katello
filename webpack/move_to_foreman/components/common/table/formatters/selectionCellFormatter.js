@@ -1,4 +1,4 @@
-import React from 'react';
+import React from '@theforeman/vendor/react';
 import TableSelectionCell from '../components/TableSelectionCell';
 
 export default (

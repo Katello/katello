@@ -1,4 +1,4 @@
-export { sprintf } from 'jed';
+export { sprintf } from '@theforeman/vendor/jed';
 
 export const translate = s => s;
 

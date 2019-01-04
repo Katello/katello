@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import React from 'react';
-import { Icon } from 'patternfly-react';
-import { Link } from 'react-router-dom';
+import React from '@theforeman/vendor/react';
+import { Icon } from '@theforeman/vendor/patternfly-react';
+import { Link } from '@theforeman/vendor/react-router-dom';
 import helpers from '../../../../move_to_foreman/common/helpers';
 import { entitlementsInlineEditFormatter } from '../../../../move_to_foreman/components/common/table/formatters/EntitlementsInlineEditFormatter';
 import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';

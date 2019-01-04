@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Spinner } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Spinner } from '@theforeman/vendor/patternfly-react';
 import './LoadingState.scss';
 
 class LoadingState extends Component {

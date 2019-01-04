@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { Form, Button } from 'patternfly-react';
-import { withRouter } from 'react-router';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { Form, Button } from '@theforeman/vendor/patternfly-react';
+import { withRouter } from '@theforeman/vendor/react-router';
+import { bindActionCreators } from '@theforeman/vendor/redux';
+import { connect } from '@theforeman/vendor/react-redux';
 import Select from '../../move_to_pf/Select/Select';
 import * as SelectOrgActions from './SelectOrgAction';
 import reducer from './SelectOrgReducer';

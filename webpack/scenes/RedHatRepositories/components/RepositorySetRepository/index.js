@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { connect } from '@theforeman/vendor/react-redux';
 import { setRepositoryEnabled, enableRepository } from '../../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import { loadEnabledRepos } from '../../../../redux/actions/RedHatRepositories/enabled';
 import RepositorySetRepository from './RepositorySetRepository';

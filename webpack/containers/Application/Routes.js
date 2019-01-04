@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React from '@theforeman/vendor/react';
+import { Route } from '@theforeman/vendor/react-router-dom';
 import { links } from './config';
 
 export default () => (

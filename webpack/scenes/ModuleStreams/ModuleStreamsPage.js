@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Grid, Row, Col, Form, FormGroup } from 'react-bootstrap';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Grid, Row, Col, Form, FormGroup } from '@theforeman/vendor/react-bootstrap';
 import qs from 'query-string';
 import Search from '../../components/Search/index';
 import ModuleStreamsTable from './ModuleStreamsTable';

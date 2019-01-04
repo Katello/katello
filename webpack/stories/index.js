@@ -1,7 +1,7 @@
 import { configure } from '@storybook/react';
 
-require('patternfly/dist/css/patternfly.min.css');
-require('patternfly/dist/css/patternfly-additions.min.css');
+require('@theforeman/vendor/node_modules/patternfly/dist/css/patternfly.min.css');
+require('@theforeman/vendor/node_modules/patternfly/dist/css/patternfly-additions.min.css');
 
 const req = require.context('../', true, /.stories.js$/);
 

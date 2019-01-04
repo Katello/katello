@@ -1,9 +1,9 @@
 // This component should be replaced with a react version
 /* eslint-disable */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { FormControl } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import React from '@theforeman/vendor/react';
+import ReactDOM from '@theforeman/vendor/react-dom';
+import { FormControl } from '@theforeman/vendor/react-bootstrap';
+import PropTypes from '@theforeman/vendor/prop-types';
 
 require('jquery');
 require('bootstrap-select');

@@ -1,5 +1,5 @@
-import thunk from 'redux-thunk';
-import Immutable from 'seamless-immutable';
+import thunk from '@theforeman/vendor/redux-thunk';
+import Immutable from '@theforeman/vendor/seamless-immutable';
 import configureMockStore from 'redux-mock-store';
 import { mock, mockRequest, mockErrorRequest } from '../../../mockRequest';
 import {

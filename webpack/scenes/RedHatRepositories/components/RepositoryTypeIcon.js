@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { ListView, OverlayTrigger, Tooltip } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { ListView, OverlayTrigger, Tooltip } from '@theforeman/vendor/patternfly-react';
 
 import { getTypeIcon } from '../../../services/index';
 

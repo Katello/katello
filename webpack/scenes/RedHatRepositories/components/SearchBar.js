@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from '@theforeman/vendor/react';
+import { connect } from '@theforeman/vendor/react-redux';
+import PropTypes from '@theforeman/vendor/prop-types';
 
-import { Form, FormGroup } from 'react-bootstrap';
+import { Form, FormGroup } from '@theforeman/vendor/react-bootstrap';
 
 import { selectOrganizationProducts }
   from '../../../redux/OrganizationProducts/OrganizationProductsSelectors';

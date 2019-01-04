@@ -1,4 +1,4 @@
-import Immutable from 'seamless-immutable';
+import Immutable from '@theforeman/vendor/seamless-immutable';
 import { toastErrorAction, failureAction } from '../../../services/api/testHelpers';
 
 export const initialState = Immutable({

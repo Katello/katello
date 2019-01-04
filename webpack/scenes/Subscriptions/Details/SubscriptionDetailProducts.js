@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { ListGroup, ListGroupItem } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { ListGroup, ListGroupItem } from '@theforeman/vendor/patternfly-react';
 import './SubscriptionDetails.scss';
 
 const SubscriptionDetailProducts = ({ subscriptionDetails }) => (

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from '@theforeman/vendor/redux';
 import { organization } from '../../containers/Application';
 import redHatRepositories from './RedHatRepositories';
 import { subscriptions } from '../../scenes/Subscriptions';

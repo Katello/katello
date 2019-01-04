@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Icon } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Icon } from '@theforeman/vendor/patternfly-react';
 
 import './ProfileRpmsCellFormatter.scss';
 

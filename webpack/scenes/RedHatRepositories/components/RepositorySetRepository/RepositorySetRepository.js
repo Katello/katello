@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import cx from 'classnames';
-import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import cx from '@theforeman/vendor/classnames';
+import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from '@theforeman/vendor/patternfly-react';
 
 import { sprintf } from 'foremanReact/common/I18n';
 import { yStream } from '../RepositorySetRepositoriesHelpers';

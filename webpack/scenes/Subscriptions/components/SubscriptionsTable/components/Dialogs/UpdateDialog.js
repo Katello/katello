@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
 import { sprintf } from 'foremanReact/common/I18n';
-import { MessageDialog } from 'patternfly-react';
+import { MessageDialog } from '@theforeman/vendor/patternfly-react';
 import { buildPools } from '../../SubscriptionsTableHelpers';
 import { renderTaskStartedToast } from '../../../../../Tasks/helpers';
 import { BLOCKING_FOREMAN_TASK_TYPES } from '../../../../SubscriptionConstants';

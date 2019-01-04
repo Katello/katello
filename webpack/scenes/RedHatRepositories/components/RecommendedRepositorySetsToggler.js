@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { Switch, Icon, FieldLevelHelp } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import classNames from '@theforeman/vendor/classnames';
+import { Switch, Icon, FieldLevelHelp } from '@theforeman/vendor/patternfly-react';
 
 import './RecommendedRepositorySetsToggler.scss';
 

@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
-import { LinkContainer } from 'react-router-bootstrap';
-import TooltipButton from 'react-bootstrap-tooltip-button';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Row, Col, Form, FormGroup, Button } from '@theforeman/vendor/patternfly-react';
+import { LinkContainer } from '@theforeman/vendor/react-router-bootstrap';
+import TooltipButton from '@theforeman/vendor/react-bootstrap-tooltip-button';
 import { noop } from 'foremanReact/common/helpers';
 
 import Search from '../../../../components/Search/index';

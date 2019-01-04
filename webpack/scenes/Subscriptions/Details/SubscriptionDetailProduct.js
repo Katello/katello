@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Row, Col } from 'patternfly-react';
+import React from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { Row, Col } from '@theforeman/vendor/patternfly-react';
 import { translate as __ } from 'foremanReact/common/I18n';
 
 const SubscriptionDetailProduct = ({ content }) => (

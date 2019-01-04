@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Alert, Spinner } from 'patternfly-react';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
+import { connect } from '@theforeman/vendor/react-redux';
+import { Alert, Spinner } from '@theforeman/vendor/patternfly-react';
 
 import loadRepositorySetRepos from '../../../redux/actions/RedHatRepositories/repositorySetRepositories';
 import RepositorySetRepository from './RepositorySetRepository/';

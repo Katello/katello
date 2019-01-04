@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from '@theforeman/vendor/react';
+import PropTypes from '@theforeman/vendor/prop-types';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';
 import { recordsValid } from '../../SubscriptionValidations';
