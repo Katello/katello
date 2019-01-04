@@ -1,6 +1,8 @@
 module Katello
   module Util
     class PathWithSubstitutions
+      ARCHITECTURES = ["x86_64", "s390x", "ppc64le", "aarch64", "multiarch", "ppc64"].freeze
+
       include Comparable
 
       attr_accessor :substitutions
@@ -12,12 +14,27 @@ module Katello
         @substitutions = substitutions
         @path = path
         @resolved = []
+        check_for_subs_in_path if no_base_arch_passed?
+      end
+
+      def no_base_arch_passed?
+        @substitutions.keys.exclude?("basearch") && substitutions_needed.exclude?("basearch")
+      end
+
+      def split_path
+        @split ||= @path.split('/').map(&:downcase).reject(&:blank?)
+      end
+
+      def check_for_subs_in_path
+        arches = split_path & ARCHITECTURES
+        arch = arches.first
+        @substitutions["basearch"] = arch if arch
       end
 
       def substitutions_needed
         # e.g. if content_url = "/content/dist/rhel/server/7/$releasever/$basearch/kickstart"
         #      return ['releasever', 'basearch']
-        path.split('/').map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
+        split_path.map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
       end
 
       def substitutable?
