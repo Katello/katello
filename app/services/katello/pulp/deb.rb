@@ -13,6 +13,15 @@ module Katello
                     :changelog, :group, :size, :url, :build_time, :group,
                     :initializer => :pulp_facts
 
+      def update_model(model)
+        keys = Pulp::Deb::PULP_INDEXED_FIELDS - ['_id']
+        custom_json = backend_data.slice(*keys)
+        if custom_json.any? { |name, value| model.send(name) != value }
+          model.assign_attributes(custom_json)
+          model.save!
+        end
+      end
+
       def requires
         if pulp_facts['requires']
           pulp_facts['requires'].map { |entry| Katello::Util::Package.format_requires(entry) }.uniq.sort

@@ -6,13 +6,16 @@ module Katello
     include Katello::Concerns::SearchByRepositoryName
 
     #  Class.repository_association_class
-    #  Class#update_from_json
 
     def backend_data
       self.class.pulp_data(pulp_id) || {}
     end
 
     module ClassMethods
+      def content_type
+        self::CONTENT_TYPE
+      end
+
       def content_unit_class
         "::Katello::Pulp::#{self.name.demodulize}".constantize
       end
@@ -51,14 +54,18 @@ module Katello
       # Import all units of a single type and refresh their repository associations
       def import_all(pulp_ids = nil, options = {})
         index_repository_association = options.fetch(:index_repository_association, true) && self.manage_repository_association
+        service_class = SmartProxy.pulp_master!.content_service(content_type)
 
         process_block = lambda do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
-            item = Katello::Util::Support.active_record_retry do
+            model = Katello::Util::Support.active_record_retry do
               self.where(:pulp_id => unit['_id']).first_or_create
             end
-            item.update_from_json(unit)
+
+            service = service_class.new(model.pulp_id)
+            service.backend_data = unit
+            service.update_model(model)
           end
           if index_repository_association
             units.map { |unit| unit.slice('_id', 'repository_memberships') }

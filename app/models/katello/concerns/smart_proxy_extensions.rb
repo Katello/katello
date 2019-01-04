@@ -130,6 +130,15 @@ module Katello
         end
       end
 
+      def content_service(content_type)
+        if content_type.is_a?(String)
+          content_type = RepositoryTypeManager.find_content_type(content_type)
+        end
+
+        #this will rely on smart proxy capabilities when available
+        content_type.pulp2_service_class
+      end
+
       def set_default_download_policy
         self.download_policy ||= ::Setting[:default_proxy_download_policy] || ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND
       end

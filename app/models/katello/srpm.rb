@@ -2,7 +2,7 @@ module Katello
   class Srpm < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    CONTENT_TYPE = Pulp::Rpm::CONTENT_TYPE
+    CONTENT_TYPE = 'srpm'.freeze
 
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :destroy, :inverse_of => :srpm
     has_many :repositories, :through => :repository_srpms, :class_name => "Katello::Repository"
@@ -11,18 +11,6 @@ module Katello
 
     def self.repository_association_class
       RepositorySrpm
-    end
-
-    def update_from_json(json)
-      keys = Pulp::Srpm::PULP_INDEXED_FIELDS - ['_id']
-      custom_json = json.slice(*keys)
-      if custom_json.any? { |name, value| self.send(name) != value }
-        custom_json[:release_sortable] = Util::Package.sortable_version(custom_json[:release])
-        custom_json[:version_sortable] = Util::Package.sortable_version(custom_json[:version])
-        self.assign_attributes(custom_json)
-        self.nvra = self.build_nvra
-        self.save!
-      end
     end
 
     def self.total_for_repositories(repos)

@@ -7,6 +7,7 @@ module Katello
     TAGS = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "docker_tags.yml")
 
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @manifest_lists = YAML.load_file(MANIFESTS).values.map(&:deep_symbolize_keys)
       @repo = Repository.find(katello_repositories(:redis).id)
 

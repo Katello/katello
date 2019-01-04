@@ -20,13 +20,6 @@ module Katello
       assert PackageGroup.find_by(:pulp_id => pulp_id)
     end
 
-    def test_update_from_json
-      pg = PackageGroup.create!(:pulp_id => "foo")
-      json = pg.attributes.merge('description' => 'an update')
-      pg.update_from_json(json)
-      assert_equal pg.description, json['description']
-    end
-
     def test_search_by_name
       assert_equal PackageGroup.search_for("name = mammals").first, @mammals_pg
     end

@@ -19,10 +19,6 @@ module Katello
       self.repositories.first
     end
 
-    def update_from_json(json)
-      self.update_attributes!(json.slice('name', 'description'))
-    end
-
     def self.list_by_filter_clauses(clauses)
       package_names = []
       pulp_package_groups = Katello.pulp_server.extensions.package_group.search(Katello::PackageGroup::CONTENT_TYPE, :filters => clauses)

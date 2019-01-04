@@ -9,6 +9,7 @@ module Katello
       @rpm_three = katello_srpms(:three)
 
       Srpm.any_instance.stubs(:backend_data).returns({})
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
     end
   end
 
@@ -33,26 +34,6 @@ module Katello
       assert_equal 2, srpms.count
       assert_include srpms, @rpm_one
       assert_include srpms, @rpm_two
-    end
-
-    def test_update_from_json
-      pulp_id = 'foo'
-      Srpm.create!(:pulp_id => pulp_id)
-      json = @rpm_one.attributes.merge('summary' => 'an update', 'version' => '3', 'release' => '4')
-      @rpm_one.update_from_json(json.with_indifferent_access)
-      @rpm_one = @rpm_one.reload
-
-      assert_equal @rpm_one.summary, json['summary']
-      refute @rpm_one.release_sortable.blank?
-      refute @rpm_one.version_sortable.blank?
-      refute @rpm_one.nvra.blank?
-    end
-
-    def test_update_from_json_is_idempotent
-      last_updated = @rpm_one.updated_at
-      json = @rpm_one.attributes
-      @rpm_one.update_from_json(json)
-      assert_equal @rpm_one.reload.updated_at, last_updated
     end
 
     def test_with_identifiers

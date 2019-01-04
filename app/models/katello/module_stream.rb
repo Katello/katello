@@ -31,7 +31,7 @@ module Katello
                    complete_value: false,
                    operators: ["=", "~"]
 
-    CONTENT_TYPE = Pulp::ModuleStream::CONTENT_TYPE
+    CONTENT_TYPE = "modulemd".freeze
     MODULE_STREAM_DEFAULT_CONTENT_TYPE = "modulemd_defaults".freeze
 
     def self.default_sort
@@ -48,36 +48,6 @@ module Katello
 
     def self.installable_for_hosts(hosts = nil)
       ApplicableContentHelper.new(ModuleStream).installable_for_hosts(hosts)
-    end
-
-    def update_from_json(json)
-      shared_attributes = json.keys & self.class.column_names
-      shared_json = json.select { |key, _v| shared_attributes.include?(key) }
-      self.update_attributes!(shared_json)
-
-      create_stream_artifacts(json['artifacts']) if json.key?('artifacts')
-      create_profiles(json['profiles']) if json.key?('profiles')
-    end
-
-    def create_stream_artifacts(artifacts)
-      artifacts.each do |name|
-        Katello::Util::Support.active_record_retry do
-          self.artifacts.where(name: name).first_or_create!
-        end
-      end
-    end
-
-    def create_profiles(profiles)
-      profiles.select do |profile, rpms|
-        Katello::Util::Support.active_record_retry do
-          profile = self.profiles.where(name: profile).first_or_create!
-        end
-        rpms.each do |rpm|
-          Katello::Util::Support.active_record_retry do
-            profile.rpms.where(name: rpm).first_or_create!
-          end
-        end
-      end
     end
 
     def library_repositories

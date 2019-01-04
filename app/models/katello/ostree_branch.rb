@@ -11,18 +11,10 @@ module Katello
     scoped_search :on => :pulp_id, :complete_value => true, :rename => :uuid
     scoped_search :on => :version_date, :complete_value => true, :rename => :created
 
-    CONTENT_TYPE = Pulp::OstreeBranch::CONTENT_TYPE
+    CONTENT_TYPE = "ostree".freeze
 
     def self.repository_association_class
       RepositoryOstreeBranch
-    end
-
-    def update_from_json(json)
-      update_attributes(:name => json[:branch],
-                        :version => json[:metadata][:version],
-                        :commit => json[:commit],
-                        :version_date => json[:_created].to_datetime
-                       )
     end
   end
 end

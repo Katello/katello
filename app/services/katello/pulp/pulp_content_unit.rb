@@ -5,12 +5,14 @@ module Katello
     class PulpContentUnit
       # Any class that extends this class should define:
       # Class::CONTENT_TYPE
+      # Class#update_model
 
       # Any class that extends this class can define:
       # Class.unit_handler (optional)
       # Class::PULP_INDEXED_FIELDS (optional)
 
       attr_accessor :uuid
+      attr_writer :backend_data
 
       def initialize(uuid)
         self.uuid = uuid
@@ -77,6 +79,11 @@ module Katello
       end
 
       def backend_data
+        @backend_data ||= fetch_backend_data
+        @backend_data.try(:with_indifferent_access)
+      end
+
+      def fetch_backend_data
         self.class.pulp_data(self.uuid)
       end
     end

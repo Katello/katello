@@ -10,7 +10,8 @@ module Katello
              :dependent => :delete_all, :inverse_of => :docker_manifest
     has_many :docker_manifest_lists, :through => :docker_manifest_list_manifests, :inverse_of => :docker_manifests
 
-    CONTENT_TYPE = Pulp::DockerManifest::CONTENT_TYPE
+    CONTENT_TYPE = "docker_manifest".freeze
+
     scoped_search :relation => :docker_tags, :on => :name, :rename => :tag, :complete_value => true
     scoped_search :on => :digest, :rename => :digest, :complete_value => true, :only_explicit => true
     scoped_search :on => :schema_version, :rename => :schema_version, :complete_value => true, :only_explicit => true
@@ -18,13 +19,6 @@ module Katello
 
     def self.repository_association_class
       RepositoryDockerManifest
-    end
-
-    def update_from_json(json)
-      update_attributes(:schema_version => json[:schema_version],
-                        :digest => json[:digest],
-                        :downloaded => json[:downloaded]
-                       )
     end
 
     def self.default_sort

@@ -38,18 +38,6 @@ module Katello
       assert_equal YumMetadataFile.in_repositories([@repo, repo2]), [@ymf1, @ymf2]
     end
 
-    def test_update_from_json
-      pulp_id = 'foo'
-      name = "foo.gz"
-      YumMetadataFile.create!(:pulp_id => pulp_id)
-      json = @ymf1.attributes.merge('checksum' => 'xxxxxx',
-                                    '_storage_path' => "/var/lib/pulp/foo/#{name}")
-      @ymf1.update_from_json(json.with_indifferent_access)
-      @ymf1 = @ymf1.reload
-      refute @ymf1.checksum.blank?
-      assert_equal name, @ymf1.name
-    end
-
     def test_with_identifiers
       assert_includes YumMetadataFile.with_identifiers(@ymf1.id), @ymf1
       assert_includes YumMetadataFile.with_identifiers([@ymf1.id]), @ymf1

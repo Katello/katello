@@ -7,7 +7,7 @@ module Katello
     ENHANCEMENT = ["enhancement", "optional"].freeze
 
     TYPES = [SECURITY, BUGZILLA, ENHANCEMENT].flatten.freeze
-    CONTENT_TYPE = Pulp::Erratum::CONTENT_TYPE
+    CONTENT_TYPE = "erratum".freeze
 
     has_many :content_facet_errata, :class_name => "Katello::ContentFacetErratum", :dependent => :destroy, :inverse_of => :content_facet
     has_many :content_facets, :through => :content_facet_errata, :class_name => "Katello::Host::ContentFacet", :source => :content_facet
@@ -99,29 +99,6 @@ module Katello
       installable_for_hosts(hosts).select(:id)
     end
 
-    def update_from_json(json)
-      keys = %w(title id severity issued type description reboot_suggested solution updated summary)
-      custom_json = json.slice(*keys)
-
-      # handle SUSE epoch dates
-      custom_json["issued"] = convert_date_if_epoch(custom_json["issued"])
-      custom_json["updated"] = convert_date_if_epoch(custom_json["updated"]) unless custom_json["updated"].blank?
-
-      if self.updated.blank? || (custom_json['updated'].to_datetime != self.updated.to_datetime)
-        custom_json['errata_id'] = custom_json.delete('id')
-        custom_json['errata_type'] = custom_json.delete('type')
-        custom_json['updated'] = custom_json['updated'].blank? ? custom_json['issued'] : custom_json['updated']
-        self.update_attributes!(custom_json)
-
-        unless json['references'].blank?
-          update_bugzillas(json['references'].select { |r| r['type'] == 'bugzilla' })
-          update_cves(json['references'].select { |r| r['type'] == 'cve' })
-        end
-      end
-      update_packages(json['pkglist']) unless json['pkglist'].blank?
-      update_modules(json['pkglist']) unless json['pkglist'].blank?
-    end
-
     def self.list_filenames_by_clauses(repo, clauses)
       query_clauses = clauses.map do |clause|
         "(#{clause.to_sql})"
@@ -146,102 +123,6 @@ module Katello
       module_stream_rpms.map do |module_hash, nvreas|
         module_hash.merge(:packages => nvreas)
       end
-    end
-
-    private
-
-    def convert_date_if_epoch(date)
-      date.to_i.to_s == date ? epoch_to_date(date) : date
-    end
-
-    def epoch_to_date(epoch)
-      Time.at(epoch.to_i).to_s
-    end
-
-    def run_until(needed_function, action_function)
-      needed = needed_function.call
-      retries = needed.length
-      until needed.empty? || retries == 0
-        begin
-          action_function.call(needed)
-        rescue ActiveRecord::RecordNotUnique
-          self.reload
-        end
-        needed = needed_function.call
-        retries -= 1
-      end
-      fail _('Failed indexing errata, maximum retries encountered') if retries == 0 && needed.any?
-    end
-
-    def update_bugzillas(json)
-      needed_function = lambda do
-        existing_names = bugzillas.pluck(:bug_id)
-        json.select { |bz| !existing_names.include?(bz['id']) }
-      end
-      action_function = lambda do |needed|
-        bugzillas.create!(needed.map { |bug| {:bug_id => bug['id'], :href => bug['href']} })
-      end
-      run_until(needed_function, action_function)
-    end
-
-    def update_cves(json)
-      needed_function = lambda do
-        existing_names = cves.pluck(:cve_id)
-        json.select { |cve| !existing_names.include?(cve['id']) }
-      end
-      action_function = lambda do |needed|
-        cves.create!(needed.map { |cve| {:cve_id => cve['id'], :href => cve['href']} })
-      end
-      run_until(needed_function, action_function)
-    end
-
-    def update_packages(json)
-      needed_function = lambda do
-        package_hashes = json.map { |list| list['packages'] }.flatten
-        package_attributes = package_hashes.map do |hash|
-          nvrea = Util::Package.build_nvra(hash)
-          {'name' => hash['name'], 'nvrea' => nvrea, 'filename' => hash['filename']}
-        end
-        existing_nvreas = self.packages.pluck(:nvrea)
-        package_attributes.delete_if { |pkg| existing_nvreas.include?(pkg['nvrea']) }
-        package_attributes.uniq { |pkg| pkg['nvrea'] }
-      end
-      action_function = lambda do |needed|
-        self.packages.create!(needed)
-      end
-      run_until(needed_function, action_function)
-    end
-
-    def update_modules(json)
-      needed_function = lambda do
-        module_stream_attributes = []
-        json.each do |package_item|
-          if package_item['module']
-            module_stream = ModuleStream.where(package_item['module']).first
-            next if module_stream.blank?
-            nvreas = package_item["packages"].map { |hash| Util::Package.build_nvra(hash) }
-            module_stream_id_column = "#{ModuleStreamErratumPackage.table_name}.module_stream_id"
-            existing = ErratumPackage.joins(:module_streams).
-                                      where(module_stream_id_column => module_stream.id,
-                                            :nvrea => nvreas).pluck(:nvrea)
-
-            (nvreas - existing).each do |nvrea|
-              package = self.packages.find_by(:nvrea => nvrea)
-              module_stream_attributes << { :module_stream_id => module_stream.id,
-                                            :erratum_package_id => package.id }
-            end
-          end
-        end
-        module_stream_attributes.uniq
-      end
-
-      action_function = lambda do |needed|
-        needed.each do |msep|
-          ModuleStreamErratumPackage.create!(msep)
-        end
-      end
-
-      run_until(needed_function, action_function)
     end
 
     class Jail < ::Safemode::Jail

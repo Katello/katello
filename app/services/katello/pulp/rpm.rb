@@ -7,23 +7,21 @@ module Katello
       PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id).freeze
       CONTENT_TYPE = "rpm".freeze
 
-      lazy_accessor :pulp_facts, :initializer => :backend_data
-
       lazy_accessor :description, :license, :buildhost, :vendor, :relativepath, :children, :checksumtype,
                     :changelog, :group, :size, :url, :build_time, :group,
-                    :initializer => :pulp_facts
+                    :initializer => :backend_data
 
       def requires
-        if pulp_facts['requires']
-          pulp_facts['requires'].map { |entry| Katello::Util::Package.format_requires(entry) }.uniq.sort
+        if backend_data['requires']
+          backend_data['requires'].map { |entry| Katello::Util::Package.format_requires(entry) }.uniq.sort
         else
           []
         end
       end
 
       def provides
-        if pulp_facts['provides']
-          pulp_facts['provides'].map { |entry| Katello::Util::Package.build_nvrea(entry, false) }.uniq.sort
+        if backend_data['provides']
+          backend_data['provides'].map { |entry| Katello::Util::Package.build_nvrea(entry, false) }.uniq.sort
         else
           []
         end
@@ -31,15 +29,27 @@ module Katello
 
       def files
         result = []
-        if pulp_facts['files']
-          if pulp_facts['files']['file']
-            result << pulp_facts['files']['file']
+        if backend_data['files']
+          if backend_data['files']['file']
+            result << backend_data['files']['file']
           end
-          if pulp_facts['files']['dir']
-            result << pulp_facts['files']['dir']
+          if backend_data['files']['dir']
+            result << backend_data['files']['dir']
           end
         end
         result.flatten
+      end
+
+      def update_model(model)
+        keys = PULP_INDEXED_FIELDS - ['_id']
+        data = backend_data.slice(*keys)
+        if data.any? { |name, value| model.send(name) != value }
+          data[:release_sortable] = Util::Package.sortable_version(data[:release])
+          data[:version_sortable] = Util::Package.sortable_version(data[:version])
+          model.assign_attributes(data)
+          model.nvra = model.build_nvra
+          model.save!
+        end
       end
     end
   end

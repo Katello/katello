@@ -28,19 +28,6 @@ module Katello
           Katello.pulp_server.resources.content.remove_orphans
         end
 
-        def self.distribution_bootable?(distribution)
-          # Not every distribution from Pulp represents a bootable
-          # repo. Determine based on the files in the repo.
-          distribution["files"].any? do |file|
-            if file.is_a? Hash
-              filename = file[:relativepath]
-            else
-              filename = file
-            end
-            filename.include?('vmlinuz') || filename.include?('pxeboot') || filename.include?('kernel.img') || filename.include?('initrd.img')
-          end
-        end
-
         def self.needs_importer_updates(repos, capsule_content)
           repos.select do |repo|
             repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
@@ -406,60 +393,6 @@ module Katello
       else
         "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}/"
       end
-    end
-
-    def index_yum_content(full_index = false)
-      if self.master?
-        Katello::Rpm.import_for_repository(self, full_index)
-        Katello::Srpm.import_for_repository(self, full_index)
-        Katello::ModuleStream.import_for_repository(self)
-        Katello::Erratum.import_for_repository(self)
-        Katello::PackageGroup.import_for_repository(self)
-        Katello::YumMetadataFile.import_for_repository(self)
-        self.import_distribution_data
-      else
-        index_linked_repo
-      end
-    end
-
-    def index_linked_repo
-      if (base_repo = self.target_repository)
-        Rpm.copy_repository_associations(base_repo, self)
-        Erratum.copy_repository_associations(base_repo, self)
-        PackageGroup.copy_repository_associations(base_repo, self)
-        ModuleStream.copy_repository_associations(base_repo, self)
-        YumMetadataFile.copy_repository_associations(base_repo, self)
-
-        self.update_attributes!(
-          :distribution_version => base_repo.distribution_version,
-          :distribution_arch => base_repo.distribution_arch,
-          :distribution_family => base_repo.distribution_family,
-          :distribution_variant => base_repo.distribution_variant,
-          :distribution_uuid => base_repo.distribution_uuid,
-          :distribution_bootable => base_repo.distribution_bootable
-        )
-      else
-        Rails.logger.error("Cannot index #{self.id}, no target repository found.")
-      end
-    end
-
-    def index_content(full_index = false)
-      if self.yum?
-        index_yum_content(full_index)
-      elsif self.docker?
-        Katello::DockerManifest.import_for_repository(self)
-        Katello::DockerManifestList.import_for_repository(self)
-        Katello::DockerTag.import_for_repository(self)
-      elsif self.puppet?
-        Katello::PuppetModule.import_for_repository(self)
-      elsif self.ostree?
-        Katello::OstreeBranch.import_for_repository(self)
-      elsif self.file?
-        Katello::FileUnit.import_for_repository(self)
-      elsif self.deb?
-        Katello::Deb.import_for_repository(self)
-      end
-      true
     end
   end
 end

@@ -5,7 +5,7 @@ module Katello
   class PuppetModule < Katello::Model
     include Concerns::PulpDatabaseUnit
 
-    CONTENT_TYPE = Pulp::PuppetModule::CONTENT_TYPE
+    CONTENT_TYPE = "puppet_module".freeze
 
     has_many :repository_puppet_modules, :class_name => "Katello::RepositoryPuppetModule", :dependent => :destroy, :inverse_of => :puppet_module
     has_many :repositories, :through => :repository_puppet_modules, :class_name => "Katello::Repository"
@@ -71,11 +71,6 @@ module Katello
           fail _("Could not find Repository for module %s.") % puppet_module.name
         end
       end
-    end
-
-    def update_from_json(json)
-      custom_json = json.slice('name', 'author', 'title', 'version', 'summary')
-      self.update_attributes!(custom_json)
     end
 
     private

@@ -6,6 +6,7 @@ module Katello
     BRANCHES = File.join(Katello::Engine.root, "test", "fixtures", "pulp", "ostree_branch.yml")
 
     def setup
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
       @branches = YAML.load_file(BRANCHES).values.map(&:deep_symbolize_keys)
       @repo = Repository.find(katello_repositories(:ostree).id)
 
