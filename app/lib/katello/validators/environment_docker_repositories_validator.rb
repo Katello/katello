@@ -20,19 +20,21 @@ module Katello
 
       def self.validate_repositories(registry_name_pattern, repositories)
         error_messages = []
-        names = []
+        name_to_repos = {}
         repositories.each do |repository|
           name = Katello::Repository.safe_render_container_name(repository, registry_name_pattern)
-
           unless ContainerImageNameValidator.validate_name(name)
             error_messages << N_("Registry name pattern results in invalid container image name of member repository '%{name}'") % {name: repository.name}
             return error_messages
           end
-          names << name
+          name_to_repos[name] ||= []
+          name_to_repos[name] << repository
         end
 
-        if names.length != names.uniq.length
-          error_messages << N_("Registry name pattern results in duplicate container image names")
+        duplicate_repos = name_to_repos.select { |_name, repos| repos.count > 1 }.values.flatten
+        if duplicate_repos.any?
+          repo_names = duplicate_repos.map(&:name).sort.join(', ')
+          error_messages << N_("Registry name pattern results in duplicate container image names for these repositories: %s.") % repo_names
           return error_messages
         end
 

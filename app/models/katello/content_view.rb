@@ -568,7 +568,8 @@ module Katello
 
         error_messages = ::Katello::Validators::EnvironmentDockerRepositoriesValidator.validate_repositories(environment.registry_name_pattern, repositories)
         unless error_messages.empty?
-          fail _("Content View publish to environment %{name} will result in invalid container image name of member repositories") % {name: environment.name}
+          error_messages << _("Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.")
+          fail error_messages.join("  ")
         end
       end
       true
