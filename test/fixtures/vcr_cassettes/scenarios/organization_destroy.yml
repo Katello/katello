@@ -163,43 +163,6 @@ http_interactions:
     http_version: 
   recorded_at: Mon, 22 Oct 2018 17:08:50 GMT
 - request:
-    method: delete
-    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/scenario_test/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Mon, 03 Dec 2018 05:39:19 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzkzOGU0NWRiLTI3NzQtNGVkMy1hNjRhLTYyNDAzZDZkYmQzYy8iLCAi
-        dGFza19pZCI6ICI5MzhlNDVkYi0yNzc0LTRlZDMtYTY0YS02MjQwM2Q2ZGJk
-        M2MifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Mon, 03 Dec 2018 05:39:19 GMT
-- request:
     method: get
     uri: https://centos7-devel2.samir.example.com/pulp/api/v2/tasks/938e45db-2774-4ed3-a64a-62403d6dbd3c/
     body:
@@ -357,44 +320,201 @@ http_interactions:
   recorded_at: Mon, 03 Dec 2018 05:39:19 GMT
 - request:
     method: delete
-    uri: https://centos7-devel2.samir.example.com:8443/candlepin/environments/d80a5783c502f0f969e23089437bb7ce
+    uri: https://gamma.partello.example.com/pulp/api/v2/repositories/scenario_test/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       Accept:
-      - "*/*"
+      - application/json
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Authorization:
-      - OAuth oauth_consumer_key="zjp7BihWXTQRyEHyjMDCmiFfK3zaUYzk", oauth_nonce="sjFHDejsMhCw3SXvjmDCW2WtYdPoYTfOoGMofp8",
-        oauth_signature="0YlT2iVKnKUi%2FEHBStokK2YCDos%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1543815559", oauth_version="1.0"
-      Cp-User:
-      - foreman_admin
+      Content-Type:
+      - application/json
   response:
     status:
-      code: 204
-      message: No Content
+      code: 202
+      message: Accepted
     headers:
-      Server:
-      - Apache-Coyote/1.1
-      X-Candlepin-Request-Uuid:
-      - 8a153745-3e3b-4ead-8949-7a97fe25ab75
-      X-Version:
-      - 2.5.6-1
       Date:
-      - Mon, 03 Dec 2018 05:39:19 GMT
+      - Fri, 04 Jan 2019 20:49:50 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
     body:
       encoding: UTF-8
-      base64_string: ''
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzL2EzMzgzMDg2LTQzZjQtNGI4Zi1iYzkxLTNhYzVjMmJmNWIyYi8iLCAi
+        dGFza19pZCI6ICJhMzM4MzA4Ni00M2Y0LTRiOGYtYmM5MS0zYWM1YzJiZjVi
+        MmIifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
-  recorded_at: Mon, 03 Dec 2018 05:39:19 GMT
+  recorded_at: Fri, 04 Jan 2019 20:49:50 GMT
+- request:
+    method: get
+    uri: https://gamma.partello.example.com/pulp/api/v2/tasks/a3383086-43f4-4b8f-bc91-3ac5c2bf5b2b/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 04 Jan 2019 20:49:50 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"1f3610224085c75a8b257702b45a4f5b-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '654'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9hMzM4MzA4Ni00M2Y0LTRiOGYtYmM5MS0zYWM1YzJiZjVi
+        MmIvIiwgInRhc2tfaWQiOiAiYTMzODMwODYtNDNmNC00YjhmLWJjOTEtM2Fj
+        NWMyYmY1YjJiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBu
+        dWxsLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwg
+        InByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVz
+        b3VyY2Vfd29ya2VyLTBAZ2FtbWEucGFydGVsbG8uZXhhbXBsZS5jb20uZHEy
+        IiwgInN0YXRlIjogIndhaXRpbmciLCAid29ya2VyX25hbWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZ2FtbWEucGFydGVsbG8uZXhhbXBsZS5j
+        b20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9pZCI6IHsi
+        JG9pZCI6ICI1YzJmYzZlZTk2MTk0MTcwNGQzOWIwMjMifSwgImlkIjogIjVj
+        MmZjNmVlOTYxOTQxNzA0ZDM5YjAyMyJ9
+    http_version: 
+  recorded_at: Fri, 04 Jan 2019 20:49:50 GMT
+- request:
+    method: get
+    uri: https://gamma.partello.example.com/pulp/api/v2/tasks/a3383086-43f4-4b8f-bc91-3ac5c2bf5b2b/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 04 Jan 2019 20:49:50 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"07b3a65d221a8cc0a04c587e8a692454-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '672'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9hMzM4MzA4Ni00M2Y0LTRiOGYtYmM5MS0zYWM1YzJiZjVi
+        MmIvIiwgInRhc2tfaWQiOiAiYTMzODMwODYtNDNmNC00YjhmLWJjOTEtM2Fj
+        NWMyYmY1YjJiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiBudWxsLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAi
+        MjAxOS0wMS0wNFQyMDo0OTo1MFoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNw
+        YXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVl
+        dWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZ2FtbWEucGFydGVs
+        bG8uZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29y
+        a2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZ2FtbWEu
+        cGFydGVsbG8uZXhhbXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9y
+        IjogbnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1YzJmYzZlZTk2MTk0MTcwNGQz
+        OWIwMjMifSwgImlkIjogIjVjMmZjNmVlOTYxOTQxNzA0ZDM5YjAyMyJ9
+    http_version: 
+  recorded_at: Fri, 04 Jan 2019 20:49:50 GMT
+- request:
+    method: get
+    uri: https://gamma.partello.example.com/pulp/api/v2/tasks/a3383086-43f4-4b8f-bc91-3ac5c2bf5b2b/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 04 Jan 2019 20:49:50 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"bf565de84773ed7e2d79fe3cac82d1ea-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '691'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9hMzM4MzA4Ni00M2Y0LTRiOGYtYmM5MS0zYWM1YzJiZjVi
+        MmIvIiwgInRhc2tfaWQiOiAiYTMzODMwODYtNDNmNC00YjhmLWJjOTEtM2Fj
+        NWMyYmY1YjJiIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTpzY2VuYXJp
+        b190ZXN0IiwgInB1bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUi
+        OiAiMjAxOS0wMS0wNFQyMDo0OTo1MFoiLCAiX25zIjogInRhc2tfc3RhdHVz
+        IiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wMS0wNFQyMDo0OTo1MFoiLCAidHJh
+        Y2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNz
+        X3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29y
+        a2VyLTBAZ2FtbWEucGFydGVsbG8uZXhhbXBsZS5jb20uZHEyIiwgInN0YXRl
+        IjogImZpbmlzaGVkIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291
+        cmNlX3dvcmtlci0wQGdhbW1hLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJl
+        c3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAi
+        NWMyZmM2ZWU5NjE5NDE3MDRkMzliMDIzIn0sICJpZCI6ICI1YzJmYzZlZTk2
+        MTk0MTcwNGQzOWIwMjMifQ==
+    http_version: 
+  recorded_at: Fri, 04 Jan 2019 20:49:50 GMT
 - request:
     method: delete
-    uri: https://centos7-devel2.samir.example.com:8443/candlepin/owners/scenario_test
+    uri: https://gamma.partello.example.com:8443/candlepin/environments/d80a5783c502f0f969e23089437bb7ce
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -406,9 +526,9 @@ http_interactions:
       User-Agent:
       - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
       Authorization:
-      - OAuth oauth_consumer_key="zjp7BihWXTQRyEHyjMDCmiFfK3zaUYzk", oauth_nonce="LfSAVVLAJVBOxSt5gIx1fKooKgyYUBeuK8MMdv6HXg",
-        oauth_signature="cKt3cOr%2FAuAyazwf9u8H%2BA%2F%2BqYA%3D", oauth_signature_method="HMAC-SHA1",
-        oauth_timestamp="1543815559", oauth_version="1.0"
+      - OAuth oauth_consumer_key="2Mmzhqd8GNJ9gfY2kpoSYnd7gdBFgJzY", oauth_nonce="RaVB2ey3dF3aTMddCOAnc0sD7rebTuwX3ff7xPMgZE",
+        oauth_signature="HwsiMuQ91FZHA2nRpisHFScuVyc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1546634990", oauth_version="1.0"
       Cp-User:
       - foreman_admin
   response:
@@ -419,14 +539,51 @@ http_interactions:
       Server:
       - Apache-Coyote/1.1
       X-Candlepin-Request-Uuid:
-      - a07610b5-654d-4fb0-aa25-c3a07d685d73
+      - a7a65f1f-43a5-420e-82e8-d6c8446b7fbc
       X-Version:
       - 2.5.6-1
       Date:
-      - Mon, 03 Dec 2018 05:39:19 GMT
+      - Fri, 04 Jan 2019 20:49:50 GMT
     body:
       encoding: UTF-8
       base64_string: ''
     http_version: 
-  recorded_at: Mon, 03 Dec 2018 05:39:19 GMT
+  recorded_at: Fri, 04 Jan 2019 20:49:50 GMT
+- request:
+    method: delete
+    uri: https://gamma.partello.example.com:8443/candlepin/owners/scenario_test
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Authorization:
+      - OAuth oauth_consumer_key="2Mmzhqd8GNJ9gfY2kpoSYnd7gdBFgJzY", oauth_nonce="WvQZFFtFgTCshW9L5OuXVcvGhREekIzprlg0uiJuWI",
+        oauth_signature="Tuxq%2B1ayt0f2AlPyA%2FeZoBlniQc%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1546634990", oauth_version="1.0"
+      Cp-User:
+      - foreman_admin
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Server:
+      - Apache-Coyote/1.1
+      X-Candlepin-Request-Uuid:
+      - 1c54b9c8-d523-4854-8a42-53d589410748
+      X-Version:
+      - 2.5.6-1
+      Date:
+      - Fri, 04 Jan 2019 20:49:50 GMT
+    body:
+      encoding: UTF-8
+      base64_string: ''
+    http_version: 
+  recorded_at: Fri, 04 Jan 2019 20:49:50 GMT
 recorded_with: VCR 3.0.3

@@ -1,54 +1,6 @@
 ---
 http_interactions:
 - request:
-    method: get
-    uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/scenario_test/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Mon, 03 Dec 2018 05:38:55 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Etag:
-      - '"b119bfba767b7a356efe7bee2f21a865-gzip"'
-      Vary:
-      - Accept-Encoding
-      Content-Length:
-      - '459'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        eyJzY3JhdGNocGFkIjogeyJjaGVja3N1bV90eXBlIjogInNoYTI1NiJ9LCAi
-        ZGlzcGxheV9uYW1lIjogIlNjZW5hcmlvIHl1bSBwcm9kdWN0IiwgImRlc2Ny
-        aXB0aW9uIjogbnVsbCwgImxhc3RfdW5pdF9hZGRlZCI6ICIyMDE4LTEyLTAz
-        VDA1OjI4OjIxWiIsICJub3RlcyI6IHsiX3JlcG8tdHlwZSI6ICJycG0tcmVw
-        byJ9LCAibGFzdF91bml0X3JlbW92ZWQiOiBudWxsLCAiY29udGVudF91bml0
-        X2NvdW50cyI6IHsicGFja2FnZV9ncm91cCI6IDIsICJkaXN0cmlidXRpb24i
-        OiAxLCAicGFja2FnZV9jYXRlZ29yeSI6IDEsICJycG0iOiA4LCAiZXJyYXR1
-        bSI6IDN9LCAiX25zIjogInJlcG9zIiwgIl9pZCI6IHsiJG9pZCI6ICI1YzA0
-        YmVkZjA1ZjVlZTMxNmQ5Y2FlOTYifSwgImlkIjogInNjZW5hcmlvX3Rlc3Qi
-        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy9zY2VuYXJp
-        b190ZXN0LyJ9
-    http_version: 
-  recorded_at: Mon, 03 Dec 2018 05:38:55 GMT
-- request:
     method: delete
     uri: https://centos7-devel2.samir.example.com/pulp/api/v2/repositories/scenario_test/
     body:
@@ -85,4 +37,49 @@ http_interactions:
         ZDAifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
     http_version: 
   recorded_at: Mon, 03 Dec 2018 05:38:55 GMT
+- request:
+    method: get
+    uri: https://gamma.partello.example.com/pulp/api/v2/repositories/scenario_test/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Fri, 04 Jan 2019 20:49:26 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '422'
+      Etag:
+      - '"5ac546ec21028925462ba3914390e451"'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkdFVCIsICJleGNlcHRpb24iOiBu
+        dWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMpOiBy
+        ZXBvc2l0b3J5PXNjZW5hcmlvX3Rlc3QiLCAiX2hyZWYiOiAiL3B1bHAvYXBp
+        L3YyL3JlcG9zaXRvcmllcy9zY2VuYXJpb190ZXN0Lz8iLCAiaHR0cF9zdGF0
+        dXMiOiA0MDQsICJlcnJvciI6IHsiY29kZSI6ICJQTFAwMDA5IiwgImRhdGEi
+        OiB7InJlc291cmNlcyI6IHsicmVwb3NpdG9yeSI6ICJzY2VuYXJpb190ZXN0
+        In19LCAiZGVzY3JpcHRpb24iOiAiTWlzc2luZyByZXNvdXJjZShzKTogcmVw
+        b3NpdG9yeT1zY2VuYXJpb190ZXN0IiwgInN1Yl9lcnJvcnMiOiBbXX0sICJ0
+        cmFjZWJhY2siOiBudWxsLCAicmVzb3VyY2VzIjogeyJyZXBvc2l0b3J5Ijog
+        InNjZW5hcmlvX3Rlc3QifX0=
+    http_version: 
+  recorded_at: Fri, 04 Jan 2019 20:49:26 GMT
 recorded_with: VCR 3.0.3

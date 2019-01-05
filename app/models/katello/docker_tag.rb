@@ -13,8 +13,6 @@ module Katello
 
     before_destroy :cleanup_meta_tags
 
-    scope :in_repositories, ->(repos) { where(:repository_id => repos) }
-
     delegate :relative_path, :environment, :content_view_version, :product, :to => :repository
 
     def associated_meta_tag

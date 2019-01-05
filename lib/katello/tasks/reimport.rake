@@ -23,6 +23,7 @@ namespace :katello do
               Katello::Rpm,
               Katello::Srpm,
               Katello::ModuleStream,
+              Katello::YumMetadataFile,
               Katello::Deb,
               Katello::FileUnit,
               Katello::Subscription,
