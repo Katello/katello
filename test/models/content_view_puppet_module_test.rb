@@ -20,7 +20,7 @@ module Katello
 
     def test_create_with_uuid
       content_view_puppet_module = ContentViewPuppetModule.new(
-        :uuid => katello_puppet_modules(:foreman_proxy).uuid,
+        :uuid => katello_puppet_modules(:foreman_proxy).pulp_id,
         :content_view => @library_view
       )
       assert content_view_puppet_module.save!
@@ -30,10 +30,10 @@ module Katello
       motd1 = katello_puppet_modules(:puppetlabs_motd)
       motd2 = katello_puppet_modules(:acmecorp_motd)
 
-      ContentViewPuppetModule.create!(:uuid => motd1.uuid, :content_view => @library_view)
+      ContentViewPuppetModule.create!(:uuid => motd1.pulp_id, :content_view => @library_view)
 
       content_view_puppet_module = ContentViewPuppetModule.new(
-        :uuid => motd2.uuid,
+        :uuid => motd2.pulp_id,
         :content_view => @library_view
       )
 
@@ -44,10 +44,10 @@ module Katello
     def test_create_duplicate_uuid
       motd = katello_puppet_modules(:puppetlabs_motd)
 
-      ContentViewPuppetModule.create!(:uuid => motd.uuid, :content_view => @library_view)
+      ContentViewPuppetModule.create!(:uuid => motd.pulp_id, :content_view => @library_view)
 
       content_view_puppet_module = ContentViewPuppetModule.new(
-        :uuid => motd.uuid,
+        :uuid => motd.pulp_id,
         :content_view => @library_view
       )
 
@@ -74,7 +74,7 @@ module Katello
 
     def test_computed_version
       content_view_puppet_module = ContentViewPuppetModule.new(
-        :uuid => katello_puppet_modules(:foreman_proxy).uuid,
+        :uuid => katello_puppet_modules(:foreman_proxy).pulp_id,
         :content_view => @library_view
       )
       assert_equal "1.0", content_view_puppet_module.computed_version
@@ -92,7 +92,7 @@ module Katello
       repo = katello_repositories(:p_forge)
       puppet_module_apt = katello_puppet_modules(:test_apt3)
       content_view_puppet_module = ContentViewPuppetModule.new(
-        :uuid => puppet_module_apt.uuid,
+        :uuid => puppet_module_apt.pulp_id,
         :author => puppet_module_apt.author,
         :content_view => @library_view
       )

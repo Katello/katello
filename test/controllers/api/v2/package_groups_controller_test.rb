@@ -84,7 +84,7 @@ module Katello
 
     def test_show_by_uuid
       Pulp::PackageGroup.any_instance.stubs(:backend_data).returns({})
-      get :show, params: { :id => @repo.package_groups.first.uuid }
+      get :show, params: { :id => @repo.package_groups.first.pulp_id }
 
       assert_response :success
     end

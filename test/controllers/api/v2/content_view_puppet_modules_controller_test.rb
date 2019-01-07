@@ -66,7 +66,7 @@ module Katello
       assert_template layout: "katello/api/v2/layouts/resource"
       assert_template "katello/api/v2/content_view_puppet_modules/create"
 
-      assert_includes @content_view.reload.puppet_modules.map(&:uuid), @puppet_module.uuid
+      assert_includes @content_view.reload.puppet_modules.map(&:uuid), @puppet_module.pulp_id
     end
 
     def test_create_protected

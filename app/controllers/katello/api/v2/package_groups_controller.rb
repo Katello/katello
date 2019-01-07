@@ -59,10 +59,10 @@ module Katello
       collection_ids = []
       current_ids = filter.package_group_rules.map(&:uuid)
       filter.applicable_repos.each do |repo|
-        collection_ids.concat(repo.package_groups.map(&:uuid))
+        collection_ids.concat(repo.package_groups.map(&:pulp_id))
       end
-      collection = PackageGroup.where(:uuid => collection_ids)
-      collection = collection.where("uuid not in (?)", current_ids) unless current_ids.empty?
+      collection = PackageGroup.where(:pulp_id => collection_ids)
+      collection = collection.where("pulp_id not in (?)", current_ids) unless current_ids.empty?
       collection
     end
 

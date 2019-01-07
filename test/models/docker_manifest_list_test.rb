@@ -17,7 +17,7 @@ module Katello
 
     def test_import_for_repository
       Katello::DockerManifestList.import_for_repository(@repo)
-      assert_equal @manifest_lists.first[:_id], @repo.docker_manifest_lists.first.uuid
+      assert_equal @manifest_lists.first[:_id], @repo.docker_manifest_lists.first.pulp_id
       assert_equal @manifest_lists.first[:digest], @repo.docker_manifest_lists.first.digest
     end
 

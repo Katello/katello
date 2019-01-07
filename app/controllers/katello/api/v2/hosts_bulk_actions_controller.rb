@@ -305,9 +305,7 @@ module Katello
 
     def content_action
       if params[:content_type] == 'errata'
-        errata_uuids = Katello::Erratum.where(:errata_id => params[:content]).pluck(:uuid)
-        errata_uuids += Katello::Erratum.where(:uuid => params[:content]).pluck(:uuid)
-        task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, errata_uuids.uniq)
+        task = async_task(::Actions::BulkAction, ::Actions::Katello::Host::Erratum::ApplicableErrataInstall, @hosts, params[:content].uniq)
         respond_for_async :resource => task
       else
         content = params[:content]

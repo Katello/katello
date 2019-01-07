@@ -3,5 +3,6 @@ object @resource
 attributes :id
 attributes :name
 attributes :path
-attributes :uuid
+attributes :pulp_id => :uuid
+attributes :pulp_id
 attributes :checksum

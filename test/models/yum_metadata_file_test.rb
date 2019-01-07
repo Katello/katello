@@ -13,9 +13,9 @@ module Katello
 
   class YumMetadataFileTest < YumMetadataFileTestBase
     def test_create
-      uuid = 'foo'
-      assert YumMetadataFile.create!(:uuid => uuid)
-      assert YumMetadataFile.find_by_uuid(uuid)
+      pulp_id = 'foo'
+      assert YumMetadataFile.create!(:pulp_id => pulp_id)
+      assert YumMetadataFile.find_by_pulp_id(pulp_id)
     end
 
     def test_with_identifiers_single
@@ -23,7 +23,7 @@ module Katello
     end
 
     def test_with_multiple
-      ymfs = YumMetadataFile.with_identifiers([@ymf1.id, @ymf2.uuid])
+      ymfs = YumMetadataFile.with_identifiers([@ymf1.id, @ymf2.pulp_id])
 
       assert_equal 2, ymfs.count
       assert_include ymfs, @ymf1
@@ -39,9 +39,9 @@ module Katello
     end
 
     def test_update_from_json
-      uuid = 'foo'
+      pulp_id = 'foo'
       name = "foo.gz"
-      YumMetadataFile.create!(:uuid => uuid)
+      YumMetadataFile.create!(:pulp_id => pulp_id)
       json = @ymf1.attributes.merge('checksum' => 'xxxxxx',
                                     '_storage_path' => "/var/lib/pulp/foo/#{name}")
       @ymf1.update_from_json(json.with_indifferent_access)
@@ -53,7 +53,7 @@ module Katello
     def test_with_identifiers
       assert_includes YumMetadataFile.with_identifiers(@ymf1.id), @ymf1
       assert_includes YumMetadataFile.with_identifiers([@ymf1.id]), @ymf1
-      assert_includes YumMetadataFile.with_identifiers(@ymf1.uuid), @ymf1
+      assert_includes YumMetadataFile.with_identifiers(@ymf1.pulp_id), @ymf1
     end
 
     def test_copy_repository_associations

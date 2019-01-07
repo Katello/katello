@@ -7,4 +7,5 @@ attributes :architecture
 attributes :filename
 attributes :checksum
 attributes :description
-attributes :uuid
+attributes :pulp_id
+attributes :pulp_id => :uuid

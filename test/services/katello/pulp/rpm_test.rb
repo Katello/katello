@@ -27,12 +27,12 @@ module Katello
         package = Rpm.find(@package_id)
 
         refute_nil package
-        refute_empty Katello::Pulp::Rpm.new(package.uuid).backend_data
+        refute_empty Katello::Pulp::Rpm.new(package.pulp_id).backend_data
       end
 
       def test_requires
         package = Rpm.find(@package_id)
-        backend_rpm = Katello::Pulp::Rpm.new(package.uuid)
+        backend_rpm = Katello::Pulp::Rpm.new(package.pulp_id)
         refute_empty backend_rpm .requires
         refute_empty backend_rpm .provides
       end

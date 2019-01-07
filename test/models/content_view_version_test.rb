@@ -98,7 +98,7 @@ module Katello
       manifest_count = 0
       tag_count = 0
       cvv.repositories.archived.docker_type.each do |repo|
-        manifest = repo.docker_manifests.create!(:digest => "abc123", :uuid => "123")
+        manifest = repo.docker_manifests.create!(:digest => "abc123", :pulp_id => "123")
         repo.docker_tags.create!(:name => "wat", :docker_taggable => manifest)
         manifest_count += repo.docker_manifests.count
         tag_count += repo.docker_tags.count

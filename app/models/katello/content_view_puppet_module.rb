@@ -18,12 +18,12 @@ module Katello
     before_validation :set_attributes
 
     def puppet_module
-      PuppetModule.find_by_uuid(self.uuid)
+      PuppetModule.find_by(:pulp_id => self.uuid)
     end
 
     def computed_version
       if self.uuid
-        puppet_module = PuppetModule.where(:uuid => self.uuid).first
+        puppet_module = PuppetModule.where(:pulp_id => self.uuid).first
       else
         puppet_module = PuppetModule.latest_module(
           self.name,
@@ -43,7 +43,6 @@ module Katello
     private
 
     def set_attributes
-      return unless SETTINGS[:katello][:use_pulp]
       if self.uuid.present?
         puppet_module = PuppetModule.with_identifiers(self.uuid).first
         fail Errors::NotFound, _("Couldn't find Puppet Module with id '%s'") % self.uuid unless puppet_module

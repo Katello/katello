@@ -102,7 +102,7 @@ module Katello
     end
 
     def index_content(puppet_module_uuids)
-      associated_ids = PuppetModule.with_uuid(puppet_module_uuids).pluck(:id)
+      associated_ids = PuppetModule.with_pulp_id(puppet_module_uuids).pluck(:id)
       self.puppet_modules = PuppetModule.where(:id => associated_ids)
       self.save!
     end

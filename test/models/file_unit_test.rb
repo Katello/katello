@@ -16,9 +16,9 @@ module Katello
     end
 
     def test_create
-      uuid = 'foo'
-      assert FileUnit.create!(:uuid => uuid)
-      assert FileUnit.find_by_uuid(uuid)
+      pulp_id = 'foo'
+      assert FileUnit.create!(:pulp_id => pulp_id)
+      assert FileUnit.find_by_pulp_id(pulp_id)
     end
 
     def test_with_identifiers_single
@@ -26,7 +26,7 @@ module Katello
     end
 
     def test_with_multiple
-      files = FileUnit.with_identifiers([@file_one.id, @file_two.uuid])
+      files = FileUnit.with_identifiers([@file_one.id, @file_two.pulp_id])
 
       assert_equal 2, files.count
       assert_include files, @file_one
@@ -34,8 +34,8 @@ module Katello
     end
 
     def test_update_from_json
-      uuid = 'foo'
-      FileUnit.create!(:uuid => uuid)
+      pulp_id = 'foo'
+      FileUnit.create!(:pulp_id => pulp_id)
       json = @file_one.attributes.merge('checksum' => '1234515')
       @file_one.update_from_json(json.with_indifferent_access)
       @file_one = FileUnit.find(@file_one.id)
@@ -53,7 +53,7 @@ module Katello
     def test_with_identifiers
       assert_includes FileUnit.with_identifiers(@file_one.id), @file_one
       assert_includes FileUnit.with_identifiers([@file_one.id]), @file_one
-      assert_includes FileUnit.with_identifiers(@file_one.uuid), @file_one
+      assert_includes FileUnit.with_identifiers(@file_one.pulp_id), @file_one
     end
   end
 end

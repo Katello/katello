@@ -15,7 +15,7 @@ module Katello
     has_many :content_facets, :through => :content_facet_applicable_module_streams, :class_name => "Katello::Host::ContentFacet"
 
     scoped_search on: :name, complete_value: true
-    scoped_search on: :uuid, complete_value: true
+    scoped_search on: :pulp_id, complete_value: true, rename: :uuid
     scoped_search on: :stream, complete_value: true
     scoped_search on: :version, complete_value: true
     scoped_search on: :context, complete_value: true

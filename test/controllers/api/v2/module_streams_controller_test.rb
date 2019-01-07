@@ -65,7 +65,7 @@ module Katello
     end
 
     def test_show_by_uuid
-      get :show, params: { :id => @module_stream_river.uuid }
+      get :show, params: { :id => @module_stream_river.pulp_id }
 
       assert_response :success
       assert_template "katello/api/v2/module_streams/show"

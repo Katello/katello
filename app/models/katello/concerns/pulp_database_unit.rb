@@ -9,7 +9,7 @@ module Katello
     #  Class#update_from_json
 
     def backend_data
-      self.class.pulp_data(uuid) || {}
+      self.class.pulp_data(pulp_id) || {}
     end
 
     module ClassMethods
@@ -33,7 +33,7 @@ module Katello
         ids = [ids] unless ids.is_a?(Array)
         ids.map!(&:to_s)
         id_integers = ids.map { |string| Integer(string) rescue -1 }
-        where("#{self.table_name}.id in (?) or #{self.table_name}.uuid in (?)", id_integers, ids)
+        where("#{self.table_name}.id in (?) or #{self.table_name}.pulp_id in (?)", id_integers, ids)
       end
 
       def in_repositories(repos)
@@ -44,19 +44,19 @@ module Katello
         end
       end
 
-      def pulp_data(uuid)
-        content_unit_class.new(uuid)
+      def pulp_data(pulp_id)
+        content_unit_class.new(pulp_id)
       end
 
       # Import all units of a single type and refresh their repository associations
-      def import_all(uuids = nil, options = {})
+      def import_all(pulp_ids = nil, options = {})
         index_repository_association = options.fetch(:index_repository_association, true) && self.manage_repository_association
 
         process_block = lambda do |units|
           units.each do |unit|
             unit = unit.with_indifferent_access
             item = Katello::Util::Support.active_record_retry do
-              self.where(:uuid => unit['_id']).first_or_create
+              self.where(:pulp_id => unit['_id']).first_or_create
             end
             item.update_from_json(unit)
           end
@@ -67,8 +67,8 @@ module Katello
           end
         end
 
-        if uuids
-          results = content_unit_class.fetch_by_uuids(uuids, &process_block).flatten
+        if pulp_ids
+          results = content_unit_class.fetch_by_uuids(pulp_ids, &process_block).flatten
           update_repository_associations(results, true) if index_repository_association
         else
           results = content_unit_class.fetch_all(&process_block).flatten
@@ -82,12 +82,12 @@ module Katello
         # in our database. Errata and Package Groups can change in Pulp, so we index
         # all of them in the repository on each sync.
         if immutable_unit_types.include?(self) && !force
-          ids_to_import = ids - repository.rpms.map(&:uuid)
+          ids_to_import = ids - repository.rpms.map(&:pulp_id)
         else
           ids_to_import = ids
         end
         self.import_all(ids_to_import, :index_repository_association => false) if repository.content_view.default? || force
-        self.sync_repository_associations(repository, :uuids => ids) if self.manage_repository_association
+        self.sync_repository_associations(repository, :pulp_ids => ids) if self.manage_repository_association
       end
 
       def unit_id_field
@@ -104,13 +104,13 @@ module Katello
                           where repository_id = #{source_repo.id} and #{unit_id_field} not in (select #{unit_id_field}
                           from #{repository_association_class.table_name} where repository_id = #{dest_repo.id})"
         else
-          columns = column_names - ["id", "uuid", "created_at", "updated_at", "repository_id"]
+          columns = column_names - ["id", "pulp_id", "created_at", "updated_at", "repository_id"]
 
           delete_query = "delete from #{self.table_name} where repository_id = #{dest_repo.id} and
-                          uuid not in (select uuid from #{self.table_name} where repository_id = #{source_repo.id})"
-          insert_query = "insert into #{self.table_name} (repository_id, uuid, #{columns.join(',')})
-                    select #{dest_repo.id} as repository_id, uuid, #{columns.join(',')} from #{self.table_name}
-                    where repository_id = #{source_repo.id} and uuid not in (select uuid
+                          pulp_id not in (select pulp_id from #{self.table_name} where repository_id = #{source_repo.id})"
+          insert_query = "insert into #{self.table_name} (repository_id, pulp_id, #{columns.join(',')})
+                    select #{dest_repo.id} as repository_id, pulp_id, #{columns.join(',')} from #{self.table_name}
+                    where repository_id = #{source_repo.id} and pulp_id not in (select pulp_id
                     from #{self.table_name} where repository_id = #{dest_repo.id})"
 
         end
@@ -121,9 +121,9 @@ module Katello
       def sync_repository_associations(repository, options = {})
         additive = options.fetch(:additive, false)
         associated_ids = options.fetch(:ids, nil)
-        uuids = options.fetch(:uuids) if associated_ids.nil?
+        pulp_ids = options.fetch(:pulp_ids) if associated_ids.nil?
 
-        associated_ids = with_uuid(uuids).pluck(:id) if uuids
+        associated_ids = with_pulp_id(pulp_ids).pluck(:id) if pulp_ids
 
         table_name = self.repository_association_class.table_name
         attribute_name = unit_id_field
@@ -152,8 +152,8 @@ module Katello
         end
       end
 
-      def with_uuid(unit_uuids)
-        where(:uuid => unit_uuids)
+      def with_pulp_id(unit_pulp_ids)
+        where(:pulp_id => unit_pulp_ids)
       end
 
       def update_repository_associations(units_json, additive = false)
@@ -169,8 +169,8 @@ module Katello
             end
           end
 
-          repo_unit_id.each do |repo_pulp_id, unit_uuids|
-            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), :uuids => unit_uuids, :additive => additive)
+          repo_unit_id.each do |repo_pulp_id, unit_pulp_ids|
+            sync_repository_associations(Repository.find_by(:pulp_id => repo_pulp_id), :pulp_ids => unit_pulp_ids, :additive => additive)
           end
         end
       end

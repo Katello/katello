@@ -264,7 +264,7 @@ module Katello
       create(:puppet_module, :name => 'm1', :author => 'kavy', :version => "1.2.0")
       puppet_module2 = create(:puppet_module, :name => 'm1', :author => 'kavy', :version => "1.3.0")
       cv_puppet_module = ContentViewPuppetModule.find(katello_content_view_puppet_modules(:library_view_m1_module).id)
-      cv_puppet_module.uuid = puppet_module2.uuid
+      cv_puppet_module.uuid = puppet_module2.pulp_id
       cv_puppet_module.save
       PuppetModule.stubs(:in_repositories).returns(PuppetModule.all)
       get :available_puppet_modules, params: { :id => content_view.id, :name => 'm1' }

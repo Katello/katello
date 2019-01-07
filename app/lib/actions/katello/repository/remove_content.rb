@@ -28,12 +28,12 @@ module Actions
                           Pulp::Repository::RemoveDeb
                         end
 
-          uuids = content_units.map(&:uuid)
+          pulp_ids = content_units.map(&:pulp_id)
           repository.remove_content(content_units)
 
           sequence do
             plan_action(pulp_action, :pulp_id => repository.pulp_id,
-                                     :clauses => {:association => {'unit_id' => {'$in' => uuids}}
+                                     :clauses => {:association => {'unit_id' => {'$in' => pulp_ids}}
             })
             plan_self
             plan_action(CapsuleSync, repository) if sync_capsule

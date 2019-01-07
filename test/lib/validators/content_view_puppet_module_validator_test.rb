@@ -46,7 +46,7 @@ module Katello
     end
 
     test "passes if uuid matches a puppet module" do
-      @model = OpenStruct.new(@base_record.merge(uuid: katello_puppet_modules(:abrt).uuid))
+      @model = OpenStruct.new(@base_record.merge(uuid: katello_puppet_modules(:abrt).pulp_id))
       @validator.validate(@model)
 
       assert_empty @model.errors[:base]
@@ -62,7 +62,7 @@ module Katello
 
     test "fails if puppet module does not belong to a repository in the content view organization" do
       @model = OpenStruct.new(@base_record.merge(
-        uuid: katello_puppet_modules(:abrt).uuid, content_view: OpenStruct.new(
+        uuid: katello_puppet_modules(:abrt).pulp_id, content_view: OpenStruct.new(
           organization: OpenStruct.new(name: :dev))))
       @validator.validate(@model)
 

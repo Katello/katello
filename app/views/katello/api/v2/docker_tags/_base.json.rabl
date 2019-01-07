@@ -4,17 +4,17 @@ attributes :id, :name
 attributes :repository_id
 
 child :schema1_manifest => :manifest_schema1 do
-  attributes :uuid => :id
+  attributes :pulp_id => :id
   attributes :schema_version, :digest, :manifest_type
 end
 
 child :schema2_manifest => :manifest_schema2 do
-  attributes :uuid => :id
+  attributes :pulp_id => :id
   attributes :schema_version, :digest, :manifest_type
 end
 
 child :docker_manifest => :manifest do
-  attributes :uuid => :id
+  attributes :pulp_id => :id
   attributes :schema_version, :digest, :manifest_type
 end
 

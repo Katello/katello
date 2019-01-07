@@ -510,7 +510,7 @@ module Katello
       if is_integer
         self.removable_unit_association.where("#{table_name}.id in (?)", ids)
       else
-        self.removable_unit_association.where("#{table_name}.uuid in (?)", ids)
+        self.removable_unit_association.where("#{table_name}.pulp_id in (?)", ids)
       end
     end
 

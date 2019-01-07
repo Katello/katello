@@ -130,7 +130,7 @@ module Katello
           end
         end
       end
-      query = query.where("#{PuppetModule.table_name}.uuid NOT in (?)", current_uuids) if current_uuids.present?
+      query = query.where("#{PuppetModule.table_name}.pulp_id NOT in (?)", current_uuids) if current_uuids.present?
       custom_sort = ->(sort_query) { sort_query.order('author, name, sortable_version DESC') }
       sorted_records = scoped_search(query, nil, nil, :resource_class => PuppetModule, :custom_sort => custom_sort)
       if params[:name]
@@ -246,8 +246,8 @@ module Katello
         top_rec = records[0]
         latest = top_rec.dup
         latest.version = _("Always Use Latest (currently %{version})") % { version: latest.version }
-        latest.uuid = nil
-        module_records.delete(top_rec) if selected_latest_versions.include?(top_rec.uuid)
+        latest.pulp_id = nil
+        module_records.delete(top_rec) if selected_latest_versions.include?(top_rec.pulp_id)
         module_records.push(latest)
       end
       module_records

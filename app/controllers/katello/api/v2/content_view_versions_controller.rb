@@ -128,10 +128,10 @@ module Katello
     param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well")
     param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment")
     param :add_content, Hash do
-      param :errata_ids, Array, :desc => "Errata ids or uuids to copy into the new versions"
-      param :package_ids, Array, :desc => "Package ids or uuids to copy into the new versions"
-      param :deb_ids, Array, :desc => "Deb Package ids or uuids to copy into the new versions"
-      param :puppet_module_ids, Array, :desc => "Puppet Module ids or uuids to copy into the new versions"
+      param :errata_ids, Array, :desc => "Errata ids to copy into the new versions"
+      param :package_ids, Array, :desc => "Package ids to copy into the new versions"
+      param :deb_ids, Array, :desc => "Deb Package ids to copy into the new versions"
+      param :puppet_module_ids, Array, :desc => "Puppet Module ids to copy into the new versions"
     end
     param :update_hosts, Hash, :desc => N_("After generating the incremental update, apply the changes to the specified hosts.  Only Errata are supported currently.") do
       param :included, Hash, :required => true, :action_aware => true do

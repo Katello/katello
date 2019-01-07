@@ -23,7 +23,7 @@ module Katello
 
     protected
 
-    def fetch_tag_uuids(repo, rule, manifest_klass = DockerManifest)
+    def fetch_tag_pulp_ids(repo, rule, manifest_klass = DockerManifest)
       query_name = rule.name.tr("*", "%")
       tags_query = ::Katello::DockerTag.where(:repository => repo).
                                         where(:docker_taggable_type => manifest_klass.name).
@@ -33,14 +33,14 @@ module Katello
       query = manifest_klass.in_repositories(repo).where("id in (#{tags_query.to_sql})")
       names = query.all.collect do |manifest|
         manifest.docker_tags.where(:repository => repo).where("name ilike ?", query_name).all.collect do |tag|
-          tag.uuid
+          tag.pulp_id
         end
       end
       names.flatten.uniq
     end
 
     def query_manifests(repo, rule)
-      (fetch_tag_uuids(repo, rule, DockerManifest) + fetch_tag_uuids(repo, rule, DockerManifestList)).flatten.uniq
+      (fetch_tag_pulp_ids(repo, rule, DockerManifest) + fetch_tag_pulp_ids(repo, rule, DockerManifestList)).flatten.uniq
     end
   end
 end

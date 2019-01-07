@@ -9,7 +9,7 @@ module Katello
     has_many :roots, :through => :repositories, :class_name => "Katello::RootRepository"
 
     scoped_search :on => :name, :complete_value => true
-    scoped_search :on => :uuid, :rename => :id, :complete_value => true
+    scoped_search :on => :pulp_id, :rename => :id, :complete_value => true
 
     def self.repository_association_class
       RepositoryPackageGroup
@@ -36,7 +36,7 @@ module Katello
     end
 
     def package_names
-      group = Pulp::PackageGroup.new(self.uuid)
+      group = Pulp::PackageGroup.new(self.pulp_id)
       group.default_package_names + group.conditional_package_names + group.optional_package_names + group.mandatory_package_names
     end
   end

@@ -113,7 +113,7 @@ module Katello
     end
 
     def test_show_uuid
-      get :show, params: { :id => @rpm.uuid }
+      get :show, params: { :id => @rpm.pulp_id }
 
       assert_response :success
       assert_template "katello/api/v2/packages/show"
@@ -126,7 +126,7 @@ module Katello
 
     def test_show_protected
       assert_protected_action(:show, @auth_permissions, @unauth_permissions) do
-        get :show, params: { :repository_id => @repo.id, :id => @rpm.uuid }
+        get :show, params: { :repository_id => @repo.id, :id => @rpm.pulp_id }
       end
     end
 
