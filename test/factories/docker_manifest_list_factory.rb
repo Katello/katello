@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :docker_manifest_list, :class => Katello::DockerManifestList do
     digest { SecureRandom.hex }
-    uuid { SecureRandom.hex }
+    pulp_id { SecureRandom.hex }
     schema_version 2
 
     after(:build) do |manifest_list|

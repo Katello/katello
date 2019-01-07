@@ -108,7 +108,7 @@ module Katello
       schema2.try(:docker_taggable)
     end
 
-    def self.with_uuid(ids)
+    def self.with_pulp_id(ids)
       self.with_identifiers(ids)
     end
 

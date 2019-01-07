@@ -23,20 +23,20 @@ module Katello
     class ErratumTest < ErratumTestBase
       def test_backend_data
         Katello::Erratum.import_for_repository(@repo)
-        erratum = Pulp::Erratum.new(Erratum.find_by_errata_id(ERRATA_ID).uuid)
+        erratum = Pulp::Erratum.new(Erratum.find_by_errata_id(ERRATA_ID).pulp_id)
         assert ERRATA_ID, erratum .backend_data['id']
       end
 
       def test_pulp_data
         Katello::Erratum.import_for_repository(@repo)
-        uuid = Erratum.find_by_errata_id(ERRATA_ID).uuid
+        uuid = Erratum.find_by_errata_id(ERRATA_ID).pulp_id
         assert ERRATA_ID, Pulp::Erratum.pulp_data(uuid)['id']
       end
 
       def test_update_from_json
         uuid = Katello::Pulp::Erratum.fetch_for_repository(@repo.pulp_id).detect { |e| e['id'] == ERRATA_ID }['_id']
         errata_data = Pulp::Erratum.pulp_data(uuid)
-        erratum = Erratum.create!(:uuid => errata_data['_id'])
+        erratum = Erratum.create!(:pulp_id => errata_data['_id'])
         erratum.update_from_json(errata_data)
         %w(title severity issued description solution updated summary).each do |attr|
           assert erratum.send(attr)

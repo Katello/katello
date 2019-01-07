@@ -28,14 +28,14 @@ module Katello
       filename = 'much-rpm.much-wow'
 
       erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
-        new_erratum.uuid = "foo"
+        new_erratum.pulp_id = "foo"
         new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
       end
 
       assert_includes @fedora_17_x86_64.empty_errata, erratum
 
       @fedora_17_x86_64.rpms.create! do |rpm|
-        rpm.uuid = 'its the uuid that never ends oh wait it does'
+        rpm.pulp_id = 'its the pulp_id that never ends oh wait it does'
         rpm.filename = filename
       end
 
@@ -47,7 +47,7 @@ module Katello
       filename = 'much-rpm.much-wow'
 
       erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
-        new_erratum.uuid = "foo"
+        new_erratum.pulp_id = "foo"
         new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
       end
 
@@ -386,23 +386,23 @@ module Katello
     def test_units_for_removal_yum
       rpms = @fedora_17_x86_64.rpms.sample(2)
       rpm_ids = rpms.map(&:id).sort
-      rpm_uuids = rpms.map(&:uuid).sort
+      rpm_uuids = rpms.map(&:pulp_id).sort
 
       refute_empty rpms
       assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids).map(&:id).sort
       assert_equal rpm_ids, @fedora_17_x86_64.units_for_removal(rpm_ids.map(&:to_s)).map(&:id).sort
-      assert_equal rpm_uuids, @fedora_17_x86_64.units_for_removal(rpm_uuids).map(&:uuid).sort
+      assert_equal rpm_uuids, @fedora_17_x86_64.units_for_removal(rpm_uuids).map(&:pulp_id).sort
     end
 
     def test_units_for_removal_puppet
       puppet_modules = @puppet_forge.puppet_modules
       puppet_ids = puppet_modules.map(&:id).sort
-      puppet_uuids = puppet_modules.map(&:uuid).sort
+      puppet_uuids = puppet_modules.map(&:pulp_id).sort
 
       refute_empty puppet_modules
       assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids).map(&:id).sort
       assert_equal puppet_ids, @puppet_forge.units_for_removal(puppet_ids.map(&:to_s)).map(&:id).sort
-      assert_equal puppet_uuids, @puppet_forge.units_for_removal(puppet_uuids).map(&:uuid).sort
+      assert_equal puppet_uuids, @puppet_forge.units_for_removal(puppet_uuids).map(&:pulp_id).sort
     end
 
     def test_packages_without_errata
@@ -410,7 +410,7 @@ module Katello
       errata_rpm = rpms[0]
       non_errata_rpm = rpms[1]
       @fedora_17_x86_64.errata.create! do |erratum|
-        erratum.uuid = "foo"
+        erratum.pulp_id = "foo"
         erratum.packages = [ErratumPackage.new(:filename => errata_rpm.filename, :nvrea => 'foo', :name => 'foo')]
       end
 
@@ -429,7 +429,7 @@ module Katello
     def test_units_for_removal_docker
       ['one', 'two', 'three'].each do |str|
         @redis.docker_manifests.create!(:digest => str) do |manifest|
-          manifest.uuid = str
+          manifest.pulp_id = str
         end
       end
 
@@ -441,7 +441,7 @@ module Katello
     def test_units_for_removal_ostree
       ['one', 'two', 'three'].each do |str|
         @ostree.ostree_branches.create!(:name => str) do |branch|
-          branch.uuid = str
+          branch.pulp_id = str
         end
       end
 

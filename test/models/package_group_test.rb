@@ -15,13 +15,13 @@ module Katello
     end
 
     def test_create
-      uuid = "foo"
-      assert PackageGroup.create!(:uuid => uuid)
-      assert PackageGroup.find_by_uuid(uuid)
+      pulp_id = "foo"
+      assert PackageGroup.create!(:pulp_id => pulp_id)
+      assert PackageGroup.find_by(:pulp_id => pulp_id)
     end
 
     def test_update_from_json
-      pg = PackageGroup.create!(:uuid => "foo")
+      pg = PackageGroup.create!(:pulp_id => "foo")
       json = pg.attributes.merge('description' => 'an update')
       pg.update_from_json(json)
       assert_equal pg.description, json['description']
@@ -32,7 +32,7 @@ module Katello
     end
 
     def test_search_by_uuid
-      assert_equal PackageGroup.search_for("id = #{@mammals_pg.uuid}").first, @mammals_pg
+      assert_equal PackageGroup.search_for("id = #{@mammals_pg.pulp_id}").first, @mammals_pg
     end
 
     def test_search_returns_none

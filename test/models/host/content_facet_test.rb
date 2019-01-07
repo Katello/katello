@@ -264,7 +264,7 @@ module Katello
     def test_partial_import
       refute_includes host.content_facet.applicable_errata, enhancement_errata
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.pulp_id])
       content_facet.import_errata_applicability(true)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
@@ -280,7 +280,7 @@ module Katello
     end
 
     def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([enhancement_errata.pulp_id])
       content_facet.import_errata_applicability(false)
 
       assert_equal [enhancement_errata], content_facet.reload.applicable_errata
@@ -307,7 +307,7 @@ module Katello
     def test_partial_import
       refute_includes host.content_facet.applicable_rpms, rpm
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.pulp_id])
       content_facet.import_rpm_applicability(true)
 
       assert_equal [rpm], content_facet.reload.applicable_rpms
@@ -323,7 +323,7 @@ module Katello
     end
 
     def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([rpm.pulp_id])
       content_facet.import_rpm_applicability(false)
 
       assert_equal [rpm], content_facet.reload.applicable_rpms
@@ -336,7 +336,7 @@ module Katello
     def test_partial_import
       refute_includes host.content_facet.applicable_module_streams, module_stream
 
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([module_stream.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([module_stream.pulp_id])
       content_facet.import_module_stream_applicability(true)
 
       assert_includes content_facet.reload.applicable_module_streams, module_stream
@@ -352,7 +352,7 @@ module Katello
     end
 
     def test_full_import
-      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([module_stream.uuid])
+      ::Katello::Pulp::Consumer.any_instance.stubs(:applicable_ids).returns([module_stream.pulp_id])
       content_facet.import_module_stream_applicability(false)
 
       assert_includes content_facet.reload.applicable_module_streams, module_stream

@@ -8,7 +8,7 @@ module Katello
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :commit, :complete_value => true
-    scoped_search :on => :uuid, :complete_value => true
+    scoped_search :on => :pulp_id, :complete_value => true, :rename => :uuid
     scoped_search :on => :version_date, :complete_value => true, :rename => :created
 
     CONTENT_TYPE = Pulp::OstreeBranch::CONTENT_TYPE

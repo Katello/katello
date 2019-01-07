@@ -26,7 +26,7 @@ module Katello
       meta_one = DockerMetaTag.create!(:name => @tag_schema1.name, :schema1 => @tag_schema1, :repository => @repo)
       DockerMetaTag.create!(:name => @tag_schema2.name, :schema2 => @tag_schema2, :repository => @repo)
 
-      result = DockerMetaTag.with_uuid(meta_one.id)
+      result = DockerMetaTag.with_pulp_id(meta_one.id)
 
       assert_includes result, meta_one
       assert_equal 1, result.length

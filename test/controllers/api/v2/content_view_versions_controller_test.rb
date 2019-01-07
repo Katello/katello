@@ -287,7 +287,7 @@ module Katello
 
     def test_incremental_update
       version = @library_dev_staging_view.versions.first
-      errata_id = Katello::Erratum.first.uuid
+      errata_id = Katello::Erratum.first.pulp_id
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => [@beta]}], [],
                                             {'errata_ids' => [errata_id]}, true, [], nil).returns({})
@@ -299,7 +299,7 @@ module Katello
 
     def test_incremental_update_with_deb
       version = @library_dev_staging_view.versions.first
-      errata_id = Katello::Erratum.first.uuid
+      errata_id = Katello::Erratum.first.pulp_id
       deb_id = Katello::Deb.first.id
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => [@beta]}], [],
@@ -312,7 +312,7 @@ module Katello
 
     def test_incremental_update_without_env
       version = @library_dev_staging_view.versions.first
-      errata_id = Katello::Erratum.first.uuid
+      errata_id = Katello::Erratum.first.pulp_id
       @controller.expects(:async_task).with(::Actions::Katello::ContentView::IncrementalUpdates,
                                             [{:content_view_version => version, :environments => []}], [],
                                             {'errata_ids' => [errata_id]}, true, [], nil).returns({})
@@ -324,7 +324,7 @@ module Katello
 
     def test_incremental_update_protected
       version = @library_dev_staging_view.versions.first
-      errata_id = Katello::Erratum.first.uuid
+      errata_id = Katello::Erratum.first.pulp_id
 
       publish_permission = {:name => @publish_permission, :search => "name=\"#{version.content_view.name}\"" }
       view_promote_permission = {:name => @cv_promote_permission, :search => "name=\"#{version.content_view.name}\"" }

@@ -151,7 +151,7 @@ module Katello
       end
 
       def filter_by_ids(ids, collection)
-        collection.with_uuid(ids)
+        collection.with_identifiers(ids)
       end
 
       def find_repository

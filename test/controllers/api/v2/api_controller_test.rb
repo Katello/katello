@@ -135,7 +135,7 @@ module Katello
     def test_scoped_search_group
       types = Katello::Erratum.pluck(:errata_type).uniq
       4.times do
-        Katello::Erratum.create!(:errata_id => "RHRA-#{rand(9999)}", :errata_type => 'security', :uuid => rand(9999).to_s)
+        Katello::Erratum.create!(:errata_id => "RHRA-#{rand(9999)}", :errata_type => 'security', :pulp_id => rand(9999).to_s)
       end
       @controller.stubs(:params).returns({})
 

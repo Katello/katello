@@ -24,7 +24,7 @@ module Katello
     scoped_search :on => :version, :complete_value => true
     scoped_search :on => :summary
 
-    validates :uuid, :presence => true
+    validates :pulp_id, :presence => true
     validates :name, :presence => true
     validates :author, :presence => true
 

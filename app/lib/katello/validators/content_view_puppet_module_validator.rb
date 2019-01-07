@@ -9,14 +9,14 @@ module Katello
           !PuppetModule.exists?(name: record.name, author: record.author)
           record.errors[:base] << _("Puppet Module with name='%{name}' and author='%{author}' does\
                                     not exist") % { name: record.name, author: record.author }
-        elsif record.uuid && !PuppetModule.exists?(uuid: record.uuid)
+        elsif record.uuid && !PuppetModule.exists?(pulp_id: record.uuid)
           record.errors[:base] << _("Puppet Module with uuid='%{uuid}' does not\
                                     exist") % { uuid: record.uuid }
         else
           puppet_modules = if record.uuid.blank?
                              PuppetModule.where(name: record.name, author: record.author)
                            else
-                             PuppetModule.where(uuid: record.uuid)
+                             PuppetModule.where(pulp_id: record.uuid)
                            end
           repositories = puppet_modules.flat_map(&:repositories)
 

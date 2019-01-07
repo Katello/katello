@@ -10,7 +10,7 @@ module Katello
     end
 
     def filter_by_content_view_filter(filter)
-      resource_class.where(:uuid => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
+      resource_class.where(:pulp_id => filter.send("#{singular_resource_name}_rules").pluck(:uuid))
     end
 
     def custom_index_relation(collection)

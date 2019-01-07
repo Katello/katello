@@ -19,9 +19,9 @@ module Katello
     end
 
     def test_create
-      uuid = 'foo'
-      assert Erratum.create!(:uuid => uuid)
-      assert Erratum.find_by_uuid(uuid)
+      pulp_id = 'foo'
+      assert Erratum.create!(:pulp_id => pulp_id)
+      assert Erratum.find_by_pulp_id(pulp_id)
     end
 
     def test_search_reboot_suggested
@@ -29,13 +29,13 @@ module Katello
     end
 
     def test_create_truncates_long_title
-      attrs = {:uuid => 'foo', :title => "This life, which had been the tomb of " \
+      attrs = {:pulp_id => 'foo', :title => "This life, which had been the tomb of " \
         "his virtue and of his honour is but a walking shadow; a poor player, " \
         "that struts and frets his hour upon the stage, and then is heard no more: " \
         "it is a tale told by an idiot, full of sound and fury, signifying nothing." \
         " - William Shakespeare"}
       assert Erratum.create!(attrs)
-      assert_equal Erratum.find_by_uuid(attrs[:uuid]).title.size, 255
+      assert_equal Erratum.find_by_pulp_id(attrs[:pulp_id]).title.size, 255
     end
 
     def test_with_identifiers_single
@@ -43,7 +43,7 @@ module Katello
     end
 
     def test_with_identifiers_multiple
-      errata = Katello::Erratum.with_identifiers([@security.id, @bugfix.uuid, @enhancement.errata_id])
+      errata = Katello::Erratum.with_identifiers([@security.id, @bugfix.pulp_id, @enhancement.errata_id])
 
       assert_equal 3, errata.length
       assert_includes errata, @security

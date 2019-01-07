@@ -9,7 +9,6 @@ module Katello
     param :content_view_id, :number, :desc => N_("content view identifier"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
       respond(:collection => scoped_search(index_relation.distinct, :name, :asc))
@@ -21,9 +20,9 @@ module Katello
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
     param :id, String, :desc => N_("the id of the puppet module to associate")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    param :uuid, String, :desc => N_("the uuid of the puppet module to associate"), :deprecated => true
     def create
-      params[:content_view_puppet_module][:uuid] ||= PuppetModule.find(params[:id]).try(:uuid) if params[:id]
+      params[:content_view_puppet_module][:uuid] ||= PuppetModule.find(params[:id]).try(:pulp_id) if params[:id]
       respond resource: ContentViewPuppetModule.create!(puppet_module_params.merge(content_view: @view))
     end
 
@@ -40,7 +39,7 @@ module Katello
     param :id, :number, :desc => N_("puppet module ID"), :required => true
     param :name, String, :desc => N_("name of the puppet module")
     param :author, String, :desc => N_("author of the puppet module")
-    param :uuid, String, :desc => N_("the uuid of the puppet module to associate")
+    param :uuid, String, :desc => N_("the uuid of the puppet module to associate"), :deprecated => true
     def update
       @puppet_module.update_attributes!(puppet_module_params)
       respond :resource => @puppet_module
@@ -58,7 +57,7 @@ module Katello
     def index_relation
       puppet_modules = ContentViewPuppetModule.where(:content_view_id => @view)
       puppet_modules = puppet_modules.where(:name => params[:name]) if params[:name]
-      puppet_modules = puppet_modules.where(:uuid => params[:uuid]) if params[:uuid]
+      puppet_modules = puppet_modules.where(:pulp_id => params[:uuid]) if params[:uuid]
       puppet_modules = puppet_modules.where(:author => params[:author]) if params[:author]
       puppet_modules
     end

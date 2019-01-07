@@ -46,7 +46,7 @@ module Katello
     end
 
     def test_search_uuid
-      module_streams = ModuleStream.search_for("uuid = \"#{@module_stream_river.uuid}\"")
+      module_streams = ModuleStream.search_for("uuid = \"#{@module_stream_river.pulp_id}\"")
       assert_includes module_streams, @module_stream_river
     end
 

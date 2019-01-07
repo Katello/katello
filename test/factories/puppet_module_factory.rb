@@ -3,6 +3,6 @@ FactoryBot.define do
     name "trystero"
     author "tpynchon"
     sequence(:version) { |n| "1.2.#{n}" }
-    sequence(:uuid)
+    sequence(:pulp_id)
   end
 end

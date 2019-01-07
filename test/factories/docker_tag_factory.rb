@@ -12,7 +12,7 @@ FactoryBot.define do
     end
 
     trait :with_uuid do
-      uuid { SecureRandom.hex }
+      pulp_id { SecureRandom.hex }
     end
 
     trait :with_manifest_list do

@@ -29,13 +29,13 @@ module Katello
       end
 
       def test_pulp_data
-        assert_equal @@package_group_names[0], Pulp::PackageGroup.pulp_data(@@package_groups.sort_by(&:name).first.uuid)['id']
+        assert_equal @@package_group_names[0], Pulp::PackageGroup.pulp_data(@@package_groups.sort_by(&:name).first.pulp_id)['id']
       end
 
       def test_update_from_json
-        uuid = @@package_groups.first.uuid
-        PackageGroup.where(:uuid => uuid).first.destroy! if PackageGroup.exists?(:uuid => uuid)
-        package_group = PackageGroup.create!(:uuid => uuid)
+        uuid = @@package_groups.first.pulp_id
+        PackageGroup.where(:pulp_id => uuid).first.destroy! if PackageGroup.exists?(:pulp_id => uuid)
+        package_group = PackageGroup.create!(:pulp_id => uuid)
         package_group_data = Pulp::PackageGroup.pulp_data(uuid)
         package_group.update_from_json(package_group_data)
         assert_equal package_group.name, package_group_data["name"]

@@ -35,7 +35,7 @@ module Katello
     end
 
     def test_with_uuid
-      tag = DockerTag.with_uuid(@tag.uuid).first
+      tag = DockerTag.with_pulp_id(@tag.pulp_id).first
       refute_nil tag
     end
 

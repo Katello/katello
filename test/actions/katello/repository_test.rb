@@ -169,7 +169,7 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       to_remove = custom_repository.rpms
-      uuids = to_remove.map(&:uuid)
+      uuids = to_remove.map(&:pulp_id)
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, to_remove
 
@@ -201,7 +201,7 @@ module ::Actions::Katello::Repository
     it 'plans' do
       uuids.each do |str|
         docker_repo.docker_manifests.create!(:digest => str) do |manifest|
-          manifest.uuid = str
+          manifest.pulp_id = str
         end
       end
 

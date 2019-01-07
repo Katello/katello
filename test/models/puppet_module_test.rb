@@ -10,9 +10,9 @@ module Katello
     end
 
     def test_create
-      uuid = 'foo'
-      create(:puppet_module, :uuid => uuid)
-      assert PuppetModule.find_by_uuid(uuid)
+      pulp_id = 'foo'
+      create(:puppet_module, :pulp_id => pulp_id)
+      assert PuppetModule.find_by_pulp_id(pulp_id)
     end
 
     def test_sortable_version
@@ -42,7 +42,7 @@ module Katello
     def test_with_identifiers
       assert_includes PuppetModule.with_identifiers(@abrt.id), @abrt
       assert_includes PuppetModule.with_identifiers([@abrt.id]), @abrt
-      assert_includes PuppetModule.with_identifiers(@abrt.uuid), @abrt
+      assert_includes PuppetModule.with_identifiers(@abrt.pulp_id), @abrt
     end
 
     def test_group_by_repoid

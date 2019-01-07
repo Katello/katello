@@ -84,7 +84,7 @@ module Katello
     def applicable_differences(partial)
       content_uuids = ::Katello::Pulp::Consumer.new(content_facet.uuid).applicable_ids(content_type)
       if partial
-        consumer_uuids = content_facet.send(applicable_units).pluck("#{content_unit_class.table_name}.uuid")
+        consumer_uuids = content_facet.send(applicable_units).pluck("#{content_unit_class.table_name}.pulp_id")
         to_remove = consumer_uuids - content_uuids
         to_add = content_uuids - consumer_uuids
       else
@@ -94,8 +94,8 @@ module Katello
       [to_add, to_remove]
     end
 
-    def insert(uuids)
-      applicable_ids = content_unit_class.where(:uuid => uuids).pluck(:id)
+    def insert(pulp_ids)
+      applicable_ids = content_unit_class.where(:pulp_id => pulp_ids).pluck(:id)
       unless applicable_ids.empty?
         inserts = applicable_ids.map { |applicable_id| "(#{applicable_id.to_i}, #{content_facet.id.to_i})" }
         sql = "INSERT INTO #{content_facet_association_class.table_name} (#{content_unit_association_id}, content_facet_id) VALUES #{inserts.join(', ')}"
@@ -103,8 +103,8 @@ module Katello
       end
     end
 
-    def remove(uuids)
-      applicable_ids = content_unit_class.where(:uuid => uuids).pluck(:id)
+    def remove(pulp_ids)
+      applicable_ids = content_unit_class.where(:pulp_id => pulp_ids).pluck(:id)
       content_facet_association_class.where(:content_facet_id => content_facet.id, content_unit_association_id => applicable_ids).delete_all
     end
   end

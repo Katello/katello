@@ -21,7 +21,7 @@ module Katello
       end
 
       def test_backend_data
-        uuid = @repository.puppet_modules.first.uuid
+        uuid = @repository.puppet_modules.first.pulp_id
         assert_equal uuid, Pulp::PuppetModule.new(uuid).backend_data['_id']
       end
     end

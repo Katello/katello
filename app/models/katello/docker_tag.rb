@@ -53,12 +53,12 @@ module Katello
       self.save!
     end
 
-    def self.import_all(uuids = nil, options = {})
-      ::Katello::DockerTag.destroy_all if uuids.blank?
+    def self.import_all(pulp_ids = nil, options = {})
+      ::Katello::DockerTag.destroy_all if pulp_ids.blank?
       super
       ::Katello::DockerTag.where(:repository_id => nil).destroy_all
-      if uuids
-        repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.uuid" => uuids).distinct
+      if pulp_ids
+        repos = ::Katello::Repository.joins(:docker_tags).where("katello_docker_tags.pulp_id" => pulp_ids).distinct
         ::Katello::DockerMetaTag.import_meta_tags(repos)
       else
         ::Katello::DockerMetaTag.import_meta_tags(::Katello::Repository.docker_type)

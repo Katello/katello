@@ -18,9 +18,9 @@ module Katello
     end
 
     def test_create
-      uuid = 'foo'
-      assert Srpm.create!(:uuid => uuid)
-      assert Srpm.find_by_uuid(uuid)
+      pulp_id = 'foo'
+      assert Srpm.create!(:pulp_id => pulp_id)
+      assert Srpm.find_by_pulp_id(pulp_id)
     end
 
     def test_with_identifiers_single
@@ -28,7 +28,7 @@ module Katello
     end
 
     def test_with_multiple
-      srpms = Srpm.with_identifiers([@rpm_one.id, @rpm_two.uuid])
+      srpms = Srpm.with_identifiers([@rpm_one.id, @rpm_two.pulp_id])
 
       assert_equal 2, srpms.count
       assert_include srpms, @rpm_one
@@ -36,8 +36,8 @@ module Katello
     end
 
     def test_update_from_json
-      uuid = 'foo'
-      Srpm.create!(:uuid => uuid)
+      pulp_id = 'foo'
+      Srpm.create!(:pulp_id => pulp_id)
       json = @rpm_one.attributes.merge('summary' => 'an update', 'version' => '3', 'release' => '4')
       @rpm_one.update_from_json(json.with_indifferent_access)
       @rpm_one = @rpm_one.reload
@@ -58,7 +58,7 @@ module Katello
     def test_with_identifiers
       assert_includes Srpm.with_identifiers(@rpm_one.id), @rpm_one
       assert_includes Srpm.with_identifiers([@rpm_one.id]), @rpm_one
-      assert_includes Srpm.with_identifiers(@rpm_one.uuid), @rpm_one
+      assert_includes Srpm.with_identifiers(@rpm_one.pulp_id), @rpm_one
     end
 
     def test_build_nvre
@@ -88,29 +88,29 @@ module Katello
       assert_equal 30, @repo.reload.srpms.count
     end
 
-    def test_import_all_uuids
+    def test_import_all_pulp_ids
       json = random_json(10)
-      uuids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10, uuids).returns(json)
+      pulp_ids = json.map { |obj| obj['_id'] }
+      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10, pulp_ids).returns(json)
 
-      Katello::Srpm.import_all(uuids)
-      uuids_in_repo = @repo.reload.srpms.pluck(:uuid)
+      Katello::Srpm.import_all(pulp_ids)
+      pulp_ids_in_repo = @repo.reload.srpms.pluck(:pulp_id)
 
-      uuids.each do |uuid|
-        assert_includes uuids_in_repo, uuid
+      pulp_ids.each do |pulp_id|
+        assert_includes pulp_ids_in_repo, pulp_id
       end
     end
 
-    def test_import_all_uuids_no_assoc
+    def test_import_all_pulp_ids_no_assoc
       json = random_json(10)
-      uuids = json.map { |obj| obj['_id'] }
-      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10, uuids).returns(json)
+      pulp_ids = json.map { |obj| obj['_id'] }
+      Katello::Pulp::Srpm.stubs(:fetch).with(0, 10, pulp_ids).returns(json)
 
-      Katello::Srpm.import_all(uuids, :index_repository_association => false)
-      uuids_in_repo = @repo.reload.srpms.pluck(:uuid)
+      Katello::Srpm.import_all(pulp_ids, :index_repository_association => false)
+      pulp_ids_in_repo = @repo.reload.srpms.pluck(:pulp_id)
 
-      uuids.each do |uuid|
-        refute_includes uuids_in_repo, uuid
+      pulp_ids.each do |pulp_id|
+        refute_includes pulp_ids_in_repo, pulp_id
       end
     end
 
@@ -134,7 +134,7 @@ module Katello
       Katello::Pulp::Srpm.stubs(:fetch).returns(@packages)
       Katello::Srpm.import_for_repository(@repo)
 
-      @all_ids = @repo.reload.srpms.pluck(:uuid).sort
+      @all_ids = @repo.reload.srpms.pluck(:pulp_id).sort
     end
   end
 end
