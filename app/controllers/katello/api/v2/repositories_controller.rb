@@ -197,7 +197,7 @@ module Katello
     param_group :repo_create
     param_group :repo
     def create
-      repo_params = filtered_repository_params
+      repo_params = repository_params
       unless RepositoryTypeManager.creatable_by_user?(repo_params[:content_type])
         msg = _("Invalid params provided - content_type must be one of %s") % RepositoryTypeManager.creatable_repository_types.keys.join(",")
         fail HttpErrors::UnprocessableEntity, msg
@@ -438,14 +438,6 @@ module Katello
           fail HttpErrors::NotFound, _("Couldn't find %{content_type} with id '%{id}'") % { :content_type => content_type, :id => params[credential_id] }
         end
       end
-    end
-
-    def filtered_repository_params
-      params = repository_params
-      ::Katello::RootRepository::CONTENT_ATTRIBUTE_RESTRICTIONS.each do |attribute, types|
-        params.delete(attribute) unless types.include?(params[:content_type])
-      end
-      params
     end
 
     def repository_params
