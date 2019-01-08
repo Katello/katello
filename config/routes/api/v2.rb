@@ -104,6 +104,7 @@ Katello::Engine.routes.draw do
           api_resources :errata, :only => [:index]
           api_resources :package_groups, :only => [:index]
           api_resources :rules, :controller => :content_view_filter_rules
+          api_resources :bulk, :controller => :content_view_filter_bulk_rules
           collection do
             get :auto_complete_search
           end
