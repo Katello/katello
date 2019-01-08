@@ -183,7 +183,8 @@ module Katello
                 update_distributor(repo.pulp_id, found['id'], distributor.config)
           else
             smart_proxy.pulp_api.resources.repository.
-                associate_distributor(repo.pulp_id, distributor.type_id, distributor.config, :distributor_id => distributor.id)
+                associate_distributor(repo.pulp_id, distributor.type_id, distributor.config, :distributor_id => distributor.id,
+                                      :auto_publish => distributor.auto_publish)
           end
         end
       end
