@@ -765,7 +765,7 @@ module Katello
     end
 
     class Jail < ::Safemode::Jail
-      allow :name, :label, :docker_upstream_name, :url
+      allow :name, :label, :docker_upstream_name
     end
   end
 end
