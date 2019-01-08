@@ -12,6 +12,7 @@ glue(@object.root) do
   child :product do |_product|
     attributes :id, :cp_id, :name
     attributes :orphaned? => :orphaned
+    attributes :redhat? => :redhat
     node :sync_plan do |_sync_plan|
       attributes :name, :description, :sync_date, :interval, :next_sync
     end
