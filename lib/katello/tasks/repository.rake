@@ -98,7 +98,7 @@ namespace :katello do
     repos.find_each.with_index do |repo, index|
       puts "Processing Repository #{index + 1}/#{repos.count}: #{repo.name} (#{repo.id})"
       begin
-        ForemanTasks.sync_task(::Actions::Katello::Repository::Update, repo,
+        ForemanTasks.sync_task(::Actions::Katello::Repository::Update, repo.root,
                                download_policy: policy)
       rescue => e
         puts "Failed to update repository #{repo.name} (#{repo.id}): #{e.message}"

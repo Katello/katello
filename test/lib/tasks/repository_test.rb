@@ -134,7 +134,7 @@ module Katello
       ENV['DOWNLOAD_POLICY'] = 'background'
       Katello::Repository.stubs(:yum_type).returns(Katello::Repository.where(:id => @library_repo))
       ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Update,
-                                            @library_repo,
+                                            @library_repo.root,
                                             download_policy: 'background')
 
       Rake.application.invoke_task('katello:change_download_policy')

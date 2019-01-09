@@ -19,13 +19,13 @@ module Actions
       plan_action(action, @provider, :redhat_repository_url => 'http://localhost')
       repositories = @provider.products.enabled.collect { |product| product.repositories }
       repositories.flatten!
-      repositories = repositories.collect do |repository|
+      root_repositories = repositories.collect do |repository|
         next unless repository.url
-        [repository, {:url => "http://localhost"}]
+        [repository.root, {:url => "http://localhost"}]
       end
 
       assert_action_planed_with(action, repository_update_class) do |repository|
-        assert_includes repositories, repository
+        assert_includes root_repositories, repository
       end
     end
   end
