@@ -30,7 +30,7 @@ module Actions
             next unless repository.url
             path = repository.url.split(current_base_url)[1]
             url = "#{new_base_url}#{path}"
-            plan_action(::Actions::Katello::Repository::Update, repository, :url => url)
+            plan_action(::Actions::Katello::Repository::Update, repository.root, :url => url)
           end
         end
       end
