@@ -3,7 +3,7 @@ require 'katello/repository_types.rb'
 
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.18'
+  requires_foreman '>= 1.21'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
@@ -296,13 +296,13 @@ Foreman::Plugin.register :katello do
                   'bastion/bastion/index_ie should have a permission that grants access'
                 ])
 
-  add_controller_action_scope(HostsController, :index) do |base_scope|
+  add_controller_action_scope('HostsController', :index) do |base_scope|
     base_scope
       .preload(:content_view, :lifecycle_environment, :subscription_facet)
       .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
   end
 
-  add_controller_action_scope(Api::V2::HostsController, :index) do |base_scope|
+  add_controller_action_scope('Api::V2::HostsController', :index) do |base_scope|
     base_scope
       .preload(:content_view, :lifecycle_environment, :subscription_facet)
       .preload(content_facet: [:bound_repositories, :content_view, :lifecycle_environment])
