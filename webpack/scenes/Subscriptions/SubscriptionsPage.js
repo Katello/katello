@@ -235,7 +235,7 @@ class SubscriptionsPage extends Component {
       <Grid bsClass="container-fluid">
         <Row>
           <Col sm={12}>
-            <h1>{__('Red Hat Subscriptions')}</h1>
+            <h1>{__('Subscriptions')}</h1>
 
             <SubscriptionsToolbar
               disableManifestActions={disableManifestActions}
