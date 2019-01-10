@@ -60,9 +60,7 @@ module Actions
         end
 
         def finalize
-          subject_organization.manifest_refreshed_at = Time.now
-          subject_organization.audit_comment = _('Manifest refreshed')
-          subject_organization.save(validate: false)
+          subject_organization.audit_manifest_action(_('Manifest refreshed'))
         end
       end
     end

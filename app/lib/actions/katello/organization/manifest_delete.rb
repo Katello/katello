@@ -39,9 +39,7 @@ module Actions
         end
 
         def finalize
-          subject_organization.update_attributes!(
-            :manifest_refreshed_at => Time.now,
-            :audit_comment => _('Manifest deleted'))
+          subject_organization.audit_manifest_action(_('Manifest deleted'))
         end
       end
     end
