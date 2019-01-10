@@ -71,7 +71,7 @@ module Katello
 
           checks = executors.map { |executor| world.ping(executor.id, timeout) }
           checks.each(&:wait)
-          if checks.any?(&:failed?)
+          if checks.any?(&:rejected?)
             fail _("some executors are not responding, check %{status_url}") % { :status_url => '/foreman_tasks/dynflow/status' }
           end
         end
