@@ -19,5 +19,13 @@ module Katello
       pools_count = @org.active_pools_count
       assert_equal pools_count, 2
     end
+
+    def test_audit_manifest_action
+      current_time = Time.now
+      travel_to current_time do
+        @org.audit_manifest_action("manifest updated")
+      end
+      assert_equal @org.manifest_refreshed_at.to_i, current_time.to_i
+    end
   end
 end
