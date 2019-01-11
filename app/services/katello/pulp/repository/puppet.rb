@@ -40,8 +40,8 @@ module Katello
 
         def copy_contents(destination_repo, options = {})
           if options[:puppet_modules]
-            module_uuids = options[:puppet_modules].pluck(:uuid)
-            clauses = { 'unit_id' => { "$in" => module_uuids } }
+            module_uuids = options[:puppet_modules].pluck(:pulp_id)
+            clauses = {'filters': { 'association': { 'unit_id' => { "$in" => module_uuids } } } }
           else
             clauses = {}
           end

@@ -1,0 +1,374 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/4/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:31 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '364'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJodHRwX3JlcXVlc3RfbWV0aG9kIjogIkRFTEVURSIsICJleGNlcHRpb24i
+        OiBudWxsLCAiZXJyb3JfbWVzc2FnZSI6ICJNaXNzaW5nIHJlc291cmNlKHMp
+        OiByZXBvc2l0b3J5PTQiLCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9z
+        aXRvcmllcy80LyIsICJodHRwX3N0YXR1cyI6IDQwNCwgImVycm9yIjogeyJj
+        b2RlIjogIlBMUDAwMDkiLCAiZGF0YSI6IHsicmVzb3VyY2VzIjogeyJyZXBv
+        c2l0b3J5IjogIjQifX0sICJkZXNjcmlwdGlvbiI6ICJNaXNzaW5nIHJlc291
+        cmNlKHMpOiByZXBvc2l0b3J5PTQiLCAic3ViX2Vycm9ycyI6IFtdfSwgInRy
+        YWNlYmFjayI6IG51bGwsICJyZXNvdXJjZXMiOiB7InJlcG9zaXRvcnkiOiAi
+        NCJ9fQ==
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:31 GMT
+- request:
+    method: post
+    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IjQiLCJkaXNwbGF5X25hbWUiOiJQIEZvcmdlIiwiaW1wb3J0ZXJf
+        dHlwZV9pZCI6InB1cHBldF9pbXBvcnRlciIsImltcG9ydGVyX2NvbmZpZyI6
+        eyJmZWVkIjpudWxsLCJyZW1vdmVfbWlzc2luZyI6dHJ1ZSwicHJveHlfaG9z
+        dCI6bnVsbCwiYmFzaWNfYXV0aF91c2VybmFtZSI6bnVsbCwiYmFzaWNfYXV0
+        aF9wYXNzd29yZCI6bnVsbCwic3NsX3ZhbGlkYXRpb24iOnRydWUsInNzbF9j
+        bGllbnRfY2VydCI6bnVsbCwic3NsX2NsaWVudF9rZXkiOm51bGwsInNzbF9j
+        YV9jZXJ0IjpudWxsfSwibm90ZXMiOnsiX3JlcG8tdHlwZSI6InB1cHBldC1y
+        ZXBvIn0sImRpc3RyaWJ1dG9ycyI6W3siZGlzdHJpYnV0b3JfdHlwZV9pZCI6
+        InB1cHBldF9kaXN0cmlidXRvciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJz
+        ZXJ2ZV9odHRwIjpmYWxzZSwic2VydmVfaHR0cHMiOnRydWV9LCJhdXRvX3B1
+        Ymxpc2giOnRydWUsImRpc3RyaWJ1dG9yX2lkIjoiNF9wdXBwZXQifSx7ImRp
+        c3RyaWJ1dG9yX3R5cGVfaWQiOiJwdXBwZXRfaW5zdGFsbF9kaXN0cmlidXRv
+        ciIsImRpc3RyaWJ1dG9yX2NvbmZpZyI6eyJpbnN0YWxsX3BhdGgiOiIvZXRj
+        L3B1cHBldC9lbnZpcm9ubWVudHMvS1RfbGlicmFyeV9sYWJlbF9vcmdfZGVm
+        YXVsdF9sYWJlbF8zMDIzNzY1Mi9tb2R1bGVzIiwiYXV0b19wdWJsaXNoIjpm
+        YWxzZX0sImF1dG9fcHVibGlzaCI6ZmFsc2UsImRpc3RyaWJ1dG9yX2lkIjoi
+        NCJ9XX0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '725'
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:31 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '298'
+      Location:
+      - "/pulp/api/v2/repositories/4/"
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
+        ICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRkZWQiOiBudWxs
+        LCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicHVwcGV0LXJlcG8ifSwgImxh
+        c3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9jb3VudHMi
+        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNWMzOGM5
+        MWJiMDJlNTMwNzc0MDEwNjg0In0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:31 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/4/?details=true
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:31 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"d04911b7dbeeac7a735fba7bebf6b830-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '1647'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
+        ICJkZXNjcmlwdGlvbiI6IG51bGwsICJkaXN0cmlidXRvcnMiOiBbeyJyZXBv
+        X2lkIjogIjQiLCAibGFzdF91cGRhdGVkIjogIjIwMTktMDEtMTFUMTY6NDk6
+        MzFaIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC9k
+        aXN0cmlidXRvcnMvNF9wdXBwZXQvIiwgImxhc3Rfb3ZlcnJpZGVfY29uZmln
+        Ijoge30sICJsYXN0X3B1Ymxpc2giOiBudWxsLCAiZGlzdHJpYnV0b3JfdHlw
+        ZV9pZCI6ICJwdXBwZXRfZGlzdHJpYnV0b3IiLCAiYXV0b19wdWJsaXNoIjog
+        dHJ1ZSwgInNjcmF0Y2hwYWQiOiB7fSwgIl9ucyI6ICJyZXBvX2Rpc3RyaWJ1
+        dG9ycyIsICJfaWQiOiB7IiRvaWQiOiAiNWMzOGM5MWJiMDJlNTMwNzc0MDEw
+        Njg2In0sICJjb25maWciOiB7InNlcnZlX2h0dHBzIjogdHJ1ZSwgInNlcnZl
+        X2h0dHAiOiBmYWxzZX0sICJpZCI6ICI0X3B1cHBldCJ9LCB7InJlcG9faWQi
+        OiAiNCIsICJsYXN0X3VwZGF0ZWQiOiAiMjAxOS0wMS0xMVQxNjo0OTozMVoi
+        LCAiX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3JlcG9zaXRvcmllcy80L2Rpc3Ry
+        aWJ1dG9ycy80LyIsICJsYXN0X292ZXJyaWRlX2NvbmZpZyI6IHt9LCAibGFz
+        dF9wdWJsaXNoIjogbnVsbCwgImRpc3RyaWJ1dG9yX3R5cGVfaWQiOiAicHVw
+        cGV0X2luc3RhbGxfZGlzdHJpYnV0b3IiLCAiYXV0b19wdWJsaXNoIjogZmFs
+        c2UsICJzY3JhdGNocGFkIjoge30sICJfbnMiOiAicmVwb19kaXN0cmlidXRv
+        cnMiLCAiX2lkIjogeyIkb2lkIjogIjVjMzhjOTFiYjAyZTUzMDc3NDAxMDY4
+        NyJ9LCAiY29uZmlnIjogeyJpbnN0YWxsX3BhdGgiOiAiL2V0Yy9wdXBwZXQv
+        ZW52aXJvbm1lbnRzL0tUX2xpYnJhcnlfbGFiZWxfb3JnX2RlZmF1bHRfbGFi
+        ZWxfMzAyMzc2NTIvbW9kdWxlcyIsICJhdXRvX3B1Ymxpc2giOiBmYWxzZX0s
+        ICJpZCI6ICI0In1dLCAibGFzdF91bml0X2FkZGVkIjogbnVsbCwgIm5vdGVz
+        IjogeyJfcmVwby10eXBlIjogInB1cHBldC1yZXBvIn0sICJsYXN0X3VuaXRf
+        cmVtb3ZlZCI6IG51bGwsICJjb250ZW50X3VuaXRfY291bnRzIjoge30sICJf
+        bnMiOiAicmVwb3MiLCAiaW1wb3J0ZXJzIjogW3sicmVwb19pZCI6ICI0Iiwg
+        Imxhc3RfdXBkYXRlZCI6ICIyMDE5LTAxLTExVDE2OjQ5OjMxWiIsICJfaHJl
+        ZiI6ICIvcHVscC9hcGkvdjIvcmVwb3NpdG9yaWVzLzQvaW1wb3J0ZXJzL3B1
+        cHBldF9pbXBvcnRlci8iLCAiX25zIjogInJlcG9faW1wb3J0ZXJzIiwgImlt
+        cG9ydGVyX3R5cGVfaWQiOiAicHVwcGV0X2ltcG9ydGVyIiwgImxhc3Rfb3Zl
+        cnJpZGVfY29uZmlnIjoge30sICJsYXN0X3N5bmMiOiBudWxsLCAic2NyYXRj
+        aHBhZCI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWMzOGM5MWJiMDJlNTMw
+        Nzc0MDEwNjg1In0sICJjb25maWciOiB7InNzbF92YWxpZGF0aW9uIjogdHJ1
+        ZSwgInJlbW92ZV9taXNzaW5nIjogdHJ1ZX0sICJpZCI6ICJwdXBwZXRfaW1w
+        b3J0ZXIifV0sICJsb2NhbGx5X3N0b3JlZF91bml0cyI6IDAsICJfaWQiOiB7
+        IiRvaWQiOiAiNWMzOGM5MWJiMDJlNTMwNzc0MDEwNjg0In0sICJ0b3RhbF9y
+        ZXBvc2l0b3J5X3VuaXRzIjogMCwgImlkIjogIjQiLCAiX2hyZWYiOiAiL3B1
+        bHAvYXBpL3YyL3JlcG9zaXRvcmllcy80LyJ9
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:32 GMT
+- request:
+    method: delete
+    uri: https://devel.balmora.example.com/pulp/api/v2/repositories/4/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:32 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzdjZmU5YjE3LThhZGQtNDE1Mi04OGNiLTM3MTQ3ZjQ0MDcwNC8iLCAi
+        dGFza19pZCI6ICI3Y2ZlOWIxNy04YWRkLTQxNTItODhjYi0zNzE0N2Y0NDA3
+        MDQifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:32 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com/pulp/api/v2/tasks/7cfe9b17-8add-4152-88cb-37147f440704/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:32 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"3a456e4560d26ff1ee605da918edb664-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '658'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83Y2ZlOWIxNy04YWRkLTQxNTItODhjYi0zNzE0N2Y0NDA3
+        MDQvIiwgInRhc2tfaWQiOiAiN2NmZTliMTctOGFkZC00MTUyLTg4Y2ItMzcx
+        NDdmNDQwNzA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wMS0xMVQx
+        Njo0OTozMloiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3Mi
+        OiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZGV2ZWwuYmFsbW9yYS5leGFtcGxlLmNv
+        bS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3b3JrZXJfbmFtZSI6ICJy
+        ZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBkZXZlbC5iYWxtb3JhLmV4YW1w
+        bGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQi
+        OiB7IiRvaWQiOiAiNWMzOGM5MWNlNTNlNTY3ZWMzZTJlNzAwIn0sICJpZCI6
+        ICI1YzM4YzkxY2U1M2U1NjdlYzNlMmU3MDAifQ==
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:32 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com/pulp/api/v2/tasks/7cfe9b17-8add-4152-88cb-37147f440704/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:32 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"3a456e4560d26ff1ee605da918edb664-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '658'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83Y2ZlOWIxNy04YWRkLTQxNTItODhjYi0zNzE0N2Y0NDA3
+        MDQvIiwgInRhc2tfaWQiOiAiN2NmZTliMTctOGFkZC00MTUyLTg4Y2ItMzcx
+        NDdmNDQwNzA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wMS0xMVQx
+        Njo0OTozMloiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3Mi
+        OiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZGV2ZWwuYmFsbW9yYS5leGFtcGxlLmNv
+        bS5kcTIiLCAic3RhdGUiOiAicnVubmluZyIsICJ3b3JrZXJfbmFtZSI6ICJy
+        ZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEBkZXZlbC5iYWxtb3JhLmV4YW1w
+        bGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQi
+        OiB7IiRvaWQiOiAiNWMzOGM5MWNlNTNlNTY3ZWMzZTJlNzAwIn0sICJpZCI6
+        ICI1YzM4YzkxY2U1M2U1NjdlYzNlMmU3MDAifQ==
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:32 GMT
+- request:
+    method: get
+    uri: https://devel.balmora.example.com/pulp/api/v2/tasks/7cfe9b17-8add-4152-88cb-37147f440704/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 11 Jan 2019 16:49:32 GMT
+      Server:
+      - Apache/2.4.6 (CentOS)
+      Etag:
+      - '"7e62582024f7d9349d56d6711d0223c6-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '677'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83Y2ZlOWIxNy04YWRkLTQxNTItODhjYi0zNzE0N2Y0NDA3
+        MDQvIiwgInRhc2tfaWQiOiAiN2NmZTliMTctOGFkZC00MTUyLTg4Y2ItMzcx
+        NDdmNDQwNzA0IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxOS0wMS0x
+        MVQxNjo0OTozMloiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
+        bWUiOiAiMjAxOS0wMS0xMVQxNjo0OTozMloiLCAidHJhY2ViYWNrIjogbnVs
+        bCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9
+        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAZGV2ZWwu
+        YmFsbW9yYS5leGFtcGxlLmNvbS5kcTIiLCAic3RhdGUiOiAiZmluaXNoZWQi
+        LCAid29ya2VyX25hbWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBA
+        ZGV2ZWwuYmFsbW9yYS5leGFtcGxlLmNvbSIsICJyZXN1bHQiOiBudWxsLCAi
+        ZXJyb3IiOiBudWxsLCAiX2lkIjogeyIkb2lkIjogIjVjMzhjOTFjZTUzZTU2
+        N2VjM2UyZTcwMCJ9LCAiaWQiOiAiNWMzOGM5MWNlNTNlNTY3ZWMzZTJlNzAw
+        In0=
+    http_version: 
+  recorded_at: Fri, 11 Jan 2019 16:49:32 GMT
+recorded_with: VCR 3.0.3
