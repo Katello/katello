@@ -12,6 +12,7 @@ module Katello
           @mirror = FactoryBot.build(:smart_proxy, :pulp_mirror)
 
           @repo = katello_repositories(:p_forge)
+          @clone = katello_repositories(:lib_p_forge)
 
           Cert::Certs.stubs(:ueber_cert).returns({})
         end
@@ -22,6 +23,28 @@ module Katello
       end
 
       class PuppetVcrTest < PuppetBaseTest
+        def setup
+          super
+          RepositorySupport.create_and_sync_repo(@repo)
+          @repo.index_content
+          RepositorySupport.create_repo(@clone)
+        end
+
+        def teardown
+          delete_repo(@repo)
+        end
+
+        def test_copy_contents
+          service = Katello::Pulp::Repository::Puppet.new(@repo, @master)
+          assert @repo.puppet_modules.count > 1
+          task = service.copy_contents(@clone, puppet_modules: ::Katello::PuppetModule.where(:id => @repo.puppet_modules.order(:sortable_version).first.id))
+          TaskSupport.wait_on_tasks([task])
+          @clone.index_content
+          assert_equal 1, @clone.puppet_modules.count
+        end
+      end
+
+      class PuppetVcrCreateTest < PuppetBaseTest
         def setup
           super
           delete_repo(@repo)

@@ -96,6 +96,23 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     end
   end
 
+  class CopyContentsTest < TestBase
+    let(:action_class) { ::Actions::Pulp::ContentViewPuppetEnvironment::CopyContents }
+    let(:action) { create_action action_class }
+
+    it 'plans and can invoke' do
+      target = puppet_env
+      source = katello_repositories(:p_forge)
+      puppet_module = source.puppet_modules.first
+
+      plan_action action, target, :source_repository_id => source.id, :puppet_modules => [puppet_module]
+      Katello::Pulp::Repository::Puppet.any_instance.expects(:copy_contents).with do |repo, options|
+        repo.pulp_id == target.pulp_id && options[:puppet_modules].to_a == [puppet_module]
+      end
+      action.invoke_external_task
+    end
+  end
+
   class CreateForVersionTest < TestBase
     let(:action_class) { ::Actions::Katello::ContentViewPuppetEnvironment::CreateForVersion }
     let(:action) { create_action action_class }
