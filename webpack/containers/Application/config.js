@@ -21,7 +21,7 @@ export const links = [
   {
     path: 'subscriptions',
     component: WithOrganization(
-      withHeader(Subscriptions, { title: __('RH Subscriptions') }),
+      withHeader(Subscriptions, { title: __('Subscriptions') }),
       '/subscriptions',
     ),
   },
