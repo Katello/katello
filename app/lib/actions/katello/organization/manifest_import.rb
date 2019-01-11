@@ -44,9 +44,7 @@ module Actions
         end
 
         def finalize
-          subject_organization.update_attributes!(
-            :manifest_refreshed_at => Time.now,
-            :audit_comment => _('Manifest imported'))
+          subject_organization.audit_manifest_action(_('Manifest imported'))
         end
       end
     end

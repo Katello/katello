@@ -203,6 +203,16 @@ module Katello
           users.pluck(:id)
         end
 
+        def audit_manifest_action(message)
+          self.manifest_refreshed_at = Time.now
+          self.audit_comment = message
+          # we skip validating here because the complex taxonomy relationships can cause a lot of unexpected issues.
+          # This should be a simple transaction that happens on an important action in the user's workflow.
+          # It would be hard to create any new invalid relationships at this step, so the validation
+          # doesn't provide much benefit for the frustration it creates.
+          self.save(validate: false)
+        end
+
         class Jail < ::Safemode::Jail
           allow :name, :label
         end
