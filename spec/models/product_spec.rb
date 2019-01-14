@@ -41,7 +41,7 @@ module Katello
         @p = Product.create!(
                                :label => "Zanzibar#{rand 10**6}",
                                :name => ProductTestData::PRODUCT_NAME,
-                               :id => ProductTestData::PRODUCT_ID,
+                               :cp_id => ProductTestData::PRODUCT_ID,
                                :provider => @provider,
                                :organization => @organization
         )

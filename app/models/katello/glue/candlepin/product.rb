@@ -90,23 +90,6 @@ module Katello
     end
 
     module InstanceMethods
-      def initialize(attribs = nil)
-        unless attribs.nil?
-          attributes_key = attribs.key?(:attributes) ? :attributes : 'attributes'
-          if attribs.key?(attributes_key)
-            attribs[:attrs] = attribs[attributes_key]
-            attribs.delete(attributes_key)
-          end
-
-          # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
-          attribs = attribs.reject do |k, _v|
-            !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
-          end
-        end
-
-        super
-      end
-
       def support_level
         return _attr(:support_level)
       end
