@@ -127,6 +127,20 @@ module Katello
       end
     end
 
+    def test_index_with_org_search
+      test_repo2 = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+      test_repo2.environment = katello_environments(:organization1_library)
+      get :index, params: { :organization_id => test_repo2.organization.id }
+
+      assert_response :success
+      assert_equal JSON.parse(response.body)['results'].map { |item| item['errata_id'] }, []
+
+      get :index, params: { :organization_id => @test_repo.organization.id }
+
+      assert_response :success
+      assert_equal JSON.parse(response.body)['results'].map { |item| item['errata_id'] }, ["RHSA-1999-1231", "RHBA-2014-013"]
+    end
+
     def test_show
       errata = @test_repo.errata.first
 
