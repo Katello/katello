@@ -4,7 +4,7 @@ module Katello
     include Katello::Concerns::Api::V2::RepositoryContentController
 
     before_action :find_host, :only => [:index, :available_errata]
-    before_action :find_optional_organization, :only => :available_errata
+    before_action :find_optional_organization, :only => [:index, :auto_complete_search, :available_errata]
     before_action :find_environment, :only => :available_errata
     before_action :find_filter, :only => :available_errata
 
