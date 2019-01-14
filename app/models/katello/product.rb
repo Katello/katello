@@ -79,27 +79,6 @@ module Katello
 
     before_create :assign_unique_label
 
-    def initialize(attrs = nil)
-      unless attrs.nil?
-        attrs = attrs.with_indifferent_access
-
-        #rename "id" to "cp_id" (activerecord and candlepin variable name conflict)
-        if attrs.key?(:id)
-          unless attrs.key?(:cp_id)
-            attrs[:cp_id] = attrs[:id]
-          end
-          attrs.delete(:id)
-        end
-
-        # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
-        attrs = attrs.reject do |k, _v|
-          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
-        end
-      end
-
-      super
-    end
-
     def orphaned?
       self.pool_products.empty?
     end
