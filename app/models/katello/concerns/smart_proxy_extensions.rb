@@ -214,6 +214,10 @@ module Katello
           Cert::Certs.verify_ueber_cert(org)
         end
       end
+
+      def smart_proxy_service
+        @smart_proxy_service ||= Pulp::SmartProxyRepository.new(self)
+      end
     end
   end
 end

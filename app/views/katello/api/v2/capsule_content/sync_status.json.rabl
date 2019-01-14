@@ -1,4 +1,4 @@
-object @capsule_content
+object @capsule
 
 attribute :last_sync_time
 
@@ -15,7 +15,7 @@ child @lifecycle_environments => :lifecycle_environments do
 
   attributes :library
   node :syncable do |env|
-    @capsule_content.environment_syncable?(env)
+    @capsule.environment_syncable?(env)
   end
   node :counts do |env|
     counts = {
@@ -23,7 +23,7 @@ child @lifecycle_environments => :lifecycle_environments do
       :content_views => env.content_views.non_default.count,
       :products => env.products.enabled.count
     }
-    repo_data = @capsule_content.current_repositories_data(env)
+    repo_data = @capsule.smart_proxy_service.current_repositories_data(env)
     counts.merge!(Katello::Pulp::ContentCountsCalculator.new(repo_data).calculate)
   end
 
@@ -40,7 +40,7 @@ child @lifecycle_environments => :lifecycle_environments do
           :products => content_view.products.enabled.count
         }
       }
-      repo_data = @capsule_content.current_repositories_data(env, content_view)
+      repo_data = @capsule.smart_proxy_service.current_repositories_data(env, content_view)
       attributes[:counts].merge!(Katello::Pulp::ContentCountsCalculator.new(repo_data).calculate)
       attributes
     end
