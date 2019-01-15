@@ -29,12 +29,12 @@ module Katello
       self.id.to_s <=> other.id.to_s
     end
 
-    def as_json(options = {})
-      ret = super(options)
-      ret[:name] = self.id.to_s
-      ret[:creatable] = @allow_creation_by_user
-      ret.delete("allow_creation_by_user")
-      ret
+    def as_json(_options = {})
+      {
+        :name => self.id.to_s,
+        :id => self.id,
+        :creatable => @allow_creation_by_user
+      }
     end
   end
 end
