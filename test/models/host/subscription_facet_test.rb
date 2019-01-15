@@ -405,5 +405,30 @@ module Katello
       assert host.valid_content_override_label?('some-label')
       refute host.valid_content_override_label?('some-label1')
     end
+
+    def test_host_type
+      kvm = "kvm"
+      host = FactoryBot.create(:host, :with_content, :with_subscription, content_view: view,
+                               lifecycle_environment: library, organization: org)
+      host.expects(:facts).returns("virt::host_type" => kvm)
+
+      assert_equal host.subscription_facet.host_type, kvm
+    end
+
+    def test_host_type_hypervisor
+      qemu = "QEMU"
+      hypervisor = FactoryBot.create(:host, :with_content, :with_subscription, content_view: view,
+                                     lifecycle_environment: library, organization: org)
+      hypervisor.expects(:facts).returns("hypervisor::type" => qemu)
+
+      assert_equal hypervisor.subscription_facet.host_type, qemu
+    end
+
+    def test_host_type_nil
+      host = FactoryBot.create(:host, :with_content, :with_subscription, content_view: view,
+                               lifecycle_environment: library, organization: org)
+
+      assert_nil host.subscription_facet.host_type
+    end
   end
 end

@@ -29,6 +29,11 @@ module Katello
 
       attr_accessor :facts
 
+      def host_type
+        host_facts = self.host.facts
+        host_facts["virt::host_type"] || host_facts["hypervisor::type"]
+      end
+
       def update_from_consumer_attributes(consumer_params)
         import_database_attributes(consumer_params)
         self.facts = consumer_params['facts'] unless consumer_params['facts'].blank?
