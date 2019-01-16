@@ -6,15 +6,12 @@ module Actions
 
         # options:
         #   skip_environment_update - defaults to false. skips updating the CP environment
-        #   planned_destroy - default to false.  destroy the AR object in plan phase instead of finalize
         def plan(repository, options = {})
-          planned_destroy = options.fetch(:planned_destroy, false)
-
           skip_environment_update = options.fetch(:skip_environment_update, false) ||
               options.fetch(:organization_destroy, false)
           action_subject(repository)
 
-          if !planned_destroy && !repository.destroyable?
+          unless repository.destroyable?
             # The repository is going to be deleted in finalize, but it cannot be deleted.
             # Stop now and inform the user.
             fail repository.errors.messages.values.join("\n")
@@ -23,7 +20,6 @@ module Actions
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(Pulp::Repository::Destroy, repository_id: repository.id)
           sequence do
-            delete_record(repository) if planned_destroy
             if repository.redhat?
               handle_redhat_content(repository) unless skip_environment_update
             else
@@ -31,14 +27,12 @@ module Actions
             end
           end
 
-          plan_self(:user_id => ::User.current.id, :planned_destroy => planned_destroy)
+          plan_self(:user_id => ::User.current.id)
         end
 
         def finalize
-          unless input[:planned_destroy]
-            repository = ::Katello::Repository.find(input[:repository][:id])
-            delete_record(repository)
-          end
+          repository = ::Katello::Repository.find(input[:repository][:id])
+          delete_record(repository)
         end
 
         def handle_custom_content(repository)

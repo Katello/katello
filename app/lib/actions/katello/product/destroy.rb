@@ -27,7 +27,6 @@ module Actions
               concurrence do
                 product.repositories.in_default_view.each do |repo|
                   repo_options = options.clone
-                  repo_options[:planned_destroy] = true
                   plan_action(Katello::Repository::Destroy, repo, repo_options)
                 end
               end

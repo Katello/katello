@@ -86,7 +86,7 @@ module Katello
       ENV['COMMIT'] = 'true'
       Runcible::Extensions::Repository.any_instance.expects(:retrieve).once.with(@cv_repo.pulp_id).raises(RestClient::ResourceNotFound)
 
-      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Destroy, @cv_repo, :planned_destroy => true)
+      ForemanTasks.expects(:sync_task).with(::Actions::Katello::Repository::Destroy, @cv_repo)
 
       Rake.application.invoke_task('katello:correct_repositories')
     end

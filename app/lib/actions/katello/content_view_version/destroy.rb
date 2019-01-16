@@ -19,7 +19,6 @@ module Actions
             concurrence do
               repos.each do |repo|
                 repo_options = options.clone
-                repo_options[:planned_destroy] = true
                 plan_action(Repository::Destroy, repo, repo_options)
               end
               puppet_envs.each do |cvpe|

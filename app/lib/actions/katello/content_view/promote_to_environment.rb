@@ -23,7 +23,7 @@ module Actions
                           :puppet_modules_present => version.promote_puppet_environment?)
 
               repos_to_delete(version, environment).each do |repo|
-                plan_action(Repository::Destroy, repo, :skip_environment_update => true, :planned_destroy => false)
+                plan_action(Repository::Destroy, repo, :skip_environment_update => true)
               end
             end
 

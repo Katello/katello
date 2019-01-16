@@ -14,7 +14,7 @@ class ScenarioSupport
   end
 
   def destroy_org(org, repo)
-    ::Katello::Repository.expects(:find).returns(repo)
+    ::Katello::Repository.expects(:find).twice.returns(repo)
     record("organization_destroy") { ForemanTasks.sync_task(::Actions::Katello::Organization::Destroy, org) }
   end
 

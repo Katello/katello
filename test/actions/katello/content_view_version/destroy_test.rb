@@ -19,7 +19,6 @@ module Katello::Host
         options = {:skip_environment_check => true}
         plan_action(action, @version, options)
 
-        options[:planned_destroy] = true
         @version.repositories.each do |repo|
           assert_action_planed_with(action, Actions::Katello::Repository::Destroy, repo, options)
         end
@@ -34,7 +33,6 @@ module Katello::Host
         options = {:skip_environment_check => true, :skip_destroy_env_content => true}
         plan_action(action, @version, options)
 
-        options[:planned_destroy] = true
         @version.archived_repos.each do |repo|
           assert_action_planed_with(action, Actions::Katello::Repository::Destroy, repo, options)
         end

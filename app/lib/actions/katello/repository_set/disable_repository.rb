@@ -12,7 +12,7 @@ module Actions
                                          options).find_repository
           if repository
             action_subject(repository)
-            plan_action(Repository::Destroy, repository, :planned_destroy => true)
+            plan_action(Repository::Destroy, repository)
           else
             fail ::Katello::Errors::NotFound, _('Repository not found')
           end

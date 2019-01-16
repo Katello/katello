@@ -131,7 +131,7 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(clone)
       action.expects(:plan_self)
-      plan_action action, clone, planned_destroy: true
+      plan_action action, clone
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
