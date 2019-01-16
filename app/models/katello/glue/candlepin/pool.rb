@@ -180,6 +180,7 @@ module Katello
 
         entries_to_remove = sub_facet_ids_from_pool_table - sub_facet_ids_from_cp
         Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => entries_to_remove).delete_all
+        self.import_audit_record(sub_facet_ids_from_pool_table, sub_facet_ids_from_cp)
       end
 
       def import_managed_associations
