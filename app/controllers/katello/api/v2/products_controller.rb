@@ -47,7 +47,15 @@ module Katello
 
     def index_relation
       query = Product.readable.where(:organization_id => @organization.id)
-      query = query.where(:provider_id => @organization.anonymous_provider.id) if params[:custom]
+
+      if params[:custom]
+        if Foreman::Cast.to_bool(params[:custom])
+          query = query.where(:provider_id => @organization.anonymous_provider.id)
+        else
+          query = query.where.not(:provider_id => @organization.anonymous_provider.id)
+        end
+      end
+
       query = query.where(:name => params[:name]) if params[:name]
       query = query.enabled if params[:enabled]
       query = query.where(:id => @activation_key.products) if @activation_key

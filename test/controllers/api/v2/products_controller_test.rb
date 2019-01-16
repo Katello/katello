@@ -65,6 +65,20 @@ module Katello
       end
     end
 
+    def test_index_custom_products_only
+      get :index, params: { organization_id: @organization.id, custom: true }
+      body = JSON.parse(response.body)
+
+      assert_equal 4, body['total']
+    end
+
+    def test_index_no_custom_products
+      get :index, params: { organization_id: @organization.id, custom: false }
+      body = JSON.parse(response.body)
+
+      assert_equal 3, body['total']
+    end
+
     def test_create
       product_params = {
         :name => 'fedora product',
