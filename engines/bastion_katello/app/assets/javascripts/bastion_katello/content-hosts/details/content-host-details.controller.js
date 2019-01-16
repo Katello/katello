@@ -24,6 +24,8 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
         $scope.getHostPurposeStatusIcon = ContentHostsHelper.getHostPurposeStatusIcon;
 
+        $scope.organization = Organization.get({id: CurrentOrganization});
+
         $scope.purposeAddonsList = [];
 
         $scope.panel = {
@@ -133,52 +135,54 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         };
 
         $scope.serviceLevels = function () {
-            var deferred = $q.defer();
-
-            Organization.get({id: CurrentOrganization}, function (organization) {
-                deferred.resolve(organization['service_levels']);
+            return $scope.organization.$promise.then(function(org) {
+                return org.service_levels;
             });
-
-            return deferred.promise;
         };
 
         $scope.purposeRoles = function () {
-            var deferred = $q.defer();
-
-            Organization.get({id: CurrentOrganization}, function (organization) {
-                deferred.resolve(organization.system_purposes.roles);
+            return $scope.organization.$promise.then(function(org) {
+                var roles = org.system_purposes.roles;
+                var role = $scope.host.subscription_facet_attributes.purpose_role;
+                if (role && !_.includes(roles, role)) {
+                    roles.push(role);
+                }
+                return roles;
             });
-
-            return deferred.promise;
         };
 
         $scope.purposeUsages = function () {
-            var deferred = $q.defer();
-
-            Organization.get({id: CurrentOrganization}, function (organization) {
-                deferred.resolve(organization.system_purposes.usage);
+            return $scope.organization.$promise.then(function(org) {
+                var usages = org.system_purposes.usage;
+                var usage = $scope.host.subscription_facet_attributes.purpose_usage;
+                if (usage && !_.includes(usages, usage)) {
+                    usages.push(usage);
+                }
+                return usages;
             });
-
-            return deferred.promise;
         };
 
         $scope.purposeAddons = function () {
-            var deferred = $q.defer();
+            var purposeAddons;
+            var addOns;
 
-            Organization.get({id: CurrentOrganization}, function (organization) {
-                deferred.resolve(organization.system_purposes.addons);
-            });
+            return $scope.organization.$promise.then(function(org) {
+                $scope.purposeAddonsList = [];
+                addOns = org.system_purposes.addons;
 
-            return deferred.promise.then(
-                function(addOns) {
-                    $scope.purposeAddonsList = [];
-
-                    angular.forEach(addOns, function (addOn) {
-                        $scope.purposeAddonsList.push({"name": addOn, "selected": $scope.host.subscription_facet_attributes.purpose_addons.indexOf(addOn) > -1});
-                    });
-
-                    return $scope.purposeAddonsList;
+                purposeAddons = $scope.host.subscription_facet_attributes.purpose_addons;
+                angular.forEach(purposeAddons, function(addOn) {
+                    if (addOn && !_.includes(addOns, addOn)) {
+                        addOns.push(addOn);
+                    }
                 });
+
+                angular.forEach(addOns, function (addOn) {
+                    $scope.purposeAddonsList.push({"name": addOn, "selected": $scope.host.subscription_facet_attributes.purpose_addons.indexOf(addOn) > -1});
+                });
+
+                return $scope.purposeAddonsList;
+            });
         };
 
         $scope.unregisterContentHost = function (host) {

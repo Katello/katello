@@ -5,7 +5,9 @@ describe('Controller: ContentHostDetailsController', function() {
         Notification,
         Host,
         HostSubscription,
+        CurrentOrganization,
         Organization,
+        mockOrg,
         MenuExpander,
         mockHost;
 
@@ -16,10 +18,24 @@ describe('Controller: ContentHostDetailsController', function() {
         $stateProvider.state('content-hosts.fake', {});
     }));
 
-
     beforeEach(inject(function(_$controller_, $rootScope, $state, $injector) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
+        $httpBackend = $injector.get('$httpBackend');
+
+        mockOrg = {
+          id: '1',
+          service_levels: ['PREMIUM'],
+          system_purposes: {
+            roles: ['custom-role'],
+            usage: ['custom-usage'],
+            addons: ['custom-addon']
+          }
+        }
+
+        Organization = $injector.get('Organization');
+        spyOn(Organization, 'get').and.callThrough();
+        $httpBackend.expectGET('/katello/api/v2/organizations/1').respond(mockOrg);
 
         translate = function(message) {
             return message;
@@ -29,6 +45,8 @@ describe('Controller: ContentHostDetailsController', function() {
             setSuccessMessage: function () {},
             setErrorMessage: function () {}
         };
+
+        CurrentOrganization = '1';
 
         mockHost = {
             failed: false,
@@ -41,6 +59,11 @@ describe('Controller: ContentHostDetailsController', function() {
                 anotherFact: "yes"
             },
             subscription: {uuid: 'abcd-1234'},
+            subscription_facet_attributes: {
+              purpose_role: 'current-role',
+              purpose_usage: 'current-usage',
+              purpose_addons: ['current-addon']
+            },
 
             $update: function(success, error) {
                 if (mockHost.failed) {
@@ -72,7 +95,6 @@ describe('Controller: ContentHostDetailsController', function() {
             'delete': function (parmas, success, error) {success()}
         };
 
-        Organization = {};
         MenuExpander = {};
 
         spyOn(Host, 'get').and.callThrough();
@@ -85,6 +107,7 @@ describe('Controller: ContentHostDetailsController', function() {
             translate: translate,
             Notification: Notification,
             Host: Host,
+            CurrentOrganization: CurrentOrganization,
             Organization: Organization,
             HostSubscription: HostSubscription,
             MenuExpander: MenuExpander
@@ -93,6 +116,42 @@ describe('Controller: ContentHostDetailsController', function() {
 
     it("sets the menu expander on the scope", function() {
         expect($scope.menuExpander).toBe(MenuExpander);
+    });
+
+    it("attaches an organization to the scope", function() {
+        expect(Organization.get).toHaveBeenCalledWith({id: '1'});
+        expect($scope.organization).toBeDefined();
+    });
+
+    it("provides a list of service levels", function() {
+        $scope.serviceLevels().then(function(service_levels) {
+            expect(service_levels).toEqual(['PREMIUM']);
+        });
+        $httpBackend.flush();
+    });
+
+    it("provides a list of system purpose roles", function() {
+        $scope.purposeRoles().then(function(roles) {
+            expect(roles).toEqual(['custom-role', 'current-role']);
+        });
+        $httpBackend.flush();
+    });
+
+    it("provides a list of system purpose usages", function() {
+        $scope.purposeUsages().then(function(usages) {
+            expect(usages).toEqual(['custom-usage', 'current-usage']);
+        });
+        $httpBackend.flush();
+    });
+
+    it("provides a list of system purpose addons", function() {
+        $scope.purposeAddons().then(function(addons) {
+            expect(addons).toEqual([
+                {name: 'custom-addon', selected: false},
+                {name: 'current-addon', selected: true},
+             ]);
+        });
+        $httpBackend.flush();
     });
 
     it("gets the host using the Host service and puts it on the $scope.", function() {
