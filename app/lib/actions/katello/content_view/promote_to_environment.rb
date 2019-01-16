@@ -39,17 +39,6 @@ module Actions
           _("Promotion to Environment")
         end
 
-        def run
-          environment = ::Katello::KTEnvironment.find(input[:environment_id])
-
-          if ::SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
-            ForemanTasks.async_task(ContentView::CapsuleSync,
-                                    ::Katello::ContentView.find(input[:content_view_id]),
-                                    environment)
-          end
-        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
-        end
-
         def rescue_strategy_for_self
           Dynflow::Action::Rescue::Skip
         end
@@ -58,6 +47,14 @@ module Actions
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
+          environment = ::Katello::KTEnvironment.find(input[:environment_id])
+
+          if ::SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
+            ForemanTasks.async_task(ContentView::CapsuleSync,
+                                    ::Katello::ContentView.find(input[:content_view_id]),
+                                    environment)
+          end
+        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         private
