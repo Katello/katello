@@ -69,14 +69,14 @@ module Katello
       get :index, params: { organization_id: @organization.id, custom: true }
       body = JSON.parse(response.body)
 
-      assert_equal 4, body['total']
+      assert_equal 5, body['total']
     end
 
     def test_index_no_custom_products
-      get :index, params: { organization_id: @organization.id, custom: false }
+      get :index, params: { organization_id: @organization.id, redhat_only: true }
       body = JSON.parse(response.body)
 
-      assert_equal 3, body['total']
+      assert_equal 2, body['total']
     end
 
     def test_create
