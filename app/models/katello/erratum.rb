@@ -58,7 +58,7 @@ module Katello
       # which is calculated elsewhere.
 
       self.joins(:content_facets).
-        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.pluck(:id))
+        where("#{Katello::Host::ContentFacet.table_name}.host_id" => hosts.select(:id))
     end
 
     def self.applicable_to_hosts_dashboard(hosts)
