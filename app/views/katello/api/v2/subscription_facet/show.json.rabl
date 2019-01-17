@@ -21,4 +21,6 @@ child :subscription_facet => :subscription_facet_attributes do |_facet|
   child :activation_keys => :activation_keys do
     attributes :id, :name
   end
+
+  attributes :host_type
 end

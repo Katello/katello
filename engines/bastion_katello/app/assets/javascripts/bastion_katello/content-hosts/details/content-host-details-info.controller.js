@@ -147,5 +147,11 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsInfoContro
         $scope.virtual = function (virt) {
             return (virt === true || virt === 'true');
         };
+
+        $scope.hostRam = function (host) {
+            if (host && host.facts) {
+                return host.facts["memory::memtotal"] ? $scope.convertMemToGB(host.facts["memory::memtotal"]) : "";
+            }
+        };
     }]
 );
