@@ -146,8 +146,17 @@ module Katello
     def test_create_with_checksum_type
       %w[sha1 sha256].each do |checksum_type|
         @root.checksum_type = checksum_type
+        @root.download_policy = 'immediate'
         assert @root.valid?, "Validation failed for create with valid checksum_type: '#{checksum_type}'"
         assert_equal checksum_type, @root.checksum_type
+      end
+    end
+
+    def test_create_with_on_demand_checksum
+      %w[sha1 sha256].each do |checksum_type|
+        @root.checksum_type = checksum_type
+        refute @root.valid?, "Validation failed for create with valid checksum_type: '#{checksum_type}'"
+        assert @root.errors.key?(:checksum_type)
       end
     end
 
@@ -266,6 +275,7 @@ module Katello
     test_attributes :pid => 'c49a3c49-110d-4b74-ae14-5c9494a4541c'
     def test_create_with_invalid_checksum_type
       @root.checksum_type = 'invalid checksum_type'
+      @root.download_policy = 'immediate'
       refute_valid @root
       assert @root.errors.key?(:checksum_type)
       assert_match 'is not included in the list', @root.errors[:checksum_type][0]
@@ -316,6 +326,7 @@ module Katello
 
     test_attributes :pid => '205e6e59-33c6-4a58-9245-1cac3a4f550a'
     def test_update_checksum
+      @root.download_policy = 'immediate'
       @root.checksum_type = 'sha1'
       assert @root.save
       @root.checksum_type = 'sha256'
