@@ -50,6 +50,7 @@ module Katello
     validate :ensure_valid_docker_tags_whitelist
     validate :ensure_content_attribute_restrictions
     validate :ensure_valid_upstream_authorization
+    validate :ensure_no_checksum_on_demand
     validates :url, presence: true, if: :ostree?
     validates :checksum_type, :inclusion => {:in => CHECKSUM_TYPES}, :allow_blank => true
     validates :product_id, :presence => true
@@ -126,6 +127,12 @@ module Katello
     def ensure_no_download_policy
       if !yum? && download_policy.present?
         errors.add(:download_policy, _("cannot be set for non-yum repositories."))
+      end
+    end
+
+    def ensure_no_checksum_on_demand
+      if checksum_type.present? && ::Runcible::Models::YumImporter::DOWNLOAD_ON_DEMAND == download_policy
+        errors.add(:checksum_type, _("Checksum type cannot be set for yum repositories with on demand download policy."))
       end
     end
 

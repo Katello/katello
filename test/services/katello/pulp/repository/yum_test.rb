@@ -92,7 +92,6 @@ module Katello
               download_policy: 'on_demand',
               verify_ssl_on_sync: true,
               ignorable_content: ['rpm'],
-              checksum_type: 'sha1',
               url: 'https://cdn.redhat.com/foo/bar'
           )
           @rhel6.root.product.expects(:certificate).returns('repo_cert')
@@ -122,8 +121,7 @@ module Katello
               verify_ssl_on_sync: true,
                upstream_username: 'root',
                upstream_password: 'redhat',
-              ignorable_content: ['drpm'],
-              checksum_type: 'sha1'
+              ignorable_content: ['drpm']
           )
           repo = Katello::Pulp::Repository::Yum.new(@custom, @master)
 
@@ -136,8 +134,6 @@ module Katello
           assert_equal importer['download_policy'], @custom.root.download_policy
           assert_equal importer['basic_auth_username'], @custom.root.upstream_username
 
-          distributor = repo.backend_data['distributors'].find { |dist| dist['distributor_type_id'] == 'yum_distributor' }
-          assert_equal @custom.root.checksum_type, distributor['config']['checksum_type']
           assert_equal 3, repo.backend_data['distributors'].count
         ensure
           delete_repo(@custom)
