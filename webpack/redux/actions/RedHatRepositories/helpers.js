@@ -1,10 +1,10 @@
 const repoTypeSearchQueryMap = {
-  rpm: '(name !~ source rpm) and (name !~ debug rpm) and (content_type = yum) and (name !~ beta) and (product_name !~ beta)',
+  rpm: '(name !~ source rpm) and (name !~ debug rpm) and (content_type = yum) and (label !~ beta) and (label !~ htb) and (name !~ beta) and (product_name !~ beta)',
   sourceRpm: '(name ~ source rpm) and (content_type = yum)',
   debugRpm: '(name ~ debug rpm) and (content_type = yum)',
   kickstart: 'content_type = kickstart',
   ostree: 'content_type = ostree',
-  beta: 'name ~ beta',
+  beta: '(name ~ beta) or (label ~ beta) or (label ~ htb)',
 };
 
 const recommendedRepositoriesRHEL = [
