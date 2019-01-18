@@ -79,11 +79,11 @@ module Katello
         end
 
         def test_class_distribution_bootable?
-          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/foo/kernel.img'}])
-          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/foo/initrd.img'}])
-          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/vmlinuz'}])
-          assert ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo/pxeboot'}])
-          refute ::Katello::Pulp::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo'}])
+          assert ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/foo/kernel.img'}])
+          assert ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/foo/initrd.img'}])
+          assert ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/vmlinuz'}])
+          assert ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo/pxeboot'}])
+          refute ::Katello::Pulp::Repository::Yum.distribution_bootable?('files' => [{:relativepath => '/bar/foo'}])
         end
       end
 
