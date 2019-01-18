@@ -20,11 +20,11 @@ FactoryBot.define do
     end
 
     trait :expiring_soon do
-      end_date Date.today + Setting[:expire_soon_days]
+      end_date Date.today + (Setting[:expire_soon_days] || 120)
     end
 
     trait :not_expiring_soon do
-      end_date Date.today + Setting[:expire_soon_days] + 1
+      end_date Date.today + (Setting[:expire_soon_days] || 120) + 1
     end
 
     trait :recently_expired do
