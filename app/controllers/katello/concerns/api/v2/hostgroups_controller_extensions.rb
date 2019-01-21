@@ -19,15 +19,6 @@ module Katello
       included do
         include ApiPieExtensions
 
-        def create
-          @hostgroup = Hostgroup.new(hostgroup_params)
-          process_response @hostgroup.save
-        end
-
-        def update
-          process_response @hostgroup.update_attributes(hostgroup_params)
-        end
-
         def show
           @render_template = 'katello/api/v2/hostgroups_extensions/show'
           render @render_template
