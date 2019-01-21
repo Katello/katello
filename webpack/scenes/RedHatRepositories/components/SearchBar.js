@@ -42,7 +42,7 @@ class SearchBar extends Component {
 
   componentDidMount() {
     // load all products until we use filtering and pagination
-    this.props.loadOrganizationProducts({ per_page: 1000 });
+    this.props.loadOrganizationProducts({ per_page: 1000, redhat_only: false });
   }
 
   onSearch(query) {

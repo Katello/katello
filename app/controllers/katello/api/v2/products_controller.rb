@@ -33,8 +33,9 @@ module Katello
     param :organization_id, :number, :desc => N_("Filter products by organization"), :required => true
     param :subscription_id, :number, :desc => N_("Filter products by subscription")
     param :name, String, :desc => N_("Filter products by name")
-    param :enabled, :bool, :desc => N_("Filter products by enabled or disabled")
-    param :custom, :bool, :desc => N_("Filter products by custom")
+    param :enabled, :bool, :desc => N_("Return enabled products only")
+    param :custom, :bool, :desc => N_("Return custom products only")
+    param :redhat_only, :bool, :desc => N_("Return Red Hat (non-custom) products only")
     param :include_available_content, :bool, :desc => N_("Whether to include available content attribute in results")
     param :sync_plan_id, :number, :desc => N_("Filter products by sync plan id")
     param :available_for, String, :desc => N_("Interpret specified object to return only Products that can be associated with specified object.  Only 'sync_plan' is supported."),
@@ -47,9 +48,10 @@ module Katello
 
     def index_relation
       query = Product.readable.where(:organization_id => @organization.id)
-      query = query.where(:provider_id => @organization.anonymous_provider.id) if params[:custom]
+      query = query.custom if ::Foreman::Cast.to_bool params[:custom]
+      query = query.redhat if ::Foreman::Cast.to_bool params[:redhat_only]
       query = query.where(:name => params[:name]) if params[:name]
-      query = query.enabled if params[:enabled]
+      query = query.enabled if ::Foreman::Cast.to_bool params[:enabled]
       query = query.where(:id => @activation_key.products) if @activation_key
 
       if params[:subscription_id]
