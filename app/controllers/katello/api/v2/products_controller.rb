@@ -48,10 +48,10 @@ module Katello
 
     def index_relation
       query = Product.readable.where(:organization_id => @organization.id)
-      query = query.custom if Foreman::Cast.to_bool params[:custom]
-      query = query.redhat if Foreman::Cast.to_bool params[:redhat_only]
+      query = query.custom if ::Foreman::Cast.to_bool params[:custom]
+      query = query.redhat if ::Foreman::Cast.to_bool params[:redhat_only]
       query = query.where(:name => params[:name]) if params[:name]
-      query = query.enabled if Foreman::Cast.to_bool params[:enabled]
+      query = query.enabled if ::Foreman::Cast.to_bool params[:enabled]
       query = query.where(:id => @activation_key.products) if @activation_key
 
       if params[:subscription_id]
