@@ -28,9 +28,9 @@ module Katello
         el8_path_with_sub = PathWithSubstitutions.new(@el8_path, {})
         el8_layered_path_with_sub = PathWithSubstitutions.new(@el8_layered_path, {})
         el8_arch_misplaced_path_with_sub = PathWithSubstitutions.new(@el8_arch_misplaced, {})
-        assert_equal el8_path_with_sub.substitutions["basearch"], "x86_64"
-        assert_equal el8_layered_path_with_sub.substitutions["basearch"], "x86_64"
-        assert_equal el8_arch_misplaced_path_with_sub.substitutions["basearch"], "x86_64"
+        assert_equal el8_path_with_sub.display_substitutions["basearch"], "x86_64"
+        assert_equal el8_layered_path_with_sub.display_substitutions["basearch"], "x86_64"
+        assert_equal el8_arch_misplaced_path_with_sub.display_substitutions["basearch"], "x86_64"
       end
 
       def test_no_basearch_substitutions
@@ -38,8 +38,8 @@ module Katello
         arch = 'x86_64'
         no_base_arch_path = "/content/dist/$releasever/#{arch}/product"
         no_base_arch = PathWithSubstitutions.new(no_base_arch_path, "releasever" => relver)
-        assert_equal no_base_arch.substitutions["basearch"], arch
-        assert_equal no_base_arch.substitutions["releasever"], relver
+        assert_equal no_base_arch.display_substitutions["basearch"], arch
+        assert_equal no_base_arch.display_substitutions["releasever"], relver
       end
 
       def test_resolve_substitutions_releasever

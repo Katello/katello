@@ -20,6 +20,7 @@ export function normalizeContentSetRepositories(repos, contentId, productId) {
   return repos.map(repo => ({
     contentId: parseInt(contentId, 10),
     productId: parseInt(productId, 10),
+    displayArch: repo.display_substitutions.basearch,
     arch: repo.substitutions.basearch,
     releasever: repo.substitutions.releasever,
     enabled: repo.enabled,

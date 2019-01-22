@@ -30,7 +30,7 @@ module Actions
           substitutor = cdn_var_substitutor
           return [] unless substitutor
           substitutor.substitute_vars(content.content_url).map do |path_with_substitutions|
-            prepare_result(path_with_substitutions.substitutions, path_with_substitutions.path)
+            prepare_result(path_with_substitutions)
           end
         end
 
@@ -39,11 +39,12 @@ module Actions
           cdn_resource.substitutor
         end
 
-        def prepare_result(substitutions, _path)
-          mapper = repository_mapper(substitutions)
+        def prepare_result(path_with_subs)
+          mapper = repository_mapper(path_with_subs.substitutions)
           repo = mapper.find_repository
           unique_id = repo.try(:pulp_id) || SecureRandom.uuid
-          { substitutions: substitutions,
+          { substitutions: path_with_subs.substitutions,
+            display_substitutions: path_with_subs.display_substitutions,
             path:          mapper.path,
             repo_name:     mapper.name,
             pulp_id:       unique_id,
