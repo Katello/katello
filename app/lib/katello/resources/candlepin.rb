@@ -41,7 +41,7 @@ module Katello
                      'content-type' => 'application/json'}
 
           request_id = ::Logging.mdc['request']
-          headers['X-Correlation-ID'] = request_id.split('-')[0] if request_id
+          headers['X-Correlation-ID'] = request_id if request_id
 
           headers.merge!(cp_oauth_header)
         end
