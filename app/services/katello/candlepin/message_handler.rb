@@ -59,18 +59,18 @@ module Katello
 
       def create_pool_on_host
         return if self.subscription_facet.nil?
-        old_sub_facet_ids = pool.subscription_facet_ids
+        old_host_ids = pool.subscription_facets.pluck(:host_id)
         ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
                                                pool_id: pool.id).first_or_create
-        pool.import_audit_record(old_sub_facet_ids)
+        pool.import_audit_record(old_host_ids)
       end
 
       def remove_pool_from_host
         return if self.subscription_facet.nil? || pool.nil?
-        old_sub_facet_ids = pool.subscription_facet_ids
+        old_host_ids = pool.subscription_facets.pluck(:host_id)
         ::Katello::SubscriptionFacetPool.where(subscription_facet_id: self.subscription_facet.id,
                                                pool_id: pool.id).destroy_all
-        pool.import_audit_record(old_sub_facet_ids)
+        pool.import_audit_record(old_host_ids)
       end
 
       def import_pool(index_hosts = true)
