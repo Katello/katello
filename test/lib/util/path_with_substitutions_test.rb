@@ -6,9 +6,6 @@ module Katello
       def setup
         @el5_path = '/content/dist/rhel/server/5/$releasever/$basearch/os'
         @non_sub_path = '/content/dist/rhel/server/5/5Server/x86_64/os'
-        @el8_path = '/content/dist/rhel8/8.0/x86_64/baseos/os/'
-        @el8_layered_path = '/content/dist/layered/rhel8/x86_64/product'
-        @el8_arch_misplaced = '/content/dist/rhel8/x86_64/product'
         @releasever_list = ['5Server', '5.8']
         @arch_list = ['x86_64', 'i386']
         @cdn = Katello::Resources::CDN::CdnResource.new('http://someurl/')
@@ -22,24 +19,6 @@ module Katello
       def test_substitutable?
         assert PathWithSubstitutions.new(@el5_path, {}).substitutable?
         refute PathWithSubstitutions.new(@non_sub_path, {}).substitutable?
-      end
-
-      def test_rhel_eight_substitutions
-        el8_path_with_sub = PathWithSubstitutions.new(@el8_path, {})
-        el8_layered_path_with_sub = PathWithSubstitutions.new(@el8_layered_path, {})
-        el8_arch_misplaced_path_with_sub = PathWithSubstitutions.new(@el8_arch_misplaced, {})
-        assert_equal el8_path_with_sub.substitutions["basearch"], "x86_64"
-        assert_equal el8_layered_path_with_sub.substitutions["basearch"], "x86_64"
-        assert_equal el8_arch_misplaced_path_with_sub.substitutions["basearch"], "x86_64"
-      end
-
-      def test_no_basearch_substitutions
-        relver = 'rhel8'
-        arch = 'x86_64'
-        no_base_arch_path = "/content/dist/$releasever/#{arch}/product"
-        no_base_arch = PathWithSubstitutions.new(no_base_arch_path, "releasever" => relver)
-        assert_equal no_base_arch.substitutions["basearch"], arch
-        assert_equal no_base_arch.substitutions["releasever"], relver
       end
 
       def test_resolve_substitutions_releasever

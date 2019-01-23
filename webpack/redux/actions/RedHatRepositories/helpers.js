@@ -1,3 +1,5 @@
+import { first, intersection } from 'lodash';
+
 const repoTypeSearchQueryMap = {
   rpm: '(name !~ source rpm) and (name !~ debug rpm) and (content_type = yum) and (name !~ beta) and (product_name !~ beta)',
   sourceRpm: '(name ~ source rpm) and (content_type = yum)',
@@ -72,5 +74,12 @@ export const joinSearchQueries = parts => parts
   .join(' and ');
 
 export const recommendedRepositorySetsQuery = createLablesQuery(recommendedRepositorySetLables);
+
+export const getArchFromPath = (path) => {
+  const architectures = ['x86_64', 's390x', 'ppc64le', 'aarch64', 'multiarch', 'ppc64'];
+  const splitPath = path.split('/').map(h => h.toLowerCase());
+  const arches = intersection(splitPath, architectures);
+  return first(arches);
+};
 
 export default normalizeRepositorySets;
