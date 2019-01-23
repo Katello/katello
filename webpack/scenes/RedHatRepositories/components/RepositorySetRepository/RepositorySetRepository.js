@@ -62,9 +62,9 @@ class RepositorySetRepository extends Component {
   }
 
   render() {
-    const { arch, releasever, type } = this.props;
+    const { displayArch, releasever, type } = this.props;
 
-    const archLabel = arch || __('Unspecified');
+    const archLabel = displayArch || __('Unspecified');
     const releaseverLabel = releasever || '';
 
     const yStreamHelpText =
@@ -135,6 +135,7 @@ class RepositorySetRepository extends Component {
 RepositorySetRepository.propTypes = {
   contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
+  displayArch: PropTypes.string,
   arch: PropTypes.string,
   releasever: PropTypes.string,
   type: PropTypes.string,
@@ -160,6 +161,7 @@ RepositorySetRepository.defaultProps = {
   label: '',
   releasever: undefined,
   arch: undefined,
+  displayArch: undefined,
   enabledSearch: {},
   loading: false,
   error: false,
