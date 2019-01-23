@@ -55,8 +55,7 @@ module Actions
             plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
             plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
                 :puppet_modules_present => has_modules)
-
-            plan_action(ContentView::UpdateEnvironment, content_view, library)
+            plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library))
             plan_action(Katello::Foreman::ContentUpdate, library, content_view)
             plan_action(ContentView::ErrataMail, content_view, library)
             plan_self(history_id: history.id, content_view_id: content_view.id,

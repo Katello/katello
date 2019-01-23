@@ -26,8 +26,7 @@ module Actions
                 plan_action(Repository::Destroy, repo, :skip_environment_update => true)
               end
             end
-
-            plan_action(ContentView::UpdateEnvironment, version.content_view, environment)
+            plan_action(Candlepin::Environment::SetContent, version.content_view, environment, version.content_view.content_view_environment(environment))
             plan_action(Katello::Foreman::ContentUpdate, environment, version.content_view)
             plan_action(ContentView::ErrataMail, version.content_view, environment)
             plan_self(history_id: history.id, environment_id: environment.id, user_id: ::User.current.id,
