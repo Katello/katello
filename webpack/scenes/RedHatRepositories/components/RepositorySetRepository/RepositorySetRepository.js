@@ -62,9 +62,9 @@ class RepositorySetRepository extends Component {
   }
 
   render() {
-    const { arch, releasever, type } = this.props;
+    const { displayArch, releasever, type } = this.props;
 
-    const archLabel = arch || __('Unspecified');
+    const archLabel = displayArch || __('Unspecified');
     const releaseverLabel = releasever || '';
 
     const yStreamHelpText =

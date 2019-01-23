@@ -1,5 +1,6 @@
 import api from '../../../services/api';
 import { apiError, apiSuccess } from '../../../move_to_foreman/common/helpers.js';
+import { getArchFromPath } from './helpers.js';
 
 import {
   REPOSITORY_SET_REPOSITORIES_REQUEST,
@@ -22,6 +23,7 @@ export function normalizeContentSetRepositories(repos, contentId, productId) {
     productId: parseInt(productId, 10),
     arch: repo.substitutions.basearch,
     releasever: repo.substitutions.releasever,
+    displayArch: repo.substitutions.basearch || getArchFromPath(repo.path),
     enabled: repo.enabled,
     error: false,
     loading: false,
