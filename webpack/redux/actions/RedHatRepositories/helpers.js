@@ -76,10 +76,10 @@ export const joinSearchQueries = parts => parts
 export const recommendedRepositorySetsQuery = createLablesQuery(recommendedRepositorySetLables);
 
 export const getArchFromPath = (path) => {
-  const architectures = ["x86_64", "s390x", "ppc64le", "aarch64", "multiarch", "ppc64"]
-  const split_path = path.split('/').map((h) => h.toLowerCase())
-  const arches = intersection(split_path, architectures)
-  return first(arches)
-}
+  const architectures = ['x86_64', 's390x', 'ppc64le', 'aarch64', 'multiarch', 'ppc64'];
+  const splitPath = path.split('/').map(h => h.toLowerCase());
+  const arches = intersection(splitPath, architectures);
+  return first(arches);
+};
 
 export default normalizeRepositorySets;

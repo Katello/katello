@@ -135,6 +135,7 @@ class RepositorySetRepository extends Component {
 RepositorySetRepository.propTypes = {
   contentId: PropTypes.number.isRequired,
   productId: PropTypes.number.isRequired,
+  displayArch: PropTypes.string,
   arch: PropTypes.string,
   releasever: PropTypes.string,
   type: PropTypes.string,
@@ -160,6 +161,7 @@ RepositorySetRepository.defaultProps = {
   label: '',
   releasever: undefined,
   arch: undefined,
+  displayArch: undefined,
   enabledSearch: {},
   loading: false,
   error: false,
