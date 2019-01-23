@@ -5,7 +5,8 @@ module Katello
 
       include Comparable
 
-      attr_accessor :substitutions, :display_substitutions, :path
+      attr_accessor :substitutions
+      attr_accessor :path
 
       #path /content/rhel/server/$arch/$releasever/os
       #substitutions  {$arch => 'x86_64'}
@@ -13,9 +14,7 @@ module Katello
         @substitutions = substitutions
         @path = path
         @resolved = []
-        @subs_from_path = {}
         check_for_subs_in_path if no_base_arch_passed?
-        @display_substitutions = substitutions.merge(@subs_from_path)
       end
 
       def no_base_arch_passed?
@@ -29,7 +28,7 @@ module Katello
       def check_for_subs_in_path
         arches = split_path & ARCHITECTURES
         arch = arches.first
-        @subs_from_path["basearch"] = arch if arch
+        @substitutions["basearch"] = arch if arch
       end
 
       def substitutions_needed
