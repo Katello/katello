@@ -1,4 +1,4 @@
-import { testComponentSnapshotsWithFixtures } from '../../../../../move_to_pf/test-utils/testHelpers';
+import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 
 import TableBodyMessage from './TableBodyMessage';
 

@@ -1,4 +1,4 @@
-import { testSelectorsSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
+import { testSelectorsSnapshotWithFixtures } from 'react-redux-test-utils';
 
 import { ORGANIZATION_PRODUCTS_KEY } from '../OrganizationProductsConstants';
 import { selectOrganizationProductsState, selectOrganizationProducts } from '../OrganizationProductsSelectors';

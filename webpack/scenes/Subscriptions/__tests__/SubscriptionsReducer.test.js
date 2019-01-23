@@ -1,4 +1,4 @@
-import { testReducerSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
+import { testReducerSnapshotWithFixtures } from 'react-redux-test-utils';
 
 import { GET_SETTING_SUCCESS } from '../../../move_to_foreman/Settings/SettingsConstants';
 import {

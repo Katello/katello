@@ -1,4 +1,4 @@
-import { testActionSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
+import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import api, { orgId } from '../../../services/api';
 import { apiError } from '../../../move_to_foreman/common/helpers';
 
@@ -12,12 +12,11 @@ jest.mock('../../../services/api');
 jest.mock('../../../move_to_foreman/common/helpers');
 
 const fixtures = {
-  'should load organization products and success': {
-    action: () => loadOrganizationProducts(params),
-    test: () => {
-      expect(api.get.mock.calls).toMatchSnapshot();
-      expect(apiError).not.toHaveBeenCalled();
-    },
+  'should load organization products and success': () => async (dispatch) => {
+    await loadOrganizationProducts(params)(dispatch);
+
+    expect(api.get.mock.calls).toMatchSnapshot('API get call');
+    expect(apiError).not.toHaveBeenCalled();
   },
   'should load organization products and fail': () => (dispatch) => {
     api.get.mockImplementation(async () => {

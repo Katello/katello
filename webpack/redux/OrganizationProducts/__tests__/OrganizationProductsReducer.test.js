@@ -1,4 +1,4 @@
-import { testReducerSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
+import { testReducerSnapshotWithFixtures } from 'react-redux-test-utils';
 
 import {
   ORGANIZATION_PRODUCTS_REQUEST,

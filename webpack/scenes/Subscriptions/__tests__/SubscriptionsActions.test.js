@@ -1,8 +1,8 @@
 import thunk from 'redux-thunk';
 import Immutable from 'seamless-immutable';
 import configureMockStore from 'redux-mock-store';
+import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import { mockRequest, mockErrorRequest, mockReset } from '../../../mockRequest';
-import { testActionSnapshotWithFixtures } from '../../../move_to_pf/test-utils/testHelpers';
 import {
   requestSuccessResponse,
   requestSuccessResponseWithRHSubscriptions,

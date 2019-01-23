@@ -1,5 +1,5 @@
+import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import ModuleStreamDetailArtifacts from '../ModuleStreamDetailArtifacts';
-import { testComponentSnapshotsWithFixtures } from '../../../../move_to_pf/test-utils/testHelpers';
 import { details } from './moduleStreamDetails.fixtures';
 
 const fixtures = {
