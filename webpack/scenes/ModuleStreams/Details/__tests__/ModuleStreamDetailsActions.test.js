@@ -1,4 +1,4 @@
-import { testActionSnapshotWithFixtures } from '../../../../move_to_pf/test-utils/testHelpers';
+import { testActionSnapshotWithFixtures } from 'react-redux-test-utils';
 import api from '../../../../services/api';
 import { apiError } from '../../../../move_to_foreman/common/helpers';
 import { loadModuleStreamDetails } from '../ModuleStreamDetailsActions';
@@ -8,12 +8,11 @@ jest.mock('../../../../services/api');
 jest.mock('../../../../move_to_foreman/common/helpers');
 
 const fixtures = {
-  'should load module stream details on success': {
-    action: () => loadModuleStreamDetails('1'),
-    test: () => {
-      expect(api.get.mock.calls).toMatchSnapshot();
-      expect(apiError).not.toHaveBeenCalled();
-    },
+  'should load module stream details on success': () => async (dispatch) => {
+    await loadModuleStreamDetails('1')(dispatch);
+
+    expect(api.get.mock.calls).toMatchSnapshot('API get call');
+    expect(apiError).not.toHaveBeenCalled();
   },
   'should load fail on bad api call': () => (dispatch) => {
     api.get.mockImplementation(async () => {

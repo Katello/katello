@@ -1,3 +1,4 @@
+import { testReducerSnapshotWithFixtures } from 'react-redux-test-utils';
 import * as types from '../TableConstants';
 
 import {
@@ -5,7 +6,6 @@ import {
   tableRecord,
 } from './Table.fixtures';
 import reducer from '../TableReducer';
-import { testReducerSnapshotWithFixtures } from '../../../../move_to_pf/test-utils/testHelpers';
 
 const fixtures = {
   'should return the initial state': {},

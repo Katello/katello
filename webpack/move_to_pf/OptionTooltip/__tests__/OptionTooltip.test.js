@@ -1,5 +1,5 @@
+import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import OptionTooltip from '../';
-import { testComponentSnapshotsWithFixtures } from '../../test-utils/testHelpers';
 
 const onClose = () => {};
 const options = [
