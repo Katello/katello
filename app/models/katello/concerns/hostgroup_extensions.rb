@@ -90,7 +90,7 @@ module Katello
       def equivalent_kickstart_repository
         return unless operatingsystem &&
                       kickstart_repository &&
-                      operatingsystem.class.method_defined?(:kickstart_repos)
+                      operatingsystem.respond_to?(:kickstart_repos)
         ks_repos = operatingsystem.kickstart_repos(self)
         ks_repos.find { |repo| repo[:name] == kickstart_repository.label }
       end
@@ -98,7 +98,7 @@ module Katello
       def matching_kickstart_repository?
         return true unless operatingsystem
 
-        if operatingsystem.class.method_defined? :kickstart_repos
+        if operatingsystem.respond_to? :kickstart_repos
           return operatingsystem.kickstart_repos(self).any? { |repo| repo[:id] == kickstart_repository_id }
         end
       end
