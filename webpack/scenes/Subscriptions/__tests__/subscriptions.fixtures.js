@@ -419,6 +419,11 @@ export const tableColumns = [
     value: false,
   },
   {
+    key: 'type',
+    label: 'Type',
+    value: true,
+  },
+  {
     key: 'consumed',
     label: 'Consumed',
     value: true,
@@ -441,6 +446,7 @@ export const loadTableColumnsSuccessAction = [
         'end_date',
         'consumed',
         'quantity',
+        'type',
       ],
     },
   },
