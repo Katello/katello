@@ -66,7 +66,7 @@ module Actions
       end
 
       def done?
-        external_task.all? { |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
+        external_task&.all? { |task| task[:finish_time] || FINISHED_STATES.include?(task[:state]) }
       end
 
       def external_task
