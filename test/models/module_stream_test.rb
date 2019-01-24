@@ -103,29 +103,5 @@ module Katello
       assert_includes ModuleStream.search_for("module_spec~#{@module_stream_river.name}"), @module_stream_river
       assert_includes ModuleStream.search_for("module_spec~#{@module_stream_river.name}:#{@module_stream_river.stream}"), @module_stream_river
     end
-
-    def pulp_module_data
-      @pulp_module_data ||= {
-        "repository_memberships" => [@fedora_repo.pulp_id],
-        "_storage_path" => "/var/lib/pulp/content/units/modulemd/04/f5586ee14de4e35c67ab08d26cb7a05e7fff0de07dceab66133a5820c382ce",
-        "name" => "duck",
-        "stream" => "0",
-        "artifacts" => ["duck-0:0.7-1.noarch", "cat-0:0.8-1.noarch"],
-        "checksum" => "7e57227ce357ab585349301507eee064b034c188088d7bab7a4025adcb6873b6",
-        "_last_updated" => "2018-08-08T18:28:44Z",
-        "_content_type_id" => "modulemd",
-        "profiles" => {"default" => ["duck", "cat"]},
-        "summary" => "Duck 0.7 module",
-        "_href" => "/pulp/api/v2/content/units/modulemd/2c5ebdc1-1504-4089-a318-c83ace3acdde/",
-        "downloaded" => true,
-        "version" => 20_180_730_233_102,
-        "pulp_user_metadata" => {},
-        "context" => "deadbeef",
-        "_id" => "2c5ebdc1-1504-4089-a318-c83ace3acdde",
-        "arch" => "noarch",
-        "children" => {},
-        "description" => "A module for the duck 0.7 package"
-      }
-    end
   end
 end
