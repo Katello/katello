@@ -10,8 +10,8 @@ module Katello
         shared_json = backend_data.select { |key, _v| shared_attributes.include?(key) }
         model.update_attributes!(shared_json)
 
-        create_stream_artifacts(backend_data['artifacts']) if backend_data.key?('artifacts')
-        create_profiles(backend_data['profiles']) if backend_data.key?('profiles')
+        create_stream_artifacts(model, backend_data['artifacts']) if backend_data.key?('artifacts')
+        create_profiles(model, backend_data['profiles']) if backend_data.key?('profiles')
       end
 
       def create_stream_artifacts(model, artifacts_json)

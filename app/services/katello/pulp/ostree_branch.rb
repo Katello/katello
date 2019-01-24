@@ -7,7 +7,7 @@ module Katello
         model.update_attributes(:name => backend_data[:branch],
                           :version => backend_data[:metadata][:version],
                           :commit => backend_data[:commit],
-                          :version_date => backend_data[:_created].to_datetime
+                          :version_date => backend_data[:_created] ? backend_data[:_created].to_datetime : nil
                          )
       end
     end
