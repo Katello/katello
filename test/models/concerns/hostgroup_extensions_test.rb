@@ -92,6 +92,9 @@ module Katello
       @distro = katello_repositories(:fedora_17_x86_64)
       @dev_distro = katello_repositories(:fedora_17_x86_64_acme_dev)
       @os = ::Redhat.create_operating_system('RedHat', '17', '0')
+      @no_family_os = FactoryBot.create(:operatingsystem,
+                                        major: 1,
+                                        name: 'no_family_os')
       @arch = architectures(:x86_64)
       @distro_cv = @distro.content_view
       @distro_env = @distro.environment
@@ -183,6 +186,14 @@ module Katello
 
       assert hg.save
       assert_equal hg.kickstart_repository_id, @dev_distro.id
+    end
+
+    def test_create_hostgroup_no_family_os
+      hg = Hostgroup.new(
+        name: 'kickstart_repo',
+        operatingsystem: @no_family_os)
+
+      assert_valid hg
     end
   end
 end
