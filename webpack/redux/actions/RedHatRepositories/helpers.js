@@ -20,6 +20,7 @@ const recommendedRepositoriesSatTools = [
   'rhel-7-server-satellite-tools-6.4-rpms',
   'rhel-6-server-satellite-tools-6.4-rpms',
   'rhel-5-server-els-satellite-tools-6.4-rpms',
+  'rhel-7-server-satellite-maintenance-6-rpms',
 ];
 
 const recommendedRepositoriesMisc = [
