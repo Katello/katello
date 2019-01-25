@@ -1,5 +1,6 @@
 require "katello_test_helper"
 
+#rubocop:disable Metrics/ModuleLength
 module Katello
   #rubocop:disable Metrics/BlockLength
   describe Api::Registry::RegistryProxiesController do
@@ -296,6 +297,29 @@ module Katello
         @controller.stubs(:registry_authorize).returns(true)
         @controller.stubs(:find_readable_repository).returns(@docker_repo)
         Resources::Registry::Proxy.stubs(:get).returns(manifest)
+        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+
+        get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
+        assert_response 200
+        assert_equal(manifest, response.body)
+        assert response.header['Content-Type'] =~ /MEDIATYPE/
+        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+      end
+
+      it "pull manifest - HTTPS Header" do
+        #production installs include an HTTPS: 'on' header, which needs to be removed
+        manifest = '{"mediaType":"MEDIATYPE"}'
+        @controller.stubs(:registry_authorize).returns(true)
+        @controller.stubs(:find_readable_repository).returns(@docker_repo)
+
+        request.env['HTTPS'] = 'on' #should not be passed through
+        request.env['HTTP_FOO'] = 'bar' #should be passed through
+
+        expected_headers = {"HOST" => "test.host", "USER-AGENT" => "Rails Testing", "AUTHORIZATION" => "Basic YXBpYWRtaW46c2VjcmV0",
+                            "ACCEPT" => "application/json", "ACCEPT-LANGUAGE" => "en-US", "FOO" => "bar", "COOKIE" => ""}
+        expected_headers['AUTHORIZATION'] = request.env['HTTP_AUTHORIZATION']
+
+        Resources::Registry::Proxy.stubs(:get).with('/v2/busybox/manifests/one', expected_headers).returns(manifest)
         DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
 
         get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
