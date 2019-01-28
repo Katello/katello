@@ -78,6 +78,11 @@ export const SUBSCRIPTION_TABLE_COLUMNS = [
     value: false,
   },
   {
+    key: 'type',
+    label: __('Type'),
+    value: false,
+  },
+  {
     key: 'consumed',
     label: __('Consumed'),
     value: false,
@@ -97,4 +102,5 @@ export const SUBSCRIPTION_TABLE_DEFAULT_COLUMNS = [
   'end_date',
   'consumed',
   'quantity',
+  'type',
 ];
