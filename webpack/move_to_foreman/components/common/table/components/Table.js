@@ -16,6 +16,7 @@ const Table = ({
   itemCount,
   pagination,
   onPaginationChange,
+  rowKey,
   ...props
 }) => {
   if (rows.length === 0 && bodyMessage === undefined) {
@@ -26,7 +27,7 @@ const Table = ({
 
   const body = children || [
     <PfTable.Header key="header" />,
-    <TableBody key="body" columns={columns} rows={rows} message={bodyMessage} rowKey="id" />,
+    <TableBody key="body" columns={columns} rows={rows} message={bodyMessage} rowKey={rowKey} />,
   ];
 
   return (
@@ -62,6 +63,7 @@ Table.propTypes = {
   children: PropTypes.node,
   itemCount: PropTypes.number,
   onPaginationChange: PropTypes.func,
+  rowKey: PropTypes.string,
 };
 
 Table.defaultProps = {
@@ -70,6 +72,7 @@ Table.defaultProps = {
   bodyMessage: undefined,
   children: undefined,
   itemCount: undefined,
+  rowKey: 'id',
   onPaginationChange: noop,
 };
 

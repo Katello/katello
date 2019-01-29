@@ -268,6 +268,7 @@ class ManageManifestModal extends Component {
                   rows={manifestHistory.results}
                   columns={columns}
                   emptyState={emptyStateData()}
+                  rowKey="created"
                 />
               </LoadingState>
             </Tab>

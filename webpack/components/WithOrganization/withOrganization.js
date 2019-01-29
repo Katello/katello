@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import { translate as __ } from 'foremanReact/common/I18n';
 import { get } from 'lodash';
 import SetOrganization from '../SelectOrg/SetOrganization';
 import Header from '../../containers/Application/Headers';
+import * as organizationActions from '../../scenes/Organizations/OrganizationActions';
+
+const mapStateToProps = state => ({
+  organization: state.katello.organization,
+});
+
+const actions = { ...organizationActions };
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 function withOrganization(WrappedComponent, redirectPath) {
   class CheckOrg extends Component {
@@ -31,10 +42,12 @@ function withOrganization(WrappedComponent, redirectPath) {
     }
 
     render() {
-      const { location } = this.props;
+      const { organization, location } = this.props;
       const newOrgSelected = get(location, 'state.orgChanged');
 
       if (newOrgSelected) {
+        if (!organization.label && !organization.loading) { this.props.loadOrganization(); }
+
         return <WrappedComponent {...this.props} />;
       } else if (this.state.orgId === '') {
         return (
@@ -49,12 +62,15 @@ function withOrganization(WrappedComponent, redirectPath) {
 
   CheckOrg.propTypes = {
     location: PropTypes.shape({}),
+    loadOrganization: PropTypes.func.isRequired,
+    organization: PropTypes.shape({}).isRequired,
   };
 
   CheckOrg.defaultProps = {
     location: undefined,
   };
-  return CheckOrg;
+
+  return connect(mapStateToProps, mapDispatchToProps)(CheckOrg);
 }
 
 export default withOrganization;
