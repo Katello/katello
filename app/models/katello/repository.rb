@@ -17,6 +17,7 @@ module Katello
     include Katello::Engine.routes.url_helpers
 
     include ERB::Util
+    include ::ScopedSearchExtensions
 
     DEB_TYPE = 'deb'.freeze
     YUM_TYPE = 'yum'.freeze
@@ -141,6 +142,8 @@ module Katello
     scoped_search :on => :description, :relation => :root, :only_explicit => true
     scoped_search :on => :name, :relation => :product, :rename => :product_name
     scoped_search :on => :id, :relation => :product, :rename => :product_id, :only_explicit => true
+    scoped_search :on => :label, :relation => :root, :complete_value => true, :only_explicit => true
+    scoped_search :on => :content_label, :ext_method => :search_by_content_label
 
     delegate :product, :redhat?, :custom?, :to => :root
     delegate :yum?, :docker?, :puppet?, :deb?, :file?, :ostree?, :to => :root
@@ -680,6 +683,17 @@ module Katello
       else
         operator = value ? 'IN' : 'NOT IN'
         {:conditions => "#{Katello::Repository.table_name}.root_id #{operator} (#{root_ids.join(',')})"}
+      end
+    end
+
+    def self.search_by_content_label(_key, operator, value)
+      conditions = sanitize_sql_for_conditions(["label #{operator} ?", value_to_sql(operator, value)])
+      contents = Katello::Content.where(conditions).pluck(:cp_content_id)
+      root_ids = Katello::RootRepository.where(:content_id => contents).pluck(:id)
+      if root_ids.empty?
+        { :conditions => "1=0" }
+      else
+        { :conditions => "#{Katello::Repository.table_name}.root_id IN (#{root_ids.join(',')})" }
       end
     end
 

@@ -33,13 +33,15 @@ class Search extends Component {
       params.params || {},
     ];
 
-    api.get(...autoCompleteParams).then(({ data }) => {
-      this.setState({
-        items: data.filter(({ error }) => !error).map(({ label }) => ({
-          text: label.trim(),
-        })),
+    if (autoCompleteParams[0] !== '') {
+      api.get(...autoCompleteParams).then(({ data }) => {
+        this.setState({
+          items: data.filter(({ error }) => !error).map(({ label }) => ({
+            text: label.trim(),
+          })),
+        });
       });
-    });
+    }
   }
 
   onSearch(search) {

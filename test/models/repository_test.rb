@@ -312,6 +312,19 @@ module Katello
       refute_includes repos, @fedora_17_x86_64
       refute_includes repos, @puppet_forge
     end
+
+    def test_search_content_label
+      content_id = 'somecontent-123'
+      product = katello_products(:redhat)
+      content = FactoryBot.create(:katello_content, cp_content_id: content_id, :organization_id => product.organization_id)
+      FactoryBot.create(:katello_product_content, content: content, product: product)
+
+      repo = katello_repositories(:fedora_17_x86_64)
+      repo.root.update_attributes!(product: product, content_id: content_id)
+
+      repos = Repository.search_for("content_label=\"#{content.label}\"")
+      assert_includes repos, repo
+    end
   end
 
   class RepositoryInstanceTest < RepositoryTestBase

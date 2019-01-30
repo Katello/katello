@@ -46,13 +46,16 @@ class RepositorySearch extends Component {
       organization_id: orgId(),
       search,
     };
-
+    let endpoint = '';
     if (this.state.searchList.key === 'enabled') {
       params.enabled = true;
+      endpoint = '/repositories/auto_complete_search';
+    } else if (this.state.searchList.key === 'available') {
+      endpoint = '/repository_sets/auto_complete_search';
     }
 
     return {
-      endpoint: '/repository_sets/auto_complete_search',
+      endpoint,
       params,
     };
   }
