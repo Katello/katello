@@ -8,6 +8,7 @@
       <tr bst-table-head>
         <th bst-table-column translate>Name</th>
         <th bst-table-column translate>Product</th>
+        <th bst-table-column translate>Content View</th>
       </tr>
     </thead>
 
@@ -23,6 +24,7 @@
       <tr bst-table-row ng-repeat="repository in table.rows">
         <td bst-table-cell>{{ repository.name }}</td>
         <td bst-table-cell>{{ repository.product.name }}</td>
+        <td bst-table-cell>{{ repository.content_view.name }}</td>
       </tr>
     </tbody>
   </table>
