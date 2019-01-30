@@ -81,6 +81,7 @@ module Katello
     param :library, :bool, :desc => N_("show repositories in Library and the default content view")
     param :content_type, RepositoryTypeManager.repository_types.keys, :desc => N_("limit to only repositories of this type")
     param :name, String, :desc => N_("name of the repository"), :required => false
+    param :label, String, :desc => N_("label of the repository"), :required => false
     param :description, String, :desc => N_("description of the repository")
     param :available_for, String, :desc => N_("interpret specified object to return only Repositories that can be associated with specified object.  Only 'content_view' & 'content_view_version' are supported."),
           :required => false
@@ -115,6 +116,7 @@ module Katello
       query = index_relation_product(query)
       query = query.with_type(params[:content_type]) if params[:content_type]
       query = query.where(:root_id => RootRepository.where(:name => params[:name])) if params[:name]
+      query = query.where(:root_id => RootRepository.where(:label => params[:label])) if params[:label]
       query = index_relation_content_unit(query)
       query = index_relation_content_view(query)
       query = index_relation_environment(query)

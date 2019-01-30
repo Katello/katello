@@ -84,5 +84,9 @@ module Katello
     def test_search_product_id
       assert_includes Katello::ProductContent.search_for("product_id = \"#{@product.id}\""), @product_content
     end
+
+    def test_search_content_label
+      assert_includes Katello::ProductContent.search_for("content_label = #{@content.label}"), @product_content
+    end
   end
 end
