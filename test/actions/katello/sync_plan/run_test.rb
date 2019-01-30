@@ -13,8 +13,17 @@ describe ::Actions::Katello::SyncPlan::Run do
 
   let(:action_class) { ::Actions::Katello::SyncPlan::Run }
   let(:action) { create_action action_class }
+  let(:uuid) { SecureRandom.uuid }
+  let(:task) do
+    OpenStruct.new(:id => uuid).tap do |o|
+      o.stubs(:add_missing_task_groups)
+      o.stubs(:task_groups).returns([])
+    end
+  end
 
   it 'plans' do
+    ForemanTasks::Task::DynflowTask.stubs(:where).returns(mock.tap { |m| m.stubs(:first! => task) })
+
     action.stubs(:action_subject).with(@sync_plan)
     plan_action(action, @sync_plan)
     syncable_products = @sync_plan.products.syncable

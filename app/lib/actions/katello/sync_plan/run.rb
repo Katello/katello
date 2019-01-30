@@ -3,7 +3,17 @@ module Actions
     module SyncPlan
       class Run < Actions::EntryAction
         include Actions::RecurringAction
+
+        middleware.use Actions::Middleware::RecurringLogic
+
+        def delay(delay_options, sync_plan)
+          input.update :sync_plan_name => sync_plan.name
+          add_missing_task_group(sync_plan)
+          super delay_options, sync_plan
+        end
+
         def plan(sync_plan)
+          add_missing_task_group(sync_plan)
           action_subject(sync_plan)
           User.as_anonymous_admin do
             fail _("No products in sync plan") unless sync_plan.products
@@ -20,12 +30,20 @@ module Actions
           end
         end
 
-        def humanized_name
-          if input.try(:[], :sync_plan_name)
-            _('Run Sync Plan %s') % (input[:sync_plan_name] || _('Unknown'))
-          else
-            _('Run Sync Plan')
+        def add_missing_task_group(sync_plan)
+          if sync_plan.task_group.nil?
+            sync_plan.task_group = ::Katello::SyncPlanTaskGroup.create!
+            sync_plan.save!
           end
+          task.add_missing_task_groups(sync_plan.task_group)
+        end
+
+        def humanized_name
+          _('Run Sync Plan:')
+        end
+
+        def humanized_input
+          input.fetch(:sync_plan_name, _('Unknown'))
         end
 
         def rescue_strategy

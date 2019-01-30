@@ -18,6 +18,7 @@ module Katello
     belongs_to :organization, :inverse_of => :sync_plans
     has_many :products, :class_name => "Katello::Product", :dependent => :nullify
     belongs_to :foreman_tasks_recurring_logic, :inverse_of => :sync_plan, :class_name => "ForemanTasks::RecurringLogic", :dependent => :destroy
+    belongs_to :task_group, :class_name => 'Katello::SyncPlanTaskGroup', :inverse_of => :sync_plan
 
     validates_lengths_from_database
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
@@ -46,6 +47,7 @@ module Katello
     end
 
     def save_with_logic!
+      self.task_group ||= SyncPlanTaskGroup.create!
       self.cron_expression = '' if (self.cron_expression && !(self.interval.eql? CUSTOM_CRON))
       associate_recurring_logic
       self.save!
