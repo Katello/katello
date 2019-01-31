@@ -169,13 +169,12 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       to_remove = custom_repository.rpms
-      uuids = to_remove.map(&:pulp_id)
+      uuids = to_remove.map(&:id)
       action.expects(:action_subject).with(custom_repository)
       plan_action action, custom_repository, to_remove
 
-      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveRpm,
-        pulp_id: custom_repository.pulp_id, clauses: {:association => {'unit_id' => {'$in' => uuids}}}
-      assert_empty custom_repository.reload.rpms
+      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveUnits,
+                                repo_id: custom_repository.id, contents: uuids, content_unit_type: "rpm"
     end
 
     it "does run capsule sync for custom repository" do
@@ -207,7 +206,9 @@ module ::Actions::Katello::Repository
 
       action.expects(:action_subject).with(docker_repo)
       plan_action action, docker_repo, docker_repo.docker_manifests
-      assert_empty docker_repo.docker_manifests.reload
+
+      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveUnits,
+                                repo_id: docker_repo.id, contents: docker_repo.docker_manifests.pluck(:id), content_unit_type: "docker_manifest"
     end
   end
 

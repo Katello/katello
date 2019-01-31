@@ -25,6 +25,14 @@ module Katello
       @content_types.sort_by(&:priority)
     end
 
+    def content_types_to_index
+      @content_types.select { |type| type.index }
+    end
+
+    def user_removable_content_types
+      @content_types.select { |type| type.user_removable }
+    end
+
     def content_type(model_class, options = {})
       @content_types ||= []
       @content_types << ContentType.new(options.merge(:model_class => model_class))
@@ -51,12 +59,14 @@ module Katello
     end
 
     class ContentType
-      attr_accessor :model_class, :priority, :pulp2_service_class
+      attr_accessor :model_class, :priority, :pulp2_service_class, :index, :user_removable
 
       def initialize(options)
         self.model_class = options[:model_class]
         self.priority = options[:priority] || 99
         self.pulp2_service_class = options[:pulp2_service_class]
+        self.index = options[:index].nil? ? true : options[:index]
+        self.user_removable = options[:user_removable] || false
       end
     end
   end

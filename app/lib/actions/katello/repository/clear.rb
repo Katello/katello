@@ -3,20 +3,13 @@ module Actions
     module Repository
       class Clear < Actions::Base
         def plan(repo)
-          [Pulp::Repository::RemoveRpm,
-           Pulp::Repository::RemoveErrata,
-           Pulp::Repository::RemovePackageGroup,
-           Pulp::Repository::RemoveDistribution,
-           Pulp::Repository::RemoveYumMetadataFile,
-           Pulp::Repository::RemoveModuleDefault,
-           Pulp::Repository::RemoveModuleStream,
-           Pulp::Repository::RemoveFile,
-           Pulp::Repository::RemovePuppetModule,
-           Pulp::Repository::RemoveDockerManifest,
-           Pulp::Repository::RemoveDockerManifestList,
-           Pulp::Repository::RemoveDockerTag,
-           Pulp::Repository::RemoveDockerBlob].each do |action_class|
-            plan_action(action_class, pulp_id: repo.pulp_id)
+          plan_self(:repo_id => repo.id)
+        end
+
+        def run
+          repo = ::Katello::Repository.find(input[:repo_id])
+          ::Katello::RepositoryTypeManager.find(repo.content_type).content_types.each do |type|
+            ::SmartProxy.pulp_master.content_service(type).remove(repo)
           end
         end
       end

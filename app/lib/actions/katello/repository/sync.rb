@@ -36,7 +36,7 @@ module Actions
 
           sequence do
             # clear yum metadata if validate_contents is on (to avoid metadata corruption issues)
-            plan_action(Pulp::Repository::RemoveYumMetadataFile, :pulp_id => repo.pulp_id) if validate_contents
+            plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
 
             sync_args = {:pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
             output = plan_action(Pulp::Repository::Sync, sync_args).output
