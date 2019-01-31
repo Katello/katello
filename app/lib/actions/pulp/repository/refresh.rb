@@ -14,6 +14,10 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
+          if repo.nil?
+            repo = ::Katello::ContentViewPuppetEnvironment.find_by(:pulp_id => input[:pulp_id])
+            repo = repo.nonpersisted_repository
+          end
           output[:results] = repo.backend_service(smart_proxy(input[:capsule_id])).refresh
         end
       end
