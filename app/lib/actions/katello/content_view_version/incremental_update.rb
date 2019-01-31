@@ -247,18 +247,14 @@ module Actions
           copy_outputs
         end
 
-        def puppet_module_names(ids)
-          find_puppet_modules(ids).pluck(:name).uniq
-        end
-
-        def remove_puppet_names(repo, names)
-          plan_action(Pulp::Repository::RemovePuppetModule, :pulp_id => repo.pulp_id, :clauses => {:unit => {:name => {'$in' => names}}})
+        def remove_puppet_modules(repo, puppet_module_ids)
+          plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :contents => puppet_module_ids, :content_unit_type => ::Katello::PuppetModule::CONTENT_TYPE)
         end
 
         def copy_puppet_content(new_repo, puppet_module_ids)
           copy_outputs = []
           unless puppet_module_ids.blank?
-            remove_puppet_names(new_repo, puppet_module_names(puppet_module_ids))
+            remove_puppet_modules(new_repo, puppet_module_ids)
             copy_outputs = puppet_module_ids.map { |module_id| copy_puppet_module(new_repo, module_id).output }
             plan_action(Pulp::ContentViewPuppetEnvironment::IndexContent, id: new_repo.id)
           end

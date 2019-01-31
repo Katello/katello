@@ -15,27 +15,13 @@ module Actions
 
           action_subject(repository)
 
-          pulp_action = case repository.content_type
-                        when ::Katello::Repository::YUM_TYPE
-                          Pulp::Repository::RemoveRpm
-                        when ::Katello::Repository::PUPPET_TYPE
-                          Pulp::Repository::RemovePuppetModule
-                        when ::Katello::Repository::DOCKER_TYPE
-                          Pulp::Repository::RemoveDockerManifest
-                        when ::Katello::Repository::FILE_TYPE
-                          Pulp::Repository::RemoveFile
-                        when ::Katello::Repository::DEB_TYPE
-                          Pulp::Repository::RemoveDeb
-                        end
-
-          pulp_ids = content_units.map(&:pulp_id)
-          repository.remove_content(content_units)
+          pulp_action = Pulp::Repository::RemoveUnits
+          content_unit_ids = content_units.map(&:id)
+          content_unit_type = content_units.first.class::CONTENT_TYPE
 
           sequence do
-            plan_action(pulp_action, :pulp_id => repository.pulp_id,
-                                     :clauses => {:association => {'unit_id' => {'$in' => pulp_ids}}
-            })
-            plan_self
+            plan_action(pulp_action, :repo_id => repository.id, :contents => content_unit_ids, :content_unit_type => content_unit_type)
+            plan_self(:content_unit_class => content_units.first.class.name, :content_unit_ids => content_unit_ids)
             plan_action(CapsuleSync, repository) if sync_capsule
           end
         end
@@ -47,6 +33,14 @@ module Actions
 
         def resource_locks
           :link
+        end
+
+        def finalize
+          if (input[:content_unit_class] && input[:content_unit_ids])
+            repo = ::Katello::Repository.find(input[:repository][:id])
+            content_units = input[:content_unit_class].constantize.where(:id => input[:content_unit_ids])
+            repo.remove_content(content_units)
+          end
         end
 
         def humanized_name

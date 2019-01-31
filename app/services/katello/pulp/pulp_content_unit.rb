@@ -86,6 +86,16 @@ module Katello
       def fetch_backend_data
         self.class.pulp_data(self.uuid)
       end
+
+      def self.remove(repo, uuids = nil)
+        fields = self.const_get(:PULP_SELECT_FIELDS) if self.constants.include?(:PULP_SELECT_FIELDS)
+        clauses = {:association => {'unit_id' => {'$in' => uuids}}}
+        clause = { type_ids: [const_get(:CONTENT_TYPE)]}
+        clause = clause.merge(filters: clauses) if uuids
+        clause = clause.merge(fields: { :unit => fields}) if fields
+        Katello.pulp_server.resources.repository.unassociate_units(repo.pulp_id,
+                                                                   clause)
+      end
     end
   end
 end

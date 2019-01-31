@@ -731,7 +731,7 @@ module Katello
 
     def index_linked_repo
       if (base_repo = self.target_repository)
-        repository_type.content_types.each do |type|
+        repository_type.content_types_to_index.each do |type|
           type.model_class.copy_repository_associations(base_repo, self)
           repository_type.index_additional_data_proc&.call(self, target_repository)
         end
@@ -744,7 +744,7 @@ module Katello
       if self.yum? && !self.master?
         index_linked_repo
       else
-        repository_type.content_types.each do |type|
+        repository_type.content_types_to_index.each do |type|
           type.model_class.import_for_repository(self, full_index)
         end
         repository_type.index_additional_data_proc&.call(self)
