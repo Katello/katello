@@ -15,10 +15,12 @@ module Actions
           options = { "importkeys" => true }
           options[:all] = true if input[:args].blank?
 
-          pulp_extensions.consumer.update_content(input[:consumer_uuid],
-                                                  input[:type],
-                                                  parse_units_for_type,
-                                                  options)
+          task = pulp_extensions.consumer.update_content(input[:consumer_uuid],
+                                                         input[:type],
+                                                         parse_units_for_type,
+                                                         options)
+          schedule_timeout(Setting['content_action_accept_timeout'])
+          task
         end
 
         def presenter
