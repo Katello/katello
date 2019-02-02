@@ -13,7 +13,9 @@
 
         function fetchContentViews(environmentId) {
             ContentView.queryUnpaged({'environment_id': environmentId}, function (data) {
-                $scope.contentViews = [$scope.contentView].concat(data.results);
+                $scope.contentViews = data.results;
+                $scope.contentView = $scope.contentViews[0];
+                $scope.contentViewSelected($scope.contentView)
             });
         }
 
@@ -74,16 +76,11 @@
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;
 
-        $scope.contentView = {id: 'all', name: translate('All Content Views')};
-
         allRepositories = {id: 'all', name: translate('All Repositories')};
         $scope.repository = allRepositories;
 
         fetchContentViews($scope.$stateParams.environmentId);
 
-        if (ContentService.getRepositoryType()) {
-            fetchRepositories();
-        }
 
         $scope.contentViewSelected = function (contentView) {
             var params = nutupane.getParams();
