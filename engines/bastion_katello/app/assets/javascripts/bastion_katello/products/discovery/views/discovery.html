@@ -7,7 +7,7 @@
               ng-options="contentType.id as contentType.name for contentType in contentTypes"/>
     </div>
 
-    <div bst-form-group ng-show="discovery.contentType === 'yum'"
+    <div bst-form-group ng-if="discovery.contentType === 'yum'"
          label="{{ 'URL to Discover' | translate }}">
       <input type="text" id="urlToDiscover"
              class="form-control"
@@ -18,15 +18,22 @@
              required/>
     </div>
 
-    <div bst-form-group ng-show="discovery.contentType === 'docker'"
-         label="{{ 'Registry to Discover' | translate }}">
-      <input type="text" id="registryToDiscover"
-             class="form-control"
-             ng-model="discovery.url"
-             ng-disabled="discovery.working"
-             placeholder="Example: registry.access.redhat.com or https://registry.access.redhat.com"
-             name="discoveryUrl"
-             required/>
+    <div bst-form-group label="{{ 'Registry to Discover' | translate }}"  ng-if="discovery.contentType === 'docker'">
+      <select required
+              id="registry_type"
+              name="registry_type"
+              ng-model="discovery.registryType"
+              ng-options="id as object.name for (id, object) in containerRegistries">
+      </select>
+
+      <input id="custom_registry_url"
+             name="custom_registry_url"
+             ng-model="discovery.customRegistryUrl"
+             placeholder="Example: <private registry url>"
+             ng-disabled="discovery.registryType !== 'custom'"/>
+      <h6 translate>
+        Choose one of the registry options to discover containers. To examine a private registry choose "Custom" and provide the url for the private registry.
+      </h6>
     </div>
 
     <div bst-form-group ng-show="discovery.contentType === 'docker'"
@@ -60,7 +67,6 @@
 
     <span class="input-group-btn">
       <button ng-show="!discovery.working && permitted('edit_products')"
-              ng-disabled="discoveryForm.discoveryUrl.$invalid"
               type="submit"
               class="btn btn-default">
         <span translate>Discover</span>
