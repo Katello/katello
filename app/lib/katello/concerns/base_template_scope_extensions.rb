@@ -6,7 +6,7 @@ module Katello
       module Overrides
         def allowed_helpers
           super + [:errata, :host_subscriptions, :host_applicable_errata_ids, :host_applicable_errata_filtered,
-                   :host_latest_applicable_rpm_version, :load_pools]
+                   :host_latest_applicable_rpm_version, :load_pools, :load_errata_applications]
         end
       end
 
@@ -36,6 +36,74 @@ module Katello
 
       def load_pools(search: '', includes: nil)
         load_resource(klass: Pool.readable, search: search, permission: nil, includes: includes)
+      end
+
+      # rubocop:disable Metrics/MethodLength
+      def load_errata_applications(filter_errata_type: 'all', include_last_reboot: 'yes')
+        result = []
+
+        tasks = load_resource(klass: ForemanTasks::Task,
+                              where: ["state != 'stoppped' AND (label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) OR label = 'Actions::Katello::Host::Erratum::Install'", RemoteExecutionFeature.feature('katello_errata_install').job_template_id],
+                              permission: 'view_tasks',
+                              joins: 'LEFT OUTER JOIN template_invocations ON foreman_tasks_tasks.id = template_invocations.run_host_job_task_id LEFT OUTER JOIN templates ON template_invocations.template_id = templates.id',
+                              select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
+                              search: ''
+        )
+
+        # batch of 1_000 records
+        tasks.each do |batch|
+          @_tasks_errata_cache = {}
+          seen_errata_ids = []
+          seen_host_ids = []
+
+          batch.each do |task|
+            seen_errata_ids = (seen_errata_ids + parse_errata(task)).uniq
+            seen_host_ids << task.input['host']['id'] if include_last_reboot == 'yes'
+          end
+
+          # preload errata in one query for this batch
+          preloaded_errata = Katello::Erratum.where(:errata_id => seen_errata_ids).pluck(:errata_id, :errata_type)
+          preloaded_hosts = ::Host.where(:id => seen_host_ids).includes(:uptime_fact)
+
+          batch.each do |task|
+            parse_errata(task).each do |erratum_id|
+              current_erratum_errata_type = preloaded_errata.find { |k, _| k == erratum_id }.last
+
+              if filter_errata_type != 'all'
+                next unless filter_errata_type == current_erratum_errata_type
+              end
+
+              hash = {
+                :date => task.ended_at,
+                :hostname => task.input['host']['name'],
+                :erratum_id => erratum_id,
+                :erratum_type => current_erratum_errata_type,
+                :status => task.result
+              }
+
+              if include_last_reboot == 'yes'
+                hash[:last_reboot_time] = preloaded_hosts.find { |k, _| k.id == task.input['host']['id'] }.uptime_seconds&.seconds&.ago
+              end
+
+              result << hash
+            end
+          end
+        end
+
+        result
+      end
+      # rubocop:enable Metrics/MethodLength
+
+      private
+
+      def parse_errata(task)
+        @_tasks_errata_cache[task.id] ||= if task.input['errata'].present?
+                                            # katello agent errata
+                                            task.input['errata']
+                                          else
+                                            # rex errata
+                                            TemplateInvocationInputValue.where(:template_invocation_id => task.template_invocation_id).limit(1).pluck(:value).first.split(',')
+                                          end
       end
     end
   end
