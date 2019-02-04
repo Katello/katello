@@ -5,15 +5,12 @@ module Katello
     has_many :products, :through => :product_contents
     belongs_to :organization, :inverse_of => :contents, :class_name => "::Organization"
 
-    validates :label, :uniqueness => {:scope => :organization_id}
-    validates :cp_content_id, :uniqueness => {:scope => :organization_id}
-
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :content_type, :complete_value => true
     scoped_search :on => :label, :complete_value => true
     scoped_search :relation => :products, :on => :name, :rename => :product_name, :complete_value => true
 
-    after_save :update_repository_names, :if => :propagate_name_change?
+    after_update :update_repository_names, :if => :propagate_name_change?
 
     def update_repository_names
       root_repositories.each do |root|

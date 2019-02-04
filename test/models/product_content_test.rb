@@ -10,19 +10,19 @@ module Katello
     end
 
     def test_no_duplicate_content_ids
-      assert_raise ActiveRecord::RecordInvalid do
+      assert_raise ActiveRecord::RecordNotUnique do
         FactoryBot.create(:katello_product_content, content: @content, product: @product)
       end
     end
 
     def test_no_nil_product
-      assert_raise ActiveRecord::RecordInvalid do
+      assert_raise ActiveRecord::NotNullViolation do
         FactoryBot.create(:katello_product_content, content: @content, product: nil)
       end
     end
 
     def test_no_nil_content
-      assert_raise ActiveRecord::RecordInvalid do
+      assert_raise ActiveRecord::NotNullViolation do
         FactoryBot.create(:katello_product_content, content: nil, product: @product)
       end
     end

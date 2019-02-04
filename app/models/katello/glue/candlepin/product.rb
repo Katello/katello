@@ -37,7 +37,6 @@ module Katello
     end
 
     def self.import_from_cp(attrs, organization)
-      product_content_attrs = attrs.delete(:productContent) || []
       import_logger = attrs[:import_logger]
 
       product_attrs = {'name' => validate_name(attrs['name']),
@@ -47,46 +46,12 @@ module Katello
                        'organization_id' => organization.id,
                        'provider_id' => organization.redhat_provider.id}
 
-      product = Product.create!(product_attrs)
-      import_product_content(product, product_content_attrs)
+      Product.create!(product_attrs)
     rescue => e
       [Rails.logger, import_logger].each do |logger|
         logger.error "Failed to create product #{attrs['name']}: #{e}" if logger
       end
       raise e
-    end
-
-    def self.import_product_content(product, content_attrs)
-      content_attrs.each do |attrs|
-        params = attrs.with_indifferent_access
-        pc = params[:content]
-
-        content_attrs = {
-          cp_content_id: pc[:id],
-          name: pc[:name],
-          label: pc[:label],
-          content_type: pc[:type],
-          vendor: pc[:vendor],
-          gpg_url: pc[:gpgUrl],
-          content_url: pc[:contentUrl],
-          organization_id: product.organization_id
-        }
-
-        # current product has this content - update its name if needed
-        # otherwise create a reference to existing content OR new content altogether
-        if (existing = product.product_content_by_id(pc[:id]))
-          new_name = pc['name']
-          existing.content.update_attributes!(:name => new_name) if existing.content.name != new_name
-          existing.update_attributes!(enabled: params['enabled']) if existing.enabled != params['enabled']
-        else
-          content = ::Katello::Content.where(:cp_content_id => pc[:id], :organization_id => product.organization_id).first
-          content ||= ::Katello::Content.create!(content_attrs)
-
-          ::Katello::ProductContent.create!(enabled: params[:enabled],
-                                            product_id: product.id,
-                                            content: content)
-        end
-      end
     end
 
     module InstanceMethods

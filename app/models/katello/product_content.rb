@@ -5,9 +5,6 @@ module Katello
 
     default_scope { includes(:content) }
 
-    validates :content_id, :presence => true, :uniqueness => { :scope => :product_id }
-    validates :product_id, :presence => true
-
     delegate :content_type, to: :content
 
     scope :displayable, -> {
