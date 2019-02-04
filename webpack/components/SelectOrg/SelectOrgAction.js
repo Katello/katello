@@ -25,7 +25,7 @@ export const getOrganiztionsList = () => (dispatch) => {
     });
 };
 
-export const changeCurrentOrgaziation = orgID => dispatch => foremanEndpoint
+export const changeCurrentOrganization = orgID => dispatch => foremanEndpoint
   .get(`organizations/${orgID}/select`)
   .then(() => {
     dispatch({
