@@ -129,19 +129,23 @@ module Katello
         cp_products = ::Katello::Resources::Candlepin::Product.all(organization.label, [:id, :name, :multiplier, :productContent])
         cp_products = cp_products.select { |prod| Glue::Candlepin::Product.engineering_product_id?(prod['id']) }
 
-        cp_products.each { |product| import_product(product) }
-
+        prod_content_importer = Katello::ProductContentImporter.new
+        cp_products.each do |product_json|
+          product = import_product(product_json)
+          prod_content_importer.add_product_content(product, product_json['productContent']) if product.redhat?
+        end
+        prod_content_importer.import
         self.index_subscriptions(self.organization)
       end
 
-      def import_product(cp_product)
-        product = organization.products.find_by(:cp_id => cp_product['id'])
+      def import_product(product_json)
+        product = organization.products.find_by(:cp_id => product_json['id'])
         if product && product.redhat?
-          product.update_attributes!(:name => cp_product['name']) unless product.name == cp_product['name']
-          Glue::Candlepin::Product.import_product_content(product, cp_product['productContent'])
+          product.update_attributes!(:name => product_json['name']) unless product.name == product_json['name']
         elsif product.nil?
-          Glue::Candlepin::Product.import_from_cp(cp_product, organization)
+          product = Glue::Candlepin::Product.import_from_cp(product_json, organization)
         end
+        product
       end
 
       def index_subscriptions(organization = nil)

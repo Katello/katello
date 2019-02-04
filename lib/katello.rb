@@ -1,7 +1,7 @@
 require "rails"
 
 require "apipie-rails"
-
+require "activerecord-import"
 require "rabl"
 require "oauth"
 require "gettext_i18n_rails"
