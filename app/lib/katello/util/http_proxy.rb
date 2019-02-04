@@ -2,7 +2,7 @@ module Katello
   module Util
     module HttpProxy
       def proxy_uri
-        URI("#{proxy_scheme}://#{proxy_user_info}@#{proxy_host}:#{proxy_port}").to_s if proxy_host
+        CGI.escape("#{proxy_scheme}://#{proxy_user_info}@#{proxy_host}:#{proxy_port}").to_s if proxy_host
       end
 
       def proxy_user_info
