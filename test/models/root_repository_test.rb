@@ -639,7 +639,6 @@ module Katello
       @root.content_type = Repository::OSTREE_TYPE
       @root.docker_tags_whitelist = ["boo"]
       refute @root.valid?
-      assert @root.errors.include?(:docker_tags_whitelist)
     end
   end
 

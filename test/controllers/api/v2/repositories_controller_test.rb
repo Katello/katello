@@ -544,6 +544,16 @@ module Katello
       assert_template 'api/v2/repositories/show'
     end
 
+    def test_update_non_docker_repo_with_whitelist_tags
+      assert_sync_task(::Actions::Katello::Repository::Update) do |root, attributes|
+        root.must_equal @repository.root
+        attributes.to_hash.must_equal('name' => 'new name')
+      end
+      put :update, params: { :id => @repository.id, :repository => { name: 'new name', docker_tags_whitelist: [] } }
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+
     def test_create_with_whitelist_tags
       whitelist = ["latest", "1.23"]
       @docker_repo.root.docker_tags_whitelist = nil
@@ -554,6 +564,19 @@ module Katello
         root.docker_tags_whitelist.must_equal whitelist
       end
       post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox", :docker_tags_whitelist => whitelist }
+      assert_response :success
+      assert_template 'api/v2/common/create'
+    end
+
+    def test_create_without_whitelist_tags
+      @docker_repo.root.docker_tags_whitelist = nil
+      Product.stubs(:find).returns(@product)
+      @product.expects(:add_repo).returns(@docker_repo.root)
+      assert_sync_task(::Actions::Katello::Repository::CreateRoot, @docker_repo.root) do |root|
+        root.must_equal @docker_repo.root
+        root.docker_tags_whitelist.must_equal []
+      end
+      post :create, params: { :name => 'busybox', :product_id => @product.id, :content_type => 'docker', :docker_upstream_name => "busybox" }
       assert_response :success
       assert_template 'api/v2/common/create'
     end
