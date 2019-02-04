@@ -445,14 +445,14 @@ module Katello
     def repository_params
       keys = [:download_policy, :mirror_on_sync, :arch, :verify_ssl_on_sync, :upstream_password, :upstream_username,
               :ostree_upstream_sync_depth, :ostree_upstream_sync_policy, :ignore_global_proxy,
-              :deb_releases, :deb_components, :deb_architectures, :description, {:ignorable_content => []},
-              {:docker_tags_whitelist => []}
+              :deb_releases, :deb_components, :deb_architectures, :description, {:ignorable_content => []}
              ]
 
+      keys += [{:docker_tags_whitelist => []}, :docker_upstream_name] if params[:action] == 'create' || @repository&.docker?
       keys += [:label, :content_type] if params[:action] == "create"
       if params[:action] == 'create' || @repository.custom?
         keys += [:url, :gpg_key_id, :ssl_ca_cert_id, :ssl_client_cert_id, :ssl_client_key_id, :unprotected, :name,
-                 :checksum_type, :docker_upstream_name]
+                 :checksum_type]
       end
       params.require(:repository).permit(*keys).to_h.with_indifferent_access
     end
@@ -473,7 +473,7 @@ module Katello
                                                             :gpg_key, :ssl_ca_cert, :ssl_client_cert, :ssl_client_key,
                                                             :checksum_type, :download_policy).to_h.with_indifferent_access)
       root.docker_upstream_name = repo_params[:docker_upstream_name] if repo_params[:docker_upstream_name]
-      root.docker_tags_whitelist = repo_params[:docker_tags_whitelist] if repo_params[:docker_tags_whitelist]
+      root.docker_tags_whitelist = repo_params.fetch(:docker_tags_whitelist, []) if root.docker?
       root.mirror_on_sync = ::Foreman::Cast.to_bool(repo_params[:mirror_on_sync]) if repo_params.key?(:mirror_on_sync)
       root.ignore_global_proxy = ::Foreman::Cast.to_bool(repo_params[:ignore_global_proxy]) if repo_params.key?(:ignore_global_proxy)
       root.verify_ssl_on_sync = ::Foreman::Cast.to_bool(repo_params[:verify_ssl_on_sync]) if repo_params.key?(:verify_ssl_on_sync)

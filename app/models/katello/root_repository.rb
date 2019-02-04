@@ -183,9 +183,7 @@ module Katello
 
     def ensure_valid_docker_tags_whitelist
       return if docker_tags_whitelist.blank?
-      if !docker?
-        errors.add(:docker_tags_whitelist, N_("can be only set for Container Image repositories."))
-      elsif !docker_tags_whitelist.is_a?(Array)
+      unless docker_tags_whitelist.is_a?(Array)
         errors.add(:docker_tags_whitelist, N_("Invalid value specified for Container Image repositories."))
       end
     end
