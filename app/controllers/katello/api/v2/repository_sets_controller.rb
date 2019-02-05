@@ -125,7 +125,7 @@ module Katello
         @product_content = @product.product_content_by_id(params[:id])
       else
         content = Katello::Content.find_by(:cp_content_id => params[:id], :organization_id => @organization[:id])
-        @product_content = Katello::ProductContent.find_by(:id => content[:id])
+        @product_content = Katello::ProductContent.find_by(:content_id => content.id)
       end
       fail HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
       @product = @product_content.product if @product.nil?
