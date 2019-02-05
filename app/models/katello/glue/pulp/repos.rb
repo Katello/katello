@@ -34,10 +34,6 @@ module Katello
     end
 
     module InstanceMethods
-      def empty?
-        return self.repos(library).empty?
-      end
-
       def distributions(env)
         to_ret = []
         self.repos(env).each do |repo|
