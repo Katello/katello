@@ -116,7 +116,8 @@ describe('Controller: DiscoveryController', function() {
     });
 
     it('should initiate docker discovery', function() {
-        $scope.discovery.url = 'http://fake/';
+        $scope.discovery.registryType = 'custom';
+        $scope.discovery.customRegistryUrl = 'http://fake/';
         $scope.discovery.contentType = 'docker';
         spyOn(Organization, 'repoDiscover').and.callThrough();
 
@@ -126,8 +127,45 @@ describe('Controller: DiscoveryController', function() {
                                                                jasmine.any(Function));
     });
 
-    it('should initiate docker discovery with search', function() {
-        $scope.discovery.url = 'http://fake/';
+    it('should initiate docker discovery with search for rh registry', function() {
+        $scope.discovery.registryType = 'redhat';
+        $scope.discovery.contentType = 'docker';
+        $scope.discovery.search = 'search';
+        spyOn(Organization, 'repoDiscover').and.callThrough();
+
+        $scope.discover();
+
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'https://registry.access.redhat.com', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: 'search'},
+                                                               jasmine.any(Function));
+    });
+
+    it('should initiate docker discovery for docker hub', function() {
+        $scope.discovery.registryType = 'dockerhub';
+        $scope.discovery.contentType = 'docker';
+        $scope.discovery.search = 'search';
+
+        spyOn(Organization, 'repoDiscover').and.callThrough();
+        $scope.discover();
+
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'https://index.docker.io', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: 'search'},
+                                                               jasmine.any(Function));
+    });
+
+    it('should initiate docker discovery for quay', function() {
+        $scope.discovery.registryType = 'quay';
+        $scope.discovery.contentType = 'docker';
+        $scope.discovery.search = 'search';
+
+        spyOn(Organization, 'repoDiscover').and.callThrough();
+        $scope.discover();
+
+        expect(Organization.repoDiscover).toHaveBeenCalledWith({id: CurrentOrganization, url: 'https://quay.io', 'content_type': 'docker', upstream_username: undefined, upstream_password: undefined, search: 'search'},
+                                                               jasmine.any(Function));
+    });
+
+    it('should initiate docker discovery with search for custom', function() {
+        $scope.discovery.registryType = 'custom';
+        $scope.discovery.customRegistryUrl = 'http://fake/';
         $scope.discovery.contentType = 'docker';
         $scope.discovery.search = 'search';
         spyOn(Organization, 'repoDiscover').and.callThrough();

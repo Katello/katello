@@ -12,13 +12,14 @@
  * @requires CurrentOrganization
  * @requires DiscoveryRepositories
  * @requires translate
+ * @requires ContainerRegistries
  *
  * @description
  *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$q', '$timeout', '$http', '$filter', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'translate',
-    function ($scope, $q, $timeout, $http, $filter, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, translate) {
+    ['$scope', '$q', '$timeout', '$http', '$filter', 'Notification', 'Task', 'Organization', 'CurrentOrganization', 'DiscoveryRepositories', 'ContainerRegistries', 'translate',
+    function ($scope, $q, $timeout, $http, $filter, Notification, Task, Organization, CurrentOrganization, DiscoveryRepositories, ContainerRegistries, translate) {
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {
@@ -27,6 +28,8 @@ angular.module('Bastion.products').controller('DiscoveryController',
         };
 
         $scope.page = {loading: false};
+
+        $scope.containerRegistries = ContainerRegistries.registries;
 
         $scope.contentTypes = [
             {id: "yum", name: "Yum Repositories"},
@@ -66,13 +69,16 @@ angular.module('Bastion.products').controller('DiscoveryController',
         };
 
         $scope.setupSelected = function () {
-            var url;
-
-            if (!_.startsWith($scope.discovery.url, 'http')) {
-                url = 'http://' + $scope.discovery.url;
-            } else {
-                url = $scope.discovery.url;
+            var url = $scope.discovery.url;
+            if ($scope.discovery.contentType === 'docker') {
+                url = ContainerRegistries.createUrlFor($scope.discovery.registryType,
+                                                       $scope.discovery.customRegistryUrl);
             }
+
+            if (!_.startsWith(url, 'http')) {
+                url = 'http://' + url;
+            }
+
             $scope.page.loading = true;
             $scope.discovery.selected = $scope.table.getSelected();
 
@@ -145,12 +151,18 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.table.rows = [];
             $scope.table.selectAll(false);
             params = {
-                id: CurrentOrganization, url: $scope.discovery.url,
+                id: CurrentOrganization,
                 'content_type': $scope.discovery.contentType,
                 'upstream_username': $scope.discovery.upstreamUsername,
                 'upstream_password': $scope.discovery.upstreamPassword,
                 search: $scope.discovery.search
             };
+
+            if ($scope.discovery.contentType === "yum") {
+                params.url = $scope.discovery.url;
+            } else {
+                params.url = ContainerRegistries.urlFor($scope.discovery.registryType, $scope.discovery.customRegistryUrl);
+            }
 
             Organization.repoDiscover(params, function (task) {
                 // Hide pagination
