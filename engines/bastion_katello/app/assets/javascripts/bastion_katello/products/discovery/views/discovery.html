@@ -20,6 +20,7 @@
 
     <div bst-form-group label="{{ 'Registry to Discover' | translate }}"  ng-if="discovery.contentType === 'docker'">
       <select required
+              class="form-control"
               id="registry_type"
               name="registry_type"
               ng-model="discovery.registryType"

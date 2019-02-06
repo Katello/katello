@@ -30,6 +30,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         $scope.page = {loading: false};
 
         $scope.containerRegistries = ContainerRegistries.registries;
+        $scope.discovery.registryType = Object.keys($scope.containerRegistries)[0];
 
         $scope.contentTypes = [
             {id: "yum", name: "Yum Repositories"},
