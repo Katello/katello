@@ -32,13 +32,13 @@ module ::Actions::Pulp::Repository
 
       it 'runs' do
         ::Katello::Repository.expects(:find_by).returns repo
-        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns({})
+        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns([])
         run_action planned_action
       end
 
       it 'runs without a capsule ID (uses default proxy)' do
         ::Katello::Repository.expects(:find_by).returns repo
-        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns({})
+        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns([])
         run_action planned_action_without_capsule_id
       end
     end

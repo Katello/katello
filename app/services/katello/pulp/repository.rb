@@ -149,9 +149,10 @@ module Katello
       end
 
       def refresh
-        update_or_associate_importer
-        update_or_associate_distributors
-        remove_unnecessary_distributors
+        tasks = update_or_associate_importer
+        tasks += update_or_associate_distributors
+        tasks += remove_unnecessary_distributors
+        tasks
       end
 
       def update_or_associate_importer
@@ -159,6 +160,7 @@ module Katello
         importer = generate_importer
         found = existing_importers.find { |i| i['importer_type_id'] == importer.id }
 
+        tasks = []
         if found
           ssl_ca_cert = importer.config.delete('ssl_ca_cert')
           ssl_client_cert = importer.config.delete('ssl_client_cert')
@@ -166,36 +168,40 @@ module Katello
           importer.config['basic_auth_username'] = nil if importer.config['basic_auth_username'].blank?
           importer.config['basic_auth_password'] = nil if importer.config['basic_auth_password'].blank?
           # Update ssl options by themselves workaround for https://pulp.plan.io/issues/2727
-          smart_proxy.pulp_api.resources.repository.update_importer(repo.pulp_id, found['id'], :ssl_client_cert => ssl_client_cert,
+          tasks << smart_proxy.pulp_api.resources.repository.update_importer(repo.pulp_id, found['id'], :ssl_client_cert => ssl_client_cert,
                                                     :ssl_client_key => ssl_client_key, :ssl_ca_cert => ssl_ca_cert)
-          smart_proxy.pulp_api.resources.repository.update_importer(repo.pulp_id, found['id'], importer.config)
+          tasks << smart_proxy.pulp_api.resources.repository.update_importer(repo.pulp_id, found['id'], importer.config)
         else
-          smart_proxy.pulp_api.resources.repository.associate_importer(repo.pulp_id, repo.importers.first['importer_type_id'], importer.config)
+          tasks << smart_proxy.pulp_api.resources.repository.associate_importer(repo.pulp_id, repo.importers.first['importer_type_id'], importer.config)
         end
+        tasks
       end
 
       def update_or_associate_distributors
+        tasks = []
         existing_distributors = backend_data["distributors"]
         generate_distributors.each do |distributor|
           found = existing_distributors.find { |i| i['distributor_type_id'] == distributor.type_id }
           if found
-            smart_proxy.pulp_api.resources.repository.
-                update_distributor(repo.pulp_id, found['id'], distributor.config)
+            tasks << smart_proxy.pulp_api.resources.repository.update_distributor(repo.pulp_id, found['id'], distributor.config)
           else
             smart_proxy.pulp_api.resources.repository.
                 associate_distributor(repo.pulp_id, distributor.type_id, distributor.config, :distributor_id => distributor.id,
                                       :auto_publish => distributor.auto_publish)
           end
         end
+        tasks
       end
 
       def remove_unnecessary_distributors
+        tasks = []
         existing_distributors = backend_data["distributors"]
         generated_distributors = generate_distributors
         existing_distributors.each do |distributor|
           found = generated_distributors.find { |dist| dist.type_id == distributor['distributor_type_id'] }
-          smart_proxy.pulp_api.resources.repository.delete_distributor(repo.pulp_id, distributor['id']) unless found
+          tasks << smart_proxy.pulp_api.resources.repository.delete_distributor(repo.pulp_id, distributor['id']) unless found
         end
+        tasks
       end
 
       def copy_units(destination_repo, units, options = {})

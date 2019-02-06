@@ -1,7 +1,7 @@
 module Actions
   module Pulp
     module Repository
-      class Refresh < Pulp::Abstract
+      class Refresh < Pulp::AbstractAsyncTask
         input_format do
           param :capsule_id
           param :pulp_id
@@ -12,13 +12,13 @@ module Actions
           plan_self(:capsule_id => options[:capsule_id], :pulp_id => repository.pulp_id)
         end
 
-        def run
+        def invoke_external_task
           repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
           if repo.nil?
             repo = ::Katello::ContentViewPuppetEnvironment.find_by(:pulp_id => input[:pulp_id])
             repo = repo.nonpersisted_repository
           end
-          output[:results] = repo.backend_service(smart_proxy(input[:capsule_id])).refresh
+          repo.backend_service(smart_proxy(input[:capsule_id])).refresh
         end
       end
     end
