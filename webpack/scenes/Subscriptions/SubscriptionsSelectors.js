@@ -18,3 +18,6 @@ export const selectDeleteButtonDisabled = state =>
 
 export const selectSubscriptionsTasks = state =>
   selectSubscriptionsState(state).tasks;
+
+export const selectTableSettings = (state, tableName) =>
+  state.katello.settings.tables[tableName] || undefined;

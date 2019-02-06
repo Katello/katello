@@ -68,9 +68,15 @@ class SubscriptionsPage extends Component {
       }
     }
 
-    // remove the loading attribute so the action isn't called when org starts loading
-    const { loading: _cloading, ...currentOrgInfo } = organization;
-    const { loading: _ploading, ...prevOrgInfo } = prevProps.organization;
+    const getOrgInfo = (org) => {
+      // remove the loading attribute so the action isn't called when org starts loading
+      const { loading, ...info } = org;
+      return info;
+    };
+
+    const currentOrgInfo = getOrgInfo(organization);
+    const prevOrgInfo = getOrgInfo(prevProps.organization);
+
     if (!isEqual(currentOrgInfo, prevOrgInfo)) {
       this.pollTasks();
     }

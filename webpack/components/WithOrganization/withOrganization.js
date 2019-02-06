@@ -13,8 +13,7 @@ const mapStateToProps = state => ({
   organization: state.katello.organization,
 });
 
-const actions = { ...organizationActions };
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ ...organizationActions }, dispatch);
 
 function withOrganization(WrappedComponent, redirectPath) {
   class CheckOrg extends Component {

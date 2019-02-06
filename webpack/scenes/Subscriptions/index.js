@@ -15,6 +15,7 @@ import {
   selectTaskModalOpened,
   selectDeleteButtonDisabled,
   selectSubscriptionsTasks,
+  selectTableSettings,
 } from './SubscriptionsSelectors';
 
 import reducer from './SubscriptionReducer';
@@ -24,8 +25,7 @@ import SubscriptionsPage from './SubscriptionsPage';
 // map state to props
 const mapStateToProps = (state) => {
   const subscriptions = selectSubscriptionsState(state);
-  const subscriptionTableSettings =
-    state.katello.settings.tables[SUBSCRIPTION_TABLE_NAME] || undefined;
+  const subscriptionTableSettings = selectTableSettings(state, SUBSCRIPTION_TABLE_NAME);
 
   return {
     subscriptions,
