@@ -43,6 +43,7 @@
              class="form-control"
              ng-model="discovery.upstreamUsername"
              ng-disabled="discovery.working"
+             ng-required="discovery.registryType === 'redhat'"
              name="upstreamUsername"/>
     </div>
 
@@ -53,6 +54,7 @@
              class="form-control"
              ng-model="discovery.upstreamPassword"
              ng-disabled="discovery.working"
+             ng-required="discovery.registryType === 'redhat'"
              name="upstreamPassword"/>
     </div>
 

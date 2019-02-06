@@ -11,7 +11,7 @@ angular.module('Bastion.products').service('ContainerRegistries',
     ['translate', function () {
 
         this.registries = {
-            'redhat': { name: 'Red Hat Registry', url: "https://registry.access.redhat.com" },
+            'redhat': { name: 'Red Hat Registry', url: "https://registry.redhat.io" },
             'dockerhub': { name: 'Docker Hub', url: "https://index.docker.io",
                                                 createUrl: "https://registry-1.docker.io" },
             'quay': { name: 'Quay', url: "https://quay.io" },
