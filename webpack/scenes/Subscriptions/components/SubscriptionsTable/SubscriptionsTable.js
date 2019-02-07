@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { sprintf } from 'foremanReact/common/I18n';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
-import { Table } from 'patternfly-react';
+import { Table, MessageDialog } from 'patternfly-react';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';
 import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../move_to_foreman/components/common/table';
-import ConfirmDialog from '../../../../move_to_foreman/components/common/ConfirmDialog';
-import Dialog from '../../../../move_to_foreman/components/common/Dialog';
 import { recordsValid } from '../../SubscriptionValidations';
 import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
 import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
@@ -275,39 +273,52 @@ class SubscriptionsTable extends Component {
             })}
           />
         </ForemanTable>
-        <ConfirmDialog
+        <MessageDialog
           show={this.state.showUpdateConfirmDialog}
           title={__('Editing Entitlements')}
-          dangerouslySetInnerHTML={{
+          secondaryContent={
+            // eslint-disable-next-line react/no-danger
+            <p dangerouslySetInnerHTML={{
             __html: sprintf(
               __("You're making changes to %(entitlementCount)s entitlement(s)"),
               {
                 entitlementCount: `<b>${Object.keys(this.state.updatedQuantity).length}</b>`,
               },
             ),
-          }}
-          onConfirm={() => this.confirmEdit()}
-          onCancel={() => this.showUpdateConfirm(false)}
+            }}
+            />
+          }
+          primaryActionButtonContent={__('Save')}
+          primaryAction={() => this.confirmEdit()}
+          secondaryActionButtonContent={__('Cancel')}
+          secondaryAction={() => this.showUpdateConfirm(false)}
+          onHide={() => this.showUpdateConfirm(false)}
         />
-        <ConfirmDialog
+        <MessageDialog
           show={this.state.showCancelConfirmDialog}
           title={__('Editing Entitlements')}
-          message={__('You have unsaved changes. Do you want to exit without saving your changes?')}
-          confirmLabel={__('Exit')}
-          onConfirm={() => this.cancelEdit()}
-          onCancel={() => this.showCancelConfirm(false)}
+          secondaryContent={__('You have unsaved changes. Do you want to exit without saving your changes?')}
+          primaryActionButtonContent={__('Exit')}
+          primaryAction={() => this.cancelEdit()}
+          secondaryActionButtonContent={__('Cancel')}
+          secondaryAction={() => this.showCancelConfirm(false)}
+          onHide={() => this.showCancelConfirm(false)}
         />
-        <Dialog
+        <MessageDialog
           show={this.state.showErrorDialog}
           title={__('Editing Entitlements')}
-          message={__('Some of your inputs contain errors. Please update them and save your changes again.')}
-          onCancel={() => this.showErrorDialog(false)}
+          secondaryContent={__('Some of your inputs contain errors. Please update them and save your changes again.')}
+          primaryAction={() => this.showErrorDialog(false)}
+          onHide={() => this.showErrorDialog(false)}
+          primaryActionButtonContent="Ok"
         />
-        <ConfirmDialog
+        <MessageDialog
           show={this.props.subscriptionDeleteModalOpen}
           title={__('Confirm Deletion')}
-          dangerouslySetInnerHTML={{
-            __html: sprintf(
+          secondaryContent={
+            // eslint-disable-next-line react/no-danger
+            <p dangerouslySetInnerHTML={{
+              __html: sprintf(
               __(`Are you sure you want to delete %(entitlementCount)s
                   subscription(s)? This action will remove the subscription(s) and
                   refresh your manifest. All systems using these subscription(s) will
@@ -317,10 +328,16 @@ class SubscriptionsTable extends Component {
               },
             ),
           }}
-
-          confirmLabel={__('Delete')}
-          onConfirm={() => this.props.onDeleteSubscriptions(this.state.selectedRows)}
-          onCancel={this.props.onSubscriptionDeleteModalClose}
+            />
+        }
+          primaryActionButtonContent={__('Delete')}
+          primaryAction={() => this.props.onDeleteSubscriptions(this.state.selectedRows)}
+          primaryActionButtonBsStyle="danger"
+          secondaryActionButtonContent={__('Cancel')}
+          secondaryAction={this.props.onSubscriptionDeleteModalClose}
+          onHide={this.props.onSubscriptionDeleteModalClose}
+          accessibleName="deleteConfirmationDialog"
+          accessibleDescription="deleteConfirmationDialogContent"
         />
       </LoadingState>
     );

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Tabs, Tab, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { Button, Icon, Modal, Spinner, OverlayTrigger, Tooltip, MessageDialog } from 'patternfly-react';
 import { isEqual } from 'lodash';
 import TooltipButton from 'react-bootstrap-tooltip-button';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
 import { Table } from '../../../move_to_foreman/components/common/table';
-import ConfirmDialog from '../../../move_to_foreman/components/common/ConfirmDialog';
 import { manifestExists } from '../SubscriptionHelpers';
 import { columns } from './ManifestHistoryTableSchema';
 import DeleteManifestModalText from './DeleteManifestModalText';
@@ -246,16 +245,24 @@ class ManageManifestModal extends Component {
 
                     />
 
-                    <ConfirmDialog
+                    <MessageDialog
                       show={this.state.showDeleteManifestModalDialog}
                       title={__('Confirm delete manifest')}
-                      dangerouslySetInnerHTML={{
+                      secondaryContent={
+                        // eslint-disable-next-line react/no-danger
+                        <p dangerouslySetInnerHTML={{
                         __html: DeleteManifestModalText,
-                      }}
-                      confirmLabel={__('Delete')}
-                      confirmStyle="danger"
-                      onConfirm={() => this.deleteManifest()}
-                      onCancel={() => this.showDeleteManifestModal(false)}
+                        }}
+                        />
+                      }
+                      primaryActionButtonContent={__('Delete')}
+                      primaryActionButtonBsStyle="danger"
+                      primaryAction={() => this.deleteManifest()}
+                      secondaryActionButtonContent={__('Cancel')}
+                      secondaryAction={() => this.showDeleteManifestModal(false)}
+                      onHide={() => this.showDeleteManifestModal(false)}
+                      accessibleName="deleteConfirmationDialog"
+                      accessibleDescription="deleteConfirmationDialogContent"
                     />
                   </Col>
                 </FormGroup>
