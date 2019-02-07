@@ -209,17 +209,26 @@ exports[`manage manifest modal should render 1`] = `
                 tooltipPlacement="top"
                 tooltipText="This is disabled because no manifest exists"
               />
-              <ConfirmDialog
-                active={false}
-                block={false}
-                bsClass="btn"
-                bsStyle="default"
-                cancelLabel="Cancel"
-                confirmLabel="Delete"
-                confirmStyle="danger"
-                dangerouslySetInnerHTML={
-                  Object {
-                    "__html": "<p>Are you sure you want to delete the manifest?</p>
+              <MessageDialog
+                accessibleDescription="deleteConfirmationDialogContent"
+                accessibleName="deleteConfirmationDialog"
+                className=""
+                enforceFocus={true}
+                footer={null}
+                icon={null}
+                onHide={[Function]}
+                primaryAction={[Function]}
+                primaryActionButtonBsStyle="danger"
+                primaryActionButtonContent="Delete"
+                primaryContent={null}
+                secondaryAction={[Function]}
+                secondaryActionButtonBsStyle="default"
+                secondaryActionButtonContent="Cancel"
+                secondaryContent={
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "<p>Are you sure you want to delete the manifest?</p>
 <p>Note: Deleting a subscription manifest is STRONGLY discouraged.
                  Deleting a manifest will:</p>
 <ul class=\\"list-aligned\\">
@@ -231,11 +240,10 @@ exports[`manage manifest modal should render 1`] = `
 </ul>
 <p>This action should only be taken in extreme circumstances or
                   for debugging purposes.</p>",
-                  }
+                      }
+                    }
+                  />
                 }
-                disabled={false}
-                onCancel={[Function]}
-                onConfirm={[Function]}
                 show={false}
                 title="Confirm delete manifest"
               />
