@@ -8,14 +8,10 @@ class AddContentConstraints < ActiveRecord::Migration[5.2]
 
     Katello::ProductContent.reset_column_information
 
-    duplicates = execute(
-        'select  "katello_contents"."cp_content_id", "katello_contents"."organization_id"
-          FROM "katello_contents"
-          GROUP BY "katello_contents"."cp_content_id", "katello_contents"."organization_id"
-          HAVING (count(*) > 1)')
+    duplicates = Katello::Content.having('count(*) > 1').group(:cp_content_id, :organization_id).select(:cp_content_id, :organization_id)
 
     duplicates.each do |dup|
-      contents = Katello::Content.where(dup).to_a
+      contents = Katello::Content.where(organization_id: dup.organization_id, cp_content_id: dup.cp_content_id).to_a
       first = contents.pop
       contents.each do |content|
         content.product_contents.each do |pc|
