@@ -9,7 +9,7 @@ module Actions
         def plan(repo)
           if repo.node_syncable?
             concurrence do
-              smart_proxies = ::Katello::CapsuleContent.with_environment(repo.environment).map { |c| c.capsule }
+              smart_proxies = ::SmartProxy.with_environment(repo.environment)
               unless smart_proxies.blank?
                 plan_action(::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync, smart_proxies,
                             :repository_id => repo.id)

@@ -92,8 +92,8 @@ module Katello
         end
 
         def associate_default_capsule
-          capsule_content = Katello::CapsuleContent.default_capsule
-          capsule_content.capsule.organizations << self if capsule_content
+          smart_proxy = SmartProxy.pulp_master
+          smart_proxy.organizations << self if smart_proxy
         end
 
         def create_anonymous_provider

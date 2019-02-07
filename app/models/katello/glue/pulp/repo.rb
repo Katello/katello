@@ -28,20 +28,20 @@ module Katello
           Katello.pulp_server.resources.content.remove_orphans
         end
 
-        def self.needs_importer_updates(repos, capsule_content)
+        def self.needs_importer_updates(repos, smart_proxy)
           repos.select do |repo|
-            repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
+            repo_details = repo.backend_service(smart_proxy).backend_data
             next unless repo_details
             capsule_importer = repo_details["importers"][0]
-            !repo.importer_matches?(capsule_importer, capsule_content.capsule)
+            !repo.importer_matches?(capsule_importer, smart_proxy)
           end
         end
 
-        def self.needs_distributor_updates(repos, capsule_content)
+        def self.needs_distributor_updates(repos, smart_proxy)
           repos.select do |repo|
-            repo_details = capsule_content.pulp_repo_facts(repo.pulp_id)
+            repo_details = repo.backend_service(smart_proxy).backend_data
             next unless repo_details
-            !repo.distributors_match?(repo_details["distributors"], capsule_content.capsule)
+            !repo.distributors_match?(repo_details["distributors"], smart_proxy)
           end
         end
       end
@@ -102,11 +102,11 @@ module Katello
         pulp_repo_facts[:content_unit_counts].values.all? { |value| value == 0 }
       end
 
-      def generate_importer(capsule = SmartProxy.default_capsule!)
+      def generate_importer(capsule = ::SmartProxy.default_capsule!)
         backend_service(capsule).generate_importer
       end
 
-      def generate_distributors(capsule = SmartProxy.default_capsule!)
+      def generate_distributors(capsule = ::SmartProxy.default_capsule!)
         backend_service(capsule).generate_distributors
       end
 

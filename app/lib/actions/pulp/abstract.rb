@@ -21,8 +21,7 @@ module Actions
       def capsule_content(capsule_id = nil)
         capsule_id ||= input["capsule_id"]
         if capsule_id
-          capsule_content = ::Katello::CapsuleContent.new(SmartProxy.unscoped.find(capsule_id))
-          capsule_content.pulp_server
+          SmartProxy.unscoped.find(capsule_id).pulp_api
         else
           ::Katello.pulp_server
         end

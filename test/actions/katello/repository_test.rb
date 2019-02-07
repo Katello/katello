@@ -16,7 +16,7 @@ module ::Actions::Katello::Repository
     let(:puppet_repository) { katello_repositories(:p_forge) }
     let(:docker_repository) { katello_repositories(:redis) }
     let(:proxy) { smart_proxies(:one) }
-    let(:capsule_content) { ::Katello::CapsuleContent.new(proxy) }
+    let(:capsule_content) { ::Katello::Pulp::SmartProxyRepository.new(proxy) }
 
     before(:all) do
       set_user
@@ -109,7 +109,7 @@ module ::Actions::Katello::Repository
 
       action.expects(:plan_self)
       plan_action action, in_use_repository
-      assert_action_planed_with action, pulp_action_class, pulp_id: in_use_repository.pulp_id
+      assert_action_planed_with action, pulp_action_class, repository_id: in_use_repository.id
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
@@ -131,7 +131,7 @@ module ::Actions::Katello::Repository
       action = create_action action_class
       action.stubs(:action_subject).with(clone)
       action.expects(:plan_self)
-      plan_action action, clone, planned_destroy: true
+      plan_action action, clone
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
@@ -441,14 +441,14 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::CapsuleSync }
 
     it 'plans' do
-      capsule_content_1 = new_capsule_content(:three)
-      capsule_content_2 = new_capsule_content(:four)
-      capsule_content_1.add_lifecycle_environment(repository.environment)
-      capsule_content_2.add_lifecycle_environment(repository.environment)
+      smart_proxy_service_1 = new_capsule_content(:three)
+      smart_proxy_service_2 = new_capsule_content(:four)
+      smart_proxy_service_1.smart_proxy.add_lifecycle_environment(repository.environment)
+      smart_proxy_service_2.smart_proxy.add_lifecycle_environment(repository.environment)
 
       plan_action(action, repository)
       assert_action_planned_with(action, ::Actions::BulkAction, ::Actions::Katello::CapsuleContent::Sync,
-                                 [capsule_content_1.capsule, capsule_content_2.capsule], :repository_id => repository.id)
+                                 [smart_proxy_service_1.smart_proxy, smart_proxy_service_2.smart_proxy], :repository_id => repository.id)
     end
   end
 

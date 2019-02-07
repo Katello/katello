@@ -62,7 +62,7 @@ module Katello
     end
 
     def test_remove_lifecycle_environment
-      capsule_content.add_lifecycle_environment(environment)
+      capsule_content.smart_proxy.add_lifecycle_environment(environment)
 
       delete :remove_lifecycle_environment, params: { :id => proxy_with_pulp.id, :environment_id => environment.id }
       assert_response :success

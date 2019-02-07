@@ -2,17 +2,19 @@ module Actions
   module Katello
     module CapsuleContent
       class RemoveUnneededRepos < ::Actions::Base
-        def plan(capsule_content)
-          currently_on_capsule = capsule_content.current_repositories.map(&:pulp_id)
-          needed_on_capsule = capsule_content.repos_available_to_capsule.map(&:pulp_id)
+        def plan(smart_proxy)
+          smart_proxy_service = ::Katello::Pulp::SmartProxyRepository.new(smart_proxy)
+          currently_on_capsule = smart_proxy_service.current_repositories.map(&:id)
+          needed_on_capsule = smart_proxy_service.repos_available_to_capsule.map(&:id)
 
           need_removal = currently_on_capsule - needed_on_capsule
-          need_removal += capsule_content.orphaned_repos
-          need_removal.compact.each do |pulp_id|
+          need_removal.compact.each do |repo_id|
             plan_action(Pulp::Repository::Destroy,
-                        :pulp_id => pulp_id,
-                        :capsule_id => capsule_content.capsule.id)
+                        :repository_id => repo_id,
+                        :capsule_id => smart_proxy.id)
           end
+
+          smart_proxy_service.delete_orphaned_repos
         end
       end
     end

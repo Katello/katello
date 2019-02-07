@@ -48,15 +48,14 @@ module Actions
               end
 
               repos_to_delete(content_view).each do |repo|
-                plan_action(Repository::Destroy, repo, :skip_environment_update => true, :planned_destroy => true)
+                plan_action(Repository::Destroy, repo, :skip_environment_update => true)
               end
             end
             has_modules = content_view.publish_puppet_environment?
             plan_action(ContentViewPuppetEnvironment::CreateForVersion, version)
             plan_action(ContentViewPuppetEnvironment::Clone, version, :environment => library,
                 :puppet_modules_present => has_modules)
-
-            plan_action(ContentView::UpdateEnvironment, content_view, library)
+            plan_action(Candlepin::Environment::SetContent, content_view, library, content_view.content_view_environment(library))
             plan_action(Katello::Foreman::ContentUpdate, library, content_view)
             plan_action(ContentView::ErrataMail, content_view, library)
             plan_self(history_id: history.id, content_view_id: content_view.id,
@@ -70,7 +69,6 @@ module Actions
         end
 
         def run
-          environment = ::Katello::KTEnvironment.find(input[:environment_id])
           view = ::Katello::ContentView.find(input[:content_view_id])
           version = ::Katello::ContentViewVersion.find(input[:content_view_version_id])
           output[:content_view_id] = view.id
@@ -101,13 +99,6 @@ module Actions
               end
             end
           end
-
-          if ::Katello::CapsuleContent.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
-            ForemanTasks.async_task(ContentView::CapsuleSync,
-                                    view,
-                                    environment)
-          end
-        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         def rescue_strategy_for_self
@@ -118,6 +109,14 @@ module Actions
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
+          environment = ::Katello::KTEnvironment.find(input[:environment_id])
+          view = ::Katello::ContentView.find(input[:content_view_id])
+          if SmartProxy.sync_needed?(environment) && Setting[:foreman_proxy_content_auto_sync]
+            ForemanTasks.async_task(ContentView::CapsuleSync,
+                                    view,
+                                    environment)
+          end
+        rescue ::Katello::Errors::CapsuleCannotBeReached # skip any capsules that cannot be connected to
         end
 
         private

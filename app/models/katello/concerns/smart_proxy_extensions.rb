@@ -77,6 +77,18 @@ module Katello
         def self.default_capsule!
           pulp_master!
         end
+
+        def self.with_environment(environment, include_default = false)
+          features = [PULP_NODE_FEATURE]
+          features << PULP_FEATURE if include_default
+
+          with_features(features).joins(:capsule_lifecycle_environments).
+              where(katello_capsule_lifecycle_environments: { lifecycle_environment_id: environment.id })
+        end
+
+        def self.sync_needed?(environment)
+          with_environment(environment).any?
+        end
       end
 
       def puppet_path
@@ -145,6 +157,66 @@ module Katello
 
       def associate_lifecycle_environments
         self.lifecycle_environments = Katello::KTEnvironment.all if self.pulp_master?
+      end
+
+      def add_lifecycle_environment(environment)
+        self.lifecycle_environments << environment
+      end
+
+      def remove_lifecycle_environment(environment)
+        self.lifecycle_environments.find(environment.id)
+        unless self.lifecycle_environments.destroy(environment)
+          fail _("Could not remove the lifecycle environment from the smart proxy")
+        end
+      rescue ActiveRecord::RecordNotFound
+        raise _("Lifecycle environment was not attached to the smart proxy; therefore, no changes were made.")
+      end
+
+      def available_lifecycle_environments(organization_id = nil)
+        scope = Katello::KTEnvironment.not_in_capsule(self)
+        scope = scope.where(organization_id: organization_id) if organization_id
+        scope
+      end
+
+      def sync_tasks
+        ForemanTasks::Task.for_resource(self)
+      end
+
+      def active_sync_tasks
+        sync_tasks.where(:result => 'pending')
+      end
+
+      def last_failed_sync_tasks
+        sync_tasks.where('started_at > ?', last_sync_time).where.not(:result => 'pending')
+      end
+
+      def last_sync_time
+        task = sync_tasks.where.not(:ended_at => nil).where(:result => 'success').order(:ended_at).last
+        task.ended_at unless task.nil?
+      end
+
+      def environment_syncable?(env)
+        last_sync_time.nil? || env.content_view_environments.where('updated_at > ?', last_sync_time).any?
+      end
+
+      def cancel_sync
+        active_sync_tasks.map(&:cancel)
+      end
+
+      def ping_pulp
+        ::Katello::Ping.pulp_without_auth(self.pulp_url)
+      rescue Errno::EHOSTUNREACH, Errno::ECONNREFUSED, RestClient::Exception => error
+        raise ::Katello::Errors::CapsuleCannotBeReached, _("%s is unreachable. %s" % [self.name, error])
+      end
+
+      def verify_ueber_certs
+        self.organizations.each do |org|
+          Cert::Certs.verify_ueber_cert(org)
+        end
+      end
+
+      def smart_proxy_service
+        @smart_proxy_service ||= Pulp::SmartProxyRepository.new(self)
       end
     end
   end

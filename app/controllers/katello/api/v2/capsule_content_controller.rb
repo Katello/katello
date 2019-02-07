@@ -22,29 +22,30 @@ module Katello
     api :GET, '/capsules/:id/content/lifecycle_environments', N_('List the lifecycle environments attached to the smart proxy')
     param_group :lifecycle_environments
     def lifecycle_environments
-      environments = capsule_content.lifecycle_environments(params[:organization_id]).readable
-      respond_for_lifecycle_environments_index(environments)
+      environments = @capsule.lifecycle_environments
+      environment_org_scope = params[:organization_id] ? environments.where(organization_id: params[:organization_id]) : environments
+      respond_for_lifecycle_environments_index(environment_org_scope)
     end
 
     api :GET, '/capsules/:id/content/available_lifecycle_environments', N_('List the lifecycle environments not attached to the smart proxy')
     param_group :lifecycle_environments
     def available_lifecycle_environments
-      environments = capsule_content.available_lifecycle_environments(params[:organization_id]).readable
+      environments = @capsule.available_lifecycle_environments(params[:organization_id]).readable
       respond_for_lifecycle_environments_index(environments)
     end
 
     api :POST, '/capsules/:id/content/lifecycle_environments', N_('Add lifecycle environments to the smart proxy')
     param_group :update_lifecycle_environments
     def add_lifecycle_environment
-      capsule_content.add_lifecycle_environment(@environment)
-      respond_for_lifecycle_environments_index(capsule_content.lifecycle_environments)
+      @capsule.add_lifecycle_environment(@environment)
+      respond_for_lifecycle_environments_index(@capsule.lifecycle_environments)
     end
 
     api :DELETE, '/capsules/:id/content/lifecycle_environments/:environment_id', N_('Remove lifecycle environments from the smart proxy')
     param_group :update_lifecycle_environments
     def remove_lifecycle_environment
-      capsule_content.remove_lifecycle_environment(@environment)
-      respond_for_lifecycle_environments_index(capsule_content.lifecycle_environments)
+      @capsule.remove_lifecycle_environment(@environment)
+      respond_for_lifecycle_environments_index(@capsule.lifecycle_environments)
     end
 
     api :POST, '/capsules/:id/content/sync', N_('Synchronize the content to the smart proxy')
@@ -55,7 +56,7 @@ module Katello
       find_environment if params[:environment_id]
       skip_metadata_check = ::Foreman::Cast.to_bool(params[:skip_metadata_check])
       task = async_task(::Actions::Katello::CapsuleContent::Sync,
-                        capsule_content.capsule,
+                        @capsule,
                         :environment_id => @environment.try(:id),
                         :skip_metadata_check => skip_metadata_check)
       respond_for_async :resource => task
@@ -65,14 +66,13 @@ module Katello
     param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
     param :organization_id, Integer, :desc => N_('Id of the organization to get the status for'), :required => false
     def sync_status
-      @capsule_content = capsule_content
-      @lifecycle_environments = @capsule_content.lifecycle_environments(@organization)
+      @lifecycle_environments = @organization ? @capsule.lifecycle_environments.where(organization_id: @organization.id) : @capsule.lifecycle_environments
     end
 
     api :DELETE, '/capsules/:id/content/sync', N_('Cancel running smart proxy synchronization')
     param :id, Integer, :desc => N_('Id of the smart proxy'), :required => true
     def cancel_sync
-      tasks = capsule_content.cancel_sync
+      tasks = @capsule.cancel_sync
       if tasks.empty?
         render_message _('There\'s no running synchronization for this smart proxy.')
       else
@@ -109,8 +109,8 @@ module Katello
       @environment = Katello::KTEnvironment.readable.find(params[:environment_id])
     end
 
-    def capsule_content
-      CapsuleContent.new(@capsule)
+    def smart_proxy_service
+      Pulp::SmartProxyRepository.new(@capsule)
     end
   end
 end

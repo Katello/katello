@@ -149,7 +149,7 @@ namespace :katello do
       ForemanTasks.sync_task(::Actions::Katello::Repository::Create, repo) if commit?
     else
       puts "Deleting #{repo.id}"
-      ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo, :planned_destroy => true) if commit?
+      ForemanTasks.sync_task(::Actions::Katello::Repository::Destroy, repo) if commit?
     end
   end
 

@@ -7,7 +7,7 @@ module Katello
         def repository_pull_url
           repo_url = super
           if Repository.where(:container_repository_name => repository_name).count > 0
-            manifest_capsule = self.capsule || CapsuleContent.default_capsule.capsule
+            manifest_capsule = self.capsule || SmartProxy.pulp_master
             "#{URI(manifest_capsule.url).hostname}:#{Setting['pulp_docker_registry_port']}/#{repo_url}"
           else
             repo_url

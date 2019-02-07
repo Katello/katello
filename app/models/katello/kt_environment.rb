@@ -241,7 +241,7 @@ module Katello
     end
 
     def add_to_default_capsule
-      CapsuleContent.default_capsule.try(:add_lifecycle_environment, self)
+      SmartProxy.pulp_master.try(:add_lifecycle_environment, self)
     end
 
     # Katello, which understands repository content and promotion, provides release versions based upon

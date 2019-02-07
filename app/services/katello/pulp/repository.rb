@@ -90,6 +90,13 @@ module Katello
                                                                               generate_distributors, display_name: root.name)
       end
 
+      def delete
+        smart_proxy.pulp_api.extensions.repository.delete(repo.pulp_id)
+      rescue RestClient::ResourceNotFound
+        Rails.logger.warn("Tried to delete repository #{repo.pulp_id}, but it did not exist.")
+        []
+      end
+
       def external_url(force_https = false)
         uri = URI.parse(::SmartProxy.pulp_master.pulp_url)
         uri.scheme = (root.unprotected && !force_https) ? 'http' : 'https'
