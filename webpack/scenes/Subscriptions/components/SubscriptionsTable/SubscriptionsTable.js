@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { sprintf } from 'foremanReact/common/I18n';
 import { cloneDeep, findIndex, isEqual } from 'lodash';
-import { Table, MessageDialog } from 'patternfly-react';
 import { LoadingState } from '../../../../move_to_pf/LoadingState';
-import { Table as ForemanTable, TableBody as ForemanTableBody } from '../../../../move_to_foreman/components/common/table';
 import { recordsValid } from '../../SubscriptionValidations';
-import { createSubscriptionsTableSchema } from './SubscriptionsTableSchema';
-import { buildTableRows, groupSubscriptionsByProductId, buildPools } from './SubscriptionsTableHelpers';
-import { renderTaskStartedToast } from '../../../Tasks/helpers';
-import { BLOCKING_FOREMAN_TASK_TYPES } from '../../SubscriptionConstants';
+import { buildTableRows, groupSubscriptionsByProductId } from './SubscriptionsTableHelpers';
+import Table from './components/Table';
+import Dialogs from './components/Dialogs';
 
 class SubscriptionsTable extends Component {
   constructor(props) {
@@ -47,139 +42,41 @@ class SubscriptionsTable extends Component {
     return null;
   }
 
-  toggleSubscriptionGroup(groupId) {
-    const { subscriptions } = this.props;
-    const { groupedSubscriptions, updatedQuantity } = this.state;
-    const { open } = groupedSubscriptions[groupId];
+  getInlineEditController = () => ({
+    isEditing: ({ rowData }) =>
+      (this.state.editing && rowData.available >= 0 && rowData.upstream_pool_id),
+    hasChanged: ({ rowData }) => {
+      const editedValue = this.state.updatedQuantity[rowData.id];
+      return this.hasQuantityChanged(rowData, editedValue);
+    },
+    onActivate: () => {
+      this.enableEditing(true);
+    },
+    onConfirm: () => {
+      if (recordsValid(this.state.rows)) {
+        this.showUpdateConfirm(true);
+      } else {
+        this.showErrorDialog(true);
+      }
+    },
+    onCancel: () => {
+      this.showCancelConfirm(true);
+    },
+    onChange: (value, { rowData }) => {
+      const updatedQuantity = cloneDeep(this.state.updatedQuantity);
 
-    groupedSubscriptions[groupId].open = !open;
+      if (this.hasQuantityChanged(rowData, value)) {
+        updatedQuantity[rowData.id] = value;
+      } else {
+        delete updatedQuantity[rowData.id];
+      }
 
+      this.updateRows(updatedQuantity);
+    },
+  });
 
-    const rows = buildTableRows(
-      groupedSubscriptions,
-      subscriptions.availableQuantities,
-      updatedQuantity,
-    );
-
-    this.setState({ rows, groupedSubscriptions });
-  }
-
-  enableEditing(editingState) {
-    this.setState({
-      updatedQuantity: {},
-      editing: editingState,
-    });
-  }
-
-  updateRows(updatedQuantity) {
-    const { groupedSubscriptions } = this.state;
-    const { subscriptions } = this.props;
-
-    const rows = buildTableRows(
-      groupedSubscriptions,
-      subscriptions.availableQuantities,
-      updatedQuantity,
-    );
-    this.setState({ rows, updatedQuantity });
-  }
-
-  showUpdateConfirm(show) {
-    this.setState({
-      showUpdateConfirmDialog: show,
-    });
-  }
-
-  showCancelConfirm(show) {
-    this.setState({
-      showCancelConfirmDialog: show,
-    });
-  }
-
-  showErrorDialog(show) {
-    this.setState({
-      showErrorDialog: show,
-    });
-  }
-
-  confirmEdit() {
-    this.showUpdateConfirm(false);
-    if (Object.keys(this.state.updatedQuantity).length > 0) {
-      this.props.updateQuantity(buildPools(this.state.updatedQuantity))
-        .then(() =>
-          this.props.bulkSearch({
-            action: `organization '${this.props.organization.owner_details.displayName}'`,
-            result: 'pending',
-            label: BLOCKING_FOREMAN_TASK_TYPES.join(' or '),
-          }))
-        .then(() => renderTaskStartedToast(this.props.task));
-    }
-    this.enableEditing(false);
-  }
-
-  cancelEdit() {
-    this.showCancelConfirm(false);
-    this.enableEditing(false);
-    this.updateRows({});
-  }
-
-  hasQuantityChanged(rowData, editedValue) {
-    if (editedValue !== undefined) {
-      const originalRows = this.props.subscriptions.results;
-      const index = findIndex(originalRows, row => (row.id === rowData.id));
-      const currentValue = originalRows[index].quantity;
-
-      return (`${editedValue}` !== `${currentValue}`);
-    }
-    return false;
-  }
-
-  render() {
-    const { subscriptions, emptyState, tableColumns } = this.props;
-    const { groupedSubscriptions } = this.state;
-    const allSubscriptionResults = subscriptions.results;
-
-    const groupingController = {
-      isCollapseable: ({ rowData }) =>
-        // it is the first subscription in the group
-        rowData.id === groupedSubscriptions[rowData.product_id].subscriptions[0].id &&
-        // the group contains more then one subscription
-        groupedSubscriptions[rowData.product_id].subscriptions.length > 1,
-      isCollapsed: ({ rowData }) => !groupedSubscriptions[rowData.product_id].open,
-      toggle: ({ rowData }) => this.toggleSubscriptionGroup(rowData.product_id),
-    };
-
-    const inlineEditController = {
-      isEditing: ({ rowData }) =>
-        (this.state.editing && rowData.available >= 0 && rowData.upstream_pool_id),
-      hasChanged: ({ rowData }) => {
-        const editedValue = this.state.updatedQuantity[rowData.id];
-        return this.hasQuantityChanged(rowData, editedValue);
-      },
-      onActivate: () => {
-        this.enableEditing(true);
-      },
-      onConfirm: () => {
-        if (recordsValid(this.state.rows)) {
-          this.showUpdateConfirm(true);
-        } else {
-          this.showErrorDialog(true);
-        }
-      },
-      onCancel: () => {
-        this.showCancelConfirm(true);
-      },
-      onChange: (value, { rowData }) => {
-        const updatedQuantity = cloneDeep(this.state.updatedQuantity);
-
-        if (this.hasQuantityChanged(rowData, value)) {
-          updatedQuantity[rowData.id] = value;
-        } else {
-          delete updatedQuantity[rowData.id];
-        }
-
-        this.updateRows(updatedQuantity);
-      },
-    };
+  getSelectionController = () => {
+    const allSubscriptionResults = this.props.subscriptions.results;
 
     const checkAllRowsSelected = () =>
       allSubscriptionResults.length === this.state.selectedRows.length;
@@ -187,8 +84,7 @@ class SubscriptionsTable extends Component {
     const updateDeleteButton = () => {
       this.props.toggleDeleteButton(this.state.selectedRows.length > 0);
     };
-
-    const selectionController = {
+    return ({
       allRowsSelected: () => checkAllRowsSelected(),
       selectAllRows: () => {
         if (checkAllRowsSelected()) {
@@ -217,128 +113,170 @@ class SubscriptionsTable extends Component {
         );
       },
       isSelected: ({ rowData }) => this.state.selectedRows.includes(rowData.id),
-    };
+    });
+  };
 
-    const onPaginationChange = (pagination) => {
-      this.props.loadSubscriptions({
-        ...pagination,
-      });
-    };
+  getTableProps = () => {
+    const {
+      subscriptions, emptyState, tableColumns, loadSubscriptions,
+    } = this.props;
+    const { groupedSubscriptions, rows, editing } = this.state;
 
-    let bodyMessage;
-    if (allSubscriptionResults.length === 0 && subscriptions.searchIsActive) {
-      bodyMessage = __('No subscriptions match your search criteria.');
+    return {
+      emptyState,
+      editing,
+      groupedSubscriptions,
+      loadSubscriptions,
+      rows,
+      subscriptions,
+      tableColumns,
+      inlineEditController: this.getInlineEditController(),
+      selectionController: this.getSelectionController(),
+    };
+  };
+
+  getUpdateDialogProps = () => {
+    const { showUpdateConfirmDialog: show, updatedQuantity } = this.state;
+    const {
+      updateQuantity, bulkSearch, organization, task,
+    } = this.props;
+    return {
+      bulkSearch,
+      organization,
+      show,
+      task,
+      updatedQuantity,
+      updateQuantity,
+      confirmEdit: this.confirmEdit,
+      enableEditing: this.enableEditing,
+      showUpdateConfirm: this.showUpdateConfirm,
+    };
+  };
+
+  getUnsavedChangesDialogProps = () => {
+    const { showCancelConfirmDialog: show } = this.state;
+    return {
+      show,
+      cancelEdit: this.cancelEdit,
+      showCancelConfirm: this.showCancelConfirm,
+    };
+  };
+
+  getInputsErrorsDialogProps = () => {
+    const { showErrorDialog: show } = this.state;
+    return {
+      show,
+      showErrorDialog: this.showErrorDialog,
+    };
+  };
+
+  getDeleteDialogProps = () => {
+    const {
+      subscriptionDeleteModalOpen: show,
+      onDeleteSubscriptions,
+      onSubscriptionDeleteModalClose,
+    } = this.props;
+    const { selectedRows } = this.state;
+    return {
+      show,
+      selectedRows,
+      onSubscriptionDeleteModalClose,
+      onDeleteSubscriptions,
+    };
+  };
+
+  getLoadingStateProps = () => {
+    const { subscriptions: { loading } } = this.props;
+    return {
+      loading,
+      loadingText: __('Loading'),
+    };
+  };
+
+  getDialogsProps = () => ({
+    updateDialog: this.getUpdateDialogProps(),
+    unsavedChangesDialog: this.getUnsavedChangesDialogProps(),
+    inputsErrorsDialog: this.getInputsErrorsDialogProps(),
+    deleteDialog: this.getDeleteDialogProps(),
+  });
+
+
+  toggleSubscriptionGroup = (groupId) => {
+    const { subscriptions } = this.props;
+    const { groupedSubscriptions, updatedQuantity } = this.state;
+    const { open } = groupedSubscriptions[groupId];
+
+    groupedSubscriptions[groupId].open = !open;
+
+
+    const rows = buildTableRows(
+      groupedSubscriptions,
+      subscriptions.availableQuantities,
+      updatedQuantity,
+    );
+
+    this.setState({ rows, groupedSubscriptions });
+  };
+
+  enableEditing = (editingState) => {
+    this.setState({
+      updatedQuantity: {},
+      editing: editingState,
+    });
+  };
+
+  updateRows = (updatedQuantity) => {
+    const { groupedSubscriptions } = this.state;
+    const { subscriptions } = this.props;
+
+    const rows = buildTableRows(
+      groupedSubscriptions,
+      subscriptions.availableQuantities,
+      updatedQuantity,
+    );
+    this.setState({ rows, updatedQuantity });
+  };
+
+  showUpdateConfirm = (show) => {
+    this.setState({
+      showUpdateConfirmDialog: show,
+    });
+  };
+
+  showCancelConfirm = (show) => {
+    this.setState({
+      showCancelConfirmDialog: show,
+    });
+  };
+
+  showErrorDialog = (show) => {
+    this.setState({
+      showErrorDialog: show,
+    });
+  };
+
+  cancelEdit = () => {
+    this.showCancelConfirm(false);
+    this.enableEditing(false);
+    this.updateRows({});
+  };
+
+  hasQuantityChanged = (rowData, editedValue) => {
+    if (editedValue !== undefined) {
+      const originalRows = this.props.subscriptions.results;
+      const index = findIndex(originalRows, row => (row.id === rowData.id));
+      const currentValue = originalRows[index].quantity;
+
+      return (`${editedValue}` !== `${currentValue}`);
     }
+    return false;
+  };
 
-    const alwaysDisplayColumns = ['select'];
-    const columnsDefinition = createSubscriptionsTableSchema(
-      inlineEditController,
-      selectionController,
-      groupingController,
-    ).filter(column => tableColumns.includes(column.property) ||
-    alwaysDisplayColumns.includes(column.property));
-
+  render() {
     return (
-      <LoadingState loading={subscriptions.loading} loadingText={__('Loading')}>
-        <ForemanTable
-          columns={columnsDefinition}
-          emptyState={emptyState}
-          bodyMessage={bodyMessage}
-          rows={this.state.rows}
-          components={{
-            header: {
-              row: Table.TableInlineEditHeaderRow,
-            },
-          }}
-          itemCount={subscriptions.itemCount}
-          pagination={subscriptions.pagination}
-          onPaginationChange={onPaginationChange}
-          inlineEdit
-        >
-          <Table.Header
-            onRow={() => ({
-              role: 'row',
-              isEditing: () => this.state.editing,
-              onCancel: () => inlineEditController.onCancel(),
-              onConfirm: () => inlineEditController.onConfirm(),
-            })}
-          />
-          <ForemanTableBody
-            columns={columnsDefinition}
-            rows={this.state.rows}
-            rowKey="id"
-            message={bodyMessage}
-            onRow={rowData => ({
-              className: classNames({ 'open-grouped-row': !groupingController.isCollapsed({ rowData }) }),
-            })}
-          />
-        </ForemanTable>
-        <MessageDialog
-          show={this.state.showUpdateConfirmDialog}
-          title={__('Editing Entitlements')}
-          secondaryContent={
-            // eslint-disable-next-line react/no-danger
-            <p dangerouslySetInnerHTML={{
-            __html: sprintf(
-              __("You're making changes to %(entitlementCount)s entitlement(s)"),
-              {
-                entitlementCount: `<b>${Object.keys(this.state.updatedQuantity).length}</b>`,
-              },
-            ),
-            }}
-            />
-          }
-          primaryActionButtonContent={__('Save')}
-          primaryAction={() => this.confirmEdit()}
-          secondaryActionButtonContent={__('Cancel')}
-          secondaryAction={() => this.showUpdateConfirm(false)}
-          onHide={() => this.showUpdateConfirm(false)}
-        />
-        <MessageDialog
-          show={this.state.showCancelConfirmDialog}
-          title={__('Editing Entitlements')}
-          secondaryContent={__('You have unsaved changes. Do you want to exit without saving your changes?')}
-          primaryActionButtonContent={__('Exit')}
-          primaryAction={() => this.cancelEdit()}
-          secondaryActionButtonContent={__('Cancel')}
-          secondaryAction={() => this.showCancelConfirm(false)}
-          onHide={() => this.showCancelConfirm(false)}
-        />
-        <MessageDialog
-          show={this.state.showErrorDialog}
-          title={__('Editing Entitlements')}
-          secondaryContent={__('Some of your inputs contain errors. Please update them and save your changes again.')}
-          primaryAction={() => this.showErrorDialog(false)}
-          onHide={() => this.showErrorDialog(false)}
-          primaryActionButtonContent="Ok"
-        />
-        <MessageDialog
-          show={this.props.subscriptionDeleteModalOpen}
-          title={__('Confirm Deletion')}
-          secondaryContent={
-            // eslint-disable-next-line react/no-danger
-            <p dangerouslySetInnerHTML={{
-              __html: sprintf(
-              __(`Are you sure you want to delete %(entitlementCount)s
-                  subscription(s)? This action will remove the subscription(s) and
-                  refresh your manifest. All systems using these subscription(s) will
-                  lose them and also may lose access to updates and Errata.`),
-              {
-                entitlementCount: `<b>${this.state.selectedRows.length}</b>`,
-              },
-            ),
-          }}
-            />
-        }
-          primaryActionButtonContent={__('Delete')}
-          primaryAction={() => this.props.onDeleteSubscriptions(this.state.selectedRows)}
-          primaryActionButtonBsStyle="danger"
-          secondaryActionButtonContent={__('Cancel')}
-          secondaryAction={this.props.onSubscriptionDeleteModalClose}
-          onHide={this.props.onSubscriptionDeleteModalClose}
-          accessibleName="deleteConfirmationDialog"
-          accessibleDescription="deleteConfirmationDialogContent"
-        />
+      <LoadingState {...this.getLoadingStateProps()}>
+        <Table {...this.getTableProps()} />
+        <Dialogs {...this.getDialogsProps()} />
       </LoadingState>
     );
   }
