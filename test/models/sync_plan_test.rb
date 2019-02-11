@@ -109,6 +109,12 @@ module Katello
       end
     end
 
+    def test_destroy
+      @plan.save_with_logic!
+      @plan.foreman_tasks_recurring_logic.destroy!
+      refute SyncPlan.find_by(id: @plan.id)
+    end
+
     def test_invalid_cron_status
       @plan.cron_expression = "20 * * * *"
       refute @plan.valid?, "Custom cron expression only needs to be set for interval value of custom cron"
