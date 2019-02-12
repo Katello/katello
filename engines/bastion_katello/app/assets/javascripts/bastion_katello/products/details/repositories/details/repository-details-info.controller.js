@@ -41,7 +41,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     return false;
                 });
 
-                results.unshift({id: null});
+                results.unshift({id: null, name:''});
                 deferred.resolve(results);
             });
 
@@ -61,7 +61,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     return false;
                 });
 
-                results.unshift({id: null});
+                results.unshift({id: null, name:''});
                 deferred.resolve(results);
             });
 
