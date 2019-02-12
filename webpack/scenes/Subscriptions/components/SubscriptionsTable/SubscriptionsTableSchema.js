@@ -3,7 +3,7 @@ import React from 'react';
 import { Icon } from 'patternfly-react';
 import { Link } from 'react-router-dom';
 import helpers from '../../../../move_to_foreman/common/helpers';
-import { entitlementsInlineEditFormatter } from './EntitlementsInlineEditFormatter';
+import { entitlementsInlineEditFormatter } from '../../../../move_to_foreman/components/common/table/formatters/EntitlementsInlineEditFormatter';
 import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';
 import {
   headerFormatter,
