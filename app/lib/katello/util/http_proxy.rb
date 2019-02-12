@@ -1,12 +1,23 @@
+require 'katello/util/proxy_uri'
+
 module Katello
   module Util
     module HttpProxy
       def proxy_uri
-        URI("#{proxy_scheme}://#{proxy_user_info}@#{proxy_host}:#{proxy_port}").to_s if proxy_host
-      end
+        #Reset the scheme to proxy(s) based on http or https to handle cgi unescaping in rest-client
+        # this relies on katello/util/proxy_uri
+        if proxy_host
+          scheme = 'proxy' if proxy_scheme == 'http'
+          scheme = 'proxys' if proxy_scheme == 'https'
 
-      def proxy_user_info
-        "#{proxy_config[:user]}:#{proxy_config[:password]}" if proxy_config && proxy_config[:user]
+          uri = URI("#{scheme}://#{proxy_host}:#{proxy_port}")
+          if proxy_config && proxy_config[:user]
+            uri.user = CGI.escape(proxy_config[:user])
+            uri.password = CGI.escape(proxy_config[:password])
+          end
+
+          uri.to_s
+        end
       end
 
       def proxy_config
