@@ -31,8 +31,8 @@ module Katello
     scoped_search :on => :reboot_suggested, :complete_value => true
     scoped_search :relation => :cves, :on => :cve_id, :rename => :cve
     scoped_search :relation => :bugzillas, :on => :bug_id, :rename => :bug
-    scoped_search :relation => :packages, :on => :nvrea, :rename => :package, :complete_value => true
-    scoped_search :relation => :packages, :on => :name, :rename => :package_name, :complete_value => true
+    scoped_search :relation => :packages, :on => :nvrea, :rename => :package, :complete_value => true, :only_explicit => true
+    scoped_search :relation => :packages, :on => :name, :rename => :package_name, :complete_value => true, :only_explicit => true
 
     before_save lambda { |erratum| erratum.title = erratum.title.truncate(255) unless erratum.title.blank? }
 
