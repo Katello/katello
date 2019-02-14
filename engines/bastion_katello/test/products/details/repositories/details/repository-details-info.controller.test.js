@@ -55,7 +55,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(promise.then).toBeDefined();
         promise.then(function(contentCredentials) {
             expect(contentCredentials).toBeDefined();
-            expect(contentCredentials).toContain({id: null});
+            expect(contentCredentials).toContain({id: null, name: ''});
         });
 
         $scope.$apply();
@@ -67,7 +67,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect(promise.then).toBeDefined();
         promise.then(function(contentCredentials) {
             expect(contentCredentials).toBeDefined();
-            expect(contentCredentials).toContain({id: null});
+            expect(contentCredentials).toContain({id: null, name: ''});
         });
 
         $scope.$apply();

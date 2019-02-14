@@ -718,6 +718,26 @@ module Katello
       @ostree_root.save!
       assert @ostree_root.pulp_update_needed?
     end
+
+    def test_pulp_update_needed_with_ssl?
+      cert = GpgKey.find(katello_gpg_keys(:fedora_cert).id)
+      refute @fedora_root.pulp_update_needed?
+      @fedora_root.ssl_ca_cert_id = cert.id
+      @fedora_root.save!
+      assert @fedora_root.pulp_update_needed?
+
+      @fedora_root = @fedora_root.reload
+      refute @fedora_root.pulp_update_needed?
+      @fedora_root.ssl_client_cert_id = cert.id
+      @fedora_root.save!
+      assert @fedora_root.pulp_update_needed?
+
+      @fedora_root = @fedora_root.reload
+      refute @fedora_root.pulp_update_needed?
+      @fedora_root.ssl_client_key_id = cert.id
+      @fedora_root.save!
+      assert @fedora_root.pulp_update_needed?
+    end
   end
 
   class RootRepositoryAuditTest < RepositoryTestBase
