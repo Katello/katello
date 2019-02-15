@@ -7,6 +7,7 @@ module Katello
       @test_repo = Repository.find(katello_repositories(:rhel_6_x86_64).id)
       @errata_filter = katello_content_view_filters(:populated_erratum_filter)
       @content_view_version = ContentViewVersion.first
+      @host = FactoryBot.create(:host)
     end
 
     def permissions
@@ -46,6 +47,13 @@ module Katello
 
     def test_index_with_content_view_version
       get :index, params: { :content_view_version_id => @content_view_version.id }
+
+      assert_response :success
+      assert_template "katello/api/v2/errata/index"
+    end
+
+    def test_index_with_host_id
+      get :index, params: { :host_id => @host.id }
 
       assert_response :success
       assert_template "katello/api/v2/errata/index"

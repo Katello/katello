@@ -50,7 +50,7 @@ module Katello
       applicable = ::Foreman::Cast.to_bool(params[:errata_restrict_applicable]) || @host
       installable = ::Foreman::Cast.to_bool(params[:errata_restrict_installable])
       if applicable || installable
-        hosts = @host ? [@host] : ::Host::Managed.authorized("view_hosts")
+        hosts = @host ? ::Host::Managed.where(:id => @host.id) : ::Host::Managed.authorized("view_hosts")
         hosts = hosts.where(:organization_id => params[:organization_id]) if params[:organization_id]
         if installable
           collection = collection.where(:id => Erratum.ids_installable_for_hosts(hosts))
