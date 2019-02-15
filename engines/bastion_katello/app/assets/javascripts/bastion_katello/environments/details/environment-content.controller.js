@@ -13,9 +13,7 @@
 
         function fetchContentViews(environmentId) {
             ContentView.queryUnpaged({'environment_id': environmentId}, function (data) {
-                $scope.contentViews = data.results;
-                $scope.contentView = $scope.contentViews[0];
-                $scope.contentViewSelected($scope.contentView)
+                $scope.contentViews = [$scope.contentView].concat(data.results);
             });
         }
 
@@ -25,7 +23,7 @@
                 'content_type': ContentService.getRepositoryType()
             };
 
-            if (contentView && contentView.id !== 'all') {
+            if (contentView && contentView.id !== '') {
                 params['content_view_id'] = contentView.id;
             }
 
@@ -55,7 +53,7 @@
         function getVersionId(contentView, environmentId) {
             var versionId, version;
 
-            if (contentView.id !== 'all') {
+            if (contentView.id !== '') {
                 version = _.find(contentView.versions, function (vers) {
                     return vers['environment_ids'].indexOf(parseInt(environmentId, 10)) > -1;
                 });
@@ -64,6 +62,8 @@
 
             return versionId;
         }
+
+        $scope.contentView = {id: '', name: translate('Select Content View')};
 
         nutupaneParams = {'environment_id': $scope.$stateParams.environmentId};
         if ($location.search().repositoryId) {
@@ -84,25 +84,32 @@
 
         $scope.contentViewSelected = function (contentView) {
             var params = nutupane.getParams();
+            if (contentView.id === '') {
+                $scope.repository = allRepositories;
+                $scope.repositories.splice(0, $scope.repositories.length);
+                params['repository_id'] = null;
+                params['content_view_id'] = null;
+                nutupane.table.rows = [];
+            } else {
+                fetchRepositories(contentView).then(function (response) {
+                    var repo;
 
-            fetchRepositories(contentView).then(function (response) {
-                var repo;
+                    params['content_view_version_id'] = getVersionId(contentView, $scope.$stateParams.environmentId);
 
-                params['content_view_version_id'] = getVersionId(contentView, $scope.$stateParams.environmentId);
+                    if (params['repository_id']) {
+                        repo = _.find(response.results, function (repository) {
+                            return repository.id.toString() === params['repository_id'].toString();
+                        });
+                    }
 
-                if (params['repository_id']) {
-                    repo = _.find(response.results, function (repository) {
-                        return repository.id.toString() === params['repository_id'].toString();
-                    });
-                }
+                    if (!repo) {
+                        params['repository_id'] = null;
+                    }
 
-                if (!repo) {
-                    params['repository_id'] = null;
-                }
-
-                nutupane.setParams(params);
-                nutupane.refresh();
-            });
+                    nutupane.setParams(params);
+                    nutupane.refresh();
+                });
+            }
         };
 
         $scope.repositorySelected = function (repository) {

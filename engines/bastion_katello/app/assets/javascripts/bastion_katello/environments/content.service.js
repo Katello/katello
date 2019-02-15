@@ -76,7 +76,7 @@
 
             params = params || {};
             params = angular.extend(params, getContentType(currentState()).params);
-            nutupane = new Nutupane($injector.get(getContentType(currentState()).resource), params, 'queryPaged');
+            nutupane = new Nutupane($injector.get(getContentType(currentState()).resource), params, 'queryPaged', { 'disableAutoLoad': true });
 
             return nutupane;
         };
