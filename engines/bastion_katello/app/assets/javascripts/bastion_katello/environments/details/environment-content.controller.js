@@ -86,7 +86,7 @@
             var params = nutupane.getParams();
             if (contentView.id === '') {
                 $scope.repository = allRepositories;
-                $scope.repositories.splice(0, $scope.repositories.length);
+                $scope.repositories = [];
                 params['repository_id'] = null;
                 params['content_view_id'] = null;
                 nutupane.table.rows = [];
