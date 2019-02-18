@@ -1,2 +1,2 @@
 collection @manifest_history
-attributes :statusMessage, :status, :created
+attributes :id, :statusMessage, :status, :created

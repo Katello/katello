@@ -34,7 +34,6 @@ class SubscriptionsPage extends Component {
   componentDidMount() {
     this.props.resetTasks();
     this.props.loadSetting('content_disconnected');
-    this.props.loadSubscriptions();
   }
 
   componentDidUpdate(prevProps) {
@@ -69,7 +68,16 @@ class SubscriptionsPage extends Component {
       }
     }
 
-    if (!isEqual(organization, prevProps.organization)) {
+    const getOrgInfo = (org) => {
+      // remove the loading attribute so the action isn't called when org starts loading
+      const { loading, ...info } = org;
+      return info;
+    };
+
+    const currentOrgInfo = getOrgInfo(organization);
+    const prevOrgInfo = getOrgInfo(prevProps.organization);
+
+    if (!isEqual(currentOrgInfo, prevOrgInfo)) {
       this.pollTasks();
     }
   }
@@ -313,7 +321,7 @@ SubscriptionsPage.propTypes = {
   loadTables: PropTypes.func.isRequired,
   createColumns: PropTypes.func.isRequired,
   updateColumns: PropTypes.func.isRequired,
-  subscriptionTableSettings: PropTypes.shape({}).isRequired,
+  subscriptionTableSettings: PropTypes.shape({}),
   tasks: PropTypes.arrayOf(PropTypes.shape({})),
   deleteSubscriptions: PropTypes.func.isRequired,
   refreshManifest: PropTypes.func.isRequired,
@@ -343,6 +351,7 @@ SubscriptionsPage.defaultProps = {
   deleteModalOpened: false,
   taskModalOpened: false,
   deleteButtonDisabled: true,
+  subscriptionTableSettings: {},
 };
 
 export default SubscriptionsPage;

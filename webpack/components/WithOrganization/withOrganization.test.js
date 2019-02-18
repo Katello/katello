@@ -1,9 +1,13 @@
 import React from 'react';
+import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import withOrganization from './withOrganization';
 
 jest.mock('../SelectOrg/SetOrganization');
+const mockStore = configureMockStore([thunk]);
+const store = mockStore({ katello: { organization: {} } });
 
 describe('subscriptions page', () => {
   const WrappedComponent = () => <div> Wrapped! </div>;
@@ -12,7 +16,7 @@ describe('subscriptions page', () => {
     global.document.getElementById = () => ({ dataset: { id: 1 } });
 
     const Component = withOrganization(WrappedComponent, '/test');
-    const page = mount(<Component />);
+    const page = mount(<Component store={store} />);
     expect(toJson(page)).toMatchSnapshot();
   });
 
@@ -20,7 +24,7 @@ describe('subscriptions page', () => {
     global.document.getElementById = () => ({ dataset: { id: '' } });
 
     const Component = withOrganization(WrappedComponent, '/test');
-    const page = mount(<Component />);
+    const page = mount(<Component store={store} />);
     expect(toJson(page)).toMatchSnapshot();
   });
 });

@@ -34,12 +34,12 @@ class SetOrganization extends Component {
   onSend() {
     const {
       history,
-      changeCurrentOrgaziation,
+      changeCurrentOrganization,
       redirectPath,
     } = this.props;
-    const { id, item } = this.state;
+    const { id } = this.state;
 
-    changeCurrentOrgaziation(encodeURIComponent(`${id}-${item}`)).then(() =>
+    changeCurrentOrganization(`${id}`).then(() =>
       history.push({
         pathname: redirectPath,
         state: { orgChanged: this.state.item },
@@ -95,7 +95,7 @@ class SetOrganization extends Component {
 SetOrganization.propTypes = {
   list: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool.isRequired,
-  changeCurrentOrgaziation: PropTypes.func.isRequired,
+  changeCurrentOrganization: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
   redirectPath: PropTypes.string.isRequired,
   getOrganiztionsList: PropTypes.func.isRequired,
