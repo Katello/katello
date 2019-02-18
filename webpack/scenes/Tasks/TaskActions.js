@@ -1,6 +1,6 @@
-import { foremanTasksApi as api } from '../../services/api';
-import { propsToSnakeCase } from '../../services/index';
+import { propsToSnakeCase } from 'foremanReact/common/helpers';
 
+import { foremanTasksApi as api } from '../../services/api';
 import {
   GET_TASK_REQUEST,
   GET_TASK_SUCCESS,

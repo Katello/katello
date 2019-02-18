@@ -1,5 +1,6 @@
+import { propsToSnakeCase } from 'foremanReact/common/helpers';
+
 import api, { orgId } from '../../services/api';
-import { propsToSnakeCase } from '../../services/index';
 
 import {
   GET_ORGANIZATION_REQUEST,

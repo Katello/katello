@@ -1,6 +1,7 @@
+import { propsToSnakeCase } from 'foremanReact/common/helpers';
+
 import { isEmpty } from 'lodash';
 import api, { orgId } from '../../services/api';
-import { propsToSnakeCase } from '../../services/index';
 
 import {
   SUBSCRIPTIONS_REQUEST,
