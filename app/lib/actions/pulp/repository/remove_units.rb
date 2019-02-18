@@ -9,31 +9,23 @@ module Actions
         end
 
         def invoke_external_task
+          fail _("Cannot pass content units without content unit type") if (input[:contents] && !input[:content_unit_type])
           repo = ::Katello::Repository.find_by(:id => input[:repo_id])
           if repo.nil?
             repo = ::Katello::ContentViewPuppetEnvironment.find_by(:id => input[:repo_id])
             repo = repo.nonpersisted_repository
           end
-          repo_content_types = ::Katello::RepositoryTypeManager.find(repo.content_type).content_types
+          fail _("An error occurred during content removal. Could not find repository with id: %s" % input[:repo_id]) unless repo
           tasks = []
-          if input[:contents]
-            if input[:content_unit_type]
-              content_type = ::Katello::RepositoryTypeManager.find_content_type(input[:content_unit_type].downcase)
+          if input[:content_unit_type]
+            content_type = ::Katello::RepositoryTypeManager.find_content_type(input[:content_unit_type].downcase)
+            if input[:contents]
               units = content_type.model_class.where(:id => input[:contents])
               unit_pulp_ids = units.map(&:pulp_id)
-              tasks << ::SmartProxy.pulp_master.content_service(content_type).remove(repo, unit_pulp_ids)
-            else
-              user_removable_content_types = ::Katello::RepositoryTypeManager.find(repo.content_type).user_removable_content_types
-              user_removable_content_types.each do |user_removable_content_type|
-                units = user_removable_content_type.model_class.where(:id => input[:contents])
-                unit_pulp_ids = units.map(&:pulp_id)
-                tasks << ::SmartProxy.pulp_master.content_service(user_removable_content_type).remove(repo, unit_pulp_ids) unless unit_pulp_ids.blank?
-              end
             end
-          elsif input[:content_unit_type]
-            content_type = ::Katello::RepositoryTypeManager.find_content_type(input[:content_unit_type].downcase)
-            tasks << ::SmartProxy.pulp_master.content_service(content_type).remove(repo)
+            tasks << ::SmartProxy.pulp_master.content_service(content_type).remove(repo, unit_pulp_ids)
           else
+            repo_content_types = ::Katello::RepositoryTypeManager.find(repo.content_type).content_types
             repo_content_types.each do |type|
               tasks << ::SmartProxy.pulp_master.content_service(type).remove(repo)
             end

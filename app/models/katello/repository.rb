@@ -568,22 +568,6 @@ module Katello
       end
     end
 
-    def remove_content(units)
-      if yum?
-        self.rpms -= units
-      elsif puppet?
-        self.puppet_modules -= units
-      elsif ostree?
-        self.ostree_branches -= units
-      elsif file?
-        self.files -= units
-      elsif deb?
-        self.debs -= units
-      elsif docker?
-        remove_docker_content(units)
-      end
-    end
-
     # deleteable? is already taken by the authorization mixin
     def destroyable?
       if self.environment.try(:library?) && self.content_view.default?

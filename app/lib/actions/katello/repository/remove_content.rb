@@ -37,9 +37,10 @@ module Actions
 
         def finalize
           if (input[:content_unit_class] && input[:content_unit_ids])
-            repo = ::Katello::Repository.find(input[:repository][:id])
             content_units = input[:content_unit_class].constantize.where(:id => input[:content_unit_ids])
-            repo.remove_content(content_units)
+            content_units.each do |content_unit|
+              content_unit.remove_from_repository(input[:repository][:id])
+            end
           end
         end
 

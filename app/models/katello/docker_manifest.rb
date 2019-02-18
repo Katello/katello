@@ -28,5 +28,11 @@ module Katello
     def manifest_type
       "image"
     end
+
+    def remove_from_repository(repo_id)
+      self.class.repository_association_class.where(:repository_id => repo_id, self.class.unit_id_field.to_sym => self.id).delete_all
+      self.destroy if (self.repositories.empty? || self.docker_manifest_lists.empty?)
+      DockerMetaTag.cleanup_tags
+    end
   end
 end

@@ -1,6 +1,5 @@
 module Katello
-  class DockerBlob < Katello::Model
-    include Concerns::PulpDatabaseUnit
+  class DockerBlob
     CONTENT_TYPE = "docker_blob".freeze
   end
 end
