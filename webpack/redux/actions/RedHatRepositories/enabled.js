@@ -1,3 +1,5 @@
+import { propsToSnakeCase } from 'foremanReact/common/helpers';
+
 import api, { orgId } from '../../../services/api';
 import {
   normalizeRepositorySets,
@@ -16,7 +18,6 @@ import {
   DISABLE_REPOSITORY_FAILURE,
   REPOSITORY_DISABLED,
 } from '../../consts';
-import { propsToSnakeCase } from '../../../services/index';
 
 export const setRepositoryDisabled = repository => ({
   type: REPOSITORY_DISABLED,

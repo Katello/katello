@@ -1,5 +1,3 @@
-import { reduce, snakeCase } from 'lodash';
-
 // eslint-disable-next-line import/prefer-default-export
 export function getTypeIcon(type) {
   const typeIcon = { name: '', type: '' };
@@ -44,16 +42,3 @@ export function getTypeIcon(type) {
   }
   return typeIcon;
 }
-
-export const propsToSnakeCase = (ob) => {
-  if (typeof (ob) !== 'object') throw Error('propsToSnakeCase only takes objects');
-  return reduce(
-    ob,
-    (snakeOb, val, key) => {
-      // eslint-disable-next-line no-param-reassign
-      snakeOb[snakeCase(key)] = val;
-      return snakeOb;
-    },
-    {},
-  );
-};

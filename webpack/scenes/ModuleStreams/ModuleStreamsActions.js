@@ -1,3 +1,5 @@
+import { propsToSnakeCase } from 'foremanReact/common/helpers';
+
 import api, { orgId } from '../../services/api';
 import {
   MODULE_STREAMS_REQUEST,
@@ -5,7 +7,6 @@ import {
   MODULE_STREAMS_FAILURE,
 } from './ModuleStreamsConstants';
 import { apiError } from '../../move_to_foreman/common/helpers.js';
-import { propsToSnakeCase } from '../../services/index';
 
 export const getModuleStreams = (extendedParams = {}) => (dispatch) => {
   dispatch({ type: MODULE_STREAMS_REQUEST });

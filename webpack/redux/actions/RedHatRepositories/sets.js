@@ -1,3 +1,5 @@
+import { propsToSnakeCase } from 'foremanReact/common/helpers';
+
 import api, { orgId } from '../../../services/api';
 import {
   normalizeRepositorySets,
@@ -13,7 +15,6 @@ import {
   REPOSITORY_SETS_FAILURE,
   REPOSITORY_SETS_UPDATE_RECOMMENDED,
 } from '../../consts';
-import { propsToSnakeCase } from '../../../services/index';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loadRepositorySets = (extendedParams = {}) => (dispatch, getState) => {
