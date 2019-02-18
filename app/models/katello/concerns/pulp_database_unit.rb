@@ -11,6 +11,10 @@ module Katello
       self.class.pulp_data(pulp_id) || {}
     end
 
+    def remove_from_repository(repo_id)
+      self.class.repository_association_class.where(:repository_id => repo_id, self.class.unit_id_field.to_sym => self.id).delete_all
+    end
+
     module ClassMethods
       def content_type
         self::CONTENT_TYPE

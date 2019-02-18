@@ -22,7 +22,6 @@ module Katello
       Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
 
       importable_models = Katello::Model.subclasses.select { |model| model if model.respond_to?(:import_all) }
-      importable_models -= ["Katello::DockerBlob", "Katello::PackageCategory", "Katello::Distribution"].map(&:constantize)
       importable_models.each { |model| model.expects(:import_all) }
 
       key = katello_activation_keys(:simple_key)
