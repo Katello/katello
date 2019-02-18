@@ -31,6 +31,7 @@ import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsCons
 
 const initialState = Immutable({
   ...initialApiState,
+  disconnected: false,
   searchQuery: '',
   manifestModalOpened: false,
   deleteModalOpened: false,
