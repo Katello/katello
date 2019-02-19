@@ -2,26 +2,28 @@
   <%= hidden_field_tag 'sync_status_url', nil, 'data-url' => sync_status_sync_management_index_path %>
   <table id="products_table">
     <thead>
-      <th>
-        <%= _("Product") %>
-      </th>
-      <th class="max_width">
-        <%= _("Start Time") %>
-      </th>
-      <th class="max_width">
-        <%= _("Duration") %>
-      </th>
-      <th>
-        <%= _("Details") %>
-      </th>
-      <th>
-        <%= _("Result") %>
-      </th>
-      <% if @show_org %>
+      <tr>
         <th>
-          <%= _("Organization") %>
+          <%= _("Product") %>
         </th>
-      <% end %>
+        <th class="max_width">
+          <%= _("Start Time") %>
+        </th>
+        <th class="max_width">
+          <%= _("Duration") %>
+        </th>
+        <th>
+          <%= _("Details") %>
+        </th>
+        <th>
+          <%= _("Result") %>
+        </th>
+        <% if @show_org %>
+          <th>
+            <%= _("Organization") %>
+          </th>
+        <% end %>
+      </tr> <!-- _products -->
     </thead>
     <tbody>
       <% if @products.length > 0 %>
@@ -35,7 +37,7 @@
                  }).html_safe
              %>
           </td>
-        </tr>
+        </tr> <!--_products -->
       <% end %>
     </tbody>
   </table>

@@ -13,15 +13,15 @@
     <% if @show_org %>
       <td><%= prod[:organization] %></td>
     <% end %>
+  </tr> <!-- _products -->
 
-    <% unless prod[:children].empty? %>
-      <%= render :partial => "children",
-          :locals => {:children => prod[:children], :parent_set => [pid], :cycle_class => cycle_class} %>
-    <% end %>
+  <% unless prod[:children].empty? %>
+    <%= render :partial => "children",
+        :locals => {:children => prod[:children], :parent_set => [pid], :cycle_class => cycle_class} %>
+  <% end %>
 
-    <% unless prod[:repos].empty? %>
-      <%= render :partial => "repo", :collection => prod[:repos], :as=>:repo,
-          :locals => {:parent_set => [pid], :cycle_class => cycle_class} %>
-    <% end %>
-  </tr>
+  <% unless prod[:repos].empty? %>
+    <%= render :partial => "repo", :collection => prod[:repos], :as=>:repo,
+        :locals => {:parent_set => [pid], :cycle_class => cycle_class} %>
+  <% end %>
 <% end %>
