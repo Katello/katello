@@ -7,6 +7,7 @@ module Katello
 
     clear_helpers
 
+    helper OrcharhinoCore::LayoutHelper
     helper ::TaxonomyHelper
     helper ::ApplicationHelper
     helper ::PaginationHelper
