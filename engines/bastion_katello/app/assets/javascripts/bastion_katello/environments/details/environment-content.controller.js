@@ -81,6 +81,25 @@
 
         fetchContentViews($scope.$stateParams.environmentId);
 
+        $scope.getNoRowsMessage = function () {
+            var messages = [ContentService.getNoRowsMessage()];
+            if ($scope.contentView.id === '') {
+                messages.push($scope.getNoContentViewMessage());
+            }
+            return messages.join(" ");
+        };
+
+        $scope.getNoContentViewMessage = function () {
+            return translate('Please make sure a Content View is selected.');
+        };
+
+        $scope.getZeroResultsMessage = function () {
+            var messages = [ContentService.getZeroResultsMessage()];
+            if ($scope.contentView.id === '') {
+                messages.push($scope.getNoContentViewMessage());
+            }
+            return messages.join(" ");
+        };
 
         $scope.contentViewSelected = function (contentView) {
             var params = nutupane.getParams();
