@@ -25,7 +25,7 @@
             'content_view_id': $scope.$stateParams.contentViewId,
             'content_type': 'file'
         },
-        'queryUnpaged', nutupaneParams);
+        'queryPaged', nutupaneParams);
         $scope.controllerName = 'katello_repositories';
 
         nutupane.load();
