@@ -74,7 +74,7 @@ module Katello
           Katello::Repository.in_environment(lifecycle_environment).in_content_views([content_view]).
               where(:distribution_arch => host.architecture.name).
               where("#{Katello::Repository.table_name}.distribution_version = :release or #{Katello::Repository.table_name}.distribution_version like :match",
-                      release: host.os.release, match:"#{host.os.release}.%")
+                      release: host.os.release, match: "#{host.os.release}.%")
         else
           []
         end

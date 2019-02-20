@@ -331,3 +331,16 @@ generic_file_dev:
   relative_path:        '/Default_Organization/dev/My_Files'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
+
+three_digit_fedora_17_x86_64_distro:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
+  pulp_id:              Fedora_17
+  relative_path:        'ACME_Corporation/library/fedora_17_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+  distribution_arch: "x86_64"
+  distribution_version: "2.1.2"
+  distribution_family: 'Red Hat Enterprise Linux'
+  distribution_variant: "TestVariant"
+  distribution_bootable: true
+  distribution_uuid: 'xyz123'
