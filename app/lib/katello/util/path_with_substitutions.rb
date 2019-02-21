@@ -14,10 +14,14 @@ module Katello
         @resolved = []
       end
 
+      def split_path
+        @split ||= path.split('/')
+      end
+
       def substitutions_needed
         # e.g. if content_url = "/content/dist/rhel/server/7/$releasever/$basearch/kickstart"
         #      return ['releasever', 'basearch']
-        path.split('/').map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
+        split_path.map { |word| word.start_with?('$') ? word[1..-1] : nil }.compact
       end
 
       def substitutable?
@@ -38,7 +42,7 @@ module Katello
 
       def unused_substitutions
         substitutions.keys.reject do |key|
-          path.include?("$#{key}")
+          path.include?("$#{key}") || split_path.include?(substitutions[key])
         end
       end
 

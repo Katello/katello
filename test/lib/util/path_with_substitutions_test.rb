@@ -6,6 +6,7 @@ module Katello
       def setup
         @el5_path = '/content/dist/rhel/server/5/$releasever/$basearch/os'
         @non_sub_path = '/content/dist/rhel/server/5/5Server/x86_64/os'
+        @el8_path = '/content/dist/rhel8/8/x86_64/appstream/kickstart'
         @releasever_list = ['5Server', '5.8']
         @arch_list = ['x86_64', 'i386']
         @cdn = Katello::Resources::CDN::CdnResource.new('http://someurl/')
@@ -51,6 +52,7 @@ module Katello
       def test_unused_substitutions
         assert_equal ['foo'], PathWithSubstitutions.new(@el5_path, 'foo' => 'bar').unused_substitutions
         assert_empty PathWithSubstitutions.new(@el5_path, 'basearch' => 'x86_64').unused_substitutions
+        assert_empty PathWithSubstitutions.new(@el8_path, 'basearch' => 'x86_64').unused_substitutions
       end
 
       def test_apply_substitutions
