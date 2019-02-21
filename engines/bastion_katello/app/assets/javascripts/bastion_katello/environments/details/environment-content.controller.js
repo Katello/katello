@@ -23,7 +23,7 @@
                 'content_type': ContentService.getRepositoryType()
             };
 
-            if (contentView && contentView.id !== 'all') {
+            if (contentView && contentView.id !== '') {
                 params['content_view_id'] = contentView.id;
             }
 
@@ -53,7 +53,7 @@
         function getVersionId(contentView, environmentId) {
             var versionId, version;
 
-            if (contentView.id !== 'all') {
+            if (contentView.id !== '') {
                 version = _.find(contentView.versions, function (vers) {
                     return vers['environment_ids'].indexOf(parseInt(environmentId, 10)) > -1;
                 });
@@ -62,6 +62,8 @@
 
             return versionId;
         }
+
+        $scope.contentView = {id: '', name: translate('Select Content View')};
 
         nutupaneParams = {'environment_id': $scope.$stateParams.environmentId};
         if ($location.search().repositoryId) {
@@ -74,38 +76,59 @@
         $scope.nutupane = nutupane;
         $scope.table = nutupane.table;
 
-        $scope.contentView = {id: 'all', name: translate('All Content Views')};
-
         allRepositories = {id: 'all', name: translate('All Repositories')};
         $scope.repository = allRepositories;
 
         fetchContentViews($scope.$stateParams.environmentId);
 
-        if (ContentService.getRepositoryType()) {
-            fetchRepositories();
-        }
+        $scope.getNoRowsMessage = function () {
+            var messages = [ContentService.getNoRowsMessage()];
+            if ($scope.contentView.id === '') {
+                messages.push($scope.getNoContentViewMessage());
+            }
+            return messages.join(" ");
+        };
+
+        $scope.getNoContentViewMessage = function () {
+            return translate('Please make sure a Content View is selected.');
+        };
+
+        $scope.getZeroResultsMessage = function () {
+            var messages = [ContentService.getZeroResultsMessage()];
+            if ($scope.contentView.id === '') {
+                messages.push($scope.getNoContentViewMessage());
+            }
+            return messages.join(" ");
+        };
 
         $scope.contentViewSelected = function (contentView) {
             var params = nutupane.getParams();
+            if (contentView.id === '') {
+                $scope.repository = allRepositories;
+                $scope.repositories = [];
+                params['repository_id'] = null;
+                params['content_view_id'] = null;
+                nutupane.table.rows = [];
+            } else {
+                fetchRepositories(contentView).then(function (response) {
+                    var repo;
 
-            fetchRepositories(contentView).then(function (response) {
-                var repo;
+                    params['content_view_version_id'] = getVersionId(contentView, $scope.$stateParams.environmentId);
 
-                params['content_view_version_id'] = getVersionId(contentView, $scope.$stateParams.environmentId);
+                    if (params['repository_id']) {
+                        repo = _.find(response.results, function (repository) {
+                            return repository.id.toString() === params['repository_id'].toString();
+                        });
+                    }
 
-                if (params['repository_id']) {
-                    repo = _.find(response.results, function (repository) {
-                        return repository.id.toString() === params['repository_id'].toString();
-                    });
-                }
+                    if (!repo) {
+                        params['repository_id'] = null;
+                    }
 
-                if (!repo) {
-                    params['repository_id'] = null;
-                }
-
-                nutupane.setParams(params);
-                nutupane.refresh();
-            });
+                    nutupane.setParams(params);
+                    nutupane.refresh();
+                });
+            }
         };
 
         $scope.repositorySelected = function (repository) {

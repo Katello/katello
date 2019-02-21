@@ -67,6 +67,21 @@
             }
         ];
 
+        this.getNoRowsMessage = function () {
+            var contentType = this.getCurrentContentType();
+            return translate('There are no %(contentType)s that match the criteria.  ')
+                        .replace('%(contentType)s', contentType.display);
+        };
+
+        this.getZeroResultsMessage = function () {
+            return translate('Your search returned zero %(contentType)s that match the criteria.')
+                        .replace('%(contentType)s', this.getCurrentContentType().display);
+        };
+
+        this.getCurrentContentType = function () {
+            return getContentType(currentState());
+        };
+
         this.getRepositoryType = function () {
             return getContentType(currentState()).repositoryType;
         };
@@ -76,7 +91,7 @@
 
             params = params || {};
             params = angular.extend(params, getContentType(currentState()).params);
-            nutupane = new Nutupane($injector.get(getContentType(currentState()).resource), params, 'queryPaged');
+            nutupane = new Nutupane($injector.get(getContentType(currentState()).resource), params, 'queryPaged', { 'disableAutoLoad': true });
 
             return nutupane;
         };

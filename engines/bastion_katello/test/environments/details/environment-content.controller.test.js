@@ -73,7 +73,7 @@ describe('Controller: EnvironmentContentController', function() {
     });
 
     it("sets the content_view_id to undefined when all content views set", function () {
-        $scope.contentViewSelected({id: 'all'});
+        $scope.contentViewSelected({id: ''});
 
         expect($scope.nutupane.getParams()['content_view_version_id']).toBe(undefined);
     });
