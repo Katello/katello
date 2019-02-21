@@ -36,7 +36,11 @@ module Katello
             id: yum_dist_id,
             auto_publish: true
           }
-          options[:checksum_type] = repo.saved_checksum_type || root.checksum_type if smart_proxy.pulp_master?
+          if smart_proxy.pulp_master?
+            options[:checksum_type] = repo.saved_checksum_type || root.checksum_type
+          else
+            options[:checksum_type] = nil
+          end
           distributors = [Runcible::Models::YumDistributor.new(repo.relative_path, root.unprotected, true, options)]
 
           if smart_proxy.pulp_master?

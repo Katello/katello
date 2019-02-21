@@ -19,7 +19,7 @@ module Actions
       private
 
       def capsule_content(capsule_id = nil)
-        capsule_id ||= input["capsule_id"]
+        capsule_id ||= input["capsule_id"] || input["smart_proxy_id"]
         if capsule_id
           SmartProxy.unscoped.find(capsule_id).pulp_api
         else
