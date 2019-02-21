@@ -15,7 +15,7 @@ module Katello
       end
 
       def split_path
-        @split ||= @path.split('/')
+        @split ||= path.split('/')
       end
 
       def substitutions_needed
