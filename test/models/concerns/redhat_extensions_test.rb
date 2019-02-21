@@ -55,6 +55,27 @@ module Katello
       assert_includes repo_list, @repo_with_distro
       refute_includes repo_list, other_repo
     end
+
+    def test_distribution_repositories_fuzzy
+      # make sure it matches 3 digit distro versions correctly
+      # If I asked for available distros for OS x.y , it should match x.y and x.y.z
+      # but not x.yz
+      @repo_with_distro.update_attributes!(:distribution_version => "2.3.4")
+      version = @repo_with_distro.distribution_version.split('.')
+      os = ::Redhat.create_operating_system("RedHat", version[0], version[1])
+      host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => os,
+                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
+                                                      :content_view_id => @repo_with_distro.content_view.id})
+      repo_list = os.distribution_repositories(host)
+      assert_includes repo_list, @repo_with_distro
+
+      diff_os = ::Redhat.create_operating_system("RedHat", version[0], "#{version[1]}0")
+      host = ::Host.new(:architecture => architectures(:x86_64), :operatingsystem => diff_os,
+                        :content_facet_attributes => {:lifecycle_environment_id => @repo_with_distro.environment.id,
+                                                      :content_view_id => @repo_with_distro.content_view.id})
+      repo_list = diff_os.distribution_repositories(host)
+      refute_includes repo_list, @repo_with_distro
+    end
   end
 
   class RedhatExtensionsMediaTest < ActiveSupport::TestCase
