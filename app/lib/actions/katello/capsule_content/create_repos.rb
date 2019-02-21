@@ -14,7 +14,6 @@ module Actions
         def repos_to_create(smart_proxy_service, environment, content_view, repository)
           repos = []
           current_repos_on_capsule = smart_proxy_service.current_repositories(environment, content_view)
-
           if repository
             unless current_repos_on_capsule.include?(repository)
               repos << repository

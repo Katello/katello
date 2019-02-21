@@ -35,10 +35,7 @@ module Actions
 
           fail _("Action not allowed for the default smart proxy.") if smart_proxy.pulp_master?
 
-          affected_repos = affected_repositories(smart_proxy_service, environment, content_view, repository)
-          need_updates = repos_needing_updates(smart_proxy, affected_repos)
-          repository_ids = get_repository_ids(smart_proxy_service, environment, content_view, repository)
-
+          repository_ids = smart_proxy_service.get_repository_ids(environment, content_view, repository)
           # Create a list of non-puppet repos to sync first, and then sync puppet repos last.
           # Puppet modules may refer to non-puppet content in the same CV, and thus need to publish last.
           puppet_repository_ids = []
@@ -50,10 +47,13 @@ module Actions
 
           unless repository_ids.blank?
             sequence do
-              need_updates.each do |repo|
-                plan_action(Pulp::Repository::Refresh, repo, capsule_id: smart_proxy_service.smart_proxy.id)
-              end
-              plan_action(ConfigureCapsule, smart_proxy_service.smart_proxy, environment, content_view, repository)
+              options = {}
+              options[:environment_id] = environment_id if environment_id
+              options[:content_view_id] = content_view_id if content_view_id
+              options[:repository_id] = repository_id if repository_id
+
+              plan_action(Pulp::Repository::RefreshNeeded, smart_proxy, options)
+              plan_action(CreateRepos, smart_proxy, environment, content_view, repository)
               sync_repos_to_capsule(smart_proxy_service, non_puppet_repository_ids, skip_metadata_check) unless non_puppet_repository_ids.blank?
               sync_repos_to_capsule(smart_proxy_service, puppet_repository_ids, skip_metadata_check) unless puppet_repository_ids.blank?
             end
@@ -95,37 +95,6 @@ module Actions
               end
             end
           end
-        end
-
-        def get_repository_ids(smart_proxy_service, environment, content_view, repository)
-          if environment
-            repository_ids = smart_proxy_service.repos_available_to_capsule(environment, content_view).map(&:pulp_id)
-          elsif repository
-            repository_ids = [repository.pulp_id]
-            environment = repository.environment
-          else
-            repository_ids = smart_proxy_service.repos_available_to_capsule.map(&:pulp_id)
-          end
-
-          if environment && !smart_proxy_service.smart_proxy.lifecycle_environments.include?(environment)
-            fail _("Lifecycle environment '%{environment}' is not attached to this capsule.") % { :environment => environment.name }
-          end
-
-          repository_ids
-        end
-
-        def affected_repositories(smart_proxy_service, environment, content_view, repository)
-          if repository
-            [repository]
-          else
-            smart_proxy_service.repos_available_to_capsule(environment, content_view)
-          end
-        end
-
-        def repos_needing_updates(smart_proxy, repos)
-          need_importer_update = ::Katello::Repository.needs_importer_updates(repos, smart_proxy)
-          need_distributor_update = ::Katello::Repository.needs_distributor_updates(repos, smart_proxy)
-          (need_distributor_update + need_importer_update).uniq
         end
 
         def rescue_strategy

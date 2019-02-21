@@ -1,19 +1,13 @@
 module Actions
   module Katello
     module CapsuleContent
-      class RemoveUnneededRepos < ::Actions::Base
+      class RemoveUnneededRepos < Pulp::AbstractAsyncTask
         def plan(smart_proxy)
-          smart_proxy_service = ::Katello::Pulp::SmartProxyRepository.new(smart_proxy)
-          currently_on_capsule = smart_proxy_service.current_repositories.map(&:id)
-          needed_on_capsule = smart_proxy_service.repos_available_to_capsule.map(&:id)
+          plan_self(:smart_proxy_id => smart_proxy.id)
+        end
 
-          need_removal = currently_on_capsule - needed_on_capsule
-          need_removal.compact.each do |repo_id|
-            plan_action(Pulp::Repository::Destroy,
-                        :repository_id => repo_id,
-                        :capsule_id => smart_proxy.id)
-          end
-
+        def invoke_external_task
+          smart_proxy_service = ::Katello::Pulp::SmartProxyRepository.new(::SmartProxy.find(input[:smart_proxy_id]))
           smart_proxy_service.delete_orphaned_repos
         end
       end
