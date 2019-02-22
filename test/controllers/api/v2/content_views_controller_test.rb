@@ -80,7 +80,8 @@ module Katello
 
     test_attributes :pid => '80d36498-2e71-4aa9-b696-f0a45e86267f'
     def test_create
-      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool", :organization_id => @organization.id }
+      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
+                              :organization_id => @organization.id, :solve_dependencies => true }
 
       assert_response :success
       assert_template :layout => 'katello/api/v2/layouts/resource'

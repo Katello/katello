@@ -72,6 +72,24 @@
 
       <div bst-form-group>
         <div class="checkbox">
+          <label for="solve_dependencies">
+            <input id="solve_dependencies"
+                   name="solve_dependencies"
+                   ng-model="contentView.solve_dependencies"
+                   type="checkbox"
+                   tabindex="4"/>
+            <span translate>Solve Dependencies?</span>
+          </label>
+        </div>
+        <p class="help-block" translate>
+          This will solve RPM dependencies on every publish of this Content View. Note that dependency solving significantly increases
+          publish time. Filters will be ignored when adding packages to solve dependencies. Also, certain scenarios may still cause
+          dependency errors. You can still opt-out of dependency solving at publish time with this option enabled.
+        </p>
+      </div>
+
+      <div bst-form-group ng-show="contentView.composite">
+        <div class="checkbox">
           <label for="auto_publish">
             <input id="auto_publish"
                    name="auto_publish"

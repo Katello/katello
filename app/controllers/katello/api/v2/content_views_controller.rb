@@ -55,6 +55,7 @@ module Katello
     param :name, String, :desc => N_("Name of the content view"), :required => true
     param :label, String, :desc => N_("Content view label")
     param :composite, :bool, :desc => N_("Composite content view")
+    param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish")
     param_group :content_view
     def create
       @view = ContentView.create!(view_params) do |view|
@@ -228,7 +229,7 @@ module Katello
 
     def view_params
       attrs = [:name, :description, :force_puppet_environment, {:component_ids => []}]
-      attrs.push(:label, :composite) if action_name == "create"
+      attrs.push(:label, :composite, :solve_dependencies) if action_name == "create"
       attrs.push(:component_ids, :auto_publish) # For deep_munge; Remove for Rails 5
       if (!@view || !@view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)

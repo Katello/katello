@@ -9,6 +9,7 @@ class Setting::Content < Setting
 
     download_policies = proc { Hash[::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
     proxy_download_policies = proc { Hash[::SmartProxy::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
+    dependency_solving_options = proc { Hash[['conservative', 'greedy'].map { |p| [p, p] }] }
 
     self.transaction do
       [
@@ -101,7 +102,16 @@ class Setting::Content < Setting
                  nil, N_('Default Location Puppet content'), nil,
                  :collection => proc { Hash[Location.unscoped.all.map { |loc| [loc[:title], loc[:title]] }] }),
         self.set('expire_soon_days', N_('The number of days remaining in a subscription before you will be reminded about renewing it.'),
-                 120, N_('Expire soon days'))
+                 120, N_('Expire soon days')),
+        self.set('content_view_solve_dependencies',
+                 N_('Solve RPM dependencies on all Content View publishes. Publishes will take significantly longer with this option turned on ' \
+                 'and filters will be overrided to solve dependencies. This can be set on individual Content Views as well.'),
+                 false, N_('Content View Dependency Solving')),
+        self.set('dependency_solving_logic',
+                 N_("The logic of solving dependencies in a Content View is managed. Conservative will only add packages to solve the dependencies if the packaged needed" \
+                 "doesn't exist. Greedy will pull in the latest package to solve a dependency even if it already does exist in the repository."),
+                 'conservative', N_('Content View Dependency Solving Logic'), nil,
+                 :collection => dependency_solving_options)
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end
     true
