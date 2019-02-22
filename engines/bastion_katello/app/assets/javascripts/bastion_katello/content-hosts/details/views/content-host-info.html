@@ -138,7 +138,7 @@
 
         <dt translate>Add ons</dt>
         <dd bst-edit-multiselect="host.subscription_facet_attributes.purpose_addons"
-            readonly="denied('edit_hosts', host)"
+            readonly="denied('edit_hosts', host) || (organization.system_purposes.addons.length + host.subscription_facet_attributes.purpose_addons.length === 0)"
             icon-class="getHostPurposeStatusIcon(host.purpose_addons_status)"
             icon-show="host.purpose_addons_status > 0"
             formatter="arrayToString"

@@ -25,7 +25,7 @@ describe('Controller: ContentHostDetailsController', function() {
 
         mockOrg = {
           id: '1',
-          service_levels: ['PREMIUM'],
+          service_levels: ['Premium'],
           system_purposes: {
             roles: ['custom-role'],
             usage: ['custom-usage'],
@@ -125,21 +125,23 @@ describe('Controller: ContentHostDetailsController', function() {
 
     it("provides a list of service levels", function() {
         $scope.serviceLevels().then(function(service_levels) {
-            expect(service_levels).toEqual(['PREMIUM']);
+            expect(service_levels.sort()).toEqual(['Self-Support', 'Standard', 'Premium'].sort());
         });
         $httpBackend.flush();
     });
 
     it("provides a list of system purpose roles", function() {
         $scope.purposeRoles().then(function(roles) {
-            expect(roles).toEqual(['custom-role', 'current-role']);
+            expect(roles.sort()).toEqual(['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation',
+                'Red Hat Enterprise Linux Compute Node', 'custom-role', 'current-role'].sort());
         });
         $httpBackend.flush();
     });
 
     it("provides a list of system purpose usages", function() {
         $scope.purposeUsages().then(function(usages) {
-            expect(usages).toEqual(['custom-usage', 'current-usage']);
+            expect(usages.sort()).toEqual(['Production', 'Development/Test', 'Disaster Recovery',
+                'custom-usage', 'current-usage'].sort());
         });
         $httpBackend.flush();
     });

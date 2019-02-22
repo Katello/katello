@@ -26,6 +26,10 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 
+        $scope.defaultUsages = ['Production', 'Development/Test', 'Disaster Recovery'];
+        $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
+        $scope.defaultServiceLevels = ['Self-Support', 'Standard', 'Premium'];
+
         $scope.purposeAddonsList = [];
 
         $scope.panel = {
@@ -136,7 +140,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
 
         $scope.serviceLevels = function () {
             return $scope.organization.$promise.then(function(org) {
-                return org.service_levels;
+                return _.union(org.service_levels, $scope.defaultServiceLevels);
             });
         };
 
@@ -147,7 +151,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 if (role && !_.includes(roles, role)) {
                     roles.push(role);
                 }
-                return roles;
+                return _.union(roles, $scope.defaultRoles);
             });
         };
 
@@ -158,7 +162,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
                 if (usage && !_.includes(usages, usage)) {
                     usages.push(usage);
                 }
-                return usages;
+                return _.union(usages, $scope.defaultUsages);
             });
         };
 
