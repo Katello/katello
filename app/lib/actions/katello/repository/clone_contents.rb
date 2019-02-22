@@ -9,12 +9,13 @@ module Actions
           index_content = options.fetch(:index_content, true)
           purge_empty_contents = options.fetch(:purge_empty_contents, false)
           copy_contents = options.fetch(:copy_contents, true)
+          solve_dependencies = options.fetch(:solve_dependencies, false)
 
           sequence do
             if copy_contents
               source_repositories.each do |repository|
                 plan_action(Pulp::Repository::CopyAllUnits, repository, new_repository,
-                            filters: filters, rpm_filenames: rpm_filenames)
+                            filters: filters, rpm_filenames: rpm_filenames, solve_dependencies: solve_dependencies)
               end
             end
 

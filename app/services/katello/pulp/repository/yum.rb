@@ -76,8 +76,18 @@ module Katello
         end
 
         def copy_contents(destination_repo, options = {})
+          override_config = {}
+
+          if options[:solve_dependencies]
+            if Setting[:dependency_solving_logic] == 'greedy'
+              override_config[:recursive] = true
+            else
+              override_config[:recursive_conservative] = true
+            end
+          end
+
           rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters], options[:rpm_filenames])
-          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, rpm_copy_clauses)]
+          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, rpm_copy_clauses.merge(:override_config => override_config))]
           if rpm_remove_clauses
             tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
                                                                          type_ids: [::Katello::Pulp::Rpm::CONTENT_TYPE],
