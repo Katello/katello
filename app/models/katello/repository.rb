@@ -161,7 +161,11 @@ module Katello
     end
 
     def backend_service(smart_proxy)
-      @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
+      if smart_proxy.pulp3_support?(self)
+        @service ||= Katello::Pulp3::Repository.instance_for_type(self, smart_proxy)
+      else
+        @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
+      end
     end
 
     def backend_content_service(smart_proxy)
