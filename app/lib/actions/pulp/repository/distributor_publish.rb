@@ -4,46 +4,17 @@ module Actions
       class DistributorPublish < Pulp::AbstractAsyncTask
         middleware.use Actions::Middleware::SkipIfMatchingContent
 
-        input_format do
-          param :pulp_id
-          param :distributor_type_id
-          param :source_pulp_id
-          param :dependency
-          param :override_config
-          param :matching_content
+        def plan(repository, smart_proxy, options)
+          plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options, :dependency => options[:dependency])
         end
 
         def invoke_external_task
-          pulp_extensions.repository.
-              publish(input[:pulp_id],
-                      distributor_id(input[:pulp_id], input[:distributor_type_id]),
-                      distributor_config)
-        end
-
-        def distributor_id(pulp_id, distributor_type_id)
-          distributor = repo(pulp_id)["distributors"].find do |dist|
-            dist["distributor_type_id"] == distributor_type_id
+          repo = ::Katello::Repository.find_by(:id => input[:repository_id])
+          if repo.nil?
+            repo = ::Katello::ContentViewPuppetEnvironment.find_by(:id => input[:repository_id]).nonpersisted_repository
           end
-          distributor['id']
-        end
-
-        def distributor_config
-          input[:override_config] ||= {}
-          # the check for YumCloneDistributor is here for backwards compatibility
-          if input[:distributor_type_id] == Runcible::Models::YumCloneDistributor.type_id
-            { override_config: input[:override_config].merge(source_repo_id: input[:source_pulp_id],
-                                                               source_distributor_id: source_distributor_id) }
-          else
-            { override_config: input[:override_config] }
-          end
-        end
-
-        def source_distributor_id
-          distributor_id(input[:source_pulp_id], Runcible::Models::YumDistributor.type_id)
-        end
-
-        def repo(pulp_id)
-          pulp_extensions.repository.retrieve_with_details(pulp_id)
+          smart_proxy = ::SmartProxy.find(input[:smart_proxy_id])
+          repo.backend_service(smart_proxy).distributor_publish(input[:options])
         end
 
         def humanized_name

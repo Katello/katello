@@ -32,6 +32,10 @@ module Katello
           Runcible::Models::IsoImporter
         end
 
+        def distributors_to_publish(_options)
+          {Runcible::Models::IsoDistributor => {}}
+        end
+
         def copy_contents(destination_repo, _options = {})
           @smart_proxy.pulp_api.extensions.file.copy(@repo.pulp_id, destination_repo.pulp_id, {})
         end

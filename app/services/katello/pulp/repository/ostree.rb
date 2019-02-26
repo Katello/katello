@@ -27,6 +27,10 @@ module Katello
                                                   :depth => root.compute_ostree_upstream_sync_depth)]
         end
 
+        def distributors_to_publish(_options)
+          {Runcible::Models::OstreeDistributor => {}}
+        end
+
         def partial_repo_path
           "/pulp/puppet/#{pulp_id}/"
         end

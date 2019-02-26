@@ -6,51 +6,12 @@ module Actions
           dependency = options.fetch(:dependency, nil)
           force = options.fetch(:force, false)
           source_repository = options.fetch(:source_repository, nil)
-
           source_repository ||= repository.target_repository if repository.link?
-
-          distributors(repository, source_repository).each do |distributor|
-            plan_action(Pulp::Repository::DistributorPublish,
-                        :pulp_id => repository.pulp_id,
-                        :distributor_type_id => distributor.type_id,
-                        :source_pulp_id => source_repository.try(:pulp_id),
-                        :override_config => override_config(distributor, force),
-                        :dependency => dependency,
-                        :matching_content => options[:matching_content])
-          end
-        end
-
-        def override_config(distributor_class, force)
-          if distributor_class == Runcible::Models::YumDistributor || distributor_class == Runcible::Models::YumCloneDistributor
-            {:force_full => force}
-          else
-            {}
-          end
-        end
-
-        def distributors(repository, clone)
-          case repository.content_type
-          when ::Katello::Repository::YUM_TYPE
-            if clone
-              [Runcible::Models::YumCloneDistributor]
-            else
-              [Runcible::Models::YumDistributor]
-            end
-          when ::Katello::Repository::PUPPET_TYPE
-            if repository.is_a?(::Katello::ContentViewPuppetEnvironment) && !repository.puppet_environment.nil?
-              [Runcible::Models::PuppetDistributor, Runcible::Models::PuppetInstallDistributor]
-            else
-              [Runcible::Models::PuppetDistributor]
-            end
-          when ::Katello::Repository::FILE_TYPE
-            [Runcible::Models::IsoDistributor]
-          when ::Katello::Repository::DOCKER_TYPE
-            [Runcible::Models::DockerDistributor]
-          when ::Katello::Repository::OSTREE_TYPE
-            [Runcible::Models::OstreeDistributor]
-          when ::Katello::Repository::DEB_TYPE
-            [Runcible::Models::DebDistributor]
-          end
+          plan_action(Pulp::Repository::DistributorPublish, repository, SmartProxy.pulp_master,
+                        :force => force,
+                        :matching_content => options[:matching_content],
+                        :source_repository => source_repository,
+                        :dependency => dependency)
         end
       end
     end

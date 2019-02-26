@@ -51,6 +51,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def distributors_to_publish
+        fail NotImplementedError
+      end
+
       def generate_master_importer
         fail NotImplementedError
       end
@@ -149,6 +153,21 @@ module Katello
           ssl_client_key: ueber_cert[:key],
           ssl_ca_cert: ::Cert::Certs.ca_cert
         }
+      end
+
+      def distributor_publish(options)
+        distributors_to_publish(options).map do |distributor_class, config|
+          config[:force_full] = options.fetch(:force, false)
+          smart_proxy.pulp_api.extensions.repository.publish(repo.pulp_id, lookup_distributor_id(distributor_class.type_id),
+                                                             override_config: config)
+        end
+      end
+
+      def lookup_distributor_id(distributor_type_id)
+        distributor = backend_data["distributors"].find do |dist|
+          dist["distributor_type_id"] == distributor_type_id
+        end
+        distributor['id']
       end
 
       def proxy_host_importer_value
