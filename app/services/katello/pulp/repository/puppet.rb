@@ -30,6 +30,14 @@ module Katello
           ::File.join(smart_proxy.puppet_path, puppet_env)
         end
 
+        def distributors_to_publish(_options)
+          if !repo.content_view.default? && !repo.archive?
+            {Runcible::Models::PuppetDistributor => {}, Runcible::Models::PuppetInstallDistributor => {}}
+          else
+            {Runcible::Models::PuppetDistributor => {}}
+          end
+        end
+
         def partial_repo_path
           "/pulp/puppet/#{repo.pulp_id}/"
         end

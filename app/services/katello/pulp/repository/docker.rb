@@ -39,6 +39,10 @@ module Katello
                                                   :repo_registry_id => repo.container_repository_name)]
         end
 
+        def distributors_to_publish(_options)
+          {Runcible::Models::DockerDistributor => {}}
+        end
+
         def external_url(_force_https = false)
           pulp_uri = URI.parse(SmartProxy.pulp_master.pulp_url)
           "#{pulp_uri.host.downcase}:#{Setting['pulp_docker_registry_port']}/#{repo.container_repository_name}"

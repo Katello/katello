@@ -34,6 +34,10 @@ module Katello
                                                 auto_publish: true)]
         end
 
+        def distributors_to_publish(_options)
+          {Runcible::Models::DebDistributor => {}}
+        end
+
         def partial_repo_path
           "/pulp/deb/#{repo.relative_path}/"
         end

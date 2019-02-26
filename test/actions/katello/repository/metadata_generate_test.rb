@@ -13,16 +13,16 @@ module Actions
     let(:puppet_repo) { katello_repositories(:p_forge) }
     let(:content_view_puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
 
+    before do
+      SmartProxy.stubs(:pulp_master).returns(SmartProxy.new)
+    end
+
     it 'plans a yum refresh' do
       action = create_action(action_class)
       plan_action(action, yum_repo)
 
-      assert_action_planed_with(action, pulp_publish_class, :pulp_id => yum_repo.pulp_id,
-          :distributor_type_id => Runcible::Models::YumDistributor.type_id,
-          :source_pulp_id => nil,
-          :override_config => {:force_full => false},
-          :dependency => nil,
-          :matching_content => nil)
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+            :force => false, :matching_content => nil, :source_repository => nil, :dependency => nil)
     end
 
     it 'plans with a content view puppet env' do
@@ -31,55 +31,24 @@ module Actions
 
       plan_action(action, content_view_puppet_env)
 
-      assert_action_planed_with(action, pulp_publish_class, :pulp_id => content_view_puppet_env.pulp_id,
-          :distributor_type_id => Runcible::Models::PuppetInstallDistributor.type_id,
-          :source_pulp_id => nil,
-          :override_config => {},
-          :dependency => nil,
-          :matching_content => nil)
-
-      assert_action_planed_with(action, pulp_publish_class, :pulp_id => content_view_puppet_env.pulp_id,
-          :distributor_type_id => Runcible::Models::PuppetDistributor.type_id,
-          :source_pulp_id => nil,
-          :override_config => {},
-          :dependency => nil,
-          :matching_content => nil)
+      assert_action_planed_with(action, pulp_publish_class, content_view_puppet_env, SmartProxy.pulp_master,
+              :force => false, :matching_content => nil, :source_repository => nil, :dependency => nil)
     end
 
     it 'plans a yum refresh with force true' do
       action = create_action(action_class)
       plan_action(action, yum_repo, :force => true)
 
-      assert_action_planed_with(action, pulp_publish_class, :pulp_id => yum_repo.pulp_id,
-          :distributor_type_id => Runcible::Models::YumDistributor.type_id,
-          :source_pulp_id => nil,
-          :override_config => {:force_full => true},
-          :dependency => nil,
-          :matching_content => nil)
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+            :force => true, :matching_content => nil, :source_repository => nil, :dependency => nil)
     end
 
     it 'plans a yum refresh with source repo' do
       action = create_action(action_class)
       plan_action(action, yum_repo, :source_repository => yum_repo2)
 
-      assert_action_planed_with(action, pulp_publish_class, :pulp_id => yum_repo.pulp_id,
-          :distributor_type_id => Runcible::Models::YumCloneDistributor.type_id,
-          :source_pulp_id => yum_repo2.pulp_id,
-          :override_config => {:force_full => false},
-          :dependency => nil,
-          :matching_content => nil)
-    end
-
-    it 'plans a puppet refresh' do
-      action = create_action(action_class)
-      plan_action(action, puppet_repo)
-
-      assert_action_planed_with(action, pulp_publish_class, :pulp_id => puppet_repo.pulp_id,
-          :distributor_type_id => Runcible::Models::PuppetDistributor.type_id,
-          :source_pulp_id => nil,
-          :override_config => {},
-          :dependency => nil,
-          :matching_content => nil)
+      assert_action_planed_with(action, pulp_publish_class, yum_repo, SmartProxy.pulp_master,
+            :force => false, :matching_content => nil, :source_repository => yum_repo2, :dependency => nil)
     end
   end
 end
