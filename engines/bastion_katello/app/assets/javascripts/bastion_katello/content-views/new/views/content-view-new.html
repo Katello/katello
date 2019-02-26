@@ -64,7 +64,7 @@
                    ng-model="contentView.composite"
                    type="checkbox"
                    tabindex="4"/>
-            <span translate>Composite View?</span>
+            <span translate>Composite View</span>
           </label>
         </div>
         <p class="help-block" translate>A composite view contains other content views.</p>
@@ -78,12 +78,12 @@
                    ng-model="contentView.solve_dependencies"
                    type="checkbox"
                    tabindex="4"/>
-            <span translate>Solve Dependencies?</span>
+            <span translate>Solve Dependencies</span>
           </label>
         </div>
         <p class="help-block" translate>
-          This will solve RPM dependencies on every publish of this Content View. Note that dependency solving significantly increases
-          publish time. Filters will be ignored when adding packages to solve dependencies. Also, certain scenarios may still cause
+          This will solve RPM dependencies on every publish of this Content View. Dependency solving significantly increases
+          publish time and filters will be ignored when adding packages to solve dependencies. Also, certain scenarios may still cause
           dependency errors. You can still opt-out of dependency solving at publish time with this option enabled.
         </p>
       </div>

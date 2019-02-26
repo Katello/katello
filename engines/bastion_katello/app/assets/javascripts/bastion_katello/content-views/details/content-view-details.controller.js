@@ -53,7 +53,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.fetchContentView = function () {
-            $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function () {
+            $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function (result) {
                 $scope.panel.loading = false;
             }, function (response) {
                 $scope.panel.loading = false;

@@ -37,12 +37,44 @@
       </div>
 
       <div bst-form-group label="{{ 'Description' | translate }}">
-    <textarea id="description"
-              name="description"
-              ng-model="version.description"
-              rows="10"
-              tabindex="1">
-    </textarea>
+        <textarea id="description"
+                  name="description"
+                  ng-model="version.description"
+                  rows="10"
+                  tabindex="1">
+        </textarea>
+      </div>
+
+      <div class="checkbox" ng-show='showSolveDepsSkip'>
+        <label>
+          <input id="solve_dependencies"
+                 name="solve_dependencies"
+                 ng-model="version.solve_dependencies"
+                 type="checkbox"/>
+          <span translate>Skip solving RPM dependencies</span>
+        </label>
+
+        <p class="help-block" translate>
+          Skip solving dependencies for this version only. This option is displayed because either
+          solving dependencies is enabled for this Content View or the global 'Content View Dependency Solving'
+          setting is on.
+        </p>
+      </div>
+
+      <div class="checkbox" ng-hide='showSolveDepsSkip'>
+        <label>
+          <input id="solve_dependencies"
+                 name="solve_dependencies"
+                 ng-model="version.solve_dependencies"
+                 type="checkbox"/>
+          <span translate>Solve RPM dependencies</span>
+        </label>
+
+        <p class="help-block" translate>
+          Solve RPM dependencies for this version only.  Publishes will take significantly longer with this option turned
+          on and filters will be ignored to solve dependencies. Also, certain scenarios can still cause dependency errors.
+          You can enable this option for the Content View as well.
+        </p>
       </div>
 
       <div bst-form-buttons

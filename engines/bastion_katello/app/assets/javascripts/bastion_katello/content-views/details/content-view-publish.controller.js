@@ -6,6 +6,7 @@
  * @requires translate
  * @requires ContentView
  * @requires Notification
+ * @requires contentViewSolveDependencies
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -13,7 +14,8 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', 'translate', 'ContentView', 'Notification', function ($scope, translate, ContentView, Notification) {
+    ['$scope', 'translate', 'ContentView', 'Notification', 'contentViewSolveDependencies',
+    function ($scope, translate, ContentView, Notification, contentViewSolveDependencies) {
 
         function success() {
             $scope.transitionTo('content-view.versions',
@@ -31,6 +33,7 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         }
 
         $scope.version = {};
+        $scope.showSolveDepsSkip = null;
 
         $scope.publish = function (contentView) {
             var description = $scope.version.description,
@@ -42,5 +45,10 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         //Refetch the content view so that the contentView is updated for latest components
         $scope.fetchContentView();
 
+        $scope.contentView.$promise.then(function () {
+            if ($scope.contentView) {
+              $scope.showSolveDepsSkip = $scope.contentView.solve_dependencies || contentViewSolveDependencies;
+            }
+        });
     }]
 );

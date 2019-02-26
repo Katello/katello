@@ -101,7 +101,7 @@ module Katello
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
                         :major => params[:major],
                         :minor => params[:minor],
-                        :solve_dependencies => ::Foreman::Cast.to_bool(params[:solve_dependencies]),
+                        :solve_dependencies => @view.solve_dependencies || ::Foreman::Cast.to_bool(params[:solve_dependencies]),
                         :repos_units => params[:repos_units])
       respond_for_async :resource => task
     end
@@ -230,8 +230,8 @@ module Katello
 
     def view_params
       attrs = [:name, :description, :force_puppet_environment, {:component_ids => []}]
-      attrs.push(:label, :composite, :solve_dependencies) if action_name == "create"
-      attrs.push(:component_ids, :auto_publish) # For deep_munge; Remove for Rails 5
+      attrs.push(:label, :composite) if action_name == "create"
+      attrs.push(:component_ids, :auto_publish, :solve_dependencies) # For deep_munge; Remove for Rails 5
       if (!@view || !@view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end
