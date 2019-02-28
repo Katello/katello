@@ -3,7 +3,6 @@ kind: job_template
 name: Restart Services - Katello SSH Default
 job_category: Katello
 description_format: 'Restart Services'
-feature: katello_service_restart
 provider_type: SSH
 template_inputs:
 - name: helper
@@ -12,6 +11,12 @@ template_inputs:
   required: true
 %>
 
-<%= input(:helper).split(",").map {|split| "#{split}" }.join("\n") %>
-
+<%
+commands = input(:helper).split(',').map { |split| split.strip }
+reboot = commands.delete('reboot')
+-%>
+<%= commands.join("\n") %>
 katello-tracer-upload
+<% if reboot -%>
+<%= render_template('Power Action - SSH Default', action: 'restart') %>
+<% end %>
