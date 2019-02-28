@@ -4,7 +4,6 @@ snippet: false
 model: JobTemplate
 job_category: Katello via Ansible
 description_format: Restart Services
-feature: katello_service_restart
 template_inputs:
 - name: helper
   required: true
@@ -25,5 +24,4 @@ reboot = commands.delete('reboot')
 ) %>
 <% if reboot %>
     - reboot:
-    - command: 'katello-tracer-upload'
 <% end %>
