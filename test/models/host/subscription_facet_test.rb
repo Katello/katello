@@ -220,6 +220,45 @@ module Katello
       assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host({'network.hostname' => host.name.upcase}, org2) }
     end
 
+    def test_find_host_existing_uuid
+      # find host by dmi.system.uuid, no hostname match
+      fact_name = FactName.create(name: 'dmi::system::uuid')
+      FactValue.create(value: "existing_system_uuid", host: host, fact_name: fact_name)
+
+      facts = {'dmi.system.uuid' => 'existing_system_uuid', 'network.hostname' => 'inexistent'}
+
+      assert_equal host, Katello::Host::SubscriptionFacet.find_host(facts, org)
+    end
+
+    def test_find_host_nil_uuid
+      # hostname does not match existing record, and the dmi.system.uuid is nil.
+      fact_name = FactName.create(name: 'dmi::system::uuid')
+      FactValue.create(value: nil, host: host, fact_name: fact_name)
+
+      assert_nil Katello::Host::SubscriptionFacet.find_host({'network.hostname' => 'inexistent'}, org)
+    end
+
+    def test_find_host_existing_uuid_and_name
+      host2 = FactoryBot.create(:host, organization: org)
+
+      fact_name = FactName.create(name: 'dmi::system::uuid')
+      FactValue.create(value: "existing_system_uuid", host: host2, fact_name: fact_name)
+
+      facts = {'dmi.system.uuid' => 'existing_system_uuid', 'network.hostname' => host.name}
+
+      # if we get two matches, raise an error
+      error = assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host(facts, org) }
+      assert_match(/since multiple were found/, error.message)
+
+      # if we get a single match uuid + hostname, return it
+      host3 = FactoryBot.create(:host, organization: org)
+
+      FactValue.create(value: 'host3-uuid', host: host3, fact_name: fact_name)
+      facts = {'dmi.system.uuid' => 'host3-uuid', 'network.hostname' => host3.name}
+
+      assert_equal host3, Katello::Host::SubscriptionFacet.find_host(facts, org)
+    end
+
     def test_find_or_create_host_with_org
       created_host = FactoryBot.create(:host, :organization_id => org.id)
       host = Katello::Host::SubscriptionFacet.find_or_create_host(org, :facts => {'network.hostname' => created_host.name})

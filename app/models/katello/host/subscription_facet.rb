@@ -242,14 +242,21 @@ module Katello
 
       def self.find_host(facts, organization)
         host_name = propose_existing_hostname(facts)
-        hosts = ::Host.unscoped.where(:name => host_name)
+        hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
+                .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
+		AND #{FactValue.table_name}.value = ?)", host_name,
+                FactName.where(name: 'dmi::system::uuid').pluck(:id), facts['dmi.system.uuid'])
 
-        return nil if hosts.empty? #no host exists
+        return nil if hosts.empty?
+
         if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
           #TODO: http://projects.theforeman.org/issues/11532
           fail _("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.") %
                    {:org_name => organization.name, :host_name => host_name }
         end
+
+        fail _("Could not associate this host to an existing profile since multiple were found. Please remove outdated content hosts.") if hosts.size > 1
+
         hosts.first
       end
 
