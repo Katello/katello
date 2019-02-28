@@ -4,6 +4,7 @@ snippet: false
 model: JobTemplate
 job_category: Katello via Ansible
 description_format: Restart Services
+feature: katello_service_restart
 template_inputs:
 - name: helper
   required: true
@@ -14,7 +15,15 @@ provider_type: Ansible
 kind: job_template
 %>
 
+<%
+commands = input(:helper).split(',').map { |split| split.strip }
+reboot = commands.delete('reboot')
+-%>
 <%= render_template(
-  'Run Command - Ansible Default',
-  :command => "#{input(:helper)},katello-tracer-upload".split(',').map {|split| "#{split}" }.join("\n")
+    'Run Command - Ansible Default',
+    :command => (commands.push('katello-tracer-upload')).join("\n")
 ) %>
+<% if reboot %>
+    - reboot:
+    - command: 'katello-tracer-upload'
+<% end %>
