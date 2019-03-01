@@ -7,6 +7,7 @@ describe('Controller: ContentViewPublishController', function() {
         var $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
             translate = $injector.get('translateMock');
+            contentViewSolveDependencies = false
 
         ContentView.publish = function(options, callback) {  callback({id: 3}) };
         $scope = $injector.get('$rootScope').$new();

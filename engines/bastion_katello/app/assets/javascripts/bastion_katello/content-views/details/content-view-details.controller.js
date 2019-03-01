@@ -8,14 +8,13 @@
  * @requires translate
  * @requires ApiErrorHandler
  * @requires Notification
- * @requires contentViewSolveDependencies
  *
  * @description
  *   Provides the functionality specific to the Content View Details page.
  */
 angular.module('Bastion.content-views').controller('ContentViewDetailsController',
-    ['$scope', '$q', 'ContentView', 'translate', 'ApiErrorHandler', 'Notification', 'RepositoryTypesService', 'contentViewSolveDependencies',
-    function ($scope, $q, ContentView, translate, ApiErrorHandler, Notification, RepositoryTypesService, contentViewSolveDependencies) {
+    ['$scope', '$q', 'ContentView', 'translate', 'ApiErrorHandler', 'Notification', 'RepositoryTypesService',
+    function ($scope, $q, ContentView, translate, ApiErrorHandler, Notification, RepositoryTypesService) {
         $scope.saveSuccess = function () {
             Notification.setSuccessMessage(translate('Content View updated.'));
         };
@@ -54,7 +53,7 @@ angular.module('Bastion.content-views').controller('ContentViewDetailsController
         };
 
         $scope.fetchContentView = function () {
-            $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function (result) {
+            $scope.contentView = ContentView.get({id: $scope.$stateParams.contentViewId}, function () {
                 $scope.panel.loading = false;
             }, function (response) {
                 $scope.panel.loading = false;

@@ -18,7 +18,7 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
     function ($scope, translate, ContentView, Notification, contentViewSolveDependencies) {
 
         // boolean is passed in as a string since it comes from rails app by way of bastion.
-        var solveDependenciesSetting = contentViewSolveDependencies === 'true'
+        var solveDependenciesSetting = contentViewSolveDependencies === 'true';
 
         function success() {
             $scope.transitionTo('content-view.versions',
@@ -35,24 +35,33 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
             $scope.working = false;
         }
 
+        $scope.calculateSolveDeps = function(contentViewSolveDep, solveDepSetting, skipSolveDep) {
+            var solveDependencies = contentViewSolveDep;
+            if (solveDepSetting) {
+                solveDependencies = true;
+            }
+            if (skipSolveDep) {
+                solveDependencies = false;
+            }
+            return solveDependencies;
+        };
+
         $scope.version = {};
 
         $scope.showSolveDepsSkip = function(contentView) {
-          return contentView.solve_dependencies || solveDependenciesSetting;
-        }
+            return contentView.solve_dependencies || solveDependenciesSetting;
+        };
 
         $scope.publish = function (contentView) {
-            var solve_dependencies = contentView.solve_dependencies
-            if (solveDependenciesSetting) {
-              solve_dependencies = true;
-            }
-            console.log($scope.contentView.skip_solve_dependencies);
-            if ($scope.contentView.skip_solve_dependencies) {
-              solve_dependencies = false;
-            }
-
-            var description = $scope.version.description,
-                data = { 'id': contentView.id, 'description': description, 'solve_dependencies': solve_dependencies };
+            var contentViewSolveDep = contentView.solve_dependencies,
+                skipSolveDep = $scope.version.skipSolveDependencies,
+                solveDependenciesParam = $scope.calculateSolveDeps(contentViewSolveDep, solveDependenciesSetting, skipSolveDep),
+                description = $scope.version.description,
+                data = {
+                  'id': contentView.id,
+                  'description': description,
+                  'solve_dependencies': solveDependenciesParam
+                };
             $scope.working = true;
             ContentView.publish(data, success, failure);
         };
