@@ -55,7 +55,7 @@ module Katello
     param :name, String, :desc => N_("Name of the content view"), :required => true
     param :label, String, :desc => N_("Content view label")
     param :composite, :bool, :desc => N_("Composite content view")
-    param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish")
+    param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
     param_group :content_view
     def create
       @view = ContentView.create!(view_params) do |view|
@@ -80,7 +80,7 @@ module Katello
     param :description, String, :desc => N_("Description for the new published content view version")
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
-    param :solve_dependencies, :bool, :desc => N_("Solve intra-repository depdencies as part of publish.  Default: false")
+    param :solve_dependencies, :bool, :desc => N_("Solve intra-repository RPM dependencies as part of the publish. Defaults to false")
     param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
       param :label, String, :desc => N_("repo label"), :required => true
       param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
@@ -101,7 +101,7 @@ module Katello
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
                         :major => params[:major],
                         :minor => params[:minor],
-                        :solve_dependencies => @view.solve_dependencies || ::Foreman::Cast.to_bool(params[:solve_dependencies]),
+                        :solve_dependencies => ::Foreman::Cast.to_bool(params[:solve_dependencies]),
                         :repos_units => params[:repos_units])
       respond_for_async :resource => task
     end

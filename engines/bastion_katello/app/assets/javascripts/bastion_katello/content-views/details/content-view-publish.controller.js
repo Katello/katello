@@ -17,6 +17,9 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
     ['$scope', 'translate', 'ContentView', 'Notification', 'contentViewSolveDependencies',
     function ($scope, translate, ContentView, Notification, contentViewSolveDependencies) {
 
+        // boolean is passed in as a string since it comes from rails app by way of bastion.
+        var solveDependenciesSetting = contentViewSolveDependencies === 'true'
+
         function success() {
             $scope.transitionTo('content-view.versions',
                                 {contentViewId: $scope.contentView.id});
@@ -33,22 +36,28 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
         }
 
         $scope.version = {};
-        $scope.showSolveDepsSkip = null;
+
+        $scope.showSolveDepsSkip = function(contentView) {
+          return contentView.solve_dependencies || solveDependenciesSetting;
+        }
 
         $scope.publish = function (contentView) {
+            var solve_dependencies = contentView.solve_dependencies
+            if (solveDependenciesSetting) {
+              solve_dependencies = true;
+            }
+            console.log($scope.contentView.skip_solve_dependencies);
+            if ($scope.contentView.skip_solve_dependencies) {
+              solve_dependencies = false;
+            }
+
             var description = $scope.version.description,
-                data = {'id': contentView.id, 'description': description};
+                data = { 'id': contentView.id, 'description': description, 'solve_dependencies': solve_dependencies };
             $scope.working = true;
             ContentView.publish(data, success, failure);
         };
 
         //Refetch the content view so that the contentView is updated for latest components
         $scope.fetchContentView();
-
-        $scope.contentView.$promise.then(function () {
-            if ($scope.contentView) {
-              $scope.showSolveDepsSkip = $scope.contentView.solve_dependencies || contentViewSolveDependencies;
-            }
-        });
     }]
 );
