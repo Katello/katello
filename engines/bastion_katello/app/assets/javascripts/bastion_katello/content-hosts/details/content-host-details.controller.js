@@ -24,13 +24,16 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
         $scope.getHostStatusIcon = ContentHostsHelper.getHostStatusIcon;
         $scope.getHostPurposeStatusIcon = ContentHostsHelper.getHostPurposeStatusIcon;
 
-        $scope.organization = Organization.get({id: CurrentOrganization});
+        $scope.organization = Organization.get({id: CurrentOrganization}, function(org) {
+            $scope.purposeAddonsCount += org.system_purposes.addons.length;
+        });
 
         $scope.defaultUsages = ['Production', 'Development/Test', 'Disaster Recovery'];
         $scope.defaultRoles = ['Red Hat Enterprise Linux Server', 'Red Hat Enterprise Linux Workstation', 'Red Hat Enterprise Linux Compute Node'];
         $scope.defaultServiceLevels = ['Self-Support', 'Standard', 'Premium'];
 
         $scope.purposeAddonsList = [];
+        $scope.purposeAddonsCount = 0;
 
         $scope.panel = {
             error: false,
@@ -41,6 +44,7 @@ angular.module('Bastion.content-hosts').controller('ContentHostDetailsController
             host.unregisterDelete = !host.hasSubscription() || deleteHostOnUnregister;
             host.deleteHostOnUnregister = deleteHostOnUnregister;
             $scope.panel.loading = false;
+            $scope.purposeAddonsCount += host.subscription_facet_attributes.purpose_addons.length;
         }, function (response) {
             $scope.panel.loading = false;
             ApiErrorHandler.handleGETRequestErrors(response, $scope);

@@ -119,7 +119,7 @@ describe('Controller: ContentHostDetailsController', function() {
     });
 
     it("attaches an organization to the scope", function() {
-        expect(Organization.get).toHaveBeenCalledWith({id: '1'});
+        expect(Organization.get).toHaveBeenCalledWith({id: '1'}, jasmine.any(Function));
         expect($scope.organization).toBeDefined();
     });
 
