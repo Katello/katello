@@ -130,11 +130,12 @@ module Katello
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'
-      assert_equal update_attrs[:name], assigns[:sync_plan].name
-      assert_equal update_attrs[:interval], assigns[:sync_plan].interval
-      assert_equal update_attrs[:enabled], assigns[:sync_plan].enabled
-      assert_equal update_attrs[:sync_date], assigns[:sync_plan].sync_date.strftime(datetime_format)
-      assert_not_equal old_rec_logic, assigns[:sync_plan].foreman_tasks_recurring_logic_id
+      response = JSON.parse(@response.body)
+      assert_equal update_attrs[:name], response['name']
+      assert_equal update_attrs[:interval], response['interval']
+      assert_equal update_attrs[:enabled], response['enabled']
+      assert_equal Time.parse(update_attrs[:sync_date]), Time.parse(response['sync_date'])
+      assert_not_equal old_rec_logic, response['foreman_tasks_recurring_logic_id']
     end
 
     def test_recurring_logic_update_with_sync_date
@@ -174,7 +175,7 @@ module Katello
         :enabled => false
       }
       old_rec_logic = @sync_plan.foreman_tasks_recurring_logic_id
-      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :sync_plan => update_attrs }
+      put :update, params: { :id => @sync_plan.id, :organization_id => @organization.id, :enabled => false, :sync_plan => update_attrs }
 
       assert_response :success
       assert_template 'api/v2/sync_plans/show'

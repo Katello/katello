@@ -47,12 +47,15 @@ module Katello
     param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
     param_group :sync_plan
     def create
+      if params[:sync_plan].key?(:enabled) || params.key?(:enabled)
+        enabled = params[:sync_plan][:enabled] || params[:enabled]
+      end
       unless sync_plan_params[:sync_date].to_time(:utc).is_a?(Time)
         fail _("Date format is incorrect.")
       end
-      @sync_plan = SyncPlan.new(sync_plan_params)
+      @sync_plan = SyncPlan.new(sync_plan_params.except(:enabled))
       @sync_plan.organization = @organization
-      @sync_plan.save_with_logic!
+      @sync_plan.save_with_logic!(enabled)
       respond_for_create(:resource => @sync_plan)
     end
 
@@ -63,6 +66,9 @@ module Katello
     param_group :sync_plan
     def update
       sync_date = sync_plan_params.try(:[], :sync_date).try(:to_time)
+      params[:enabled] = params[:enabled] || params[:sync_plan][:enabled]
+      toggle_enabled = (@sync_plan.enabled? != params[:enabled]) && params.key?(:enabled) && !@sync_plan.foreman_tasks_recurring_logic.cancelled?
+      @sync_plan.foreman_tasks_recurring_logic.enabled = params[:enabled] if toggle_enabled
       if !sync_date.nil? && !sync_date.is_a?(Time)
         fail _("Date format is incorrect.")
       end
@@ -116,7 +122,9 @@ module Katello
     end
 
     def sync_plan_params
-      params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids, :enabled, :cron_expression)
+      sync_plan_param = params.require(:sync_plan).permit(:name, :description, :interval, :sync_date, :product_ids, :enabled, :cron_expression)
+      sync_plan_param[:enabled] = params[:enabled]
+      sync_plan_param
     end
   end
 end

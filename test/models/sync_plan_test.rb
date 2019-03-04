@@ -32,8 +32,9 @@ module Katello
     test_attributes :pid => 'df5837e7-3d0f-464a-bd67-86b423c16eb4'
     def test_create_enabled_disabled
       [false, true].each do |enabled|
-        sync_plan = SyncPlan.new(valid_attributes.merge(:enabled => enabled))
+        sync_plan = SyncPlan.new(valid_attributes.merge(:name => enabled))
         assert sync_plan.valid?, "Validation failed when creating with enabled = #{enabled}"
+        sync_plan.save_with_logic! enabled
         assert_equal enabled, sync_plan.enabled
       end
     end
@@ -93,7 +94,7 @@ module Katello
     end
 
     def test_recurring_logic_on_create
-      sync_plan = SyncPlan.new(valid_attributes.merge(:enabled => true))
+      sync_plan = SyncPlan.new(valid_attributes)
       sync_plan.save_with_logic!
       assert_not_equal sync_plan.foreman_tasks_recurring_logic, nil
       assert_equal sync_plan.foreman_tasks_recurring_logic.enabled?, sync_plan.enabled
@@ -118,7 +119,7 @@ module Katello
     def test_invalid_cron_status
       @plan.cron_expression = "20 * * * *"
       refute @plan.valid?, "Custom cron expression only needs to be set for interval value of custom cron"
-      assert @plan.save_with_logic!
+      @plan.save_with_logic!
       assert_equal @plan.cron_expression, ''
     end
 
@@ -291,7 +292,7 @@ module Katello
     end
 
     def test_delete
-      sync_plan = SyncPlan.new(valid_attributes.merge(:enabled => true))
+      sync_plan = SyncPlan.new(valid_attributes)
       sync_plan.save_with_logic!
       p = SyncPlan.find_by_name('Sync plan')
       pid = p.id
@@ -336,7 +337,7 @@ module Katello
     end
 
     def test_cancel_recurring_logic
-      sync_plan = SyncPlan.new(valid_attributes.merge(:enabled => true))
+      sync_plan = SyncPlan.new(valid_attributes)
       sync_plan.save_with_logic!
       p = SyncPlan.find_by_name('Sync plan')
       p.cancel_recurring_logic

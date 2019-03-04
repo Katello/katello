@@ -23,7 +23,6 @@ module Katello
     validates_lengths_from_database
     validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
     validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
-    validates :enabled, :inclusion => [true, false]
     validate :validate_sync_date
     validate :product_enabled
     validate :custom_cron_interval_expression
@@ -34,7 +33,19 @@ module Katello
     scoped_search :on => :name, :complete_value => true
     scoped_search :on => :organization_id, :complete_value => true, :only_explicit => true, :validator => ScopedSearch::Validators::INTEGER
     scoped_search :on => :interval, :complete_value => true
-    scoped_search :on => :enabled, :complete_value => true
+    scoped_search :on => :enabled, :complete_value => { :true => true, :false => false }, :ext_method => :search_enabled
+
+    def self.search_enabled(_key, operator, value)
+      value = !value if operator == '<>'
+      active_logics = ForemanTasks::RecurringLogic.where(:state => "active")
+      active_logic_ids = active_logics.pluck(:id)
+      if active_logic_ids.empty?
+        {:conditions => "1=0"}
+      else
+        operator = value ? 'IN' : 'NOT IN'
+        {:conditions => "#{Katello::SyncPlan.table_name}.foreman_tasks_recurring_logic_id #{operator} (#{active_logic_ids.join(',')})"}
+      end
+    end
 
     def product_enabled
       products.each do |product|
@@ -46,26 +57,27 @@ module Katello
       errors.add :base, _("Custom cron expression only needs to be set for interval value of custom cron") if cron_status_mismatch?
     end
 
-    def save_with_logic!
+    def save_with_logic!(enabled = nil)
       self.task_group ||= SyncPlanTaskGroup.create!
       self.cron_expression = '' if (self.cron_expression && !(self.interval.eql? CUSTOM_CRON))
       associate_recurring_logic
       self.save!
       start_recurring_logic
+      self.foreman_tasks_recurring_logic.enabled = enabled unless (enabled || enabled.nil?)
     end
 
     def update_attributes_with_logics!(params)
       transaction do
-        params["cron_expression"] = '' unless params["interval"].eql? CUSTOM_CRON
-        self.update_attributes!(params)
-        if rec_logic_changed?
+        params["cron_expression"] = '' unless (self.cron_expression == '' && params["interval"].eql?(CUSTOM_CRON))
+        self.update_attributes!(params.except(:enabled))
+        if (rec_logic_changed? || (params["enabled"] && !self.enabled? && self.foreman_tasks_recurring_logic.cancelled?))
           old_rec_logic = self.foreman_tasks_recurring_logic
           associate_recurring_logic
           self.save!
           old_rec_logic.cancel
           start_recurring_logic
         end
-        toggle_enabled if enabled_toggle?
+        toggle_enabled(params[:enabled]) if (params.key?(:enabled) && params[:enabled] != self.enabled?)
       end
     end
 
@@ -73,8 +85,8 @@ module Katello
       self.foreman_tasks_recurring_logic = add_recurring_logic_to_sync_plan(self.sync_date, self.interval, self.cron_expression)
     end
 
-    def toggle_enabled
-      self.foreman_tasks_recurring_logic.enabled = self.enabled
+    def toggle_enabled(value = false)
+      self.foreman_tasks_recurring_logic.enabled = value
     end
 
     def start_recurring_logic
@@ -85,6 +97,18 @@ module Katello
           self.foreman_tasks_recurring_logic.start_after(::Actions::Katello::SyncPlan::Run, self.sync_date, self)
         end
       end
+    end
+
+    def enabled?
+      self.foreman_tasks_recurring_logic && self.foreman_tasks_recurring_logic.state == 'active'
+    end
+
+    def enabled
+      enabled?
+    end
+
+    def enabled=(value)
+      self.foreman_tasks_recurring_logic.enabled = value
     end
 
     def cancel_recurring_logic
@@ -120,7 +144,7 @@ module Katello
     end
 
     def next_sync_date
-      return nil unless self.enabled
+      return nil unless self.enabled?
       self.foreman_tasks_recurring_logic&.tasks&.order(:start_at)&.last&.start_at
     end
 
@@ -160,10 +184,6 @@ module Katello
 
     def rec_logic_changed?
       saved_change_to_attribute?(:sync_date) || saved_change_to_attribute?(:interval) || saved_change_to_attribute?(:cron_expression)
-    end
-
-    def enabled_toggle?
-      saved_change_to_attribute?(:enabled)
     end
 
     def cron_status_mismatch?

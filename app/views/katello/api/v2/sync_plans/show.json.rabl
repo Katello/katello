@@ -4,7 +4,7 @@ attributes :id, :organization_id
 attributes :name, :description
 attributes :interval, :next_sync
 attributes :created_at, :updated_at
-attributes :enabled, :foreman_tasks_recurring_logic_id
+attributes :foreman_tasks_recurring_logic_id
 attributes :cron_expression
 
 child :products => :products do |_product|
@@ -30,4 +30,8 @@ end
 
 node :sync_date do |sync_plan|
   sync_plan.plan_date_time
+end
+
+node :enabled do |sync_plan|
+  sync_plan.foreman_tasks_recurring_logic.state == 'active'
 end
