@@ -29,7 +29,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true)
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
     end
 
     it 'plans to clone yum metadata' do
@@ -45,7 +45,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true)
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
     end
 
     it 'plans to clone docker units' do
@@ -60,7 +60,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true)
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
     end
 
     it 'plans to clone file units' do
@@ -74,7 +74,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
-                                :metadata_generate => true)
+                                :metadata_generate => true, :solve_dependencies => false)
     end
   end
 end

@@ -4,6 +4,7 @@ module Actions
     module ContentView
       class Publish < Actions::EntryAction
         # rubocop:disable MethodLength
+        # rubocop:disable Metrics/AbcSize
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
           solve_dependencies = options.fetch(:solve_dependencies, false)
@@ -102,6 +103,7 @@ module Actions
             end
           end
         end
+        # rubocop:enable Metrics/AbcSize
 
         def rescue_strategy_for_self
           Dynflow::Action::Rescue::Skip

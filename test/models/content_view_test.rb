@@ -269,10 +269,10 @@ module Katello
 
     def test_composite_content_view_no_dependency_resolution
       assert_raises(ActiveRecord::RecordInvalid) do
-        view = ContentView.create!(:name => "should not work",
-                                  :organization_id => @organization.id,
-                                  :solve_dependencies => true,
-                                  :composite => true)
+        ContentView.create!(:name => "should not work",
+                            :organization_id => @organization.id,
+                            :solve_dependencies => true,
+                            :composite => true)
       end
     end
 

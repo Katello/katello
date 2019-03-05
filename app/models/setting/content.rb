@@ -1,15 +1,20 @@
 class Setting::Content < Setting
   #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/AbcSize
+
+  def self.hashify_parameters(parameters)
+    Hash[parameters.map { |p| [p, p] }]
+  end
+
   def self.load_defaults
     return unless super
 
     BLANK_ATTRS.concat %w(register_hostname_fact default_location_subscribed_hosts
                           default_location_puppet_content)
 
-    download_policies = proc { Hash[::Runcible::Models::YumImporter::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
-    proxy_download_policies = proc { Hash[::SmartProxy::DOWNLOAD_POLICIES.map { |p| [p, p] }] }
-    dependency_solving_options = proc { Hash[['conservative', 'greedy'].map { |p| [p, p] }] }
+    download_policies = proc { hashify_parameters(::Runcible::Models::YumImporter::DOWNLOAD_POLICIES) }
+    proxy_download_policies = proc { hashify_parameters(::SmartProxy::DOWNLOAD_POLICIES) }
+    dependency_solving_options = proc { hashify_parameters(['conservative', 'greedy']) }
 
     self.transaction do
       [
@@ -112,7 +117,7 @@ class Setting::Content < Setting
                  N_("How the logic of solving dependencies in a Content View is managed. Conservative will only add packages to solve the dependencies " \
                   "if the packaged needed doesn't exist. Greedy will pull in the latest package to solve a dependency even if it already does exist " \
                   "in the repository."),
-                 'conservative', N_('Content View Dependency Solving Logic'), nil,
+                 'conservative', N_('Content View Dependency Solving Algorithm'), nil,
                  :collection => dependency_solving_options)
       ].each { |s| self.create! s.update(:category => "Setting::Content") }
     end

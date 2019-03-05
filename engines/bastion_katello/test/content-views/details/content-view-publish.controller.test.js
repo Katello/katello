@@ -7,7 +7,6 @@ describe('Controller: ContentViewPublishController', function() {
         var $controller = $injector.get('$controller'),
             ContentView = $injector.get('MockResource').$new(),
             translate = $injector.get('translateMock');
-            contentViewSolveDependencies = false
 
         ContentView.publish = function(options, callback) {  callback({id: 3}) };
         $scope = $injector.get('$rootScope').$new();
@@ -24,7 +23,8 @@ describe('Controller: ContentViewPublishController', function() {
         $controller('ContentViewPublishController', {
             $scope: $scope,
             translate: translate,
-            ContentView: ContentView
+            ContentView: ContentView,
+            contentViewSolveDependencies: false
         });
     }));
 
@@ -39,4 +39,24 @@ describe('Controller: ContentViewPublishController', function() {
             {contentViewId: $scope.contentView.id});
     });
 
+    // dependency solving testing
+    // order within array is: content view setting, global setting, skip solve deps checkbox, result
+    var scenarios = [
+      [false, false, false, false],
+      [false, true, false, true],
+      [true, false, false, true],
+      [true, true, false, true],
+      [true, false, true, false],
+      [false, true, true, false],
+      [true, true, true, false]
+    ];
+
+    scenarios.map(function(scenario) {
+      it('calculates solve dependencies correctly, scenario: ' + scenario.join(', '), function() {
+        var contentViewSetting = scenario[0],
+            globalSetting = scenario[1],
+            skipSolveDep = scenario[2]
+        expect($scope.calculateSolveDeps(contentViewSetting, globalSetting, skipSolveDep)).toBe(scenario[3]);
+      });
+    });
 });
