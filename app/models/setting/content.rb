@@ -108,7 +108,7 @@ class Setting::Content < Setting
                  'and filters will be ignored to solve dependencies. Also, certain scenarios can still cause dependency errors. This can be ' \
                  'set on individual Content Views as well.'),
                  false, N_('Content View Dependency Solving')),
-        self.set('dependency_solving_logic',
+        self.set('dependency_solving_algorithm',
                  N_("How the logic of solving dependencies in a Content View is managed. Conservative will only add packages to solve the dependencies " \
                   "if the packaged needed doesn't exist. Greedy will pull in the latest package to solve a dependency even if it already does exist " \
                   "in the repository."),

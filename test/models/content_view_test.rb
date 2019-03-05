@@ -69,6 +69,11 @@ module Katello
       assert ContentView.create(FactoryBot.attributes_for(:katello_content_view))
     end
 
+    def test_create_solve_dependencies
+      content_view = FactoryBot.build(:katello_content_view, solve_dependencies: true)
+      assert content_view.save
+    end
+
     def test_label
       content_view = FactoryBot.build(:katello_content_view)
       content_view.label = ""
@@ -168,6 +173,13 @@ module Katello
       assert new_view.filters == @library_dev_view.filters
     end
 
+    def test_copy_with_solve_dependencies
+      content_view = FactoryBot.create(:katello_content_view, solve_dependencies: true)
+      new_view = content_view.copy('another content view with dep solving')
+
+      assert_equal content_view.solve_dependencies, new_view.solve_dependencies
+    end
+
     def test_delete
       skip "TODO: Fix content views"
       view = @library_dev_view
@@ -253,6 +265,15 @@ module Katello
         view.repositories << Repository.first
       end
       assert_empty view.repositories
+    end
+
+    def test_composite_content_view_no_dependency_resolution
+      assert_raises(ActiveRecord::RecordInvalid) do
+        view = ContentView.create!(:name => "should not work",
+                                  :organization_id => @organization.id,
+                                  :solve_dependencies => true,
+                                  :composite => true)
+      end
     end
 
     def test_on_demand_repositories

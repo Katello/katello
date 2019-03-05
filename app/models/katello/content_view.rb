@@ -62,6 +62,9 @@ module Katello
     validate :check_docker_conflicts
     validate :check_non_composite_auto_publish
     validates :composite, :inclusion => [true, false]
+    validates :composite,
+              inclusion: { in: [false], message: "Composite Content Views can not solve dependencies"},
+              if: :solve_dependencies
 
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -157,7 +160,7 @@ module Katello
     def copy(new_name)
       new_view = ContentView.new
       new_view.name = new_name
-      new_view.attributes = self.attributes.slice("description", "organization_id", "default", "composite")
+      new_view.attributes = self.attributes.slice("description", "organization_id", "default", "composite", "solve_dependencies")
       new_view.save!
       new_view.repositories = self.repositories
 
