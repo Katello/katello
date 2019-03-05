@@ -1,8 +1,14 @@
 module Actions
   module Pulp
     class Abstract < Actions::Base
+      BACKEND_SERVICE_TYPE = 'pulp2'.freeze
+
       middleware.use ::Actions::Middleware::RemoteAction
       middleware.use Actions::Middleware::PulpServicesCheck
+
+      def self.backend_service_type
+        BACKEND_SERVICE_TYPE
+      end
 
       def pulp_resources(capsule_id = nil)
         capsule_content(capsule_id).resources

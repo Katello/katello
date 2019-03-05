@@ -2,7 +2,7 @@ module Actions
   module Pulp3
     module Orchestration
       module Repository
-        class GenerateMetadata < Actions::Base
+        class GenerateMetadata < Pulp3::Abstract
           def plan(repository, smart_proxy, options)
             sequence do
               plan_action(Actions::Pulp3::Repository::CreatePublication, repository, smart_proxy, options)

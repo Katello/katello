@@ -120,6 +120,14 @@ module Katello
         client
       end
 
+      def backend_service_type(repository)
+        if pulp3_support?(repository)
+          Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
+        else
+          Actions::Pulp::Abstract::BACKEND_SERVICE_TYPE
+        end
+      end
+
       def pulp3_support?(repository)
         type = Katello::RepositoryTypeManager.repository_types[repository.root.content_type]
         type.pulp3_plugin && self.capabilities('Pulp3').include?(type.pulp3_plugin)

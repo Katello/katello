@@ -8,8 +8,8 @@ module Actions
           source_repository = options.fetch(:source_repository, nil)
           source_repository ||= repository.target_repository if repository.link?
 
-          plan_action(PulpSelector, Pulp::Repository::DistributorPublish,
-                      Pulp3::Orchestration::Repository::GenerateMetadata,
+          plan_action(PulpSelector,
+                      [Pulp::Repository::DistributorPublish, Pulp3::Orchestration::Repository::GenerateMetadata],
                       repository, SmartProxy.pulp_master,
                         :force => force,
                         :source_repository => source_repository,
