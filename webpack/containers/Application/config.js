@@ -31,7 +31,7 @@ export const links = [
   },
   {
     // eslint-disable-next-line no-useless-escape
-    path: 'subscriptions/:id([0-9]*$)',
+    path: 'subscriptions/:id([0-9]+)',
     component: withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
   },
   {
@@ -43,7 +43,7 @@ export const links = [
     component: withHeader(ModuleStreams, { title: __('Module Streams') }),
   },
   {
-    path: 'module_streams/:id([0-9]*$)',
+    path: 'module_streams/:id([0-9]+)',
     component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
   },
 ];
