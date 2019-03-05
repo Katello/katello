@@ -37,24 +37,24 @@
       </h6>
     </div>
 
-    <div bst-form-group ng-show="discovery.contentType === 'docker'"
-         label="{{ 'Registry Username' | translate }}">
+    <div bst-form-group
+         label="{{ 'Username' | translate }}">
       <input type="text" id="upstreamUsername"
              class="form-control"
              ng-model="discovery.upstreamUsername"
              ng-disabled="discovery.working"
-             ng-required="discovery.registryType === 'redhat'"
+             ng-required="discovery.contentType === 'docker' && discovery.registryType === 'redhat'"
              name="upstreamUsername"/>
     </div>
 
-    <div bst-form-group ng-show="discovery.contentType === 'docker'"
-         label="{{ 'Registry Password' | translate }}">
+    <div bst-form-group
+         label="{{ 'Password' | translate }}">
       <input id="upstreamPassword"
              type="password"
              class="form-control"
              ng-model="discovery.upstreamPassword"
              ng-disabled="discovery.working"
-             ng-required="discovery.registryType === 'redhat'"
+             ng-required="discovery.contentType === 'docker' && discovery.registryType === 'redhat'"
              name="upstreamPassword"/>
     </div>
 
