@@ -41,7 +41,12 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
                 $scope.$watch('syncPlan.interval', function (interval) {
                     if (interval !== $scope.syncPlanInterval) {
                         $scope.editInterval = true;
-                        $scope.editedInterval = (interval === "custom cron");
+                        $scope.editedInterval = false;
+                        $scope.workingText = translate('Working');
+                        if (interval === "custom cron") {
+                            $scope.editedInterval = true;
+                            $scope.workingText = translate('Please enter cron below');
+                        }
                     } else {
                         $scope.editedInterval = false;
                         $scope.editInterval = false;
