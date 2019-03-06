@@ -11,7 +11,7 @@ module Actions
           unit_keys = repo_service.unit_keys(uploads)
           generate_metadata = options.fetch(:generate_metadata, true)
           sync_capsule = options.fetch(:sync_capsule, true)
-          unit_type_id = repo_service.unit_type_id(uploads)
+          unit_type_id = (options[:content_type] ? SmartProxy.pulp_master.content_service(options[:content_type])::CONTENT_TYPE : repo_service.unit_type_id(uploads))
 
           sequence do
             upload_results = concurrence do

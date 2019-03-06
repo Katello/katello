@@ -2,6 +2,8 @@ module Katello
   class Srpm < Katello::Model
     include Concerns::PulpDatabaseUnit
 
+    scoped_search :on => :id, :only_explicit => true
+
     CONTENT_TYPE = 'srpm'.freeze
 
     has_many :repository_srpms, :class_name => "Katello::RepositorySrpm", :dependent => :destroy, :inverse_of => :srpm

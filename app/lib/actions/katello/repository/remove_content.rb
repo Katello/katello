@@ -17,7 +17,7 @@ module Actions
 
           pulp_action = Pulp::Repository::RemoveUnits
           content_unit_ids = content_units.map(&:id)
-          content_unit_type = content_units.first.class::CONTENT_TYPE
+          content_unit_type = options[:content_type] || content_units.first.class::CONTENT_TYPE
 
           sequence do
             plan_action(pulp_action, :repo_id => repository.id, :contents => content_unit_ids, :content_unit_type => content_unit_type)

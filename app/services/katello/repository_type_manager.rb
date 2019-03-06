@@ -26,6 +26,20 @@ module Katello
         type.allow_creation_by_user
       end
 
+      def removable_content_types
+        list = @repository_types.values.map do |type|
+          type.content_types.select(&:removable)
+        end
+        list.flatten
+      end
+
+      def uploadable_content_types
+        list = @repository_types.values.map do |type|
+          type.content_types.select(&:uploadable)
+        end
+        list.flatten
+      end
+
       def find(repository_type)
         repository_types[repository_type.to_s]
       end
