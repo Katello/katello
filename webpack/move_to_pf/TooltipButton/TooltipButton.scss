@@ -1,0 +1,36 @@
+.tooltip-button-helper {
+  display: inline-block;
+  vertical-align: top;
+  cursor: not-allowed;
+
+  button {
+    pointer-events: none;
+  }
+}
+.btn-group-vertical > .tooltip-button-helper,
+.btn-group > .tooltip-button-helper {
+  float: left;
+  position: relative;
+}
+.btn-toolbar .tooltip-button-helper {
+  float: left;
+}
+.btn-toolbar > .tooltip-button-helper {
+  margin-left: 5px;
+}
+.btn-group > .tooltip-button-helper:first-child:not(:last-child) > .btn:not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .tooltip-button-helper:last-child:not(:first-child) > .btn,
+.btn-group > .tooltip-button-helper:not(:first-child) > .dropdown-toggle {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .btn + .tooltip-button-helper,
+.btn-group .tooltip-button-helper + .btn,
+.btn-group .tooltip-button-helper + .tooltip-button-helper,
+.btn-group .tooltip-button-helper + .btn-group,
+.btn-group .btn-group + .tooltip-button-helper {
+  margin-left: -1px;
+}
