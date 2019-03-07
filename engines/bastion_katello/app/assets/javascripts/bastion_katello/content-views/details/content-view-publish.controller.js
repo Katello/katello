@@ -62,6 +62,7 @@ angular.module('Bastion.content-views').controller('ContentViewPublishController
                   'description': description,
                   'solve_dependencies': solveDependenciesParam
                 };
+
             $scope.working = true;
             ContentView.publish(data, success, failure);
         };

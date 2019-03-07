@@ -77,7 +77,7 @@ module Katello
 
         def build_overide_config(options)
           config = {}
-          if options[:solve_dependencies] || Setting['content_view_solve_dependencies']
+          if options[:solve_dependencies]
             if Setting[:dependency_solving_algorithm] == 'greedy'
               config[:recursive] = true
             else

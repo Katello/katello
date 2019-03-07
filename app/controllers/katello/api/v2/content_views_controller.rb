@@ -19,6 +19,7 @@ module Katello
       param :repository_ids, Array, :desc => N_("List of repository ids")
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
       param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
+      param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
     end
 
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
@@ -55,7 +56,6 @@ module Katello
     param :name, String, :desc => N_("Name of the content view"), :required => true
     param :label, String, :desc => N_("Content view label")
     param :composite, :bool, :desc => N_("Composite content view")
-    param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
     param_group :content_view
     def create
       @view = ContentView.create!(view_params) do |view|
