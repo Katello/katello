@@ -6,6 +6,7 @@ module Katello
     include SyncManagementHelper::RepoMethods
     helper Rails.application.routes.url_helpers
     helper ReactjsHelper
+    helper ReactAppHelper
     respond_to :html, :json
 
     def section_id
