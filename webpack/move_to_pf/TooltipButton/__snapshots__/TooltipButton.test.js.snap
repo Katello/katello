@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TooltipButton renders disabled TooltipButton 1`] = `
+<OverlayTrigger
+  defaultOverlayShown={false}
+  delayHide={150}
+  overlay={
+    <Tooltip
+      bsClass="tooltip"
+      id="some-id"
+      placement="right"
+    >
+      some-text
+    </Tooltip>
+  }
+  placement="top"
+  trigger={
+    Array [
+      "hover",
+      "focus",
+    ]
+  }
+>
+  <div
+    className="tooltip-button-helper"
+  >
+    <Button
+      active={false}
+      block={false}
+      bsClass="btn"
+      bsStyle="default"
+      disabled={true}
+    >
+      some-title
+    </Button>
+  </div>
+</OverlayTrigger>
+`;
+
+exports[`TooltipButton renders disabled TooltipButton with renderedButton 1`] = `
+<OverlayTrigger
+  defaultOverlayShown={false}
+  delayHide={150}
+  overlay={
+    <Tooltip
+      bsClass="tooltip"
+      id="some-id"
+      placement="right"
+    >
+      some-text
+    </Tooltip>
+  }
+  placement="top"
+  trigger={
+    Array [
+      "hover",
+      "focus",
+    ]
+  }
+>
+  <div
+    className="tooltip-button-helper"
+  >
+    some-render-button
+  </div>
+</OverlayTrigger>
+`;
+
+exports[`TooltipButton renders enabled TooltipButton 1`] = `
+<Button
+  active={false}
+  block={false}
+  bsClass="btn"
+  bsStyle="default"
+  disabled={false}
+>
+  some-title
+</Button>
+`;
+
+exports[`TooltipButton renders enabled TooltipButton with renderedButton 1`] = `"some-render-button"`;
+
+exports[`TooltipButton renders minimal TooltipButton 1`] = `
+<Button
+  active={false}
+  block={false}
+  bsClass="btn"
+  bsStyle="default"
+  disabled={false}
+/>
+`;

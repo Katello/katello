@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Form, FormGroup, Button } from 'patternfly-react';
 import { LinkContainer } from 'react-router-bootstrap';
-import TooltipButton from 'react-bootstrap-tooltip-button';
 import { noop } from 'foremanReact/common/helpers';
 
 import Search from '../../../../components/Search/index';
+import TooltipButton from '../../../../move_to_pf/TooltipButton';
 import OptionTooltip from '../../../../move_to_pf/OptionTooltip';
 
 const SubscriptionsToolbar = ({
