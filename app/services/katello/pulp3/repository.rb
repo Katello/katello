@@ -59,17 +59,25 @@ module Katello
         end
       end
 
+      def list(args)
+        pulp3_api.repositories_list(args).results
+      end
+
+      def delete(href = repository_reference.repository_href)
+        pulp3_api.repositories_delete(href)
+      end
+
       def update_distribution(path)
         distribution_reference = distribution_reference(path)
         pulp3_api.distributions_partial_update(distribution_reference.href, publication: repo.publication_href)
       end
 
       def refresh_distributions
-        paths.each do |path|
+        paths.each do |prefix, path|
           if distribution_reference(path)
             update_distribution(path)
           else
-            create_distribution(path)
+            create_distribution(prefix, path)
           end
         end
       end
@@ -80,16 +88,31 @@ module Katello
       end
 
       def paths
-        list = []
-        list << "https/#{repo.relative_path}"
-        list << "http/#{repo.relative_path}" if repo.root.unprotected
+        list = {
+          https: "https/#{repo.relative_path}"
+        }
+        list['http'] = "http/#{repo.relative_path}" if repo.root.unprotected
         list
       end
 
-      def create_distribution(path)
-        path = path.sub(/^\//, '') #remove leading / if present
-        distribution = pulp3_api.distributions_create(base_path: path, publication: repo.publication_href, name: backend_object_name)
+      private def delete_distribution(href)
+        pulp3_api.distributions_delete(href)
+      end
 
+      def lookup_distributions(args)
+        pulp3_api.distributions_list(args).results
+      end
+
+      def delete_distributions_by_paths
+        paths.values.each do |path|
+          dists = lookup_distributions(base_path: path.sub(/^\//, ''))
+          delete_distribution(dists.first._href) if dists.first
+        end
+      end
+
+      def create_distribution(prefix, path)
+        path = path.sub(/^\//, '') #remove leading / if present
+        distribution = pulp3_api.distributions_create(base_path: path, publication: repo.publication_href, name: "#{prefix}_#{backend_object_name}")
         DistributionReference.create!(path: path, href: distribution._href, root_repository_id: repo.root.id)
       end
 

@@ -16,6 +16,14 @@ module Katello
           pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
         end
 
+        def delete_remote(href = repo.remote_href)
+          pulp3_api.remotes_file_file_delete(href)
+        end
+
+        def list_remotes(args)
+          pulp3_api.remotes_file_file_list(args).results
+        end
+
         def sync
           pulp3_api.remotes_file_file_sync(repo.remote_href, repository: repository_reference.repository_href)
         end
@@ -25,6 +33,14 @@ module Katello
             response = pulp3_api.publishers_file_file_create(:name => backend_object_name)
             repository_reference.update_attributes!(:publisher_href => response._href)
           end
+        end
+
+        def list_publishers(args)
+          pulp3_api.publishers_file_file_list(args).results
+        end
+
+        def delete_publisher(href = repository_reference.publisher_href)
+          pulp3_api.publishers_file_file_delete(href)
         end
 
         def create_publication

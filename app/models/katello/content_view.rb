@@ -49,6 +49,9 @@ module Katello
     has_many :hostgroups, :class_name => "::Hostgroup", :foreign_key => :content_view_id,
                           :inverse_of => :content_view, :dependent => :nullify
 
+    has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :content_view_id,
+             :dependent => :destroy, :inverse_of => :content_view
+
     validates_lengths_from_database :except => [:label]
     validates :label, :uniqueness => {:scope => :organization_id},
                       :presence => true
