@@ -255,7 +255,10 @@ module Katello
                    {:org_name => organization.name, :host_name => host_name }
         end
 
-        fail _("Could not associate this host to an existing profile since multiple were found. Please remove outdated content hosts.") if hosts.size > 1
+        if hosts.size > 1
+          hostnames = hosts.pluck(:name).sort
+          fail _("Multiple profiles found. Consider removing %s which match this host.") % hostnames.join(', ')
+        end
 
         hosts.first
       end
