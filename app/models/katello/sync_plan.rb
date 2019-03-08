@@ -56,12 +56,11 @@ module Katello
 
     def update_attributes_with_logics!(params)
       transaction do
-        params["cron_expression"] = '' unless params["interval"].eql? CUSTOM_CRON
+        params["cron_expression"] = '' if (params.key?("interval") && !params["interval"].eql?(CUSTOM_CRON) && self.interval.eql?(CUSTOM_CRON))
         self.update_attributes!(params)
         if rec_logic_changed?
           old_rec_logic = self.foreman_tasks_recurring_logic
           associate_recurring_logic
-          self.save!
           old_rec_logic.cancel
           start_recurring_logic
         end
