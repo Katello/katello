@@ -248,7 +248,8 @@ module Katello
 
       # if we get two matches, raise an error
       error = assert_raises(RuntimeError) { Katello::Host::SubscriptionFacet.find_host(facts, org) }
-      assert_match(/since multiple were found/, error.message)
+      expected = "Multiple profiles found. Consider removing %s which match this host." % [host.name, host2.name].sort.join(', ')
+      assert_equal expected, error.message
 
       # if we get a single match uuid + hostname, return it
       host3 = FactoryBot.create(:host, organization: org)
