@@ -182,13 +182,28 @@ module Katello
       end
     end
 
-    def test_update_with_invalid_interval
-      @plan.save_with_logic!
-      invalid_name_list.each do |interval|
-        @plan.interval = interval
-        refute_valid @plan
-        assert @plan.errors.key?(:interval)
-      end
+    def test_cron_update_with_interval
+      sync_plan = SyncPlan.new(valid_attributes.merge(:interval => "custom cron", :cron_expression => '* * * * *'))
+      sync_plan.save_with_logic!
+      sync_plan.reload
+      assert_equal sync_plan.cron_expression, '* * * * *'
+      params = {"interval": "daily"}.with_indifferent_access
+      old_rec_logic_id = sync_plan.foreman_tasks_recurring_logic.id
+      sync_plan.update_attributes_with_logics! params
+      assert_equal sync_plan.cron_expression, ''
+      assert_not_equal sync_plan.foreman_tasks_recurring_logic.id, old_rec_logic_id
+    end
+
+    def test_update_cron_without_interval
+      sync_plan = SyncPlan.new(valid_attributes.merge(:interval => "custom cron", :cron_expression => '* * * * *'))
+      sync_plan.save_with_logic!
+      sync_plan.reload
+      assert_equal sync_plan.cron_expression, '* * * * *'
+      params = {"description": "Test updates without interval"}.with_indifferent_access
+      old_rec_logic_id = sync_plan.foreman_tasks_recurring_logic.id
+      sync_plan.update_attributes_with_logics! params
+      assert_equal sync_plan.cron_expression, '* * * * *'
+      assert_equal sync_plan.foreman_tasks_recurring_logic.id, old_rec_logic_id
     end
 
     def test_sync_date_future
