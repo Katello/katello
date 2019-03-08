@@ -1,5 +1,3 @@
-#:nocov:
-
 module Katello
   class Ping
     OK_RETURN_CODE = 'ok'.freeze
@@ -40,7 +38,8 @@ module Katello
       def ping_candlepin_without_auth(service_result)
         url = SETTINGS[:katello][:candlepin][:url]
         exception_watch(service_result) do
-          backend_status(url, :candlepin)
+          status = backend_status(url, :candlepin)
+          check_candlepin_status(status)
         end
       end
 
@@ -56,7 +55,8 @@ module Katello
 
       def ping_candlepin_with_auth(service_result)
         exception_watch(service_result) do
-          Katello::Resources::Candlepin::CandlepinPing.ping
+          status = Katello::Resources::Candlepin::CandlepinPing.ping
+          check_candlepin_status(status)
         end
       end
 
@@ -77,16 +77,24 @@ module Katello
         end
       end
 
+      def check_candlepin_status(status)
+        if status[:mode] != 'NORMAL'
+          fail _("Candlepin is not running properly")
+        end
+      end
+
       # check for exception - set the result code properly
       def exception_watch(result)
         start = Time.new
         yield
         result[:status] = OK_RETURN_CODE
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
+        result
       rescue => e
         Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
         result[:status] = FAIL_RETURN_CODE
         result[:message] = e.message
+        result
       end
 
       # get package information for katello and its components
@@ -110,10 +118,9 @@ module Katello
       # because it returns empty string, which is not enough to say
       # pulp is the one that responded
       def pulp_without_auth(url)
-        body = backend_status(url, :pulp)
+        json = backend_status(url, :pulp)
 
-        fail _("Pulp does not appear to be running at %s.") % url if body.empty?
-        json = JSON.parse(body)
+        fail _("Pulp does not appear to be running at %s.") % url if json.empty?
 
         if json['database_connection'] && json['database_connection']['connected'] != true
           fail _("Pulp database connection issue at %s.") % url
@@ -147,10 +154,10 @@ module Katello
         options[:ssl_ca_file] = ca_file unless ca_file.nil?
         options[:verify_ssl] = SETTINGS[:katello][backend][:verify_ssl] if SETTINGS[:katello][backend].key?(:verify_ssl)
         client = RestClient::Resource.new("#{url}/status", options)
-        client.get
+
+        response = client.get
+        response.empty? ? {} : JSON.parse(response).with_indifferent_access
       end
     end
   end
 end
-
-#:nocov:

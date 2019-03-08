@@ -40,5 +40,45 @@ module Katello
       no_reserved_resource_worker_status["known_workers"].delete_if { |x| x["_id"] =~ /reserved_resource_worker-./ }
       refute Katello::Ping.all_pulp_workers_present?(no_reserved_resource_worker_status)
     end
+
+    def test_candlepin_ping_ok
+      Katello::Resources::Candlepin::CandlepinPing.expects(:ping).returns(mode: 'NORMAL')
+
+      response = Katello::Ping.ping_candlepin_with_auth({})
+
+      assert_equal 'ok', response[:status]
+    end
+
+    def test_candlepin_ping_suspend_fail
+      Katello::Resources::Candlepin::CandlepinPing.expects(:ping).returns(mode: 'SUSPEND')
+
+      assert_equal({status: 'FAIL', message: 'Candlepin is not running properly'}, Katello::Ping.ping_candlepin_with_auth({}))
+    end
+
+    def test_candlepin_ping_fail
+      Katello::Resources::Candlepin::CandlepinPing.expects(:ping).raises(StandardError.new('yikes'))
+
+      assert_equal({status: 'FAIL', message: 'yikes'}, Katello::Ping.ping_candlepin_with_auth({}))
+    end
+
+    def test_candlepin_unauth_ping_ok
+      Katello::Ping.expects(:backend_status).returns(mode: 'NORMAL')
+
+      response = Katello::Ping.ping_candlepin_without_auth({})
+
+      assert_equal 'ok', response[:status]
+    end
+
+    def test_candlepin_unauth_ping_fail
+      Katello::Ping.expects(:backend_status).raises(StandardError.new('yikes'))
+
+      assert_equal({status: 'FAIL', message: 'yikes'}, Katello::Ping.ping_candlepin_without_auth({}))
+    end
+
+    def test_candlepin_unauth_ping_suspend_fail
+      Katello::Ping.expects(:backend_status).returns(mode: 'SUSPEND')
+
+      assert_equal({status: 'FAIL', message: 'Candlepin is not running properly'}, Katello::Ping.ping_candlepin_without_auth({}))
+    end
   end
 end
