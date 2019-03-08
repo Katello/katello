@@ -5,7 +5,6 @@ import UpstreamSubscriptionsPage from '../UpstreamSubscriptionsPage';
 import { successState } from './upstreamSubscriptions.fixtures';
 import { loadUpstreamSubscriptions, saveUpstreamSubscriptions } from '../UpstreamSubscriptionsActions';
 
-jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 jest.mock('foremanReact/components/BreadcrumbBar');
 jest.mock('foremanReact/components/Pagination/PaginationWrapper');
 

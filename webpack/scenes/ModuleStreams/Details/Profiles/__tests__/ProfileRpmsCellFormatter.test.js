@@ -4,8 +4,6 @@ import toJson from 'enzyme-to-json';
 import ProfileRpmCellFormatter from '../ProfileRpmsCellFormatter';
 import { details } from '../../__tests__/moduleStreamDetails.fixtures';
 
-jest.mock('../../../../../move_to_foreman/foreman_toast_notifications');
-
 describe('ProfileRpmCellFormatter', () => {
   it('should render and expand on click', () => {
     //  eslint-disable-next-line prefer-destructuring

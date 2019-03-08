@@ -1,11 +1,9 @@
 import { snakeCase } from 'lodash';
 
-export default {
-  urlBuilder(...parts) {
-    return parts.join('/');
-  },
+export const stringIsPositiveNumber = (value) => {
+  const reg = new RegExp('^[0-9]+$');
+  return reg.test(value);
 };
-
 const propsToCase = (casingFn, errorMsg, ob) => {
   if (typeof ob !== 'object') throw Error(errorMsg);
 
@@ -18,4 +16,3 @@ const propsToCase = (casingFn, errorMsg, ob) => {
 
 export const propsToSnakeCase = ob =>
   propsToCase(snakeCase, 'propsToSnakeCase only takes objects', ob);
-

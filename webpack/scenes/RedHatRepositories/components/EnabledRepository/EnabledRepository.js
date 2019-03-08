@@ -5,7 +5,6 @@ import { sprintf } from 'foremanReact/common/I18n';
 
 import RepositoryTypeIcon from '../RepositoryTypeIcon';
 
-import { notify } from '../../../../move_to_foreman/foreman_toast_notifications';
 import EnabledRepositoryContent from './EnabledRepositoryContent';
 
 class EnabledRepository extends Component {
@@ -39,7 +38,7 @@ class EnabledRepository extends Component {
     );
 
     this.notifyDisabled = () => {
-      notify({
+      window.tfm.toastNotifications.notify({
         message: sprintf(__("Repository '%(repoName)s' has been disabled."), { repoName: this.props.name }),
         type: 'success',
       });

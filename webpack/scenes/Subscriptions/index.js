@@ -1,9 +1,9 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as settingActions from 'foremanReact/components/Settings/SettingsActions';
 
 import * as subscriptionActions from './SubscriptionActions';
 import * as taskActions from '../Tasks/TaskActions';
-import * as settingActions from '../../move_to_foreman/Settings/SettingsActions';
 import * as tableActions from '../Settings/Tables/TableActions';
 import * as manifestActions from './Manifest/ManifestActions';
 

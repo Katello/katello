@@ -8,7 +8,6 @@ import SubscriptionDetailAssociations from './SubscriptionDetailAssociations';
 import SubscriptionDetailProducts from './SubscriptionDetailProducts';
 import SubscriptionDetailProductContent from './SubscriptionDetailProductContent';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
-import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
 import api, { orgId } from '../../../services/api';
 
 class SubscriptionDetails extends Component {
@@ -55,7 +54,7 @@ class SubscriptionDetails extends Component {
     };
 
     if (subscriptionDetails.error) {
-      notify({ message: subscriptionDetails.error });
+      window.tfm.toastNotifications.notify({ message: subscriptionDetails.error });
     }
 
     return (

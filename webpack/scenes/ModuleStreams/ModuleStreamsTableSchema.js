@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import {
   headerFormatter,
   cellFormatter,
 } from '../../move_to_foreman/components/common/table';
-import helpers from '../../move_to_foreman/common/helpers';
 
 
 const TableSchema = [
@@ -18,7 +18,7 @@ const TableSchema = [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <Link to={helpers.urlBuilder('module_streams', '', rowData.id)}>{rowData.name}</Link>
+            <Link to={urlBuilder('module_streams', '', rowData.id)}>{rowData.name}</Link>
           </td>
         ),
       ],

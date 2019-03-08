@@ -4,8 +4,8 @@ import Immutable from 'seamless-immutable';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { isEmpty, isEqual } from 'lodash';
 import { Grid, Row, Col } from 'patternfly-react';
+import ModalProgressBar from 'foremanReact/components/common/ModalProgressBar';
 import { renderTaskFinishedToast, renderTaskStartedToast } from '../Tasks/helpers';
-import ModalProgressBar from '../../move_to_foreman/components/common/ModalProgressBar';
 import ManageManifestModal from './Manifest/';
 import { SubscriptionsTable } from './components/SubscriptionsTable';
 import SubscriptionsToolbar from './components/SubscriptionsToolbar';
@@ -290,7 +290,8 @@ class SubscriptionsPage extends Component {
               <ModalProgressBar
                 show={taskModalOpened}
                 container={document.getElementById('subscriptions-table')}
-                task={task}
+                title={task ? task.humanized.action : null}
+                progress={task ? Math.round(task.progress * 100) : 0}
               />
             </div>
           </Col>

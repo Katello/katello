@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
-import helpers from '../../../move_to_foreman/common/helpers.js';
+import { urlWithSearch } from 'foremanReact/common/urlHelpers';
 
 const SubscriptionDetailAssociations = ({ subscriptionDetails }) => {
   const searchQuery = 'subscription_id="%s"'.replace('%s', subscriptionDetails.id);
@@ -21,7 +21,7 @@ const SubscriptionDetailAssociations = ({ subscriptionDetails }) => {
           <tr>
             <td>{__('Content Hosts')}</td>
             <td>
-              <a href={helpers.urlWithSearch('content_hosts', searchQuery)}>
+              <a href={urlWithSearch('content_hosts', searchQuery)}>
                 {subscriptionDetails.host_count}
               </a>
             </td>
@@ -29,7 +29,7 @@ const SubscriptionDetailAssociations = ({ subscriptionDetails }) => {
           <tr>
             <td>{__('Activation Keys')}</td>
             <td>
-              <a href={helpers.urlWithSearch('activation_keys', searchQuery)}>
+              <a href={urlWithSearch('activation_keys', searchQuery)}>
                 {subscriptionDetails.activation_keys &&
                   subscriptionDetails.activation_keys.length}
               </a>

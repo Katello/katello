@@ -5,8 +5,6 @@ import toJson from 'enzyme-to-json';
 import configureMockStore from 'redux-mock-store';
 import RepositorySetRepository from '../RepositorySetRepository';
 
-jest.mock('../../../../../move_to_foreman/foreman_toast_notifications');
-
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
 

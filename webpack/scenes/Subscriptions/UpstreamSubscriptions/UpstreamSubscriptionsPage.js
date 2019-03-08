@@ -6,9 +6,9 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Grid, Row, Col } from 'react-bootstrap';
 import BreadcrumbsBar from 'foremanReact/components/BreadcrumbBar';
 import { Button } from 'patternfly-react';
+import { stringIsPositiveNumber } from 'foremanReact/common/helpers';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { LoadingState } from '../../../move_to_pf/LoadingState';
-import { notify } from '../../../move_to_foreman/foreman_toast_notifications';
-import helpers from '../../../move_to_foreman/common/helpers';
 import { Table } from '../../../move_to_foreman/components/common/table';
 import { columns } from './UpstreamSubscriptionsTableSchema';
 
@@ -53,7 +53,7 @@ class UpstreamSubscriptionsPage extends Component {
   // eslint-disable-next-line class-methods-use-this
   quantityValidation(pool) {
     const origQuantity = pool.updatedQuantity;
-    if (origQuantity && helpers.stringIsInteger(origQuantity)) {
+    if (origQuantity && stringIsPositiveNumber(origQuantity)) {
       const parsedQuantity = parseInt(origQuantity, 10);
       const aboveZeroMsg = [false, __('Please enter a positive number above zero')];
 
@@ -88,8 +88,8 @@ class UpstreamSubscriptionsPage extends Component {
   };
 
   validateSelectedRows = () => Array.isArray(this.state.selectedRows) &&
-           this.state.selectedRows.length &&
-           this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
+    this.state.selectedRows.length &&
+    this.state.selectedRows.every(pool => this.quantityValidation(pool)[0]);
 
   saveUpstreamSubscriptions = () => {
     const updatedPools = _.map(
@@ -107,13 +107,13 @@ class UpstreamSubscriptionsPage extends Component {
         const message = (
           <span>
             <span>{__('Subscriptions have been saved and are being updated. ')}</span>
-            <a href={helpers.urlBuilder('foreman_tasks/tasks', '', task.id)}>
+            <a href={urlBuilder('foreman_tasks/tasks', '', task.id)}>
               {__('Click here to go to the tasks page for the task.')}
             </a>
           </span>
         );
 
-        notify({ message, type: 'success' });
+        window.tfm.toastNotifications.notify({ message, type: 'success' });
         this.props.history.push('/subscriptions');
       }
     });
@@ -137,7 +137,7 @@ class UpstreamSubscriptionsPage extends Component {
                 bsStyle="primary"
                 type="submit"
                 disabled={upstreamSubscriptions.loading ||
-                          !this.validateSelectedRows()}
+                  !this.validateSelectedRows()}
                 onClick={this.saveUpstreamSubscriptions}
               >
                 {__('Submit')}
@@ -184,7 +184,7 @@ class UpstreamSubscriptionsPage extends Component {
     const emptyStateData = () => ({
       header: __('There are no Subscription Allocations to display'),
       description: __('Subscription Allocations allow you to export subscriptions from the Red Hat Customer Portal to ' +
-          'an on-premise subscription management application such as Red Hat Satellite.'),
+        'an on-premise subscription management application such as Red Hat Satellite.'),
       action: {
         title: __('Import a Manifest to Begin'),
         url: '/subscriptions',

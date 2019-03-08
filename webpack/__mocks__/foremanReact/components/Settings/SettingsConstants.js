@@ -1,0 +1,2 @@
+export const GET_SETTING_SUCCESS = 'GET_SETTING_SUCCESS';
+export default GET_SETTING_SUCCESS;
