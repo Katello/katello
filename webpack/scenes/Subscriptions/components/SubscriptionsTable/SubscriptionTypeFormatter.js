@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import helpers from '../../../../move_to_foreman/common/helpers';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 
 export const subscriptionTypeFormatter = (value, { rowData }) => {
   let cellContent;
@@ -12,7 +12,7 @@ export const subscriptionTypeFormatter = (value, { rowData }) => {
       <span>
         {__('Guests of')}
         {' '}
-        <Link to={helpers.urlBuilder('content_hosts', '', rowData.hypervisor.id)}>{rowData.hypervisor.name}</Link>
+        <Link to={urlBuilder('content_hosts', '', rowData.hypervisor.id)}>{rowData.hypervisor.name}</Link>
       </span>
     );
   } else if (rowData.unmapped_guest) {

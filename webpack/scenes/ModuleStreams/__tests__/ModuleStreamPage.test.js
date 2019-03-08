@@ -5,7 +5,6 @@ import ModuleStreamsPage from '../ModuleStreamsPage';
 import ModuleStreamsTable from '../ModuleStreamsTable';
 import Search from '../../../components/Search/index';
 
-jest.mock('../../../move_to_foreman/foreman_toast_notifications');
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 
 describe('Module streams page', () => {

@@ -1,13 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
+import { loadSetting } from 'foremanReact/components/Settings/SettingsActions';
 import SubscriptionsPage from '../SubscriptionsPage';
 import { successState, settingsSuccessState } from './subscriptions.fixtures';
 import { loadSubscriptions, updateQuantity, loadTableColumns } from '../SubscriptionActions';
-import { loadSetting } from '../../../move_to_foreman/Settings/SettingsActions';
 import { createColumns, updateColumns } from '../../../scenes/Settings/Tables/TableActions';
 
-jest.mock('../../../move_to_foreman/foreman_toast_notifications');
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 
 const loadTables = () => new Promise((resolve) => {

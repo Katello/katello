@@ -2,7 +2,7 @@
 import React from 'react';
 import { Icon } from 'patternfly-react';
 import { Link } from 'react-router-dom';
-import helpers from '../../../../move_to_foreman/common/helpers';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import { entitlementsInlineEditFormatter } from '../../../../move_to_foreman/components/common/table/formatters/EntitlementsInlineEditFormatter';
 import { subscriptionTypeFormatter } from './SubscriptionTypeFormatter';
 import {
@@ -48,7 +48,7 @@ export const createSubscriptionsTableSchema = (
       formatters: [
         (value, { rowData }) => (
           <td>
-            <Link to={helpers.urlBuilder('subscriptions', '', rowData.id)}>{rowData.name}</Link>
+            <Link to={urlBuilder('subscriptions', '', rowData.id)}>{rowData.name}</Link>
           </td>
         ),
       ],

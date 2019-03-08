@@ -1,6 +1,6 @@
 import { testReducerSnapshotWithFixtures } from 'react-redux-test-utils';
+import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsConstants';
 
-import { GET_SETTING_SUCCESS } from '../../../move_to_foreman/Settings/SettingsConstants';
 import {
   SUBSCRIPTIONS_REQUEST,
   SUBSCRIPTIONS_SUCCESS,
@@ -31,6 +31,7 @@ import {
 } from '../SubscriptionConstants';
 import reducer from '../SubscriptionReducer';
 
+jest.mock('foremanReact/components/Settings/SettingsConstants');
 const fixtures = {
   'should return the initial state': {},
   'should handle SUBSCRIPTIONS_REQUEST': {

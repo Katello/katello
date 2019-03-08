@@ -1,8 +1,8 @@
 import React from 'react';
 import { sprintf } from 'foremanReact/common/I18n';
+import { KEYCODES } from 'foremanReact/common/keyCodes';
 import { Table, FormControl, FormGroup, HelpBlock, Spinner } from 'patternfly-react';
 import { validateQuantity } from '../../../../../scenes/Subscriptions/SubscriptionValidations';
-import { KEY_CODES } from '../../../../common/helpers';
 
 const renderValue = (value, additionalData, onActivate) => {
   const { available, upstream_pool_id: upstreamPoolId } = additionalData.rowData;
@@ -16,7 +16,7 @@ const renderValue = (value, additionalData, onActivate) => {
       <div
         onClick={() => onActivate(additionalData)}
         onKeyPress={(e) => {
-          if (e.keyCode === KEY_CODES.ENTER_KEY) {
+          if (e.keyCode === KEYCODES.ENTER) {
             onActivate(additionalData);
           }
         }}

@@ -1,4 +1,5 @@
 import Immutable from 'seamless-immutable';
+import { GET_SETTING_SUCCESS } from 'foremanReact/components/Settings/SettingsConstants';
 import { initialApiState } from '../../services/api';
 import { TASK_BULK_SEARCH_SUCCESS, RESET_TASKS, GET_TASK_SUCCESS } from '../Tasks/TaskConstants';
 
@@ -27,7 +28,6 @@ import {
   SUBSCRIPTIONS_DISABLE_DELETE_BUTTON,
   SUBSCRIPTIONS_ENABLE_DELETE_BUTTON,
 } from './SubscriptionConstants';
-import { GET_SETTING_SUCCESS } from '../../move_to_foreman/Settings/SettingsConstants';
 
 const initialState = Immutable({
   ...initialApiState,

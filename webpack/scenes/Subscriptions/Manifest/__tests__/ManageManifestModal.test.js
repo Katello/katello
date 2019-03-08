@@ -4,11 +4,10 @@ import toJson from 'enzyme-to-json';
 import ManageManifestModal from '../ManageManifestModal';
 import { manifestHistorySuccessState } from './manifest.fixtures';
 
-jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 jest.mock('foremanReact/components/Pagination/PaginationWrapper', () => (<div>Pagination Mock</div>));
 
 describe('manage manifest modal', () => {
-  const noop = () => {};
+  const noop = () => { };
   const organization = { id: 1, redhat_repository_url: 'https://redhat.com' };
 
   it('should render', async () => {

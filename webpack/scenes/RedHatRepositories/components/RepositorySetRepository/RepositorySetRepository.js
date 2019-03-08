@@ -5,7 +5,6 @@ import { ListView, Spinner, OverlayTrigger, Tooltip, Icon, FieldLevelHelp } from
 
 import { sprintf } from 'foremanReact/common/I18n';
 import { yStream } from '../RepositorySetRepositoriesHelpers';
-import { notify } from '../../../../move_to_foreman/foreman_toast_notifications';
 import '../../index.scss';
 
 class RepositorySetRepository extends Component {
@@ -42,7 +41,7 @@ class RepositorySetRepository extends Component {
 
     this.notifyEnabled = (data) => {
       const repoName = data.output.repository.name;
-      notify({
+      window.tfm.toastNotifications.notify({
         message: sprintf(__("Repository '%(repoName)s' has been enabled."), { repoName }),
         type: 'success',
       });
@@ -103,7 +102,7 @@ class RepositorySetRepository extends Component {
               <ListView.InfoItem key="error" stacked className="list-error-danger">
                 {this.state.error.displayMessage}
               </ListView.InfoItem>,
-              ]
+            ]
             : null
         }
         actions={

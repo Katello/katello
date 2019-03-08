@@ -1,9 +1,9 @@
 import React from 'react';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import {
   headerFormatter,
   cellFormatter,
 } from '../../../../move_to_foreman/components/common/table';
-import helpers from '../../../../move_to_foreman/common/helpers';
 
 const TableSchema = [
   {
@@ -16,7 +16,7 @@ const TableSchema = [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <a href={helpers.urlBuilder(`products/${rowData.product_id}/repositories`, '', rowData.id)}>
+            <a href={urlBuilder(`products/${rowData.product_id}/repositories`, '', rowData.id)}>
               {rowData.name}
             </a>
           </td>

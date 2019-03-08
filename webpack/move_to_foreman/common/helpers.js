@@ -2,17 +2,6 @@ import { translate as __ } from 'foremanReact/common/I18n';
 import { addToast } from 'foremanReact/redux/actions/toasts';
 import { SUBSCRIPTIONS_QUANTITIES_FAILURE } from '../../scenes/Subscriptions/SubscriptionConstants';
 
-const urlBuilder = (controller, action, id = undefined) =>
-  `/${controller}/${id ? `${id}/` : ''}${action}`;
-
-const urlWithSearch = (base, searchQuery) => `/${base}?search=${searchQuery}`;
-
-const stringIsInteger = (value) => {
-  // checking for positive integers only
-  const reg = new RegExp('^[0-9]+$');
-  return reg.test(value);
-};
-
 
 const getSubscriptionsErrorMessage = (message) => {
   const errorMessageHash = {
@@ -102,17 +91,8 @@ export const apiError = (actionType, result, additionalData = {}) => (dispatch) 
   return resultWithSuccessFlag(result);
 };
 
-export const KEY_CODES = {
-  TAB_KEY: 9,
-  ENTER_KEY: 13,
-  ESCAPE_KEY: 27,
-};
 
 export default {
-  urlBuilder,
-  urlWithSearch,
   getResponseErrorMsgs,
   apiError,
-  KEY_CODES,
-  stringIsInteger,
 };

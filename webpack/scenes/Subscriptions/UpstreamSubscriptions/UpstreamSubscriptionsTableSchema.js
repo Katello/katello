@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
 import { translate as __ } from 'foremanReact/common/I18n';
-import helpers from '../../../move_to_foreman/common/helpers';
+import { urlBuilder } from 'foremanReact/common/urlHelpers';
 import {
   headerFormatter,
   cellFormatter,
@@ -32,7 +32,7 @@ export const columns = (controller, selectionController) => [
       formatters: [
         (value, { rowData }) => (
           <td>
-            <a href={helpers.urlBuilder('subscriptions', '', rowData.id)}>
+            <a href={urlBuilder('subscriptions', '', rowData.id)}>
               {rowData.product_name}
             </a>
           </td>

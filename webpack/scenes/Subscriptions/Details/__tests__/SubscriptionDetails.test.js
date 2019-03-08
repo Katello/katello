@@ -10,7 +10,6 @@ import { loadSubscriptionDetails } from '../SubscriptionDetailActions';
 import { loadProducts } from '../../../Products/ProductActions';
 import { successState } from './subscriptionDetails.fixtures';
 
-jest.mock('../../../../move_to_foreman/foreman_toast_notifications');
 
 describe('subscriptions details page', () => {
   it('should render and contain appropiate components', async () => {

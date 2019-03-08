@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 
+import { KEYCODES } from 'foremanReact/common/keyCodes';
 import { InputGroup, Button, Icon } from 'patternfly-react';
 import TypeAheadInput from './TypeAheadInput';
 import TypeAheadItems from './TypeAheadItems';
 import { getActiveItems } from './helpers';
 
 import './TypeAhead.scss';
-
-const KEY_CODES = { TAB_KEY: 9, ENTER_KEY: 13 };
 
 class TypeAhead extends Component {
   constructor(props) {
@@ -71,7 +70,7 @@ class TypeAhead extends Component {
                 <TypeAheadInput
                   onKeyPress={(e) => {
                     switch (e.keyCode) {
-                      case KEY_CODES.TAB_KEY:
+                      case KEYCODES.TAB_KEY:
                         if (isOpen && activeItems[highlightedIndex]) {
                           selectItem(activeItems[highlightedIndex]);
                           e.preventDefault();
@@ -79,7 +78,7 @@ class TypeAhead extends Component {
 
                         break;
 
-                      case KEY_CODES.ENTER_KEY:
+                      case KEYCODES.ENTER:
                         if (!isOpen || !activeItems[highlightedIndex]) {
                           onSearch(this.state.inputValue);
                           e.preventDefault();
