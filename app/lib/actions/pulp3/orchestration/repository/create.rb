@@ -8,7 +8,6 @@ module Actions
               plan_action(Actions::Pulp3::Repository::Create, repository, smart_proxy)
               plan_action(Actions::Pulp3::Repository::CreateRemote, repository, smart_proxy)
               plan_action(Actions::Pulp3::Repository::CreatePublisher, repository, smart_proxy)
-              plan_action(Actions::Pulp3::Repository::CreateVersion, repository, smart_proxy)
             end
           end
         end

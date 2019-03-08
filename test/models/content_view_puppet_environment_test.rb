@@ -56,10 +56,13 @@ module Katello
 
     def test_puppet_importer_values_for_mirror_on_sync
       assert @puppet_env.mirror_on_sync?
-      capsule = OpenStruct.new(:default_capsule? => true)
+      capsule = FactoryBot.create(:smart_proxy, :default_smart_proxy)
+      #= mock(:pulp3_support? => false, :pulp_mirror? => false)
 
       refute @puppet_env.nonpersisted_repository.generate_importer(capsule).remove_missing
-      other_capsule = OpenStruct.new(:default_capsule? => false)
+
+      Cert::Certs.stubs(:ueber_cert).returns({})
+      other_capsule = mock(:pulp3_support? => false, :pulp_mirror? => true)
       assert true, @puppet_env.nonpersisted_repository.generate_importer(other_capsule).remove_missing
     end
   end

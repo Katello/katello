@@ -38,7 +38,7 @@ module Actions
           ::User.current = ::User.anonymous_api_admin
           unless input[:clone]
             repository = ::Katello::Repository.find(input[:repository_id])
-            ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
+            ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository, repository_creation: true)
           end
         ensure
           ::User.current = nil

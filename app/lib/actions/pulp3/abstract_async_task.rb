@@ -97,8 +97,8 @@ module Actions
 
       def transform_task_response(response)
         response = [] if response.nil?
-        response = response.as_json if response.is_a?(Zest::AsyncOperationResponse)
-        response = [response] if response.is_a?(Hash)
+        response = [response] unless response.is_a?(Array)
+        response = response.map { |task| task.is_a?(Zest::AsyncOperationResponse) ? task.as_json : task }
         response
       end
 

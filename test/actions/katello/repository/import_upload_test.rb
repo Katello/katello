@@ -10,6 +10,10 @@ module Actions
     let(:pulp_import_class) { ::Actions::Pulp::Repository::ImportUpload }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
 
+    before do
+      FactoryBot.create(:smart_proxy, :default_smart_proxy)
+    end
+
     it 'plans' do
       upload = {'id' => '1', 'size' => '12333', 'checksum' => 'asf23421324', 'name' => 'test'}
       action = create_action(action_class)

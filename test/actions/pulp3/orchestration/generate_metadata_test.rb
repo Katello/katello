@@ -1,6 +1,6 @@
 require 'katello_test_helper'
 
-module ::Actions::Pulp
+module ::Actions::Pulp3
   class GenerateMetadataTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
 
@@ -12,7 +12,9 @@ module ::Actions::Pulp
     end
 
     def test_generate_metadata
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @master, {})
+      refute @repo.version_href
+
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::GenerateMetadata, @repo, @master, repository_creation: true)
       @repo.reload
 
       assert @repo.version_href

@@ -73,7 +73,7 @@ module Katello
       end
 
       def refresh_distributions
-        paths.each do |prefix, path|
+        paths.map do |prefix, path|
           if distribution_reference(path)
             update_distribution(path)
           else
@@ -83,8 +83,7 @@ module Katello
       end
 
       def create_version
-        #TODO: https://pulp.plan.io/issues/4447
-        pulp3_api.repositories_versions_create(repository_reference.repository_href.split('/').last, {})
+        pulp3_api.repositories_versions_create(repository_reference.repository_href, {})
       end
 
       def paths
@@ -103,6 +102,13 @@ module Katello
         pulp3_api.distributions_list(args).results
       end
 
+      def get_distribution(href)
+        pulp3_api.distributions_read(href)
+      rescue Zest::ApiError => e
+        raise e if e.code != 404
+        nil
+      end
+
       def delete_distributions_by_paths
         paths.values.each do |path|
           dists = lookup_distributions(base_path: path.sub(/^\//, ''))
@@ -110,10 +116,18 @@ module Katello
         end
       end
 
+      def save_distribution_references(hrefs)
+        hrefs.each do |href|
+          path = get_distribution(href)&.base_path
+          unless distribution_reference(path)
+            DistributionReference.create!(path: path, href: href, root_repository_id: repo.root.id)
+          end
+        end
+      end
+
       def create_distribution(prefix, path)
         path = path.sub(/^\//, '') #remove leading / if present
-        distribution = pulp3_api.distributions_create(base_path: path, publication: repo.publication_href, name: "#{prefix}_#{backend_object_name}")
-        DistributionReference.create!(path: path, href: distribution._href, root_repository_id: repo.root.id)
+        pulp3_api.distributions_create(base_path: path, publication: repo.publication_href, name: "#{prefix}_#{backend_object_name}")
       end
 
       def common_remote_options

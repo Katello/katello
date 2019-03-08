@@ -28,7 +28,7 @@ module ::Actions::Pulp::Repository
 
       it 'runs' do
         ::Katello::Pulp::SmartProxyRepository.any_instance.expects(:repos_needing_updates).returns([repo])
-        repo.backend_service(:default_smart_proxy).expects(:refresh).once.returns([])
+        repo.backend_service(SmartProxy.pulp_master).expects(:refresh).once.returns([])
         run_action planned_action
       end
     end

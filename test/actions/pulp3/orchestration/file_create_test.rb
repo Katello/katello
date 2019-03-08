@@ -1,6 +1,6 @@
 require 'katello_test_helper'
 
-module ::Actions::Pulp
+module ::Actions::Pulp3
   class FileCreateTest < ActiveSupport::TestCase
     include Katello::Pulp3Support
 
@@ -16,7 +16,7 @@ module ::Actions::Pulp
       @repo.reload
 
       assert @repo.remote_href
-      assert @repo.version_href
+      refute @repo.version_href
 
       repo_reference = Katello::Pulp3::RepositoryReference.find_by(:root_repository_id => @repo.root.id,
                                                                    :content_view_id => @repo.content_view.id)
