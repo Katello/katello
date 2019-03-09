@@ -69,7 +69,10 @@ module Katello
 
           page.links.each do |link|
             if link.path.ends_with?('/repodata/')
-              @found << page.url.to_s
+              page_url = page.url.clone
+              page_url.user = nil
+              page_url.password = nil
+              @found << page_url.to_s
             else
               @to_follow << link.to_s if should_follow?(link.path)
             end
