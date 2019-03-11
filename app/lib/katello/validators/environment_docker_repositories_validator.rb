@@ -42,31 +42,13 @@ module Katello
       end
 
       def test_repository
-        Katello::Validators::EnvironmentDockerRepositoriesValidator::RepositoryOpenStruct.new(
-            name: "bad name!", label: "good_label", docker_upstream_name: "image/name", url: "https://registry.example.com",
-            organization: SafeOpenStruct.new(name: "bad name!", label: "good_label"),
-            product: SafeOpenStruct.new(name: "bad name!", label: "good_label"),
-            environment: SafeOpenStruct.new(name: "bad name!", label: "good_label"),
-            content_view_version: OpenStruct.new(content_view: ContentViewOpenStruct.new(name: "bad name!", label: "good_label", version: "1.2"))
+        Katello::Repository.new(
+          root: ::Katello::RootRepository.new(name: "bad name!", label: "good_label", docker_upstream_name: "image/name", url: "https://registry.example.com"),
+          product: ::Katello::Product.new(name: "bad name!", label: "good_label"),
+          environment: ::Katello::KTEnvironment.new(name: "bad name!", label: "good_label",
+                                                    organization: Organization.new(name: "bad name!", label: "good_label")),
+          content_view_version: ::Katello::ContentViewVersion.new(major: 1, minor: 20, content_view: Katello::ContentView.new(name: "bad name!", label: "good_label"))
         )
-      end
-
-      class RepositoryOpenStruct < OpenStruct
-        class Jail < ::Safemode::Jail
-          allow :name, :label, :version, :docker_upstream_name, :url
-        end
-      end
-
-      class ContentViewOpenStruct < OpenStruct
-        class Jail < ::Safemode::Jail
-          allow :name, :label, :version
-        end
-      end
-
-      class SafeOpenStruct < OpenStruct
-        class Jail < ::Safemode::Jail
-          allow :name, :label
-        end
       end
     end
   end
