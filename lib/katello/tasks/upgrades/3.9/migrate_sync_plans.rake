@@ -31,7 +31,7 @@ namespace :katello do
             sync_plan.save!
             if sync_plan.foreman_tasks_recurring_logic.state.nil?
               sync_plan.start_recurring_logic
-              sync_plan.foreman_tasks_recurring_logic.enabled = false unless sync_plan.enabled
+              sync_plan.foreman_tasks_recurring_logic.enabled = false unless sync_plan[:enabled]
             end
           end
           sync_plan.products.each do |product|

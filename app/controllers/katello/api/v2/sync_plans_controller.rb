@@ -47,12 +47,15 @@ module Katello
     param :organization_id, :number, :desc => N_("Filter sync plans by organization name or label"), :required => true
     param_group :sync_plan
     def create
+      if params[:sync_plan].key?(:enabled) || params.key?(:enabled)
+        enabled = params[:sync_plan][:enabled] || params[:enabled]
+      end
       unless sync_plan_params[:sync_date].to_time(:utc).is_a?(Time)
         fail _("Date format is incorrect.")
       end
-      @sync_plan = SyncPlan.new(sync_plan_params)
+      @sync_plan = SyncPlan.new(sync_plan_params.except(:enabled))
       @sync_plan.organization = @organization
-      @sync_plan.save_with_logic!
+      @sync_plan.save_with_logic!(enabled)
       respond_for_create(:resource => @sync_plan)
     end
 
