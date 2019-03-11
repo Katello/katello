@@ -117,8 +117,8 @@ angular.module('Bastion.products').controller('DiscoveryController',
                     contentType: $scope.discovery.contentType
                 };
                 if ($scope.discovery.contentType === 'yum') {
-                    if (baseUrl[baseUrl.length - 1] !== '/') {
-                        baseUrl += '/';
+                    if (baseUrl.endsWith('/')) {
+                        baseUrl = baseUrl.slice(0, -1);
                     }
                     params.path = url.replace(baseUrl, "");
                     params.name = $scope.defaultName(params.path);

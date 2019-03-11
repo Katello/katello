@@ -132,8 +132,8 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
 
         $scope.getRepoPath = function (repo) {
             var repoUrl = repo.url;
-            if (!repoUrl.endsWith('/')) {
-                repoUrl += '/';
+            if (repoUrl.endsWith('/') ) {
+                repoUrl = repoUrl.slice(0, -1);
             }
             return repoUrl + repo.path;
         };
