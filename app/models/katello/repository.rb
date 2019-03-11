@@ -687,7 +687,8 @@ module Katello
         allowed_methods = {}
         allowed_vars = {}
         scope_variables = {repository: repository, organization: repository.organization, product: repository.product,
-                           lifecycle_environment: repository.environment, content_view: repository.content_view_version.content_view}
+                           lifecycle_environment: repository.environment, content_view: repository.content_view_version.content_view,
+                           content_view_version: repository.content_view_version}
         box = Safemode::Box.new(repository, allowed_methods)
         erb = ERB.new(pattern)
         pattern = box.eval(erb.src, allowed_vars, scope_variables)

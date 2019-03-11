@@ -45,6 +45,19 @@ module Katello
       assert_empty @hq_env_dev.errors[:registry_name_pattern]
     end
 
+    test "success static pattern for single repo with cvv version" do
+      hq_cvv_single_repo = create(:registry_content_view_version, :hq_cvv_single_repo,
+                                  content_view: @hq_cv_single_repo)
+      create(:registry_repository, :hq_repo_alpha,
+             environment: @hq_env_dev,
+             product: @hq_product,
+             content_view_version: hq_cvv_single_repo)
+
+      @hq_env_dev.registry_name_pattern = "content_view_version.version"
+      @validator.validate(@hq_env_dev)
+      assert_empty @hq_env_dev.errors[:registry_name_pattern]
+    end
+
     test "fails static pattern for multiple repos" do
       hq_cvv_multi_repo = create(:registry_content_view_version, :hq_cvv_multi_repo,
                                   content_view: @hq_cv_multi_repo)
