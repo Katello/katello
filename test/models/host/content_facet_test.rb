@@ -377,6 +377,7 @@ module Katello
   end
 
   class BoundReposTest < ContentFacetBase
+    let(:deb_repo) { katello_repositories(:debian_9_amd64) }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
     let(:view_repo) { katello_repositories(:fedora_17_x86_64_library_view_1) }
 
@@ -397,9 +398,13 @@ module Katello
       content_facet.expects(:propagate_yum_repos)
       assert_empty content_facet.bound_repositories
 
-      content_facet.update_repositories_by_paths(["/pulp/repos/#{repo.relative_path}"])
+      content_facet.update_repositories_by_paths([
+                                                   "/pulp/repos/#{repo.relative_path}",
+                                                   "/pulp/deb/#{deb_repo.relative_path}",
+                                                   "/pulp/unknown_content_type/Library/test/"
+                                                 ])
 
-      assert_equal content_facet.bound_repositories, [repo]
+      assert_equal content_facet.bound_repositories, [deb_repo, repo]
     end
 
     def test_save_bound_repos_by_paths_same_path
