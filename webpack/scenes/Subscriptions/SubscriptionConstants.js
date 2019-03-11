@@ -100,6 +100,7 @@ export const SUBSCRIPTION_TABLE_DEFAULT_COLUMNS = [
   'contract_number',
   'start_date',
   'end_date',
+  'virt_who',
   'consumed',
   'quantity',
   'type',

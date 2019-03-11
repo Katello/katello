@@ -416,7 +416,7 @@ export const tableColumns = [
   {
     key: 'virt_who',
     label: 'Requires Virt-Who',
-    value: false,
+    value: true,
   },
   {
     key: 'type',
@@ -444,6 +444,7 @@ export const loadTableColumnsSuccessAction = [
         'contract_number',
         'start_date',
         'end_date',
+        'virt_who',
         'consumed',
         'quantity',
         'type',
