@@ -19,7 +19,7 @@ module Katello
     end
 
     def test_disabled_sync_plan_migration
-      @plan.enabled = false
+      @plan[:enabled] = false
       @plan.save!
       assert_nil @plan.foreman_tasks_recurring_logic
       Rake.application.invoke_task('katello:upgrades:3.9:migrate_sync_plans')
