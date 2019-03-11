@@ -132,6 +132,30 @@ module Katello
       end
     end
 
+    describe "update deb_package_profile" do
+      before do
+        User.stubs(:consumer?).returns(true)
+        uuid = @host.subscription_facet.uuid
+        stub_cp_consumer_with_uuid(uuid)
+      end
+      let(:deb_package_profile) do
+        {
+          "deb_packages" => [
+            {
+              "name" => "pi",
+              "architecture" => "transcendent",
+              "version" => "3.14159"
+            }
+          ]
+        }
+      end
+
+      it "should update the package profile" do
+        put :deb_package_profile, params: { :id => @host.subscription_facet.uuid, :deb_package_profile => deb_package_profile}
+        assert_equal 200, response.status
+      end
+    end
+
     describe "update facts with non-consumer user" do
       it "should prevent update facts for unauthorized user" do
         login_user(setup_user_with_permissions(:view_hosts, User.find(users(:restricted).id)))

@@ -1,3 +1,11 @@
+debian:
+  name:            Debian
+  description:     The universal operating system
+  label:           debian_label
+  cp_id:           debian
+  provider_id:     <%= ActiveRecord::FixtureSet.identify(:anonymous) %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+
 fedora:
   name:         Fedora
   description:  An open source Linux distribution.

@@ -9,10 +9,6 @@ module Katello
       api_base_url "/api"
     end
 
-    def_param_group :debs do
-      param :debs, Array, of: String, :desc => N_("List of deb package names"), :required => true
-    end
-
     api :GET, "/hosts/:host_id/debs", N_("List deb packages installed on the host")
     param :host_id, :number, :required => true, :desc => N_("ID of the host")
     param_group :search, Api::V2::ApiController

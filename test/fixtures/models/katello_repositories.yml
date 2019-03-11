@@ -1,3 +1,10 @@
+debian_9_amd64:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:debian_9_amd64_root) %>
+  pulp_id:              debian_9
+  relative_path:        'ACME_Corporation/library/debian_9_label'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>
+
 fedora_17_x86_64:
   root_id:              <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_root) %>
   pulp_id:              Fedora_17
