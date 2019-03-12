@@ -1,4 +1,4 @@
-# 3.11.0-RC2 Beautiful Disaster (2019-01-23)
+# 3.11.0 Beautiful Disaster (2019-03-12)
 
 ## Features
 
@@ -8,17 +8,8 @@
 
 ## Bug Fixes
 
-### Web UI
- * adapt to new webpack bundle entry format ([#25883](https://projects.theforeman.org/issues/25883), [ffb6e876](https://github.com/Katello/katello.git/commit/ffb6e876b646bc9c3903c829fb8a734ac42c7c14))
- * [object Object] instead of organization name on Content -> Sync status page ([#25228](https://projects.theforeman.org/issues/25228), [013fd5f3](https://github.com/Katello/katello.git/commit/013fd5f3ed9ca9ef2a0820265fc3f446d4e0a2d4))
-
-### Tests
- * Repository controller transient test failures ([#25867](https://projects.theforeman.org/issues/25867), [a137467e](https://github.com/Katello/katello.git/commit/a137467ed23923964c6134f46cb3760a813ff225))
- * db:seeds tries to talk to candlepin during pr tests ([#25744](https://projects.theforeman.org/issues/25744), [135ddf68](https://github.com/Katello/katello.git/commit/135ddf68d93e18574db5d956d8bbe27dcfaa7624))
- * test breakage from foreman change ([#25738](https://projects.theforeman.org/issues/25738), [1087a435](https://github.com/Katello/katello.git/commit/1087a435e089201baf0a0d49ae50b4f0b6e7f398))
- * silent errors in Katello::Host::HypervisorsUpdateTest ([#25546](https://projects.theforeman.org/issues/25546), [3fa2ee88](https://github.com/Katello/katello.git/commit/3fa2ee88fbae9051eab13340a9e33d0f8450b965))
-
 ### Repositories
+ * rake task katello:upgrades:3.11:update_puppet_repos sometimes fails on slow hardware ([#26171](https://projects.theforeman.org/issues/26171), [463f2a55](https://github.com/Katello/katello.git/commit/463f2a551de0469b263d944a2fbacd91d03775b3))
  * Upgrade Step: katello:upgrades:3.11:update_puppet_repos failed during 6.4 to 6.5 upgrade ([#25866](https://projects.theforeman.org/issues/25866), [6f2ff89d](https://github.com/Katello/katello.git/commit/6f2ff89df3f797d3dbce121897b0e79af351d4e6))
  * hammer repository info show "Red Hat Repository: no" for a Redhat enabled repository ([#25805](https://projects.theforeman.org/issues/25805), [4967a656](https://github.com/Katello/katello.git/commit/4967a656fccc33153790a0a479193573487e7eed), [0de73e68](https://github.com/Katello/hammer-cli-katello.git/commit/0de73e6874d46e3e4f7c852410e09a9af4c77ec9))
  * rename content unit 'uuid' to 'backend_identifier' ([#25794](https://projects.theforeman.org/issues/25794), [0d5a1ebe](https://github.com/Katello/katello.git/commit/0d5a1ebe7d722113d16146d6f98b6d2a39c351c0))
@@ -27,6 +18,24 @@
  * uploading a package to custom repo does not trigger sync of Capsule in Library LE ([#25761](https://projects.theforeman.org/issues/25761), [cd1b0b50](https://github.com/Katello/katello.git/commit/cd1b0b5028f1dcc1a9b55c555b9aa3a40d241c75))
  * Product sync: wrong link to task ([#25751](https://projects.theforeman.org/issues/25751), [02d8b97a](https://github.com/Katello/katello.git/commit/02d8b97ae38b31580295259f43dc304dcdee9c47))
  * Recommended Repositories lists tools for outdated Satellite version ([#25750](https://projects.theforeman.org/issues/25750), [a293cac8](https://github.com/Katello/katello.git/commit/a293cac81496ef4bd12948fa4577a8a2ef71a690))
+
+### Hosts
+ * OS's with 3 digit versions not showing up as "synced content" ([#26095](https://projects.theforeman.org/issues/26095), [a04b0ba0](https://github.com/Katello/katello.git/commit/a04b0ba0f4289200b246874a5d3ba681129748d7))
+
+### Content Views
+ * productid is not published in the content view if that is the only item which changed in the sync ([#26058](https://projects.theforeman.org/issues/26058))
+ * CV History: Incorrect API call due to parsing error (page=NaN) ([#25232](https://projects.theforeman.org/issues/25232))
+
+### Tests
+ * react test failure - initExpanded={false} ([#26031](https://projects.theforeman.org/issues/26031), [a9096b74](https://github.com/Katello/katello.git/commit/a9096b74c5ab3540e9bb854db9f3c99807f381ab))
+ * Repository controller transient test failures ([#25867](https://projects.theforeman.org/issues/25867), [a137467e](https://github.com/Katello/katello.git/commit/a137467ed23923964c6134f46cb3760a813ff225))
+ * db:seeds tries to talk to candlepin during pr tests ([#25744](https://projects.theforeman.org/issues/25744), [135ddf68](https://github.com/Katello/katello.git/commit/135ddf68d93e18574db5d956d8bbe27dcfaa7624))
+ * test breakage from foreman change ([#25738](https://projects.theforeman.org/issues/25738), [1087a435](https://github.com/Katello/katello.git/commit/1087a435e089201baf0a0d49ae50b4f0b6e7f398))
+ * silent errors in Katello::Host::HypervisorsUpdateTest ([#25546](https://projects.theforeman.org/issues/25546), [3fa2ee88](https://github.com/Katello/katello.git/commit/3fa2ee88fbae9051eab13340a9e33d0f8450b965))
+
+### Web UI
+ * adapt to new webpack bundle entry format ([#25883](https://projects.theforeman.org/issues/25883), [ffb6e876](https://github.com/Katello/katello.git/commit/ffb6e876b646bc9c3903c829fb8a734ac42c7c14))
+ * [object Object] instead of organization name on Content -> Sync status page ([#25228](https://projects.theforeman.org/issues/25228), [013fd5f3](https://github.com/Katello/katello.git/commit/013fd5f3ed9ca9ef2a0820265fc3f446d4e0a2d4))
 
 ### Inter Server Sync
  * CV with repo having background download policy is importing and exporting ([#25861](https://projects.theforeman.org/issues/25861), [b00cb3c8](https://github.com/Katello/hammer-cli-katello.git/commit/b00cb3c8be632f52d1b636b093bda10ab816f887))
@@ -51,12 +60,11 @@
 ### Client/Agent
  * katello-rhsm-consumer can fail, breaking the isntallation of katello-ca-consumer.rpm ([#25739](https://projects.theforeman.org/issues/25739), [f5397553](https://github.com/theforeman/puppet-certs/commit/f53975534752041d655994795b539912e4b7aa36))
 
-### Content Views
- * productid is not published in the content view if that is the only item which changed in the sync ([#25718](https://projects.theforeman.org/issues/25718), [6dd89e86](https://github.com/Katello/katello.git/commit/6dd89e862945a20e56d972a4b030868ac744b66b))
- * CV History: Incorrect API call due to parsing error (page=NaN) ([#25232](https://projects.theforeman.org/issues/25232))
-
 ### Sync Plans
  * Form button on Product> New Sync Plan doesn't get disabled on first click ([#24718](https://projects.theforeman.org/issues/24718))
+
+### Installer
+ * port 8080 is needed by candlepin for one-time initialization ([#19095](https://projects.theforeman.org/issues/19095))
 
 ### Other
  * Need to add module streams in hammer o/p for "host errata info" ([#25845](https://projects.theforeman.org/issues/25845), [1fad5382](https://github.com/Katello/hammer-cli-katello.git/commit/1fad5382de0e166cc570fe17e3fd9f64c6d813fa))
