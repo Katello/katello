@@ -79,6 +79,13 @@ module Katello
       assert_equal expected, rpms.to_a.sort
     end
 
+    def test_with_search_modular
+      rpms = Rpm.in_repositories(@repo).search_for('modular = true')
+      modular = katello_rpms(:modular)
+      assert_includes rpms, modular
+      refute_includes rpms, @rpm_one
+    end
+
     def test_with_identifiers
       assert_includes Rpm.with_identifiers(@rpm_one.id), @rpm_one
       assert_includes Rpm.with_identifiers([@rpm_one.id]), @rpm_one

@@ -1,6 +1,6 @@
 object @resource
 
-attributes :id, :pulp_id, :name, :version, :release, :arch, :epoch, :summary
+attributes :id, :pulp_id, :name, :version, :release, :arch, :epoch, :summary, :modular
 attributes :filename, :sourcerpm, :checksum
 attributes :nvrea, :nvra
 attributes :pulp_id => :uuid

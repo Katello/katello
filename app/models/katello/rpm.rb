@@ -19,6 +19,7 @@ module Katello
     scoped_search :on => :evr, :ext_method => :scoped_search_evr, :only_explicit => true
     scoped_search :on => :filename, :complete_value => true
     scoped_search :on => :sourcerpm, :complete_value => true
+    scoped_search :on => :modular, :complete_value => true, :only_explicit => true
     scoped_search :on => :checksum
 
     before_save lambda { |rpm| rpm.summary = rpm.summary.truncate(255) unless rpm.summary.blank? }
