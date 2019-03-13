@@ -131,7 +131,7 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
         };
 
         $scope.getRepoPath = function (repo) {
-            return repo.repositoryUrl
+            return repo.repositoryUrl;
         };
 
         $scope.createRepoChoices.product['organization_id'] = CurrentOrganization;
