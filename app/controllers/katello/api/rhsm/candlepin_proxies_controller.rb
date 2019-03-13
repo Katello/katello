@@ -481,7 +481,8 @@ module Katello
         end
       when "rhsm_proxy_owner_servicelevels_path"
         (User.consumer? || ::User.current.can?(:view_organizations, self))
-      when "rhsm_proxy_consumer_certificates_path", "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
+      when "rhsm_proxy_consumer_accessible_content_path", "rhsm_proxy_consumer_certificates_path",
+           "rhsm_proxy_consumer_releases_path", "rhsm_proxy_certificate_serials_path",
            "rhsm_proxy_consumer_entitlements_path", "rhsm_proxy_consumer_entitlements_post_path",
            "rhsm_proxy_consumer_entitlements_delete_path", "rhsm_proxy_consumer_entitlements_pool_delete_path",
            "rhsm_proxy_consumer_certificates_put_path", "rhsm_proxy_consumer_dryrun_path",
