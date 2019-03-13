@@ -3,6 +3,7 @@
 <header class="details-header">
   <h3>{{ filter.name }}</h3>
   <small translate>Type: {{ filter.inclusion | filterType }} {{ filter.type | filterContentType }}</small>
+  <div class="help-block" ng-if="filter.type === 'rpm' || filter.type === 'errata'" translate>RPMs belonging to modules will not get filtered.</div>
 </header>
 
 <div ui-view></div>
