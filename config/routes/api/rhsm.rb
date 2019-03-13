@@ -25,6 +25,7 @@ Katello::Engine.routes.draw do
       match '/consumers/:id' => 'candlepin_proxies#regenerate_identity_certificates', :via => :post
       match '/consumers/:id' => 'candlepin_proxies#consumer_destroy', :via => :delete
       match '/users/:login/owners' => 'candlepin_proxies#list_owners', :via => :get, :constraints => {:login => /\S+/}
+      match '/consumers/:id/accessible_content' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_accessible_content_path
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/certificates' => 'candlepin_proxies#put', :via => :put, :as => :proxy_consumer_certificates_put_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
