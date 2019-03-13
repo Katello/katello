@@ -14,7 +14,9 @@ const recommendedRepositoriesRHEL = [
   'rhel-7-server-optional-rpms',
   'rhel-7-server-extras-rpms',
   'rhel-7-server-eus-rpms',
+  'rhel-7-server-kickstart',
   'rhel-6-server-rpms',
+  'rhel-6-server-kickstart',
   'rhel-5-server-els-rpms',
 ];
 
