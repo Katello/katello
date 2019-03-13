@@ -24,6 +24,9 @@ module Katello
 
     before_save lambda { |rpm| rpm.summary = rpm.summary.truncate(255) unless rpm.summary.blank? }
 
+    scope :modular, -> { where(modular: true) }
+    scope :non_modular, -> { where(modular: false) }
+
     def self.default_sort
       order(:name).order(:epoch).order(:version_sortable).order(:release_sortable)
     end
