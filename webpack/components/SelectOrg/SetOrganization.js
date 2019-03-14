@@ -44,6 +44,9 @@ class SetOrganization extends Component {
         pathname: redirectPath,
         state: { orgChanged: this.state.item },
       }));
+
+    // FIXME: needed to update organization in the navigation
+    window.location.reload();
   }
 
   render() {
