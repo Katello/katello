@@ -191,7 +191,7 @@ module Katello
       end
 
       def create_activation_key_associations
-        keys = Rails.cache.fetch("#{organization.label}/activation_keys", expires_in: 2.minutes) do
+        keys = Rails.cache.fetch("#{organization.label}/activation_keys_id_pool_id", expires_in: 2.minutes) do
           Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id", organization.label)
         end
         activation_key_ids = keys.collect do |key|
