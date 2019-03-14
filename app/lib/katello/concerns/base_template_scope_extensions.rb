@@ -41,14 +41,20 @@ module Katello
       # rubocop:disable Metrics/MethodLength
       def load_errata_applications(filter_errata_type: 'all', include_last_reboot: 'yes', since: nil, up_to: nil, status: nil)
         result = []
+
         search_up_to = up_to.present? ? "ended_at < \"#{up_to}\"" : nil
         search_since = since.present? ? "ended_at > \"#{since}\"" : nil
         search_result = status.present? ? "result = #{status}" : nil
-
         search = [search_up_to, search_since, search_result].compact.join(' and ')
 
+        if Katello.with_remote_execution?
+          condition = ["state != 'stoppped' AND (label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) OR label = 'Actions::Katello::Host::Erratum::Install'", RemoteExecutionFeature.feature('katello_errata_install').job_template_id]
+        else
+          condition = "state != 'stoppped' AND label = 'Actions::Katello::Host::Erratum::Install'"
+        end
+
         tasks = load_resource(klass: ForemanTasks::Task,
-                              where: ["state != 'stoppped' AND (label = 'Actions::RemoteExecution::RunHostJob' AND templates.id = ?) OR label = 'Actions::Katello::Host::Erratum::Install'", RemoteExecutionFeature.feature('katello_errata_install').job_template_id],
+                              where: condition,
                               permission: 'view_tasks',
                               joins: 'LEFT OUTER JOIN template_invocations ON foreman_tasks_tasks.id = template_invocations.run_host_job_task_id LEFT OUTER JOIN templates ON template_invocations.template_id = templates.id',
                               select: 'foreman_tasks_tasks.*,template_invocations.id AS template_invocation_id',
