@@ -92,14 +92,17 @@ module Katello
     def setup
       super
       @host = hosts(:one)
-      @host.content_facet.content_view = katello_content_views(:acme_default)
-      @host.content_facet.bound_repositories = [@repo]
+      @host.content_facet.content_view = katello_content_views(:library_dev_view)
+      @view_repo = katello_repositories(:rhel_6_x86_64_library_view_1)
+      @host.content_facet.bound_repositories = [@repo, @view_repo]
       @host.content_facet.save!
     end
 
     def test_hosts_available
       assert_includes @security.hosts_available, @host.content_facet
       assert_includes @security.hosts_available(@host.organization), @host.content_facet
+      available_errata = @security.hosts_available
+      assert_equal available_errata.uniq.size, available_errata.size
       refute_includes @security.hosts_available, @host_without_errata
       refute_includes @bugfix.hosts_available(@host.organization), @host_without_errata
     end
