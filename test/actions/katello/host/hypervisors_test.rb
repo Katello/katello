@@ -44,4 +44,41 @@ module Katello::Host
       end
     end
   end
+
+  class HypervisorsVcrTest < ActiveSupport::TestCase
+    include VCR::TestCase
+
+    def setup
+      FactImporter.any_instance.stubs(:ensure_no_active_transaction).returns(true)
+      Setting[:default_location_subscribed_hosts] = taxonomies(:location1).name
+    end
+
+    def org_exists(label)
+      ::Katello::Resources::Candlepin::Owner.find(label)
+    rescue
+      false
+    end
+
+    def create_org(org_label)
+      org = Organization.find_by(:label => org_label) || Organization.new(:name => org_label, :label => org_label)
+      ForemanTasks.sync_task(::Actions::Candlepin::Owner::Destroy, :label => org_label) if org_exists(org_label)
+      ForemanTasks.sync_task(::Actions::Katello::Organization::Create, org)
+    end
+
+    def test_duplicate_hostname
+      org_label = 'duplicate_hostname_test'
+      data = JSON.parse(File.read(File.join(Katello::Engine.root, 'test/fixtures/files/virt_who_duplicate_host.json')))
+      data['owner'] = org_label
+      data = data.with_indifferent_access
+      create_org(org_label)
+      org = Organization.find_by(label: org_label)
+
+      assert_equal 0, org.hosts.count
+      task = Katello::Resources::Candlepin::Consumer.async_hypervisors(org_label, data.to_json)
+      action = ForemanTasks.sync_task(::Actions::Katello::Host::Hypervisors, nil, task_id: task['id'])
+
+      assert_equal 'success', action.result
+      assert_equal 2, org.reload.hosts.count
+    end
+  end
 end
