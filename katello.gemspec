@@ -7,11 +7,12 @@ require "katello/version"
 Gem::Specification.new do |gem|
   gem.name        = "katello"
   gem.version     = Katello::VERSION
+  gem.license     = 'GPL-2.0'
   gem.authors     = ["N/A"]
   gem.email       = ["katello-devel@redhat.com"]
   gem.homepage    = "http://www.katello.org"
-  gem.summary     = ""
-  gem.description = "Content and Subscription Management plugin for Foreman"
+  gem.summary     = "Content and Subscription Management plugin for Foreman"
+  gem.description = "Katello adds Content and Subscription Management to Foreman. For this it relies on Candlepin and Pulp."
 
   gem.files = Dir["{app,webpack,vendor,lib,db,ca,config,locale}/**/*"] +
     ['LICENSE.txt', 'README.md', 'package.json']
