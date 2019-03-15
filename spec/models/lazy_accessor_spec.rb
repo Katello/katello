@@ -46,37 +46,6 @@ module Katello
         @c.b = Something::ANOTHER_VALUE
         @c.b.must_equal(Something::ANOTHER_VALUE)
       end
-
-      it "should mark changed attribute as dirty" do
-        @c.a = Something::ANOTHER_VALUE
-        @c.a_changed?.must_equal(true)
-      end
-
-      it "should mark object dirty" do
-        @c.a = Something::ANOTHER_VALUE
-        @c.remote_attribute_changed?('a').must_equal(true)
-      end
-
-      it "should return the change" do
-        @c.a = Something::ANOTHER_VALUE
-        @c.a_change.must_equal([Something::DEFAULT_VALUE, Something::ANOTHER_VALUE])
-      end
-
-      it "should cache the old value after changes were retrieved" do
-        @c.a = Something::ANOTHER_VALUE
-        @c.a_change
-        @c.changed_remote_attributes['a'].must_equal(Something::DEFAULT_VALUE)
-      end
-
-      it "should return previous value" do
-        @c.a = Something::ANOTHER_VALUE
-        @c.a_was.must_equal(Something::DEFAULT_VALUE)
-      end
-
-      it "should mark object dirty after changes" do
-        @c.a = Something::ANOTHER_VALUE
-        @c.changed_remote_attributes.wont_be_empty
-      end
     end
   end
 end

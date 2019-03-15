@@ -36,22 +36,6 @@ module Katello
           options[:in_group] = args.size > 1
           @lazy_attributes_options[symbol.to_s] = options
 
-          send :define_method, "#{symbol}_will_change!" do
-            lazy_attribute_will_change!(symbol)
-          end
-
-          send :define_method, "#{symbol.to_s}_changed?" do
-            remote_attribute_changed?(symbol.to_s)
-          end
-
-          send :define_method, "#{symbol.to_s}_change" do
-            lazy_attribute_change(symbol)
-          end
-
-          send :define_method, "#{symbol.to_s}_was" do
-            lazy_attribute_was(symbol)
-          end
-
           send :define_method, "#{symbol.to_s}=" do |val|
             lazy_attribute_set(symbol, val)
           end
@@ -70,10 +54,6 @@ module Katello
 
       def changed_remote_attributes=(val)
         @changed_remote_attributes = val
-      end
-
-      def remote_attribute_changed?(attr)
-        changed_remote_attributes.key?(attr)
       end
 
       def save(*)
@@ -103,30 +83,8 @@ module Katello
 
       private
 
-      def lazy_attribute_will_change!(attr)
-        changed_remote_attributes[attr.to_s] ||=
-          instance_variable_get("@#{attr}").nil? ? remote_attribute_value(attr) : instance_variable_get("@#{attr}")
-      end
-
-      def lazy_attribute_change(attr)
-        attr = attr.to_s
-        if remote_attribute_changed?(attr)
-          return [changed_remote_attributes[attr], __send__(attr)]
-        end
-      end
-
-      def lazy_attribute_was(attr)
-        attr = attr.to_s
-        remote_attribute_changed?(attr) ? changed_remote_attributes[attr] : __send__(attr)
-      end
-
       def lazy_attribute_set(attr, val)
-        attr = attr.to_s
-
-        old = instance_variable_get("@#{attr}").nil? ? self.send(attr) : instance_variable_get("@#{attr}")
-        changed_remote_attributes[attr] = old if old != val
-
-        instance_variable_set("@#{attr}", val)
+        instance_variable_set("@#{attr.to_s}", val)
       end
 
       def lazy_attribute_get(attr)
