@@ -33,14 +33,14 @@ module Actions
         # Loads all resources needed for refreshing subscription facet
         def load_resources
           @organizations = ::Organization.where(label: hypervisors_field(:organization_label)).map { |org| [org.label, org] }.to_h
-          @hosts = {}
 
+          candlepin_data = ::Katello::Resources::Candlepin::Consumer.get_all_with_facts(hypervisors_field(:uuid))
+          @candlepin_attributes = candlepin_data.map { |consumer| [consumer[:uuid], consumer] }.to_h
+
+          @hosts = {}
           @hosts.merge!(load_hosts_by_uuid)
           @hosts.merge!(load_hosts_by_duplicate_name)
           @hosts.merge!(create_missing_hosts)
-
-          candlepin_data = ::Katello::Resources::Candlepin::Consumer.get_all_with_facts(@hosts.keys)
-          @candlepin_attributes = candlepin_data.map { |consumer| [consumer[:uuid], consumer] }.to_h
         end
 
         def load_hosts_by_uuid
@@ -68,7 +68,8 @@ module Actions
           new_hypervisors = {}
           @hypervisors.each do |hypervisor|
             next if @hosts.key?(hypervisor[:uuid])
-            duplicate_name, org = duplicate_name(hypervisor)
+
+            duplicate_name, org = duplicate_name(hypervisor, @candlepin_attributes[hypervisor[:uuid]])
             new_hypervisors[hypervisor[:uuid]] = create_host_for_hypervisor(duplicate_name, org)
           end
           new_hypervisors
@@ -80,7 +81,7 @@ module Actions
           @hypervisors.each do |hypervisor|
             next if @hosts.key?(hypervisor[:uuid])
 
-            duplicate_name, org = duplicate_name(hypervisor)
+            duplicate_name, org = duplicate_name(hypervisor, @candlepin_attributes[hypervisor[:uuid]])
             duplicate_names[duplicate_name] = hypervisor[:uuid]
             duplicate_name_orgs[duplicate_name] = org
           end
@@ -99,9 +100,9 @@ module Actions
           hypervisors.map { |h| h[field] }.uniq
         end
 
-        def duplicate_name(hypervisor)
+        def duplicate_name(hypervisor, consumer)
           organization = @organizations[hypervisor[:organization_label]]
-          sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(hypervisor[:name])
+          sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(consumer[:hypervisorId][:hypervisorId])
           ["virt-who-#{sanitized_name}-#{organization.id}", organization]
         end
 

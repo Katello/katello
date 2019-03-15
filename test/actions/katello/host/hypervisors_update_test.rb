@@ -36,9 +36,10 @@ module Katello::Host
         entitlementStatus: Katello::SubscriptionStatus::UNKNOWN,
         guestIds: ['test-id-1'],
         entitlementCount: 0,
-        facts: @facts
+        facts: @facts,
+        hypervisorId: {hypervisorId: old_name}
       }.with_indifferent_access
-      ::Katello::Resources::Candlepin::Consumer.stubs(:get).returns(@consumer)
+      ::Katello::Resources::Candlepin::Consumer.stubs(:get_all_with_facts).returns([@consumer])
     end
 
     let(:action_class) { ::Actions::Katello::Host::Hypervisors }
@@ -46,7 +47,7 @@ module Katello::Host
     describe 'Hypervisors Update' do
       it 'new hypervisor' do
         @host.subscription_facet.destroy!
-        @host.reload
+        @host.destroy!
 
         action = create_action(::Actions::Katello::Host::HypervisorsUpdate)
 
@@ -55,7 +56,7 @@ module Katello::Host
 
         action.state.must_equal :success
 
-        @host.reload
+        @host = Host.find_by(:name => @hypervisor_name)
         assert_not_nil @host.subscription_facet
         assert_equal @facts['hypervisor.type'], @host.facts['hypervisor::type']
       end
