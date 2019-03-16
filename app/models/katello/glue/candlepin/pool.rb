@@ -191,7 +191,9 @@ module Katello
       end
 
       def create_activation_key_associations
-        keys = Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id", organization.label)
+        keys = Rails.cache.fetch("#{organization.label}/activation_keys_id_pool_id", expires_in: 2.minutes) do
+          Resources::Candlepin::ActivationKey.get(nil, "?include=id&include=pools.pool.id", organization.label)
+        end
         activation_key_ids = keys.collect do |key|
           key['id'] if key['pools'].present? && key['pools'].any? { |pool| pool['pool'].try(:[], 'id') == cp_id }
         end
