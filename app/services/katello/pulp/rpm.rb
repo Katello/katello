@@ -43,7 +43,7 @@ module Katello
       def update_model(model)
         keys = PULP_INDEXED_FIELDS - ['_id', 'is_modular']
         data = backend_data.slice(*keys)
-        data['modular'] = backend_data['is_modular']
+        data['modular'] = backend_data['is_modular'] == true
         if data.any? { |name, value| model.send(name) != value }
           data[:release_sortable] = Util::Package.sortable_version(data[:release])
           data[:version_sortable] = Util::Package.sortable_version(data[:version])
