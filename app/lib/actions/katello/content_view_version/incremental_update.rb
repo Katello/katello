@@ -248,7 +248,7 @@ module Actions
         end
 
         def remove_puppet_modules(repo, puppet_module_ids)
-          plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :contents => puppet_module_ids, :content_unit_type => ::Katello::PuppetModule::CONTENT_TYPE)
+          plan_action(Pulp::Repository::RemoveUnits, :content_view_puppet_environment_id => repo.id, :contents => puppet_module_ids, :content_unit_type => ::Katello::PuppetModule::CONTENT_TYPE)
         end
 
         def copy_puppet_content(new_repo, puppet_module_ids)

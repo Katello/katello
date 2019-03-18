@@ -32,7 +32,7 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
 
     it 'plans' do
       plan_action action, puppet_env
-      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveUnits, :repo_id => puppet_env.id
+      assert_action_planed_with action, ::Actions::Pulp::Repository::RemoveUnits, :content_view_puppet_environment_id => puppet_env.id
     end
   end
 

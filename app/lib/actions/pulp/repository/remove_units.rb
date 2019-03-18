@@ -4,16 +4,17 @@ module Actions
       class RemoveUnits < Pulp::AbstractAsyncTask
         input_format do
           param :repo_id
+          param :content_view_puppet_environment_id
           param :contents
           param :content_unit_type
         end
 
         def invoke_external_task
           fail _("Cannot pass content units without content unit type") if (input[:contents] && !input[:content_unit_type])
-          repo = ::Katello::Repository.find_by(:id => input[:repo_id])
-          if repo.nil?
-            repo = ::Katello::ContentViewPuppetEnvironment.find_by(:id => input[:repo_id])
-            repo = repo.nonpersisted_repository
+          if input[:repo_id]
+            repo = ::Katello::Repository.find(input[:repo_id])
+          else
+            repo = ::Katello::ContentViewPuppetEnvironment.find(input[:content_view_puppet_environment_id]).nonpersisted_repository
           end
           fail _("An error occurred during content removal. Could not find repository with id: %s" % input[:repo_id]) unless repo
           tasks = []

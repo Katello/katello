@@ -3,7 +3,7 @@ module Actions
     module ContentViewPuppetEnvironment
       class Clear < Actions::Base
         def plan(repo)
-          plan_action(Pulp::Repository::RemoveUnits, repo_id: repo.id)
+          plan_action(Pulp::Repository::RemoveUnits, content_view_puppet_environment_id: repo.id)
         end
       end
     end
