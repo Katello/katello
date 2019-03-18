@@ -109,7 +109,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             baseUrl = $scope.discovery.url;
 
             toRet = _.map(urls, function (url) {
-                var params, urlPath, baseUrlPath;
+                var params, urlPath, baseUrlPath, replaceWith = '';
 
                 params = {
                     url: $scope.discovery.url,
@@ -120,7 +120,10 @@ angular.module('Bastion.products').controller('DiscoveryController',
                 if ($scope.discovery.contentType === 'yum') {
                     urlPath = new URL(url).pathname;
                     baseUrlPath = new URL(baseUrl).pathname;
-                    params.path = urlPath.replace(baseUrlPath, "/");
+                    if (baseUrlPath.endsWith("/")) {
+                        replaceWith = '/';
+                    }
+                    params.path = urlPath.replace(baseUrlPath, replaceWith);
                     params.name = $scope.defaultName(params.path);
                 } else {
                     params.dockerUpstreamName = url;
