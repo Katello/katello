@@ -80,7 +80,8 @@ module Katello
       @organization.reload
       respond_for_create :resource => @organization
     rescue => e
-      process_resource_error(message: e.message)
+      ::Foreman::Logging.exception('Could not create organization', e)
+      process_resource_error(message: e.message, resource: @organization)
     end
 
     api :DELETE, '/organizations/:id', N_('Delete an organization')
