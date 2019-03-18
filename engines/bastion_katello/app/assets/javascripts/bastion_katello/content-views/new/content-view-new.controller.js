@@ -6,12 +6,13 @@
  * @requires ContentView
  * @requires FormUtils
  * @requires CurrentOrganization
+ * @requires contentViewSolveDependencies
  *
  * @description
  */
 angular.module('Bastion.content-views').controller('NewContentViewController',
-    ['$scope', 'ContentView', 'FormUtils', 'CurrentOrganization',
-    function ($scope, ContentView, FormUtils, CurrentOrganization) {
+    ['$scope', 'ContentView', 'FormUtils', 'CurrentOrganization', 'contentViewSolveDependencies',
+    function ($scope, ContentView, FormUtils, CurrentOrganization, contentViewSolveDependencies) {
 
         function success(response) {
             var successState = 'content-view.repositories.yum.available';
@@ -32,6 +33,10 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         }
 
         $scope.contentView = new ContentView({'organization_id': CurrentOrganization});
+        /* eslint-disable camelcase */
+        // boolean is passed in as a string since it comes from rails app by way of bastion.
+        $scope.contentView.solve_dependencies = contentViewSolveDependencies === 'true';
+        /* eslint-enable camelcase */
         $scope.createOption = 'new';
         $scope.table = {};
 
@@ -47,8 +52,10 @@ angular.module('Bastion.content-views').controller('NewContentViewController',
         });
 
         $scope.$watch('contentView.composite', function () {
-            if (!$scope.contentView.composite) {
+            if ($scope.contentView.composite) {
                 /* eslint-disable camelcase */
+                $scope.contentView.solve_dependencies = false;
+            } else {
                 $scope.contentView.auto_publish = false;
                 /* eslint-enable camelcase */
             }

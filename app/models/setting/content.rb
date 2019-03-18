@@ -109,14 +109,12 @@ class Setting::Content < Setting
         self.set('expire_soon_days', N_('The number of days remaining in a subscription before you will be reminded about renewing it.'),
                  120, N_('Expire soon days')),
         self.set('content_view_solve_dependencies',
-                 N_('Solve RPM dependencies on all Content View publishes. Publishes will take significantly longer with this option turned on ' \
-                 'and filters will be ignored to solve dependencies. Also, certain scenarios can still cause dependency errors. This can be ' \
-                 'set on individual Content Views as well.'),
-                 false, N_('Content View Dependency Solving')),
+                 N_('The default dependency solving value for new Content Views.'),
+                 false, N_('Content View Dependency Solving Default')),
         self.set('dependency_solving_algorithm',
-                 N_("How the logic of solving dependencies in a Content View is managed. Conservative will only add packages to solve the dependencies " \
-                  "if the packaged needed doesn't exist. Greedy will pull in the latest package to solve a dependency even if it already does exist " \
-                  "in the repository."),
+                 N_("How the logic of solving dependencies in a Content View is managed. Conservative will only add " \
+                 "packages to solve the dependencies if the packaged needed doesn't exist. Greedy will pull in the " \
+                 "latest package to solve a dependency even if it already does exist in the repository."),
                  'conservative', N_('Content View Dependency Solving Algorithm'), nil,
                  :collection => dependency_solving_options)
       ].each { |s| self.create! s.update(:category => "Setting::Content") }

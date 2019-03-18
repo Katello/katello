@@ -80,7 +80,6 @@ module Katello
     param :description, String, :desc => N_("Description for the new published content view version")
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
-    param :solve_dependencies, :bool, :desc => N_("Solve intra-repository RPM dependencies as part of the publish. Defaults to false")
     param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
       param :label, String, :desc => N_("repo label"), :required => true
       param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
@@ -101,7 +100,7 @@ module Katello
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
                         :major => params[:major],
                         :minor => params[:minor],
-                        :solve_dependencies => ::Foreman::Cast.to_bool(params[:solve_dependencies]),
+                        :solve_dependencies => @view.solve_dependencies,
                         :repos_units => params[:repos_units])
       respond_for_async :resource => task
     end

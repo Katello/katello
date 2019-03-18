@@ -94,3 +94,13 @@ composite_view:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
   organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>
+
+library_view_solve_deps:
+  name:               Solve Dependencies CV
+  label:              'solve_dependencies_cv'
+  solve_dependencies: true
+  default:            false
+  next_version:       2
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::FixtureSet.identify(:empty_organization) %>

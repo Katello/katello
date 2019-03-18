@@ -23,7 +23,8 @@ describe('Controller: NewContentViewController', function() {
             $scope: $scope,
             ContentView: ContentView,
             FormUtils: FormUtils,
-            CurrentOrganization: 'CurrentOrganization'
+            CurrentOrganization: 'CurrentOrganization',
+            contentViewSolveDependencies: 'false'
         };
 
         $controller('NewContentViewController', dependencies);

@@ -37,28 +37,12 @@
       </div>
 
       <div bst-form-group label="{{ 'Description' | translate }}">
-        <textarea id="description"
-                  name="description"
-                  ng-model="version.description"
-                  rows="10"
-                  tabindex="1">
-        </textarea>
-      </div>
-
-      <div class="checkbox" ng-show='showSolveDepsSkip(contentView)'>
-        <label>
-          <input id="skipSolveDependencies"
-                 name="skipSolveDependencies"
-                 ng-model="version.skipSolveDependencies"
-                 type="checkbox"/>
-          <span translate>Skip solving RPM dependencies</span>
-        </label>
-
-        <p class="help-block" translate>
-          Skip solving dependencies for this version only. This option is displayed because either
-          solving dependencies is enabled for this Content View or the global 'Content View Dependency Solving'
-          setting is on.
-        </p>
+    <textarea id="description"
+              name="description"
+              ng-model="version.description"
+              rows="10"
+              tabindex="1">
+    </textarea>
       </div>
 
       <div bst-form-buttons

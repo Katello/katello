@@ -134,6 +134,18 @@
         </h6>
       </div>
 
+      <div class="checkbox">
+        <label>
+          <input id="verify_ssl_on_sync" name="verify_ssl_on_sync" ng-model="repository.verify_ssl_on_sync" type="checkbox"/>
+          <span translate>Verify SSL</span>
+        </label>
+
+        <p class="help-block" translate>
+          Selecting this option will result in Katello verifying that the upstream url's SSL certificates are signed by a trusted CA. Unselect if you do not want this verification.
+        </p>
+      </div>
+
+
       <div bst-form-group label="{{ 'Upstream Username' | translate }}" >
         <input id="upstream_username"
                name="upstream_username"

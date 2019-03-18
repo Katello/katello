@@ -15,6 +15,7 @@ module Katello
       @staging = KTEnvironment.find(katello_environments(:staging).id)
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
+      @library_solve_deps = katello_content_views(:library_view_solve_deps)
     end
 
     def permissions
@@ -149,7 +150,7 @@ module Katello
 
     test_attributes :pid => '3f1457f2-586b-472c-8053-99017c4a4909'
     def test_update
-      params = { :name => "My View", :description => "New description" }
+      params = { :name => "My View", :description => "New description", :solve_dependencies => true }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         content_view_params.key?(:name).must_equal true
         content_view_params[:name].must_equal params[:name]
@@ -339,6 +340,30 @@ module Katello
       target_view = ContentView.find(katello_content_views(:library_dev_view).id)
       post :publish, params: { :id => target_view.id, :minor => 1 }
       assert_response 400
+    end
+
+    def test_publish_with_solve_dependencies_defaults_to_false
+      target_view = @library_dev_view
+
+      assert_async_task ::Actions::Katello::ContentView::Publish do |view, _description, params|
+        view.must_equal target_view
+        assert_equal params[:solve_dependencies], false
+      end
+
+      post :publish, params: { :id => target_view.id }
+      assert_response :success
+    end
+
+    def test_publish_with_cv_solve_dependencies_value
+      target_view = @library_solve_deps
+
+      assert_async_task ::Actions::Katello::ContentView::Publish do |view, _description, params|
+        view.must_equal target_view
+        assert params[:solve_dependencies]
+      end
+
+      post :publish, params: { :id => target_view.id }
+      assert_response :success
     end
 
     def test_destroy_protected
