@@ -57,30 +57,23 @@ module Katello
       end
 
       def current_yum_repos(environment_id = nil, content_view_id = nil)
-        @current_repositories ||= @smart_proxy.pulp_repositories
-        katello_repo_ids = []
-
-        @current_repositories.each do |repo|
-          found_repo = Katello::Repository.where(:pulp_id => repo[:id]).first
-          katello_repo_ids << found_repo.id if found_repo
-        end
-        katello_repos = Katello::Repository.where(:id => katello_repo_ids)
+        katello_repos = Katello::Repository.all
         katello_repos = katello_repos.where(:environment_id => environment_id) if environment_id
         katello_repos = katello_repos.in_content_views([content_view_id]) if content_view_id
-        katello_repos
+
+        pulp_repos = self.smart_proxy.pulp_api.extensions.repository.search_by_repository_ids(katello_repos.pluck(:pulp_id))
+
+        katello_repos.where(:pulp_id => pulp_repos.map { |pulp_repo| pulp_repo['id'] })
       end
 
       def current_puppet_environments(environment_id = nil, content_view_id = nil)
-        @current_repositories ||= @smart_proxy.pulp_repositories
-        puppet_repo_ids = []
-        @current_repositories.each do |repo|
-          found_puppet = Katello::ContentViewPuppetEnvironment.where(:pulp_id => repo[:id]).first
-          puppet_repo_ids << found_puppet.id if found_puppet
-        end
-        puppet_repos = Katello::ContentViewPuppetEnvironment.where(:id => puppet_repo_ids)
+        puppet_repos = Katello::ContentViewPuppetEnvironment.all
         puppet_repos = puppet_repos.where(:environment_id => environment_id) if environment_id
         puppet_repos = puppet_repos.in_content_view(content_view_id) if content_view_id
-        puppet_repos
+
+        pulp_repos = self.smart_proxy.pulp_api.extensions.repository.search_by_repository_ids(puppet_repos.pluck(:pulp_id))
+
+        puppet_repos.where(:pulp_id => pulp_repos.map { |pulp_repo| pulp_repo['id'] })
       end
 
       def current_repositories_data(environment = nil, content_view = nil)
