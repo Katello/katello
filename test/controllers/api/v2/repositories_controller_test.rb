@@ -456,6 +456,21 @@ module Katello
       assert_template 'api/v2/repositories/show'
     end
 
+    def test_show_sync_plan_details
+      sync_plan = katello_sync_plans(:sync_plan_hourly)
+      sync_plan.products << @repository.product
+
+      get :show, params: { :id => @repository.id }
+
+      assert_response :success
+      result = JSON.parse(@response.body)
+
+      assert_equal @repository.product.sync_plan.interval, result['product']['sync_plan']['interval']
+      assert_equal @repository.product.sync_plan.name, result['product']['sync_plan']['name']
+      assert_equal @repository.product.sync_plan.sync_date, result['product']['sync_plan']['sync_date']
+      assert_equal @repository.product.sync_plan.next_sync, result['product']['sync_plan']['next_sync']
+    end
+
     def test_show_protected
       allowed_perms = [@read_permission]
       denied_perms = [@create_permission, @update_permission, @destroy_permission]
