@@ -118,8 +118,8 @@ angular.module('Bastion.products').controller('DiscoveryController',
                     repositoryUrl: url
                 };
                 if ($scope.discovery.contentType === 'yum') {
-                    urlPath = new URL(url).pathname
-                    baseUrlPath = new URL(baseUrl).pathname
+                    urlPath = new URL(url).pathname;
+                    baseUrlPath = new URL(baseUrl).pathname;
                     params.path = urlPath.replace(baseUrlPath, "/");
                     params.name = $scope.defaultName(params.path);
                 } else {
