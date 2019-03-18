@@ -1,4 +1,4 @@
-import { testComponentSnapshotsWithFixtures } from '../test-utils/testHelpers';
+import { testComponentSnapshotsWithFixtures } from 'react-redux-test-utils';
 import TooltipButton from './TooltipButton';
 
 const createRequiredProps = () => ({
