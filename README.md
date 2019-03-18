@@ -68,7 +68,7 @@ See the [developer documentation](https://www.theforeman.org/plugins/katello/dev
 
 ## Annotated Pulp and Candlepin Workflows and test Scenarios
 
-See the [annotation docs](./test/scenarios/README.md) for more information.
+See the [annotation docs](./test/scenarios/annotations/README.md) for more information.
 
 ## Contact & Resources
 
