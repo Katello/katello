@@ -59,13 +59,20 @@ module Katello
     end
 
     def http_crawl(resume_point)
-      Anemone.crawl(resume_point, @proxy) do |anemone|
+      resume_point_uri = URI(resume_point)
+      resume_point_uri.user = @upstream_username if @upstream_username
+      resume_point_uri.password = @upstream_password if @upstream_password
+
+      Anemone.crawl(resume_point_uri, @proxy) do |anemone|
         anemone.focus_crawl do |page|
           @crawled << page.url.path
 
           page.links.each do |link|
             if link.path.ends_with?('/repodata/')
-              @found << page.url.to_s
+              page_url = page.url.clone
+              page_url.user = nil
+              page_url.password = nil
+              @found << page_url.to_s
             else
               @to_follow << link.to_s if should_follow?(link.path)
             end

@@ -176,28 +176,13 @@ describe('Controller: DiscoveryController', function() {
                                                                jasmine.any(Function));
     });
 
-    it('should set discovery table upon completed discovery', function() {
-        $scope.discovery.url = 'http://fake/';
-        $scope.discovery.contentType = 'yum';
-        spyOn(Task, 'get');
-        $scope.discover();
-
-        expect(Task.get).not.toHaveBeenCalled();
-
-        Task.simulateBulkSearch(Organization.mockDiscoveryTask);
-
-        expect($scope.table.rows[0].path).toBe('foo');
-        expect($scope.table.rows[0].name).toBe('foo');
-    });
-
-    it('should set discovery table upon completed discovery', function() {
+    it('should set docker discovery table upon completed discovery', function() {
         $scope.discovery.url = 'http://fake/';
         $scope.discovery.contentType = 'docker';
         spyOn(Task, 'get');
         $scope.discover();
 
         expect(Task.get).not.toHaveBeenCalled();
-
         Task.simulateBulkSearch(Organization.mockDiscoveryTask);
 
         expect($scope.table.rows[0].path).toBe('http://fake/foo');
@@ -207,7 +192,7 @@ describe('Controller: DiscoveryController', function() {
 
     it('discovery should poll if task is pending', function() {
         $scope.discovery.url = 'http://fake/';
-        $scope.discovery.contentType = 'yum';
+        $scope.discovery.contentType = 'docker';
         $scope.discover();
         Organization.mockDiscoveryTask.state = 'running';
         spyOn(Task, 'unregisterSearch');
@@ -216,6 +201,7 @@ describe('Controller: DiscoveryController', function() {
     });
 
     it('discovery should stop polling if task is not pending', function() {
+        $scope.discovery.contentType = 'docker';
         $scope.discover();
         Organization.mockDiscoveryTask.state = 'finished';
         spyOn(Task, 'unregisterSearch');

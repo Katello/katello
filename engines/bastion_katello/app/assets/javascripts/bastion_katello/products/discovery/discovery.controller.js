@@ -109,15 +109,21 @@ angular.module('Bastion.products').controller('DiscoveryController',
             baseUrl = $scope.discovery.url;
 
             toRet = _.map(urls, function (url) {
-                var params;
+                var params, urlPath, baseUrlPath, replaceWith = '';
 
                 params = {
                     url: $scope.discovery.url,
                     label: '',
-                    contentType: $scope.discovery.contentType
+                    contentType: $scope.discovery.contentType,
+                    repositoryUrl: url
                 };
                 if ($scope.discovery.contentType === 'yum') {
-                    params.path = url.replace(baseUrl, "");
+                    urlPath = new URL(url).pathname;
+                    baseUrlPath = new URL(baseUrl).pathname;
+                    if (baseUrlPath.endsWith("/")) {
+                        replaceWith = '/';
+                    }
+                    params.path = urlPath.replace(baseUrlPath, replaceWith);
                     params.name = $scope.defaultName(params.path);
                 } else {
                     params.dockerUpstreamName = url;

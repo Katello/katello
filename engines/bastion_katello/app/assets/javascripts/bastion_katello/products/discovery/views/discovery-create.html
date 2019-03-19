@@ -73,8 +73,8 @@
       </label>
     </div>
 
-    <div bst-form-group ng-show="discovery.contentType === 'docker'"
-         label="{{ 'Registry username' | translate }}">
+    <div bst-form-group
+         label="{{ 'Username' | translate }}">
       <input id="registryUsername"
              type="text"
              class="form-control"
@@ -83,8 +83,8 @@
              name="upstreamUsername"/>
     </div>
 
-    <div bst-form-group ng-show="discovery.contentType === 'docker'"
-         label="{{ 'Registry Password' | translate }}">
+    <div bst-form-group
+         label="{{ 'Password' | translate }}">
       <input id="registryPassword"
              type="password"
              class="form-control"
@@ -162,7 +162,7 @@
             <span ng-show="creating() || repo.created">{{ repo.label }}</span>
           </td>
           <td bst-table-cell ng-show="discovery.contentType === 'yum'">
-            {{ repo.url + repo.path }}
+            {{ getRepoPath(repo) }}
           </td>
         </tr>
       </tbody>

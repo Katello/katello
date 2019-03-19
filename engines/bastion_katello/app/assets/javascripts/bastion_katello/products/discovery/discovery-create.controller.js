@@ -35,13 +35,14 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
                 name: repo.name,
                 label: repo.label,
                 'content_type': repo.contentType,
-                url: repo.url + repo.path,
                 'product_id': $scope.createRepoChoices.existingProductId,
                 unprotected: $scope.createRepoChoices.unprotected,
                 'verify_ssl': $scope.createRepoChoices.verifySsl,
                 'upstream_username': $scope.createRepoChoices.upstreamUsername,
                 'upstream_password': $scope.createRepoChoices.upstreamPassword
             };
+
+            repoParams.url = $scope.getRepoPath(repo);
 
             if (repo.contentType === 'docker') {
                 repoParams.url = $scope.createRepoChoices.repositoryUrl;
@@ -127,6 +128,10 @@ angular.module('Bastion.products').controller('DiscoveryCreateController',
             repositoryUrl: DiscoveryRepositories.getRepositoryUrl(),
             upstreamUsername: DiscoveryRepositories.getUpstreamUsername(),
             upstreamPassword: DiscoveryRepositories.getUpstreamPassword()
+        };
+
+        $scope.getRepoPath = function (repo) {
+            return repo.repositoryUrl;
         };
 
         $scope.createRepoChoices.product['organization_id'] = CurrentOrganization;
