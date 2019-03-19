@@ -1,0 +1,23 @@
+<div data-extend-template="layouts/partials/page-loading-indicator.html"></div>
+
+<div data-extend-template="layouts/partials/page-header-with-actions.html">
+  <span data-block="header"></span>
+  <span data-block="item-actions"></span>
+</div>
+
+<div data-extend-template="layouts/partials/full-row-breadcrumbs.html"></div>
+<div data-extend-template="layouts/partials/messages-container.html"></div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <nav data-block="navigation"></nav>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12 page-content">
+    <div ng-hide="page && (page.loading || page.error)">
+      <span data-block="content"></span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="bst-edit">
+  <div class="value" ng-class="{ 'editable' : !readonly }" ng-click="edit()" ng-hide="editMode || workingMode">
+    <span class="fr" ng-hide="editMode || readonly">
+      <i class="fa fa-edit inline-icon"></i>
+      <i class="fa fa-remove inline-icon" ng-click="delete($event)" ng-show="deletable"></i>
+    </span>
+    <span>
+      <i class="{{ iconClass }}" ng-show="iconShow && displayValue"></i>
+      <span class="editable-value">{{ displayValue }}</span>
+    </span>
+  </div>
+
+  <span ng-switch on="buttonConfig">
+    <div ng-switch-when="addRemove">
+      <div ng-include="'components/views/bst-edit-add-remove-cancel.html'"></div>
+    </div>
+    <div ng-switch-default>
+      <div ng-include="'components/views/bst-edit-save-cancel.html'"></div>
+    </div>
+  </span>
+</div>

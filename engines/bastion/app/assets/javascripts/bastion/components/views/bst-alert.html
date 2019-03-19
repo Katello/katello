@@ -1,0 +1,12 @@
+<div uib-alert ng-class='"alert-" + (type || "warning")' ng-mouseover="cancelFade()">
+  <button ng-show="closeable" type="button" class="close" aria-hidden="true" ng-click="close()">
+    <span class="pficon pficon-close"></span>
+  </button>
+
+  <span ng-show="type === 'danger'" class="pficon pficon-error-circle-o"></span>
+  <span ng-show="type === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+  <span ng-show="type === 'info'" class="pficon pficon-info"></span>
+  <span ng-show="type === 'success'" class="pficon pficon-ok"></span>
+
+  <span ng-transclude></span>
+</div>

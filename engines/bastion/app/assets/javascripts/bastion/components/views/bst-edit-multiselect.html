@@ -1,0 +1,9 @@
+<div class="bst-dialog bst-multiselect" ng-class="{open: editMode, closed: !editMode}">
+  <i class="fa fa-remove fr" ng-click="editMode = false" ng-show="editMode"></i>
+  <form ng-show="editMode" role="form">
+    <p ng-repeat="option in options">
+      <input type="checkbox" ng-model="option.selected"/> {{ option.name }}
+    </p>
+  </form>
+  <div bst-edit></div>
+</div>

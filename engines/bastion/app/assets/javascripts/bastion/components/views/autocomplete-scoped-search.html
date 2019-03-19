@@ -1,0 +1,12 @@
+<i class='ui-autocomplete-category' ng-show="match.model.isCategory">
+  {{ match.model.category }}
+</i>
+
+<a ng-hide="match.model.isCategory">
+  <i class='ui-autocomplete-completed'>
+    {{ match.model.completed }}
+  </i>
+  <span ng-bind-html="match.label | uibTypeaheadHighlight:query">
+    {{ match.model.label }}
+  </span>
+</a>
