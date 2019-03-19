@@ -34,11 +34,12 @@ module Katello
       end
 
       def import_pool(cp_pool_id, index_hosts = true)
-        pool = nil
+        json = candlepin_data(cp_pool_id)
         ::Katello::Util::Support.active_record_retry do
-          pool = Katello::Pool.where(:cp_id => cp_pool_id).first_or_create
+          pool = Katello::Pool.where(:cp_id => cp_pool_id, :organization => Organization.find_by(:label => json['owner']['key'])).first_or_create
+          pool.backend_data = json
+          pool.import_data(index_hosts)
         end
-        pool.import_data(index_hosts)
       end
 
       def stacking_subscription(org_label, stacking_id)
