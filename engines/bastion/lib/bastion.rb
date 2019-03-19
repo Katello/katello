@@ -4,9 +4,9 @@ require 'angular-rails-templates'
 
 require File.expand_path('bastion/engine', File.dirname(__FILE__))
 
+#rubocop:disable Style/ClassVars
 module Bastion
-
-  @@plugins = {};
+  @@plugins = {}
 
   def self.plugins
     @@plugins
@@ -23,7 +23,7 @@ module Bastion
       'relativeUrlRoot' => url_root ? url_root + '/' : '/'
     }
 
-    Bastion.plugins.each do |name, plugin|
+    Bastion.plugins.each do |_name, plugin|
       base_config.merge!(plugin[:config]) if plugin[:config]
     end
 
@@ -33,5 +33,4 @@ module Bastion
   def self.localization_path(locale)
     "bastion/angular-i18n/angular-locale_#{locale}.js"
   end
-
 end

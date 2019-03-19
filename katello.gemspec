@@ -16,6 +16,8 @@ Gem::Specification.new do |gem|
 
   gem.files = Dir["{app,webpack,vendor,lib,db,ca,config,locale}/**/*"] +
     ['LICENSE.txt', 'README.md', 'package.json']
+  gem.files += Dir["engines/bastion/{app,vendor,lib,config}/**/*"]
+  gem.files += Dir["engines/bastion/{README.md}"]
   gem.files += Dir["engines/bastion_katello/{app,vendor,lib,config}/**/*"]
   gem.files += Dir["engines/bastion_katello/{README.md}"]
   gem.files -= ["lib/katello/tasks/annotate_scenarios.rake"]
@@ -43,7 +45,8 @@ Gem::Specification.new do |gem|
 
   # UI
   gem.add_dependency "deface", '>= 1.0.2', '< 2.0.0'
-  gem.add_dependency "bastion", ">= 6.1.22", "< 7.0.0"
+  gem.add_dependency "angular-rails-templates", "~> 1.0.2"
+  gem.add_development_dependency "uglifier"
 
   # Testing
   gem.add_development_dependency "factory_bot_rails", "~> 4.5"

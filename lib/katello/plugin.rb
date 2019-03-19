@@ -350,6 +350,9 @@ Foreman::Plugin.register :katello do
   precompile = [
     'katello/katello.css',
     'katello/containers/container.css',
+    'bastion/bastion.css',
+    'bastion/bastion.js',
+    /bastion\S+.(?:svg|eot|woff|ttf)$/,
     'bastion_katello/bastion_katello.css',
     'bastion_katello/bastion_katello.js',
     /bastion_katello\S+.(?:svg|eot|woff|ttf)$/

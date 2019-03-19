@@ -32,16 +32,18 @@ BASTION_MODULES.push('myModuleName');
 
 ### Plugin Development ###
 
-Bastion supplies a common set of testing and development using Grunt. These Grunt based tasks have been wrapped in Rake to make them more familiar to a Rails developer. To setup your development environment, from your plugin's checkout:
+Bastion supplies a common set of testing and development using Grunt.  To setup your development environment, from your plugin's checkout:
 
 ```
-rake bastion:setup
+sudo npm install -g grunt-cli
+npm install
+npm install ../bastion/
 ```
 
 To run your plugin's tests and lint them:
 
 ```
-rake bastion:ci
+grunt ci
 ```
 
 ### Basics of Adding a New Entity ###
@@ -188,13 +190,14 @@ Open the file, and add the following lines (with empty lines above and below for
 To setup a development environment, clone the repository or your fork of the repository. From the git checkout, setup the required development dependencies by running:
 
 ```
-rake bastion:setup
+sudo npm install -g grunt-cli
+npm install
 ```
 
 After making changes, tests and linting can be run via:
 
 ```
-rake bastion:ci
+grunt ci
 ```
 
 ### Dependencies ###
