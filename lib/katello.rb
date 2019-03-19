@@ -21,6 +21,7 @@ require "securerandom"
 lib_foreman = File.expand_path('lib/foreman', Rails.root)
 require lib_foreman if Dir.exist?(lib_foreman)
 
+require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
 require File.expand_path("../engines/bastion_katello/lib/bastion_katello", File.dirname(__FILE__))
 require "monkeys/anemone"
 
