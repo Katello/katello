@@ -1,0 +1,104 @@
+@import "patternfly/variables";
+
+.filter-option label {
+  font-weight: normal;
+}
+
+.alert ul {
+  list-style: none;
+}
+
+// Patternfly Overrides
+$table-cell-padding-top: 5px;
+$table-cell-padding-bottom: 5px;
+
+// Foreman Core Overrides
+table.table {
+  margin-bottom: 0 !important;
+}
+
+.table th {
+  background: inherit;
+}
+
+// Prevent Foreman editable icon from bleeding into our pages
+.editable {
+  background: inherit;
+  padding: 0;
+}
+
+.wizard li {
+  &:not(:first-child) span {
+    padding-left: 15px;
+  }
+}
+
+.breadcrumbs-inline .breadcrumb {
+  display: inline-block;
+}
+
+.breadcrumb > .active a {
+  color: $breadcrumb-active-color;
+}
+
+.breadcrumbs .breadcrumb {
+  margin-bottom: 0;
+}
+
+// Need to override these because .bastion .dropdown-menu (we wrap
+// everything in .bastion) has more specificity than these selectors
+// and thus overrides them making them not displayed when they should be.
+html [uib-typeahead-popup].dropdown-menu,
+html .uib-datepicker-popup.dropdown-menu
+{
+  display: block;
+}
+
+// Fix bad margin and border on patternfly dropdown buttons
+html .toolbar-pf .toolbar-pf-filter.form-group .input-group-btn .btn {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  margin-right: -1px;
+  margin-left: -1px;
+}
+
+// Increase size of .toolbar-pf-filter
+html .toolbar-pf.table-view-pf-toolbar-external .toolbar-pf-filter {
+  width: 35%;
+}
+
+// Add border to bottom of empty table
+.row.toolbar-pf.table-view-pf-toolbar.empty-table{
+  border-bottom: 1px solid #d1d1d1;
+  margin-bottom: 10px;
+}
+
+// Ensure scrolling on the modal body
+.modal-body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+// Add some margin to the bottom of the table footer
+.content-view-pf-pagination {
+  margin-bottom: 20px;
+}
+
+.dropdown-menu form {
+  padding: 5px;
+}
+
+html .dropdown-menu .content-view-pf-pagination {
+  background-color: #FFFFFF;
+  border: none;
+  margin-bottom: 0;
+  white-space: nowrap;
+
+  .pagination-pf-back {
+    margin-left: 0;
+  }
+
+  .form-group:last-child {
+    justify-content: center;
+  }
+}

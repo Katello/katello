@@ -1,0 +1,67 @@
+<span uib-dropdown ng-show="showSwitcher()" on-toggle="toggled(open)">
+  <a uib-dropdown-toggle>
+    <i class="fa fa-exchange"></i>
+  </a>
+  <ul class="dropdown-menu" uib-dropdown-menu>
+    <form role="form" class="search-pf has-button">
+      <div class="form-group has-clear">
+        <div class="search-pf-input-group">
+          <label for="search" class="sr-only" translate>
+            Search
+          </label>
+          <input id="search" type="search" class="form-control" placeholder="{{ 'Search' | translate }}" ng-model="resourceFilter" />
+          <button type="button" class="clear" aria-hidden="true" ng-click="resourceFilter = null" ng-hide="resourceFilter === null">
+            <span class="pficon pficon-close"></span>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-default" type="button">
+          <span class="fa fa-search"></span>
+        </button>
+      </div>
+    </form>
+    <li ng-class="{'table-mask': table.refreshing || table.working, 'active': item.selected}"
+        ng-repeat="item in table.rows | filter:resourceFilter">
+      <a ng-click="changeResource(item.id)">{{ item.name }}</a>
+    </li>
+
+    <li role="separator" class="divider"></li>
+
+    <li>
+      <form class="content-view-pf-pagination">
+        <div class="form-group" ng-show="table.hasPagination()">
+
+          <ul class="pagination pagination-pf-back">
+            <li ng-class="{ disabled: table.onFirstPage() }">
+              <a ng-click="table.onFirstPage() || table.previousPage()" title="{{ 'Previous Page' | translate }}">
+                <span class="i fa fa-angle-left"></span>
+              </a>
+            </li>
+          </ul>
+
+          <label for="currentPage" class="sr-only" translate>
+            Current Page
+          </label>
+
+          <input id="currentPage" ng-show="table.resource.subtotal > 0" class="pagination-pf-page" type="text" ng-model="table.params.page"
+                 ng-blur="table.changePage(table.params.page)" bst-on-enter="table.changePage(table.params.page)"/>
+
+          <input ng-show="table.resource.subtotal === 0" class="pagination-pf-page" type="text" readonly="true" ng-value="table.resource.subtotal"/>
+
+          <span translate>of
+            <span class="pagination-pf-pages">{{ (table.resource.subtotal / table.resource.per_page) | roundUp }}</span>
+          </span>
+
+          <ul class="pagination pagination-pf-forward">
+            <li ng-class="{ disabled: table.onLastPage() }">
+              <a ng-click="table.onLastPage() || table.nextPage()" title=" {{ 'Next Page' | translate }}">
+                <span class="i fa fa-angle-right"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </form>
+    </li>
+  </ul>
+</span>
