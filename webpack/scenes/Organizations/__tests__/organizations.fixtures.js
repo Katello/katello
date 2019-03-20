@@ -86,6 +86,9 @@ export const saveSuccessActions = [
     response: requestSuccessResponse,
     type: 'SAVE_ORGANIZATION_SUCCESS',
   },
+  {
+    type: 'GET_ORGANIZATION_REQUEST',
+  },
 ];
 
 export const saveFailureActions = [

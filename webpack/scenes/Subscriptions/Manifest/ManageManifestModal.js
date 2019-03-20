@@ -169,8 +169,8 @@ class ManageManifestModal extends Component {
                     <FormControl
                       id="cdnUrl"
                       type="text"
-                      value={this.state.redhat_repository_url || organization.redhat_repository_url || ''}
-                      onChange={this.updateRepositoryUrl}
+                      defaultValue={this.state.redhat_repository_url || organization.redhat_repository_url || ''}
+                      onBlur={this.updateRepositoryUrl}
                     />
                   </Col>
                 </FormGroup>
@@ -304,11 +304,9 @@ ManageManifestModal.propTypes = {
   manifestHistory: PropTypes.shape({}).isRequired,
   showModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
-  taskDetails: PropTypes.shape({}),
 };
 
 ManageManifestModal.defaultProps = {
-  taskDetails: undefined,
   disableManifestActions: false,
   disabledReason: '',
   onClose() {},
