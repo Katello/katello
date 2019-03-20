@@ -49,6 +49,9 @@ export const saveOrganization = (extendedParams = {}) => (dispatch) => {
         type: SAVE_ORGANIZATION_SUCCESS,
         response: data,
       });
+
+      // TODO: Necessary because of https://projects.theforeman.org/issues/26420
+      dispatch(loadOrganization());
     })
     .catch((result) => {
       dispatch({
