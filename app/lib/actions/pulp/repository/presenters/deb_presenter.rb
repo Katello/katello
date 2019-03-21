@@ -14,10 +14,20 @@ module Actions
           private
 
           def humanized_details
-            task_details&.inject([]) do |res, step|
-              res.append("#{step[:description]} (#{step[:num_processed]}/#{step[:items_total]})") if step[:state] == "IN_PROGRESS"
-              res
+            res = ""
+
+            if task_details
+              sync_step = task_details.select { |step| step["step_type"] == "sync_step_unit_download" }.first
+              if sync_step
+                if sync_step["items_total"] > 0
+                  res = "New packages: #{sync_step["num_processed"]}/#{sync_step["items_total"]}"
+                else
+                  res = _("No new packages.")
+                end
+              end
             end
+
+            res
           end
 
           def size_summary
