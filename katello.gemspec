@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "rabl"
   gem.add_dependency "foreman-tasks", "~> 0.13", ">= 0.14.1"
-  gem.add_dependency "foreman_docker", ">= 0.2.0"
+  gem.add_dependency "foreman_docker", "< 4.1.1", ">= 0.2.0"
 
   gem.add_dependency "qpid_messaging"
   gem.add_dependency "gettext_i18n_rails"
