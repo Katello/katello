@@ -906,44 +906,6 @@ http_interactions:
   recorded_at: Wed, 09 Jan 2019 08:27:34 GMT
 - request:
     method: post
-    uri: https://centos7-devel.kangae.example.com/pulp/api/v2/content/uploads/
-    body:
-      encoding: UTF-8
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 201
-      message: CREATED
-    headers:
-      Date:
-      - Wed, 09 Jan 2019 08:27:34 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '132'
-      Location:
-      - "/pulp/api/v2/content/uploads/dfc74fb7-7af7-4a5d-8787-873e1d7d4378/"
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ1cGxvYWRfaWQiOiAiZGZjNzRmYjctN2FmNy00YTVkLTg3ODctODczZTFk
-        N2Q0Mzc4IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9jb250ZW50L3VwbG9h
-        ZHMvZGZjNzRmYjctN2FmNy00YTVkLTg3ODctODczZTFkN2Q0Mzc4LyJ9
-    http_version: 
-  recorded_at: Wed, 09 Jan 2019 08:27:34 GMT
-- request:
-    method: post
     uri: https://centos7-devel.kangae.example.com/pulp/api/v2/repositories/4/actions/import_upload//
     body:
       encoding: UTF-8
@@ -1178,88 +1140,6 @@ http_interactions:
     http_version: 
   recorded_at: Wed, 09 Jan 2019 08:27:34 GMT
 - request:
-    method: post
-    uri: https://centos7-devel.kangae.example.com/pulp/api/v2/repositories/4/search/units/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJwdXBwZXRfbW9kdWxlIl0sImZp
-        ZWxkcyI6eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '90'
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Wed, 09 Jan 2019 08:27:34 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Vary:
-      - Accept-Encoding
-      Content-Length:
-      - '229'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: ASCII-8BIT
-      base64_string: |
-        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICI1NjY3YzVhZi02OGE2LTRiY2EtOGJj
-        Yy1mNjcyODNmNDIwZGMiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
-        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNWMzNWIwNzY5MTg0OWMwOGE3
-        OTZlZTNmIn0sICJ1bml0X2lkIjogIjU2NjdjNWFmLTY4YTYtNGJjYS04YmNj
-        LWY2NzI4M2Y0MjBkYyIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
-        ZSJ9XQ==
-    http_version: 
-  recorded_at: Wed, 09 Jan 2019 08:27:34 GMT
-- request:
-    method: delete
-    uri: https://centos7-devel.kangae.example.com/pulp/api/v2/repositories/4/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Date:
-      - Wed, 09 Jan 2019 08:27:34 GMT
-      Server:
-      - Apache/2.4.6 (CentOS)
-      Content-Length:
-      - '172'
-      Content-Type:
-      - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
-        c2tzLzVlNWZlZjg1LTdkNjgtNDNkYS1iMDIzLTkwMjRiYTI4MjczYS8iLCAi
-        dGFza19pZCI6ICI1ZTVmZWY4NS03ZDY4LTQzZGEtYjAyMy05MDI0YmEyODI3
-        M2EifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
-    http_version: 
-  recorded_at: Wed, 09 Jan 2019 08:27:34 GMT
-- request:
     method: get
     uri: https://centos7-devel.kangae.example.com/pulp/api/v2/tasks/5e5fef85-7d68-43da-b023-9024ba28273a/
     body:
@@ -1413,4 +1293,1327 @@ http_interactions:
         ODQ5YzA4YTc5NmVlNjUifQ==
     http_version: 
   recorded_at: Wed, 09 Jan 2019 08:27:35 GMT
+- request:
+    method: post
+    uri: https://theta.partello.example.com/pulp/api/v2/repositories/4/actions/import_upload//
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvX2lkIjoiNCIsInVuaXRfdHlwZV9pZCI6InB1cHBldF9tb2R1bGUi
+        LCJ1cGxvYWRfaWQiOiJjYTMyM2Y3OS05Zjc3LTRhNmMtODcxOS1lODBmMTYx
+        MGEyODIiLCJ1bml0X2tleSI6e30sInVuaXRfbWV0YWRhdGEiOnt9fQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '130'
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzMzYWU1YzdjLWJjNTctNDVkOS1iODRiLTBjOWFhNzU3Y2Y2Ni8iLCAi
+        dGFza19pZCI6ICIzM2FlNWM3Yy1iYzU3LTQ1ZDktYjg0Yi0wYzlhYTc1N2Nm
+        NjYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"9db827a2710156c2360aea51d92aa05f-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '562'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3
+        bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVl
+        IjogIiIsICJzdGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogbnVs
+        bCwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
+        aWQiOiAiNWM5NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0
+        ZjZjYTY5ODlkNDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"9db827a2710156c2360aea51d92aa05f-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '562'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3
+        bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVl
+        IjogIiIsICJzdGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogbnVs
+        bCwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
+        aWQiOiAiNWM5NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0
+        ZjZjYTY5ODlkNDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"9db827a2710156c2360aea51d92aa05f-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '562'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3
+        bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVl
+        IjogIiIsICJzdGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtlcl9uYW1lIjogbnVs
+        bCwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRv
+        aWQiOiAiNWM5NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0
+        ZjZjYTY5ODlkNDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"6ecf4b2bdaa5b2618bb08efaef9f5581-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '688'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJUMTQ6NTI6NThaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6
+        ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5
+        NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0ZjZjYTY5ODlk
+        NDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"6ecf4b2bdaa5b2618bb08efaef9f5581-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '688'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJUMTQ6NTI6NThaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6
+        ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5
+        NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0ZjZjYTY5ODlk
+        NDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"6ecf4b2bdaa5b2618bb08efaef9f5581-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '688'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJUMTQ6NTI6NThaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6
+        ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5
+        NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0ZjZjYTY5ODlk
+        NDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"6ecf4b2bdaa5b2618bb08efaef9f5581-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '688'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJUMTQ6NTI6NThaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6
+        ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5
+        NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0ZjZjYTY5ODlk
+        NDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"6ecf4b2bdaa5b2618bb08efaef9f5581-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '688'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJUMTQ6NTI6NThaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6
+        ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5
+        NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0sICJpZCI6ICI1Yzk0ZjZjYTY5ODlk
+        NDhmNTM2YjgyZTkifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/33ae5c7c-bc57-45d9-b84b-0c9aa757cf66/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"cea20b9e4a1c09b95b762798bd028924-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '755'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy8zM2FlNWM3Yy1iYzU3
+        LTQ1ZDktYjg0Yi0wYzlhYTc1N2NmNjYvIiwgInRhc2tfaWQiOiAiMzNhZTVj
+        N2MtYmM1Ny00NWQ5LWI4NGItMGM5YWE3NTdjZjY2IiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogIjIwMTktMDMtMjJUMTQ6NTI6NThaIiwgIl9u
+        cyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJU
+        MTQ6NTI6NThaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tz
+        IjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2Vy
+        dmVkX3Jlc291cmNlX3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUu
+        Y29tLmRxMiIsICJzdGF0ZSI6ICJmaW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6
+        ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEB0aGV0YS5wYXJ0ZWxsby5l
+        eGFtcGxlLmNvbSIsICJyZXN1bHQiOiB7ImRldGFpbHMiOiB7fSwgInN1Y2Nl
+        c3NfZmxhZyI6IHRydWUsICJzdW1tYXJ5IjogIiJ9LCAiZXJyb3IiOiBudWxs
+        LCAiX2lkIjogeyIkb2lkIjogIjVjOTRmNmNhNjk4OWQ0OGY1MzZiODJlOSJ9
+        LCAiaWQiOiAiNWM5NGY2Y2E2OTg5ZDQ4ZjUzNmI4MmU5In0=
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: delete
+    uri: https://theta.partello.example.com/pulp/api/v2/content/uploads/ca323f79-9f77-4a6c-8719-e80f1610a282//
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:58 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '4'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: 'bnVsbA==
+
+'
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:58 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/f581d9c2-ed68-4eb3-8e47-baa295ad418c/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:59 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"86aa9434941918128070577c1292f830-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '534'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mNTgxZDljMi1lZDY4LTRlYjMtOGU0Ny1iYWEyOTVhZDQx
+        OGMvIiwgInRhc2tfaWQiOiAiZjU4MWQ5YzItZWQ2OC00ZWIzLThlNDctYmFh
+        Mjk1YWQ0MThjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAidHJhY2Vi
+        YWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3Jl
+        cG9ydCI6IHt9LCAicXVldWUiOiAiIiwgInN0YXRlIjogIndhaXRpbmciLCAi
+        d29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjog
+        bnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1Yzk0ZjZjYjY5ODlkNDhmNTM2Yjgz
+        NjQifSwgImlkIjogIjVjOTRmNmNiNjk4OWQ0OGY1MzZiODM2NCJ9
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:59 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/f581d9c2-ed68-4eb3-8e47-baa295ad418c/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:59 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"df50108030fc00ec25ec679049a0717a-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '660'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mNTgxZDljMi1lZDY4LTRlYjMtOGU0Ny1iYWEyOTVhZDQx
+        OGMvIiwgInRhc2tfaWQiOiAiZjU4MWQ5YzItZWQ2OC00ZWIzLThlNDctYmFh
+        Mjk1YWQ0MThjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wMy0yMlQx
+        NDo1Mjo1OVoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3Mi
+        OiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEucGFydGVsbG8uZXhhbXBsZS5j
+        b20uZHEyIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEucGFydGVsbG8uZXhh
+        bXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Yzk0ZjZjYjY5ODlkNDhmNTM2YjgzNjQifSwgImlk
+        IjogIjVjOTRmNmNiNjk4OWQ0OGY1MzZiODM2NCJ9
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:59 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/f581d9c2-ed68-4eb3-8e47-baa295ad418c/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:59 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"df50108030fc00ec25ec679049a0717a-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '660'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mNTgxZDljMi1lZDY4LTRlYjMtOGU0Ny1iYWEyOTVhZDQx
+        OGMvIiwgInRhc2tfaWQiOiAiZjU4MWQ5YzItZWQ2OC00ZWIzLThlNDctYmFh
+        Mjk1YWQ0MThjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wMy0yMlQx
+        NDo1Mjo1OVoiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3Mi
+        OiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEucGFydGVsbG8uZXhhbXBsZS5j
+        b20uZHEyIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEucGFydGVsbG8uZXhh
+        bXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Yzk0ZjZjYjY5ODlkNDhmNTM2YjgzNjQifSwgImlk
+        IjogIjVjOTRmNmNiNjk4OWQ0OGY1MzZiODM2NCJ9
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:59 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/f581d9c2-ed68-4eb3-8e47-baa295ad418c/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 14:52:59 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"ecfe0cda2cff16ec1f39e74fc75d1ec7-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '679'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy9mNTgxZDljMi1lZDY4LTRlYjMtOGU0Ny1iYWEyOTVhZDQx
+        OGMvIiwgInRhc2tfaWQiOiAiZjU4MWQ5YzItZWQ2OC00ZWIzLThlNDctYmFh
+        Mjk1YWQ0MThjIiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxOS0wMy0y
+        MlQxNDo1Mjo1OVoiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
+        bWUiOiAiMjAxOS0wMy0yMlQxNDo1Mjo1OVoiLCAidHJhY2ViYWNrIjogbnVs
+        bCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9
+        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEu
+        cGFydGVsbG8uZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjogImZpbmlzaGVk
+        IiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGws
+        ICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5NGY2Y2I2OTg5
+        ZDQ4ZjUzNmI4MzY0In0sICJpZCI6ICI1Yzk0ZjZjYjY5ODlkNDhmNTM2Yjgz
+        NjQifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 14:52:59 GMT
+- request:
+    method: post
+    uri: https://theta.partello.example.com/pulp/api/v2/repositories/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJpZCI6IjQiLCJkaXNwbGF5X25hbWUiOiJQIEZvcmdlIiwiaW1wb3J0ZXJf
+        dHlwZV9pZCI6InB1cHBldF9pbXBvcnRlciIsImltcG9ydGVyX2NvbmZpZyI6
+        eyJmZWVkIjoiaHR0cDovL2RhdmlkZC5mZWRvcmFwZW9wbGUub3JnL3JlcG9z
+        L3JhbmRvbV9wdXBwZXQvIiwicmVtb3ZlX21pc3NpbmciOnRydWUsInByb3h5
+        X2hvc3QiOm51bGwsImJhc2ljX2F1dGhfdXNlcm5hbWUiOm51bGwsImJhc2lj
+        X2F1dGhfcGFzc3dvcmQiOm51bGwsInNzbF92YWxpZGF0aW9uIjp0cnVlLCJz
+        c2xfY2xpZW50X2NlcnQiOm51bGwsInNzbF9jbGllbnRfa2V5IjpudWxsLCJz
+        c2xfY2FfY2VydCI6bnVsbH0sIm5vdGVzIjp7Il9yZXBvLXR5cGUiOiJwdXBw
+        ZXQtcmVwbyJ9LCJkaXN0cmlidXRvcnMiOlt7ImRpc3RyaWJ1dG9yX3R5cGVf
+        aWQiOiJwdXBwZXRfZGlzdHJpYnV0b3IiLCJkaXN0cmlidXRvcl9jb25maWci
+        Onsic2VydmVfaHR0cCI6ZmFsc2UsInNlcnZlX2h0dHBzIjp0cnVlfSwiYXV0
+        b19wdWJsaXNoIjp0cnVlLCJkaXN0cmlidXRvcl9pZCI6IjRfcHVwcGV0In0s
+        eyJkaXN0cmlidXRvcl90eXBlX2lkIjoicHVwcGV0X2luc3RhbGxfZGlzdHJp
+        YnV0b3IiLCJkaXN0cmlidXRvcl9jb25maWciOnsiaW5zdGFsbF9wYXRoIjoi
+        L2V0Yy9wdXBwZXQvZW52aXJvbm1lbnRzL0tUX2xpYnJhcnlfbGFiZWxfb3Jn
+        X2RlZmF1bHRfbGFiZWxfMzAyMzc2NTIiLCJzdWJkaXIiOiJtb2R1bGVzIn0s
+        ImF1dG9fcHVibGlzaCI6ZmFsc2UsImRpc3RyaWJ1dG9yX2lkIjoiNCJ9XX0=
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '764'
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:22 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '298'
+      Location:
+      - "/pulp/api/v2/repositories/4/"
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzY3JhdGNocGFkIjoge30sICJkaXNwbGF5X25hbWUiOiAiUCBGb3JnZSIs
+        ICJkZXNjcmlwdGlvbiI6IG51bGwsICJsYXN0X3VuaXRfYWRkZWQiOiBudWxs
+        LCAibm90ZXMiOiB7Il9yZXBvLXR5cGUiOiAicHVwcGV0LXJlcG8ifSwgImxh
+        c3RfdW5pdF9yZW1vdmVkIjogbnVsbCwgImNvbnRlbnRfdW5pdF9jb3VudHMi
+        OiB7fSwgIl9ucyI6ICJyZXBvcyIsICJfaWQiOiB7IiRvaWQiOiAiNWM5NTI3
+        MmFkYjI4NGU0NGZhZDg0MmVjIn0sICJpZCI6ICI0IiwgIl9ocmVmIjogIi9w
+        dWxwL2FwaS92Mi9yZXBvc2l0b3JpZXMvNC8ifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:22 GMT
+- request:
+    method: post
+    uri: https://theta.partello.example.com/pulp/api/v2/content/uploads/
+    body:
+      encoding: UTF-8
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: CREATED
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:22 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '132'
+      Location:
+      - "/pulp/api/v2/content/uploads/3df5816b-c891-415c-a08f-648997cadd9c/"
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ1cGxvYWRfaWQiOiAiM2RmNTgxNmItYzg5MS00MTVjLWEwOGYtNjQ4OTk3
+        Y2FkZDljIiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi9jb250ZW50L3VwbG9h
+        ZHMvM2RmNTgxNmItYzg5MS00MTVjLWEwOGYtNjQ4OTk3Y2FkZDljLyJ9
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:22 GMT
+- request:
+    method: post
+    uri: https://theta.partello.example.com/pulp/api/v2/repositories/4/actions/import_upload//
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvX2lkIjoiNCIsInVuaXRfdHlwZV9pZCI6InB1cHBldF9tb2R1bGUi
+        LCJ1cGxvYWRfaWQiOiIzZGY1ODE2Yi1jODkxLTQxNWMtYTA4Zi02NDg5OTdj
+        YWRkOWMiLCJ1bml0X2tleSI6e30sInVuaXRfbWV0YWRhdGEiOnt9fQ==
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '130'
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:22 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzRjNGNjY2U1LTY5MzAtNDAwNi05YmM0LTA0NTcyYWVmMGJlZS8iLCAi
+        dGFza19pZCI6ICI0YzRjY2NlNS02OTMwLTQwMDYtOWJjNC0wNDU3MmFlZjBi
+        ZWUifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:22 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/4c4ccce5-6930-4006-9bc4-04572aef0bee/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:22 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"ae8728af61f32f5e7c51f688a1bf8716-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '670'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy80YzRjY2NlNS02OTMw
+        LTQwMDYtOWJjNC0wNDU3MmFlZjBiZWUvIiwgInRhc2tfaWQiOiAiNGM0Y2Nj
+        ZTUtNjkzMC00MDA2LTliYzQtMDQ1NzJhZWYwYmVlIiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogbnVsbCwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3
+        bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVl
+        IjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQHRoZXRhLnBhcnRlbGxv
+        LmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6ICJ3YWl0aW5nIiwgIndvcmtl
+        cl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0wQHRoZXRhLnBh
+        cnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGwsICJlcnJvciI6
+        IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5NTI3MmE2OTg5ZDQ4ZjUzNmM2
+        YTBjIn0sICJpZCI6ICI1Yzk1MjcyYTY5ODlkNDhmNTM2YzZhMGMifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:22 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/4c4ccce5-6930-4006-9bc4-04572aef0bee/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:22 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"3cc2c5f08c75ec38bf6e2fd3505f7bbd-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '688'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy80YzRjY2NlNS02OTMw
+        LTQwMDYtOWJjNC0wNDU3MmFlZjBiZWUvIiwgInRhc2tfaWQiOiAiNGM0Y2Nj
+        ZTUtNjkzMC00MDA2LTliYzQtMDQ1NzJhZWYwYmVlIiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogbnVsbCwgIl9ucyI6ICJ0YXNrX3N0YXR1cyIs
+        ICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJUMTg6MTk6MjJaIiwgInRyYWNl
+        YmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tzIjogW10sICJwcm9ncmVzc19y
+        ZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtl
+        ci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tLmRxMiIsICJzdGF0ZSI6
+        ICJydW5uaW5nIiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNl
+        X3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3Vs
+        dCI6IG51bGwsICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5
+        NTI3MmE2OTg5ZDQ4ZjUzNmM2YTBjIn0sICJpZCI6ICI1Yzk1MjcyYTY5ODlk
+        NDhmNTM2YzZhMGMifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/4c4ccce5-6930-4006-9bc4-04572aef0bee/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"4b826e88662da34262c23e0af8193aea-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '755'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        Lm1hbmFnZXJzLmNvbnRlbnQudXBsb2FkLmltcG9ydF91cGxvYWRlZF91bml0
+        IiwgIl9ocmVmIjogIi9wdWxwL2FwaS92Mi90YXNrcy80YzRjY2NlNS02OTMw
+        LTQwMDYtOWJjNC0wNDU3MmFlZjBiZWUvIiwgInRhc2tfaWQiOiAiNGM0Y2Nj
+        ZTUtNjkzMC00MDA2LTliYzQtMDQ1NzJhZWYwYmVlIiwgInRhZ3MiOiBbInB1
+        bHA6cmVwb3NpdG9yeTo0IiwgInB1bHA6YWN0aW9uOmltcG9ydF91cGxvYWQi
+        XSwgImZpbmlzaF90aW1lIjogIjIwMTktMDMtMjJUMTg6MTk6MjNaIiwgIl9u
+        cyI6ICJ0YXNrX3N0YXR1cyIsICJzdGFydF90aW1lIjogIjIwMTktMDMtMjJU
+        MTg6MTk6MjJaIiwgInRyYWNlYmFjayI6IG51bGwsICJzcGF3bmVkX3Rhc2tz
+        IjogW10sICJwcm9ncmVzc19yZXBvcnQiOiB7fSwgInF1ZXVlIjogInJlc2Vy
+        dmVkX3Jlc291cmNlX3dvcmtlci0wQHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUu
+        Y29tLmRxMiIsICJzdGF0ZSI6ICJmaW5pc2hlZCIsICJ3b3JrZXJfbmFtZSI6
+        ICJyZXNlcnZlZF9yZXNvdXJjZV93b3JrZXItMEB0aGV0YS5wYXJ0ZWxsby5l
+        eGFtcGxlLmNvbSIsICJyZXN1bHQiOiB7ImRldGFpbHMiOiB7fSwgInN1Y2Nl
+        c3NfZmxhZyI6IHRydWUsICJzdW1tYXJ5IjogIiJ9LCAiZXJyb3IiOiBudWxs
+        LCAiX2lkIjogeyIkb2lkIjogIjVjOTUyNzJhNjk4OWQ0OGY1MzZjNmEwYyJ9
+        LCAiaWQiOiAiNWM5NTI3MmE2OTg5ZDQ4ZjUzNmM2YTBjIn0=
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: delete
+    uri: https://theta.partello.example.com/pulp/api/v2/content/uploads/3df5816b-c891-415c-a08f-648997cadd9c//
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '4'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: 'bnVsbA==
+
+'
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: post
+    uri: https://theta.partello.example.com/pulp/api/v2/repositories/4/search/units/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJjcml0ZXJpYSI6eyJ0eXBlX2lkcyI6WyJwdXBwZXRfbW9kdWxlIl0sImZp
+        ZWxkcyI6eyJ1bml0IjpbXSwiYXNzb2NpYXRpb24iOlsidW5pdF9pZCJdfX19
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '90'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '229'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        W3sibWV0YWRhdGEiOiB7Il9pZCI6ICI5YTZjODhhMC03MzkzLTQ0ODctODIz
+        ZS1hZTAzY2E1ZWNhMzMiLCAiX2NvbnRlbnRfdHlwZV9pZCI6ICJwdXBwZXRf
+        bW9kdWxlIn0sICJfaWQiOiB7IiRvaWQiOiAiNWM5NTI3MmI2OTg5ZDQ4ZjUz
+        NmM2YTI3In0sICJ1bml0X2lkIjogIjlhNmM4OGEwLTczOTMtNDQ4Ny04MjNl
+        LWFlMDNjYTVlY2EzMyIsICJ1bml0X3R5cGVfaWQiOiAicHVwcGV0X21vZHVs
+        ZSJ9XQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: delete
+    uri: https://theta.partello.example.com/pulp/api/v2/repositories/4/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '172'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJzcGF3bmVkX3Rhc2tzIjogW3siX2hyZWYiOiAiL3B1bHAvYXBpL3YyL3Rh
+        c2tzLzdlZDk0MmIzLTYwMGMtNDFkNy1hNWE4LWM5MTIzNjY1YTQwNi8iLCAi
+        dGFza19pZCI6ICI3ZWQ5NDJiMy02MDBjLTQxZDctYTVhOC1jOTEyMzY2NWE0
+        MDYifV0sICJyZXN1bHQiOiBudWxsLCAiZXJyb3IiOiBudWxsfQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/7ed942b3-600c-41d7-a5a8-c9123665a406/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"b7f0b430dd62a069373633cef3bcfee5-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '534'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83ZWQ5NDJiMy02MDBjLTQxZDctYTVhOC1jOTEyMzY2NWE0
+        MDYvIiwgInRhc2tfaWQiOiAiN2VkOTQyYjMtNjAwYy00MWQ3LWE1YTgtYzkx
+        MjM2NjVhNDA2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiBudWxsLCAidHJhY2Vi
+        YWNrIjogbnVsbCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3Jl
+        cG9ydCI6IHt9LCAicXVldWUiOiAiIiwgInN0YXRlIjogIndhaXRpbmciLCAi
+        d29ya2VyX25hbWUiOiBudWxsLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjog
+        bnVsbCwgIl9pZCI6IHsiJG9pZCI6ICI1Yzk1MjcyYjY5ODlkNDhmNTM2YzZh
+        NTMifSwgImlkIjogIjVjOTUyNzJiNjk4OWQ0OGY1MzZjNmE1MyJ9
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/7ed942b3-600c-41d7-a5a8-c9123665a406/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"eedb4e5b6b87448b11fa6a759c788667-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '660'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83ZWQ5NDJiMy02MDBjLTQxZDctYTVhOC1jOTEyMzY2NWE0
+        MDYvIiwgInRhc2tfaWQiOiAiN2VkOTQyYjMtNjAwYy00MWQ3LWE1YTgtYzkx
+        MjM2NjVhNDA2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiBudWxsLCAiX25z
+        IjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3RpbWUiOiAiMjAxOS0wMy0yMlQx
+        ODoxOToyM1oiLCAidHJhY2ViYWNrIjogbnVsbCwgInNwYXduZWRfdGFza3Mi
+        OiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9LCAicXVldWUiOiAicmVzZXJ2
+        ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEucGFydGVsbG8uZXhhbXBsZS5j
+        b20uZHEyIiwgInN0YXRlIjogInJ1bm5pbmciLCAid29ya2VyX25hbWUiOiAi
+        cmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEucGFydGVsbG8uZXhh
+        bXBsZS5jb20iLCAicmVzdWx0IjogbnVsbCwgImVycm9yIjogbnVsbCwgIl9p
+        ZCI6IHsiJG9pZCI6ICI1Yzk1MjcyYjY5ODlkNDhmNTM2YzZhNTMifSwgImlk
+        IjogIjVjOTUyNzJiNjk4OWQ0OGY1MzZjNmE1MyJ9
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
+- request:
+    method: get
+    uri: https://theta.partello.example.com/pulp/api/v2/tasks/7ed942b3-600c-41d7-a5a8-c9123665a406/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.5.1p57
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 22 Mar 2019 18:19:23 GMT
+      Server:
+      - Apache
+      Etag:
+      - '"7907f52bba5ee6131e4a31261cec21dc-gzip"'
+      Vary:
+      - Accept-Encoding
+      Content-Length:
+      - '679'
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: ASCII-8BIT
+      base64_string: |
+        eyJleGNlcHRpb24iOiBudWxsLCAidGFza190eXBlIjogInB1bHAuc2VydmVy
+        LnRhc2tzLnJlcG9zaXRvcnkuZGVsZXRlIiwgIl9ocmVmIjogIi9wdWxwL2Fw
+        aS92Mi90YXNrcy83ZWQ5NDJiMy02MDBjLTQxZDctYTVhOC1jOTEyMzY2NWE0
+        MDYvIiwgInRhc2tfaWQiOiAiN2VkOTQyYjMtNjAwYy00MWQ3LWE1YTgtYzkx
+        MjM2NjVhNDA2IiwgInRhZ3MiOiBbInB1bHA6cmVwb3NpdG9yeTo0IiwgInB1
+        bHA6YWN0aW9uOmRlbGV0ZSJdLCAiZmluaXNoX3RpbWUiOiAiMjAxOS0wMy0y
+        MlQxODoxOToyM1oiLCAiX25zIjogInRhc2tfc3RhdHVzIiwgInN0YXJ0X3Rp
+        bWUiOiAiMjAxOS0wMy0yMlQxODoxOToyM1oiLCAidHJhY2ViYWNrIjogbnVs
+        bCwgInNwYXduZWRfdGFza3MiOiBbXSwgInByb2dyZXNzX3JlcG9ydCI6IHt9
+        LCAicXVldWUiOiAicmVzZXJ2ZWRfcmVzb3VyY2Vfd29ya2VyLTBAdGhldGEu
+        cGFydGVsbG8uZXhhbXBsZS5jb20uZHEyIiwgInN0YXRlIjogImZpbmlzaGVk
+        IiwgIndvcmtlcl9uYW1lIjogInJlc2VydmVkX3Jlc291cmNlX3dvcmtlci0w
+        QHRoZXRhLnBhcnRlbGxvLmV4YW1wbGUuY29tIiwgInJlc3VsdCI6IG51bGws
+        ICJlcnJvciI6IG51bGwsICJfaWQiOiB7IiRvaWQiOiAiNWM5NTI3MmI2OTg5
+        ZDQ4ZjUzNmM2YTUzIn0sICJpZCI6ICI1Yzk1MjcyYjY5ODlkNDhmNTM2YzZh
+        NTMifQ==
+    http_version: 
+  recorded_at: Fri, 22 Mar 2019 18:19:23 GMT
 recorded_with: VCR 3.0.3
