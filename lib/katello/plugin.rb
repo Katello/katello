@@ -3,7 +3,7 @@ require 'katello/repository_types.rb'
 
 # rubocop:disable Metrics/BlockLength
 Foreman::Plugin.register :katello do
-  requires_foreman '>= 1.21'
+  requires_foreman '>= 1.23'
 
   sub_menu :top_menu, :content_menu, :caption => N_('Content'),
            :icon => 'fa fa-book', :after => :monitor_menu do
@@ -200,6 +200,7 @@ Foreman::Plugin.register :katello do
 
   allowed_template_helpers :subscription_manager_configuration_url, :repository_url
   extend_template_helpers Katello::KatelloUrlsHelper
+  register_global_js_file 'fills'
 
   search_path_override("Katello") do |resource|
     "/#{Katello::Util::Model.model_to_controller_path(resource)}/auto_complete_search"

@@ -10,6 +10,7 @@ import { setOrganization } from '../../components/SelectOrg/SetOrganization';
 import { moduleStreams } from '../../scenes/ModuleStreams';
 import { reducers as organizationProductsReducers } from '../OrganizationProducts';
 import { moduleStreamDetails } from '../../scenes/ModuleStreams/Details';
+import { reducers as systemStatuses } from '../../components/extensions/about';
 
 export default combineReducers({
   organization,
@@ -23,4 +24,5 @@ export default combineReducers({
   moduleStreams,
   moduleStreamDetails,
   ...organizationProductsReducers,
+  ...systemStatuses,
 });
