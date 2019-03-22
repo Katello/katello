@@ -57,6 +57,30 @@ module Katello
           assert_equal 'docker_tag', @repo.backend_service(@master).unit_type_id(uploads)
         end
       end
+
+      class DockerCopyContentsTest < ::ActiveSupport::TestCase
+        def test_filter_criteria_is_not_empty
+          @repo = katello_repositories(:busybox)
+
+          filter = FactoryBot.create(:katello_content_view_docker_filter)
+          docker_tag = mock
+          docker_tag.expects(:copy).with do |_, _, criteria|
+            criteria != { :filters => { :unit => nil }}
+          end
+          extensions = mock
+          extensions.stubs(:docker_tag).returns(docker_tag)
+          pulp_api = mock
+          pulp_api.stubs(:extensions).returns(extensions)
+          smart_proxy = mock
+          smart_proxy.stubs(:pulp_api).returns(pulp_api)
+
+          destination_repo = mock
+          destination_repo.stubs(:pulp_id).returns("234832")
+
+          service = Katello::Pulp::Repository::Docker.new(@repo, smart_proxy)
+          service.copy_contents(destination_repo, :filters => [filter])
+        end
+      end
     end
   end
 end
