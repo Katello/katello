@@ -24,7 +24,7 @@ module Katello
         end
 
         def delete_repo(repo)
-          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id) rescue ''
+          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id) rescue ''
         end
 
         def sync_repo(repo)
@@ -167,6 +167,7 @@ module Katello
         def setup
           super
           @custom.root.update_attributes(:url => 'file:///var/www/test_repos/zoo')
+          delete_repo(@custom)
           create_repo(@custom)
           sync_repo(@custom)
           create_repo(@custom_cv)

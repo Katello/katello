@@ -46,37 +46,44 @@ module Katello
     end
 
     def test_with_search
-      rpms = Rpm.in_repositories(@repo).search_for('version >= 1.0')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('version >= 1.0')
       expected = [@rpm_one, @rpm_one_two, @rpm_three, @rpm_two]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('version > 1.0')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('version > 1.0')
       expected = [@rpm_three]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('version <= 99')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('version <= 99')
       expected = [@rpm_one, @rpm_one_two, @rpm_three, @rpm_two]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('version < 99')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('version < 99')
       expected = [@rpm_one, @rpm_one_two, @rpm_two]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('release >= 2.el7')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('release >= 2.el7')
       expected = [@rpm_one_two, @rpm_three]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('release > 1.el7')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('release > 1.el7')
       expected = [@rpm_one_two, @rpm_three]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('release <= 2.el7')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('release <= 2.el7')
       expected = [@rpm_one, @rpm_one_two, @rpm_two]
       assert_equal expected, rpms.to_a.sort
 
-      rpms = Rpm.in_repositories(@repo).search_for('release < 2.el7')
+      rpms = Rpm.in_repositories(@repo).non_modular.search_for('release < 2.el7')
       expected = [@rpm_one, @rpm_two]
       assert_equal expected, rpms.to_a.sort
+    end
+
+    def test_with_search_modular
+      rpms = Rpm.in_repositories(@repo).search_for('modular = true')
+      modular = katello_rpms(:modular)
+      assert_includes rpms, modular
+      refute_includes rpms, @rpm_one
     end
 
     def test_with_identifiers

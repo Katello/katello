@@ -21,3 +21,7 @@ fedora_dev_one:
 fedora_dev_two:
   rpm_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
   repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64_dev) %>
+
+fedora_modular:
+  rpm_id: <%= ActiveRecord::FixtureSet.identify(:modular) %>
+  repository_id: <%= ActiveRecord::FixtureSet.identify(:fedora_17_x86_64) %>

@@ -4,7 +4,7 @@ module Katello
       include LazyAccessor
 
       PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum).freeze
-      PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id).freeze
+      PULP_INDEXED_FIELDS = %w(name version release arch epoch summary sourcerpm checksum filename _id is_modular).freeze
       CONTENT_TYPE = "rpm".freeze
 
       lazy_accessor :description, :license, :buildhost, :vendor, :relativepath, :children, :checksumtype,
@@ -41,8 +41,9 @@ module Katello
       end
 
       def update_model(model)
-        keys = PULP_INDEXED_FIELDS - ['_id']
+        keys = PULP_INDEXED_FIELDS - ['_id', 'is_modular']
         data = backend_data.slice(*keys)
+        data['modular'] = backend_data['is_modular'] == true
         if data.any? { |name, value| model.send(name) != value }
           data[:release_sortable] = Util::Package.sortable_version(data[:release])
           data[:version_sortable] = Util::Package.sortable_version(data[:version])

@@ -9,6 +9,7 @@ one:
   arch:     x86_64
   filename: one-1.1.rpm
   nvra:     one-1.0-1.el7.x86_64
+  modular: false
 
 two:
   name:     two
@@ -21,6 +22,7 @@ two:
   arch:     x86_64
   filename: two-2.1.rpm
   nvra:     two-1.0-1.el7.x86_64
+  modular: false
 
 three:
   name:     three
@@ -33,6 +35,21 @@ three:
   arch:     x86_64
   filename: three-99-108.rpm
   nvra:     three-99-108.x86_64
+  modular: false
+
+modular:
+  name:     modular
+  pulp_id:     modular
+  epoch:    0
+  version:  0.9
+  release:  108
+  version_sortable: 02-99
+  release_sortable: 03-108
+  arch:     x86_64
+  filename: mod-99-108.rpm
+  nvra:     mod-99-108.x86_64
+  modular: true
+
 
 one_two:
   name:     one
