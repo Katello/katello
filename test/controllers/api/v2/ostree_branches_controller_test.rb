@@ -19,7 +19,7 @@ module Katello
     end
 
     def test_index_version_date_sort
-      response = get :index, params: {sort_by: 'created', sort_order: 'desc'}
+      response = get :index, params: {sort_by: 'version', sort_order: 'desc'}
       body = JSON.parse(response.body)
 
       assert_response :success
