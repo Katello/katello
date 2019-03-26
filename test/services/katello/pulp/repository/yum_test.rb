@@ -24,7 +24,7 @@ module Katello
         end
 
         def delete_repo(repo)
-          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id) rescue ''
+          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :repository_id => repo.id) rescue ''
         end
 
         def sync_repo(repo)

@@ -75,21 +75,8 @@ module Katello
           smart_proxy.pulp_api.extensions.repository.regenerate_applicability_by_ids([repo.pulp_id], true)
         end
 
-        def build_overide_config(options)
-          config = {}
-          if options[:solve_dependencies]
-            if Setting[:dependency_solving_algorithm] == 'greedy'
-              config[:recursive] = true
-            else
-              config[:recursive_conservative] = true
-            end
-          end
-
-          config
-        end
-
         def copy_contents(destination_repo, options = {})
-          override_config = build_overide_config(options)
+          override_config = Katello::Repository.build_override_config(options)
           rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters], options[:rpm_filenames])
           tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
                    rpm_copy_clauses.merge(:override_config => override_config))]
