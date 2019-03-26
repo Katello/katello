@@ -14,7 +14,7 @@ module Katello
 
         def generate_mirror_importer
           config = {
-            feed: root.url,
+            feed: external_url(true),
             depth: PULP_MIRROR_SYNC_DEPTH
           }
           Runcible::Models::OstreeImporter.new(config.merge(mirror_importer_connection_options))
@@ -32,7 +32,7 @@ module Katello
         end
 
         def partial_repo_path
-          "/pulp/puppet/#{pulp_id}/"
+          "/pulp/ostree/web/#{repo.relative_path}".sub('//', '/')
         end
 
         def importer_class
