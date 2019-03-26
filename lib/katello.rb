@@ -9,7 +9,6 @@ require "foreman-tasks"
 require "rest_client"
 require "anemone"
 require "securerandom"
-require 'foreman_docker'
 
 require "runcible"
 

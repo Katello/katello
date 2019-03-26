@@ -146,25 +146,16 @@ module Katello
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
       ::User.send :include, Katello::Concerns::UserExtensions
       ::Setting.send :include, Katello::Concerns::SettingExtensions
-      ::Container.send :include, Katello::Concerns::ContainerExtensions
-      ::DockerContainerWizardState.send :include, Katello::Concerns::DockerContainerWizardStateExtensions
-      ::DockerContainerWizardStates::Image.send :include, Katello::Concerns::DockerContainerWizardStateImageExtensions
       ForemanTasks::RecurringLogic.send :include, Katello::Concerns::RecurringLogicExtensions
 
       #Controller extensions
       ::HostsController.send :include, Katello::Concerns::HostsControllerExtensions
       ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
-      ::Containers::StepsController.send :include, Katello::Concerns::Containers::StepsControllerExtensions
       ::SmartProxiesController.send :include, Katello::Concerns::SmartProxiesControllerExtensions
-
       ::FactImporter.register_fact_importer(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactImporter)
       ::FactParser.register_fact_parser(Katello::RhsmFactName::FACT_TYPE, Katello::RhsmFactParser)
 
       #Helper Extensions
-      ::Containers::StepsController.class_eval do
-        helper Katello::Concerns::ForemanDocker::ContainerStepsHelperExtensions
-      end
-
       ::SmartProxiesController.class_eval do
         helper Katello::Concerns::SmartProxyHelperExtensions
       end

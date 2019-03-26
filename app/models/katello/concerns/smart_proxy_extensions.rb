@@ -33,12 +33,6 @@ module Katello
 
         lazy_accessor :pulp_repositories, :initializer => lambda { |_s| pulp_node.extensions.repository.retrieve_all }
 
-        has_many :containers,
-                 :class_name => "Container",
-                 :foreign_key => :capsule_id,
-                 :inverse_of => :capsule,
-                 :dependent => :nullify
-
         has_many :capsule_lifecycle_environments,
                  :class_name  => "Katello::CapsuleLifecycleEnvironment",
                  :foreign_key => :capsule_id,
