@@ -18,8 +18,8 @@ module Katello
       assert_template "katello/api/v2/ostree_branches/index"
     end
 
-    def test_index_version_date_sort
-      response = get :index, params: {sort_by: 'created', sort_order: 'desc'}
+    def test_index_sort
+      response = get :index, params: {sort_by: 'version', sort_order: 'desc'}
       body = JSON.parse(response.body)
 
       assert_response :success
