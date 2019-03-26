@@ -7,7 +7,6 @@ module Actions
 
         def plan(repositories, content_view_version, options = {})
           incremental = options.fetch(:incremental, false)
-          solve_dependencies = options.fetch(:solve_dependencies, false)
           content_view = content_view_version.content_view
           filters = incremental ? [] : content_view.filters.applicable(repositories.first)
 
@@ -31,7 +30,7 @@ module Actions
                         filters: filters,
                         rpm_filenames: rpm_filenames,
                         copy_contents: copy_contents,
-                        solve_dependencies: solve_dependencies,
+                        solve_dependencies: content_view.solve_dependencies,
                         metadata_generate: !incremental)
           end
         end

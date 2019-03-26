@@ -100,7 +100,6 @@ module Katello
       task = async_task(::Actions::Katello::ContentView::Publish, @view, params[:description],
                         :major => params[:major],
                         :minor => params[:minor],
-                        :solve_dependencies => @view.solve_dependencies,
                         :repos_units => params[:repos_units])
       respond_for_async :resource => task
     end

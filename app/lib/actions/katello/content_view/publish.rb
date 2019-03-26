@@ -4,10 +4,8 @@ module Actions
     module ContentView
       class Publish < Actions::EntryAction
         # rubocop:disable MethodLength
-        # rubocop:disable Metrics/AbcSize
         def plan(content_view, description = "", options = {})
           action_subject(content_view)
-          solve_dependencies = options.fetch(:solve_dependencies, false)
           content_view.check_ready_to_publish!
 
           if options[:repos_units].present?
@@ -45,7 +43,7 @@ module Actions
               content_view.publish_repositories do |repositories|
                 sequence do
                   clone_to_version = plan_action(Repository::CloneToVersion, repositories, version,
-                                                 :repos_units => options[:repos_units], :solve_dependencies => solve_dependencies)
+                                                 :repos_units => options[:repos_units])
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
               end
@@ -103,7 +101,6 @@ module Actions
             end
           end
         end
-        # rubocop:enable Metrics/AbcSize
 
         def rescue_strategy_for_self
           Dynflow::Action::Rescue::Skip

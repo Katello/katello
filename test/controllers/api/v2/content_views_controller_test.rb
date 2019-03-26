@@ -342,30 +342,6 @@ module Katello
       assert_response 400
     end
 
-    def test_publish_with_solve_dependencies_defaults_to_false
-      target_view = @library_dev_view
-
-      assert_async_task ::Actions::Katello::ContentView::Publish do |view, _description, params|
-        view.must_equal target_view
-        assert_equal params[:solve_dependencies], false
-      end
-
-      post :publish, params: { :id => target_view.id }
-      assert_response :success
-    end
-
-    def test_publish_with_cv_solve_dependencies_value
-      target_view = @library_solve_deps
-
-      assert_async_task ::Actions::Katello::ContentView::Publish do |view, _description, params|
-        view.must_equal target_view
-        assert params[:solve_dependencies]
-      end
-
-      post :publish, params: { :id => target_view.id }
-      assert_response :success
-    end
-
     def test_destroy_protected
       diff_view = ContentView.find(katello_content_views(:candlepin_default_cv).id)
       diff_view_destroy_permission = {:name => :destroy_content_views, :search => "name=\"#{diff_view.name}\"" }
