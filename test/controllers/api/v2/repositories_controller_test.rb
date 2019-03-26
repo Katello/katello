@@ -459,7 +459,8 @@ module Katello
     def test_show_sync_plan_details
       sync_plan = katello_sync_plans(:sync_plan_hourly)
       sync_plan.products << @repository.product
-
+      sync_plan.associate_recurring_logic
+      sync_plan.start_recurring_logic
       get :show, params: { :id => @repository.id }
 
       assert_response :success
@@ -468,6 +469,7 @@ module Katello
       assert_equal @repository.product.sync_plan.interval, result['product']['sync_plan']['interval']
       assert_equal @repository.product.sync_plan.name, result['product']['sync_plan']['name']
       assert_equal @repository.product.sync_plan.sync_date, result['product']['sync_plan']['sync_date']
+      refute_nil @repository.product.sync_plan.next_sync
       assert_equal @repository.product.sync_plan.next_sync, result['product']['sync_plan']['next_sync']
     end
 
