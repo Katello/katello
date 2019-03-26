@@ -19,6 +19,12 @@ module Katello
         def delete_repo(repo)
           ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Destroy, :pulp_id => repo.pulp_id) rescue ''
         end
+
+        def test_mirrored_importer
+          service = Katello::Pulp::Repository::Ostree.new(@repo, @mirror)
+
+          assert_include service.generate_mirror_importer.feed, URI(SmartProxy.pulp_master.pulp_url).host
+        end
       end
 
       class OstreeVcrTest < OstreeBaseTest
