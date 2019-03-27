@@ -52,5 +52,9 @@ module Katello
     def to_label
       "content credential (#{content_type} - #{name})"
     end
+
+    def skip_strip_attrs
+      ['content']
+    end
   end
 end
