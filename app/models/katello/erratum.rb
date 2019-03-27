@@ -129,7 +129,7 @@ module Katello
       streams = packages.map do |pack|
         pack.module_streams
       end
-      return streams.flatten
+      return streams.flatten.uniq
     end
 
     class Jail < ::Safemode::Jail
