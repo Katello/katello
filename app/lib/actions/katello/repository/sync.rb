@@ -35,13 +35,17 @@ module Actions
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
           sequence do
-            # clear yum metadata if validate_contents is on (to avoid metadata corruption issues)
             plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
-
-            sync_args = {:pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
-            output = plan_action(Pulp::Repository::Sync, sync_args).output
+            sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
+            sync_args.merge!(:return_output => true)
+            sync_action = plan_action(PulpSelector,
+                        [Actions::Pulp::Orchestration::Repository::Sync,
+                         Actions::Pulp3::Orchestration::Repository::Sync],
+                        repo, SmartProxy.pulp_master, sync_args)
+            output = sync_action.output
 
             contents_changed = skip_metadata_check || output[:contents_changed]
+
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed, :full_index => skip_metadata_check)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
@@ -75,7 +79,7 @@ module Actions
         end
 
         def presenter
-          Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Repository::Sync))
+          Helpers::Presenter::Delegated.new(self, planned_actions(PulpSelector))
         end
 
         def pulp_task_id

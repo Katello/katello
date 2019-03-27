@@ -35,6 +35,10 @@ module Katello
         fail NotImplementedError
       end
 
+      def delete_publication
+        fail NotImplementedError
+      end
+
       def self.instance_for_type(repo, smart_proxy)
         Katello::RepositoryTypeManager.repository_types[repo.root.content_type].pulp3_service_class.new(repo, smart_proxy)
       end
