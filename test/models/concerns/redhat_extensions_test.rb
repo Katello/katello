@@ -117,7 +117,6 @@ module Katello
       distro_repos = mock('distribution_repos').tap do |mock|
         mock.expects(:where).returns([@repo_with_distro])
       end
-      distro_repos.expects(:empty?)
       @os.expects(:distribution_repositories).with(@host).returns(distro_repos)
       @host.content_facet.content_source = nil
       assert_empty @os.kickstart_repos(@host)
@@ -127,7 +126,6 @@ module Katello
       distro_repos = mock('distribution_repos').tap do |mock|
         mock.expects(:where).returns([@repo_with_distro])
       end
-      distro_repos.expects(:empty?)
       @os.expects(:distribution_repositories).with(@host).returns(distro_repos)
       repos = @os.kickstart_repos(@host)
       refute_empty repos
