@@ -21,8 +21,8 @@ module Katello
       rpms = Rpm.in_repositories(@repositories)
       col = "#{Rpm.table_name}.arch"
       rpms = rpms.where("#{col} ILIKE ?", "%#{params[:term]}%").select(col).group(col).order(col).limit(page_size)
-      rpms = rpms.modular if Foreman::Cast.to_bool(params[:modular_only])
-      rpms = rpms.non_modular if Foreman::Cast.to_bool(params[:non_modular_only])
+      rpms = rpms.modular if ::Foreman::Cast.to_bool(params[:modular_only])
+      rpms = rpms.non_modular if ::Foreman::Cast.to_bool(params[:non_modular_only])
       render :json => rpms.pluck(col)
     end
 
