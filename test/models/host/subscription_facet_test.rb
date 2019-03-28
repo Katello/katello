@@ -221,8 +221,10 @@ module Katello
     end
 
     def test_find_host_existing_uuid
+      PuppetFactName.where(:name => 'dmi::system::uuid').first_or_create
+
       # find host by dmi.system.uuid, no hostname match
-      fact_name = FactName.create(name: 'dmi::system::uuid')
+      fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
       FactValue.create(value: "existing_system_uuid", host: host, fact_name: fact_name)
 
       facts = {'dmi.system.uuid' => 'existing_system_uuid', 'network.hostname' => 'inexistent'}
@@ -241,7 +243,7 @@ module Katello
     def test_find_host_existing_uuid_and_name
       host2 = FactoryBot.create(:host, organization: org)
 
-      fact_name = FactName.create(name: 'dmi::system::uuid')
+      fact_name = RhsmFactName.create(name: 'dmi::system::uuid')
       FactValue.create(value: "existing_system_uuid", host: host2, fact_name: fact_name)
 
       facts = {'dmi.system.uuid' => 'existing_system_uuid', 'network.hostname' => host.name}

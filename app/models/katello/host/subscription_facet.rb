@@ -242,10 +242,10 @@ module Katello
 
       def self.find_host(facts, organization)
         host_name = propose_existing_hostname(facts)
+        uuid_fact_id = RhsmFactName.find_by(name: 'dmi::system::uuid')&.id || -1
         hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
                 .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
-		AND #{FactValue.table_name}.value = ?)", host_name,
-                FactName.where(name: 'dmi::system::uuid').pluck(:id), facts['dmi.system.uuid'])
+		AND #{FactValue.table_name}.value = ?)", host_name, uuid_fact_id, facts['dmi.system.uuid'])
 
         return nil if hosts.empty?
 
