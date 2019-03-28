@@ -114,11 +114,15 @@ const orgNode = () => document.getElementById('organization-id');
 const userNode = () => document.getElementById('user-id');
 // This node does not exist while testing
 export const orgId = () => {
+  // get the org id from the html attribute
   const node = orgNode();
   const id = node && node.dataset.id;
-  const { katello: { setOrganization: { currentId } } } = store.getState();
 
-  return id === '' ? currentId : id;
+  // get the org id from Foreman's store
+  const { layout: { currentOrganization: { id: currentId } } } = store.getState();
+
+  const resolvedId = currentId || id;
+  return parseInt(resolvedId, 10) || null;
 };
 
 export const userId = () => (userNode() ? userNode().dataset.id : '1');

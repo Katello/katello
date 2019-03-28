@@ -19,11 +19,12 @@ export default (state = initialState, action) => {
         .set('list', payload.results)
         .set('loading', false);
 
-    case CHANGE_CURRENT_ORGANIZATION_SUCCESS:
+    case CHANGE_CURRENT_ORGANIZATION_SUCCESS: {
+      const { id } = payload;
       return state
-        .set('currentId', payload)
+        .set('currentId', id)
         .set('loading', false);
-
+    }
     case GET_ORGANIZATIONS_LIST_FAILURE:
       return state
         .set('error', payload);

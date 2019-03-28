@@ -27,12 +27,18 @@ export const links = [
   },
   {
     path: 'subscriptions/add',
-    component: withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') }),
+    component: WithOrganization(
+      withHeader(UpstreamSubscriptions, { title: __('Add Subscriptions') }),
+      '/subscriptions/add',
+    ),
   },
   {
     // eslint-disable-next-line no-useless-escape
     path: 'subscriptions/:id([0-9]+)',
-    component: withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
+    component: WithOrganization(
+      withHeader(SubscriptionDetails, { title: __('Subscription Details') }),
+      '/subscriptions',
+    ),
   },
   {
     path: 'organization_select',
@@ -40,10 +46,10 @@ export const links = [
   },
   {
     path: 'module_streams',
-    component: withHeader(ModuleStreams, { title: __('Module Streams') }),
+    component: WithOrganization(withHeader(ModuleStreams, { title: __('Module Streams') }), '/module_streams', false),
   },
   {
     path: 'module_streams/:id([0-9]+)',
-    component: withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }),
+    component: WithOrganization(withHeader(ModuleStreamDetails, { title: __('Module Stream Details') }), '/module_streams', false),
   },
 ];

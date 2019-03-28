@@ -1,5 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as settingActions from 'foremanReact/components/Settings/SettingsActions';
 
 import * as subscriptionActions from './SubscriptionActions';
@@ -56,4 +57,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export const subscriptions = reducer;
 
 // export connected component
-export default connect(mapStateToProps, mapDispatchToProps)(SubscriptionsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SubscriptionsPage));

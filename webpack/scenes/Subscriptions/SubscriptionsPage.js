@@ -34,6 +34,7 @@ class SubscriptionsPage extends Component {
   componentDidMount() {
     this.props.resetTasks();
     this.props.loadSetting('content_disconnected');
+    this.pollTasks();
   }
 
   componentDidUpdate(prevProps) {

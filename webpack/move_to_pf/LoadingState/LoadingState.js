@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Spinner } from 'patternfly-react';
 import './LoadingState.scss';
 
+/* eslint-disable no-underscore-dangle */
 class LoadingState extends Component {
   constructor(props) {
     super(props);
@@ -12,9 +13,18 @@ class LoadingState extends Component {
   }
 
   componentDidMount() {
+    this._ismounted = true;
+
     setTimeout(() => {
-      this.setState({ render: true });
+      // Check if mounted to avoid updating the state on an unmounted component
+      if (this._ismounted) {
+        this.setState({ render: true });
+      }
     }, this.props.timeout);
+  }
+
+  componentWillUnmount() {
+    this._ismounted = false;
   }
 
   render() {
@@ -45,4 +55,5 @@ LoadingState.defaultProps = {
   timeout: 300,
 };
 
+/* eslint-enable no-underscore-dangle */
 export default LoadingState;

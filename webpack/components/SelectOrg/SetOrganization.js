@@ -25,7 +25,7 @@ class SetOrganization extends Component {
 
   onSelectItem(e) {
     this.setState({
-      item: e.target.options[e.target.selectedIndex].text,
+      title: e.target.options[e.target.selectedIndex].text,
       id: e.target.value,
       disabled: false,
     });
@@ -37,13 +37,14 @@ class SetOrganization extends Component {
       changeCurrentOrganization,
       redirectPath,
     } = this.props;
-    const { id } = this.state;
+    const { id, title } = this.state;
 
-    changeCurrentOrganization(`${id}`).then(() =>
+    changeCurrentOrganization({ id, title }).then(() => {
+      window.tfm.nav.changeOrganization({ id: String(id), title });
       history.push({
         pathname: redirectPath,
-        state: { orgChanged: this.state.item },
-      }));
+      });
+    });
   }
 
   render() {

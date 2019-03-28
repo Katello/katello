@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`subscriptions page should render select org page 1`] = `
+exports[`with organization should render a loading state when Katello org is still loading 1`] = `
 <Connect(CheckOrg)
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={Object {}}
   store={
     Object {
       "clearActions": [Function],
@@ -15,7 +21,176 @@ exports[`subscriptions page should render select org page 1`] = `
 >
   <CheckOrg
     default={[Function]}
+    history={
+      Object {
+        "push": [MockFunction],
+      }
+    }
+    layoutOrganization={
+      Object {
+        "id": 1,
+        "title": "Test",
+      }
+    }
     loadOrganization={[Function]}
+    location={Object {}}
+    organization={
+      Object {
+        "loading": true,
+      }
+    }
+    saveOrganization={[Function]}
+    store={
+      Object {
+        "clearActions": [Function],
+        "dispatch": [Function],
+        "getActions": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      }
+    }
+    storeSubscription={
+      Subscription {
+        "listeners": Object {
+          "clear": [Function],
+          "get": [Function],
+          "notify": [Function],
+          "subscribe": [Function],
+        },
+        "onStateChange": [Function],
+        "parentSub": undefined,
+        "store": Object {
+          "clearActions": [Function],
+          "dispatch": [Function],
+          "getActions": [Function],
+          "getState": [Function],
+          "replaceReducer": [Function],
+          "subscribe": [Function],
+        },
+        "unsubscribe": [Function],
+      }
+    }
+  >
+    <LoadingState
+      loading={true}
+      loadingText="Loading"
+      timeout={300}
+    />
+  </CheckOrg>
+</Connect(CheckOrg)>
+`;
+
+exports[`with organization should render a loading state when Katello org isn't loaded 1`] = `
+<Connect(CheckOrg)
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={Object {}}
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <CheckOrg
+    default={[Function]}
+    history={
+      Object {
+        "push": [MockFunction],
+      }
+    }
+    layoutOrganization={
+      Object {
+        "id": 1,
+        "title": "Test",
+      }
+    }
+    loadOrganization={[Function]}
+    location={Object {}}
+    organization={Object {}}
+    saveOrganization={[Function]}
+    store={
+      Object {
+        "clearActions": [Function],
+        "dispatch": [Function],
+        "getActions": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      }
+    }
+    storeSubscription={
+      Subscription {
+        "listeners": Object {
+          "clear": [Function],
+          "get": [Function],
+          "notify": [Function],
+          "subscribe": [Function],
+        },
+        "onStateChange": [Function],
+        "parentSub": undefined,
+        "store": Object {
+          "clearActions": [Function],
+          "dispatch": [Function],
+          "getActions": [Function],
+          "getState": [Function],
+          "replaceReducer": [Function],
+          "subscribe": [Function],
+        },
+        "unsubscribe": [Function],
+      }
+    }
+  >
+    <LoadingState
+      loading={true}
+      loadingText="Loading"
+      timeout={300}
+    />
+  </CheckOrg>
+</Connect(CheckOrg)>
+`;
+
+exports[`with organization should render the select org page when org is 'Any Organization' 1`] = `
+<Connect(CheckOrg)
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={Object {}}
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <CheckOrg
+    default={[Function]}
+    history={
+      Object {
+        "push": [MockFunction],
+      }
+    }
+    layoutOrganization={
+      Object {
+        "title": "Any Organization",
+      }
+    }
+    loadOrganization={[Function]}
+    location={Object {}}
     organization={Object {}}
     saveOrganization={[Function]}
     store={
@@ -72,15 +247,19 @@ exports[`subscriptions page should render select org page 1`] = `
         </SideEffect(NullComponent)>
       </HelmetWrapper>
     </Header>
-    <Connect(withRouter(SetOrganization))
-      redirectPath="/test"
-    />
+    <Connect(withRouter(SetOrganization)) />
   </CheckOrg>
 </Connect(CheckOrg)>
 `;
 
-exports[`subscriptions page should render the wrapped component 1`] = `
+exports[`with organization should render the wrapped component when katello org is Loaded 1`] = `
 <Connect(CheckOrg)
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={Object {}}
   store={
     Object {
       "clearActions": [Function],
@@ -94,8 +273,25 @@ exports[`subscriptions page should render the wrapped component 1`] = `
 >
   <CheckOrg
     default={[Function]}
+    history={
+      Object {
+        "push": [MockFunction],
+      }
+    }
+    layoutOrganization={
+      Object {
+        "id": 1,
+        "title": "Test",
+      }
+    }
     loadOrganization={[Function]}
-    organization={Object {}}
+    location={Object {}}
+    organization={
+      Object {
+        "id": 1,
+        "title": "Test",
+      }
+    }
     saveOrganization={[Function]}
     store={
       Object {
@@ -129,47 +325,70 @@ exports[`subscriptions page should render the wrapped component 1`] = `
       }
     }
   >
-    <WrappedComponent
-      default={[Function]}
-      loadOrganization={[Function]}
-      organization={Object {}}
-      saveOrganization={[Function]}
-      store={
-        Object {
-          "clearActions": [Function],
-          "dispatch": [Function],
-          "getActions": [Function],
-          "getState": [Function],
-          "replaceReducer": [Function],
-          "subscribe": [Function],
+    <LoadingState
+      loading={false}
+      loadingText="Loading"
+      timeout={300}
+    >
+      <WrappedComponent
+        default={[Function]}
+        history={
+          Object {
+            "push": [MockFunction],
+          }
         }
-      }
-      storeSubscription={
-        Subscription {
-          "listeners": Object {
-            "clear": [Function],
-            "get": [Function],
-            "notify": [Function],
-            "subscribe": [Function],
-          },
-          "onStateChange": [Function],
-          "parentSub": undefined,
-          "store": Object {
+        layoutOrganization={
+          Object {
+            "id": 1,
+            "title": "Test",
+          }
+        }
+        loadOrganization={[Function]}
+        location={Object {}}
+        organization={
+          Object {
+            "id": 1,
+            "title": "Test",
+          }
+        }
+        saveOrganization={[Function]}
+        store={
+          Object {
             "clearActions": [Function],
             "dispatch": [Function],
             "getActions": [Function],
             "getState": [Function],
             "replaceReducer": [Function],
             "subscribe": [Function],
-          },
-          "unsubscribe": [Function],
+          }
         }
-      }
-    >
-      <div>
-         Wrapped! 
-      </div>
-    </WrappedComponent>
+        storeSubscription={
+          Subscription {
+            "listeners": Object {
+              "clear": [Function],
+              "get": [Function],
+              "notify": [Function],
+              "subscribe": [Function],
+            },
+            "onStateChange": [Function],
+            "parentSub": undefined,
+            "store": Object {
+              "clearActions": [Function],
+              "dispatch": [Function],
+              "getActions": [Function],
+              "getState": [Function],
+              "replaceReducer": [Function],
+              "subscribe": [Function],
+            },
+            "unsubscribe": [Function],
+          }
+        }
+      >
+        <div>
+           Wrapped! 
+        </div>
+      </WrappedComponent>
+    </LoadingState>
   </CheckOrg>
 </Connect(CheckOrg)>
 `;

@@ -25,17 +25,17 @@ export const getOrganiztionsList = () => (dispatch) => {
     });
 };
 
-export const changeCurrentOrganization = orgID => dispatch => foremanEndpoint
-  .get(`organizations/${orgID}/select`)
+export const changeCurrentOrganization = org => dispatch => foremanEndpoint
+  .get(`organizations/${org.id}/select`)
   .then(() => {
     dispatch({
       type: CHANGE_CURRENT_ORGANIZATION_SUCCESS,
-      payload: orgID,
+      payload: org,
     });
   })
   .catch(() => {
     dispatch({
       type: CHANGE_CURRENT_ORGANIZATION_FAILURE,
-      payload: orgID,
+      payload: org.id,
     });
   });
