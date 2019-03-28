@@ -65,7 +65,7 @@ module Katello
 
       def delete(href = repository_reference.repository_href)
         response = pulp3_api.repositories_delete(href)
-        repository_reference.delete
+        repository_reference.destroy if repository_reference
         response
       end
 
