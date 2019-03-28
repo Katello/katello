@@ -22,7 +22,5 @@ class FileDeleteTest < ActiveSupport::TestCase
       :content_view_id => @repo.content_view.id)
 
     assert_nil repo_reference
-
   end
-
 end
