@@ -125,6 +125,13 @@ module Katello
       end
     end
 
+    def module_stream_objects
+      streams = packages.map do |pack|
+        pack.module_streams
+      end
+      return streams.flatten.uniq
+    end
+
     class Jail < ::Safemode::Jail
       allow :errata_id, :errata_type, :issued, :created_at, :severity, :package_names, :cves, :reboot_suggested
     end
