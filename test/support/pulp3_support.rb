@@ -35,7 +35,11 @@ module Katello
 
     def create_repo(repo, smart_proxy)
       ensure_creatable(repo, smart_proxy)
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, repo, smart_proxy)
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Create, repo, smart_proxy)
+      ForemanTasks.sync_task(
+        ::Actions::Katello::Repository::MetadataGenerate, repo,
+        repository_creation: true)
       repo.reload
     end
   end
