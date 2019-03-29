@@ -9,7 +9,9 @@ class RemoveForemanDockerSupport < ActiveRecord::Migration[5.1]
       remove_column :docker_tags, :katello_repository_id
     end
     if table_exists?(:docker_container_wizard_states_images)
-      remove_column :docker_container_wizard_states_images, :capsule_id
+      if column_exists?(:docker_container_wizard_states_images, :capsule_id)
+        remove_column :docker_container_wizard_states_images, :capsule_id
+      end
     end
     if table_exists?(:containers)
       remove_column :containers, :capsule_id
