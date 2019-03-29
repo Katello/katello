@@ -9,6 +9,9 @@ class FileDeleteTest < ActiveSupport::TestCase
     @repo.root.update_attributes(:url => 'http://test/test/')
     create_repo(@repo, @master)
     ForemanTasks.sync_task(
+      ::Actions::Katello::Repository::MetadataGenerate, repo,
+      repository_creation: true)
+    ForemanTasks.sync_task(
       ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
     @repo.reload
   end
