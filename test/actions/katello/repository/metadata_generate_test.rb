@@ -13,13 +13,14 @@ module Actions
     let(:yum_repo2) { katello_repositories(:fedora_17_x86_64_dev) }
     let(:puppet_repo) { katello_repositories(:p_forge) }
     let(:content_view_puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
-    let(:action_options) {{
-      :force => false,
-      :matching_content => nil,
-      :source_repository => nil,
-      :dependency => nil,
-      :repository_creation => false
-    }}
+    let(:action_options) do
+      { :force => false,
+        :matching_content => nil,
+        :source_repository => nil,
+        :dependency => nil,
+        :repository_creation => false
+      }
+    end
 
     before do
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
