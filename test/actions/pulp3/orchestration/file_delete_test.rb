@@ -22,10 +22,6 @@ class FileDeleteTest < ActiveSupport::TestCase
   end
 
   def test_distribution_references_are_deleted
-    repo_reference = Katello::Pulp3::RepositoryReference.find_by(
-      :root_repository_id => @repo.root.id,
-      :content_view_id => @repo.content_view.id)
-
     distribution_references = Katello::Pulp3::DistributionReference.where(
       href: @repo.remote_href, root_repository_id: @repo.root.id)
 
