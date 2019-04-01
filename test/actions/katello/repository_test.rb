@@ -93,6 +93,7 @@ module ::Actions::Katello::Repository
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
+    let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Delete }
     let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
     let(:in_use_repository) { katello_repositories(:fedora_17_no_arch) }
     let(:published_repository) { katello_repositories(:rhel_6_x86_64) }
@@ -109,7 +110,11 @@ module ::Actions::Katello::Repository
 
       action.expects(:plan_self)
       plan_action action, in_use_repository
-      assert_action_planed_with action, pulp_action_class, repository_id: in_use_repository.id
+      assert_action_planed_with action, Actions::Katello::PulpSelector,
+        [pulp_action_class, pulp3_action_class],
+        in_use_repository,
+        nil,
+        repository_id: in_use_repository.id
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
