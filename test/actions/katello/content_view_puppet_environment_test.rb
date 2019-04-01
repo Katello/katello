@@ -8,7 +8,10 @@ module ::Actions::Katello::ContentViewPuppetEnvironment
     include Support::CapsuleSupport
 
     let(:puppet_env) { katello_content_view_puppet_environments(:library_view_puppet_environment) }
-    setup { set_default_location }
+    setup do
+      set_default_location
+      FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
+    end
   end
 
   class CreateTest < TestBase

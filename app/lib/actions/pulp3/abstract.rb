@@ -1,0 +1,17 @@
+module Actions
+  module Pulp3
+    class Abstract < Actions::Base
+      middleware.use ::Actions::Middleware::RemoteAction
+
+      BACKEND_SERVICE_TYPE = 'pulp3'.freeze
+
+      def self.backend_service_type
+        BACKEND_SERVICE_TYPE
+      end
+
+      def smart_proxy
+        SmartProxy.find(input[:smart_proxy_id])
+      end
+    end
+  end
+end

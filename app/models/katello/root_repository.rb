@@ -31,6 +31,11 @@ module Katello
     has_many :repositories, :class_name => "Katello::Repository", :foreign_key => :root_id,
                           :inverse_of => :root, :dependent => :destroy
 
+    has_many :repository_references, :class_name => 'Katello::Pulp3::RepositoryReference', :foreign_key => :root_repository_id,
+             :dependent => :destroy, :inverse_of => :root_repository
+    has_many :distribution_references, :class_name => 'Katello::Pulp3::DistributionReference', :foreign_key => :root_repository_id,
+             :dependent => :destroy, :inverse_of => :root_repository
+
     before_validation :update_ostree_upstream_sync_policy
 
     validates_lengths_from_database :except => [:label]

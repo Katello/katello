@@ -213,6 +213,7 @@ module ::Actions::Katello::Repository
   end
 
   class UploadFilesTest < TestBase
+    setup { FactoryBot.create(:smart_proxy, :default_smart_proxy) }
     let(:action_class) { ::Actions::Katello::Repository::UploadFiles }
 
     it 'plans' do
@@ -262,7 +263,7 @@ module ::Actions::Katello::Repository
 
   class UploadDockerTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::ImportUpload }
-
+    setup { SmartProxy.stubs(:pulp_master).returns(SmartProxy.new) }
     it 'plans' do
       action.expects(:action_subject).with(docker_repository)
 

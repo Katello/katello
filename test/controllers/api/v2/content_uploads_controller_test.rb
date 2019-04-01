@@ -79,7 +79,7 @@ module Katello
       content = mock(content_hash)
       resources = mock(:content => content)
       pulp_server = mock(:resources => resources)
-      pulp_master = mock(pulp_api: pulp_server)
+      pulp_master = mock(pulp_api: pulp_server, pulp3_support?: false)
       SmartProxy.expects(:pulp_master).at_least_once.returns(pulp_master)
     end
   end

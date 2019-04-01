@@ -98,7 +98,6 @@ module Katello
     belongs_to :content_view_version, :inverse_of => :repositories, :class_name => "Katello::ContentViewVersion"
 
     validates_with Validators::ContainerImageNameValidator, :attributes => :container_repository_name, :allow_blank => false, :if => :docker?
-    validates :pulp_id, :presence => true, :uniqueness => true, :if => proc { |r| r.name.present? }
     validates :container_repository_name, :if => :docker?, :uniqueness => {message: ->(object, _data) do
       _("for repository '%{name}' is not unique and cannot be created in '%{env}'. Its Container Repository Name (%{container_name}) conflicts with an existing repository.  Consider changing the Lifecycle Environment's Registry Name Pattern to something more specific.") %
           {name: object.name, container_name: object.container_repository_name, :env => object.environment.name}
@@ -161,7 +160,11 @@ module Katello
     end
 
     def backend_service(smart_proxy)
-      @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
+      if smart_proxy.pulp3_support?(self)
+        @service ||= Katello::Pulp3::Repository.instance_for_type(self, smart_proxy)
+      else
+        @service ||= Katello::Pulp::Repository.instance_for_type(self, smart_proxy)
+      end
     end
 
     def backend_content_service(smart_proxy)

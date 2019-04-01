@@ -108,6 +108,37 @@ module Katello
         @pulp_api ||= Katello::Pulp::Server.config(pulp_url, User.remote_user)
       end
 
+      def pulp3_api
+        config = Zest::Configuration.new
+        config.host = pulp3_host!
+        config.username = 'admin'
+        config.password = 'password'
+        config.debugging = true
+        config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
+        client = Zest::PulpApi.new
+        client.api_client.config = config
+        client
+      end
+
+      def backend_service_type(repository)
+        if pulp3_support?(repository)
+          Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
+        else
+          Actions::Pulp::Abstract::BACKEND_SERVICE_TYPE
+        end
+      end
+
+      def pulp3_support?(repository)
+        type = Katello::RepositoryTypeManager.repository_types[repository.root.content_type]
+        type.pulp3_plugin && self.capabilities('Pulp3').try(:include?, type.pulp3_plugin)
+      end
+
+      def pulp3_host!
+        url = self.setting('Pulp3', 'pulp_url')
+        fail "Cannot determine pulp3 url, check smart proxy configuration" unless url
+        URI.parse(url).host
+      end
+
       def pulp_mirror?
         self.features.map(&:name).include?(PULP_NODE_FEATURE)
       end

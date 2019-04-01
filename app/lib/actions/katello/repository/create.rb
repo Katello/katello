@@ -9,9 +9,10 @@ module Actions
           action_subject(repository)
 
           org = repository.organization
-          create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
+          pulp2_create_action = plan_create ? Actions::Pulp::Repository::CreateInPlan : Actions::Pulp::Repository::Create
           sequence do
-            create_action = plan_action(create_action, repository)
+            create_action = plan_action(PulpSelector, [pulp2_create_action, Pulp3::Orchestration::Repository::Create],
+                                        repository, SmartProxy.pulp_master)
 
             return if create_action.error
 
@@ -37,7 +38,7 @@ module Actions
           ::User.current = ::User.anonymous_api_admin
           unless input[:clone]
             repository = ::Katello::Repository.find(input[:repository_id])
-            ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
+            ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository, repository_creation: true)
           end
         ensure
           ::User.current = nil
