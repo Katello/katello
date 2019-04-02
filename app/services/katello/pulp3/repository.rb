@@ -122,15 +122,6 @@ module Katello
         []
       end
 
-      def delete_distributions_by_paths
-        paths.values.each do |path|
-          dists = lookup_distributions(base_path: path.sub(/^\//, ''))
-          if dists.first
-            delete_distribution(dists.first._href)
-          end
-        end
-      end
-
       def save_distribution_references(hrefs)
         hrefs.each do |href|
           path = get_distribution(href)&.base_path
