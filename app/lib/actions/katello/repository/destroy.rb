@@ -18,10 +18,16 @@ module Actions
           end
 
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
-          plan_action(PulpSelector,
-              [Pulp::Repository::Destroy, Pulp3::Orchestration::Repository::Delete],
-              repository,
-              SmartProxy.pulp_master)
+
+          if SmartProxy.pulp_master.backend_service_type(repository) ==
+            Actions::Pulp3::Abstract::BACKEND_SERVICE_TYPE
+            plan_action(Pulp3::Orchestration::Repository::Delete,
+              repository.id, SmartProxy.pulp_master)
+          else
+            plan_action(Pulp::Repository::Destroy,
+              repository_id: repository.id)
+          end
+
           plan_self(:user_id => ::User.current.id)
           sequence do
             if repository.redhat?
