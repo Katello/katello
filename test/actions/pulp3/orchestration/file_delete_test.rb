@@ -11,6 +11,14 @@ class FileDeleteTest < ActiveSupport::TestCase
     ForemanTasks.sync_task(
       ::Actions::Katello::Repository::MetadataGenerate, @repo,
       repository_creation: true)
+
+    assert Katello::Pulp3::RepositoryReference.find_by(
+        :root_repository_id => @repo.root.id,
+        :content_view_id => @repo.content_view.id)
+
+    refute_empty Katello::Pulp3::DistributionReference.where(
+      root_repository_id: @repo.root.id)
+
     ForemanTasks.sync_task(
       ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
     @repo.reload
@@ -26,7 +34,7 @@ class FileDeleteTest < ActiveSupport::TestCase
 
   def test_distribution_references_are_deleted
     distribution_references = Katello::Pulp3::DistributionReference.where(
-      href: @repo.remote_href, root_repository_id: @repo.root.id)
+      root_repository_id: @repo.root.id)
 
     assert_empty distribution_references
   end

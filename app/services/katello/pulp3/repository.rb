@@ -111,10 +111,23 @@ module Katello
         nil
       end
 
+      def delete_distributions
+        paths.values.each do |path|
+          distribution_reference = distribution_reference(path)
+          if distribution_reference
+            delete_distribution(distribution_reference.href)
+            distribution_reference.destroy
+          end
+        end
+        []
+      end
+
       def delete_distributions_by_paths
         paths.values.each do |path|
           dists = lookup_distributions(base_path: path.sub(/^\//, ''))
-          delete_distribution(dists.first._href) if dists.first
+          if dists.first
+            delete_distribution(dists.first._href)
+          end
         end
       end
 
