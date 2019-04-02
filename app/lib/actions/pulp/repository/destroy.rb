@@ -8,6 +8,14 @@ module Actions
           param :content_view_puppet_environment_id
         end
 
+        def plan(repository, smart_proxy = SmartProxy.pulp_master!)
+          if repository.is_a?(::Katello::ContentViewPuppetEnvironment)
+            plan_self(:content_view_puppet_environment_id => repository.id, :capsule_id => smart_proxy.id)
+          else
+            plan_self(:repository_id => repository.id, :capsule_id => smart_proxy.id)
+          end
+        end
+        
         def invoke_external_task
           begin
             if input[:content_view_puppet_environment_id]

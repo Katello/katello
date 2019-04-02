@@ -21,8 +21,7 @@ module Actions
           plan_action(PulpSelector,
               [Pulp::Repository::Destroy, Pulp3::Orchestration::Repository::Delete],
               repository,
-              SmartProxy.pulp_master,
-              repository_id: repository.id)
+              SmartProxy.pulp_master)
           plan_self(:user_id => ::User.current.id)
           sequence do
             if repository.redhat?
