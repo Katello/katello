@@ -62,7 +62,7 @@
                 params: {
                     'content_type': "ostree",
                     'content_view_version_id': $scope.$stateParams.versionId,
-                    'sort_by': 'created',
+                    'sort_by': 'version',
                     'sort_order': 'DESC'
                 }
             },
