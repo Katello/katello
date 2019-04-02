@@ -30,7 +30,7 @@ module Katello
         tasks << service.delete_remote(remote._href)
       end
 
-      service.delete_distributions_by_paths
+      service.delete_distributions
     end
 
     def create_repo(repo, smart_proxy)
