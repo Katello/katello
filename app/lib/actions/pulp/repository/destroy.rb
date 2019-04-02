@@ -15,7 +15,7 @@ module Actions
             plan_self(:repository_id => repository.id, :capsule_id => smart_proxy.id)
           end
         end
-        
+
         def invoke_external_task
           begin
             if input[:content_view_puppet_environment_id]
