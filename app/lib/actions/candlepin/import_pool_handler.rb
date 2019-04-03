@@ -53,10 +53,11 @@ module Actions
 
       def reindex_purpose_status
         reindex_consumer do
-          subscription_facet.update_purpose_status(valid_role: message_handler.compliant_role?,
-                                                   valid_usage: message_handler.compliant_usage?,
-                                                   valid_addons: message_handler.compliant_addons?,
-                                                   valid_sla: message_handler.compliant_sla?)
+          subscription_facet.update_purpose_status(role_status: message_handler.system_purpose.role_status,
+                                                   usage_status: message_handler.system_purpose.usage_status,
+                                                   addons_status: message_handler.system_purpose.addons_status,
+                                                   sla_status: message_handler.system_purpose.sla_status,
+                                                   purpose_status: message_handler.system_purpose.overall_status)
         end
       end
 
