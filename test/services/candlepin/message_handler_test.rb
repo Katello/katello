@@ -32,20 +32,12 @@ module Katello
       @handler = load_handler('system_purpose_compliance.created')
     end
 
-    def test_compliant_role
-      assert_equal false, @handler.compliant_role?
-    end
-
-    def test_compliant_usage
-      assert_equal false, @handler.compliant_usage?
-    end
-
-    def test_compliant_addons
-      assert_equal false, @handler.compliant_addons?
-    end
-
-    def test_compliant_sla
-      assert_equal false, @handler.compliant_sla?
+    def test_system_purpose
+      assert_equal @handler.system_purpose.overall_status, :mismatched
+      assert_equal @handler.system_purpose.sla_status, :mismatched
+      assert_equal @handler.system_purpose.role_status, :not_specified
+      assert_equal @handler.system_purpose.usage_status, :not_specified
+      assert_equal @handler.system_purpose.addons_status, :not_specified
     end
   end
 

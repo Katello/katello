@@ -162,12 +162,14 @@ module Katello
         host.refresh_global_status!
       end
 
-      def update_purpose_status(valid_sla: nil, valid_role: nil, valid_usage: nil, valid_addons: nil)
-        update_status(::Katello::PurposeSlaStatus, status_override: valid_sla)
-        update_status(::Katello::PurposeRoleStatus, status_override: valid_role)
-        update_status(::Katello::PurposeUsageStatus, status_override: valid_usage)
-        update_status(::Katello::PurposeAddonsStatus, status_override: valid_addons)
-        update_status(::Katello::PurposeStatus)
+      def update_purpose_status(sla_status: nil, role_status: nil, usage_status: nil, addons_status: nil, purpose_status: nil)
+        # if this method is ever called such that we aren't sending the status params, we should pass along the candlepin_consumer
+        # in order to reduce HTTP requests into candlepin for each Status
+        update_status(::Katello::PurposeSlaStatus, status_override: sla_status)
+        update_status(::Katello::PurposeRoleStatus, status_override: role_status)
+        update_status(::Katello::PurposeUsageStatus, status_override: usage_status)
+        update_status(::Katello::PurposeAddonsStatus, status_override: addons_status)
+        update_status(::Katello::PurposeStatus, status_override: purpose_status)
 
         host.refresh_global_status!
       end

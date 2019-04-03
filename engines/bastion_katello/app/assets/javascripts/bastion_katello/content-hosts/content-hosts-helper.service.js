@@ -39,11 +39,13 @@ angular.module('Bastion.content-hosts').service('ContentHostsHelper',
         };
 
         this.getHostPurposeStatusIcon = function (statusCode) {
-            if (parseInt(statusCode) === 0) {
-                return 'pficon pficon-ok';
-            }
+            var code = parseInt(statusCode);
 
-            return 'pficon pficon-warning-triangle-o';
+            if (code === 0) { // matched
+                return 'pficon pficon-ok';
+            } else if (code === 1) { // mismatched
+                return 'pficon pficon-warning-triangle-o';
+            }
         };
     }
 );

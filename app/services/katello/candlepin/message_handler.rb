@@ -29,24 +29,15 @@ module Katello
         event_data['reasons']
       end
 
-      def compliant_role?
-        reasons.none? { |reason| reason.match(/role/) }
-      end
-
-      def compliant_usage?
-        reasons.none? { |reason| reason.match(/usage/) }
-      end
-
-      def compliant_addons?
-        reasons.none? { |reason| reason.match(/add on/) }
-      end
-
-      def compliant_sla?
-        reasons.none? { |reason| reason.match(/sla/) }
-      end
-
       def consumer_uuid
         content['consumerUuid']
+      end
+
+      def system_purpose
+        if subject == 'system_purpose_compliance.created' && @system_purpose.nil?
+          @system_purpose = Katello::Candlepin::SystemPurpose.new(event_data)
+        end
+        @system_purpose
       end
 
       def pool_id

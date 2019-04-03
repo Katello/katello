@@ -121,20 +121,8 @@ module Katello
         self.class.friendly_compliance_reasons(Resources::Candlepin::Consumer.compliance(uuid)['reasons'])
       end
 
-      def compliant_role?
-        purpose_compliance['nonCompliantRole'].nil?
-      end
-
-      def compliant_usage?
-        purpose_compliance['nonCompliantUsage'].nil?
-      end
-
-      def compliant_addons?
-        purpose_compliance['nonCompliantAddOns'].empty?
-      end
-
-      def compliant_sla?
-        purpose_compliance['nonCompliantSLA'].empty?
+      def system_purpose
+        @system_purpose ||= Katello::Candlepin::SystemPurpose.new(purpose_compliance)
       end
 
       def entitlements?

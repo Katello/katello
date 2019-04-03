@@ -1,9 +1,5 @@
 module Katello
   class PurposeRoleStatus < HostStatus::Status
-    VALID = 0
-    INVALID = 1
-    UNKNOWN = 2
-
     def self.status_name
       N_('Role')
     end
@@ -13,26 +9,11 @@ module Katello
     end
 
     def to_label(_options = {})
-      case status
-      when VALID
-        N_('Matched')
-      when INVALID
-        N_('Mismatched')
-      else
-        N_('Unknown')
-      end
+      Katello::PurposeStatus.to_label(status)
     end
 
     def to_status(options = {})
-      return UNKNOWN unless relevant?
-
-      status_override = options[:status_override]
-
-      return INVALID if status_override == false
-
-      return VALID if status_override || consumer.compliant_role?
-
-      INVALID
+      Katello::PurposeStatus.to_status(self, :role_status, options)
     end
 
     def relevant?(_options = {})
@@ -41,10 +22,6 @@ module Katello
 
     def substatus?(_options = {})
       true
-    end
-
-    def consumer
-      Katello::Candlepin::Consumer.new(host.subscription_facet.uuid, host.organization.label)
     end
   end
 end

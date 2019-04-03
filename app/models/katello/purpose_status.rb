@@ -1,15 +1,20 @@
 module Katello
   class PurposeStatus < HostStatus::Status
-    VALID = 0
-    INVALID = 1
+    MATCHED = 0
+    MISMATCHED = 1
     UNKNOWN = 2
+    NOT_SPECIFIED = 3
 
-    SUBSTATUSES = [
-      Katello::PurposeSlaStatus,
-      Katello::PurposeRoleStatus,
-      Katello::PurposeUsageStatus,
-      Katello::PurposeAddonsStatus
-    ].freeze
+    def self.status_map
+      map = {
+        mismatched: MISMATCHED,
+        matched: MATCHED,
+        not_specified: NOT_SPECIFIED
+      }
+
+      map.default = UNKNOWN
+      map
+    end
 
     def self.status_name
       N_('System Purpose')
@@ -19,34 +24,44 @@ module Katello
       'purpose'
     end
 
-    def to_label(_options = {})
+    def self.to_label(status)
       case status
-      when VALID
+      when MATCHED
         N_('Matched')
-      when INVALID
+      when MISMATCHED
         N_('Mismatched')
+      when NOT_SPECIFIED
+        N_('Not Specified')
       else
         N_('Unknown')
       end
     end
 
+    def self.to_status(status, purpose_method, options)
+      return UNKNOWN unless status.relevant?
+
+      if options.key?(:status_override)
+        return self.status_map[options[:status_override]]
+      end
+
+      consumer = status.host.subscription_facet.candlepin_consumer
+      self.status_map[consumer.system_purpose.send(purpose_method)]
+    end
+
+    def to_label(_options = {})
+      self.class.to_label(status)
+    end
+
     def to_global(_options = {})
-      case status
-      when VALID
+      if [MATCHED, UNKNOWN, NOT_SPECIFIED].include?(status)
         ::HostStatus::Global::OK
       else
         ::HostStatus::Global::WARN
       end
     end
 
-    def to_status(_options = {})
-      return UNKNOWN unless relevant?
-
-      SUBSTATUSES.each do |status_class|
-        return INVALID if host.get_status(status_class).status != status_class::VALID
-      end
-
-      VALID
+    def to_status(options = {})
+      self.class.to_status(self, :overall_status, options)
     end
 
     def relevant?(_options = {})
