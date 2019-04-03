@@ -119,7 +119,6 @@ module Katello
             distribution_reference.destroy
           end
         end
-        []
       end
 
       def save_distribution_references(hrefs)
