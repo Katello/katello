@@ -52,7 +52,7 @@ module ::Actions::Katello::Repository
     it 'clone flag disables metadata generation' do
       plan = plan_action action, repository, true
       run_action plan
-      plan.run.must_equal nil
+      assert_nil plan.run
       refute_action_planed action, candlepin_action_class
     end
   end
@@ -92,7 +92,7 @@ module ::Actions::Katello::Repository
 
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
-    let(:pulp_action_class) { ::Actions::Pulp::Repository::Destroy }
+    let(:pulp_action_class) { ::Actions::Pulp2::Orchestration::Repository::Delete }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Delete }
     let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
     let(:in_use_repository) { katello_repositories(:fedora_17_no_arch) }
@@ -113,8 +113,7 @@ module ::Actions::Katello::Repository
       assert_action_planed_with action, Actions::Katello::PulpSelector,
         [pulp_action_class, pulp3_action_class],
         in_use_repository,
-        nil,
-        repository_id: in_use_repository.id
+        nil
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end

@@ -20,7 +20,7 @@ class FileDeleteTest < ActiveSupport::TestCase
       root_repository_id: @repo.root.id)
 
     ForemanTasks.sync_task(
-      ::Actions::Pulp3::Orchestration::Repository::Delete, @repo.id, @master)
+      ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
     @repo.reload
   end
 
