@@ -20,7 +20,15 @@ module Actions
                         target_repo,
                         :source_repository => source_repo,
                         :matching_content => output[:matching_content])
+
+            plan_self(:source_checksum_type => source_repo.saved_checksum_type, :target_repo_id => target_repo.id) unless source_repo.saved_checksum_type == target_repo.saved_checksum_type
           end
+        end
+
+        def finalize
+          repository = ::Katello::Repository.find(input[:target_repo_id])
+          source_checksum_type = input[:source_checksum_type]
+          repository.update_attributes!(saved_checksum_type: source_checksum_type) if (repository && source_checksum_type)
         end
       end
     end
