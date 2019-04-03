@@ -20,7 +20,7 @@ module Actions
           plan_action(ContentViewPuppetModule::Destroy, repository) if repository.puppet?
           plan_action(PulpSelector,
             [Pulp2::Orchestration::Repository::Delete,
-              Pulp3::Orchestration::Repository::Delete],
+             Pulp3::Orchestration::Repository::Delete],
             repository, SmartProxy.pulp_master)
 
           plan_self(:user_id => ::User.current.id)
