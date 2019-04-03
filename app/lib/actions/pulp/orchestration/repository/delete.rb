@@ -3,7 +3,7 @@ module Actions
     module Orchestration
       module Repository
         class Delete < Pulp::Abstract
-          def plan(repository, smart_proxy)
+          def plan(repository, _smart_proxy)
             sequence do
               plan_action(Pulp::Repository::Destroy, repository_id: repository.id)
             end
