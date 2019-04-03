@@ -15,7 +15,9 @@
 
     <tbody>
       <tr bst-table-row ng-repeat="package in table.rows">
-        <td bst-table-cell>{{ package.name }}</td>
+        <td bst-table-cell>
+          <a ui-sref="package.info({packageId: package.id})">{{ package.name }}</a>
+        </td>
         <td bst-table-cell>{{ package.version }}</td>
         <td bst-table-cell>{{ package.release }}</td>
         <td bst-table-cell>{{ package.arch }}</td>

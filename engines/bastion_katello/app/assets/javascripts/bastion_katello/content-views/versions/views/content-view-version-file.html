@@ -9,8 +9,12 @@
 
     <tbody>
       <tr bst-table-row ng-repeat="repository in table.rows">
-        <td bst-table-cell>{{ repository.name }}</td>
-        <td bst-table-cell>{{ repository.product.name }}</td>
+        <td bst-table-cell>
+          <a ui-sref="product.repository.info({productId: repository.product.id, repositoryId: repository.id})">{{ repository.name }}</a>
+        </td>
+        <td bst-table-cell>
+          <a ui-sref="product.info({productId: repository.product.id})">{{ repository.product.name }}</a>
+        </td>
       </tr>
     </tbody>
   </table>

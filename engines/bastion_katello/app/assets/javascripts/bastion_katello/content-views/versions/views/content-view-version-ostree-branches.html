@@ -14,7 +14,9 @@
 
     <tbody>
       <tr bst-table-row ng-repeat="branch in table.rows">
-        <td bst-table-cell>{{ branch.name }}</td>
+        <td bst-table-cell>
+          <a ui-sref="ostree-branch.info({branchId: branch.id})">{{ branch.name }}</a>
+        </td>
         <td bst-table-cell>{{ branch.version }}</td>
         <td bst-table-cell>{{ branch.commit }}</td>
       </tr>
