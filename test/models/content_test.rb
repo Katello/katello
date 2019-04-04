@@ -20,5 +20,35 @@ module Katello
 
       assert_includes repo.reload.name, "FOOBAR"
     end
+
+    def test_import_all
+      org_products = Organization.all.collect do |org|
+        org.products.where.not(cp_id: nil).map do |cp_product|
+          {
+            "id" => cp_product.cp_id,
+            "productContent" => [
+              {
+                "content" => {
+                  "id" => SecureRandom.uuid,
+                  "type" => "file",
+                  "name" => "import_all_content",
+                  "contentUrl" => "/content/dist/rhel/server/6/$releasever/$basearch/satellite/5.7/iso"
+                },
+                "enabled" => false
+              }
+            ]
+          }
+        end
+      end
+
+      Katello::Resources::Candlepin::Product.stubs(:all).returns(*org_products)
+
+      Katello::Content.import_all
+
+      contents = Katello::Content.where(name: 'import_all_content')
+
+      assert contents.size > 0
+      assert_equal contents.size, org_products.flatten.flatten.size
+    end
   end
 end
