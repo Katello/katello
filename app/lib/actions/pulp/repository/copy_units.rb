@@ -18,7 +18,7 @@ module Actions
 
           units = input[:class_name].constantize.where(:id => input[:unit_ids])
 
-          override_config = Katello::Repository.build_override_config(input)
+          override_config = ::Katello::Repository.build_override_config(input)
 
           source_repo.backend_service(SmartProxy.pulp_master).copy_units(target_repo, units, override_config)
         end

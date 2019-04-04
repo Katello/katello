@@ -151,8 +151,8 @@ module Katello
       end
 
       validate_content(params[:add_content])
-      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments, params[:add_content],
-                        params[:resolve_dependencies], hosts, params[:description])
+      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments,
+                        params[:add_content], params[:resolve_dependencies], hosts, params[:description])
       respond_for_async :resource => task
     end
 
