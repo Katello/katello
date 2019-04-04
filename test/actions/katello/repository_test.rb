@@ -92,7 +92,7 @@ module ::Actions::Katello::Repository
 
   class DestroyTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Destroy }
-    let(:pulp_action_class) { ::Actions::Pulp2::Orchestration::Repository::Delete }
+    let(:pulp_action_class) { ::Actions::Pulp::Orchestration::Repository::Delete }
     let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Delete }
     let(:unpublished_repository) { katello_repositories(:fedora_17_unpublished) }
     let(:in_use_repository) { katello_repositories(:fedora_17_no_arch) }
