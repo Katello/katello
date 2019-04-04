@@ -37,17 +37,21 @@ module Katello
 
     def self.import_all
       Organization.all.each do |org|
+        cp_products = ::Katello::Resources::Candlepin::Product.all(org.label, [:id, :productContent])
+        product_hash = cp_products.group_by { |prod| prod['id'] }
+
+        prod_content_importer = Katello::ProductContentImporter.new
         org.products.each do |product|
-          begin
-            product_json = Katello::Resources::Candlepin::Product.get(org.label,
-                                                                  product.cp_id,
-                                                                  %w(productContent)).first
-            product_content_attrs = product_json['productContent']
-            Katello::Glue::Candlepin::Product.import_product_content(product, product_content_attrs)
-          rescue RestClient::NotFound
+          product_json = product_hash[product.cp_id]&.first
+
+          if product_json.nil?
             Rails.logger.warn _("Product with ID %s not found in Candlepin. Skipping content import for it.") % product.cp_id
+            next
           end
+
+          prod_content_importer.add_product_content(product, product_json['productContent'])
         end
+        prod_content_importer.import
       end
     end
   end
