@@ -1,5 +1,5 @@
 module Actions
-  module Pulp2
+  module Pulp
     module Orchestration
       module Repository
         class Delete < Pulp::Abstract
