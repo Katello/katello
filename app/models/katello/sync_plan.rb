@@ -69,7 +69,7 @@ module Katello
 
     def update_attributes_with_logics!(params)
       transaction do
-        fail _("No recurring logic tied to the sync plan. Try running `foreman-rake katello:upgrades:3.9:migrate_sync_plans` on your server") if self.foreman_tasks_recurring_logic.nil?
+        fail _("No recurring logic tied to the sync plan.") if self.foreman_tasks_recurring_logic.nil?
         params["cron_expression"] = '' if (params.key?("interval") && !params["interval"].eql?(CUSTOM_CRON) && self.interval.eql?(CUSTOM_CRON))
         self.update_attributes!(params.except(:enabled))
         if (rec_logic_changed? || (params["enabled"] && !self.enabled? && self.foreman_tasks_recurring_logic.cancelled?))
