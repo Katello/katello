@@ -17,7 +17,7 @@ module Katello
         end
 
         def delete_remote(href = repo.remote_href)
-          pulp3_api.remotes_file_file_delete(href)
+          pulp3_api.remotes_file_file_delete(href) if href
         end
 
         def list_remotes(args)
