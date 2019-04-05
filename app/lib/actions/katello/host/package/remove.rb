@@ -47,7 +47,7 @@ module Actions
 
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: _("Removal of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")})
+            host.update(audit_comment: (_("Removal of package(s) requested: %{packages}") % {packages: input[:packages].join(", ")}).truncate(255))
           end
         end
       end
