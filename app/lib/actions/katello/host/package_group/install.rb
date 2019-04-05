@@ -34,7 +34,7 @@ module Actions
 
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: _("Installation of package group(s) requested: %{groups}") % {groups: input[:groups].join(", ")})
+            host.update(audit_comment: (_("Installation of package group(s) requested: %{groups}") % {groups: input[:groups].join(", ")}).truncate(255))
           end
         end
       end
