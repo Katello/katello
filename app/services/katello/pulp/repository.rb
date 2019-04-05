@@ -230,12 +230,9 @@ module Katello
         tasks
       end
 
-      def copy_units(destination_repo, units, options = {})
+      def copy_units(destination_repo, units, override_config = {})
         content_type = units.first.class::CONTENT_TYPE
         unit_ids = units.pluck(:pulp_id)
-        override_config = {}
-        override_config[:recursive] = true if options[:recursive]
-        override_config[:resolve_dependencies] = true if options[:resolve_dependencies]
 
         smart_proxy.pulp_api.extensions.send(content_type).copy(repo.pulp_id, destination_repo.pulp_id, ids: unit_ids, override_config: override_config)
         if content_type == ::Katello::Erratum::CONTENT_TYPE
