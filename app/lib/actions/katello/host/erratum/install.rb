@@ -43,7 +43,7 @@ module Actions
 
           def finalize
             host = ::Host.find_by(:id => input[:host_id])
-            host.update(audit_comment: _("Installation of errata requested: %{errata}") % {errata: input[:errata].join(", ")})
+            host.update(audit_comment: (_("Installation of errata requested: %{errata}") % {errata: input[:errata].join(", ")}).truncate(255))
           end
         end
       end
