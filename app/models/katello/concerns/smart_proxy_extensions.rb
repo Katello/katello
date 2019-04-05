@@ -129,7 +129,7 @@ module Katello
       end
 
       def pulp3_support?(repository)
-        type = Katello::RepositoryTypeManager.repository_types[repository.root.content_type]
+        type = Katello::RepositoryTypeManager.repository_types[repository.content_type]
         type.pulp3_plugin && self.capabilities('Pulp3').try(:include?, type.pulp3_plugin)
       end
 
