@@ -15,6 +15,7 @@ module Katello
       @staging = KTEnvironment.find(katello_environments(:staging).id)
       @library_dev_staging_view = ContentView.find(katello_content_views(:library_dev_staging_view).id)
       @library_dev_view = ContentView.find(katello_content_views(:library_dev_view).id)
+      @library_solve_deps = katello_content_views(:library_view_solve_deps)
     end
 
     def permissions
@@ -80,7 +81,8 @@ module Katello
 
     test_attributes :pid => '80d36498-2e71-4aa9-b696-f0a45e86267f'
     def test_create
-      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool", :organization_id => @organization.id }
+      post :create, params: { :name => "My View", :label => "My_View", :description => "Cool",
+                              :organization_id => @organization.id, :solve_dependencies => true }
 
       assert_response :success
       assert_template :layout => 'katello/api/v2/layouts/resource'
@@ -148,7 +150,7 @@ module Katello
 
     test_attributes :pid => '3f1457f2-586b-472c-8053-99017c4a4909'
     def test_update
-      params = { :name => "My View", :description => "New description" }
+      params = { :name => "My View", :description => "New description", :solve_dependencies => true }
       assert_sync_task(::Actions::Katello::ContentView::Update) do |_content_view, content_view_params|
         content_view_params.key?(:name).must_equal true
         content_view_params[:name].must_equal params[:name]

@@ -76,8 +76,11 @@ module Katello
         end
 
         def copy_contents(destination_repo, options = {})
+          override_config = Katello::Repository.build_override_config(options)
           rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters], options[:rpm_filenames])
-          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, rpm_copy_clauses)]
+          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
+                   rpm_copy_clauses.merge(:override_config => override_config))]
+
           if rpm_remove_clauses
             tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
                                                                          type_ids: [::Katello::Pulp::Rpm::CONTENT_TYPE],

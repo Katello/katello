@@ -11,6 +11,7 @@ module Actions
     let(:docker_repo) { katello_repositories(:redis) }
     let(:file_repo) { katello_repositories(:generic_file) }
     let(:version) { katello_content_view_versions(:library_dev_view_version) }
+    let(:version_solve_deps) { katello_content_view_versions(:library_view_solve_deps_version) }
 
     def setup
       get_organization #ensure we have an org label
@@ -29,7 +30,23 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true)
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
+    end
+
+    it 'plans to clone yum units with dependency solving' do
+      cloned_repo = katello_repositories(:fedora_17_x86_64)
+
+      action = create_action(action_class)
+      cloned_repo.expects(:master?).returns(true)
+
+      cloned_repo.root = yum_repo.root
+      yum_repo.expects(:build_clone).returns(cloned_repo)
+
+      plan_action(action, [yum_repo], version_solve_deps, {})
+
+      assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
+                                :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => true)
     end
 
     it 'plans to clone yum metadata' do
@@ -45,7 +62,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [yum_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true)
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
     end
 
     it 'plans to clone docker units' do
@@ -60,7 +77,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [docker_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil,
-                                :copy_contents => true, :metadata_generate => true)
+                                :copy_contents => true, :metadata_generate => true, :solve_dependencies => false)
     end
 
     it 'plans to clone file units' do
@@ -74,7 +91,7 @@ module Actions
 
       assert_action_planed_with(action, Actions::Katello::Repository::CloneContents, [file_repo], cloned_repo,
                                 :purge_empty_contents => true, :filters => [], :rpm_filenames => nil, :copy_contents => true,
-                                :metadata_generate => true)
+                                :metadata_generate => true, :solve_dependencies => false)
     end
   end
 end

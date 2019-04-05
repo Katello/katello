@@ -8,6 +8,7 @@ attributes :force_puppet_environment
 attributes :version_count
 attributes :latest_version
 attributes :auto_publish
+attributes :solve_dependencies
 
 node :next_version do |content_view|
   content_view.next_version.to_f.to_s

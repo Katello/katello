@@ -42,7 +42,8 @@ module Actions
             concurrence do
               content_view.publish_repositories do |repositories|
                 sequence do
-                  clone_to_version = plan_action(Repository::CloneToVersion, repositories, version, :repos_units => options[:repos_units])
+                  clone_to_version = plan_action(Repository::CloneToVersion, repositories, version,
+                                                 :repos_units => options[:repos_units])
                   plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
               end

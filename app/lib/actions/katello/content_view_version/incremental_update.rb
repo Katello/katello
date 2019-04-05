@@ -68,8 +68,9 @@ module Actions
           copy_output = []
           sequence do
             new_repo = plan_action(Repository::CloneToVersion, source_repos, new_version, :incremental => true).new_repository
-            copy_output += copy_deb_content(new_repo, dep_solve, content[:deb_ids])
-            copy_output += copy_yum_content(new_repo, dep_solve, content[:package_ids], content[:errata_ids])
+            solve_dependencies = new_version.content_view.solve_dependencies || dep_solve
+            copy_output += copy_deb_content(new_repo, solve_dependencies, content[:deb_ids])
+            copy_output += copy_yum_content(new_repo, solve_dependencies, content[:package_ids], content[:errata_ids])
 
             plan_action(Katello::Repository::MetadataGenerate, new_repo)
             plan_action(Katello::Repository::IndexContent, id: new_repo.id)
@@ -221,7 +222,6 @@ module Actions
             unless deb_ids.blank?
               copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
                                           ::Katello::Deb.with_identifiers(deb_ids),
-                                        recursive: true,
                                         resolve_dependencies: dep_solve).output
             end
           end
@@ -234,7 +234,6 @@ module Actions
             unless errata_ids.blank?
               copy_outputs << plan_action(Pulp::Repository::CopyUnits, new_repo.library_instance, new_repo,
                                         ::Katello::Erratum.with_identifiers(errata_ids),
-                                        recursive: true,
                                         resolve_dependencies: dep_solve).output
             end
 

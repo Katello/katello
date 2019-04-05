@@ -5,10 +5,12 @@ module Actions
         def plan(source_repo, target_repo, options = {})
           filter_ids = options.fetch(:filters, nil)&.map(&:id)
           rpm_filenames = options.fetch(:rpm_filenames, nil)
+          solve_dependencies = options.fetch(:solve_dependencies, false)
 
           plan_self(source_repo_id: source_repo.id,
                     target_repo_id: target_repo.id,
                     filter_ids: filter_ids,
+                    solve_dependencies: solve_dependencies,
                     rpm_filenames: rpm_filenames)
         end
 
@@ -19,6 +21,7 @@ module Actions
 
           source_repo.backend_service(SmartProxy.pulp_master).copy_contents(target_repo,
                                                                             filters: filters,
+                                                                            solve_dependencies: input[:solve_dependencies],
                                                                             rpm_filenames: input[:rpm_filenames])
         end
       end

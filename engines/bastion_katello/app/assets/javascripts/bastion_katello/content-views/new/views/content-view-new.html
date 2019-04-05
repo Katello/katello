@@ -64,13 +64,31 @@
                    ng-model="contentView.composite"
                    type="checkbox"
                    tabindex="4"/>
-            <span translate>Composite View?</span>
+            <span translate>Composite View</span>
           </label>
         </div>
         <p class="help-block" translate>A composite view contains other content views.</p>
       </div>
 
-      <div bst-form-group>
+      <div bst-form-group ng-hide="contentView.composite">
+        <div class="checkbox">
+          <label for="solve_dependencies">
+            <input id="solve_dependencies"
+                   name="solve_dependencies"
+                   ng-model="contentView.solve_dependencies"
+                   type="checkbox"
+                   tabindex="4"/>
+            <span translate>Solve Dependencies</span>
+          </label>
+        </div>
+        <p class="help-block" translate>
+          This will solve RPM dependencies on every publish of this Content View. Dependency solving significantly increases
+          publish time (publishes can take over three times as long) and filters will be ignored when adding packages to solve
+          dependencies. Also, certain scenarios involving errata may still cause dependency errors.
+        </p>
+      </div>
+
+      <div bst-form-group ng-show="contentView.composite">
         <div class="checkbox">
           <label for="auto_publish">
             <input id="auto_publish"

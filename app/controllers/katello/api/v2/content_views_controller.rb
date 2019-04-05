@@ -19,6 +19,7 @@ module Katello
       param :repository_ids, Array, :desc => N_("List of repository ids")
       param :component_ids, Array, :desc => N_("List of component content view version ids for composite views")
       param :auto_publish, :bool, :desc => N_("Enable/Disable auto publish of composite view")
+      param :solve_dependencies, :bool, :desc => N_("Solve RPM dependencies by default on Content View publish, defaults to false")
     end
 
     api :GET, "/organizations/:organization_id/content_views", N_("List content views")
@@ -79,7 +80,6 @@ module Katello
     param :description, String, :desc => N_("Description for the new published content view version")
     param :major, :number, :desc => N_("Override the major version number"), :required => false
     param :minor, :number, :desc => N_("Override the minor version number"), :required => false
-
     param :repos_units, Array, :desc => N_("Specify the list of units in each repo"), :required => false do
       param :label, String, :desc => N_("repo label"), :required => true
       param :rpm_filenames, Array, of: String, :desc => N_("list of rpm filename strings to include in published version"), :required => true
@@ -229,7 +229,7 @@ module Katello
     def view_params
       attrs = [:name, :description, :force_puppet_environment, {:component_ids => []}]
       attrs.push(:label, :composite) if action_name == "create"
-      attrs.push(:component_ids, :auto_publish) # For deep_munge; Remove for Rails 5
+      attrs.push(:component_ids, :auto_publish, :solve_dependencies) # For deep_munge; Remove for Rails 5
       if (!@view || !@view.composite?)
         attrs.push({:repository_ids => []}, :repository_ids)
       end

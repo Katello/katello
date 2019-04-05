@@ -8,7 +8,6 @@ module Actions
                       target_repo_id: target_repo.id,
                       class_name: units.first.class.name,
                       unit_ids: units.pluck(:id),
-                      recursive: options[:recursive],
                       resolve_dependencies: options[:resolve_dependencies])
           end
         end
@@ -19,9 +18,9 @@ module Actions
 
           units = input[:class_name].constantize.where(:id => input[:unit_ids])
 
-          source_repo.backend_service(SmartProxy.pulp_master).copy_units(target_repo, units,
-                                                                         recursive: input[:recursive],
-                                                                         resolve_dependencies: input[:resolve_dependencies])
+          override_config = ::Katello::Repository.build_override_config(input)
+
+          source_repo.backend_service(SmartProxy.pulp_master).copy_units(target_repo, units, override_config)
         end
       end
     end

@@ -125,7 +125,7 @@ module Katello
       param :environment_ids, Array, :desc => N_("The list of environments to promote the specified Content View Version to (replacing the older version)")
     end
     param :description, String, :desc => N_("The description for the new generated Content View Versions")
-    param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well")
+    param :resolve_dependencies, :bool, :desc => N_("If true, when adding the specified errata or packages, any needed dependencies will be copied as well. Defaults to true")
     param :propagate_all_composites, :bool, :desc => N_("If true, will publish a new composite version using any specified content_view_version_id that has been promoted to a lifecycle environment")
     param :add_content, Hash do
       param :errata_ids, Array, :desc => "Errata ids to copy into the new versions"
@@ -151,8 +151,9 @@ module Katello
       end
 
       validate_content(params[:add_content])
-      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments, params[:add_content],
-                        params[:resolve_dependencies], hosts, params[:description])
+      resolve_dependencies = params.fetch(:resolve_dependencies, true)
+      task = async_task(::Actions::Katello::ContentView::IncrementalUpdates, @version_environments, @composite_version_environments,
+                        params[:add_content], resolve_dependencies, hosts, params[:description])
       respond_for_async :resource => task
     end
 

@@ -30,6 +30,7 @@ module Actions
                         filters: filters,
                         rpm_filenames: rpm_filenames,
                         copy_contents: copy_contents,
+                        solve_dependencies: content_view.solve_dependencies,
                         metadata_generate: !incremental)
           end
         end
