@@ -235,18 +235,6 @@ module Katello
         unit_ids = units.pluck(:pulp_id)
 
         smart_proxy.pulp_api.extensions.send(content_type).copy(repo.pulp_id, destination_repo.pulp_id, ids: unit_ids, override_config: override_config)
-        if content_type == ::Katello::Erratum::CONTENT_TYPE
-          # copy the modules belonging to this errarta over (pulp 2.19 should handle this case out of the box)
-          # remove this code after 2.19
-          module_stream_ids = units.map do |erratum|
-            erratum.module_stream_objects.map(&:pulp_id)
-          end
-          module_stream_ids.flatten!
-          smart_proxy.pulp_api.extensions.module.copy(repo.pulp_id,
-                                                      destination_repo.pulp_id,
-                                                      ids: module_stream_ids,
-                                                      override_config: override_config)
-        end
       end
 
       def content_unit_types
