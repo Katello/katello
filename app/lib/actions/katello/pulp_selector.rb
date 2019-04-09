@@ -5,9 +5,7 @@ module Actions
       def plan(backend_actions, repository, smart_proxy, *args)
         pass_only_args = args.dig(0, :args_only) || false
         return_action_output = args.dig(0, :return_output) || false
-        backend_type = smart_proxy.backend_service_type(repository)
-        found_action = backend_actions.find { |action| action.backend_service_type == backend_type }
-
+        found_action = PulpSelector.select(backend_actions, repository, smart_proxy)
         fail "Could not locate an action for type #{backend_type}" unless found_action
         if return_action_output
           sequence do
@@ -26,9 +24,13 @@ module Actions
       end
 
       def presenter
-        Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Orchestration::Repository::Sync))
+         Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Orchestration::Repository::Sync))
       end
 
+      def self.select(backend_actions, repository, smart_proxy)
+        backend_type = smart_proxy.backend_service_type(repository)
+        found_action = backend_actions.find { |action| action.backend_service_type == backend_type }
+      end
     end
   end
 end

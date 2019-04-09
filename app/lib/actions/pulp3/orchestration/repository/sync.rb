@@ -3,6 +3,7 @@ module Actions
     module Orchestration
       module Repository
         class Sync < Pulp3::Abstract
+          include Helpers::Presenter
           def plan(repository, smart_proxy, options)
             sequence do
               action_output = plan_action(Actions::Pulp3::Repository::Sync, options).output
@@ -16,6 +17,10 @@ module Actions
             input[:output].each do |key, value|
               output[key] = value
             end
+          end
+
+          def presenter
+            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp3::Repository::Sync))
           end
         end
       end
