@@ -7,7 +7,7 @@ module Support
             'yum_importer' => {
               'content' => {
                 'size_total' => total,
-                'size_left'  => left } } } }
+                'size_left' => left } } } }
       end
 
       def task_finished_hash

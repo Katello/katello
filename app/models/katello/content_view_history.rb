@@ -16,7 +16,7 @@ module Katello
     STATUSES = [IN_PROGRESS, FAILED, SUCCESSFUL].freeze
 
     validates_lengths_from_database
-    validates :status, :inclusion => {:in          => STATUSES,
+    validates :status, :inclusion => {:in => STATUSES,
                                       :allow_blank => false}
     validates :action, presence: true
 

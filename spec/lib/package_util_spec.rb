@@ -27,7 +27,7 @@ module Katello
         subject { "1:name-ver.si.on-relea.se.x86_64.rpm" }
         let(:expected) do
           { :epoch => "1",
-            :name  => "name",
+            :name => "name",
             :version => "ver.si.on",
             :release => "relea.se",
             :arch => "x86_64",
@@ -42,7 +42,7 @@ module Katello
         subject { "1:name-ver.si.on-relea.se.x86_64" }
         let(:expected) do
           { :epoch => "1",
-            :name  => "name",
+            :name => "name",
             :version => "ver.si.on",
             :release => "relea.se",
             :arch => "x86_64" }
@@ -55,7 +55,7 @@ module Katello
       describe "nvrea with dash and dots in name and rpm" do
         subject { "name-with-dashes-and.dots-1.0-1.noarch.rpm" }
         let(:expected) do
-          { :name  => "name-with-dashes-and.dots",
+          { :name => "name-with-dashes-and.dots",
             :version => "1.0",
             :release => "1",
             :arch => "noarch",
@@ -68,7 +68,7 @@ module Katello
       describe "nvrea with rpm without epoch" do
         subject { "name-ver.si.on-relea.se.x86_64.rpm" }
         let(:expected) do
-          { :name  => "name",
+          { :name => "name",
             :version => "ver.si.on",
             :release => "relea.se",
             :arch => "x86_64",
@@ -82,7 +82,7 @@ module Katello
       describe "nvrea without rpm and epoch" do
         subject { "name-ver.si.on-relea.se.x86_64" }
         let(:expected) do
-          { :name  => "name",
+          { :name => "name",
             :version => "ver.si.on",
             :release => "relea.se",
             :arch => "x86_64" }
@@ -108,7 +108,7 @@ module Katello
         subject { "1:name-ver.si.on-relea.se" }
         let(:expected) do
           { :epoch => "1",
-            :name  => "name",
+            :name => "name",
             :version => "ver.si.on",
             :release => "relea.se" }
         end
@@ -120,7 +120,7 @@ module Katello
       describe "nvre without epoch" do
         subject { "name-ver.si.on-relea.se" }
         let(:expected) do
-          { :name  => "name",
+          { :name => "name",
             :version => "ver.si.on",
             :release => "relea.se"
           }

@@ -1,10 +1,10 @@
 module Katello
   module Util
     module Package
-      SUFFIX_RE = /\.(rpm)$/
-      ARCH_RE = /\.([^.\-]*)$/
-      NVRE_RE = /^(.*)-(?:([0-9]+):)?([^-]*)-([^-]*)$/
-      EVR_RE = /^(?:([0-9]+):)?(.*?)(?:-([^-]*))?$/
+      SUFFIX_RE = /\.(rpm)$/.freeze
+      ARCH_RE = /\.([^.\-]*)$/.freeze
+      NVRE_RE = /^(.*)-(?:([0-9]+):)?([^-]*)-([^-]*)$/.freeze
+      EVR_RE = /^(?:([0-9]+):)?(.*?)(?:-([^-]*))?$/.freeze
       SUPPORTED_ARCHS = %w(noarch i386 i686 ppc64 s390x x86_64 ia64).freeze
 
       # is able to take both nvre and nvrea and parse it correctly

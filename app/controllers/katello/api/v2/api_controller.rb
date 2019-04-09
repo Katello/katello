@@ -115,12 +115,12 @@ module Katello
 
     def scoped_search_results(query, sub_total, total, page, per_page, error = nil)
       {
-        :results  => query,
+        :results => query,
         :subtotal => sub_total,
-        :total    => total,
-        :page     => page,
+        :total => total,
+        :page => page,
         :per_page => per_page,
-        :error    => error
+        :error => error
       }
     end
 

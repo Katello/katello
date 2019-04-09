@@ -608,8 +608,8 @@ module Katello
     def check_remove_from_environment!(env)
       errors = []
 
-      dependencies = {hosts:                _("hosts"),
-                      activation_keys:        _("activation keys")
+      dependencies = {hosts: _("hosts"),
+                      activation_keys: _("activation keys")
       }
 
       dependencies.each do |key, name|
@@ -626,9 +626,9 @@ module Katello
     def check_ready_to_destroy!
       errors = []
 
-      dependencies = {environments:           _("environments"),
-                      hosts:                  _("hosts"),
-                      activation_keys:        _("activation keys")
+      dependencies = {environments: _("environments"),
+                      hosts: _("hosts"),
+                      activation_keys: _("activation keys")
       }
 
       dependencies.each do |key, name|

@@ -77,8 +77,8 @@ module Katello
 
             pool = {
               'startDate' => start_date,
-              'endDate'   => end_date,
-              'quantity'  =>  -1,
+              'endDate' => end_date,
+              'quantity' => -1,
               'accountNumber' => '',
               'productId' => product_id,
               'providedProducts' => [],

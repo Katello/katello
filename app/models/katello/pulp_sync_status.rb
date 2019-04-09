@@ -164,7 +164,7 @@ module Katello
         result = ERROR if result == HISTORY_ERROR
         result = FINISHED if result == HISTORY_SUCCESS
         {
-          :state =>  result,
+          :state => result,
           :progress => {:details => history["details"]},
           :finish_time => history['completed'],
           :start_time => history['started']
