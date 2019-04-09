@@ -15,9 +15,9 @@ module Katello
     def index_response
       results = @view.content_view_components
       {
-        :results  => results.uniq,
+        :results => results.uniq,
         :subtotal => results.count,
-        :total    => results.count
+        :total => results.count
       }
     end
 

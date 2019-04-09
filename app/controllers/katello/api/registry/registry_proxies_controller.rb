@@ -223,12 +223,12 @@ module Katello
       response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/uploads/#{params[:uuid]}"
       response.header['Range'] = "123"
       response.header['Docker-Upload-UUID'] = "123"
-      render plain: '', status: 204
+      render plain: '', status: :no_content
     end
 
     def chunk_upload_blob
       response.header['Location'] = "#{request_url}/v2/#{params[:repository]}/blobs/uploads/#{params[:uuid]}"
-      render plain: '', status: 202
+      render plain: '', status: :accepted
     end
 
     def upload_blob
@@ -265,12 +265,12 @@ module Katello
     end
 
     def cancel_upload_blob
-      render plain: '', status: 200
+      render plain: '', status: :ok
     end
 
     def ping
       response.headers['Docker-Distribution-API-Version'] = 'registry/2.0'
-      render json: {}, status: 200
+      render json: {}, status: :ok
     end
 
     def v1_ping
@@ -295,7 +295,7 @@ module Katello
       results[:results] = search_results[:results].collect do |repository|
         { name: repository[:container_repository_name], description: repository[:description] }
       end
-      render json: results, status: 200
+      render json: results, status: :ok
     end
 
     def catalog

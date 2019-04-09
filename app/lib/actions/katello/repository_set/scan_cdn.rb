@@ -44,12 +44,12 @@ module Actions
           repo = mapper.find_repository
           unique_id = repo.try(:pulp_id) || SecureRandom.uuid
           { substitutions: substitutions,
-            path:          mapper.path,
-            repo_name:     mapper.name,
-            pulp_id:       unique_id,
-            name:          mapper.content.name,
-            enabled:       !repo.nil?,
-            promoted:      (!repo.nil? && repo.promoted?),
+            path: mapper.path,
+            repo_name: mapper.name,
+            pulp_id: unique_id,
+            name: mapper.content.name,
+            enabled: !repo.nil?,
+            promoted: (!repo.nil? && repo.promoted?),
             repository_id: repo.try(:id)
           }
         end

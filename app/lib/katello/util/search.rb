@@ -6,13 +6,13 @@ module Katello
       def self.custom_analyzers
         {
           "kt_name_analyzer" => {
-            "type"      => "custom",
+            "type" => "custom",
             "tokenizer" => "keyword"
           },
           "autcomplete_name_analyzer" => {
-            "type"      => "custom",
+            "type" => "custom",
             "tokenizer" => "keyword",
-            "filter"    => %w(standard lowercase ngram_filter)
+            "filter" => %w(standard lowercase ngram_filter)
           }
         }
       end
@@ -20,10 +20,10 @@ module Katello
       def self.custom_filters
         {
           "ngram_filter" => {
-            "type"      => "edgeNGram",
-            "side"      => "front",
-            "min_gram"  => 1,
-            "max_gram"  => 30
+            "type" => "edgeNGram",
+            "side" => "front",
+            "min_gram" => 1,
+            "max_gram" => 30
           }
         }
       end

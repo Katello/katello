@@ -215,7 +215,7 @@ module Katello
       User.as_anonymous_admin do
         Katello::RegistrationManager.unregister_host(@host, :unregistering => !Setting['unregister_delete_host'])
       end
-      render :plain => _("Deleted consumer '%s'") % params[:id], :status => 204
+      render :plain => _("Deleted consumer '%s'") % params[:id], :status => :no_content
     end
 
     # used for registering with activation keys
@@ -257,7 +257,7 @@ module Katello
       User.current = User.anonymous_admin
       async_task(::Actions::Katello::Host::Update, @host, rhsm_params)
       update_host_registered_through(@host, request.headers)
-      render :json => {:content => _("Facts successfully updated.")}, :status => 200
+      render :json => {:content => _("Facts successfully updated.")}, :status => :ok
     end
 
     def serials

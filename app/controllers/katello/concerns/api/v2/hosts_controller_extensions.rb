@@ -28,7 +28,7 @@ module Katello
         def host_collections
           @host.host_collection_ids = params[:host_collection_ids]
           @host.save!
-          render(:locals => { :resource => @host }, :template => 'katello/api/v2/hosts/show', :status => 200)
+          render(:locals => { :resource => @host }, :template => 'katello/api/v2/hosts/show', :status => :ok)
         end
       end
     end

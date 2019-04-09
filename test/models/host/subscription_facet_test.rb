@@ -72,11 +72,11 @@ module Katello
 
     def test_purpose_status_search
       searches = {
-        Katello::PurposeSlaStatus    => "sla_status",
+        Katello::PurposeSlaStatus => "sla_status",
         Katello::PurposeAddonsStatus => "addons_status",
-        Katello::PurposeRoleStatus   => "role_status",
-        Katello::PurposeUsageStatus  => "usage_status",
-        Katello::PurposeStatus       => "purpose_status"
+        Katello::PurposeRoleStatus => "role_status",
+        Katello::PurposeUsageStatus => "usage_status",
+        Katello::PurposeStatus => "purpose_status"
       }
 
       searches.each do |status_class, query|

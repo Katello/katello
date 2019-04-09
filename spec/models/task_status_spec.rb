@@ -98,13 +98,13 @@ module Katello
                               "arch" => "noarch",
                               "epoch" => "0",
                               "release" => "1"}],
-                  "resolved" =>                       [{"qname" => "cheetah-1.26.3-5.noarch",
-                                                        "repoid" => "zoo-repo-updates",
-                                                        "name" => "cheetah",
-                                                        "version" => "1.26.3",
-                                                        "arch" => "noarch",
-                                                        "epoch" => "0",
-                                                        "release" => "5"}]
+                  "resolved" => [{"qname" => "cheetah-1.26.3-5.noarch",
+                                  "repoid" => "zoo-repo-updates",
+                                  "name" => "cheetah",
+                                  "version" => "1.26.3",
+                                  "arch" => "noarch",
+                                  "epoch" => "0",
+                                  "release" => "5"}]
                 }
               }
             }
@@ -147,13 +147,13 @@ module Katello
                               "arch" => "noarch",
                               "epoch" => "0",
                               "release" => "5"}],
-                  "resolved" =>                       [{"qname" => "elephant-8.8-1.noarch",
-                                                        "repoid" => "installed",
-                                                        "name" => "elephant",
-                                                        "version" => "8.8",
-                                                        "arch" => "noarch",
-                                                        "epoch" => "0",
-                                                        "release" => "1"}]
+                  "resolved" => [{"qname" => "elephant-8.8-1.noarch",
+                                  "repoid" => "installed",
+                                  "name" => "elephant",
+                                  "version" => "8.8",
+                                  "arch" => "noarch",
+                                  "epoch" => "0",
+                                  "release" => "1"}]
                 }
               }
             }

@@ -14,7 +14,7 @@ module Actions
         attr_reader :instance
 
         def initialize(logger, url, address)
-          @instance ||= self.new(logger, url, address)
+          @instance = self.new(logger, url, address)
         end
 
         def close
