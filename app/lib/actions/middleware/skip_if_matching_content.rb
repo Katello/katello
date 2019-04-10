@@ -12,7 +12,8 @@ module Actions
       private
 
       def execute?
-        if action.input.keys.include?('matching_content') && action.input['matching_content']
+        options = action.input[:options]
+        if options && options['matching_content']
           self.action.output[:matching_content_skip] = true
           false
         else
