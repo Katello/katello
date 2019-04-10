@@ -4,7 +4,7 @@ module Actions
       module Repository
         class Sync < Pulp::Abstract
           include Helpers::Presenter
-          def plan(repository, smart_proxy, options)
+          def plan(_repository, _smart_proxy, options)
             sequence do
               action_output = plan_action(Actions::Pulp::Repository::Sync, options).output
               plan_self(:output => action_output)

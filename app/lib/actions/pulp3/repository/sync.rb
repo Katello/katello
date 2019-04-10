@@ -13,8 +13,8 @@ module Actions
         end
 
         def invoke_external_task
-            repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
-            output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync
+          repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
+          output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync
         end
 
         def external_task=(tasks)
@@ -45,15 +45,14 @@ module Actions
         end
 
         def presenter
-          repo = ::Katello::Repository.where(:pulp_id => input['pulp_id']).first
           Presenters::ContentUnitPresenter.new(self)
         end
 
         def rescue_strategy_for_self
-        # There are various reasons the syncing fails, not all of them are
-        # fatal: when fail on syncing, we continue with the task ending up
-        # in the warning state, but not locking further syncs
-        Dynflow::Action::Rescue::Skip
+          # There are various reasons the syncing fails, not all of them are
+          # fatal: when fail on syncing, we continue with the task ending up
+          # in the warning state, but not locking further syncs
+          Dynflow::Action::Rescue::Skip
         end
       end
     end

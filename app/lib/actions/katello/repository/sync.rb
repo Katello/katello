@@ -79,7 +79,7 @@ module Actions
         end
 
         def presenter
-          Helpers::Presenter::Delegated.new(self, planned_actions(PulpSelector))
+          Helpers::Presenter::Delegated.new(self, planned_actions(Pulp3::Orchestration::Repository::Sync))
         end
 
         def pulp_task_id

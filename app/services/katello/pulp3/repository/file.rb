@@ -48,7 +48,7 @@ module Katello
         end
 
         def delete_publication
-          pulp3_api.publications_delete()
+          pulp3_api.publications_delete
         end
       end
     end

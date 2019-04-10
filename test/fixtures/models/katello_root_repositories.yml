@@ -160,3 +160,12 @@ generic_file_root:
   gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
   unprotected:           <%= true %>
 
+pulp3_file_root:
+  name:                 Pulp3 Files
+  content_id:           10
+  content_type:         file
+  label:                Pulp3_Files
+  product_id:           <%= ActiveRecord::FixtureSet.identify(:fedora) %>
+  gpg_key_id:           <%= ActiveRecord::FixtureSet.identify(:fedora_gpg_key) %>
+  unprotected:           <%= true %>
+  url:                  "https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/"

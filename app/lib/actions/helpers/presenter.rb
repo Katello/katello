@@ -2,8 +2,8 @@ module Actions
   module Helpers
     # Delegate task information to presenter object
     module Presenter
-      def presenter(*args)
-      fail NotImplementedError
+      def presenter
+        fail NotImplementedError
       end
 
       delegate :humanized_output, to: :presenter

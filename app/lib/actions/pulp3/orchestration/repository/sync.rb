@@ -8,7 +8,7 @@ module Actions
             sequence do
               action_output = plan_action(Actions::Pulp3::Repository::Sync, options).output
               plan_action(Pulp3::Repository::SaveVersion, repository, action_output[:pulp_tasks])
-              plan_action(Pulp3::Orchestration::Repository::GenerateMetadata, repository, SmartProxy.pulp_master, {:force => true})
+              plan_action(Pulp3::Orchestration::Repository::GenerateMetadata, repository, smart_proxy, :force => true)
               plan_self(:output => action_output)
             end
           end

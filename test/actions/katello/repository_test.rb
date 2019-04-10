@@ -325,9 +325,8 @@ module ::Actions::Katello::Repository
 
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Sync }
-    let(:pulp2_action_class) {::Actions::Pulp::Orchestration::Repository::Sync}
-    let(:pulp3_action_class) {::Actions::Pulp3::Orchestration::Repository::Sync}
-
+    let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::Sync }
+    let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
 
     it 'plans' do
       action = create_action action_class
@@ -404,7 +403,7 @@ module ::Actions::Katello::Repository
           action.stubs(planned_actions: [pulp_action])
         end
       end
-
+      let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
       let(:pulp_action) { fixture_action(pulp_action_class, input: {pulp_id: repository.pulp_id}, output: fixture_variant) }
 
       describe 'successfully synchronized' do

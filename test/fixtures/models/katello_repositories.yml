@@ -331,3 +331,10 @@ generic_file_dev:
   relative_path:        '/Default_Organization/dev/My_Files'
   environment_id:       <%= ActiveRecord::FixtureSet.identify(:dev) %>
   content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_dev_view_version) %>
+
+pulp3_file:
+  root_id:              <%= ActiveRecord::FixtureSet.identify(:pulp3_file_root) %>
+  pulp_id:              "Default_Organization-Cabinet-pulp3_File"
+  relative_path:        '/Default_Organization/library/pulp3_File'
+  environment_id:       <%= ActiveRecord::FixtureSet.identify(:library) %>
+  content_view_version_id: <%= ActiveRecord::FixtureSet.identify(:library_default_version) %>

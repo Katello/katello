@@ -14,6 +14,7 @@ module Actions
           end
         else
           planned_action = pass_only_args ? plan_action(found_action, *args) : plan_action(found_action, repository, smart_proxy, *args)
+          planned_action
         end
       end
 
@@ -24,14 +25,14 @@ module Actions
       end
 
       def presenter
-         Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Orchestration::Repository::Sync))
+        Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Orchestration::Repository::Sync))
       end
 
       def self.select(backend_actions, repository, smart_proxy)
         backend_type = smart_proxy.backend_service_type(repository)
         found_action = backend_actions.find { |action| action.backend_service_type == backend_type }
+        found_action
       end
     end
   end
 end
-
