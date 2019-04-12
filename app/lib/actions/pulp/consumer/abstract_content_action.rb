@@ -47,6 +47,8 @@ module Actions
         # by default runcible puts whatever we pass into a hash under the 'name' key
         # here we can make the unit hash more precise
         def parse_units_for_type
+          return unless input[:args]
+
           if input[:type] == 'rpm'
             input[:args].collect do |unit|
               ::Katello::Util::Package.parse_nvrea_nvre(unit) || unit
