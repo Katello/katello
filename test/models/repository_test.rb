@@ -547,6 +547,16 @@ module Katello
       assert_nil @puppet_forge.capsule_download_policy(proxy)
       assert_not_nil @fedora_17_x86_64.download_policy
     end
+
+    def test_index_content_ordering
+      repo_type = @rhel6.repository_type
+      repo_types_hash = Hash[repo_type.content_types_to_index.map { |type| [type.model_class.content_type, type.priority] }]
+      # {"rpm"=>1, "modulemd"=>2, "erratum"=>3, "package_group"=>99, "yum_repo_metadata_file"=>99, "srpm"=>99}
+
+      # make sure rpms and module streams get indexed before errata
+      assert repo_types_hash[::Katello::Rpm.content_type] < repo_types_hash[::Katello::Erratum.content_type]
+      assert repo_types_hash[::Katello::ModuleStream.content_type] < repo_types_hash[::Katello::Erratum.content_type]
+    end
   end
 
   class RepositoryApplicabilityTest < RepositoryTestBase
