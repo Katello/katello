@@ -262,6 +262,12 @@ module Katello
           fail _("Multiple profiles found. Consider removing %s which match this host.") % hostnames.join(', ')
         end
 
+        # check for hosts that were matched by dmi.system.uuid but whose name didn't match
+        if hosts.where(name: host_name).empty?
+          fail _("The host %{existing} matches this registration. Remove or rename it to %{new_host} before registering.") %
+            {existing: hosts.pluck(:name).first, new_host: host_name}
+        end
+
         hosts.first
       end
 
