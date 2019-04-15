@@ -72,6 +72,7 @@ module Katello::Host
       data = data.with_indifferent_access
       create_org(org_label)
       org = Organization.find_by(label: org_label)
+      host_names_expected = ["virt-who-2e78f643-1d2f-45d1-b191-d931147cbde1-#{org.id}", "virt-who-261c4dca-702f-42b3-b8ef-2a72b77f7ec2-#{org.id}"]
 
       assert_equal 0, org.hosts.count
       task = Katello::Resources::Candlepin::Consumer.async_hypervisors(org_label, data.to_json)
@@ -79,6 +80,33 @@ module Katello::Host
 
       assert_equal 'success', action.result
       assert_equal 2, org.reload.hosts.count
+      assert_equal org.hosts.pluck(:name).sort, host_names_expected.sort
+    end
+
+    def test_altered_hypervisor_id
+      # the desired behavior is for a single host record to be used when the hypervisor_id has changed
+      org_label = 'altered_hypervisor_id_test'
+      data = JSON.parse(File.read(File.join(Katello::Engine.root, 'test/fixtures/files/virt_who_altered_hypervisor_id.json')))
+      data['owner'] = org_label
+      data = data.with_indifferent_access
+      create_org(org_label)
+      org = Organization.find_by(label: org_label)
+      host_names_expected = ["virt-who-more-useful-identifier-#{org.id}", "virt-who-261c4dca-702f-42b3-b8ef-2a72b77f7ec2-#{org.id}"]
+
+      task = Katello::Resources::Candlepin::Consumer.async_hypervisors(org_label, data.to_json)
+      ForemanTasks.sync_task(::Actions::Katello::Host::Hypervisors, nil, task_id: task['id'])
+
+      # Change hypervisor ID
+      data[:hypervisors].first[:hypervisorId][:hypervisorId] = "more_useful_identifier"
+      task = Katello::Resources::Candlepin::Consumer.async_hypervisors(org_label, data.to_json)
+      action = ForemanTasks.sync_task(::Actions::Katello::Host::Hypervisors, nil, task_id: task['id'])
+
+      consumers = ::Katello::Resources::Candlepin::Consumer.get('owner' => org_label, :include_only => [:uuid])
+
+      assert_equal 'success', action.result
+      assert_equal 2, consumers.count # In older Candlepins we'd have another host record, but now system.dmi.uuid is accounted for
+      assert_equal 2, org.reload.hosts.count # We should match Candlepin
+      assert_equal org.hosts.pluck(:name).sort, host_names_expected.sort
     end
   end
 end

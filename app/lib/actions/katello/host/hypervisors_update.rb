@@ -20,7 +20,7 @@ module Actions
 
             ActiveRecord::Base.transaction do
               @hosts.each do |uuid, host|
-                update_subscription_facet(uuid, host)
+                update_host(uuid, host)
               end
             end
 
@@ -100,10 +100,14 @@ module Actions
           hypervisors.map { |h| h[field] }.uniq
         end
 
+        def name_for_host(organization, consumer)
+          sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(consumer[:hypervisorId][:hypervisorId])
+          "virt-who-#{sanitized_name}-#{organization.id}"
+        end
+
         def duplicate_name(hypervisor, consumer)
           organization = @organizations[hypervisor[:organization_label]]
-          sanitized_name = ::Katello::Host::SubscriptionFacet.sanitize_name(consumer[:hypervisorId][:hypervisorId])
-          ["virt-who-#{sanitized_name}-#{organization.id}", organization]
+          [name_for_host(organization, consumer), organization]
         end
 
         def create_host_for_hypervisor(name, organization, location = nil)
@@ -114,6 +118,23 @@ module Actions
           host
         end
 
+        def update_host(uuid, host)
+          update_subscription_facet(uuid, host)
+          update_host_name(uuid, host)
+          host.save!
+        end
+
+        def update_host_name(uuid, host)
+          # if the hypervisorId name pattern does not match that of the host, update the name
+          consumer = @candlepin_attributes[uuid]
+          return unless consumer
+
+          expected_name = name_for_host(host.organization, consumer)
+          if host.name != expected_name
+            host.name = expected_name
+          end
+        end
+
         def update_subscription_facet(uuid, host)
           host.subscription_facet ||= host.build_subscription_facet(uuid: uuid)
           if @candlepin_attributes.key?(uuid)
@@ -122,7 +143,6 @@ module Actions
             host.subscription_facet.save!
             host.subscription_facet.update_subscription_status(@candlepin_attributes[uuid].try(:[], :entitlementStatus))
           end
-          host.save!
         end
 
         def update_facts(uuid, host)
