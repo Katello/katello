@@ -28,11 +28,10 @@ module ::Actions::Pulp3
       @repo.root.update_attributes(
         verify_ssl_on_sync: false)
 
-      result = ForemanTasks.sync_task(
+      ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
         @master)
-      puts result
     end
 
     def test_update_unprotected
@@ -42,12 +41,11 @@ module ::Actions::Pulp3
 
       @repo.root.update_attributes(unprotected: false)
 
-      result = ForemanTasks.sync_task(
+      ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
         @master)
 
-      puts result
       refute_empty Katello::Pulp3::DistributionReference.where(
           root_repository_id: @repo.root.id)
     end
