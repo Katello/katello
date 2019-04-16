@@ -39,6 +39,10 @@ module Katello
           pulp3_api.publishers_file_file_list(args).results
         end
 
+        def update_publisher
+          pulp3_api.publishers_file_file_update(repository_reference.publisher_href, name: backend_object_name)
+        end
+
         def delete_publisher(href = repository_reference.publisher_href)
           pulp3_api.publishers_file_file_delete(href)
         end
@@ -46,6 +50,7 @@ module Katello
         def create_publication
           pulp3_api.publishers_file_file_publish(repository_reference.publisher_href, repository_version: repo.version_href)
         end
+
       end
     end
   end
