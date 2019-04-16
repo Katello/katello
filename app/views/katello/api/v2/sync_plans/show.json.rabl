@@ -2,7 +2,7 @@ object @resource
 
 attributes :id, :organization_id
 attributes :name, :description
-attributes :interval, :next_sync
+attributes :interval, :next_sync, :sync_date
 attributes :created_at, :updated_at
 attributes :enabled, :foreman_tasks_recurring_logic_id
 attributes :cron_expression
@@ -26,8 +26,4 @@ node :permissions do |sync_plan|
     :edit_sync_plans => sync_plan.editable?,
     :destroy_sync_plans => sync_plan.deletable?
   }
-end
-
-node :sync_date do |sync_plan|
-  sync_plan.plan_date_time
 end
