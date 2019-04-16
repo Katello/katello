@@ -63,7 +63,11 @@ module Katello
         end
       end
 
-      def list(args)
+      def update
+        pulp3_api.repositories_update(repository_reference.repository_href, name: backend_object_name  )
+      end
+
+      def  list(args)
         pulp3_api.repositories_list(args).results
       end
 
