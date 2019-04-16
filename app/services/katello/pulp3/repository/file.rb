@@ -50,7 +50,6 @@ module Katello
         def create_publication
           pulp3_api.publishers_file_file_publish(repository_reference.publisher_href, repository_version: repo.version_href)
         end
-
       end
     end
   end
