@@ -107,6 +107,12 @@ module Actions
         end
 
         def finalize
+          # update errata applicability counts for all hosts in the CV & Library
+          ::Katello::Host::ContentFacet.where(:content_view_id => input[:content_view_id],
+                                              :lifecycle_environment_id => input[:environment_id]).each do |facet|
+            facet.update_applicability_counts
+          end
+
           history = ::Katello::ContentViewHistory.find(input[:history_id])
           history.status = ::Katello::ContentViewHistory::SUCCESSFUL
           history.save!
