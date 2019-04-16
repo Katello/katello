@@ -28,8 +28,15 @@ angular.module('Bastion.sync-plans').controller('SyncPlanDetailsInfoController',
             $scope.editedInterval = false;
 
             function updateSyncPlan(syncPlan) {
-                syncPlan.syncDate = new Date(syncPlan['sync_date']);
-                syncPlan.syncTime = new Date(syncPlan['sync_date']);
+                var syncDate;
+                if (syncPlan['sync_date']) {
+                    syncDate = new Date(syncPlan['sync_date'].replace(/\s/, 'T').replace(/\s/, ''));
+                } else {
+                    syncDate = new Date();
+                }
+
+                syncPlan.syncDate = syncDate;
+                syncPlan.syncTime = syncDate;
                 $scope.syncPlan = syncPlan;
             }
 

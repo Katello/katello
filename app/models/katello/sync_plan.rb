@@ -12,8 +12,6 @@ module Katello
     WEEKLY = 'weekly'.freeze
     CUSTOM_CRON = 'custom cron'.freeze
     TYPES = [HOURLY, DAILY, WEEKLY, CUSTOM_CRON].freeze
-    DURATION = {HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }.freeze
-    WEEK_DAYS = %w(Sunday Monday Tuesday Wednesday Thursday Friday).collect { |d| N_(d) }
 
     belongs_to :organization, :inverse_of => :sync_plans
     has_many :products, :class_name => "Katello::Product", :dependent => :nullify
@@ -93,37 +91,9 @@ module Katello
       errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
     end
 
-    def plan_day
-      WEEK_DAYS[self.sync_date.strftime('%A').to_i]
-    end
-
-    def plan_date
-      self.sync_date.strftime('%m/%d/%Y')
-    end
-
-    def plan_time
-      self.sync_date.strftime('%I:%M %p')
-    end
-
-    def plan_date_time
-      self.sync_date.strftime('%Y/%m/%d %H:%M:%S %z')
-    end
-
-    def plan_zone
-      self.sync_date.strftime('%Z')
-    end
-
-    def sync_time
-      self.sync_date.utc.strftime('%H%M%S%N')
-    end
-
-    def next_sync_date
+    def next_sync
       return nil unless self.enabled
       self.foreman_tasks_recurring_logic&.tasks&.order(:start_at)&.last&.start_at
-    end
-
-    def next_sync
-      next_sync_date.try(:strftime, '%Y/%m/%d %H:%M:%S %z')
     end
 
     def self.humanize_class_name(_name = nil)
