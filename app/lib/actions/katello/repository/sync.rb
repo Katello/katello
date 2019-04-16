@@ -79,7 +79,9 @@ module Actions
         end
 
         def presenter
-          Helpers::Presenter::Delegated.new(self, planned_actions(Pulp3::Orchestration::Repository::Sync))
+          found = all_planned_actions(Pulp::Repository::Sync)
+          found = all_planned_actions(Pulp3::Repository::Sync) if found.empty?
+          Helpers::Presenter::Delegated.new(self, found)
         end
 
         def pulp_task_id

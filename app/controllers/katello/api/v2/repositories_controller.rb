@@ -267,14 +267,6 @@ module Katello
       if params[:source_url].blank? && @repository.url.blank?
         fail HttpErrors::BadRequest, _("attempted to sync without a feed URL")
       end
-      # #Hack to support presenters for Pulp3
-      # repo = @repository
-      # ::Actions::Katello::PulpSelector.send(:define_method, "presenter") do
-      #   ::Actions::Helpers::Presenter::Delegated.new(self,
-      #                                     planned_actions(::Actions::Katello::PulpSelector.select([Actions::Pulp::Orchestration::Repository::Sync, Actions::Pulp3::Orchestration::Repository::Sync],
-      #                                                                                             repo,
-      #                                                                                             SmartProxy.pulp_master)))
-      # end
 
       task = async_task(::Actions::Katello::Repository::Sync, @repository, nil, sync_options)
       respond_for_async :resource => task

@@ -113,8 +113,7 @@ module ::Actions::Katello::Repository
       plan_action action, in_use_repository
       assert_action_planed_with action, Actions::Katello::PulpSelector,
         [pulp_action_class, pulp3_action_class],
-        in_use_repository,
-        nil
+        in_use_repository, proxy
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
@@ -398,13 +397,13 @@ module ::Actions::Katello::Repository
     end
 
     describe 'progress' do
-      let :action do
-        create_action(action_class).tap do |action|
-          action.stubs(planned_actions: [pulp_action])
-        end
-      end
       let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
       let(:pulp_action) { fixture_action(pulp_action_class, input: {pulp_id: repository.pulp_id}, output: fixture_variant) }
+      let :action do
+        create_action(action_class).tap do |action|
+          action.stubs(all_planned_actions: [pulp_action])
+        end
+      end
 
       describe 'successfully synchronized' do
         let(:fixture_variant) { :success }

@@ -6,27 +6,34 @@ module ::Actions::Pulp3
 
     def setup
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      @repo = katello_repositories(:generic_file)
-      @repo.root.update_attributes(:url => 'https://repos.fedorapeople.org/pulp/pulp/demo_repos/test_file_repo/')
-      ensure_creatable(@repo, @master)
+      @repo = katello_repositories(:pulp3_file)
+      create_repo(@repo, @master)
+      ForemanTasks.sync_task(
+          ::Actions::Katello::Repository::MetadataGenerate, @repo,
+          repository_creation: true)
+
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
+
+      assert repository_reference
+      refute_empty repository_reference.repository_href
+      refute_empty Katello::Pulp3::DistributionReference.where(
+          root_repository_id: @repo.root.id)
+      @repo_version_href = @repo.version_href
     end
 
     def test_sync
-      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Create, @repo, @master)
+      sync_args = {:smart_proxy_id => @master.id, :pulp_id => @repo.pulp_id}
+      sync_args.merge!(:return_output => true)
+      ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
+      refute_equal @repo.version_href, @repo_version_href
+      repository_reference = Katello::Pulp3::RepositoryReference.find_by(
+          :root_repository_id => @repo.root.id,
+          :content_view_id => @repo.content_view.id)
 
-      assert @repo.remote_href
-      refute @repo.version_href
-
-      repo_reference = Katello::Pulp3::RepositoryReference.find_by(:root_repository_id => @repo.root.id,
-                                                                   :content_view_id => @repo.content_view.id)
-      assert repo_reference
-      assert repo_reference.repository_href
-      assert repo_reference.publisher_href
-      # ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master)
-      # @repo.reload
-      # assert @repo.version_href
-
+      assert_equal repository_reference.repository_href + "versions/2/", @repo.version_href
     end
   end
 end
