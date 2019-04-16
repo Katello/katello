@@ -211,7 +211,7 @@ module Katello
       sync_date = '5000/11/17 18:26:48 +0000'
       @plan.sync_date = sync_date
       @plan.save_with_logic!
-      @plan.next_sync.to_s.must_equal('5000/11/18 18:26:00 +0000')
+      @plan.next_sync.must_equal(Time.utc(5000, 11, 18, 18, 26))
     end
 
     def sync_date_if_disabled
@@ -231,8 +231,7 @@ module Katello
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.sync_date = '1999-11-17 09:26:00 UTC'
       @plan.save_with_logic!
-      datetime = "2012/01/01 09:26:00 +0000"
-      @plan.next_sync.to_s.must_equal(datetime)
+      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 9, 26))
     end
 
     def test_next_run_daily
@@ -240,8 +239,7 @@ module Katello
       @plan.sync_date = '1999-11-17 09:26:00 UTC'
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      datetime = "2012/01/01 09:26:00 +0000"
-      @plan.next_sync.to_s.must_equal(datetime)
+      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 9, 26))
     end
 
     def test_next_run_weekly
@@ -249,7 +247,7 @@ module Katello
       @plan.sync_date = '1999-11-17 09:26:00 UTC' #WEDNESDAY
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 4, 9, 26, 0, "+00:00")) #WEDNESDAY
+      @plan.next_sync.must_equal(Time.utc(2012, 1, 4, 9, 26)) # Wednesday
     end
 
     def test_next_run_cron_hourly
@@ -258,7 +256,7 @@ module Katello
       @plan.cron_expression = "10 * * * *" #Every hour at 10 minutes
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 1, 9, 10, 0, "+00:00"))
+      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 9, 10))
     end
 
     def test_next_run_cron_daily_at_time
@@ -267,7 +265,7 @@ module Katello
       @plan.cron_expression = "5 10 * * *" #Everyday at 10:05  #
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 1, 10, 05, 0, "+00:00"))
+      @plan.next_sync.must_equal(Time.utc(2012, 1, 1, 10, 5))
     end
 
     def test_next_run_cron_monthly
@@ -276,15 +274,15 @@ module Katello
       @plan.cron_expression = "15 14 5 * *" #At 14:15 on day-of-month 5
       Time.stubs(:now).returns(Time.utc(2012, 1, 1, 9))
       @plan.save_with_logic!
-      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 1, 5, 14, 15, 0, "+00:00"))
+      @plan.next_sync.must_equal(Time.utc(2012, 1, 5, 14, 15))
     end
 
     def test_next_run_weekly_week_prior_time_after_now
       @plan.interval = 'weekly'
       @plan.sync_date = '2012-11-10 09:26:00 UTC' #SATURDAY
-      Time.stubs(:now).returns(Time.new(2012, 11, 17, 9, 20, 0, "+00:00"))
+      Time.stubs(:now).returns(Time.utc(2012, 11, 17, 9, 20))
       @plan.save_with_logic!
-      Time.parse(@plan.next_sync).must_equal(Time.new(2012, 11, 17, 9, 26, 0, "+00:00"))
+      @plan.next_sync.must_equal(Time.utc(2012, 11, 17, 9, 26))
     end
 
     def test_invalid_custom_cron_expression
