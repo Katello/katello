@@ -175,21 +175,14 @@ class ActiveSupport::TestCase
   include FixtureTestCase
   include ForemanTasks::TestHelpers::WithInThreadExecutor
 
-  setup :global_setup
-  teardown :global_teardown
-
-  def global_setup
-    @original_candlepin_bulk_size = SETTINGS[:katello][:candlepin][:bulk_load_size]
-  end
-
-  def global_teardown
-    SETTINGS[:katello][:candlepin][:bulk_load_size] = @original_candlepin_bulk_size
-  end
-
   before do
     stub_ping
     stub_certs
     Setting::Content.load_defaults
+  end
+
+  teardown do
+    SETTINGS[:katello][:candlepin][:bulk_load_size] = 1000
   end
 
   def self.stubbed_ping_response
