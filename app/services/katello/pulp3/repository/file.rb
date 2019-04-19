@@ -13,7 +13,9 @@ module Katello
         end
 
         def update_remote
-          pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
+          unless remote_options[:url].blank?
+            pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
+          end
         end
 
         def delete_remote(href = repo.remote_href)
