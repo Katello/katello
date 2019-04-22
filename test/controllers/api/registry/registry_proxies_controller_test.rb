@@ -267,6 +267,20 @@ module Katello
         assert_equal "dev_label-published_dev_view-puppet_product-busybox", body["results"][0]["name"]
       end
 
+      it "show unauthenticated repositories for head requests" do
+        repo = katello_repositories(:busybox_dev)
+        repo.set_container_repository_name
+        assert repo.save!
+        repo.environment.registry_unauthenticated_pull = true
+        assert repo.environment.save!
+
+        @controller.stubs(:authenticate).returns(false)
+        User.current = nil
+        head :v1_search, params: { n: 2 }
+        assert true
+        assert_response 200
+      end
+
       it "show two repositories" do
         User.current = User.find(users('admin').id)
 
@@ -326,6 +340,34 @@ module Katello
         assert_response 200
         assert_equal(manifest, response.body)
         assert response.header['Content-Type'] =~ /MEDIATYPE/
+        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+      end
+
+      it "pull manifest - HTTP Header - v1+json" do
+        manifest = '{}'
+        @controller.stubs(:registry_authorize).returns(true)
+        @controller.stubs(:find_readable_repository).returns(@docker_repo)
+        Resources::Registry::Proxy.stubs(:get).returns(manifest)
+        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+
+        get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
+        assert_response 200
+        assert_equal(manifest, response.body)
+        assert_includes response.header['Content-Type'], 'application/vnd.docker.distribution.manifest.v1+json'
+        assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
+      end
+
+      it "pull manifest - HTTP Header - with signatures" do
+        manifest = '{"signatures": [{"signature":"...."}]}'
+        @controller.stubs(:registry_authorize).returns(true)
+        @controller.stubs(:find_readable_repository).returns(@docker_repo)
+        Resources::Registry::Proxy.stubs(:get).returns(manifest)
+        DockerMetaTag.stubs(:where).with(repository_id: @docker_repo.id, name: @tag.name).returns([@tag])
+
+        get :pull_manifest, params: { repository: @docker_repo.name, tag: @tag.name }
+        assert_response 200
+        assert_equal(manifest, response.body)
+        assert_includes response.header['Content-Type'], 'application/vnd.docker.distribution.manifest.v1+prettyjws'
         assert_equal response.header['Docker-Content-Digest'], "sha256:#{Digest::SHA256.hexdigest(manifest)}"
       end
 
