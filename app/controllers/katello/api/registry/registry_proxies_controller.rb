@@ -51,7 +51,7 @@ module Katello
 
     def registry_authorize
       @repository = find_readable_repository
-      return true if request.method == 'GET' && @repository && @repository.environment.registry_unauthenticated_pull
+      return true if ['GET', 'HEAD'].include?(request.method) && @repository && @repository.environment.registry_unauthenticated_pull
 
       token = request.headers['Authorization']
       if token
@@ -161,7 +161,20 @@ module Katello
       results = JSON.parse(r)
 
       response.header['Docker-Content-Digest'] = "sha256:#{Digest::SHA256.hexdigest(r)}"
-      render json: r, content_type: results['mediaType']
+      # https://docs.docker.com/registry/spec/manifest-v2-2/
+      # If its v2 schema 2 only the mediaType attribute will be present in the manifest
+      media_type = results['mediaType']
+      if media_type.blank?
+        # so mediaType is not schema2 v2 only set the mediaType based on
+        # https://docs.docker.com/registry/spec/manifest-v2-1/
+        media_type = if results["signatures"].blank?
+                       'application/vnd.docker.distribution.manifest.v1+json'
+                     else
+                       'application/vnd.docker.distribution.manifest.v1+prettyjws'
+                     end
+      end
+
+      render json: r, content_type: media_type
     end
 
     def check_blob
