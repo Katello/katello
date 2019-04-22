@@ -16,7 +16,7 @@ module Katello
           @file_repo = katello_repositories(:generic_file)
           @file_repo_service = @file_repo.backend_service(@mock_smart_proxy)
           @file_repo.root.update_attributes(url: 'my-files.org')
-          
+
           @file_repo.remote_href = '193874298udsfsdf'
           refute_empty @file_repo.remote_href
         end
@@ -28,19 +28,16 @@ module Katello
         end
 
         def test_feed_url_is_missing
-          @file_repo_service.stubs(:remote_options).returns({url: ''})
+          @file_repo_service.stubs(:remote_options).returns(url: '')
           assert_empty @file_repo_service.remote_options[:url], "Feed url was not empty or blank."
           @mock_pulp3_api.expects(:remotes_file_file_partial_update).never
-          result = @file_repo_service.update_remote
+          @file_repo_service.update_remote
         end
 
         def teardown
           mocha_teardown
         end
-
       end
-
     end
   end
 end
-
