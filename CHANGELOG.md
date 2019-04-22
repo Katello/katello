@@ -1,3 +1,41 @@
+# 3.11.1 Beautiful Disaster (2019-04-22)
+
+## Bug Fixes
+
+### Repositories
+ * Sync Status: Next Sync information is incorrect ([#26361](https://projects.theforeman.org/issues/26361), [00a3bda1](https://github.com/Katello/katello.git/commit/00a3bda130c6217f2075e3914a8052bbdbee4493))
+ * Unable to update certificates belonging to a  repository ([#26032](https://projects.theforeman.org/issues/26032), [d6f1515a](https://github.com/Katello/katello.git/commit/d6f1515ab4539acbf3b0ed58fb1737b7945cb740))
+ * Upgrade step katello:upgrades:3.8:clear_checksum_type from 6.3 to 6.4 failed - Download policy Cannot sync file:// repositories with On Demand or Background Download Policies ([#25968](https://projects.theforeman.org/issues/25968), [16bf1e78](https://github.com/Katello/katello.git/commit/16bf1e784c86dd4b43b650d8fb056f0f1b034f68))
+ * Providing custom=false to products controller does not filter out custom products ([#25180](https://projects.theforeman.org/issues/25180), [22220f49](https://github.com/Katello/katello.git/commit/22220f49331b3e2d4580ffe551b86ed76050f176), [6c02e861](https://github.com/Katello/katello.git/commit/6c02e861083cd6e4d7c913c6e42fb6c4861d8a09), [53e88d8a](https://github.com/Katello/katello.git/commit/53e88d8a47384246696b0084d958b5397c74cc64))
+
+### Inter Server Sync
+ * The CV exported tar should have minor version of Content View ([#26326](https://projects.theforeman.org/issues/26326), [da08bb03](https://github.com/Katello/hammer-cli-katello.git/commit/da08bb032d6071eec4d3f7efd9580b879b108238))
+ * Exporting CV version with non-yum repos not producing correct error for end user ([#25995](https://projects.theforeman.org/issues/25995), [1d21dfa7](https://github.com/Katello/hammer-cli-katello.git/commit/1d21dfa7af7580c0fb93cc510140295e35bb5237))
+ * Satellite throws Undefined method error while importing the CVv if clone CV isnt set ([#25919](https://projects.theforeman.org/issues/25919), [8bd79fe6](https://github.com/Katello/hammer-cli-katello.git/commit/8bd79fe62e663b743d8de2402a5a62a980fe85df))
+
+### Hammer
+ * when candlepin is in "SUSPEND" mode, `hammer ping` still reports "ok" on candlepin ([#26228](https://projects.theforeman.org/issues/26228), [25914b84](https://github.com/Katello/katello.git/commit/25914b84f28b956c4ded09900a28661ca0f95c2a))
+ * CVv with mirror_on_sync repo is being imported ([#25947](https://projects.theforeman.org/issues/25947), [3e0f61c0](https://github.com/Katello/hammer-cli-katello.git/commit/3e0f61c0b71e1e9db33e8fe6c5af5bd4fe5693d9))
+ * Reimporting the existing CV version should have more refined validation message ([#25932](https://projects.theforeman.org/issues/25932), [b2f09697](https://github.com/Katello/hammer-cli-katello.git/commit/b2f096971d958bde710191f1c495a7962d6fcc27))
+
+### Subscriptions
+ * Manifest can be refreshed only by the user who imported. Other user can't refresh that. ([#25957](https://projects.theforeman.org/issues/25957), [2890799c](https://github.com/Katello/katello.git/commit/2890799c0188d611ad8dc52006f9e68518b930b3))
+
+### Content Views
+ * checksum-type does not updated on already synced repository at Katello Capsule. ([#25885](https://projects.theforeman.org/issues/25885), [c39e61e3](https://github.com/Katello/katello.git/commit/c39e61e30f9736093ca1d8dba1ec8873b53e4bf4))
+
+### Installer
+ * RHSM: package_profile_on_trans option needs to be set  ([#25873](https://projects.theforeman.org/issues/25873), [cf229880](https://github.com/theforeman/puppet-certs/commit/cf22988072b2051bb4ea52e4040a71cb0b599428), [a9a497ad](https://github.com/theforeman/puppet-certs/commit/a9a497adec2c6db853c32f987d2873265921dfcd))
+
+### Other
+ * on big katello-agent update: PG::StringDataRightTruncation: ERROR:  value too long for type character varying(255) ([#26547](https://projects.theforeman.org/issues/26547), [ef0083b8](https://github.com/Katello/katello.git/commit/ef0083b8d80ae4e0265d8db36ee1216fb3ebb140))
+ * Bulk update all packages(via katello agent) fails ([#26433](https://projects.theforeman.org/issues/26433), [cbd14ba4](https://github.com/Katello/katello.git/commit/cbd14ba421535c19202e3469b048372635f6c4d1))
+ * Dates missing/invalid throughout Katello ([#26417](https://projects.theforeman.org/issues/26417), [2044025c](https://github.com/Katello/katello.git/commit/2044025c66df425cdc44246eeb422e4ed2d9555d))
+ * Better error reporting on organization creation ([#26389](https://projects.theforeman.org/issues/26389), [6894067e](https://github.com/Katello/katello.git/commit/6894067e5f32a5bb6e6104301647738aa620cdef))
+ * Some errata are showing more Installable hosts than Applicable hosts in errata page. ([#26354](https://projects.theforeman.org/issues/26354), [23f441f2](https://github.com/Katello/katello.git/commit/23f441f24884022fb9bebba410fd9cf6995a6fab))
+ * Missing checkbox to toggle between applicable errata and installabe errata in the errata content hosts page. ([#26353](https://projects.theforeman.org/issues/26353), [da43ad64](https://github.com/Katello/katello.git/commit/da43ad64537bc843e3699023ebaacf06f5718af2))
+ * 500 ISE on fetching task during capsule sync ([#25918](https://projects.theforeman.org/issues/25918), [d849c962](https://github.com/Katello/katello.git/commit/d849c962a31ad653a5532147f39957f41802a907))
+
 # 3.11.0 Beautiful Disaster (2019-03-12)
 
 ## Features
