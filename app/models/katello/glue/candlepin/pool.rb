@@ -166,8 +166,13 @@ module Katello
       def import_hosts
         uuids = Resources::Candlepin::Pool.consumer_uuids(self.cp_id)
 
-        sub_facet_ids_from_cp = Katello::Host::SubscriptionFacet.where(:uuid => uuids).select(:id).pluck(:id)
+        sub_facet_ids_from_cp, host_ids_from_cp = Katello::Host::SubscriptionFacet.where(:uuid => uuids).pluck([:id, :host_id]).transpose
+        sub_facet_ids_from_cp ||= []
+        host_ids_from_cp ||= []
+
         sub_facet_ids_from_pool_table = Katello::SubscriptionFacetPool.where(:pool_id => self.id).select(:subscription_facet_id).pluck(:subscription_facet_id)
+        host_ids_from_pool_table = Katello::Host::SubscriptionFacet.where(:id => sub_facet_ids_from_pool_table).pluck(:host_id)
+
         entries_to_add = sub_facet_ids_from_cp - sub_facet_ids_from_pool_table
         unless entries_to_add.empty?
           ActiveRecord::Base.transaction do
@@ -180,6 +185,7 @@ module Katello
 
         entries_to_remove = sub_facet_ids_from_pool_table - sub_facet_ids_from_cp
         Katello::SubscriptionFacetPool.where(:pool_id => self.id, :subscription_facet_id => entries_to_remove).delete_all
+        self.import_audit_record(host_ids_from_pool_table, host_ids_from_cp)
       end
 
       def import_managed_associations

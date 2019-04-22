@@ -490,5 +490,18 @@ module Katello
 
       assert_nil host.subscription_facet.host_type
     end
+
+    def test_audit_for_subscription_facet
+      sample_host = ::Host::Managed.create!(:name => 'foohost', :managed => false, :organization_id => org.id)
+      subfacet1 = Katello::Host::SubscriptionFacet.create!(:host => sample_host)
+
+      recent_audit = Audit.where(auditable_id: subfacet1.id).last
+      assert recent_audit, "No audit record for subscription_facet"
+      assert_equal 'create', recent_audit.action
+      assert_includes recent_audit.organization_ids, org.id
+
+      subscription_facet_rec = sample_host.associated_audits.where(auditable_id: subfacet1.id)
+      assert subscription_facet_rec, "No associated audit record for subscription_facet"
+    end
   end
 end

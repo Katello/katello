@@ -71,6 +71,18 @@ module Katello
       subscription.present? && subscription.redhat?
     end
 
+    def import_audit_record(old_host_ids, new_host_ids = subscription_facets.pluck(:host_id))
+      return if old_host_ids.empty? && new_host_ids.empty?
+      pool_id = self.id
+      Audited::Audit.new(
+        :auditable_id => pool_id,
+        :auditable_type => 'Katello::Pool',
+        :action => 'update',
+        :auditable_name => self.name,
+        :audited_changes => {'host_ids' => [old_host_ids, new_host_ids]}
+      ).save!
+    end
+
     private
 
     def default_sort
