@@ -6,8 +6,11 @@ module Actions
         middleware.use Actions::Middleware::ExecuteIfContentsChanged
 
         def plan(repository, smart_proxy, options = {})
-          action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed])
-          plan_action(SaveDistributionReferences, repository, smart_proxy, action.output[:post_sync_skipped] ? {} : action.output[:pulp_tasks], :contents_changed => options[:contents_changed])
+          sequence do
+            action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed])
+            plan_action(SaveDistributionReferences, repository, smart_proxy,
+                        action.output, :contents_changed => options[:contents_changed])
+          end
         end
 
         def invoke_external_task

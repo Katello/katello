@@ -101,6 +101,18 @@ module Katello
         []
       end
 
+      def index_content(full_index = false)
+        if repo.yum? && !repo.master?
+          index_linked_repo
+        else
+          repo.repository_type.content_types_to_index.each do |type|
+            type.model_class.import_for_repository(repo, full_index)
+          end
+          repo.repository_type.index_additional_data_proc&.call(repo)
+        end
+        true
+      end
+
       def external_url(force_https = false)
         uri = URI.parse(::SmartProxy.pulp_master.pulp_url)
         uri.scheme = (root.unprotected && !force_https) ? 'http' : 'https'

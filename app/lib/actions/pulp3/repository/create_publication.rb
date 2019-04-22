@@ -6,7 +6,7 @@ module Actions
         def plan(repository, smart_proxy, options)
           sequence do
             action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed], :options => options)
-            plan_action(SavePublication, repository, action.output[:post_sync_skipped] ? {} : action.output[:pulp_tasks], :contents_changed => options[:contents_changed])
+            plan_action(SavePublication, repository, action.output, :contents_changed => options[:contents_changed])
           end
         end
 

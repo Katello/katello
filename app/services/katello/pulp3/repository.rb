@@ -79,6 +79,14 @@ module Katello
         response
       end
 
+      def index_content(full_index = false)
+        repo.repository_type.content_types_to_index.each do |type|
+          type.model_class.import_for_pulp3_repository(repo, full_index)
+        end
+        repo.repository_type.index_additional_data_proc&.call(repo)
+        true
+      end
+
       def refresh_distributions
         path = repo.relative_path.sub(/^\//, '')
         dist_ref = distribution_reference(path)
@@ -135,9 +143,9 @@ module Katello
       end
 
       def lookup_version(href)
-        pulp3_api.repositories_versions_read(href)
-      rescue Zest::ApiError => e
-        raise e if e.code != 404
+        pulp3_api.repositories_versions_read href
+      rescue PulpcoreClient::ApiError => e
+        Rails.logger.error "Exception when calling RepositoriesApi->repositories_versions_read: #{e}"
         nil
       end
     end

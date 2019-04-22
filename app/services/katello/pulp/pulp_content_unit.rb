@@ -60,6 +60,7 @@ module Katello
       end
 
       def self.ids_for_repository(repo_id)
+        repo_id = Katello::Repository.find(repo_id).try(:pulp_id)
         criteria = {:type_ids => [const_get(:CONTENT_TYPE)],
                     :fields => {:unit => [], :association => ['unit_id']}}
         Katello.pulp_server.resources.repository.unit_search(repo_id, criteria).map { |i| i['unit_id'] }

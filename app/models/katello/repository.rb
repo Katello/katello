@@ -750,6 +750,13 @@ module Katello
       end
     end
 
+    def index_pulp3_content(full_index = false)
+      repository_type.content_types_to_index.each do |type|
+        type.model_class.import_for_pulp3_repository(self, full_index)
+      end
+      repository_type.index_additional_data_proc&.call(self)
+    end
+
     def index_content(full_index = false)
       if self.yum? && !self.master?
         index_linked_repo

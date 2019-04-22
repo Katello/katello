@@ -46,6 +46,8 @@ module Katello
 
         def sync
           [pulp3_api.remotes_file_file_sync(repo.remote_href, repository: repository_reference.repository_href)]
+        rescue PulpFileClient::ApiError => e
+          Rails.logger.error "Exception when calling RemotesApi->remotes_file_file_sync: #{e}"
         end
 
         def create_publication
@@ -90,6 +92,15 @@ module Katello
         rescue PulpFileClient::ApiError => e
           raise e if e.code != 404
           nil
+        end
+
+        def version_details
+          pulp3_api.repositories_versions_read(repo.version_href)
+        end
+
+        def content_list
+          PagedResults.fetch_paged_results(pulp3_api, :content_file_files_list,
+                                           ({repository_version: repo.version_href, page_size: SETTINGS[:katello][:pulp][:bulk_load_size]}))
         end
       end
     end

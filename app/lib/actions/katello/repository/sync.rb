@@ -45,7 +45,8 @@ module Actions
 
             contents_changed = skip_metadata_check || output[:contents_changed]
 
-            plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed, :full_index => skip_metadata_check)
+            index_args = {:contents_changed => contents_changed, :full_index => skip_metadata_check}
+            plan_action(Katello::Repository::IndexContent, repo, index_args)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
             plan_action(Katello::Repository::CorrectChecksum, repo)

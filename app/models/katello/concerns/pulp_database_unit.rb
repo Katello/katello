@@ -21,7 +21,7 @@ module Katello
       end
 
       def content_unit_class
-        "::Katello::Pulp::#{self.name.demodulize}".constantize
+        SmartProxy.pulp_master!.content_service(content_type)
       end
 
       def manage_repository_association
@@ -71,11 +71,6 @@ module Katello
             service.backend_data = unit
             service.update_model(model)
           end
-          if index_repository_association
-            units.map { |unit| unit.slice('_id', 'repository_memberships') }
-          else
-            units.count
-          end
         end
 
         if pulp_ids
@@ -88,7 +83,7 @@ module Katello
       end
 
       def import_for_repository(repository, force = false)
-        ids = content_unit_class.ids_for_repository(repository.pulp_id)
+        ids = content_unit_class.ids_for_repository(repository.id)
         # Rpms cannot change in Pulp so we do not index them if they are already present
         # in our database. Errata and Package Groups can change in Pulp, so we index
         # all of them in the repository on each sync.
@@ -99,6 +94,31 @@ module Katello
         end
         self.import_all(ids_to_import, :index_repository_association => false) if repository.content_view.default? || force
         self.sync_repository_associations(repository, :pulp_ids => ids) if self.manage_repository_association
+      end
+
+      def pulp3_import_all(repository = nil, options = {})
+        service_class = SmartProxy.pulp_master!.content_service(content_type)
+        process_block = lambda do |units|
+          units = units.as_json
+          units.each do |unit|
+            unit = unit.with_indifferent_access
+            model = Katello::Util::Support.active_record_retry do
+              self.where(:pulp_id => unit['_href']).first_or_create
+            end
+            service = service_class.new(model.pulp_id)
+            service.backend_data = unit
+            service.update_model(model)
+          end
+        end
+        if repository
+          results = content_unit_class.fetch_by_repo(repository, &process_block).flatten
+        end
+        results
+      end
+
+      def import_for_pulp3_repository(repository, force = false)
+        pulp_ids = self.pulp3_import_all(repository, :index_repository_association => false) if repository.content_view.default? || force
+        self.sync_repository_associations(repository, :pulp_ids => pulp_ids) if self.manage_repository_association
       end
 
       def unit_id_field
