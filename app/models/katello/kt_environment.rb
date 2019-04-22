@@ -1,7 +1,6 @@
 module Katello
   class KTEnvironment < Katello::Model
-    audited
-    has_associated_audits
+    audited :associations => [:content_facets]
     include ForemanTasks::Concerns::ActionSubject
     include Authorization::LifecycleEnvironment
 
