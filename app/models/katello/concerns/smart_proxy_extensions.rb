@@ -1,6 +1,8 @@
 require 'proxy_api'
 require 'proxy_api/pulp'
 require 'proxy_api/pulp_node'
+require 'pulp/v3/api'
+
 module Katello
   module Concerns
     module SmartProxyExtensions
@@ -114,14 +116,13 @@ module Katello
       end
 
       def pulp3_api
-        config = Zest::Configuration.new
+        client = Pulp::V3::Api.new
+        config = client.configure
         config.host = pulp3_host!
         config.username = 'admin'
         config.password = 'password'
         config.debugging = true
         config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
-        client = Zest::PulpApi.new
-        client.api_client.config = config
         client
       end
 

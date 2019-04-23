@@ -57,8 +57,12 @@ module Katello
 
       def create
         unless repository_reference
-          response = pulp3_api.repositories_create(Zest::Repository.new(:name => backend_object_name))
-          RepositoryReference.create!(:root_repository_id => repo.root_id, :content_view_id => repo.content_view.id, :repository_href => response._href)
+          response = pulp3_api.repositories_create(
+            name: backend_object_name)
+          RepositoryReference.create!(
+           root_repository_id: repo.root_id,
+           content_view_id: repo.content_view.id,
+           repository_href: response._href)
           response
         end
       end
