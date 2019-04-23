@@ -25,7 +25,6 @@ module ::Actions::Pulp3
 
     def test_sync
       sync_args = {:smart_proxy_id => @master.id, :pulp_id => @repo.pulp_id}
-      sync_args.merge!(:return_output => true)
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       refute_equal @repo.version_href, @repo_version_href

@@ -3,16 +3,17 @@ module Actions
     class PulpSelector < Actions::Base
       middleware.use Actions::Middleware::PropagateOutput
       def plan(backend_actions, repository, smart_proxy, *args)
-        return_action_output = args.dig(0, :return_output) || false
         found_action = PulpSelector.select(backend_actions, repository, smart_proxy)
         fail "Could not locate an action for type #{backend_type}" unless found_action
-        if return_action_output
-          sequence do
-            action_output = plan_action(found_action, repository, smart_proxy, *args).output
+        sequence do
+          action = plan_action(found_action, repository, smart_proxy, *args)
+          begin
+            action_output = action.output
+          rescue
+            plan_self
+          else
             plan_self(:subaction_output => action_output)
           end
-        else
-          plan_action(found_action, repository, smart_proxy, *args)
         end
       end
 

@@ -37,7 +37,6 @@ module Actions
           sequence do
             plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
             sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
-            sync_args.merge!(:return_output => true)
             sync_action = plan_action(PulpSelector,
                         [Actions::Pulp::Orchestration::Repository::Sync,
                          Actions::Pulp3::Orchestration::Repository::Sync],
