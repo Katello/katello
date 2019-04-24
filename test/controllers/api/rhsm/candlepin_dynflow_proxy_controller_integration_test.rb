@@ -14,12 +14,14 @@ module Katello
     end
 
     test 'params are not parsed in the controller' do
-      JSON.expects(:parse).never
       Api::Rhsm::CandlepinDynflowProxyController.any_instance.expects(:async_task).returns(nil)
       Resources::Candlepin::Consumer.expects(:get).returns({})
+      packages = [{"vendor" => "CentOS", "name" => "python-six", "epoch" => 0, "version" => "1.9.0", "release" => "2.el7", "arch" => "noarch"}]
 
-      put "/rhsm/consumers/#{@host.subscription_facet.uuid}/packages", params: {}.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
+      put "/rhsm/consumers/#{@host.subscription_facet.uuid}/packages", params: packages.to_json, headers: { 'CONTENT_TYPE' => 'application/json' }
 
+      assert_nil request.params['_json']
+      assert_equal 'text/plain', request.headers['CONTENT_TYPE']
       assert_response :success
     end
   end
