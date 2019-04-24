@@ -3,7 +3,7 @@ module Actions
     module Orchestration
       module Repository
         class Sync < Pulp3::Abstract
-          middleware.use Actions::Middleware::PropagateOutput
+          include Actions::Helpers::OutputPropagator
           def plan(repository, smart_proxy, options)
             sequence do
               action_output = plan_action(Actions::Pulp3::Repository::Sync, options).output
@@ -11,9 +11,6 @@ module Actions
               plan_action(Pulp3::Orchestration::Repository::GenerateMetadata, repository, smart_proxy, :force => true)
               plan_self(:subaction_output => action_output)
             end
-          end
-
-          def run
           end
         end
       end

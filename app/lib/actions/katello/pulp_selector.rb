@@ -1,24 +1,19 @@
 module Actions
   module Katello
     class PulpSelector < Actions::Base
-      middleware.use Actions::Middleware::PropagateOutput
+      include Actions::Helpers::OutputPropagator
       def plan(backend_actions, repository, smart_proxy, *args)
         found_action = PulpSelector.select(backend_actions, repository, smart_proxy)
         fail "Could not locate an action for type #{backend_type}" unless found_action
         sequence do
           action = plan_action(found_action, repository, smart_proxy, *args)
-          begin
+          if found_action.included_modules.include? Actions::Helpers::OutputPropagator
             action_output = action.output
-          rescue
-            plan_self
-          else
             plan_self(:subaction_output => action_output)
+          else
+            plan_self
           end
         end
-      end
-
-      def run
-        #Middleware propagates sub-action output to parent action.
       end
 
       def self.select(backend_actions, repository, smart_proxy)
