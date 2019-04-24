@@ -117,12 +117,13 @@ module Katello
 
       def pulp3_api
         client = Pulp::V3::Api.new
-        config = client.configure
-        config.host = pulp3_host!
-        config.username = 'admin'
-        config.password = 'password'
-        config.debugging = true
-        config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
+        client.configure.each do |config|
+          config.host = pulp3_host!
+          config.username = 'admin'
+          config.password = 'password'
+          config.debugging = true
+          config.logger = ::Foreman::Logging.logger('katello/pulp_rest')
+        end
         client
       end
 

@@ -23,11 +23,9 @@ module ::Actions::Pulp3
     end
 
     def test_update_ssl_validation
-      skip "TODO: blocked by https://pulp.plan.io/issues/4506"
-
-      assert @repo.root.verify_ssl_on_sync, "Respository verify_ssl_on_sync option was false."
+      refute @repo.root.verify_ssl_on_sync, "Respository verify_ssl_on_sync option was false."
       @repo.root.update_attributes(
-        verify_ssl_on_sync: false)
+        verify_ssl_on_sync: true)
 
       ForemanTasks.sync_task(
         ::Actions::Pulp3::Orchestration::Repository::Update,

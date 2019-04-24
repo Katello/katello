@@ -6,7 +6,7 @@ module Katello
     module V3
       class Api
         def configure
-          @config ||= PulpcoreClient.configure
+          [PulpcoreClient.configure, PulpFileClient.configure]
         end
 
         def repositories_api
@@ -25,8 +25,16 @@ module Katello
           @file_remotes_api ||= PulpFileClient::RemotesApi.new
         end
 
+        def tasks_api
+          @tasks_api ||= PulpcoreClient::TasksApi.new
+        end
+
         def repositories_create(data)
           repositories_api.repositories_create(data)
+        end
+
+        def repositories_update(href, data)
+          repositories_api.repositories_partial_update(href, data)
         end
 
         def repositories_list(args)
@@ -38,7 +46,7 @@ module Katello
         end
 
         def repositories_versions_create(href, data)
-          repositories_api.repositories_versions_create(repository_href, data)
+          repositories_api.repositories_versions_create(href, data)
         end
 
         def publishers_file_file_create(data)
@@ -49,8 +57,16 @@ module Katello
           file_publishers_api.publishers_file_file_list(opts)
         end
 
+        def publishers_file_file_update(href, data)
+          file_publishers_api.publishers_file_file_partial_update(href, data)
+        end
+
         def publishers_file_file_delete(href)
           file_publishers_api.publishers_file_file_delete(href)
+        end
+
+        def publishers_file_file_publish(href, data)
+          file_publishers_api.publishers_file_file_publish(href, data)
         end
 
         def remotes_file_file_list(opts)
@@ -65,12 +81,24 @@ module Katello
           file_remotes_api.remotes_file_file_delete(href)
         end
 
+        def distributions_create(data)
+          distributions_api.distributions_create(data)
+        end
+
         def distributions_list(opts)
           distributions_api.distributions_list(opts)
         end
 
+        def distributions_read(href)
+          distributions_api.distributions_read(href)
+        end
+
         def distributions_delete(href)
           distributions_api.distributions_delete(href)
+        end
+
+        def tasks_read(href)
+          tasks_api.tasks_read(href)
         end
       end
     end
