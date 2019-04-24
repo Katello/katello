@@ -1,3 +1,76 @@
+# 3.10.1 Belgian Tripel (2019-04-17)
+
+## Bug Fixes
+
+### Content Views
+ * Content View Version - ostree branch - generates error ([#26514](https://projects.theforeman.org/issues/26514), [9b4e10eb](https://github.com/Katello/katello.git/commit/9b4e10eb4e3fe88d662de54781cc683a17d40f60))
+
+### OSTree
+ * Syncing Red Hat Enterprise Linux Atomic Host Trees x86_64 from CDN gives undefined method `to_datetime' for nil:NilClass ([#26447](https://projects.theforeman.org/issues/26447), [cb71d1d9](https://github.com/Katello/hammer-cli-katello.git/commit/cb71d1d936ab345b715101f415e9c5abf5fd03b8), [e53d750f](https://github.com/Katello/katello.git/commit/e53d750fc691b2e63beef202c5e3749ab84fc616))
+
+### Repositories
+ * refresh repos should track async tasks ([#26005](https://projects.theforeman.org/issues/26005), [0f394f21](https://github.com/Katello/katello.git/commit/0f394f213503e7ece3857c564ea30296a3bea93e))
+ * source-url is not honored when syncing repos ([#25737](https://projects.theforeman.org/issues/25737), [6aaa50fb](https://github.com/Katello/katello.git/commit/6aaa50fb9755133c0baf790f77ea900271455d01))
+ * Syncing puppet repo gives Error: PLP0034: The distributor indicated a failed response when publishing repository ([#25729](https://projects.theforeman.org/issues/25729), [ce530681](https://github.com/Katello/katello.git/commit/ce530681401bbb388640d0c402f3fc4f02742eb0), [c2b76683](https://github.com/Katello/katello.git/commit/c2b766835d36cc05614864c37073ae852ebf01e0))
+ * Should expose suse client repos via http ([#25667](https://projects.theforeman.org/issues/25667), [768446a0](https://github.com/Katello/katello.git/commit/768446a055f94fbe5081be15dc15655bbb8b8744), [269d516c](https://github.com/Katello/katello.git/commit/269d516ced4adc230e67147b7c2a86cea46a2e0e))
+ * Upgrade step katello:upgrades:3.8:clear_checksum_type from 6.4 to 6.5 failed ([#25597](https://projects.theforeman.org/issues/25597), [899a61ce](https://github.com/Katello/katello.git/commit/899a61ce7439449b65e6cb3e89ed387e039dd25b))
+
+### Subscriptions
+ * scan_cdn task failed while enabling red hat repositories from cdn ([#25996](https://projects.theforeman.org/issues/25996), [3e7e1658](https://github.com/Katello/katello.git/commit/3e7e1658bbde267bed2623d42848e43965aabcdb))
+ * org delete sometimes fails on product/destroy.rb ([#25711](https://projects.theforeman.org/issues/25711), [e254baba](https://github.com/Katello/katello.git/commit/e254baba718bf1dbfd71178b03ae096719898357))
+ * view_subscription filter does not allow subscriptions to be viewed ([#25699](https://projects.theforeman.org/issues/25699), [bc33b8d4](https://github.com/Katello/katello.git/commit/bc33b8d447841d944e3c24209e60b914378da83f))
+ * Missing consumed and entitlements columns at subscriptions page ([#25574](https://projects.theforeman.org/issues/25574), [6e18d3d1](https://github.com/Katello/katello.git/commit/6e18d3d1c9e054468fa785752ec66861a6a24d39))
+ * Subscription details doesn't show in web UI ([#25573](https://projects.theforeman.org/issues/25573))
+ * Subscription detail page is empty ([#25515](https://projects.theforeman.org/issues/25515), [1ecd066b](https://github.com/Katello/katello.git/commit/1ecd066b7edab6db5903a1cfa282685130c43203))
+
+### Foreman Proxy Content
+ * Capsule sync failed with undefined method `backend_service' for nil:NilClass after upgrade ([#25954](https://projects.theforeman.org/issues/25954), [c3de1231](https://github.com/Katello/katello.git/commit/c3de1231755190bdd346808f0d6420bcc4f7f8f5))
+ * syncing a content view puppet environment to a smart proxy fails a refresh step ([#25830](https://projects.theforeman.org/issues/25830))
+
+### Provisioning
+ * undefined method `content_facet' for #<Hostgroup:0x00007f1fb2583b98> ([#25753](https://projects.theforeman.org/issues/25753), [5f581e95](https://github.com/Katello/katello.git/commit/5f581e9525027af47564d3558c54676dcb2b681b))
+
+### Hammer
+ * [Sync Plan] - Hammer Sync-Plan info does not show foreman_tasks_recurring_logic_id ([#25728](https://projects.theforeman.org/issues/25728), [d8db9a6c](https://github.com/Katello/hammer-cli-katello.git/commit/d8db9a6c690ce94a58ecd3f1539c63e74a7aeecf))
+
+### Client/Agent
+ * disable host-tools plugins where subman supports combined profile ([#25725](https://projects.theforeman.org/issues/25725), [1614be4c](https://github.com/Katello/katello-host-tools.git/commit/1614be4c645f927cc689aa54785f52181ab0ed95))
+
+### Sync Plans
+ * [Product]- Sync Plan Interval and timing is shown incorrectly in Product Details Page If Sync Interval is Custom Cron ([#25687](https://projects.theforeman.org/issues/25687), [5b5dfee7](https://github.com/Katello/katello.git/commit/5b5dfee71d1b54e217b0075f0dbc6c06dde5494c))
+ * organization changed from Default org to [object Object] on sync status page in satellite WebUI. ([#25632](https://projects.theforeman.org/issues/25632))
+
+### Inter Server Sync
+ * [RFE] The CV exported tar should have name respective to Content View name ([#25682](https://projects.theforeman.org/issues/25682), [e42198e3](https://github.com/Katello/hammer-cli-katello.git/commit/e42198e3578ea1527f219ab66ce9363a38f5d56a))
+ * Reimporting the existing CV version should have more refined validation message ([#25406](https://projects.theforeman.org/issues/25406), [a633c90b](https://github.com/Katello/katello.git/commit/a633c90b93638c11e3e65358a64a1ca7bff7b700))
+
+### Modularity
+ * UUID error on syncing repo with  module errata  ([#25676](https://projects.theforeman.org/issues/25676), [b3e38874](https://github.com/Katello/katello.git/commit/b3e388743286b320111f97487d7ad07cdb35c49f))
+
+### Installer
+ * upgrade-mongo-storage-engine is not restoring database ([#25634](https://projects.theforeman.org/issues/25634), [8879ed3d](https://github.com/Katello/katello-installer.git/commit/8879ed3d08f9673112a96e364a7ac5f188a495c7))
+
+### Hosts
+ * [Module Streams] - "Filter by Status:" is not working if user tried to use pagination ([#25627](https://projects.theforeman.org/issues/25627), [d64e347a](https://github.com/Katello/katello.git/commit/d64e347a82a9ac8ec2ad868590e8f5759ff87d7f))
+
+### Docker
+ * Docker repositories sync - Limit Sync Tags is ignored ([#25615](https://projects.theforeman.org/issues/25615), [bce600ed](https://github.com/Katello/katello.git/commit/bce600ed6c28acb0a9a279ed1d1ecbab3d869cac))
+
+### Activation Key
+ * Activation key search is broken ([#25599](https://projects.theforeman.org/issues/25599), [51044123](https://github.com/Katello/katello.git/commit/5104412333617709815ec814cabdc51c5df94f1e))
+
+### Web UI
+ * blank page on navigating from foreman to katello page ([#25572](https://projects.theforeman.org/issues/25572))
+
+### API
+ * switch to scoped_search based sorting ([#23512](https://projects.theforeman.org/issues/23512))
+
+### Other
+ * Error When Creating or Editing Host Group With Operating System ([#25917](https://projects.theforeman.org/issues/25917), [ee4dbaba](https://github.com/Katello/katello.git/commit/ee4dbaba78a3bc410eb7a83103b2b2a889d24e2f))
+ * 3.10 repo points to rc packages and beta pulp repo ([#25859](https://projects.theforeman.org/issues/25859))
+ * Restore DNF tracer plugin in host tools ([#25587](https://projects.theforeman.org/issues/25587), [8c1ebfbd](https://github.com/Katello/katello-host-tools.git/commit/8c1ebfbd54d660843a2d533bed29fcaa5e5c5adf))
+
+
 # 3.10.0 Belgian Tripel (2018-12-14)
 
 ## Features
