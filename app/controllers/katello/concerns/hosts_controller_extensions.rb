@@ -48,9 +48,9 @@ module Katello
                          .preload(:subscription_facet, :host_statuses, :operatingsystem,
                                   :applicable_rpms, :lifecycle_environment, :content_view)
               csv_response(@hosts,
-                [:name, :subscription_status_label, 'applicable_errata.security.size',
-                 'applicable_errata.bugfix.size', 'applicable_errata.enhancement.size',
-                 'applicable_rpms.size', :operatingsystem, :lifecycle_environment, :content_view,
+                [:name, :subscription_status_label, 'content_facet.installable_security_errata_count',
+                 'content_facet.installable_bugfix_errata_count', 'content_facet.installable_enhancement_errata_count',
+                 'content_facet.upgradable_rpm_count', :operatingsystem, :lifecycle_environment, :content_view,
                  'subscription_facet.registered_at', 'subscription_facet.last_checkin'],
                 ['Name', 'Subscription Status', 'Installable Updates - Security',
                  'Installable Updates - Bug Fixes', 'Installable Updates - Enhancements',
