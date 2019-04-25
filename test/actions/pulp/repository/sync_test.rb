@@ -8,7 +8,7 @@ module ::Actions::Pulp::Repository
     end
 
     def test_sync
-      ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).main_action
+      ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => repo.id).main_action
       assert_equal 8, ::Katello::Pulp::Rpm.ids_for_repository(repo.pulp_id).length
     end
   end
@@ -20,7 +20,7 @@ module ::Actions::Pulp::Repository
     end
 
     def test_sync
-      output = ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).output
+      output = ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => repo.id).output
       download_tasks = output["pulp_tasks"].select { |task| task["tags"].include?("pulp:action:download") }
       assert_equal "background", repo.download_policy
       assert_empty download_tasks

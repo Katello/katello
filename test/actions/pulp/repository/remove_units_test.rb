@@ -57,7 +57,7 @@ module ::Actions::Pulp::Repository
     def setup
       FactoryBot.create(:smart_proxy, :default_smart_proxy)
       super
-      ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id).main_action
+      ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => repo.id).main_action
     end
 
     def test_remove_with_repo

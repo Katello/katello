@@ -6,7 +6,7 @@ module ::Actions::Pulp3
 
     def setup
       @master = FactoryBot.create(:smart_proxy, :default_smart_proxy, :with_pulp3)
-      @repo = katello_repositories(:pulp3_file)
+      @repo = katello_repositories(:pulp3_file_1)
       create_repo(@repo, @master)
       ForemanTasks.sync_task(
           ::Actions::Katello::Repository::MetadataGenerate, @repo,
@@ -23,8 +23,14 @@ module ::Actions::Pulp3
       @repo_version_href = @repo.version_href
     end
 
+    def teardown
+      ForemanTasks.sync_task(
+          ::Actions::Pulp3::Orchestration::Repository::Delete, @repo, @master)
+      @repo.reload
+    end
+
     def test_sync
-      sync_args = {:smart_proxy_id => @master.id, :pulp_id => @repo.pulp_id}
+      sync_args = {:smart_proxy_id => @master.id, :repo_id => @repo.id}
       ForemanTasks.sync_task(::Actions::Pulp3::Orchestration::Repository::Sync, @repo, @master, sync_args)
       @repo.reload
       refute_equal @repo.version_href, @repo_version_href

@@ -4,17 +4,13 @@ module Actions
       class Sync < Pulp3::AbstractAsyncTask
         include Helpers::Presenter
 
-        input_format do
-          param :smart_proxy_id
-          param :pulp_id
-          param :task_id # In case we need just pair this action with existing sync task
-          param :source_url # allow overriding the feed URL
-          param :options # Pulp sync options
+        def plan(repo, smart_proxy, options = {})
+          plan_self(:repo_id => repo.id, :smart_proxy_id => smart_proxy.id, :options => options)
         end
 
         def invoke_external_task
-          repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
-          output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync
+          repo = ::Katello::Repository.find(input[:repo_id])
+          output[:pulp_tasks] = repo.backend_service(::SmartProxy.find(input[:smart_proxy_id])).sync
         end
 
         def external_task=(tasks)

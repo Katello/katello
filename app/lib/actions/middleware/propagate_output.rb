@@ -7,6 +7,7 @@ module Actions
           action.input['subaction_output'].each do |key, value|
             self.action.output[key] = value
           end
+          action.input.delete('subaction_output')
         end
       end
     end

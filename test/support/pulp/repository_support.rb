@@ -42,7 +42,7 @@ module Katello
       FactoryBot.create(:smart_proxy, :default_smart_proxy) unless ::SmartProxy.pulp_master
 
       ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync,
-                               pulp_id: repo.pulp_id
+                               repo_id: repo.id
                               )
     end
 

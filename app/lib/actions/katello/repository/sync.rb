@@ -16,7 +16,7 @@ module Actions
         #   of Katello and we just need to finish the rest of the orchestration
         # rubocop:disable MethodLength
         # rubocop:disable CyclomaticComplexity
-        def plan(repo, pulp_sync_task_id = nil, options = {})
+        def plan(repo, _pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
           source_url = options.fetch(:source_url, nil)
@@ -36,7 +36,7 @@ module Actions
 
           sequence do
             plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
-            sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
+            sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
             sync_action = plan_action(PulpSelector,
                         [Actions::Pulp::Orchestration::Repository::Sync,
                          Actions::Pulp3::Orchestration::Repository::Sync],

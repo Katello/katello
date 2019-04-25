@@ -28,7 +28,7 @@ module Katello
         end
 
         def sync_repo(repo)
-          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :pulp_id => repo.pulp_id)
+          ::ForemanTasks.sync_task(::Actions::Pulp::Repository::Sync, :repo_id => repo.id)
         end
 
         def create_repo(repo)
