@@ -124,12 +124,14 @@ module Katello
       end
 
       def update_distributions
-        paths.values.select { |prefix, _path| prefix == 'http' }.each do |path|
-          dists = lookup_distributions(base_path: path.sub(/^\//, ''))
-          delete_distribution(dists.first._href) if dists.first
+        paths.values.each do |path|
+          dist_refs = distribution_reference(path)
 
-          if repo.root.unprotected
-            create_distribution(prefix, path)
+          next unless dist_refs.first
+
+          if dist_refs.first.path.start_with?('http') and not repo.root.unprotected
+            delete_distribution(dist_refs.first._href)
+            dist_refs.first.destroy
           end
         end
       end

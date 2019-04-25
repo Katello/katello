@@ -36,8 +36,8 @@ module ::Actions::Pulp3
 
     def test_update_unprotected
       assert @repo.root.unprotected
-      refute_empty Katello::Pulp3::DistributionReference.where(
-        root_repository_id: @repo.root.id)
+      assert_equal 2, Katello::Pulp3::DistributionReference.where(
+        root_repository_id: @repo.root.id).count
 
       @repo.root.update_attributes(unprotected: false)
 
@@ -46,8 +46,12 @@ module ::Actions::Pulp3
         @repo,
         @master)
 
-      refute_empty Katello::Pulp3::DistributionReference.where(
+      dist_refs = Katello::Pulp3::DistributionReference.where(
           root_repository_id: @repo.root.id)
+
+      assert_equal 1, dist_refs.count
+
+      assert dist_refs.first.path.start_with?('https')
     end
   end
 end
