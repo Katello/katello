@@ -72,7 +72,7 @@
               {{ module.installed_profiles.join(", ") }}
             </td>
             <td bst-table-cell>
-              <div class="dropdown" ng-hide="!remoteExecutionPresent || denied('edit_content_hosts', contentHost)">
+              <div class="dropdown" ng-hide="!remoteExecutionPresent || denied('edit_hosts', host)">
                 <button class="btn btn-default dropdown-toggle" ng-disabled="$scope.working" type="button" id="dropdownMenu1" data-toggle="dropdown"> Actions
                   <span class="caret"></span>
                 </button>
