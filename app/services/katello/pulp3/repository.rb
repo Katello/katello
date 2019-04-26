@@ -88,10 +88,25 @@ module Katello
 
       def refresh_distributions
         paths.map do |prefix, path|
-          if distribution_reference(path)
-            update_distribution(path)
+          dist_ref = distribution_reference(path)
+          if dist_ref
+            if prefix == :http
+              if repo.root.unprotected
+                update_distribution(path)
+              else
+                result = delete_distribution(dist_ref.href)
+                dist_ref.destroy
+                result
+              end
+            else
+              update_distribution(path)
+            end
           else
-            create_distribution(prefix, path)
+            if prefix == :http
+              create_distribution(prefix, path) if repo.root.unprotected
+            else
+              create_distribution(prefix, path)
+            end
           end
         end
       end
@@ -101,11 +116,10 @@ module Katello
       end
 
       def paths
-        list = {
-          https: "https/#{repo.relative_path}"
+        {
+          https: "https/#{repo.relative_path}",
+          http: "http/#{repo.relative_path}"
         }
-        list['http'] = "http/#{repo.relative_path}" if repo.root.unprotected
-        list
       end
 
       private def delete_distribution(href)
@@ -124,16 +138,7 @@ module Katello
       end
 
       def update_distributions
-        paths.values.each do |path|
-          dist_refs = distribution_reference(path)
-
-          next unless dist_refs.first
-
-          if dist_refs.first.path.start_with?('http') and not repo.root.unprotected
-            delete_distribution(dist_refs.first._href)
-            dist_refs.first.destroy
-          end
-        end
+        refresh_distributions
       end
 
       def delete_distributions

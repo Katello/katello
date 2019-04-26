@@ -14,6 +14,7 @@ module ::Actions::Pulp3
         ::Actions::Katello::Repository::MetadataGenerate, @repo,
         repository_creation: true)
 
+      assert_equal 2, Katello::Pulp3::DistributionReference.where(root_repository_id: @repo.root.id).count
       @repo.root.update_attributes(
         verify_ssl_on_sync: false,
         ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
@@ -34,7 +35,7 @@ module ::Actions::Pulp3
         @master)
     end
 
-    def test_update_unprotected
+    def test_update_unset_unprotected
       assert @repo.root.unprotected
       assert_equal 2, Katello::Pulp3::DistributionReference.where(
         root_repository_id: @repo.root.id).count
@@ -47,11 +48,42 @@ module ::Actions::Pulp3
         @master)
 
       dist_refs = Katello::Pulp3::DistributionReference.where(
-          root_repository_id: @repo.root.id)
+         root_repository_id: @repo.root.id)
 
-      assert_equal 1, dist_refs.count
+      assert_equal 1, dist_refs.count, "Expected 1 distribution reference but found 2"
 
-      assert dist_refs.first.path.start_with?('https')
+      assert dist_refs.first.path.start_with?('https'),
+        "Distribution reference '#{dist_refs.first.path}' path didn't start with 'https'."
+    end
+
+    def test_update_set_unprotected
+      skip "TODO: blocked by https://pulp.plan.io/issues/4506"
+      @repo.root.update_attributes(unprotected: false)
+
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Update,
+        @repo,
+        @master)
+
+      dist_refs = Katello::Pulp3::DistributionReference.where(
+        root_repository_id: @repo.root.id)
+
+      assert_equal 1, dist_refs.count, "Expected only 1 distribution reference."
+      @repo.root.update_attributes(unprotected: true)
+
+      ForemanTasks.sync_task(
+        ::Actions::Pulp3::Orchestration::Repository::Update,
+        @repo,
+        @master)
+
+      dist_refs = Katello::Pulp3::DistributionReference.where(
+        root_repository_id: @repo.root.id)
+
+      ForemanTasks.sync_task(
+        ::Actions::Katello::Repository::MetadataGenerate, @repo)
+
+      assert_equal 2, dist_refs.count, "Expected a distribution reference for both https and http paths, but only found 1 #{dist_refs.first.path}."
+      assert dist_refs.sort_by(&:path).last.path.start_with?('https')
     end
   end
 end
