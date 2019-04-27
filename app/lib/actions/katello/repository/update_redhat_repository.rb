@@ -17,20 +17,12 @@ module Actions
 
         private
 
-        def path(repo)
-          path = repo.content.content_url
-          repo.root.substitutions.each do |key, value|
-            path = path.gsub("$#{key}", value) if value
-          end
-          path
-        end
-
         def relative_path(repo)
-          repo.generate_repo_path(path(repo))
+          repo.generate_repo_path(repo.generate_content_path)
         end
 
         def upstream_url(repo)
-          repo.product.repo_url(path(repo))
+          repo.product.repo_url(repo.generate_content_path)
         end
       end
     end
