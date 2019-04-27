@@ -355,7 +355,7 @@ module Katello
 
     def generate_repo_path(content_path = nil)
       _org, _content, content_path = (self.library_instance || self).relative_path.split("/", 3) if content_path.blank?
-
+      content_path = content_path.sub(%r|^/|, '')
       if self.environment
         cve = ContentViewEnvironment.where(:environment_id => self.environment,
                                            :content_view_id => self.content_view).first
