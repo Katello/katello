@@ -345,8 +345,8 @@ module Katello
       return task && task.main_action.pulp_task_id == pulp_task_id
     end
 
-    def generate_repo_path
-      _org, _content, content_path = (self.library_instance || self).relative_path.split("/", 3)
+    def generate_repo_path(content_path = nil)
+      _org, _content, content_path = (self.library_instance || self).relative_path.split("/", 3) if content_path.blank?
 
       if self.environment
         cve = ContentViewEnvironment.where(:environment_id => self.environment,

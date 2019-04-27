@@ -26,7 +26,7 @@ module Actions
         end
 
         def relative_path(repo)
-          ::Katello::Glue::Pulp::Repos.repo_path_from_content_path(repo.environment, path(repo))
+          repo.generate_repo_path(path(repo))
         end
 
         def upstream_url(repo)
