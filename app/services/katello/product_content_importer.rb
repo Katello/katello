@@ -106,8 +106,13 @@ module Katello
 
       new_url = prod_content_json[:content][:contentUrl]
       if content.content_url != new_url
-        attrs_to_update[:content_url] = new_url
-        @content_url_updated << content
+        if content.can_update_to_url?(new_url)
+          attrs_to_update[:content_url] = new_url
+          @content_url_updated << content
+        else
+          Rails.logger.warn(_("Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].") %
+                      { content: content.inspect, content_url: content.content_url, new_url: new_url })
+        end
       end
       content.update_attributes!(attrs_to_update) unless attrs_to_update.blank?
     end

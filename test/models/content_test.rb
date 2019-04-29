@@ -50,5 +50,20 @@ module Katello
       assert contents.size > 0
       assert_equal contents.size, org_products.flatten.flatten.size
     end
+
+    def test_can_update_url
+      fixtures = [
+        { from: '/content/rhel/x64', to: '/content/foo', expected_result: true },
+        { from: '/content/rhel/$aaa/$bbb/', to: '/content/foo/$bbb/$aaa', expected_result: true },
+        { from: '/content/rhel/$aaa/$bbb', to: '$aaa/content/$bbb', expected_result: true },
+        { from: '/content/rhel/$aaa', to: '/content/foo', expected_result: false },
+        { from: '/content/rhel/$aaa', to: '/content/$bbb', expected_result: false }
+      ]
+      fixtures.each do |fixture|
+        @content.content_url = fixture[:from]
+        fail_message = "comparing #{fixture[:from]} to #{fixture[:to]}. expected_result = #{fixture[:expected_result]}"
+        assert_equal(fixture[:expected_result], @content.can_update_to_url?(fixture[:to]), fail_message)
+      end
+    end
   end
 end
