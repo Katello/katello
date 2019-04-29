@@ -4,10 +4,6 @@ module Actions
       class UpdateContentUrls < Actions::EntryAction
         def plan(content_to_update)
           concurrence do
-            content_to_update = content_to_update.select do |content|
-
-            end
-
             content_to_update.flat_map(&:repositories).each do |repo|
               plan_action(Katello::Repository::UpdateRedhatRepository, repo)
             end
