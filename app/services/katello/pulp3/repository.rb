@@ -133,6 +133,9 @@ module Katello
           {}
         end
       end
+
+      def lookup_version(href)
+        pulp3_api.repositories_versions_read(href)
     end
   end
 end
