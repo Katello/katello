@@ -2,8 +2,9 @@ module Actions
   module Pulp3
     module Repository
       class SavePublication < Pulp3::Abstract
-        def plan(repository, tasks)
-          plan_self(:repository_id => repository.id, :tasks => tasks)
+        middleware.use Actions::Middleware::ExecuteIfContentsChanged
+        def plan(repository, tasks, options = {})
+          plan_self(:repository_id => repository.id, :tasks => tasks, :contents_changed => options[:contents_changed])
         end
 
         def run
