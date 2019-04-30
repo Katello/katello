@@ -133,6 +133,13 @@ module Katello
           {}
         end
       end
+
+      def lookup_version(href)
+        pulp3_api.repositories_versions_read(href)
+      rescue Zest::ApiError => e
+        raise e if e.code != 404
+        nil
+      end
     end
   end
 end

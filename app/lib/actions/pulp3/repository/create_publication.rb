@@ -2,10 +2,11 @@ module Actions
   module Pulp3
     module Repository
       class CreatePublication < Pulp3::AbstractAsyncTask
+        middleware.use Actions::Middleware::ExecuteIfContentsChanged
         def plan(repository, smart_proxy, options)
           sequence do
-            action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :options => options)
-            plan_action(SavePublication, repository, action.output[:pulp_tasks])
+            action = plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id, :contents_changed => options[:contents_changed], :options => options)
+            plan_action(SavePublication, repository, action.output[:post_sync_skipped] ? {} : action.output[:pulp_tasks], :contents_changed => options[:contents_changed])
           end
         end
 
