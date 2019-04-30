@@ -16,7 +16,7 @@ module Actions
         #   of Katello and we just need to finish the rest of the orchestration
         # rubocop:disable MethodLength
         # rubocop:disable CyclomaticComplexity
-        def plan(repo, pulp_sync_task_id = nil, options = {})
+        def plan(repo, _pulp_sync_task_id = nil, options = {})
           action_subject(repo)
 
           source_url = options.fetch(:source_url, nil)
@@ -35,13 +35,16 @@ module Actions
           fail ::Katello::Errors::InvalidActionOptionError, _("Cannot skip metadata check on non-yum repositories.") if skip_metadata_check && !repo.yum?
 
           sequence do
-            # clear yum metadata if validate_contents is on (to avoid metadata corruption issues)
             plan_action(Pulp::Repository::RemoveUnits, :repo_id => repo.id, :content_unit_type => ::Katello::YumMetadataFile::CONTENT_TYPE) if validate_contents
-
-            sync_args = {:pulp_id => repo.pulp_id, :task_id => pulp_sync_task_id, :source_url => source_url, :options => pulp_sync_options}
-            output = plan_action(Pulp::Repository::Sync, sync_args).output
+            sync_args = {:smart_proxy_id => SmartProxy.pulp_master.id, :repo_id => repo.id, :source_url => source_url, :options => pulp_sync_options}
+            sync_action = plan_action(PulpSelector,
+                        [Actions::Pulp::Orchestration::Repository::Sync,
+                         Actions::Pulp3::Orchestration::Repository::Sync],
+                        repo, SmartProxy.pulp_master, sync_args)
+            output = sync_action.output
 
             contents_changed = skip_metadata_check || output[:contents_changed]
+
             plan_action(Katello::Repository::IndexContent, :id => repo.id, :contents_changed => contents_changed, :full_index => skip_metadata_check)
             plan_action(Katello::Foreman::ContentUpdate, repo.environment, repo.content_view, repo)
             plan_action(Katello::Repository::FetchPxeFiles, :id => repo.id)
@@ -75,7 +78,9 @@ module Actions
         end
 
         def presenter
-          Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Repository::Sync))
+          found = all_planned_actions(Pulp::Repository::Sync)
+          found = all_planned_actions(Pulp3::Repository::Sync) if found.empty?
+          Helpers::Presenter::Delegated.new(self, found)
         end
 
         def pulp_task_id

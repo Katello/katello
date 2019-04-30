@@ -51,5 +51,10 @@ module ::Actions::Katello
         plan_action(action, [Pulp2TestAction], repo, smart_proxy)
       end
     end
+
+    def test_select_method
+      smart_proxy.stubs(:pulp3_support?).returns(true)
+      assert_equal Pulp3TestAction, Actions::Katello::PulpSelector.select([Pulp2TestAction, Pulp3TestAction], repo, smart_proxy)
+    end
   end
 end

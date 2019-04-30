@@ -19,7 +19,7 @@ module ::Actions::Pulp::Repository
       task2         = task1.merge(task_progress_hash(6, 8))
       task3         = task1.merge(task_progress_hash(0, 8)).merge(task_finished_hash)
 
-      plan_action action, pulp_id: @repo.pulp_id
+      plan_action action, repo_id: @repo.id
       action = run_action action do |actn|
         stub_task_poll actn, task1, task2, task3
       end

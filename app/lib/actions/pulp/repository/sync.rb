@@ -5,24 +5,18 @@ module Actions
         include Helpers::Presenter
 
         input_format do
-          param :pulp_id
-          param :task_id # In case we need just pair this action with existing sync task
+          param :repo_id
           param :source_url # allow overriding the feed URL
           param :options # Pulp sync options
         end
 
         def invoke_external_task
-          if input[:task_id]
-            # don't initiate, just load the existing task
-            task_resource.poll(input[:task_id])
-          else
-            overrides = {}
-            overrides[:feed] = input[:source_url] if input[:source_url]
-            overrides[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
-            overrides[:options] = input[:options] if input[:options]
-            repo = ::Katello::Repository.find_by(:pulp_id => input[:pulp_id])
-            output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync(overrides)
-          end
+          overrides = {}
+          overrides[:feed] = input[:source_url] if input[:source_url]
+          overrides[:validate] = !(SETTINGS[:katello][:pulp][:skip_checksum_validation])
+          overrides[:options] = input[:options] if input[:options]
+          repo = ::Katello::Repository.find(input[:repo_id])
+          output[:pulp_tasks] = repo.backend_service(::SmartProxy.pulp_master).sync(overrides)
         end
 
         def finalize
@@ -72,7 +66,7 @@ module Actions
         end
 
         def presenter
-          repo = ::Katello::Repository.where(:pulp_id => input['pulp_id']).first
+          repo = ::Katello::Repository.find(input['repo_id'])
 
           if repo.try(:puppet?)
             Presenters::PuppetPresenter.new(self)

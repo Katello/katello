@@ -18,6 +18,7 @@ module Katello
       @on_demand_repo = katello_repositories(:fedora_17_x86_64)
       @puppet_repo = katello_repositories(:p_forge)
       @docker_repo = katello_repositories(:busybox)
+      @smart_proxy = smart_proxies(:one)
     end
 
     def permissions
@@ -33,6 +34,7 @@ module Katello
       Product.any_instance.stubs(:certificate).returns(nil)
       Product.any_instance.stubs(:key).returns(nil)
       Resources::CDN::CdnResource.stubs(:ca_file_contents).returns(:nil)
+      SmartProxy.stubs(:pulp_master).returns @smart_proxy
     end
 
     def setup

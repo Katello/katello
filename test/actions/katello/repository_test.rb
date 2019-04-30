@@ -22,6 +22,7 @@ module ::Actions::Katello::Repository
       set_user
       ::Katello::Product.any_instance.stubs(:certificate).returns(nil)
       ::Katello::Product.any_instance.stubs(:key).returns(nil)
+      SmartProxy.stubs(:pulp_master).returns(proxy)
     end
   end
 
@@ -112,8 +113,7 @@ module ::Actions::Katello::Repository
       plan_action action, in_use_repository
       assert_action_planed_with action, Actions::Katello::PulpSelector,
         [pulp_action_class, pulp3_action_class],
-        in_use_repository,
-        nil
+        in_use_repository, proxy
 
       refute_action_planed action, ::Actions::Katello::Product::ContentDestroy
     end
@@ -324,15 +324,15 @@ module ::Actions::Katello::Repository
 
   class SyncTest < TestBase
     let(:action_class) { ::Actions::Katello::Repository::Sync }
-    let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
+    let(:pulp2_action_class) { ::Actions::Pulp::Orchestration::Repository::Sync }
+    let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Sync }
 
     it 'plans' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository
-
-      assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: nil, source_url: nil, options: {})
+      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+                                smart_proxy_id: proxy.id, repo_id: repository.id, source_url: nil, options: {})
       assert_action_planed action, ::Actions::Katello::Repository::IndexContent
       assert_action_planed action, ::Actions::Pulp::Repository::RegenerateApplicability
       assert_action_planed action, ::Actions::Katello::Repository::ImportApplicability
@@ -352,22 +352,13 @@ module ::Actions::Katello::Repository
       refute_action_planed action, ::Actions::Katello::Repository::ImportApplicability
     end
 
-    it 'passes the task id to pulp sync action when provided' do
-      action = create_action action_class
-      action.stubs(:action_subject).with(repository)
-      plan_action action, repository, '123'
-
-      assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: '123', source_url: nil, options: {})
-    end
-
     it 'passes the source URL to pulp sync action when provided' do
       action = create_action action_class
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, nil, :source_url => 'file:///tmp/'
 
-      assert_action_planed_with(action, pulp_action_class,
-                                pulp_id: repository.pulp_id, task_id: nil,
+      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+                                smart_proxy_id: proxy.id, repo_id: repository.id,
                                 source_url: 'file:///tmp/', options: {})
     end
 
@@ -376,8 +367,9 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, nil, :skip_metadata_check => true
 
-      assert_action_planed_with(action, pulp_action_class, pulp_id: repository.pulp_id,
-                                task_id: nil, source_url: nil, options: {force_full: true})
+      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+                                smart_proxy_id: proxy.id, repo_id: repository.id,
+                                source_url: nil, options: {force_full: true})
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
     end
 
@@ -386,22 +378,23 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
       plan_action action, repository, nil, :validate_contents => true
 
-      assert_action_planed_with(action, pulp_action_class, source_url: nil,
-                                pulp_id: repository.pulp_id, task_id: nil,
-                                options: {download_policy: 'on_demand', force_full: true})
+      assert_action_planed_with(action, ::Actions::Katello::PulpSelector, [pulp2_action_class, pulp3_action_class], repository, proxy,
+                                smart_proxy_id: proxy.id, repo_id: repository.id,
+                                source_url: nil, options: {download_policy: 'on_demand', force_full: true})
+
       assert_action_planed_with(action, Actions::Pulp::Repository::Download, pulp_id: repository.pulp_id,
                                 options: {:verify_all_units => true})
       assert_action_planed_with(action, Actions::Katello::Repository::MetadataGenerate, repository, :force => true)
     end
 
     describe 'progress' do
+      let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
+      let(:pulp_action) { fixture_action(pulp_action_class, input: {repo_id: repository.id}, output: fixture_variant) }
       let :action do
         create_action(action_class).tap do |action|
-          action.stubs(planned_actions: [pulp_action])
+          action.stubs(all_planned_actions: [pulp_action])
         end
       end
-
-      let(:pulp_action) { fixture_action(pulp_action_class, input: {pulp_id: repository.pulp_id}, output: fixture_variant) }
 
       describe 'successfully synchronized' do
         let(:fixture_variant) { :success }

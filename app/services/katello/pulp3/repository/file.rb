@@ -25,7 +25,7 @@ module Katello
         end
 
         def sync
-          pulp3_api.remotes_file_file_sync(repo.remote_href, repository: repository_reference.repository_href)
+          [pulp3_api.remotes_file_file_sync(repo.remote_href, repository: repository_reference.repository_href)]
         end
 
         def create_publisher
