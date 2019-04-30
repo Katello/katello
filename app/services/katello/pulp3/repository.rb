@@ -80,10 +80,25 @@ module Katello
 
       def refresh_distributions
         paths.map do |prefix, path|
-          if distribution_reference(path)
-            update_distribution(path)
+          dist_ref = distribution_reference(path)
+          if dist_ref
+            if prefix == :http
+              if repo.root.unprotected
+                update_distribution(path)
+              else
+                result = delete_distribution(dist_ref.href)
+                dist_ref.destroy
+                result
+              end
+            else
+              update_distribution(path)
+            end
           else
-            create_distribution(prefix, path)
+            if prefix == :http
+              create_distribution(prefix, path) if repo.root.unprotected
+            else
+              create_distribution(prefix, path)
+            end
           end
         end
       end
@@ -168,6 +183,13 @@ module Katello
         else
           {}
         end
+      end
+
+      def lookup_version(href)
+        pulp3_api.repositories_versions_read(href)
+      rescue Zest::ApiError => e
+        raise e if e.code != 404
+        nil
       end
     end
   end

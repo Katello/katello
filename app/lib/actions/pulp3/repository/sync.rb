@@ -14,7 +14,6 @@ module Actions
         end
 
         def external_task=(tasks)
-          output[:contents_changed] = false
           output[:create_version] = true
           super
         end
