@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: delete
-    uri: http://192.168.121.249/pulp/api/v3/repositories/81947dd2-4b70-4887-a5b2-9a0600b63db7/
+    uri: http://192.168.121.225/pulp/api/v3/repositories/20032689-500b-4c94-a2a3-876d2803304a/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:50:57 GMT
+      - Wed, 01 May 2019 17:40:53 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -41,19 +41,19 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2EwZTVkNTZlLWQ5ZGYtNDNl
-        Ny05ODY3LTQ0NGRiN2M0YTFlNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzkyMDFiNzc4LTNkNGItNGU0
+        Ny1hZTA5LTgwMDEwYTYzNWQxZS8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:50:57 GMT
+  recorded_at: Wed, 01 May 2019 17:40:53 GMT
 - request:
     method: delete
-    uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/64faf37a-0c32-443f-a403-1f826539ec95/
+    uri: http://192.168.121.225/pulp/api/v3/publishers/file/file/758e2e9c-cb58-41f5-9dd6-fecad0cecae9/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
       Content-Type:
       - application/json
       Accept:
@@ -70,7 +70,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:50:57 GMT
+      - Wed, 01 May 2019 17:40:53 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -86,19 +86,19 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2JmMGEyNTYyLTBlNjAtNDM4
-        YS1iOGQwLWVmYjExZWIxYjY4Ni8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzNlZGE4Mjg0LTE3YjAtNDc4
+        Ni1hMGVlLTRmZDBhNDIzYzZlNi8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:50:57 GMT
+  recorded_at: Wed, 01 May 2019 17:40:53 GMT
 - request:
     method: delete
-    uri: http://192.168.121.249/pulp/api/v3/remotes/file/file/458efaae-9493-4dcc-94bb-62556ba6e010/
+    uri: http://192.168.121.225/pulp/api/v3/remotes/file/file/6728925a-62c1-4d4a-abf8-8cd67e6b249e/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
       Content-Type:
       - application/json
       Accept:
@@ -115,7 +115,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:50:58 GMT
+      - Wed, 01 May 2019 17:40:53 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -131,19 +131,19 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I3OTM2MDNiLTM3ZTQtNDdk
-        Mi1iYjg5LWYzNTMxOWYwNGRiNi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M1YWQ1ZWVkLWYxNDItNGI1
+        Zi04YjM5LTNjZGJiZjA4MmM4Ni8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:50:58 GMT
+  recorded_at: Wed, 01 May 2019 17:40:53 GMT
 - request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/distributions/72a9ac00-9b96-4f31-85c5-3a7633ab93f5/
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/distributions/?base_path=https//Default_Organization/library/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -154,37 +154,41 @@ http_interactions:
       - ''
   response:
     status:
-      code: 204
-      message: No Content
+      code: 200
+      message: OK
     headers:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:50:58 GMT
+      - Wed, 01 May 2019 17:40:53 GMT
+      Content-Type:
+      - application/json
       Content-Length:
-      - '0'
+      - '52'
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
-      base64_string: ''
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:50:58 GMT
+  recorded_at: Wed, 01 May 2019 17:40:53 GMT
 - request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/distributions/18db8e08-e16c-408b-a6fb-c9fa0d474ea3/
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/distributions/?base_path=http//Default_Organization/library/My_Files
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -195,31 +199,35 @@ http_interactions:
       - ''
   response:
     status:
-      code: 204
-      message: No Content
+      code: 200
+      message: OK
     headers:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:50:58 GMT
+      - Wed, 01 May 2019 17:40:53 GMT
+      Content-Type:
+      - application/json
       Content-Length:
-      - '0'
+      - '52'
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
-      base64_string: ''
+      base64_string: |
+        eyJjb3VudCI6MCwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOltdfQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:50:58 GMT
+  recorded_at: Wed, 01 May 2019 17:40:53 GMT
 - request:
     method: post
-    uri: http://192.168.121.249/pulp/api/v3/repositories/adcd2e3b-f52f-4dbc-94c4-b50778d76f56/versions/
+    uri: http://192.168.121.225/pulp/api/v3/repositories/1345d48b-e380-40d9-847d-e7920295601f/versions/
     body:
       encoding: UTF-8
       base64_string: 'e30=
@@ -227,7 +235,7 @@ http_interactions:
 '
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -244,7 +252,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:00 GMT
+      - Wed, 01 May 2019 17:40:55 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -260,19 +268,19 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzAzYjVkOGVlLTg3NDEtNDZi
-        Ni05NDc4LWFkNDg2Y2M2NWUwMi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE1OTc2YWE2LTVmMzctNGI4
+        ZC1iMDNlLTUxN2FiNTU2N2JjMC8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:00 GMT
+  recorded_at: Wed, 01 May 2019 17:40:55 GMT
 - request:
     method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/03b5d8ee-8741-46b6-9478-ad486cc65e02/
+    uri: http://192.168.121.225/pulp/api/v3/tasks/15976aa6-5f37-4b8d-b03e-517ab5567bc0/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -289,7 +297,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:00 GMT
+      - Wed, 01 May 2019 17:40:55 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -305,32 +313,31 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wM2I1ZDhlZS04NzQxLTQ2
-        YjYtOTQ3OC1hZDQ4NmNjNjVlMDIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjUxOjAwLjA5NDc3M1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8xNTk3NmFhNi01ZjM3LTRi
+        OGQtYjAzZS01MTdhYjU1NjdiYzAvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE3OjQwOjU1LjE0MDk5M1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
-        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjUxOjAwLjE5NTU5N1oi
-        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTE6MDAuMjUwNjczWiIs
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE3OjQwOjU1LjI1MjgzOVoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMDFUMTc6NDA6NTUuMzE3NTI2WiIs
         Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
-        L3B1bHAvYXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4MC00MmE2LTg5ZTkt
-        MDE2ZmEyYjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0OS00YTVmLTllMjct
+        Nzc4ZWNhM2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
         W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
-        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2FkY2QyZTNiLWY1MmYtNGRi
-        Yy05NGM0LWI1MDc3OGQ3NmY1Ni92ZXJzaW9ucy8xLyJdfQ==
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzEzNDVkNDhiLWUzODAtNDBk
+        OS04NDdkLWU3OTIwMjk1NjAxZi92ZXJzaW9ucy8xLyJdfQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:00 GMT
+  recorded_at: Wed, 01 May 2019 17:40:55 GMT
 - request:
     method: post
-    uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/c13dea99-42e1-499e-aa7a-1af606354c03/publish/
+    uri: http://192.168.121.225/pulp/api/v3/publications/file/file/
     body:
       encoding: UTF-8
       base64_string: |
-        eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2FkY2QyZTNiLWY1MmYtNGRiYy05NGM0LWI1MDc3OGQ3NmY1Ni92ZXJz
-        aW9ucy8xLyJ9
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy8xMzQ1
+        ZDQ4Yi1lMzgwLTQwZDktODQ3ZC1lNzkyMDI5NTYwMWYvIn0=
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
       Content-Type:
       - application/json
       Accept:
@@ -347,7 +354,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:00 GMT
+      - Wed, 01 May 2019 17:40:55 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -357,25 +364,25 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
-      - POST, OPTIONS
+      - GET, POST, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzYwZDA4ZDQwLWYzOGEtNDA0
-        NS04YmEwLTgxYzVlNGRkN2QxMi8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2IyZTI5NDQ4LTZiNzktNGFm
+        Mi04OTIzLTBhMGM1NWY0OTczNy8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:00 GMT
+  recorded_at: Wed, 01 May 2019 17:40:55 GMT
 - request:
     method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/60d08d40-f38a-4045-8ba0-81c5e4dd7d12/
+    uri: http://192.168.121.225/pulp/api/v3/tasks/b2e29448-6b79-4af2-8923-0a0c55f49737/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -392,11 +399,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:00 GMT
+      - Wed, 01 May 2019 17:40:55 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '512'
+      - '522'
       Connection:
       - keep-alive
       Vary:
@@ -408,34 +415,79 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82MGQwOGQ0MC1mMzhhLTQw
-        NDUtOGJhMC04MWM1ZTRkZDdkMTIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjUxOjAwLjQ3ODIzNloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9iMmUyOTQ0OC02Yjc5LTRh
+        ZjItODkyMy0wYTBjNTVmNDk3MzcvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE3OjQwOjU1LjU4MjY3NloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjUxOjAwLjU3NTMwNVoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTE6MDAuNjM2OTcyWiIsIm5vbl9m
+        YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE3OjQwOjU1LjY5MTI2NFoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDUtMDFUMTc6NDA6NTUuNzQ2MjMzWiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4MC00MmE2LTg5ZTktMDE2ZmEy
-        YjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgwZi00NDUzLWEzZGItMGQ1YjI0
+        MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvcHVibGljYXRpb25zLzQ2YjE1YjJiLTVhN2QtNDRiZi1hNzhl
-        LTFlMDdkYmRlMDRiNy8iXX0=
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9iMTUwNTdmYi0xMjM0
+        LTRmOWMtODgwZi0yMzcyODA5ZDA3MjQvIl19
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:00 GMT
+  recorded_at: Wed, 01 May 2019 17:40:55 GMT
 - request:
     method: post
-    uri: http://192.168.121.249/pulp/api/v3/distributions/
+    uri: http://192.168.121.225/pulp/api/v3/distributions/
     body:
       encoding: UTF-8
       base64_string: |
-        eyJiYXNlX3BhdGgiOiJodHRwcy8vRGVmYXVsdF9Pcmdhbml6YXRpb24vbGli
-        cmFyeS9NeV9GaWxlcyIsInB1YmxpY2F0aW9uIjoiL3B1bHAvYXBpL3YzL3B1
-        YmxpY2F0aW9ucy80NmIxNWIyYi01YTdkLTQ0YmYtYTc4ZS0xZTA3ZGJkZTA0
-        YjcvIiwibmFtZSI6Imh0dHBzX29yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVz
-        In0=
+        eyJuYW1lIjoiaHR0cHNfb3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMiLCJw
+        dWJsaWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvZmlsZS9m
+        aWxlL2IxNTA1N2ZiLTEyMzQtNGY5Yy04ODBmLTIzNzI4MDlkMDcyNC8iLCJi
+        YXNlX3BhdGgiOiIvRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFyeS9NeV9G
+        aWxlcyJ9
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 17:40:55 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '65'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJiYXNlX3BhdGgiOlsiUmVsYXRpdmUgcGF0aCBjYW5ub3QgYmVnaW4gb3Ig
+        ZW5kIHdpdGggc2xhc2hlcy4iXX0=
+    http_version: 
+  recorded_at: Wed, 01 May 2019 17:40:55 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/repositories/1345d48b-e380-40d9-847d-e7920295601f/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -452,7 +504,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:00 GMT
+      - Wed, 01 May 2019 18:07:48 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -462,29 +514,25 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
-      - GET, POST, DELETE, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzU5M2E5NzFiLTY3MjUtNDc1
-        Zi04MjVlLTRhNTIxODQ0OTg5ZC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzE5MzNkYzBkLTA5NzMtNDg3
+        MC05NGNiLTk0ZGM3OTUxN2ZhZS8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:00 GMT
+  recorded_at: Wed, 01 May 2019 18:07:48 GMT
 - request:
-    method: post
-    uri: http://192.168.121.249/pulp/api/v3/distributions/
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/publishers/file/file/e791313b-dd32-40a8-858f-b8135ce9f07f/
     body:
-      encoding: UTF-8
-      base64_string: |
-        eyJiYXNlX3BhdGgiOiJodHRwLy9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJy
-        YXJ5L015X0ZpbGVzIiwicHVibGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVi
-        bGljYXRpb25zLzQ2YjE1YjJiLTVhN2QtNDRiZi1hNzhlLTFlMDdkYmRlMDRi
-        Ny8iLCJuYW1lIjoiaHR0cF9vcmdfZGVmYXVsdF9sYWJlbC1NeV9GaWxlcyJ9
+      encoding: US-ASCII
+      base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
       Content-Type:
       - application/json
       Accept:
@@ -501,7 +549,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
+      - Wed, 01 May 2019 18:07:49 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -511,25 +559,117 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
-      - GET, POST, DELETE, HEAD, OPTIONS
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBlM2Q1Mjg4LTViNzQtNDVi
-        Mi1hNmI3LTViMzg3M2NkYmFiNC8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzc4OTRkNjUxLTQzZjMtNGEw
+        ZS04NzQzLWM5MTE3N2Y1NjdiZC8ifQ==
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
+  recorded_at: Wed, 01 May 2019 18:07:49 GMT
 - request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/593a971b-6725-475f-825e-4a521844989d/
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/remotes/file/file/5a7c4eb6-367b-4ec4-a69a-5982c93cfdd1/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:07:49 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E2MjM3ZjhkLTEwMTgtNDlk
+        Zi1hMDhmLTE5ZjAwYjE0NTMwNi8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:07:49 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/repositories/cbe5c417-5f56-43a4-934d-cd62a07dbb63/versions/
+    body:
+      encoding: UTF-8
+      base64_string: 'e30=
+
+'
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:07:51 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzg3YmNiYThjLTZhY2YtNDcw
+        My1hMDlhLTAxZjgwMzA2N2M0NS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:07:51 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/87bcba8c-6acf-4703-a09a-01f803067c45/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -546,11 +686,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
+      - Wed, 01 May 2019 18:07:51 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '513'
+      - '502'
       Connection:
       - keep-alive
       Vary:
@@ -562,29 +702,368 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy81OTNhOTcxYi02NzI1LTQ3
-        NWYtODI1ZS00YTUyMTg0NDk4OWQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjUxOjAwLjg0ODYyN1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MuZGlzdHJpYnV0aW9uLmNyZWF0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjUxOjAwLjk2NjYzNFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTE6MDEuMTg5MzkzWiIsIm5vbl9m
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy84N2JjYmE4Yy02YWNmLTQ3
+        MDMtYTA5YS0wMWY4MDMwNjdjNDUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjA3OjUxLjA5NjgxN1oiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLnJlcG9zaXRvcnkuYWRkX2FuZF9yZW1vdmUi
+        LCJzdGFydGVkX2F0IjoiMjAxOS0wNS0wMVQxODowNzo1MS4yNTA3NjFaIiwi
+        ZmluaXNoZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJv
+        ciI6bnVsbCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvMGNkNzc0
+        NmMtYzc0OS00YTVmLTllMjctNzc4ZWNhM2ZiYzhhLyIsInBhcmVudCI6bnVs
+        bCwic3Bhd25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJj
+        cmVhdGVkX3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVz
+        L2NiZTVjNDE3LTVmNTYtNDNhNC05MzRkLWNkNjJhMDdkYmI2My92ZXJzaW9u
+        cy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:07:51 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/87bcba8c-6acf-4703-a09a-01f803067c45/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:07:51 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '529'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy84N2JjYmE4Yy02YWNmLTQ3
+        MDMtYTA5YS0wMWY4MDMwNjdjNDUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjA3OjUxLjA5NjgxN1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjA3OjUxLjI1MDc2MVoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MDc6NTEuMzE0MTYyWiIs
+        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0OS00YTVmLTllMjct
+        Nzc4ZWNhM2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2NiZTVjNDE3LTVmNTYtNDNh
+        NC05MzRkLWNkNjJhMDdkYmI2My92ZXJzaW9ucy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:07:51 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/publications/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9jYmU1
+        YzQxNy01ZjU2LTQzYTQtOTM0ZC1jZDYyYTA3ZGJiNjMvIn0=
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:07:51 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2IwMmU3ZjkyLTQwNmItNGM3
+        OC1hNDdmLTc3MjUzNDcxMDlkZC8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:07:51 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/b02e7f92-406b-4c78-a47f-7725347109dd/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:07:52 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '522'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9iMDJlN2Y5Mi00MDZiLTRj
+        NzgtYTQ3Zi03NzI1MzQ3MTA5ZGQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjA3OjUxLjczMzIyOVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjA3OjUxLjg5Mjc4NVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MDc6NTEuOTgxMDIxWiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4MC00MmE2LTg5ZTktMDE2ZmEy
-        YjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0OS00YTVmLTllMjctNzc4ZWNh
+        M2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy84MzUzNzRlNC1kN2I0LTQyODgtYmY3
-        Yy03MWRiNDA4ODY3ZWMvIl19
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9iYTQ5ZTNmZi1hYjM4
+        LTQ4NTItYjlmNS1jZDRmYmFhMjBiYzgvIl19
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
+  recorded_at: Wed, 01 May 2019 18:07:52 GMT
 - request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/0e3d5288-5b74-45b2-a6b7-5b3873cdbab4/
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/repositories/cbe5c417-5f56-43a4-934d-cd62a07dbb63/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:10:08 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzFhNmRmZDYwLThlZjktNDEw
+        Zi1iYjYzLTcxZGYwZjBjZTFjNS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:10:08 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/publishers/file/file/e95ea708-1d38-47dd-a270-a722dfcb6b5a/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:10:09 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2IxMjJmNGQwLWNlYzQtNDYx
+        ZC1iNDNlLWQ2MjZmYTA3YWY5Mi8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:10:09 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/remotes/file/file/20ee6137-41f8-48d7-a9db-800851390697/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:10:09 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzgzZjFiOGQ0LTQ0NDctNDQ2
+        Zi1hZDQ4LThjZjAxZjkyNzY4MS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:10:09 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/repositories/655f3707-322c-4b89-9d96-c85120c1b61c/versions/
+    body:
+      encoding: UTF-8
+      base64_string: 'e30=
+
+'
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:10:11 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2YxNjYzMDVmLWRjZTUtNDBk
+        Zi04ZDY3LWI1ZDJkMDJhZmQ2ZS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:10:11 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/f166305f-dce5-40df-8d67-b5d2d02afd6e/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -601,11 +1080,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
+      - Wed, 01 May 2019 18:10:11 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '420'
+      - '529'
       Connection:
       - keep-alive
       Vary:
@@ -617,27 +1096,130 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wZTNkNTI4OC01Yjc0LTQ1
-        YjItYTZiNy01YjM4NzNjZGJhYjQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjUxOjAxLjAwMjI2MFoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
-        cHVscGNvcmUuYXBwLnRhc2tzLmRpc3RyaWJ1dGlvbi5jcmVhdGUiLCJzdGFy
-        dGVkX2F0IjoiMjAxOS0wNC0yNVQxNzo1MTowMS4zNjE3ODBaIiwiZmluaXNo
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mMTY2MzA1Zi1kY2U1LTQw
+        ZGYtOGQ2Ny1iNWQyZDAyYWZkNmUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEwOjExLjAzMjE5NVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjEwOjExLjE2NzIxM1oi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MTA6MTEuMjI1OTY2WiIs
+        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgwZi00NDUzLWEzZGIt
+        MGQ1YjI0MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzY1NWYzNzA3LTMyMmMtNGI4
+        OS05ZDk2LWM4NTEyMGMxYjYxYy92ZXJzaW9ucy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:10:11 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/publications/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy82NTVm
+        MzcwNy0zMjJjLTRiODktOWQ5Ni1jODUxMjBjMWI2MWMvIn0=
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:10:11 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2UwYmQ3ZmM4LTcxNmQtNGMz
+        NS1iM2RlLWM4N2FmNmMwN2JiMy8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:10:11 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/e0bd7fc8-716d-4c35-b3de-c87af6c07bb3/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:10:11 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '495'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9lMGJkN2ZjOC03MTZkLTRj
+        MzUtYjNkZS1jODdhZjZjMDdiYjMvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEwOjExLjQ1MTA1NVoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscF9maWxlLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxpc2giLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNS0wMVQxODoxMDoxMS41ODY2MThaIiwiZmluaXNo
         ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
-        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4
-        MC00MmE2LTg5ZTktMDE2ZmEyYjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bh
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgw
+        Zi00NDUzLWEzZGItMGQ1YjI0MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bh
         d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
-        X3Jlc291cmNlcyI6W119
+        X3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUv
+        ZmlsZS9hODU0MGMzMS05NmNlLTRiMjItOWE0NC0wOGI5NGUwZjFkMjYvIl19
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
+  recorded_at: Wed, 01 May 2019 18:10:11 GMT
 - request:
     method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/593a971b-6725-475f-825e-4a521844989d/
+    uri: http://192.168.121.225/pulp/api/v3/tasks/e0bd7fc8-716d-4c35-b3de-c87af6c07bb3/
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
       Content-Type:
       - application/json
       Accept:
@@ -654,11 +1236,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
+      - Wed, 01 May 2019 18:10:11 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '513'
+      - '522'
       Connection:
       - keep-alive
       Vary:
@@ -670,653 +1252,67 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy81OTNhOTcxYi02NzI1LTQ3
-        NWYtODI1ZS00YTUyMTg0NDk4OWQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjUxOjAwLjg0ODYyN1oiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MuZGlzdHJpYnV0aW9uLmNyZWF0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjUxOjAwLjk2NjYzNFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTE6MDEuMTg5MzkzWiIsIm5vbl9m
-        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4MC00MmE2LTg5ZTktMDE2ZmEy
-        YjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
-        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy84MzUzNzRlNC1kN2I0LTQyODgtYmY3
-        Yy03MWRiNDA4ODY3ZWMvIl19
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
-- request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/0e3d5288-5b74-45b2-a6b7-5b3873cdbab4/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '513'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8wZTNkNTI4OC01Yjc0LTQ1
-        YjItYTZiNy01YjM4NzNjZGJhYjQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjUxOjAxLjAwMjI2MFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MuZGlzdHJpYnV0aW9uLmNyZWF0ZSIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjUxOjAxLjM2MTc4MFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTE6MDEuNTU0MzEyWiIsIm5vbl9m
-        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4MC00MmE2LTg5ZTktMDE2ZmEy
-        YjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
-        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvZGlzdHJpYnV0aW9ucy8zNmY1MmM1ZS05NDhkLTQ0MGQtOWI4
-        Yi00YjIwZmI1ZjkzY2IvIl19
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
-- request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/distributions/835374e4-d7b4-4288-bf7c-71db408867ec/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '455'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zLzgzNTM3NGU0
-        LWQ3YjQtNDI4OC1iZjdjLTcxZGI0MDg4NjdlYy8iLCJfY3JlYXRlZCI6IjIw
-        MTktMDQtMjVUMTc6NTE6MDEuMTcyNjU1WiIsIm5hbWUiOiJodHRwc19vcmdf
-        ZGVmYXVsdF9sYWJlbC1NeV9GaWxlcyIsInB1Ymxpc2hlciI6bnVsbCwicHVi
-        bGljYXRpb24iOiIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zLzQ2YjE1YjJi
-        LTVhN2QtNDRiZi1hNzhlLTFlMDdkYmRlMDRiNy8iLCJyZXBvc2l0b3J5Ijpu
-        dWxsLCJjb250ZW50X2d1YXJkIjpudWxsLCJyZW1vdGUiOm51bGwsImJhc2Vf
-        cGF0aCI6Imh0dHBzLy9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015
-        X0ZpbGVzIiwiYmFzZV91cmwiOiJsb2NhbGhvc3Q6MjQ4MTYvcHVscC9jb250
-        ZW50L2h0dHBzLy9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015X0Zp
-        bGVzIn0=
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
-- request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/distributions/36f52c5e-948d-440d-9b8b-4b20fb5f93cb/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:51:01 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '452'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zLzM2ZjUyYzVl
-        LTk0OGQtNDQwZC05YjhiLTRiMjBmYjVmOTNjYi8iLCJfY3JlYXRlZCI6IjIw
-        MTktMDQtMjVUMTc6NTE6MDEuNTQ0MDkyWiIsIm5hbWUiOiJodHRwX29yZ19k
-        ZWZhdWx0X2xhYmVsLU15X0ZpbGVzIiwicHVibGlzaGVyIjpudWxsLCJwdWJs
-        aWNhdGlvbiI6Ii9wdWxwL2FwaS92My9wdWJsaWNhdGlvbnMvNDZiMTViMmIt
-        NWE3ZC00NGJmLWE3OGUtMWUwN2RiZGUwNGI3LyIsInJlcG9zaXRvcnkiOm51
-        bGwsImNvbnRlbnRfZ3VhcmQiOm51bGwsInJlbW90ZSI6bnVsbCwiYmFzZV9w
-        YXRoIjoiaHR0cC8vRGVmYXVsdF9Pcmdhbml6YXRpb24vbGlicmFyeS9NeV9G
-        aWxlcyIsImJhc2VfdXJsIjoibG9jYWxob3N0OjI0ODE2L3B1bHAvY29udGVu
-        dC9odHRwLy9EZWZhdWx0X09yZ2FuaXphdGlvbi9saWJyYXJ5L015X0ZpbGVz
-        In0=
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:01 GMT
-- request:
-    method: put
-    uri: http://192.168.121.249/pulp/api/v3/repositories/adcd2e3b-f52f-4dbc-94c4-b50778d76f56/
-    body:
-      encoding: UTF-8
-      base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMifQ==
-
-'
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:51:02 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E0NTNkMWRmLWUzNjAtNGUy
-        OC05Yzg1LTI2YzA4MTZjM2QwZi8ifQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:51:02 GMT
-- request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/repositories/9ae6ac74-08a7-4657-9479-08ad28a3f9d9/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzkwMGU1YzUwLWZlZWEtNDBh
-        Yy1iOGJiLTU0Y2ExODQ1ZDJlNS8ifQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:43 GMT
-- request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/8d7f21b6-3f4a-4bef-9d1f-17f91ea175a5/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzM4MjJkY2Y2LThjYTAtNGI2
-        Zi1hN2U2LTg0MDQ2ZmZkYjJkNS8ifQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:43 GMT
-- request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/remotes/file/file/4e7656c7-3ce4-45a8-96f2-d087a7312234/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzdiMjkzNTc5LTg2MGUtNGM4
-        NS04MjVhLTNiMTdlNDM1MGIyMS8ifQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:44 GMT
-- request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/distributions/9bda2142-c52a-4b25-b083-ab459d0dab07/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 204
-      message: No Content
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:44 GMT
-      Content-Length:
-      - '0'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: ''
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:44 GMT
-- request:
-    method: delete
-    uri: http://192.168.121.249/pulp/api/v3/distributions/e6140f17-7289-459c-973d-251cb70fbb04/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 204
-      message: No Content
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:44 GMT
-      Content-Length:
-      - '0'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: ''
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:44 GMT
-- request:
-    method: post
-    uri: http://192.168.121.249/pulp/api/v3/repositories/a93b30ff-ea50-4d65-94a4-d0f73ed69c9a/versions/
-    body:
-      encoding: UTF-8
-      base64_string: 'e30=
-
-'
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:45 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, POST, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2RkOTNjZWJmLWQ0YmEtNGFi
-        Yi1hMmUzLTVlODE4N2U1YTg4Mi8ifQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:45 GMT
-- request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/dd93cebf-d4ba-4abb-a2e3-5e8187e5a882/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '529'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9kZDkzY2ViZi1kNGJhLTRh
-        YmItYTJlMy01ZTgxODdlNWE4ODIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjU0OjQ1Ljk4NDY3NVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
-        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
-        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjU0OjQ2LjA5MDIxN1oi
-        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTQ6NDYuMTQwNDk2WiIs
-        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
-        L3B1bHAvYXBpL3YzL3dvcmtlcnMvODM3OTM5YWQtZTg4MC00MmE2LTg5ZTkt
-        MDE2ZmEyYjAzZDdmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
-        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
-        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2E5M2IzMGZmLWVhNTAtNGQ2
-        NS05NGE0LWQwZjczZWQ2OWM5YS92ZXJzaW9ucy8xLyJdfQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:46 GMT
-- request:
-    method: post
-    uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/2ecf4cb3-b656-4d6a-9638-17eba959fc2f/publish/
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
-        aWVzL2E5M2IzMGZmLWVhNTAtNGQ2NS05NGE0LWQwZjczZWQ2OWM5YS92ZXJz
-        aW9ucy8xLyJ9
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 202
-      message: Accepted
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '67'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - POST, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzIxZGVlOTAxLWRjNTQtNDUz
-        OC1hOThkLWI0ZTJmOTFiNzA4ZS8ifQ==
-    http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:46 GMT
-- request:
-    method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/21dee901-dc54-4538-a98d-b4e2f91b708e/
-    body:
-      encoding: US-ASCII
-      base64_string: ''
-    headers:
-      User-Agent:
-      - Swagger-Codegen/0.0.4/ruby
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      Authorization:
-      - Basic YWRtaW46cGFzc3dvcmQ=
-      Expect:
-      - ''
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.12.2
-      Date:
-      - Thu, 25 Apr 2019 17:54:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '512'
-      Connection:
-      - keep-alive
-      Vary:
-      - Accept, Cookie
-      Allow:
-      - GET, DELETE, HEAD, OPTIONS
-      X-Frame-Options:
-      - SAMEORIGIN
-    body:
-      encoding: UTF-8
-      base64_string: |
-        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy8yMWRlZTkwMS1kYzU0LTQ1
-        MzgtYTk4ZC1iNGUyZjkxYjcwOGUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI1
-        VDE3OjU0OjQ2LjM2NjUxNFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9lMGJkN2ZjOC03MTZkLTRj
+        MzUtYjNkZS1jODdhZjZjMDdiYjMvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEwOjExLjQ1MTA1NVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
-        YXJ0ZWRfYXQiOiIyMDE5LTA0LTI1VDE3OjU0OjQ2LjUwMTcxOFoiLCJmaW5p
-        c2hlZF9hdCI6IjIwMTktMDQtMjVUMTc6NTQ6NDYuNTc1MzkyWiIsIm5vbl9m
+        YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjEwOjExLjU4NjYxOFoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MTA6MTEuNjQ0ODgyWiIsIm5vbl9m
         YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
-        YXBpL3YzL3dvcmtlcnMvNGYyZmRiYjMtZjU0NC00MTRhLWFiNTEtZDcxNzQ4
-        MTFkNmFhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        YXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgwZi00NDUzLWEzZGItMGQ1YjI0
+        MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
         b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
-        cC9hcGkvdjMvcHVibGljYXRpb25zLzcwYWM0Mzg0LWE2ZmItNDY3Yi1iMjA1
-        LTAzOTRiMzI4ZGQ2NS8iXX0=
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9hODU0MGMzMS05NmNl
+        LTRiMjItOWE0NC0wOGI5NGUwZjFkMjYvIl19
     http_version: 
-  recorded_at: Thu, 25 Apr 2019 17:54:46 GMT
+  recorded_at: Wed, 01 May 2019 18:10:11 GMT
 - request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/repositories/f47e7424-b8cd-4c03-ab84-3a7b55f48ec4/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:12:41 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzA0MGZiNTFhLTFlN2MtNGJi
+        Yy1hZmQyLTcyNGQ5ZWRmNWYxYy8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:41 GMT
+- request:
+<<<<<<< HEAD
     method: post
     uri: http://192.168.121.249/pulp/api/v3/distributions/
     body:
@@ -17030,6 +17026,16 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/publishers/file/file/45f8b740-1370-4cbf-a995-7755cc817c65/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17046,7 +17052,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:26:53 GMT
+=======
+      - Wed, 01 May 2019 18:12:41 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17056,12 +17066,17 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, POST, DELETE, HEAD, OPTIONS
+=======
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBjZGFlZmY0LWI0ZmEtNDY3
         ZC04MzNmLWM5YWUyZGE4ZTA2MC8ifQ==
     http_version: 
@@ -17077,6 +17092,21 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2VhNTg0OTEzLTViYzMtNDY1
+        Ni1hMjZmLTk5MjdhMGQwZWRkYy8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:41 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/remotes/file/file/24b4fd01-b7fb-4815-88f0-fc296db78dc6/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17093,7 +17123,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:26:53 GMT
+=======
+      - Wed, 01 May 2019 18:12:41 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17109,6 +17143,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQxYjY1ODc4LTMyMWUtNDc5
         NC04MGZlLWIwOWU3YTdjMWQzNC8ifQ==
     http_version: 
@@ -17175,6 +17210,23 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzRlYjMzNjgzLTA2ZDYtNGVh
+        YS1iZDUxLWNmNDY1YzYxOTQ0NS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:41 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/repositories/8a8e6626-6af6-41b8-8ccc-2dac88785c74/versions/
+    body:
+      encoding: UTF-8
+      base64_string: 'e30=
+
+'
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17191,7 +17243,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:17 GMT
+=======
+      - Wed, 01 May 2019 18:12:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17201,12 +17257,17 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+=======
+      - GET, POST, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzk2M2IwMjZlLWU5ZjMtNDA0
         Yi05Nzg1LTg3ZGZmZTEyOTdhYi8ifQ==
     http_version: 
@@ -17214,12 +17275,25 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/?name=org_default_label-My_Files
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzkxNWNhZjZiLTE3ZmEtNDAz
+        ZS04ZWUwLTBlY2NjZDg4YzE1ZC8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:43 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/915caf6b-17fa-403e-8ee0-0ecccd88c15d/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17236,6 +17310,7 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:17 GMT
       Content-Type:
       - application/json
@@ -17292,17 +17367,29 @@ http_interactions:
       - application/json
       Content-Length:
       - '67'
+=======
+      - Wed, 01 May 2019 18:12:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '502'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+=======
+      - GET, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2ZjNzAzMTIxLWNiNWUtNGRi
         NC1hYTg0LTQ4NjY3OTU3ZGNkMi8ifQ==
     http_version: 
@@ -17310,12 +17397,35 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/remotes/file/file/?name=org_default_label-My_Files
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85MTVjYWY2Yi0xN2ZhLTQw
+        M2UtOGVlMC0wZWNjY2Q4OGMxNWQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEyOjQzLjM3Njc2NVoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLnJlcG9zaXRvcnkuYWRkX2FuZF9yZW1vdmUi
+        LCJzdGFydGVkX2F0IjoiMjAxOS0wNS0wMVQxODoxMjo0My41MTU5NzVaIiwi
+        ZmluaXNoZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJv
+        ciI6bnVsbCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvZmZjODhk
+        MGQtNDgwZi00NDUzLWEzZGItMGQ1YjI0MTEyMGRmLyIsInBhcmVudCI6bnVs
+        bCwic3Bhd25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJj
+        cmVhdGVkX3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVz
+        LzhhOGU2NjI2LTZhZjYtNDFiOC04Y2NjLTJkYWM4ODc4NWM3NC92ZXJzaW9u
+        cy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:43 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/915caf6b-17fa-403e-8ee0-0ecccd88c15d/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17332,22 +17442,35 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:18 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '415'
+=======
+      - Wed, 01 May 2019 18:12:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '529'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, POST, HEAD, OPTIONS
+=======
+      - GET, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlbW90ZXMvZmlsZS9maWxl
         L2E3ZjhlMjA4LTE0NmYtNDNjYy05MTMwLTQxYWUzYWNiZDkyYi8iLCJfY3Jl
@@ -17369,6 +17492,33 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85MTVjYWY2Yi0xN2ZhLTQw
+        M2UtOGVlMC0wZWNjY2Q4OGMxNWQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEyOjQzLjM3Njc2NVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjEyOjQzLjUxNTk3NVoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MTI6NDMuNTg4MzE0WiIs
+        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgwZi00NDUzLWEzZGIt
+        MGQ1YjI0MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzLzhhOGU2NjI2LTZhZjYtNDFi
+        OC04Y2NjLTJkYWM4ODc4NWM3NC92ZXJzaW9ucy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:43 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/publications/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy84YThl
+        NjYyNi02YWY2LTQxYjgtOGNjYy0yZGFjODg3ODVjNzQvIn0=
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17385,7 +17535,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:18 GMT
+=======
+      - Wed, 01 May 2019 18:12:44 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17395,12 +17549,17 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+=======
+      - GET, POST, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY1NmE1MzBjLTM3ZGMtNDJm
         Ny04MzUwLWE0Y2UwMzNhNGVmZS8ifQ==
     http_version: 
@@ -17408,12 +17567,25 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/distributions/?base_path=https//Default_Organization/library/My_Files
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2FlNWNmMjhkLThmYzgtNGE0
+        YS05ZGMzLWY1MmIxYjQ4N2FkYS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:44 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/ae5cf28d-8fc8-4a4a-9dc3-f52b1b487ada/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17430,22 +17602,35 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:18 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '446'
+=======
+      - Wed, 01 May 2019 18:12:44 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '424'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, POST, DELETE, HEAD, OPTIONS
+=======
+      - GET, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvM2Uw
         ZTFiNjctMGRlZi00ODUyLThmZGYtMTM4ZGQzOWVhZDc2LyIsIl9jcmVhdGVk
@@ -17502,12 +17687,33 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/distributions/?base_path=http//Default_Organization/library/My_Files
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9hZTVjZjI4ZC04ZmM4LTRh
+        NGEtOWRjMy1mNTJiMWI0ODdhZGEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEyOjQ0LjA0NDYxNloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscF9maWxlLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxpc2giLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNS0wMVQxODoxMjo0NC4yMjI4ODdaIiwiZmluaXNo
+        ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgw
+        Zi00NDUzLWEzZGItMGQ1YjI0MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bh
+        d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
+        X3Jlc291cmNlcyI6W251bGxdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:44 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/ae5cf28d-8fc8-4a4a-9dc3-f52b1b487ada/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17524,22 +17730,35 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:18 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '443'
+=======
+      - Wed, 01 May 2019 18:12:44 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '522'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, POST, DELETE, HEAD, OPTIONS
+=======
+      - GET, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
         dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL2Rpc3RyaWJ1dGlvbnMvZDUw
         ZDY3YTMtMTE4ZS00MzdlLWFkODAtNjNiZTE1OTEyMjkxLyIsIl9jcmVhdGVk
@@ -17555,11 +17774,31 @@ http_interactions:
 - request:
     method: delete
     uri: http://192.168.121.249/pulp/api/v3/distributions/d50d67a3-118e-437e-ad80-63be15912291/
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9hZTVjZjI4ZC04ZmM4LTRh
+        NGEtOWRjMy1mNTJiMWI0ODdhZGEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjEyOjQ0LjA0NDYxNloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjEyOjQ0LjIyMjg4N1oiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MTI6NDQuMzA1NTM1WiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvZmZjODhkMGQtNDgwZi00NDUzLWEzZGItMGQ1YjI0
+        MTEyMGRmLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS84YzBiMWU1OC1hMzFi
+        LTQ3OTAtODY3OC0yMDQ1YTRhZWU3MDcvIl19
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:12:44 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/repositories/8a8e6626-6af6-41b8-8ccc-2dac88785c74/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
       Content-Type:
       - application/json
@@ -17660,6 +17899,9 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17670,12 +17912,18 @@ http_interactions:
       - ''
   response:
     status:
+<<<<<<< HEAD
       code: 201
       message: Created
+=======
+      code: 202
+      message: Accepted
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     headers:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:19 GMT
       Content-Type:
       - application/json
@@ -17689,11 +17937,25 @@ http_interactions:
       - Accept, Cookie
       Allow:
       - GET, POST, HEAD, OPTIONS
+=======
+      - Wed, 01 May 2019 18:15:40 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS9mZTgw
         YjU4OC05OTZiLTQ3OGItODgzZS00Mjk4ZGYzMGIwZjcvIiwiX2NyZWF0ZWQi
         OiIyMDE5LTA0LTI2VDE1OjI4OjE5LjU4ODU2OVoiLCJfdHlwZSI6ImZpbGUu
@@ -17708,6 +17970,15 @@ http_interactions:
 - request:
     method: post
     uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2U3NDE1MGM0LWJjZGQtNDNl
+        Yy1iZjhkLWRkYmM4N2NlN2UyOC8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:40 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/publishers/file/file/d1ff2ecc-cd1f-4ccb-ba59-9985a3ca2726/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: UTF-8
       base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMifQ==
@@ -17715,7 +17986,11 @@ http_interactions:
 '
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17732,7 +18007,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:19 GMT
+=======
+      - Wed, 01 May 2019 18:15:40 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17750,6 +18029,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9wdWJsaXNoZXJzL2ZpbGUvZmlsZS8z
         YWU4NjAxZS0xZWIwLTQxNTItYjMxNy1iNzkwZTk3YTlmYzcvIiwiX2NyZWF0
         ZWQiOiIyMDE5LTA0LTI2VDE1OjI4OjE5Ljc0NjM0NloiLCJfdHlwZSI6ImZp
@@ -17762,14 +18042,25 @@ http_interactions:
 - request:
     method: post
     uri: http://192.168.121.249/pulp/api/v3/repositories/f69ea6e3-b83d-4455-b0c4-a3039fd95b48/versions/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzQ2YzUxYTM4LWIzNGYtNDBm
+        NC04NTA4LTlkOTI3NDJiZTcwOC8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:40 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/remotes/file/file/31eb7f34-f278-4752-acc2-dd8688fbf5b8/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
-      encoding: UTF-8
-      base64_string: 'e30=
-
-'
+      encoding: US-ASCII
+      base64_string: ''
     headers:
       User-Agent:
+<<<<<<< HEAD
       - Swagger-Codegen/0.0.4/ruby
+=======
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -17786,7 +18077,67 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:20 GMT
+=======
+      - Wed, 01 May 2019 18:15:41 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept, Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      base64_string: |
+<<<<<<< HEAD
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M5N2U1ODIwLTk4MjctNGQ1
+        Zi1iZDgyLTBmODFmMjc3YTQ0MS8ifQ==
+    http_version: 
+  recorded_at: Fri, 26 Apr 2019 15:28:20 GMT
+- request:
+    method: get
+    uri: http://192.168.121.249/pulp/api/v3/tasks/c97e5820-9827-4d5f-bd82-0f81f277a441/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzBhNTdiMjdmLTBjNTEtNDMz
+        Zi05YWEyLWI4MjE3Njc0ZDQ3Zi8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:41 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/repositories/c947e0e7-58bf-4a82-9c55-12f361f5449b/versions/
+    body:
+      encoding: UTF-8
+      base64_string: 'e30=
+
+'
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      Authorization:
+      - Basic YWRtaW46cGFzc3dvcmQ=
+      Expect:
+      - ''
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Server:
+      - nginx/1.12.2
+      Date:
+      - Wed, 01 May 2019 18:15:42 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -17802,13 +18153,14 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
-        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M5N2U1ODIwLTk4MjctNGQ1
-        Zi1iZDgyLTBmODFmMjc3YTQ0MS8ifQ==
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E1YjRiOTU5LWNlNjAtNGEy
+        OS1iZDRkLWI4OTM4ZjNjNjQwMi8ifQ==
     http_version: 
-  recorded_at: Fri, 26 Apr 2019 15:28:20 GMT
+  recorded_at: Wed, 01 May 2019 18:15:42 GMT
 - request:
     method: get
-    uri: http://192.168.121.249/pulp/api/v3/tasks/c97e5820-9827-4d5f-bd82-0f81f277a441/
+    uri: http://192.168.121.225/pulp/api/v3/tasks/a5b4b959-ce60-4a29-bd4d-b8938f3c6402/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -17831,7 +18183,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:20 GMT
+=======
+      - Wed, 01 May 2019 18:15:42 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17847,29 +18203,50 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jOTdlNTgyMC05ODI3LTRk
         NWYtYmQ4Mi0wZjgxZjI3N2E0NDEvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI2
         VDE1OjI4OjIwLjI0NjMzNFoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
         OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
         ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA0LTI2VDE1OjI4OjIwLjM1MzI0OVoi
         LCJmaW5pc2hlZF9hdCI6IjIwMTktMDQtMjZUMTU6Mjg6MjAuMzk5MTE2WiIs
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9hNWI0Yjk1OS1jZTYwLTRh
+        MjktYmQ0ZC1iODkzOGYzYzY0MDIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjE1OjQyLjY0MTEyNloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjE1OjQyLjc2NzQ0MVoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MTU6NDIuODI3NTc1WiIs
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
         Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
         L3B1bHAvYXBpL3YzL3dvcmtlcnMvNGYyZmRiYjMtZjU0NC00MTRhLWFiNTEt
         ZDcxNzQ4MTFkNmFhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
         W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+<<<<<<< HEAD
         WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2Y2OWVhNmUzLWI4M2QtNDQ1
         NS1iMGM0LWEzMDM5ZmQ5NWI0OC92ZXJzaW9ucy8xLyJdfQ==
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:20 GMT
+=======
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2M5NDdlMGU3LTU4YmYtNGE4
+        Mi05YzU1LTEyZjM2MWY1NDQ5Yi92ZXJzaW9ucy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:42 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: post
     uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/3ae8601e-1eb0-4152-b317-b790e97a9fc7/publish/
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJyZXBvc2l0b3J5X3ZlcnNpb24iOiIvcHVscC9hcGkvdjMvcmVwb3NpdG9y
         aWVzL2Y2OWVhNmUzLWI4M2QtNDQ1NS1iMGM0LWEzMDM5ZmQ5NWI0OC92ZXJz
         aW9ucy8xLyJ9
+=======
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9jOTQ3
+        ZTBlNy01OGJmLTRhODItOWM1NS0xMmYzNjFmNTQ0OWIvIn0=
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
@@ -17889,7 +18266,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:20 GMT
+=======
+      - Wed, 01 May 2019 18:15:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -17905,6 +18286,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY0MWE0ZmNjLTY2MzEtNDUz
         OC1iZjhmLTg2NzkzYmY4ZjViNy8ifQ==
     http_version: 
@@ -17912,6 +18294,15 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/tasks/641a4fcc-6631-4538-bf8f-86793bf8f5b7/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzllN2FiNjhjLTc4NGQtNDE3
+        Zi1iMDMyLTVhNmYwZGI3ZWJiNS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:43 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/9e7ab68c-784d-417f-b032-5a6f0db7ebb5/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -17934,11 +18325,19 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:20 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '512'
+=======
+      - Wed, 01 May 2019 18:15:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '495'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
@@ -17950,6 +18349,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy82NDFhNGZjYy02NjMxLTQ1
         MzgtYmY4Zi04Njc5M2JmOGY1YjcvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI2
         VDE1OjI4OjIwLjYwNTkxMloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
@@ -17975,6 +18375,27 @@ http_interactions:
         YmxpY2F0aW9ucy8wZDYyMGJjMi0zZTlmLTQ5NTUtYTNlOC1hZDY5MmJiMDc1
         OGQvIiwibmFtZSI6Imh0dHBzX29yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVz
         In0=
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85ZTdhYjY4Yy03ODRkLTQx
+        N2YtYjAzMi01YTZmMGRiN2ViYjUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjE1OjQzLjA4MDg0NloiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscF9maWxlLmFwcC50YXNrcy5wdWJsaXNoaW5nLnB1Ymxpc2giLCJzdGFy
+        dGVkX2F0IjoiMjAxOS0wNS0wMVQxODoxNTo0My4xOTkyNzVaIiwiZmluaXNo
+        ZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVs
+        bCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0
+        OS00YTVmLTllMjctNzc4ZWNhM2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bh
+        d25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVk
+        X3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUv
+        ZmlsZS9lZTA1ODU3MS0wM2Q4LTQ5MmEtYTU2OC1hNTMwZGVkZDdiODQvIl19
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:43 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/9e7ab68c-784d-417f-b032-5a6f0db7ebb5/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
@@ -17988,32 +18409,66 @@ http_interactions:
       - ''
   response:
     status:
+<<<<<<< HEAD
       code: 202
       message: Accepted
+=======
+      code: 200
+      message: OK
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     headers:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:21 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '67'
+=======
+      - Wed, 01 May 2019 18:15:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '522'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, POST, DELETE, HEAD, OPTIONS
+=======
+      - GET, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M5NTZmNzk1LTQ3MDItNDU5
         OS04NmQyLTE5YTZjMmZjOWI3NS8ifQ==
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:21 GMT
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy85ZTdhYjY4Yy03ODRkLTQx
+        N2YtYjAzMi01YTZmMGRiN2ViYjUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjE1OjQzLjA4MDg0NloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjE1OjQzLjE5OTI3NVoiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MTU6NDMuMjgzMTYxWiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0OS00YTVmLTllMjctNzc4ZWNh
+        M2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9lZTA1ODU3MS0wM2Q4
+        LTQ5MmEtYTU2OC1hNTMwZGVkZDdiODQvIl19
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:15:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: post
     uri: http://192.168.121.249/pulp/api/v3/distributions/
@@ -18043,7 +18498,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:21 GMT
+=======
+      - Wed, 01 May 2019 18:22:42 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18059,6 +18518,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2JlYWM1ZjM2LTJmNjktNDZk
         Zi04NDJkLWY5NjFiM2MzMTVlNC8ifQ==
     http_version: 
@@ -18066,6 +18526,23 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/tasks/c956f795-4702-4599-86d2-19a6c2fc9b75/
+=======
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy81OTQy
+        Y2M5ZC1mMjM1LTQ5OTItODZjMy02ZDk1ZDI0YjUwMjUvIiwiX2NyZWF0ZWQi
+        OiIyMDE5LTA1LTAxVDE4OjIyOjQwLjEyMDQyNloiLCJfdmVyc2lvbnNfaHJl
+        ZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvNTk0MmNjOWQtZjIzNS00
+        OTkyLTg2YzMtNmQ5NWQyNGI1MDI1L3ZlcnNpb25zLyIsIl9sYXRlc3RfdmVy
+        c2lvbl9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy81OTQyY2M5
+        ZC1mMjM1LTQ5OTItODZjMy02ZDk1ZDI0YjUwMjUvdmVyc2lvbnMvMS8iLCJu
+        YW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMiLCJkZXNjcmlwdGlv
+        biI6IiJ9XX0=
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:42 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/repositories/5942cc9d-f235-4992-86c3-6d95d24b5025/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -18088,7 +18565,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:21 GMT
+=======
+      - Wed, 01 May 2019 18:22:42 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18104,6 +18585,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jOTU2Zjc5NS00NzAyLTQ1
         OTktODZkMi0xOWE2YzJmYzliNzUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI2
         VDE1OjI4OjIxLjA2NDcxOVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
@@ -18118,6 +18600,12 @@ http_interactions:
         NS1jNmI4Mjc3M2E3NjgvIl19
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:21 GMT
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzZkZmNhYzkxLThiYzgtNDZh
+        NC05NTUxLWEyODkxODUyZDk1Mi8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:42 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/tasks/beac5f36-2f69-46df-842d-f961b3c315e4/
@@ -18143,7 +18631,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:21 GMT
+=======
+      - Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18159,6 +18651,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9iZWFjNWYzNi0yZjY5LTQ2
         ZGYtODQyZC1mOTYxYjNjMzE1ZTQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI2
         VDE1OjI4OjIxLjMyNDQ0NVoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
@@ -18174,6 +18667,21 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/tasks/c956f795-4702-4599-86d2-19a6c2fc9b75/
+=======
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3B1Ymxpc2hlcnMvZmlsZS9m
+        aWxlLzRlMDliYzlhLWUxYjItNDRmYi04OTk4LThhNjMyMjM3YTNhYy8iLCJf
+        Y3JlYXRlZCI6IjIwMTktMDUtMDFUMTg6MjI6NDAuNDQyNzEwWiIsIl90eXBl
+        IjoiZmlsZS5maWxlIiwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLU15X0Zp
+        bGVzIiwiX2xhc3RfdXBkYXRlZCI6IjIwMTktMDUtMDFUMTg6MjI6NDAuNDQy
+        NzIzWiIsIl9kaXN0cmlidXRpb25zIjpbXSwibWFuaWZlc3QiOiJQVUxQX01B
+        TklGRVNUIn1dfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:43 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/publishers/file/file/4e09bc9a-e1b2-44fb-8998-8a632237a3ac/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -18196,7 +18704,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:21 GMT
+=======
+      - Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18212,6 +18724,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jOTU2Zjc5NS00NzAyLTQ1
         OTktODZkMi0xOWE2YzJmYzliNzUvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI2
         VDE1OjI4OjIxLjA2NDcxOVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
@@ -18226,6 +18739,12 @@ http_interactions:
         NS1jNmI4Mjc3M2E3NjgvIl19
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:21 GMT
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2E4NWNkOTUxLWQ2NTItNDU4
+        MC1hMTRhLWQzYTE4NDE3ZmM3ZS8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/tasks/beac5f36-2f69-46df-842d-f961b3c315e4/
@@ -18251,7 +18770,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:21 GMT
+=======
+      - Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18267,6 +18790,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9iZWFjNWYzNi0yZjY5LTQ2
         ZGYtODQyZC1mOTYxYjNjMzE1ZTQvIiwiX2NyZWF0ZWQiOiIyMDE5LTA0LTI2
         VDE1OjI4OjIxLjMyNDQ0NVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
@@ -18284,6 +18808,24 @@ http_interactions:
 - request:
     method: get
     uri: http://192.168.121.249/pulp/api/v3/distributions/4366e1aa-3f4d-42f2-8665-c6b82773a768/
+=======
+        eyJjb3VudCI6MSwibmV4dCI6bnVsbCwicHJldmlvdXMiOm51bGwsInJlc3Vs
+        dHMiOlt7Il9ocmVmIjoiL3B1bHAvYXBpL3YzL3JlbW90ZXMvZmlsZS9maWxl
+        LzIzNzJlZTk2LWJmYzktNDljNC1hNmFkLTlmNTc1YTkwZDRiYS8iLCJfY3Jl
+        YXRlZCI6IjIwMTktMDUtMDFUMTg6MjI6NDAuMjc5MjE5WiIsIl90eXBlIjoi
+        ZmlsZS5maWxlIiwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVz
+        IiwidXJsIjoiaHR0cDovL3Rlc3QvdGVzdC8vUFVMUF9NQU5JRkVTVCIsInZh
+        bGlkYXRlIjp0cnVlLCJzc2xfY2FfY2VydGlmaWNhdGUiOm51bGwsInNzbF9j
+        bGllbnRfY2VydGlmaWNhdGUiOm51bGwsInNzbF9jbGllbnRfa2V5IjpudWxs
+        LCJzc2xfdmFsaWRhdGlvbiI6dHJ1ZSwicHJveHlfdXJsIjoiIiwiX2xhc3Rf
+        dXBkYXRlZCI6IjIwMTktMDUtMDFUMTg6MjI6NDAuMjc5MjMzWiIsImRvd25s
+        b2FkX2NvbmN1cnJlbmN5IjoyMCwicG9saWN5IjoiaW1tZWRpYXRlIn1dfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:43 GMT
+- request:
+    method: delete
+    uri: http://192.168.121.225/pulp/api/v3/remotes/file/file/2372ee96-bfc9-49c4-a6ad-9f575a90d4ba/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: US-ASCII
       base64_string: ''
@@ -18306,7 +18848,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:22 GMT
+=======
+      - Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18322,6 +18868,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9kaXN0cmlidXRpb25zLzQzNjZlMWFh
         LTNmNGQtNDJmMi04NjY1LWM2YjgyNzczYTc2OC8iLCJfY3JlYXRlZCI6IjIw
         MTktMDQtMjZUMTU6Mjg6MjEuNDU1OTc5WiIsIm5hbWUiOiJodHRwc19vcmdf
@@ -18392,6 +18939,15 @@ http_interactions:
 - request:
     method: put
     uri: http://192.168.121.249/pulp/api/v3/repositories/f69ea6e3-b83d-4455-b0c4-a3039fd95b48/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2NiMmY0MDg4LTZkYWMtNGI3
+        My1iNzJlLWZkMjQ3N2M5ZTUxMi8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:43 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/distributions/?base_path=/Default_Organization/library/My_Files
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: UTF-8
       base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMifQ==
@@ -18416,7 +18972,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:22 GMT
+=======
+      - Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18435,7 +18995,11 @@ http_interactions:
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M3OTEzMzQ3LWJhYjEtNDBk
         NS04MmY3LTI3MjM1NTY4MWMwYy8ifQ==
     http_version: 
+<<<<<<< HEAD
   recorded_at: Fri, 26 Apr 2019 15:28:22 GMT
+=======
+  recorded_at: Wed, 01 May 2019 18:22:43 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: patch
     uri: http://192.168.121.249/pulp/api/v3/distributions/4366e1aa-3f4d-42f2-8665-c6b82773a768/
@@ -18463,13 +19027,22 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:22 GMT
+=======
+      - Wed, 01 May 2019 18:22:44 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
       - '67'
       Connection:
       - keep-alive
+<<<<<<< HEAD
+=======
+      Location:
+      - "/pulp/api/v3/repositories/b09dd208-f0c6-4358-ab4a-02ddd6e49b15/"
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Vary:
       - Accept, Cookie
       Allow:
@@ -18479,10 +19052,22 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzg5ZTYxMTY2LThmYTctNDc4
         OC04ZjYxLTdkNTRjOWY5M2MwOS8ifQ==
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:22 GMT
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZXBvc2l0b3JpZXMvYjA5ZGQyMDgt
+        ZjBjNi00MzU4LWFiNGEtMDJkZGQ2ZTQ5YjE1LyIsIl9jcmVhdGVkIjoiMjAx
+        OS0wNS0wMVQxODoyMjo0NC4xMzUzNzhaIiwiX3ZlcnNpb25zX2hyZWYiOiIv
+        cHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2IwOWRkMjA4LWYwYzYtNDM1OC1h
+        YjRhLTAyZGRkNmU0OWIxNS92ZXJzaW9ucy8iLCJfbGF0ZXN0X3ZlcnNpb25f
+        aHJlZiI6bnVsbCwibmFtZSI6Im9yZ19kZWZhdWx0X2xhYmVsLU15X0ZpbGVz
+        IiwiZGVzY3JpcHRpb24iOiIifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:44 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: delete
     uri: http://192.168.121.249/pulp/api/v3/distributions/9dae57eb-1d0a-44a6-87ec-fd78c6be0a5d/
@@ -18508,11 +19093,22 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:22 GMT
+=======
+      - Wed, 01 May 2019 18:22:44 GMT
+      Content-Type:
+      - application/json
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Length:
       - '0'
       Connection:
       - keep-alive
+<<<<<<< HEAD
+=======
+      Location:
+      - "/pulp/api/v3/remotes/file/file/3cbd49d4-abee-47d6-9753-e1b6e5d58059/"
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Vary:
       - Accept, Cookie
       Allow:
@@ -18521,9 +19117,25 @@ http_interactions:
       - SAMEORIGIN
     body:
       encoding: UTF-8
+<<<<<<< HEAD
       base64_string: ''
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:22 GMT
+=======
+      base64_string: |
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9yZW1vdGVzL2ZpbGUvZmlsZS8zY2Jk
+        NDlkNC1hYmVlLTQ3ZDYtOTc1My1lMWI2ZTVkNTgwNTkvIiwiX2NyZWF0ZWQi
+        OiIyMDE5LTA1LTAxVDE4OjIyOjQ0LjI5NTE3MVoiLCJfdHlwZSI6ImZpbGUu
+        ZmlsZSIsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1NeV9GaWxlcyIsInVy
+        bCI6Imh0dHA6Ly90ZXN0L3Rlc3QvL1BVTFBfTUFOSUZFU1QiLCJ2YWxpZGF0
+        ZSI6dHJ1ZSwic3NsX2NhX2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50
+        X2NlcnRpZmljYXRlIjpudWxsLCJzc2xfY2xpZW50X2tleSI6bnVsbCwic3Ns
+        X3ZhbGlkYXRpb24iOnRydWUsInByb3h5X3VybCI6IiIsIl9sYXN0X3VwZGF0
+        ZWQiOiIyMDE5LTA1LTAxVDE4OjIyOjQ0LjI5NTE4NFoiLCJkb3dubG9hZF9j
+        b25jdXJyZW5jeSI6MjAsInBvbGljeSI6ImltbWVkaWF0ZSJ9
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:44 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 - request:
     method: put
     uri: http://192.168.121.249/pulp/api/v3/publishers/file/file/3ae8601e-1eb0-4152-b317-b790e97a9fc7/
@@ -18551,13 +19163,22 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:23 GMT
+=======
+      - Wed, 01 May 2019 18:22:44 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
       - '67'
       Connection:
       - keep-alive
+<<<<<<< HEAD
+=======
+      Location:
+      - "/pulp/api/v3/publishers/file/file/d70f8539-df67-4d82-aee3-bc1204162f3a/"
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Vary:
       - Accept, Cookie
       Allow:
@@ -18567,6 +19188,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzZmMDcwODUzLTZjNDQtNDUx
         Mi1iZjJhLWY5OTM4MDE5NjQ3NC8ifQ==
     http_version: 
@@ -18574,6 +19196,20 @@ http_interactions:
 - request:
     method: put
     uri: http://192.168.121.249/pulp/api/v3/repositories/f69ea6e3-b83d-4455-b0c4-a3039fd95b48/
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My9wdWJsaXNoZXJzL2ZpbGUvZmlsZS9k
+        NzBmODUzOS1kZjY3LTRkODItYWVlMy1iYzEyMDQxNjJmM2EvIiwiX2NyZWF0
+        ZWQiOiIyMDE5LTA1LTAxVDE4OjIyOjQ0LjQ4MDk0N1oiLCJfdHlwZSI6ImZp
+        bGUuZmlsZSIsIm5hbWUiOiJvcmdfZGVmYXVsdF9sYWJlbC1NeV9GaWxlcyIs
+        Il9sYXN0X3VwZGF0ZWQiOiIyMDE5LTA1LTAxVDE4OjIyOjQ0LjQ4MDk3MFoi
+        LCJfZGlzdHJpYnV0aW9ucyI6W10sIm1hbmlmZXN0IjoiUFVMUF9NQU5JRkVT
+        VCJ9
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:44 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/repositories/b09dd208-f0c6-4358-ab4a-02ddd6e49b15/versions/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: UTF-8
       base64_string: 'eyJuYW1lIjoib3JnX2RlZmF1bHRfbGFiZWwtTXlfRmlsZXMifQ==
@@ -18598,7 +19234,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:23 GMT
+=======
+      - Wed, 01 May 2019 18:22:45 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18614,6 +19254,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2I1YjI0ZDdlLWY0NzItNDlk
         My05MTcwLWExNjYyMWVhZDg4Ni8ifQ==
     http_version: 
@@ -18621,6 +19262,15 @@ http_interactions:
 - request:
     method: patch
     uri: http://192.168.121.249/pulp/api/v3/distributions/4366e1aa-3f4d-42f2-8665-c6b82773a768/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2Y2ZWUyZTI0LTNmMTctNDAz
+        Zi1hNTk5LTQ5MmI1MDM1ZDFmMy8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:45 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/f6ee2e24-3f17-403f-a599-492b5035d1f3/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: UTF-8
       base64_string: |
@@ -18645,11 +19295,19 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:23 GMT
       Content-Type:
       - application/json
       Content-Length:
       - '67'
+=======
+      - Wed, 01 May 2019 18:22:45 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '502'
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Connection:
       - keep-alive
       Vary:
@@ -18661,6 +19319,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2M3MmJhOGJjLWE1NDItNDE1
         Yi05MjQwLTgwYjEwODNkOWQ5MC8ifQ==
     http_version: 
@@ -18678,6 +19337,31 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mNmVlMmUyNC0zZjE3LTQw
+        M2YtYTU5OS00OTJiNTAzNWQxZjMvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjIyOjQ0Ljk5NTEzNVoiLCJzdGF0ZSI6InJ1bm5pbmciLCJuYW1lIjoi
+        cHVscGNvcmUuYXBwLnRhc2tzLnJlcG9zaXRvcnkuYWRkX2FuZF9yZW1vdmUi
+        LCJzdGFydGVkX2F0IjoiMjAxOS0wNS0wMVQxODoyMjo0NS4xNjI0NjBaIiwi
+        ZmluaXNoZWRfYXQiOm51bGwsIm5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJv
+        ciI6bnVsbCwid29ya2VyIjoiL3B1bHAvYXBpL3YzL3dvcmtlcnMvMGNkNzc0
+        NmMtYzc0OS00YTVmLTllMjctNzc4ZWNhM2ZiYzhhLyIsInBhcmVudCI6bnVs
+        bCwic3Bhd25lZF90YXNrcyI6W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJj
+        cmVhdGVkX3Jlc291cmNlcyI6WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVz
+        L2IwOWRkMjA4LWYwYzYtNDM1OC1hYjRhLTAyZGRkNmU0OWIxNS92ZXJzaW9u
+        cy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:45 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/f6ee2e24-3f17-403f-a599-492b5035d1f3/
+    body:
+      encoding: US-ASCII
+      base64_string: ''
+    headers:
+      User-Agent:
+      - Swagger-Codegen/3.0.0rc1-0b7f6c52/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -18688,28 +19372,37 @@ http_interactions:
       - ''
   response:
     status:
-      code: 202
-      message: Accepted
+      code: 200
+      message: OK
     headers:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:23 GMT
+=======
+      - Wed, 01 May 2019 18:22:45 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
-      - '67'
+      - '529'
       Connection:
       - keep-alive
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, POST, DELETE, HEAD, OPTIONS
+=======
+      - GET, DELETE, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2JmNTFmMGYyLWM5ZTgtNDM1
         Mi1iOGIzLTIwNjg0YzZkMTQzZC8ifQ==
     http_version: 
@@ -18725,6 +19418,33 @@ http_interactions:
     headers:
       User-Agent:
       - Swagger-Codegen/0.0.4/ruby
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9mNmVlMmUyNC0zZjE3LTQw
+        M2YtYTU5OS00OTJiNTAzNWQxZjMvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjIyOjQ0Ljk5NTEzNVoiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwY29yZS5hcHAudGFza3MucmVwb3NpdG9yeS5hZGRfYW5kX3JlbW92
+        ZSIsInN0YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjIyOjQ1LjE2MjQ2MFoi
+        LCJmaW5pc2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MjI6NDUuMjE3NDkwWiIs
+        Im5vbl9mYXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoi
+        L3B1bHAvYXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0OS00YTVmLTllMjct
+        Nzc4ZWNhM2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6
+        W10sInByb2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6
+        WyIvcHVscC9hcGkvdjMvcmVwb3NpdG9yaWVzL2IwOWRkMjA4LWYwYzYtNDM1
+        OC1hYjRhLTAyZGRkNmU0OWIxNS92ZXJzaW9ucy8xLyJdfQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:45 GMT
+- request:
+    method: post
+    uri: http://192.168.121.225/pulp/api/v3/publications/file/file/
+    body:
+      encoding: UTF-8
+      base64_string: |
+        eyJyZXBvc2l0b3J5IjoiL3B1bHAvYXBpL3YzL3JlcG9zaXRvcmllcy9iMDlk
+        ZDIwOC1mMGM2LTQzNTgtYWI0YS0wMmRkZDZlNDliMTUvIn0=
+    headers:
+      User-Agent:
+      - Swagger-Codegen/0.0.1b10-885d41ba/ruby
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Accept:
@@ -18741,7 +19461,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:24 GMT
+=======
+      - Wed, 01 May 2019 18:22:45 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18751,12 +19475,17 @@ http_interactions:
       Vary:
       - Accept, Cookie
       Allow:
+<<<<<<< HEAD
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+=======
+      - GET, POST, HEAD, OPTIONS
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2QyYTNhNWI1LTIzZWMtNDY4
         Zi1hYjY4LTgwODhiZDg1M2M5MS8ifQ==
     http_version: 
@@ -18764,6 +19493,15 @@ http_interactions:
 - request:
     method: patch
     uri: http://192.168.121.249/pulp/api/v3/distributions/4366e1aa-3f4d-42f2-8665-c6b82773a768/
+=======
+        eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzL2MxMmRiYjE3LTBjNWEtNGVh
+        NC1hZmFjLTg1OWJiYmY2NjA1Yi8ifQ==
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:45 GMT
+- request:
+    method: get
+    uri: http://192.168.121.225/pulp/api/v3/tasks/c12dbb17-0c5a-4ea4-afac-859bbbf6605b/
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
     body:
       encoding: UTF-8
       base64_string: |
@@ -18788,7 +19526,11 @@ http_interactions:
       Server:
       - nginx/1.12.2
       Date:
+<<<<<<< HEAD
       - Fri, 26 Apr 2019 15:28:24 GMT
+=======
+      - Wed, 01 May 2019 18:22:45 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
       Content-Type:
       - application/json
       Content-Length:
@@ -18804,6 +19546,7 @@ http_interactions:
     body:
       encoding: UTF-8
       base64_string: |
+<<<<<<< HEAD
         eyJ0YXNrIjoiL3B1bHAvYXBpL3YzL3Rhc2tzLzY0ZWIyZTViLTY1ZjYtNDk1
         ZS05Y2IzLWYzZDY0ZmJlOTM2Mi8ifQ==
     http_version: 
@@ -18857,4 +19600,20 @@ http_interactions:
         cGF0aCI6WyJUaGlzIGZpZWxkIG11c3QgYmUgdW5pcXVlLiJdfQ==
     http_version: 
   recorded_at: Fri, 26 Apr 2019 15:28:24 GMT
+=======
+        eyJfaHJlZiI6Ii9wdWxwL2FwaS92My90YXNrcy9jMTJkYmIxNy0wYzVhLTRl
+        YTQtYWZhYy04NTliYmJmNjYwNWIvIiwiX2NyZWF0ZWQiOiIyMDE5LTA1LTAx
+        VDE4OjIyOjQ1LjYxMDU1NloiLCJzdGF0ZSI6ImNvbXBsZXRlZCIsIm5hbWUi
+        OiJwdWxwX2ZpbGUuYXBwLnRhc2tzLnB1Ymxpc2hpbmcucHVibGlzaCIsInN0
+        YXJ0ZWRfYXQiOiIyMDE5LTA1LTAxVDE4OjIyOjQ1Ljc3NTgyNloiLCJmaW5p
+        c2hlZF9hdCI6IjIwMTktMDUtMDFUMTg6MjI6NDUuODY1MjYyWiIsIm5vbl9m
+        YXRhbF9lcnJvcnMiOltdLCJlcnJvciI6bnVsbCwid29ya2VyIjoiL3B1bHAv
+        YXBpL3YzL3dvcmtlcnMvMGNkNzc0NmMtYzc0OS00YTVmLTllMjctNzc4ZWNh
+        M2ZiYzhhLyIsInBhcmVudCI6bnVsbCwic3Bhd25lZF90YXNrcyI6W10sInBy
+        b2dyZXNzX3JlcG9ydHMiOltdLCJjcmVhdGVkX3Jlc291cmNlcyI6WyIvcHVs
+        cC9hcGkvdjMvcHVibGljYXRpb25zL2ZpbGUvZmlsZS9jNTNlOTJiNi01MzI0
+        LTQzNzItYmE2Yi1hMTUwNzQ1N2RmZjMvIl19
+    http_version: 
+  recorded_at: Wed, 01 May 2019 18:22:45 GMT
+>>>>>>> b241b82... Fixes #26238 - 1 dist per rel. path
 recorded_with: VCR 3.0.3
