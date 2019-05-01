@@ -1,3 +1,5 @@
+require "pulpcore_client"
+
 module Katello
   module Pulp3
     class Repository
@@ -137,10 +139,6 @@ module Katello
         nil
       end
 
-      def update_distributions
-        refresh_distributions
-      end
-
       def delete_distributions
         paths.values.each do |path|
           dists = lookup_distributions(base_path: path.sub(/^\//, ''))
@@ -161,7 +159,11 @@ module Katello
 
       def create_distribution(prefix, path)
         path = path.sub(/^\//, '') #remove leading / if present
-        pulp3_api.distributions_create(base_path: path, publication: repo.publication_href, name: "#{prefix}_#{backend_object_name}")
+        distribution_data = PulpcoreClient::Distribution.new(
+          base_path: repo.relative_path,
+          publication: repo.publication_href,
+          name: "#{prefix}_#{backend_object_name}")
+        pulp3_api.distributions_create(distribution_data)
       end
 
       def common_remote_options

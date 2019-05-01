@@ -1,9 +1,12 @@
+require "pulp_file_client"
+
 module Katello
   module Pulp3
     class Repository
       class File < ::Katello::Pulp3::Repository
         def create_remote
-          response = pulp3_api.remotes_file_file_create(Zest::FileRemote.new(remote_options))
+          remote_file_data = PulpFileClient::FileRemote.new(remote_options)
+          response = pulp3_api.remotes_file_file_create(remote_file_data)
           repo.update_attributes!(:remote_href => response._href)
         end
 
@@ -50,7 +53,9 @@ module Katello
         end
 
         def create_publication
-          pulp3_api.publishers_file_file_publish(repository_reference.publisher_href, repository_version: repo.version_href)
+          publication_data = PulpFileClient::FilePublication.new(
+            repository: repository_reference.repository_href)
+          pulp3_api.publications_file_file_create(publication_data)
         end
       end
     end

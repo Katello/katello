@@ -21,16 +21,19 @@ module Katello
         delegate :publishers_file_file_list, to: :file_publishers_api
         delegate :publishers_file_file_update, to: :file_publishers_api
         delegate :publishers_file_file_delete, to: :file_publishers_api
-        delegate :publishers_file_file_publish, to: :file_publishers_api
+
+        delegate :publications_file_file_create, to: :file_publications_api
 
         delegate :remotes_file_file_list, to: :file_remotes_api
         delegate :remotes_file_file_create, to: :file_remotes_api
         delegate :remotes_file_file_delete, to: :file_remotes_api
+        delegate :remotes_file_file_partial_update, to: :file_remotes_api
 
         delegate :distributions_create, to: :distributions_api
         delegate :distributions_list, to: :distributions_api
         delegate :distributions_read, to: :distributions_api
         delegate :distributions_delete, to: :distributions_api
+        delegate :distributions_partial_update, to: :distributions_api
 
         delegate :tasks_read, to: :tasks_api
 
@@ -44,6 +47,10 @@ module Katello
 
         def file_publishers_api
           @file_publishers_api ||= PulpFileClient::PublishersApi.new
+        end
+
+        def file_publications_api
+          @file_publications_api ||= PulpFileClient::PublicationsApi.new
         end
 
         def file_remotes_api

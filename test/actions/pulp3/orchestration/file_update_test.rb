@@ -55,7 +55,6 @@ module ::Actions::Pulp3
     end
 
     def test_update_set_unprotected
-      skip "TODO: blocked by https://pulp.plan.io/issues/4506"
       @repo.root.update_attributes(unprotected: false)
 
       ForemanTasks.sync_task(
