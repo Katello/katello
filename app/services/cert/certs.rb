@@ -19,7 +19,7 @@ module Cert
     def self.verify_ueber_cert(organization)
       ueber_cert = OpenSSL::X509::Certificate.new(self.ueber_cert(organization)[:cert])
       cert_store = OpenSSL::X509::Store.new
-      cert_store.add_file Setting[:ssl_ca_file]
+      cert_store.add_file SETTINGS[:katello][:candlepin][:ca_cert_file]
       organization.regenerate_ueber_cert unless cert_store.verify ueber_cert
     end
   end

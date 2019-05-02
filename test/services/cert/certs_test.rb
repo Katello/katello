@@ -8,12 +8,12 @@ module Katello
     def setup
       @org = get_organization
       Resources::Candlepin::Owner.create(@org.label, @org.name)
-      @original_ssl_ca_file = Setting[:ssl_ca_file]
+      @original_ssl_ca_file = SETTINGS[:katello][:candlepin][:ca_cert_file]
     end
 
     def teardown
       Resources::Candlepin::Owner.destroy(@org.label)
-      Setting[:ssl_ca_file] = @original_ssl_ca_file
+      SETTINGS[:katello][:candlepin][:ca_cert_file] = @original_ssl_ca_file
     end
 
     def test_verify_ueber_cert_no_change
@@ -26,10 +26,9 @@ module Katello
     end
 
     def test_verify_ueber_cert_changes
-      Setting[:ssl_ca_file] = File.join("#{Katello::Engine.root}", "/ca/redhat-uep.pem")
+      SETTINGS[:katello][:candlepin][:ca_cert_file] = File.join("#{Katello::Engine.root}", "/ca/redhat-uep.pem")
       @org.expects(:regenerate_ueber_cert).once
       Cert::Certs.verify_ueber_cert(@org)
-      Setting[:ssl_ca_file] = @original_ssl_ca_file
     end
   end
 end
