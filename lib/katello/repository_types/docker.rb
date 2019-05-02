@@ -1,5 +1,6 @@
 Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
   service_class Katello::Pulp::Repository::Docker
+  default_managed_content_type Katello::DockerManifest
   pulp3_service_class Katello::Pulp3::Repository::Docker
   pulp3_skip_publication true
   pulp3_plugin 'pulp_docker'
@@ -8,7 +9,8 @@ Katello::RepositoryTypeManager.register(::Katello::Repository::DOCKER_TYPE) do
                :priority => 1,
                :pulp2_service_class => ::Katello::Pulp::DockerManifest,
                :pulp3_service_class => ::Katello::Pulp3::DockerManifest,
-               :user_removable => true
+               :removable => true,
+               :uploadable => true
   content_type Katello::DockerManifestList,
                :priority => 2,
                :pulp2_service_class => ::Katello::Pulp::DockerManifestList,

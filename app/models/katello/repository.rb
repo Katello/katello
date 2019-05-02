@@ -533,14 +533,15 @@ module Katello
       self.ostree_branches.map(&:name)
     end
 
-    def units_for_removal(ids)
+    def units_for_removal(ids, type_class = nil)
+      removable_unit_association = unit_type_for_removal(type_class)
       table_name = removable_unit_association.table_name
       is_integer = Integer(ids.first) rescue false #assume all ids are either integers or not
 
       if is_integer
-        self.removable_unit_association.where("#{table_name}.id in (?)", ids)
+        removable_unit_association.where("#{table_name}.id in (?)", ids)
       else
-        self.removable_unit_association.where("#{table_name}.pulp_id in (?)", ids)
+        removable_unit_association.where("#{table_name}.pulp_id in (?)", ids)
       end
     end
 
@@ -784,21 +785,11 @@ module Katello
 
     protected
 
-    def removable_unit_association
-      if yum?
-        self.rpms
-      elsif docker?
-        self.docker_manifests
-      elsif puppet?
-        self.puppet_modules
-      elsif ostree?
-        self.ostree_branches
-      elsif file?
-        self.files
-      elsif deb?
-        self.debs
+    def unit_type_for_removal(type_class = nil)
+      if type_class
+        Katello::RepositoryTypeManager.find_content_type(type_class).model_class
       else
-        fail "Content type not supported for removal"
+        Katello::RepositoryTypeManager.find(self.content_type).default_managed_content_type.model_class
       end
     end
 

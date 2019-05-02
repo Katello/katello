@@ -26,6 +26,20 @@ module Katello
         type.allow_creation_by_user
       end
 
+      def removable_content_types
+        list = @repository_types.values.map do |type|
+          type.content_types.select(&:removable)
+        end
+        list.flatten
+      end
+
+      def uploadable_content_types
+        list = @repository_types.values.map do |type|
+          type.content_types.select(&:uploadable)
+        end
+        list.flatten
+      end
+
       def find(repository_type)
         repository_types[repository_type.to_s]
       end
@@ -33,7 +47,7 @@ module Katello
       def find_repository_type(katello_label)
         repository_types.values.each do |repo_type|
           repo_type.content_types.each do |content_type|
-            return repo_type if content_type.model_class::CONTENT_TYPE == katello_label.to_s
+            return repo_type if content_type.label == katello_label.to_s
           end
         end
         nil
@@ -42,7 +56,7 @@ module Katello
       def find_content_type(katello_label)
         repository_types.values.each do |repo_type|
           repo_type.content_types.each do |content_type|
-            return content_type if content_type.model_class::CONTENT_TYPE == katello_label.to_s
+            return content_type if content_type.label == katello_label.to_s
           end
         end
         nil
