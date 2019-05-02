@@ -9,6 +9,10 @@ module Katello
 
     before_save lambda { |rpm| rpm.summary = rpm.summary.truncate(255) unless rpm.summary.blank? }
 
+    def self.default_sort
+      order(:name).order(:epoch).order(:version_sortable).order(:release_sortable)
+    end
+
     def self.repository_association_class
       RepositorySrpm
     end

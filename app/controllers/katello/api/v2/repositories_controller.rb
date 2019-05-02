@@ -338,16 +338,18 @@ module Katello
     desc "Remove content from a repository"
     param :id, :number, :required => true, :desc => "repository ID"
     param 'ids', Array, :required => true, :desc => "Array of content ids to remove"
+    param :content_type, RepositoryTypeManager.removable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
     def remove_content
       sync_capsule = ::Foreman::Cast.to_bool(params.fetch(:sync_capsule, true))
       fail _("No content ids provided") if @content.blank?
-      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, sync_capsule: sync_capsule)
+      respond_for_async :resource => sync_task(::Actions::Katello::Repository::RemoveContent, @repository, @content, content_type: params[:content_type], sync_capsule: sync_capsule)
     end
 
     api :POST, "/repositories/:id/upload_content", N_("Upload content into the repository")
     param :id, :number, :required => true, :desc => N_("repository ID")
     param :content, File, :required => true, :desc => N_("Content files to upload. Can be a single file or array of files.")
+    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     def upload_content
       fail Katello::Errors::InvalidRepositoryContent, _("Cannot upload Container Image content.") if @repository.docker?
 
@@ -356,7 +358,7 @@ module Katello
       end
 
       if !filepaths.blank?
-        sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths)
+        sync_task(::Actions::Katello::Repository::UploadFiles, @repository, filepaths, params[:content_type])
         render :json => {:status => "success", :filenames => filepaths.map { |item| item[:filename] }}
       else
         fail HttpErrors::BadRequest, _("No file uploaded")
@@ -377,6 +379,7 @@ module Katello
     param :async, :bool, desc: N_("Do not wait for the ImportUpload action to finish. Default: false")
     param 'publish_repository', :bool, :desc => N_("Whether or not to regenerate the repository on disk. Default: true")
     param 'sync_capsule', :bool, :desc => N_("Whether or not to sync an external capsule after upload. Default: true")
+    param :content_type, RepositoryTypeManager.uploadable_content_types.map(&:label), :required => false, :desc => N_("content type ('deb', 'docker_manifest', 'file', 'ostree', 'puppet_module', 'rpm', 'srpm')")
     param :uploads, Array, :desc => N_("Array of uploads to import") do
       param 'id', String, :required => true
       param 'size', String
@@ -405,7 +408,7 @@ module Katello
         respond_for_async(resource: send(
           async ? :async_task : :sync_task,
           ::Actions::Katello::Repository::ImportUpload, @repository, uploads,
-          generate_metadata: generate_metadata, sync_capsule: sync_capsule))
+          generate_metadata: generate_metadata, sync_capsule: sync_capsule, content_type: params[:content_type]))
       rescue => e
         raise HttpErrors::BadRequest, e.message
       end
@@ -524,7 +527,11 @@ module Katello
     end
 
     def find_content
-      @content = @repository.units_for_removal(params[:ids])
+      if params[:content_type]
+        @content = @repository.units_for_removal(params[:ids], params[:content_type])
+      else
+        @content = @repository.units_for_removal(params[:ids])
+      end
     end
 
     def filter_by_content_view(query, content_view_id, environment_id, is_available_for)

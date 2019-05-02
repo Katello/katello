@@ -11,7 +11,10 @@ module Actions
           unit_keys = repo_service.unit_keys(uploads)
           generate_metadata = options.fetch(:generate_metadata, true)
           sync_capsule = options.fetch(:sync_capsule, true)
-          unit_type_id = repo_service.unit_type_id(uploads)
+          repo_type = repository.content_type
+
+          options[:content_type] ||= ::Katello::RepositoryTypeManager.find(repo_type).default_managed_content_type.label
+          unit_type_id = SmartProxy.pulp_master.content_service(options[:content_type])::CONTENT_TYPE
 
           sequence do
             upload_results = concurrence do
@@ -27,7 +30,7 @@ module Actions
                                             unit_metadata: unit_metadata)
 
                 plan_action(FinishUpload, repository, :dependency => import_upload.output,
-                            generate_metadata: false)
+                            generate_metadata: false, content_type: options[:content_type])
                 import_upload.output
               end
             end

@@ -6,9 +6,13 @@ module Actions
   module Katello
     module Repository
       class UploadFiles < Actions::EntryAction
-        def plan(repository, files)
+        def plan(repository, files, content_type = nil)
           action_subject(repository)
           tmp_files = prepare_tmp_files(files)
+
+          content_type ||= ::Katello::RepositoryTypeManager.find(repository.content_type).default_managed_content_type.label
+          unit_type_id = SmartProxy.pulp_master.content_service(content_type)::CONTENT_TYPE
+
           sequence do
             concurrence do
               tmp_files.each do |file|
@@ -19,7 +23,7 @@ module Actions
                               file: file[:path])
                   plan_action(Pulp::Repository::ImportUpload,
                               pulp_id: repository.pulp_id,
-                              unit_type_id: repository.unit_type_id,
+                              unit_type_id: unit_type_id,
                               unit_key: unit_key(file, repository),
                               upload_id: upload_request.output[:upload_id])
                   plan_action(Pulp::Repository::DeleteUploadRequest,
@@ -27,7 +31,7 @@ module Actions
                 end
               end
             end
-            plan_action(FinishUpload, repository)
+            plan_action(FinishUpload, repository, content_type: content_type)
             plan_self(tmp_files: tmp_files)
           end
         ensure

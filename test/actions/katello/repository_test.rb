@@ -227,19 +227,19 @@ module ::Actions::Katello::Repository
 
     it 'plans' do
       file = File.join(::Katello::Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
-      action.expects(:action_subject).with(custom_repository)
+      action.expects(:action_subject).with(puppet_repository)
       action.execution_plan.stub_planned_action(::Actions::Pulp::Repository::CreateUploadRequest) do |content_create|
         content_create.stubs(output: { upload_id: 123 })
       end
 
-      plan_action action, custom_repository, [{:path => file, :filename => 'puppet_module.tar.gz'}]
+      plan_action action, puppet_repository, [{:path => file, :filename => 'puppet_module.tar.gz'}]
       assert_action_planed(action, ::Actions::Pulp::Repository::CreateUploadRequest)
       assert_action_planed_with(action, ::Actions::Pulp::Repository::UploadFile,
                                 upload_id: 123, file: File.join(Rails.root, 'tmp', 'uploads', 'puppet_module.tar.gz'))
       assert_action_planed_with(action, ::Actions::Pulp::Repository::DeleteUploadRequest,
                                 upload_id: 123)
       assert_action_planed_with(action, ::Actions::Katello::Repository::FinishUpload,
-                                custom_repository)
+                                puppet_repository, :content_type => 'puppet_module')
     end
   end
 
@@ -297,7 +297,7 @@ module ::Actions::Katello::Repository
       unit_keys = uploads.map { |u| u.except('id') }
 
       plan_action action, docker_repository, uploads,
-              generate_metadata: true, sync_capsule: true
+              generate_metadata: true, sync_capsule: true, content_type: 'docker_tag'
 
       assert_action_planned_with(action, ::Actions::Pulp::Repository::ImportUpload,
                                  pulp_id: docker_repository.pulp_id,
@@ -312,17 +312,17 @@ module ::Actions::Katello::Repository
     let(:action_class) { ::Actions::Katello::Repository::FinishUpload }
 
     it 'plans' do
-      plan_action action, custom_repository
+      plan_action action, custom_repository, :content_type => 'rpm'
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
 
     it "does plan metadata generate for puppet repository" do
-      plan_action action, puppet_repository
+      plan_action action, puppet_repository, :content_type => 'puppet_module'
       assert_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
 
     it "does not plan metadata generate for puppet repository" do
-      plan_action action, puppet_repository, :generate_metadata => false
+      plan_action action, puppet_repository, :generate_metadata => false, :content_type => 'puppet_module'
       refute_action_planed(action, ::Actions::Katello::Repository::MetadataGenerate)
     end
   end

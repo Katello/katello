@@ -17,7 +17,7 @@ module Actions
           action_subject(repository)
 
           content_unit_ids = content_units.map(&:id)
-          content_unit_type = content_units.first.class::CONTENT_TYPE
+          content_unit_type = options[:content_type] || content_units.first.class::CONTENT_TYPE
 
           sequence do
             remove_content_args = {

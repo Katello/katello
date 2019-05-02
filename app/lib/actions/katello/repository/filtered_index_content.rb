@@ -6,11 +6,11 @@ module Actions
           param :id, Integer
           param :filter
           param :dependency
+          param :content_type
         end
 
         def run
           repo = ::Katello::Repository.find(input[:id])
-          unit_ids = search_units(repo)
           if repo.puppet?
             ::Katello::PuppetModule.import_for_repository(repo)
           elsif repo.docker?
@@ -21,15 +21,20 @@ module Actions
             ::Katello::FileUnit.import_for_repository(repo)
           elsif repo.deb?
             ::Katello::Deb.import_all(unit_ids, repo)
-          else
-            ::Katello::Rpm.import_all(unit_ids, repo)
+          elsif repo.yum?
+            unit_ids = search_units(repo)
+            if input[:content_type] == 'srpm'
+              ::Katello::Srpm.import_all(unit_ids, repo)
+            else
+              ::Katello::Rpm.import_all(unit_ids, repo)
+            end
           end
         end
 
         private
 
         def search_units(repo)
-          found = repo.unit_search(:type_ids => [repo.unit_type_id],
+          found = repo.unit_search(:type_ids => [input[:content_type]],
                                    :filters => input[:filter])
           found.map { |result| result.try(:[], :unit_id) }.compact
         end

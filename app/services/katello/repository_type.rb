@@ -29,8 +29,12 @@ module Katello
       @content_types.select { |type| type.index }
     end
 
-    def user_removable_content_types
-      @content_types.select { |type| type.user_removable }
+    def default_managed_content_type(model_class = nil)
+      if model_class
+        @default_managed_content_type_class = model_class
+      else
+        @content_types.find { |content_type| content_type.model_class == @default_managed_content_type_class }
+      end
     end
 
     def content_type(model_class, options = {})
@@ -59,7 +63,7 @@ module Katello
     end
 
     class ContentType
-      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :user_removable
+      attr_accessor :model_class, :priority, :pulp2_service_class, :pulp3_service_class, :index, :uploadable, :removable
 
       def initialize(options)
         self.model_class = options[:model_class]
@@ -67,7 +71,12 @@ module Katello
         self.pulp2_service_class = options[:pulp2_service_class]
         self.pulp3_service_class = options[:pulp3_service_class]
         self.index = options[:index].nil? ? true : options[:index]
-        self.user_removable = options[:user_removable] || false
+        self.uploadable = options[:uploadable] || false
+        self.removable = options[:removable] || false
+      end
+
+      def label
+        self.model_class::CONTENT_TYPE
       end
     end
   end

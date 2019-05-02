@@ -302,6 +302,13 @@ Katello::Engine.routes.draw do
           end
         end
 
+        api_resources :srpms, :only => [:index, :show], :controller => 'srpms' do
+          collection do
+            get :auto_complete_search
+            get :compare
+          end
+        end
+
         api_resources :subscriptions, :only => [:index, :show] do
           collection do
             get :auto_complete_search
