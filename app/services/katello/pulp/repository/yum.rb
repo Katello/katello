@@ -76,23 +76,49 @@ module Katello
         end
 
         def copy_contents(destination_repo, options = {})
-          override_config = Katello::Repository.build_override_config(options)
-          rpm_copy_clauses, rpm_remove_clauses = generate_copy_clauses(options[:filters], options[:rpm_filenames])
-          tasks = [smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id,
-                   rpm_copy_clauses.merge(:override_config => override_config))]
+          tasks = []
+          tasks.concat(copy_filterable_content(destination_repo, ::Katello::Pulp::Rpm::CONTENT_TYPE, options))
+          tasks.concat(copy_filterable_content(destination_repo, ::Katello::Pulp::Erratum::CONTENT_TYPE, options))
+          tasks.concat(copy_modular_content(destination_repo, options))
 
-          if rpm_remove_clauses
-            tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
-                                                                         type_ids: [::Katello::Pulp::Rpm::CONTENT_TYPE],
-                                                                          filters: {unit: rpm_remove_clauses})
+          [:srpm, :package_group, :yum_repo_metadata_file, :distribution, :module, :module_default].each do |type|
+            tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
+          end
+          tasks
+        end
+
+        def copy_modular_content(destination_repo, options)
+          tasks = []
+          # always copy modular rpms
+          tasks.concat(copy_filterable_content(destination_repo, ::Katello::Pulp::Rpm::CONTENT_TYPE,
+                                    options.merge(rpm_filenames: repo.rpms.modular.pluck(:filename))))
+
+          # copy over the modular errata
+          tasks.concat(copy_filterable_content(destination_repo, ::Katello::Pulp::Erratum::CONTENT_TYPE,
+                                    options.merge(errata_ids: repo.errata.modular.pluck(:errata_id))))
+
+          [:module, :module_default].each do |type|
+            tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
+          end
+          tasks
+        end
+
+        def copy_filterable_content(destination_repo, content_type, options)
+          override_config = Katello::Repository.build_override_config(options)
+          copy_clauses, remove_clauses = generate_copy_clauses(options[:filters], content_type, options)
+
+          unit = :rpm
+          if content_type == ::Katello::Pulp::Erratum::CONTENT_TYPE
+            unit = :errata
           end
 
-          # always copy modular rpms
-          modular_includes = {filters: {unit: { 'filename' => { '$in' => repo.rpms.modular.pluck(:filename) } }}}
-          smart_proxy.pulp_api.extensions.rpm.copy(repo.pulp_id, destination_repo.pulp_id, modular_includes)
+          tasks = [smart_proxy.pulp_api.extensions.send(unit).copy(repo.pulp_id, destination_repo.pulp_id,
+                   copy_clauses.merge(:override_config => override_config))]
 
-          [:srpm, :errata, :package_group, :yum_repo_metadata_file, :distribution, :module, :module_default].each do |type|
-            tasks << smart_proxy.pulp_api.extensions.send(type).copy(repo.pulp_id, destination_repo.pulp_id)
+          if remove_clauses
+            tasks << smart_proxy.pulp_api.extensions.repository.unassociate_units(destination_repo.pulp_id,
+                                                                         type_ids: [content_type],
+                                                                         filters: {unit: remove_clauses})
           end
           tasks
         end
@@ -157,12 +183,21 @@ module Katello
           smart_proxy.pulp_api.extensions.repository.unassociate_units(repo.pulp_id, :filters => criteria)
         end
 
-        def generate_copy_clauses(filters, rpm_filenames)
-          if rpm_filenames&.any?
-            copy_clauses = {filters: {unit: { 'filename' => { '$in' => rpm_filenames } }}}
+        def generate_copy_clauses(filters, content_type, options = {})
+          if options[:rpm_filenames]&.any?
+            copy_clauses = {filters: {unit: { 'filename' => { '$in' => options[:rpm_filenames] } }}}
+            remove_clauses = nil
+          elsif options[:errata_ids]&.any?
+            copy_clauses = {filters: {unit: { 'id' => { '$in' => options[:errata_ids]} }}}
             remove_clauses = nil
           elsif filters
-            clause_gen = ::Katello::Util::PackageClauseGenerator.new(repo, filters.yum)
+            if content_type == ::Katello::Pulp::Rpm::CONTENT_TYPE
+              clause_generator_class = ::Katello::Util::PackageClauseGenerator
+            else
+              clause_generator_class = ::Katello::Util::ErratumClauseGenerator
+            end
+
+            clause_gen = clause_generator_class.new(repo, filters.yum)
             clause_gen.generate
 
             copy = clause_gen.copy_clause
@@ -174,7 +209,11 @@ module Katello
             copy_clauses = {}
             remove_clauses = nil
           end
-          copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
+          if content_type == ::Katello::Pulp::Rpm::CONTENT_TYPE
+            copy_clauses.merge!(fields: ::Katello::Pulp::Rpm::PULP_SELECT_FIELDS)
+          else
+            copy_clauses.merge!(fields: ::Katello::Pulp::Erratum::PULP_SELECT_FIELDS)
+          end
           [copy_clauses, remove_clauses]
         end
       end

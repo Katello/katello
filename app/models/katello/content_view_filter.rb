@@ -38,6 +38,10 @@ module Katello
                                       DOCKER.to_sym => "Katello::ContentViewDockerFilter"}
     scoped_search :on => :inclusion, :rename => :inclusion_type, :complete_value => {:include => true, :exclude => :false}
 
+    def self.yum_errata_only
+      where(:type => ::Katello::ContentViewErratumFilter.name)
+    end
+
     def self.yum
       where(:type => [::Katello::ContentViewPackageGroupFilter.name,
                       ::Katello::ContentViewErratumFilter.name,

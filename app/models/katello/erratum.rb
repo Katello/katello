@@ -43,6 +43,7 @@ module Katello
     scope :security, -> { of_type(Erratum::SECURITY) }
     scope :bugfix, -> { of_type(Erratum::BUGZILLA) }
     scope :enhancement, -> { of_type(Erratum::ENHANCEMENT) }
+    scope :modular, -> { joins(:packages => :module_stream_errata_packages) }
 
     def self.repository_association_class
       RepositoryErratum
@@ -100,14 +101,19 @@ module Katello
     end
 
     def self.list_filenames_by_clauses(repo, clauses)
+      Katello::ErratumPackage.joins(:erratum).merge(repo.errata).
+          where(clauses_to_filter(clauses)).pluck(:filename)
+    end
+
+    def self.list_errata_id_by_clauses(repo, clauses)
+      repo.errata.where(clauses_to_filter(clauses)).pluck(:errata_id)
+    end
+
+    def self.clauses_to_filter(clauses)
       query_clauses = clauses.map do |clause|
         "(#{clause.to_sql})"
       end
-      statement = query_clauses.join(" OR ")
-
-      Katello::ErratumPackage.joins(:erratum => :repository_errata).
-          where("#{RepositoryErratum.table_name}.repository_id" => repo.id).
-          where(statement).pluck(:filename)
+      query_clauses.join(" OR ")
     end
 
     def module_streams
