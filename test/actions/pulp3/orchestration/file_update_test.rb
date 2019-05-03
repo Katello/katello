@@ -80,7 +80,8 @@ module ::Actions::Pulp3
 
       ForemanTasks.sync_task(
         ::Actions::Katello::Repository::MetadataGenerate, @repo)
-
+      dist_refs = Katello::Pulp3::DistributionReference.where(
+        root_repository_id: @repo.root.id)
       assert_equal 2, dist_refs.count, "Expected a distribution reference for both https and http paths, but only found 1 #{dist_refs.first.path}."
       assert dist_refs.sort_by(&:path).last.path.start_with?('https')
     end
