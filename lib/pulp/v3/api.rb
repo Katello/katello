@@ -28,6 +28,7 @@ module Katello
         delegate :remotes_file_file_create, to: :file_remotes_api
         delegate :remotes_file_file_delete, to: :file_remotes_api
         delegate :remotes_file_file_partial_update, to: :file_remotes_api
+        delegate :remotes_file_file_sync, to: :file_remotes_api
 
         delegate :distributions_create, to: :distributions_api
         delegate :distributions_list, to: :distributions_api
