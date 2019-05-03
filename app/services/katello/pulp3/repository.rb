@@ -140,7 +140,6 @@ module Katello
           response = delete_distribution(dists.first._href) if dists.first
           dist_ref = distribution_reference(path)
           dist_ref.destroy! if dist_ref
-          response
         end
       end
 
