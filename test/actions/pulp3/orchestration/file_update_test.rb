@@ -33,8 +33,6 @@ module ::Actions::Pulp3
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
         @master)
-
-
     end
 
     def test_update_unset_unprotected
