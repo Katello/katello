@@ -8,7 +8,7 @@ module Actions
 
         def run
           repo = ::Katello::Repository.find(input[:repository_id])
-          output[:response] = repo.backend_service(smart_proxy).update_distributions
+          output[:response] = repo.backend_service(smart_proxy).refresh_distributions
         end
       end
     end

@@ -14,7 +14,9 @@ module ::Actions::Pulp3
         ::Actions::Katello::Repository::MetadataGenerate, @repo,
         repository_creation: true)
 
-      assert_equal 2, Katello::Pulp3::DistributionReference.where(root_repository_id: @repo.root.id).count
+      assert_equal 2,
+        Katello::Pulp3::DistributionReference.where(root_repository_id: @repo.root.id).count,
+        "Expected 2 distribution references (for both http and https paths)."
       @repo.root.update_attributes(
         verify_ssl_on_sync: false,
         ssl_ca_cert: katello_gpg_keys(:unassigned_gpg_key),
@@ -31,6 +33,8 @@ module ::Actions::Pulp3
         ::Actions::Pulp3::Orchestration::Repository::Update,
         @repo,
         @master)
+
+
     end
 
     def test_update_unset_unprotected

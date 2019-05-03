@@ -53,8 +53,8 @@ module Katello
         RepositoryReference.find_by(:root_repository_id => repo.root_id, :content_view_id => repo.content_view.id)
       end
 
-      def distribution_reference
-        DistributionReference.find_by(:path => repo.relative_path)
+      def distribution_reference(path)
+        DistributionReference.find_by(:path => path)
       end
 
       def create
@@ -83,14 +83,36 @@ module Katello
         response
       end
 
-      def update_distribution
+      def update_distribution(path)
+        distribution_reference = distribution_reference(path)
         if distribution_reference
           pulp3_api.distributions_partial_update(distribution_reference.href, publication: repo.publication_href)
         end
       end
 
       def refresh_distributions
-        update_distribution
+        paths.map do |prefix, path|
+          dist_ref = distribution_reference(path)
+          if dist_ref
+            if prefix == :http
+              if repo.root.unprotected
+                update_distribution(path)
+              else
+                result = delete_distribution(dist_ref.href)
+                dist_ref.destroy!
+                result
+              end
+            else
+              update_distribution(path)
+            end
+          else
+            if prefix == :http
+              create_distribution(prefix, path) if repo.root.unprotected
+            else
+              create_distribution(prefix, path)
+            end
+          end
+        end
       end
 
       def create_version
@@ -113,26 +135,37 @@ module Katello
       end
 
       def delete_distributions
-        dists = lookup_distributions(base_path: repo.relative_path)
-        delete_distribution(dists.first._href) if dists.first
-        distribution_reference.destroy if distribution_reference
+        paths.values.each do |path|
+          dists = lookup_distributions(base_path: path.sub(/^\//, ''))
+          delete_distribution(dists.first._href) if dists.first
+          distribution_reference.destroy if distribution_reference(path)
+        end
       end
 
       def save_distribution_references(hrefs)
         hrefs.each do |href|
           path = get_distribution(href)&.base_path
-          unless distribution_reference
+          unless distribution_reference(path)
             DistributionReference.create!(path: path, href: href, root_repository_id: repo.root.id)
           end
         end
       end
 
-      def create_distribution
+      def create_distribution(prefix, path)
+        path = path.sub(/^\//, '')
         distribution_data = PulpcoreClient::Distribution.new(
-          base_path: repo.relative_path,
+          base_path: path,
           publication: repo.publication_href,
           name: "#{prefix}_#{backend_object_name}")
         pulp3_api.distributions_create(distribution_data)
+      end
+
+      def paths
+        list = {
+          https: "https/#{repo.relative_path}",
+          http: "http/#{repo.relative_path}"
+        }
+        list
       end
 
       def common_remote_options
