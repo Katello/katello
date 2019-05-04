@@ -11,6 +11,8 @@ module Katello
       Setting.stubs(:[]).with(:authorize_login_delegation_auth_source_user_autocreate).returns('EXTERNAL')
       Setting.stubs(:[]).with(:entries_per_page).returns(20)
       Setting.stubs(:[]).with(:bcrypt_cost).returns(5)
+      Setting.stubs(:[]).with(:default_locale).returns(nil)
+      Setting.stubs(:[]).with(:default_timezone).returns(nil)
     end
 
     def seed
