@@ -12,8 +12,9 @@ module Katello
             JSON.parse(content_json).with_indifferent_access
           end
 
-          def all(owner_label)
-            content_json = Candlepin::CandlepinResource.get(path(owner_label), self.default_headers).body
+          def all(owner_label, include_only: nil)
+            includes = include_only ? "?#{included_list(include_only)}" : ""
+            content_json = Candlepin::CandlepinResource.get(path(owner_label) + includes, self.default_headers).body
             JSON.parse(content_json)
           end
 
