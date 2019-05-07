@@ -12,7 +12,7 @@ module Actions
 
         def run
           repository = ::Katello::Repository.find(input[:repository_id])
-          ForemanTasks.async_task(Katello::Repository::MetadataGenerate, repository)
+          ForemanTasks.async_task(Katello::Repository::UpdateMetadataSync, repository)
         end
 
         private
