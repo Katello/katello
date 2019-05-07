@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import reducer from './ModuleStreamDetailsReducer';
 import * as moduleStreamDetailsActions from './ModuleStreamDetailsActions';
 import ModuleStreamDetails from './ModuleStreamDetails';
