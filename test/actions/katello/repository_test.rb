@@ -74,7 +74,7 @@ module ::Actions::Katello::Repository
     let(:pulp_action_class) { ::Actions::Pulp::Repository::Refresh }
     let(:candlepin_action_class) { ::Actions::Candlepin::Product::ContentUpdate }
     let(:repository) { katello_repositories(:fedora_17_unpublished) }
-
+    let(:pulp3_action_class) { ::Actions::Pulp3::Orchestration::Repository::Update }
     def setup
       content = FactoryBot.create(:katello_content, cp_content_id: repository.content_id, organization_id: repository.product.organization_id)
       Katello::ProductContent.create!(:content_id => content.id, :product_id => repository.product_id)
@@ -86,7 +86,9 @@ module ::Actions::Katello::Repository
       action.stubs(:action_subject).with(repository)
 
       plan_action action, repository.root, :unprotected => true
-      assert_action_planed_with action, pulp_action_class, repository
+      assert_action_planed_with action, Actions::Katello::PulpSelector,
+        [pulp_action_class, pulp3_action_class],
+        repository, proxy
       assert_action_planed action, candlepin_action_class
     end
   end

@@ -116,7 +116,7 @@ module Katello
       end
 
       def pulp3_api
-        client = Pulp::V3::Api.new
+        client = Katello::Pulp::V3::Api.new
         client.configure(
           host: pulp3_host!,
           username: 'admin',

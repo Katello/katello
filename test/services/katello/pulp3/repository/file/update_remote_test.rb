@@ -31,6 +31,16 @@ module Katello
           @file_repo_service.stubs(:remote_options).returns(url: '')
           assert_empty @file_repo_service.remote_options[:url], "Feed url was not empty or blank."
           @mock_pulp3_api.expects(:remotes_file_file_partial_update).never
+          @mock_pulp3_api.expects(:remotes_file_file_delete).with(@file_repo.remote_href)
+          @file_repo_service.update_remote
+        end
+
+        def test_feed_url_is_blank_and_remote_href_is_nil
+          @file_repo_service.stubs(:remote_options).returns(url: '')
+          assert_empty @file_repo_service.remote_options[:url], "Feed url was not empty or blank."
+          @file_repo.remote_href = nil
+          @mock_pulp3_api.expects(:remotes_file_file_partial_update).never
+          @mock_pulp3_api.expects(:remotes_file_file_create).once
           @file_repo_service.update_remote
         end
 

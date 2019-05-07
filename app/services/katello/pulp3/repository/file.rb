@@ -1,4 +1,5 @@
 require "pulp_file_client"
+gem "pulp_file_client", path: "/home/projects/pulp_file-client"
 
 module Katello
   module Pulp3
@@ -16,7 +17,13 @@ module Katello
         end
 
         def update_remote
-          unless remote_options[:url].blank?
+          if remote_options[:url].blank?
+            if repo.remote_href
+              pulp3_api.remotes_file_file_delete(repo.remote_href)
+            else
+              create_remote
+            end
+          else
             pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
           end
         end
