@@ -4,7 +4,7 @@ require 'pulp_file_client'
 module Katello
   module Pulp
     module V3
-      class Api
+      class API
         def configure(opts)
           [PulpcoreClient.configure, PulpFileClient.configure].each do |config|
             opts.each { |option, value| config.send("#{option}=", value) }

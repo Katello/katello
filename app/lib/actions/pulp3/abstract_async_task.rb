@@ -106,7 +106,6 @@ module Actions
 
       def external_task=(external_task_data)
         output[:pulp_tasks] = transform_task_response(external_task_data)
-
         output[:pulp_tasks].each do |pulp_task|
           if (pulp_exception = ::Katello::Errors::PulpError.from_task(pulp_task))
             fail pulp_exception
