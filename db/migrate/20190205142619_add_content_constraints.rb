@@ -13,15 +13,19 @@ class AddContentConstraints < ActiveRecord::Migration[5.2]
     duplicates.each do |dup|
       contents = Katello::Content.where(organization_id: dup.organization_id, cp_content_id: dup.cp_content_id).to_a
       first = contents.pop
+      content_to_delete = []
       contents.each do |content|
         content.product_contents.each do |pc|
-          unless first.products.include?(pc.product)
+          if !first.products.include?(pc.product)
             pc.content = first
             pc.save!
+          else
+            pc.delete
           end
         end
-        content.delete
+        content_to_delete << content.id
       end
+      ::Katello::Content.where(id: content_to_delete).delete_all
     end
 
     add_index :katello_contents, [:cp_content_id, :organization_id], :unique => true, :name => :katello_contents_cpcid_orgid_uniq
