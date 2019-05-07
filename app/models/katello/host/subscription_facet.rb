@@ -244,31 +244,30 @@ module Katello
 
       def self.find_host(facts, organization)
         host_name = propose_existing_hostname(facts)
+        host_uuid = facts['dmi.system.uuid']
         uuid_fact_id = RhsmFactName.find_by(name: 'dmi::system::uuid')&.id || -1
+
         hosts = ::Host.unscoped.distinct.left_outer_joins(:fact_values)
                 .where("#{::Host.table_name}.name = ? OR (#{FactValue.table_name}.fact_name_id = ?
-		AND #{FactValue.table_name}.value = ?)", host_name, uuid_fact_id, facts['dmi.system.uuid'])
+               AND #{FactValue.table_name}.value = ?)", host_name, uuid_fact_id, host_uuid)
 
-        return nil if hosts.empty?
+        return if hosts.empty?
 
-        if hosts.where("organization_id = #{organization.id} OR organization_id is NULL").empty? #not in the correct org
+        hosts = hosts.where(organization_id: [organization.id, nil])
+        hosts_size = hosts.size
+
+        if hosts_size == 0 # not in the correct org
           #TODO: http://projects.theforeman.org/issues/11532
-          fail _("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.") %
+          fail Katello::Errors::RegistrationError, _("Host with name %{host_name} is currently registered to a different org, please migrate host to %{org_name}.") %
                    {:org_name => organization.name, :host_name => host_name }
         end
 
-        if hosts.size > 1
-          hostnames = hosts.pluck(:name).sort
-          fail _("Multiple profiles found. Consider removing %s which match this host.") % hostnames.join(', ')
+        if hosts_size == 1 && hosts.joins(:subscription_facet).empty?
+          return hosts.first
         end
 
-        # check for hosts that were matched by dmi.system.uuid but whose name didn't match
-        if hosts.where(name: host_name).empty?
-          fail _("The host %{existing} matches this registration. Remove or rename it to %{new_host} before registering.") %
-            {existing: hosts.pluck(:name).first, new_host: host_name}
-        end
-
-        hosts.first
+        hostnames = hosts.pluck(:name).sort.join(', ')
+        fail Katello::Errors::RegistrationError, _("Please unregister or remove hosts which match this host before registering: %{existing}") % {existing: hostnames}
       end
 
       def self.sanitize_name(name)
