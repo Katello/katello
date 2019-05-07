@@ -21,6 +21,7 @@ module Katello
           rescue_from Errors::UnsupportedActionException, :with => :rescue_from_unsupported_action_exception
           rescue_from Errors::MaxHostsReachedException, :with => :rescue_from_max_hosts_reached_exception
           rescue_from Errors::CdnSubstitutionError, :with => :rescue_from_bad_data
+          rescue_from Errors::RegistrationError, :with => :rescue_from_bad_data
           rescue_from ActionController::ParameterMissing, :with => :rescue_from_missing_param
         end
 
