@@ -16,16 +16,10 @@ module Actions
           add_missing_task_group(sync_plan)
           action_subject(sync_plan)
           User.as_anonymous_admin do
-            fail _("No products in sync plan") unless sync_plan.products
-
             syncable_products = sync_plan.products.syncable
             syncable_roots = ::Katello::RootRepository.where(:product_id => syncable_products).has_url
 
-            fail _("No syncable repositories found for selected products and options.") if syncable_roots.empty?
-
-            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync,
-                        syncable_roots.map(&:library_instance))
-
+            plan_action(::Actions::BulkAction, ::Actions::Katello::Repository::Sync, syncable_roots.map(&:library_instance)) unless syncable_roots.empty?
             plan_self(:sync_plan_name => sync_plan.name)
           end
         end
