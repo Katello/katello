@@ -1,5 +1,4 @@
 require "pulp_file_client"
-gem "pulp_file_client", path: "/home/projects/pulp_file-client"
 
 module Katello
   module Pulp3
