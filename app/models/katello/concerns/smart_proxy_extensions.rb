@@ -1,7 +1,6 @@
 require 'proxy_api'
 require 'proxy_api/pulp'
 require 'proxy_api/pulp_node'
-require 'pulp/v3/api'
 
 module Katello
   module Concerns
@@ -116,7 +115,7 @@ module Katello
       end
 
       def pulp3_api
-        client = Pulp::V3::API.new
+        client = ::Pulp::V3::Api.new
         client.configure(
           host: pulp3_host!,
           username: 'admin',
