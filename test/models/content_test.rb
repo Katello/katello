@@ -55,6 +55,7 @@ module Katello
       fixtures = [
         { from: '/content/rhel/x64', to: '/content/foo', expected_result: true },
         { from: '/content/rhel/$aaa/$bbb/', to: '/content/foo/$bbb/$aaa', expected_result: true },
+        { from: '/content/rhel/$aaa/$bbb/', to: '/content/foo/xxxx-$bbb/yyyy-$aaa', expected_result: true },
         { from: '/content/rhel/$aaa/$bbb', to: '$aaa/content/$bbb', expected_result: true },
         { from: '/content/rhel/$aaa', to: '/content/foo', expected_result: false },
         { from: '/content/rhel/$aaa', to: '/content/$bbb', expected_result: false }
