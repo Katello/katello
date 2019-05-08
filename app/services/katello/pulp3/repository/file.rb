@@ -12,18 +12,25 @@ module Katello
 
         def remote_options
           #TODO: move to user specifying PULP_MANIFEST
-          common_remote_options.merge(url: root.url + '/PULP_MANIFEST')
+          if root.url.blank?
+            common_remote_options.delete(:url)
+            common_remote_options
+          else
+            common_remote_options.merge(url: root.url + '/PULP_MANIFEST')
+          end
         end
 
         def update_remote
           if remote_options[:url].blank?
             if repo.remote_href
               pulp3_api.remotes_file_file_delete(repo.remote_href)
+            end
+          else
+            if repo.remote_href?
+              pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
             else
               create_remote
             end
-          else
-            pulp3_api.remotes_file_file_partial_update(repo.remote_href, remote_options)
           end
         end
 
