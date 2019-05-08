@@ -121,11 +121,11 @@
                   <i class="fa fa-warning inline-icon" title="{{ 'Security' | translate }}"></i>
                 </span>
 
-                <span ng-show="erratum.type == 'bugfix'">
+                <span ng-show="erratum.type == 'bugfix' || erratum.type == 'recommended'">
                   <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
                 </span>
 
-                <span ng-show="erratum.type == 'enhancement'">
+                <span ng-show="erratum.type == 'enhancement' || erratum.type == 'optional'">
                   <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
                 </span>
 
