@@ -31,7 +31,7 @@ module Actions
           if root.pulp_update_needed?
             plan_action(PulpSelector,
                         [::Actions::Pulp::Repository::Refresh,
-                        Pulp3::Orchestration::Repository::Update],
+                         Pulp3::Orchestration::Repository::Update],
                         repository, SmartProxy.pulp_master)
           end
 
