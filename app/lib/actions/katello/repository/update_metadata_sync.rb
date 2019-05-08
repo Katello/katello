@@ -7,6 +7,7 @@ module Actions
             plan_action(Katello::Repository::MetadataGenerate, repository)
             concurrence do
               ::SmartProxy.with_repo(repository).each do |capsule|
+                next if capsule.pulp_master?
                 plan_action(Katello::CapsuleContent::Sync, capsule, repository_id: repository.id)
               end
             end

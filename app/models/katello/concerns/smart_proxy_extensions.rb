@@ -56,7 +56,7 @@ module Katello
         }
         scope :with_content, -> { with_features(PULP_FEATURE, PULP_NODE_FEATURE) }
 
-        scope :with_repo, lambda do |repo|
+        def self.with_repo(repo)
           joins(:capsule_lifecycle_environments).
           where("#{Katello::CapsuleLifecycleEnvironment.table_name}.lifecycle_environment_id" => repo.environment_id)
         end
