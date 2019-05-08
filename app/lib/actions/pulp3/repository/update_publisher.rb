@@ -3,7 +3,7 @@ module Actions
     module Repository
       class UpdatePublisher < Pulp3::Abstract
         def plan(repository, smart_proxy)
-          plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id) if repository.root.url?
+          plan_self(:repository_id => repository.id, :smart_proxy_id => smart_proxy.id)
         end
 
         def run
