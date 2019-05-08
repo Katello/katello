@@ -91,28 +91,30 @@ module Katello
       end
 
       def refresh_distributions
+        responses = []
         paths.map do |prefix, path|
           dist_ref = distribution_reference(path)
           if dist_ref
             if prefix == :http
               if repo.root.unprotected
-                update_distribution(path)
+                responses << update_distribution(path)
               else
                 result = delete_distribution(dist_ref.href)
                 dist_ref.destroy!
-                result
+                responses << result
               end
             else
-              update_distribution(path)
+              responses << update_distribution(path)
             end
           else
             if prefix == :http
-              create_distribution(prefix, path) if repo.root.unprotected
+              responses << create_distribution(prefix, path) if repo.root.unprotected
             else
-              create_distribution(prefix, path)
+              responses << create_distribution(prefix, path)
             end
           end
         end
+        responses
       end
 
       def create_version
