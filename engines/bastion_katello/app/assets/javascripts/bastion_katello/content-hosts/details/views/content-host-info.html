@@ -208,7 +208,7 @@
 
         <dt translate>Bug Fix</dt>
         <dd>
-          <a ui-sref="content-host.errata.index({getSearch: 'type=bugfix'})" ng-class="{black: !host.content_facet_attributes.errata_counts.bugfix, yellow: host.content_facet_attributes.errata_counts.bugfix > 0}">
+          <a ui-sref="content-host.errata.index({getSearch: 'type=bugfix or type=recommended'})" ng-class="{black: !host.content_facet_attributes.errata_counts.bugfix, yellow: host.content_facet_attributes.errata_counts.bugfix > 0}">
             <i class="fa fa-bug inline-icon" title="{{ 'Bug Fix' | translate }}"></i>
             {{ host.content_facet_attributes.errata_counts.bugfix || 0 }}
           </a>
@@ -216,7 +216,7 @@
 
         <dt translate>Enhancement</dt>
         <dd>
-          <a ui-sref="content-host.errata.index({getSearch: 'type=enhancement'})" ng-class="{black: !host.content_facet_attributes.errata_counts.enhancement, yellow: host.content_facet_attributes.errata_counts.enhancement > 0}">
+          <a ui-sref="content-host.errata.index({getSearch: 'type=enhancement or type=optional'})" ng-class="{black: !host.content_facet_attributes.errata_counts.enhancement, yellow: host.content_facet_attributes.errata_counts.enhancement > 0}">
             <i class="fa fa-plus-square inline-icon" title="{{ 'Enhancement' | translate }}"></i>
             {{ host.content_facet_attributes.errata_counts.enhancement || 0 }}
           </a>
