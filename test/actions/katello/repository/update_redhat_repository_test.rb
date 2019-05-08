@@ -7,7 +7,7 @@ module Actions
     include FactoryBot::Syntax::Methods
 
     let(:action_class) { ::Actions::Katello::Repository::UpdateRedhatRepository }
-    let(:pulp_import_class) { ::Actions::Pulp::Repository::Refresh }
+    let(:refresh_class) { ::Actions::Pulp::Repository::Refresh }
     let(:repo) { katello_repositories(:fedora_17_x86_64) }
 
     it 'plans' do
@@ -28,7 +28,7 @@ module Actions
       assert_equal expected_upstream_url, repo.root.url
       assert_equal expected_relative_path, repo.relative_path
 
-      assert_action_planed_with(action, pulp_import_class, repo)
+      assert_action_planed_with(action, refresh_class, repo)
     end
   end
 end
