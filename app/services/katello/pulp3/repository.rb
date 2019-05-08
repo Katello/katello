@@ -162,11 +162,10 @@ module Katello
       end
 
       def paths
-        list = {
+        {
           https: "https/#{repo.relative_path}",
           http: "http/#{repo.relative_path}"
         }
-        list
       end
 
       def common_remote_options
