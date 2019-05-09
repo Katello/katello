@@ -20,11 +20,13 @@ module Katello
     #    },
     #    "enabled":false
     # }
+    attr_reader :content_url_updated
 
     def initialize
       @contents_to_create = []
       @product_contents_to_create = []
       @product_mapping = {}
+      @content_url_updated = []
     end
 
     def add_product_content(product, product_content_json)
@@ -98,8 +100,21 @@ module Katello
 
     #cannot use activerecord-improt to update content, as we rely on after_update callback
     private def update_content(content, prod_content_json)
+      attrs_to_update = {}
       new_name = prod_content_json[:content][:name]
-      content.update_attributes!(:name => new_name) if content.name != new_name
+      attrs_to_update[:name] = new_name if content.name != new_name
+
+      new_url = prod_content_json[:content][:contentUrl]
+      if content.content_url != new_url
+        if content.can_update_to_url?(new_url)
+          attrs_to_update[:content_url] = new_url
+          @content_url_updated << content
+        else
+          Rails.logger.warn(_("Substitution Mismatch. Unable to update for content: (%{content}). From [%{content_url}] To [%{new_url}].") %
+                      { content: content.inspect, content_url: content.content_url, new_url: new_url })
+        end
+      end
+      content.update_attributes!(attrs_to_update) unless attrs_to_update.blank?
     end
 
     private def update_product_content(product_content, new_enabled_value)

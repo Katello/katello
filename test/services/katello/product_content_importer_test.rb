@@ -63,5 +63,37 @@ module Katello
 
       assert_equal @fedora.contents, @redhat.contents
     end
+
+    def test_import_with_changed_url
+      @product_content.first['content']['contentUrl'] = '/foo/$basearch/$releasever/'
+      @service.add_product_content(@fedora, @product_content)
+      @service.import
+
+      assert_equal 1, @fedora.contents.count
+      assert_equal @product_content[0]['content']['id'], @fedora.contents.first.cp_content_id
+
+      assert_equal 1, @fedora.product_contents.count
+      refute @fedora.reload.product_contents.first.enabled
+      assert_equal 'foo', @fedora.contents.first.name
+
+      @product_content.first['enabled'] = true
+      @product_content.first['content']['contentUrl'] = '/bar/$releasever/$basearch/'
+
+      @service = ProductContentImporter.new
+      @service.add_product_content(@fedora, @product_content)
+      @service.import
+
+      assert_equal [@product_content.first['content']['id']], @service.content_url_updated.map(&:cp_content_id)
+
+      @product_content.first['enabled'] = true
+      # bad substitution
+      @product_content.first['content']['contentUrl'] = '/bar/$releasever'
+
+      @service = ProductContentImporter.new
+      @service.add_product_content(@fedora, @product_content)
+      @service.import
+
+      assert_empty(@service.content_url_updated)
+    end
   end
 end

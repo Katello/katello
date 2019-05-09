@@ -54,5 +54,13 @@ module Katello
         prod_content_importer.import
       end
     end
+
+    def can_update_to_url?(new_url)
+      # We need to match the substitutable variables from
+      # current content_url and new_url
+      current_subs = content_url&.scan(/\$\w+/)&.sort
+      new_url_subs = new_url&.scan(/\$\w+/)&.sort
+      current_subs == new_url_subs
+    end
   end
 end
