@@ -33,7 +33,20 @@ module ::Actions::Katello::Product
         let(:candlepin_remove_class) { ::Actions::Candlepin::Product::ContentRemove }
 
         it 'plans' do
-          Katello::Content.expects(:find).returns(@content)
+          Katello::Content.expects(:find_by_id).returns(@content)
+
+          action = create_action action_class
+          action.stubs(:action_subject).with(@repository)
+          plan_action action, @repository.root
+          assert_action_planed_with action, candlepin_remove_class, product_id: @product.cp_id,
+                                                                    owner: @product.organization.label,
+                                                                    content_id: @repository.content_id
+          assert_action_planed_with action, candlepin_destroy_class, content_id: @repository.content_id,
+                                                                     owner: @product.organization.label
+        end
+
+        it 'plans when Content is missing' do
+          @repository.root.expects(:content).returns(nil)
 
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
@@ -46,7 +59,7 @@ module ::Actions::Katello::Product
         end
 
         it 'removes contents even if cp content_id is very large' do
-          Katello::Content.expects(:find).returns(@content)
+          Katello::Content.expects(:find_by_id).returns(@content)
 
           action = create_action action_class
           action.stubs(:action_subject).with(@repository)
