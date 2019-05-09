@@ -136,6 +136,7 @@ module Katello
         end
         prod_content_importer.import
         self.index_subscriptions(self.organization)
+        prod_content_importer
       end
 
       def import_product(product_json)

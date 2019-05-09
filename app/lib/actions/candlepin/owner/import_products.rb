@@ -10,7 +10,8 @@ module Actions
           organization = ::Organization.find(input[:organization_id])
           ::Katello::Product.without_auditing do
             User.as_anonymous_admin do
-              organization.redhat_provider.import_products_from_cp
+              updated_content = organization.redhat_provider.import_products_from_cp.content_url_updated
+              ForemanTasks.async_task(Katello::Repository::UpdateContentUrls, updated_content) if updated_content.present?
             end
           end
         end
