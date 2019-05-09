@@ -40,6 +40,8 @@ module Katello
     param :packages_restrict_applicable, :boolean, :desc => N_("Return packages that are applicable to one or more hosts (defaults to true if host_id is specified)")
     param :packages_restrict_upgradable, :boolean, :desc => N_("Return packages that are upgradable on one or more hosts")
     param :packages_restrict_latest, :boolean, :desc => N_("Return only the latest version of each package")
+    param :modular_only, :boolean, :desc => N_("Return packages that belong to a module streams")
+    param :non_modular_only, :boolean, :desc => N_("Return packages that do not belong any module streams")
     param :available_for, String, :desc => N_("Return packages that can be added to the specified object.  Only the value 'content_view_version' is supported.")
     param_group :search, ::Katello::Api::V2::ApiController
     def index
@@ -62,6 +64,8 @@ module Katello
           collection = collection.applicable_to_hosts(hosts)
         end
       end
+      collection = collection.modular if ::Foreman::Cast.to_bool(params[:modular_only])
+      collection = collection.non_modular if ::Foreman::Cast.to_bool(params[:non_modular_only])
       collection
     end
 

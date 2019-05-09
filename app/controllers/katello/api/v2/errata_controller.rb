@@ -18,6 +18,8 @@ module Katello
     param :host_id, :number, :desc => N_("Host id to list applicable errata for")
     param :errata_restrict_applicable, :bool, :desc => N_("Return errata that are applicable to one or more hosts (defaults to true if host_id is specified)")
     param :errata_restrict_installable, :bool, :desc => N_("Return errata that are upgradable on one or more hosts")
+    param :modular_only, :boolean, :desc => N_("Return errata that contains a module streams")
+    param :non_modular_only, :boolean, :desc => N_("Return errata that do not contain any module streams")
     param :available_for, String, :desc => N_("Return errata that can be added to the specified object.  The values 'content_view_version' and 'content_view_filter are supported.")
     param_group :search, Api::V2::ApiController
     def index
@@ -42,7 +44,7 @@ module Katello
       collection = collection.where("#{date_type} >= ?", params[:start_date]) if params[:start_date]
       collection = collection.where("#{date_type} <= ?", params[:end_date]) if params[:end_date]
       collection = collection.of_type(params[:types]) if params[:types]
-      collection
+      collection.non_modular
     end
 
     def custom_index_relation(collection)
@@ -58,6 +60,8 @@ module Katello
           collection = collection.applicable_to_hosts(hosts)
         end
       end
+      collection = collection.modular if ::Foreman::Cast.to_bool(params[:modular_only])
+      collection = collection.non_modular if ::Foreman::Cast.to_bool(params[:non_modular_only])
       collection
     end
 

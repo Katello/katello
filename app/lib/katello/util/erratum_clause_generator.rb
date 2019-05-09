@@ -20,21 +20,21 @@ module Katello
       def collect_clauses(repo, filters)
         return if filters.blank?
 
-        pulp_content_clauses = filters.collect do |filter|
+        content_clauses = filters.collect do |filter|
           filter.generate_clauses(repo)
         end
-        pulp_content_clauses.flatten!
-        pulp_content_clauses.compact!
+        content_clauses.flatten!
+        content_clauses.compact!
 
-        unless pulp_content_clauses.empty?
-          [errata_clauses_from_content(pulp_content_clauses)]
+        unless content_clauses.empty?
+          [errata_clauses_from_content(content_clauses)]
         end
       end
 
       # input ->  [{"type"=>{"$in"=>[:bugfix, :security]}}] <- Errata Pulp Clauses
       # output -> {"filename" => {"$in" => {"foo.el6.noarch", "..."}}} <- Packages belonging to those errata
-      def errata_clauses_from_content(pulp_content_clauses)
-        errata_ids = Katello::Erratum.list_errata_id_by_clauses(@repo, pulp_content_clauses)
+      def errata_clauses_from_content(content_clauses)
+        errata_ids = Katello::Erratum.list_errata_id_by_clauses(@repo, content_clauses)
         {'id' => {"$in" => errata_ids}} unless errata_ids.empty?
       end
     end
