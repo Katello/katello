@@ -480,15 +480,14 @@ module Katello
     def test_generate_content_path
       repo = katello_repositories(:rhel_6_x86_64)
       fixtures = [
-        { input: '/content/rhel/x64',  expected: '/content/rhel/x64' },
-        { input: '/content/$releasever/$basearch',  expected: '/content/rhel/6Server/x86_64' },
-        { input: '/content/$releasever/f00-$basearch',  expected: '/content/rhel/6Server/f00-x86_64' },
-
+        { input: '/content/rhel/x64', expected: '/content/rhel/x64' },
+        { input: '/content/$releasever/$basearch', expected: '/content/6Server/x86_64' },
+        { input: '/content/$releasever/f00-$basearch', expected: '/content/6Server/f00-x86_64' },
+        { input: '/content/$basearch/foo/$releasever', expected: '/content/x86_64/foo/6Server' }
       ]
 
       fixtures.each do |fixture|
-        content = repo.content
-        content.content_url = fixture[:input]
+        repo.content.update_attributes!(content_url: fixture[:input])
         fail_message = "comparing #{fixture[:input]} - expected_result = #{fixture[:expected]}"
         assert_equal(fixture[:expected], repo.generate_content_path, fail_message)
       end
