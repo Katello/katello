@@ -477,6 +477,23 @@ module Katello
       assert_equal "#{@fedora_17_x86_64.organization.label}/library_default_view_library/fedora_17_label", @fedora_17_x86_64.generate_repo_path
     end
 
+    def test_generate_content_path
+      repo = katello_repositories(:rhel_6_x86_64)
+      fixtures = [
+        { input: '/content/rhel/x64',  expected: '/content/rhel/x64' },
+        { input: '/content/$releasever/$basearch',  expected: '/content/rhel/6Server/x86_64' },
+        { input: '/content/$releasever/f00-$basearch',  expected: '/content/rhel/6Server/f00-x86_64' },
+
+      ]
+
+      fixtures.each do |fixture|
+        content = repo.content
+        content.content_url = fixture[:input]
+        fail_message = "comparing #{fixture[:input]} - expected_result = #{fixture[:expected]}"
+        assert_equal(fixture[:expected], repo.generate_content_path, fail_message)
+      end
+    end
+
     def test_docker_clone_repo_path
       @repo = build(:katello_repository, :docker,
                     :content_view_version => @fedora_17_x86_64.content_view_version,
