@@ -1,5 +1,3 @@
-require "pulp_file_client"
-
 module Katello
   module Pulp3
     class Repository
