@@ -19,7 +19,7 @@ module Actions
                           owner: root_repository.product.organization.label,
                           content_id: root_repository.content_id)
 
-              ::Katello::Content.find(katello_content_id)&.destroy!
+              ::Katello::Content.find_by_id(katello_content_id)&.destroy!
             end
           end
         end
