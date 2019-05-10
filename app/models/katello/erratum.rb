@@ -29,6 +29,15 @@ module Katello
     scoped_search :on => :issued, :complete_value => true
     scoped_search :on => :updated, :complete_value => true
     scoped_search :on => :reboot_suggested, :complete_value => true
+    scoped_search :on => :modular,
+                  :rename => :modular,
+                  :only_explicit => true,
+                  :ext_method => :find_by_modular,
+                  :complete_value => {:true => 0, :false => 1},
+                  :special_values => ['true', 'false'],
+                  :validator => ->(value) { ['true', 'false'].include?(value.downcase) },
+                  :operators => ["="]
+
     scoped_search :relation => :cves, :on => :cve_id, :rename => :cve
     scoped_search :relation => :bugzillas, :on => :bug_id, :rename => :bug
     scoped_search :relation => :packages, :on => :nvrea, :rename => :package, :complete_value => true, :only_explicit => true
@@ -137,6 +146,18 @@ module Katello
         pack.module_streams
       end
       return streams.flatten.uniq
+    end
+
+    def self.find_by_modular(_key, operator, value)
+      conditions = ""
+      if operator == '='
+        query = value.downcase == "true" ? modular : non_modular
+        conditions = "#{table_name}.id in (#{query.select(:id).to_sql})"
+      else
+        #failure condition. No such value so must return 0
+        conditions = "1=0"
+      end
+      { :conditions => conditions }
     end
 
     class Jail < ::Safemode::Jail
