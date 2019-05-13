@@ -132,6 +132,17 @@ module Katello
       assert_response_ids response, ids
     end
 
+    def test_index_with_content_view_version_id_archived
+      version = @view.content_view_versions.first
+      ids = version.archived_repos.pluck :id
+
+      response = get :index, params: { :content_view_version_id => version.id, :organization_id => @organization.id, :archived => true }
+
+      assert_response :success
+      assert_template 'api/v2/repositories/index'
+      assert_response_ids response, ids
+    end
+
     def test_index_available_for_content_view
       ids = @view.organization.default_content_view.versions.first.repositories.pluck(:id) - @view.repositories.pluck(:id)
 
