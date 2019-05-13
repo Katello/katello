@@ -1,3 +1,5 @@
+require 'pulp_file_client'
+
 module Katello
   module Pulp3
     class Repository
@@ -46,28 +48,9 @@ module Katello
           [pulp3_api.remotes_file_file_sync(repo.remote_href, repository: repository_reference.repository_href)]
         end
 
-        def create_publisher
-          unless repository_reference.publisher_href
-            response = pulp3_api.publishers_file_file_create(:name => backend_object_name)
-            repository_reference.update_attributes!(:publisher_href => response._href)
-          end
-        end
-
-        def list_publishers(args)
-          pulp3_api.publishers_file_file_list(args).results
-        end
-
-        def update_publisher
-          pulp3_api.publishers_file_file_update(repository_reference.publisher_href, name: backend_object_name)
-        end
-
-        def delete_publisher(href = repository_reference.publisher_href)
-          pulp3_api.publishers_file_file_delete(href)
-        end
-
         def create_publication
-          publication_data = PulpFileClient::FilePublication.new(
-            repository: repository_reference.repository_href)
+          publication_data = ::PulpFileClient::FilePublication.new(
+            repository_version: repo.version_href)
           pulp3_api.publications_file_file_create(publication_data)
         end
 

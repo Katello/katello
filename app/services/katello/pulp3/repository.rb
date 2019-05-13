@@ -29,10 +29,6 @@ module Katello
         fail NotImplementedError
       end
 
-      def create_publisher
-        fail NotImplementedError
-      end
-
       def create_publication
         fail NotImplementedError
       end
