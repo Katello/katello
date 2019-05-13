@@ -22,7 +22,6 @@ module ::Actions::Pulp3
                                                                    :content_view_id => @repo.content_view.id)
       assert repo_reference
       assert repo_reference.repository_href
-      assert repo_reference.publisher_href
     end
   end
 end

@@ -7,7 +7,6 @@ module Actions
             plan_action(Actions::Pulp3::Repository::UpdateRepository, repository, smart_proxy)
             plan_action(Actions::Pulp3::Repository::UpdateRemote, repository, smart_proxy)
             plan_action(Actions::Pulp3::Repository::RefreshDistribution, repository, smart_proxy)
-            plan_action(Actions::Pulp3::Repository::UpdatePublisher, repository, smart_proxy)
           end
         end
       end

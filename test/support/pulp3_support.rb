@@ -22,10 +22,6 @@ module Katello
         tasks << service.delete(repo._href)
       end
 
-      if (publisher = service.list_publishers(name: service.backend_object_name).first)
-        tasks << service.delete_publisher(publisher._href)
-      end
-
       if (remote = service.list_remotes(name: service.backend_object_name).first)
         tasks << service.delete_remote(remote._href)
       end

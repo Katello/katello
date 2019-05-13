@@ -16,11 +16,6 @@ module Pulp
       delegate :repositories_delete, to: :repositories_api
       delegate :repositories_versions_create, to: :repositories_api
 
-      delegate :publishers_file_file_create, to: :file_publishers_api
-      delegate :publishers_file_file_list, to: :file_publishers_api
-      delegate :publishers_file_file_update, to: :file_publishers_api
-      delegate :publishers_file_file_delete, to: :file_publishers_api
-
       delegate :publications_file_file_create, to: :file_publications_api
 
       delegate :remotes_file_file_list, to: :file_remotes_api
@@ -43,10 +38,6 @@ module Pulp
 
       def file_distributions_api
         @file_distributions_api ||= PulpFileClient::DistributionsApi.new
-      end
-
-      def file_publishers_api
-        @file_publishers_api ||= PulpFileClient::PublishersApi.new
       end
 
       def file_publications_api
