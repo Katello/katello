@@ -11,7 +11,6 @@ require "anemone"
 require "securerandom"
 
 require "runcible"
-require 'zest'
 require "deface"
 require 'qpid_messaging'
 
