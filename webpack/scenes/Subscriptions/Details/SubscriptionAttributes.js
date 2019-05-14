@@ -14,6 +14,6 @@ export default {
   support_type: __('Support Type'),
   arch: __('Architecture(s)'),
   type: __('Type'),
-  mutli_entitlement: __('Multi-entitlement'),
+  multi_entitlement: __('Multi-entitlement'),
   stacking_id: __('Stacking ID'),
 };
