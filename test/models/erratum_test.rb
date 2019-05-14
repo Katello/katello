@@ -28,6 +28,16 @@ module Katello
       assert_includes Katello::Erratum.search_for("reboot_suggested = true"), @security
     end
 
+    def test_search_modular
+      assert_includes Katello::Erratum.search_for("modular = false"), @security
+      assert_includes Katello::Erratum.search_for("modular = true"), katello_errata(:modular)
+    end
+
+    def test_modular
+      refute Katello::Erratum.search_for("modular = false").first.modular?
+      assert Katello::Erratum.search_for("modular = true").first.modular?
+    end
+
     def test_create_truncates_long_title
       attrs = {:pulp_id => 'foo', :title => "This life, which had been the tomb of " \
         "his virtue and of his honour is but a walking shadow; a poor player, " \

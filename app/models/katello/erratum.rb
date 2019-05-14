@@ -34,6 +34,14 @@ module Katello
     scoped_search :relation => :packages, :on => :nvrea, :rename => :package, :complete_value => true, :only_explicit => true
     scoped_search :relation => :packages, :on => :name, :rename => :package_name, :complete_value => true, :only_explicit => true
 
+    scoped_search :on => :modular,
+                  :only_explicit => true,
+                  :ext_method => :find_by_modular,
+                  :complete_value => {:true => 0, :false => 1},
+                  :special_values => ['true', 'false'],
+                  :validator => ->(value) { ['true', 'false'].include?(value.downcase) },
+                  :operators => ["="]
+
     before_save lambda { |erratum| erratum.title = erratum.title.truncate(255) unless erratum.title.blank? }
 
     def self.of_type(type)
@@ -43,6 +51,8 @@ module Katello
     scope :security, -> { of_type(Erratum::SECURITY) }
     scope :bugfix, -> { of_type(Erratum::BUGZILLA) }
     scope :enhancement, -> { of_type(Erratum::ENHANCEMENT) }
+    scope :modular, -> { joins(:packages => :module_stream_errata_packages) }
+    scope :non_modular, -> { where.not(:id => modular) }
 
     def self.repository_association_class
       RepositoryErratum
@@ -110,6 +120,10 @@ module Katello
           where(statement).pluck(:filename)
     end
 
+    def modular?
+      ::Katello::Erratum.modular.where(:id => id).exists?
+    end
+
     def module_streams
       # return something like
       # {module_stream => [packages]}
@@ -130,6 +144,18 @@ module Katello
         pack.module_streams
       end
       return streams.flatten.uniq
+    end
+
+    def self.find_by_modular(_key, operator, value)
+      conditions = ""
+      if operator == '='
+        query = value.downcase == "true" ? modular : non_modular
+        conditions = "#{table_name}.id in (#{query.select(:id).to_sql})"
+      else
+        #failure condition. No such value so must return 0
+        conditions = "1=0"
+      end
+      { :conditions => conditions }
     end
 
     class Jail < ::Safemode::Jail

@@ -23,6 +23,25 @@ module Katello
       assert @repo.full_path =~ /abc123/
     end
 
+    def test_empty_errata_with_differing_package_counts
+      @fedora_17_x86_64.errata.destroy_all
+      filename = 'much-rpm.much-wow'
+
+      erratum = @fedora_17_x86_64.errata.create! do |new_erratum|
+        new_erratum.pulp_id = "foo"
+        new_erratum.packages = [ErratumPackage.new(:filename => filename, :nvrea => 'foo', :name => 'foo')]
+      end
+
+      assert_includes @fedora_17_x86_64.empty_errata, erratum
+
+      @fedora_17_x86_64.rpms.create! do |rpm|
+        rpm.pulp_id = 'its the pulp_id that never ends oh wait it does'
+        rpm.filename = filename
+      end
+
+      refute_includes @fedora_17_x86_64.empty_errata, erratum
+    end
+
     def test_empty_errata
       @fedora_17_x86_64.errata.destroy_all
       filename = 'much-rpm.much-wow'
